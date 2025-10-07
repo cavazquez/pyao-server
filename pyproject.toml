@@ -1,0 +1,66 @@
+[project]
+name = "src"
+version = "0.1.0"
+description = "Servidor de Argentum Online en Python"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "mypy>=1.13.0",
+]
+build = [
+    "hatchling>=1.25.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+pyao-server = "src.run_server:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = [
+    "ALL"  # Habilitar todas las reglas
+]
+ignore = [
+    "D203",    # one-blank-line-before-class (conflicto con D211)
+    "D213",    # multi-line-summary-second-line (conflicto con D212)
+    "COM812",  # missing-trailing-comma (conflicto con formatter)
+    "ISC001",  # single-line-implicit-string-concatenation (conflicto con formatter)
+    "T201",    # print statements (permitido)
+    "CPY001",  # copyright notice (no requerido)
+    "S104",    # binding to all interfaces (intencional para servidor)
+]
+preview = true  # Habilitar reglas experimentales
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+strict_concatenate = true
