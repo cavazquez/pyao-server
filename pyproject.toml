@@ -40,6 +40,7 @@ ignore = [
     "T201",    # print statements (permitido)
     "CPY001",  # copyright notice (no requerido)
     "S104",    # binding to all interfaces (intencional para servidor)
+    "TC003",   # asyncio usado en runtime, no solo type-checking
 ]
 preview = true  # Habilitar reglas experimentales
 
