@@ -65,3 +65,18 @@ warn_unused_ignores = true
 warn_no_return = true
 strict_equality = true
 strict_concatenate = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# No fallar si no hay tests
+addopts = "--strict-markers"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # assert permitido en tests
+    "PLR2004", # magic values permitidos en tests
+    "D104",    # docstring en __init__.py no requerido
+]
