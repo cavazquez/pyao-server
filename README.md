@@ -10,6 +10,8 @@
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
+> Implementación moderna y eficiente del servidor de Argentum Online.
+
 ## 🛠️ Tecnologías
 
 - ![Python](https://img.shields.io/badge/Python-3.14+-3776AB?logo=python&logoColor=white) - Lenguaje de programación
