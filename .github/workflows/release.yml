@@ -43,13 +43,14 @@ jobs:
     - name: Run mypy type checker
       run: uv run mypy .
     
-    - name: Run tests
-      run: uv run pytest -v
+    - name: Run tests with coverage
+      run: uv run pytest -v --cov=src --cov-report=xml --cov-report=term-missing
   
   build:
     needs: test
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     
@@ -71,9 +72,9 @@ jobs:
         path: |
           ~/.cache/uv
           .venv
-        key: ${{ runner.os }}-${{ matrix.os }}-uv-${{ hashFiles('uv.lock') }}
+        key: ${{ matrix.os }}-uv-${{ hashFiles('uv.lock') }}
         restore-keys: |
-          ${{ runner.os }}-${{ matrix.os }}-uv-
+          ${{ matrix.os }}-uv-
     
     - name: Install dependencies
       run: uv sync --all-groups

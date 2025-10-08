@@ -1,6 +1,9 @@
 # PyAO Server
 
 [![CI](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml)
+[![Release](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg)](https://codecov.io/gh/cavazquez/pyao-server)
+[![Downloads](https://img.shields.io/github/downloads/cavazquez/pyao-server/total.svg)](https://github.com/cavazquez/pyao-server/releases)
 [![Python](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -50,6 +53,9 @@ El servidor escuchará en `0.0.0.0:7666` por defecto.
 
 # Solo tests
 uv run pytest -v
+
+# Tests con cobertura
+uv run pytest -v --cov=src --cov-report=term-missing
 
 # Solo linter
 uv run ruff check .
