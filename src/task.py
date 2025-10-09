@@ -5,6 +5,8 @@ import logging
 import random
 from abc import ABC, abstractmethod
 
+from src.msg import build_dice_roll_response
+
 logger = logging.getLogger(__name__)
 
 
@@ -60,8 +62,6 @@ class TaskNull(Task):
 class TaskDice(Task):
     """Tarea que maneja la tirada de dados."""
 
-    PACKET_ID_DICE_ROLL = 67  # ServerPacketID.DiceRoll
-
     async def execute(self) -> None:
         """Ejecuta la tirada de dados y envía el resultado al cliente."""
         # Tirar 5 atributos (Fuerza, Agilidad, Inteligencia, Carisma, Constitución)
@@ -81,16 +81,13 @@ class TaskDice(Task):
             constitution,
         )
 
-        # Construir paquete: PacketID + 5 bytes de atributos
-        response = bytes(
-            [
-                self.PACKET_ID_DICE_ROLL,
-                strength,
-                agility,
-                intelligence,
-                charisma,
-                constitution,
-            ]
+        # Construir paquete de respuesta
+        response = build_dice_roll_response(
+            strength=strength,
+            agility=agility,
+            intelligence=intelligence,
+            charisma=charisma,
+            constitution=constitution,
         )
 
         # Enviar respuesta al cliente

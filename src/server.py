@@ -2,23 +2,15 @@
 
 import asyncio
 import logging
-from typing import ClassVar
 
-from src.task import Task, TaskDice, TaskNull
+from src.packet_handlers import TASK_HANDLERS
+from src.task import Task, TaskNull
 
 logger = logging.getLogger(__name__)
 
 
 class ArgentumServer:
     """Servidor TCP para Argentum Online."""
-
-    # ClientPacketID según el protocolo
-    PACKET_ID_THROW_DICES = 1
-
-    # Mapeo de PacketID a clase de Task
-    TASK_HANDLERS: ClassVar[dict[int, type[Task]]] = {
-        PACKET_ID_THROW_DICES: TaskDice,
-    }
 
     def __init__(self, host: str = "0.0.0.0", port: int = 7666) -> None:
         """Inicializa el servidor.
@@ -31,7 +23,8 @@ class ArgentumServer:
         self.port = port
         self.server: asyncio.Server | None = None
 
-    def create_task(self, data: bytes, writer: asyncio.StreamWriter) -> Task:
+    @staticmethod
+    def create_task(data: bytes, writer: asyncio.StreamWriter) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
         Args:
@@ -47,7 +40,7 @@ class ArgentumServer:
         packet_id = data[0]
 
         # Buscar handler en el diccionario
-        task_class = self.TASK_HANDLERS.get(packet_id, TaskNull)
+        task_class = TASK_HANDLERS.get(packet_id, TaskNull)
         return task_class(data, writer)
 
     async def handle_client(
