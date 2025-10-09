@@ -1,10 +1,34 @@
-"""Mensajes del servidor."""
+"""Construcción de mensajes/paquetes del servidor."""
+
+from src.packet_id import ServerPacketID
 
 
-class ServerMessages:
-    """Mensajes que el servidor envía a los clientes."""
+def build_dice_roll_response(
+    strength: int,
+    agility: int,
+    intelligence: int,
+    charisma: int,
+    constitution: int,
+) -> bytes:
+    """Construye el paquete de respuesta para la tirada de dados.
 
-    # Mensajes de dados
-    DICE_ROLL_RESULT = "Tiraste los dados y obtuviste: {result}"
-    DICE_ROLL_SUCCESS = "¡Excelente tirada!"
-    DICE_ROLL_POOR = "Mala suerte, intenta de nuevo."
+    Args:
+        strength: Valor de fuerza (6-18).
+        agility: Valor de agilidad (6-18).
+        intelligence: Valor de inteligencia (6-18).
+        charisma: Valor de carisma (6-18).
+        constitution: Valor de constitución (6-18).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID + 5 bytes de atributos.
+    """
+    return bytes(
+        [
+            ServerPacketID.DICE_ROLL,
+            strength,
+            agility,
+            intelligence,
+            charisma,
+            constitution,
+        ]
+    )

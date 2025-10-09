@@ -70,14 +70,16 @@ uv run mypy .
 
 ```
 pyao-server/
-├── src/              # Código fuente
-│   ├── server.py     # Servidor TCP principal
-│   ├── task.py       # Sistema de tareas
-│   ├── msg.py        # Mensajes del servidor
-│   └── run_server.py # Entry point
-├── tests/            # Tests unitarios
-├── .github/          # GitHub Actions workflows
-└── pyproject.toml    # Configuración del proyecto
+├── src/                  # Código fuente
+│   ├── server.py         # Servidor TCP principal
+│   ├── task.py           # Sistema de tareas
+│   ├── packet_id.py      # Definición de IDs de paquetes (enums)
+│   ├── packet_handlers.py # Mapeo de packet IDs a handlers
+│   ├── msg.py            # Mensajes del servidor
+│   └── run_server.py     # Entry point
+├── tests/                # Tests unitarios
+├── .github/              # GitHub Actions workflows
+└── pyproject.toml        # Configuración del proyecto
 ```
 
 ## 🎮 Cliente Compatible
