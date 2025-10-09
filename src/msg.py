@@ -1,5 +1,6 @@
 """Construcción de mensajes/paquetes del servidor."""
 
+from src.packet_builder import PacketBuilder
 from src.packet_id import ServerPacketID
 
 
@@ -22,13 +23,11 @@ def build_dice_roll_response(
     Returns:
         Paquete de bytes con el formato: PacketID + 5 bytes de atributos.
     """
-    return bytes(
-        [
-            ServerPacketID.DICE_ROLL,
-            strength,
-            agility,
-            intelligence,
-            charisma,
-            constitution,
-        ]
-    )
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.DICE_ROLL)
+    packet.add_byte(strength)
+    packet.add_byte(agility)
+    packet.add_byte(intelligence)
+    packet.add_byte(charisma)
+    packet.add_byte(constitution)
+    return packet.to_bytes()
