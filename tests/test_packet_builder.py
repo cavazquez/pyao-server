@@ -177,3 +177,105 @@ def test_packet_builder_chaining_all_methods() -> None:
 
     assert result is packet
     assert packet.to_bytes() == bytes([1, 88, 2, 3])  # 88 = 'X'
+
+
+def test_packet_builder_add_int16_positive() -> None:
+    """Verifica que add_int16 agregue un entero de 16 bits positivo."""
+    packet = PacketBuilder()
+    packet.add_int16(1000)
+
+    result = packet.to_bytes()
+    # 1000 en little-endian: 0xE8 0x03
+    assert len(result) == 2
+    assert result == bytes([0xE8, 0x03])
+
+
+def test_packet_builder_add_int16_negative() -> None:
+    """Verifica que add_int16 maneje enteros negativos."""
+    packet = PacketBuilder()
+    packet.add_int16(-1000)
+
+    result = packet.to_bytes()
+    # -1000 en little-endian signed: 0x18 0xFC
+    assert len(result) == 2
+    assert result == bytes([0x18, 0xFC])
+
+
+def test_packet_builder_add_int16_zero() -> None:
+    """Verifica que add_int16 maneje el valor cero."""
+    packet = PacketBuilder()
+    packet.add_int16(0)
+
+    result = packet.to_bytes()
+    assert len(result) == 2
+    assert result == bytes([0x00, 0x00])
+
+
+def test_packet_builder_add_int16_max_min() -> None:
+    """Verifica que add_int16 maneje valores máximos y mínimos."""
+    packet = PacketBuilder()
+    packet.add_int16(32767)  # Max int16
+    packet.add_int16(-32768)  # Min int16
+
+    result = packet.to_bytes()
+    assert len(result) == 4
+    # 32767 = 0xFF7F, -32768 = 0x0080 en little-endian
+    assert result == bytes([0xFF, 0x7F, 0x00, 0x80])
+
+
+def test_packet_builder_add_int32_positive() -> None:
+    """Verifica que add_int32 agregue un entero de 32 bits positivo."""
+    packet = PacketBuilder()
+    packet.add_int32(100000)
+
+    result = packet.to_bytes()
+    # 100000 en little-endian: 0xA0 0x86 0x01 0x00
+    assert len(result) == 4
+    assert result == bytes([0xA0, 0x86, 0x01, 0x00])
+
+
+def test_packet_builder_add_int32_negative() -> None:
+    """Verifica que add_int32 maneje enteros negativos."""
+    packet = PacketBuilder()
+    packet.add_int32(-100000)
+
+    result = packet.to_bytes()
+    # -100000 en little-endian signed
+    assert len(result) == 4
+    assert result == bytes([0x60, 0x79, 0xFE, 0xFF])
+
+
+def test_packet_builder_add_int32_zero() -> None:
+    """Verifica que add_int32 maneje el valor cero."""
+    packet = PacketBuilder()
+    packet.add_int32(0)
+
+    result = packet.to_bytes()
+    assert len(result) == 4
+    assert result == bytes([0x00, 0x00, 0x00, 0x00])
+
+
+def test_packet_builder_mixed_with_integers() -> None:
+    """Verifica que se puedan mezclar bytes e integers."""
+    packet = PacketBuilder()
+    packet.add_byte(1)
+    packet.add_int16(256)
+    packet.add_int32(65536)
+    packet.add_byte(2)
+
+    result = packet.to_bytes()
+    # Byte 1, int16(256)=[0x00,0x01], int32(65536)=[0x00,0x00,0x01,0x00], Byte 2
+    expected = bytes([1, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 2])
+    assert len(result) == 8
+    assert result == expected
+
+
+def test_packet_builder_chaining_with_integers() -> None:
+    """Verifica encadenamiento con los métodos de enteros."""
+    packet = PacketBuilder()
+    result = packet.add_byte(1).add_int16(100).add_int32(1000).add_byte(2)
+
+    assert result is packet
+    # Byte 1, int16(100)=[0x64,0x00], int32(1000)=[0xE8,0x03,0x00,0x00], Byte 2
+    expected = bytes([1, 0x64, 0x00, 0xE8, 0x03, 0x00, 0x00, 2])
+    assert packet.to_bytes() == expected

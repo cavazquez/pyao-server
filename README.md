@@ -79,11 +79,11 @@ pyao-server/
 │   ├── packet_builder.py     # Constructor de paquetes de bytes
 │   ├── msg.py                # Construcción de mensajes del servidor
 │   └── run_server.py         # Entry point
-├── tests/                    # Tests unitarios (40 tests, 100% cobertura)
+├── tests/                    # Tests unitarios (100% cobertura)
 │   ├── test_server.py        # Tests del servidor (TODO)
 │   ├── test_client_connection.py  # Tests de ClientConnection (9 tests)
 │   ├── test_task.py          # Tests de tareas (2 tests)
-│   ├── test_packet_builder.py     # Tests de PacketBuilder (19 tests)
+│   ├── test_packet_builder.py     # Tests de PacketBuilder (28 tests)
 │   └── test_msg.py           # Tests de mensajes (10 tests)
 ├── .github/                  # GitHub Actions workflows
 └── pyproject.toml            # Configuración del proyecto
@@ -96,7 +96,7 @@ El servidor sigue una arquitectura de separación de responsabilidades:
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
 - **`ClientConnection`**: Encapsula la comunicación con cada cliente
 - **`Task`**: Procesa la lógica de negocio (tirada de dados, movimiento, etc.)
-- **`PacketBuilder`**: Construye paquetes de bytes con validación
+- **`PacketBuilder`**: Construye paquetes de bytes con validación (soporta bytes, int16, int32, strings)
 - **`msg.py`**: Funciones para construir mensajes específicos del protocolo
 
 ## 🎮 Cliente Compatible
