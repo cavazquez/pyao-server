@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.client_connection import ClientConnection
+from src.message_sender import MessageSender
 from src.task import TaskDice, TaskNull
 
 
@@ -14,9 +15,10 @@ async def test_task_null_logs_unknown_packet() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     connection = ClientConnection(writer)
+    message_sender = MessageSender(connection)
 
     data = bytes([99, 1, 2, 3, 4, 5])  # PacketID 99 (desconocido)
-    task = TaskNull(data, connection)
+    task = TaskNull(data, message_sender)
 
     # No debería lanzar excepción
     await task.execute()
@@ -32,9 +34,10 @@ async def test_task_dice_generates_attributes() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
     connection = ClientConnection(writer)
+    message_sender = MessageSender(connection)
 
     data = bytes([1])  # PacketID ThrowDices
-    task = TaskDice(data, connection)
+    task = TaskDice(data, message_sender)
 
     await task.execute()
 

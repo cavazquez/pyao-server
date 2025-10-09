@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 
@@ -14,15 +14,15 @@ logger = logging.getLogger(__name__)
 class Task(ABC):
     """Clase base para tareas que procesan mensajes del cliente."""
 
-    def __init__(self, data: bytes, connection: ClientConnection) -> None:
+    def __init__(self, data: bytes, message_sender: MessageSender) -> None:
         """Inicializa la tarea.
 
         Args:
             data: Datos recibidos del cliente.
-            connection: Conexión con el cliente para enviar respuestas.
+            message_sender: Enviador de mensajes para comunicarse con el cliente.
         """
         self.data = data
-        self.connection = connection
+        self.message_sender = message_sender
 
     @abstractmethod
     async def execute(self) -> None:
@@ -37,7 +37,7 @@ class TaskNull(Task):
         """Loguea información detallada del mensaje no reconocido."""
         logger.warning(
             "Mensaje no reconocido desde %s - Tamaño: %d bytes",
-            self.connection.address,
+            self.message_sender.connection.address,
             len(self.data),
         )
 
@@ -73,7 +73,7 @@ class TaskDice(Task):
 
         logger.info(
             "Cliente %s tiró dados - STR:%d AGI:%d INT:%d CHA:%d CON:%d",
-            self.connection.address,
+            self.message_sender.connection.address,
             strength,
             agility,
             intelligence,
@@ -81,8 +81,8 @@ class TaskDice(Task):
             constitution,
         )
 
-        # Enviar resultado usando el método de la conexión
-        await self.connection.send_dice_roll(
+        # Enviar resultado usando el enviador de mensajes
+        await self.message_sender.send_dice_roll(
             strength=strength,
             agility=agility,
             intelligence=intelligence,
@@ -90,4 +90,4 @@ class TaskDice(Task):
             constitution=constitution,
         )
 
-        logger.info("Enviado resultado de dados a %s", self.connection.address)
+        logger.info("Enviado resultado de dados a %s", self.message_sender.connection.address)

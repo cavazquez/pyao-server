@@ -4,6 +4,7 @@ import asyncio
 import logging
 
 from src.client_connection import ClientConnection
+from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.task import Task, TaskNull
 
@@ -25,24 +26,24 @@ class ArgentumServer:
         self.server: asyncio.Server | None = None
 
     @staticmethod
-    def create_task(data: bytes, connection: ClientConnection) -> Task:
+    def create_task(data: bytes, message_sender: MessageSender) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
         Args:
             data: Datos recibidos del cliente.
-            connection: Conexión con el cliente.
+            message_sender: Enviador de mensajes para comunicarse con el cliente.
 
         Returns:
             Instancia de la tarea correspondiente.
         """
         if len(data) == 0:
-            return TaskNull(data, connection)
+            return TaskNull(data, message_sender)
 
         packet_id = data[0]
 
         # Buscar handler en el diccionario
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
-        return task_class(data, connection)
+        return task_class(data, message_sender)
 
     async def handle_client(
         self,
@@ -56,6 +57,7 @@ class ArgentumServer:
             writer: Stream para escribir datos al cliente.
         """
         connection = ClientConnection(writer)
+        message_sender = MessageSender(connection)
         logger.info("Nueva conexión desde %s", connection.address)
 
         try:
@@ -67,7 +69,7 @@ class ArgentumServer:
                 logger.info("Recibidos %d bytes desde %s", len(data), connection.address)
 
                 # Crear y ejecutar tarea apropiada según el mensaje
-                task = self.create_task(data, connection)
+                task = self.create_task(data, message_sender)
                 await task.execute()
 
         except Exception:

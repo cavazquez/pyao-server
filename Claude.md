@@ -39,11 +39,17 @@
 - NO asumir estructura de base de datos o persistencia
 - NO agregar dependencias externas sin consultar
 
+## Documentación
+- **SIEMPRE actualizar la estructura del proyecto en README.md** cuando se agreguen/eliminen archivos
+- Mantener sincronizada la sección "📦 Estructura del Proyecto" con los cambios
+- Actualizar la sección "Arquitectura" si cambian las responsabilidades de las clases
+
 ## Workflow
 1. Discutir qué implementar
 2. Mostrar el plan específico
 3. Implementar solo esa parte
-4. Confirmar que funciona
+4. Actualizar README.md con los cambios
+5. Confirmar que funciona
 5. Preguntar qué sigue
 
 ## Pre-commit

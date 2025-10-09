@@ -70,23 +70,34 @@ uv run mypy .
 
 ```
 pyao-server/
-├── src/                      # Código fuente
-│   ├── server.py             # Servidor TCP principal (ArgentumServer)
-│   ├── client_connection.py  # Gestión de conexiones de cliente
-│   ├── task.py               # Sistema de tareas (Task, TaskDice, TaskNull)
-│   ├── packet_id.py          # Definición de IDs de paquetes (enums)
-│   ├── packet_handlers.py    # Mapeo de packet IDs a handlers
-│   ├── packet_builder.py     # Constructor de paquetes de bytes
-│   ├── msg.py                # Construcción de mensajes del servidor
-│   └── run_server.py         # Entry point
-├── tests/                    # Tests unitarios (100% cobertura)
-│   ├── test_server.py        # Tests del servidor (TODO)
-│   ├── test_client_connection.py  # Tests de ClientConnection (9 tests)
-│   ├── test_task.py          # Tests de tareas (2 tests)
-│   ├── test_packet_builder.py     # Tests de PacketBuilder (28 tests)
-│   └── test_msg.py           # Tests de mensajes (10 tests)
-├── .github/                  # GitHub Actions workflows
-└── pyproject.toml            # Configuración del proyecto
+├── src/                         # Código fuente
+│   ├── __init__.py              # Inicialización del paquete
+│   ├── run_server.py            # Entry point del servidor
+│   ├── server.py                # Servidor TCP principal (ArgentumServer)
+│   ├── client_connection.py     # Gestión de conexiones TCP
+│   ├── message_sender.py        # Envío de mensajes específicos del juego
+│   ├── task.py                  # Sistema de tareas (Task, TaskDice, TaskNull)
+│   ├── packet_id.py             # Definición de IDs de paquetes (enums)
+│   ├── packet_handlers.py       # Mapeo de packet IDs a handlers
+│   ├── packet_builder.py        # Constructor de paquetes de bytes
+│   └── msg.py                   # Construcción de mensajes del servidor
+├── tests/                       # Tests unitarios (52 tests, 61% cobertura)
+│   ├── __init__.py              # Inicialización del paquete de tests
+│   ├── test_client_connection.py   # Tests de ClientConnection (6 tests)
+│   ├── test_message_sender.py      # Tests de MessageSender (6 tests)
+│   ├── test_task.py                # Tests de tareas (2 tests)
+│   ├── test_packet_builder.py      # Tests de PacketBuilder (28 tests)
+│   └── test_msg.py                 # Tests de mensajes (10 tests)
+├── .github/                     # GitHub Actions workflows (CI/CD)
+│   └── workflows/
+│       ├── ci.yml               # Integración continua
+│       └── release.yml          # Releases automáticos
+├── pyproject.toml               # Configuración del proyecto y dependencias
+├── uv.lock                      # Lock file de dependencias
+├── run_tests.sh                 # Script para ejecutar todos los checks
+├── Claude.md                    # Reglas de desarrollo
+├── README.md                    # Este archivo
+└── LICENSE                      # Licencia Apache 2.0
 ```
 
 ### Arquitectura
@@ -94,7 +105,8 @@ pyao-server/
 El servidor sigue una arquitectura de separación de responsabilidades:
 
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
-- **`ClientConnection`**: Encapsula la comunicación con cada cliente
+- **`ClientConnection`**: Gestiona la conexión TCP básica (send, close, wait_closed)
+- **`MessageSender`**: Envía mensajes específicos del juego al cliente
 - **`Task`**: Procesa la lógica de negocio (tirada de dados, movimiento, etc.)
 - **`PacketBuilder`**: Construye paquetes de bytes con validación (soporta bytes, int16, int32, strings)
 - **`msg.py`**: Funciones para construir mensajes específicos del protocolo
