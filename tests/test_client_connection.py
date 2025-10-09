@@ -8,14 +8,12 @@ from src.client_connection import ClientConnection
 from src.packet_id import ServerPacketID
 
 
-@pytest.mark.asyncio
-async def test_client_connection_initialization() -> None:
+def test_client_connection_initialization() -> None:
     """Verifica que ClientConnection se inicialice correctamente."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("192.168.1.100", 54321)
-    
+
     connection = ClientConnection(writer)
-    
     assert connection.writer is writer
     assert connection.address == ("192.168.1.100", 54321)
     writer.get_extra_info.assert_called_once_with("peername")
@@ -27,12 +25,12 @@ async def test_client_connection_send() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
     data = b"\x01\x02\x03\x04"
-    
+
     await connection.send(data)
-    
+
     writer.write.assert_called_once_with(data)
     writer.drain.assert_called_once()
 
@@ -43,11 +41,11 @@ async def test_client_connection_send_empty_data() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
-    
+
     await connection.send(b"")
-    
+
     writer.write.assert_called_once_with(b"")
     writer.drain.assert_called_once()
 
@@ -58,9 +56,9 @@ async def test_client_connection_send_dice_roll() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
-    
+
     await connection.send_dice_roll(
         strength=10,
         agility=12,
@@ -68,11 +66,11 @@ async def test_client_connection_send_dice_roll() -> None:
         charisma=16,
         constitution=18,
     )
-    
+
     # Verificar que se llamó write con los datos correctos
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    
+
     assert len(written_data) == 6
     assert written_data[0] == ServerPacketID.DICE_ROLL
     assert written_data[1] == 10  # strength
@@ -80,7 +78,7 @@ async def test_client_connection_send_dice_roll() -> None:
     assert written_data[3] == 14  # intelligence
     assert written_data[4] == 16  # charisma
     assert written_data[5] == 18  # constitution
-    
+
     writer.drain.assert_called_once()
 
 
@@ -90,9 +88,9 @@ async def test_client_connection_send_dice_roll_min_values() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
-    
+
     await connection.send_dice_roll(
         strength=6,
         agility=6,
@@ -100,7 +98,7 @@ async def test_client_connection_send_dice_roll_min_values() -> None:
         charisma=6,
         constitution=6,
     )
-    
+
     written_data = writer.write.call_args[0][0]
     assert all(written_data[i] == 6 for i in range(1, 6))
 
@@ -111,9 +109,9 @@ async def test_client_connection_send_dice_roll_max_values() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
-    
+
     await connection.send_dice_roll(
         strength=18,
         agility=18,
@@ -121,7 +119,7 @@ async def test_client_connection_send_dice_roll_max_values() -> None:
         charisma=18,
         constitution=18,
     )
-    
+
     written_data = writer.write.call_args[0][0]
     assert all(written_data[i] == 18 for i in range(1, 6))
 
@@ -130,10 +128,10 @@ def test_client_connection_close() -> None:
     """Verifica que close() cierre el writer."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
-    
+
     connection = ClientConnection(writer)
     connection.close()
-    
+
     writer.close.assert_called_once()
 
 
@@ -143,10 +141,10 @@ async def test_client_connection_wait_closed() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.wait_closed = AsyncMock()
-    
+
     connection = ClientConnection(writer)
     await connection.wait_closed()
-    
+
     writer.wait_closed.assert_called_once()
 
 
@@ -156,12 +154,12 @@ async def test_client_connection_multiple_sends() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-    
+
     connection = ClientConnection(writer)
-    
+
     await connection.send(b"\x01\x02")
     await connection.send(b"\x03\x04")
     await connection.send(b"\x05\x06")
-    
+
     assert writer.write.call_count == 3
     assert writer.drain.call_count == 3

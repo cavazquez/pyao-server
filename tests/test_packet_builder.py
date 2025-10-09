@@ -16,7 +16,7 @@ def test_packet_builder_add_single_byte() -> None:
     """Verifica que se pueda agregar un byte."""
     packet = PacketBuilder()
     packet.add_byte(42)
-    
+
     assert len(packet) == 1
     assert packet.to_bytes() == bytes([42])
 
@@ -27,7 +27,7 @@ def test_packet_builder_add_multiple_bytes() -> None:
     packet.add_byte(1)
     packet.add_byte(2)
     packet.add_byte(3)
-    
+
     assert len(packet) == 3
     assert packet.to_bytes() == bytes([1, 2, 3])
 
@@ -36,7 +36,7 @@ def test_packet_builder_chaining() -> None:
     """Verifica que se puedan encadenar llamadas a add_byte."""
     packet = PacketBuilder()
     result = packet.add_byte(10).add_byte(20).add_byte(30)
-    
+
     assert result is packet  # Verifica que retorna self
     assert len(packet) == 3
     assert packet.to_bytes() == bytes([10, 20, 30])
@@ -47,7 +47,7 @@ def test_packet_builder_min_max_values() -> None:
     packet = PacketBuilder()
     packet.add_byte(0)
     packet.add_byte(255)
-    
+
     assert len(packet) == 2
     assert packet.to_bytes() == bytes([0, 255])
 
@@ -56,11 +56,11 @@ def test_packet_builder_to_bytes_multiple_calls() -> None:
     """Verifica que to_bytes() se pueda llamar múltiples veces."""
     packet = PacketBuilder()
     packet.add_byte(1).add_byte(2).add_byte(3)
-    
+
     # Llamar to_bytes() varias veces debe retornar lo mismo
     result1 = packet.to_bytes()
     result2 = packet.to_bytes()
-    
+
     assert result1 == result2
     assert result1 == bytes([1, 2, 3])
 
@@ -79,7 +79,7 @@ def test_packet_builder_parametrized(values: list[int]) -> None:
     packet = PacketBuilder()
     for value in values:
         packet.add_byte(value)
-    
+
     assert len(packet) == len(values)
     assert packet.to_bytes() == bytes(values)
 
@@ -93,7 +93,7 @@ def test_packet_builder_realistic_packet() -> None:
     packet.add_byte(14)  # Intelligence
     packet.add_byte(10)  # Charisma
     packet.add_byte(16)  # Constitution
-    
+
     result = packet.to_bytes()
     assert len(result) == 6
     assert result[0] == 67
@@ -102,3 +102,78 @@ def test_packet_builder_realistic_packet() -> None:
     assert result[3] == 14
     assert result[4] == 10
     assert result[5] == 16
+
+
+def test_packet_builder_add_byte_validation_too_large() -> None:
+    """Verifica que add_byte rechace valores mayores a 255."""
+    packet = PacketBuilder()
+
+    with pytest.raises(ValueError, match="must be in range 0-255"):
+        packet.add_byte(256)
+
+
+def test_packet_builder_add_byte_validation_negative() -> None:
+    """Verifica que add_byte rechace valores negativos."""
+    packet = PacketBuilder()
+
+    with pytest.raises(ValueError, match="must be in range 0-255"):
+        packet.add_byte(-1)
+
+
+def test_packet_builder_add_string_utf8() -> None:
+    """Verifica que add_string agregue texto con codificación UTF-8."""
+    packet = PacketBuilder()
+    packet.add_string("Hello")
+
+    result = packet.to_bytes()
+    assert result == b"Hello"
+
+
+def test_packet_builder_add_string_with_encoding() -> None:
+    """Verifica que add_string funcione con diferentes codificaciones."""
+    packet = PacketBuilder()
+    packet.add_string("Hola", encoding="ascii")
+
+    result = packet.to_bytes()
+    assert result == b"Hola"
+
+
+def test_packet_builder_add_string_unicode() -> None:
+    """Verifica que add_string maneje caracteres Unicode."""
+    packet = PacketBuilder()
+    packet.add_string("Español: ñ, á, é")
+
+    result = packet.to_bytes()
+    assert result == "Español: ñ, á, é".encode()
+
+
+def test_packet_builder_add_bytes() -> None:
+    """Verifica que add_bytes agregue bytes directamente."""
+    packet = PacketBuilder()
+    packet.add_bytes(b"\x01\x02\x03")
+
+    result = packet.to_bytes()
+    assert result == b"\x01\x02\x03"
+
+
+def test_packet_builder_mixed_operations() -> None:
+    """Verifica que se puedan mezclar diferentes tipos de operaciones."""
+    packet = PacketBuilder()
+    packet.add_byte(1)
+    packet.add_string("AB")
+    packet.add_byte(2)
+    packet.add_bytes(b"\x03\x04")
+
+    result = packet.to_bytes()
+    # Byte 1, then "AB" as ASCII (65, 66), then bytes 2, 3, 4
+    expected = bytes([1, 65, 66, 2, 3, 4])
+    assert result == expected
+
+
+def test_packet_builder_chaining_all_methods() -> None:
+    """Verifica encadenamiento con todos los métodos."""
+    packet = PacketBuilder()
+    result = packet.add_byte(1).add_string("X").add_bytes(b"\x02").add_byte(3)
+
+    assert result is packet
+    assert packet.to_bytes() == bytes([1, 88, 2, 3])  # 88 = 'X'
