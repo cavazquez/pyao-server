@@ -1,4 +1,10 @@
-"""Constructor de paquetes de bytes para el protocolo del servidor."""
+"""Constructor de paquetes de bytes para el protocolo del servidor.
+
+Ejemplo de uso:
+    >>> packet = PacketBuilder()
+    >>> packet.add_byte(1).add_int16(1000).add_int32(100000)
+    >>> data = packet.to_bytes()
+"""
 
 # Constantes para validación de bytes
 MAX_BYTE_VALUE = 255
@@ -28,6 +34,32 @@ class PacketBuilder:
             msg = f"Byte value must be in range {MIN_BYTE_VALUE}-{MAX_BYTE_VALUE}, got {value}"
             raise ValueError(msg)
         self._data.append(value)
+        return self
+
+    def add_int16(self, value: int) -> PacketBuilder:
+        """Agrega un entero de 16 bits en little-endian.
+
+        Args:
+            value: Valor del entero (-32768 a 32767 para signed, 0 a 65535 para unsigned).
+
+        Returns:
+            Self para permitir encadenamiento de métodos.
+        """
+        # Convertir a bytes en little-endian (2 bytes)
+        self._data.extend(value.to_bytes(2, byteorder="little", signed=True))
+        return self
+
+    def add_int32(self, value: int) -> PacketBuilder:
+        """Agrega un entero de 32 bits en little-endian.
+
+        Args:
+            value: Valor del entero (-2147483648 a 2147483647 para signed).
+
+        Returns:
+            Self para permitir encadenamiento de métodos.
+        """
+        # Convertir a bytes en little-endian (4 bytes)
+        self._data.extend(value.to_bytes(4, byteorder="little", signed=True))
         return self
 
     def add_string(self, text: str, encoding: str = "utf-8") -> PacketBuilder:
