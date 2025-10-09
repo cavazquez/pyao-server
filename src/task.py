@@ -1,11 +1,12 @@
 """Sistema de tareas para procesar mensajes del cliente."""
 
-import asyncio
 import logging
 import random
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
-from src.msg import build_dice_roll_response
+if TYPE_CHECKING:
+    from src.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 
@@ -13,16 +14,15 @@ logger = logging.getLogger(__name__)
 class Task(ABC):
     """Clase base para tareas que procesan mensajes del cliente."""
 
-    def __init__(self, data: bytes, writer: asyncio.StreamWriter) -> None:
+    def __init__(self, data: bytes, connection: ClientConnection) -> None:
         """Inicializa la tarea.
 
         Args:
             data: Datos recibidos del cliente.
-            writer: Stream para enviar respuestas al cliente.
+            connection: Conexión con el cliente para enviar respuestas.
         """
         self.data = data
-        self.writer = writer
-        self.client_addr = writer.get_extra_info("peername")
+        self.connection = connection
 
     @abstractmethod
     async def execute(self) -> None:
@@ -37,7 +37,7 @@ class TaskNull(Task):
         """Loguea información detallada del mensaje no reconocido."""
         logger.warning(
             "Mensaje no reconocido desde %s - Tamaño: %d bytes",
-            self.client_addr,
+            self.connection.address,
             len(self.data),
         )
 
@@ -73,7 +73,7 @@ class TaskDice(Task):
 
         logger.info(
             "Cliente %s tiró dados - STR:%d AGI:%d INT:%d CHA:%d CON:%d",
-            self.client_addr,
+            self.connection.address,
             strength,
             agility,
             intelligence,
@@ -81,8 +81,8 @@ class TaskDice(Task):
             constitution,
         )
 
-        # Construir paquete de respuesta
-        response = build_dice_roll_response(
+        # Enviar resultado usando el método de la conexión
+        await self.connection.send_dice_roll(
             strength=strength,
             agility=agility,
             intelligence=intelligence,
@@ -90,8 +90,4 @@ class TaskDice(Task):
             constitution=constitution,
         )
 
-        # Enviar respuesta al cliente
-        self.writer.write(response)
-        await self.writer.drain()
-
-        logger.info("Enviado resultado de dados a %s", self.client_addr)
+        logger.info("Enviado resultado de dados a %s", self.connection.address)

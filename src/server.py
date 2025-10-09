@@ -3,6 +3,7 @@
 import asyncio
 import logging
 
+from src.client_connection import ClientConnection
 from src.packet_handlers import TASK_HANDLERS
 from src.task import Task, TaskNull
 
@@ -24,24 +25,24 @@ class ArgentumServer:
         self.server: asyncio.Server | None = None
 
     @staticmethod
-    def create_task(data: bytes, writer: asyncio.StreamWriter) -> Task:
+    def create_task(data: bytes, connection: ClientConnection) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
         Args:
             data: Datos recibidos del cliente.
-            writer: Stream para enviar respuestas.
+            connection: Conexión con el cliente.
 
         Returns:
             Instancia de la tarea correspondiente.
         """
         if len(data) == 0:
-            return TaskNull(data, writer)
+            return TaskNull(data, connection)
 
         packet_id = data[0]
 
         # Buscar handler en el diccionario
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
-        return task_class(data, writer)
+        return task_class(data, connection)
 
     async def handle_client(
         self,
@@ -54,8 +55,8 @@ class ArgentumServer:
             reader: Stream para leer datos del cliente.
             writer: Stream para escribir datos al cliente.
         """
-        addr = writer.get_extra_info("peername")
-        logger.info("Nueva conexión desde %s", addr)
+        connection = ClientConnection(writer)
+        logger.info("Nueva conexión desde %s", connection.address)
 
         try:
             while True:
@@ -63,18 +64,18 @@ class ArgentumServer:
                 if not data:
                     break
 
-                logger.info("Recibidos %d bytes desde %s", len(data), addr)
+                logger.info("Recibidos %d bytes desde %s", len(data), connection.address)
 
                 # Crear y ejecutar tarea apropiada según el mensaje
-                task = self.create_task(data, writer)
+                task = self.create_task(data, connection)
                 await task.execute()
 
         except Exception:
-            logger.exception("Error manejando cliente %s", addr)
+            logger.exception("Error manejando cliente %s", connection.address)
         finally:
-            logger.info("Cerrando conexión con %s", addr)
-            writer.close()
-            await writer.wait_closed()
+            logger.info("Cerrando conexión con %s", connection.address)
+            connection.close()
+            await connection.wait_closed()
 
     async def start(self) -> None:
         """Inicia el servidor TCP."""
