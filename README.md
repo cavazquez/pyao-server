@@ -15,7 +15,7 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 ## 🛠️ Tecnologías
 
 - ![Python](https://img.shields.io/badge/Python-3.14+-3776AB?logo=python&logoColor=white) - Lenguaje de programación
-- ![Redis](https://img.shields.io/badge/Redis-5.2+-DC382D?logo=redis&logoColor=white) - Base de datos en memoria para configuración y estado
+- ![Redis](https://img.shields.io/badge/Redis-8.2+-DC382D?logo=redis&logoColor=white) - Base de datos en memoria para configuración y estado
 - ![uv](https://img.shields.io/badge/uv-package_manager-6B4FBB?logo=python&logoColor=white) - Gestor de paquetes y entornos
 - ![Ruff](https://img.shields.io/badge/Ruff-linter_&_formatter-D7FF64?logo=ruff&logoColor=black) - Linter y formatter ultra-rápido
 - ![mypy](https://img.shields.io/badge/mypy-type_checker-blue?logo=python&logoColor=white) - Type checker estático
@@ -28,7 +28,8 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
 - Python 3.14+
 - [uv](https://github.com/astral-sh/uv) (gestor de paquetes)
-- Redis 5.2+ (opcional, para configuración y estado distribuido)
+- Redis 8.2+ (opcional, para configuración y estado distribuido)
+- Docker (opcional, para ejecutar Redis)
 
 ### Instalación
 
@@ -44,15 +45,19 @@ uv sync --dev
 ### Configurar Redis (Opcional)
 
 ```bash
-# Instalar Redis (Ubuntu/Debian)
+# Opción 1: Usar el Dockerfile incluido (recomendado)
+docker build -t pyao-redis ./redis
+docker run -d --name pyao-redis -p 6379:6379 pyao-redis
+
+# Opción 2: Usar imagen oficial de Docker
+docker run -d --name pyao-redis -p 6379:6379 redis:8-alpine
+
+# Opción 3: Instalar localmente (Ubuntu/Debian)
 sudo apt-get install redis-server
-
-# Iniciar Redis
 redis-server
-
-# O usar Docker
-docker run -d -p 6379:6379 redis:latest
 ```
+
+Ver [redis/README.md](redis/README.md) para documentación completa de Redis.
 
 ### Ejecutar el servidor
 
@@ -110,6 +115,9 @@ pyao-server/
 │   ├── test_packet_builder.py      # Tests de PacketBuilder
 │   ├── test_msg.py                 # Tests de mensajes
 │   └── test_redis_client.py        # Tests de Redis
+├── redis/                       # Configuración de Redis
+│   ├── Dockerfile               # Imagen Docker de Redis 8
+│   └── README.md                # Documentación de Redis
 ├── .github/                     # GitHub Actions workflows (CI/CD)
 │   └── workflows/
 │       ├── ci.yml               # Integración continua
