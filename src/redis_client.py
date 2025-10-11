@@ -30,7 +30,8 @@ class RedisClient:
             config: Configuración de Redis. Si es None, usa valores por defecto.
 
         Raises:
-            RedisError: Si hay un error al conectar a Redis.
+            ConnectionError: Si no se puede conectar a Redis (puerto cerrado, host inaccesible).
+            RedisError: Si hay otro error al conectar a Redis.
         """
         if self._redis is not None:
             logger.warning("Redis ya está conectado")
@@ -40,7 +41,7 @@ class RedisClient:
             config = RedisConfig()
 
         try:
-            self._redis = await redis.Redis(
+            self._redis = redis.Redis(
                 host=config.host,
                 port=config.port,
                 db=config.db,
@@ -55,8 +56,18 @@ class RedisClient:
             # Inicializar configuración por defecto si no existe
             await self._initialize_default_config()
 
+        except redis.ConnectionError as e:
+            logger.warning(
+                "No se pudo conectar a Redis en %s:%d - %s",
+                config.host,
+                config.port,
+                e,
+            )
+            self._redis = None
+            raise
         except redis.RedisError:
             logger.exception("Error al conectar a Redis")
+            self._redis = None
             raise
 
     async def _initialize_default_config(self) -> None:
