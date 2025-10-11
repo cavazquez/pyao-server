@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+echo "📦 Tool versions:"
+echo "  Python: $(uv run python --version)"
+echo "  uv: $(uv --version)"
+echo "  ruff: $(uv run ruff --version)"
+echo "  mypy: $(uv run mypy --version)"
+echo "  pytest: $(uv run pytest --version)"
+echo ""
+
 echo "🔍 Running ruff linter..."
 uv run ruff check .
 
