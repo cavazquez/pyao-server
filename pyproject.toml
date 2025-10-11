@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "redis>=5.2.0",
+]
 
 [dependency-groups]
 dev = [
@@ -13,6 +15,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "pytest-cov>=6.0.0",
     "mypy>=1.13.0",
+    "fakeredis>=2.26.0",
 ]
 build = [
     "hatchling>=1.25.0",
@@ -80,4 +83,5 @@ addopts = "--strict-markers"
     "S101",    # assert permitido en tests
     "PLR2004", # magic values permitidos en tests
     "D104",    # docstring en __init__.py no requerido
+    "PLR6301", # métodos de test pueden usar self
 ]
