@@ -2,7 +2,7 @@
 
 import logging
 import time
-from typing import TYPE_CHECKING, Any, Self, cast
+from typing import Any, Self, cast
 
 import redis.asyncio as redis
 
@@ -20,8 +20,8 @@ class RedisClient:
     def __new__(cls) -> Self:
         """Implementa el patrón singleton."""
         if cls._instance is None:
-            cls._instance = cast(RedisClient, super().__new__(cls))
-        return cast(Self, cls._instance)
+            cls._instance = cast("RedisClient", super().__new__(cls))
+        return cast("Self", cls._instance)
 
     async def connect(self, config: RedisConfig | None = None) -> None:
         """Conecta al servidor Redis.
