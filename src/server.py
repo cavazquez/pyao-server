@@ -2,6 +2,9 @@
 
 import asyncio
 import logging
+import sys
+
+import redis
 
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
@@ -117,9 +120,17 @@ class ArgentumServer:
                 # Resetear contador de conexiones
                 await self.redis_client.redis.set("server:connections:count", "0")
 
+            except redis.ConnectionError as e:
+                logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
+                logger.error(  # noqa: TRY400
+                    "El servidor requiere Redis para funcionar. "
+                    "Asegúrate de que Redis esté ejecutándose."
+                )
+                logger.error("Puedes iniciar Redis con: redis-server")  # noqa: TRY400
+                sys.exit(1)
             except Exception:
-                logger.exception("Error al conectar con Redis, usando configuración local")
-                self.redis_client = None
+                logger.exception("Error inesperado al conectar con Redis")
+                sys.exit(1)
 
         self.server = await asyncio.start_server(
             self.handle_client,
