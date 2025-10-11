@@ -9,7 +9,7 @@ from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.redis_client import RedisClient
-from src.task import Task, TaskNull
+from src.task import Task, TaskCreateAccount, TaskNull
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +37,7 @@ class ArgentumServer:
         self.server: asyncio.Server | None = None
         self.redis_client: RedisClient | None = None
 
-    @staticmethod
-    def create_task(data: bytes, message_sender: MessageSender) -> Task:
+    def create_task(self, data: bytes, message_sender: MessageSender) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
         Args:
@@ -55,6 +54,11 @@ class ArgentumServer:
 
         # Buscar handler en el diccionario
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
+
+        # Si es TaskCreateAccount, pasar redis_client
+        if task_class is TaskCreateAccount:
+            return TaskCreateAccount(data, message_sender, self.redis_client)
+
         return task_class(data, message_sender)
 
     async def handle_client(

@@ -137,7 +137,7 @@ El servidor sigue una arquitectura de separación de responsabilidades:
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
 - **`ClientConnection`**: Gestiona la conexión TCP básica (send, close, wait_closed)
 - **`MessageSender`**: Envía mensajes específicos del juego al cliente
-- **`Task`**: Procesa la lógica de negocio (tirada de dados, movimiento, etc.)
+- **`Task`**: Procesa la lógica de negocio (tirada de dados, creación de cuentas, movimiento, etc.)
 - **`PacketBuilder`**: Construye paquetes de bytes con validación (soporta bytes, int16, int32, strings)
 - **`msg.py`**: Funciones para construir mensajes específicos del protocolo
 - **`RedisClient`**: Cliente Redis singleton para configuración y estado distribuido
@@ -148,6 +148,7 @@ El servidor sigue una arquitectura de separación de responsabilidades:
 Redis se utiliza para:
 
 - **Configuración del servidor**: Host, puerto, límites de conexiones
+- **Cuentas de usuario**: Almacenamiento de cuentas, autenticación
 - **Estado del juego**: Sesiones de jugadores, posiciones, inventarios
 - **Métricas en tiempo real**: Contador de conexiones activas, estadísticas
 
@@ -157,6 +158,9 @@ Estructura de claves en Redis:
 config:server:host              # Host del servidor
 config:server:port              # Puerto del servidor
 server:connections:count        # Contador de conexiones activas
+accounts:counter                # Contador autoincremental de user_id
+account:{username}:data         # Datos de la cuenta (hash)
+account:username:{username}     # Mapeo username -> user_id
 session:{user_id}:active        # Sesión activa del jugador
 session:{user_id}:last_seen     # Último acceso del jugador
 player:{user_id}:position       # Posición del jugador

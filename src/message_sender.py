@@ -3,7 +3,11 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_dice_roll_response
+from src.msg import (
+    build_account_created_response,
+    build_account_error_response,
+    build_dice_roll_response,
+)
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection
@@ -46,4 +50,22 @@ class MessageSender:
             charisma=charisma,
             constitution=constitution,
         )
+        await self.connection.send(response)
+
+    async def send_account_created(self, user_id: int) -> None:
+        """Envía confirmación de cuenta creada al cliente.
+
+        Args:
+            user_id: ID del usuario creado.
+        """
+        response = build_account_created_response(user_id=user_id)
+        await self.connection.send(response)
+
+    async def send_account_error(self, error_message: str) -> None:
+        """Envía mensaje de error en creación de cuenta al cliente.
+
+        Args:
+            error_message: Mensaje de error.
+        """
+        response = build_account_error_response(error_message=error_message)
         await self.connection.send(response)

@@ -75,6 +75,27 @@ class RedisKeys:
         """
         return f"player:{user_id}:inventory"
 
+    # Cuentas de usuario
+    ACCOUNTS_COUNTER = "accounts:counter"
+
+    @staticmethod
+    def account_data(username: str) -> str:
+        """Clave para datos de cuenta de usuario.
+
+        Returns:
+            Clave de Redis para los datos de la cuenta.
+        """
+        return f"account:{username}:data"
+
+    @staticmethod
+    def account_id_by_username(username: str) -> str:
+        """Clave para mapear username a user_id.
+
+        Returns:
+            Clave de Redis para el mapeo username -> user_id.
+        """
+        return f"account:username:{username}"
+
 
 # Valores por defecto para configuración del servidor
 DEFAULT_SERVER_CONFIG = {
