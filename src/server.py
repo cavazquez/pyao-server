@@ -5,7 +5,6 @@ import logging
 import sys
 
 import redis
-
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS

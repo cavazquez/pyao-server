@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 import pytest_asyncio
-import redis
 from fakeredis import aioredis
 
+import redis
 from src.redis_client import RedisClient
 from src.redis_config import RedisConfig, RedisKeys
 
