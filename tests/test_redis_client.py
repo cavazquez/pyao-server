@@ -1,9 +1,11 @@
 """Tests para el cliente Redis."""
 
 from collections.abc import AsyncGenerator
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 import pytest_asyncio
+import redis
 from fakeredis import aioredis
 
 from src.redis_client import RedisClient
@@ -126,6 +128,33 @@ class TestRedisClient:
         value = await redis_client.redis.get(key)
         assert value is not None
         assert int(value) > 0
+
+    @pytest.mark.asyncio
+    async def test_connection_error_handling(self) -> None:
+        """Verifica que ConnectionError se captura correctamente."""
+        # Resetear singleton
+        RedisClient._instance = None  # noqa: SLF001
+        RedisClient._redis = None  # noqa: SLF001
+
+        client = RedisClient()
+        config = RedisConfig(host="invalid-host", port=9999)
+
+        # Mock Redis para simular ConnectionError en ping()
+        mock_instance = MagicMock()
+        mock_instance.ping = AsyncMock(
+            side_effect=redis.ConnectionError("Error 111 connecting to invalid-host:9999")
+        )
+
+        with patch("redis.asyncio.Redis", return_value=mock_instance):
+            with pytest.raises(redis.ConnectionError):
+                await client.connect(config)
+
+            # Verificar que _redis se limpió
+            assert client._redis is None  # noqa: SLF001
+
+        # Limpiar singleton
+        RedisClient._instance = None  # noqa: SLF001
+        RedisClient._redis = None  # noqa: SLF001
 
 
 class TestRedisConfig:
