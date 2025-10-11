@@ -207,3 +207,97 @@ class RedisClient:
         """
         key = RedisKeys.session_last_seen(user_id)
         await self.redis.set(key, str(int(time.time())))
+
+    # Métodos para gestión de cuentas
+
+    async def account_exists(self, username: str) -> bool:
+        """Verifica si existe una cuenta con el username dado.
+
+        Args:
+            username: Nombre de usuario a verificar.
+
+        Returns:
+            True si la cuenta existe, False en caso contrario.
+        """
+        key = RedisKeys.account_id_by_username(username)
+        return bool(await self.redis.exists(key))
+
+    async def create_account(
+        self,
+        username: str,
+        password_hash: str,
+        email: str,
+        char_data: dict[str, Any] | None = None,
+    ) -> int:
+        """Crea una nueva cuenta de usuario.
+
+        Args:
+            username: Nombre de usuario.
+            password_hash: Hash de la contraseña.
+            email: Email del usuario.
+            char_data: Datos opcionales del personaje (job, race, gender, home, head).
+
+        Returns:
+            ID del usuario creado.
+
+        Raises:
+            ValueError: Si la cuenta ya existe.
+        """
+        # Verificar si la cuenta ya existe
+        if await self.account_exists(username):
+            msg = f"La cuenta '{username}' ya existe"
+            raise ValueError(msg)
+
+        # Generar nuevo user_id
+        user_id = await self.redis.incr(RedisKeys.ACCOUNTS_COUNTER)
+        user_id = int(user_id) if isinstance(user_id, (int, str)) else 0
+
+        # Guardar mapeo username -> user_id
+        username_key = RedisKeys.account_id_by_username(username)
+        await self.redis.set(username_key, str(user_id))
+
+        # Guardar datos de la cuenta
+        account_key = RedisKeys.account_data(username)
+        account_data = {
+            "user_id": str(user_id),
+            "username": username,
+            "password_hash": password_hash,
+            "email": email,
+            "created_at": str(int(time.time())),
+        }
+
+        # Agregar datos del personaje si están presentes
+        if char_data:
+            for key, value in char_data.items():
+                account_data[f"char_{key}"] = str(value)
+
+        await self.redis.hset(account_key, mapping=account_data)  # type: ignore[misc]
+
+        logger.info("Cuenta creada: %s (ID: %d)", username, user_id)
+        return user_id
+
+    async def get_account_data(self, username: str) -> dict[str, str]:
+        """Obtiene los datos de una cuenta.
+
+        Args:
+            username: Nombre de usuario.
+
+        Returns:
+            Diccionario con los datos de la cuenta.
+        """
+        key = RedisKeys.account_data(username)
+        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        return result
+
+    async def get_user_id_by_username(self, username: str) -> int | None:
+        """Obtiene el user_id asociado a un username.
+
+        Args:
+            username: Nombre de usuario.
+
+        Returns:
+            ID del usuario o None si no existe.
+        """
+        key = RedisKeys.account_id_by_username(username)
+        value = await self.redis.get(key)
+        return int(value) if value is not None else None

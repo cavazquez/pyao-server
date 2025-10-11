@@ -2,7 +2,11 @@
 
 import pytest
 
-from src.msg import build_dice_roll_response
+from src.msg import (
+    build_account_created_response,
+    build_account_error_response,
+    build_dice_roll_response,
+)
 from src.packet_id import ServerPacketID
 
 
@@ -140,3 +144,73 @@ def test_build_dice_roll_response_parametrized(
     assert response[3] == intelligence
     assert response[4] == charisma
     assert response[5] == constitution
+
+
+def test_build_account_created_response_structure() -> None:
+    """Verifica que el paquete de cuenta creada tenga la estructura correcta."""
+    user_id = 100
+    response = build_account_created_response(user_id)
+
+    # Verificar longitud: 1 byte PacketID + 4 bytes int32
+    assert len(response) == 5
+
+    # Verificar PacketID
+    assert response[0] == ServerPacketID.ACCOUNT_CREATED
+
+
+def test_build_account_created_response_user_id() -> None:
+    """Verifica que el user_id se codifique correctamente."""
+    user_id = 12345
+    response = build_account_created_response(user_id)
+
+    # Decodificar user_id (int32 little-endian)
+    decoded_id = int.from_bytes(response[1:5], byteorder="little", signed=True)
+    assert decoded_id == user_id
+
+
+def test_build_account_created_response_large_user_id() -> None:
+    """Verifica con user_id grande."""
+    user_id = 999999
+    response = build_account_created_response(user_id)
+
+    decoded_id = int.from_bytes(response[1:5], byteorder="little", signed=True)
+    assert decoded_id == user_id
+
+
+def test_build_account_error_response_structure() -> None:
+    """Verifica que el paquete de error tenga la estructura correcta."""
+    error_msg = "Error de prueba"
+    response = build_account_error_response(error_msg)
+
+    # Verificar PacketID
+    assert response[0] == ServerPacketID.ACCOUNT_ERROR
+
+    # Verificar longitud del mensaje (int16, little-endian)
+    msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    assert msg_length == len(error_msg.encode("utf-8"))
+
+    # Verificar mensaje
+    decoded_msg = response[3 : 3 + msg_length].decode("utf-8")
+    assert decoded_msg == error_msg
+
+
+def test_build_account_error_response_empty() -> None:
+    """Verifica con mensaje vacío."""
+    response = build_account_error_response("")
+
+    assert response[0] == ServerPacketID.ACCOUNT_ERROR
+    # PacketID (1 byte) + length (2 bytes) = 3 bytes total
+    assert len(response) == 3
+    msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    assert msg_length == 0
+
+
+def test_build_account_error_response_long_message() -> None:
+    """Verifica con mensaje largo."""
+    error_msg = "Este es un mensaje de error muy largo " * 10
+    response = build_account_error_response(error_msg)
+
+    assert response[0] == ServerPacketID.ACCOUNT_ERROR
+    msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    decoded_msg = response[3 : 3 + msg_length].decode("utf-8")
+    assert decoded_msg == error_msg
