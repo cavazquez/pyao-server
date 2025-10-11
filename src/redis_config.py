@@ -1,0 +1,84 @@
+"""Configuración y constantes para Redis."""
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class RedisConfig:
+    """Configuración de conexión a Redis."""
+
+    host: str = "localhost"
+    port: int = 6379
+    db: int = 0
+    decode_responses: bool = True
+    socket_timeout: float = 5.0
+    socket_connect_timeout: float = 5.0
+
+
+class RedisKeys:
+    """Constantes para las claves de Redis."""
+
+    # Configuración del servidor
+    CONFIG_SERVER_HOST = "config:server:host"
+    CONFIG_SERVER_PORT = "config:server:port"
+    CONFIG_SERVER_MAX_CONNECTIONS = "config:server:max_connections"
+
+    # Estado del servidor
+    SERVER_UPTIME = "server:uptime"
+    SERVER_CONNECTIONS_COUNT = "server:connections:count"
+    SERVER_CONNECTIONS_ACTIVE = "server:connections:active"
+
+    # Sesiones de jugadores
+    @staticmethod
+    def session_active(user_id: int) -> str:
+        """Clave para sesión activa de un jugador.
+
+        Returns:
+            Clave de Redis para la sesión activa.
+        """
+        return f"session:{user_id}:active"
+
+    @staticmethod
+    def session_last_seen(user_id: int) -> str:
+        """Clave para último acceso de un jugador.
+
+        Returns:
+            Clave de Redis para el último acceso.
+        """
+        return f"session:{user_id}:last_seen"
+
+    # Estado del jugador
+    @staticmethod
+    def player_position(user_id: int) -> str:
+        """Clave para posición del jugador.
+
+        Returns:
+            Clave de Redis para la posición.
+        """
+        return f"player:{user_id}:position"
+
+    @staticmethod
+    def player_stats(user_id: int) -> str:
+        """Clave para estadísticas del jugador.
+
+        Returns:
+            Clave de Redis para las estadísticas.
+        """
+        return f"player:{user_id}:stats"
+
+    @staticmethod
+    def player_inventory(user_id: int) -> str:
+        """Clave para inventario del jugador.
+
+        Returns:
+            Clave de Redis para el inventario.
+        """
+        return f"player:{user_id}:inventory"
+
+
+# Valores por defecto para configuración del servidor
+DEFAULT_SERVER_CONFIG = {
+    RedisKeys.CONFIG_SERVER_HOST: "0.0.0.0",
+    RedisKeys.CONFIG_SERVER_PORT: "7666",
+    RedisKeys.CONFIG_SERVER_MAX_CONNECTIONS: "1000",
+}

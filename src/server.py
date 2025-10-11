@@ -6,6 +6,7 @@ import logging
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
+from src.redis_client import RedisClient
 from src.task import Task, TaskNull
 
 logger = logging.getLogger(__name__)
@@ -14,16 +15,25 @@ logger = logging.getLogger(__name__)
 class ArgentumServer:
     """Servidor TCP para Argentum Online."""
 
-    def __init__(self, host: str = "0.0.0.0", port: int = 7666) -> None:
+    def __init__(
+        self,
+        host: str = "0.0.0.0",
+        port: int = 7666,
+        *,
+        use_redis: bool = True,
+    ) -> None:
         """Inicializa el servidor.
 
         Args:
-            host: Dirección IP donde escuchar.
-            port: Puerto donde escuchar.
+            host: Dirección IP donde escuchar (se sobrescribe con Redis si está habilitado).
+            port: Puerto donde escuchar (se sobrescribe con Redis si está habilitado).
+            use_redis: Si True, usa Redis para configuración y estado.
         """
         self.host = host
         self.port = port
+        self.use_redis = use_redis
         self.server: asyncio.Server | None = None
+        self.redis_client: RedisClient | None = None
 
     @staticmethod
     def create_task(data: bytes, message_sender: MessageSender) -> Task:
@@ -60,6 +70,12 @@ class ArgentumServer:
         message_sender = MessageSender(connection)
         logger.info("Nueva conexión desde %s", connection.address)
 
+        # Incrementar contador de conexiones en Redis
+        if self.redis_client:
+            await self.redis_client.increment_connections()
+            connections = await self.redis_client.get_connections_count()
+            logger.info("Conexiones activas: %d", connections)
+
         try:
             while True:
                 data = await reader.read(1024)
@@ -79,8 +95,32 @@ class ArgentumServer:
             connection.close()
             await connection.wait_closed()
 
+            # Decrementar contador de conexiones en Redis
+            if self.redis_client:
+                await self.redis_client.decrement_connections()
+                connections = await self.redis_client.get_connections_count()
+                logger.info("Conexiones activas: %d", connections)
+
     async def start(self) -> None:
         """Inicia el servidor TCP."""
+        # Conectar a Redis si está habilitado
+        if self.use_redis:
+            try:
+                self.redis_client = RedisClient()
+                await self.redis_client.connect()
+
+                # Obtener configuración desde Redis
+                self.host = await self.redis_client.get_server_host()
+                self.port = await self.redis_client.get_server_port()
+                logger.info("Configuración cargada desde Redis: %s:%d", self.host, self.port)
+
+                # Resetear contador de conexiones
+                await self.redis_client.redis.set("server:connections:count", "0")
+
+            except Exception:
+                logger.exception("Error al conectar con Redis, usando configuración local")
+                self.redis_client = None
+
         self.server = await asyncio.start_server(
             self.handle_client,
             self.host,
@@ -99,3 +139,7 @@ class ArgentumServer:
             self.server.close()
             await self.server.wait_closed()
             logger.info("Servidor detenido")
+
+        # Desconectar de Redis
+        if self.redis_client:
+            await self.redis_client.disconnect()
