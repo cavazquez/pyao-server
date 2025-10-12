@@ -285,7 +285,7 @@ class TaskCreateAccount(Task):
         """
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    async def execute(self) -> None:  # noqa: C901
+    async def execute(self) -> None:
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
         hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
@@ -345,26 +345,21 @@ class TaskCreateAccount(Task):
         password_hash = self._hash_password(password)
 
         # Obtener atributos de dados de la sesión
-        dice_attributes = None
+        stats_data = None
         if self.session_data and "dice_attributes" in self.session_data:
-            dice_attributes = self.session_data["dice_attributes"]
-            logger.info("Atributos de dados recuperados de sesión: %s", dice_attributes)
+            stats_data = self.session_data["dice_attributes"]
+            logger.info("Atributos de dados recuperados de sesión: %s", stats_data)
         else:
             logger.warning("No se encontraron atributos de dados en la sesión")
 
-        # Combinar char_data con dice_attributes
-        if char_data is None:
-            char_data = {}
-        if dice_attributes:
-            char_data.update(dice_attributes)
-
-        # Crear cuenta en Redis
+        # Crear cuenta en Redis con datos separados
         try:
             user_id = await self.redis_client.create_account(
                 username=username,
                 password_hash=password_hash,
                 email=email,
-                char_data=char_data or None,
+                character_data=char_data or None,
+                stats_data=stats_data or None,
             )
 
             logger.info(

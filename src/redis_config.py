@@ -58,8 +58,17 @@ class RedisKeys:
         return f"player:{user_id}:position"
 
     @staticmethod
+    def player_character(user_id: int) -> str:
+        """Clave para datos del personaje (race, gender, job, head, home).
+
+        Returns:
+            Clave de Redis para los datos del personaje.
+        """
+        return f"player:{user_id}:character"
+
+    @staticmethod
     def player_stats(user_id: int) -> str:
-        """Clave para estadísticas del jugador.
+        """Clave para estadísticas/atributos del jugador (strength, agility, etc).
 
         Returns:
             Clave de Redis para las estadísticas.

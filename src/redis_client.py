@@ -227,7 +227,8 @@ class RedisClient:
         username: str,
         password_hash: str,
         email: str,
-        char_data: dict[str, Any] | None = None,
+        character_data: dict[str, Any] | None = None,
+        stats_data: dict[str, Any] | None = None,
     ) -> int:
         """Crea una nueva cuenta de usuario.
 
@@ -235,7 +236,8 @@ class RedisClient:
             username: Nombre de usuario.
             password_hash: Hash de la contraseña.
             email: Email del usuario.
-            char_data: Datos opcionales del personaje (job, race, gender, home, head).
+            character_data: Datos del personaje (race, gender, job, head, home).
+            stats_data: Estadísticas/atributos (strength, agility, intelligence, etc).
 
         Returns:
             ID del usuario creado.
@@ -256,7 +258,7 @@ class RedisClient:
         username_key = RedisKeys.account_id_by_username(username)
         await self.redis.set(username_key, str(user_id))
 
-        # Guardar datos de la cuenta
+        # Guardar datos de la cuenta (solo info de autenticación)
         account_key = RedisKeys.account_data(username)
         account_data = {
             "user_id": str(user_id),
@@ -265,13 +267,25 @@ class RedisClient:
             "email": email,
             "created_at": str(int(time.time())),
         }
-
-        # Agregar datos del personaje si están presentes
-        if char_data:
-            for key, value in char_data.items():
-                account_data[f"char_{key}"] = str(value)
-
         await self.redis.hset(account_key, mapping=account_data)  # type: ignore[misc]
+
+        # Guardar datos del personaje en hash separado
+        if character_data:
+            character_key = RedisKeys.player_character(user_id)
+            str_character_data = {k: str(v) for k, v in character_data.items()}
+            await self.redis.hset(character_key, mapping=str_character_data)  # type: ignore[misc]
+            logger.info(
+                "Datos del personaje guardados para user_id %d: %s",
+                user_id,
+                character_data,
+            )
+
+        # Guardar estadísticas/atributos en hash separado
+        if stats_data:
+            stats_key = RedisKeys.player_stats(user_id)
+            str_stats_data = {k: str(v) for k, v in stats_data.items()}
+            await self.redis.hset(stats_key, mapping=str_stats_data)  # type: ignore[misc]
+            logger.info("Estadísticas guardadas para user_id %d: %s", user_id, stats_data)
 
         logger.info("Cuenta creada: %s (ID: %d)", username, user_id)
         return user_id
