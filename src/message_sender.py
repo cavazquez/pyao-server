@@ -81,7 +81,7 @@ class MessageSender:
         charisma: int,
         constitution: int,
     ) -> None:
-        """Envía los atributos del personaje al cliente.
+        """Envía los atributos del personaje al cliente usando PacketID 50.
 
         Args:
             strength: Valor de fuerza.

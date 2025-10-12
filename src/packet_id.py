@@ -15,9 +15,9 @@ class ClientPacketID(IntEnum):
 class ServerPacketID(IntEnum):
     """IDs de paquetes enviados por el servidor."""
 
+    ATTRIBUTES = 50
     LOGIN_SUCCESS = 66
     DICE_ROLL = 67
     ACCOUNT_CREATED = 68
     ACCOUNT_ERROR = 69
-    ATTRIBUTES = 70
     LOGIN_ERROR = 71

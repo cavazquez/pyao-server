@@ -295,7 +295,7 @@ class TaskRequestAttributes(Task):
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Obtiene atributos desde Redis y los envía al cliente."""
+        """Obtiene atributos desde Redis y los envía al cliente usando PacketID 50."""
         # Primero verificar si hay atributos en sesión (creación de personaje)
         if self.session_data and "dice_attributes" in self.session_data:
             attributes = self.session_data["dice_attributes"]
@@ -305,6 +305,7 @@ class TaskRequestAttributes(Task):
                 attributes,
             )
 
+            # Intentar con send_attributes (PacketID 50)
             await self.message_sender.send_attributes(
                 strength=attributes["strength"],
                 agility=attributes["agility"],
@@ -350,6 +351,7 @@ class TaskRequestAttributes(Task):
                 constitution,
             )
 
+            # Intentar con send_attributes (PacketID 50)
             await self.message_sender.send_attributes(
                 strength=strength,
                 agility=agility,

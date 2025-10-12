@@ -83,7 +83,7 @@ def build_attributes_response(
         constitution: Valor de constitución.
 
     Returns:
-        Paquete de bytes con el formato: PacketID + 5 bytes de atributos.
+        Paquete de bytes con el formato: PacketID (50) + 5 bytes de atributos.
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.ATTRIBUTES)
