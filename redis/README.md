@@ -138,6 +138,77 @@ docker exec pyao-redis redis-cli client list
 docker exec -it pyao-redis redis-cli monitor
 ```
 
+## 🖥️ Redis Insight (GUI Recomendada)
+
+**Redis Insight** es la herramienta oficial de Redis para gestión visual y monitoreo. Proporciona una interfaz gráfica moderna para:
+
+- Visualizar y editar claves en tiempo real
+- Monitorear rendimiento y métricas
+- Ejecutar comandos con autocompletado
+- Analizar uso de memoria
+- Depurar consultas lentas
+
+### Instalación
+
+#### Snap (Ubuntu/Debian)
+
+```bash
+sudo snap install redis-insight
+```
+
+Ejecutar:
+```bash
+redis-insight
+```
+
+#### Flatpak (Distribuciones con soporte Flatpak)
+
+```bash
+# Agregar repositorio Flathub (si no está agregado)
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+# Instalar Redis Insight
+flatpak install flathub com.redis.RedisInsight
+
+# Ejecutar
+flatpak run com.redis.RedisInsight
+```
+
+#### Otras opciones
+
+```bash
+# Docker
+docker run -d --name redis-insight \
+  -p 5540:5540 \
+  redis/redisinsight:latest
+
+# Acceder en: http://localhost:5540
+
+# AppImage (descarga desde redis.com/redis-enterprise/redis-insight/)
+chmod +x RedisInsight-v2-linux-x86_64.AppImage
+./RedisInsight-v2-linux-x86_64.AppImage
+```
+
+### Conectar a Redis local
+
+1. Abrir Redis Insight
+2. Click en "Add Redis Database"
+3. Configurar:
+   - **Host**: `localhost`
+   - **Port**: `6379`
+   - **Name**: `PyAO Redis`
+4. Click en "Add Redis Database"
+
+### Conectar a Redis en Docker
+
+Si Redis está en Docker, usa:
+- **Host**: `localhost` (si usas `-p 6379:6379`)
+- **Port**: `6379`
+
+O desde la red de Docker:
+- **Host**: `pyao-redis` (nombre del contenedor)
+- **Port**: `6379`
+
 ## 🔒 Seguridad
 
 Para producción, considera:

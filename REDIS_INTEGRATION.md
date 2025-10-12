@@ -102,6 +102,12 @@ SET config:server:host "127.0.0.1"
 GET server:connections:count
 ```
 
+### Interfaz Gráfica (Recomendado)
+
+Para una experiencia visual y más amigable, se recomienda usar **Redis Insight**, la GUI oficial de Redis.
+
+Ver instrucciones de instalación en [`redis/README.md`](redis/README.md#-redis-insight-gui-recomendada) (disponible en Snap, Flatpak, Docker y AppImage).
+
 ## 🧪 Tests
 
 Todos los tests pasan exitosamente:

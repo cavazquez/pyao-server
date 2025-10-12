@@ -57,7 +57,9 @@ sudo apt-get install redis-server
 redis-server
 ```
 
-Ver [redis/README.md](redis/README.md) para documentación completa de Redis.
+**Interfaz Gráfica (Recomendado):** Para gestionar Redis visualmente, instala [Redis Insight](https://redis.io/insight/) (disponible en Snap, Flatpak, Docker y AppImage).
+
+Ver [redis/README.md](redis/README.md) para documentación completa de Redis y Redis Insight.
 
 ### Ejecutar el servidor
 
