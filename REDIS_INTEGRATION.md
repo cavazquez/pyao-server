@@ -16,9 +16,9 @@ Se ha integrado Redis exitosamente en el servidor PyAO para gestionar configurac
 - Sesiones de jugadores (activas y último acceso)
 - Soporte para posiciones, estadísticas e inventarios
 
-### 3. **Arquitectura Flexible**
-- Redis es opcional (parámetro `use_redis=True/False`)
-- Fallback automático a configuración local si Redis falla
+### 3. **Arquitectura Robusta**
+- Redis es obligatorio para el funcionamiento del servidor
+- El servidor no iniciará sin conexión a Redis
 - Patrón singleton para el cliente Redis
 
 ## 📁 Archivos Creados
@@ -44,11 +44,11 @@ Se ha integrado Redis exitosamente en el servidor PyAO para gestionar configurac
 
 ### Código del Servidor
 - **`src/server.py`**
-  - Agregado parámetro `use_redis` al constructor
-  - Conexión automática a Redis en `start()`
+  - Conexión obligatoria a Redis en `start()`
   - Carga de configuración desde Redis
   - Tracking de conexiones activas
   - Desconexión limpia en `stop()`
+  - El servidor termina con error si Redis no está disponible
 
 ### Documentación
 - **`README.md`**
@@ -66,7 +66,7 @@ Se ha integrado Redis exitosamente en el servidor PyAO para gestionar configurac
 uv sync --dev
 ```
 
-### Iniciar Redis (Opcional)
+### Iniciar Redis (Obligatorio)
 
 ```bash
 # Opción 1: Redis local
@@ -79,13 +79,11 @@ docker run -d -p 6379:6379 redis:latest
 ### Ejecutar el Servidor
 
 ```bash
-# Con Redis (por defecto)
+# Asegúrate de que Redis esté ejecutándose primero
 uv run pyao-server
-
-# Sin Redis
-# Modificar src/run_server.py:
-# server = ArgentumServer(host="0.0.0.0", port=7666, use_redis=False)
 ```
+
+**Nota:** El servidor requiere Redis para funcionar. Si Redis no está disponible, el servidor terminará con un error.
 
 ### Configurar desde Redis CLI
 
@@ -201,8 +199,8 @@ uv run pytest -v
 
 ## 📝 Notas Importantes
 
-- **Redis es opcional**: El servidor funciona sin Redis
-- **Fallback automático**: Si Redis falla, usa configuración local
+- **Redis es obligatorio**: El servidor requiere Redis para funcionar
+- **Validación en inicio**: El servidor verifica la conexión a Redis al iniciar
 - **Tests con fakeredis**: No requiere Redis real para tests
 - **Singleton pattern**: Una sola instancia de RedisClient
 - **Type-safe**: Totalmente tipado con mypy strict mode
@@ -211,9 +209,14 @@ uv run pytest -v
 ## 🐛 Troubleshooting
 
 ### Redis no conecta
-```python
-# El servidor continuará con configuración local
-# Logs mostrarán: "Error al conectar con Redis, usando configuración local"
+```bash
+# El servidor terminará con error
+# Logs mostrarán: "No se pudo conectar a Redis" y "El servidor requiere Redis para funcionar"
+
+# Solución: Iniciar Redis
+redis-server
+# o con Docker:
+docker run -d -p 6379:6379 redis:8-alpine
 ```
 
 ### Tests fallan

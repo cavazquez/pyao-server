@@ -28,8 +28,8 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
 - Python 3.14+
 - [uv](https://github.com/astral-sh/uv) (gestor de paquetes)
-- Redis 8.2+ (opcional, para configuración y estado distribuido)
-- Docker (opcional, para ejecutar Redis)
+- Redis 8.2+ (obligatorio, para configuración y estado distribuido)
+- Docker (recomendado, para ejecutar Redis)
 
 ### Instalación
 
@@ -42,7 +42,7 @@ cd pyao-server
 uv sync --dev
 ```
 
-### Configurar Redis (Opcional)
+### Configurar Redis (Obligatorio)
 
 ```bash
 # Opción 1: Usar el Dockerfile incluido (recomendado)
@@ -67,11 +67,9 @@ Ver [redis/README.md](redis/README.md) para documentación completa de Redis y R
 uv run pyao-server
 ```
 
-El servidor escuchará en `0.0.0.0:7666` por defecto.
+El servidor cargará automáticamente la configuración desde Redis (host, puerto, etc.) y almacenará el estado del juego.
 
-**Con Redis:** El servidor cargará automáticamente la configuración desde Redis (host, puerto, etc.) y almacenará el estado del juego.
-
-**Sin Redis:** El servidor funcionará normalmente con configuración local. Redis es opcional.
+**Nota:** Redis es obligatorio. El servidor no iniciará sin una conexión activa a Redis.
 
 ## 🧪 Testing
 

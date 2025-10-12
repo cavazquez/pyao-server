@@ -21,19 +21,15 @@ class ArgentumServer:
         self,
         host: str = "0.0.0.0",
         port: int = 7666,
-        *,
-        use_redis: bool = True,
     ) -> None:
         """Inicializa el servidor.
 
         Args:
-            host: Dirección IP donde escuchar (se sobrescribe con Redis si está habilitado).
-            port: Puerto donde escuchar (se sobrescribe con Redis si está habilitado).
-            use_redis: Si True, usa Redis para configuración y estado.
+            host: Dirección IP donde escuchar (se sobrescribe con Redis).
+            port: Puerto donde escuchar (se sobrescribe con Redis).
         """
         self.host = host
         self.port = port
-        self.use_redis = use_redis
         self.server: asyncio.Server | None = None
         self.redis_client: RedisClient | None = None
 
@@ -77,10 +73,9 @@ class ArgentumServer:
         logger.info("Nueva conexión desde %s", connection.address)
 
         # Incrementar contador de conexiones en Redis
-        if self.redis_client:
-            await self.redis_client.increment_connections()
-            connections = await self.redis_client.get_connections_count()
-            logger.info("Conexiones activas: %d", connections)
+        await self.redis_client.increment_connections()
+        connections = await self.redis_client.get_connections_count()
+        logger.info("Conexiones activas: %d", connections)
 
         try:
             while True:
@@ -102,38 +97,36 @@ class ArgentumServer:
             await connection.wait_closed()
 
             # Decrementar contador de conexiones en Redis
-            if self.redis_client:
-                await self.redis_client.decrement_connections()
-                connections = await self.redis_client.get_connections_count()
-                logger.info("Conexiones activas: %d", connections)
+            await self.redis_client.decrement_connections()
+            connections = await self.redis_client.get_connections_count()
+            logger.info("Conexiones activas: %d", connections)
 
     async def start(self) -> None:
         """Inicia el servidor TCP."""
-        # Conectar a Redis si está habilitado
-        if self.use_redis:
-            try:
-                self.redis_client = RedisClient()
-                await self.redis_client.connect()
+        # Conectar a Redis (obligatorio)
+        try:
+            self.redis_client = RedisClient()
+            await self.redis_client.connect()
 
-                # Obtener configuración desde Redis
-                self.host = await self.redis_client.get_server_host()
-                self.port = await self.redis_client.get_server_port()
-                logger.info("Configuración cargada desde Redis: %s:%d", self.host, self.port)
+            # Obtener configuración desde Redis
+            self.host = await self.redis_client.get_server_host()
+            self.port = await self.redis_client.get_server_port()
+            logger.info("Configuración cargada desde Redis: %s:%d", self.host, self.port)
 
-                # Resetear contador de conexiones
-                await self.redis_client.redis.set("server:connections:count", "0")
+            # Resetear contador de conexiones
+            await self.redis_client.redis.set("server:connections:count", "0")
 
-            except redis.ConnectionError as e:
-                logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
-                logger.error(  # noqa: TRY400
-                    "El servidor requiere Redis para funcionar. "
-                    "Asegúrate de que Redis esté ejecutándose."
-                )
-                logger.error("Puedes iniciar Redis con: redis-server")  # noqa: TRY400
-                sys.exit(1)
-            except Exception:
-                logger.exception("Error inesperado al conectar con Redis")
-                sys.exit(1)
+        except redis.ConnectionError as e:
+            logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
+            logger.error(  # noqa: TRY400
+                "El servidor requiere Redis para funcionar. "
+                "Asegúrate de que Redis esté ejecutándose."
+            )
+            logger.error("Puedes iniciar Redis con: redis-server")  # noqa: TRY400
+            sys.exit(1)
+        except Exception:
+            logger.exception("Error inesperado al conectar con Redis")
+            sys.exit(1)
 
         self.server = await asyncio.start_server(
             self.handle_client,
@@ -155,5 +148,4 @@ class ArgentumServer:
             logger.info("Servidor detenido")
 
         # Desconectar de Redis
-        if self.redis_client:
-            await self.redis_client.disconnect()
+        await self.redis_client.disconnect()
