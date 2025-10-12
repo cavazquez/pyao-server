@@ -68,6 +68,22 @@ class TaskNull(Task):
 class TaskDice(Task):
     """Tarea que maneja la tirada de dados."""
 
+    def __init__(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        session_data: dict[str, dict[str, int]] | None = None,
+    ) -> None:
+        """Inicializa la tarea de tirada de dados.
+
+        Args:
+            data: Datos recibidos del cliente.
+            message_sender: Enviador de mensajes para comunicarse con el cliente.
+            session_data: Datos de sesión compartidos (opcional).
+        """
+        super().__init__(data, message_sender)
+        self.session_data = session_data
+
     async def execute(self) -> None:
         """Ejecuta la tirada de dados y envía el resultado al cliente."""
         # Tirar 5 atributos (Fuerza, Agilidad, Inteligencia, Carisma, Constitución)
@@ -86,6 +102,20 @@ class TaskDice(Task):
             charisma,
             constitution,
         )
+
+        # Guardar atributos en session_data si está disponible
+        if self.session_data is not None:
+            self.session_data["dice_attributes"] = {
+                "strength": strength,
+                "agility": agility,
+                "intelligence": intelligence,
+                "charisma": charisma,
+                "constitution": constitution,
+            }
+            logger.info(
+                "Atributos guardados en sesión para %s",
+                self.message_sender.connection.address,
+            )
 
         # Enviar resultado usando el enviador de mensajes
         await self.message_sender.send_dice_roll(
@@ -107,6 +137,7 @@ class TaskCreateAccount(Task):
         data: bytes,
         message_sender: MessageSender,
         redis_client: RedisClient | None = None,
+        session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
 
@@ -114,9 +145,11 @@ class TaskCreateAccount(Task):
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             redis_client: Cliente Redis para almacenar la cuenta (opcional).
+            session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.redis_client = redis_client
+        self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: PLR0911, C901, PLR0915
         """Parsea el paquete de creación de cuenta.
@@ -252,7 +285,7 @@ class TaskCreateAccount(Task):
         """
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: C901
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
         hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
@@ -310,6 +343,20 @@ class TaskCreateAccount(Task):
 
         # Hash de la contraseña
         password_hash = self._hash_password(password)
+
+        # Obtener atributos de dados de la sesión
+        dice_attributes = None
+        if self.session_data and "dice_attributes" in self.session_data:
+            dice_attributes = self.session_data["dice_attributes"]
+            logger.info("Atributos de dados recuperados de sesión: %s", dice_attributes)
+        else:
+            logger.warning("No se encontraron atributos de dados en la sesión")
+
+        # Combinar char_data con dice_attributes
+        if char_data is None:
+            char_data = {}
+        if dice_attributes:
+            char_data.update(dice_attributes)
 
         # Crear cuenta en Redis
         try:

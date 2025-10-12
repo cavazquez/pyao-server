@@ -9,7 +9,7 @@ from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.redis_client import RedisClient
-from src.task import Task, TaskCreateAccount, TaskNull
+from src.task import Task, TaskCreateAccount, TaskDice, TaskNull
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +33,18 @@ class ArgentumServer:
         self.server: asyncio.Server | None = None
         self.redis_client: RedisClient | None = None
 
-    def create_task(self, data: bytes, message_sender: MessageSender) -> Task:
+    def create_task(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        session_data: dict[str, dict[str, int]],
+    ) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
+            session_data: Datos de sesión (mutable, compartido entre tareas).
 
         Returns:
             Instancia de la tarea correspondiente.
@@ -51,9 +57,11 @@ class ArgentumServer:
         # Buscar handler en el diccionario
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
 
-        # Si es TaskCreateAccount, pasar redis_client
+        # Pasar parámetros adicionales según el tipo de tarea
         if task_class is TaskCreateAccount:
-            return TaskCreateAccount(data, message_sender, self.redis_client)
+            return TaskCreateAccount(data, message_sender, self.redis_client, session_data)
+        if task_class is TaskDice:
+            return TaskDice(data, message_sender, session_data)
 
         return task_class(data, message_sender)
 
@@ -77,6 +85,9 @@ class ArgentumServer:
         connections = await self.redis_client.get_connections_count()
         logger.info("Conexiones activas: %d", connections)
 
+        # Datos de sesión compartidos entre tareas (mutable)
+        session_data: dict[str, dict[str, int]] = {}
+
         try:
             while True:
                 data = await reader.read(1024)
@@ -86,7 +97,7 @@ class ArgentumServer:
                 logger.info("Recibidos %d bytes desde %s", len(data), connection.address)
 
                 # Crear y ejecutar tarea apropiada según el mensaje
-                task = self.create_task(data, message_sender)
+                task = self.create_task(data, message_sender, session_data)
                 await task.execute()
 
         except Exception:
