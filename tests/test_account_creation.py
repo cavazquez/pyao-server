@@ -6,60 +6,9 @@ import pytest
 
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
-from src.msg import build_account_created_response, build_account_error_response
 from src.packet_id import ClientPacketID, ServerPacketID
 from src.redis_client import RedisClient
 from src.task import TaskCreateAccount
-
-
-def test_build_account_created_response() -> None:
-    """Verifica que el paquete de cuenta creada tenga la estructura correcta."""
-    user_id = 12345
-    response = build_account_created_response(user_id)
-
-    # Verificar que el primer byte sea el PacketID correcto
-    assert response[0] == ServerPacketID.ACCOUNT_CREATED
-
-    # Verificar que el user_id esté codificado como int32 (4 bytes, little-endian)
-    assert len(response) == 5  # 1 byte PacketID + 4 bytes int32
-    decoded_user_id = int.from_bytes(response[1:5], byteorder="little", signed=True)
-    assert decoded_user_id == user_id
-
-
-def test_build_account_error_response() -> None:
-    """Verifica que el paquete de error tenga la estructura correcta."""
-    error_message = "Usuario ya existe"
-    response = build_account_error_response(error_message)
-
-    # Verificar que el primer byte sea el PacketID correcto
-    assert response[0] == ServerPacketID.ACCOUNT_ERROR
-
-    # Verificar longitud del mensaje
-    msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
-    assert msg_length == len(error_message.encode("utf-8"))
-
-    # Verificar que el mensaje esté codificado correctamente
-    decoded_message = response[3 : 3 + msg_length].decode("utf-8")
-    assert decoded_message == error_message
-
-
-def test_build_account_error_response_empty_message() -> None:
-    """Verifica que funcione con mensaje vacío."""
-    response = build_account_error_response("")
-
-    assert response[0] == ServerPacketID.ACCOUNT_ERROR
-    assert len(response) == 3  # PacketID + int16 length
-
-
-def test_build_account_error_response_unicode() -> None:
-    """Verifica que funcione con caracteres unicode."""
-    error_message = "Error: contraseña inválida 🔒"
-    response = build_account_error_response(error_message)
-
-    assert response[0] == ServerPacketID.ACCOUNT_ERROR
-    msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
-    decoded_message = response[3 : 3 + msg_length].decode("utf-8")
-    assert decoded_message == error_message
 
 
 @pytest.mark.asyncio
@@ -116,10 +65,10 @@ async def test_task_create_account_success() -> None:
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se envió respuesta de éxito
+    # Verificar que se envió respuesta de éxito (Logged)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_CREATED
+    assert written_data[0] == ServerPacketID.LOGGED
 
 
 @pytest.mark.asyncio
@@ -158,7 +107,7 @@ async def test_task_create_account_duplicate_username() -> None:
     # Verificar que se envió mensaje de error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
 
 
 @pytest.mark.asyncio
@@ -191,7 +140,7 @@ async def test_task_create_account_invalid_username() -> None:
     # Verificar que se envió error sin llamar a Redis
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -225,7 +174,7 @@ async def test_task_create_account_invalid_password() -> None:
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -259,7 +208,7 @@ async def test_task_create_account_invalid_email() -> None:
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -293,7 +242,7 @@ async def test_task_create_account_no_redis() -> None:
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
 
 
 @pytest.mark.asyncio
@@ -316,7 +265,7 @@ async def test_task_create_account_invalid_packet() -> None:
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 

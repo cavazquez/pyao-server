@@ -1,6 +1,5 @@
 """Definición de IDs de paquetes del protocolo Argentum Online.
 
-Protocolo: ERA001
 Basado en: brian-christopher/ArgentumOnlineGodot
 """
 
@@ -149,19 +148,14 @@ class ClientPacketID(IntEnum):
 class ServerPacketID(IntEnum):
     """IDs de paquetes enviados por el servidor según protocolo AO."""
 
-    # Paquetes implementados
-    ATTRIBUTES = 50  # Enviar atributos del personaje
+    # Paquetes del protocolo AO estándar (implementados)
+    LOGGED = 0  # Login exitoso
+    ERROR_MSG = 55  # Mensaje de error
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
-
-    # Paquetes custom del servidor (fuera del protocolo estándar)
-    LOGIN_SUCCESS = 200
-    ACCOUNT_CREATED = 201
-    ACCOUNT_ERROR = 202
-    LOGIN_ERROR = 203
+    ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
-    # LOGGED = 0
     # REMOVE_DIALOGS = 1
     # REMOVE_CHAR_DIALOG = 2
     # NAVIGATE_TOGGLE = 3
@@ -215,7 +209,6 @@ class ServerPacketID(IntEnum):
     # BLACKSMITH_ARMORS = 52
     # CARPENTER_OBJECTS = 53
     # REST_OK = 54
-    # ERROR_MSG = 55
     # BLIND = 56
     # DUMB = 57
     # SHOW_SIGNAL = 58

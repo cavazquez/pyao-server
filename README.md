@@ -170,7 +170,18 @@ player:{user_id}:inventory      # Inventario del jugador
 
 ## 🎮 Cliente Compatible
 
-Este servidor es compatible con el cliente [ArgentumOnlineGodot](https://github.com/brian-christopher/ArgentumOnlineGodot).
+Este servidor implementa el **protocolo estándar de Argentum Online Godot** y es 100% compatible con:
+
+- **[ArgentumOnlineGodot](https://github.com/brian-christopher/ArgentumOnlineGodot)** (brian-christopher)
+- Basado en Argentum Online 0.13.3
+- Requiere Godot 4.4.1+
+
+## 📚 Documentación
+
+- **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login
+- **[Migración de Protocolo](docs/PROTOCOL_MIGRATION.md)**: Cambios del protocolo custom al estándar AO
+- **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
+- **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
 
 ## 📝 Desarrollo
 

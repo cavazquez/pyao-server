@@ -33,39 +33,6 @@ def build_dice_roll_response(
     return packet.to_bytes()
 
 
-def build_account_created_response(user_id: int) -> bytes:
-    """Construye el paquete de respuesta para cuenta creada exitosamente.
-
-    Args:
-        user_id: ID del usuario creado.
-
-    Returns:
-        Paquete de bytes con el formato: PacketID + user_id (int32).
-    """
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.ACCOUNT_CREATED)
-    packet.add_int32(user_id)
-    return packet.to_bytes()
-
-
-def build_account_error_response(error_message: str) -> bytes:
-    """Construye el paquete de respuesta para error en creación de cuenta.
-
-    Args:
-        error_message: Mensaje de error.
-
-    Returns:
-        Paquete de bytes con el formato: PacketID + longitud (int16) + mensaje de error (string).
-    """
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.ACCOUNT_ERROR)
-    # Agregar longitud del string como int16 antes del contenido
-    encoded_message = error_message.encode("utf-8")
-    packet.add_int16(len(encoded_message))
-    packet.add_bytes(encoded_message)
-    return packet.to_bytes()
-
-
 def build_attributes_response(
     strength: int,
     agility: int,
@@ -95,32 +62,33 @@ def build_attributes_response(
     return packet.to_bytes()
 
 
-def build_login_success_response(user_id: int) -> bytes:
-    """Construye el paquete de respuesta para login exitoso.
+def build_logged_response(user_class: int) -> bytes:
+    """Construye el paquete Logged del protocolo AO estándar.
 
     Args:
-        user_id: ID del usuario que hizo login.
+        user_class: Clase del personaje (1 byte).
 
     Returns:
-        Paquete de bytes con el formato: PacketID + user_id (int32).
+        Paquete de bytes con el formato: PacketID (0) + userClass (1 byte).
     """
     packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.LOGIN_SUCCESS)
-    packet.add_int32(user_id)
+    packet.add_byte(ServerPacketID.LOGGED)
+    packet.add_byte(user_class)
     return packet.to_bytes()
 
 
-def build_login_error_response(error_message: str) -> bytes:
-    """Construye el paquete de respuesta para error en login.
+def build_error_msg_response(error_message: str) -> bytes:
+    """Construye el paquete ErrorMsg del protocolo AO estándar.
 
     Args:
         error_message: Mensaje de error.
 
     Returns:
-        Paquete de bytes con el formato: PacketID + longitud (int16) + mensaje de error (string).
+        Paquete de bytes con el formato:
+        PacketID (55) + longitud (int16) + mensaje de error (string).
     """
     packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.LOGIN_ERROR)
+    packet.add_byte(ServerPacketID.ERROR_MSG)
     encoded_message = error_message.encode("utf-8")
     packet.add_int16(len(encoded_message))
     packet.add_bytes(encoded_message)

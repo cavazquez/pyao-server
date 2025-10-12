@@ -223,20 +223,20 @@ class TaskLogin(Task):
         # Verificar que Redis esté disponible
         if self.redis_client is None:
             logger.error("Redis no está disponible para login")
-            await self.message_sender.send_login_error("Servicio no disponible")
+            await self.message_sender.send_error_msg("Servicio no disponible")
             return
 
         # Verificar si la cuenta existe
         if not await self.redis_client.account_exists(username):
             logger.warning("Intento de login con usuario inexistente: %s", username)
-            await self.message_sender.send_login_error("Usuario o contraseña incorrectos")
+            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return
 
         # Obtener datos de la cuenta
         account_data = await self.redis_client.get_account_data(username)
         if not account_data:
             logger.error("Cuenta existe pero no se pudieron obtener datos: %s", username)
-            await self.message_sender.send_login_error("Error al obtener datos de cuenta")
+            await self.message_sender.send_error_msg("Error al obtener datos de cuenta")
             return
 
         # Verificar contraseña
@@ -245,19 +245,21 @@ class TaskLogin(Task):
 
         if password_hash != stored_hash:
             logger.warning("Contraseña incorrecta para usuario: %s", username)
-            await self.message_sender.send_login_error("Usuario o contraseña incorrectos")
+            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return
 
         # Login exitoso
         user_id = int(account_data.get("user_id", 0))
-        logger.info("Login exitoso para %s (ID: %d)", username, user_id)
+        user_class = int(account_data.get("char_job", 1))  # Obtener clase del personaje
+        logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Guardar user_id en session_data para uso posterior
         if self.session_data is not None:
             self.session_data["user_id"] = user_id  # type: ignore[assignment]
             logger.info("User ID %d guardado en sesión", user_id)
 
-        await self.message_sender.send_login_success(user_id)
+        # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
+        await self.message_sender.send_logged(user_class)
 
     @staticmethod
     def _hash_password(password: str) -> str:
@@ -541,7 +543,7 @@ class TaskCreateAccount(Task):
                 "Paquete de creación de cuenta inválido desde %s",
                 self.message_sender.connection.address,
             )
-            await self.message_sender.send_account_error("Formato de paquete inválido")
+            await self.message_sender.send_error_msg("Formato de paquete inválido")
             return
 
         username, password, email, char_data = parsed
@@ -558,26 +560,26 @@ class TaskCreateAccount(Task):
         # Validar datos
         if not username or len(username) < MIN_USERNAME_LENGTH:
             logger.warning("Username muy corto: %s (len=%d)", username, len(username))
-            await self.message_sender.send_account_error(
+            await self.message_sender.send_error_msg(
                 f"El nombre de usuario debe tener al menos {MIN_USERNAME_LENGTH} caracteres"
             )
             return
 
         if not password or len(password) < MIN_PASSWORD_LENGTH:
             logger.warning("Password muy corto: len=%d", len(password))
-            await self.message_sender.send_account_error(
+            await self.message_sender.send_error_msg(
                 f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres"
             )
             return
 
         if not email or "@" not in email:
-            await self.message_sender.send_account_error("Email inválido")
+            await self.message_sender.send_error_msg("Email inválido")
             return
 
         # Verificar que Redis esté disponible
         if self.redis_client is None:
             logger.error("Redis no está disponible para crear cuenta")
-            await self.message_sender.send_account_error("Servicio de cuentas no disponible")
+            await self.message_sender.send_error_msg("Servicio de cuentas no disponible")
             return
 
         # Hash de la contraseña
@@ -602,19 +604,21 @@ class TaskCreateAccount(Task):
             )
 
             logger.info(
-                "Cuenta creada exitosamente: %s (ID: %d) desde %s",
+                "Cuenta creada exitosamente: %s (ID: %d, Clase: %d) desde %s",
                 username,
                 user_id,
+                char_data.get("job", 1) if char_data else 1,
                 self.message_sender.connection.address,
             )
 
-            # Enviar confirmación al cliente
-            await self.message_sender.send_account_created(user_id)
+            # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
+            user_class = char_data.get("job", 1) if char_data else 1
+            await self.message_sender.send_logged(user_class)
 
         except ValueError as e:
             # Cuenta ya existe u otro error de validación
             logger.warning("Error creando cuenta para %s: %s", username, e)
-            await self.message_sender.send_account_error(str(e))
+            await self.message_sender.send_error_msg(str(e))
         except Exception:
             logger.exception("Error inesperado creando cuenta para %s", username)
-            await self.message_sender.send_account_error("Error interno del servidor")
+            await self.message_sender.send_error_msg("Error interno del servidor")

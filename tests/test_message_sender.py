@@ -153,8 +153,8 @@ async def test_message_sender_uses_connection_send() -> None:
 
 
 @pytest.mark.asyncio
-async def test_message_sender_send_account_created() -> None:
-    """Verifica que send_account_created() construya y envíe el paquete correcto."""
+async def test_message_sender_send_logged() -> None:
+    """Verifica que send_logged() construya y envíe el paquete correcto."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -162,27 +162,26 @@ async def test_message_sender_send_account_created() -> None:
     connection = ClientConnection(writer)
     message_sender = MessageSender(connection)
 
-    user_id = 12345
-    await message_sender.send_account_created(user_id)
+    user_class = 5
+    await message_sender.send_logged(user_class)
 
     # Verificar que se llamó write
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Verificar estructura: PacketID + int32
-    assert len(written_data) == 5
-    assert written_data[0] == ServerPacketID.ACCOUNT_CREATED
+    # Verificar estructura: PacketID + userClass
+    assert len(written_data) == 2
+    assert written_data[0] == ServerPacketID.LOGGED
 
-    # Verificar user_id
-    decoded_id = int.from_bytes(written_data[1:5], byteorder="little", signed=True)
-    assert decoded_id == user_id
+    # Verificar userClass
+    assert written_data[1] == user_class
 
     writer.drain.assert_called_once()
 
 
 @pytest.mark.asyncio
-async def test_message_sender_send_account_error() -> None:
-    """Verifica que send_account_error() construya y envíe el paquete correcto."""
+async def test_message_sender_send_error_msg() -> None:
+    """Verifica que send_error_msg() construya y envíe el paquete correcto."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -191,14 +190,14 @@ async def test_message_sender_send_account_error() -> None:
     message_sender = MessageSender(connection)
 
     error_message = "Usuario ya existe"
-    await message_sender.send_account_error(error_message)
+    await message_sender.send_error_msg(error_message)
 
     # Verificar que se llamó write
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
     # Verificar PacketID
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
 
     # Verificar longitud y mensaje
     msg_length = int.from_bytes(written_data[1:3], byteorder="little", signed=True)
@@ -209,8 +208,8 @@ async def test_message_sender_send_account_error() -> None:
 
 
 @pytest.mark.asyncio
-async def test_message_sender_send_account_error_empty() -> None:
-    """Verifica send_account_error() con mensaje vacío."""
+async def test_message_sender_send_error_msg_empty() -> None:
+    """Verifica send_error_msg() con mensaje vacío."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -218,8 +217,8 @@ async def test_message_sender_send_account_error_empty() -> None:
     connection = ClientConnection(writer)
     message_sender = MessageSender(connection)
 
-    await message_sender.send_account_error("")
+    await message_sender.send_error_msg("")
 
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ACCOUNT_ERROR
+    assert written_data[0] == ServerPacketID.ERROR_MSG
     assert len(written_data) == 3  # PacketID + int16 length

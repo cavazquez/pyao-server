@@ -4,12 +4,10 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.msg import (
-    build_account_created_response,
-    build_account_error_response,
     build_attributes_response,
     build_dice_roll_response,
-    build_login_error_response,
-    build_login_success_response,
+    build_error_msg_response,
+    build_logged_response,
 )
 
 if TYPE_CHECKING:
@@ -55,24 +53,6 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_account_created(self, user_id: int) -> None:
-        """Envía confirmación de cuenta creada al cliente.
-
-        Args:
-            user_id: ID del usuario creado.
-        """
-        response = build_account_created_response(user_id=user_id)
-        await self.connection.send(response)
-
-    async def send_account_error(self, error_message: str) -> None:
-        """Envía mensaje de error en creación de cuenta al cliente.
-
-        Args:
-            error_message: Mensaje de error.
-        """
-        response = build_account_error_response(error_message=error_message)
-        await self.connection.send(response)
-
     async def send_attributes(
         self,
         strength: int,
@@ -99,20 +79,20 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_login_success(self, user_id: int) -> None:
-        """Envía confirmación de login exitoso al cliente.
+    async def send_logged(self, user_class: int) -> None:
+        """Envía paquete Logged del protocolo AO estándar.
 
         Args:
-            user_id: ID del usuario que hizo login.
+            user_class: Clase del personaje (1 byte).
         """
-        response = build_login_success_response(user_id=user_id)
+        response = build_logged_response(user_class=user_class)
         await self.connection.send(response)
 
-    async def send_login_error(self, error_message: str) -> None:
-        """Envía mensaje de error en login al cliente.
+    async def send_error_msg(self, error_message: str) -> None:
+        """Envía paquete ErrorMsg del protocolo AO estándar.
 
         Args:
             error_message: Mensaje de error.
         """
-        response = build_login_error_response(error_message=error_message)
+        response = build_error_msg_response(error_message=error_message)
         await self.connection.send(response)
