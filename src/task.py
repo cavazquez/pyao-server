@@ -210,7 +210,7 @@ class TaskLogin(Task):
             )
             return
 
-        username, _password = parsed
+        username, password = parsed
         logger.info(
             "Intento de login desde %s - Username: %s",
             self.message_sender.connection.address,
@@ -220,10 +220,47 @@ class TaskLogin(Task):
         # Verificar que Redis esté disponible
         if self.redis_client is None:
             logger.error("Redis no está disponible para login")
+            await self.message_sender.send_login_error("Servicio no disponible")
             return
 
-        # Implementación pendiente: verificar credenciales en Redis
-        logger.info("Login procesado para %s (implementación pendiente)", username)
+        # Verificar si la cuenta existe
+        if not await self.redis_client.account_exists(username):
+            logger.warning("Intento de login con usuario inexistente: %s", username)
+            await self.message_sender.send_login_error("Usuario o contraseña incorrectos")
+            return
+
+        # Obtener datos de la cuenta
+        account_data = await self.redis_client.get_account_data(username)
+        if not account_data:
+            logger.error("Cuenta existe pero no se pudieron obtener datos: %s", username)
+            await self.message_sender.send_login_error("Error al obtener datos de cuenta")
+            return
+
+        # Verificar contraseña
+        password_hash = self._hash_password(password)
+        stored_hash = account_data.get("password_hash", "")
+
+        if password_hash != stored_hash:
+            logger.warning("Contraseña incorrecta para usuario: %s", username)
+            await self.message_sender.send_login_error("Usuario o contraseña incorrectos")
+            return
+
+        # Login exitoso
+        user_id = int(account_data.get("user_id", 0))
+        logger.info("Login exitoso para %s (ID: %d)", username, user_id)
+        await self.message_sender.send_login_success(user_id)
+
+    @staticmethod
+    def _hash_password(password: str) -> str:
+        """Genera un hash SHA-256 de la contraseña.
+
+        Args:
+            password: Contraseña en texto plano.
+
+        Returns:
+            Hash hexadecimal de la contraseña.
+        """
+        return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
 
 class TaskRequestAttributes(Task):

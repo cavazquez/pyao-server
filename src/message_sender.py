@@ -8,6 +8,8 @@ from src.msg import (
     build_account_error_response,
     build_attributes_response,
     build_dice_roll_response,
+    build_login_error_response,
+    build_login_success_response,
 )
 
 if TYPE_CHECKING:
@@ -95,4 +97,22 @@ class MessageSender:
             charisma=charisma,
             constitution=constitution,
         )
+        await self.connection.send(response)
+
+    async def send_login_success(self, user_id: int) -> None:
+        """Envía confirmación de login exitoso al cliente.
+
+        Args:
+            user_id: ID del usuario que hizo login.
+        """
+        response = build_login_success_response(user_id=user_id)
+        await self.connection.send(response)
+
+    async def send_login_error(self, error_message: str) -> None:
+        """Envía mensaje de error en login al cliente.
+
+        Args:
+            error_message: Mensaje de error.
+        """
+        response = build_login_error_response(error_message=error_message)
         await self.connection.send(response)

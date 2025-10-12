@@ -93,3 +93,35 @@ def build_attributes_response(
     packet.add_byte(charisma)
     packet.add_byte(constitution)
     return packet.to_bytes()
+
+
+def build_login_success_response(user_id: int) -> bytes:
+    """Construye el paquete de respuesta para login exitoso.
+
+    Args:
+        user_id: ID del usuario que hizo login.
+
+    Returns:
+        Paquete de bytes con el formato: PacketID + user_id (int32).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.LOGIN_SUCCESS)
+    packet.add_int32(user_id)
+    return packet.to_bytes()
+
+
+def build_login_error_response(error_message: str) -> bytes:
+    """Construye el paquete de respuesta para error en login.
+
+    Args:
+        error_message: Mensaje de error.
+
+    Returns:
+        Paquete de bytes con el formato: PacketID + longitud (int16) + mensaje de error (string).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.LOGIN_ERROR)
+    encoded_message = error_message.encode("utf-8")
+    packet.add_int16(len(encoded_message))
+    packet.add_bytes(encoded_message)
+    return packet.to_bytes()
