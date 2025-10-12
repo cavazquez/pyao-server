@@ -1,23 +1,268 @@
-"""Definición de IDs de paquetes del protocolo Argentum Online."""
+"""Definición de IDs de paquetes del protocolo Argentum Online.
+
+Protocolo: ERA001
+Basado en: brian-christopher/ArgentumOnlineGodot
+"""
 
 from enum import IntEnum
 
 
 class ClientPacketID(IntEnum):
-    """IDs de paquetes enviados por el cliente."""
+    """IDs de paquetes enviados por el cliente según protocolo AO."""
 
-    LOGIN = 0
-    THROW_DICES = 1
-    CREATE_ACCOUNT = 2
-    REQUEST_ATTRIBUTES = 13
+    # Paquetes implementados
+    LOGIN = 0  # LoginExistingChar
+    THROW_DICES = 1  # ThrowDices
+    CREATE_ACCOUNT = 2  # LoginNewChar
+    REQUEST_ATTRIBUTES = 13  # RequestAtributes
+
+    # Paquetes del protocolo AO (no implementados aún)
+    # ruff: noqa: ERA001
+    # TALK = 3
+    # YELL = 4
+    # WHISPER = 5
+    # WALK = 6
+    # REQUEST_POSITION_UPDATE = 7
+    # ATTACK = 8
+    # PICK_UP = 9
+    # SAFE_TOGGLE = 10
+    # RESUSCITATION_SAFE_TOGGLE = 11
+    # REQUEST_GUILD_LEADER_INFO = 12
+    # REQUEST_FAME = 14
+    # REQUEST_SKILLS = 15
+    # REQUEST_MINI_STATS = 16
+    # COMMERCE_END = 17
+    # USER_COMMERCE_END = 18
+    # USER_COMMERCE_CONFIRM = 19
+    # COMMERCE_CHAT = 20
+    # BANK_END = 21
+    # USER_COMMERCE_OK = 22
+    # USER_COMMERCE_REJECT = 23
+    # DROP = 24
+    # CAST_SPELL = 25
+    # LEFT_CLICK = 26
+    # DOUBLE_CLICK = 27
+    # WORK = 28
+    # USE_SPELL_MACRO = 29
+    # USE_ITEM = 30
+    # CRAFT_BLACKSMITH = 31
+    # CRAFT_CARPENTER = 32
+    # WORK_LEFT_CLICK = 33
+    # CREATE_NEW_GUILD = 34
+    # SPELL_INFO = 35
+    # EQUIP_ITEM = 36
+    # CHANGE_HEADING = 37
+    # MODIFY_SKILLS = 38
+    # TRAIN = 39
+    # COMMERCE_BUY = 40
+    # BANK_EXTRACT_ITEM = 41
+    # COMMERCE_SELL = 42
+    # BANK_DEPOSIT = 43
+    # FORUM_POST = 44
+    # MOVE_SPELL = 45
+    # MOVE_BANK = 46
+    # CLAN_CODEX_UPDATE = 47
+    # USER_COMMERCE_OFFER = 48
+    # GUILD_ACCEPT_PEACE = 49
+    # GUILD_REJECT_ALLIANCE = 50
+    # GUILD_REJECT_PEACE = 51
+    # GUILD_ACCEPT_ALLIANCE = 52
+    # GUILD_OFFER_PEACE = 53
+    # GUILD_OFFER_ALLIANCE = 54
+    # GUILD_ALLIANCE_DETAILS = 55
+    # GUILD_PEACE_DETAILS = 56
+    # GUILD_REQUEST_JOINER_INFO = 57
+    # GUILD_ALLIANCE_PROP_LIST = 58
+    # GUILD_PEACE_PROP_LIST = 59
+    # GUILD_DECLARE_WAR = 60
+    # GUILD_NEW_WEBSITE = 61
+    # GUILD_ACCEPT_NEW_MEMBER = 62
+    # GUILD_REJECT_NEW_MEMBER = 63
+    # GUILD_KICK_MEMBER = 64
+    # GUILD_UPDATE_NEWS = 65
+    # GUILD_MEMBER_INFO = 66
+    # GUILD_OPEN_ELECTIONS = 67
+    # GUILD_REQUEST_MEMBERSHIP = 68
+    # GUILD_REQUEST_DETAILS = 69
+    # ONLINE = 70
+    # QUIT = 71
+    # GUILD_LEAVE = 72
+    # REQUEST_ACCOUNT_STATE = 73
+    # PET_STAND = 74
+    # PET_FOLLOW = 75
+    # RELEASE_PET = 76
+    # TRAIN_LIST = 77
+    # REST = 78
+    # MEDITATE = 79
+    # RESUSCITATE = 80
+    # HEAL = 81
+    # HELP = 82
+    # REQUEST_STATS = 83
+    # COMMERCE_START = 84
+    # BANK_START = 85
+    # ENLIST = 86
+    # INFORMATION = 87
+    # REWARD = 88
+    # REQUEST_MOTD = 89
+    # UPTIME = 90
+    # PARTY_LEAVE = 91
+    # PARTY_CREATE = 92
+    # PARTY_JOIN = 93
+    # INQUIRY = 94
+    # GUILD_MESSAGE = 95
+    # PARTY_MESSAGE = 96
+    # CENTINEL_REPORT = 97
+    # GUILD_ONLINE = 98
+    # PARTY_ONLINE = 99
+    # COUNCIL_MESSAGE = 100
+    # ROLE_MASTER_REQUEST = 101
+    # GM_REQUEST = 102
+    # BUG_REPORT = 103
+    # CHANGE_DESCRIPTION = 104
+    # GUILD_VOTE = 105
+    # PUNISHMENTS = 106
+    # CHANGE_PASSWORD = 107
+    # GAMBLE = 108
+    # INQUIRY_VOTE = 109
+    # LEAVE_FACTION = 110
+    # BANK_EXTRACT_GOLD = 111
+    # BANK_DEPOSIT_GOLD = 112
+    # DENOUNCE = 113
+    # GUILD_FUNDATE = 114
+    # GUILD_FUNDATION = 115
+    # PARTY_KICK = 116
+    # PARTY_SET_LEADER = 117
+    # PARTY_ACCEPT_MEMBER = 118
+    # PING = 119
+    # REQUEST_PARTY_FORM = 120
+    # ITEM_UPGRADE = 121
+    # GM_COMMANDS = 122
+    # INIT_CRAFTING = 123
+    # HOME = 124
+    # SHOW_GUILD_NEWS = 125
+    # SHARE_NPC = 126
+    # STOP_SHARING_NPC = 127
+    # CONSULTATION = 128
+    # MOVE_ITEM = 129
 
 
 class ServerPacketID(IntEnum):
-    """IDs de paquetes enviados por el servidor."""
+    """IDs de paquetes enviados por el servidor según protocolo AO."""
 
-    ATTRIBUTES = 50
-    LOGIN_SUCCESS = 66
-    DICE_ROLL = 67
-    ACCOUNT_CREATED = 68
-    ACCOUNT_ERROR = 69
-    LOGIN_ERROR = 71
+    # Paquetes implementados
+    ATTRIBUTES = 50  # Enviar atributos del personaje
+    DICE_ROLL = 67  # Enviar resultado de tirada de dados
+
+    # Paquetes custom del servidor (fuera del protocolo estándar)
+    LOGIN_SUCCESS = 200
+    ACCOUNT_CREATED = 201
+    ACCOUNT_ERROR = 202
+    LOGIN_ERROR = 203
+
+    # Paquetes del protocolo AO (no implementados aún)
+    # ruff: noqa: ERA001
+    # LOGGED = 0
+    # REMOVE_DIALOGS = 1
+    # REMOVE_CHAR_DIALOG = 2
+    # NAVIGATE_TOGGLE = 3
+    # DISCONNECT = 4
+    # COMMERCE_END = 5
+    # BANK_END = 6
+    # COMMERCE_INIT = 7
+    # BANK_INIT = 8
+    # USER_COMMERCE_INIT = 9
+    # USER_COMMERCE_END = 10
+    # USER_OFFER_CONFIRM = 11
+    # COMMERCE_CHAT = 12
+    # SHOW_BLACKSMITH_FORM = 13
+    # SHOW_CARPENTER_FORM = 14
+    # UPDATE_STA = 15
+    # UPDATE_MANA = 16
+    # UPDATE_HP = 17
+    # UPDATE_GOLD = 18
+    # UPDATE_BANK_GOLD = 19
+    # UPDATE_EXP = 20
+    # CHANGE_MAP = 21
+    # POS_UPDATE = 22
+    # CHAT_OVER_HEAD = 23
+    # CONSOLE_MSG = 24
+    # GUILD_CHAT = 25
+    # SHOW_MESSAGE_BOX = 26
+    # USER_INDEX_IN_SERVER = 27
+    # USER_CHAR_INDEX_IN_SERVER = 28
+    # CHARACTER_CREATE = 29
+    # CHARACTER_REMOVE = 30
+    # CHARACTER_CHANGE_NICK = 31
+    # CHARACTER_MOVE = 32
+    # FORCE_CHAR_MOVE = 33
+    # CHARACTER_CHANGE = 34
+    # OBJECT_CREATE = 35
+    # OBJECT_DELETE = 36
+    # BLOCK_POSITION = 37
+    # PLAY_MIDI = 38
+    # PLAY_WAVE = 39
+    # GUILD_LIST = 40
+    # AREA_CHANGED = 41
+    # PAUSE_TOGGLE = 42
+    # RAIN_TOGGLE = 43
+    # CREATE_FX = 44
+    # UPDATE_USER_STATS = 45
+    # WORK_REQUEST_TARGET = 46
+    # CHANGE_INVENTORY_SLOT = 47
+    # CHANGE_BANK_SLOT = 48
+    # CHANGE_SPELL_SLOT = 49
+    # BLACKSMITH_WEAPONS = 51
+    # BLACKSMITH_ARMORS = 52
+    # CARPENTER_OBJECTS = 53
+    # REST_OK = 54
+    # ERROR_MSG = 55
+    # BLIND = 56
+    # DUMB = 57
+    # SHOW_SIGNAL = 58
+    # CHANGE_NPC_INVENTORY_SLOT = 59
+    # UPDATE_HUNGER_AND_THIRST = 60
+    # FAME = 61
+    # MINI_STATS = 62
+    # LEVEL_UP = 63
+    # ADD_FORUM_MSG = 64
+    # SHOW_FORUM_FORM = 65
+    # SET_INVISIBLE = 66
+    # MEDITATE_TOGGLE = 68
+    # BLIND_NO_MORE = 69
+    # DUMB_NO_MORE = 70
+    # SEND_SKILLS = 71
+    # TRAINER_CREATURE_LIST = 72
+    # GUILD_NEWS = 73
+    # OFFER_DETAILS = 74
+    # ALIANCE_PROPOSALS_LIST = 75
+    # PEACE_PROPOSALS_LIST = 76
+    # CHARACTER_INFO = 77
+    # GUILD_LEADER_INFO = 78
+    # GUILD_MEMBER_INFO = 79
+    # GUILD_DETAILS = 80
+    # SHOW_GUILD_FUNDATION_FORM = 81
+    # PARALIZE_OK = 82
+    # SHOW_USER_REQUEST = 83
+    # TRADE_OK = 84
+    # BANK_OK = 85
+    # CHANGE_USER_TRADE_SLOT = 86
+    # SEND_NIGHT = 87
+    # PONG = 88
+    # UPDATE_TAG_AND_STATUS = 89
+    # SPAWN_LIST = 90
+    # SHOW_SOS_FORM = 91
+    # SHOW_MOTD_EDITION_FORM = 92
+    # SHOW_GM_PANEL_FORM = 93
+    # USER_NAME_LIST = 94
+    # SHOW_DENOUNCES = 95
+    # RECORD_LIST = 96
+    # RECORD_DETAILS = 97
+    # SHOW_GUILD_ALIGN = 98
+    # SHOW_PARTY_FORM = 99
+    # UPDATE_STRENGTH_AND_DEXTERITY = 100
+    # UPDATE_STRENGTH = 101
+    # UPDATE_DEXTERITY = 102
+    # ADD_SLOTS = 103
+    # MULTI_MESSAGE = 104
+    # STOP_WORKING = 105
+    # CANCEL_OFFER_ITEM = 106

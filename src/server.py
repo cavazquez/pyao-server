@@ -85,9 +85,10 @@ class ArgentumServer:
         logger.info("Nueva conexión desde %s", connection.address)
 
         # Incrementar contador de conexiones en Redis
-        await self.redis_client.increment_connections()
-        connections = await self.redis_client.get_connections_count()
-        logger.info("Conexiones activas: %d", connections)
+        if self.redis_client:
+            await self.redis_client.increment_connections()
+            connections = await self.redis_client.get_connections_count()
+            logger.info("Conexiones activas: %d", connections)
 
         # Datos de sesión compartidos entre tareas (mutable)
         session_data: dict[str, dict[str, int]] = {}
@@ -112,9 +113,10 @@ class ArgentumServer:
             await connection.wait_closed()
 
             # Decrementar contador de conexiones en Redis
-            await self.redis_client.decrement_connections()
-            connections = await self.redis_client.get_connections_count()
-            logger.info("Conexiones activas: %d", connections)
+            if self.redis_client:
+                await self.redis_client.decrement_connections()
+                connections = await self.redis_client.get_connections_count()
+                logger.info("Conexiones activas: %d", connections)
 
     async def start(self) -> None:
         """Inicia el servidor TCP."""
@@ -163,4 +165,5 @@ class ArgentumServer:
             logger.info("Servidor detenido")
 
         # Desconectar de Redis
-        await self.redis_client.disconnect()
+        if self.redis_client:
+            await self.redis_client.disconnect()

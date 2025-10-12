@@ -254,7 +254,7 @@ class TaskLogin(Task):
 
         # Guardar user_id en session_data para uso posterior
         if self.session_data is not None:
-            self.session_data["user_id"] = user_id
+            self.session_data["user_id"] = user_id  # type: ignore[assignment]
             logger.info("User ID %d guardado en sesión", user_id)
 
         await self.message_sender.send_login_success(user_id)
@@ -332,7 +332,7 @@ class TaskRequestAttributes(Task):
         # Obtener atributos desde Redis
         user_id = self.session_data["user_id"]
         stats_key = f"player:{user_id}:stats"
-        stats_data = await self.redis_client.redis.hgetall(stats_key)
+        stats_data = await self.redis_client.redis.hgetall(stats_key)  # type: ignore[misc]
 
         if stats_data:
             strength = int(stats_data.get("strength", 0))
@@ -342,7 +342,8 @@ class TaskRequestAttributes(Task):
             constitution = int(stats_data.get("constitution", 0))
 
             logger.info(
-                "Enviando atributos desde Redis para user_id %d: STR=%d AGI=%d INT=%d CHA=%d CON=%d",
+                "Enviando atributos desde Redis para user_id %d: "
+                "STR=%d AGI=%d INT=%d CHA=%d CON=%d",
                 user_id,
                 strength,
                 agility,
