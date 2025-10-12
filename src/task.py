@@ -129,6 +129,155 @@ class TaskDice(Task):
         logger.info("Enviado resultado de dados a %s", self.message_sender.connection.address)
 
 
+class TaskLogin(Task):
+    """Tarea que maneja el login de usuarios."""
+
+    def __init__(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        redis_client: RedisClient | None = None,
+    ) -> None:
+        """Inicializa la tarea de login.
+
+        Args:
+            data: Datos recibidos del cliente.
+            message_sender: Enviador de mensajes para comunicarse con el cliente.
+            redis_client: Cliente Redis para verificar credenciales.
+        """
+        super().__init__(data, message_sender)
+        self.redis_client = redis_client
+
+    def _parse_packet(self) -> tuple[str, str] | None:
+        """Parsea el paquete de login.
+
+        El formato esperado es:
+        - Byte 0: PacketID (LOGIN)
+        - Bytes 1-2: Longitud del username (int16, little-endian)
+        - Bytes siguientes: Username (UTF-8)
+        - Bytes siguientes (2): Longitud del password (int16, little-endian)
+        - Bytes siguientes: Password (UTF-8)
+
+        Returns:
+            Tupla (username, password) o None si hay error.
+        """
+        try:
+            offset = 1  # Saltar PacketID
+
+            # Leer username
+            if len(self.data) < offset + 2:
+                return None
+            username_len = int.from_bytes(
+                self.data[offset : offset + 2],
+                byteorder="little",
+                signed=False,
+            )
+            offset += 2
+
+            if len(self.data) < offset + username_len:
+                return None
+            username = self.data[offset : offset + username_len].decode("utf-8")
+            offset += username_len
+
+            # Leer password
+            if len(self.data) < offset + 2:
+                return None
+            password_len = int.from_bytes(
+                self.data[offset : offset + 2],
+                byteorder="little",
+                signed=False,
+            )
+            offset += 2
+
+            if len(self.data) < offset + password_len:
+                return None
+            password = self.data[offset : offset + password_len].decode("utf-8")
+
+        except (ValueError, UnicodeDecodeError) as e:
+            logger.warning("Error parseando paquete de login: %s", e)
+            return None
+        else:
+            return (username, password)
+
+    async def execute(self) -> None:
+        """Ejecuta el login del usuario."""
+        # Parsear datos del paquete
+        parsed = self._parse_packet()
+        if parsed is None:
+            logger.warning(
+                "Paquete de login inválido desde %s",
+                self.message_sender.connection.address,
+            )
+            return
+
+        username, _password = parsed
+        logger.info(
+            "Intento de login desde %s - Username: %s",
+            self.message_sender.connection.address,
+            username,
+        )
+
+        # Verificar que Redis esté disponible
+        if self.redis_client is None:
+            logger.error("Redis no está disponible para login")
+            return
+
+        # Implementación pendiente: verificar credenciales en Redis
+        logger.info("Login procesado para %s (implementación pendiente)", username)
+
+
+class TaskRequestAttributes(Task):
+    """Tarea que maneja la solicitud de atributos del personaje."""
+
+    def __init__(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        session_data: dict[str, dict[str, int]] | None = None,
+    ) -> None:
+        """Inicializa la tarea de solicitud de atributos.
+
+        Args:
+            data: Datos recibidos del cliente.
+            message_sender: Enviador de mensajes para comunicarse con el cliente.
+            session_data: Datos de sesión compartidos (opcional).
+        """
+        super().__init__(data, message_sender)
+        self.session_data = session_data
+
+    async def execute(self) -> None:
+        """Envía los atributos guardados en la sesión al cliente."""
+        # Verificar si hay atributos en la sesión
+        if self.session_data and "dice_attributes" in self.session_data:
+            attributes = self.session_data["dice_attributes"]
+            logger.info(
+                "Enviando atributos a %s: %s",
+                self.message_sender.connection.address,
+                attributes,
+            )
+
+            await self.message_sender.send_attributes(
+                strength=attributes["strength"],
+                agility=attributes["agility"],
+                intelligence=attributes["intelligence"],
+                charisma=attributes["charisma"],
+                constitution=attributes["constitution"],
+            )
+        else:
+            logger.warning(
+                "Cliente %s solicitó atributos pero no hay dados en sesión",
+                self.message_sender.connection.address,
+            )
+            # Enviar atributos en 0 o error
+            await self.message_sender.send_attributes(
+                strength=0,
+                agility=0,
+                intelligence=0,
+                charisma=0,
+                constitution=0,
+            )
+
+
 class TaskCreateAccount(Task):
     """Tarea que maneja la creación de cuentas."""
 

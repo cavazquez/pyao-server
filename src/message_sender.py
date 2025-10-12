@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.msg import (
     build_account_created_response,
     build_account_error_response,
+    build_attributes_response,
     build_dice_roll_response,
 )
 
@@ -68,4 +69,30 @@ class MessageSender:
             error_message: Mensaje de error.
         """
         response = build_account_error_response(error_message=error_message)
+        await self.connection.send(response)
+
+    async def send_attributes(
+        self,
+        strength: int,
+        agility: int,
+        intelligence: int,
+        charisma: int,
+        constitution: int,
+    ) -> None:
+        """Envía los atributos del personaje al cliente.
+
+        Args:
+            strength: Valor de fuerza.
+            agility: Valor de agilidad.
+            intelligence: Valor de inteligencia.
+            charisma: Valor de carisma.
+            constitution: Valor de constitución.
+        """
+        response = build_attributes_response(
+            strength=strength,
+            agility=agility,
+            intelligence=intelligence,
+            charisma=charisma,
+            constitution=constitution,
+        )
         await self.connection.send(response)
