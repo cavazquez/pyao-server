@@ -137,6 +137,7 @@ class TaskLogin(Task):
         data: bytes,
         message_sender: MessageSender,
         redis_client: RedisClient | None = None,
+        session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -144,9 +145,11 @@ class TaskLogin(Task):
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             redis_client: Cliente Redis para verificar credenciales.
+            session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.redis_client = redis_client
+        self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -248,6 +251,12 @@ class TaskLogin(Task):
         # Login exitoso
         user_id = int(account_data.get("user_id", 0))
         logger.info("Login exitoso para %s (ID: %d)", username, user_id)
+
+        # Guardar user_id en session_data para uso posterior
+        if self.session_data is not None:
+            self.session_data["user_id"] = user_id
+            logger.info("User ID %d guardado en sesión", user_id)
+
         await self.message_sender.send_login_success(user_id)
 
     @staticmethod
@@ -270,6 +279,7 @@ class TaskRequestAttributes(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
+        redis_client: RedisClient | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de solicitud de atributos.
@@ -277,18 +287,20 @@ class TaskRequestAttributes(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            session_data: Datos de sesión compartidos (opcional).
+            redis_client: Cliente Redis para obtener atributos.
+            session_data: Datos de sesión compartidos (para obtener user_id).
         """
         super().__init__(data, message_sender)
+        self.redis_client = redis_client
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Envía los atributos guardados en la sesión al cliente."""
-        # Verificar si hay atributos en la sesión
+        """Obtiene atributos desde Redis y los envía al cliente."""
+        # Primero verificar si hay atributos en sesión (creación de personaje)
         if self.session_data and "dice_attributes" in self.session_data:
             attributes = self.session_data["dice_attributes"]
             logger.info(
-                "Enviando atributos a %s: %s",
+                "Enviando atributos desde sesión a %s: %s",
                 self.message_sender.connection.address,
                 attributes,
             )
@@ -300,19 +312,57 @@ class TaskRequestAttributes(Task):
                 charisma=attributes["charisma"],
                 constitution=attributes["constitution"],
             )
-        else:
+            return
+
+        # Si no hay en sesión, obtener desde Redis usando user_id
+        if not self.redis_client:
+            logger.error("Redis no disponible para obtener atributos")
+            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+            return
+
+        if not self.session_data or "user_id" not in self.session_data:
             logger.warning(
-                "Cliente %s solicitó atributos pero no hay dados en sesión",
+                "Cliente %s solicitó atributos pero no hay user_id en sesión",
                 self.message_sender.connection.address,
             )
-            # Enviar atributos en 0 o error
-            await self.message_sender.send_attributes(
-                strength=0,
-                agility=0,
-                intelligence=0,
-                charisma=0,
-                constitution=0,
+            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+            return
+
+        # Obtener atributos desde Redis
+        user_id = self.session_data["user_id"]
+        stats_key = f"player:{user_id}:stats"
+        stats_data = await self.redis_client.redis.hgetall(stats_key)
+
+        if stats_data:
+            strength = int(stats_data.get("strength", 0))
+            agility = int(stats_data.get("agility", 0))
+            intelligence = int(stats_data.get("intelligence", 0))
+            charisma = int(stats_data.get("charisma", 0))
+            constitution = int(stats_data.get("constitution", 0))
+
+            logger.info(
+                "Enviando atributos desde Redis para user_id %d: STR=%d AGI=%d INT=%d CHA=%d CON=%d",
+                user_id,
+                strength,
+                agility,
+                intelligence,
+                charisma,
+                constitution,
             )
+
+            await self.message_sender.send_attributes(
+                strength=strength,
+                agility=agility,
+                intelligence=intelligence,
+                charisma=charisma,
+                constitution=constitution,
+            )
+        else:
+            logger.warning(
+                "No se encontraron atributos en Redis para user_id %d",
+                user_id,
+            )
+            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
 
 
 class TaskCreateAccount(Task):
