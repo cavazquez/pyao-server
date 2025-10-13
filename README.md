@@ -138,7 +138,10 @@ pyao-server/
 ├── docs/                        # Documentación
 │   ├── LOGIN_FLOW.md            # Flujo de login
 │   ├── ACCOUNT_CREATION.md      # Creación de cuentas
-│   └── PROTOCOL_MIGRATION.md    # Migración de protocolo
+│   ├── redis_architecture.md    # Arquitectura de Redis
+│   ├── REDIS_INTEGRATION.md     # Integración con Redis
+│   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios
+│   └── COVERAGE_ANALYSIS.md     # Análisis de cobertura de tests
 │
 ├── .github/                     # GitHub Actions workflows (CI/CD)
 │   └── workflows/
@@ -148,7 +151,6 @@ pyao-server/
 ├── pyproject.toml               # Configuración del proyecto y dependencias
 ├── uv.lock                      # Lock file de dependencias
 ├── run_tests.sh                 # Script para ejecutar todos los checks
-├── REFACTOR_REPOSITORIES.md     # Documentación de refactorización
 ├── Claude.md                    # Reglas de desarrollo
 ├── README.md                    # Este archivo
 └── LICENSE                      # Licencia Apache 2.0
@@ -247,10 +249,17 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ## 📚 Documentación
 
+### Protocolo y Flujos
 - **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login
-- **[Migración de Protocolo](docs/PROTOCOL_MIGRATION.md)**: Cambios del protocolo custom al estándar AO
 - **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
+
+### Arquitectura y Diseño
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
+- **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
+- **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
+
+### Calidad y Testing
+- **[Análisis de Cobertura](docs/COVERAGE_ANALYSIS.md)**: Análisis detallado de cobertura de tests
 
 ## 📝 Desarrollo
 
