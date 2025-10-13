@@ -62,32 +62,35 @@ def build_attributes_response(
     return packet.to_bytes()
 
 
-def build_logged_response() -> bytes:
+def build_logged_response(user_class: int) -> bytes:
     """Construye el paquete Logged del protocolo AO estándar.
 
-    El paquete Logged solo contiene el PacketID sin datos adicionales.
-    El cliente tiene _HandleLogged vacío, indicando que no espera datos.
+    Args:
+        user_class: Clase del personaje (1 byte).
 
     Returns:
-        Paquete de bytes con el formato: PacketID (0) solamente.
+        Paquete de bytes con el formato: PacketID (0) + userClass (1 byte).
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.LOGGED)
+    packet.add_byte(user_class)
     return packet.to_bytes()
 
 
-def build_change_map_response(map_number: int) -> bytes:
+def build_change_map_response(map_number: int, version: int = 0) -> bytes:
     """Construye el paquete ChangeMap del protocolo AO estándar.
 
     Args:
         map_number: Número del mapa (int16).
+        version: Versión del mapa (int16), por defecto 0.
 
     Returns:
-        Paquete de bytes con el formato: PacketID (21) + mapNumber (int16).
+        Paquete de bytes con el formato: PacketID (21) + mapNumber (int16) + version (int16).
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.CHANGE_MAP)
     packet.add_int16(map_number)
+    packet.add_int16(version)
     return packet.to_bytes()
 
 

@@ -162,15 +162,17 @@ async def test_message_sender_send_logged() -> None:
     connection = ClientConnection(writer)
     message_sender = MessageSender(connection)
 
-    await message_sender.send_logged()
+    user_class = 5
+    await message_sender.send_logged(user_class)
 
     # Verificar que se llamó write
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Verificar estructura: solo PacketID (sin datos adicionales)
-    assert len(written_data) == 1
+    # Verificar estructura: PacketID + userClass
+    assert len(written_data) == 2
     assert written_data[0] == ServerPacketID.LOGGED
+    assert written_data[1] == user_class
 
     writer.drain.assert_called_once()
 

@@ -284,8 +284,9 @@ class TaskCreateAccount(Task):
             )
             logger.info("Estadísticas iniciales creadas en Redis para user_id %d", user_id)
 
-            # Enviar paquete Logged (solo PacketID, sin datos)
-            await self.message_sender.send_logged()
+            # Enviar paquete Logged con la clase del personaje
+            user_class = char_data.get("job", 1) if char_data else 1
+            await self.message_sender.send_logged(user_class)
 
             # Enviar índice del personaje en el servidor
             await self.message_sender.send_user_char_index_in_server(user_id)

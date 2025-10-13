@@ -104,24 +104,30 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_logged(self) -> None:
+    async def send_logged(self, user_class: int) -> None:
         """Envía paquete Logged del protocolo AO estándar.
 
-        El paquete Logged solo contiene el PacketID (0) sin datos adicionales.
-        El cliente tiene _HandleLogged vacío, no espera datos.
+        Args:
+            user_class: Clase del personaje (1 byte).
         """
-        response = build_logged_response()
-        logger.info("[%s] Enviando LOGGED", self.connection.address)
+        response = build_logged_response(user_class=user_class)
+        logger.info("[%s] Enviando LOGGED: userClass=%d", self.connection.address, user_class)
         await self.connection.send(response)
 
-    async def send_change_map(self, map_number: int) -> None:
+    async def send_change_map(self, map_number: int, version: int = 0) -> None:
         """Envía paquete ChangeMap del protocolo AO estándar.
 
         Args:
             map_number: Número del mapa (int16).
+            version: Versión del mapa (int16), por defecto 0.
         """
-        response = build_change_map_response(map_number=map_number)
-        logger.info("[%s] Enviando CHANGE_MAP: map=%d", self.connection.address, map_number)
+        response = build_change_map_response(map_number=map_number, version=version)
+        logger.info(
+            "[%s] Enviando CHANGE_MAP: map=%d, version=%d",
+            self.connection.address,
+            map_number,
+            version,
+        )
         await self.connection.send(response)
 
     async def send_pos_update(self, x: int, y: int) -> None:

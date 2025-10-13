@@ -142,8 +142,8 @@ class TaskLogin(Task):
             self.session_data["user_id"] = user_id  # type: ignore[assignment]
             logger.info("User ID %d guardado en sesión", user_id)
 
-        # Enviar paquete Logged (solo PacketID, sin datos)
-        await self.message_sender.send_logged()
+        # Enviar paquete Logged con la clase del personaje
+        await self.message_sender.send_logged(user_class)
 
         # Enviar índice del personaje en el servidor
         await self.message_sender.send_user_char_index_in_server(user_id)

@@ -150,13 +150,17 @@ def test_build_dice_roll_response_parametrized(
 
 def test_build_logged_response_structure() -> None:
     """Verifica que el paquete Logged tenga la estructura correcta."""
-    response = build_logged_response()
+    user_class = 1
+    response = build_logged_response(user_class)
 
-    # Verificar longitud: solo 1 byte PacketID (sin datos adicionales)
-    assert len(response) == 1
+    # Verificar longitud: 1 byte PacketID + 1 byte userClass
+    assert len(response) == 2
 
     # Verificar PacketID
     assert response[0] == ServerPacketID.LOGGED
+
+    # Verificar userClass
+    assert response[1] == user_class
 
 
 def test_build_error_msg_response_structure() -> None:
@@ -228,10 +232,11 @@ def test_build_user_char_index_in_server_response_values() -> None:
 def test_build_change_map_response_structure() -> None:
     """Verifica que el paquete ChangeMap tenga la estructura correcta."""
     map_number = 5
-    response = build_change_map_response(map_number)
+    version = 10
+    response = build_change_map_response(map_number, version)
 
-    # Verificar longitud: 1 byte PacketID + 2 bytes int16
-    assert len(response) == 3
+    # Verificar longitud: 1 byte PacketID + 2 bytes int16 (map) + 2 bytes int16 (version)
+    assert len(response) == 5
 
     # Verificar PacketID
     assert response[0] == ServerPacketID.CHANGE_MAP
@@ -239,6 +244,10 @@ def test_build_change_map_response_structure() -> None:
     # Verificar mapNumber (int16, little-endian)
     decoded_map = int.from_bytes(response[1:3], byteorder="little", signed=True)
     assert decoded_map == map_number
+
+    # Verificar version (int16, little-endian)
+    decoded_version = int.from_bytes(response[3:5], byteorder="little", signed=True)
+    assert decoded_version == version
 
 
 def test_build_change_map_response_values() -> None:
@@ -250,3 +259,6 @@ def test_build_change_map_response_values() -> None:
         assert response[0] == ServerPacketID.CHANGE_MAP
         decoded_map = int.from_bytes(response[1:3], byteorder="little", signed=True)
         assert decoded_map == map_number
+        # Version por defecto debe ser 0
+        decoded_version = int.from_bytes(response[3:5], byteorder="little", signed=True)
+        assert decoded_version == 0
