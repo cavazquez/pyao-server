@@ -5,6 +5,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.task import MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, Task
+from src.task_login import TaskLogin
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
@@ -173,7 +174,7 @@ class TaskCreateAccount(Task):
         """
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    async def execute(self) -> None:  # noqa: PLR0915
+    async def execute(self) -> None:
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
         hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
@@ -257,74 +258,15 @@ class TaskCreateAccount(Task):
                 self.message_sender.connection.address,
             )
 
-            # Crear posición inicial del personaje
-            default_x = 50
-            default_y = 50
-            default_map = 1
-            await self.player_repo.set_position(user_id, default_x, default_y, default_map)
-            logger.info(
-                "Posición inicial creada para nuevo personaje %s (ID: %d): (%d, %d) en mapa %d",
-                username,
-                user_id,
-                default_x,
-                default_y,
-                default_map,
+            # Ejecutar login automático después de crear la cuenta
+            login_task = TaskLogin(
+                data=self.data,
+                message_sender=self.message_sender,
+                player_repo=self.player_repo,
+                account_repo=self.account_repo,
+                session_data=self.session_data,
             )
-
-            # Crear estadísticas iniciales del personaje
-            await self.player_repo.set_stats(
-                user_id=user_id,
-                max_hp=100,
-                min_hp=100,
-                max_mana=100,
-                min_mana=100,
-                max_sta=100,
-                min_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=0,
-            )
-            logger.info("Estadísticas iniciales creadas en Redis para user_id %d", user_id)
-
-            # Enviar paquete Logged con la clase del personaje
-            user_class = char_data.get("job", 1) if char_data else 1
-            await self.message_sender.send_logged(user_class)
-
-            # Enviar índice del personaje en el servidor
-            await self.message_sender.send_user_char_index_in_server(user_id)
-
-            # Enviar cambio de mapa
-            await self.message_sender.send_change_map(default_map)
-
-            # Enviar posición inicial
-            await self.message_sender.send_pos_update(default_x, default_y)
-            logger.info("Posición inicial enviada al nuevo personaje")
-
-            # Enviar estadísticas completas del personaje (UpdateUserStats)
-            await self.message_sender.send_update_user_stats(
-                max_hp=100,
-                min_hp=100,
-                max_mana=100,
-                min_mana=100,
-                max_sta=100,
-                min_sta=100,
-                gold=0,
-                level=1,
-                elu=300,  # Experiencia para subir de nivel
-                experience=0,
-            )
-            logger.info("Estadísticas iniciales enviadas al nuevo personaje")
-
-            # Crear y enviar hambre y sed iniciales
-            await self.player_repo.set_hunger_thirst(
-                user_id=user_id, max_water=100, min_water=100, max_hunger=100, min_hunger=100
-            )
-            logger.info("Hambre y sed iniciales creadas en Redis para user_id %d", user_id)
-
-            await self.message_sender.send_update_hunger_and_thirst(
-                max_water=100, min_water=100, max_hunger=100, min_hunger=100
-            )
+            await login_task.execute_with_credentials(username, password)
 
         except ValueError as e:
             # Cuenta ya existe u otro error de validación

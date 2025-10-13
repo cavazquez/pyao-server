@@ -102,6 +102,15 @@ class TaskLogin(Task):
             return
 
         username, password = parsed
+        await self.execute_with_credentials(username, password)
+
+    async def execute_with_credentials(self, username: str, password: str) -> None:
+        """Ejecuta el login con credenciales ya parseadas.
+
+        Args:
+            username: Nombre de usuario.
+            password: Contraseña en texto plano.
+        """
         logger.info(
             "Intento de login desde %s - Username: %s",
             self.message_sender.connection.address,

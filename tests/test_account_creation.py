@@ -25,9 +25,15 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.set_position = AsyncMock()
     player_repo.set_stats = AsyncMock()
     player_repo.set_hunger_thirst = AsyncMock()
+    player_repo.get_position = AsyncMock(return_value=None)  # Para que cree posición por defecto
+    player_repo.get_stats = AsyncMock(return_value=None)  # Para que cree stats por defecto
+    player_repo.get_hunger_thirst = AsyncMock(return_value=None)  # Para que cree hambre/sed por defecto
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
+    # Mocks necesarios para TaskLogin que se ejecuta después de crear la cuenta
+    account_repo.get_account = AsyncMock(return_value={"user_id": 1, "char_job": 1})
+    account_repo.verify_password = AsyncMock(return_value=True)
 
     # Crear conexión y message sender
     reader = MagicMock()
