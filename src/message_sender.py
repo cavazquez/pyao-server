@@ -11,6 +11,7 @@ from src.msg import (
     build_logged_response,
     build_pos_update_response,
     build_update_hp_response,
+    build_update_hunger_and_thirst_response,
     build_update_mana_response,
     build_update_sta_response,
     build_update_user_stats_response,
@@ -193,6 +194,33 @@ class MessageSender:
         """
         response = build_update_sta_response(stamina=stamina)
         logger.info("[%s] Enviando UPDATE_STA: %d", self.connection.address, stamina)
+        await self.connection.send(response)
+
+    async def send_update_hunger_and_thirst(
+        self, max_water: int, min_water: int, max_hunger: int, min_hunger: int
+    ) -> None:
+        """Envía paquete UpdateHungerAndThirst del protocolo AO estándar.
+
+        Args:
+            max_water: Sed máxima (u8).
+            min_water: Sed actual (u8).
+            max_hunger: Hambre máxima (u8).
+            min_hunger: Hambre actual (u8).
+        """
+        response = build_update_hunger_and_thirst_response(
+            max_water=max_water,
+            min_water=min_water,
+            max_hunger=max_hunger,
+            min_hunger=min_hunger,
+        )
+        logger.info(
+            "[%s] Enviando UPDATE_HUNGER_AND_THIRST: water=%d/%d hunger=%d/%d",
+            self.connection.address,
+            min_water,
+            max_water,
+            min_hunger,
+            max_hunger,
+        )
         await self.connection.send(response)
 
     async def send_update_user_stats(  # noqa: PLR0913, PLR0917

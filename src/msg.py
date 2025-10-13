@@ -189,6 +189,29 @@ def build_update_sta_response(stamina: int) -> bytes:
     return packet.to_bytes()
 
 
+def build_update_hunger_and_thirst_response(
+    max_water: int, min_water: int, max_hunger: int, min_hunger: int
+) -> bytes:
+    """Construye el paquete UpdateHungerAndThirst del protocolo AO estándar.
+
+    Args:
+        max_water: Sed máxima (u8).
+        min_water: Sed actual (u8).
+        max_hunger: Hambre máxima (u8).
+        min_hunger: Hambre actual (u8).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (60) + maxAgua + minAgua + maxHam + minHam.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_HUNGER_AND_THIRST)
+    packet.add_byte(max_water)
+    packet.add_byte(min_water)
+    packet.add_byte(max_hunger)
+    packet.add_byte(min_hunger)
+    return packet.to_bytes()
+
+
 def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
     max_hp: int,
     min_hp: int,

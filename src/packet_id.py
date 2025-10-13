@@ -161,6 +161,7 @@ class ServerPacketID(IntEnum):
     UPDATE_USER_STATS = 45  # Actualizar estadísticas completas del usuario
     ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
     ERROR_MSG = 55  # Mensaje de error
+    UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
 
     # Paquetes del protocolo AO (no implementados aún)

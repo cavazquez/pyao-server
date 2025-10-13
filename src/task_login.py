@@ -200,6 +200,11 @@ class TaskLogin(Task):
 
         await self.message_sender.send_update_user_stats(**user_stats)
 
+        # Enviar hambre y sed (valores por defecto)
+        await self.message_sender.send_update_hunger_and_thirst(
+            max_water=100, min_water=100, max_hunger=100, min_hunger=100
+        )
+
     @staticmethod
     def _hash_password(password: str) -> str:
         """Genera un hash SHA-256 de la contraseña.

@@ -12,7 +12,7 @@ from src.task import TaskCreateAccount
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_success() -> None:
+async def test_task_create_account_success() -> None:  # noqa: PLR0914
     """Verifica que TaskCreateAccount cree una cuenta exitosamente."""
     # Mock del writer
     writer = MagicMock()
@@ -66,9 +66,9 @@ async def test_task_create_account_success() -> None:
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 5 paquetes:
-    # Logged, UserCharIndex, ChangeMap, PosUpdate, UpdateUserStats
-    assert writer.write.call_count == 5
+    # Verificar que se enviaron 6 paquetes:
+    # Logged, UserCharIndex, ChangeMap, PosUpdate, UpdateUserStats, UpdateHungerAndThirst
+    assert writer.write.call_count == 6
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -89,6 +89,10 @@ async def test_task_create_account_success() -> None:
     # Quinto paquete: UpdateUserStats
     fifth_call = writer.write.call_args_list[4][0][0]
     assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
+
+    # Sexto paquete: UpdateHungerAndThirst
+    sixth_call = writer.write.call_args_list[5][0][0]
+    assert sixth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
 
 
 @pytest.mark.asyncio

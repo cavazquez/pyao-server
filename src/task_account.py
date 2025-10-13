@@ -313,6 +313,11 @@ class TaskCreateAccount(Task):
             )
             logger.info("Estadísticas iniciales enviadas al nuevo personaje")
 
+            # Enviar hambre y sed (valores por defecto)
+            await self.message_sender.send_update_hunger_and_thirst(
+                max_water=100, min_water=100, max_hunger=100, min_hunger=100
+            )
+
         except ValueError as e:
             # Cuenta ya existe u otro error de validación
             logger.warning("Error creando cuenta para %s: %s", username, e)
