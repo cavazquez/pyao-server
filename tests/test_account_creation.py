@@ -79,9 +79,10 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 6 paquetes:
-    # Logged, UserCharIndex, ChangeMap, CharacterCreate, UpdateUserStats, UpdateHungerAndThirst
-    assert writer.write.call_count == 6
+    # Verificar que se enviaron 7 paquetes:
+    # Logged, UserCharIndex, ChangeMap, CharacterCreate,
+    # UpdateUserStats, UpdateHungerAndThirst, Attributes
+    assert writer.write.call_count == 7
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]

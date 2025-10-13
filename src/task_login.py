@@ -104,7 +104,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:
+    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: PLR0915
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
@@ -236,6 +236,29 @@ class TaskLogin(Task):
             logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
 
         await self.message_sender.send_update_hunger_and_thirst(**hunger_thirst)
+
+        # Obtener y enviar atributos del personaje
+        attributes = await self.player_repo.get_attributes(user_id)
+
+        if attributes is None:
+            # Si no existen atributos, crear valores por defecto
+            attributes = {
+                "strength": 10,
+                "agility": 10,
+                "intelligence": 10,
+                "charisma": 10,
+                "constitution": 10,
+            }
+            await self.player_repo.set_attributes(user_id=user_id, **attributes)
+            logger.info("Atributos por defecto creados en Redis para user_id %d", user_id)
+
+        await self.message_sender.send_attributes(
+            strength=attributes["strength"],
+            agility=attributes["agility"],
+            intelligence=attributes["intelligence"],
+            charisma=attributes["charisma"],
+            constitution=attributes["constitution"],
+        )
 
     @staticmethod
     def _hash_password(password: str) -> str:
