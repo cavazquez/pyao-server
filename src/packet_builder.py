@@ -89,21 +89,15 @@ class PacketBuilder:
         return self
 
     def to_bytes(self) -> bytes:
-        """Convierte el paquete a bytes con prefijo de longitud.
+        """Convierte el paquete a bytes.
 
-        El protocolo AO requiere que cada paquete tenga un prefijo de longitud (int16)
-        antes del contenido. La longitud incluye el tamaño del paquete completo
-        (longitud + contenido).
+        Cada entero en el buffer se convierte directamente a su valor
+        de byte correspondiente (0-255).
 
         Returns:
-            Representación en bytes del paquete con prefijo de longitud.
+            Representación en bytes del paquete.
         """
-        # Calcular longitud total: 2 bytes (int16 de longitud) + contenido
-        packet_length = len(self._data) + 2
-
-        # Crear el paquete final: [longitud_int16][contenido]
-        length_bytes = packet_length.to_bytes(2, byteorder="little", signed=True)
-        return length_bytes + bytes(self._data)
+        return bytes(self._data)
 
     def __len__(self) -> int:
         """Retorna la longitud actual del paquete.

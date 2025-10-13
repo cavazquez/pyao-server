@@ -42,12 +42,11 @@ async def test_message_sender_send_dice_roll() -> None:
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Paquete con prefijo de longitud
-    assert len(written_data) == 8  # 2 bytes longitud + 6 bytes contenido
-    assert written_data[2] == ServerPacketID.DICE_ROLL  # Byte 2 es PacketID
-    assert written_data[3] == 10  # strength
-    assert written_data[4] == 12  # agility
-    assert written_data[5] == 14  # intelligence
+    assert len(written_data) == 6
+    assert written_data[0] == ServerPacketID.DICE_ROLL
+    assert written_data[1] == 10  # strength
+    assert written_data[2] == 12  # agility
+    assert written_data[3] == 14  # intelligence
     assert written_data[4] == 16  # charisma
     assert written_data[5] == 18  # constitution
 
@@ -170,12 +169,12 @@ async def test_message_sender_send_logged() -> None:
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Verificar estructura: [longitud_int16][PacketID][userClass]
-    assert len(written_data) == 4  # 2 bytes longitud + 2 bytes contenido
-    assert written_data[2] == ServerPacketID.LOGGED  # Byte 2 es PacketID
+    # Verificar estructura: PacketID + userClass
+    assert len(written_data) == 2
+    assert written_data[0] == ServerPacketID.LOGGED
 
     # Verificar userClass
-    assert written_data[3] == user_class
+    assert written_data[1] == user_class
 
     writer.drain.assert_called_once()
 
@@ -197,11 +196,11 @@ async def test_message_sender_send_error_msg() -> None:
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Verificar PacketID (saltar 2 bytes de longitud del paquete)
-    assert written_data[2] == ServerPacketID.ERROR_MSG
+    # Verificar PacketID
+    assert written_data[0] == ServerPacketID.ERROR_MSG
 
     # Verificar longitud y mensaje
-    msg_length = int.from_bytes(written_data[3:5], byteorder="little", signed=True)
+    msg_length = int.from_bytes(written_data[1:3], byteorder="little", signed=True)
     decoded_message = written_data[3 : 3 + msg_length].decode("utf-8")
     assert decoded_message == error_message
 
@@ -221,5 +220,5 @@ async def test_message_sender_send_error_msg_empty() -> None:
     await message_sender.send_error_msg("")
 
     written_data = writer.write.call_args[0][0]
-    assert written_data[2] == ServerPacketID.ERROR_MSG  # Byte 2 es PacketID
-    assert len(written_data) == 5  # 2 bytes longitud + PacketID + int16 length
+    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert len(written_data) == 3  # PacketID + int16 length
