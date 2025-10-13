@@ -165,6 +165,7 @@ class ServerPacketID(IntEnum):
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
 
     CHARACTER_CREATE = 29  # Crear personaje en el mapa
+    CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
@@ -178,15 +179,13 @@ class ServerPacketID(IntEnum):
     # BANK_INIT = 8
     # USER_COMMERCE_INIT = 9
     # USER_COMMERCE_END = 10
-    # USER_OFFER_CONFIRM = 11
-    # COMMERCE_CHAT = 12
-    # SHOW_BLACKSMITH_FORM = 13
-    # SHOW_CARPENTER_FORM = 14
+    # SHOW_BLACK_SCREEN = 11
+    # SHOW_SIGN = 12
+    # CHANGE_INVENTORY_SLOT = 13
+    # CHANGE_SPELL_SLOT = 14
     # UPDATE_GOLD = 18
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
-    # CHANGE_MAP = 21
-    # CHAT_OVER_HEAD = 23
     # CONSOLE_MSG = 24
     # GUILD_CHAT = 25
     # SHOW_MESSAGE_BOX = 26
@@ -196,7 +195,6 @@ class ServerPacketID(IntEnum):
     # CHARACTER_CHANGE_NICK = 31
     # CHARACTER_MOVE = 32
     # FORCE_CHAR_MOVE = 33
-    # CHARACTER_CHANGE = 34
     # OBJECT_CREATE = 35
     # OBJECT_DELETE = 36
     # BLOCK_POSITION = 37

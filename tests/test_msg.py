@@ -4,6 +4,7 @@ import pytest
 
 from src.msg import (
     build_change_map_response,
+    build_character_change_response,
     build_character_create_response,
     build_dice_roll_response,
     build_error_msg_response,
@@ -358,3 +359,91 @@ def test_build_character_create_response_with_name() -> None:
     name_start = name_length_offset + 2
     decoded_name = response[name_start : name_start + name_length].decode("utf-8")
     assert decoded_name == name
+
+
+def test_build_character_change_response_structure() -> None:
+    """Verifica que el paquete CHARACTER_CHANGE tenga la estructura correcta."""
+    response = build_character_change_response(
+        char_index=1,
+        body=0,
+        head=15,
+        heading=3,
+        weapon=0,
+        shield=0,
+        helmet=0,
+        fx=0,
+        loops=0,
+    )
+
+    # Verificar longitud: 1 byte PacketID + 2 charIndex + 2 body + 2 head + 1 heading
+    # + 2 weapon + 2 shield + 2 helmet + 2 fx + 2 loops = 18 bytes
+    assert len(response) == 18
+
+    # Verificar PacketID
+    assert response[0] == ServerPacketID.CHARACTER_CHANGE
+
+
+def test_build_character_change_response_values() -> None:
+    """Verifica que los valores se incluyan correctamente en CHARACTER_CHANGE."""
+    char_index = 123
+    body = 5
+    head = 20
+    heading = 4  # Oeste
+    weapon = 10
+    shield = 15
+    helmet = 8
+    fx = 2
+    loops = 3
+
+    response = build_character_change_response(
+        char_index=char_index,
+        body=body,
+        head=head,
+        heading=heading,
+        weapon=weapon,
+        shield=shield,
+        helmet=helmet,
+        fx=fx,
+        loops=loops,
+    )
+
+    # Verificar charIndex (int16, little-endian)
+    assert int.from_bytes(response[1:3], byteorder="little", signed=False) == char_index
+
+    # Verificar body (int16)
+    assert int.from_bytes(response[3:5], byteorder="little", signed=False) == body
+
+    # Verificar head (int16)
+    assert int.from_bytes(response[5:7], byteorder="little", signed=False) == head
+
+    # Verificar heading (byte)
+    assert response[7] == heading
+
+    # Verificar weapon (int16)
+    assert int.from_bytes(response[8:10], byteorder="little", signed=False) == weapon
+
+    # Verificar shield (int16)
+    assert int.from_bytes(response[10:12], byteorder="little", signed=False) == shield
+
+    # Verificar helmet (int16)
+    assert int.from_bytes(response[12:14], byteorder="little", signed=False) == helmet
+
+    # Verificar fx (int16)
+    assert int.from_bytes(response[14:16], byteorder="little", signed=False) == fx
+
+    # Verificar loops (int16)
+    assert int.from_bytes(response[16:18], byteorder="little", signed=False) == loops
+
+
+def test_build_character_change_response_heading_directions() -> None:
+    """Verifica que CHARACTER_CHANGE maneje todas las direcciones correctamente."""
+    for heading in [1, 2, 3, 4]:  # Norte, Este, Sur, Oeste
+        response = build_character_change_response(
+            char_index=1,
+            body=0,
+            head=15,
+            heading=heading,
+        )
+
+        # Verificar que el heading esté en la posición correcta
+        assert response[7] == heading

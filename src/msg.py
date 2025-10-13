@@ -258,6 +258,47 @@ def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
     return packet.to_bytes()
 
 
+def build_character_change_response(  # noqa: PLR0913, PLR0917
+    char_index: int,
+    body: int,
+    head: int,
+    heading: int,
+    weapon: int = 0,
+    shield: int = 0,
+    helmet: int = 0,
+    fx: int = 0,
+    loops: int = 0,
+) -> bytes:
+    """Construye el paquete CharacterChange del protocolo AO estándar.
+
+    Args:
+        char_index: Índice del personaje (int16).
+        body: ID del cuerpo (int16).
+        head: ID de la cabeza (int16).
+        heading: Dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste) (byte).
+        weapon: ID del arma equipada (int16).
+        shield: ID del escudo equipado (int16).
+        helmet: ID del casco equipado (int16).
+        fx: ID del efecto visual (int16).
+        loops: Número de loops del efecto (int16).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (34) + datos del personaje.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHARACTER_CHANGE)
+    packet.add_int16(char_index)
+    packet.add_int16(body)
+    packet.add_int16(head)
+    packet.add_byte(heading)
+    packet.add_int16(weapon)
+    packet.add_int16(shield)
+    packet.add_int16(helmet)
+    packet.add_int16(fx)
+    packet.add_int16(loops)
+    return packet.to_bytes()
+
+
 def build_character_create_response(  # noqa: PLR0913, PLR0917
     char_index: int,
     body: int,

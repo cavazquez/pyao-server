@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.msg import (
     build_attributes_response,
     build_change_map_response,
+    build_character_change_response,
     build_character_create_response,
     build_dice_roll_response,
     build_error_msg_response,
@@ -336,5 +337,49 @@ class MessageSender:
             x,
             y,
             name,
+        )
+        await self.connection.send(response)
+
+    async def send_character_change(  # noqa: PLR0913, PLR0917
+        self,
+        char_index: int,
+        body: int,
+        head: int,
+        heading: int,
+        weapon: int = 0,
+        shield: int = 0,
+        helmet: int = 0,
+        fx: int = 0,
+        loops: int = 0,
+    ) -> None:
+        """Envía paquete CharacterChange del protocolo AO estándar.
+
+        Args:
+            char_index: Índice del personaje (int16).
+            body: ID del cuerpo/raza (int16).
+            head: ID de la cabeza (int16).
+            heading: Dirección que mira el personaje (byte).
+            weapon: ID del arma equipada (int16), por defecto 0.
+            shield: ID del escudo equipado (int16), por defecto 0.
+            helmet: ID del casco equipado (int16), por defecto 0.
+            fx: ID del efecto visual (int16), por defecto 0.
+            loops: Loops del efecto (int16), por defecto 0.
+        """
+        response = build_character_change_response(
+            char_index=char_index,
+            body=body,
+            head=head,
+            heading=heading,
+            weapon=weapon,
+            shield=shield,
+            helmet=helmet,
+            fx=fx,
+            loops=loops,
+        )
+        logger.info(
+            "[%s] Enviando CHARACTER_CHANGE: charIndex=%d heading=%d",
+            self.connection.address,
+            char_index,
+            heading,
         )
         await self.connection.send(response)

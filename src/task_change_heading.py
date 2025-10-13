@@ -110,5 +110,13 @@ class TaskChangeHeading(Task):
             heading,
         )
 
-        # Nota: El cliente ya cambió la dirección localmente.
-        # En el futuro: Enviar CHARACTER_CHANGE a otros jugadores para que vean el cambio
+        # Enviar CHARACTER_CHANGE de vuelta al cliente para confirmar
+        # Nota: body y head son hardcoded por ahora, en el futuro obtener de Redis
+        await self.message_sender.send_character_change(
+            char_index=user_id,
+            body=0,
+            head=15,
+            heading=heading,
+        )
+
+        # Nota: En el futuro, también enviar a otros jugadores en el mismo mapa
