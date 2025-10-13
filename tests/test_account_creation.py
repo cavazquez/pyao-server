@@ -25,9 +25,10 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.set_position = AsyncMock()
     player_repo.set_stats = AsyncMock()
     player_repo.set_hunger_thirst = AsyncMock()
-    player_repo.get_position = AsyncMock(return_value=None)  # Para que cree posición por defecto
-    player_repo.get_stats = AsyncMock(return_value=None)  # Para que cree stats por defecto
-    player_repo.get_hunger_thirst = AsyncMock(return_value=None)  # Para que cree hambre/sed por defecto
+    # Para que cree valores por defecto
+    player_repo.get_position = AsyncMock(return_value=None)
+    player_repo.get_stats = AsyncMock(return_value=None)
+    player_repo.get_hunger_thirst = AsyncMock(return_value=None)
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
@@ -78,9 +79,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 5 paquetes:
-    # Logged, UserCharIndex, ChangeMap, UpdateUserStats, UpdateHungerAndThirst
-    assert writer.write.call_count == 5
+    # Verificar que se enviaron 6 paquetes:
+    # Logged, UserCharIndex, ChangeMap, CharacterCreate, UpdateUserStats, UpdateHungerAndThirst
+    assert writer.write.call_count == 6
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -94,13 +95,17 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     third_call = writer.write.call_args_list[2][0][0]
     assert third_call[0] == ServerPacketID.CHANGE_MAP
 
-    # Cuarto paquete: UpdateUserStats
+    # Cuarto paquete: CharacterCreate
     fourth_call = writer.write.call_args_list[3][0][0]
-    assert fourth_call[0] == ServerPacketID.UPDATE_USER_STATS
+    assert fourth_call[0] == ServerPacketID.CHARACTER_CREATE
 
-    # Quinto paquete: UpdateHungerAndThirst
+    # Quinto paquete: UpdateUserStats
     fifth_call = writer.write.call_args_list[4][0][0]
-    assert fifth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
+    assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
+
+    # Sexto paquete: UpdateHungerAndThirst
+    sixth_call = writer.write.call_args_list[5][0][0]
+    assert sixth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
 
 
 @pytest.mark.asyncio
@@ -320,8 +325,18 @@ async def test_task_create_account_unicode_username() -> None:
     writer.drain = AsyncMock()
 
     player_repo = MagicMock(spec=PlayerRepository)
+    player_repo.set_position = AsyncMock()
+    player_repo.set_stats = AsyncMock()
+    player_repo.set_hunger_thirst = AsyncMock()
+    player_repo.get_position = AsyncMock(return_value=None)
+    player_repo.get_stats = AsyncMock(return_value=None)
+    player_repo.get_hunger_thirst = AsyncMock(return_value=None)
+
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
+    # Mocks necesarios para TaskLogin
+    account_repo.get_account = AsyncMock(return_value={"user_id": 1, "char_job": 1})
+    account_repo.verify_password = AsyncMock(return_value=True)
 
     reader = MagicMock()
     connection = ClientConnection(reader, writer)

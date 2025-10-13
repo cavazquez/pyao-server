@@ -88,4 +88,5 @@ addopts = "--strict-markers"
     "PLR2004", # magic values permitidos en tests
     "D104",    # docstring en __init__.py no requerido
     "PLR6301", # métodos de test pueden usar self
+    "ERA001",  # código comentado permitido en tests
 ]

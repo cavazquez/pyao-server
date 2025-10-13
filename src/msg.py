@@ -254,3 +254,55 @@ def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
     packet.add_int32(elu)
     packet.add_int32(experience)
     return packet.to_bytes()
+
+
+def build_character_create_response(  # noqa: PLR0913, PLR0917
+    char_index: int,
+    body: int,
+    head: int,
+    heading: int,
+    x: int,
+    y: int,
+    weapon: int = 0,
+    shield: int = 0,
+    helmet: int = 0,
+    fx: int = 0,
+    loops: int = 0,
+    name: str = "",
+) -> bytes:
+    """Construye el paquete CharacterCreate del protocolo AO estándar.
+
+    Args:
+        char_index: Índice del personaje (int16).
+        body: ID del cuerpo/raza (int16).
+        head: ID de la cabeza (int16).
+        heading: Dirección que mira el personaje (byte: 1=Norte, 2=Este, 3=Sur, 4=Oeste).
+        x: Posición X (byte).
+        y: Posición Y (byte).
+        weapon: ID del arma equipada (int16), por defecto 0.
+        shield: ID del escudo equipado (int16), por defecto 0.
+        helmet: ID del casco equipado (int16), por defecto 0.
+        fx: ID del efecto visual (int16), por defecto 0.
+        loops: Loops del efecto (int16), por defecto 0.
+        name: Nombre del personaje (string), por defecto vacío.
+
+    Returns:
+        Paquete de bytes con el formato CHARACTER_CREATE.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHARACTER_CREATE)
+    packet.add_int16(char_index)
+    packet.add_int16(body)
+    packet.add_int16(head)
+    packet.add_byte(heading)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    packet.add_int16(weapon)
+    packet.add_int16(shield)
+    packet.add_int16(helmet)
+    packet.add_int16(fx)
+    packet.add_int16(loops)
+    # Agregar longitud del nombre (int16) y luego el nombre
+    packet.add_int16(len(name))
+    packet.add_string(name)
+    return packet.to_bytes()

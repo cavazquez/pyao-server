@@ -4,6 +4,7 @@ import pytest
 
 from src.msg import (
     build_change_map_response,
+    build_character_create_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
@@ -262,3 +263,98 @@ def test_build_change_map_response_values() -> None:
         # Version por defecto debe ser 0
         decoded_version = int.from_bytes(response[3:5], byteorder="little", signed=True)
         assert decoded_version == 0
+
+
+def test_build_character_create_response_structure() -> None:
+    """Verifica que el paquete CharacterCreate tenga la estructura correcta."""
+    response = build_character_create_response(
+        char_index=100,
+        body=1,
+        head=5,
+        heading=3,
+        x=50,
+        y=50,
+        name="TestChar",
+    )
+
+    # Verificar que el primer byte sea el PacketID correcto
+    assert response[0] == ServerPacketID.CHARACTER_CREATE
+
+    # Verificar char_index (int16)
+    char_index = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    assert char_index == 100
+
+    # Verificar body (int16)
+    body = int.from_bytes(response[3:5], byteorder="little", signed=True)
+    assert body == 1
+
+    # Verificar head (int16)
+    head = int.from_bytes(response[5:7], byteorder="little", signed=True)
+    assert head == 5
+
+    # Verificar heading (byte)
+    assert response[7] == 3
+
+    # Verificar x (byte)
+    assert response[8] == 50
+
+    # Verificar y (byte)
+    assert response[9] == 50
+
+
+def test_build_character_create_response_with_equipment() -> None:
+    """Verifica que el paquete incluya correctamente el equipamiento."""
+    response = build_character_create_response(
+        char_index=200,
+        body=2,
+        head=10,
+        heading=1,
+        x=100,
+        y=100,
+        weapon=15,
+        shield=20,
+        helmet=25,
+        name="Warrior",
+    )
+
+    assert response[0] == ServerPacketID.CHARACTER_CREATE
+
+    # Verificar weapon (int16) - offset 10
+    weapon = int.from_bytes(response[10:12], byteorder="little", signed=True)
+    assert weapon == 15
+
+    # Verificar shield (int16) - offset 12
+    shield = int.from_bytes(response[12:14], byteorder="little", signed=True)
+    assert shield == 20
+
+    # Verificar helmet (int16) - offset 14
+    helmet = int.from_bytes(response[14:16], byteorder="little", signed=True)
+    assert helmet == 25
+
+
+def test_build_character_create_response_with_name() -> None:
+    """Verifica que el nombre del personaje se incluya correctamente."""
+    name = "TestPlayer"
+    response = build_character_create_response(
+        char_index=1,
+        body=1,
+        head=1,
+        heading=1,
+        x=1,
+        y=1,
+        name=name,
+    )
+
+    # Offset del nombre: PacketID(1) + char_index(2) + body(2) + head(2) +
+    # heading(1) + x(1) + y(1) + weapon(2) + shield(2) + helmet(2) + fx(2) + loops(2) = 20 bytes
+    # Luego viene: length(2) + string
+    name_length_offset = 20
+    name_length = int.from_bytes(
+        response[name_length_offset : name_length_offset + 2], byteorder="little", signed=False
+    )
+    assert name_length == len(name)
+
+    # Verificar el nombre
+    name_start = name_length_offset + 2
+    decoded_name = response[name_start : name_start + name_length].decode("utf-8")
+    assert decoded_name == name

@@ -164,6 +164,8 @@ class ServerPacketID(IntEnum):
     UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
 
+    CHARACTER_CREATE = 29  # Crear personaje en el mapa
+
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
     # REMOVE_DIALOGS = 1
@@ -190,7 +192,6 @@ class ServerPacketID(IntEnum):
     # SHOW_MESSAGE_BOX = 26
     # USER_INDEX_IN_SERVER = 27
     # USER_CHAR_INDEX_IN_SERVER = 28
-    # CHARACTER_CREATE = 29
     # CHARACTER_REMOVE = 30
     # CHARACTER_CHANGE_NICK = 31
     # CHARACTER_MOVE = 32

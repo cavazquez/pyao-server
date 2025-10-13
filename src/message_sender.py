@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.msg import (
     build_attributes_response,
     build_change_map_response,
+    build_character_create_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
@@ -276,5 +277,64 @@ class MessageSender:
             level,
             elu,
             experience,
+        )
+        await self.connection.send(response)
+
+    async def send_character_create(  # noqa: PLR0913, PLR0917
+        self,
+        char_index: int,
+        body: int,
+        head: int,
+        heading: int,
+        x: int,
+        y: int,
+        weapon: int = 0,
+        shield: int = 0,
+        helmet: int = 0,
+        fx: int = 0,
+        loops: int = 0,
+        name: str = "",
+    ) -> None:
+        """Envía paquete CharacterCreate del protocolo AO estándar.
+
+        Args:
+            char_index: Índice del personaje (int16).
+            body: ID del cuerpo/raza (int16).
+            head: ID de la cabeza (int16).
+            heading: Dirección que mira el personaje (byte).
+            x: Posición X (byte).
+            y: Posición Y (byte).
+            weapon: ID del arma equipada (int16), por defecto 0.
+            shield: ID del escudo equipado (int16), por defecto 0.
+            helmet: ID del casco equipado (int16), por defecto 0.
+            fx: ID del efecto visual (int16), por defecto 0.
+            loops: Loops del efecto (int16), por defecto 0.
+            name: Nombre del personaje (string), por defecto vacío.
+        """
+        response = build_character_create_response(
+            char_index=char_index,
+            body=body,
+            head=head,
+            heading=heading,
+            x=x,
+            y=y,
+            weapon=weapon,
+            shield=shield,
+            helmet=helmet,
+            fx=fx,
+            loops=loops,
+            name=name,
+        )
+        logger.info(
+            "[%s] Enviando CHARACTER_CREATE: charIndex=%d body=%d head=%d heading=%d "
+            "pos=(%d,%d) name=%s",
+            self.connection.address,
+            char_index,
+            body,
+            head,
+            heading,
+            x,
+            y,
+            name,
         )
         await self.connection.send(response)

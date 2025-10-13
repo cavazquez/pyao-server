@@ -174,6 +174,22 @@ class TaskLogin(Task):
         # Enviar cambio de mapa
         await self.message_sender.send_change_map(position["map"])
 
+        # Obtener datos visuales del personaje
+        char_body = int(account_data.get("char_race", 1))
+        char_head = int(account_data.get("char_head", 1))
+        char_heading = 3  # Sur por defecto
+
+        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
+        await self.message_sender.send_character_create(
+            char_index=user_id,
+            body=char_body,
+            head=char_head,
+            heading=char_heading,
+            x=position["x"],
+            y=position["y"],
+            name=username,
+        )
+
         # Obtener y enviar estadísticas completas del personaje
         user_stats = await self.player_repo.get_stats(user_id)
 
