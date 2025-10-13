@@ -69,17 +69,17 @@ async def test_task_create_account_success() -> None:
     # Verificar que se enviaron 3 paquetes: Logged, PosUpdate y UpdateUserStats
     assert writer.write.call_count == 3
 
-    # Primer paquete: Logged
+    # Primer paquete: Logged (saltar los 2 primeros bytes de longitud)
     first_call = writer.write.call_args_list[0][0][0]
-    assert first_call[0] == ServerPacketID.LOGGED
+    assert first_call[2] == ServerPacketID.LOGGED  # Byte 2 es el PacketID
 
-    # Segundo paquete: PosUpdate
+    # Segundo paquete: PosUpdate (saltar los 2 primeros bytes de longitud)
     second_call = writer.write.call_args_list[1][0][0]
-    assert second_call[0] == ServerPacketID.POS_UPDATE
+    assert second_call[2] == ServerPacketID.POS_UPDATE  # Byte 2 es el PacketID
 
-    # Tercer paquete: UpdateUserStats
+    # Tercer paquete: UpdateUserStats (saltar los 2 primeros bytes de longitud)
     third_call = writer.write.call_args_list[2][0][0]
-    assert third_call[0] == ServerPacketID.UPDATE_USER_STATS
+    assert third_call[2] == ServerPacketID.UPDATE_USER_STATS  # Byte 2 es el PacketID
 
 
 @pytest.mark.asyncio
@@ -115,10 +115,10 @@ async def test_task_create_account_duplicate_username() -> None:
     task = TaskCreateAccount(bytes(data), message_sender, redis_client)
     await task.execute()
 
-    # Verificar que se envió mensaje de error
+    # Verificar que se envió mensaje de error (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
 
 
 @pytest.mark.asyncio
@@ -148,10 +148,10 @@ async def test_task_create_account_invalid_username() -> None:
     task = TaskCreateAccount(bytes(data), message_sender, redis_client)
     await task.execute()
 
-    # Verificar que se envió error sin llamar a Redis
+    # Verificar que se envió error sin llamar a Redis (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -182,10 +182,10 @@ async def test_task_create_account_invalid_password() -> None:
     task = TaskCreateAccount(bytes(data), message_sender, redis_client)
     await task.execute()
 
-    # Verificar que se envió error
+    # Verificar que se envió error (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -216,10 +216,10 @@ async def test_task_create_account_invalid_email() -> None:
     task = TaskCreateAccount(bytes(data), message_sender, redis_client)
     await task.execute()
 
-    # Verificar que se envió error
+    # Verificar que se envió error (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
@@ -245,19 +245,18 @@ async def test_task_create_account_no_redis() -> None:
     data.extend(password.encode("utf-8"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
-
     # Crear tarea sin redis_client (None)
     task = TaskCreateAccount(bytes(data), message_sender, None)
     await task.execute()
 
-    # Verificar que se envió error
+    # Verificar que se envió error (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_invalid_packet() -> None:
+async def test_task_create_account_malformed_packet() -> None:
     """Verifica manejo de paquete malformado."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
@@ -273,15 +272,15 @@ async def test_task_create_account_invalid_packet() -> None:
     task = TaskCreateAccount(data, message_sender, redis_client)
     await task.execute()
 
-    # Verificar que se envió error
+    # Verificar que se envió error (saltar los 2 bytes de longitud)
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.ERROR_MSG
+    assert written_data[2] == ServerPacketID.ERROR_MSG
     redis_client.create_account.assert_not_called()
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_unicode_username() -> None:
+async def test_task_create_account_redis_error() -> None:
     """Verifica que funcione con username unicode."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
@@ -289,6 +288,8 @@ async def test_task_create_account_unicode_username() -> None:
 
     redis_client = MagicMock(spec=RedisClient)
     redis_client.create_account = AsyncMock(return_value=1)
+    redis_client.set_player_position = AsyncMock()
+    redis_client.set_player_user_stats = AsyncMock()
 
     connection = ClientConnection(writer)
     message_sender = MessageSender(connection)

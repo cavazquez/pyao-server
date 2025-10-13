@@ -45,12 +45,12 @@ async def test_task_dice_generates_attributes() -> None:
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
 
-    # Verificar formato: PacketID (67) + 5 bytes de atributos
-    assert len(written_data) == 6
-    assert written_data[0] == 67  # ServerPacketID.DiceRoll
+    # Verificar formato: [longitud_int16][PacketID (67)][5 bytes de atributos]
+    assert len(written_data) == 8  # 2 bytes longitud + 6 bytes contenido
+    assert written_data[2] == 67  # ServerPacketID.DiceRoll (byte 2)
 
     # Verificar que los atributos están en rango válido (6-18)
-    for i in range(1, 6):
+    for i in range(3, 8):  # Bytes 3-7 son los atributos
         assert 6 <= written_data[i] <= 18
 
     # Verificar que se llamó drain
