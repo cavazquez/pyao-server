@@ -266,11 +266,15 @@ def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
         font_color: Color de la fuente (byte), por defecto 7 (blanco).
 
     Returns:
-        Paquete de bytes con el formato: PacketID (24) + mensaje + color.
+        Paquete de bytes con el formato: PacketID (24) + longitud (int16) + mensaje + color.
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.CONSOLE_MSG)
+    # Agregar longitud del mensaje como int16
+    packet.add_int16(len(message))
+    # Agregar mensaje
     packet.add_string(message)
+    # Agregar color
     packet.add_byte(font_color)
     return packet.to_bytes()
 
