@@ -9,7 +9,15 @@ from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.redis_client import RedisClient
-from src.task import Task, TaskCreateAccount, TaskDice, TaskLogin, TaskNull, TaskRequestAttributes
+from src.task import (
+    Task,
+    TaskCreateAccount,
+    TaskDice,
+    TaskLogin,
+    TaskNull,
+    TaskRequestAttributes,
+    TaskTalk,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +74,8 @@ class ArgentumServer:
             return TaskDice(data, message_sender, session_data)
         if task_class is TaskRequestAttributes:
             return TaskRequestAttributes(data, message_sender, self.redis_client, session_data)
+        if task_class is TaskTalk:
+            return TaskTalk(data, message_sender, session_data)
 
         return task_class(data, message_sender)
 

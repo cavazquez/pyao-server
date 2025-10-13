@@ -15,9 +15,11 @@ class ClientPacketID(IntEnum):
     CREATE_ACCOUNT = 2  # LoginNewChar
     REQUEST_ATTRIBUTES = 13  # RequestAtributes
 
+    # Paquetes del protocolo AO (implementados)
+    TALK = 3  # Hablar (chat normal)
+
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
-    # TALK = 3
     # YELL = 4
     # WHISPER = 5
     # WALK = 6

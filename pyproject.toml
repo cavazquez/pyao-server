@@ -53,6 +53,7 @@ convention = "google"
 
 [tool.ruff.lint.pylint]
 max-public-methods = 30
+max-returns = 8
 
 [tool.ruff.format]
 quote-style = "double"
