@@ -103,7 +103,12 @@ class ArgentumServer:
             return TaskWalk(data, message_sender, self.player_repo, self.map_manager, session_data)
         if task_class is TaskChangeHeading:
             return TaskChangeHeading(
-                data, message_sender, self.player_repo, self.account_repo, session_data
+                data,
+                message_sender,
+                self.player_repo,
+                self.account_repo,
+                self.map_manager,
+                session_data,
             )
 
         return task_class(data, message_sender)

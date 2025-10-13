@@ -36,7 +36,7 @@ async def test_task_change_heading_success() -> None:
     data = bytes([ClientPacketID.CHANGE_HEADING, heading])
 
     # Crear y ejecutar tarea
-    task = TaskChangeHeading(data, message_sender, player_repo, None, session_data)
+    task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
     await task.execute()
 
     # Verificar que se llamó a set_heading con los parámetros correctos
@@ -62,7 +62,7 @@ async def test_task_change_heading_all_directions() -> None:
     # Probar todas las direcciones: 1=Norte, 2=Este, 3=Sur, 4=Oeste
     for heading in [1, 2, 3, 4]:
         data = bytes([ClientPacketID.CHANGE_HEADING, heading])
-        task = TaskChangeHeading(data, message_sender, player_repo, None, session_data)
+        task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
         await task.execute()
 
     # Verificar que se llamó 4 veces
@@ -87,7 +87,7 @@ async def test_task_change_heading_invalid_direction() -> None:
 
     # Probar dirección inválida (5)
     data = bytes([ClientPacketID.CHANGE_HEADING, 5])
-    task = TaskChangeHeading(data, message_sender, player_repo, None, session_data)
+    task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
     await task.execute()
 
     # Verificar que NO se llamó a set_heading
@@ -112,7 +112,7 @@ async def test_task_change_heading_no_session() -> None:
     session_data: dict[str, dict[str, int]] = {}
 
     data = bytes([ClientPacketID.CHANGE_HEADING, 1])
-    task = TaskChangeHeading(data, message_sender, player_repo, None, session_data)
+    task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
     await task.execute()
 
     # Verificar que NO se llamó a set_heading
@@ -134,7 +134,7 @@ async def test_task_change_heading_no_player_repo() -> None:
 
     data = bytes([ClientPacketID.CHANGE_HEADING, 1])
     # Sin player_repo
-    task = TaskChangeHeading(data, message_sender, None, None, session_data)
+    task = TaskChangeHeading(data, message_sender, None, None, None, session_data)
     await task.execute()
 
     # No debería haber errores, solo un log de error
@@ -158,7 +158,7 @@ async def test_task_change_heading_invalid_packet() -> None:
 
     # Paquete demasiado corto
     data = bytes([ClientPacketID.CHANGE_HEADING])
-    task = TaskChangeHeading(data, message_sender, player_repo, None, session_data)
+    task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
     await task.execute()
 
     # Verificar que NO se llamó a set_heading

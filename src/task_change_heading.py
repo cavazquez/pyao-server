@@ -7,6 +7,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
+    from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -25,12 +26,13 @@ MIN_CHANGE_HEADING_PACKET_SIZE = 2
 class TaskChangeHeading(Task):
     """Tarea que maneja el cambio de dirección del personaje sin moverse."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         data: bytes,
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         account_repo: AccountRepository | None = None,
+        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de cambio de dirección.
@@ -40,11 +42,13 @@ class TaskChangeHeading(Task):
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
             account_repo: Repositorio de cuentas.
+            map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
+        self.map_manager = map_manager
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -74,7 +78,7 @@ class TaskChangeHeading(Task):
         else:
             return heading
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: C901
         """Ejecuta el cambio de dirección del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -137,4 +141,28 @@ class TaskChangeHeading(Task):
             heading=heading,
         )
 
-        # Nota: En el futuro, también enviar a otros jugadores en el mismo mapa
+        # Broadcast multijugador: enviar CHARACTER_CHANGE a otros jugadores en el mapa
+        if self.map_manager and self.player_repo:
+            # Obtener el mapa actual del jugador
+            position = await self.player_repo.get_position(user_id)
+            if position:
+                map_id = position["map"]
+
+                # Enviar CHARACTER_CHANGE a todos los demás jugadores en el mapa
+                other_senders = self.map_manager.get_all_message_senders_in_map(
+                    map_id, exclude_user_id=user_id
+                )
+                for sender in other_senders:
+                    await sender.send_character_change(
+                        char_index=user_id,
+                        body=char_body,
+                        head=char_head,
+                        heading=heading,
+                    )
+
+                logger.debug(
+                    "Cambio de dirección de user %d notificado a %d jugadores en mapa %d",
+                    user_id,
+                    len(other_senders),
+                    map_id,
+                )
