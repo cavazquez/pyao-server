@@ -84,6 +84,15 @@ class RedisKeys:
         """
         return f"player:{user_id}:inventory"
 
+    @staticmethod
+    def player_user_stats(user_id: int) -> str:
+        """Clave para estadísticas completas del jugador (HP, mana, stamina, oro, nivel, exp).
+
+        Returns:
+            Clave de Redis para las estadísticas completas.
+        """
+        return f"player:{user_id}:user_stats"
+
     # Cuentas de usuario
     ACCOUNTS_COUNTER = "accounts:counter"
 

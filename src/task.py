@@ -288,21 +288,28 @@ class TaskLogin(Task):
             position["map"],
         )
 
-        # Enviar estadísticas completas del personaje (UpdateUserStats)
-        # Por ahora enviamos valores por defecto, en el futuro se obtendrán de Redis
-        await self.message_sender.send_update_user_stats(
-            max_hp=100,
-            min_hp=100,
-            max_mana=100,
-            min_mana=100,
-            max_sta=100,
-            min_sta=100,
-            gold=0,
-            level=1,
-            elu=300,  # Experiencia para subir de nivel
-            experience=0,
-        )
-        logger.info("Estadísticas iniciales enviadas para user_id %d", user_id)
+        # Obtener y enviar estadísticas completas del personaje
+        user_stats = await self.redis_client.get_player_user_stats(user_id)
+
+        if user_stats is None:
+            # Si no existen stats, crear valores por defecto
+            user_stats = {
+                "max_hp": 100,
+                "min_hp": 100,
+                "max_mana": 100,
+                "min_mana": 100,
+                "max_sta": 100,
+                "min_sta": 100,
+                "gold": 0,
+                "level": 1,
+                "elu": 300,
+                "experience": 0,
+            }
+            await self.redis_client.set_player_user_stats(user_id=user_id, **user_stats)
+            logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
+
+        await self.message_sender.send_update_user_stats(**user_stats)
+        logger.info("Estadísticas enviadas para user_id %d", user_id)
 
     @staticmethod
     def _hash_password(password: str) -> str:
@@ -667,6 +674,22 @@ class TaskCreateAccount(Task):
                 default_y,
                 default_map,
             )
+
+            # Crear estadísticas iniciales del personaje
+            await self.redis_client.set_player_user_stats(
+                user_id=user_id,
+                max_hp=100,
+                min_hp=100,
+                max_mana=100,
+                min_mana=100,
+                max_sta=100,
+                min_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
+            )
+            logger.info("Estadísticas iniciales creadas en Redis para user_id %d", user_id)
 
             # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
             user_class = char_data.get("job", 1) if char_data else 1

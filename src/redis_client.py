@@ -356,3 +356,76 @@ class RedisClient:
             "y": int(result.get("y", 0)),
             "map": int(result.get("map", 1)),
         }
+
+    async def set_player_user_stats(  # noqa: PLR0913, PLR0917
+        self,
+        user_id: int,
+        max_hp: int,
+        min_hp: int,
+        max_mana: int,
+        min_mana: int,
+        max_sta: int,
+        min_sta: int,
+        gold: int,
+        level: int,
+        elu: int,
+        experience: int,
+    ) -> None:
+        """Guarda las estadísticas completas del jugador en Redis.
+
+        Args:
+            user_id: ID del usuario.
+            max_hp: HP máximo.
+            min_hp: HP actual.
+            max_mana: Mana máximo.
+            min_mana: Mana actual.
+            max_sta: Stamina máxima.
+            min_sta: Stamina actual.
+            gold: Oro del jugador.
+            level: Nivel del jugador.
+            elu: Experiencia para subir de nivel.
+            experience: Experiencia total.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        stats_data = {
+            "max_hp": str(max_hp),
+            "min_hp": str(min_hp),
+            "max_mana": str(max_mana),
+            "min_mana": str(min_mana),
+            "max_sta": str(max_sta),
+            "min_sta": str(min_sta),
+            "gold": str(gold),
+            "level": str(level),
+            "elu": str(elu),
+            "experience": str(experience),
+        }
+        await self.redis.hset(key, mapping=stats_data)  # type: ignore[misc]
+        logger.info("Estadísticas guardadas para user_id %d", user_id)
+
+    async def get_player_user_stats(self, user_id: int) -> dict[str, int] | None:
+        """Obtiene las estadísticas completas del jugador desde Redis.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con las estadísticas o None si no existe.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+
+        if not result:
+            return None
+
+        return {
+            "max_hp": int(result.get("max_hp", 100)),
+            "min_hp": int(result.get("min_hp", 100)),
+            "max_mana": int(result.get("max_mana", 100)),
+            "min_mana": int(result.get("min_mana", 100)),
+            "max_sta": int(result.get("max_sta", 100)),
+            "min_sta": int(result.get("min_sta", 100)),
+            "gold": int(result.get("gold", 0)),
+            "level": int(result.get("level", 1)),
+            "elu": int(result.get("elu", 300)),
+            "experience": int(result.get("experience", 0)),
+        }
