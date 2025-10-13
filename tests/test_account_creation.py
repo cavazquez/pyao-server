@@ -78,9 +78,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 6 paquetes:
-    # Logged, UserCharIndex, ChangeMap, PosUpdate, UpdateUserStats, UpdateHungerAndThirst
-    assert writer.write.call_count == 6
+    # Verificar que se enviaron 5 paquetes:
+    # Logged, UserCharIndex, ChangeMap, UpdateUserStats, UpdateHungerAndThirst
+    assert writer.write.call_count == 5
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -94,17 +94,13 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     third_call = writer.write.call_args_list[2][0][0]
     assert third_call[0] == ServerPacketID.CHANGE_MAP
 
-    # Cuarto paquete: PosUpdate
+    # Cuarto paquete: UpdateUserStats
     fourth_call = writer.write.call_args_list[3][0][0]
-    assert fourth_call[0] == ServerPacketID.POS_UPDATE
+    assert fourth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
-    # Quinto paquete: UpdateUserStats
+    # Quinto paquete: UpdateHungerAndThirst
     fifth_call = writer.write.call_args_list[4][0][0]
-    assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
-
-    # Sexto paquete: UpdateHungerAndThirst
-    sixth_call = writer.write.call_args_list[5][0][0]
-    assert sixth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
+    assert fifth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
 
 
 @pytest.mark.asyncio

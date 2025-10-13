@@ -174,15 +174,6 @@ class TaskLogin(Task):
         # Enviar cambio de mapa
         await self.message_sender.send_change_map(position["map"])
 
-        # Enviar posición en el mapa
-        await self.message_sender.send_pos_update(position["x"], position["y"])
-        logger.info(
-            "Paquete POS_UPDATE enviado: (%d, %d) en mapa %d",
-            position["x"],
-            position["y"],
-            position["map"],
-        )
-
         # Obtener y enviar estadísticas completas del personaje
         user_stats = await self.player_repo.get_stats(user_id)
 
