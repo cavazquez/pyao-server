@@ -9,6 +9,7 @@ from src.task_login import TaskLogin
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
+    from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -22,12 +23,13 @@ MIN_PASSWORD_LENGTH = 6
 class TaskCreateAccount(Task):
     """Tarea que maneja la creación de cuentas."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         data: bytes,
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         account_repo: AccountRepository | None = None,
+        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
@@ -37,11 +39,13 @@ class TaskCreateAccount(Task):
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
             account_repo: Repositorio de cuentas.
+            map_manager: Gestor de mapas (pasado a TaskLogin en login automático).
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
+        self.map_manager = map_manager
         self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: C901, PLR0915
@@ -303,6 +307,7 @@ class TaskCreateAccount(Task):
                 message_sender=self.message_sender,
                 player_repo=self.player_repo,
                 account_repo=self.account_repo,
+                map_manager=self.map_manager,
                 session_data=self.session_data,
             )
             await login_task.execute_with_credentials(username, password)

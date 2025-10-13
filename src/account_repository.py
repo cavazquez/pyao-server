@@ -115,3 +115,25 @@ class AccountRepository:
 
         stored_hash = account_data.get("password_hash", "")
         return stored_hash == password_hash
+
+    async def get_account_by_user_id(self, user_id: int) -> dict[str, str] | None:
+        """Obtiene los datos de una cuenta por user_id.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con los datos de la cuenta o None si no existe.
+        """
+        # Buscar en todas las cuentas (esto es ineficiente, pero funcional por ahora)
+        # En el futuro, podríamos mantener un índice user_id -> username en Redis
+        # Por ahora, iteramos sobre las claves de cuentas
+        pattern = "account:*:data"
+        keys = await self.redis.redis.keys(pattern)
+
+        for key in keys:
+            account_data: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
+            if account_data.get("user_id") == str(user_id):
+                return account_data
+
+        return None

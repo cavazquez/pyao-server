@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import redis
 from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
+from src.map_manager import MapManager
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
@@ -47,6 +48,7 @@ class ArgentumServer:
         self.redis_client: RedisClient | None = None
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
+        self.map_manager = MapManager()  # Gestor de jugadores por mapa
 
     def create_task(  # noqa: PLR0911
         self,
@@ -75,11 +77,21 @@ class ArgentumServer:
         # Pasar parámetros adicionales según el tipo de tarea
         if task_class is TaskLogin:
             return TaskLogin(
-                data, message_sender, self.player_repo, self.account_repo, session_data
+                data,
+                message_sender,
+                self.player_repo,
+                self.account_repo,
+                self.map_manager,
+                session_data,
             )
         if task_class is TaskCreateAccount:
             return TaskCreateAccount(
-                data, message_sender, self.player_repo, self.account_repo, session_data
+                data,
+                message_sender,
+                self.player_repo,
+                self.account_repo,
+                self.map_manager,
+                session_data,
             )
         if task_class is TaskDice:
             return TaskDice(data, message_sender, session_data)

@@ -8,6 +8,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
+    from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -17,12 +18,13 @@ logger = logging.getLogger(__name__)
 class TaskLogin(Task):
     """Tarea que maneja el login de usuarios."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         data: bytes,
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         account_repo: AccountRepository | None = None,
+        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de login.
@@ -32,11 +34,13 @@ class TaskLogin(Task):
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
             account_repo: Repositorio de cuentas.
+            map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
+        self.map_manager = map_manager
         self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str] | None:
@@ -104,7 +108,9 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: PLR0915
+    async def execute_with_credentials(  # noqa: C901, PLR0912, PLR0914, PLR0915
+        self, username: str, password: str
+    ) -> None:
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
@@ -259,6 +265,62 @@ class TaskLogin(Task):
             charisma=attributes["charisma"],
             constitution=attributes["constitution"],
         )
+
+        # Broadcast multijugador: agregar jugador al mapa y notificar a otros
+        if self.map_manager:
+            map_id = position["map"]
+
+            # Enviar CHARACTER_CREATE de todos los jugadores existentes al nuevo jugador
+            existing_players = self.map_manager.get_players_in_map(map_id)
+            for other_user_id in existing_players:
+                # Obtener datos del otro jugador
+                other_position = await self.player_repo.get_position(other_user_id)
+                if other_position:
+                    # Obtener datos visuales del otro jugador
+                    other_account = await self.account_repo.get_account_by_user_id(other_user_id)
+                    if other_account:
+                        other_body = int(other_account.get("char_race", 1))
+                        other_head = int(other_account.get("char_head", 1))
+                        other_username = other_account.get("username", "")
+
+                        if other_body == 0:
+                            other_body = 1
+
+                        # Enviar CHARACTER_CREATE del otro jugador al nuevo jugador
+                        await self.message_sender.send_character_create(
+                            char_index=other_user_id,
+                            body=other_body,
+                            head=other_head,
+                            heading=other_position.get("heading", 3),
+                            x=other_position["x"],
+                            y=other_position["y"],
+                            name=other_username,
+                        )
+
+            # Agregar el nuevo jugador al MapManager
+            self.map_manager.add_player(map_id, user_id, self.message_sender)
+
+            # Enviar CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa
+            other_senders = self.map_manager.get_all_message_senders_in_map(
+                map_id, exclude_user_id=user_id
+            )
+            for sender in other_senders:
+                await sender.send_character_create(
+                    char_index=user_id,
+                    body=char_body,
+                    head=char_head,
+                    heading=char_heading,
+                    x=position["x"],
+                    y=position["y"],
+                    name=username,
+                )
+
+            logger.info(
+                "Jugador %d agregado al mapa %d. Notificados %d jugadores",
+                user_id,
+                map_id,
+                len(other_senders),
+            )
 
     @staticmethod
     def _hash_password(password: str) -> str:
