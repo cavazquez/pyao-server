@@ -98,7 +98,14 @@ class ArgentumServer:
         if task_class is TaskRequestAttributes:
             return TaskRequestAttributes(data, message_sender, self.player_repo, session_data)
         if task_class is TaskTalk:
-            return TaskTalk(data, message_sender, session_data)
+            return TaskTalk(
+                data,
+                message_sender,
+                self.player_repo,
+                self.account_repo,
+                self.map_manager,
+                session_data,
+            )
         if task_class is TaskWalk:
             return TaskWalk(data, message_sender, self.player_repo, self.map_manager, session_data)
         if task_class is TaskChangeHeading:

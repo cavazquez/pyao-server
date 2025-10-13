@@ -6,7 +6,10 @@ from typing import TYPE_CHECKING
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
+    from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +20,13 @@ MIN_TALK_PACKET_SIZE = 3  # PacketID + int16
 class TaskTalk(Task):
     """Tarea para procesar mensajes de chat del jugador."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917
         self,
         data: bytes,
         message_sender: MessageSender,
+        player_repo: PlayerRepository | None = None,
+        account_repo: AccountRepository | None = None,
+        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea Talk.
@@ -28,9 +34,15 @@ class TaskTalk(Task):
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
+            player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas.
+            map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión del cliente.
         """
         super().__init__(data, message_sender)
+        self.player_repo = player_repo
+        self.account_repo = account_repo
+        self.map_manager = map_manager
         self.session_data = session_data
 
     def _parse_packet(self) -> str | None:
@@ -87,5 +99,37 @@ class TaskTalk(Task):
             message,
         )
 
-        # Por ahora solo logueamos el mensaje
-        # En el futuro se implementará broadcast a jugadores cercanos
+        # Broadcast multijugador: enviar mensaje a todos los jugadores en el mapa
+        if self.map_manager and self.player_repo and self.account_repo and self.session_data:
+            # Obtener el nombre del usuario
+            username = "Desconocido"
+            if "username" in self.session_data:
+                username_value = self.session_data["username"]
+                if isinstance(username_value, str):
+                    username = username_value
+
+            # Convertir user_id a int
+            if isinstance(user_id, dict):
+                return
+
+            user_id_int = int(user_id)
+
+            # Obtener el mapa del jugador
+            position = await self.player_repo.get_position(user_id_int)
+            if position:
+                map_id = position["map"]
+
+                # Formatear mensaje con el nombre del usuario
+                formatted_message = f"{username}: {message}"
+
+                # Enviar a todos los jugadores en el mapa (incluyendo el emisor)
+                all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+                for sender in all_senders:
+                    await sender.send_console_msg(formatted_message)
+
+                logger.debug(
+                    "Mensaje de chat de user %d enviado a %d jugadores en mapa %d",
+                    user_id_int,
+                    len(all_senders),
+                    map_id,
+                )

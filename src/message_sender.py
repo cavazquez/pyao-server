@@ -9,6 +9,7 @@ from src.msg import (
     build_character_change_response,
     build_character_create_response,
     build_character_remove_response,
+    build_console_msg_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
@@ -396,5 +397,20 @@ class MessageSender:
             "[%s] Enviando CHARACTER_REMOVE: charIndex=%d",
             self.connection.address,
             char_index,
+        )
+        await self.connection.send(response)
+
+    async def send_console_msg(self, message: str, font_color: int = 7) -> None:
+        """Envía paquete ConsoleMsg del protocolo AO estándar.
+
+        Args:
+            message: Mensaje a enviar.
+            font_color: Color de la fuente (byte), por defecto 7 (blanco).
+        """
+        response = build_console_msg_response(message=message, font_color=font_color)
+        logger.debug(
+            "[%s] Enviando CONSOLE_MSG: %s",
+            self.connection.address,
+            message[:50],  # Solo primeros 50 caracteres en el log
         )
         await self.connection.send(response)

@@ -164,6 +164,7 @@ class ServerPacketID(IntEnum):
     UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
 
+    CONSOLE_MSG = 24  # Mensaje de consola/chat
     CHARACTER_CREATE = 29  # Crear personaje en el mapa
     CHARACTER_REMOVE = 30  # Remover personaje del mapa
     CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
@@ -187,7 +188,6 @@ class ServerPacketID(IntEnum):
     # UPDATE_GOLD = 18
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
-    # CONSOLE_MSG = 24
     # GUILD_CHAT = 25
     # SHOW_MESSAGE_BOX = 26
     # USER_INDEX_IN_SERVER = 27
