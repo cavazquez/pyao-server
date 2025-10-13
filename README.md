@@ -98,33 +98,57 @@ pyao-server/
 │   ├── __init__.py              # Inicialización del paquete
 │   ├── run_server.py            # Entry point del servidor
 │   ├── server.py                # Servidor TCP principal (ArgentumServer)
-│   ├── client_connection.py     # Gestión de conexiones TCP
+│   ├── client_connection.py     # Gestión de conexiones TCP (send/receive)
 │   ├── message_sender.py        # Envío de mensajes específicos del juego
-│   ├── task.py                  # Sistema de tareas (Task, TaskDice, TaskNull)
+│   │
+│   ├── # Capa de Datos (Repositorios)
+│   ├── player_repository.py     # Repositorio de datos de jugadores
+│   ├── account_repository.py    # Repositorio de cuentas de usuario
+│   ├── redis_client.py          # Cliente Redis (bajo nivel)
+│   ├── redis_config.py          # Configuración y constantes de Redis
+│   │
+│   ├── # Lógica de Negocio (Tasks)
+│   ├── task.py                  # Sistema de tareas base
+│   ├── task_login.py            # Tarea de login
+│   ├── task_account.py          # Tarea de creación de cuentas
+│   ├── task_attributes.py       # Tarea de solicitud de atributos
+│   ├── task_dice.py             # Tarea de tirada de dados
+│   ├── task_talk.py             # Tarea de chat
+│   │
+│   ├── # Protocolo
 │   ├── packet_id.py             # Definición de IDs de paquetes (enums)
 │   ├── packet_handlers.py       # Mapeo de packet IDs a handlers
 │   ├── packet_builder.py        # Constructor de paquetes de bytes
-│   ├── msg.py                   # Construcción de mensajes del servidor
-│   ├── redis_client.py          # Cliente Redis singleton con soporte async
-│   └── redis_config.py          # Configuración y constantes de Redis
+│   └── msg.py                   # Construcción de mensajes del servidor
+│
 ├── tests/                       # Tests unitarios
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   ├── test_client_connection.py   # Tests de ClientConnection
 │   ├── test_message_sender.py      # Tests de MessageSender
 │   ├── test_task.py                # Tests de tareas
+│   ├── test_account_creation.py    # Tests de creación de cuentas
 │   ├── test_packet_builder.py      # Tests de PacketBuilder
 │   ├── test_msg.py                 # Tests de mensajes
 │   └── test_redis_client.py        # Tests de Redis
+│
 ├── redis/                       # Configuración de Redis
 │   ├── Dockerfile               # Imagen Docker de Redis 8
 │   └── README.md                # Documentación de Redis
+│
+├── docs/                        # Documentación
+│   ├── LOGIN_FLOW.md            # Flujo de login
+│   ├── ACCOUNT_CREATION.md      # Creación de cuentas
+│   └── PROTOCOL_MIGRATION.md    # Migración de protocolo
+│
 ├── .github/                     # GitHub Actions workflows (CI/CD)
 │   └── workflows/
 │       ├── ci.yml               # Integración continua
 │       └── release.yml          # Releases automáticos
+│
 ├── pyproject.toml               # Configuración del proyecto y dependencias
 ├── uv.lock                      # Lock file de dependencias
 ├── run_tests.sh                 # Script para ejecutar todos los checks
+├── REFACTOR_REPOSITORIES.md     # Documentación de refactorización
 ├── Claude.md                    # Reglas de desarrollo
 ├── README.md                    # Este archivo
 └── LICENSE                      # Licencia Apache 2.0
@@ -132,16 +156,50 @@ pyao-server/
 
 ### Arquitectura
 
-El servidor sigue una arquitectura de separación de responsabilidades:
+El servidor sigue una **arquitectura en capas** con separación de responsabilidades:
 
+#### Capa de Red
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
-- **`ClientConnection`**: Gestiona la conexión TCP básica (send, close, wait_closed)
+- **`ClientConnection`**: Gestiona la conexión TCP (send/receive, close, wait_closed)
 - **`MessageSender`**: Envía mensajes específicos del juego al cliente
-- **`Task`**: Procesa la lógica de negocio (tirada de dados, creación de cuentas, movimiento, etc.)
-- **`PacketBuilder`**: Construye paquetes de bytes con validación (soporta bytes, int16, int32, strings)
-- **`msg.py`**: Funciones para construir mensajes específicos del protocolo
-- **`RedisClient`**: Cliente Redis singleton para configuración y estado distribuido
+
+#### Capa de Datos (Repositorios)
+- **`PlayerRepository`**: Gestión de datos de jugadores (posición, stats, hambre/sed, atributos)
+- **`AccountRepository`**: Gestión de cuentas (crear, obtener, verificar password)
+- **`RedisClient`**: Cliente Redis de bajo nivel (conexión, configuración, sesiones)
 - **`RedisConfig`**: Configuración y constantes de Redis
+
+#### Capa de Lógica de Negocio (Tasks)
+- **`Task`**: Clase base para procesamiento de paquetes
+- **`TaskLogin`**: Procesa login de usuarios
+- **`TaskCreateAccount`**: Procesa creación de cuentas
+- **`TaskRequestAttributes`**: Procesa solicitud de atributos
+- **`TaskDice`**: Procesa tirada de dados
+- **`TaskTalk`**: Procesa mensajes de chat
+
+#### Capa de Protocolo
+- **`PacketBuilder`**: Construye paquetes de bytes con validación
+- **`msg.py`**: Funciones para construir mensajes específicos del protocolo
+- **`packet_id.py`**: Enums de IDs de paquetes
+- **`packet_handlers.py`**: Mapeo de packet IDs a handlers
+
+```
+┌─────────────────────────────────────────┐
+│         Capa de Red                     │
+│  ArgentumServer → ClientConnection      │
+│         ↓                                │
+│    MessageSender                         │
+└──────────────┬──────────────────────────┘
+               │
+        ┌──────┴──────┐
+        │             │
+┌───────▼────────┐ ┌──▼────────────────┐
+│ Capa de Datos  │ │ Lógica Negocio    │
+│ PlayerRepo     │ │ Tasks             │
+│ AccountRepo    │ │ (Login, Create,   │
+│ RedisClient    │ │  Attributes, etc) │
+└────────────────┘ └───────────────────┘
+```
 
 ### Integración con Redis
 
@@ -155,16 +213,27 @@ Redis se utiliza para:
 Estructura de claves en Redis:
 
 ```
+# Configuración (gestionada por RedisClient)
 config:server:host              # Host del servidor
 config:server:port              # Puerto del servidor
+config:server:max_connections   # Límite de conexiones
+
+# Sesiones (gestionadas por RedisClient)
 server:connections:count        # Contador de conexiones activas
+session:{user_id}:active        # Sesión activa del jugador
+session:{user_id}:last_seen     # Último acceso del jugador
+
+# Cuentas (gestionadas por AccountRepository)
 accounts:counter                # Contador autoincremental de user_id
 account:{username}:data         # Datos de la cuenta (hash)
 account:username:{username}     # Mapeo username -> user_id
-session:{user_id}:active        # Sesión activa del jugador
-session:{user_id}:last_seen     # Último acceso del jugador
-player:{user_id}:position       # Posición del jugador
-player:{user_id}:stats          # Estadísticas del jugador
+
+# Jugadores (gestionadas por PlayerRepository)
+player:{user_id}:position       # Posición del jugador (x, y, map)
+player:{user_id}:user_stats     # Estadísticas (HP, mana, stamina, gold, level, exp)
+player:{user_id}:hunger_thirst  # Hambre y sed (max/min water/hunger)
+player:{user_id}:stats          # Atributos (STR, AGI, INT, CHA, CON)
+player:{user_id}:character      # Datos del personaje (race, gender, job, head, home)
 player:{user_id}:inventory      # Inventario del jugador
 ```
 
