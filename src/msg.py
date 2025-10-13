@@ -240,9 +240,11 @@ def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
 
     Returns:
         Paquete de bytes con el formato: PacketID (45) + stats.
+        Orden: min/max (actual/máximo) para cada stat.
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.UPDATE_USER_STATS)
+    # Orden según cliente Godot: max/min (máximo/actual)
     packet.add_int16(max_hp)
     packet.add_int16(min_hp)
     packet.add_int16(max_mana)

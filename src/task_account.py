@@ -262,6 +262,18 @@ class TaskCreateAccount(Task):
                 self.message_sender.connection.address,
             )
 
+            # Guardar atributos de dados en Redis si existen
+            if stats_data:
+                await self.player_repo.set_attributes(
+                    user_id=user_id,
+                    strength=stats_data.get("strength", 10),
+                    agility=stats_data.get("agility", 10),
+                    intelligence=stats_data.get("intelligence", 10),
+                    charisma=stats_data.get("charisma", 10),
+                    constitution=stats_data.get("constitution", 10),
+                )
+                logger.info("Atributos guardados en Redis para user_id %d", user_id)
+
             # Ejecutar login automático después de crear la cuenta
             login_task = TaskLogin(
                 data=self.data,
