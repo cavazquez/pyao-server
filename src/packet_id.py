@@ -85,7 +85,7 @@ class ClientPacketID(IntEnum):
     # GUILD_OPEN_ELECTIONS = 67
     # GUILD_REQUEST_MEMBERSHIP = 68
     # GUILD_REQUEST_DETAILS = 69
-    # ONLINE = 70
+    ONLINE = 70
     # QUIT = 71
     # GUILD_LEAVE = 72
     # REQUEST_ACCOUNT_STATE = 73

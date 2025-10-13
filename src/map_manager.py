@@ -15,23 +15,26 @@ class MapManager:
     def __init__(self) -> None:
         """Inicializa el gestor de mapas.
 
-        Estructura interna: {map_id: {user_id: message_sender}}
+        Estructura interna: {map_id: {user_id: (message_sender, username)}}
         """
-        self._players_by_map: dict[int, dict[int, MessageSender]] = {}
+        self._players_by_map: dict[int, dict[int, tuple[MessageSender, str]]] = {}
 
-    def add_player(self, map_id: int, user_id: int, message_sender: MessageSender) -> None:
+    def add_player(
+        self, map_id: int, user_id: int, message_sender: MessageSender, username: str = ""
+    ) -> None:
         """Agrega un jugador a un mapa.
 
         Args:
             map_id: ID del mapa.
             user_id: ID del usuario.
             message_sender: MessageSender del jugador.
+            username: Nombre del usuario (opcional).
         """
         if map_id not in self._players_by_map:
             self._players_by_map[map_id] = {}
 
-        self._players_by_map[map_id][user_id] = message_sender
-        logger.debug("Jugador %d agregado al mapa %d", user_id, map_id)
+        self._players_by_map[map_id][user_id] = (message_sender, username)
+        logger.debug("Jugador %d (%s) agregado al mapa %d", user_id, username, map_id)
 
     def remove_player(self, map_id: int, user_id: int) -> None:
         """Remueve un jugador de un mapa.
@@ -82,7 +85,8 @@ class MapManager:
         if map_id not in self._players_by_map:
             return None
 
-        return self._players_by_map[map_id].get(user_id)
+        player_data = self._players_by_map[map_id].get(user_id)
+        return player_data[0] if player_data else None
 
     def get_all_message_senders_in_map(
         self, map_id: int, exclude_user_id: int | None = None
@@ -100,7 +104,7 @@ class MapManager:
             return []
 
         senders = []
-        for user_id, sender in self._players_by_map[map_id].items():
+        for user_id, (sender, _username) in self._players_by_map[map_id].items():
             if exclude_user_id is None or user_id != exclude_user_id:
                 senders.append(sender)
 
@@ -140,3 +144,16 @@ class MapManager:
         for map_id in maps_to_clean:
             del self._players_by_map[map_id]
             logger.debug("Mapa %d eliminado (sin jugadores)", map_id)
+
+    def get_all_connected_players(self) -> list[str]:
+        """Obtiene la lista de nombres de todos los jugadores conectados.
+
+        Returns:
+            Lista de nombres de usuario conectados.
+        """
+        usernames = []
+        for players in self._players_by_map.values():
+            for _user_id, (_sender, username) in players.items():
+                if username and username not in usernames:
+                    usernames.append(username)
+        return usernames

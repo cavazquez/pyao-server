@@ -298,7 +298,7 @@ class TaskLogin(Task):
                         )
 
             # Agregar el nuevo jugador al MapManager
-            self.map_manager.add_player(map_id, user_id, self.message_sender)
+            self.map_manager.add_player(map_id, user_id, self.message_sender, username)
 
             # Enviar CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa
             other_senders = self.map_manager.get_all_message_senders_in_map(
