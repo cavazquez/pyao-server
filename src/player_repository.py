@@ -7,6 +7,8 @@ from src.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.redis_client import RedisClient
+else:
+    RedisClient = object
 
 logger = logging.getLogger(__name__)
 

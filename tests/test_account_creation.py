@@ -4,25 +4,30 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID, ServerPacketID
-from src.redis_client import RedisClient
+from src.player_repository import PlayerRepository
 from src.task import TaskCreateAccount
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_success() -> None:  # noqa: PLR0914
+async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     """Verifica que TaskCreateAccount cree una cuenta exitosamente."""
     # Mock del writer
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    # Mock del RedisClient
-    redis_client = MagicMock(spec=RedisClient)
-    redis_client.create_account = AsyncMock(return_value=1)
-    redis_client.set_player_position = AsyncMock()
+    # Mock de los repositorios
+    player_repo = MagicMock(spec=PlayerRepository)
+    player_repo.set_position = AsyncMock()
+    player_repo.set_stats = AsyncMock()
+    player_repo.set_hunger_thirst = AsyncMock()
+
+    account_repo = MagicMock(spec=AccountRepository)
+    account_repo.create_account = AsyncMock(return_value=1)
 
     # Crear conexión y message sender
     reader = MagicMock()
@@ -55,12 +60,12 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914
     data.append(1)  # home
 
     # Crear y ejecutar tarea
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se llamó a create_account
-    redis_client.create_account.assert_called_once()
-    call_args = redis_client.create_account.call_args
+    account_repo.create_account.assert_called_once()
+    call_args = account_repo.create_account.call_args
     assert call_args.kwargs["username"] == username
     assert call_args.kwargs["email"] == email
     # Verificar que la contraseña fue hasheada (no es la original)
@@ -104,8 +109,9 @@ async def test_task_create_account_duplicate_username() -> None:
     writer.drain = AsyncMock()
 
     # Mock del RedisClient que lanza ValueError
-    redis_client = MagicMock(spec=RedisClient)
-    redis_client.create_account = AsyncMock(
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
+    account_repo.create_account = AsyncMock(
         side_effect=ValueError("La cuenta 'testuser' ya existe")
     )
 
@@ -127,7 +133,7 @@ async def test_task_create_account_duplicate_username() -> None:
     data.extend(email.encode("utf-8"))
 
     # Ejecutar tarea
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se envió mensaje de error
@@ -143,7 +149,8 @@ async def test_task_create_account_invalid_username() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    redis_client = MagicMock(spec=RedisClient)
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
@@ -161,14 +168,14 @@ async def test_task_create_account_invalid_username() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se envió error sin llamar a Redis
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.ERROR_MSG
-    redis_client.create_account.assert_not_called()
+    account_repo.create_account.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -178,7 +185,8 @@ async def test_task_create_account_invalid_password() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    redis_client = MagicMock(spec=RedisClient)
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
@@ -196,14 +204,14 @@ async def test_task_create_account_invalid_password() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.ERROR_MSG
-    redis_client.create_account.assert_not_called()
+    account_repo.create_account.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -213,7 +221,8 @@ async def test_task_create_account_invalid_email() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    redis_client = MagicMock(spec=RedisClient)
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
@@ -231,14 +240,14 @@ async def test_task_create_account_invalid_email() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.ERROR_MSG
-    redis_client.create_account.assert_not_called()
+    account_repo.create_account.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -282,7 +291,8 @@ async def test_task_create_account_invalid_packet() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    redis_client = MagicMock(spec=RedisClient)
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
@@ -290,14 +300,14 @@ async def test_task_create_account_invalid_packet() -> None:
     # Paquete incompleto (solo PacketID)
     data = bytes([ClientPacketID.CREATE_ACCOUNT])
 
-    task = TaskCreateAccount(data, message_sender, redis_client)
+    task = TaskCreateAccount(data, message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se envió error
     assert writer.write.called
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.ERROR_MSG
-    redis_client.create_account.assert_not_called()
+    account_repo.create_account.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -307,8 +317,9 @@ async def test_task_create_account_unicode_username() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    redis_client = MagicMock(spec=RedisClient)
-    redis_client.create_account = AsyncMock(return_value=1)
+    player_repo = MagicMock(spec=PlayerRepository)
+    account_repo = MagicMock(spec=AccountRepository)
+    account_repo.create_account = AsyncMock(return_value=1)
 
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
@@ -339,12 +350,12 @@ async def test_task_create_account_unicode_username() -> None:
     # Home
     data.append(1)  # home
 
-    task = TaskCreateAccount(bytes(data), message_sender, redis_client)
+    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
 
     # Verificar que se creó la cuenta
-    redis_client.create_account.assert_called_once()
-    call_args = redis_client.create_account.call_args
+    account_repo.create_account.assert_called_once()
+    call_args = account_repo.create_account.call_args
     assert call_args.kwargs["username"] == username
 
 

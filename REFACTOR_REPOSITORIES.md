@@ -26,31 +26,28 @@ Separar la responsabilidad de `RedisClient` en:
   - Crea `PlayerRepository` y `AccountRepository`
   - Pasa repositorios a `TaskLogin` y `TaskCreateAccount`
 
+### ✅ Completado (Continuación)
+
+- [x] Actualizar `TaskLogin` para usar repositorios
+  - ✅ `self.player_repo.get_position()` / `set_position()`
+  - ✅ `self.player_repo.get_stats()` / `set_stats()`
+  - ✅ `self.player_repo.get_hunger_thirst()` / `set_hunger_thirst()`
+  - ✅ `self.account_repo.get_account()` / `verify_password()`
+
+- [x] Actualizar `TaskCreateAccount` para usar repositorios
+  - ✅ `self.account_repo.create_account()`
+  - ✅ `self.player_repo.set_position()` / `set_stats()` / `set_hunger_thirst()`
+
+- [x] Actualizar tests para usar repositorios
+  - ✅ test_account_creation.py: Usa mocks de PlayerRepository y AccountRepository
+
 ### ❌ Pendiente
-
-- [ ] Actualizar `TaskLogin` para usar repositorios en lugar de `redis_client`
-  - Cambiar `self.redis_client.get_player_position()` → `self.player_repo.get_position()`
-  - Cambiar `self.redis_client.set_player_position()` → `self.player_repo.set_position()`
-  - Cambiar `self.redis_client.get_player_user_stats()` → `self.player_repo.get_stats()`
-  - Cambiar `self.redis_client.set_player_user_stats()` → `self.player_repo.set_stats()`
-  - Cambiar `self.redis_client.get_player_hunger_thirst()` → `self.player_repo.get_hunger_thirst()`
-  - Cambiar `self.redis_client.set_player_hunger_thirst()` → `self.player_repo.set_hunger_thirst()`
-  - Cambiar `self.redis_client.get_account()` → `self.account_repo.get_account()`
-
-- [ ] Actualizar `TaskCreateAccount` para usar repositorios
-  - Cambiar `self.redis_client.create_account()` → `self.account_repo.create_account()`
-  - Cambiar `self.redis_client.set_player_position()` → `self.player_repo.set_position()`
-  - Cambiar `self.redis_client.set_player_user_stats()` → `self.player_repo.set_stats()`
-  - Cambiar `self.redis_client.set_player_hunger_thirst()` → `self.player_repo.set_hunger_thirst()`
 
 - [ ] Actualizar `TaskRequestAttributes` para usar repositorios
   - Cambiar `self.redis_client.get_player_stats()` → `self.player_repo.get_attributes()`
 
-- [ ] Actualizar tests para usar repositorios
-
 - [ ] Limpiar métodos obsoletos de `RedisClient`:
-  - Eliminar `create_account()`
-  - Eliminar `get_account()`
+  - Eliminar `create_account()` / `get_account()` / `account_exists()` / `get_account_data()`
   - Eliminar `get_player_position()` / `set_player_position()`
   - Eliminar `get_player_user_stats()` / `set_player_user_stats()`
   - Eliminar `get_player_hunger_thirst()` / `set_player_hunger_thirst()`
