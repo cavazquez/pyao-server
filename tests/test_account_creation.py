@@ -66,20 +66,29 @@ async def test_task_create_account_success() -> None:
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 3 paquetes: Logged, PosUpdate y UpdateUserStats
-    assert writer.write.call_count == 3
+    # Verificar que se enviaron 5 paquetes:
+    # Logged, UserCharIndex, ChangeMap, PosUpdate, UpdateUserStats
+    assert writer.write.call_count == 5
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
     assert first_call[0] == ServerPacketID.LOGGED
 
-    # Segundo paquete: PosUpdate
+    # Segundo paquete: UserCharIndexInServer
     second_call = writer.write.call_args_list[1][0][0]
-    assert second_call[0] == ServerPacketID.POS_UPDATE
+    assert second_call[0] == ServerPacketID.USER_CHAR_INDEX_IN_SERVER
 
-    # Tercer paquete: UpdateUserStats
+    # Tercer paquete: ChangeMap
     third_call = writer.write.call_args_list[2][0][0]
-    assert third_call[0] == ServerPacketID.UPDATE_USER_STATS
+    assert third_call[0] == ServerPacketID.CHANGE_MAP
+
+    # Cuarto paquete: PosUpdate
+    fourth_call = writer.write.call_args_list[3][0][0]
+    assert fourth_call[0] == ServerPacketID.POS_UPDATE
+
+    # Quinto paquete: UpdateUserStats
+    fifth_call = writer.write.call_args_list[4][0][0]
+    assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
 
 @pytest.mark.asyncio

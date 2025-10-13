@@ -169,7 +169,7 @@ class TaskCreateAccount(Task):
         """
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
         hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
@@ -286,6 +286,12 @@ class TaskCreateAccount(Task):
 
             # Enviar paquete Logged (solo PacketID, sin datos)
             await self.message_sender.send_logged()
+
+            # Enviar índice del personaje en el servidor
+            await self.message_sender.send_user_char_index_in_server(user_id)
+
+            # Enviar cambio de mapa
+            await self.message_sender.send_change_map(default_map)
 
             # Enviar posición inicial
             await self.message_sender.send_pos_update(default_x, default_y)

@@ -2,7 +2,13 @@
 
 import pytest
 
-from src.msg import build_dice_roll_response, build_error_msg_response, build_logged_response
+from src.msg import (
+    build_change_map_response,
+    build_dice_roll_response,
+    build_error_msg_response,
+    build_logged_response,
+    build_user_char_index_in_server_response,
+)
 from src.packet_id import ServerPacketID
 
 
@@ -190,3 +196,57 @@ def test_build_error_msg_response_long_message() -> None:
     msg_length = int.from_bytes(response[1:3], byteorder="little", signed=True)
     decoded_msg = response[3 : 3 + msg_length].decode("utf-8")
     assert decoded_msg == error_msg
+
+
+def test_build_user_char_index_in_server_response_structure() -> None:
+    """Verifica que el paquete UserCharIndexInServer tenga la estructura correcta."""
+    char_index = 42
+    response = build_user_char_index_in_server_response(char_index)
+
+    # Verificar longitud: 1 byte PacketID + 2 bytes int16
+    assert len(response) == 3
+
+    # Verificar PacketID
+    assert response[0] == ServerPacketID.USER_CHAR_INDEX_IN_SERVER
+
+    # Verificar charIndex (int16, little-endian)
+    decoded_index = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    assert decoded_index == char_index
+
+
+def test_build_user_char_index_in_server_response_values() -> None:
+    """Verifica diferentes valores de charIndex."""
+    test_values = [0, 1, 100, 1000, 32767]  # Valores válidos para int16
+
+    for char_index in test_values:
+        response = build_user_char_index_in_server_response(char_index)
+        assert response[0] == ServerPacketID.USER_CHAR_INDEX_IN_SERVER
+        decoded_index = int.from_bytes(response[1:3], byteorder="little", signed=True)
+        assert decoded_index == char_index
+
+
+def test_build_change_map_response_structure() -> None:
+    """Verifica que el paquete ChangeMap tenga la estructura correcta."""
+    map_number = 5
+    response = build_change_map_response(map_number)
+
+    # Verificar longitud: 1 byte PacketID + 2 bytes int16
+    assert len(response) == 3
+
+    # Verificar PacketID
+    assert response[0] == ServerPacketID.CHANGE_MAP
+
+    # Verificar mapNumber (int16, little-endian)
+    decoded_map = int.from_bytes(response[1:3], byteorder="little", signed=True)
+    assert decoded_map == map_number
+
+
+def test_build_change_map_response_values() -> None:
+    """Verifica diferentes valores de mapNumber."""
+    test_values = [1, 10, 100, 500, 1000]
+
+    for map_number in test_values:
+        response = build_change_map_response(map_number)
+        assert response[0] == ServerPacketID.CHANGE_MAP
+        decoded_map = int.from_bytes(response[1:3], byteorder="little", signed=True)
+        assert decoded_map == map_number

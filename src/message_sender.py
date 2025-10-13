@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.msg import (
     build_attributes_response,
+    build_change_map_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
@@ -13,6 +14,7 @@ from src.msg import (
     build_update_mana_response,
     build_update_sta_response,
     build_update_user_stats_response,
+    build_user_char_index_in_server_response,
 )
 
 if TYPE_CHECKING:
@@ -112,6 +114,16 @@ class MessageSender:
         logger.info("[%s] Enviando LOGGED", self.connection.address)
         await self.connection.send(response)
 
+    async def send_change_map(self, map_number: int) -> None:
+        """Envía paquete ChangeMap del protocolo AO estándar.
+
+        Args:
+            map_number: Número del mapa (int16).
+        """
+        response = build_change_map_response(map_number=map_number)
+        logger.info("[%s] Enviando CHANGE_MAP: map=%d", self.connection.address, map_number)
+        await self.connection.send(response)
+
     async def send_pos_update(self, x: int, y: int) -> None:
         """Envía paquete PosUpdate del protocolo AO estándar.
 
@@ -121,6 +133,20 @@ class MessageSender:
         """
         response = build_pos_update_response(x=x, y=y)
         logger.info("[%s] Enviando POS_UPDATE: x=%d, y=%d", self.connection.address, x, y)
+        await self.connection.send(response)
+
+    async def send_user_char_index_in_server(self, char_index: int) -> None:
+        """Envía paquete UserCharIndexInServer del protocolo AO estándar.
+
+        Args:
+            char_index: Índice del personaje del jugador en el servidor (int16).
+        """
+        response = build_user_char_index_in_server_response(char_index=char_index)
+        logger.info(
+            "[%s] Enviando USER_CHAR_INDEX_IN_SERVER: charIndex=%d",
+            self.connection.address,
+            char_index,
+        )
         await self.connection.send(response)
 
     async def send_error_msg(self, error_message: str) -> None:

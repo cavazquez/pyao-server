@@ -145,6 +145,9 @@ class TaskLogin(Task):
         # Enviar paquete Logged (solo PacketID, sin datos)
         await self.message_sender.send_logged()
 
+        # Enviar índice del personaje en el servidor
+        await self.message_sender.send_user_char_index_in_server(user_id)
+
         # Obtener y enviar posición del personaje
         position = await self.redis_client.get_player_position(user_id)
 
@@ -163,6 +166,10 @@ class TaskLogin(Task):
             )
             position = {"x": default_x, "y": default_y, "map": default_map}
 
+        # Enviar cambio de mapa
+        await self.message_sender.send_change_map(position["map"])
+
+        # Enviar posición en el mapa
         await self.message_sender.send_pos_update(position["x"], position["y"])
         logger.info(
             "Paquete POS_UPDATE enviado: (%d, %d) en mapa %d",

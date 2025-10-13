@@ -76,6 +76,21 @@ def build_logged_response() -> bytes:
     return packet.to_bytes()
 
 
+def build_change_map_response(map_number: int) -> bytes:
+    """Construye el paquete ChangeMap del protocolo AO estándar.
+
+    Args:
+        map_number: Número del mapa (int16).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (21) + mapNumber (int16).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHANGE_MAP)
+    packet.add_int16(map_number)
+    return packet.to_bytes()
+
+
 def build_pos_update_response(x: int, y: int) -> bytes:
     """Construye el paquete PosUpdate del protocolo AO estándar.
 
@@ -90,6 +105,21 @@ def build_pos_update_response(x: int, y: int) -> bytes:
     packet.add_byte(ServerPacketID.POS_UPDATE)
     packet.add_byte(x)
     packet.add_byte(y)
+    return packet.to_bytes()
+
+
+def build_user_char_index_in_server_response(char_index: int) -> bytes:
+    """Construye el paquete UserCharIndexInServer del protocolo AO estándar.
+
+    Args:
+        char_index: Índice del personaje del jugador en el servidor (int16).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (28) + charIndex (int16).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.USER_CHAR_INDEX_IN_SERVER)
+    packet.add_int16(char_index)
     return packet.to_bytes()
 
 

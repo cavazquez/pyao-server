@@ -155,7 +155,9 @@ class ServerPacketID(IntEnum):
     UPDATE_STA = 15  # Actualizar stamina
     UPDATE_MANA = 16  # Actualizar mana
     UPDATE_HP = 17  # Actualizar HP
+    CHANGE_MAP = 21  # Cambiar mapa del personaje
     POS_UPDATE = 22  # Actualizar posición del personaje
+    USER_CHAR_INDEX_IN_SERVER = 28  # Índice del personaje del jugador
     UPDATE_USER_STATS = 45  # Actualizar estadísticas completas del usuario
     ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
     ERROR_MSG = 55  # Mensaje de error

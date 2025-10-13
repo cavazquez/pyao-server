@@ -5,6 +5,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Constante para el límite de bytes a mostrar en logs
+MAX_LOG_BYTES = 32
+
 
 class ClientConnection:
     """Encapsula la conexión con un cliente y provee métodos para comunicación."""
@@ -26,7 +29,14 @@ class ClientConnection:
         """
         self.writer.write(data)
         await self.writer.drain()
-        logger.debug("Enviados %d bytes a %s", len(data), self.address)
+        hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
+        logger.info(
+            "Enviados %d bytes a %s: %s%s",
+            len(data),
+            self.address,
+            hex_data,
+            "..." if len(data) > MAX_LOG_BYTES else "",
+        )
 
     def close(self) -> None:
         """Cierra la conexión con el cliente."""
