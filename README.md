@@ -108,12 +108,15 @@ pyao-server/
 │   ├── redis_config.py          # Configuración y constantes de Redis
 │   │
 │   ├── # Lógica de Negocio (Tasks)
-│   ├── task.py                  # Sistema de tareas base
+│   ├── task.py                  # Sistema de tareas base (clase abstracta)
 │   ├── task_login.py            # Tarea de login
 │   ├── task_account.py          # Tarea de creación de cuentas
 │   ├── task_attributes.py       # Tarea de solicitud de atributos
 │   ├── task_dice.py             # Tarea de tirada de dados
 │   ├── task_talk.py             # Tarea de chat
+│   ├── task_walk.py             # Tarea de movimiento
+│   ├── task_change_heading.py   # Tarea de cambio de dirección
+│   ├── task_null.py             # Tarea para packets desconocidos
 │   │
 │   ├── # Protocolo
 │   ├── packet_id.py             # Definición de IDs de paquetes (enums)
@@ -121,14 +124,15 @@ pyao-server/
 │   ├── packet_builder.py        # Constructor de paquetes de bytes
 │   └── msg.py                   # Construcción de mensajes del servidor
 │
-├── tests/                       # Tests unitarios
+├── tests/                       # Tests unitarios (103 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   ├── test_client_connection.py   # Tests de ClientConnection
 │   ├── test_message_sender.py      # Tests de MessageSender
-│   ├── test_task.py                # Tests de tareas
+│   ├── test_task.py                # Tests de tareas base
 │   ├── test_account_creation.py    # Tests de creación de cuentas
+│   ├── test_task_change_heading.py # Tests de cambio de dirección
 │   ├── test_packet_builder.py      # Tests de PacketBuilder
-│   ├── test_msg.py                 # Tests de mensajes
+│   ├── test_msg.py                 # Tests de mensajes y packets
 │   └── test_redis_client.py        # Tests de Redis
 │
 ├── redis/                       # Configuración de Redis
@@ -172,12 +176,15 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 - **`RedisConfig`**: Configuración y constantes de Redis
 
 #### Capa de Lógica de Negocio (Tasks)
-- **`Task`**: Clase base para procesamiento de paquetes
+- **`Task`**: Clase base abstracta para procesamiento de paquetes
 - **`TaskLogin`**: Procesa login de usuarios
 - **`TaskCreateAccount`**: Procesa creación de cuentas
 - **`TaskRequestAttributes`**: Procesa solicitud de atributos
 - **`TaskDice`**: Procesa tirada de dados
 - **`TaskTalk`**: Procesa mensajes de chat
+- **`TaskWalk`**: Procesa movimiento del personaje
+- **`TaskChangeHeading`**: Procesa cambio de dirección sin moverse
+- **`TaskNull`**: Maneja packets desconocidos
 
 #### Capa de Protocolo
 - **`PacketBuilder`**: Construye paquetes de bytes con validación
@@ -231,7 +238,7 @@ account:{username}:data         # Datos de la cuenta (hash)
 account:username:{username}     # Mapeo username -> user_id
 
 # Jugadores (gestionadas por PlayerRepository)
-player:{user_id}:position       # Posición del jugador (x, y, map)
+player:{user_id}:position       # Posición del jugador (x, y, map, heading)
 player:{user_id}:user_stats     # Estadísticas (HP, mana, stamina, gold, level, exp)
 player:{user_id}:hunger_thirst  # Hambre y sed (max/min water/hunger)
 player:{user_id}:stats          # Atributos (STR, AGI, INT, CHA, CON)
