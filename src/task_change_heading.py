@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -29,6 +30,7 @@ class TaskChangeHeading(Task):
         data: bytes,
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
+        account_repo: AccountRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de cambio de dirección.
@@ -37,10 +39,12 @@ class TaskChangeHeading(Task):
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
+        self.account_repo = account_repo
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -110,12 +114,26 @@ class TaskChangeHeading(Task):
             heading,
         )
 
+        # Obtener datos visuales del personaje de Redis
+        char_body = 1  # Valor por defecto
+        char_head = 15  # Valor por defecto
+
+        if self.account_repo and "username" in self.session_data:
+            username = self.session_data["username"]
+            if isinstance(username, str):
+                account_data = await self.account_repo.get_account(username)
+                if account_data:
+                    char_body = int(account_data.get("char_race", 1))
+                    char_head = int(account_data.get("char_head", 15))
+                    # Si body es 0, usar valor por defecto
+                    if char_body == 0:
+                        char_body = 1
+
         # Enviar CHARACTER_CHANGE de vuelta al cliente para confirmar
-        # Nota: body y head son hardcoded por ahora, en el futuro obtener de Redis
         await self.message_sender.send_character_change(
             char_index=user_id,
-            body=0,
-            head=15,
+            body=char_body,
+            head=char_head,
             heading=heading,
         )
 

@@ -142,10 +142,11 @@ class TaskLogin(Task):
         user_class = int(account_data.get("char_job", 1))  # Obtener clase del personaje
         logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
-        # Guardar user_id en session_data para uso posterior
+        # Guardar user_id y username en session_data para uso posterior
         if self.session_data is not None:
             self.session_data["user_id"] = user_id  # type: ignore[assignment]
-            logger.info("User ID %d guardado en sesión", user_id)
+            self.session_data["username"] = username  # type: ignore[assignment]
+            logger.info("User ID %d y username %s guardados en sesión", user_id, username)
 
         # Enviar paquete Logged con la clase del personaje
         await self.message_sender.send_logged(user_class)
@@ -177,6 +178,11 @@ class TaskLogin(Task):
         # Obtener datos visuales del personaje
         char_body = int(account_data.get("char_race", 1))
         char_head = int(account_data.get("char_head", 1))
+
+        # Si body es 0, usar valor por defecto (1 = humano)
+        if char_body == 0:
+            char_body = 1
+
         char_heading = 3  # Sur por defecto
 
         # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
