@@ -261,6 +261,7 @@ class TaskLogin(Task):
 
         # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
         await self.message_sender.send_logged(user_class)
+        logger.info("Paquete LOGGED enviado para user_id %d (clase: %d)", user_id, user_class)
 
         # Obtener y enviar posición del personaje
         position = await self.redis_client.get_player_position(user_id)
@@ -282,7 +283,7 @@ class TaskLogin(Task):
 
         await self.message_sender.send_pos_update(position["x"], position["y"])
         logger.info(
-            "Posición enviada: (%d, %d) en mapa %d",
+            "Paquete POS_UPDATE enviado: (%d, %d) en mapa %d",
             position["x"],
             position["y"],
             position["map"],
@@ -309,7 +310,7 @@ class TaskLogin(Task):
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
         await self.message_sender.send_update_user_stats(**user_stats)
-        logger.info("Estadísticas enviadas para user_id %d", user_id)
+        logger.info("Paquete UPDATE_USER_STATS enviado para user_id %d", user_id)
 
     @staticmethod
     def _hash_password(password: str) -> str:
