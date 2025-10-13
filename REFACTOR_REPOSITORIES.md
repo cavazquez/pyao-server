@@ -44,16 +44,10 @@ Separar la responsabilidad de `RedisClient` en:
 - [x] Actualizar `TaskRequestAttributes` para usar repositorios
   - ✅ `self.player_repo.get_attributes()`
 
-### ❌ Pendiente (Opcional - Limpieza)
-
-- [ ] Limpiar métodos obsoletos de `RedisClient`:
-  - Eliminar `create_account()` / `get_account()` / `account_exists()` / `get_account_data()`
-  - Eliminar `get_player_position()` / `set_player_position()`
-  - Eliminar `get_player_user_stats()` / `set_player_user_stats()`
-  - Eliminar `get_player_hunger_thirst()` / `set_player_hunger_thirst()`
-  - Eliminar `get_player_stats()` / `set_player_stats()`
-  - Mantener solo: conexión, configuración, contadores de sesiones
-  - **Nota**: Estos métodos ya no se usan, pero se pueden dejar para compatibilidad
+- [x] Limpiar métodos obsoletos de `RedisClient`
+  - ✅ Eliminados todos los métodos de gestión de cuentas y jugadores
+  - ✅ RedisClient ahora solo maneja: conexión, configuración, contadores de sesiones
+  - ✅ Código más limpio y responsabilidades claras
 
 ## Beneficios
 
@@ -65,11 +59,44 @@ Separar la responsabilidad de `RedisClient` en:
 
 ## Estado Final
 
-✅ **Refactorización COMPLETADA**
+✅ **Refactorización 100% COMPLETADA**
 
-Todas las tareas ahora usan repositorios en lugar de RedisClient directamente:
-- `TaskLogin` → `PlayerRepository` + `AccountRepository`
-- `TaskCreateAccount` → `PlayerRepository` + `AccountRepository`
-- `TaskRequestAttributes` → `PlayerRepository`
+### Arquitectura Final
+```
+┌─────────────────────────────────────────┐
+│         RedisClient                     │
+│  (Solo conexión y bajo nivel)           │
+│  - connect() / disconnect()             │
+│  - get_server_host() / get_server_port()│
+│  - increment/decrement_connections()    │
+│  - set/delete_player_session()          │
+└──────────────┬──────────────────────────┘
+               │
+        ┌──────┴──────┐
+        │             │
+┌───────▼────────┐ ┌──▼────────────────┐
+│ PlayerRepo     │ │ AccountRepo       │
+│ (Alto nivel)   │ │ (Alto nivel)      │
+│ - position     │ │ - create_account  │
+│ - stats        │ │ - get_account     │
+│ - hunger/thirst│ │ - verify_password │
+│ - attributes   │ │                   │
+└───────┬────────┘ └──┬────────────────┘
+        │             │
+     ┌──┴─────────────┴──┐
+     │      Tasks        │
+     │  - TaskLogin      │
+     │  - TaskCreate     │
+     │  - TaskRequest    │
+     └───────────────────┘
+```
 
-La limpieza de métodos obsoletos en `RedisClient` es opcional y puede hacerse más adelante sin afectar la funcionalidad.
+### Todas las tareas refactorizadas
+- ✅ `TaskLogin` → `PlayerRepository` + `AccountRepository`
+- ✅ `TaskCreateAccount` → `PlayerRepository` + `AccountRepository`
+- ✅ `TaskRequestAttributes` → `PlayerRepository`
+
+### RedisClient limpio
+- ✅ Eliminados ~260 líneas de código obsoleto
+- ✅ Solo responsabilidades de bajo nivel
+- ✅ Código más mantenible y claro
