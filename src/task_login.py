@@ -7,8 +7,9 @@ from typing import TYPE_CHECKING
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
     from src.message_sender import MessageSender
-    from src.redis_client import RedisClient
+    from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,8 @@ class TaskLogin(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
-        redis_client: RedisClient | None = None,
+        player_repo: PlayerRepository | None = None,
+        account_repo: AccountRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de login.
@@ -28,11 +30,13 @@ class TaskLogin(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            redis_client: Cliente Redis para verificar credenciales.
+            player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
-        self.redis_client = redis_client
+        self.player_repo = player_repo
+        self.account_repo = account_repo
         self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str] | None:
@@ -86,7 +90,7 @@ class TaskLogin(Task):
         else:
             return (username, password)
 
-    async def execute(self) -> None:  # noqa: PLR0915
+    async def execute(self) -> None:
         """Ejecuta el login del usuario."""
         # Parsear datos del paquete
         parsed = self._parse_packet()
@@ -104,30 +108,22 @@ class TaskLogin(Task):
             username,
         )
 
-        # Verificar que Redis esté disponible
-        if self.redis_client is None:
-            logger.error("Redis no está disponible para login")
+        # Verificar que los repositorios estén disponibles
+        if self.account_repo is None or self.player_repo is None:
+            logger.error("Repositorios no están disponibles para login")
             await self.message_sender.send_error_msg("Servicio no disponible")
             return
 
-        # Verificar si la cuenta existe
-        if not await self.redis_client.account_exists(username):
+        # Obtener datos de la cuenta
+        account_data = await self.account_repo.get_account(username)
+        if not account_data:
             logger.warning("Intento de login con usuario inexistente: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return
 
-        # Obtener datos de la cuenta
-        account_data = await self.redis_client.get_account_data(username)
-        if not account_data:
-            logger.error("Cuenta existe pero no se pudieron obtener datos: %s", username)
-            await self.message_sender.send_error_msg("Error al obtener datos de cuenta")
-            return
-
         # Verificar contraseña
         password_hash = self._hash_password(password)
-        stored_hash = account_data.get("password_hash", "")
-
-        if password_hash != stored_hash:
+        if not await self.account_repo.verify_password(username, password_hash):
             logger.warning("Contraseña incorrecta para usuario: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return
@@ -149,14 +145,14 @@ class TaskLogin(Task):
         await self.message_sender.send_user_char_index_in_server(user_id)
 
         # Obtener y enviar posición del personaje
-        position = await self.redis_client.get_player_position(user_id)
+        position = await self.player_repo.get_position(user_id)
 
         if position is None:
             # Si no existe posición, crear una por defecto
             default_x = 50
             default_y = 50
             default_map = 1
-            await self.redis_client.set_player_position(user_id, default_x, default_y, default_map)
+            await self.player_repo.set_position(user_id, default_x, default_y, default_map)
             logger.info(
                 "Posición inicial creada para user_id %d: (%d, %d) en mapa %d",
                 user_id,
@@ -179,7 +175,7 @@ class TaskLogin(Task):
         )
 
         # Obtener y enviar estadísticas completas del personaje
-        user_stats = await self.redis_client.get_player_user_stats(user_id)
+        user_stats = await self.player_repo.get_stats(user_id)
 
         if user_stats is None:
             # Si no existen stats, crear valores por defecto
@@ -195,13 +191,13 @@ class TaskLogin(Task):
                 "elu": 300,
                 "experience": 0,
             }
-            await self.redis_client.set_player_user_stats(user_id=user_id, **user_stats)
+            await self.player_repo.set_stats(user_id=user_id, **user_stats)
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
         await self.message_sender.send_update_user_stats(**user_stats)
 
         # Obtener y enviar hambre y sed
-        hunger_thirst = await self.redis_client.get_player_hunger_thirst(user_id)
+        hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
 
         if hunger_thirst is None:
             # Si no existen, crear valores por defecto
@@ -211,7 +207,7 @@ class TaskLogin(Task):
                 "max_hunger": 100,
                 "min_hunger": 100,
             }
-            await self.redis_client.set_player_hunger_thirst(user_id=user_id, **hunger_thirst)
+            await self.player_repo.set_hunger_thirst(user_id=user_id, **hunger_thirst)
             logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
 
         await self.message_sender.send_update_hunger_and_thirst(**hunger_thirst)

@@ -7,8 +7,9 @@ from typing import TYPE_CHECKING
 from src.task import MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, Task
 
 if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
     from src.message_sender import MessageSender
-    from src.redis_client import RedisClient
+    from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,8 @@ class TaskCreateAccount(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
-        redis_client: RedisClient | None = None,
+        player_repo: PlayerRepository | None = None,
+        account_repo: AccountRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
@@ -28,11 +30,13 @@ class TaskCreateAccount(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            redis_client: Cliente Redis para almacenar la cuenta (opcional).
+            player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
-        self.redis_client = redis_client
+        self.player_repo = player_repo
+        self.account_repo = account_repo
         self.session_data = session_data
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: C901, PLR0915
@@ -219,9 +223,9 @@ class TaskCreateAccount(Task):
             await self.message_sender.send_error_msg("Email inválido")
             return
 
-        # Verificar que Redis esté disponible
-        if self.redis_client is None:
-            logger.error("Redis no está disponible para crear cuenta")
+        # Verificar que los repositorios estén disponibles
+        if self.account_repo is None or self.player_repo is None:
+            logger.error("Repositorios no están disponibles para crear cuenta")
             await self.message_sender.send_error_msg("Servicio de cuentas no disponible")
             return
 
@@ -238,12 +242,11 @@ class TaskCreateAccount(Task):
 
         # Crear cuenta en Redis con datos separados
         try:
-            user_id = await self.redis_client.create_account(
+            user_id = await self.account_repo.create_account(
                 username=username,
                 password_hash=password_hash,
                 email=email,
-                character_data=char_data or None,
-                stats_data=stats_data or None,
+                char_data=char_data,
             )
 
             logger.info(
@@ -258,7 +261,7 @@ class TaskCreateAccount(Task):
             default_x = 50
             default_y = 50
             default_map = 1
-            await self.redis_client.set_player_position(user_id, default_x, default_y, default_map)
+            await self.player_repo.set_position(user_id, default_x, default_y, default_map)
             logger.info(
                 "Posición inicial creada para nuevo personaje %s (ID: %d): (%d, %d) en mapa %d",
                 username,
@@ -269,7 +272,7 @@ class TaskCreateAccount(Task):
             )
 
             # Crear estadísticas iniciales del personaje
-            await self.redis_client.set_player_user_stats(
+            await self.player_repo.set_stats(
                 user_id=user_id,
                 max_hp=100,
                 min_hp=100,
@@ -314,7 +317,7 @@ class TaskCreateAccount(Task):
             logger.info("Estadísticas iniciales enviadas al nuevo personaje")
 
             # Crear y enviar hambre y sed iniciales
-            await self.redis_client.set_player_hunger_thirst(
+            await self.player_repo.set_hunger_thirst(
                 user_id=user_id, max_water=100, min_water=100, max_hunger=100, min_hunger=100
             )
             logger.info("Hambre y sed iniciales creadas en Redis para user_id %d", user_id)

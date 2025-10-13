@@ -71,9 +71,13 @@ class ArgentumServer:
 
         # Pasar parámetros adicionales según el tipo de tarea
         if task_class is TaskLogin:
-            return TaskLogin(data, message_sender, self.player_repo, self.account_repo, session_data)
+            return TaskLogin(
+                data, message_sender, self.player_repo, self.account_repo, session_data
+            )
         if task_class is TaskCreateAccount:
-            return TaskCreateAccount(data, message_sender, self.player_repo, self.account_repo, session_data)
+            return TaskCreateAccount(
+                data, message_sender, self.player_repo, self.account_repo, session_data
+            )
         if task_class is TaskDice:
             return TaskDice(data, message_sender, session_data)
         if task_class is TaskRequestAttributes:

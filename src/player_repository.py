@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class PlayerRepository:
     """Repositorio para operaciones de datos de jugadores."""
 
-    def __init__(self, redis_client: "RedisClient") -> None:
+    def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el repositorio.
 
         Args:
@@ -59,7 +59,9 @@ class PlayerRepository:
             "map": str(map_number),
         }
         await self.redis.redis.hset(key, mapping=position_data)  # type: ignore[misc]
-        logger.debug("Posición guardada para user_id %d: (%d, %d) en mapa %d", user_id, x, y, map_number)
+        logger.debug(
+            "Posición guardada para user_id %d: (%d, %d) en mapa %d", user_id, x, y, map_number
+        )
 
     async def get_stats(self, user_id: int) -> dict[str, int] | None:
         """Obtiene las estadísticas del jugador (HP, mana, stamina, etc).
@@ -201,8 +203,14 @@ class PlayerRepository:
             "constitution": int(result.get("constitution", 10)),
         }
 
-    async def set_attributes(
-        self, user_id: int, strength: int, agility: int, intelligence: int, charisma: int, constitution: int
+    async def set_attributes(  # noqa: PLR0913, PLR0917
+        self,
+        user_id: int,
+        strength: int,
+        agility: int,
+        intelligence: int,
+        charisma: int,
+        constitution: int,
     ) -> None:
         """Guarda los atributos del jugador.
 

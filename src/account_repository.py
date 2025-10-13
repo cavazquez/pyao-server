@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class AccountRepository:
     """Repositorio para operaciones de cuentas de usuario."""
 
-    def __init__(self, redis_client: "RedisClient") -> None:
+    def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el repositorio.
 
         Args:
@@ -48,7 +48,7 @@ class AccountRepository:
             raise ValueError(msg)
 
         # Generar nuevo user_id
-        user_id = await self.redis.redis.incr(RedisKeys.ACCOUNTS_COUNTER)
+        user_id = int(await self.redis.redis.incr(RedisKeys.ACCOUNTS_COUNTER))
 
         # Guardar mapeo username -> user_id
         await self.redis.redis.set(username_key, str(user_id))
