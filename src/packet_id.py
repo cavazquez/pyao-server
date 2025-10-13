@@ -17,12 +17,12 @@ class ClientPacketID(IntEnum):
 
     # Paquetes del protocolo AO (implementados)
     TALK = 3  # Hablar (chat normal)
+    WALK = 6  # Caminar/moverse
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
     # YELL = 4
     # WHISPER = 5
-    # WALK = 6
     # REQUEST_POSITION_UPDATE = 7
     # ATTACK = 8
     # PICK_UP = 9
