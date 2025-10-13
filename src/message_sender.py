@@ -56,6 +56,15 @@ class MessageSender:
             charisma=charisma,
             constitution=constitution,
         )
+        logger.info(
+            "[%s] Enviando DICE_ROLL: STR=%d AGI=%d INT=%d CHA=%d CON=%d",
+            self.connection.address,
+            strength,
+            agility,
+            intelligence,
+            charisma,
+            constitution,
+        )
         await self.connection.send(response)
 
     async def send_attributes(
@@ -82,6 +91,15 @@ class MessageSender:
             charisma=charisma,
             constitution=constitution,
         )
+        logger.info(
+            "[%s] Enviando ATTRIBUTES: STR=%d AGI=%d INT=%d CHA=%d CON=%d",
+            self.connection.address,
+            strength,
+            agility,
+            intelligence,
+            charisma,
+            constitution,
+        )
         await self.connection.send(response)
 
     async def send_logged(self) -> None:
@@ -91,6 +109,7 @@ class MessageSender:
         El cliente tiene _HandleLogged vacío, no espera datos.
         """
         response = build_logged_response()
+        logger.info("[%s] Enviando LOGGED", self.connection.address)
         await self.connection.send(response)
 
     async def send_pos_update(self, x: int, y: int) -> None:
@@ -101,6 +120,7 @@ class MessageSender:
             y: Posición Y del personaje (0-255).
         """
         response = build_pos_update_response(x=x, y=y)
+        logger.info("[%s] Enviando POS_UPDATE: x=%d, y=%d", self.connection.address, x, y)
         await self.connection.send(response)
 
     async def send_error_msg(self, error_message: str) -> None:
@@ -110,6 +130,7 @@ class MessageSender:
             error_message: Mensaje de error.
         """
         response = build_error_msg_response(error_message=error_message)
+        logger.info("[%s] Enviando ERROR_MSG: %s", self.connection.address, error_message)
         await self.connection.send(response)
 
     async def send_update_hp(self, hp: int) -> None:
@@ -119,6 +140,7 @@ class MessageSender:
             hp: Puntos de vida actuales (int16).
         """
         response = build_update_hp_response(hp=hp)
+        logger.info("[%s] Enviando UPDATE_HP: %d", self.connection.address, hp)
         await self.connection.send(response)
 
     async def send_update_mana(self, mana: int) -> None:
@@ -128,6 +150,7 @@ class MessageSender:
             mana: Puntos de mana actuales (int16).
         """
         response = build_update_mana_response(mana=mana)
+        logger.info("[%s] Enviando UPDATE_MANA: %d", self.connection.address, mana)
         await self.connection.send(response)
 
     async def send_update_sta(self, stamina: int) -> None:
@@ -137,6 +160,7 @@ class MessageSender:
             stamina: Puntos de stamina actuales (int16).
         """
         response = build_update_sta_response(stamina=stamina)
+        logger.info("[%s] Enviando UPDATE_STA: %d", self.connection.address, stamina)
         await self.connection.send(response)
 
     async def send_update_user_stats(  # noqa: PLR0913, PLR0917
@@ -177,5 +201,20 @@ class MessageSender:
             level=level,
             elu=elu,
             experience=experience,
+        )
+        logger.info(
+            "[%s] Enviando UPDATE_USER_STATS: HP=%d/%d MANA=%d/%d STA=%d/%d "
+            "GOLD=%d LVL=%d ELU=%d EXP=%d",
+            self.connection.address,
+            min_hp,
+            max_hp,
+            min_mana,
+            max_mana,
+            min_sta,
+            max_sta,
+            gold,
+            level,
+            elu,
+            experience,
         )
         await self.connection.send(response)

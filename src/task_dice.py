@@ -72,5 +72,3 @@ class TaskDice(Task):
             charisma=charisma,
             constitution=constitution,
         )
-
-        logger.info("Enviado resultado de dados a %s", self.message_sender.connection.address)

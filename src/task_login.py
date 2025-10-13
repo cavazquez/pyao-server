@@ -144,7 +144,6 @@ class TaskLogin(Task):
 
         # Enviar paquete Logged (solo PacketID, sin datos)
         await self.message_sender.send_logged()
-        logger.info("Paquete LOGGED enviado para user_id %d", user_id)
 
         # Obtener y enviar posición del personaje
         position = await self.redis_client.get_player_position(user_id)
@@ -193,7 +192,6 @@ class TaskLogin(Task):
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
         await self.message_sender.send_update_user_stats(**user_stats)
-        logger.info("Paquete UPDATE_USER_STATS enviado para user_id %d", user_id)
 
     @staticmethod
     def _hash_password(password: str) -> str:
