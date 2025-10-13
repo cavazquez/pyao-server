@@ -284,9 +284,8 @@ class TaskCreateAccount(Task):
             )
             logger.info("Estadísticas iniciales creadas en Redis para user_id %d", user_id)
 
-            # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
-            user_class = char_data.get("job", 1) if char_data else 1
-            await self.message_sender.send_logged(user_class)
+            # Enviar paquete Logged (solo PacketID, sin datos)
+            await self.message_sender.send_logged()
 
             # Enviar posición inicial
             await self.message_sender.send_pos_update(default_x, default_y)

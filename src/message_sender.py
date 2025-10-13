@@ -84,13 +84,13 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_logged(self, user_class: int) -> None:
+    async def send_logged(self) -> None:
         """Envía paquete Logged del protocolo AO estándar.
 
-        Args:
-            user_class: Clase del personaje (1 byte).
+        El paquete Logged solo contiene el PacketID (0) sin datos adicionales.
+        El cliente tiene _HandleLogged vacío, no espera datos.
         """
-        response = build_logged_response(user_class=user_class)
+        response = build_logged_response()
         await self.connection.send(response)
 
     async def send_pos_update(self, x: int, y: int) -> None:

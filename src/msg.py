@@ -62,18 +62,17 @@ def build_attributes_response(
     return packet.to_bytes()
 
 
-def build_logged_response(user_class: int) -> bytes:
+def build_logged_response() -> bytes:
     """Construye el paquete Logged del protocolo AO estándar.
 
-    Args:
-        user_class: Clase del personaje (1 byte).
+    El paquete Logged solo contiene el PacketID sin datos adicionales.
+    El cliente tiene _HandleLogged vacío, indicando que no espera datos.
 
     Returns:
-        Paquete de bytes con el formato: PacketID (0) + userClass (1 byte).
+        Paquete de bytes con el formato: PacketID (0) solamente.
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.LOGGED)
-    packet.add_byte(user_class)
     return packet.to_bytes()
 
 

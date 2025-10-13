@@ -142,9 +142,9 @@ class TaskLogin(Task):
             self.session_data["user_id"] = user_id  # type: ignore[assignment]
             logger.info("User ID %d guardado en sesión", user_id)
 
-        # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
-        await self.message_sender.send_logged(user_class)
-        logger.info("Paquete LOGGED enviado para user_id %d (clase: %d)", user_id, user_class)
+        # Enviar paquete Logged (solo PacketID, sin datos)
+        await self.message_sender.send_logged()
+        logger.info("Paquete LOGGED enviado para user_id %d", user_id)
 
         # Obtener y enviar posición del personaje
         position = await self.redis_client.get_player_position(user_id)

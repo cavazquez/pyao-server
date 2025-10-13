@@ -144,23 +144,13 @@ def test_build_dice_roll_response_parametrized(
 
 def test_build_logged_response_structure() -> None:
     """Verifica que el paquete Logged tenga la estructura correcta."""
-    user_class = 1
-    response = build_logged_response(user_class)
+    response = build_logged_response()
 
-    # Verificar longitud: 1 byte PacketID + 1 byte userClass
-    assert len(response) == 2
+    # Verificar longitud: solo 1 byte PacketID (sin datos adicionales)
+    assert len(response) == 1
 
     # Verificar PacketID
     assert response[0] == ServerPacketID.LOGGED
-
-
-def test_build_logged_response_user_class() -> None:
-    """Verifica que el userClass se codifique correctamente."""
-    user_class = 5
-    response = build_logged_response(user_class)
-
-    # Verificar userClass
-    assert response[1] == user_class
 
 
 def test_build_error_msg_response_structure() -> None:
