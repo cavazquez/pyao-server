@@ -12,12 +12,14 @@ MAX_LOG_BYTES = 32
 class ClientConnection:
     """Encapsula la conexión con un cliente y provee métodos para comunicación."""
 
-    def __init__(self, writer: asyncio.StreamWriter) -> None:
+    def __init__(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
         """Inicializa la conexión del cliente.
 
         Args:
+            reader: Stream para leer datos del cliente.
             writer: Stream para enviar datos al cliente.
         """
+        self.reader = reader
         self.writer = writer
         self.address = writer.get_extra_info("peername")
 
@@ -37,6 +39,27 @@ class ClientConnection:
             hex_data,
             "..." if len(data) > MAX_LOG_BYTES else "",
         )
+
+    async def receive(self, max_bytes: int = 1024) -> bytes:
+        """Recibe datos del cliente.
+
+        Args:
+            max_bytes: Número máximo de bytes a leer.
+
+        Returns:
+            Bytes recibidos del cliente (vacío si la conexión se cerró).
+        """
+        data = await self.reader.read(max_bytes)
+        if data:
+            hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
+            logger.info(
+                "Recibidos %d bytes de %s: %s%s",
+                len(data),
+                self.address,
+                hex_data,
+                "..." if len(data) > MAX_LOG_BYTES else "",
+            )
+        return data
 
     def close(self) -> None:
         """Cierra la conexión con el cliente."""

@@ -25,7 +25,8 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914
     redis_client.set_player_position = AsyncMock()
 
     # Crear conexión y message sender
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Construir paquete de creación de cuenta con formato real del cliente
@@ -108,7 +109,8 @@ async def test_task_create_account_duplicate_username() -> None:
         side_effect=ValueError("La cuenta 'testuser' ya existe")
     )
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Construir paquete
@@ -142,7 +144,8 @@ async def test_task_create_account_invalid_username() -> None:
     writer.drain = AsyncMock()
 
     redis_client = MagicMock(spec=RedisClient)
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Username muy corto (menos de 3 caracteres)
@@ -176,7 +179,8 @@ async def test_task_create_account_invalid_password() -> None:
     writer.drain = AsyncMock()
 
     redis_client = MagicMock(spec=RedisClient)
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Password muy corto (menos de 6 caracteres)
@@ -210,7 +214,8 @@ async def test_task_create_account_invalid_email() -> None:
     writer.drain = AsyncMock()
 
     redis_client = MagicMock(spec=RedisClient)
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Email sin @
@@ -243,7 +248,8 @@ async def test_task_create_account_no_redis() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Construir paquete válido
@@ -277,7 +283,8 @@ async def test_task_create_account_invalid_packet() -> None:
     writer.drain = AsyncMock()
 
     redis_client = MagicMock(spec=RedisClient)
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Paquete incompleto (solo PacketID)
@@ -303,7 +310,8 @@ async def test_task_create_account_unicode_username() -> None:
     redis_client = MagicMock(spec=RedisClient)
     redis_client.create_account = AsyncMock(return_value=1)
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     # Username con caracteres unicode

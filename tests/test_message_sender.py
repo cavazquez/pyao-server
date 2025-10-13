@@ -14,7 +14,8 @@ def test_message_sender_initialization() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("192.168.1.100", 54321)
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     assert message_sender.connection is connection
@@ -27,7 +28,8 @@ async def test_message_sender_send_dice_roll() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_dice_roll(
@@ -60,7 +62,8 @@ async def test_message_sender_send_dice_roll_min_values() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_dice_roll(
@@ -82,7 +85,8 @@ async def test_message_sender_send_dice_roll_max_values() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_dice_roll(
@@ -104,7 +108,8 @@ async def test_message_sender_multiple_sends() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_dice_roll(
@@ -133,7 +138,8 @@ async def test_message_sender_uses_connection_send() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_dice_roll(
@@ -159,7 +165,8 @@ async def test_message_sender_send_logged() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     user_class = 5
@@ -184,7 +191,8 @@ async def test_message_sender_send_error_msg() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     error_message = "Usuario ya existe"
@@ -212,7 +220,8 @@ async def test_message_sender_send_error_msg_empty() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
     await message_sender.send_error_msg("")

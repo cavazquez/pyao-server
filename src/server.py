@@ -87,10 +87,10 @@ class ArgentumServer:
         """Maneja la conexión de un cliente.
 
         Args:
-            reader: Stream para leer datos del cliente.
-            writer: Stream para escribir datos al cliente.
+            reader: Stream para leer datos del cliente (pasado a ClientConnection).
+            writer: Stream para escribir datos al cliente (pasado a ClientConnection).
         """
-        connection = ClientConnection(writer)
+        connection = ClientConnection(reader, writer)
         message_sender = MessageSender(connection)
         logger.info("Nueva conexión desde %s", connection.address)
 
@@ -105,11 +105,9 @@ class ArgentumServer:
 
         try:
             while True:
-                data = await reader.read(1024)
+                data = await connection.receive()
                 if not data:
                     break
-
-                logger.info("Recibidos %d bytes desde %s", len(data), connection.address)
 
                 # Crear y ejecutar tarea apropiada según el mensaje
                 task = self.create_task(data, message_sender, session_data)

@@ -9,10 +9,12 @@ from src.client_connection import ClientConnection
 
 def test_client_connection_initialization() -> None:
     """Verifica que ClientConnection se inicialice correctamente."""
+    reader = MagicMock()
     writer = MagicMock()
     writer.get_extra_info.return_value = ("192.168.1.100", 54321)
 
-    connection = ClientConnection(writer)
+    connection = ClientConnection(reader, writer)
+    assert connection.reader is reader
     assert connection.writer is writer
     assert connection.address == ("192.168.1.100", 54321)
     writer.get_extra_info.assert_called_once_with("peername")
@@ -25,7 +27,8 @@ async def test_client_connection_send() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     data = b"\x01\x02\x03\x04"
 
     await connection.send(data)
@@ -41,7 +44,8 @@ async def test_client_connection_send_empty_data() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
 
     await connection.send(b"")
 
@@ -54,7 +58,8 @@ def test_client_connection_close() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     connection.close()
 
     writer.close.assert_called_once()
@@ -67,7 +72,8 @@ async def test_client_connection_wait_closed() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.wait_closed = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
     await connection.wait_closed()
 
     writer.wait_closed.assert_called_once()
@@ -80,7 +86,8 @@ async def test_client_connection_multiple_sends() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    connection = ClientConnection(writer)
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
 
     await connection.send(b"\x01\x02")
     await connection.send(b"\x03\x04")
