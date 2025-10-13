@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from src.packet_id import ClientPacketID
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
+from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
 from src.task_talk import TaskTalk
@@ -20,5 +21,6 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CREATE_ACCOUNT: TaskCreateAccount,
     ClientPacketID.TALK: TaskTalk,
     ClientPacketID.WALK: TaskWalk,
+    ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
 }

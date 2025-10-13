@@ -18,6 +18,7 @@ class ClientPacketID(IntEnum):
     # Paquetes del protocolo AO (implementados)
     TALK = 3  # Hablar (chat normal)
     WALK = 6  # Caminar/moverse
+    CHANGE_HEADING = 37  # Cambiar dirección sin moverse
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
@@ -52,7 +53,6 @@ class ClientPacketID(IntEnum):
     # CREATE_NEW_GUILD = 34
     # SPELL_INFO = 35
     # EQUIP_ITEM = 36
-    # CHANGE_HEADING = 37
     # MODIFY_SKILLS = 38
     # TRAIN = 39
     # COMMERCE_BUY = 40

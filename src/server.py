@@ -14,6 +14,7 @@ from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
+from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
 from src.task_null import TaskNull
@@ -47,7 +48,7 @@ class ArgentumServer:
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
 
-    def create_task(
+    def create_task(  # noqa: PLR0911
         self,
         data: bytes,
         message_sender: MessageSender,
@@ -88,6 +89,8 @@ class ArgentumServer:
             return TaskTalk(data, message_sender, session_data)
         if task_class is TaskWalk:
             return TaskWalk(data, message_sender, self.player_repo, session_data)
+        if task_class is TaskChangeHeading:
+            return TaskChangeHeading(data, message_sender, self.player_repo, session_data)
 
         return task_class(data, message_sender)
 
