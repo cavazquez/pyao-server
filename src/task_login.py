@@ -180,6 +180,7 @@ class TaskLogin(Task):
         char_heading = 3  # Sur por defecto
 
         # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
+        # Con efecto de aparición (FX 1 = efecto de spawn/login)
         await self.message_sender.send_character_create(
             char_index=user_id,
             body=char_body,
@@ -187,6 +188,8 @@ class TaskLogin(Task):
             heading=char_heading,
             x=position["x"],
             y=position["y"],
+            fx=1,  # Efecto de aparición/spawn
+            loops=-1,  # -1 = reproducir una vez
             name=username,
         )
 
