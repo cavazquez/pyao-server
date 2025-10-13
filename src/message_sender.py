@@ -414,3 +414,14 @@ class MessageSender:
             message[:50],  # Solo primeros 50 caracteres en el log
         )
         await self.connection.send(response)
+
+    async def send_multiline_console_msg(self, message: str, font_color: int = 7) -> None:
+        """Envía un mensaje multilínea dividido por saltos de línea.
+
+        Args:
+            message: Mensaje con saltos de línea (\n).
+            font_color: Color de la fuente (byte), por defecto 7 (blanco).
+        """
+        lines = message.split("\n")
+        for line in lines:
+            await self.send_console_msg(line, font_color)

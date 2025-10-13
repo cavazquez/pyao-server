@@ -98,7 +98,7 @@ class ClientPacketID(IntEnum):
     # RESUSCITATE = 80
     # HEAL = 81
     # HELP = 82
-    # REQUEST_STATS = 83
+    REQUEST_STATS = 83
     # COMMERCE_START = 84
     # BANK_START = 85
     # ENLIST = 86

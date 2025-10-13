@@ -8,6 +8,7 @@ from src.task_attributes import TaskRequestAttributes
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
+from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_walk import TaskWalk
 
@@ -23,4 +24,5 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.WALK: TaskWalk,
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
+    ClientPacketID.REQUEST_STATS: TaskRequestStats,
 }

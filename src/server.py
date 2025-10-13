@@ -19,6 +19,7 @@ from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
 from src.task_null import TaskNull
+from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_walk import TaskWalk
 
@@ -117,6 +118,8 @@ class ArgentumServer:
                 self.map_manager,
                 session_data,
             )
+        if task_class is TaskRequestStats:
+            return TaskRequestStats(data, message_sender, self.player_repo, session_data)
 
         return task_class(data, message_sender)
 
