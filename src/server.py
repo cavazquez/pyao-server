@@ -5,9 +5,11 @@ import logging
 import sys
 
 import redis
+from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
+from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
 from src.task import (
     Task,
@@ -40,6 +42,8 @@ class ArgentumServer:
         self.port = port
         self.server: asyncio.Server | None = None
         self.redis_client: RedisClient | None = None
+        self.player_repo: PlayerRepository | None = None
+        self.account_repo: AccountRepository | None = None
 
     def create_task(
         self,
@@ -67,9 +71,9 @@ class ArgentumServer:
 
         # Pasar parámetros adicionales según el tipo de tarea
         if task_class is TaskLogin:
-            return TaskLogin(data, message_sender, self.redis_client, session_data)
+            return TaskLogin(data, message_sender, self.player_repo, self.account_repo, session_data)
         if task_class is TaskCreateAccount:
-            return TaskCreateAccount(data, message_sender, self.redis_client, session_data)
+            return TaskCreateAccount(data, message_sender, self.player_repo, self.account_repo, session_data)
         if task_class is TaskDice:
             return TaskDice(data, message_sender, session_data)
         if task_class is TaskRequestAttributes:
@@ -132,6 +136,10 @@ class ArgentumServer:
         try:
             self.redis_client = RedisClient()
             await self.redis_client.connect()
+
+            # Crear repositorios
+            self.player_repo = PlayerRepository(self.redis_client)
+            self.account_repo = AccountRepository(self.redis_client)
 
             # Obtener configuración desde Redis
             self.host = await self.redis_client.get_server_host()
