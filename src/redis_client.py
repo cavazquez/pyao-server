@@ -429,3 +429,47 @@ class RedisClient:
             "elu": int(result.get("elu", 300)),
             "experience": int(result.get("experience", 0)),
         }
+
+    async def set_player_hunger_thirst(
+        self, user_id: int, max_water: int, min_water: int, max_hunger: int, min_hunger: int
+    ) -> None:
+        """Guarda hambre y sed del jugador en Redis.
+
+        Args:
+            user_id: ID del usuario.
+            max_water: Sed máxima.
+            min_water: Sed actual.
+            max_hunger: Hambre máxima.
+            min_hunger: Hambre actual.
+        """
+        key = RedisKeys.player_hunger_thirst(user_id)
+        data = {
+            "max_water": str(max_water),
+            "min_water": str(min_water),
+            "max_hunger": str(max_hunger),
+            "min_hunger": str(min_hunger),
+        }
+        await self.redis.hset(key, mapping=data)  # type: ignore[misc]
+        logger.debug("Hambre y sed guardadas para user_id %d", user_id)
+
+    async def get_player_hunger_thirst(self, user_id: int) -> dict[str, int] | None:
+        """Obtiene hambre y sed del jugador desde Redis.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con hambre y sed o None si no existe.
+        """
+        key = RedisKeys.player_hunger_thirst(user_id)
+        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+
+        if not result:
+            return None
+
+        return {
+            "max_water": int(result.get("max_water", 100)),
+            "min_water": int(result.get("min_water", 100)),
+            "max_hunger": int(result.get("max_hunger", 100)),
+            "min_hunger": int(result.get("min_hunger", 100)),
+        }

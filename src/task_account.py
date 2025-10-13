@@ -313,7 +313,12 @@ class TaskCreateAccount(Task):
             )
             logger.info("Estadísticas iniciales enviadas al nuevo personaje")
 
-            # Enviar hambre y sed (valores por defecto)
+            # Crear y enviar hambre y sed iniciales
+            await self.redis_client.set_player_hunger_thirst(
+                user_id=user_id, max_water=100, min_water=100, max_hunger=100, min_hunger=100
+            )
+            logger.info("Hambre y sed iniciales creadas en Redis para user_id %d", user_id)
+
             await self.message_sender.send_update_hunger_and_thirst(
                 max_water=100, min_water=100, max_hunger=100, min_hunger=100
             )

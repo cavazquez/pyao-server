@@ -93,6 +93,15 @@ class RedisKeys:
         """
         return f"player:{user_id}:user_stats"
 
+    @staticmethod
+    def player_hunger_thirst(user_id: int) -> str:
+        """Clave para hambre y sed del jugador.
+
+        Returns:
+            Clave de Redis para hambre y sed.
+        """
+        return f"player:{user_id}:hunger_thirst"
+
     # Cuentas de usuario
     ACCOUNTS_COUNTER = "accounts:counter"
 

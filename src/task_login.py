@@ -86,7 +86,7 @@ class TaskLogin(Task):
         else:
             return (username, password)
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta el login del usuario."""
         # Parsear datos del paquete
         parsed = self._parse_packet()
@@ -200,10 +200,21 @@ class TaskLogin(Task):
 
         await self.message_sender.send_update_user_stats(**user_stats)
 
-        # Enviar hambre y sed (valores por defecto)
-        await self.message_sender.send_update_hunger_and_thirst(
-            max_water=100, min_water=100, max_hunger=100, min_hunger=100
-        )
+        # Obtener y enviar hambre y sed
+        hunger_thirst = await self.redis_client.get_player_hunger_thirst(user_id)
+
+        if hunger_thirst is None:
+            # Si no existen, crear valores por defecto
+            hunger_thirst = {
+                "max_water": 100,
+                "min_water": 100,
+                "max_hunger": 100,
+                "min_hunger": 100,
+            }
+            await self.redis_client.set_player_hunger_thirst(user_id=user_id, **hunger_thirst)
+            logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
+
+        await self.message_sender.send_update_hunger_and_thirst(**hunger_thirst)
 
     @staticmethod
     def _hash_password(password: str) -> str:
