@@ -258,6 +258,21 @@ def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
     return packet.to_bytes()
 
 
+def build_character_remove_response(char_index: int) -> bytes:
+    """Construye el paquete CharacterRemove del protocolo AO estándar.
+
+    Args:
+        char_index: Índice del personaje a remover (int16).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (30) + char_index.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHARACTER_REMOVE)
+    packet.add_int16(char_index)
+    return packet.to_bytes()
+
+
 def build_character_change_response(  # noqa: PLR0913, PLR0917
     char_index: int,
     body: int,

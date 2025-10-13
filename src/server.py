@@ -151,6 +151,35 @@ class ArgentumServer:
             logger.exception("Error manejando cliente %s", connection.address)
         finally:
             logger.info("Cerrando conexión con %s", connection.address)
+
+            # Broadcast multijugador: notificar desconexión
+            if "user_id" in session_data and self.player_repo:
+                user_id_value = session_data["user_id"]
+                if not isinstance(user_id_value, dict):
+                    user_id = int(user_id_value)
+
+                    # Obtener el mapa del jugador antes de removerlo
+                    position = await self.player_repo.get_position(user_id)
+                    if position:
+                        map_id = position["map"]
+
+                        # Enviar CHARACTER_REMOVE a todos los jugadores en el mapa
+                        other_senders = self.map_manager.get_all_message_senders_in_map(
+                            map_id, exclude_user_id=user_id
+                        )
+                        for sender in other_senders:
+                            await sender.send_character_remove(user_id)
+
+                        logger.info(
+                            "Desconexión de user %d notificada a %d jugadores en mapa %d",
+                            user_id,
+                            len(other_senders),
+                            map_id,
+                        )
+
+                    # Remover jugador del MapManager
+                    self.map_manager.remove_player_from_all_maps(user_id)
+
             connection.close()
             await connection.wait_closed()
 

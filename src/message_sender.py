@@ -8,6 +8,7 @@ from src.msg import (
     build_change_map_response,
     build_character_change_response,
     build_character_create_response,
+    build_character_remove_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
@@ -381,5 +382,19 @@ class MessageSender:
             self.connection.address,
             char_index,
             heading,
+        )
+        await self.connection.send(response)
+
+    async def send_character_remove(self, char_index: int) -> None:
+        """Envía paquete CharacterRemove del protocolo AO estándar.
+
+        Args:
+            char_index: Índice del personaje a remover (int16).
+        """
+        response = build_character_remove_response(char_index=char_index)
+        logger.info(
+            "[%s] Enviando CHARACTER_REMOVE: charIndex=%d",
+            self.connection.address,
+            char_index,
         )
         await self.connection.send(response)

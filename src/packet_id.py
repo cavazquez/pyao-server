@@ -165,6 +165,7 @@ class ServerPacketID(IntEnum):
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
 
     CHARACTER_CREATE = 29  # Crear personaje en el mapa
+    CHARACTER_REMOVE = 30  # Remover personaje del mapa
     CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
 
     # Paquetes del protocolo AO (no implementados aún)
@@ -191,7 +192,6 @@ class ServerPacketID(IntEnum):
     # SHOW_MESSAGE_BOX = 26
     # USER_INDEX_IN_SERVER = 27
     # USER_CHAR_INDEX_IN_SERVER = 28
-    # CHARACTER_REMOVE = 30
     # CHARACTER_CHANGE_NICK = 31
     # CHARACTER_MOVE = 32
     # FORCE_CHAR_MOVE = 33
