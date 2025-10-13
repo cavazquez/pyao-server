@@ -124,13 +124,16 @@ pyao-server/
 │   ├── packet_builder.py        # Constructor de paquetes de bytes
 │   └── msg.py                   # Construcción de mensajes del servidor
 │
-├── tests/                       # Tests unitarios (103 tests)
+├── tests/                       # Tests unitarios (131 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   ├── test_client_connection.py   # Tests de ClientConnection
 │   ├── test_message_sender.py      # Tests de MessageSender
-│   ├── test_task.py                # Tests de tareas base
 │   ├── test_account_creation.py    # Tests de creación de cuentas
-│   ├── test_task_change_heading.py # Tests de cambio de dirección
+│   ├── test_task_change_heading.py # Tests de cambio de dirección (6 tests)
+│   ├── test_task_dice.py           # Tests de TaskDice (1 test)
+│   ├── test_task_null.py           # Tests de TaskNull (1 test)
+│   ├── test_task_talk.py           # Tests de TaskTalk (9 tests)
+│   ├── test_map_manager.py         # Tests de MapManager (19 tests)
 │   ├── test_packet_builder.py      # Tests de PacketBuilder
 │   ├── test_msg.py                 # Tests de mensajes y packets
 │   └── test_redis_client.py        # Tests de Redis
