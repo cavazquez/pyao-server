@@ -41,10 +41,10 @@ Separar la responsabilidad de `RedisClient` en:
 - [x] Actualizar tests para usar repositorios
   - ✅ test_account_creation.py: Usa mocks de PlayerRepository y AccountRepository
 
-### ❌ Pendiente
+- [x] Actualizar `TaskRequestAttributes` para usar repositorios
+  - ✅ `self.player_repo.get_attributes()`
 
-- [ ] Actualizar `TaskRequestAttributes` para usar repositorios
-  - Cambiar `self.redis_client.get_player_stats()` → `self.player_repo.get_attributes()`
+### ❌ Pendiente (Opcional - Limpieza)
 
 - [ ] Limpiar métodos obsoletos de `RedisClient`:
   - Eliminar `create_account()` / `get_account()` / `account_exists()` / `get_account_data()`
@@ -53,6 +53,7 @@ Separar la responsabilidad de `RedisClient` en:
   - Eliminar `get_player_hunger_thirst()` / `set_player_hunger_thirst()`
   - Eliminar `get_player_stats()` / `set_player_stats()`
   - Mantener solo: conexión, configuración, contadores de sesiones
+  - **Nota**: Estos métodos ya no se usan, pero se pueden dejar para compatibilidad
 
 ## Beneficios
 
@@ -62,9 +63,13 @@ Separar la responsabilidad de `RedisClient` en:
 4. **Mejor organización**: Lógica de negocio separada de lógica de persistencia
 5. **Escalabilidad**: Fácil cambiar Redis por otra BD en el futuro
 
-## Próximos Pasos
+## Estado Final
 
-1. Actualizar `TaskLogin` y `TaskCreateAccount` para usar repositorios
-2. Actualizar tests
-3. Eliminar métodos obsoletos de `RedisClient`
-4. Commit y push
+✅ **Refactorización COMPLETADA**
+
+Todas las tareas ahora usan repositorios en lugar de RedisClient directamente:
+- `TaskLogin` → `PlayerRepository` + `AccountRepository`
+- `TaskCreateAccount` → `PlayerRepository` + `AccountRepository`
+- `TaskRequestAttributes` → `PlayerRepository`
+
+La limpieza de métodos obsoletos en `RedisClient` es opcional y puede hacerse más adelante sin afectar la funcionalidad.

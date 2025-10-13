@@ -7,7 +7,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.message_sender import MessageSender
-    from src.redis_client import RedisClient
+    from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class TaskRequestAttributes(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
-        redis_client: RedisClient | None = None,
+        player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de solicitud de atributos.
@@ -27,11 +27,11 @@ class TaskRequestAttributes(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            redis_client: Cliente Redis para obtener atributos.
+            player_repo: Repositorio de jugadores para obtener atributos.
             session_data: Datos de sesión compartidos (para obtener user_id).
         """
         super().__init__(data, message_sender)
-        self.redis_client = redis_client
+        self.player_repo = player_repo
         self.session_data = session_data
 
     async def execute(self) -> None:
@@ -55,9 +55,9 @@ class TaskRequestAttributes(Task):
             )
             return
 
-        # Si no hay en sesión, obtener desde Redis usando user_id
-        if not self.redis_client:
-            logger.error("Redis no disponible para obtener atributos")
+        # Si no hay en sesión, obtener desde repositorio usando user_id
+        if not self.player_repo:
+            logger.error("PlayerRepository no disponible para obtener atributos")
             await self.message_sender.send_attributes(0, 0, 0, 0, 0)
             return
 
@@ -69,40 +69,38 @@ class TaskRequestAttributes(Task):
             await self.message_sender.send_attributes(0, 0, 0, 0, 0)
             return
 
-        # Obtener atributos desde Redis
-        user_id = self.session_data["user_id"]
-        stats_key = f"player:{user_id}:stats"
-        stats_data = await self.redis_client.redis.hgetall(stats_key)  # type: ignore[misc]
+        # Obtener atributos desde el repositorio
+        user_id_value = self.session_data["user_id"]
+        if isinstance(user_id_value, dict):
+            logger.error("user_id en sesión es un dict, esperaba int")
+            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+            return
 
-        if stats_data:
-            strength = int(stats_data.get("strength", 0))
-            agility = int(stats_data.get("agility", 0))
-            intelligence = int(stats_data.get("intelligence", 0))
-            charisma = int(stats_data.get("charisma", 0))
-            constitution = int(stats_data.get("constitution", 0))
+        user_id = int(user_id_value)
+        attributes = await self.player_repo.get_attributes(user_id)
 
+        if attributes is not None:
             logger.info(
-                "Enviando atributos desde Redis para user_id %d: "
+                "Enviando atributos desde repositorio para user_id %d: "
                 "STR=%d AGI=%d INT=%d CHA=%d CON=%d",
                 user_id,
-                strength,
-                agility,
-                intelligence,
-                charisma,
-                constitution,
+                attributes["strength"],
+                attributes["agility"],
+                attributes["intelligence"],
+                attributes["charisma"],
+                attributes["constitution"],
             )
 
-            # Intentar con send_attributes (PacketID 50)
             await self.message_sender.send_attributes(
-                strength=strength,
-                agility=agility,
-                intelligence=intelligence,
-                charisma=charisma,
-                constitution=constitution,
+                strength=attributes["strength"],
+                agility=attributes["agility"],
+                intelligence=attributes["intelligence"],
+                charisma=attributes["charisma"],
+                constitution=attributes["constitution"],
             )
         else:
             logger.warning(
-                "No se encontraron atributos en Redis para user_id %d",
+                "No se encontraron atributos en repositorio para user_id %d",
                 user_id,
             )
             await self.message_sender.send_attributes(0, 0, 0, 0, 0)
