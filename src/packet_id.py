@@ -152,7 +152,11 @@ class ServerPacketID(IntEnum):
 
     # Paquetes del protocolo AO estándar (implementados)
     LOGGED = 0  # Login exitoso
+    UPDATE_STA = 15  # Actualizar stamina
+    UPDATE_MANA = 16  # Actualizar mana
+    UPDATE_HP = 17  # Actualizar HP
     POS_UPDATE = 22  # Actualizar posición del personaje
+    UPDATE_USER_STATS = 45  # Actualizar estadísticas completas del usuario
     ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
     ERROR_MSG = 55  # Mensaje de error
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
@@ -173,9 +177,6 @@ class ServerPacketID(IntEnum):
     # COMMERCE_CHAT = 12
     # SHOW_BLACKSMITH_FORM = 13
     # SHOW_CARPENTER_FORM = 14
-    # UPDATE_STA = 15
-    # UPDATE_MANA = 16
-    # UPDATE_HP = 17
     # UPDATE_GOLD = 18
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
@@ -202,7 +203,6 @@ class ServerPacketID(IntEnum):
     # PAUSE_TOGGLE = 42
     # RAIN_TOGGLE = 43
     # CREATE_FX = 44
-    # UPDATE_USER_STATS = 45
     # WORK_REQUEST_TARGET = 46
     # CHANGE_INVENTORY_SLOT = 47
     # CHANGE_BANK_SLOT = 48

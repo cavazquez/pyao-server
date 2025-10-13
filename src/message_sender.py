@@ -9,6 +9,10 @@ from src.msg import (
     build_error_msg_response,
     build_logged_response,
     build_pos_update_response,
+    build_update_hp_response,
+    build_update_mana_response,
+    build_update_sta_response,
+    build_update_user_stats_response,
 )
 
 if TYPE_CHECKING:
@@ -106,4 +110,72 @@ class MessageSender:
             error_message: Mensaje de error.
         """
         response = build_error_msg_response(error_message=error_message)
+        await self.connection.send(response)
+
+    async def send_update_hp(self, hp: int) -> None:
+        """Envía paquete UpdateHP del protocolo AO estándar.
+
+        Args:
+            hp: Puntos de vida actuales (int16).
+        """
+        response = build_update_hp_response(hp=hp)
+        await self.connection.send(response)
+
+    async def send_update_mana(self, mana: int) -> None:
+        """Envía paquete UpdateMana del protocolo AO estándar.
+
+        Args:
+            mana: Puntos de mana actuales (int16).
+        """
+        response = build_update_mana_response(mana=mana)
+        await self.connection.send(response)
+
+    async def send_update_sta(self, stamina: int) -> None:
+        """Envía paquete UpdateSta del protocolo AO estándar.
+
+        Args:
+            stamina: Puntos de stamina actuales (int16).
+        """
+        response = build_update_sta_response(stamina=stamina)
+        await self.connection.send(response)
+
+    async def send_update_user_stats(  # noqa: PLR0913, PLR0917
+        self,
+        max_hp: int,
+        min_hp: int,
+        max_mana: int,
+        min_mana: int,
+        max_sta: int,
+        min_sta: int,
+        gold: int,
+        level: int,
+        elu: int,
+        experience: int,
+    ) -> None:
+        """Envía paquete UpdateUserStats del protocolo AO estándar.
+
+        Args:
+            max_hp: HP máximo (int16).
+            min_hp: HP actual (int16).
+            max_mana: Mana máximo (int16).
+            min_mana: Mana actual (int16).
+            max_sta: Stamina máxima (int16).
+            min_sta: Stamina actual (int16).
+            gold: Oro del jugador (int32).
+            level: Nivel del jugador (byte).
+            elu: Experiencia para subir de nivel (int32).
+            experience: Experiencia total (int32).
+        """
+        response = build_update_user_stats_response(
+            max_hp=max_hp,
+            min_hp=min_hp,
+            max_mana=max_mana,
+            min_mana=min_mana,
+            max_sta=max_sta,
+            min_sta=min_sta,
+            gold=gold,
+            level=level,
+            elu=elu,
+            experience=experience,
+        )
         await self.connection.send(response)

@@ -288,6 +288,22 @@ class TaskLogin(Task):
             position["map"],
         )
 
+        # Enviar estadísticas completas del personaje (UpdateUserStats)
+        # Por ahora enviamos valores por defecto, en el futuro se obtendrán de Redis
+        await self.message_sender.send_update_user_stats(
+            max_hp=100,
+            min_hp=100,
+            max_mana=100,
+            min_mana=100,
+            max_sta=100,
+            min_sta=100,
+            gold=0,
+            level=1,
+            elu=300,  # Experiencia para subir de nivel
+            experience=0,
+        )
+        logger.info("Estadísticas iniciales enviadas para user_id %d", user_id)
+
     @staticmethod
     def _hash_password(password: str) -> str:
         """Genera un hash SHA-256 de la contraseña.
@@ -659,6 +675,21 @@ class TaskCreateAccount(Task):
             # Enviar posición inicial
             await self.message_sender.send_pos_update(default_x, default_y)
             logger.info("Posición inicial enviada al nuevo personaje")
+
+            # Enviar estadísticas completas del personaje (UpdateUserStats)
+            await self.message_sender.send_update_user_stats(
+                max_hp=100,
+                min_hp=100,
+                max_mana=100,
+                min_mana=100,
+                max_sta=100,
+                min_sta=100,
+                gold=0,
+                level=1,
+                elu=300,  # Experiencia para subir de nivel
+                experience=0,
+            )
+            logger.info("Estadísticas iniciales enviadas al nuevo personaje")
 
         except ValueError as e:
             # Cuenta ya existe u otro error de validación

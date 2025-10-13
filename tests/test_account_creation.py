@@ -66,8 +66,8 @@ async def test_task_create_account_success() -> None:
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 2 paquetes: Logged y PosUpdate
-    assert writer.write.call_count == 2
+    # Verificar que se enviaron 3 paquetes: Logged, PosUpdate y UpdateUserStats
+    assert writer.write.call_count == 3
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -76,6 +76,10 @@ async def test_task_create_account_success() -> None:
     # Segundo paquete: PosUpdate
     second_call = writer.write.call_args_list[1][0][0]
     assert second_call[0] == ServerPacketID.POS_UPDATE
+
+    # Tercer paquete: UpdateUserStats
+    third_call = writer.write.call_args_list[2][0][0]
+    assert third_call[0] == ServerPacketID.UPDATE_USER_STATS
 
 
 @pytest.mark.asyncio
