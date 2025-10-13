@@ -3,12 +3,15 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.task import MIN_TALK_PACKET_SIZE, Task
+from src.task import Task
 
 if TYPE_CHECKING:
     from src.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
+
+# Constantes
+MIN_TALK_PACKET_SIZE = 3  # PacketID + int16
 
 
 class TaskTalk(Task):

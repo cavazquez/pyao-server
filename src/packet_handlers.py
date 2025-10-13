@@ -1,8 +1,17 @@
 """Mapeo de IDs de paquetes a sus handlers correspondientes."""
 
+from typing import TYPE_CHECKING
+
 from src.packet_id import ClientPacketID
-from src.task import Task, TaskCreateAccount, TaskDice, TaskLogin, TaskRequestAttributes, TaskTalk
+from src.task_account import TaskCreateAccount
+from src.task_attributes import TaskRequestAttributes
+from src.task_dice import TaskDice
+from src.task_login import TaskLogin
+from src.task_talk import TaskTalk
 from src.task_walk import TaskWalk
+
+if TYPE_CHECKING:
+    from src.task import Task
 
 # Mapeo de PacketID a clase de Task
 TASK_HANDLERS: dict[int, type[Task]] = {

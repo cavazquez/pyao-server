@@ -6,7 +6,8 @@ import pytest
 
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
-from src.task import TaskDice, TaskNull
+from src.task_dice import TaskDice
+from src.task_null import TaskNull
 
 
 @pytest.mark.asyncio

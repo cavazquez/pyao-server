@@ -1,10 +1,10 @@
-"""Tarea para creación de cuentas."""
+"""Tarea para creación de cuentas de usuario."""
 
 import hashlib
 import logging
 from typing import TYPE_CHECKING
 
-from src.task import MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, Task
+from src.task import Task
 from src.task_login import TaskLogin
 
 if TYPE_CHECKING:
@@ -13,6 +13,10 @@ if TYPE_CHECKING:
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
+
+# Constantes de validación
+MIN_USERNAME_LENGTH = 3
+MIN_PASSWORD_LENGTH = 6
 
 
 class TaskCreateAccount(Task):

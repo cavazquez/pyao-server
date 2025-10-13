@@ -9,7 +9,7 @@ from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID, ServerPacketID
 from src.player_repository import PlayerRepository
-from src.task import TaskCreateAccount
+from src.task_account import TaskCreateAccount
 
 
 @pytest.mark.asyncio

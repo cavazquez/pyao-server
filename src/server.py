@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import sys
+from typing import TYPE_CHECKING
 
 import redis
 from src.account_repository import AccountRepository
@@ -11,16 +12,16 @@ from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
-from src.task import (
-    Task,
-    TaskCreateAccount,
-    TaskDice,
-    TaskLogin,
-    TaskNull,
-    TaskRequestAttributes,
-    TaskTalk,
-)
+from src.task_account import TaskCreateAccount
+from src.task_attributes import TaskRequestAttributes
+from src.task_dice import TaskDice
+from src.task_login import TaskLogin
+from src.task_null import TaskNull
+from src.task_talk import TaskTalk
 from src.task_walk import TaskWalk
+
+if TYPE_CHECKING:
+    from src.task import Task
 
 logger = logging.getLogger(__name__)
 
