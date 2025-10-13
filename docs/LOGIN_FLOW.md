@@ -257,9 +257,10 @@ Basado en: [brian-christopher/ArgentumOnlineGodot](https://github.com/brian-chri
 
 **Paquetes implementados**:
 - `LOGGED = 0`: Login exitoso con clase del personaje
+- `POS_UPDATE = 22`: Actualización de posición del personaje
+- `ATTRIBUTES = 50`: Atributos del personaje (Atributes en el protocolo)
 - `ERROR_MSG = 55`: Mensajes de error
 - `DICE_ROLL = 67`: Tirada de dados para creación de personaje
-- `ATTRIBUTES = 50`: Atributos del personaje (Atributes en el protocolo)
 
 **Ventajas del protocolo estándar**:
 - Compatibilidad total con el cliente Godot oficial
@@ -274,7 +275,7 @@ Según el protocolo estándar de AO (comentados en `src/packet_id.py`), los sigu
 1. **`USER_INDEX_IN_SERVER`** (27): Índice del usuario en el servidor
 2. **`CHARACTER_CREATE`** (29): Crear el personaje en el mapa
 3. **`CHANGE_MAP`** (21): Cambiar al mapa inicial
-4. **`POS_UPDATE`** (22): Actualizar posición del personaje
+4. ~~**`POS_UPDATE`** (22): Actualizar posición del personaje~~ ✅ **Implementado**
 5. **`UPDATE_USER_STATS`** (45): Enviar estadísticas completas (HP, mana, etc.)
 6. **`UPDATE_HP`** (17): Actualizar puntos de vida
 7. **`UPDATE_MANA`** (16): Actualizar puntos de maná
@@ -326,8 +327,10 @@ uv run pytest -v
 
 ## Mejoras Futuras
 
-- [ ] Implementar el paquete `LOGGED` estándar del protocolo AO
-- [ ] Enviar más datos en el login (posición, mapa, stats completos)
+- [x] ~~Implementar el paquete `LOGGED` estándar del protocolo AO~~ ✅ **Implementado**
+- [x] ~~Enviar posición del personaje después del login~~ ✅ **Implementado** (posición por defecto)
+- [ ] Obtener posición del personaje desde Redis
+- [ ] Enviar más datos en el login (mapa, stats completos)
 - [ ] Implementar sistema de sesiones persistentes en Redis
 - [ ] Agregar timeout de sesión
 - [ ] Implementar reconexión automática

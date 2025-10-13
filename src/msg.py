@@ -77,6 +77,23 @@ def build_logged_response(user_class: int) -> bytes:
     return packet.to_bytes()
 
 
+def build_pos_update_response(x: int, y: int) -> bytes:
+    """Construye el paquete PosUpdate del protocolo AO estándar.
+
+    Args:
+        x: Posición X del personaje (1 byte, 0-255).
+        y: Posición Y del personaje (1 byte, 0-255).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (22) + x (1 byte) + y (1 byte).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.POS_UPDATE)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    return packet.to_bytes()
+
+
 def build_error_msg_response(error_message: str) -> bytes:
     """Construye el paquete ErrorMsg del protocolo AO estándar.
 

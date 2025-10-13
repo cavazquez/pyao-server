@@ -315,3 +315,44 @@ class RedisClient:
         key = RedisKeys.account_id_by_username(username)
         value = await self.redis.get(key)
         return int(value) if value is not None else None
+
+    async def set_player_position(self, user_id: int, x: int, y: int, map_id: int = 1) -> None:
+        """Guarda la posición del jugador en Redis.
+
+        Args:
+            user_id: ID del usuario.
+            x: Coordenada X (0-255).
+            y: Coordenada Y (0-255).
+            map_id: ID del mapa (por defecto 1).
+        """
+        key = RedisKeys.player_position(user_id)
+        position_data = {"x": str(x), "y": str(y), "map": str(map_id)}
+        await self.redis.hset(key, mapping=position_data)  # type: ignore[misc]
+        logger.info(
+            "Posición guardada para user_id %d: (%d, %d) en mapa %d",
+            user_id,
+            x,
+            y,
+            map_id,
+        )
+
+    async def get_player_position(self, user_id: int) -> dict[str, int] | None:
+        """Obtiene la posición del jugador desde Redis.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con x, y, map o None si no existe.
+        """
+        key = RedisKeys.player_position(user_id)
+        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+
+        if not result:
+            return None
+
+        return {
+            "x": int(result.get("x", 0)),
+            "y": int(result.get("y", 0)),
+            "map": int(result.get("map", 1)),
+        }

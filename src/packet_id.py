@@ -150,9 +150,10 @@ class ServerPacketID(IntEnum):
 
     # Paquetes del protocolo AO estándar (implementados)
     LOGGED = 0  # Login exitoso
+    POS_UPDATE = 22  # Actualizar posición del personaje
+    ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
     ERROR_MSG = 55  # Mensaje de error
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
-    ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
@@ -177,7 +178,6 @@ class ServerPacketID(IntEnum):
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
     # CHANGE_MAP = 21
-    # POS_UPDATE = 22
     # CHAT_OVER_HEAD = 23
     # CONSOLE_MSG = 24
     # GUILD_CHAT = 25

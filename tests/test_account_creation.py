@@ -22,6 +22,7 @@ async def test_task_create_account_success() -> None:
     # Mock del RedisClient
     redis_client = MagicMock(spec=RedisClient)
     redis_client.create_account = AsyncMock(return_value=1)
+    redis_client.set_player_position = AsyncMock()
 
     # Crear conexión y message sender
     connection = ClientConnection(writer)
@@ -65,10 +66,16 @@ async def test_task_create_account_success() -> None:
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se envió respuesta de éxito (Logged)
-    assert writer.write.called
-    written_data = writer.write.call_args[0][0]
-    assert written_data[0] == ServerPacketID.LOGGED
+    # Verificar que se enviaron 2 paquetes: Logged y PosUpdate
+    assert writer.write.call_count == 2
+
+    # Primer paquete: Logged
+    first_call = writer.write.call_args_list[0][0][0]
+    assert first_call[0] == ServerPacketID.LOGGED
+
+    # Segundo paquete: PosUpdate
+    second_call = writer.write.call_args_list[1][0][0]
+    assert second_call[0] == ServerPacketID.POS_UPDATE
 
 
 @pytest.mark.asyncio

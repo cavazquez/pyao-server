@@ -261,6 +261,32 @@ class TaskLogin(Task):
         # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
         await self.message_sender.send_logged(user_class)
 
+        # Obtener y enviar posición del personaje
+        position = await self.redis_client.get_player_position(user_id)
+
+        if position is None:
+            # Si no existe posición, crear una por defecto
+            default_x = 50
+            default_y = 50
+            default_map = 1
+            await self.redis_client.set_player_position(user_id, default_x, default_y, default_map)
+            logger.info(
+                "Posición inicial creada para user_id %d: (%d, %d) en mapa %d",
+                user_id,
+                default_x,
+                default_y,
+                default_map,
+            )
+            position = {"x": default_x, "y": default_y, "map": default_map}
+
+        await self.message_sender.send_pos_update(position["x"], position["y"])
+        logger.info(
+            "Posición enviada: (%d, %d) en mapa %d",
+            position["x"],
+            position["y"],
+            position["map"],
+        )
+
     @staticmethod
     def _hash_password(password: str) -> str:
         """Genera un hash SHA-256 de la contraseña.
@@ -611,9 +637,27 @@ class TaskCreateAccount(Task):
                 self.message_sender.connection.address,
             )
 
+            # Crear posición inicial del personaje
+            default_x = 50
+            default_y = 50
+            default_map = 1
+            await self.redis_client.set_player_position(user_id, default_x, default_y, default_map)
+            logger.info(
+                "Posición inicial creada para nuevo personaje %s (ID: %d): (%d, %d) en mapa %d",
+                username,
+                user_id,
+                default_x,
+                default_y,
+                default_map,
+            )
+
             # Enviar paquete Logged con la clase del personaje (protocolo AO estándar)
             user_class = char_data.get("job", 1) if char_data else 1
             await self.message_sender.send_logged(user_class)
+
+            # Enviar posición inicial
+            await self.message_sender.send_pos_update(default_x, default_y)
+            logger.info("Posición inicial enviada al nuevo personaje")
 
         except ValueError as e:
             # Cuenta ya existe u otro error de validación

@@ -8,6 +8,7 @@ from src.msg import (
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
+    build_pos_update_response,
 )
 
 if TYPE_CHECKING:
@@ -86,6 +87,16 @@ class MessageSender:
             user_class: Clase del personaje (1 byte).
         """
         response = build_logged_response(user_class=user_class)
+        await self.connection.send(response)
+
+    async def send_pos_update(self, x: int, y: int) -> None:
+        """Envía paquete PosUpdate del protocolo AO estándar.
+
+        Args:
+            x: Posición X del personaje (0-255).
+            y: Posición Y del personaje (0-255).
+        """
+        response = build_pos_update_response(x=x, y=y)
         await self.connection.send(response)
 
     async def send_error_msg(self, error_message: str) -> None:

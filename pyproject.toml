@@ -51,6 +51,9 @@ preview = true  # Habilitar reglas experimentales
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint.pylint]
+max-public-methods = 30
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
