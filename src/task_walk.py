@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -33,6 +34,7 @@ class TaskWalk(Task):
         data: bytes,
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
+        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
@@ -41,10 +43,12 @@ class TaskWalk(Task):
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
+            map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
+        self.map_manager = map_manager
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -74,7 +78,7 @@ class TaskWalk(Task):
         else:
             return heading
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: C901
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -128,8 +132,8 @@ class TaskWalk(Task):
         elif heading == HEADING_WEST:
             new_x = max(MIN_MAP_COORDINATE, current_x - 1)
 
-        # Actualizar posición en Redis
-        await self.player_repo.set_position(user_id, new_x, new_y, current_map)
+        # Actualizar posición en Redis (incluyendo heading)
+        await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
 
         logger.info(
             "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
@@ -141,6 +145,21 @@ class TaskWalk(Task):
             heading,
         )
 
+        # Broadcast multijugador: enviar POS_UPDATE a otros jugadores en el mapa
+        if self.map_manager:
+            # Enviar POS_UPDATE a todos los demás jugadores en el mapa
+            other_senders = self.map_manager.get_all_message_senders_in_map(
+                current_map, exclude_user_id=user_id
+            )
+            for sender in other_senders:
+                await sender.send_pos_update(user_id, new_x, new_y)
+
+            logger.debug(
+                "Movimiento de user %d notificado a %d jugadores en mapa %d",
+                user_id,
+                len(other_senders),
+                current_map,
+            )
+
         # Nota: NO enviamos POS_UPDATE al cliente que se movió porque el cliente
         # ya asume que se movió cuando envió WALK. Solo actualizamos en el servidor.
-        # En el futuro, aquí se debería enviar CHARACTER_MOVE a otros jugadores.
