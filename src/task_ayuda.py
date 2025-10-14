@@ -34,9 +34,12 @@ class TaskAyuda(Task):
         # Mensaje de ayuda con comandos disponibles
         help_message = (
             "--- Comandos Disponibles ---\n"
-            "/AYUDA o /HELP - Muestra esta ayuda\n"
+            "/AYUDA - Muestra esta ayuda\n"
             "/EST - Muestra tus estadisticas\n"
             "/ONLINE - Lista de jugadores conectados\n"
+            "/MOTD - Mensaje del dia del servidor\n"
+            "/UPTIME - Tiempo de actividad del servidor\n"
+            "/INFO - Informacion del servidor\n"
             "/SALIR - Desconectarse del servidor\n"
             "--- Informacion ---\n"
             "Usa las teclas de direccion para moverte\n"
