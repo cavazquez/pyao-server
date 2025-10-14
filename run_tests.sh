@@ -22,6 +22,6 @@ uv run mypy .
 
 echo ""
 echo "🧪 Running unit tests..."
-uv run pytest -v
+uv run pytest
 echo ""
 echo "✅ All checks passed!"

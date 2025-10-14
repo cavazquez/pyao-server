@@ -46,9 +46,5 @@ async def add_test_items(user_id: int) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        user_id = int(sys.argv[1])
-    else:
-        user_id = 1  # Usuario por defecto
-
+    user_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     asyncio.run(add_test_items(user_id))
