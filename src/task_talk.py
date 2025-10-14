@@ -20,7 +20,7 @@ MIN_TALK_PACKET_SIZE = 3  # PacketID + int16
 class TaskTalk(Task):
     """Tarea para procesar mensajes de chat del jugador."""
 
-    def __init__(  # noqa: PLR0913, PLR0917
+    def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,

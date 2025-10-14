@@ -4,6 +4,8 @@ import hashlib
 import logging
 from typing import TYPE_CHECKING
 
+from src.inventory_repository import InventoryRepository
+from src.items_catalog import get_item
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -18,7 +20,7 @@ logger = logging.getLogger(__name__)
 class TaskLogin(Task):
     """Tarea que maneja el login de usuarios."""
 
-    def __init__(  # noqa: PLR0913, PLR0917
+    def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
@@ -267,6 +269,47 @@ class TaskLogin(Task):
                 max_hunger=hunger_thirst["max_hunger"],
                 min_hunger=hunger_thirst["min_hunger"],
             )
+
+        # Enviar inventario completo
+        inventory_repo = InventoryRepository(self.player_repo.redis)
+        inventory = await inventory_repo.get_inventory(user_id)
+
+        logger.info("Enviando inventario para user_id %d", user_id)
+        for i in range(1, InventoryRepository.MAX_SLOTS + 1):
+            slot_key = f"slot_{i}"
+            slot_value = inventory.get(slot_key, "")
+
+            if slot_value and isinstance(slot_value, str):
+                try:
+                    item_id, quantity = slot_value.split(":")
+                    item = get_item(int(item_id))
+
+                    if item:
+                        logger.info(
+                            "Enviando slot %d: %s (id=%d, grh=%d, type=%d, qty=%s)",
+                            i,
+                            item.name,
+                            item.item_id,
+                            item.graphic_id,
+                            item.item_type.to_client_type(),
+                            quantity,
+                        )
+                        await self.message_sender.send_change_inventory_slot(
+                            slot=i,
+                            item_id=item.item_id,
+                            name=item.name,
+                            amount=int(quantity),
+                            equipped=False,
+                            grh_id=item.graphic_id,
+                            item_type=item.item_type.to_client_type(),
+                            max_hit=item.max_damage,
+                            min_hit=item.min_damage,
+                            max_def=item.defense,
+                            min_def=item.defense,
+                            sale_price=float(item.value),
+                        )
+                except (ValueError, AttributeError) as e:
+                    logger.warning("Error procesando slot %d: %s", i, e)
 
         # Obtener datos visuales del personaje
         char_body = int(account_data.get("char_race", 1))

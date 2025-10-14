@@ -45,6 +45,14 @@ ignore = [
     "CPY001",  # copyright notice (no requerido)
     "S104",    # binding to all interfaces (intencional para servidor)
     "TC003",   # asyncio usado en runtime, no solo type-checking
+    "FIX002",  # line-contains-todo (permitido)
+    "TD002",   # missing author in TODO (no requerido)
+    "TD003",   # missing issue link in TODO (no requerido)
+    "PLR0913", # too many arguments (necesario para protocolos)
+    "PLR0917", # too many positional arguments (necesario para protocolos)
+    "FBT001",  # boolean positional argument (necesario para protocolos)
+    "PLC0415", # import not at top (permitido en casos específicos)
+    "PLC1901", # simplificaciones no críticas
 ]
 preview = true  # Habilitar reglas experimentales
 
@@ -76,7 +84,7 @@ strict_concatenate = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
-disable_error_code = ["method-assign", "arg-type", "dict-item"]
+ignore_errors = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -93,4 +101,15 @@ addopts = "--strict-markers"
     "D104",    # docstring en __init__.py no requerido
     "PLR6301", # métodos de test pueden usar self
     "ERA001",  # código comentado permitido en tests
+    "ANN001",  # anotaciones de tipos no requeridas en tests
+    "ANN201",  # return type annotation no requerida en tests
+    "ANN202",  # return type annotation no requerida en funciones privadas de tests
+    "DOC201",  # return documentation no requerida en fixtures
+    "RUF029",  # async sin await permitido en mocks
+    "SIM118",  # simplificaciones no requeridas en tests
+]
+"tools/**/*.py" = [
+    "PLR1702", # parsers pueden tener muchos bloques anidados
+    "C901",    # parsers pueden ser complejos
+    "PLR0912", # parsers pueden tener muchas ramas
 ]

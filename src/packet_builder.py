@@ -88,6 +88,37 @@ class PacketBuilder:
         self._data.extend(data)
         return self
 
+    def add_unicode_string(self, text: str) -> PacketBuilder:
+        """Agrega una cadena Unicode con longitud prefijada (int16).
+
+        El formato es: longitud (int16) + texto en UTF-8.
+
+        Args:
+            text: Texto a agregar.
+
+        Returns:
+            Self para permitir encadenamiento de métodos.
+        """
+        encoded = text.encode("utf-8")
+        self.add_int16(len(encoded))
+        self._data.extend(encoded)
+        return self
+
+    def add_float(self, value: float) -> PacketBuilder:
+        """Agrega un float de 32 bits en little-endian.
+
+        Args:
+            value: Valor del float.
+
+        Returns:
+            Self para permitir encadenamiento de métodos.
+        """
+        import struct
+
+        float_bytes = struct.pack("<f", value)  # <f = little-endian float
+        self._data.extend(float_bytes)
+        return self
+
     def to_bytes(self) -> bytes:
         """Convierte el paquete a bytes.
 

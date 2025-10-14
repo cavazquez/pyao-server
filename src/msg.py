@@ -212,7 +212,7 @@ def build_update_hunger_and_thirst_response(
     return packet.to_bytes()
 
 
-def build_update_user_stats_response(  # noqa: PLR0913, PLR0917
+def build_update_user_stats_response(
     max_hp: int,
     min_hp: int,
     max_mana: int,
@@ -294,7 +294,7 @@ def build_character_remove_response(char_index: int) -> bytes:
     return packet.to_bytes()
 
 
-def build_character_change_response(  # noqa: PLR0913, PLR0917
+def build_character_change_response(
     char_index: int,
     body: int,
     head: int,
@@ -335,7 +335,7 @@ def build_character_change_response(  # noqa: PLR0913, PLR0917
     return packet.to_bytes()
 
 
-def build_character_create_response(  # noqa: PLR0913, PLR0917
+def build_character_create_response(
     char_index: int,
     body: int,
     head: int,
@@ -384,4 +384,54 @@ def build_character_create_response(  # noqa: PLR0913, PLR0917
     # Agregar longitud del nombre (int16) y luego el nombre
     packet.add_int16(len(name))
     packet.add_string(name)
+    return packet.to_bytes()
+
+
+def build_change_inventory_slot_response(
+    slot: int,
+    item_id: int,
+    name: str,
+    amount: int,
+    equipped: bool,
+    grh_id: int,
+    item_type: int,
+    max_hit: int,
+    min_hit: int,
+    max_def: int,
+    min_def: int,
+    sale_price: float,
+) -> bytes:
+    """Construye el paquete para actualizar un slot del inventario.
+
+    Args:
+        slot: Número de slot (1-20).
+        item_id: ID del item (index).
+        name: Nombre del item.
+        amount: Cantidad del item.
+        equipped: Si está equipado (True/False).
+        grh_id: ID del gráfico.
+        item_type: Tipo de item.
+        max_hit: Daño máximo.
+        min_hit: Daño mínimo.
+        max_def: Defensa máxima.
+        min_def: Defensa mínima.
+        sale_price: Precio de venta.
+
+    Returns:
+        Paquete de bytes con el formato del cliente.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHANGE_INVENTORY_SLOT)
+    packet.add_byte(slot)
+    packet.add_int16(item_id)
+    packet.add_unicode_string(name)
+    packet.add_int16(amount)
+    packet.add_byte(1 if equipped else 0)
+    packet.add_int16(grh_id)
+    packet.add_byte(item_type)
+    packet.add_int16(max_hit)
+    packet.add_int16(min_hit)
+    packet.add_int16(max_def)
+    packet.add_int16(min_def)
+    packet.add_float(sale_price)
     return packet.to_bytes()

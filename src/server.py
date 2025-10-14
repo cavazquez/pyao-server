@@ -32,6 +32,7 @@ from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
+from src.task_use_item import TaskUseItem
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
@@ -143,6 +144,14 @@ class ArgentumServer:
             return TaskUptime(data, message_sender, self.server_repo)
         if task_class is TaskQuit:
             return TaskQuit(data, message_sender, self.player_repo, self.map_manager, session_data)
+        if task_class is TaskUseItem:
+            return TaskUseItem(data, message_sender, self.player_repo, session_data)
+
+        # Importar TaskInventoryClick para comparación
+        from src.task_inventory_click import TaskInventoryClick
+
+        if task_class is TaskInventoryClick:
+            return TaskInventoryClick(data, message_sender, self.player_repo, session_data)
 
         return task_class(data, message_sender)
 
@@ -261,7 +270,7 @@ class ArgentumServer:
             self.game_tick = GameTick(
                 player_repo=self.player_repo,
                 map_manager=self.map_manager,
-                tick_interval=1.0,  # 1 segundo por tick
+                tick_interval=60.0,  # 60 segundos por tick
             )
 
             # Agregar efectos al sistema de tick (configuración desde Redis)

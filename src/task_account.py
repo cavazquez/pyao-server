@@ -4,6 +4,9 @@ import hashlib
 import logging
 from typing import TYPE_CHECKING
 
+from src.account_repository import AccountRepository
+from src.inventory_repository import InventoryRepository
+from src.player_repository import PlayerRepository
 from src.task import Task
 from src.task_login import TaskLogin
 
@@ -23,7 +26,7 @@ MIN_PASSWORD_LENGTH = 6
 class TaskCreateAccount(Task):
     """Tarea que maneja la creación de cuentas."""
 
-    def __init__(  # noqa: PLR0913, PLR0917
+    def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
@@ -182,7 +185,7 @@ class TaskCreateAccount(Task):
         """
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
         hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
@@ -300,6 +303,15 @@ class TaskCreateAccount(Task):
                 initial_stats["max_hp"],
                 initial_stats["max_mana"],
             )
+
+            # Crear inventario inicial con items básicos
+            inventory_repo = InventoryRepository(self.player_repo.redis)
+            await inventory_repo.add_item(user_id, item_id=1, quantity=5)  # 5 Pociones Rojas
+            await inventory_repo.add_item(user_id, item_id=2, quantity=5)  # 5 Pociones Azules
+            await inventory_repo.add_item(user_id, item_id=3, quantity=10)  # 10 Manzanas
+            await inventory_repo.add_item(user_id, item_id=4, quantity=10)  # 10 Aguas
+            await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
+            logger.info("Inventario inicial creado para user_id %d", user_id)
 
             # Ejecutar login automático después de crear la cuenta
             login_task = TaskLogin(

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.msg import (
     build_attributes_response,
+    build_change_inventory_slot_response,
     build_change_map_response,
     build_character_change_response,
     build_character_create_response,
@@ -227,7 +228,7 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_update_user_stats(  # noqa: PLR0913, PLR0917
+    async def send_update_user_stats(
         self,
         max_hp: int,
         min_hp: int,
@@ -283,7 +284,7 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_character_create(  # noqa: PLR0913, PLR0917
+    async def send_character_create(
         self,
         char_index: int,
         body: int,
@@ -342,7 +343,7 @@ class MessageSender:
         )
         await self.connection.send(response)
 
-    async def send_character_change(  # noqa: PLR0913, PLR0917
+    async def send_character_change(
         self,
         char_index: int,
         body: int,
@@ -425,3 +426,57 @@ class MessageSender:
         lines = message.split("\n")
         for line in lines:
             await self.send_console_msg(line, font_color)
+
+    async def send_change_inventory_slot(
+        self,
+        slot: int,
+        item_id: int,
+        name: str,
+        amount: int,
+        equipped: bool,
+        grh_id: int,
+        item_type: int,
+        max_hit: int = 0,
+        min_hit: int = 0,
+        max_def: int = 0,
+        min_def: int = 0,
+        sale_price: float = 0.0,
+    ) -> None:
+        """Envía actualización de un slot del inventario.
+
+        Args:
+            slot: Número de slot (1-20).
+            item_id: ID del item.
+            name: Nombre del item.
+            amount: Cantidad.
+            equipped: Si está equipado.
+            grh_id: ID del gráfico.
+            item_type: Tipo de item.
+            max_hit: Daño máximo.
+            min_hit: Daño mínimo.
+            max_def: Defensa máxima.
+            min_def: Defensa mínima.
+            sale_price: Precio de venta.
+        """
+        response = build_change_inventory_slot_response(
+            slot=slot,
+            item_id=item_id,
+            name=name,
+            amount=amount,
+            equipped=equipped,
+            grh_id=grh_id,
+            item_type=item_type,
+            max_hit=max_hit,
+            min_hit=min_hit,
+            max_def=max_def,
+            min_def=min_def,
+            sale_price=sale_price,
+        )
+        logger.debug(
+            "[%s] Enviando CHANGE_INVENTORY_SLOT: slot=%d, item=%s, amount=%d",
+            self.connection.address,
+            slot,
+            name,
+            amount,
+        )
+        await self.connection.send(response)

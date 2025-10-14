@@ -18,6 +18,7 @@ class ClientPacketID(IntEnum):
     # Paquetes del protocolo AO (implementados)
     TALK = 3  # Hablar (chat normal)
     WALK = 6  # Caminar/moverse
+    USE_ITEM = 30  # Usar item del inventario
     CHANGE_HEADING = 37  # Cambiar dirección sin moverse
 
     # Paquetes del protocolo AO (no implementados aún)
@@ -43,10 +44,9 @@ class ClientPacketID(IntEnum):
     # DROP = 24
     # CAST_SPELL = 25
     # LEFT_CLICK = 26
-    # DOUBLE_CLICK = 27
+    DOUBLE_CLICK = 27  # Doble click en inventario (usar item)
     # WORK = 28
     # USE_SPELL_MACRO = 29
-    # USE_ITEM = 30
     # CRAFT_BLACKSMITH = 31
     # CRAFT_CARPENTER = 32
     # WORK_LEFT_CLICK = 33
@@ -152,6 +152,7 @@ class ServerPacketID(IntEnum):
 
     # Paquetes del protocolo AO estándar (implementados)
     LOGGED = 0  # Login exitoso
+    # CHANGE_INVENTORY_SLOT = 13  # ID usado en algunas versiones
     UPDATE_STA = 15  # Actualizar stamina
     UPDATE_MANA = 16  # Actualizar mana
     UPDATE_HP = 17  # Actualizar HP
@@ -168,6 +169,7 @@ class ServerPacketID(IntEnum):
     CHARACTER_CREATE = 29  # Crear personaje en el mapa
     CHARACTER_REMOVE = 30  # Remover personaje del mapa
     CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
+    CHANGE_INVENTORY_SLOT = 47  # Actualizar slot de inventario
 
     # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001

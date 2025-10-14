@@ -110,7 +110,7 @@ class PlayerRepository:
             "experience": int(result.get("experience", 0)),
         }
 
-    async def set_stats(  # noqa: PLR0913, PLR0917
+    async def set_stats(
         self,
         user_id: int,
         max_hp: int,
@@ -181,7 +181,7 @@ class PlayerRepository:
             "hunger_counter": int(result.get("hunger_counter", 0)),
         }
 
-    async def set_hunger_thirst(  # noqa: PLR0913, PLR0917
+    async def set_hunger_thirst(
         self,
         user_id: int,
         max_water: int,
@@ -243,7 +243,7 @@ class PlayerRepository:
             "constitution": int(result.get("constitution", 10)),
         }
 
-    async def set_attributes(  # noqa: PLR0913, PLR0917
+    async def set_attributes(
         self,
         user_id: int,
         strength: int,

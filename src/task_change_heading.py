@@ -26,7 +26,7 @@ MIN_CHANGE_HEADING_PACKET_SIZE = 2
 class TaskChangeHeading(Task):
     """Tarea que maneja el cambio de dirección del personaje sin moverse."""
 
-    def __init__(  # noqa: PLR0913, PLR0917
+    def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
