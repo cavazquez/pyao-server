@@ -8,6 +8,7 @@ from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.player_service import PlayerService
 from src.session_manager import SessionManager
 from src.task import Task
+from src.task_motd import TaskMotd
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
@@ -199,11 +200,7 @@ class TaskLogin(Task):
         # Enviar inventario (después del delay automático de spawn_character)
         await player_service.send_inventory(user_id)
 
-        # Enviar MOTD (Mensaje del Día)
-        if self.server_repo:
-            motd = await self.server_repo.get_motd()
-        else:
-            motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
-
-        await self.message_sender.send_multiline_console_msg(motd)
+        # Enviar MOTD (Mensaje del Día) - reutilizar TaskMotd
+        motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)
+        await motd_task.execute()
         logger.info("MOTD enviado a user_id %d", user_id)
