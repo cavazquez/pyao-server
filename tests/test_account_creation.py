@@ -61,7 +61,7 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
 
     # Construir paquete de creación de cuenta con formato real del cliente
     username = "testuser"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -156,7 +156,7 @@ async def test_task_create_account_duplicate_username() -> None:
 
     # Construir paquete
     username = "testuser"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -192,7 +192,7 @@ async def test_task_create_account_invalid_username() -> None:
 
     # Username muy corto (menos de 3 caracteres)
     username = "ab"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -228,7 +228,7 @@ async def test_task_create_account_invalid_password() -> None:
 
     # Password muy corto (menos de 6 caracteres)
     username = "testuser"
-    password = "12345"  # noqa: S105
+    password = "12345"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -264,7 +264,7 @@ async def test_task_create_account_invalid_email() -> None:
 
     # Email sin @
     username = "testuser"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "invalidemail"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -298,7 +298,7 @@ async def test_task_create_account_no_redis() -> None:
 
     # Construir paquete válido
     username = "testuser"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -372,7 +372,7 @@ async def test_task_create_account_unicode_username() -> None:
 
     # Username con caracteres unicode
     username = "usuario_ñ"
-    password = "password123"  # noqa: S105
+    password = "password123"
     email = "test@example.com"
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
@@ -406,13 +406,15 @@ async def test_task_create_account_unicode_username() -> None:
 
 def test_task_create_account_password_hashing() -> None:
     """Verifica que las contraseñas se hasheen correctamente."""
+    from src.password_utils import hash_password
+
     password1 = "password123"
     password2 = "password123"
     password3 = "different"
 
-    hash1 = TaskCreateAccount._hash_password(password1)  # noqa: SLF001
-    hash2 = TaskCreateAccount._hash_password(password2)  # noqa: SLF001
-    hash3 = TaskCreateAccount._hash_password(password3)  # noqa: SLF001
+    hash1 = hash_password(password1)
+    hash2 = hash_password(password2)
+    hash3 = hash_password(password3)
 
     # Misma contraseña debe generar mismo hash
     assert hash1 == hash2

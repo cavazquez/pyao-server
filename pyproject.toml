@@ -97,6 +97,7 @@ addopts = "--strict-markers -q"
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "S101",    # assert permitido en tests
+    "S105",    # contraseñas hardcodeadas permitidas en tests
     "PLR2004", # magic values permitidos en tests
     "D104",    # docstring en __init__.py no requerido
     "PLR6301", # métodos de test pueden usar self

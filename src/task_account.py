@@ -1,12 +1,10 @@
-"""Tarea para creación de cuentas de usuario."""
+"""Tarea para creación de cuentas."""
 
-import hashlib
 import logging
 from typing import TYPE_CHECKING
 
-from src.account_repository import AccountRepository
 from src.inventory_repository import InventoryRepository
-from src.player_repository import PlayerRepository
+from src.password_utils import hash_password
 from src.task import Task
 from src.task_login import TaskLogin
 
@@ -173,18 +171,6 @@ class TaskCreateAccount(Task):
         else:
             return (username, password, email, char_data)
 
-    @staticmethod
-    def _hash_password(password: str) -> str:
-        """Genera un hash SHA-256 de la contraseña.
-
-        Args:
-            password: Contraseña en texto plano.
-
-        Returns:
-            Hash hexadecimal de la contraseña.
-        """
-        return hashlib.sha256(password.encode("utf-8")).hexdigest()
-
     async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta la creación de cuenta."""
         # Log de datos recibidos en hexadecimal para debugging
@@ -242,7 +228,7 @@ class TaskCreateAccount(Task):
             return
 
         # Hash de la contraseña
-        password_hash = self._hash_password(password)
+        password_hash = hash_password(password)
 
         # Obtener atributos de dados de la sesión
         stats_data = None

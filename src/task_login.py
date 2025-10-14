@@ -1,10 +1,10 @@
 """Tarea para login de usuarios."""
 
 import asyncio
-import hashlib
 import logging
 from typing import TYPE_CHECKING
 
+from src.password_utils import hash_password
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -141,8 +141,8 @@ class TaskLogin(Task):
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return
 
-        # Verificar contraseña
-        password_hash = self._hash_password(password)
+        # Hashear la contraseña para compararla
+        password_hash = hash_password(password)
         if not await self.account_repo.verify_password(username, password_hash):
             logger.warning("Contraseña incorrecta para usuario: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
@@ -370,15 +370,3 @@ class TaskLogin(Task):
 
         await self.message_sender.send_multiline_console_msg(motd)
         logger.info("MOTD enviado a user_id %d (con delay de 500ms)", user_id)
-
-    @staticmethod
-    def _hash_password(password: str) -> str:
-        """Genera un hash SHA-256 de la contraseña.
-
-        Args:
-            password: Contraseña en texto plano.
-
-        Returns:
-            Hash hexadecimal de la contraseña.
-        """
-        return hashlib.sha256(password.encode("utf-8")).hexdigest()
