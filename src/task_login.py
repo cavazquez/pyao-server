@@ -203,4 +203,3 @@ class TaskLogin(Task):
         # Enviar MOTD (Mensaje del Día) - reutilizar TaskMotd
         motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)
         await motd_task.execute()
-        logger.info("MOTD enviado a user_id %d", user_id)

@@ -44,4 +44,4 @@ class TaskMotd(Task):
 
         # Enviar MOTD línea por línea
         await self.message_sender.send_multiline_console_msg(motd)
-        logger.debug("MOTD enviado a %s", self.message_sender.connection.address)
+        logger.info("MOTD enviado a %s", self.message_sender.connection.address)
