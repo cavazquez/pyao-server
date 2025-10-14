@@ -101,39 +101,62 @@ pyao-server/
 │   ├── client_connection.py     # Gestión de conexiones TCP (send/receive)
 │   ├── message_sender.py        # Envío de mensajes específicos del juego
 │   │
+│   ├── # Capa de Servicios (Lógica Reutilizable)
+│   ├── player_service.py        # Servicio de gestión de jugadores
+│   ├── authentication_service.py # Servicio de autenticación
+│   ├── session_manager.py       # Gestión de sesiones de usuario
+│   ├── multiplayer_broadcast_service.py # Broadcast multijugador
+│   ├── password_utils.py        # Utilidades de contraseñas
+│   │
 │   ├── # Capa de Datos (Repositorios)
 │   ├── player_repository.py     # Repositorio de datos de jugadores
 │   ├── account_repository.py    # Repositorio de cuentas de usuario
+│   ├── server_repository.py     # Repositorio de configuración del servidor
+│   ├── inventory_repository.py  # Repositorio de inventarios
 │   ├── redis_client.py          # Cliente Redis (bajo nivel)
 │   ├── redis_config.py          # Configuración y constantes de Redis
 │   │
 │   ├── # Lógica de Negocio (Tasks)
 │   ├── task.py                  # Sistema de tareas base (clase abstracta)
-│   ├── task_login.py            # Tarea de login
+│   ├── task_login.py            # Tarea de login 
 │   ├── task_account.py          # Tarea de creación de cuentas
 │   ├── task_attributes.py       # Tarea de solicitud de atributos
 │   ├── task_dice.py             # Tarea de tirada de dados
 │   ├── task_talk.py             # Tarea de chat
 │   ├── task_walk.py             # Tarea de movimiento
 │   ├── task_change_heading.py   # Tarea de cambio de dirección
+│   ├── task_motd.py             # Tarea de MOTD
+│   ├── task_inventory_click.py  # Tarea de click en inventario
+│   ├── task_use_item.py         # Tarea de uso de items
 │   ├── task_null.py             # Tarea para packets desconocidos
 │   │
 │   ├── # Protocolo
 │   ├── packet_id.py             # Definición de IDs de paquetes (enums)
 │   ├── packet_handlers.py       # Mapeo de packet IDs a handlers
 │   ├── packet_builder.py        # Constructor de paquetes de bytes
-│   └── msg.py                   # Construcción de mensajes del servidor
+│   ├── msg.py                   # Construcción de mensajes del servidor
+│   │
+│   ├── # Sistema de Juego
+│   ├── map_manager.py           # Gestor de mapas y jugadores
+│   ├── game_tick.py             # Sistema de tick del juego
+│   ├── items_catalog.py         # Catálogo de items (1049 items)
+│   └── effect_*.py              # Efectos del juego (hambre, oro, etc.)
 │
-├── tests/                       # Tests unitarios (131 tests)
+├── tests/                       # Tests unitarios (276 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
+│   ├── # Tests de Servicios (24 tests nuevos)
+│   ├── test_player_service.py      # Tests de PlayerService (7 tests)
+│   ├── test_authentication_service.py # Tests de AuthenticationService (4 tests)
+│   ├── test_session_manager.py     # Tests de SessionManager (13 tests)
+│   ├── # Tests de Tasks
 │   ├── test_client_connection.py   # Tests de ClientConnection
 │   ├── test_message_sender.py      # Tests de MessageSender
 │   ├── test_account_creation.py    # Tests de creación de cuentas
-│   ├── test_task_change_heading.py # Tests de cambio de dirección (6 tests)
-│   ├── test_task_dice.py           # Tests de TaskDice (1 test)
-│   ├── test_task_null.py           # Tests de TaskNull (1 test)
-│   ├── test_task_talk.py           # Tests de TaskTalk (9 tests)
-│   ├── test_map_manager.py         # Tests de MapManager (19 tests)
+│   ├── test_task_change_heading.py # Tests de cambio de dirección
+│   ├── test_task_dice.py           # Tests de TaskDice
+│   ├── test_task_null.py           # Tests de TaskNull
+│   ├── test_task_talk.py           # Tests de TaskTalk
+│   ├── test_map_manager.py         # Tests de MapManager
 │   ├── test_packet_builder.py      # Tests de PacketBuilder
 │   ├── test_msg.py                 # Tests de mensajes y packets
 │   └── test_redis_client.py        # Tests de Redis
