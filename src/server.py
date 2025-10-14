@@ -13,11 +13,13 @@ from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
+from src.server_repository import ServerRepository
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
+from src.task_motd import TaskMotd
 from src.task_null import TaskNull
 from src.task_online import TaskOnline
 from src.task_quit import TaskQuit
@@ -124,6 +126,8 @@ class ArgentumServer:
             return TaskRequestStats(data, message_sender, self.player_repo, session_data)
         if task_class is TaskOnline:
             return TaskOnline(data, message_sender, self.map_manager, session_data)
+        if task_class is TaskMotd:
+            return TaskMotd(data, message_sender, self.server_repo)
         if task_class is TaskQuit:
             return TaskQuit(
                 data, message_sender, self.player_repo, self.map_manager, session_data
@@ -217,6 +221,7 @@ class ArgentumServer:
             # Crear repositorios
             self.player_repo = PlayerRepository(self.redis_client)
             self.account_repo = AccountRepository(self.redis_client)
+            self.server_repo = ServerRepository(self.redis_client)
 
             # Obtener configuración desde Redis
             self.host = await self.redis_client.get_server_host()
@@ -225,6 +230,18 @@ class ArgentumServer:
 
             # Resetear contador de conexiones
             await self.redis_client.redis.set("server:connections:count", "0")
+
+            # Inicializar MOTD si no existe
+            motd = await self.server_repo.get_motd()
+            if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
+                # Es el mensaje por defecto, establecer uno inicial
+                initial_motd = (
+                    "Bienvenido a Argentum Online!\n"
+                    "Servidor en desarrollo.\n"
+                    "Usa /AYUDA para ver los comandos disponibles."
+                )
+                await self.server_repo.set_motd(initial_motd)
+                logger.info("MOTD inicial establecido")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

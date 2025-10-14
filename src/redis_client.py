@@ -208,7 +208,7 @@ class RedisClient:
         key = RedisKeys.session_last_seen(user_id)
         await self.redis.set(key, str(int(time.time())))
 
-    # NOTA: Los métodos de gestión de cuentas y jugadores fueron movidos a
-    # AccountRepository y PlayerRepository respectivamente.
+    # NOTA: Los métodos de gestión de cuentas, jugadores y servidor fueron movidos a
+    # AccountRepository, PlayerRepository y ServerRepository respectivamente.
     # RedisClient ahora solo maneja operaciones de bajo nivel: conexión,
     # configuración y contadores de sesiones.

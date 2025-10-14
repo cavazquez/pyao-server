@@ -104,7 +104,7 @@ class ClientPacketID(IntEnum):
     # ENLIST = 86
     # INFORMATION = 87
     # REWARD = 88
-    # REQUEST_MOTD = 89
+    REQUEST_MOTD = 89
     # UPTIME = 90
     # PARTY_LEAVE = 91
     # PARTY_CREATE = 92
