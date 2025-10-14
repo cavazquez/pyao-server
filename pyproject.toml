@@ -92,7 +92,7 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 # No fallar si no hay tests
-addopts = "--strict-markers"
+addopts = "--strict-markers -q"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
