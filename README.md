@@ -362,6 +362,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
 
 ### Arquitectura y Diseño
+- **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño ⭐ **NUEVO**
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
 - **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
 - **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
