@@ -1,8 +1,9 @@
-"""Tarea para procesar la solicitud de estadísticas del jugador."""
+"""Tarea para solicitar estadísticas del jugador."""
 
 import logging
 from typing import TYPE_CHECKING
 
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -37,9 +38,7 @@ class TaskRequestStats(Task):
     async def execute(self) -> None:
         """Procesa la solicitud de estadísticas del jugador."""
         # Obtener user_id de la sesión
-        user_id = None
-        if self.session_data:
-            user_id = self.session_data.get("user_id")
+        user_id = SessionManager.get_user_id(self.session_data)
 
         if user_id is None:
             logger.warning(

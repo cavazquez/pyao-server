@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.authentication_service import AuthenticationService
 from src.player_service import PlayerService
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -141,9 +142,7 @@ class TaskLogin(Task):
 
         # Guardar user_id y username en session_data para uso posterior
         if self.session_data is not None:
-            self.session_data["user_id"] = user_id  # type: ignore[assignment]
-            self.session_data["username"] = username  # type: ignore[assignment]
-            logger.info("User ID %d y username %s guardados en sesión", user_id, username)
+            SessionManager.set_user_session(self.session_data, user_id, username)
 
         # IMPORTANTE: Orden de envío de paquetes durante el login
         # Este orden es crítico para evitar problemas de parsing en el cliente.

@@ -1,4 +1,4 @@
-"""Task para usar un item del inventario."""
+"""Tarea para usar items del inventario."""
 
 import logging
 import struct
@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -46,11 +47,10 @@ class TaskUseItem(Task):
             return
 
         # Verificar que el jugador esté logueado
-        user_id_value = self.session_data.get("user_id")
-        if not user_id_value or not isinstance(user_id_value, int):
+        user_id = SessionManager.get_user_id(self.session_data)
+        if user_id is None:
             logger.warning("Intento de usar item sin estar logueado")
             return
-        user_id: int = user_id_value
 
         # Verificar que tengamos player_repo
         if not self.player_repo:

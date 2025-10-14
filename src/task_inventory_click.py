@@ -1,4 +1,4 @@
-"""Task para click en slot del inventario (mostrar información)."""
+"""Tarea para manejar clicks en el inventario."""
 
 import logging
 import struct
@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -50,8 +51,8 @@ class TaskInventoryClick(Task):
             logger.warning("session_data no disponible")
             return
 
-        user_id = self.session_data.get("user_id")
-        if not user_id or not isinstance(user_id, int):
+        user_id = SessionManager.get_user_id(self.session_data)
+        if user_id is None:
             logger.warning("Intento de click en inventario sin estar logueado")
             return
 

@@ -1,8 +1,9 @@
-"""Tarea para procesar mensajes de chat."""
+"""Tarea para mensajes de chat."""
 
 import logging
 from typing import TYPE_CHECKING
 
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -82,9 +83,7 @@ class TaskTalk(Task):
             return
 
         # Obtener user_id de la sesión
-        user_id = None
-        if self.session_data:
-            user_id = self.session_data.get("user_id")
+        user_id = SessionManager.get_user_id(self.session_data)
 
         if user_id is None:
             logger.warning(

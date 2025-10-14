@@ -1,8 +1,9 @@
-"""Tarea para procesar la desconexión ordenada del jugador."""
+"""Tarea para desconexión de usuarios."""
 
 import logging
 from typing import TYPE_CHECKING
 
+from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -38,12 +39,10 @@ class TaskQuit(Task):
         self.map_manager = map_manager
         self.session_data = session_data
 
-    async def execute(self) -> None:  # noqa: C901
+    async def execute(self) -> None:
         """Procesa la desconexión ordenada del jugador."""
         # Obtener user_id de la sesión
-        user_id = None
-        if self.session_data:
-            user_id = self.session_data.get("user_id")
+        user_id = SessionManager.get_user_id(self.session_data)
 
         if user_id is None:
             logger.info(
