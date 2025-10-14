@@ -59,3 +59,57 @@ class ServerRepository:
         """
         await self.redis_client.redis.set("server:uptime:start", str(timestamp))
         logger.info("Timestamp de inicio del servidor establecido: %d", timestamp)
+
+    # Configuración de efectos del juego
+    async def get_effect_config_int(self, key: str, default: int) -> int:
+        """Obtiene un valor de configuración de efecto como entero.
+
+        Args:
+            key: Clave de configuración.
+            default: Valor por defecto si no existe.
+
+        Returns:
+            Valor de configuración como entero.
+        """
+        value = await self.redis_client.redis.get(key)
+        if value is None:
+            return default
+        try:
+            return int(value)
+        except ValueError:
+            logger.warning("Valor inválido para %s: %s, usando default %d", key, value, default)
+            return default
+
+    async def get_effect_config_float(self, key: str, default: float) -> float:
+        """Obtiene un valor de configuración de efecto como float.
+
+        Args:
+            key: Clave de configuración.
+            default: Valor por defecto si no existe.
+
+        Returns:
+            Valor de configuración como float.
+        """
+        value = await self.redis_client.redis.get(key)
+        if value is None:
+            return default
+        try:
+            return float(value)
+        except ValueError:
+            logger.warning("Valor inválido para %s: %s, usando default %.2f", key, value, default)
+            return default
+
+    async def get_effect_config_bool(self, key: str, *, default: bool) -> bool:
+        """Obtiene un valor de configuración de efecto como booleano.
+
+        Args:
+            key: Clave de configuración.
+            default: Valor por defecto si no existe.
+
+        Returns:
+            Valor de configuración como booleano (1=True, 0=False).
+        """
+        value = await self.redis_client.redis.get(key)
+        if value is None:
+            return default
+        return bool(value == "1")

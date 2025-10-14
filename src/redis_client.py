@@ -215,61 +215,7 @@ class RedisClient:
         key = RedisKeys.session_last_seen(user_id)
         await self.redis.set(key, str(int(time.time())))
 
-    # Configuración de efectos del juego
-    async def get_effect_config_int(self, key: str, default: int) -> int:
-        """Obtiene un valor de configuración de efecto como entero.
-
-        Args:
-            key: Clave de configuración.
-            default: Valor por defecto si no existe.
-
-        Returns:
-            Valor de configuración como entero.
-        """
-        value = await self.redis.get(key)
-        if value is None:
-            return default
-        try:
-            return int(value)
-        except ValueError:
-            logger.warning("Valor inválido para %s: %s, usando default %d", key, value, default)
-            return default
-
-    async def get_effect_config_float(self, key: str, default: float) -> float:
-        """Obtiene un valor de configuración de efecto como float.
-
-        Args:
-            key: Clave de configuración.
-            default: Valor por defecto si no existe.
-
-        Returns:
-            Valor de configuración como float.
-        """
-        value = await self.redis.get(key)
-        if value is None:
-            return default
-        try:
-            return float(value)
-        except ValueError:
-            logger.warning("Valor inválido para %s: %s, usando default %.2f", key, value, default)
-            return default
-
-    async def get_effect_config_bool(self, key: str, *, default: bool) -> bool:
-        """Obtiene un valor de configuración de efecto como booleano.
-
-        Args:
-            key: Clave de configuración.
-            default: Valor por defecto si no existe.
-
-        Returns:
-            Valor de configuración como booleano (1=True, 0=False).
-        """
-        value = await self.redis.get(key)
-        if value is None:
-            return default
-        return bool(value == "1")
-
-    # NOTA: Los métodos de gestión de cuentas, jugadores y servidor fueron movidos a
-    # AccountRepository, PlayerRepository y ServerRepository respectivamente.
+    # NOTA: Los métodos de gestión de cuentas, jugadores, servidor y configuración
+    # de efectos fueron movidos a AccountRepository, PlayerRepository y ServerRepository.
     # RedisClient ahora solo maneja operaciones de bajo nivel: conexión,
-    # configuración y contadores de sesiones.
+    # configuración del servidor y contadores de sesiones.

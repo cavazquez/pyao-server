@@ -9,7 +9,9 @@ from typing import TYPE_CHECKING
 import redis
 from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
-from src.game_tick import GameTick, GoldDecayEffect, HungerThirstEffect
+from src.effect_gold_decay import GoldDecayEffect
+from src.effect_hunger_thirst import HungerThirstEffect
+from src.game_tick import GameTick
 from src.map_manager import MapManager
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
@@ -58,6 +60,7 @@ class ArgentumServer:
         self.redis_client: RedisClient | None = None
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
+        self.server_repo: ServerRepository | None = None
         self.map_manager = MapManager()  # Gestor de jugadores por mapa
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
 
@@ -242,7 +245,7 @@ class ArgentumServer:
             # Establecer timestamp de inicio del servidor
             await self.server_repo.set_uptime_start(int(time.time()))
 
-            # Inicializar MOTD si no existe
+            # Obtener MOTD desde Redis
             motd = await self.server_repo.get_motd()
             if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
                 # Es el mensaje por defecto, establecer uno inicial
@@ -262,18 +265,18 @@ class ArgentumServer:
             )
 
             # Agregar efectos al sistema de tick (configuración desde Redis)
-            hunger_thirst_enabled = await self.redis_client.get_effect_config_bool(
+            hunger_thirst_enabled = await self.server_repo.get_effect_config_bool(
                 RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, default=True
             )
             if hunger_thirst_enabled:
-                self.game_tick.add_effect(HungerThirstEffect(self.redis_client))
+                self.game_tick.add_effect(HungerThirstEffect(self.server_repo))
                 logger.info("Efecto de hambre/sed habilitado")
 
-            gold_decay_enabled = await self.redis_client.get_effect_config_bool(
+            gold_decay_enabled = await self.server_repo.get_effect_config_bool(
                 RedisKeys.CONFIG_GOLD_DECAY_ENABLED, default=True
             )
             if gold_decay_enabled:
-                self.game_tick.add_effect(GoldDecayEffect(self.redis_client))
+                self.game_tick.add_effect(GoldDecayEffect(self.server_repo))
                 logger.info("Efecto de reducción de oro habilitado")
 
             self.game_tick.start()

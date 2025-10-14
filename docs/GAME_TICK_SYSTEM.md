@@ -8,7 +8,7 @@ El sistema está compuesto por:
 
 - **`GameTick`**: Clase principal que ejecuta el loop de tick y gestiona los efectos
 - **`TickEffect`**: Clase abstracta base para crear nuevos efectos
-- **`RedisClient`**: Provee métodos para leer configuración de efectos desde Redis
+- **`ServerRepository`**: Provee métodos para leer configuración de efectos desde Redis
 - **Efectos implementados**: `HungerThirstEffect`, `GoldDecayEffect`
 
 ## Configuración en Redis
@@ -46,7 +46,7 @@ redis-cli SET config:effects:hunger_thirst:enabled 0
 
 **Código (en server.py):**
 ```python
-self.game_tick.add_effect(HungerThirstEffect(self.redis_client))
+self.game_tick.add_effect(HungerThirstEffect(self.server_repo))
 ```
 
 ### 2. GoldDecayEffect
@@ -80,7 +80,7 @@ redis-cli SET config:effects:gold_decay:enabled 0
 
 **Código (en server.py):**
 ```python
-self.game_tick.add_effect(GoldDecayEffect(self.redis_client))
+self.game_tick.add_effect(GoldDecayEffect(self.server_repo))
 ```
 
 ## Crear Nuevos Efectos
@@ -88,7 +88,7 @@ self.game_tick.add_effect(GoldDecayEffect(self.redis_client))
 Para crear un nuevo efecto, implementa la clase abstracta `TickEffect`:
 
 ```python
-from src.game_tick import TickEffect
+from src.tick_effect import TickEffect
 
 class MyCustomEffect(TickEffect):
     """Descripción de tu efecto."""

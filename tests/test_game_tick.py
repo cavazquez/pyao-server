@@ -5,7 +5,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.game_tick import GameTick, GoldDecayEffect, HungerThirstEffect
+from src.effect_gold_decay import GoldDecayEffect
+from src.effect_hunger_thirst import HungerThirstEffect
+from src.game_tick import GameTick
 
 
 @pytest.fixture
@@ -29,17 +31,17 @@ def mock_map_manager() -> MagicMock:
 
 
 @pytest.fixture
-def mock_redis_client() -> AsyncMock:
-    """Crea un mock del RedisClient.
+def mock_server_repo() -> AsyncMock:
+    """Crea un mock del ServerRepository.
 
     Returns:
-        Mock del RedisClient.
+        Mock del ServerRepository.
     """
-    redis_mock = AsyncMock()
+    server_repo_mock = AsyncMock()
     # Configurar valores por defecto
-    redis_mock.get_effect_config_int.return_value = 4
-    redis_mock.get_effect_config_float.return_value = 1.0
-    return redis_mock
+    server_repo_mock.get_effect_config_int.return_value = 4
+    server_repo_mock.get_effect_config_float.return_value = 1.0
+    return server_repo_mock
 
 
 @pytest.fixture
@@ -80,9 +82,9 @@ async def test_gold_decay_effect_reduces_gold(
     }
 
     # Crear efecto con intervalo corto para testing
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_float.side_effect = [1.0, 0.1]  # percentage, interval
-    effect = GoldDecayEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_float.side_effect = [1.0, 0.1]  # percentage, interval
+    effect = GoldDecayEffect(mock_server_repo)
 
     # Aplicar el efecto suficientes veces para cumplir el intervalo
     for _ in range(1):  # 0.1 segundos / 1.0 segundo por tick = 0.1 ticks
@@ -121,9 +123,9 @@ async def test_gold_decay_effect_no_gold(
         "experience": 0,
     }
 
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_float.side_effect = [1.0, 0.1]  # percentage, interval
-    effect = GoldDecayEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_float.side_effect = [1.0, 0.1]  # percentage, interval
+    effect = GoldDecayEffect(mock_server_repo)
 
     # Aplicar el efecto
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
@@ -153,9 +155,9 @@ async def test_hunger_thirst_effect_reduces_water(
         "hunger_counter": 0,
     }
 
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_int.side_effect = [4, 6, 10, 10]  # intervalos y reducciones
-    effect = HungerThirstEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_int.side_effect = [4, 6, 10, 10]  # intervalos y reducciones
+    effect = HungerThirstEffect(mock_server_repo)
 
     # Aplicar el efecto (debería reducir agua)
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
@@ -205,11 +207,11 @@ async def test_game_tick_applies_multiple_effects(
     }
 
     # Agregar dos efectos
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_int.return_value = 4
-    mock_redis.get_effect_config_float.return_value = 1.0
-    effect1 = HungerThirstEffect(mock_redis)
-    effect2 = GoldDecayEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_int.return_value = 4
+    mock_server_repo.get_effect_config_float.return_value = 1.0
+    effect1 = HungerThirstEffect(mock_server_repo)
+    effect2 = GoldDecayEffect(mock_server_repo)
 
     game_tick.add_effect(effect1)
     game_tick.add_effect(effect2)
@@ -269,9 +271,9 @@ async def test_gold_decay_custom_percentage(
     }
 
     # Crear efecto con 5% de reducción
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_float.side_effect = [5.0, 0.1]  # percentage, interval
-    effect = GoldDecayEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_float.side_effect = [5.0, 0.1]  # percentage, interval
+    effect = GoldDecayEffect(mock_server_repo)
 
     # Aplicar el efecto
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
@@ -302,9 +304,9 @@ async def test_hunger_thirst_flags_activated(
         "hunger_counter": 5,  # INTERVALO_HAMBRE - 1
     }
 
-    mock_redis = AsyncMock()
-    mock_redis.get_effect_config_int.side_effect = [4, 6, 10, 10]  # intervalos y reducciones
-    effect = HungerThirstEffect(mock_redis)
+    mock_server_repo = AsyncMock()
+    mock_server_repo.get_effect_config_int.side_effect = [4, 6, 10, 10]  # intervalos y reducciones
+    effect = HungerThirstEffect(mock_server_repo)
 
     # Aplicar el efecto
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
