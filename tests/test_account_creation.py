@@ -93,10 +93,11 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # 3. ChangeMap
     # 4. UpdateUserStats
     # 5-24. ChangeInventorySlot (20 slots)
-    # 25. CharacterCreate (al final)
+    # 25. CharacterCreate
+    # 26-27. MOTD (2 líneas de ConsoleMsg)
     # Nota: Attributes ya no se envía automáticamente (el cliente lo solicita con /EST)
     # Nota: UpdateHungerAndThirst se envía solo si hunger_thirst no es None
-    assert writer.write.call_count == 25  # 5 paquetes base + 20 slots de inventario
+    assert writer.write.call_count == 27  # 5 paquetes base + 20 slots + 2 MOTD
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -119,9 +120,15 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         inventory_call = writer.write.call_args_list[i][0][0]
         assert inventory_call[0] == ServerPacketID.CHANGE_INVENTORY_SLOT
 
-    # Último paquete (25): CharacterCreate
-    last_call = writer.write.call_args_list[24][0][0]
-    assert last_call[0] == ServerPacketID.CHARACTER_CREATE
+    # Paquete 25: CharacterCreate
+    char_create_call = writer.write.call_args_list[24][0][0]
+    assert char_create_call[0] == ServerPacketID.CHARACTER_CREATE
+
+    # Paquetes 26-27: MOTD (2 líneas de ConsoleMsg)
+    motd_call_1 = writer.write.call_args_list[25][0][0]
+    assert motd_call_1[0] == ServerPacketID.CONSOLE_MSG
+    motd_call_2 = writer.write.call_args_list[26][0][0]
+    assert motd_call_2[0] == ServerPacketID.CONSOLE_MSG
 
 
 @pytest.mark.asyncio

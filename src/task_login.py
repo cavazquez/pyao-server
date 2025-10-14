@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
+    from src.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class TaskLogin(Task):
         account_repo: AccountRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        server_repo: ServerRepository | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -38,12 +40,14 @@ class TaskLogin(Task):
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
+            server_repo: Repositorio del servidor para obtener el MOTD.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.session_data = session_data
+        self.server_repo = server_repo
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -403,6 +407,16 @@ class TaskLogin(Task):
                 map_id,
                 len(other_senders),
             )
+
+        # Enviar MOTD (Mensaje del Día) al final del login
+        if self.server_repo:
+            motd = await self.server_repo.get_motd()
+        else:
+            # Mensaje por defecto si no hay repositorio
+            motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
+
+        await self.message_sender.send_multiline_console_msg(motd)
+        logger.info("MOTD enviado a user_id %d", user_id)
 
     @staticmethod
     def _hash_password(password: str) -> str:
