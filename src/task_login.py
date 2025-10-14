@@ -4,6 +4,8 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING
 
+from src.inventory_repository import InventoryRepository
+from src.items_catalog import get_item
 from src.password_utils import hash_password
 from src.task import Task
 
@@ -358,9 +360,6 @@ class TaskLogin(Task):
         await asyncio.sleep(0.5)  # 500ms de delay
 
         # Enviar inventario después del delay (solo slots con items)
-        from src.inventory_repository import InventoryRepository
-        from src.items_catalog import get_item
-
         inventory_repo = InventoryRepository(self.player_repo.redis)
         inventory = await inventory_repo.get_inventory(user_id)
 

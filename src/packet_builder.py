@@ -1,10 +1,6 @@
-"""Constructor de paquetes de bytes para el protocolo del servidor.
+"""Construcción de paquetes de bytes."""
 
-Ejemplo de uso:
-    >>> packet = PacketBuilder()
-    >>> packet.add_byte(1).add_int16(1000).add_int32(100000)
-    >>> data = packet.to_bytes()
-"""
+import struct
 
 # Constantes para validación de bytes
 MAX_BYTE_VALUE = 255
@@ -113,8 +109,6 @@ class PacketBuilder:
         Returns:
             Self para permitir encadenamiento de métodos.
         """
-        import struct
-
         float_bytes = struct.pack("<f", value)  # <f = little-endian float
         self._data.extend(float_bytes)
         return self

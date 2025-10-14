@@ -8,6 +8,7 @@ from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID, ServerPacketID
+from src.password_utils import hash_password
 from src.player_repository import PlayerRepository
 from src.task_account import TaskCreateAccount
 
@@ -406,8 +407,6 @@ async def test_task_create_account_unicode_username() -> None:
 
 def test_task_create_account_password_hashing() -> None:
     """Verifica que las contraseñas se hasheen correctamente."""
-    from src.password_utils import hash_password
-
     password1 = "password123"
     password2 = "password123"
     password3 = "different"

@@ -24,6 +24,7 @@ from src.task_attributes import TaskRequestAttributes
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_information import TaskInformation
+from src.task_inventory_click import TaskInventoryClick
 from src.task_login import TaskLogin
 from src.task_motd import TaskMotd
 from src.task_null import TaskNull
@@ -146,9 +147,6 @@ class ArgentumServer:
             return TaskQuit(data, message_sender, self.player_repo, self.map_manager, session_data)
         if task_class is TaskUseItem:
             return TaskUseItem(data, message_sender, self.player_repo, session_data)
-
-        # Importar TaskInventoryClick para comparación
-        from src.task_inventory_click import TaskInventoryClick
 
         if task_class is TaskInventoryClick:
             return TaskInventoryClick(data, message_sender, self.player_repo, session_data)

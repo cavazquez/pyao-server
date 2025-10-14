@@ -51,8 +51,6 @@ ignore = [
     "PLR0913", # too many arguments (necesario para protocolos)
     "PLR0917", # too many positional arguments (necesario para protocolos)
     "FBT001",  # boolean positional argument (necesario para protocolos)
-    "PLC0415", # import not at top (permitido en casos específicos)
-    "PLC1901", # simplificaciones no críticas
 ]
 preview = true  # Habilitar reglas experimentales
 
