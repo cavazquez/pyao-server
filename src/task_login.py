@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.authentication_service import AuthenticationService
+from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.player_service import PlayerService
 from src.session_manager import SessionManager
 from src.task import Task
@@ -114,9 +115,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(  # noqa: C901, PLR0914
-        self, username: str, password: str
-    ) -> None:
+    async def execute_with_credentials(self, username: str, password: str) -> None:
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
@@ -184,64 +183,17 @@ class TaskLogin(Task):
         await player_service.spawn_character(user_id, username, position)
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
-        if self.map_manager:
-            map_id = position["map"]
-
-            # Enviar CHARACTER_CREATE de todos los jugadores existentes al nuevo jugador
-            existing_players = self.map_manager.get_players_in_map(map_id)
-            for other_user_id in existing_players:
-                # Obtener datos del otro jugador
-                other_position = await self.player_repo.get_position(other_user_id)
-                if other_position:
-                    # Obtener datos visuales del otro jugador
-                    other_account = await self.account_repo.get_account_by_user_id(other_user_id)
-                    if other_account:
-                        other_body = int(other_account.get("char_race", 1))
-                        other_head = int(other_account.get("char_head", 1))
-                        other_username = other_account.get("username", "")
-
-                        if other_body == 0:
-                            other_body = 1
-
-                        # Enviar CHARACTER_CREATE del otro jugador al nuevo jugador
-                        await self.message_sender.send_character_create(
-                            char_index=other_user_id,
-                            body=other_body,
-                            head=other_head,
-                            heading=other_position.get("heading", 3),
-                            x=other_position["x"],
-                            y=other_position["y"],
-                            name=other_username,
-                        )
-
-            # Agregar el nuevo jugador al MapManager
-            self.map_manager.add_player(map_id, user_id, self.message_sender, username)
-
-            # Enviar CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa
-            # TODO: Obtener body, head, heading desde Redis cuando se implementen
-            char_body = 1
-            char_head = 1
-            char_heading = 3  # Sur
-
-            other_senders = self.map_manager.get_all_message_senders_in_map(
-                map_id, exclude_user_id=user_id
+        if self.map_manager and self.account_repo:
+            broadcast_service = MultiplayerBroadcastService(
+                self.map_manager,
+                self.player_repo,
+                self.account_repo,
             )
-            for sender in other_senders:
-                await sender.send_character_create(
-                    char_index=user_id,
-                    body=char_body,
-                    head=char_head,
-                    heading=char_heading,
-                    x=position["x"],
-                    y=position["y"],
-                    name=username,
-                )
-
-            logger.info(
-                "Jugador %d agregado al mapa %d. Notificados %d jugadores",
+            await broadcast_service.notify_player_spawn(
                 user_id,
-                map_id,
-                len(other_senders),
+                username,
+                position,
+                self.message_sender,
             )
 
         # Enviar inventario (después del delay automático de spawn_character)

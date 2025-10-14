@@ -1,0 +1,156 @@
+"""Servicio para broadcast multijugador."""
+
+import logging
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
+    from src.map_manager import MapManager
+    from src.message_sender import MessageSender
+    from src.player_repository import PlayerRepository
+
+logger = logging.getLogger(__name__)
+
+
+class MultiplayerBroadcastService:
+    """Servicio que encapsula la lógica de broadcast multijugador."""
+
+    def __init__(
+        self,
+        map_manager: MapManager,
+        player_repo: PlayerRepository,
+        account_repo: AccountRepository,
+    ) -> None:
+        """Inicializa el servicio de broadcast multijugador.
+
+        Args:
+            map_manager: Gestor de mapas.
+            player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas.
+        """
+        self.map_manager = map_manager
+        self.player_repo = player_repo
+        self.account_repo = account_repo
+
+    async def notify_player_spawn(
+        self,
+        user_id: int,
+        username: str,
+        position: dict[str, int],
+        message_sender: MessageSender,
+    ) -> None:
+        """Notifica el spawn de un jugador a todos en el mapa.
+
+        Realiza tres acciones:
+        1. Envía CHARACTER_CREATE de jugadores existentes al nuevo jugador
+        2. Agrega el nuevo jugador al MapManager
+        3. Notifica a otros jugadores del nuevo spawn
+
+        Args:
+            user_id: ID del usuario que hace spawn.
+            username: Nombre del usuario.
+            position: Posición del jugador (x, y, map).
+            message_sender: MessageSender del nuevo jugador.
+        """
+        map_id = position["map"]
+
+        # 1. Enviar CHARACTER_CREATE de todos los jugadores existentes al nuevo jugador
+        await self._send_existing_players_to_new_player(map_id, message_sender)
+
+        # 2. Agregar el nuevo jugador al MapManager
+        self.map_manager.add_player(map_id, user_id, message_sender, username)
+
+        # 3. Enviar CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa
+        notified_count = await self._broadcast_new_player_to_others(
+            user_id, username, position, map_id
+        )
+
+        logger.info(
+            "Jugador %d agregado al mapa %d. Notificados %d jugadores",
+            user_id,
+            map_id,
+            notified_count,
+        )
+
+    async def _send_existing_players_to_new_player(
+        self,
+        map_id: int,
+        message_sender: MessageSender,
+    ) -> None:
+        """Envía CHARACTER_CREATE de jugadores existentes al nuevo jugador.
+
+        Args:
+            map_id: ID del mapa.
+            message_sender: MessageSender del nuevo jugador.
+        """
+        existing_players = self.map_manager.get_players_in_map(map_id)
+
+        for other_user_id in existing_players:
+            # Obtener datos del otro jugador
+            other_position = await self.player_repo.get_position(other_user_id)
+            if not other_position:
+                continue
+
+            # Obtener datos visuales del otro jugador
+            other_account = await self.account_repo.get_account_by_user_id(other_user_id)
+            if not other_account:
+                continue
+
+            other_body = int(other_account.get("char_race", 1))
+            other_head = int(other_account.get("char_head", 1))
+            other_username = other_account.get("username", "")
+
+            # Validar body (no puede ser 0)
+            if other_body == 0:
+                other_body = 1
+
+            # Enviar CHARACTER_CREATE del otro jugador al nuevo jugador
+            await message_sender.send_character_create(
+                char_index=other_user_id,
+                body=other_body,
+                head=other_head,
+                heading=other_position.get("heading", 3),
+                x=other_position["x"],
+                y=other_position["y"],
+                name=other_username,
+            )
+
+    async def _broadcast_new_player_to_others(
+        self,
+        user_id: int,
+        username: str,
+        position: dict[str, int],
+        map_id: int,
+    ) -> int:
+        """Envía CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa.
+
+        Args:
+            user_id: ID del nuevo jugador.
+            username: Nombre del nuevo jugador.
+            position: Posición del nuevo jugador.
+            map_id: ID del mapa.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # TODO: Obtener body, head, heading desde Redis cuando se implementen
+        char_body = 1
+        char_head = 1
+        char_heading = 3  # Sur
+
+        other_senders = self.map_manager.get_all_message_senders_in_map(
+            map_id, exclude_user_id=user_id
+        )
+
+        for sender in other_senders:
+            await sender.send_character_create(
+                char_index=user_id,
+                body=char_body,
+                head=char_head,
+                heading=char_heading,
+                x=position["x"],
+                y=position["y"],
+                name=username,
+            )
+
+        return len(other_senders)
