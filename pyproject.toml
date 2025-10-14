@@ -74,6 +74,10 @@ warn_no_return = true
 strict_equality = true
 strict_concatenate = true
 
+[[tool.mypy.overrides]]
+module = "tests.*"
+disable_error_code = ["method-assign", "arg-type", "dict-item"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

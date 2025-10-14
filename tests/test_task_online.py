@@ -25,18 +25,18 @@ async def test_task_online_with_players() -> None:
 
     # Crear MapManager con jugadores
     map_manager = MapManager()
-    
+
     # Agregar jugadores de prueba
     sender1 = MagicMock()
     sender2 = MagicMock()
     sender3 = MagicMock()
-    
+
     map_manager.add_player(1, 100, sender1, "Alice")
     map_manager.add_player(1, 101, sender2, "Bob")
     map_manager.add_player(2, 102, sender3, "Charlie")
 
     # Datos de sesión
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
 
     # Construir paquete ONLINE (solo PacketID)
     data = bytes([ClientPacketID.ONLINE])
@@ -69,17 +69,17 @@ async def test_task_online_sorted_alphabetically() -> None:
 
     # Crear MapManager con jugadores
     map_manager = MapManager()
-    
+
     sender1 = MagicMock()
     sender2 = MagicMock()
     sender3 = MagicMock()
-    
+
     # Agregar en orden no alfabético
     map_manager.add_player(1, 100, sender1, "Zara")
     map_manager.add_player(1, 101, sender2, "Alice")
     map_manager.add_player(1, 102, sender3, "Mike")
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
     data = bytes([ClientPacketID.ONLINE])
 
     task = TaskOnline(data, message_sender, map_manager, session_data)
@@ -109,7 +109,7 @@ async def test_task_online_no_players() -> None:
     # MapManager vacío
     map_manager = MapManager()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
     data = bytes([ClientPacketID.ONLINE])
 
     task = TaskOnline(data, message_sender, map_manager, session_data)
@@ -154,7 +154,7 @@ async def test_task_online_no_map_manager() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_console_msg = AsyncMock()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
     data = bytes([ClientPacketID.ONLINE])
 
     task = TaskOnline(data, message_sender, None, session_data)
@@ -181,7 +181,7 @@ async def test_task_online_single_player() -> None:
     sender = MagicMock()
     map_manager.add_player(1, 100, sender, "SoloPlayer")
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
     data = bytes([ClientPacketID.ONLINE])
 
     task = TaskOnline(data, message_sender, map_manager, session_data)
@@ -210,12 +210,12 @@ async def test_task_online_no_duplicate_usernames() -> None:
     map_manager = MapManager()
     sender1 = MagicMock()
     sender2 = MagicMock()
-    
+
     # Agregar el mismo jugador en diferentes mapas (caso hipotético)
     map_manager.add_player(1, 100, sender1, "Alice")
     map_manager.add_player(2, 101, sender2, "Bob")
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 100}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 100}
     data = bytes([ClientPacketID.ONLINE])
 
     task = TaskOnline(data, message_sender, map_manager, session_data)

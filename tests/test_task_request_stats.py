@@ -57,7 +57,7 @@ async def test_task_request_stats_success() -> None:
     message_sender.send_multiline_console_msg = AsyncMock()
 
     # Datos de sesión
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete REQUEST_STATS (solo PacketID)
     data = bytes([ClientPacketID.REQUEST_STATS])
@@ -108,7 +108,7 @@ async def test_task_request_stats_no_stats() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_console_msg = AsyncMock()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete REQUEST_STATS
     data = bytes([ClientPacketID.REQUEST_STATS])
@@ -152,7 +152,7 @@ async def test_task_request_stats_no_attributes() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_console_msg = AsyncMock()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete REQUEST_STATS
     data = bytes([ClientPacketID.REQUEST_STATS])
@@ -205,7 +205,7 @@ async def test_task_request_stats_no_hunger_thirst() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_console_msg = AsyncMock()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete REQUEST_STATS
     data = bytes([ClientPacketID.REQUEST_STATS])
@@ -254,7 +254,7 @@ async def test_task_request_stats_no_repo() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_console_msg = AsyncMock()
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete REQUEST_STATS
     data = bytes([ClientPacketID.REQUEST_STATS])

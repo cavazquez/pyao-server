@@ -24,7 +24,7 @@ async def test_task_talk_success() -> None:
     message_sender = MessageSender(connection)
 
     # Datos de sesión con user_id
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK con mensaje "Hola"
     message = "Hola"
@@ -88,7 +88,7 @@ async def test_task_talk_with_broadcast() -> None:
         player_repo,
         account_repo,
         map_manager,
-        session_data,  # type: ignore[arg-type]
+        session_data,
     )
     await task.execute()
 
@@ -114,7 +114,7 @@ async def test_task_talk_empty_message() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK con mensaje vacío
     message = ""
@@ -139,7 +139,7 @@ async def test_task_talk_long_message() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK con mensaje largo
     message = "Este es un mensaje muy largo " * 10
@@ -164,7 +164,7 @@ async def test_task_talk_unicode_message() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK con mensaje Unicode
     message = "Hola 你好 مرحبا 🎮"
@@ -189,7 +189,7 @@ async def test_task_talk_invalid_packet_too_short() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Paquete demasiado corto (solo PacketID)
     data = bytes([ClientPacketID.TALK])
@@ -211,7 +211,7 @@ async def test_task_talk_invalid_packet_wrong_length() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Paquete con longitud que no coincide con el contenido
     data = bytes([ClientPacketID.TALK]) + (100).to_bytes(2, byteorder="little") + b"Hola"
@@ -273,7 +273,7 @@ async def test_task_talk_without_username() -> None:
     message_sender = MessageSender(connection)
 
     # Datos de sesión sin username
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK
     message = "Hola"

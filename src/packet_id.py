@@ -102,7 +102,7 @@ class ClientPacketID(IntEnum):
     # COMMERCE_START = 84
     # BANK_START = 85
     # ENLIST = 86
-    # INFORMATION = 87
+    INFORMATION = 87
     # REWARD = 88
     REQUEST_MOTD = 89
     UPTIME = 90

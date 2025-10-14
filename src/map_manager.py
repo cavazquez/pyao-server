@@ -153,7 +153,7 @@ class MapManager:
         """
         usernames = []
         for players in self._players_by_map.values():
-            for _user_id, (_sender, username) in players.items():
+            for _sender, username in players.values():
                 if username and username not in usernames:
                     usernames.append(username)
         return usernames

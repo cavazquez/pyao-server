@@ -38,7 +38,7 @@ class TaskQuit(Task):
         self.map_manager = map_manager
         self.session_data = session_data
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: C901
         """Procesa la desconexión ordenada del jugador."""
         # Obtener user_id de la sesión
         user_id = None
@@ -65,22 +65,26 @@ class TaskQuit(Task):
             if isinstance(username_value, str):
                 username = username_value
 
-        logger.info("Jugador %d (%s) solicitó desconexión desde %s", 
-                   user_id_int, username, self.message_sender.connection.address)
+        logger.info(
+            "Jugador %d (%s) solicitó desconexión desde %s",
+            user_id_int,
+            username,
+            self.message_sender.connection.address,
+        )
 
         # Obtener posición del jugador antes de removerlo
         if self.player_repo and self.map_manager:
             position = await self.player_repo.get_position(user_id_int)
             if position:
                 map_id = position["map"]
-                
+
                 # Notificar a otros jugadores en el mapa que el personaje se fue
                 other_senders = self.map_manager.get_all_message_senders_in_map(
                     map_id, exclude_user_id=user_id_int
                 )
                 for sender in other_senders:
                     await sender.send_character_remove(user_id_int)
-                
+
                 logger.debug(
                     "CHARACTER_REMOVE enviado a %d jugadores en mapa %d",
                     len(other_senders),

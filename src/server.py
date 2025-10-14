@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import sys
+import time
 from typing import TYPE_CHECKING
 
 import redis
@@ -18,6 +19,7 @@ from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
+from src.task_information import TaskInformation
 from src.task_login import TaskLogin
 from src.task_motd import TaskMotd
 from src.task_null import TaskNull
@@ -56,7 +58,7 @@ class ArgentumServer:
         self.account_repo: AccountRepository | None = None
         self.map_manager = MapManager()  # Gestor de jugadores por mapa
 
-    def create_task(  # noqa: PLR0911
+    def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
         data: bytes,
         message_sender: MessageSender,
@@ -129,12 +131,12 @@ class ArgentumServer:
             return TaskOnline(data, message_sender, self.map_manager, session_data)
         if task_class is TaskMotd:
             return TaskMotd(data, message_sender, self.server_repo)
+        if task_class is TaskInformation:
+            return TaskInformation(data, message_sender, self.server_repo, self.map_manager)
         if task_class is TaskUptime:
             return TaskUptime(data, message_sender, self.server_repo)
         if task_class is TaskQuit:
-            return TaskQuit(
-                data, message_sender, self.player_repo, self.map_manager, session_data
-            )
+            return TaskQuit(data, message_sender, self.player_repo, self.map_manager, session_data)
 
         return task_class(data, message_sender)
 
@@ -235,7 +237,6 @@ class ArgentumServer:
             await self.redis_client.redis.set("server:connections:count", "0")
 
             # Establecer timestamp de inicio del servidor
-            import time
             await self.server_repo.set_uptime_start(int(time.time()))
 
             # Inicializar MOTD si no existe

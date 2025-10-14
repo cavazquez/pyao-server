@@ -85,9 +85,7 @@ async def test_task_motd_multiline_message() -> None:
 
     # Mock del server_repo con mensaje multilínea
     server_repo = MagicMock()
-    server_repo.get_motd = AsyncMock(
-        return_value="Linea 1\nLinea 2\nLinea 3\nLinea 4"
-    )
+    server_repo.get_motd = AsyncMock(return_value="Linea 1\nLinea 2\nLinea 3\nLinea 4")
 
     data = bytes([ClientPacketID.REQUEST_MOTD])
 

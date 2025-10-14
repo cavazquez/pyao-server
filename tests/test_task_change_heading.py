@@ -29,7 +29,7 @@ async def test_task_change_heading_success() -> None:
     message_sender = MessageSender(connection)
 
     # Datos de sesión con user_id
-    session_data: dict[str, dict[str, int]] = {"user_id": 123}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete CHANGE_HEADING con dirección Este (2)
     heading = 2
@@ -57,7 +57,7 @@ async def test_task_change_heading_all_directions() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 456}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 456}
 
     # Probar todas las direcciones: 1=Norte, 2=Este, 3=Sur, 4=Oeste
     for heading in [1, 2, 3, 4]:
@@ -83,7 +83,7 @@ async def test_task_change_heading_invalid_direction() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 789}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 789}
 
     # Probar dirección inválida (5)
     data = bytes([ClientPacketID.CHANGE_HEADING, 5])
@@ -130,7 +130,7 @@ async def test_task_change_heading_no_player_repo() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 999}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 999}
 
     data = bytes([ClientPacketID.CHANGE_HEADING, 1])
     # Sin player_repo
@@ -154,7 +154,7 @@ async def test_task_change_heading_invalid_packet() -> None:
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
-    session_data: dict[str, dict[str, int]] = {"user_id": 111}  # type: ignore[dict-item]
+    session_data: dict[str, dict[str, int]] = {"user_id": 111}
 
     # Paquete demasiado corto
     data = bytes([ClientPacketID.CHANGE_HEADING])

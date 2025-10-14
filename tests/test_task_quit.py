@@ -34,7 +34,7 @@ async def test_task_quit_success() -> None:
     sender1.send_character_remove = AsyncMock()
     sender2 = MagicMock()
     sender2.send_character_remove = AsyncMock()
-    
+
     # Agregar jugadores al mapa
     map_manager.add_player(1, 100, message_sender, "TestUser")
     map_manager.add_player(1, 101, sender1, "OtherUser1")

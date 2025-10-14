@@ -43,13 +43,13 @@ class TaskUptime(Task):
                 # Calcular uptime
                 current_time = int(time.time())
                 uptime_seconds = current_time - start_time
-                
+
                 # Convertir a formato legible
                 days = uptime_seconds // 86400
                 hours = (uptime_seconds % 86400) // 3600
                 minutes = (uptime_seconds % 3600) // 60
                 seconds = uptime_seconds % 60
-                
+
                 # Formatear mensaje
                 uptime_parts = []
                 if days > 0:
@@ -60,7 +60,7 @@ class TaskUptime(Task):
                     uptime_parts.append(f"{minutes} minuto{'s' if minutes != 1 else ''}")
                 if seconds > 0 or not uptime_parts:
                     uptime_parts.append(f"{seconds} segundo{'s' if seconds != 1 else ''}")
-                
+
                 uptime_str = ", ".join(uptime_parts)
                 message = f"El servidor lleva activo: {uptime_str}"
             else:

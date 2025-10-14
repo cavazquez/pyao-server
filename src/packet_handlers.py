@@ -8,6 +8,7 @@ from src.task_attributes import TaskRequestAttributes
 from src.task_ayuda import TaskAyuda
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
+from src.task_information import TaskInformation
 from src.task_login import TaskLogin
 from src.task_motd import TaskMotd
 from src.task_online import TaskOnline
@@ -32,6 +33,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
     ClientPacketID.AYUDA: TaskAyuda,
     ClientPacketID.REQUEST_STATS: TaskRequestStats,
+    ClientPacketID.INFORMATION: TaskInformation,
     ClientPacketID.REQUEST_MOTD: TaskMotd,
     ClientPacketID.UPTIME: TaskUptime,
     ClientPacketID.ONLINE: TaskOnline,

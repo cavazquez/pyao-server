@@ -71,7 +71,9 @@ class TaskRequestStats(Task):
         # Obtener atributos del jugador
         attributes = await self.player_repo.get_attributes(user_id_int)
         if not attributes:
-            await self.message_sender.send_console_msg("Error: No se pudieron obtener los atributos")
+            await self.message_sender.send_console_msg(
+                "Error: No se pudieron obtener los atributos"
+            )
             return
 
         # Obtener hambre y sed

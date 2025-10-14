@@ -416,7 +416,7 @@ class MessageSender:
         await self.connection.send(response)
 
     async def send_multiline_console_msg(self, message: str, font_color: int = 7) -> None:
-        """Envía un mensaje multilínea dividido por saltos de línea.
+        r"""Envía un mensaje multilínea dividido por saltos de línea.
 
         Args:
             message: Mensaje con saltos de línea (\n).
