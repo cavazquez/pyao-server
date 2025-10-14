@@ -105,7 +105,7 @@ class ClientPacketID(IntEnum):
     # INFORMATION = 87
     # REWARD = 88
     REQUEST_MOTD = 89
-    # UPTIME = 90
+    UPTIME = 90
     # PARTY_LEAVE = 91
     # PARTY_CREATE = 92
     # PARTY_JOIN = 93

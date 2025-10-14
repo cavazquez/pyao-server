@@ -25,6 +25,7 @@ from src.task_online import TaskOnline
 from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
+from src.task_uptime import TaskUptime
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
@@ -128,6 +129,8 @@ class ArgentumServer:
             return TaskOnline(data, message_sender, self.map_manager, session_data)
         if task_class is TaskMotd:
             return TaskMotd(data, message_sender, self.server_repo)
+        if task_class is TaskUptime:
+            return TaskUptime(data, message_sender, self.server_repo)
         if task_class is TaskQuit:
             return TaskQuit(
                 data, message_sender, self.player_repo, self.map_manager, session_data
@@ -230,6 +233,10 @@ class ArgentumServer:
 
             # Resetear contador de conexiones
             await self.redis_client.redis.set("server:connections:count", "0")
+
+            # Establecer timestamp de inicio del servidor
+            import time
+            await self.server_repo.set_uptime_start(int(time.time()))
 
             # Inicializar MOTD si no existe
             motd = await self.server_repo.get_motd()

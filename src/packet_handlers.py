@@ -15,6 +15,7 @@ from src.task_ping import TaskPing
 from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
+from src.task_uptime import TaskUptime
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
@@ -32,6 +33,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.AYUDA: TaskAyuda,
     ClientPacketID.REQUEST_STATS: TaskRequestStats,
     ClientPacketID.REQUEST_MOTD: TaskMotd,
+    ClientPacketID.UPTIME: TaskUptime,
     ClientPacketID.ONLINE: TaskOnline,
     ClientPacketID.QUIT: TaskQuit,
     ClientPacketID.PING: TaskPing,
