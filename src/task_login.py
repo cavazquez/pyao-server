@@ -274,7 +274,7 @@ class TaskLogin(Task):
         inventory_repo = InventoryRepository(self.player_repo.redis)
         inventory = await inventory_repo.get_inventory(user_id)
 
-        logger.info("Enviando inventario para user_id %d", user_id)
+        logger.info("Enviando inventario completo para user_id %d", user_id)
         for i in range(1, InventoryRepository.MAX_SLOTS + 1):
             slot_key = f"slot_{i}"
             slot_value = inventory.get(slot_key, "")
@@ -302,14 +302,32 @@ class TaskLogin(Task):
                             equipped=False,
                             grh_id=item.graphic_id,
                             item_type=item.item_type.to_client_type(),
-                            max_hit=item.max_damage,
-                            min_hit=item.min_damage,
-                            max_def=item.defense,
-                            min_def=item.defense,
+                            max_hit=item.max_damage or 0,
+                            min_hit=item.min_damage or 0,
+                            max_def=item.defense or 0,
+                            min_def=item.defense or 0,
                             sale_price=float(item.value),
                         )
+                    else:
+                        logger.warning("Item %s no encontrado en catálogo", item_id)
                 except (ValueError, AttributeError) as e:
                     logger.warning("Error procesando slot %d: %s", i, e)
+            else:
+                # Enviar slot vacío explícitamente
+                await self.message_sender.send_change_inventory_slot(
+                    slot=i,
+                    item_id=0,
+                    name="",
+                    amount=0,
+                    equipped=False,
+                    grh_id=0,
+                    item_type=0,
+                    max_hit=0,
+                    min_hit=0,
+                    max_def=0,
+                    min_def=0,
+                    sale_price=0.0,
+                )
 
         # Obtener datos visuales del personaje
         char_body = int(account_data.get("char_race", 1))
