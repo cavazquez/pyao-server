@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.password_utils import hash_password
+from src.authentication_service import AuthenticationService
 from src.player_service import PlayerService
 from src.task import Task
 
@@ -113,7 +113,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(  # noqa: C901, PLR0914, PLR0915
+    async def execute_with_credentials(  # noqa: C901, PLR0914
         self, username: str, password: str
     ) -> None:
         """Ejecuta el login con credenciales ya parseadas.
@@ -122,35 +122,21 @@ class TaskLogin(Task):
             username: Nombre de usuario.
             password: Contraseña en texto plano.
         """
-        logger.info(
-            "Intento de login desde %s - Username: %s",
-            self.message_sender.connection.address,
-            username,
-        )
-
         # Verificar que los repositorios estén disponibles
         if self.account_repo is None or self.player_repo is None:
             logger.error("Repositorios no están disponibles para login")
             await self.message_sender.send_error_msg("Servicio no disponible")
             return
 
-        # Obtener datos de la cuenta
-        account_data = await self.account_repo.get_account(username)
-        if not account_data:
-            logger.warning("Intento de login con usuario inexistente: %s", username)
-            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
+        # Autenticar usuario
+        auth_service = AuthenticationService(self.account_repo, self.message_sender)
+        auth_result = await auth_service.authenticate(username, password)
+
+        if auth_result is None:
+            # La autenticación falló (el servicio ya envió el error al cliente)
             return
 
-        # Hashear la contraseña para compararla
-        password_hash = hash_password(password)
-        if not await self.account_repo.verify_password(username, password_hash):
-            logger.warning("Contraseña incorrecta para usuario: %s", username)
-            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
-            return
-
-        # Login exitoso
-        user_id = int(account_data.get("user_id", 0))
-        user_class = int(account_data.get("char_job", 1))  # Obtener clase del personaje
+        user_id, user_class = auth_result
         logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Guardar user_id y username en session_data para uso posterior
