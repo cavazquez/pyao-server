@@ -9,6 +9,7 @@ from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_login import TaskLogin
 from src.task_online import TaskOnline
+from src.task_ping import TaskPing
 from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
@@ -29,4 +30,5 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.REQUEST_STATS: TaskRequestStats,
     ClientPacketID.ONLINE: TaskOnline,
     ClientPacketID.QUIT: TaskQuit,
+    ClientPacketID.PING: TaskPing,
 }

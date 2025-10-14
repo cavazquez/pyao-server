@@ -134,7 +134,7 @@ class ClientPacketID(IntEnum):
     # PARTY_KICK = 116
     # PARTY_SET_LEADER = 117
     # PARTY_ACCEPT_MEMBER = 118
-    # PING = 119
+    PING = 119
     # REQUEST_PARTY_FORM = 120
     # ITEM_UPGRADE = 121
     # GM_COMMANDS = 122
@@ -244,7 +244,7 @@ class ServerPacketID(IntEnum):
     # BANK_OK = 85
     # CHANGE_USER_TRADE_SLOT = 86
     # SEND_NIGHT = 87
-    # PONG = 88
+    PONG = 88
     # UPDATE_TAG_AND_STATUS = 89
     # SPAWN_LIST = 90
     # SHOW_SOS_FORM = 91
