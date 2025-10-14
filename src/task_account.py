@@ -267,28 +267,28 @@ class TaskCreateAccount(Task):
                 )
                 logger.info("Atributos guardados en Redis para user_id %d", user_id)
 
-            # Crear estadísticas iniciales basadas en atributos
-            constitution = stats_data.get("constitution", 10) if stats_data else 10
-            intelligence = stats_data.get("intelligence", 10) if stats_data else 10
-            initial_stats = {
-                "max_hp": constitution * 10,  # HP basado en constitución
-                "min_hp": constitution * 10,
-                "max_mana": intelligence * 10,  # Mana basado en inteligencia
-                "min_mana": intelligence * 10,
-                "max_sta": 100,  # Stamina fija inicial
-                "min_sta": 100,
-                "gold": 0,
-                "level": 1,
-                "elu": 300,
-                "experience": 0,
-            }
-            await self.player_repo.set_stats(user_id=user_id, **initial_stats)
-            logger.info(
-                "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
-                user_id,
-                initial_stats["max_hp"],
-                initial_stats["max_mana"],
-            )
+                # Crear estadísticas iniciales basadas en atributos
+                constitution = stats_data.get("constitution", 10)
+                intelligence = stats_data.get("intelligence", 10)
+                initial_stats = {
+                    "max_hp": constitution * 10,  # HP basado en constitución
+                    "min_hp": constitution * 10,
+                    "max_mana": intelligence * 10,  # Mana basado en inteligencia
+                    "min_mana": intelligence * 10,
+                    "max_sta": 100,  # Stamina fija inicial
+                    "min_sta": 100,
+                    "gold": 0,
+                    "level": 1,
+                    "elu": 300,
+                    "experience": 0,
+                }
+                await self.player_repo.set_stats(user_id=user_id, **initial_stats)
+                logger.info(
+                    "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
+                    user_id,
+                    initial_stats["max_hp"],
+                    initial_stats["max_mana"],
+                )
 
             # Crear inventario inicial con items básicos
             inventory_repo = InventoryRepository(self.player_repo.redis)
