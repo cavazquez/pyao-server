@@ -113,3 +113,38 @@ class ServerRepository:
         if value is None:
             return default
         return bool(value == "1")
+
+    # Configuración de dados
+    async def get_dice_min_value(self) -> int:
+        """Obtiene el valor mínimo para tirada de dados.
+
+        Returns:
+            Valor mínimo (default: 6).
+        """
+        return await self.get_effect_config_int("server:dice:min_value", 6)
+
+    async def get_dice_max_value(self) -> int:
+        """Obtiene el valor máximo para tirada de dados.
+
+        Returns:
+            Valor máximo (default: 18).
+        """
+        return await self.get_effect_config_int("server:dice:max_value", 18)
+
+    async def set_dice_min_value(self, value: int) -> None:
+        """Establece el valor mínimo para tirada de dados.
+
+        Args:
+            value: Nuevo valor mínimo.
+        """
+        await self.redis_client.redis.set("server:dice:min_value", str(value))
+        logger.info("Valor mínimo de dados establecido: %d", value)
+
+    async def set_dice_max_value(self, value: int) -> None:
+        """Establece el valor máximo para tirada de dados.
+
+        Args:
+            value: Nuevo valor máximo.
+        """
+        await self.redis_client.redis.set("server:dice:max_value", str(value))
+        logger.info("Valor máximo de dados establecido: %d", value)

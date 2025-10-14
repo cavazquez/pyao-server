@@ -284,6 +284,10 @@ redis-cli SET config:effects:hunger_thirst:reduccion_hambre 10
 redis-cli SET config:effects:gold_decay:enabled 1
 redis-cli SET config:effects:gold_decay:percentage 1.0
 redis-cli SET config:effects:gold_decay:interval_seconds 60.0
+
+# Dados (valores mínimo y máximo para atributos)
+redis-cli SET server:dice:min_value 6
+redis-cli SET server:dice:max_value 18
 ```
 
 **Ejemplos de Configuración:**
@@ -299,6 +303,10 @@ redis-cli SET config:effects:gold_decay:interval_seconds 120.0
 
 # Desactivar un efecto
 redis-cli SET config:effects:gold_decay:enabled 0
+
+# Dados más difíciles (8-16 en lugar de 6-18)
+redis-cli SET server:dice:min_value 8
+redis-cli SET server:dice:max_value 16
 ```
 
 Los cambios se aplican **inmediatamente** en el próximo tick (no requiere reiniciar el servidor).

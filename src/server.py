@@ -110,7 +110,7 @@ class ArgentumServer:
                 session_data,
             )
         if task_class is TaskDice:
-            return TaskDice(data, message_sender, session_data)
+            return TaskDice(data, message_sender, session_data, self.server_repo)
         if task_class is TaskRequestAttributes:
             return TaskRequestAttributes(data, message_sender, self.player_repo, session_data)
         if task_class is TaskTalk:
@@ -251,6 +251,11 @@ class ArgentumServer:
 
             # Establecer timestamp de inicio del servidor
             await self.server_repo.set_uptime_start(int(time.time()))
+
+            # Inicializar configuración de dados si no existe
+            dice_min = await self.server_repo.get_dice_min_value()
+            dice_max = await self.server_repo.get_dice_max_value()
+            logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
 
             # Obtener MOTD desde Redis
             motd = await self.server_repo.get_motd()
