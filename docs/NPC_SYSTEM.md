@@ -323,32 +323,57 @@ class CombatService:
 4. **CombatService** - Sistema de combate
 5. **LootService** - Sistema de drops
 
-## 📄 Archivos de Configuración del Cliente
+## 📄 Archivos de Configuración
 
-### localindex.dat
+### Cliente Original: localindex.dat
 
-El cliente tiene un archivo **`localindex.dat`** que contiene información de texto para minimizar el uso de ancho de banda.
+El cliente original tiene un archivo **`localindex.dat`** que contiene información de texto.
 
 **Ubicación**: `C:\AO20\init\localindex.dat`
 
 **Contenido**:
 - `[HECHIZO1]`, `[HECHIZO2]`, etc. - Información de hechizos
 - `[OBJ1]`, `[OBJ2]`, etc. - Información de objetos
-- `[NPC1]`, `[NPC2]`, etc. - **Información de NPCs** (nombres, descripciones)
+- `[NPC1]`, `[NPC2]`, etc. - **Información de NPCs**
 
-**Formato de NPC en localindex.dat**:
-```ini
-[NPC1]
-NOMBRE=Goblin
-DESC=Un goblin salvaje que ataca a los viajeros.
+### PyAO Server: Archivos TOML Separados ⭐
 
-[NPC2]
-NOMBRE=Comerciante
-DESC=Un comerciante amigable que vende pociones.
+PyAO Server usa archivos **TOML separados** en lugar de un solo `.dat`:
 
-[NPC3]
-NOMBRE=Guardia Real
-DESC=Un guardia que protege la ciudad.
+**Ubicación**: `data/`
+
+**Archivos**:
+- `data/npcs.toml` - Catálogo de NPCs
+- `data/hechizos.toml` - Catálogo de hechizos
+- `data/objetos.toml` - Catálogo de objetos
+
+**Formato de NPC en npcs.toml**:
+```toml
+[[npc]]
+id = 1
+nombre = "Goblin"
+descripcion = "Un goblin salvaje que ataca a los viajeros."
+body_id = 500
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 5
+hp_max = 100
+oro_min = 10
+oro_max = 50
+
+[[npc]]
+id = 2
+nombre = "Comerciante"
+descripcion = "Un comerciante amigable que vende pociones."
+body_id = 501
+head_id = 1
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
 ```
 
 ### ¿Cómo se Usa?
@@ -357,12 +382,30 @@ DESC=Un guardia que protege la ciudad.
 2. **Cliente**: Lee el nombre y descripción del `localindex.dat` usando el NPC ID
 3. **Beneficio**: Ahorra ancho de banda (no enviar nombres/descripciones cada vez)
 
-### Generación del Archivo
+### Ventajas de TOML sobre .dat
 
-El archivo se genera con el programa **`Creador_de_indices.exe`**:
-- Lee los datos del servidor (NPCs.dat, Obj.dat, Hechizos.dat)
-- Genera el `localindex.dat` para el cliente
-- Repositorio: [argentum-online-creador-indices](https://github.com/ao-org/argentum-online-creador-indices)
+1. **Formato Moderno** - Más legible y mantenible
+2. **Separación** - Un archivo por tipo de dato
+3. **Versionable** - Fácil de trackear en Git
+4. **Tipado** - Estructura clara con tipos
+5. **Comentarios** - Se pueden agregar comentarios
+6. **Validación** - Fácil de validar con schemas
+7. **Extensible** - Fácil agregar nuevos campos
+
+### Carga de Catálogos
+
+```python
+import tomllib
+
+# Cargar catálogo de NPCs
+with open("data/npcs.toml", "rb") as f:
+    data = tomllib.load(f)
+    npcs = {npc["id"]: npc for npc in data["npc"]}
+
+# Obtener NPC por ID
+goblin = npcs[1]
+print(f"{goblin['nombre']}: {goblin['descripcion']}")
+```
 
 ### Implicaciones para PyAO Server
 

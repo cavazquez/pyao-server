@@ -1,0 +1,124 @@
+# Catálogo de Objetos para PyAO Server
+# Este archivo reemplaza la sección [OBJ] de localindex.dat
+# Nota: El catálogo completo de items ya existe en src/items_catalog.py (1049 items)
+# Este archivo es para información adicional de texto (descripciones, etc.)
+
+[[objeto]]
+id = 1
+nombre = "Poción Roja"
+descripcion = "Una poción que restaura 50 puntos de vida."
+texto_uso = "Has bebido una Poción Roja y recuperas vida."
+
+[[objeto]]
+id = 2
+nombre = "Poción Azul"
+descripcion = "Una poción que restaura 50 puntos de maná."
+texto_uso = "Has bebido una Poción Azul y recuperas maná."
+
+[[objeto]]
+id = 3
+nombre = "Manzana"
+descripcion = "Una manzana fresca que reduce el hambre."
+texto_uso = "Has comido una manzana y te sientes menos hambriento."
+
+[[objeto]]
+id = 4
+nombre = "Agua"
+descripcion = "Agua fresca que reduce la sed."
+texto_uso = "Has bebido agua y te sientes menos sediento."
+
+[[objeto]]
+id = 5
+nombre = "Espada Corta"
+descripcion = "Una espada básica para principiantes."
+texto_equipar = "Has equipado la Espada Corta."
+
+[[objeto]]
+id = 6
+nombre = "Escudo de Madera"
+descripcion = "Un escudo básico hecho de madera resistente."
+texto_equipar = "Has equipado el Escudo de Madera."
+
+[[objeto]]
+id = 7
+nombre = "Armadura de Cuero"
+descripcion = "Una armadura ligera hecha de cuero curtido."
+texto_equipar = "Has equipado la Armadura de Cuero."
+
+[[objeto]]
+id = 8
+nombre = "Casco de Hierro"
+descripcion = "Un casco que protege tu cabeza en combate."
+texto_equipar = "Has equipado el Casco de Hierro."
+
+[[objeto]]
+id = 9
+nombre = "Anillo de Fuerza"
+descripcion = "Un anillo mágico que aumenta tu fuerza."
+texto_equipar = "Has equipado el Anillo de Fuerza y sientes más poder."
+
+[[objeto]]
+id = 10
+nombre = "Pergamino de Teletransporte"
+descripcion = "Un pergamino mágico que te transporta a la ciudad."
+texto_uso = "Has usado el Pergamino de Teletransporte."
+
+[[objeto]]
+id = 11
+nombre = "Daga"
+descripcion = "Una daga pequeña pero mortal."
+texto_equipar = "Has equipado la Daga."
+
+[[objeto]]
+id = 12
+nombre = "Arco Corto"
+descripcion = "Un arco básico para atacar a distancia."
+texto_equipar = "Has equipado el Arco Corto."
+
+[[objeto]]
+id = 13
+nombre = "Flechas"
+descripcion = "Flechas para usar con arcos."
+texto_uso = "Flechas equipadas."
+
+[[objeto]]
+id = 14
+nombre = "Hacha de Leñador"
+descripcion = "Un hacha para talar árboles."
+texto_equipar = "Has equipado el Hacha de Leñador."
+
+[[objeto]]
+id = 15
+nombre = "Pico de Minero"
+descripcion = "Un pico para extraer minerales."
+texto_equipar = "Has equipado el Pico de Minero."
+
+[[objeto]]
+id = 16
+nombre = "Caña de Pescar"
+descripcion = "Una caña para pescar en ríos y lagos."
+texto_equipar = "Has equipado la Caña de Pescar."
+
+[[objeto]]
+id = 17
+nombre = "Lingote de Hierro"
+descripcion = "Un lingote de hierro para herrería."
+texto_uso = "Lingote de hierro listo para forjar."
+
+[[objeto]]
+id = 18
+nombre = "Lingote de Oro"
+descripcion = "Un valioso lingote de oro."
+texto_uso = "Lingote de oro de gran valor."
+
+[[objeto]]
+id = 19
+nombre = "Gema Roja"
+descripcion = "Una gema preciosa de color rojo."
+texto_uso = "Una gema valiosa."
+
+[[objeto]]
+id = 20
+nombre = "Llave Oxidada"
+descripcion = "Una vieja llave que podría abrir algo."
+texto_uso = "Has usado la llave oxidada."
