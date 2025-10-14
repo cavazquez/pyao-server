@@ -1,12 +1,10 @@
 """Tarea para login de usuarios."""
 
-import asyncio
 import logging
 from typing import TYPE_CHECKING
 
-from src.inventory_repository import InventoryRepository
-from src.items_catalog import get_item
 from src.password_utils import hash_password
+from src.player_service import PlayerService
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -115,7 +113,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(  # noqa: C901, PLR0912, PLR0914, PLR0915
+    async def execute_with_credentials(  # noqa: C901, PLR0914, PLR0915
         self, username: str, password: str
     ) -> None:
         """Ejecuta el login con credenciales ya parseadas.
@@ -181,122 +179,24 @@ class TaskLogin(Task):
         # Enviar índice del personaje en el servidor
         await self.message_sender.send_user_char_index_in_server(user_id)
 
-        # Obtener y enviar posición del personaje
-        position = await self.player_repo.get_position(user_id)
+        # Crear servicio de jugador para encapsular lógica de datos + envío
+        player_service = PlayerService(self.player_repo, self.message_sender)
 
-        if position is None:
-            # Si no existe posición, crear una por defecto
-            default_x = 50
-            default_y = 50
-            default_map = 1
-            await self.player_repo.set_position(user_id, default_x, default_y, default_map)
-            logger.info(
-                "Posición inicial creada para user_id %d: (%d, %d) en mapa %d",
-                user_id,
-                default_x,
-                default_y,
-                default_map,
-            )
-            position = {"x": default_x, "y": default_y, "map": default_map}
+        # Obtener/crear y enviar posición (envía CHANGE_MAP)
+        position = await player_service.send_position(user_id)
 
-        # Enviar cambio de mapa
-        await self.message_sender.send_change_map(position["map"])
+        # Crear atributos por defecto si no existen (NO se envían al login)
+        # El cliente los solicitará con /EST
+        await player_service.send_attributes(user_id)
 
-        # Crear atributos por defecto si no existen (pero no enviarlos al login)
-        # El cliente los solicitará cuando el jugador abra la ventana de estadísticas
-        attributes = await self.player_repo.get_attributes(user_id)
+        # Obtener/crear y enviar stats (envía UPDATE_USER_STATS)
+        await player_service.send_stats(user_id)
 
-        if attributes is None:
-            # Si no existen atributos, crear valores por defecto
-            attributes = {
-                "strength": 10,
-                "agility": 10,
-                "intelligence": 10,
-                "charisma": 10,
-                "constitution": 10,
-            }
-            await self.player_repo.set_attributes(user_id=user_id, **attributes)
-            logger.info("Atributos por defecto creados en Redis para user_id %d", user_id)
+        # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
+        await player_service.send_hunger_thirst(user_id)
 
-        # NO enviar atributos automáticamente - el cliente los solicitará con /EST
-
-        # Obtener y enviar estadísticas completas del personaje
-        user_stats = await self.player_repo.get_stats(user_id)
-
-        if user_stats is None:
-            # Si no existen stats, crear valores por defecto
-            user_stats = {
-                "max_hp": 100,
-                "min_hp": 100,
-                "max_mana": 100,
-                "min_mana": 100,
-                "max_sta": 100,
-                "min_sta": 100,
-                "gold": 0,
-                "level": 1,
-                "elu": 300,
-                "experience": 0,
-            }
-            await self.player_repo.set_stats(user_id=user_id, **user_stats)
-            logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
-
-        # Enviar stats ANTES de CHARACTER_CREATE para evitar problemas de parsing
-        await self.message_sender.send_update_user_stats(**user_stats)
-
-        # Crear hambre y sed por defecto si no existen
-        hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
-
-        if hunger_thirst is None:
-            # Si no existen, crear valores por defecto
-            await self.player_repo.set_hunger_thirst(
-                user_id=user_id,
-                max_water=100,
-                min_water=100,
-                max_hunger=100,
-                min_hunger=100,
-                thirst_flag=0,
-                hunger_flag=0,
-                water_counter=0,
-                hunger_counter=0,
-            )
-            logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
-            hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
-
-        # Enviar hambre y sed
-        if hunger_thirst:
-            await self.message_sender.send_update_hunger_and_thirst(
-                max_water=hunger_thirst["max_water"],
-                min_water=hunger_thirst["min_water"],
-                max_hunger=hunger_thirst["max_hunger"],
-                min_hunger=hunger_thirst["min_hunger"],
-            )
-
-        # Obtener datos visuales del personaje
-        char_body = int(account_data.get("char_race", 1))
-        char_head = int(account_data.get("char_head", 1))
-
-        # Si body es 0, usar valor por defecto (1 = humano)
-        if char_body == 0:
-            char_body = 1
-
-        char_heading = 3  # Sur por defecto
-
-        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
-        # (antes del inventario para evitar abrir ventanas no deseadas)
-        await self.message_sender.send_character_create(
-            char_index=user_id,
-            body=char_body,
-            head=char_head,
-            heading=char_heading,
-            x=position["x"],
-            y=position["y"],
-            fx=1,  # Efecto de aparición/spawn
-            loops=-1,  # -1 = reproducir una vez
-            name=username,
-        )
-
-        # El inventario se enviará después del delay de 500ms
-        # para evitar problemas de parsing con CHARACTER_CREATE
+        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
+        await player_service.spawn_character(user_id, username, position)
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
         if self.map_manager:
@@ -333,6 +233,11 @@ class TaskLogin(Task):
             self.map_manager.add_player(map_id, user_id, self.message_sender, username)
 
             # Enviar CHARACTER_CREATE del nuevo jugador a todos los demás en el mapa
+            # TODO: Obtener body, head, heading desde Redis cuando se implementen
+            char_body = 1
+            char_head = 1
+            char_heading = 3  # Sur
+
             other_senders = self.map_manager.get_all_message_senders_in_map(
                 map_id, exclude_user_id=user_id
             )
@@ -354,58 +259,13 @@ class TaskLogin(Task):
                 len(other_senders),
             )
 
-        # Esperar un momento antes de enviar más paquetes para evitar problemas de parsing
-        # El cliente VB6 necesita tiempo para procesar CHARACTER_CREATE
-        # antes de recibir más paquetes
-        await asyncio.sleep(0.5)  # 500ms de delay
+        # Enviar inventario (después del delay automático de spawn_character)
+        await player_service.send_inventory(user_id)
 
-        # Enviar inventario después del delay (solo slots con items)
-        inventory_repo = InventoryRepository(self.player_repo.redis)
-        inventory = await inventory_repo.get_inventory(user_id)
-
-        logger.info("Enviando inventario para user_id %d (después del delay)", user_id)
-        for i in range(1, InventoryRepository.MAX_SLOTS + 1):
-            slot_key = f"slot_{i}"
-            slot_value = inventory.get(slot_key, "")
-
-            # Solo enviar slots con items (no enviar vacíos)
-            if slot_value and isinstance(slot_value, str):
-                try:
-                    item_id, quantity = slot_value.split(":")
-                    item = get_item(int(item_id))
-
-                    if item:
-                        logger.debug(
-                            "Enviando slot %d: %s (id=%d, qty=%s)",
-                            i,
-                            item.name,
-                            item.item_id,
-                            quantity,
-                        )
-                        await self.message_sender.send_change_inventory_slot(
-                            slot=i,
-                            item_id=item.item_id,
-                            name=item.name,
-                            amount=int(quantity),
-                            equipped=False,
-                            grh_id=item.graphic_id,
-                            item_type=item.item_type.to_client_type(),
-                            max_hit=item.max_damage or 0,
-                            min_hit=item.min_damage or 0,
-                            max_def=item.defense or 0,
-                            min_def=item.defense or 0,
-                            sale_price=float(item.value),
-                        )
-                    else:
-                        logger.warning("Item %s no encontrado en catálogo", item_id)
-                except (ValueError, AttributeError) as e:
-                    logger.warning("Error procesando slot %d: %s", i, e)
-
-        # Enviar MOTD (Mensaje del Día) después del inventario
+        # Enviar MOTD (Mensaje del Día)
         if self.server_repo:
             motd = await self.server_repo.get_motd()
         else:
-            # Mensaje por defecto si no hay repositorio
             motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
 
         await self.message_sender.send_multiline_console_msg(motd)
