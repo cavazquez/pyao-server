@@ -5,9 +5,6 @@ Extraído del archivo obj.dat del cliente VB6.
 
 from enum import IntEnum
 
-# Número más alto de objeto en obj.dat (no la cantidad de objetos)
-NUM_OBJS = 1052
-
 
 class ObjType(IntEnum):
     """Tipos de objetos (ObjType)."""

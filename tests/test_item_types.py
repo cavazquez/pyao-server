@@ -1,6 +1,6 @@
 """Tests para los enums de tipos de items."""
 
-from src.item_types import NUM_OBJS, ObjType, TipoPocion
+from src.item_types import ObjType, TipoPocion
 
 
 class TestObjType:
@@ -88,15 +88,3 @@ class TestTipoPocion:
         """Verifica que TipoPocion sea un IntEnum."""
         assert isinstance(TipoPocion.HP, int)
         assert TipoPocion.HP + 1 == 4
-
-
-class TestNumObjs:
-    """Tests para la constante NUM_OBJS."""
-
-    def test_num_objs_value(self):
-        """Verifica que NUM_OBJS tenga el valor correcto."""
-        assert NUM_OBJS == 1052
-
-    def test_num_objs_is_int(self):
-        """Verifica que NUM_OBJS sea un entero."""
-        assert isinstance(NUM_OBJS, int)
