@@ -229,6 +229,27 @@ class ArgentumServer:
                 connections = await self.redis_client.get_connections_count()
                 logger.info("Conexiones activas: %d", connections)
 
+    async def _initialize_dice_config(self) -> None:
+        """Inicializa la configuración de dados en Redis si no existe."""
+        if not self.redis_client or not self.server_repo:
+            return
+
+        dice_min_key = "server:dice:min_value"
+        dice_max_key = "server:dice:max_value"
+
+        # Verificar si existen, si no, crear con valores por defecto
+        if await self.redis_client.redis.get(dice_min_key) is None:
+            await self.server_repo.set_dice_min_value(6)
+            logger.info("Valor mínimo de dados inicializado: 6")
+
+        if await self.redis_client.redis.get(dice_max_key) is None:
+            await self.server_repo.set_dice_max_value(18)
+            logger.info("Valor máximo de dados inicializado: 18")
+
+        dice_min = await self.server_repo.get_dice_min_value()
+        dice_max = await self.server_repo.get_dice_max_value()
+        logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
+
     async def start(self) -> None:
         """Inicia el servidor TCP."""
         # Conectar a Redis (obligatorio)
@@ -252,10 +273,8 @@ class ArgentumServer:
             # Establecer timestamp de inicio del servidor
             await self.server_repo.set_uptime_start(int(time.time()))
 
-            # Inicializar configuración de dados si no existe
-            dice_min = await self.server_repo.get_dice_min_value()
-            dice_max = await self.server_repo.get_dice_max_value()
-            logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
+            # Inicializar configuración de dados
+            await self._initialize_dice_config()
 
             # Obtener MOTD desde Redis
             motd = await self.server_repo.get_motd()
