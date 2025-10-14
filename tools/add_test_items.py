@@ -25,8 +25,8 @@ async def add_test_items(user_id: int) -> None:
             (1, 10),  # Manzana Roja x10
             (2, 1),  # Espada Larga x1
             (38, 5),  # Poción Roja x5
-            (39, 3),  # Poción Azul x3
-            (3, 1),  # Escudo x1
+            (39, 3),  # Poción Verde x3
+            (3, 1),  # Hacha x1
         ]
 
         print(f"Agregando items de prueba al inventario del usuario {user_id}...")
