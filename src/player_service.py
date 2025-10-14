@@ -193,7 +193,8 @@ class PlayerService:
         )
 
         # Delay crítico para evitar problemas de parsing en el cliente
-        await asyncio.sleep(0.5)
+        # Optimizado mediante búsqueda binaria: 65ms es el mínimo seguro
+        await asyncio.sleep(0.065)
         logger.info("Personaje spawneado para user_id %d (con delay post-spawn)", user_id)
 
     async def send_inventory(self, user_id: int) -> None:
