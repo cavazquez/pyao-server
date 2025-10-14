@@ -266,8 +266,8 @@ class TaskLogin(Task):
 
         char_heading = 3  # Sur por defecto
 
-        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa (al final antes del broadcast)
-        # Con efecto de aparición (FX 1 = efecto de spawn/login)
+        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
+        # (al final antes del broadcast, con efecto de aparición FX 1)
         await self.message_sender.send_character_create(
             char_index=user_id,
             body=char_body,
