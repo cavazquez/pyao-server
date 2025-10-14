@@ -197,7 +197,8 @@ class TaskLogin(Task):
         # Enviar cambio de mapa
         await self.message_sender.send_change_map(position["map"])
 
-        # Obtener y enviar atributos del personaje
+        # Crear atributos por defecto si no existen (pero no enviarlos al login)
+        # El cliente los solicitará cuando el jugador abra la ventana de estadísticas
         attributes = await self.player_repo.get_attributes(user_id)
 
         if attributes is None:
@@ -212,13 +213,7 @@ class TaskLogin(Task):
             await self.player_repo.set_attributes(user_id=user_id, **attributes)
             logger.info("Atributos por defecto creados en Redis para user_id %d", user_id)
 
-        await self.message_sender.send_attributes(
-            strength=attributes["strength"],
-            agility=attributes["agility"],
-            intelligence=attributes["intelligence"],
-            charisma=attributes["charisma"],
-            constitution=attributes["constitution"],
-        )
+        # NO enviar atributos automáticamente - el cliente los solicitará con /EST
 
         # Obtener y enviar estadísticas completas del personaje
         user_stats = await self.player_repo.get_stats(user_id)

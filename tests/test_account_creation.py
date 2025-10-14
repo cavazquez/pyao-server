@@ -91,12 +91,12 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # 1. Logged
     # 2. UserCharIndex
     # 3. ChangeMap
-    # 4. Attributes
-    # 5. UpdateUserStats
-    # 6-25. ChangeInventorySlot (20 slots)
-    # 26. CharacterCreate (al final)
+    # 4. UpdateUserStats
+    # 5-24. ChangeInventorySlot (20 slots)
+    # 25. CharacterCreate (al final)
+    # Nota: Attributes ya no se envía automáticamente (el cliente lo solicita con /EST)
     # Nota: UpdateHungerAndThirst se envía solo si hunger_thirst no es None
-    assert writer.write.call_count == 26  # 6 paquetes base + 20 slots de inventario
+    assert writer.write.call_count == 25  # 5 paquetes base + 20 slots de inventario
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -110,21 +110,17 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     third_call = writer.write.call_args_list[2][0][0]
     assert third_call[0] == ServerPacketID.CHANGE_MAP
 
-    # Cuarto paquete: Attributes
+    # Cuarto paquete: UpdateUserStats
     fourth_call = writer.write.call_args_list[3][0][0]
-    assert fourth_call[0] == ServerPacketID.ATTRIBUTES
+    assert fourth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
-    # Quinto paquete: UpdateUserStats
-    fifth_call = writer.write.call_args_list[4][0][0]
-    assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
-
-    # Paquetes 6-25: ChangeInventorySlot (20 slots)
-    for i in range(5, 25):
+    # Paquetes 5-24: ChangeInventorySlot (20 slots)
+    for i in range(4, 24):
         inventory_call = writer.write.call_args_list[i][0][0]
         assert inventory_call[0] == ServerPacketID.CHANGE_INVENTORY_SLOT
 
-    # Último paquete (26): CharacterCreate
-    last_call = writer.write.call_args_list[25][0][0]
+    # Último paquete (25): CharacterCreate
+    last_call = writer.write.call_args_list[24][0][0]
     assert last_call[0] == ServerPacketID.CHARACTER_CREATE
 
 
