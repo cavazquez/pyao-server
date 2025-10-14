@@ -72,21 +72,29 @@ class MapManager:
 
         return players
 
-    def get_message_sender(self, map_id: int, user_id: int) -> MessageSender | None:
-        """Obtiene el MessageSender de un jugador en un mapa.
+    def get_message_sender(self, user_id: int, map_id: int | None = None) -> MessageSender | None:
+        """Obtiene el MessageSender de un jugador.
 
         Args:
-            map_id: ID del mapa.
             user_id: ID del usuario.
+            map_id: ID del mapa (opcional, si no se provee busca en todos los mapas).
 
         Returns:
             MessageSender del jugador o None si no existe.
         """
-        if map_id not in self._players_by_map:
-            return None
+        # Si se especifica un mapa, buscar solo en ese mapa
+        if map_id is not None:
+            if map_id not in self._players_by_map:
+                return None
+            player_data = self._players_by_map[map_id].get(user_id)
+            return player_data[0] if player_data else None
 
-        player_data = self._players_by_map[map_id].get(user_id)
-        return player_data[0] if player_data else None
+        # Si no se especifica mapa, buscar en todos los mapas
+        for players in self._players_by_map.values():
+            if user_id in players:
+                return players[user_id][0]
+
+        return None
 
     def get_all_message_senders_in_map(
         self, map_id: int, exclude_user_id: int | None = None
@@ -157,3 +165,16 @@ class MapManager:
                 if username and username not in usernames:
                     usernames.append(username)
         return usernames
+
+    def get_all_connected_user_ids(self) -> list[int]:
+        """Obtiene la lista de user_ids de todos los jugadores conectados.
+
+        Returns:
+            Lista de user_ids conectados.
+        """
+        user_ids = []
+        for players in self._players_by_map.values():
+            for user_id in players:
+                if user_id not in user_ids:
+                    user_ids.append(user_id)
+        return user_ids

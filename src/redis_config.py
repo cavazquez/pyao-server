@@ -23,6 +23,17 @@ class RedisKeys:
     CONFIG_SERVER_PORT = "config:server:port"
     CONFIG_SERVER_MAX_CONNECTIONS = "config:server:max_connections"
 
+    # Configuración de efectos del juego
+    CONFIG_HUNGER_THIRST_ENABLED = "config:effects:hunger_thirst:enabled"
+    CONFIG_HUNGER_THIRST_INTERVAL_SED = "config:effects:hunger_thirst:interval_sed"
+    CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE = "config:effects:hunger_thirst:interval_hambre"
+    CONFIG_HUNGER_THIRST_REDUCCION_AGUA = "config:effects:hunger_thirst:reduccion_agua"
+    CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE = "config:effects:hunger_thirst:reduccion_hambre"
+
+    CONFIG_GOLD_DECAY_ENABLED = "config:effects:gold_decay:enabled"
+    CONFIG_GOLD_DECAY_PERCENTAGE = "config:effects:gold_decay:percentage"
+    CONFIG_GOLD_DECAY_INTERVAL = "config:effects:gold_decay:interval_seconds"
+
     # Estado del servidor
     SERVER_UPTIME = "server:uptime"
     SERVER_CONNECTIONS_COUNT = "server:connections:count"
@@ -129,4 +140,18 @@ DEFAULT_SERVER_CONFIG = {
     RedisKeys.CONFIG_SERVER_HOST: "0.0.0.0",
     RedisKeys.CONFIG_SERVER_PORT: "7666",
     RedisKeys.CONFIG_SERVER_MAX_CONNECTIONS: "1000",
+}
+
+# Valores por defecto para efectos del juego
+DEFAULT_EFFECTS_CONFIG = {
+    # Hambre y Sed
+    RedisKeys.CONFIG_HUNGER_THIRST_ENABLED: "1",
+    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED: "4",  # segundos
+    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE: "6",  # segundos
+    RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA: "10",  # puntos
+    RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE: "10",  # puntos
+    # Reducción de Oro
+    RedisKeys.CONFIG_GOLD_DECAY_ENABLED: "1",
+    RedisKeys.CONFIG_GOLD_DECAY_PERCENTAGE: "1.0",  # porcentaje
+    RedisKeys.CONFIG_GOLD_DECAY_INTERVAL: "60.0",  # segundos
 }

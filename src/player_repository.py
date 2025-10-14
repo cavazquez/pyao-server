@@ -162,7 +162,7 @@ class PlayerRepository:
             user_id: ID del usuario.
 
         Returns:
-            Diccionario con hambre y sed o None si no existe.
+            Diccionario con hambre, sed, flags y contadores o None si no existe.
         """
         key = RedisKeys.player_hunger_thirst(user_id)
         result: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
@@ -175,10 +175,23 @@ class PlayerRepository:
             "min_water": int(result.get("min_water", 100)),
             "max_hunger": int(result.get("max_hunger", 100)),
             "min_hunger": int(result.get("min_hunger", 100)),
+            "thirst_flag": int(result.get("thirst_flag", 0)),
+            "hunger_flag": int(result.get("hunger_flag", 0)),
+            "water_counter": int(result.get("water_counter", 0)),
+            "hunger_counter": int(result.get("hunger_counter", 0)),
         }
 
-    async def set_hunger_thirst(
-        self, user_id: int, max_water: int, min_water: int, max_hunger: int, min_hunger: int
+    async def set_hunger_thirst(  # noqa: PLR0913, PLR0917
+        self,
+        user_id: int,
+        max_water: int,
+        min_water: int,
+        max_hunger: int,
+        min_hunger: int,
+        thirst_flag: int = 0,
+        hunger_flag: int = 0,
+        water_counter: int = 0,
+        hunger_counter: int = 0,
     ) -> None:
         """Guarda hambre y sed del jugador.
 
@@ -188,6 +201,10 @@ class PlayerRepository:
             min_water: Sed actual.
             max_hunger: Hambre máxima.
             min_hunger: Hambre actual.
+            thirst_flag: Flag de sed (1 si tiene sed, 0 si no).
+            hunger_flag: Flag de hambre (1 si tiene hambre, 0 si no).
+            water_counter: Contador para intervalo de sed.
+            hunger_counter: Contador para intervalo de hambre.
         """
         key = RedisKeys.player_hunger_thirst(user_id)
         data = {
@@ -195,6 +212,10 @@ class PlayerRepository:
             "min_water": str(min_water),
             "max_hunger": str(max_hunger),
             "min_hunger": str(min_hunger),
+            "thirst_flag": str(thirst_flag),
+            "hunger_flag": str(hunger_flag),
+            "water_counter": str(water_counter),
+            "hunger_counter": str(hunger_counter),
         }
         await self.redis.redis.hset(key, mapping=data)  # type: ignore[misc]
         logger.debug("Hambre y sed guardadas para user_id %d", user_id)

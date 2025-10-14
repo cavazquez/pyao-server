@@ -245,16 +245,28 @@ class TaskLogin(Task):
 
         if hunger_thirst is None:
             # Si no existen, crear valores por defecto
-            hunger_thirst = {
-                "max_water": 100,
-                "min_water": 100,
-                "max_hunger": 100,
-                "min_hunger": 100,
-            }
-            await self.player_repo.set_hunger_thirst(user_id=user_id, **hunger_thirst)
+            await self.player_repo.set_hunger_thirst(
+                user_id=user_id,
+                max_water=100,
+                min_water=100,
+                max_hunger=100,
+                min_hunger=100,
+                thirst_flag=0,
+                hunger_flag=0,
+                water_counter=0,
+                hunger_counter=0,
+            )
             logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
+            hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
 
-        await self.message_sender.send_update_hunger_and_thirst(**hunger_thirst)
+        # Enviar solo los valores visibles al cliente
+        if hunger_thirst:
+            await self.message_sender.send_update_hunger_and_thirst(
+                max_water=hunger_thirst["max_water"],
+                min_water=hunger_thirst["min_water"],
+                max_hunger=hunger_thirst["max_hunger"],
+                min_hunger=hunger_thirst["min_hunger"],
+            )
 
         # Obtener datos visuales del personaje
         char_body = int(account_data.get("char_race", 1))

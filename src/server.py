@@ -9,11 +9,13 @@ from typing import TYPE_CHECKING
 import redis
 from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
+from src.game_tick import GameTick, GoldDecayEffect, HungerThirstEffect
 from src.map_manager import MapManager
 from src.message_sender import MessageSender
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
+from src.redis_config import RedisKeys
 from src.server_repository import ServerRepository
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
@@ -57,6 +59,7 @@ class ArgentumServer:
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
         self.map_manager = MapManager()  # Gestor de jugadores por mapa
+        self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -251,6 +254,31 @@ class ArgentumServer:
                 await self.server_repo.set_motd(initial_motd)
                 logger.info("MOTD inicial establecido")
 
+            # Inicializar sistema de tick del juego con efectos configurables
+            self.game_tick = GameTick(
+                player_repo=self.player_repo,
+                map_manager=self.map_manager,
+                tick_interval=1.0,  # 1 segundo por tick
+            )
+
+            # Agregar efectos al sistema de tick (configuración desde Redis)
+            hunger_thirst_enabled = await self.redis_client.get_effect_config_bool(
+                RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, default=True
+            )
+            if hunger_thirst_enabled:
+                self.game_tick.add_effect(HungerThirstEffect(self.redis_client))
+                logger.info("Efecto de hambre/sed habilitado")
+
+            gold_decay_enabled = await self.redis_client.get_effect_config_bool(
+                RedisKeys.CONFIG_GOLD_DECAY_ENABLED, default=True
+            )
+            if gold_decay_enabled:
+                self.game_tick.add_effect(GoldDecayEffect(self.redis_client))
+                logger.info("Efecto de reducción de oro habilitado")
+
+            self.game_tick.start()
+            logger.info("Sistema de tick del juego iniciado")
+
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
             logger.error(  # noqa: TRY400
@@ -277,6 +305,11 @@ class ArgentumServer:
 
     async def stop(self) -> None:
         """Detiene el servidor."""
+        # Detener sistema de tick del juego
+        if self.game_tick:
+            await self.game_tick.stop()
+            logger.info("Sistema de tick del juego detenido")
+
         if self.server:
             self.server.close()
             await self.server.wait_closed()

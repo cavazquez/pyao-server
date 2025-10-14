@@ -139,13 +139,13 @@ def test_get_message_sender(map_manager: MapManager, message_sender: MessageSend
     """Verifica que se pueda obtener el MessageSender de un jugador."""
     map_manager.add_player(1, 100, message_sender)
 
-    sender = map_manager.get_message_sender(1, 100)
+    sender = map_manager.get_message_sender(100)
     assert sender is message_sender
 
 
 def test_get_message_sender_nonexistent(map_manager: MapManager) -> None:
     """Verifica que obtener MessageSender de jugador inexistente retorne None."""
-    sender = map_manager.get_message_sender(1, 999)
+    sender = map_manager.get_message_sender(999)
     assert sender is None
 
 

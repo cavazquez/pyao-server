@@ -243,11 +243,78 @@ account:username:{username}     # Mapeo username -> user_id
 # Jugadores (gestionadas por PlayerRepository)
 player:{user_id}:position       # Posición del jugador (x, y, map, heading)
 player:{user_id}:user_stats     # Estadísticas (HP, mana, stamina, gold, level, exp)
-player:{user_id}:hunger_thirst  # Hambre y sed (max/min water/hunger)
+player:{user_id}:hunger_thirst  # Hambre y sed (max/min water/hunger, flags, counters)
 player:{user_id}:stats          # Atributos (STR, AGI, INT, CHA, CON)
 player:{user_id}:character      # Datos del personaje (race, gender, job, head, home)
 player:{user_id}:inventory      # Inventario del jugador
 ```
+
+### Sistema de Tick del Juego
+
+El servidor implementa un **sistema de tick genérico y configurable** que aplica efectos periódicos a todos los jugadores conectados. **Todas las constantes se almacenan en Redis** y pueden modificarse sin reiniciar el servidor.
+
+#### Efectos Implementados
+
+**1. Hambre y Sed** (basado en General.bas:1369-1422 del servidor original VB6)
+- **Intervalo de Sed**: Configurable (default: 4 segundos)
+- **Intervalo de Hambre**: Configurable (default: 6 segundos)
+- **Reducción de Agua**: Configurable (default: 10 puntos)
+- **Reducción de Hambre**: Configurable (default: 10 puntos)
+- **Flags de Estado**: Cuando agua o comida llegan a 0, se activa un flag
+- **Notificación**: Los cambios se envían mediante UPDATE_HUNGER_AND_THIRST
+
+**2. Reducción de Oro**
+- **Intervalo**: Configurable (default: 60 segundos)
+- **Reducción**: Configurable (default: 1% del oro actual)
+- **Notificación**: El jugador recibe un mensaje en consola y actualización de stats
+
+#### Configuración en Redis
+
+Todas las constantes se almacenan en Redis y pueden modificarse en tiempo real:
+
+```bash
+# Hambre y Sed
+redis-cli SET config:effects:hunger_thirst:enabled 1
+redis-cli SET config:effects:hunger_thirst:interval_sed 4
+redis-cli SET config:effects:hunger_thirst:interval_hambre 6
+redis-cli SET config:effects:hunger_thirst:reduccion_agua 10
+redis-cli SET config:effects:hunger_thirst:reduccion_hambre 10
+
+# Reducción de Oro
+redis-cli SET config:effects:gold_decay:enabled 1
+redis-cli SET config:effects:gold_decay:percentage 1.0
+redis-cli SET config:effects:gold_decay:interval_seconds 60.0
+```
+
+**Ejemplos de Configuración:**
+
+```bash
+# Hambre/sed más agresiva (cada 2 segundos, -20 puntos)
+redis-cli SET config:effects:hunger_thirst:interval_sed 2
+redis-cli SET config:effects:hunger_thirst:reduccion_agua 20
+
+# Oro más suave (0.5% cada 2 minutos)
+redis-cli SET config:effects:gold_decay:percentage 0.5
+redis-cli SET config:effects:gold_decay:interval_seconds 120.0
+
+# Desactivar un efecto
+redis-cli SET config:effects:gold_decay:enabled 0
+```
+
+Los cambios se aplican **inmediatamente** en el próximo tick (no requiere reiniciar el servidor).
+
+**Ejemplo de Salida del Servidor:**
+```
+INFO - Configuración de efecto inicializada: config:effects:hunger_thirst:enabled = 1
+INFO - Configuración de efecto inicializada: config:effects:gold_decay:percentage = 1.0
+INFO - Efecto de hambre/sed habilitado
+INFO - Efecto de reducción de oro habilitado
+INFO - Sistema de tick iniciado (intervalo: 1.0s, efectos: 2)
+INFO - user_id 1: oro reducido de 1000 a 990 (-10, 1.0%)
+INFO - user_id 2 tiene sed (agua = 0)
+```
+
+Ver **[documentación completa del sistema de tick](docs/GAME_TICK_SYSTEM.md)** para crear efectos personalizados.
 
 ## 🎮 Cliente Compatible
 
@@ -267,6 +334,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
 - **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
 - **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
+- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Sistema genérico de efectos periódicos
 
 ### Calidad y Testing
 - **[Análisis de Cobertura](docs/COVERAGE_ANALYSIS.md)**: Análisis detallado de cobertura de tests

@@ -81,15 +81,15 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 7 paquetes en el orden correcto:
+    # Verificar que se enviaron 6 paquetes en el orden correcto:
     # 1. Logged
     # 2. UserCharIndex
     # 3. ChangeMap
     # 4. Attributes
     # 5. UpdateUserStats
-    # 6. UpdateHungerAndThirst
-    # 7. CharacterCreate (al final)
-    assert writer.write.call_count == 7
+    # 6. CharacterCreate (al final)
+    # Nota: UpdateHungerAndThirst se envía solo si hunger_thirst no es None
+    assert writer.write.call_count == 6
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -111,13 +111,10 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     fifth_call = writer.write.call_args_list[4][0][0]
     assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
-    # Sexto paquete: UpdateHungerAndThirst
+    # Sexto paquete: CharacterCreate
+    # (UpdateHungerAndThirst no se envía porque hunger_thirst es None)
     sixth_call = writer.write.call_args_list[5][0][0]
-    assert sixth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
-
-    # Séptimo paquete: CharacterCreate (al final)
-    seventh_call = writer.write.call_args_list[6][0][0]
-    assert seventh_call[0] == ServerPacketID.CHARACTER_CREATE
+    assert sixth_call[0] == ServerPacketID.CHARACTER_CREATE
 
 
 @pytest.mark.asyncio
