@@ -154,6 +154,20 @@ class TaskLogin(Task):
             self.session_data["username"] = username  # type: ignore[assignment]
             logger.info("User ID %d y username %s guardados en sesión", user_id, username)
 
+        # IMPORTANTE: Orden de envío de paquetes durante el login
+        # Este orden es crítico para evitar problemas de parsing en el cliente.
+        # El cliente lee los paquetes de forma secuencial y puede malinterpretar
+        # los bytes si llegan concatenados por TCP en un orden incorrecto.
+        #
+        # Orden correcto:
+        # 1. LOGGED (ID: 0)
+        # 2. USER_CHAR_INDEX_IN_SERVER (ID: 28)
+        # 3. CHANGE_MAP (ID: 21)
+        # 4. ATTRIBUTES (ID: 50)
+        # 5. UPDATE_USER_STATS (ID: 45)
+        # 6. UPDATE_HUNGER_AND_THIRST (ID: 60)
+        # 7. CHARACTER_CREATE (ID: 29) - DEBE IR AL FINAL antes del broadcast
+
         # Enviar paquete Logged con la clase del personaje
         await self.message_sender.send_logged(user_class)
 
@@ -181,28 +195,27 @@ class TaskLogin(Task):
         # Enviar cambio de mapa
         await self.message_sender.send_change_map(position["map"])
 
-        # Obtener datos visuales del personaje
-        char_body = int(account_data.get("char_race", 1))
-        char_head = int(account_data.get("char_head", 1))
+        # Obtener y enviar atributos del personaje
+        attributes = await self.player_repo.get_attributes(user_id)
 
-        # Si body es 0, usar valor por defecto (1 = humano)
-        if char_body == 0:
-            char_body = 1
+        if attributes is None:
+            # Si no existen atributos, crear valores por defecto
+            attributes = {
+                "strength": 10,
+                "agility": 10,
+                "intelligence": 10,
+                "charisma": 10,
+                "constitution": 10,
+            }
+            await self.player_repo.set_attributes(user_id=user_id, **attributes)
+            logger.info("Atributos por defecto creados en Redis para user_id %d", user_id)
 
-        char_heading = 3  # Sur por defecto
-
-        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
-        # Con efecto de aparición (FX 1 = efecto de spawn/login)
-        await self.message_sender.send_character_create(
-            char_index=user_id,
-            body=char_body,
-            head=char_head,
-            heading=char_heading,
-            x=position["x"],
-            y=position["y"],
-            fx=1,  # Efecto de aparición/spawn
-            loops=-1,  # -1 = reproducir una vez
-            name=username,
+        await self.message_sender.send_attributes(
+            strength=attributes["strength"],
+            agility=attributes["agility"],
+            intelligence=attributes["intelligence"],
+            charisma=attributes["charisma"],
+            constitution=attributes["constitution"],
         )
 
         # Obtener y enviar estadísticas completas del personaje
@@ -227,7 +240,7 @@ class TaskLogin(Task):
 
         await self.message_sender.send_update_user_stats(**user_stats)
 
-        # Obtener y enviar hambre y sed
+        # Obtener y enviar hambre y sed (al final para evitar problemas de parsing)
         hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
 
         if hunger_thirst is None:
@@ -243,27 +256,28 @@ class TaskLogin(Task):
 
         await self.message_sender.send_update_hunger_and_thirst(**hunger_thirst)
 
-        # Obtener y enviar atributos del personaje
-        attributes = await self.player_repo.get_attributes(user_id)
+        # Obtener datos visuales del personaje
+        char_body = int(account_data.get("char_race", 1))
+        char_head = int(account_data.get("char_head", 1))
 
-        if attributes is None:
-            # Si no existen atributos, crear valores por defecto
-            attributes = {
-                "strength": 10,
-                "agility": 10,
-                "intelligence": 10,
-                "charisma": 10,
-                "constitution": 10,
-            }
-            await self.player_repo.set_attributes(user_id=user_id, **attributes)
-            logger.info("Atributos por defecto creados en Redis para user_id %d", user_id)
+        # Si body es 0, usar valor por defecto (1 = humano)
+        if char_body == 0:
+            char_body = 1
 
-        await self.message_sender.send_attributes(
-            strength=attributes["strength"],
-            agility=attributes["agility"],
-            intelligence=attributes["intelligence"],
-            charisma=attributes["charisma"],
-            constitution=attributes["constitution"],
+        char_heading = 3  # Sur por defecto
+
+        # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa (al final antes del broadcast)
+        # Con efecto de aparición (FX 1 = efecto de spawn/login)
+        await self.message_sender.send_character_create(
+            char_index=user_id,
+            body=char_body,
+            head=char_head,
+            heading=char_heading,
+            x=position["x"],
+            y=position["y"],
+            fx=1,  # Efecto de aparición/spawn
+            loops=-1,  # -1 = reproducir una vez
+            name=username,
         )
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros

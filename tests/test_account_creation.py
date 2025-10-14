@@ -25,10 +25,12 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.set_position = AsyncMock()
     player_repo.set_stats = AsyncMock()
     player_repo.set_hunger_thirst = AsyncMock()
+    player_repo.set_attributes = AsyncMock()
     # Para que cree valores por defecto
     player_repo.get_position = AsyncMock(return_value=None)
     player_repo.get_stats = AsyncMock(return_value=None)
     player_repo.get_hunger_thirst = AsyncMock(return_value=None)
+    player_repo.get_attributes = AsyncMock(return_value=None)
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
@@ -79,9 +81,14 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert call_args.kwargs["password_hash"] != password
     assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
 
-    # Verificar que se enviaron 7 paquetes:
-    # Logged, UserCharIndex, ChangeMap, CharacterCreate,
-    # UpdateUserStats, UpdateHungerAndThirst, Attributes
+    # Verificar que se enviaron 7 paquetes en el orden correcto:
+    # 1. Logged
+    # 2. UserCharIndex
+    # 3. ChangeMap
+    # 4. Attributes
+    # 5. UpdateUserStats
+    # 6. UpdateHungerAndThirst
+    # 7. CharacterCreate (al final)
     assert writer.write.call_count == 7
 
     # Primer paquete: Logged
@@ -96,9 +103,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     third_call = writer.write.call_args_list[2][0][0]
     assert third_call[0] == ServerPacketID.CHANGE_MAP
 
-    # Cuarto paquete: CharacterCreate
+    # Cuarto paquete: Attributes
     fourth_call = writer.write.call_args_list[3][0][0]
-    assert fourth_call[0] == ServerPacketID.CHARACTER_CREATE
+    assert fourth_call[0] == ServerPacketID.ATTRIBUTES
 
     # Quinto paquete: UpdateUserStats
     fifth_call = writer.write.call_args_list[4][0][0]
@@ -107,6 +114,10 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # Sexto paquete: UpdateHungerAndThirst
     sixth_call = writer.write.call_args_list[5][0][0]
     assert sixth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
+
+    # Séptimo paquete: CharacterCreate (al final)
+    seventh_call = writer.write.call_args_list[6][0][0]
+    assert seventh_call[0] == ServerPacketID.CHARACTER_CREATE
 
 
 @pytest.mark.asyncio
