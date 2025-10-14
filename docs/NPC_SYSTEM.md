@@ -323,8 +323,88 @@ class CombatService:
 4. **CombatService** - Sistema de combate
 5. **LootService** - Sistema de drops
 
+## 📄 Archivos de Configuración del Cliente
+
+### localindex.dat
+
+El cliente tiene un archivo **`localindex.dat`** que contiene información de texto para minimizar el uso de ancho de banda.
+
+**Ubicación**: `C:\AO20\init\localindex.dat`
+
+**Contenido**:
+- `[HECHIZO1]`, `[HECHIZO2]`, etc. - Información de hechizos
+- `[OBJ1]`, `[OBJ2]`, etc. - Información de objetos
+- `[NPC1]`, `[NPC2]`, etc. - **Información de NPCs** (nombres, descripciones)
+
+**Formato de NPC en localindex.dat**:
+```ini
+[NPC1]
+NOMBRE=Goblin
+DESC=Un goblin salvaje que ataca a los viajeros.
+
+[NPC2]
+NOMBRE=Comerciante
+DESC=Un comerciante amigable que vende pociones.
+
+[NPC3]
+NOMBRE=Guardia Real
+DESC=Un guardia que protege la ciudad.
+```
+
+### ¿Cómo se Usa?
+
+1. **Servidor**: Solo envía el **NPC ID** y datos mínimos (body, head, posición)
+2. **Cliente**: Lee el nombre y descripción del `localindex.dat` usando el NPC ID
+3. **Beneficio**: Ahorra ancho de banda (no enviar nombres/descripciones cada vez)
+
+### Generación del Archivo
+
+El archivo se genera con el programa **`Creador_de_indices.exe`**:
+- Lee los datos del servidor (NPCs.dat, Obj.dat, Hechizos.dat)
+- Genera el `localindex.dat` para el cliente
+- Repositorio: [argentum-online-creador-indices](https://github.com/ao-org/argentum-online-creador-indices)
+
+### Implicaciones para PyAO Server
+
+**Opción 1: Usar localindex.dat (Compatible)**
+```python
+# El servidor solo envía el NPC ID
+await message_sender.send_character_create(
+    char_index=10001,
+    body=500,      # ID del sprite
+    head=0,
+    heading=3,
+    x=50,
+    y=50,
+    name="",       # Vacío! El cliente lo lee de localindex.dat
+)
+
+# El cliente busca en localindex.dat:
+# [NPC500] -> NOMBRE=Goblin
+```
+
+**Opción 2: Enviar Nombre Completo (Más Simple)**
+```python
+# El servidor envía el nombre completo
+await message_sender.send_character_create(
+    char_index=10001,
+    body=500,
+    head=0,
+    heading=3,
+    x=50,
+    y=50,
+    name="Goblin",  # Nombre completo
+)
+
+# Más simple pero usa más ancho de banda
+```
+
+**Recomendación**: Empezar con **Opción 2** (más simple) y luego optimizar con **Opción 1** si es necesario.
+
 ## 📚 Referencias
 
 - [LOGIN_FLOW.md](LOGIN_FLOW.md) - Flujo de login (usa CHARACTER_CREATE)
 - [SERVICES_ARCHITECTURE.md](SERVICES_ARCHITECTURE.md) - Arquitectura de servicios
 - Cliente VB6 - `charlist()` maneja jugadores y NPCs
+- [localindex.dat](https://github.com/ao-org/Recursos/blob/master/init/localindex.dat) - Archivo de índice del cliente
+- [Creador de Índices](https://github.com/ao-org/argentum-online-creador-indices) - Programa que genera localindex.dat
