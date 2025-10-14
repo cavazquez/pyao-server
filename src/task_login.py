@@ -293,12 +293,8 @@ class TaskLogin(Task):
             name=username,
         )
 
-        # NO enviar inventario automáticamente al login
-        # El cliente lo solicitará cuando el jugador haga click en los slots
-        # Esto evita que se abra la ventana de comercio automáticamente
-        logger.info(
-            "Inventario no enviado al login para user_id %d (se enviará on-demand)", user_id
-        )
+        # El inventario se enviará después del delay de 500ms
+        # para evitar problemas de parsing con CHARACTER_CREATE
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
         if self.map_manager:
@@ -356,12 +352,57 @@ class TaskLogin(Task):
                 len(other_senders),
             )
 
-        # Esperar un momento antes de enviar el MOTD para evitar problemas de parsing
+        # Esperar un momento antes de enviar más paquetes para evitar problemas de parsing
         # El cliente VB6 necesita tiempo para procesar CHARACTER_CREATE
         # antes de recibir más paquetes
         await asyncio.sleep(0.5)  # 500ms de delay
 
-        # Enviar MOTD (Mensaje del Día) después del delay
+        # Enviar inventario después del delay (solo slots con items)
+        from src.inventory_repository import InventoryRepository
+        from src.items_catalog import get_item
+
+        inventory_repo = InventoryRepository(self.player_repo.redis)
+        inventory = await inventory_repo.get_inventory(user_id)
+
+        logger.info("Enviando inventario para user_id %d (después del delay)", user_id)
+        for i in range(1, InventoryRepository.MAX_SLOTS + 1):
+            slot_key = f"slot_{i}"
+            slot_value = inventory.get(slot_key, "")
+
+            # Solo enviar slots con items (no enviar vacíos)
+            if slot_value and isinstance(slot_value, str):
+                try:
+                    item_id, quantity = slot_value.split(":")
+                    item = get_item(int(item_id))
+
+                    if item:
+                        logger.debug(
+                            "Enviando slot %d: %s (id=%d, qty=%s)",
+                            i,
+                            item.name,
+                            item.item_id,
+                            quantity,
+                        )
+                        await self.message_sender.send_change_inventory_slot(
+                            slot=i,
+                            item_id=item.item_id,
+                            name=item.name,
+                            amount=int(quantity),
+                            equipped=False,
+                            grh_id=item.graphic_id,
+                            item_type=item.item_type.to_client_type(),
+                            max_hit=item.max_damage or 0,
+                            min_hit=item.min_damage or 0,
+                            max_def=item.defense or 0,
+                            min_def=item.defense or 0,
+                            sale_price=float(item.value),
+                        )
+                    else:
+                        logger.warning("Item %s no encontrado en catálogo", item_id)
+                except (ValueError, AttributeError) as e:
+                    logger.warning("Error procesando slot %d: %s", i, e)
+
+        # Enviar MOTD (Mensaje del Día) después del inventario
         if self.server_repo:
             motd = await self.server_repo.get_motd()
         else:
@@ -369,4 +410,4 @@ class TaskLogin(Task):
             motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
 
         await self.message_sender.send_multiline_console_msg(motd)
-        logger.info("MOTD enviado a user_id %d (con delay de 500ms)", user_id)
+        logger.info("MOTD enviado a user_id %d", user_id)
