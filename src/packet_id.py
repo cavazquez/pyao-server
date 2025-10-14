@@ -34,7 +34,7 @@ class ClientPacketID(IntEnum):
     # REQUEST_FAME = 14
     # REQUEST_SKILLS = 15
     # REQUEST_MINI_STATS = 16
-    # COMMERCE_END = 17
+    COMMERCE_END = 17  # Cerrar ventana de comercio
     # USER_COMMERCE_END = 18
     # USER_COMMERCE_CONFIRM = 19
     # COMMERCE_CHAT = 20
@@ -177,7 +177,7 @@ class ServerPacketID(IntEnum):
     # REMOVE_CHAR_DIALOG = 2
     # NAVIGATE_TOGGLE = 3
     # DISCONNECT = 4
-    # COMMERCE_END = 5
+    COMMERCE_END = 5  # Cerrar ventana de comercio
     # BANK_END = 6
     # COMMERCE_INIT = 7
     # BANK_INIT = 8

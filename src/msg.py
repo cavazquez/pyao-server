@@ -258,6 +258,17 @@ def build_update_user_stats_response(
     return packet.to_bytes()
 
 
+def build_commerce_end_response() -> bytes:
+    """Construye el paquete CommerceEnd del protocolo AO estándar.
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (5).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.COMMERCE_END)
+    return packet.to_bytes()
+
+
 def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
     """Construye el paquete ConsoleMsg del protocolo AO estándar.
 

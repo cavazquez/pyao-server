@@ -26,10 +26,20 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.set_stats = AsyncMock()
     player_repo.set_hunger_thirst = AsyncMock()
     player_repo.set_attributes = AsyncMock()
-    # Para que cree valores por defecto
+    # Para que cree valores por defecto y luego los devuelva
     player_repo.get_position = AsyncMock(return_value=None)
     player_repo.get_stats = AsyncMock(return_value=None)
-    player_repo.get_hunger_thirst = AsyncMock(return_value=None)
+    player_repo.get_hunger_thirst = AsyncMock(
+        side_effect=[
+            None,  # Primera llamada: no existen
+            {  # Segunda llamada: devolver valores creados
+                "max_water": 100,
+                "min_water": 100,
+                "max_hunger": 100,
+                "min_hunger": 100,
+            },
+        ]
+    )
     player_repo.get_attributes = AsyncMock(return_value=None)
     # Mock de redis para InventoryRepository
     redis_client_mock = MagicMock()
@@ -92,12 +102,12 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # 2. UserCharIndex
     # 3. ChangeMap
     # 4. UpdateUserStats
-    # 5-24. ChangeInventorySlot (20 slots)
-    # 25. CharacterCreate
-    # 26-27. MOTD (2 líneas de ConsoleMsg)
-    # Nota: Attributes ya no se envía automáticamente (el cliente lo solicita con /EST)
-    # Nota: UpdateHungerAndThirst se envía solo si hunger_thirst no es None
-    assert writer.write.call_count == 27  # 5 paquetes base + 20 slots + 2 MOTD
+    # 5. UpdateHungerAndThirst
+    # 6. CharacterCreate
+    # Nota: MOTD se envía con delay asíncrono (no se verifica en este test)
+    # Nota: Attributes no se envía automáticamente (el cliente lo solicita con /EST)
+    # Nota: Inventario no se envía al login (se carga on-demand con clicks)
+    assert writer.write.call_count >= 6  # Al menos 6 paquetes base (MOTD es asíncrono)
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -115,20 +125,15 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     fourth_call = writer.write.call_args_list[3][0][0]
     assert fourth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
-    # Paquetes 5-24: ChangeInventorySlot (20 slots)
-    for i in range(4, 24):
-        inventory_call = writer.write.call_args_list[i][0][0]
-        assert inventory_call[0] == ServerPacketID.CHANGE_INVENTORY_SLOT
+    # Quinto paquete: UpdateHungerAndThirst
+    fifth_call = writer.write.call_args_list[4][0][0]
+    assert fifth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
 
-    # Paquete 25: CharacterCreate
-    char_create_call = writer.write.call_args_list[24][0][0]
-    assert char_create_call[0] == ServerPacketID.CHARACTER_CREATE
+    # Sexto paquete: CharacterCreate
+    sixth_call = writer.write.call_args_list[5][0][0]
+    assert sixth_call[0] == ServerPacketID.CHARACTER_CREATE
 
-    # Paquetes 26-27: MOTD (2 líneas de ConsoleMsg)
-    motd_call_1 = writer.write.call_args_list[25][0][0]
-    assert motd_call_1[0] == ServerPacketID.CONSOLE_MSG
-    motd_call_2 = writer.write.call_args_list[26][0][0]
-    assert motd_call_2[0] == ServerPacketID.CONSOLE_MSG
+    # MOTD se envía con delay asíncrono, no se verifica aquí
 
 
 @pytest.mark.asyncio

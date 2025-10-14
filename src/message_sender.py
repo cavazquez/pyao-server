@@ -10,6 +10,7 @@ from src.msg import (
     build_character_change_response,
     build_character_create_response,
     build_character_remove_response,
+    build_commerce_end_response,
     build_console_msg_response,
     build_dice_roll_response,
     build_error_msg_response,
@@ -426,6 +427,12 @@ class MessageSender:
         lines = message.split("\n")
         for line in lines:
             await self.send_console_msg(line, font_color)
+
+    async def send_commerce_end(self) -> None:
+        """Envía paquete CommerceEnd para cerrar la ventana de comercio."""
+        response = build_commerce_end_response()
+        logger.debug("[%s] Enviando COMMERCE_END", self.connection.address)
+        await self.connection.send(response)
 
     async def send_change_inventory_slot(
         self,

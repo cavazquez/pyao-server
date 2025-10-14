@@ -1,11 +1,10 @@
 """Tarea para login de usuarios."""
 
+import asyncio
 import hashlib
 import logging
 from typing import TYPE_CHECKING
 
-from src.inventory_repository import InventoryRepository
-from src.items_catalog import get_item
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -239,9 +238,10 @@ class TaskLogin(Task):
             await self.player_repo.set_stats(user_id=user_id, **user_stats)
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
+        # Enviar stats ANTES de CHARACTER_CREATE para evitar problemas de parsing
         await self.message_sender.send_update_user_stats(**user_stats)
 
-        # Obtener y enviar hambre y sed (al final para evitar problemas de parsing)
+        # Crear hambre y sed por defecto si no existen
         hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
 
         if hunger_thirst is None:
@@ -260,7 +260,7 @@ class TaskLogin(Task):
             logger.info("Hambre y sed por defecto creadas en Redis para user_id %d", user_id)
             hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)
 
-        # Enviar solo los valores visibles al cliente
+        # Enviar hambre y sed
         if hunger_thirst:
             await self.message_sender.send_update_hunger_and_thirst(
                 max_water=hunger_thirst["max_water"],
@@ -268,65 +268,6 @@ class TaskLogin(Task):
                 max_hunger=hunger_thirst["max_hunger"],
                 min_hunger=hunger_thirst["min_hunger"],
             )
-
-        # Enviar inventario completo
-        inventory_repo = InventoryRepository(self.player_repo.redis)
-        inventory = await inventory_repo.get_inventory(user_id)
-
-        logger.info("Enviando inventario completo para user_id %d", user_id)
-        for i in range(1, InventoryRepository.MAX_SLOTS + 1):
-            slot_key = f"slot_{i}"
-            slot_value = inventory.get(slot_key, "")
-
-            if slot_value and isinstance(slot_value, str):
-                try:
-                    item_id, quantity = slot_value.split(":")
-                    item = get_item(int(item_id))
-
-                    if item:
-                        logger.info(
-                            "Enviando slot %d: %s (id=%d, grh=%d, type=%d, qty=%s)",
-                            i,
-                            item.name,
-                            item.item_id,
-                            item.graphic_id,
-                            item.item_type.to_client_type(),
-                            quantity,
-                        )
-                        await self.message_sender.send_change_inventory_slot(
-                            slot=i,
-                            item_id=item.item_id,
-                            name=item.name,
-                            amount=int(quantity),
-                            equipped=False,
-                            grh_id=item.graphic_id,
-                            item_type=item.item_type.to_client_type(),
-                            max_hit=item.max_damage or 0,
-                            min_hit=item.min_damage or 0,
-                            max_def=item.defense or 0,
-                            min_def=item.defense or 0,
-                            sale_price=float(item.value),
-                        )
-                    else:
-                        logger.warning("Item %s no encontrado en catálogo", item_id)
-                except (ValueError, AttributeError) as e:
-                    logger.warning("Error procesando slot %d: %s", i, e)
-            else:
-                # Enviar slot vacío explícitamente
-                await self.message_sender.send_change_inventory_slot(
-                    slot=i,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    equipped=False,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                    sale_price=0.0,
-                )
 
         # Obtener datos visuales del personaje
         char_body = int(account_data.get("char_race", 1))
@@ -339,7 +280,7 @@ class TaskLogin(Task):
         char_heading = 3  # Sur por defecto
 
         # Enviar CHARACTER_CREATE para mostrar el personaje en el mapa
-        # (al final antes del broadcast, con efecto de aparición FX 1)
+        # (antes del inventario para evitar abrir ventanas no deseadas)
         await self.message_sender.send_character_create(
             char_index=user_id,
             body=char_body,
@@ -350,6 +291,13 @@ class TaskLogin(Task):
             fx=1,  # Efecto de aparición/spawn
             loops=-1,  # -1 = reproducir una vez
             name=username,
+        )
+
+        # NO enviar inventario automáticamente al login
+        # El cliente lo solicitará cuando el jugador haga click en los slots
+        # Esto evita que se abra la ventana de comercio automáticamente
+        logger.info(
+            "Inventario no enviado al login para user_id %d (se enviará on-demand)", user_id
         )
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
@@ -408,7 +356,12 @@ class TaskLogin(Task):
                 len(other_senders),
             )
 
-        # Enviar MOTD (Mensaje del Día) al final del login
+        # Esperar un momento antes de enviar el MOTD para evitar problemas de parsing
+        # El cliente VB6 necesita tiempo para procesar CHARACTER_CREATE
+        # antes de recibir más paquetes
+        await asyncio.sleep(0.5)  # 500ms de delay
+
+        # Enviar MOTD (Mensaje del Día) después del delay
         if self.server_repo:
             motd = await self.server_repo.get_motd()
         else:
@@ -416,7 +369,7 @@ class TaskLogin(Task):
             motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
 
         await self.message_sender.send_multiline_console_msg(motd)
-        logger.info("MOTD enviado a user_id %d", user_id)
+        logger.info("MOTD enviado a user_id %d (con delay de 500ms)", user_id)
 
     @staticmethod
     def _hash_password(password: str) -> str:
