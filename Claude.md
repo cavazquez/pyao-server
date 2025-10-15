@@ -45,12 +45,13 @@
 - Actualizar la sección "Arquitectura" si cambian las responsabilidades de las clases
 
 ## Workflow
-1. Discutir qué implementar
-2. Mostrar el plan específico
-3. Implementar solo esa parte
-4. Actualizar README.md con los cambios
-5. Confirmar que funciona
-5. Preguntar qué sigue
+1. **Proponer cambios**: Mostrar qué cambios se van a realizar y esperar confirmación del usuario
+2. **Implementar**: Solo después de la aprobación, realizar los cambios en el código
+3. **Ejecutar tests**: Correr `./run_tests.sh` y verificar que no haya errores ni warnings
+4. **Generar tests**: Crear o actualizar los tests necesarios para los cambios realizados
+5. **Ejecutar tests nuevamente**: Correr `./run_tests.sh` hasta que no haya ningún error ni warning
+6. **Actualizar README.md**: Si se agregaron/eliminaron archivos o cambió la arquitectura
+7. **Commit y Push**: Solo cuando todo esté limpio y funcionando
 
 ## Pre-commit
 - **OBLIGATORIO**: Antes de cada commit, ejecutar `./run_tests.sh` y verificar que todo pase
