@@ -9,12 +9,12 @@ echo "  mypy: $(uv run mypy --version)"
 echo "  pytest: $(uv run pytest --version)"
 echo ""
 
-echo "🔍 Running ruff linter..."
-uv run ruff check .
+echo "🎨 Auto-formatting code..."
+uv run ruff format .
 
 echo ""
-echo "🎨 Running ruff formatter..."
-uv run ruff format --check .
+echo "🔍 Running ruff linter..."
+uv run ruff check .
 
 echo ""
 echo "🔬 Running mypy type checker..."

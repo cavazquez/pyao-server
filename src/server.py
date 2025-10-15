@@ -26,8 +26,10 @@ from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
+from src.task_double_click import TaskDoubleClick
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
+from src.task_left_click import TaskLeftClick
 from src.task_login import TaskLogin
 from src.task_motd import TaskMotd
 from src.task_null import TaskNull
@@ -36,7 +38,6 @@ from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
-from src.task_use_item import TaskUseItem
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
@@ -150,9 +151,14 @@ class ArgentumServer:
             return TaskUptime(data, message_sender, self.server_repo)
         if task_class is TaskQuit:
             return TaskQuit(data, message_sender, self.player_repo, self.map_manager, session_data)
-        if task_class is TaskUseItem:
-            return TaskUseItem(data, message_sender, self.player_repo, session_data)
-
+        if task_class is TaskDoubleClick:
+            return TaskDoubleClick(
+                data, message_sender, self.player_repo, self.map_manager, session_data
+            )
+        if task_class is TaskLeftClick:
+            return TaskLeftClick(
+                data, message_sender, self.player_repo, self.map_manager, session_data
+            )
         if task_class is TaskInventoryClick:
             return TaskInventoryClick(data, message_sender, self.player_repo, session_data)
 

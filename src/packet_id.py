@@ -38,12 +38,12 @@ class ClientPacketID(IntEnum):
     # USER_COMMERCE_END = 18
     # USER_COMMERCE_CONFIRM = 19
     # COMMERCE_CHAT = 20
-    # BANK_END = 21
+    BANK_END = 21  # Cerrar ventana de banco
     # USER_COMMERCE_OK = 22
     # USER_COMMERCE_REJECT = 23
     # DROP = 24
     # CAST_SPELL = 25
-    # LEFT_CLICK = 26
+    LEFT_CLICK = 26  # Click en personaje/NPC
     DOUBLE_CLICK = 27  # Doble click en inventario (usar item)
     # WORK = 28
     # USE_SPELL_MACRO = 29

@@ -6,11 +6,14 @@ from src.packet_id import ClientPacketID
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
 from src.task_ayuda import TaskAyuda
+from src.task_bank_end import TaskBankEnd
 from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_end import TaskCommerceEnd
 from src.task_dice import TaskDice
+from src.task_double_click import TaskDoubleClick
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
+from src.task_left_click import TaskLeftClick
 from src.task_login import TaskLogin
 from src.task_motd import TaskMotd
 from src.task_online import TaskOnline
@@ -19,7 +22,6 @@ from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
-from src.task_use_item import TaskUseItem
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
@@ -32,11 +34,13 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CREATE_ACCOUNT: TaskCreateAccount,
     ClientPacketID.TALK: TaskTalk,
     ClientPacketID.WALK: TaskWalk,
-    ClientPacketID.DOUBLE_CLICK: TaskUseItem,  # Doble click - usar item
+    ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
+    ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
     ClientPacketID.USE_ITEM: TaskInventoryClick,  # Click en inventario - mostrar info
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
     ClientPacketID.COMMERCE_END: TaskCommerceEnd,  # Cerrar ventana de comercio
+    ClientPacketID.BANK_END: TaskBankEnd,  # Cerrar ventana de banco
     ClientPacketID.AYUDA: TaskAyuda,
     ClientPacketID.REQUEST_STATS: TaskRequestStats,
     ClientPacketID.INFORMATION: TaskInformation,
