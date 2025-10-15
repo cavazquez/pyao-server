@@ -188,6 +188,8 @@ class TaskLogin(Task):
         # Reproducir sonido de login
         await self.message_sender.play_sound_login()
 
+        # TODO: Agregar música de fondo cuando el cliente implemente el handler de PLAY_MIDI
+
         # Enviar CHARACTER_CREATE con delay post-spawn incluido (65ms)
         await player_service.spawn_character(user_id, username, position)
 

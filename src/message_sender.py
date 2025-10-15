@@ -16,6 +16,7 @@ from src.msg import (
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
+    build_play_midi_response,
     build_play_wave_response,
     build_pos_update_response,
     build_update_hp_response,
@@ -25,7 +26,7 @@ from src.msg import (
     build_update_user_stats_response,
     build_user_char_index_in_server_response,
 )
-from src.sounds import SoundID
+from src.sounds import MusicID, SoundID
 from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
@@ -438,6 +439,16 @@ class MessageSender:  # noqa: PLR0904
         logger.debug("[%s] Enviando COMMERCE_END", self.connection.address)
         await self.connection.send(response)
 
+    async def send_play_midi(self, midi_id: int) -> None:
+        """Envía paquete PlayMIDI para reproducir música MIDI en el cliente.
+
+        Args:
+            midi_id: ID de la música MIDI a reproducir (byte). Usar MusicID para constantes.
+        """
+        response = build_play_midi_response(midi_id=midi_id)
+        logger.debug("[%s] Enviando PLAY_MIDI: midi=%d", self.connection.address, midi_id)
+        await self.connection.send(response)
+
     async def send_play_wave(self, wave_id: int, x: int = 0, y: int = 0) -> None:
         """Envía paquete PlayWave para reproducir un sonido en el cliente.
 
@@ -476,6 +487,23 @@ class MessageSender:  # noqa: PLR0904
     async def play_sound_item_pickup(self) -> None:
         """Reproduce el sonido de recoger item."""
         await self.send_play_wave(wave_id=SoundID.ITEM_PICKUP)
+
+    # Métodos de conveniencia para música MIDI
+    async def play_music_main_theme(self) -> None:
+        """Reproduce el tema principal."""
+        await self.send_play_midi(midi_id=MusicID.MAIN_THEME)
+
+    async def play_music_battle(self) -> None:
+        """Reproduce música de batalla."""
+        await self.send_play_midi(midi_id=MusicID.BATTLE)
+
+    async def play_music_town(self) -> None:
+        """Reproduce música de ciudad."""
+        await self.send_play_midi(midi_id=MusicID.TOWN)
+
+    async def play_music_dungeon(self) -> None:
+        """Reproduce música de mazmorra."""
+        await self.send_play_midi(midi_id=MusicID.DUNGEON)
 
     async def send_create_fx(self, char_index: int, fx: int, loops: int) -> None:
         """Envía paquete CreateFX para mostrar un efecto visual.

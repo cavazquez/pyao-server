@@ -269,6 +269,21 @@ def build_commerce_end_response() -> bytes:
     return packet.to_bytes()
 
 
+def build_play_midi_response(midi_id: int) -> bytes:
+    """Construye el paquete PlayMIDI del protocolo AO estándar.
+
+    Args:
+        midi_id: ID de la música MIDI a reproducir (byte).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (38) + midi (1 byte).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.PLAY_MIDI)
+    packet.add_byte(midi_id)
+    return packet.to_bytes()
+
+
 def build_play_wave_response(wave_id: int, x: int = 0, y: int = 0) -> bytes:
     """Construye el paquete PlayWave del protocolo AO estándar.
 

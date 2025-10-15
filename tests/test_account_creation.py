@@ -143,6 +143,7 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     assert eighth_call[0] == ServerPacketID.CREATE_FX
 
     # MOTD se envía con delay asíncrono, no se verifica aquí
+    # TODO: Agregar verificación de PLAY_MIDI cuando el cliente lo soporte
 
 
 @pytest.mark.asyncio
