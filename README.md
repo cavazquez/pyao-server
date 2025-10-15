@@ -103,6 +103,7 @@ pyao-server/
 │   │
 │   ├── # Capa de Servicios (Lógica Reutilizable)
 │   ├── player_service.py        # Servicio de gestión de jugadores
+│   ├── npc_service.py           # Servicio de gestión de NPCs
 │   ├── authentication_service.py # Servicio de autenticación
 │   ├── session_manager.py       # Gestión de sesiones de usuario
 │   ├── multiplayer_broadcast_service.py # Broadcast multijugador
@@ -110,6 +111,7 @@ pyao-server/
 │   │
 │   ├── # Capa de Datos (Repositorios)
 │   ├── player_repository.py     # Repositorio de datos de jugadores
+│   ├── npc_repository.py        # Repositorio de NPCs en Redis
 │   ├── account_repository.py    # Repositorio de cuentas de usuario
 │   ├── server_repository.py     # Repositorio de configuración del servidor
 │   ├── inventory_repository.py  # Repositorio de inventarios
@@ -137,10 +139,16 @@ pyao-server/
 │   ├── msg.py                   # Construcción de mensajes del servidor
 │   │
 │   ├── # Sistema de Juego
-│   ├── map_manager.py           # Gestor de mapas y jugadores
+│   ├── map_manager.py           # Gestor de mapas, jugadores y NPCs
 │   ├── game_tick.py             # Sistema de tick del juego
 │   ├── items_catalog.py         # Catálogo de items (1049 items)
+│   ├── npc_catalog.py           # Catálogo de NPCs
+│   ├── npc.py                   # Modelo de datos de NPCs
 │   └── effect_*.py              # Efectos del juego (hambre, oro, etc.)
+│
+├── data/                        # Datos del juego
+│   ├── npcs.toml                # Catálogo de NPCs (10 NPCs)
+│   └── map_npcs.toml            # Configuración de spawns de NPCs
 │
 ├── tests/                       # Tests unitarios (276 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
@@ -168,6 +176,7 @@ pyao-server/
 ├── docs/                        # Documentación
 │   ├── LOGIN_FLOW.md            # Flujo de login
 │   ├── ACCOUNT_CREATION.md      # Creación de cuentas
+│   ├── NPC_SYSTEM.md            # Sistema de NPCs
 │   ├── redis_architecture.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios
@@ -197,6 +206,7 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 
 #### Capa de Datos (Repositorios)
 - **`PlayerRepository`**: Gestión de datos de jugadores (posición, stats, hambre/sed, atributos)
+- **`NPCRepository`**: Gestión de NPCs en Redis (crear, obtener, actualizar, eliminar)
 - **`AccountRepository`**: Gestión de cuentas (crear, obtener, verificar password)
 - **`RedisClient`**: Cliente Redis de bajo nivel (conexión, configuración, sesiones)
 - **`RedisConfig`**: Configuración y constantes de Redis
@@ -270,6 +280,10 @@ player:{user_id}:hunger_thirst  # Hambre y sed (max/min water/hunger, flags, cou
 player:{user_id}:stats          # Atributos (STR, AGI, INT, CHA, CON)
 player:{user_id}:character      # Datos del personaje (race, gender, job, head, home)
 player:{user_id}:inventory      # Inventario del jugador
+
+# NPCs (gestionadas por NPCRepository)
+npc:instance:{instance_id}      # Datos de una instancia de NPC (hash)
+npc:map:{map_id}                # Índice de NPCs en un mapa (set)
 ```
 
 ### Sistema de Tick del Juego
@@ -361,8 +375,11 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login
 - **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
 
+### Sistema de Juego
+- **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo ⭐ **NUEVO**
+
 ### Arquitectura y Diseño
-- **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño ⭐ **NUEVO**
+- **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
 - **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
 - **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades

@@ -14,6 +14,9 @@ from src.effect_hunger_thirst import HungerThirstEffect
 from src.game_tick import GameTick
 from src.map_manager import MapManager
 from src.message_sender import MessageSender
+from src.npc_catalog import NPCCatalog
+from src.npc_repository import NPCRepository
+from src.npc_service import NPCService
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
@@ -63,8 +66,9 @@ class ArgentumServer:
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
         self.server_repo: ServerRepository | None = None
-        self.map_manager = MapManager()  # Gestor de jugadores por mapa
+        self.map_manager = MapManager()  # Gestor de jugadores y NPCs por mapa
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
+        self.npc_service: NPCService | None = None  # Servicio de NPCs
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -99,6 +103,7 @@ class ArgentumServer:
                 self.account_repo,
                 self.map_manager,
                 session_data,
+                self.npc_service,
             )
         if task_class is TaskCreateAccount:
             return TaskCreateAccount(
@@ -312,6 +317,13 @@ class ArgentumServer:
 
             self.game_tick.start()
             logger.info("Sistema de tick del juego iniciado")
+
+            # Inicializar sistema de NPCs
+            npc_catalog = NPCCatalog()
+            npc_repository = NPCRepository(self.redis_client)
+            self.npc_service = NPCService(npc_repository, npc_catalog, self.map_manager)
+            await self.npc_service.initialize_world_npcs()
+            logger.info("Sistema de NPCs inicializado")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

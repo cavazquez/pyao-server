@@ -8,6 +8,7 @@ from src.authentication_service import AuthenticationService
 from src.map_manager import MapManager
 from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.npc_service import NPCService
 from src.player_repository import PlayerRepository
 from src.player_service import PlayerService
 from src.server_repository import ServerRepository
@@ -19,6 +20,7 @@ if TYPE_CHECKING:
     from src.account_repository import AccountRepository
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository
 
@@ -36,6 +38,7 @@ class TaskLogin(Task):
         account_repo: AccountRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        npc_service: NPCService | None = None,
         server_repo: ServerRepository | None = None,
     ) -> None:
         """Inicializa la tarea de login.
@@ -47,6 +50,7 @@ class TaskLogin(Task):
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
+            npc_service: Servicio de NPCs para enviar NPCs al jugador.
             server_repo: Repositorio del servidor para obtener el MOTD.
         """
         super().__init__(data, message_sender)
@@ -54,6 +58,7 @@ class TaskLogin(Task):
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.session_data = session_data
+        self.npc_service = npc_service
         self.server_repo = server_repo
 
     def _parse_packet(self) -> tuple[str, str] | None:
@@ -190,7 +195,7 @@ class TaskLogin(Task):
 
         # TODO: Agregar música de fondo cuando el cliente implemente el handler de PLAY_MIDI
 
-        # Enviar CHARACTER_CREATE con delay post-spawn incluido (65ms)
+        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
         await player_service.spawn_character(user_id, username, position)
 
         # Mostrar efecto visual de spawn
@@ -208,6 +213,13 @@ class TaskLogin(Task):
                 username,
                 position,
                 self.message_sender,
+            )
+
+        # Enviar NPCs del mapa al jugador
+        if self.npc_service:
+            await self.npc_service.send_npcs_to_player(
+                self.message_sender,
+                position["map"],
             )
 
         # Enviar inventario (después del delay automático de spawn_character)

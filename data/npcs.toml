@@ -82,15 +82,15 @@ oro_max = 0
 [[npc]]
 id = 7
 nombre = "Lobo"
-descripcion = "Un lobo salvaje que caza en manada."
-body_id = 506
+descripcion = "Un lobo salvaje que merodea por los bosques."
+body_id = 138
 head_id = 0
 es_hostil = true
 es_atacable = true
 nivel = 3
-hp_max = 60
-oro_min = 0
-oro_max = 10
+hp_max = 80
+oro_min = 5
+oro_max = 20
 
 [[npc]]
 id = 8

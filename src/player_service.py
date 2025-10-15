@@ -169,7 +169,7 @@ class PlayerService:
     ) -> None:
         """Envía CHARACTER_CREATE con delay post-spawn incluido.
 
-        El delay de 500ms es crítico para que el cliente VB6 procese CHARACTER_CREATE
+        El delay de 500ms es crítico para que el cliente Godot procese CHARACTER_CREATE
         antes de recibir más paquetes (inventario, MOTD, etc.).
 
         Args:
@@ -196,8 +196,8 @@ class PlayerService:
         )
 
         # Delay crítico para evitar problemas de parsing en el cliente
-        # Optimizado mediante búsqueda binaria: 65ms es el mínimo seguro
-        await asyncio.sleep(0.065)
+        # Cliente Godot requiere 500ms para procesar CHARACTER_CREATE correctamente
+        await asyncio.sleep(0.5)
         logger.info("Personaje spawneado para user_id %d (con delay post-spawn)", user_id)
 
     async def send_inventory(self, user_id: int) -> None:

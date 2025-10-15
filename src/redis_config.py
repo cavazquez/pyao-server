@@ -134,6 +134,25 @@ class RedisKeys:
         """
         return f"account:username:{username}"
 
+    # NPCs
+    @staticmethod
+    def npc_instance(instance_id: str) -> str:
+        """Clave para datos de una instancia de NPC.
+
+        Returns:
+            Clave de Redis para la instancia del NPC.
+        """
+        return f"npc:instance:{instance_id}"
+
+    @staticmethod
+    def npc_map_index(map_id: int) -> str:
+        """Clave para índice de NPCs en un mapa.
+
+        Returns:
+            Clave de Redis para el índice de NPCs del mapa.
+        """
+        return f"npc:map:{map_id}"
+
 
 # Valores por defecto para configuración del servidor
 DEFAULT_SERVER_CONFIG = {

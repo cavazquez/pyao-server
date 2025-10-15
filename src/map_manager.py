@@ -5,19 +5,24 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.message_sender import MessageSender
+    from src.npc import NPC
+
 
 logger = logging.getLogger(__name__)
 
 
 class MapManager:
-    """Gestiona qué jugadores están en qué mapa para broadcast de eventos."""
+    """Gestiona qué jugadores y NPCs están en qué mapa para broadcast de eventos."""
 
     def __init__(self) -> None:
         """Inicializa el gestor de mapas.
 
-        Estructura interna: {map_id: {user_id: (message_sender, username)}}
+        Estructura interna:
+        - _players_by_map: {map_id: {user_id: (message_sender, username)}}
+        - _npcs_by_map: {map_id: {instance_id: NPC}}
         """
         self._players_by_map: dict[int, dict[int, tuple[MessageSender, str]]] = {}
+        self._npcs_by_map: dict[int, dict[str, NPC]] = {}
 
     def add_player(
         self, map_id: int, user_id: int, message_sender: MessageSender, username: str = ""
@@ -178,3 +183,78 @@ class MapManager:
                 if user_id not in user_ids:
                     user_ids.append(user_id)
         return user_ids
+
+    # Métodos para NPCs
+    def add_npc(self, map_id: int, npc: NPC) -> None:
+        """Agrega un NPC a un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            npc: Instancia del NPC.
+        """
+        if map_id not in self._npcs_by_map:
+            self._npcs_by_map[map_id] = {}
+
+        self._npcs_by_map[map_id][npc.instance_id] = npc
+        logger.debug("NPC %s agregado al mapa %d", npc.name, map_id)
+
+    def remove_npc(self, map_id: int, instance_id: str) -> None:
+        """Remueve un NPC de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            instance_id: ID único de la instancia del NPC.
+        """
+        if map_id in self._npcs_by_map and instance_id in self._npcs_by_map[map_id]:
+            npc_name = self._npcs_by_map[map_id][instance_id].name
+            del self._npcs_by_map[map_id][instance_id]
+            logger.debug("NPC %s removido del mapa %d", npc_name, map_id)
+
+            # Limpiar mapa vacío
+            if not self._npcs_by_map[map_id]:
+                del self._npcs_by_map[map_id]
+                logger.debug("Mapa %d eliminado (sin NPCs)", map_id)
+
+    def get_npcs_in_map(self, map_id: int) -> list[NPC]:
+        """Obtiene todos los NPCs de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+
+        Returns:
+            Lista de NPCs en el mapa.
+        """
+        if map_id not in self._npcs_by_map:
+            return []
+
+        return list(self._npcs_by_map[map_id].values())
+
+    def get_npc_by_char_index(self, map_id: int, char_index: int) -> NPC | None:
+        """Obtiene un NPC por su CharIndex en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            char_index: CharIndex del NPC.
+
+        Returns:
+            Instancia del NPC o None si no existe.
+        """
+        if map_id not in self._npcs_by_map:
+            return None
+
+        for npc in self._npcs_by_map[map_id].values():
+            if npc.char_index == char_index:
+                return npc
+
+        return None
+
+    def get_all_npcs(self) -> list[NPC]:
+        """Obtiene todos los NPCs del mundo.
+
+        Returns:
+            Lista de todos los NPCs.
+        """
+        npcs: list[NPC] = []
+        for map_npcs in self._npcs_by_map.values():
+            npcs.extend(map_npcs.values())
+        return npcs
