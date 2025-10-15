@@ -5,6 +5,9 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# Tipo para datos de sesión
+SessionData = dict[str, Any]
+
 
 class SessionManager:
     """Gestor estático para operaciones de sesión de usuario."""

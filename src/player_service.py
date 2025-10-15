@@ -1,4 +1,6 @@
-"""Servicio para gestionar operaciones de jugadores."""
+"""Servicio de lógica de jugador."""
+
+from __future__ import annotations
 
 import asyncio
 import logging
@@ -6,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
     from src.message_sender import MessageSender
@@ -179,7 +182,7 @@ class PlayerService:
         char_head = 1
         char_heading = 3  # Sur
 
-        # Enviar CHARACTER_CREATE
+        # Enviar CHARACTER_CREATE con efecto de spawn
         await self.message_sender.send_character_create(
             char_index=user_id,
             body=char_body,
@@ -187,8 +190,8 @@ class PlayerService:
             heading=char_heading,
             x=position["x"],
             y=position["y"],
-            fx=1,  # Efecto de aparición/spawn
-            loops=-1,  # -1 = reproducir una vez
+            fx=VisualEffectID.SPAWN_YELLOW,  # Efecto amarillo de aparición
+            loops=FXLoops.ONCE,  # Reproducir una vez
             name=username,
         )
 

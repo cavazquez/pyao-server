@@ -169,6 +169,9 @@ class ServerPacketID(IntEnum):
     CHARACTER_CREATE = 29  # Crear personaje en el mapa
     CHARACTER_REMOVE = 30  # Remover personaje del mapa
     CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
+    PLAY_MIDI = 38  # Reproducir música MIDI
+    PLAY_WAVE = 39  # Reproducir sonido WAV
+    CREATE_FX = 44  # Crear efecto visual en una posición
     CHANGE_INVENTORY_SLOT = 47  # Actualizar slot de inventario
 
     # Paquetes del protocolo AO (no implementados aún)
@@ -200,8 +203,6 @@ class ServerPacketID(IntEnum):
     # OBJECT_CREATE = 35
     # OBJECT_DELETE = 36
     # BLOCK_POSITION = 37
-    # PLAY_MIDI = 38
-    # PLAY_WAVE = 39
     # GUILD_LIST = 40
     # AREA_CHANGED = 41
     # PAUSE_TOGGLE = 42

@@ -269,6 +269,44 @@ def build_commerce_end_response() -> bytes:
     return packet.to_bytes()
 
 
+def build_play_wave_response(wave_id: int, x: int = 0, y: int = 0) -> bytes:
+    """Construye el paquete PlayWave del protocolo AO estándar.
+
+    Args:
+        wave_id: ID del sonido a reproducir (byte).
+        x: Posición X del sonido (byte), 0 para sonido global.
+        y: Posición Y del sonido (byte), 0 para sonido global.
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (39) + wave (1 byte) + x (1 byte) + y (1 byte).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.PLAY_WAVE)
+    packet.add_byte(wave_id)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    return packet.to_bytes()
+
+
+def build_create_fx_response(char_index: int, fx: int, loops: int) -> bytes:
+    """Construye el paquete CreateFX del protocolo AO estándar.
+
+    Args:
+        char_index: ID del personaje/objeto que genera el efecto (int16).
+        fx: ID del efecto visual (int16).
+        loops: Número de loops (int16). -1 = una vez, 0 = infinito, >0 = número específico.
+
+    Returns:
+        Paquete de bytes: PacketID (44) + charIndex (int16) + fx (int16) + loops (int16).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CREATE_FX)
+    packet.add_int16(char_index)
+    packet.add_int16(fx)
+    packet.add_int16(loops)
+    return packet.to_bytes()
+
+
 def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
     """Construye el paquete ConsoleMsg del protocolo AO estándar.
 

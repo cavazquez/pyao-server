@@ -12,9 +12,11 @@ from src.msg import (
     build_character_remove_response,
     build_commerce_end_response,
     build_console_msg_response,
+    build_create_fx_response,
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
+    build_play_wave_response,
     build_pos_update_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
@@ -23,6 +25,8 @@ from src.msg import (
     build_update_user_stats_response,
     build_user_char_index_in_server_response,
 )
+from src.sounds import SoundID
+from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection
@@ -30,7 +34,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class MessageSender:
+class MessageSender:  # noqa: PLR0904
     """Encapsula la lógica de envío de mensajes específicos del juego."""
 
     def __init__(self, connection: ClientConnection) -> None:
@@ -433,6 +437,86 @@ class MessageSender:
         response = build_commerce_end_response()
         logger.debug("[%s] Enviando COMMERCE_END", self.connection.address)
         await self.connection.send(response)
+
+    async def send_play_wave(self, wave_id: int, x: int = 0, y: int = 0) -> None:
+        """Envía paquete PlayWave para reproducir un sonido en el cliente.
+
+        Args:
+            wave_id: ID del sonido a reproducir (byte). Usar SoundID para constantes.
+            x: Posición X del sonido (byte), 0 para sonido global.
+            y: Posición Y del sonido (byte), 0 para sonido global.
+        """
+        response = build_play_wave_response(wave_id=wave_id, x=x, y=y)
+        logger.debug(
+            "[%s] Enviando PLAY_WAVE: wave=%d, pos=(%d,%d)", self.connection.address, wave_id, x, y
+        )
+        await self.connection.send(response)
+
+    # Métodos de conveniencia para sonidos comunes
+    async def play_sound_login(self) -> None:
+        """Reproduce el sonido de login."""
+        await self.send_play_wave(wave_id=SoundID.LOGIN)
+
+    async def play_sound_click(self) -> None:
+        """Reproduce el sonido de click."""
+        await self.send_play_wave(wave_id=SoundID.CLICK)
+
+    async def play_sound_level_up(self) -> None:
+        """Reproduce el sonido de subir de nivel."""
+        await self.send_play_wave(wave_id=SoundID.LEVEL_UP)
+
+    async def play_sound_error(self) -> None:
+        """Reproduce el sonido de error."""
+        await self.send_play_wave(wave_id=SoundID.ERROR)
+
+    async def play_sound_gold_pickup(self) -> None:
+        """Reproduce el sonido de recoger oro."""
+        await self.send_play_wave(wave_id=SoundID.GOLD_PICKUP)
+
+    async def play_sound_item_pickup(self) -> None:
+        """Reproduce el sonido de recoger item."""
+        await self.send_play_wave(wave_id=SoundID.ITEM_PICKUP)
+
+    async def send_create_fx(self, char_index: int, fx: int, loops: int) -> None:
+        """Envía paquete CreateFX para mostrar un efecto visual.
+
+        Args:
+            char_index: ID del personaje/objeto que genera el efecto (int16).
+            fx: ID del efecto visual (int16). Usar VisualEffectID para constantes.
+            loops: Número de loops (int16). Usar FXLoops para constantes.
+        """
+        response = build_create_fx_response(char_index=char_index, fx=fx, loops=loops)
+        logger.debug(
+            "[%s] Enviando CREATE_FX: charIndex=%d, fx=%d, loops=%d",
+            self.connection.address,
+            char_index,
+            fx,
+            loops,
+        )
+        await self.connection.send(response)
+
+    # Métodos de conveniencia para efectos comunes
+    async def play_effect_spawn(self, char_index: int) -> None:
+        """Muestra efecto de spawn/aparición en un personaje."""
+        await self.send_create_fx(
+            char_index=char_index, fx=VisualEffectID.SPAWN_BLUE, loops=FXLoops.ONCE
+        )
+
+    async def play_effect_heal(self, char_index: int) -> None:
+        """Muestra efecto de curación en un personaje."""
+        await self.send_create_fx(char_index=char_index, fx=VisualEffectID.HEAL, loops=FXLoops.ONCE)
+
+    async def play_effect_meditation(self, char_index: int) -> None:
+        """Muestra efecto de meditación en un personaje."""
+        await self.send_create_fx(
+            char_index=char_index, fx=VisualEffectID.MEDITATION, loops=FXLoops.INFINITE
+        )
+
+    async def play_effect_explosion(self, char_index: int) -> None:
+        """Muestra efecto de explosión."""
+        await self.send_create_fx(
+            char_index=char_index, fx=VisualEffectID.EXPLOSION, loops=FXLoops.ONCE
+        )
 
     async def send_change_inventory_slot(
         self,

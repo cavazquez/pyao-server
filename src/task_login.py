@@ -1,11 +1,16 @@
-"""Tarea para login de usuarios."""
+"""Tarea de login de usuario."""
 
 import logging
 from typing import TYPE_CHECKING
 
+from src.account_repository import AccountRepository
 from src.authentication_service import AuthenticationService
+from src.map_manager import MapManager
+from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.player_repository import PlayerRepository
 from src.player_service import PlayerService
+from src.server_repository import ServerRepository
 from src.session_manager import SessionManager
 from src.task import Task
 from src.task_motd import TaskMotd
@@ -180,8 +185,14 @@ class TaskLogin(Task):
         # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
         await player_service.send_hunger_thirst(user_id)
 
-        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
+        # Reproducir sonido de login
+        await self.message_sender.play_sound_login()
+
+        # Enviar CHARACTER_CREATE con delay post-spawn incluido (65ms)
         await player_service.spawn_character(user_id, username, position)
+
+        # Mostrar efecto visual de spawn
+        await self.message_sender.play_effect_spawn(char_index=user_id)
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
         if self.map_manager and self.account_repo:
