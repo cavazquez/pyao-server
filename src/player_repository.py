@@ -272,3 +272,27 @@ class PlayerRepository:
         }
         await self.redis.redis.hset(key, mapping=stats_data)  # type: ignore[misc]
         logger.debug("Atributos guardados para user_id %d", user_id)
+
+    async def set_meditating(self, user_id: int, is_meditating: bool) -> None:
+        """Establece el estado de meditación del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            is_meditating: True si está meditando, False si no.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "meditating", "1" if is_meditating else "0")  # type: ignore[misc]
+        logger.debug("Estado de meditación actualizado para user_id %d: %s", user_id, is_meditating)
+
+    async def is_meditating(self, user_id: int) -> bool:
+        """Verifica si el jugador está meditando.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            True si está meditando, False si no.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "meditating")  # type: ignore[misc]
+        return result == b"1" if result else False

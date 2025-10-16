@@ -108,7 +108,7 @@ class PlayerService:
                 "max_hp": 100,
                 "min_hp": 100,
                 "max_mana": 100,
-                "min_mana": 100,
+                "min_mana": 50,  # Empezar con 50% de mana para testing
                 "max_sta": 100,
                 "min_sta": 100,
                 "gold": 0,

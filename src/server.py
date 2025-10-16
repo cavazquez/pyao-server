@@ -13,6 +13,7 @@ from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.game_tick import GameTick
 from src.map_manager import MapManager
+from src.meditation_effect import MeditationEffect
 from src.message_sender import MessageSender
 from src.npc_catalog import NPCCatalog
 from src.npc_repository import NPCRepository
@@ -332,6 +333,12 @@ class ArgentumServer:
             if gold_decay_enabled:
                 self.game_tick.add_effect(GoldDecayEffect(self.server_repo))
                 logger.info("Efecto de reducción de oro habilitado")
+
+            # Agregar efecto de meditación (siempre habilitado)
+            self.game_tick.add_effect(
+                MeditationEffect(self.player_repo, self.map_manager, interval_seconds=3.0)
+            )
+            logger.info("Efecto de meditación habilitado")
 
             self.game_tick.start()
             logger.info("Sistema de tick del juego iniciado")

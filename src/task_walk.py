@@ -109,6 +109,14 @@ class TaskWalk(Task):
 
         user_id = int(user_id_value)
 
+        # Cancelar meditación si está meditando
+        is_meditating = await self.player_repo.is_meditating(user_id)
+        if is_meditating:
+            await self.player_repo.set_meditating(user_id, is_meditating=False)
+            await self.message_sender.send_meditate_toggle()
+            await self.message_sender.send_console_msg("Dejas de meditar al moverte.")
+            logger.info("user_id %d dejó de meditar al moverse", user_id)
+
         # Obtener posición actual
         position = await self.player_repo.get_position(user_id)
         if position is None:
