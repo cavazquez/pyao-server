@@ -138,9 +138,7 @@ def build_error_msg_response(error_message: str) -> bytes:
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.ERROR_MSG)
-    encoded_message = error_message.encode("utf-8")
-    packet.add_int16(len(encoded_message))
-    packet.add_bytes(encoded_message)
+    packet.add_unicode_string(error_message)
     return packet.to_bytes()
 
 
@@ -410,6 +408,8 @@ def build_character_create_response(
     fx: int = 0,
     loops: int = 0,
     name: str = "",
+    nick_color: int = 0,
+    privileges: int = 0,
 ) -> bytes:
     """Construye el paquete CharacterCreate del protocolo AO estándar.
 
@@ -426,6 +426,8 @@ def build_character_create_response(
         fx: ID del efecto visual (int16), por defecto 0.
         loops: Loops del efecto (int16), por defecto 0.
         name: Nombre del personaje (string), por defecto vacío.
+        nick_color: Color del nick (byte), por defecto 0.
+        privileges: Privilegios del personaje (byte), por defecto 0.
 
     Returns:
         Paquete de bytes con el formato CHARACTER_CREATE.
@@ -443,9 +445,10 @@ def build_character_create_response(
     packet.add_int16(helmet)
     packet.add_int16(fx)
     packet.add_int16(loops)
-    # Agregar longitud del nombre (int16) y luego el nombre
-    packet.add_int16(len(name))
-    packet.add_string(name)
+    # Agregar nombre con longitud en bytes UTF-8
+    packet.add_unicode_string(name)
+    packet.add_byte(nick_color)
+    packet.add_byte(privileges)
     return packet.to_bytes()
 
 
@@ -491,6 +494,7 @@ def build_change_inventory_slot_response(
     packet.add_byte(1 if equipped else 0)
     packet.add_int16(grh_id)
     packet.add_byte(item_type)
+    # Cliente espera: maxHit, minHit, maxDef, minDef
     packet.add_int16(max_hit)
     packet.add_int16(min_hit)
     packet.add_int16(max_def)

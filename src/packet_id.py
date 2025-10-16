@@ -189,7 +189,7 @@ class ServerPacketID(IntEnum):
     # SHOW_BLACK_SCREEN = 11
     # SHOW_SIGN = 12
     # CHANGE_INVENTORY_SLOT = 13
-    CHANGE_SPELL_SLOT = 14  # Actualizar slot de hechizo
+    # CHANGE_SPELL_SLOT = 14  # ID incorrecto, el correcto es 49
     # UPDATE_STA = 15  # Ya definido arriba
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
@@ -211,7 +211,7 @@ class ServerPacketID(IntEnum):
     # WORK_REQUEST_TARGET = 46
     # CHANGE_INVENTORY_SLOT = 47
     # CHANGE_BANK_SLOT = 48
-    # CHANGE_SPELL_SLOT = 49
+    CHANGE_SPELL_SLOT = 49  # Actualizar slot de hechizo
     # BLACKSMITH_WEAPONS = 51
     # BLACKSMITH_ARMORS = 52
     # CARPENTER_OBJECTS = 53

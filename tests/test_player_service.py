@@ -1,6 +1,5 @@
 """Tests para PlayerService."""
 
-import time
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -182,8 +181,8 @@ async def test_send_hunger_thirst_creates_default():
 
 
 @pytest.mark.asyncio
-async def test_spawn_character_includes_delay():
-    """Verifica que spawn_character incluya el delay de 65ms."""
+async def test_spawn_character_sends_packet():
+    """Verifica que spawn_character envíe el paquete CHARACTER_CREATE."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -198,13 +197,7 @@ async def test_spawn_character_includes_delay():
 
     position = {"x": 50, "y": 50, "map": 1}
 
-    # Medir tiempo
-    start = time.time()
     await player_service.spawn_character(123, "testuser", position)
-    elapsed = time.time() - start
-
-    # Verificar que tomó al menos 65ms (con margen de 10ms)
-    assert elapsed >= 0.055  # Margen de 10ms
 
     # Verificar que se envió CHARACTER_CREATE
     assert writer.write.call_count == 1

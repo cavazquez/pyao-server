@@ -26,6 +26,7 @@ from src.msg import (
     build_update_user_stats_response,
     build_user_char_index_in_server_response,
 )
+from src.packet_builder import PacketBuilder
 from src.packet_id import ServerPacketID
 from src.sounds import MusicID, SoundID
 from src.visual_effects import FXLoops, VisualEffectID
@@ -305,6 +306,8 @@ class MessageSender:  # noqa: PLR0904
         fx: int = 0,
         loops: int = 0,
         name: str = "",
+        nick_color: int = 0,
+        privileges: int = 0,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -321,6 +324,8 @@ class MessageSender:  # noqa: PLR0904
             fx: ID del efecto visual (int16), por defecto 0.
             loops: Loops del efecto (int16), por defecto 0.
             name: Nombre del personaje (string), por defecto vacío.
+            nick_color: Color del nick (byte), por defecto 0.
+            privileges: Privilegios del personaje (byte), por defecto 0.
         """
         response = build_character_create_response(
             char_index=char_index,
@@ -335,6 +340,8 @@ class MessageSender:  # noqa: PLR0904
             fx=fx,
             loops=loops,
             name=name,
+            nick_color=nick_color,
+            privileges=privileges,
         )
         logger.info(
             "[%s] Enviando CHARACTER_CREATE: charIndex=%d body=%d head=%d heading=%d "
@@ -628,16 +635,12 @@ class MessageSender:  # noqa: PLR0904
             spell_id: ID del hechizo.
             spell_name: Nombre del hechizo.
         """
-        response = bytearray()
-        response.append(ServerPacketID.CHANGE_SPELL_SLOT)
-        response.append(slot)
-        response.extend(spell_id.to_bytes(2, byteorder="little", signed=True))
-
-        # Enviar nombre del hechizo como ASCII String (formato VB6)
-        # Formato: Length (2 bytes) + String bytes
-        spell_name_bytes = spell_name.encode("ascii", errors="replace")
-        response.extend(len(spell_name_bytes).to_bytes(2, byteorder="little"))
-        response.extend(spell_name_bytes)
+        packet = PacketBuilder()
+        packet.add_byte(ServerPacketID.CHANGE_SPELL_SLOT)
+        packet.add_byte(slot)
+        packet.add_int16(spell_id)
+        packet.add_unicode_string(spell_name)
+        response = packet.to_bytes()
 
         logger.debug(
             "[%s] Enviando CHANGE_SPELL_SLOT: slot=%d, spell_id=%d, name=%s",
@@ -646,4 +649,4 @@ class MessageSender:  # noqa: PLR0904
             spell_id,
             spell_name,
         )
-        await self.connection.send(bytes(response))
+        await self.connection.send(response)

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from typing import TYPE_CHECKING
 
@@ -167,10 +166,7 @@ class PlayerService:
         username: str,
         position: dict[str, int],
     ) -> None:
-        """Envía CHARACTER_CREATE con delay post-spawn incluido.
-
-        El delay de 500ms es crítico para que el cliente Godot procese CHARACTER_CREATE
-        antes de recibir más paquetes (inventario, MOTD, etc.).
+        """Envía CHARACTER_CREATE del personaje.
 
         Args:
             user_id: ID del usuario.
@@ -195,10 +191,7 @@ class PlayerService:
             name=username,
         )
 
-        # Delay crítico para evitar problemas de parsing en el cliente
-        # Cliente Godot requiere 500ms para procesar CHARACTER_CREATE correctamente
-        await asyncio.sleep(0.5)
-        logger.info("Personaje spawneado para user_id %d (con delay post-spawn)", user_id)
+        logger.info("Personaje spawneado para user_id %d", user_id)
 
     async def send_inventory(self, user_id: int) -> None:
         """Obtiene inventario y envía solo slots con items al cliente.
