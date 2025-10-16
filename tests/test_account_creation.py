@@ -85,8 +85,19 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # Home
     data.append(1)  # home
 
-    # Crear y ejecutar tarea
-    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
+    # Crear y ejecutar tarea (sin spellbook_repo ni spell_catalog para simplificar el test)
+    task = TaskCreateAccount(
+        bytes(data),
+        message_sender,
+        player_repo,
+        account_repo,
+        map_manager=None,
+        session_data=None,
+        npc_service=None,
+        server_repo=None,
+        spellbook_repo=None,
+        spell_catalog=None,
+    )
     await task.execute()
 
     # Verificar que se llamó a create_account
@@ -104,11 +115,14 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # 3. ChangeMap
     # 4. UpdateUserStats
     # 5. UpdateHungerAndThirst
-    # 6. CharacterCreate
+    # 6. PlayWave (sonido de login)
+    # 7. CharacterCreate
+    # 8. CreateFX (efecto visual de spawn)
     # Nota: MOTD se envía con delay asíncrono (no se verifica en este test)
     # Nota: Attributes no se envía automáticamente (el cliente lo solicita con /EST)
     # Nota: Inventario no se envía al login (se carga on-demand con clicks)
-    assert writer.write.call_count >= 6  # Al menos 6 paquetes base (MOTD es asíncrono)
+    # Nota: ChangeSpellSlot no se envía porque spellbook_repo es None en este test
+    assert writer.write.call_count >= 5  # Al menos 5 paquetes base (MOTD es asíncrono)
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -130,21 +144,17 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     fifth_call = writer.write.call_args_list[4][0][0]
     assert fifth_call[0] == ServerPacketID.UPDATE_HUNGER_AND_THIRST
 
-    # Sexto paquete: ChangeSpellSlot (hechizo inicial)
+    # Sexto paquete: PlayWave (sonido de login)
     sixth_call = writer.write.call_args_list[5][0][0]
-    assert sixth_call[0] == ServerPacketID.CHANGE_SPELL_SLOT
+    assert sixth_call[0] == ServerPacketID.PLAY_WAVE
 
-    # Séptimo paquete: PlayWave (sonido de login)
+    # Séptimo paquete: CharacterCreate
     seventh_call = writer.write.call_args_list[6][0][0]
-    assert seventh_call[0] == ServerPacketID.PLAY_WAVE
+    assert seventh_call[0] == ServerPacketID.CHARACTER_CREATE
 
-    # Octavo paquete: CharacterCreate
+    # Octavo paquete: CreateFX (efecto visual de spawn)
     eighth_call = writer.write.call_args_list[7][0][0]
-    assert eighth_call[0] == ServerPacketID.CHARACTER_CREATE
-
-    # Noveno paquete: CreateFX (efecto visual de spawn)
-    ninth_call = writer.write.call_args_list[8][0][0]
-    assert ninth_call[0] == ServerPacketID.CREATE_FX
+    assert eighth_call[0] == ServerPacketID.CREATE_FX
 
     # MOTD se envía con delay asíncrono, no se verifica aquí
     # TODO: Agregar verificación de PLAY_MIDI cuando el cliente lo soporte

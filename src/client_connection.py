@@ -32,7 +32,7 @@ class ClientConnection:
         self.writer.write(data)
         await self.writer.drain()
         hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
-        logger.info(
+        logger.debug(
             "Enviados %d bytes a %s: %s%s",
             len(data),
             self.address,
@@ -52,7 +52,7 @@ class ClientConnection:
         data = await self.reader.read(max_bytes)
         if data:
             hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
-            logger.info(
+            logger.debug(
                 "Recibidos %d bytes de %s: %s%s",
                 len(data),
                 self.address,

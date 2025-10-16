@@ -202,7 +202,10 @@ class PlayerService:
         inventory_repo = InventoryRepository(self.player_repo.redis)
         inventory = await inventory_repo.get_inventory(user_id)
 
-        logger.info("Enviando inventario para user_id %d", user_id)
+        # Contar items no vacíos
+        non_empty_slots = sum(1 for v in inventory.values() if v and isinstance(v, str))
+        logger.info("Enviando inventario para user_id %d (%d items)", user_id, non_empty_slots)
+
         for i in range(1, InventoryRepository.MAX_SLOTS + 1):
             slot_key = f"slot_{i}"
             slot_value = inventory.get(slot_key, "")
@@ -214,12 +217,13 @@ class PlayerService:
                     item = get_item(int(item_id))
 
                     if item:
-                        logger.debug(
-                            "Enviando slot %d: %s (id=%d, qty=%s)",
+                        logger.info(
+                            "Item enviado: Slot %d -> '%s' (ID=%d, Cantidad=%s, Tipo=%s)",
                             i,
                             item.name,
                             item.item_id,
                             quantity,
+                            item.item_type.name,
                         )
                         await self.message_sender.send_change_inventory_slot(
                             slot=i,

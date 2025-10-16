@@ -12,7 +12,11 @@ if TYPE_CHECKING:
     from src.account_repository import AccountRepository
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
+    from src.server_repository import ServerRepository
+    from src.spell_catalog import SpellCatalog
+    from src.spellbook_repository import SpellbookRepository
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +36,10 @@ class TaskCreateAccount(Task):
         account_repo: AccountRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        npc_service: NPCService | None = None,
+        server_repo: ServerRepository | None = None,
+        spellbook_repo: SpellbookRepository | None = None,
+        spell_catalog: SpellCatalog | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
 
@@ -42,12 +50,20 @@ class TaskCreateAccount(Task):
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas (pasado a TaskLogin en login automático).
             session_data: Datos de sesión compartidos (opcional).
+            npc_service: Servicio de NPCs.
+            server_repo: Repositorio del servidor.
+            spellbook_repo: Repositorio de libro de hechizos.
+            spell_catalog: Catálogo de hechizos.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.session_data = session_data
+        self.npc_service = npc_service
+        self.server_repo = server_repo
+        self.spellbook_repo = spellbook_repo
+        self.spell_catalog = spell_catalog
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: C901, PLR0915
         """Parsea el paquete de creación de cuenta.
@@ -307,6 +323,10 @@ class TaskCreateAccount(Task):
                 account_repo=self.account_repo,
                 map_manager=self.map_manager,
                 session_data=self.session_data,
+                npc_service=self.npc_service,
+                server_repo=self.server_repo,
+                spellbook_repo=self.spellbook_repo,
+                spell_catalog=self.spell_catalog,
             )
             await login_task.execute_with_credentials(username, password)
 

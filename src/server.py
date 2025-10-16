@@ -25,6 +25,7 @@ from src.redis_config import RedisKeys
 from src.server_repository import ServerRepository
 from src.spell_catalog import SpellCatalog
 from src.spell_service import SpellService
+from src.spellbook_repository import SpellbookRepository
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
 from src.task_cast_spell import TaskCastSpell
@@ -77,6 +78,7 @@ class ArgentumServer:
         self.npc_service: NPCService | None = None  # Servicio de NPCs
         self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
         self.spell_service: SpellService | None = None  # Servicio de hechizos
+        self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -112,6 +114,9 @@ class ArgentumServer:
                 self.map_manager,
                 session_data,
                 self.npc_service,
+                self.server_repo,
+                self.spellbook_repo,
+                self.spell_catalog,
             )
         if task_class is TaskCreateAccount:
             return TaskCreateAccount(
@@ -121,6 +126,10 @@ class ArgentumServer:
                 self.account_repo,
                 self.map_manager,
                 session_data,
+                self.npc_service,
+                self.server_repo,
+                self.spellbook_repo,
+                self.spell_catalog,
             )
         if task_class is TaskDice:
             return TaskDice(data, message_sender, session_data, self.server_repo)
@@ -168,7 +177,12 @@ class ArgentumServer:
             )
         if task_class is TaskCastSpell:
             return TaskCastSpell(
-                data, message_sender, self.player_repo, self.spell_service, session_data
+                data,
+                message_sender,
+                self.player_repo,
+                self.spell_service,
+                session_data,
+                self.spellbook_repo,
             )
         if task_class is TaskMeditate:
             return TaskMeditate(data, message_sender, self.player_repo, session_data)
@@ -354,6 +368,7 @@ class ArgentumServer:
             self.spell_service = SpellService(
                 self.spell_catalog, self.player_repo, npc_repository, self.map_manager
             )
+            self.spellbook_repo = SpellbookRepository(self.redis_client)
             logger.info("Sistema de magia inicializado")
 
         except redis.ConnectionError as e:

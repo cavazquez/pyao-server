@@ -64,11 +64,16 @@ class TestTaskCastSpell:
         spell_service = MagicMock(spec=SpellService)
         spell_service.cast_spell = AsyncMock(return_value=True)
 
+        spellbook_repo = MagicMock()
+        spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)  # Dardo Mágico
+
         # Packet: CAST_SPELL + Slot 1
         data = bytes([25, 1])
         session_data = {"user_id": 1}
 
-        task = TaskCastSpell(data, message_sender, player_repo, spell_service, session_data)
+        task = TaskCastSpell(
+            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+        )
 
         # Execute
         await task.execute()

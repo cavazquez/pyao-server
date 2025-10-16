@@ -113,6 +113,15 @@ class RedisKeys:
         """
         return f"player:{user_id}:hunger_thirst"
 
+    @staticmethod
+    def player_spellbook(user_id: int) -> str:
+        """Clave para libro de hechizos del jugador.
+
+        Returns:
+            Clave de Redis para el libro de hechizos.
+        """
+        return f"player:{user_id}:spellbook"
+
     # Cuentas de usuario
     ACCOUNTS_COUNTER = "accounts:counter"
 

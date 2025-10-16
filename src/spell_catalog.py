@@ -46,9 +46,20 @@ class SpellCatalog:
                     continue
 
                 self.spells[spell_id] = spell_data
-                logger.debug("Cargado hechizo: %s (ID: %d)", spell_data.get("name"), spell_id)
+                spell_name = spell_data.get("name", "Unknown")
+                logger.info(
+                    "Hechizo cargado: ID=%d, Nombre='%s', Mana=%d, Daño=%d-%d",
+                    spell_id,
+                    spell_name,
+                    spell_data.get("mana_cost", 0),
+                    spell_data.get("min_damage", 0),
+                    spell_data.get("max_damage", 0),
+                )
 
-            logger.info("Catálogo de hechizos cargado: %d hechizos", len(self.spells))
+            logger.info(
+                "✓ Catálogo de hechizos cargado exitosamente: %d hechizos disponibles",
+                len(self.spells),
+            )
 
         except Exception:
             logger.exception("Error al cargar catálogo de hechizos")

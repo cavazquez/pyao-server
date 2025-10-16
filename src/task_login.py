@@ -13,6 +13,7 @@ from src.player_repository import PlayerRepository
 from src.player_service import PlayerService
 from src.server_repository import ServerRepository
 from src.session_manager import SessionManager
+from src.spellbook_repository import SpellbookRepository
 from src.task import Task
 from src.task_motd import TaskMotd
 
@@ -23,6 +24,8 @@ if TYPE_CHECKING:
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository
+    from src.spell_catalog import SpellCatalog
+    from src.spellbook_repository import SpellbookRepository
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +43,8 @@ class TaskLogin(Task):
         session_data: dict[str, dict[str, int]] | None = None,
         npc_service: NPCService | None = None,
         server_repo: ServerRepository | None = None,
+        spellbook_repo: SpellbookRepository | None = None,
+        spell_catalog: SpellCatalog | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -52,6 +57,8 @@ class TaskLogin(Task):
             session_data: Datos de sesión compartidos (opcional).
             npc_service: Servicio de NPCs para enviar NPCs al jugador.
             server_repo: Repositorio del servidor para obtener el MOTD.
+            spellbook_repo: Repositorio de libro de hechizos.
+            spell_catalog: Catálogo de hechizos.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -60,6 +67,8 @@ class TaskLogin(Task):
         self.session_data = session_data
         self.npc_service = npc_service
         self.server_repo = server_repo
+        self.spellbook_repo = spellbook_repo
+        self.spell_catalog = spell_catalog
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -190,9 +199,36 @@ class TaskLogin(Task):
         # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
         await player_service.send_hunger_thirst(user_id)
 
-        # Enviar hechizos iniciales (Dardo Mágico en slot 1)
-        # TODO: Implementar sistema de libro de hechizos en Redis
-        await self.message_sender.send_change_spell_slot(1, 1, "Dardo Magico")
+        # Inicializar y enviar hechizos desde Redis
+        if self.spellbook_repo and self.spell_catalog:
+            # Inicializar libro de hechizos con hechizos por defecto si es necesario
+            await self.spellbook_repo.initialize_default_spells(user_id)
+
+            # Cargar y enviar todos los hechizos del jugador
+            logger.info("Cargando libro de hechizos para user_id %d desde Redis", user_id)
+            spells = await self.spellbook_repo.get_all_spells(user_id)
+
+            if spells:
+                logger.info(
+                    "user_id %d tiene %d hechizo(s) en su libro: %s",
+                    user_id,
+                    len(spells),
+                    dict(sorted(spells.items())),
+                )
+
+                for slot, spell_id in sorted(spells.items()):
+                    spell_data = self.spell_catalog.get_spell_data(spell_id)
+                    if spell_data:
+                        spell_name = spell_data.get("name", f"Spell {spell_id}")
+                        await self.message_sender.send_change_spell_slot(slot, spell_id, spell_name)
+                        logger.info(
+                            "Hechizo enviado al cliente: slot=%d, spell_id=%d (%s)",
+                            slot,
+                            spell_id,
+                            spell_name,
+                        )
+            else:
+                logger.info("user_id %d no tiene hechizos en su libro", user_id)
 
         # Reproducir sonido de login
         await self.message_sender.play_sound_login()
