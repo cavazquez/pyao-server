@@ -1,0 +1,21 @@
+# Catálogo de Hechizos de Argentum Online
+# Basado en Hechizos.dat del servidor original
+
+[[spell]]
+id = 1
+name = "Dardo Mágico"
+description = "Lanza un proyectil mágico que causa daño al objetivo"
+magic_words = "SAGITTA"
+type = 1  # Tipo 1: Actúa sobre HP, MANA, STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 5
+stamina_cost = 0
+min_skill = 1
+min_damage = 5
+max_damage = 15
+wav = 10  # ID del sonido
+fx_grh = 5  # ID del gráfico de efecto
+loops = 1
+caster_msg = "Has lanzado Dardo Mágico sobre "
+self_msg = "Te has lanzado Dardo Mágico."
+target_msg = " te ha lanzado Dardo Mágico."

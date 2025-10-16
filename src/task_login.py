@@ -190,6 +190,10 @@ class TaskLogin(Task):
         # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
         await player_service.send_hunger_thirst(user_id)
 
+        # Enviar hechizos iniciales (Dardo Mágico en slot 1)
+        # TODO: Implementar sistema de libro de hechizos en Redis
+        await self.message_sender.send_change_spell_slot(1, 1, "Dardo Magico")
+
         # Reproducir sonido de login
         await self.message_sender.play_sound_login()
 

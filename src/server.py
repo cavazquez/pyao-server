@@ -22,8 +22,11 @@ from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
 from src.redis_config import RedisKeys
 from src.server_repository import ServerRepository
+from src.spell_catalog import SpellCatalog
+from src.spell_service import SpellService
 from src.task_account import TaskCreateAccount
 from src.task_attributes import TaskRequestAttributes
+from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
@@ -31,6 +34,7 @@ from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
 from src.task_left_click import TaskLeftClick
 from src.task_login import TaskLogin
+from src.task_meditate import TaskMeditate
 from src.task_motd import TaskMotd
 from src.task_null import TaskNull
 from src.task_online import TaskOnline
@@ -70,6 +74,8 @@ class ArgentumServer:
         self.map_manager = MapManager()  # Gestor de jugadores y NPCs por mapa
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
         self.npc_service: NPCService | None = None  # Servicio de NPCs
+        self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
+        self.spell_service: SpellService | None = None  # Servicio de hechizos
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -159,6 +165,12 @@ class ArgentumServer:
             return TaskLeftClick(
                 data, message_sender, self.player_repo, self.map_manager, session_data
             )
+        if task_class is TaskCastSpell:
+            return TaskCastSpell(
+                data, message_sender, self.player_repo, self.spell_service, session_data
+            )
+        if task_class is TaskMeditate:
+            return TaskMeditate(data, message_sender, self.player_repo, session_data)
         if task_class is TaskInventoryClick:
             return TaskInventoryClick(data, message_sender, self.player_repo, session_data)
 
@@ -261,7 +273,7 @@ class ArgentumServer:
         dice_max = await self.server_repo.get_dice_max_value()
         logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
 
-    async def start(self) -> None:
+    async def start(self) -> None:  # noqa: PLR0915
         """Inicia el servidor TCP."""
         # Conectar a Redis (obligatorio)
         try:
@@ -330,6 +342,13 @@ class ArgentumServer:
             self.npc_service = NPCService(npc_repository, npc_catalog, self.map_manager)
             await self.npc_service.initialize_world_npcs()
             logger.info("Sistema de NPCs inicializado")
+
+            # Inicializar sistema de magia
+            self.spell_catalog = SpellCatalog()
+            self.spell_service = SpellService(
+                self.spell_catalog, self.player_repo, npc_repository, self.map_manager
+            )
+            logger.info("Sistema de magia inicializado")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

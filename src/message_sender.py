@@ -26,6 +26,7 @@ from src.msg import (
     build_update_user_stats_response,
     build_user_char_index_in_server_response,
 )
+from src.packet_id import ServerPacketID
 from src.sounds import MusicID, SoundID
 from src.visual_effects import FXLoops, VisualEffectID
 
@@ -599,3 +600,50 @@ class MessageSender:  # noqa: PLR0904
             amount,
         )
         await self.connection.send(response)
+
+    async def send_meditate_toggle(self) -> None:
+        """Envía paquete MEDITATE_TOGGLE para confirmar meditación."""
+        response = bytes([ServerPacketID.MEDITATE_TOGGLE])
+        logger.debug("[%s] Enviando MEDITATE_TOGGLE", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_create_fx_at_position(self, _x: int, _y: int, fx: int, loops: int) -> None:
+        """Envía efecto visual en una posición específica del mapa.
+
+        Args:
+            _x: Coordenada X (no usado por ahora).
+            _y: Coordenada Y (no usado por ahora).
+            fx: ID del efecto visual.
+            loops: Número de loops.
+        """
+        # Por ahora usamos char_index=0 para efectos en el terreno
+        # TODO: Implementar CREATE_FX con coordenadas si el protocolo lo soporta
+        await self.send_create_fx(char_index=0, fx=fx, loops=loops)
+
+    async def send_change_spell_slot(self, slot: int, spell_id: int, spell_name: str) -> None:
+        """Envía actualización de un slot de hechizo.
+
+        Args:
+            slot: Número de slot (1-based).
+            spell_id: ID del hechizo.
+            spell_name: Nombre del hechizo.
+        """
+        response = bytearray()
+        response.append(ServerPacketID.CHANGE_SPELL_SLOT)
+        response.append(slot)
+        response.extend(spell_id.to_bytes(2, byteorder="little", signed=True))
+
+        # Enviar nombre del hechizo como ASCII String (formato VB6)
+        # Formato: Length (2 bytes) + String bytes
+        spell_name_bytes = spell_name.encode("ascii", errors="replace")
+        response.extend(len(spell_name_bytes).to_bytes(2, byteorder="little"))
+        response.extend(spell_name_bytes)
+
+        logger.debug(
+            "[%s] Enviando CHANGE_SPELL_SLOT: slot=%d, spell_id=%d, name=%s",
+            self.connection.address,
+            slot,
+            spell_id,
+            spell_name,
+        )
+        await self.connection.send(bytes(response))

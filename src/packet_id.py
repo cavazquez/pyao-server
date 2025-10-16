@@ -42,7 +42,7 @@ class ClientPacketID(IntEnum):
     # USER_COMMERCE_OK = 22
     # USER_COMMERCE_REJECT = 23
     # DROP = 24
-    # CAST_SPELL = 25
+    CAST_SPELL = 25  # Lanzar hechizo
     LEFT_CLICK = 26  # Click en personaje/NPC
     DOUBLE_CLICK = 27  # Doble click en inventario (usar item)
     # WORK = 28
@@ -94,7 +94,7 @@ class ClientPacketID(IntEnum):
     # RELEASE_PET = 76
     # TRAIN_LIST = 77
     # REST = 78
-    # MEDITATE = 79
+    MEDITATE = 79  # Meditar para recuperar mana
     # RESUSCITATE = 80
     # HEAL = 81
     AYUDA = 82
@@ -189,8 +189,8 @@ class ServerPacketID(IntEnum):
     # SHOW_BLACK_SCREEN = 11
     # SHOW_SIGN = 12
     # CHANGE_INVENTORY_SLOT = 13
-    # CHANGE_SPELL_SLOT = 14
-    # UPDATE_GOLD = 18
+    CHANGE_SPELL_SLOT = 14  # Actualizar slot de hechizo
+    # UPDATE_STA = 15  # Ya definido arriba
     # UPDATE_BANK_GOLD = 19
     # UPDATE_EXP = 20
     # GUILD_CHAT = 25
@@ -227,7 +227,7 @@ class ServerPacketID(IntEnum):
     # ADD_FORUM_MSG = 64
     # SHOW_FORUM_FORM = 65
     # SET_INVISIBLE = 66
-    # MEDITATE_TOGGLE = 68
+    MEDITATE_TOGGLE = 68  # Toggle meditación
     # BLIND_NO_MORE = 69
     # DUMB_NO_MORE = 70
     # SEND_SKILLS = 71
