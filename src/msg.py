@@ -334,10 +334,8 @@ def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.CONSOLE_MSG)
-    # Agregar longitud del mensaje como int16
-    packet.add_int16(len(message))
-    # Agregar mensaje
-    packet.add_string(message)
+    # Agregar mensaje con longitud en bytes UTF-8
+    packet.add_unicode_string(message)
     # Agregar color
     packet.add_byte(font_color)
     return packet.to_bytes()

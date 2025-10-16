@@ -305,9 +305,10 @@ class ArgentumServer:
             if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
                 # Es el mensaje por defecto, establecer uno inicial
                 initial_motd = (
-                    "Bienvenido a Argentum Online!\n"
-                    "Servidor en desarrollo.\n"
-                    "Usa /AYUDA para ver los comandos disponibles."
+                    "» Bienvenido a Argentum Online! «\n"
+                    "• Servidor en desarrollo.\n"
+                    "• Usa /AYUDA para ver los comandos disponibles.\n"
+                    "¡Buena suerte en tu aventura!"
                 )
                 await self.server_repo.set_motd(initial_motd)
                 logger.info("MOTD inicial establecido")

@@ -40,7 +40,7 @@ class TaskMotd(Task):
             motd = await self.server_repo.get_motd()
         else:
             # Mensaje por defecto si no hay repositorio
-            motd = "Bienvenido a Argentum Online!\nServidor en desarrollo."
+            motd = "» Bienvenido a Argentum Online! «\n• Servidor en desarrollo."
 
         # Enviar MOTD línea por línea
         await self.message_sender.send_multiline_console_msg(motd)
