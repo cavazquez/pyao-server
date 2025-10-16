@@ -335,9 +335,7 @@ class ArgentumServer:
                 logger.info("Efecto de reducción de oro habilitado")
 
             # Agregar efecto de meditación (siempre habilitado)
-            self.game_tick.add_effect(
-                MeditationEffect(self.player_repo, self.map_manager, interval_seconds=3.0)
-            )
+            self.game_tick.add_effect(MeditationEffect(interval_seconds=3.0))
             logger.info("Efecto de meditación habilitado")
 
             self.game_tick.start()

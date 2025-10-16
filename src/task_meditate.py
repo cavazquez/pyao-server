@@ -61,7 +61,7 @@ class TaskMeditate(Task):
             # Mensaje al jugador
             if new_state:
                 await self.message_sender.send_console_msg(
-                    "Comienzas a meditar. Recuperarás mana automáticamente."
+                    "Comienzas a meditar. Recuperaras mana automaticamente."
                 )
                 logger.info("user_id %d comenzó a meditar", user_id)
             else:
