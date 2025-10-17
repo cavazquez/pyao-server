@@ -343,16 +343,12 @@ class ArgentumServer:
             return
 
         # Hambre y Sed - 180 segundos (3 minutos)
-        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED) is None:
-            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
-            logger.info("Intervalo de sed inicializado: 180 segundos (3 minutos)")
+        # SIEMPRE establecer valores correctos (sobrescribe valores de testing)
+        await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
+        logger.info("Intervalo de sed configurado: 180 segundos (3 minutos)")
 
-        if (
-            await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE)
-            is None
-        ):
-            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
-            logger.info("Intervalo de hambre inicializado: 180 segundos (3 minutos)")
+        await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
+        logger.info("Intervalo de hambre configurado: 180 segundos (3 minutos)")
 
         if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
             await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")

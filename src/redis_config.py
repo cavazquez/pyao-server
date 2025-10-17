@@ -196,8 +196,8 @@ DEFAULT_SERVER_CONFIG = {
 DEFAULT_EFFECTS_CONFIG = {
     # Hambre y Sed
     RedisKeys.CONFIG_HUNGER_THIRST_ENABLED: "1",
-    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED: "4",  # segundos
-    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE: "6",  # segundos
+    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED: "180",  # 180 segundos = 3 minutos
+    RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE: "180",  # 180 segundos = 3 minutos
     RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA: "10",  # puntos
     RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE: "10",  # puntos
     # Reducción de Oro
