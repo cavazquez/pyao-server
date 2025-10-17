@@ -97,13 +97,19 @@ class CombatService:
             "npc_died": npc_died,
         }
 
-        # Si el NPC murió, calcular experiencia
+        # Si el NPC murió, calcular experiencia y loot
         if npc_died:
             experience = self._calculate_experience(npc.level)
-            result["experience"] = experience
+            gold = self._calculate_gold_drop(npc.level)
 
-            # Dar experiencia al jugador
+            result["experience"] = experience
+            result["gold"] = gold  # Oro para dropear en el suelo, no dar directamente
+
+            # Dar experiencia al jugador (esto sí se da directamente)
             await self._give_experience(user_id, experience, message_sender)
+
+            # El oro se debe dropear en el suelo, no darlo directamente
+            # TODO: Crear item de oro en el tile donde murió el NPC
 
         return result
 
@@ -196,6 +202,20 @@ class CombatService:
         base_exp = npc_level * 10
         bonus = random.randint(0, npc_level * 2)  # noqa: S311
         return base_exp + bonus
+
+    def _calculate_gold_drop(self, npc_level: int) -> int:  # noqa: PLR6301
+        """Calcula el oro que dropea un NPC al morir.
+
+        Args:
+            npc_level: Nivel del NPC.
+
+        Returns:
+            Cantidad de oro.
+        """
+        # Fórmula: nivel * 5 + bonus aleatorio (1-50)
+        base_gold = npc_level * 5
+        bonus = random.randint(1, 50)  # noqa: S311
+        return base_gold + bonus
 
     async def _give_experience(
         self, user_id: int, experience: int, message_sender: MessageSender | None = None

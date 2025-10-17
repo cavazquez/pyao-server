@@ -201,3 +201,28 @@ class MultiplayerBroadcastService:
             )
 
         return notified
+
+    async def broadcast_character_remove(self, map_id: int, char_index: int) -> int:
+        """Broadcast de CHARACTER_REMOVE a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            char_index: Índice del personaje que se remueve.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # Obtener todos los jugadores en el mapa
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            await sender.send_character_remove(char_index)
+            notified += 1
+
+        if notified > 0:
+            logger.debug(
+                "Broadcast CHARACTER_REMOVE: CharIndex=%d - %d notificados", char_index, notified
+            )
+
+        return notified

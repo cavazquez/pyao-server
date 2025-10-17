@@ -148,16 +148,27 @@ class TaskAttack(Task):
         # Si el NPC murió
         if npc_died:
             experience = result.get("experience", 0)
+            gold = result.get("gold", 0)
 
             await self.message_sender.send_console_msg(
-                f"¡Has matado a {target_npc.name}! Ganaste {experience} de experiencia."
+                f"¡Has matado a {target_npc.name}! Ganaste {experience} EXP."
             )
 
             # Remover NPC del mapa
             await self.npc_service.remove_npc(target_npc)
 
-            # TODO: Generar loot (oro, items)
+            # TODO: Dropear oro en el tile donde murió el NPC
+            # TODO: Dropear items según tabla de loot
+            # TODO: Enviar OBJECT_CREATE para mostrar items en el mapa
             # TODO: Verificar si sube de nivel
+
+            logger.info(
+                "NPC %s dropeó %d de oro en (%d, %d)",
+                target_npc.name,
+                gold,
+                target_npc.x,
+                target_npc.y,
+            )
         else:
             # Mostrar HP restante del NPC
             hp_percent = int((target_npc.hp / target_npc.max_hp) * 100)

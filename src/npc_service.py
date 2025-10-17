@@ -189,13 +189,18 @@ class NPCService:
         Args:
             npc: Instancia del NPC a eliminar.
         """
+        # Broadcast CHARACTER_REMOVE a jugadores cercanos
+        await self.broadcast_service.broadcast_character_remove(npc.map_id, npc.char_index)
+
         # Remover del MapManager
         self.map_manager.remove_npc(npc.map_id, npc.instance_id)
 
         # Remover de Redis
         await self.npc_repository.remove_npc(npc.instance_id)
 
-        logger.debug("NPC eliminado: %s (CharIndex: %d)", npc.name, npc.char_index)
+        logger.info(
+            "NPC eliminado: %s (CharIndex: %d) del mapa %d", npc.name, npc.char_index, npc.map_id
+        )
 
     async def move_npc(self, npc: NPC, new_x: int, new_y: int, new_heading: int) -> None:
         """Mueve un NPC a una nueva posición.
