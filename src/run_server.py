@@ -4,20 +4,25 @@ import asyncio
 import logging
 
 from src.server import ArgentumServer
+from src.server_cli import ServerCLI
 
-# Configurar logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 
 def main() -> None:
     """Punto de entrada principal del servidor."""
-    logger.info("Iniciando PyAO Server...")
+    cli = ServerCLI()
+    args = cli.parse_args()
 
-    server = ArgentumServer(host="0.0.0.0", port=7666)
+    # Configurar logging
+    cli.configure_logging(args.debug)
+
+    # Mostrar información de inicio
+    logger.info("Iniciando PyAO Server v%s...", cli.VERSION)
+    logger.info("Host: %s | Puerto: %d", args.host, args.port)
+
+    # Crear y ejecutar servidor
+    server = ArgentumServer(host=args.host, port=args.port)
 
     try:
         asyncio.run(server.start())

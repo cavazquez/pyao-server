@@ -154,3 +154,50 @@ class MultiplayerBroadcastService:
             )
 
         return len(other_senders)
+
+    async def broadcast_character_move(
+        self,
+        map_id: int,
+        char_index: int,
+        new_x: int,
+        new_y: int,
+        new_heading: int,
+        old_x: int,
+        old_y: int,
+    ) -> int:
+        """Envía CHARACTER_MOVE a jugadores cercanos que pueden ver el movimiento.
+
+        Args:
+            map_id: ID del mapa donde ocurre el movimiento.
+            char_index: Índice del personaje que se mueve.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+            new_heading: Nueva dirección.
+            old_x: Posición X anterior.
+            old_y: Posición Y anterior.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # Obtener todos los jugadores en el mapa
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            # Enviar el movimiento a todos los jugadores en el mapa
+            # TODO: Optimizar para enviar solo a jugadores en rango visible
+            await sender.send_character_move(char_index, new_x, new_y, new_heading)
+            notified += 1
+
+        if notified > 0:
+            logger.debug(
+                "Broadcast CHARACTER_MOVE: CharIndex=%d de (%d,%d) a (%d,%d) - %d notificados",
+                char_index,
+                old_x,
+                old_y,
+                new_x,
+                new_y,
+                notified,
+            )
+
+        return notified

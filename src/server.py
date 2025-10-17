@@ -11,11 +11,13 @@ from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
+from src.effect_npc_movement import NPCMovementEffect
 from src.equipment_repository import EquipmentRepository
 from src.game_tick import GameTick
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
 from src.message_sender import MessageSender
+from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_catalog import NPCCatalog
 from src.npc_repository import NPCRepository
 from src.npc_service import NPCService
@@ -82,6 +84,7 @@ class ArgentumServer:
         self.spell_service: SpellService | None = None  # Servicio de hechizos
         self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
         self.equipment_repo: EquipmentRepository | None = None  # Repositorio de equipamiento
+        self.broadcast_service: MultiplayerBroadcastService | None = None  # Servicio de broadcast
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -342,7 +345,7 @@ class ArgentumServer:
             self.game_tick = GameTick(
                 player_repo=self.player_repo,
                 map_manager=self.map_manager,
-                tick_interval=60.0,  # 60 segundos por tick
+                tick_interval=0.5,  # 0.5 segundos por tick (cada efecto decide su intervalo)
             )
 
             # Agregar efectos al sistema de tick (configuración desde Redis)
@@ -364,15 +367,28 @@ class ArgentumServer:
             self.game_tick.add_effect(MeditationEffect(interval_seconds=3.0))
             logger.info("Efecto de meditación habilitado")
 
-            self.game_tick.start()
-            logger.info("Sistema de tick del juego iniciado")
+            # Inicializar servicio de broadcast multijugador
+            self.broadcast_service = MultiplayerBroadcastService(
+                self.map_manager, self.player_repo, self.account_repo
+            )
+            logger.info("Servicio de broadcast multijugador inicializado")
 
             # Inicializar sistema de NPCs
             npc_catalog = NPCCatalog()
             npc_repository = NPCRepository(self.redis_client)
-            self.npc_service = NPCService(npc_repository, npc_catalog, self.map_manager)
+            self.npc_service = NPCService(
+                npc_repository, npc_catalog, self.map_manager, self.broadcast_service
+            )
             await self.npc_service.initialize_world_npcs()
             logger.info("Sistema de NPCs inicializado")
+
+            # Agregar efecto de movimiento de NPCs
+            self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))
+            logger.info("Efecto de movimiento de NPCs habilitado")
+
+            # Iniciar el sistema de tick después de agregar todos los efectos
+            self.game_tick.start()
+            logger.info("Sistema de tick del juego iniciado con todos los efectos")
 
             # Inicializar sistema de magia
             self.spell_catalog = SpellCatalog()

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc import NPC
     from src.npc_catalog import NPCCatalog
     from src.npc_repository import NPCRepository
@@ -24,6 +25,7 @@ class NPCService:
         npc_repository: NPCRepository,
         npc_catalog: NPCCatalog,
         map_manager: MapManager,
+        broadcast_service: MultiplayerBroadcastService,
     ) -> None:
         """Inicializa el servicio de NPCs.
 
@@ -31,10 +33,12 @@ class NPCService:
             npc_repository: Repositorio para operaciones de NPCs en Redis.
             npc_catalog: Catálogo de NPCs.
             map_manager: Gestor de mapas para trackear NPCs.
+            broadcast_service: Servicio de broadcast multijugador.
         """
         self.npc_repository = npc_repository
         self.npc_catalog = npc_catalog
         self.map_manager = map_manager
+        self.broadcast_service = broadcast_service
         self._next_char_index = 10001  # CharIndex inicial para NPCs
 
     async def initialize_world_npcs(self, spawns_path: str = "data/map_npcs.toml") -> None:
@@ -206,16 +210,23 @@ class NPCService:
         await self.npc_repository.update_npc_position(npc.instance_id, new_x, new_y, new_heading)
 
         # Actualizar en memoria
+        old_x = npc.x
+        old_y = npc.y
         npc.x = new_x
         npc.y = new_y
         npc.heading = new_heading
 
-        # TODO: Broadcast CHARACTER_MOVE a jugadores cercanos
+        # Broadcast CHARACTER_MOVE a jugadores cercanos
+        await self.broadcast_service.broadcast_character_move(
+            npc.map_id, npc.char_index, new_x, new_y, new_heading, old_x, old_y
+        )
 
         logger.debug(
-            "NPC movido: %s (CharIndex: %d) a (%d, %d)",
+            "NPC movido: %s (CharIndex: %d) de (%d, %d) a (%d, %d)",
             npc.name,
             npc.char_index,
+            old_x,
+            old_y,
             new_x,
             new_y,
         )

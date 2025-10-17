@@ -9,6 +9,7 @@ from src.msg import (
     build_change_map_response,
     build_character_change_response,
     build_character_create_response,
+    build_character_move_response,
     build_character_remove_response,
     build_commerce_end_response,
     build_console_msg_response,
@@ -649,4 +650,16 @@ class MessageSender:  # noqa: PLR0904
             spell_id,
             spell_name,
         )
+        await self.connection.send(response)
+
+    async def send_character_move(self, char_index: int, x: int, y: int, heading: int) -> None:
+        """Envía el packet CHARACTER_MOVE para notificar movimiento de un personaje.
+
+        Args:
+            char_index: Índice del personaje que se mueve.
+            x: Nueva posición X.
+            y: Nueva posición Y.
+            heading: Nueva dirección.
+        """
+        response = build_character_move_response(char_index, x, y, heading)
         await self.connection.send(response)
