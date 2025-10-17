@@ -15,6 +15,7 @@ from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
 from src.equipment_repository import EquipmentRepository
 from src.game_tick import GameTick
+from src.inventory_repository import InventoryRepository
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
 from src.message_sender import MessageSender
@@ -446,8 +447,17 @@ class ArgentumServer:
             self.equipment_repo = EquipmentRepository(self.redis_client)
             logger.info("Sistema de equipamiento inicializado")
 
+            # Inicializar sistema de inventario
+            self.inventory_repo = InventoryRepository(self.redis_client)
+            logger.info("Sistema de inventario inicializado")
+
             # Inicializar sistema de combate
-            self.combat_service = CombatService(self.player_repo, npc_repository)
+            self.combat_service = CombatService(
+                self.player_repo,
+                npc_repository,
+                self.equipment_repo,
+                self.inventory_repo,
+            )
             logger.info("Sistema de combate inicializado")
 
             # Inicializar configuración de efectos en Redis (si no existe)
