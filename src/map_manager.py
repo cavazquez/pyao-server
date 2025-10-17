@@ -98,6 +98,30 @@ class MapManager(SpatialIndexMixin):
 
         return players
 
+    def get_username(self, user_id: int, map_id: int | None = None) -> str | None:
+        """Obtiene el username de un jugador.
+
+        Args:
+            user_id: ID del usuario.
+            map_id: ID del mapa (opcional, si no se provee busca en todos los mapas).
+
+        Returns:
+            Username del jugador o None si no existe.
+        """
+        # Si se especifica un mapa, buscar solo en ese mapa
+        if map_id is not None:
+            if map_id not in self._players_by_map:
+                return None
+            player_data = self._players_by_map[map_id].get(user_id)
+            return player_data[1] if player_data else None
+
+        # Si no se especifica mapa, buscar en todos los mapas
+        for players in self._players_by_map.values():
+            if user_id in players:
+                return players[user_id][1]
+
+        return None
+
     def get_message_sender(self, user_id: int, map_id: int | None = None) -> MessageSender | None:
         """Obtiene el MessageSender de un jugador.
 

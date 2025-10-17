@@ -27,6 +27,8 @@ class TestBroadcastMovement:
         sender2.send_character_change = AsyncMock()
 
         map_manager.get_all_message_senders_in_map.return_value = [sender1, sender2]
+        map_manager.get_username.return_value = "testuser"
+        account_repo.get_account = AsyncMock(return_value={"char_race": "1", "char_head": "1"})
 
         broadcast_service = MultiplayerBroadcastService(map_manager, player_repo, account_repo)
 
@@ -88,6 +90,8 @@ class TestBroadcastMovement:
         sender.send_character_change = AsyncMock()
 
         map_manager.get_all_message_senders_in_map.return_value = [sender]
+        map_manager.get_username.return_value = "testuser"
+        account_repo.get_account = AsyncMock(return_value={"char_race": "1", "char_head": "1"})
 
         broadcast_service = MultiplayerBroadcastService(map_manager, player_repo, account_repo)
 

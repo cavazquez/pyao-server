@@ -202,8 +202,24 @@ class MultiplayerBroadcastService:
             # Solo enviar CHARACTER_CHANGE si el heading cambió
             # (CHARACTER_MOVE no incluye heading para compatibilidad con cliente Godot)
             if old_heading is None or new_heading != old_heading:
-                # TODO: Obtener body y head real del personaje desde Redis
-                await sender.send_character_change(char_index, body=1, head=1, heading=new_heading)
+                # Obtener body y head desde Redis
+                char_body = 1  # Valor por defecto
+                char_head = 1  # Valor por defecto
+
+                # Obtener username del char_index
+                username = self.map_manager.get_username(char_index, map_id)
+                if username and self.account_repo:
+                    account_data = await self.account_repo.get_account(username)
+                    if account_data:
+                        char_body = int(account_data.get("char_race", 1))
+                        char_head = int(account_data.get("char_head", 1))
+                        # Si body es 0, usar valor por defecto
+                        if char_body == 0:
+                            char_body = 1
+
+                await sender.send_character_change(
+                    char_index, body=char_body, head=char_head, heading=new_heading
+                )
             notified += 1
 
         if notified > 0:
