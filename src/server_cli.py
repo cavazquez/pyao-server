@@ -7,7 +7,7 @@ import logging
 class ServerCLI:
     """Interfaz de línea de comandos para el servidor."""
 
-    VERSION = "0.1.0"
+    VERSION = "0.2.0-alpha"
 
     def __init__(self) -> None:
         """Inicializa la CLI del servidor."""

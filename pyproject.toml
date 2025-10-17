@@ -1,6 +1,6 @@
 [project]
 name = "src"
-version = "0.1.0"
+version = "0.2.0-alpha"
 description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"

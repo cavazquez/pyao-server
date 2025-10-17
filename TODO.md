@@ -19,10 +19,11 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
 
 ### Integración de Colisiones
-- [ ] **Integrar validación en TaskWalk** - Usar `map_manager.can_move_to()`
-- [ ] **Integrar validación en NPCMovementEffect** - Prevenir NPCs encima de jugadores
+- [x] **Integrar validación en TaskWalk** - Usar `map_manager.can_move_to()` ✅ v0.2.0
+- [x] **Integrar validación en NPCMovementEffect** - Prevenir NPCs encima de jugadores ✅ v0.2.0
 - [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
-- [ ] **Actualizar índice en todos los movimientos** - `update_player_tile()`, `update_npc_tile()`
+- [x] **Actualizar índice en todos los movimientos** - `update_player_tile()`, `update_npc_tile()` ✅ v0.2.0
+- [x] **Método get_tile_occupant** - Identificar qué bloquea un tile ✅ v0.2.0
 
 ## 🔥 Prioridad Alta
 
@@ -335,7 +336,16 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 
 ## 🎯 Roadmap Sugerido
 
-### Versión 0.2.0 - Combate y Loot
+### Versión 0.2.0-alpha - Sistema de Movimiento y Colisiones ✅
+- [x] Sistema de colisiones completo
+- [x] Detección de NPCs y jugadores bloqueando
+- [x] Minimapa actualizado al login
+- [x] REQUEST_POSITION_UPDATE (tecla L)
+- [x] Heading guardado y cargado correctamente
+- [x] Fix bug parsing CHARACTER_MOVE
+- [x] Broadcast de movimiento optimizado
+
+### Versión 0.3.0 - Combate y Loot
 - Sistema de combate completo
 - Drops y experiencia
 - Muerte y respawn de NPCs
@@ -363,7 +373,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 
 ---
 
-**Última actualización:** 2025-10-16  
-**Tests actuales:** 374  
+**Última actualización:** 2025-10-17  
+**Versión actual:** 0.2.0-alpha  
+**Tests actuales:** 378  
 **Servicios implementados:** 7  
 **Efectos de tick:** 4
