@@ -169,14 +169,7 @@ class ArgentumServer:
                 session_data,
             )
         if task_class is TaskWalk:
-            return TaskWalk(
-                data,
-                message_sender,
-                self.player_repo,
-                self.map_manager,
-                session_data,
-                self.broadcast_service,
-            )
+            return TaskWalk(data, message_sender, self.player_repo, self.map_manager, session_data)
         if task_class is TaskChangeHeading:
             return TaskChangeHeading(
                 data,
