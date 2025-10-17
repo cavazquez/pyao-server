@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 class MultiplayerBroadcastService:
     """Servicio que encapsula la lógica de broadcast multijugador."""
 
+    # Rango visible en tiles (15 tiles = 31x31 grid centrado en el jugador)
+    VISIBLE_RANGE = 15
+
     def __init__(
         self,
         map_manager: MapManager,
@@ -31,6 +34,24 @@ class MultiplayerBroadcastService:
         self.map_manager = map_manager
         self.player_repo = player_repo
         self.account_repo = account_repo
+
+    @staticmethod
+    def _is_in_visible_range(x1: int, y1: int, x2: int, y2: int, visible_range: int) -> bool:
+        """Verifica si dos posiciones están dentro del rango visible.
+
+        Usa distancia de Chebyshev (máximo de diferencias absolutas).
+
+        Args:
+            x1: Coordenada X de la primera posición.
+            y1: Coordenada Y de la primera posición.
+            x2: Coordenada X de la segunda posición.
+            y2: Coordenada Y de la segunda posición.
+            visible_range: Rango visible en tiles.
+
+        Returns:
+            True si están en rango visible, False si no.
+        """
+        return max(abs(x1 - x2), abs(y1 - y2)) <= visible_range
 
     async def notify_player_spawn(
         self,
@@ -191,12 +212,27 @@ class MultiplayerBroadcastService:
             Número de jugadores notificados.
         """
         # Obtener todos los jugadores en el mapa
-        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+        all_player_ids = self.map_manager.get_players_in_map(map_id, exclude_user_id=char_index)
 
         notified = 0
-        for sender in all_senders:
-            # Enviar el movimiento a todos los jugadores en el mapa
-            # TODO: Optimizar para enviar solo a jugadores en rango visible
+        for player_id in all_player_ids:
+            # Obtener posición del jugador para verificar si está en rango visible
+            player_position = await self.player_repo.get_position(player_id)
+            if not player_position:
+                continue
+
+            # Filtrar por rango visible
+            if not self._is_in_visible_range(
+                new_x, new_y, player_position["x"], player_position["y"], self.VISIBLE_RANGE
+            ):
+                continue
+
+            # Obtener message_sender del jugador
+            sender = self.map_manager.get_message_sender(player_id, map_id)
+            if not sender:
+                continue
+
+            # Enviar el movimiento solo a jugadores en rango visible
             await sender.send_character_move(char_index, new_x, new_y)
 
             # Solo enviar CHARACTER_CHANGE si el heading cambió
