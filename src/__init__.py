@@ -1,3 +1,15 @@
 """PyAO Server - Servidor de Argentum Online en Python."""
 
-__version__ = "0.2.0-alpha"
+try:
+    from importlib.metadata import PackageNotFoundError, version
+
+    __version__ = version("src")
+except PackageNotFoundError:
+    # Fallback: leer desde pyproject.toml si no está instalado
+    import tomllib
+    from pathlib import Path
+
+    pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+    with pyproject_path.open("rb") as f:
+        pyproject = tomllib.load(f)
+    __version__ = pyproject["project"]["version"]

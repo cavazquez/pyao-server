@@ -3,11 +3,13 @@
 import argparse
 import logging
 
+from src import __version__
+
 
 class ServerCLI:
     """Interfaz de línea de comandos para el servidor."""
 
-    VERSION = "0.2.0-alpha"
+    VERSION = __version__
 
     def __init__(self) -> None:
         """Inicializa la CLI del servidor."""
