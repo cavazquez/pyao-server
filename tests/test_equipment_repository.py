@@ -2,27 +2,24 @@
 
 # ruff: noqa: DOC402
 
+from typing import TYPE_CHECKING
+
 import pytest
 import pytest_asyncio
 
 from src.equipment_repository import EquipmentRepository
 from src.equipment_slot import EquipmentSlot
-from src.redis_client import RedisClient
 
-
-@pytest_asyncio.fixture
-async def redis_client() -> RedisClient:
-    """Crea un cliente Redis para tests."""
-    client = RedisClient()
-    await client.connect()
-    yield client
-    if client.redis:
-        await client.redis.aclose()
+if TYPE_CHECKING:
+    from src.redis_client import RedisClient
 
 
 @pytest_asyncio.fixture
 async def equipment_repo(redis_client: RedisClient) -> EquipmentRepository:
-    """Crea un repositorio de equipamiento para tests."""
+    """Crea un repositorio de equipamiento para tests.
+
+    Usa el fixture redis_client de conftest.py que ya tiene fakeredis configurado.
+    """
     return EquipmentRepository(redis_client)
 
 

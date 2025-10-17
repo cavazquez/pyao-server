@@ -194,7 +194,7 @@ class TaskLogin(Task):
         # TODO: La GUI del cliente debería mostrar la posición del jugador (X, Y, Mapa).
         # Esto ayuda en debugging y testing. Considerar agregar un packet para actualizar
         # la posición en la GUI o incluirlo en algún packet existente.
-        
+
         # Obtener/crear y enviar posición (envía CHANGE_MAP)
         position = await player_service.send_position(user_id)
 
@@ -304,7 +304,7 @@ class TaskLogin(Task):
             # Enviar OBJECT_CREATE por cada item en ese tile
             for item in items:
                 grh_index = item.get("grh_index")
-                if grh_index:
+                if grh_index and isinstance(grh_index, int):
                     await self.message_sender.send_object_create(x, y, grh_index)
                     items_sent += 1
                     # Pequeño delay para no saturar

@@ -75,7 +75,7 @@ class TaskDrop(Task):
         # El oro se dropea desde el inventario pero es un stat especial
         # Por ahora implementar solo drop de oro
         # TODO: Implementar drop de items reales del inventario
-        
+
         # Intentar dropear oro (asumimos que cualquier drop es oro por ahora)
         await self._drop_gold(user_id, quantity)
 
@@ -140,9 +140,9 @@ class TaskDrop(Task):
         # Crear un método helper o factory para crear ground items consistentemente.
         # Ejemplo: GroundItemFactory.create_gold(quantity) o similar.
         # Esto evita duplicación de código entre TaskDrop, TaskAttack, etc.
-        
+
         # Crear ground item
-        ground_item = {
+        ground_item: dict[str, int | str | None] = {
             "item_id": GOLD_ITEM_ID,
             "quantity": quantity,
             "grh_index": GOLD_GRH_INDEX,

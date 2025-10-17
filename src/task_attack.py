@@ -161,7 +161,7 @@ class TaskAttack(Task):
 
             # Dropear oro en el suelo
             if gold > 0:
-                ground_item = {
+                ground_item: dict[str, int | str | None] = {
                     "item_id": GOLD_ITEM_ID,
                     "quantity": gold,
                     "grh_index": GOLD_GRH_INDEX,
