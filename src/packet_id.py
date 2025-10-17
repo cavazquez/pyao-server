@@ -26,7 +26,7 @@ class ClientPacketID(IntEnum):
     # ruff: noqa: ERA001
     # YELL = 4
     # WHISPER = 5
-    # REQUEST_POSITION_UPDATE = 7
+    REQUEST_POSITION_UPDATE = 7  # Solicitar actualización de posición
     ATTACK = 8  # Atacar (cuerpo a cuerpo)
     PICK_UP = 9  # Recoger item del suelo
     # SAFE_TOGGLE = 10

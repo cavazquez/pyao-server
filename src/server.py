@@ -51,6 +51,7 @@ from src.task_null import TaskNull
 from src.task_online import TaskOnline
 from src.task_pickup import TaskPickup
 from src.task_quit import TaskQuit
+from src.task_request_position_update import TaskRequestPositionUpdate
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
@@ -180,6 +181,8 @@ class ArgentumServer:
             )
         if task_class is TaskRequestStats:
             return TaskRequestStats(data, message_sender, self.player_repo, session_data)
+        if task_class is TaskRequestPositionUpdate:
+            return TaskRequestPositionUpdate(data, message_sender, self.player_repo, session_data)
         if task_class is TaskOnline:
             return TaskOnline(data, message_sender, self.map_manager, session_data)
         if task_class is TaskMotd:
