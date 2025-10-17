@@ -1,6 +1,15 @@
-# Sistema de Tick del Juego
+# Sistema de Tick del Juego (Game Loop)
 
 El servidor implementa un **sistema de tick genérico y extensible** que permite aplicar efectos periódicos a todos los jugadores conectados. **Todas las constantes se almacenan en Redis** y pueden modificarse en tiempo real sin reiniciar el servidor.
+
+## 📋 Tabla de Contenidos
+
+- [Arquitectura](#arquitectura)
+- [Configuración](#configuración-del-gametick)
+- [Efectos Implementados](#efectos-implementados)
+- [Crear Nuevos Efectos](#crear-nuevos-efectos)
+- [TODOs](#todos)
+- [Referencias](#referencias)
 
 ## Arquitectura
 
@@ -369,3 +378,117 @@ self.game_tick.add_effect(GoldDecayEffect(percentage=5.0, interval_seconds=30.0)
 # Oro más suave: 0.5% cada 2 minutos
 self.game_tick.add_effect(GoldDecayEffect(percentage=0.5, interval_seconds=120.0))
 ```
+
+## 📝 TODOs
+
+### Alta Prioridad
+
+- [ ] **Optimizar NPCMovementEffect**
+  - Actualmente procesa todos los NPCs cada tick
+  - Implementar procesamiento por chunks
+  - Limitar NPCs procesados por tick (ej: 10 NPCs por tick)
+
+- [ ] **Efecto de Regeneración**
+  - Regenerar HP/Mana automáticamente
+  - Más rápido si está meditando
+  - Configurable en Redis
+
+- [ ] **Efecto de Veneno**
+  - Reducir HP gradualmente
+  - Duración configurable
+  - Curable con antídoto
+
+### Media Prioridad
+
+- [ ] **Efecto de Clima**
+  - Lluvia, nieve, tormenta
+  - Afecta visibilidad
+  - Afecta movimiento
+
+- [ ] **Efecto de Día/Noche**
+  - Ciclo día/noche
+  - Afecta spawn de NPCs
+  - Afecta stats de algunos NPCs
+
+- [ ] **Efecto de Buffs/Debuffs**
+  - Buffs temporales (fuerza, velocidad, etc.)
+  - Debuffs (lentitud, ceguera, etc.)
+  - Duración y stack
+
+### Baja Prioridad
+
+- [ ] **Efecto de Fatiga**
+  - Reducir stamina por caminar mucho
+  - Necesita descansar
+
+- [ ] **Efecto de Temperatura**
+  - Frío/Calor según mapa
+  - Necesita ropa adecuada
+
+## 🔧 Mejoras Técnicas
+
+### Rendimiento
+
+- [ ] Cachear configuración de Redis (actualizar cada N ticks)
+- [ ] Procesar jugadores en paralelo (asyncio.gather)
+- [ ] Métricas de rendimiento por efecto
+- [ ] Profiling del game loop
+
+### Monitoreo
+
+- [ ] Logs de rendimiento por efecto
+- [ ] Alertas si un efecto tarda mucho
+- [ ] Dashboard de métricas en tiempo real
+
+### Testing
+
+- [ ] Tests unitarios para cada efecto
+- [ ] Tests de integración del game loop
+- [ ] Tests de carga (muchos jugadores)
+- [ ] Tests de configuración dinámica
+
+## 📊 Estadísticas
+
+### Código
+
+- **GameTick**: ~150 líneas
+- **TickEffect**: ~50 líneas (clase base)
+- **Efectos**: ~200 líneas promedio cada uno
+- **Tests**: 374 pasando (sin tests específicos de efectos aún)
+
+### Rendimiento Actual
+
+- **Tick interval**: 0.5 segundos
+- **Efectos activos**: 4 (Hambre/Sed, Oro, Meditación, NPCs)
+- **Tiempo por tick**: ~5-10ms (con pocos jugadores)
+- **Tiempo por tick**: ~50-100ms (con 100 jugadores, estimado)
+
+### Configuración Actual
+
+| Efecto | Intervalo | Reducción | Estado |
+|--------|-----------|-----------|--------|
+| Hambre/Sed | 180s (3 min) | 10 puntos | ✅ Activo |
+| Oro | 60s (1 min) | 1% | ✅ Activo |
+| Meditación | 3s | +5% mana | ✅ Activo |
+| NPCs | 1s | Movimiento | ✅ Activo |
+
+## 🔗 Referencias
+
+- [COMBAT_SYSTEM.md](./COMBAT_SYSTEM.md) - Sistema de combate
+- [TODO.md](../TODO.md) - Lista completa de tareas
+- [server.py](../src/server.py) - Inicialización del GameTick
+- [game_tick.py](../src/game_tick.py) - Implementación del loop
+
+## 📜 Changelog
+
+### 2025-10-16
+- ✅ Sistema de tick funcionando con 4 efectos
+- ✅ Configuración en Redis con valores por defecto
+- ✅ Hambre/sed cada 3 minutos
+- ✅ NPCs se mueven automáticamente
+- ✅ Validación de colisiones en movimiento de NPCs
+
+### Próxima Sesión
+- [ ] Optimizar NPCMovementEffect
+- [ ] Implementar efecto de regeneración
+- [ ] Tests unitarios de efectos
