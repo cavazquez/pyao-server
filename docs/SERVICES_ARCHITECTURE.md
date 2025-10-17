@@ -354,9 +354,68 @@ await service.do_something(user_id)
 |---------|-------|---------|--------|
 | **TaskLogin** | 413 líneas | 205 líneas | **-50%** |
 | **Código duplicado** | Alto | Bajo | **Eliminado** |
-| **Tests** | 252 | 276 | **+24** |
-| **Servicios** | 0 | 4 | **+4** |
-| **Reutilización** | Baja | Alta | **7+ tasks** |
+| **Tests** | 252 | 374 | **+122** |
+| **Servicios** | 0 | 7 | **+7** |
+| **Reutilización** | Baja | Alta | **10+ tasks** |
+| **Efectos de Tick** | 2 | 4 | **+2** |
+
+---
+
+### 5. NPCService ✅ IMPLEMENTADO
+
+**Responsabilidad**: Gestión de NPCs (spawn, movimiento, eliminación).
+
+**Ubicación**: `src/npc_service.py`
+
+**Métodos Públicos**:
+- `initialize_world_npcs(spawns_path)` - Carga NPCs desde `data/map_npcs.toml`
+- `spawn_npc(npc_id, map_id, x, y, heading)` - Crea un NPC en el mapa
+- `move_npc(npc, new_x, new_y, new_heading)` - Mueve un NPC y hace broadcast
+- `remove_npc(npc)` - Elimina un NPC del mundo
+- `send_npcs_to_player(player_id, map_id)` - Envía NPCs del mapa al jugador
+
+**Usado en**:
+- `Server.initialize()` - Inicialización de NPCs del mundo
+- `TaskLogin` - Enviar NPCs al jugador
+- `NPCMovementEffect` - Movimiento automático de NPCs
+
+**Tests**: 11 tests en `tests/test_npc_movement.py`
+
+---
+
+### 6. SpellService ✅ IMPLEMENTADO
+
+**Responsabilidad**: Lógica de hechizos (casteo, validación, efectos).
+
+**Ubicación**: `src/spell_service.py`
+
+**Métodos Públicos**:
+- `cast_spell(user_id, spell_id, target_x, target_y)` - Lanza un hechizo
+- `validate_spell_range(caster_pos, target_pos, max_range)` - Valida rango
+- `apply_spell_effect(spell, target)` - Aplica efectos del hechizo
+
+**Usado en**:
+- `TaskCastSpell` - Lanzar hechizos desde el libro
+
+**Tests**: 7 tests de targeting en `tests/test_spell_targeting.py`
+
+---
+
+### 7. EquipmentService ✅ IMPLEMENTADO
+
+**Responsabilidad**: Gestión de equipamiento (equipar, desequipar).
+
+**Ubicación**: `src/equipment_service.py`
+
+**Métodos Públicos**:
+- `equip_item(user_id, slot, item_id)` - Equipa un item
+- `unequip_item(user_id, slot)` - Desequipa un item
+- `get_equipped_items(user_id)` - Obtiene items equipados
+
+**Usado en**:
+- `TaskEquipItem` - Equipar items desde inventario
+
+**Tests**: 15 tests en `tests/test_equipment_*.py`
 
 ---
 
@@ -365,8 +424,10 @@ await service.do_something(user_id)
 ### Servicios Potenciales
 - `MovementService` - Encapsular lógica de movimiento (TaskWalk, TaskChangeHeading)
 - `ServerService` - Encapsular lógica de servidor (MOTD, uptime, info)
-- `CombatService` - Encapsular lógica de combate (cuando se implemente)
-- `TradeService` - Encapsular lógica de comercio (cuando se implemente)
+- `CombatService` - Encapsular lógica de combate NPC vs Jugador
+- `TradeService` - Encapsular lógica de comercio con NPCs
+- `QuestService` - Sistema de misiones
+- `LootService` - Sistema de drops y experiencia
 
 ### Mejoras
 - Tests de integración end-to-end
