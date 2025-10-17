@@ -2,6 +2,28 @@
 
 Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor.
 
+## 🔧 Refactoring y Limpieza de Código
+
+### Análisis de Código
+- [ ] **Revisar todos los `# noqa`** - Analizar si son necesarios o si se puede arreglar el código
+- [ ] **Revisar todos los `# type: ignore`** - Analizar si se pueden eliminar mejorando los tipos
+- [ ] **Dividir MessageSender** - Archivo muy grande, considerar separar en módulos
+  - Podría ser: `message_sender_stats.py`, `message_sender_combat.py`, etc.
+- [ ] **Analizar complejidad ciclomática** - Métodos con `C901` y `PLR0912`
+- [ ] **Reducir variables locales** - Métodos con `PLR0914` (too many local variables)
+
+### Mapas y Datos
+- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
+- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
+- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
+- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
+
+### Integración de Colisiones
+- [ ] **Integrar validación en TaskWalk** - Usar `map_manager.can_move_to()`
+- [ ] **Integrar validación en NPCMovementEffect** - Prevenir NPCs encima de jugadores
+- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
+- [ ] **Actualizar índice en todos los movimientos** - `update_player_tile()`, `update_npc_tile()`
+
 ## 🔥 Prioridad Alta
 
 ### Sistema de Combate
