@@ -75,6 +75,10 @@ class ArgentumServer:
             host: Dirección IP donde escuchar (se sobrescribe con Redis).
             port: Puerto donde escuchar (se sobrescribe con Redis).
         """
+        # TODO: Los objetos deberían crearse lo más completos posibles y funcionales.
+        # Analizar si se puede cambiar el orden y reducir la cantidad de None.
+        # Ver TODO_ARQUITECTURA.md sección 3 para propuestas de solución.
+        # Considerar usar Builder Pattern o Factory para inicialización completa.
         self.host = host
         self.port = port
         self.server: asyncio.Server | None = None
@@ -92,6 +96,10 @@ class ArgentumServer:
         self.equipment_repo: EquipmentRepository | None = None  # Repositorio de equipamiento
         self.broadcast_service: MultiplayerBroadcastService | None = None  # Servicio de broadcast
 
+    # TODO: Revisar la separación de capas y responsabilidades.
+    # Este método tiene demasiada lógica de creación de tasks con dependencias.
+    # Ver TODO_ARQUITECTURA.md sección 2 para propuestas de mejora.
+    # Considerar: Service Container, Dependency Injection, o Factory Pattern.
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
         data: bytes,

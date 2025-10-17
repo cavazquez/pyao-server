@@ -44,6 +44,11 @@ class NPCService:
     async def initialize_world_npcs(self, spawns_path: str = "data/map_npcs.toml") -> None:
         """Inicializa todos los NPCs del mundo al iniciar el servidor.
 
+        TODO: Apenas se inicia Redis se cargan los recursos desde los archivos TOML y maps,
+        luego solo se consulta la base Redis. Ese comportamiento debe ser revisado.
+        Ver TODO_ARQUITECTURA.md sección 1 para análisis completo y propuestas.
+        Considerar: ¿Archivos son source of truth o Redis? ¿Cómo sincronizar cambios?
+
         Lee la configuración de spawns desde map_npcs.toml y crea las instancias
         de NPCs en Redis y en el MapManager.
 
