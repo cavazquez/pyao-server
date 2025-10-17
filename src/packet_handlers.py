@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from src.packet_id import ClientPacketID
 from src.task_account import TaskCreateAccount
+from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_ayuda import TaskAyuda
 from src.task_bank_end import TaskBankEnd
@@ -37,6 +38,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CREATE_ACCOUNT: TaskCreateAccount,
     ClientPacketID.TALK: TaskTalk,
     ClientPacketID.WALK: TaskWalk,
+    ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC

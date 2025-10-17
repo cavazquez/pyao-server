@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import redis
 from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
+from src.combat_service import CombatService
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
@@ -30,6 +31,7 @@ from src.spell_catalog import SpellCatalog
 from src.spell_service import SpellService
 from src.spellbook_repository import SpellbookRepository
 from src.task_account import TaskCreateAccount
+from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
@@ -201,6 +203,16 @@ class ArgentumServer:
         if task_class is TaskEquipItem:
             return TaskEquipItem(
                 data, message_sender, self.player_repo, session_data, self.equipment_repo
+            )
+        if task_class is TaskAttack:
+            return TaskAttack(
+                data,
+                message_sender,
+                self.player_repo,
+                self.combat_service,
+                self.map_manager,
+                self.npc_service,
+                session_data,
             )
 
         return task_class(data, message_sender)
@@ -401,6 +413,10 @@ class ArgentumServer:
             # Inicializar sistema de equipamiento
             self.equipment_repo = EquipmentRepository(self.redis_client)
             logger.info("Sistema de equipamiento inicializado")
+
+            # Inicializar sistema de combate
+            self.combat_service = CombatService(self.player_repo, npc_repository)
+            logger.info("Sistema de combate inicializado")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

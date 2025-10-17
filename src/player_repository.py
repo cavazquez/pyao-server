@@ -296,3 +296,25 @@ class PlayerRepository:
         key = RedisKeys.player_user_stats(user_id)
         result = await self.redis.redis.hget(key, "meditating")  # type: ignore[misc]
         return result == b"1" if result else False
+
+    async def update_hp(self, user_id: int, hp: int) -> None:
+        """Actualiza el HP del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            hp: Nuevo HP.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "hp", str(hp))  # type: ignore[misc]
+        logger.debug("HP actualizado para user_id %d: %d", user_id, hp)
+
+    async def update_experience(self, user_id: int, exp: int) -> None:
+        """Actualiza la experiencia del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            exp: Nueva experiencia.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "experience", str(exp))  # type: ignore[misc]
+        logger.debug("Experiencia actualizada para user_id %d: %d", user_id, exp)

@@ -238,6 +238,17 @@ class NPCRepository:
         await self.redis.redis.hset(key, mapping=position_data)  # type: ignore[misc]
         logger.debug("Posición actualizada para NPC %s: (%d, %d)", instance_id, x, y)
 
+    async def update_npc_hp(self, instance_id: str, hp: int) -> None:
+        """Actualiza el HP de un NPC.
+
+        Args:
+            instance_id: ID único de la instancia del NPC.
+            hp: Nuevo HP.
+        """
+        key = RedisKeys.npc_instance(instance_id)
+        await self.redis.redis.hset(key, "hp", str(hp))  # type: ignore[misc]
+        logger.debug("HP actualizado para NPC %s: %d", instance_id, hp)
+
     async def remove_npc(self, instance_id: str) -> None:
         """Elimina un NPC del mundo.
 

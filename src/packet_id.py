@@ -27,7 +27,7 @@ class ClientPacketID(IntEnum):
     # YELL = 4
     # WHISPER = 5
     # REQUEST_POSITION_UPDATE = 7
-    # ATTACK = 8
+    ATTACK = 8  # Atacar (cuerpo a cuerpo)
     # PICK_UP = 9
     # SAFE_TOGGLE = 10
     # RESUSCITATION_SAFE_TOGGLE = 11
