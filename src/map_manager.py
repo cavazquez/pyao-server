@@ -1,11 +1,13 @@
 """Gestor de mapas y jugadores para broadcast multijugador."""
 
+import asyncio
 import logging
 from typing import TYPE_CHECKING
 
 from src.map_manager_spatial import SpatialIndexMixin
 
 if TYPE_CHECKING:
+    from src.ground_items_repository import GroundItemsRepository
     from src.message_sender import MessageSender
     from src.npc import NPC
 
@@ -18,8 +20,11 @@ class MapManager(SpatialIndexMixin):
 
     MAX_ITEMS_PER_TILE = 10  # Límite de items por tile
 
-    def __init__(self) -> None:
+    def __init__(self, ground_items_repo: GroundItemsRepository | None = None) -> None:
         """Inicializa el gestor de mapas.
+
+        Args:
+            ground_items_repo: Repositorio de ground items (opcional).
 
         Estructura interna:
         - _players_by_map: {map_id: {user_id: (message_sender, username)}}
@@ -36,6 +41,9 @@ class MapManager(SpatialIndexMixin):
 
         # Ground items: {(map_id, x, y): [Item, Item, ...]}
         self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
+
+        # Repositorio para persistencia
+        self.ground_items_repo = ground_items_repo
 
     def add_player(
         self, map_id: int, user_id: int, message_sender: MessageSender, username: str = ""
@@ -311,6 +319,12 @@ class MapManager(SpatialIndexMixin):
             item.get("quantity"),
         )
 
+        # Persistir en Redis de forma asíncrona (fire and forget)
+        if self.ground_items_repo:
+            task = asyncio.create_task(self._persist_ground_items(map_id))
+            # Guardar referencia para evitar warning
+            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
+
     def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
         """Obtiene todos los items en un tile específico.
 
@@ -368,6 +382,11 @@ class MapManager(SpatialIndexMixin):
             item.get("item_id"),
         )
 
+        # Persistir en Redis
+        if self.ground_items_repo:
+            task = asyncio.create_task(self._persist_ground_items(map_id))
+            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
+
         return item
 
     def clear_ground_items(self, map_id: int) -> int:
@@ -401,3 +420,42 @@ class MapManager(SpatialIndexMixin):
             Cantidad de items.
         """
         return sum(len(items) for key, items in self._ground_items.items() if key[0] == map_id)
+
+    async def _persist_ground_items(self, map_id: int) -> None:
+        """Persiste los ground items de un mapa en Redis.
+
+        Args:
+            map_id: ID del mapa.
+        """
+        if not self.ground_items_repo:
+            return
+
+        # Filtrar items del mapa
+        map_items: dict[tuple[int, int], list[dict[str, int | str | None]]] = {}
+        for (item_map_id, x, y), items in self._ground_items.items():
+            if item_map_id == map_id:
+                map_items[x, y] = items
+
+        # Guardar en Redis
+        await self.ground_items_repo.save_ground_items(map_id, map_items)
+
+    async def load_ground_items(self, map_id: int) -> None:
+        """Carga los ground items de un mapa desde Redis.
+
+        Args:
+            map_id: ID del mapa.
+        """
+        if not self.ground_items_repo:
+            return
+
+        # Cargar desde Redis
+        map_items = await self.ground_items_repo.load_ground_items(map_id)
+
+        # Agregar a memoria
+        for (x, y), items in map_items.items():
+            key = (map_id, x, y)
+            self._ground_items[key] = items
+
+        if map_items:
+            total_items = sum(len(items) for items in map_items.values())
+            logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)

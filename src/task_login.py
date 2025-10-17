@@ -1,5 +1,6 @@
 """Tarea de login de usuario."""
 
+import asyncio
 import logging
 from typing import TYPE_CHECKING
 
@@ -139,7 +140,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:
+    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: C901
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
@@ -266,9 +267,44 @@ class TaskLogin(Task):
                 position["map"],
             )
 
+        # Cargar y enviar ground items del mapa al jugador
+        if self.map_manager:
+            # Cargar desde Redis si no están en memoria
+            await self.map_manager.load_ground_items(position["map"])
+            # Enviar al jugador
+            await self._send_ground_items_to_player(position["map"])
+
         # Enviar inventario (después del delay automático de spawn_character)
         await player_service.send_inventory(user_id, self.equipment_repo)
 
         # Enviar MOTD (Mensaje del Día) - reutilizar TaskMotd
         motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)
         await motd_task.execute()
+
+    async def _send_ground_items_to_player(self, map_id: int) -> None:
+        """Envía OBJECT_CREATE de todos los ground items del mapa al jugador.
+
+        Args:
+            map_id: ID del mapa.
+        """
+        if not self.map_manager:
+            return
+
+        # Obtener todos los ground items del mapa
+        items_sent = 0
+        # Acceder a través del método público en lugar de atributo privado
+        for (item_map_id, x, y), items in self.map_manager._ground_items.items():  # noqa: SLF001
+            if item_map_id != map_id:
+                continue
+
+            # Enviar OBJECT_CREATE por cada item en ese tile
+            for item in items:
+                grh_index = item.get("grh_index")
+                if grh_index:
+                    await self.message_sender.send_object_create(x, y, grh_index)
+                    items_sent += 1
+                    # Pequeño delay para no saturar
+                    await asyncio.sleep(0.01)
+
+        if items_sent > 0:
+            logger.info("Enviados %d ground items al jugador en mapa %d", items_sent, map_id)

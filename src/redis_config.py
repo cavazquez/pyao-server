@@ -39,6 +39,19 @@ class RedisKeys:
     SERVER_CONNECTIONS_COUNT = "server:connections:count"
     SERVER_CONNECTIONS_ACTIVE = "server:connections:active"
 
+    # Ground items (items en el suelo)
+    @staticmethod
+    def ground_items(map_id: int) -> str:
+        """Clave para ground items de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+
+        Returns:
+            Clave de Redis para los ground items del mapa.
+        """
+        return f"ground_items:{map_id}"
+
     # Sesiones de jugadores
     @staticmethod
     def session_active(user_id: int) -> str:

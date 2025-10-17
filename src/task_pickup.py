@@ -56,6 +56,8 @@ class TaskPickup(Task):
             logger.warning("Intento de recoger item sin estar logueado")
             return
 
+        logger.info("TaskPickup: user_id=%d intentando recoger item", user_id)
+
         # Validar que tenemos los servicios necesarios
         if not self.player_repo or not self.map_manager:
             logger.error("TaskPickup: Faltan servicios necesarios")

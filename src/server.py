@@ -15,6 +15,7 @@ from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
 from src.equipment_repository import EquipmentRepository
 from src.game_tick import GameTick
+from src.ground_items_repository import GroundItemsRepository
 from src.inventory_repository import InventoryRepository
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
@@ -81,7 +82,8 @@ class ArgentumServer:
         self.player_repo: PlayerRepository | None = None
         self.account_repo: AccountRepository | None = None
         self.server_repo: ServerRepository | None = None
-        self.map_manager = MapManager()  # Gestor de jugadores y NPCs por mapa
+        self.ground_items_repo: GroundItemsRepository | None = None
+        self.map_manager: MapManager | None = None  # Gestor de jugadores y NPCs por mapa
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
         self.npc_service: NPCService | None = None  # Servicio de NPCs
         self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
@@ -359,6 +361,15 @@ class ArgentumServer:
             await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
             logger.info("Sistema de hambre/sed habilitado por defecto")
 
+    async def _load_ground_items(self) -> None:
+        """Carga ground items desde Redis para mapas activos."""
+        if not self.map_manager:
+            return
+
+        # Por ahora cargar solo mapa 1 (el mapa principal)
+        # TODO: Cargar dinámicamente según mapas con jugadores/NPCs
+        await self.map_manager.load_ground_items(1)
+
     async def start(self) -> None:  # noqa: PLR0915
         """Inicia el servidor TCP."""
         # Conectar a Redis (obligatorio)
@@ -433,6 +444,9 @@ class ArgentumServer:
             # Inicializar sistema de NPCs
             npc_catalog = NPCCatalog()
             npc_repository = NPCRepository(self.redis_client)
+            # map_manager ya está inicializado arriba, verificar para mypy
+            if self.map_manager is None:
+                raise RuntimeError("MapManager no inicializado")
             self.npc_service = NPCService(
                 npc_repository, npc_catalog, self.map_manager, self.broadcast_service
             )
@@ -449,6 +463,8 @@ class ArgentumServer:
 
             # Inicializar sistema de magia
             self.spell_catalog = SpellCatalog()
+            if self.map_manager is None:
+                raise RuntimeError("MapManager no inicializado")
             self.spell_service = SpellService(
                 self.spell_catalog, self.player_repo, npc_repository, self.map_manager
             )
@@ -463,6 +479,11 @@ class ArgentumServer:
             self.inventory_repo = InventoryRepository(self.redis_client)
             logger.info("Sistema de inventario inicializado")
 
+            # Inicializar sistema de ground items
+            self.ground_items_repo = GroundItemsRepository(self.redis_client)
+            self.map_manager = MapManager(self.ground_items_repo)
+            logger.info("Sistema de ground items inicializado")
+
             # Inicializar sistema de combate
             self.combat_service = CombatService(
                 self.player_repo,
@@ -474,6 +495,9 @@ class ArgentumServer:
 
             # Inicializar configuración de efectos en Redis (si no existe)
             await self._initialize_effects_config()
+
+            # Cargar ground items desde Redis para todos los mapas activos
+            await self._load_ground_items()
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
