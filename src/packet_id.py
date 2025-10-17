@@ -42,7 +42,7 @@ class ClientPacketID(IntEnum):
     BANK_END = 21  # Cerrar ventana de banco
     # USER_COMMERCE_OK = 22
     # USER_COMMERCE_REJECT = 23
-    # DROP = 24
+    DROP = 24  # Tirar item al suelo
     CAST_SPELL = 25  # Lanzar hechizo
     LEFT_CLICK = 26  # Click en personaje/NPC
     DOUBLE_CLICK = 27  # Doble click en inventario (usar item)

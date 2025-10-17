@@ -39,6 +39,7 @@ from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
+from src.task_drop import TaskDrop
 from src.task_equip_item import TaskEquipItem
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
@@ -229,6 +230,16 @@ class ArgentumServer:
             )
         if task_class is TaskPickup:
             return TaskPickup(
+                data,
+                message_sender,
+                self.player_repo,
+                self.inventory_repo,
+                self.map_manager,
+                self.broadcast_service,
+                session_data,
+            )
+        if task_class is TaskDrop:
+            return TaskDrop(
                 data,
                 message_sender,
                 self.player_repo,

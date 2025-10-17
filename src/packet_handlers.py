@@ -13,6 +13,7 @@ from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_end import TaskCommerceEnd
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
+from src.task_drop import TaskDrop
 from src.task_equip_item import TaskEquipItem
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
@@ -41,6 +42,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.WALK: TaskWalk,
     ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
     ClientPacketID.PICK_UP: TaskPickup,  # Recoger item del suelo
+    ClientPacketID.DROP: TaskDrop,  # Tirar item al suelo
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
