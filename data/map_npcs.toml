@@ -1,58 +1,58 @@
 # Configuración de spawns de NPCs en mapas
 # Define qué NPCs aparecen en qué mapas y en qué posiciones
 
-# Mapa 1 - NPCs distribuidos alrededor de (66,70) con 3 casillas de separación
-# Centro: jugador en (69,70)
+# Mapa 1 - NPCs distribuidos alrededor de (50,50) para testing
+# Centro: jugador en (50,50)
 
 # Norte (arriba)
 [[spawn]]
 map_id = 1
 npc_id = 2  # Comerciante
-x = 69
-y = 67
+x = 50
+y = 47
 heading = 3  # Sur (mirando al jugador)
 
 [[spawn]]
 map_id = 1
 npc_id = 5  # Banquero
-x = 69
-y = 64
+x = 50
+y = 44
 heading = 3  # Sur
 
 # Sur (abajo)
 [[spawn]]
 map_id = 1
 npc_id = 6  # Entrenador
-x = 69
-y = 73
+x = 50
+y = 53
 heading = 1  # Norte (mirando al jugador)
 
 [[spawn]]
 map_id = 1
 npc_id = 9  # Herrero
-x = 69
-y = 76
+x = 50
+y = 56
 heading = 1  # Norte
 
 # Este (derecha)
 [[spawn]]
 map_id = 1
 npc_id = 7  # Lobo
-x = 72
-y = 70
+x = 53
+y = 50
 heading = 4  # Oeste (mirando al jugador)
 
 [[spawn]]
 map_id = 1
 npc_id = 1  # Goblin
-x = 75
-y = 70
+x = 56
+y = 50
 heading = 4  # Oeste
 
 # Oeste (izquierda)
 [[spawn]]
 map_id = 1
 npc_id = 1  # Goblin
-x = 66
-y = 70
+x = 47
+y = 50
 heading = 2  # Este (mirando al jugador)
