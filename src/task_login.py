@@ -247,6 +247,9 @@ class TaskLogin(Task):
         # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
         await player_service.spawn_character(user_id, username, position)
 
+        # Enviar actualización de posición para actualizar el minimapa
+        await self.message_sender.send_pos_update(position["x"], position["y"])
+
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)
 

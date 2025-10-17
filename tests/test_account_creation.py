@@ -152,9 +152,13 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     seventh_call = writer.write.call_args_list[6][0][0]
     assert seventh_call[0] == ServerPacketID.CHARACTER_CREATE
 
-    # Octavo paquete: CreateFX (efecto visual de spawn)
+    # Octavo paquete: PosUpdate (actualización de posición para minimapa)
     eighth_call = writer.write.call_args_list[7][0][0]
-    assert eighth_call[0] == ServerPacketID.CREATE_FX
+    assert eighth_call[0] == ServerPacketID.POS_UPDATE
+
+    # Noveno paquete: CreateFX (efecto visual de spawn)
+    ninth_call = writer.write.call_args_list[8][0][0]
+    assert ninth_call[0] == ServerPacketID.CREATE_FX
 
     # MOTD se envía con delay asíncrono, no se verifica aquí
     # TODO: Agregar verificación de PLAY_MIDI cuando el cliente lo soporte
