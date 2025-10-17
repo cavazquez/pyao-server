@@ -8,6 +8,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,7 @@ class TaskWalk(Task):
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        broadcast_service: MultiplayerBroadcastService | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
 
@@ -45,11 +47,13 @@ class TaskWalk(Task):
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
+            broadcast_service: Servicio de broadcast multijugador (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.session_data = session_data
+        self.broadcast_service = broadcast_service
 
     def _parse_packet(self) -> int | None:
         """Parsea el paquete de movimiento.
@@ -154,10 +158,32 @@ class TaskWalk(Task):
 
         # Validar colisiones con MapManager
         if self.map_manager and not self.map_manager.can_move_to(current_map, new_x, new_y):
-            # Posición bloqueada (pared, agua, otro jugador/NPC)
-            logger.debug(
-                "User %d no puede moverse a (%d,%d) - posición bloqueada", user_id, new_x, new_y
-            )
+            # Posición bloqueada - determinar qué la está bloqueando
+            occupant = self.map_manager.get_tile_occupant(current_map, new_x, new_y)
+            if occupant:
+                # Tile ocupado por jugador o NPC
+                occupant_type, occupant_id = occupant.split(":", 1)
+                if occupant_type == "player":
+                    logger.info(
+                        "User %d no puede moverse a (%d,%d) - bloqueado por jugador %s",
+                        user_id,
+                        new_x,
+                        new_y,
+                        occupant_id,
+                    )
+                elif occupant_type == "npc":
+                    logger.info(
+                        "User %d no puede moverse a (%d,%d) - bloqueado por NPC %s",
+                        user_id,
+                        new_x,
+                        new_y,
+                        occupant_id,
+                    )
+            else:
+                # Bloqueado por tile (pared, agua, etc.)
+                logger.debug(
+                    "User %d no puede moverse a (%d,%d) - tile bloqueado", user_id, new_x, new_y
+                )
             # Solo cambiar dirección
             current_heading = position.get("heading", 3)
             if heading != current_heading:
@@ -183,20 +209,10 @@ class TaskWalk(Task):
             heading,
         )
 
-        # Broadcast multijugador: enviar POS_UPDATE a otros jugadores en el mapa
-        if self.map_manager:
-            # Enviar POS_UPDATE a todos los demás jugadores en el mapa
-            other_senders = self.map_manager.get_all_message_senders_in_map(
-                current_map, exclude_user_id=user_id
-            )
-            for sender in other_senders:
-                await sender.send_pos_update(user_id, new_x, new_y)
-
-            logger.debug(
-                "Movimiento de user %d notificado a %d jugadores en mapa %d",
-                user_id,
-                len(other_senders),
-                current_map,
+        # Broadcast multijugador: enviar CHARACTER_MOVE a otros jugadores en el mapa
+        if self.broadcast_service:
+            await self.broadcast_service.broadcast_character_move(
+                current_map, user_id, new_x, new_y, heading, current_x, current_y
             )
 
         # Nota: NO enviamos POS_UPDATE al cliente que se movió porque el cliente

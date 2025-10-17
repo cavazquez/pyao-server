@@ -47,6 +47,20 @@ class SpatialIndexMixin:
         key = (map_id, x, y)
         return key in self._tile_occupation  # type: ignore[attr-defined]
 
+    def get_tile_occupant(self, map_id: int, x: int, y: int) -> str | None:
+        """Obtiene información sobre quién ocupa un tile.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            String con formato 'player:user_id' o 'npc:instance_id', o None si está libre.
+        """
+        key = (map_id, x, y)
+        return self._tile_occupation.get(key)  # type: ignore[attr-defined, no-any-return]
+
     def update_player_tile(
         self, user_id: int, map_id: int, old_x: int, old_y: int, new_x: int, new_y: int
     ) -> None:
