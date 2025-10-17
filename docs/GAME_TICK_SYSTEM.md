@@ -9,7 +9,21 @@ El sistema está compuesto por:
 - **`GameTick`**: Clase principal que ejecuta el loop de tick y gestiona los efectos
 - **`TickEffect`**: Clase abstracta base para crear nuevos efectos
 - **`ServerRepository`**: Provee métodos para leer configuración de efectos desde Redis
-- **Efectos implementados**: `HungerThirstEffect`, `GoldDecayEffect`
+- **Efectos implementados**: `HungerThirstEffect`, `GoldDecayEffect`, `MeditationEffect`, `NPCMovementEffect`
+
+## Configuración del GameTick
+
+**Intervalo de tick**: 0.5 segundos (configurable en `server.py`)
+
+```python
+self.game_tick = GameTick(
+    player_repo=self.player_repo,
+    map_manager=self.map_manager,
+    tick_interval=0.5,  # 0.5 segundos por tick
+)
+```
+
+Cada efecto decide su propio intervalo de ejecución mediante `get_interval_seconds()`.
 
 ## Configuración en Redis
 
@@ -24,16 +38,19 @@ Reduce automáticamente la comida y el agua de los jugadores, basado en el servi
 **Claves de Redis:**
 ```
 config:effects:hunger_thirst:enabled           # 1=habilitado, 0=deshabilitado
-config:effects:hunger_thirst:interval_sed      # Segundos entre reducciones de agua (default: 4)
-config:effects:hunger_thirst:interval_hambre   # Segundos entre reducciones de comida (default: 6)
+config:effects:hunger_thirst:interval_sed      # Segundos entre reducciones de agua (default: 60)
+config:effects:hunger_thirst:interval_hambre   # Segundos entre reducciones de comida (default: 60)
 config:effects:hunger_thirst:reduccion_agua    # Puntos a reducir (default: 10)
 config:effects:hunger_thirst:reduccion_hambre  # Puntos a reducir (default: 10)
 ```
 
+**Intervalo**: 1 segundo (se ejecuta cada segundo para contar intervalos)
+
 **Ejemplos de Configuración:**
 ```bash
-# Configuración por defecto
-redis-cli SET config:effects:hunger_thirst:interval_sed 4
+# Configuración actual (cada 60 segundos = 1 minuto)
+redis-cli SET config:effects:hunger_thirst:interval_sed 60
+redis-cli SET config:effects:hunger_thirst:interval_hambre 60
 redis-cli SET config:effects:hunger_thirst:reduccion_agua 10
 
 # Más agresivo (cada 2 segundos, -20 puntos)
@@ -82,6 +99,67 @@ redis-cli SET config:effects:gold_decay:enabled 0
 ```python
 self.game_tick.add_effect(GoldDecayEffect(self.server_repo))
 ```
+
+### 3. MeditationEffect ✅ IMPLEMENTADO
+
+Recupera mana automáticamente para jugadores que están meditando.
+
+**Intervalo**: 3 segundos
+
+**Configuración:**
+```python
+self.game_tick.add_effect(MeditationEffect(interval_seconds=3.0))
+```
+
+**Características:**
+- Recupera 10 puntos de mana por tick
+- Solo aplica a jugadores con `is_meditating=True`
+- No requiere configuración en Redis (siempre habilitado)
+
+**Código:**
+```python
+# src/meditation_effect.py
+class MeditationEffect(TickEffect):
+    async def apply(self, user_id, player_repo, message_sender):
+        stats = await player_repo.get_stats(user_id)
+        if stats.get("is_meditating"):
+            new_mana = min(stats["mana"] + 10, stats["max_mana"])
+            await player_repo.update_stats(user_id, mana=new_mana)
+```
+
+### 4. NPCMovementEffect ✅ IMPLEMENTADO
+
+Controla el movimiento y la IA de los NPCs hostiles.
+
+**Intervalo**: 5 segundos
+
+**Configuración:**
+```python
+self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))
+```
+
+**Características:**
+- NPCs hostiles (Goblin, Lobo) persiguen jugadores cercanos (10 tiles)
+- Movimiento aleatorio cuando no hay jugadores cerca
+- NPCs amigables (Comerciantes, Banqueros) no se mueven
+- Broadcast automático de `CHARACTER_MOVE` a jugadores en el mapa
+
+**Código:**
+```python
+# src/effect_npc_movement.py
+class NPCMovementEffect(TickEffect):
+    async def apply(self, user_id, player_repo, message_sender):
+        # Solo se ejecuta una vez por tick (no por cada jugador)
+        all_npcs = self.npc_service.map_manager.get_all_npcs()
+        for npc in npcs_to_move:
+            if npc.npc_id in {1, 7}:  # Hostiles
+                await self._move_npc_with_ai(npc, player_repo)
+```
+
+**Detección de Jugadores:**
+- Rango: 10 tiles (distancia Manhattan)
+- Prioriza al jugador más cercano
+- Movimiento limitado a 5 tiles desde spawn
 
 ## Crear Nuevos Efectos
 

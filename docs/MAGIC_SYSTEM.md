@@ -28,20 +28,29 @@
 #### CAST_SPELL (25 / 0x19)
 **Descripción:** Lanzar un hechizo desde el libro de hechizos
 
-**Formato:**
+**Formato Antiguo (2 bytes):**
 ```
 PacketID (1 byte) + Slot (1 byte)
 ```
 
-**Ejemplo:**
+**Formato Nuevo con Targeting (6 bytes):** ✅ IMPLEMENTADO
 ```
-0x19 0x01  # Lanza hechizo en slot 1
+PacketID (1 byte) + Slot (1 byte) + TargetX (2 bytes) + TargetY (2 bytes)
+```
+
+**Ejemplos:**
+```
+0x19 0x01              # Lanza hechizo en slot 1 (sin target específico)
+0x19 0x01 0x32 0x00 0x28 0x00  # Lanza en slot 1 hacia (50, 40)
 ```
 
 **Notas:**
 - El slot es la posición en el libro de hechizos (1-based)
 - El cliente envía el slot, no el ID del hechizo
 - El servidor debe validar que el jugador tenga ese hechizo
+- **Targeting**: Si el packet tiene 6 bytes, incluye coordenadas del objetivo
+- **Validación de rango**: Máximo 10 tiles (distancia Manhattan)
+- **Compatibilidad**: Soporta ambos formatos (2 y 6 bytes)
 
 ---
 

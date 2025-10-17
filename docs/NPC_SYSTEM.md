@@ -73,7 +73,7 @@ for npc in map_npcs:
 
 ```python
 # Cuando un NPC se mueve, el servidor envía:
-# CHARACTER_MOVE (Packet ID: 30)
+# CHARACTER_MOVE (Packet ID: 32)
 
 await message_sender.send_character_move(
     char_index=npc.char_index,
@@ -127,45 +127,85 @@ For i = 1 To LastChar
 Next i
 ```
 
-## 🤖 IA del Servidor (No Implementado Aún)
+## 🤖 IA del Servidor ✅ IMPLEMENTADO
 
-### Comportamientos Típicos
+### Sistema de Movimiento de NPCs
 
-1. **Patrullaje**
-   - El NPC se mueve en un área definida
-   - Puede seguir un path predefinido
+El servidor implementa un sistema de IA básica para NPCs hostiles que incluye:
 
-2. **Agresión**
-   - Detecta jugadores cercanos
-   - Persigue y ataca
+1. **Detección de Jugadores**
+   - Rango de detección: 10 tiles (distancia Manhattan)
+   - Solo NPCs hostiles detectan jugadores (Goblin ID=1, Lobo ID=7)
 
-3. **Huida**
-   - Si la vida es baja, huye
-   - Busca aliados
+2. **Persecución**
+   - NPCs hostiles persiguen al jugador más cercano
+   - Se mueven un tile por turno hacia el objetivo
+   - Priorizan movimiento horizontal sobre vertical
 
-4. **Respawn**
-   - Después de morir, reaparece en un tiempo
-   - Puede tener un punto de spawn fijo
+3. **Movimiento Aleatorio**
+   - Cuando no hay jugadores cerca, se mueven aleatoriamente
+   - Limitado a un radio de 5 tiles desde su posición de spawn
 
-### Ejemplo de IA Básica
+4. **NPCs Estáticos**
+   - Comerciantes, Banqueros, Entrenadores, Herreros no se mueven
+   - Permanecen en su posición inicial
+
+### Implementación Actual
 
 ```python
-class NPCBehavior:
-    async def update(self, npc, delta_time):
-        if npc.is_hostile:
-            # Buscar jugadores cercanos
-            target = self.find_nearest_player(npc)
+# src/effect_npc_movement.py
+class NPCMovementEffect(TickEffect):
+    """Efecto que hace que los NPCs se muevan aleatoriamente."""
+    
+    async def _move_npc_with_ai(self, npc, player_repo):
+        # Obtener jugadores en el mapa
+        player_ids = self.npc_service.map_manager.get_players_in_map(npc.map_id)
+        
+        # Encontrar jugador más cercano
+        closest_player = None
+        min_distance = float("inf")
+        
+        for user_id in player_ids:
+            position = await player_repo.get_position(user_id)
+            distance = abs(npc.x - position["x"]) + abs(npc.y - position["y"])
             
-            if target:
-                # Perseguir
-                await self.move_towards(npc, target)
-                
-                # Atacar si está en rango
-                if self.is_in_range(npc, target):
-                    await self.attack(npc, target)
+            if distance < min_distance and distance <= 10:
+                min_distance = distance
+                closest_player = (position["x"], position["y"])
+        
+        # Perseguir o moverse aleatoriamente
+        if closest_player:
+            await self._move_towards_target(npc, *closest_player)
         else:
-            # Patrullar
-            await self.patrol(npc)
+            await self._move_npc_randomly(npc)
+```
+
+### Configuración
+
+- **Intervalo de movimiento**: 5 segundos
+- **Rango de detección**: 10 tiles
+- **NPCs hostiles**: Goblin (ID=1), Lobo (ID=7)
+- **GameTick**: 0.5 segundos
+
+### Broadcast de Movimiento
+
+Cuando un NPC se mueve, el servidor envía `CHARACTER_MOVE` a todos los jugadores en el mapa:
+
+```python
+# src/npc_service.py
+async def move_npc(self, npc, new_x, new_y, new_heading):
+    # Actualizar en Redis
+    await self.npc_repository.update_npc_position(...)
+    
+    # Actualizar en memoria
+    npc.x = new_x
+    npc.y = new_y
+    npc.heading = new_heading
+    
+    # Broadcast a jugadores cercanos
+    await self.broadcast_service.broadcast_character_move(
+        npc.map_id, npc.char_index, new_x, new_y, new_heading, old_x, old_y
+    )
 ```
 
 ## 📊 Estructura de Datos del NPC
@@ -269,36 +309,67 @@ elif npc.is_hostile:
     await attack_npc(player_id, npc_id)
 ```
 
-## 🔮 Implementación Futura en PyAO
+## ✅ Implementación Actual en PyAO
 
-### Fase 1: NPCs Estáticos
+### NPCService (Implementado)
 ```python
+# src/npc_service.py
 class NPCService:
-    async def spawn_npc(self, map_id, npc_data):
+    async def initialize_world_npcs(self, spawns_path: str):
+        """Inicializa todos los NPCs del mundo desde map_npcs.toml."""
+    
+    async def spawn_npc(self, npc_id, map_id, x, y, heading):
         """Crea un NPC en el mapa."""
     
-    async def send_npcs_to_player(self, player_id, map_id):
-        """Envía todos los NPCs del mapa al jugador."""
-```
-
-### Fase 2: NPCs con IA
-```python
-class NPCAIService:
-    async def update_npc_behavior(self, npc_id, delta_time):
-        """Actualiza el comportamiento del NPC."""
+    async def move_npc(self, npc, new_x, new_y, new_heading):
+        """Mueve un NPC y hace broadcast a jugadores."""
     
-    async def npc_attack(self, npc_id, target_id):
-        """NPC ataca a un objetivo."""
+    async def remove_npc(self, npc):
+        """Elimina un NPC del mundo."""
 ```
 
-### Fase 3: Sistema de Combate
+### NPCMovementEffect (Implementado)
+```python
+# src/effect_npc_movement.py
+class NPCMovementEffect(TickEffect):
+    """Efecto de IA que mueve NPCs hostiles."""
+    
+    async def apply(self, user_id, player_repo, message_sender):
+        """Ejecuta la IA de movimiento cada 5 segundos."""
+```
+
+### MultiplayerBroadcastService (Implementado)
+```python
+# src/multiplayer_broadcast_service.py
+async def broadcast_character_move(
+    self, map_id, char_index, new_x, new_y, new_heading, old_x, old_y
+):
+    """Envía CHARACTER_MOVE a todos los jugadores en el mapa."""
+```
+
+## 🔮 Próximas Fases
+
+### Fase 3: Sistema de Combate (Pendiente)
 ```python
 class CombatService:
+    async def npc_attack(self, npc_id, target_id):
+        """NPC ataca a un jugador."""
+    
     async def calculate_damage(self, attacker, defender):
         """Calcula daño de un ataque."""
     
     async def apply_damage(self, target_id, damage):
         """Aplica daño a un objetivo."""
+```
+
+### Fase 4: Sistema de Loot (Pendiente)
+```python
+class LootService:
+    async def drop_loot(self, npc_id, position):
+        """Genera loot cuando un NPC muere."""
+    
+    async def give_experience(self, player_id, npc_level):
+        """Otorga experiencia al jugador."""
 ```
 
 ## 📝 Notas Importantes
@@ -315,13 +386,24 @@ class CombatService:
 
 5. **Optimización**: No enviar NPCs fuera del rango de visión del jugador.
 
-## 🚀 Próximos Pasos
+## 🚀 Estado Actual y Próximos Pasos
 
+### ✅ Completado
 1. **NPCRepository** - Almacenar NPCs en Redis
 2. **NPCService** - Gestión de NPCs (spawn, despawn, move)
-3. **NPCAIService** - Comportamientos de IA
-4. **CombatService** - Sistema de combate
-5. **LootService** - Sistema de drops
+3. **NPCCatalog** - Catálogo de NPCs desde `data/npcs.toml`
+4. **NPCMovementEffect** - IA básica de movimiento y persecución
+5. **MultiplayerBroadcastService** - Broadcast de movimiento a jugadores
+
+### 🔄 En Progreso
+- **Tests** - 11 tests de movimiento y broadcast de NPCs
+
+### 📋 Pendiente
+1. **CombatService** - Sistema de combate NPC vs Jugador
+2. **LootService** - Sistema de drops y experiencia
+3. **NPCDialogService** - Sistema de diálogos con NPCs
+4. **QuestService** - Sistema de misiones
+5. **IA Avanzada** - Pathfinding, comportamientos complejos
 
 ## 📄 Archivos de Configuración
 
