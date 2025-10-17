@@ -25,6 +25,13 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [x] **Actualizar índice en todos los movimientos** - `update_player_tile()`, `update_npc_tile()` ✅ v0.2.0
 - [x] **Método get_tile_occupant** - Identificar qué bloquea un tile ✅ v0.2.0
 
+### Estructura de Datos Redis
+- [ ] **Reorganizar datos en Redis** - Muchos datos del mismo tipo están en diferentes lugares
+  - Revisar keys de jugadores, NPCs, items, etc.
+  - Estandarizar nomenclatura de keys
+  - Agrupar datos relacionados
+  - Documentar estructura de datos en Redis
+
 ## 🔥 Prioridad Alta
 
 ### Sistema de Combate
@@ -247,6 +254,12 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Guía de deployment
 - [ ] Troubleshooting común
 - [ ] Changelog detallado
+- [ ] **Documentación de movimiento de personajes** - Explicar flujo completo
+  - Cliente: _MovePlayer, _CanMoveTo, WriteWalk
+  - Servidor: TaskWalk, validaciones, broadcast
+  - Paquetes: WALK, CHARACTER_MOVE, CHARACTER_CHANGE, POS_UPDATE
+  - Colisiones: can_move_to, get_tile_occupant
+  - Heading: guardado en Redis, sincronización cliente-servidor
 
 ### Tutoriales
 - [ ] Cómo crear un nuevo packet
