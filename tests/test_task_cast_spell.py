@@ -67,8 +67,8 @@ class TestTaskCastSpell:
         spellbook_repo = MagicMock()
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)  # Dardo Mágico
 
-        # Packet: CAST_SPELL + Slot 1
-        data = bytes([25, 1])
+        # Packet: CAST_SPELL + Slot 1 + Target X=51 + Target Y=50 (little-endian)
+        data = bytes([25, 1, 51, 0, 50, 0])  # X=51, Y=50 en little-endian uint16
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -83,3 +83,5 @@ class TestTaskCastSpell:
         call_args = spell_service.cast_spell.call_args[0]
         assert call_args[0] == 1  # user_id
         assert call_args[1] == 1  # spell_id (Dardo Mágico)
+        assert call_args[2] == 51  # target_x
+        assert call_args[3] == 50  # target_y
