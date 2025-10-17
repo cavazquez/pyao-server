@@ -5,11 +5,13 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from src.equipment_service import EquipmentService
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
 from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
+    from src.equipment_repository import EquipmentRepository
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -193,14 +195,23 @@ class PlayerService:
 
         logger.info("Personaje spawneado para user_id %d", user_id)
 
-    async def send_inventory(self, user_id: int) -> None:
+    async def send_inventory(
+        self, user_id: int, equipment_repo: EquipmentRepository | None = None
+    ) -> None:
         """Obtiene inventario y envía solo slots con items al cliente.
 
         Args:
             user_id: ID del usuario.
+            equipment_repo: Repositorio de equipamiento (opcional).
         """
         inventory_repo = InventoryRepository(self.player_repo.redis)
         inventory = await inventory_repo.get_inventory(user_id)
+
+        # Obtener items equipados si el repositorio está disponible
+        equipped_slots = {}
+        if equipment_repo:
+            equipment_service = EquipmentService(equipment_repo, inventory_repo)
+            equipped_slots = await equipment_service.get_equipped_items(user_id)
 
         # Contar items no vacíos
         non_empty_slots = sum(1 for v in inventory.values() if v and isinstance(v, str))
@@ -217,20 +228,23 @@ class PlayerService:
                     item = get_item(int(item_id))
 
                     if item:
+                        is_equipped = i in equipped_slots
+                        equipped_str = " [EQUIPADO]" if is_equipped else ""
                         logger.info(
-                            "Item enviado: Slot %d -> '%s' (ID=%d, Cantidad=%s, Tipo=%s)",
+                            "Item enviado: Slot %d -> '%s' (ID=%d, Cantidad=%s, Tipo=%s)%s",
                             i,
                             item.name,
                             item.item_id,
                             quantity,
                             item.item_type.name,
+                            equipped_str,
                         )
                         await self.message_sender.send_change_inventory_slot(
                             slot=i,
                             item_id=item.item_id,
                             name=item.name,
                             amount=int(quantity),
-                            equipped=False,
+                            equipped=is_equipped,
                             grh_id=item.graphic_id,
                             item_type=item.item_type.to_client_type(),
                             max_hit=item.max_damage or 0,

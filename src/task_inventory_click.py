@@ -10,6 +10,7 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.equipment_repository import EquipmentRepository
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -25,6 +26,7 @@ class TaskInventoryClick(Task):
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        equipment_repo: EquipmentRepository | None = None,
     ) -> None:
         """Inicializa la tarea de click en inventario.
 
@@ -33,10 +35,12 @@ class TaskInventoryClick(Task):
             message_sender: Enviador de mensajes.
             player_repo: Repositorio de jugadores.
             session_data: Datos de sesión.
+            equipment_repo: Repositorio de equipamiento.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.session_data = session_data or {}
+        self.equipment_repo = equipment_repo
 
     async def execute(self) -> None:
         """Ejecuta el click en un slot del inventario."""
@@ -98,13 +102,19 @@ class TaskInventoryClick(Task):
                 await self.message_sender.send_console_msg("Item no válido.")
                 return
 
+            # Verificar si el item está equipado
+            is_equipped = False
+            if self.equipment_repo:
+                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, slot)
+                is_equipped = equipped_slot is not None
+
             # Enviar información del slot actualizada
             await self.message_sender.send_change_inventory_slot(
                 slot=slot,
                 item_id=item.item_id,
                 name=item.name,
                 amount=quantity,
-                equipped=False,  # TODO: Implementar sistema de equipamiento
+                equipped=is_equipped,
                 grh_id=item.graphic_id,
                 item_type=item.item_type.to_client_type(),
                 max_hit=item.max_damage or 0,

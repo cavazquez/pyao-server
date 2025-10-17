@@ -11,6 +11,7 @@ from src.account_repository import AccountRepository
 from src.client_connection import ClientConnection
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
+from src.equipment_repository import EquipmentRepository
 from src.game_tick import GameTick
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
@@ -32,6 +33,7 @@ from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
+from src.task_equip_item import TaskEquipItem
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
 from src.task_left_click import TaskLeftClick
@@ -79,6 +81,7 @@ class ArgentumServer:
         self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
         self.spell_service: SpellService | None = None  # Servicio de hechizos
         self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
+        self.equipment_repo: EquipmentRepository | None = None  # Repositorio de equipamiento
 
     def create_task(  # noqa: PLR0911, C901, PLR0912
         self,
@@ -117,6 +120,7 @@ class ArgentumServer:
                 self.server_repo,
                 self.spellbook_repo,
                 self.spell_catalog,
+                self.equipment_repo,
             )
         if task_class is TaskCreateAccount:
             return TaskCreateAccount(
@@ -130,6 +134,7 @@ class ArgentumServer:
                 self.server_repo,
                 self.spellbook_repo,
                 self.spell_catalog,
+                self.equipment_repo,
             )
         if task_class is TaskDice:
             return TaskDice(data, message_sender, session_data, self.server_repo)
@@ -187,7 +192,13 @@ class ArgentumServer:
         if task_class is TaskMeditate:
             return TaskMeditate(data, message_sender, self.player_repo, session_data)
         if task_class is TaskInventoryClick:
-            return TaskInventoryClick(data, message_sender, self.player_repo, session_data)
+            return TaskInventoryClick(
+                data, message_sender, self.player_repo, session_data, self.equipment_repo
+            )
+        if task_class is TaskEquipItem:
+            return TaskEquipItem(
+                data, message_sender, self.player_repo, session_data, self.equipment_repo
+            )
 
         return task_class(data, message_sender)
 
@@ -370,6 +381,10 @@ class ArgentumServer:
             )
             self.spellbook_repo = SpellbookRepository(self.redis_client)
             logger.info("Sistema de magia inicializado")
+
+            # Inicializar sistema de equipamiento
+            self.equipment_repo = EquipmentRepository(self.redis_client)
+            logger.info("Sistema de equipamiento inicializado")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

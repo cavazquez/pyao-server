@@ -12,6 +12,7 @@ from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_end import TaskCommerceEnd
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
+from src.task_equip_item import TaskEquipItem
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
 from src.task_left_click import TaskLeftClick
@@ -40,6 +41,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
     ClientPacketID.USE_ITEM: TaskInventoryClick,  # Click en inventario - mostrar info
+    ClientPacketID.EQUIP_ITEM: TaskEquipItem,  # Equipar/desequipar item
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
     ClientPacketID.COMMERCE_END: TaskCommerceEnd,  # Cerrar ventana de comercio

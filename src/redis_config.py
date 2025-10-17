@@ -122,6 +122,15 @@ class RedisKeys:
         """
         return f"player:{user_id}:spellbook"
 
+    @staticmethod
+    def player_equipment(user_id: int) -> str:
+        """Clave para equipamiento del jugador.
+
+        Returns:
+            Clave de Redis para el equipamiento.
+        """
+        return f"player:{user_id}:equipment"
+
     # Cuentas de usuario
     ACCOUNTS_COUNTER = "accounts:counter"
 

@@ -1,0 +1,84 @@
+"""Tarea para equipar/desequipar items."""
+
+import logging
+import struct
+from typing import TYPE_CHECKING
+
+from src.equipment_service import EquipmentService
+from src.inventory_repository import InventoryRepository
+from src.player_service import PlayerService
+from src.session_manager import SessionManager
+from src.task import Task
+
+if TYPE_CHECKING:
+    from src.equipment_repository import EquipmentRepository
+    from src.message_sender import MessageSender
+    from src.player_repository import PlayerRepository
+
+logger = logging.getLogger(__name__)
+
+
+class TaskEquipItem(Task):
+    """Maneja equipar/desequipar items del inventario."""
+
+    def __init__(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        player_repo: PlayerRepository | None = None,
+        session_data: dict[str, dict[str, int]] | None = None,
+        equipment_repo: EquipmentRepository | None = None,
+    ) -> None:
+        """Inicializa la tarea de equipar item.
+
+        Args:
+            data: Datos del packet.
+            message_sender: Enviador de mensajes.
+            player_repo: Repositorio de jugadores.
+            session_data: Datos de sesión.
+            equipment_repo: Repositorio de equipamiento.
+        """
+        super().__init__(data, message_sender)
+        self.player_repo = player_repo
+        self.session_data = session_data or {}
+        self.equipment_repo = equipment_repo
+
+    async def execute(self) -> None:
+        """Ejecuta equipar/desequipar item."""
+        # Parsear el packet: PacketID (1 byte) + Slot (1 byte)
+        min_packet_size = 2
+        if len(self.data) < min_packet_size:
+            logger.warning("Packet EQUIP_ITEM inválido: tamaño incorrecto")
+            return
+
+        # Verificar que el jugador esté logueado
+        user_id = SessionManager.get_user_id(self.session_data)
+        if user_id is None:
+            logger.warning("Intento de equipar item sin estar logueado")
+            return
+
+        # Verificar dependencias
+        if not self.player_repo or not self.equipment_repo:
+            logger.error("Dependencias no disponibles para equipar item")
+            return
+
+        try:
+            # Extraer el slot del inventario (segundo byte)
+            slot = struct.unpack("B", self.data[1:2])[0]
+
+            logger.info("user_id %d intenta equipar/desequipar item en slot %d", user_id, slot)
+
+            # Crear servicio de equipamiento
+            inventory_repo = InventoryRepository(self.player_repo.redis)
+            equipment_service = EquipmentService(self.equipment_repo, inventory_repo)
+
+            # Equipar o desequipar el item
+            success = await equipment_service.toggle_equip_item(user_id, slot, self.message_sender)
+
+            if success:
+                # Reenviar el inventario completo para actualizar el estado de equipamiento
+                player_service = PlayerService(self.player_repo, self.message_sender)
+                await player_service.send_inventory(user_id, self.equipment_repo)
+
+        except struct.error:
+            logger.exception("Error al parsear packet EQUIP_ITEM")

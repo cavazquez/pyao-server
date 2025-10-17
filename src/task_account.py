@@ -10,6 +10,7 @@ from src.task_login import TaskLogin
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
+    from src.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.npc_service import NPCService
@@ -40,6 +41,7 @@ class TaskCreateAccount(Task):
         server_repo: ServerRepository | None = None,
         spellbook_repo: SpellbookRepository | None = None,
         spell_catalog: SpellCatalog | None = None,
+        equipment_repo: EquipmentRepository | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
 
@@ -54,6 +56,7 @@ class TaskCreateAccount(Task):
             server_repo: Repositorio del servidor.
             spellbook_repo: Repositorio de libro de hechizos.
             spell_catalog: Catálogo de hechizos.
+            equipment_repo: Repositorio de equipamiento.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -64,6 +67,7 @@ class TaskCreateAccount(Task):
         self.server_repo = server_repo
         self.spellbook_repo = spellbook_repo
         self.spell_catalog = spell_catalog
+        self.equipment_repo = equipment_repo
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: C901, PLR0915
         """Parsea el paquete de creación de cuenta.
@@ -327,6 +331,7 @@ class TaskCreateAccount(Task):
                 server_repo=self.server_repo,
                 spellbook_repo=self.spellbook_repo,
                 spell_catalog=self.spell_catalog,
+                equipment_repo=self.equipment_repo,
             )
             await login_task.execute_with_credentials(username, password)
 

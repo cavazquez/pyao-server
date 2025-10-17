@@ -19,6 +19,7 @@ from src.task_motd import TaskMotd
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository
+    from src.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.npc_service import NPCService
@@ -45,6 +46,7 @@ class TaskLogin(Task):
         server_repo: ServerRepository | None = None,
         spellbook_repo: SpellbookRepository | None = None,
         spell_catalog: SpellCatalog | None = None,
+        equipment_repo: EquipmentRepository | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -59,6 +61,7 @@ class TaskLogin(Task):
             server_repo: Repositorio del servidor para obtener el MOTD.
             spellbook_repo: Repositorio de libro de hechizos.
             spell_catalog: Catálogo de hechizos.
+            equipment_repo: Repositorio de equipamiento.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -69,6 +72,7 @@ class TaskLogin(Task):
         self.server_repo = server_repo
         self.spellbook_repo = spellbook_repo
         self.spell_catalog = spell_catalog
+        self.equipment_repo = equipment_repo
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -263,7 +267,7 @@ class TaskLogin(Task):
             )
 
         # Enviar inventario (después del delay automático de spawn_character)
-        await player_service.send_inventory(user_id)
+        await player_service.send_inventory(user_id, self.equipment_repo)
 
         # Enviar MOTD (Mensaje del Día) - reutilizar TaskMotd
         motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)

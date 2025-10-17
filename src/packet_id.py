@@ -19,6 +19,7 @@ class ClientPacketID(IntEnum):
     TALK = 3  # Hablar (chat normal)
     WALK = 6  # Caminar/moverse
     USE_ITEM = 30  # Usar item del inventario
+    EQUIP_ITEM = 36  # Equipar/desequipar item
     CHANGE_HEADING = 37  # Cambiar dirección sin moverse
 
     # Paquetes del protocolo AO (no implementados aún)
