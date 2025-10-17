@@ -42,11 +42,11 @@ class HungerThirstEffect(TickEffect):
         # Leer configuración desde Redis
         intervalo_sed = await self.server_repo.get_effect_config_int(
             RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED,
-            60,  # 60 segundos = 1 minuto
+            180,  # 180 segundos = 3 minutos
         )
         intervalo_hambre = await self.server_repo.get_effect_config_int(
             RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE,
-            60,  # 60 segundos = 1 minuto
+            180,  # 180 segundos = 3 minutos
         )
         reduccion_agua = await self.server_repo.get_effect_config_int(
             RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, 10

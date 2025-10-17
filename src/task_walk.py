@@ -78,7 +78,7 @@ class TaskWalk(Task):
         else:
             return heading
 
-    async def execute(self) -> None:  # noqa: C901
+    async def execute(self) -> None:  # noqa: C901, PLR0912
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -139,6 +139,18 @@ class TaskWalk(Task):
             new_y = min(MAX_MAP_COORDINATE, current_y + 1)
         elif heading == HEADING_WEST:
             new_x = max(MIN_MAP_COORDINATE, current_x - 1)
+
+        # Verificar si realmente se movió
+        moved = new_x != current_x or new_y != current_y
+
+        if not moved:
+            # No se movió (límite del mapa o bloqueado)
+            # Solo actualizar heading si cambió
+            current_heading = position.get("heading", 3)
+            if heading != current_heading:
+                await self.player_repo.set_heading(user_id, heading)
+                logger.debug("User %d cambió dirección a %d sin moverse", user_id, heading)
+            return
 
         # Actualizar posición en Redis (incluyendo heading)
         await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
