@@ -312,8 +312,8 @@ Todas las constantes se almacenan en Redis y pueden modificarse en tiempo real:
 ```bash
 # Hambre y Sed
 redis-cli SET config:effects:hunger_thirst:enabled 1
-redis-cli SET config:effects:hunger_thirst:interval_sed 4
-redis-cli SET config:effects:hunger_thirst:interval_hambre 6
+redis-cli SET config:effects:hunger_thirst:interval_sed 180
+redis-cli SET config:effects:hunger_thirst:interval_hambre 180
 redis-cli SET config:effects:hunger_thirst:reduccion_agua 10
 redis-cli SET config:effects:hunger_thirst:reduccion_hambre 10
 
@@ -330,8 +330,8 @@ redis-cli SET server:dice:max_value 18
 **Ejemplos de Configuración:**
 
 ```bash
-# Hambre/sed más agresiva (cada 2 segundos, -20 puntos)
-redis-cli SET config:effects:hunger_thirst:interval_sed 2
+# Hambre/sed más agresiva (cada 30 segundos, -20 puntos)
+redis-cli SET config:effects:hunger_thirst:interval_sed 30
 redis-cli SET config:effects:hunger_thirst:reduccion_agua 20
 
 # Oro más suave (0.5% cada 2 minutos)

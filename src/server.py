@@ -314,6 +314,38 @@ class ArgentumServer:
         dice_max = await self.server_repo.get_dice_max_value()
         logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
 
+    async def _initialize_effects_config(self) -> None:
+        """Inicializa la configuración de efectos en Redis si no existe."""
+        if not self.redis_client:
+            return
+
+        # Hambre y Sed - 180 segundos (3 minutos)
+        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED) is None:
+            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
+            logger.info("Intervalo de sed inicializado: 180 segundos (3 minutos)")
+
+        if (
+            await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE)
+            is None
+        ):
+            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
+            logger.info("Intervalo de hambre inicializado: 180 segundos (3 minutos)")
+
+        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
+            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")
+            logger.info("Reducción de agua inicializada: 10 puntos")
+
+        if (
+            await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE)
+            is None
+        ):
+            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10")
+            logger.info("Reducción de hambre inicializada: 10 puntos")
+
+        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED) is None:
+            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
+            logger.info("Sistema de hambre/sed habilitado por defecto")
+
     async def start(self) -> None:  # noqa: PLR0915
         """Inicia el servidor TCP."""
         # Conectar a Redis (obligatorio)
@@ -417,6 +449,9 @@ class ArgentumServer:
             # Inicializar sistema de combate
             self.combat_service = CombatService(self.player_repo, npc_repository)
             logger.info("Sistema de combate inicializado")
+
+            # Inicializar configuración de efectos en Redis (si no existe)
+            await self._initialize_effects_config()
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400

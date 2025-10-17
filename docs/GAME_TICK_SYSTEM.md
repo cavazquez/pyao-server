@@ -38,8 +38,8 @@ Reduce automáticamente la comida y el agua de los jugadores, basado en el servi
 **Claves de Redis:**
 ```
 config:effects:hunger_thirst:enabled           # 1=habilitado, 0=deshabilitado
-config:effects:hunger_thirst:interval_sed      # Segundos entre reducciones de agua (default: 60)
-config:effects:hunger_thirst:interval_hambre   # Segundos entre reducciones de comida (default: 60)
+config:effects:hunger_thirst:interval_sed      # Segundos entre reducciones de agua (default: 180)
+config:effects:hunger_thirst:interval_hambre   # Segundos entre reducciones de comida (default: 180)
 config:effects:hunger_thirst:reduccion_agua    # Puntos a reducir (default: 10)
 config:effects:hunger_thirst:reduccion_hambre  # Puntos a reducir (default: 10)
 ```
@@ -48,13 +48,13 @@ config:effects:hunger_thirst:reduccion_hambre  # Puntos a reducir (default: 10)
 
 **Ejemplos de Configuración:**
 ```bash
-# Configuración actual (cada 60 segundos = 1 minuto)
-redis-cli SET config:effects:hunger_thirst:interval_sed 60
-redis-cli SET config:effects:hunger_thirst:interval_hambre 60
+# Configuración actual (cada 180 segundos = 3 minutos)
+redis-cli SET config:effects:hunger_thirst:interval_sed 180
+redis-cli SET config:effects:hunger_thirst:interval_hambre 180
 redis-cli SET config:effects:hunger_thirst:reduccion_agua 10
 
-# Más agresivo (cada 2 segundos, -20 puntos)
-redis-cli SET config:effects:hunger_thirst:interval_sed 2
+# Más agresivo (cada 30 segundos, -20 puntos)
+redis-cli SET config:effects:hunger_thirst:interval_sed 30
 redis-cli SET config:effects:hunger_thirst:reduccion_agua 20
 
 # Desactivar
