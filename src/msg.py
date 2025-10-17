@@ -537,3 +537,39 @@ def build_character_move_response(char_index: int, x: int, y: int, heading: int)
     packet.add_byte(y)
     packet.add_byte(heading)
     return packet.to_bytes()
+
+
+def build_object_create_response(x: int, y: int, grh_index: int) -> bytes:
+    """Construye el paquete ObjectCreate del protocolo AO estándar.
+
+    Args:
+        x: Posición X del objeto (byte).
+        y: Posición Y del objeto (byte).
+        grh_index: Índice gráfico del objeto (int16).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (35) + X + Y + GrhIndex.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.OBJECT_CREATE)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    packet.add_int16(grh_index)
+    return packet.to_bytes()
+
+
+def build_object_delete_response(x: int, y: int) -> bytes:
+    """Construye el paquete ObjectDelete del protocolo AO estándar.
+
+    Args:
+        x: Posición X del objeto (byte).
+        y: Posición Y del objeto (byte).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (36) + X + Y.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.OBJECT_DELETE)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    return packet.to_bytes()

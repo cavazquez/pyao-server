@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 class MapManager(SpatialIndexMixin):
     """Gestiona qué jugadores y NPCs están en qué mapa para broadcast de eventos."""
 
+    MAX_ITEMS_PER_TILE = 10  # Límite de items por tile
+
     def __init__(self) -> None:
         """Inicializa el gestor de mapas.
 
@@ -31,6 +33,9 @@ class MapManager(SpatialIndexMixin):
 
         # Tiles bloqueados por mapa (paredes, agua, etc.)
         self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
+
+        # Ground items: {(map_id, x, y): [Item, Item, ...]}
+        self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
 
     def add_player(
         self, map_id: int, user_id: int, message_sender: MessageSender, username: str = ""
@@ -266,3 +271,133 @@ class MapManager(SpatialIndexMixin):
         for map_npcs in self._npcs_by_map.values():
             npcs.extend(map_npcs.values())
         return npcs
+
+    # Ground Items Methods
+
+    def add_ground_item(
+        self, map_id: int, x: int, y: int, item: dict[str, int | str | None]
+    ) -> None:
+        """Agrega un item al suelo en una posición específica.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X.
+            y: Posición Y.
+            item: Diccionario con datos del item:
+                - item_id: ID del item
+                - quantity: Cantidad
+                - grh_index: Índice gráfico
+                - owner_id (opcional): Dueño temporal
+                - spawn_time (opcional): Timestamp de spawn
+        """
+        key = (map_id, x, y)
+        if key not in self._ground_items:
+            self._ground_items[key] = []
+
+        # Límite de items por tile
+        if len(self._ground_items[key]) >= self.MAX_ITEMS_PER_TILE:
+            logger.warning(
+                "Tile (%d, %d) en mapa %d tiene 10 items, no se puede agregar más", x, y, map_id
+            )
+            return
+
+        self._ground_items[key].append(item)
+        logger.debug(
+            "Item agregado al suelo: mapa=%d pos=(%d,%d) item_id=%d cantidad=%d",
+            map_id,
+            x,
+            y,
+            item.get("item_id"),
+            item.get("quantity"),
+        )
+
+    def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
+        """Obtiene todos los items en un tile específico.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X.
+            y: Posición Y.
+
+        Returns:
+            Lista de items en ese tile (vacía si no hay items).
+        """
+        key = (map_id, x, y)
+        return self._ground_items.get(key, [])
+
+    def remove_ground_item(
+        self, map_id: int, x: int, y: int, item_index: int = 0
+    ) -> dict[str, int | str | None] | None:
+        """Remueve un item del suelo.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X.
+            y: Posición Y.
+            item_index: Índice del item en la lista (default: 0, primer item).
+
+        Returns:
+            Item removido o None si no existe.
+        """
+        key = (map_id, x, y)
+        if key not in self._ground_items:
+            return None
+
+        items = self._ground_items[key]
+        if item_index >= len(items):
+            logger.warning(
+                "Intento de remover item_index=%d pero solo hay %d items en (%d,%d)",
+                item_index,
+                len(items),
+                x,
+                y,
+            )
+            return None
+
+        item = items.pop(item_index)
+
+        # Limpiar si no quedan items
+        if not items:
+            del self._ground_items[key]
+
+        logger.debug(
+            "Item removido del suelo: mapa=%d pos=(%d,%d) item_id=%d",
+            map_id,
+            x,
+            y,
+            item.get("item_id"),
+        )
+
+        return item
+
+    def clear_ground_items(self, map_id: int) -> int:
+        """Limpia todos los items de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+
+        Returns:
+            Cantidad de items removidos.
+        """
+        keys_to_remove = [key for key in self._ground_items if key[0] == map_id]
+
+        total_items = sum(len(self._ground_items[key]) for key in keys_to_remove)
+
+        for key in keys_to_remove:
+            del self._ground_items[key]
+
+        if total_items > 0:
+            logger.info("Limpiados %d items del mapa %d", total_items, map_id)
+
+        return total_items
+
+    def get_ground_items_count(self, map_id: int) -> int:
+        """Obtiene la cantidad total de items en el suelo de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+
+        Returns:
+            Cantidad de items.
+        """
+        return sum(len(items) for key, items in self._ground_items.items() if key[0] == map_id)

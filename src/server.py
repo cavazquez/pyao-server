@@ -213,6 +213,7 @@ class ArgentumServer:
                 self.combat_service,
                 self.map_manager,
                 self.npc_service,
+                self.broadcast_service,
                 session_data,
             )
 

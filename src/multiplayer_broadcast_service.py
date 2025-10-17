@@ -226,3 +226,58 @@ class MultiplayerBroadcastService:
             )
 
         return notified
+
+    async def broadcast_object_create(self, map_id: int, x: int, y: int, grh_index: int) -> int:
+        """Broadcast de OBJECT_CREATE a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X del objeto.
+            y: Posición Y del objeto.
+            grh_index: Índice gráfico del objeto.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # Obtener todos los jugadores en el mapa
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            await sender.send_object_create(x, y, grh_index)
+            notified += 1
+
+        if notified > 0:
+            logger.debug(
+                "Broadcast OBJECT_CREATE: pos=(%d,%d) grh=%d - %d notificados",
+                x,
+                y,
+                grh_index,
+                notified,
+            )
+
+        return notified
+
+    async def broadcast_object_delete(self, map_id: int, x: int, y: int) -> int:
+        """Broadcast de OBJECT_DELETE a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X del objeto.
+            y: Posición Y del objeto.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # Obtener todos los jugadores en el mapa
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            await sender.send_object_delete(x, y)
+            notified += 1
+
+        if notified > 0:
+            logger.debug("Broadcast OBJECT_DELETE: pos=(%d,%d) - %d notificados", x, y, notified)
+
+        return notified

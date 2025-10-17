@@ -17,6 +17,8 @@ from src.msg import (
     build_dice_roll_response,
     build_error_msg_response,
     build_logged_response,
+    build_object_create_response,
+    build_object_delete_response,
     build_play_midi_response,
     build_play_wave_response,
     build_pos_update_response,
@@ -684,4 +686,33 @@ class MessageSender:  # noqa: PLR0904
             heading: Nueva dirección.
         """
         response = build_character_move_response(char_index, x, y, heading)
+        await self.connection.send(response)
+
+    async def send_object_create(self, x: int, y: int, grh_index: int) -> None:
+        """Envía el packet OBJECT_CREATE para mostrar un item en el suelo.
+
+        Args:
+            x: Posición X del objeto.
+            y: Posición Y del objeto.
+            grh_index: Índice gráfico del objeto.
+        """
+        response = build_object_create_response(x, y, grh_index)
+        logger.debug(
+            "[%s] Enviando OBJECT_CREATE: pos=(%d,%d) grh=%d",
+            self.connection.address,
+            x,
+            y,
+            grh_index,
+        )
+        await self.connection.send(response)
+
+    async def send_object_delete(self, x: int, y: int) -> None:
+        """Envía el packet OBJECT_DELETE para remover un item del suelo.
+
+        Args:
+            x: Posición X del objeto.
+            y: Posición Y del objeto.
+        """
+        response = build_object_delete_response(x, y)
+        logger.debug("[%s] Enviando OBJECT_DELETE: pos=(%d,%d)", self.connection.address, x, y)
         await self.connection.send(response)

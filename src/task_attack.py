@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.item_constants import GOLD_GRH_INDEX, GOLD_ITEM_ID
 from src.session_manager import SessionManager
 from src.sounds import SoundID
 from src.task import Task
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from src.combat_service import CombatService
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
 
@@ -29,6 +31,7 @@ class TaskAttack(Task):
         combat_service: CombatService | None = None,
         map_manager: MapManager | None = None,
         npc_service: NPCService | None = None,
+        broadcast_service: MultiplayerBroadcastService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -40,6 +43,7 @@ class TaskAttack(Task):
             combat_service: Servicio de combate.
             map_manager: Gestor de mapas.
             npc_service: Servicio de NPCs.
+            broadcast_service: Servicio de broadcast.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -47,9 +51,10 @@ class TaskAttack(Task):
         self.combat_service = combat_service
         self.map_manager = map_manager
         self.npc_service = npc_service
+        self.broadcast_service = broadcast_service
         self.session_data = session_data or {}
 
-    async def execute(self) -> None:  # noqa: PLR0914, C901
+    async def execute(self) -> None:  # noqa: PLR0914, PLR0912, PLR0915, C901
         """Procesa el ataque del jugador."""
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)
@@ -154,21 +159,43 @@ class TaskAttack(Task):
                 f"¡Has matado a {target_npc.name}! Ganaste {experience} EXP."
             )
 
+            # Dropear oro en el suelo
+            if gold > 0:
+                ground_item = {
+                    "item_id": GOLD_ITEM_ID,
+                    "quantity": gold,
+                    "grh_index": GOLD_GRH_INDEX,
+                    "owner_id": None,
+                    "spawn_time": None,
+                }
+
+                # Agregar al MapManager
+                self.map_manager.add_ground_item(
+                    map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, item=ground_item
+                )
+
+                # Broadcast OBJECT_CREATE a jugadores cercanos
+                if self.broadcast_service:
+                    await self.broadcast_service.broadcast_object_create(
+                        map_id=target_npc.map_id,
+                        x=target_npc.x,
+                        y=target_npc.y,
+                        grh_index=GOLD_GRH_INDEX,
+                    )
+
+                logger.info(
+                    "NPC %s dropeó %d de oro en (%d, %d)",
+                    target_npc.name,
+                    gold,
+                    target_npc.x,
+                    target_npc.y,
+                )
+
             # Remover NPC del mapa
             await self.npc_service.remove_npc(target_npc)
 
-            # TODO: Dropear oro en el tile donde murió el NPC
             # TODO: Dropear items según tabla de loot
-            # TODO: Enviar OBJECT_CREATE para mostrar items en el mapa
             # TODO: Verificar si sube de nivel
-
-            logger.info(
-                "NPC %s dropeó %d de oro en (%d, %d)",
-                target_npc.name,
-                gold,
-                target_npc.x,
-                target_npc.y,
-            )
         else:
             # Mostrar HP restante del NPC
             hp_percent = int((target_npc.hp / target_npc.max_hp) * 100)
