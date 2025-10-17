@@ -123,6 +123,23 @@ class TaskPickup(Task):
         # Actualizar oro
         await self.player_repo.update_gold(user_id, new_gold)
 
+        # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
+        # TODO: Optimizar para enviar solo el oro en lugar de todos los stats
+        stats = await self.player_repo.get_stats(user_id)
+        if stats:
+            await self.message_sender.send_update_user_stats(
+                max_hp=stats.get("max_hp", 100),
+                min_hp=stats.get("min_hp", 100),
+                max_mana=stats.get("max_mana", 100),
+                min_mana=stats.get("min_mana", 100),
+                max_sta=stats.get("max_sta", 100),
+                min_sta=stats.get("min_sta", 100),
+                gold=new_gold,
+                level=stats.get("level", 1),
+                elu=stats.get("elu", 300),
+                experience=stats.get("exp", 0),
+            )
+
         # Remover del suelo
         if self.map_manager:
             self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
