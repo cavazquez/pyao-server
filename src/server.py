@@ -417,7 +417,12 @@ class ArgentumServer:
                 await self.server_repo.set_motd(initial_motd)
                 logger.info("MOTD inicial establecido")
 
-            # Inicializar sistema de tick del juego con efectos configurables
+            # Inicializar sistema de ground items y MapManager (necesario para otros servicios)
+            self.ground_items_repo = GroundItemsRepository(self.redis_client)
+            self.map_manager = MapManager(self.ground_items_repo)
+            logger.info("Sistema de ground items y MapManager inicializados")
+
+            # Inicializar sistema de tick del juego
             self.game_tick = GameTick(
                 player_repo=self.player_repo,
                 map_manager=self.map_manager,
@@ -452,9 +457,7 @@ class ArgentumServer:
             # Inicializar sistema de NPCs
             npc_catalog = NPCCatalog()
             npc_repository = NPCRepository(self.redis_client)
-            # map_manager ya está inicializado arriba, verificar para mypy
-            if self.map_manager is None:
-                raise RuntimeError("MapManager no inicializado")
+            # map_manager ya está inicializado arriba
             self.npc_service = NPCService(
                 npc_repository, npc_catalog, self.map_manager, self.broadcast_service
             )
@@ -471,8 +474,7 @@ class ArgentumServer:
 
             # Inicializar sistema de magia
             self.spell_catalog = SpellCatalog()
-            if self.map_manager is None:
-                raise RuntimeError("MapManager no inicializado")
+            # map_manager ya está inicializado arriba
             self.spell_service = SpellService(
                 self.spell_catalog, self.player_repo, npc_repository, self.map_manager
             )
@@ -486,11 +488,6 @@ class ArgentumServer:
             # Inicializar sistema de inventario
             self.inventory_repo = InventoryRepository(self.redis_client)
             logger.info("Sistema de inventario inicializado")
-
-            # Inicializar sistema de ground items
-            self.ground_items_repo = GroundItemsRepository(self.redis_client)
-            self.map_manager = MapManager(self.ground_items_repo)
-            logger.info("Sistema de ground items inicializado")
 
             # Inicializar sistema de combate
             self.combat_service = CombatService(
