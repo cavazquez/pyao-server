@@ -21,6 +21,7 @@ from src.task_login import TaskLogin
 from src.task_meditate import TaskMeditate
 from src.task_motd import TaskMotd
 from src.task_online import TaskOnline
+from src.task_pickup import TaskPickup
 from src.task_ping import TaskPing
 from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
@@ -39,6 +40,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.TALK: TaskTalk,
     ClientPacketID.WALK: TaskWalk,
     ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
+    ClientPacketID.PICK_UP: TaskPickup,  # Recoger item del suelo
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC

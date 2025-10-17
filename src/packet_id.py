@@ -28,7 +28,7 @@ class ClientPacketID(IntEnum):
     # WHISPER = 5
     # REQUEST_POSITION_UPDATE = 7
     ATTACK = 8  # Atacar (cuerpo a cuerpo)
-    # PICK_UP = 9
+    PICK_UP = 9  # Recoger item del suelo
     # SAFE_TOGGLE = 10
     # RESUSCITATION_SAFE_TOGGLE = 11
     # REQUEST_GUILD_LEADER_INFO = 12

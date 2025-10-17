@@ -47,6 +47,7 @@ from src.task_meditate import TaskMeditate
 from src.task_motd import TaskMotd
 from src.task_null import TaskNull
 from src.task_online import TaskOnline
+from src.task_pickup import TaskPickup
 from src.task_quit import TaskQuit
 from src.task_request_stats import TaskRequestStats
 from src.task_talk import TaskTalk
@@ -213,6 +214,16 @@ class ArgentumServer:
                 self.combat_service,
                 self.map_manager,
                 self.npc_service,
+                self.broadcast_service,
+                session_data,
+            )
+        if task_class is TaskPickup:
+            return TaskPickup(
+                data,
+                message_sender,
+                self.player_repo,
+                self.inventory_repo,
+                self.map_manager,
                 self.broadcast_service,
                 session_data,
             )
