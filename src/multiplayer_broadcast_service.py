@@ -164,6 +164,7 @@ class MultiplayerBroadcastService:
         new_heading: int,
         old_x: int,
         old_y: int,
+        old_heading: int | None = None,
     ) -> int:
         """Envía CHARACTER_MOVE a jugadores cercanos que pueden ver el movimiento.
 
@@ -175,6 +176,7 @@ class MultiplayerBroadcastService:
             new_heading: Nueva dirección.
             old_x: Posición X anterior.
             old_y: Posición Y anterior.
+            old_heading: Dirección anterior (opcional, para detectar cambios).
 
         Returns:
             Número de jugadores notificados.
@@ -186,7 +188,13 @@ class MultiplayerBroadcastService:
         for sender in all_senders:
             # Enviar el movimiento a todos los jugadores en el mapa
             # TODO: Optimizar para enviar solo a jugadores en rango visible
-            await sender.send_character_move(char_index, new_x, new_y, new_heading)
+            await sender.send_character_move(char_index, new_x, new_y)
+
+            # Solo enviar CHARACTER_CHANGE si el heading cambió
+            # (CHARACTER_MOVE no incluye heading para compatibilidad con cliente Godot)
+            if old_heading is None or new_heading != old_heading:
+                # TODO: Obtener body y head real del personaje desde Redis
+                await sender.send_character_change(char_index, body=1, head=1, heading=new_heading)
             notified += 1
 
         if notified > 0:

@@ -21,8 +21,10 @@ class TestBroadcastMovement:
         # Crear message_senders mock
         sender1 = MagicMock()
         sender1.send_character_move = AsyncMock()
+        sender1.send_character_change = AsyncMock()
         sender2 = MagicMock()
         sender2.send_character_move = AsyncMock()
+        sender2.send_character_change = AsyncMock()
 
         map_manager.get_all_message_senders_in_map.return_value = [sender1, sender2]
 
@@ -41,8 +43,11 @@ class TestBroadcastMovement:
 
         # Assert
         assert notified == 2
-        sender1.send_character_move.assert_called_once_with(10001, 51, 50, 2)
-        sender2.send_character_move.assert_called_once_with(10001, 51, 50, 2)
+        sender1.send_character_move.assert_called_once_with(10001, 51, 50)
+        sender2.send_character_move.assert_called_once_with(10001, 51, 50)
+        # CHARACTER_CHANGE también se envía porque old_heading es None
+        sender1.send_character_change.assert_called_once()
+        sender2.send_character_change.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_broadcast_character_move_no_players(self) -> None:
@@ -80,6 +85,7 @@ class TestBroadcastMovement:
 
         sender = MagicMock()
         sender.send_character_move = AsyncMock()
+        sender.send_character_change = AsyncMock()
 
         map_manager.get_all_message_senders_in_map.return_value = [sender]
 
@@ -98,4 +104,5 @@ class TestBroadcastMovement:
 
         # Assert
         assert notified == 1
-        sender.send_character_move.assert_called_once_with(10005, 72, 71, 3)
+        sender.send_character_move.assert_called_once_with(10005, 72, 71)
+        sender.send_character_change.assert_called_once()

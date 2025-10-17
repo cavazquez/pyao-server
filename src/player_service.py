@@ -175,10 +175,10 @@ class PlayerService:
             username: Nombre del usuario.
             position: Posición del personaje (x, y, map).
         """
-        # TODO: Obtener body, head, heading desde Redis cuando se implementen
+        # TODO: Obtener body, head desde Redis cuando se implementen
         char_body = 1
         char_head = 1
-        char_heading = 3  # Sur
+        char_heading = position.get("heading", 3)  # Obtener heading de Redis, default Sur
 
         # Enviar CHARACTER_CREATE con efecto de spawn
         await self.message_sender.send_character_create(

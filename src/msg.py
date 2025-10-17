@@ -518,24 +518,23 @@ def build_change_inventory_slot_response(
     return packet.to_bytes()
 
 
-def build_character_move_response(char_index: int, x: int, y: int, heading: int) -> bytes:
+def build_character_move_response(char_index: int, x: int, y: int) -> bytes:
     """Construye el paquete CHARACTER_MOVE para notificar movimiento de un personaje.
 
     Args:
         char_index: Índice del personaje que se mueve.
         x: Nueva posición X.
         y: Nueva posición Y.
-        heading: Nueva dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste).
 
     Returns:
-        Paquete de bytes con el formato: PacketID + CharIndex + X + Y + Heading.
+        Paquete de bytes con el formato: PacketID + CharIndex + X + Y.
+        NOTA: Heading NO se envía porque el cliente Godot no lo lee.
     """
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.CHARACTER_MOVE)
     packet.add_int16(char_index)
     packet.add_byte(x)
     packet.add_byte(y)
-    packet.add_byte(heading)
     return packet.to_bytes()
 
 

@@ -676,16 +676,15 @@ class MessageSender:  # noqa: PLR0904
         )
         await self.connection.send(response)
 
-    async def send_character_move(self, char_index: int, x: int, y: int, heading: int) -> None:
+    async def send_character_move(self, char_index: int, x: int, y: int) -> None:
         """Envía el packet CHARACTER_MOVE para notificar movimiento de un personaje.
 
         Args:
             char_index: Índice del personaje que se mueve.
             x: Nueva posición X.
             y: Nueva posición Y.
-            heading: Nueva dirección.
         """
-        response = build_character_move_response(char_index, x, y, heading)
+        response = build_character_move_response(char_index, x, y)
         await self.connection.send(response)
 
     async def send_object_create(self, x: int, y: int, grh_index: int) -> None:
