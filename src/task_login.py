@@ -191,6 +191,10 @@ class TaskLogin(Task):
         # Crear servicio de jugador para encapsular lógica de datos + envío
         player_service = PlayerService(self.player_repo, self.message_sender)
 
+        # TODO: La GUI del cliente debería mostrar la posición del jugador (X, Y, Mapa).
+        # Esto ayuda en debugging y testing. Considerar agregar un packet para actualizar
+        # la posición en la GUI o incluirlo en algún packet existente.
+        
         # Obtener/crear y enviar posición (envía CHANGE_MAP)
         position = await player_service.send_position(user_id)
 

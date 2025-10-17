@@ -136,6 +136,11 @@ class TaskDrop(Task):
                 experience=stats.get("exp", 0),
             )
 
+        # TODO: La creación de ground items debe estar encapsulada.
+        # Crear un método helper o factory para crear ground items consistentemente.
+        # Ejemplo: GroundItemFactory.create_gold(quantity) o similar.
+        # Esto evita duplicación de código entre TaskDrop, TaskAttack, etc.
+        
         # Crear ground item
         ground_item = {
             "item_id": GOLD_ITEM_ID,
