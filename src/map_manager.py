@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.map_manager_spatial import SpatialIndexMixin
+
 if TYPE_CHECKING:
     from src.message_sender import MessageSender
     from src.npc import NPC
@@ -11,7 +13,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class MapManager:
+class MapManager(SpatialIndexMixin):
     """Gestiona qué jugadores y NPCs están en qué mapa para broadcast de eventos."""
 
     def __init__(self) -> None:
@@ -23,6 +25,12 @@ class MapManager:
         """
         self._players_by_map: dict[int, dict[int, tuple[MessageSender, str]]] = {}
         self._npcs_by_map: dict[int, dict[str, NPC]] = {}
+
+        # Índice espacial para colisiones
+        self._tile_occupation: dict[tuple[int, int, int], str] = {}
+
+        # Tiles bloqueados por mapa (paredes, agua, etc.)
+        self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
 
     def add_player(
         self, map_id: int, user_id: int, message_sender: MessageSender, username: str = ""

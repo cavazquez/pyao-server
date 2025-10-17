@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "name": "Ullathorpe",
+  "width": 100,
+  "height": 100,
+  "blocked_tiles": [
+    {"x": 50, "y": 50, "type": "wall"},
+    {"x": 51, "y": 50, "type": "wall"},
+    {"x": 52, "y": 50, "type": "wall"},
+    {"x": 50, "y": 51, "type": "wall"},
+    {"x": 52, "y": 51, "type": "wall"},
+    {"x": 50, "y": 52, "type": "wall"},
+    {"x": 51, "y": 52, "type": "wall"},
+    {"x": 52, "y": 52, "type": "wall"}
+  ],
+  "spawn_points": [
+    {"x": 50, "y": 50, "description": "Centro de Ullathorpe"}
+  ]
+}
