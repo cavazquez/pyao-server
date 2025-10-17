@@ -5,6 +5,7 @@ import random
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from src.message_sender import MessageSender
     from src.npc import NPC
     from src.npc_repository import NPCRepository
     from src.player_repository import PlayerRepository
@@ -29,12 +30,15 @@ class CombatService:
         self.player_repo = player_repo
         self.npc_repository = npc_repository
 
-    async def player_attack_npc(self, user_id: int, npc: NPC) -> dict[str, int | bool] | None:
+    async def player_attack_npc(
+        self, user_id: int, npc: NPC, message_sender: MessageSender | None = None
+    ) -> dict[str, int | bool] | None:
         """Jugador ataca a un NPC.
 
         Args:
             user_id: ID del jugador atacante.
             npc: NPC objetivo.
+            message_sender: MessageSender para enviar updates al cliente.
 
         Returns:
             Diccionario con resultado del ataque:
@@ -89,7 +93,7 @@ class CombatService:
             result["experience"] = experience
 
             # Dar experiencia al jugador
-            await self._give_experience(user_id, experience)
+            await self._give_experience(user_id, experience, message_sender)
 
         return result
 
@@ -146,12 +150,15 @@ class CombatService:
         bonus = random.randint(0, npc_level * 2)  # noqa: S311
         return base_exp + bonus
 
-    async def _give_experience(self, user_id: int, experience: int) -> None:
+    async def _give_experience(
+        self, user_id: int, experience: int, message_sender: MessageSender | None = None
+    ) -> None:
         """Otorga experiencia a un jugador.
 
         Args:
             user_id: ID del jugador.
             experience: Cantidad de experiencia.
+            message_sender: MessageSender para enviar update al cliente.
         """
         # Obtener experiencia actual
         stats = await self.player_repo.get_stats(user_id)
@@ -166,8 +173,11 @@ class CombatService:
 
         logger.info("Jugador %d ganó %d de experiencia (total: %d)", user_id, experience, new_exp)
 
+        # Enviar packet de experiencia al cliente
+        if message_sender:
+            await message_sender.send_update_exp(new_exp)
+
         # TODO: Verificar si sube de nivel
-        # TODO: Enviar packet de experiencia al cliente
 
     async def npc_attack_player(self, npc: NPC, user_id: int) -> dict[str, int | bool] | None:
         """NPC ataca a un jugador.

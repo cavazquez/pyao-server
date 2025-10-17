@@ -20,6 +20,7 @@ from src.msg import (
     build_play_midi_response,
     build_play_wave_response,
     build_pos_update_response,
+    build_update_exp_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
     build_update_mana_response,
@@ -208,6 +209,16 @@ class MessageSender:  # noqa: PLR0904
         """
         response = build_update_sta_response(stamina=stamina)
         logger.info("[%s] Enviando UPDATE_STA: %d", self.connection.address, stamina)
+        await self.connection.send(response)
+
+    async def send_update_exp(self, experience: int) -> None:
+        """Envía paquete UpdateExp del protocolo AO estándar.
+
+        Args:
+            experience: Puntos de experiencia actuales (int32).
+        """
+        response = build_update_exp_response(experience=experience)
+        logger.info("[%s] Enviando UPDATE_EXP: %d", self.connection.address, experience)
         await self.connection.send(response)
 
     async def send_update_hunger_and_thirst(

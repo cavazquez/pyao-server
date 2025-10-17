@@ -114,7 +114,9 @@ class TaskAttack(Task):
             return
 
         # Realizar el ataque
-        result = await self.combat_service.player_attack_npc(user_id, target_npc)
+        result = await self.combat_service.player_attack_npc(
+            user_id, target_npc, self.message_sender
+        )
 
         if not result:
             await self.message_sender.send_console_msg("No puedes atacar en este momento.")

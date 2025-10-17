@@ -193,7 +193,7 @@ class ServerPacketID(IntEnum):
     # CHANGE_SPELL_SLOT = 14  # ID incorrecto, el correcto es 49
     # UPDATE_STA = 15  # Ya definido arriba
     # UPDATE_BANK_GOLD = 19
-    # UPDATE_EXP = 20
+    UPDATE_EXP = 20  # Actualizar experiencia
     # GUILD_CHAT = 25
     # SHOW_MESSAGE_BOX = 26
     # USER_INDEX_IN_SERVER = 27

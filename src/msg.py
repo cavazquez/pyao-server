@@ -187,6 +187,21 @@ def build_update_sta_response(stamina: int) -> bytes:
     return packet.to_bytes()
 
 
+def build_update_exp_response(experience: int) -> bytes:
+    """Construye el paquete UpdateExp del protocolo AO estándar.
+
+    Args:
+        experience: Puntos de experiencia actuales (int32).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (20) + experience (int32).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_EXP)
+    packet.add_int32(experience)
+    return packet.to_bytes()
+
+
 def build_update_hunger_and_thirst_response(
     max_water: int, min_water: int, max_hunger: int, min_hunger: int
 ) -> bytes:
