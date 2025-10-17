@@ -216,6 +216,9 @@ class NPCService:
         npc.y = new_y
         npc.heading = new_heading
 
+        # Actualizar índice espacial
+        self.map_manager.update_npc_tile(npc.instance_id, npc.map_id, old_x, old_y, new_x, new_y)
+
         # Broadcast CHARACTER_MOVE a jugadores cercanos
         await self.broadcast_service.broadcast_character_move(
             npc.map_id, npc.char_index, new_x, new_y, new_heading, old_x, old_y

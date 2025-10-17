@@ -207,8 +207,8 @@ class NPCMovementEffect(TickEffect):
             new_y -= 1
             new_heading = 1  # Norte
 
-        # Validar límites
-        if new_x < 1 or new_x > 100 or new_y < 1 or new_y > 100:  # noqa: PLR2004
+        # Validar colisiones con MapManager
+        if not self.npc_service.map_manager.can_move_to(npc.map_id, new_x, new_y):
             return
 
         # Mover el NPC
@@ -240,9 +240,8 @@ class NPCMovementEffect(TickEffect):
         elif direction == 4:  # Oeste  # noqa: PLR2004
             new_x -= 1
 
-        # Validar que la nueva posición esté dentro de límites razonables
-        # TODO: Validar contra mapa real y tiles bloqueados
-        if new_x < 1 or new_x > 100 or new_y < 1 or new_y > 100:  # noqa: PLR2004
+        # Validar colisiones con MapManager
+        if not self.npc_service.map_manager.can_move_to(npc.map_id, new_x, new_y):
             return
 
         # Limitar movimiento a un área cercana al spawn (radio de 5 tiles)

@@ -78,7 +78,7 @@ class TaskWalk(Task):
         else:
             return heading
 
-    async def execute(self) -> None:  # noqa: C901, PLR0912
+    async def execute(self) -> None:  # noqa: C901, PLR0912, PLR0915
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -152,8 +152,26 @@ class TaskWalk(Task):
                 logger.debug("User %d cambió dirección a %d sin moverse", user_id, heading)
             return
 
+        # Validar colisiones con MapManager
+        if self.map_manager and not self.map_manager.can_move_to(current_map, new_x, new_y):
+            # Posición bloqueada (pared, agua, otro jugador/NPC)
+            logger.debug(
+                "User %d no puede moverse a (%d,%d) - posición bloqueada", user_id, new_x, new_y
+            )
+            # Solo cambiar dirección
+            current_heading = position.get("heading", 3)
+            if heading != current_heading:
+                await self.player_repo.set_heading(user_id, heading)
+            return
+
         # Actualizar posición en Redis (incluyendo heading)
         await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
+
+        # Actualizar índice espacial
+        if self.map_manager:
+            self.map_manager.update_player_tile(
+                user_id, current_map, current_x, current_y, new_x, new_y
+            )
 
         logger.info(
             "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
