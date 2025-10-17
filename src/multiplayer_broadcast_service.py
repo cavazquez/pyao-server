@@ -133,10 +133,19 @@ class MultiplayerBroadcastService:
         Returns:
             Número de jugadores notificados.
         """
-        # TODO: Obtener body, head, heading desde Redis cuando se implementen
-        char_body = 1
-        char_head = 1
-        char_heading = 3  # Sur
+        # Obtener body, head, heading desde Redis
+        char_body = 1  # Valor por defecto
+        char_head = 1  # Valor por defecto
+        char_heading = position.get("heading", 3)  # Sur por defecto
+
+        if self.account_repo:
+            account_data = await self.account_repo.get_account(username)
+            if account_data:
+                char_body = int(account_data.get("char_race", 1))
+                char_head = int(account_data.get("char_head", 1))
+                # Si body es 0, usar valor por defecto
+                if char_body == 0:
+                    char_body = 1
 
         other_senders = self.map_manager.get_all_message_senders_in_map(
             map_id, exclude_user_id=user_id

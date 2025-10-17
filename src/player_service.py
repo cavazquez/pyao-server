@@ -11,6 +11,7 @@ from src.items_catalog import get_item
 from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
     from src.equipment_repository import EquipmentRepository
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
@@ -25,15 +26,18 @@ class PlayerService:
         self,
         player_repo: PlayerRepository,
         message_sender: MessageSender,
+        account_repo: AccountRepository | None = None,
     ) -> None:
         """Inicializa el servicio de jugador.
 
         Args:
             player_repo: Repositorio de jugadores.
             message_sender: Enviador de mensajes al cliente.
+            account_repo: Repositorio de cuentas (opcional).
         """
         self.player_repo = player_repo
         self.message_sender = message_sender
+        self.account_repo = account_repo
 
     async def send_position(self, user_id: int) -> dict[str, int]:
         """Obtiene posición, crea default si no existe, envía CHANGE_MAP.
@@ -175,9 +179,19 @@ class PlayerService:
             username: Nombre del usuario.
             position: Posición del personaje (x, y, map).
         """
-        # TODO: Obtener body, head desde Redis cuando se implementen
-        char_body = 1
-        char_head = 1
+        # Obtener body y head desde Redis
+        char_body = 1  # Valor por defecto
+        char_head = 1  # Valor por defecto
+
+        if self.account_repo:
+            account_data = await self.account_repo.get_account(username)
+            if account_data:
+                char_body = int(account_data.get("char_race", 1))
+                char_head = int(account_data.get("char_head", 1))
+                # Si body es 0, usar valor por defecto
+                if char_body == 0:
+                    char_body = 1
+
         char_heading = position.get("heading", 3)  # Obtener heading de Redis, default Sur
 
         # Enviar CHARACTER_CREATE con efecto de spawn

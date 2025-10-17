@@ -182,7 +182,7 @@ async def test_send_hunger_thirst_creates_default():
 
 @pytest.mark.asyncio
 async def test_spawn_character_sends_packet():
-    """Verifica que spawn_character envíe el paquete CHARACTER_CREATE."""
+    """Verifica que spawn_character envíe el paquete CHARACTER_CREATE con valores por defecto."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -193,11 +193,56 @@ async def test_spawn_character_sends_packet():
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
 
+    # Sin account_repo, debe usar valores por defecto
     player_service = PlayerService(player_repo, message_sender)
 
-    position = {"x": 50, "y": 50, "map": 1}
+    position = {"x": 50, "y": 50, "map": 1, "heading": 3}
 
     await player_service.spawn_character(123, "testuser", position)
 
     # Verificar que se envió CHARACTER_CREATE
     assert writer.write.call_count == 1
+    sent_packet = writer.write.call_args[0][0]
+    # Verificar que usa valores por defecto: body=1, head=1
+    assert sent_packet[3] == 1  # body
+    assert sent_packet[5] == 1  # head
+
+
+@pytest.mark.asyncio
+async def test_spawn_character_reads_from_redis():
+    """Verifica que spawn_character lea body y head desde Redis."""
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.drain = AsyncMock()
+
+    player_repo = MagicMock(spec=PlayerRepository)
+
+    # Mock de AccountRepository
+    account_repo = MagicMock()
+    account_repo.get_account = AsyncMock(
+        return_value={
+            "char_race": "5",  # body
+            "char_head": "10",  # head
+        }
+    )
+
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
+    message_sender = MessageSender(connection)
+
+    # Con account_repo, debe leer desde Redis
+    player_service = PlayerService(player_repo, message_sender, account_repo)
+
+    position = {"x": 50, "y": 50, "map": 1, "heading": 2}
+
+    await player_service.spawn_character(123, "testuser", position)
+
+    # Verificar que se llamó a get_account
+    account_repo.get_account.assert_called_once_with("testuser")
+
+    # Verificar que se envió CHARACTER_CREATE con los valores de Redis
+    assert writer.write.call_count == 1
+    sent_packet = writer.write.call_args[0][0]
+    # Verificar que usa valores de Redis: body=5, head=10
+    assert sent_packet[3] == 5  # body
+    assert sent_packet[5] == 10  # head

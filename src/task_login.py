@@ -189,7 +189,7 @@ class TaskLogin(Task):
         await self.message_sender.send_user_char_index_in_server(user_id)
 
         # Crear servicio de jugador para encapsular lógica de datos + envío
-        player_service = PlayerService(self.player_repo, self.message_sender)
+        player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
 
         # TODO: La GUI del cliente debería mostrar la posición del jugador (X, Y, Mapa).
         # Esto ayuda en debugging y testing. Considerar agregar un packet para actualizar
