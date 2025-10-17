@@ -72,15 +72,12 @@ class TaskDrop(Task):
             logger.error("TaskDrop: Faltan servicios necesarios")
             return
 
-        # Por ahora solo implementar drop de oro
-        # TODO: Implementar drop de items del inventario
-        if slot == 0:  # Slot 0 podría ser oro
-            await self._drop_gold(user_id, quantity)
-        else:
-            await self.message_sender.send_console_msg(
-                "Drop de items aún no implementado. Solo puedes tirar oro por ahora."
-            )
-            logger.warning("Drop de items no implementado, solo oro")
+        # El oro se dropea desde el inventario pero es un stat especial
+        # Por ahora implementar solo drop de oro
+        # TODO: Implementar drop de items reales del inventario
+        
+        # Intentar dropear oro (asumimos que cualquier drop es oro por ahora)
+        await self._drop_gold(user_id, quantity)
 
     async def _drop_gold(self, user_id: int, quantity: int) -> None:
         """Tira oro del jugador al suelo.
