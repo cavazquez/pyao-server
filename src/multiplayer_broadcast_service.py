@@ -211,7 +211,7 @@ class MultiplayerBroadcastService:
         Returns:
             Número de jugadores notificados.
         """
-        # Obtener todos los jugadores en el mapa
+        # Obtener todos los jugadores en el mapa (excluyendo el que se movió para evitar saltos)
         all_player_ids = self.map_manager.get_players_in_map(map_id, exclude_user_id=char_index)
 
         notified = 0
@@ -292,6 +292,36 @@ class MultiplayerBroadcastService:
         if notified > 0:
             logger.debug(
                 "Broadcast CHARACTER_REMOVE: CharIndex=%d - %d notificados", char_index, notified
+            )
+
+        return notified
+
+    async def broadcast_block_position(self, map_id: int, x: int, y: int, blocked: bool) -> int:
+        """Broadcast de BLOCK_POSITION a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            x: Posición X del tile.
+            y: Posición Y del tile.
+            blocked: True si está bloqueado, False si no.
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            await sender.send_block_position(x, y, blocked)
+            notified += 1
+
+        if notified > 0:
+            logger.debug(
+                "Broadcast BLOCK_POSITION: pos=(%d,%d) blocked=%s - %d notificados",
+                x,
+                y,
+                blocked,
+                notified,
             )
 
         return notified

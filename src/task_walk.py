@@ -8,6 +8,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ class TaskWalk(Task):
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
+        broadcast_service: MultiplayerBroadcastService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
@@ -44,11 +46,13 @@ class TaskWalk(Task):
             message_sender: Enviador de mensajes para comunicarse con el cliente.
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para broadcast.
+            broadcast_service: Servicio de broadcast multijugador.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
+        self.broadcast_service = broadcast_service
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -88,6 +92,8 @@ class TaskWalk(Task):
                 self.message_sender.connection.address,
             )
             return
+
+        logger.debug("TaskWalk: Recibido WALK con heading=%d desde %s", heading, self.message_sender.connection.address)
 
         # Verificar que el player_repo esté disponible
         if self.player_repo is None:
@@ -183,21 +189,16 @@ class TaskWalk(Task):
             heading,
         )
 
-        # Broadcast multijugador: enviar POS_UPDATE a otros jugadores en el mapa
-        if self.map_manager:
-            # Enviar POS_UPDATE a todos los demás jugadores en el mapa
-            other_senders = self.map_manager.get_all_message_senders_in_map(
-                current_map, exclude_user_id=user_id
+        # Broadcast multijugador: notificar movimiento a otros jugadores
+        # Nota: NO enviamos POS_UPDATE al cliente que se movió porque causa saltos visuales
+        if self.broadcast_service:
+            await self.broadcast_service.broadcast_character_move(
+                map_id=current_map,
+                char_index=user_id,
+                new_x=new_x,
+                new_y=new_y,
+                new_heading=heading,
+                old_x=current_x,
+                old_y=current_y,
+                old_heading=position.get("heading", 3),
             )
-            for sender in other_senders:
-                await sender.send_pos_update(user_id, new_x, new_y)
-
-            logger.debug(
-                "Movimiento de user %d notificado a %d jugadores en mapa %d",
-                user_id,
-                len(other_senders),
-                current_map,
-            )
-
-        # Nota: NO enviamos POS_UPDATE al cliente que se movió porque el cliente
-        # ya asume que se movió cuando envió WALK. Solo actualizamos en el servidor.

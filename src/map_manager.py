@@ -241,7 +241,12 @@ class MapManager(SpatialIndexMixin):
             self._npcs_by_map[map_id] = {}
 
         self._npcs_by_map[map_id][npc.instance_id] = npc
-        logger.debug("NPC %s agregado al mapa %d", npc.name, map_id)
+        
+        # Marcar tile como ocupado en el índice espacial
+        tile_key = (map_id, npc.x, npc.y)
+        self._tile_occupation[tile_key] = f"npc:{npc.instance_id}"
+        
+        logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
     def remove_npc(self, map_id: int, instance_id: str) -> None:
         """Remueve un NPC de un mapa.
@@ -251,7 +256,15 @@ class MapManager(SpatialIndexMixin):
             instance_id: ID único de la instancia del NPC.
         """
         if map_id in self._npcs_by_map and instance_id in self._npcs_by_map[map_id]:
-            npc_name = self._npcs_by_map[map_id][instance_id].name
+            npc = self._npcs_by_map[map_id][instance_id]
+            npc_name = npc.name
+            
+            # Limpiar tile occupation para que el tile quede libre
+            tile_key = (map_id, npc.x, npc.y)
+            if tile_key in self._tile_occupation:
+                del self._tile_occupation[tile_key]
+                logger.debug("Tile (%d,%d) liberado al remover NPC %s", npc.x, npc.y, npc_name)
+            
             del self._npcs_by_map[map_id][instance_id]
             logger.debug("NPC %s removido del mapa %d", npc_name, map_id)
 

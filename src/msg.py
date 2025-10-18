@@ -557,6 +557,25 @@ def build_object_create_response(x: int, y: int, grh_index: int) -> bytes:
     return packet.to_bytes()
 
 
+def build_block_position_response(x: int, y: int, blocked: bool) -> bytes:
+    """Construye el paquete BlockPosition del protocolo AO estándar.
+
+    Args:
+        x: Posición X (byte).
+        y: Posición Y (byte).
+        blocked: True si el tile está bloqueado, False si no (byte: 1 o 0).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (36) + X + Y + Blocked.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.BLOCK_POSITION)
+    packet.add_byte(x)
+    packet.add_byte(y)
+    packet.add_byte(1 if blocked else 0)
+    return packet.to_bytes()
+
+
 def build_object_delete_response(x: int, y: int) -> bytes:
     """Construye el paquete ObjectDelete del protocolo AO estándar.
 

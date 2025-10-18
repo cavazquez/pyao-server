@@ -203,7 +203,7 @@ class ServerPacketID(IntEnum):
     # FORCE_CHAR_MOVE = 33
     OBJECT_CREATE = 35
     OBJECT_DELETE = 36
-    # BLOCK_POSITION = 37
+    BLOCK_POSITION = 37
     # GUILD_LIST = 40
     # AREA_CHANGED = 41
     # PAUSE_TOGGLE = 42

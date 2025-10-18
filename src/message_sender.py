@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.msg import (
     build_attributes_response,
+    build_block_position_response,
     build_change_inventory_slot_response,
     build_change_map_response,
     build_character_change_response,
@@ -702,6 +703,24 @@ class MessageSender:  # noqa: PLR0904
             x,
             y,
             grh_index,
+        )
+        await self.connection.send(response)
+
+    async def send_block_position(self, x: int, y: int, blocked: bool) -> None:
+        """Envía el packet BLOCK_POSITION para marcar un tile como bloqueado o no.
+
+        Args:
+            x: Posición X del tile.
+            y: Posición Y del tile.
+            blocked: True si está bloqueado, False si no.
+        """
+        response = build_block_position_response(x, y, blocked)
+        logger.debug(
+            "[%s] Enviando BLOCK_POSITION: pos=(%d,%d) blocked=%s",
+            self.connection.address,
+            x,
+            y,
+            blocked,
         )
         await self.connection.send(response)
 

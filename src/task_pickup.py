@@ -78,7 +78,7 @@ class TaskPickup(Task):
 
         if not items:
             await self.message_sender.send_console_msg("No hay nada aquí.")
-            logger.debug("Jugador %d intentó recoger pero no hay items en (%d,%d)", user_id, x, y)
+            logger.info("Jugador %d intentó recoger pero no hay items en (%d,%d)", user_id, x, y)
             return
 
         # Recoger primer item

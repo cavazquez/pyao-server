@@ -379,6 +379,9 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 ### Sistema de Juego
 - **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo ⭐ **NUEVO**
 
+### Bug Fixes y Troubleshooting
+- **[Bug Fix: Tile Occupation](docs/BUGFIX_TILE_OCCUPATION.md)**: Solución al bug de tiles bloqueados al remover NPCs 🐛 **NUEVO**
+
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis

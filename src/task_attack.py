@@ -191,7 +191,7 @@ class TaskAttack(Task):
                     target_npc.y,
                 )
 
-            # Remover NPC del mapa
+            # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
             await self.npc_service.remove_npc(target_npc)
 
             # TODO: Dropear items según tabla de loot
