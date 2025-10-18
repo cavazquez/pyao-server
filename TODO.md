@@ -32,23 +32,54 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
   - Agrupar datos relacionados
   - Documentar estructura de datos en Redis
 
+## 🎯 Próximas Tareas Sugeridas (Post v0.3.0)
+
+### Opción 1: Loot Tables y Items Variados
+- [ ] Implementar sistema de loot tables configurables
+- [ ] Crear catálogo de items (armas, armaduras, pociones)
+- [ ] NPCs dropean items según probabilidades
+- [ ] Mejorar visualización de items en el suelo
+
+### Opción 2: IA de NPCs Mejorada
+- [ ] NPCs hostiles atacan jugadores automáticamente
+- [ ] Pathfinding básico para movimiento inteligente
+- [ ] NPCs patrullan rutas predefinidas
+- [ ] Rango de agresión configurable
+
+### Opción 3: Sistema de Comercio
+- [ ] NPCs vendedores funcionales
+- [ ] Ventana de comercio (comprar/vender)
+- [ ] Inventario de comerciantes
+- [ ] Precios configurables por item
+
+### Opción 4: Optimizaciones y Performance
+- [ ] Broadcast inteligente (solo jugadores en rango)
+- [ ] Cargar mapas desde archivos `.map`
+- [ ] Redis pipeline para comandos batch
+- [ ] Profiling y optimización de cuellos de botella
+
 ## 🔥 Prioridad Alta
 
 ### Sistema de Combate
-- [ ] Implementar `CombatService` para combate jugador vs NPC
-- [ ] Calcular daño basado en stats (fuerza, armas, armadura)
+- [x] Implementar `CombatService` para combate jugador vs NPC ✅ v0.2.0
+- [x] Calcular daño basado en stats (fuerza, armas, armadura) ✅ v0.2.0
 - [ ] Sistema de críticos y esquives
-- [ ] Animaciones de ataque (FX)
-- [ ] Muerte de NPCs y respawn
-- [ ] Experiencia y nivel al matar NPCs
-- [ ] Packet `ATTACK` para iniciar combate
+- [x] Animaciones de ataque (FX) ✅ v0.2.0
+- [x] Muerte de NPCs ✅ v0.2.0
+- [x] Experiencia al matar NPCs ✅ v0.2.0
+- [x] Packet `ATTACK` para iniciar combate ✅ v0.2.0
 - [ ] Packet `DAMAGE` para mostrar daño recibido
+- [x] **Sistema de Respawn de NPCs** ✅ v0.3.0
+  - [x] Respawn automático con tiempo aleatorio (min-max)
+  - [x] Búsqueda de posición libre aleatoria cercana
+  - [x] Reintentos no bloqueantes
+  - [x] Logs INFO para diagnóstico
 
 ### Sistema de Loot
-- [ ] Drops de oro al matar NPCs
+- [x] Drops de oro al matar NPCs ✅ v0.2.0
 - [ ] Drops de items según tabla de probabilidades
-- [ ] Recoger items del suelo (`PICK_UP`)
-- [ ] Visualización de items en el mapa
+- [x] Recoger items del suelo (`PICK_UP`) ✅ v0.2.0
+- [x] Visualización de items en el mapa ✅ v0.2.0
 - [ ] Inventario lleno - manejar casos límite
 
 ### IA de NPCs Mejorada
@@ -357,11 +388,20 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [x] Heading guardado y cargado correctamente
 - [x] Fix bug parsing CHARACTER_MOVE
 - [x] Broadcast de movimiento optimizado
+- [x] Bug fix: Tiles bloqueados al remover NPCs
+- [x] Validación de tiles ocupados en add_npc
 
-### Versión 0.3.0 - Combate y Loot
-- Sistema de combate completo
-- Drops y experiencia
-- Muerte y respawn de NPCs
+### Versión 0.3.0-alpha - Sistema de Respawn de NPCs ✅
+- [x] Respawn automático con tiempo aleatorio
+- [x] Búsqueda de posición libre aleatoria cercana
+- [x] Reintentos no bloqueantes con asyncio
+- [x] Logs INFO para diagnóstico de bloqueos
+- [x] NPCs permanentes (respawn_time=0)
+
+### Versión 0.4.0 - Loot Tables y Items
+- [ ] Drops de items según tabla de probabilidades
+- [ ] Loot tables configurables por NPC
+- [ ] Items variados (armas, armaduras, pociones)
 
 ### Versión 0.3.0 - Economía
 - Sistema de comercio
@@ -387,7 +427,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 ---
 
 **Última actualización:** 2025-10-17  
-**Versión actual:** 0.2.0-alpha  
-**Tests actuales:** 378  
-**Servicios implementados:** 7  
-**Efectos de tick:** 4
+**Versión actual:** 0.3.0-alpha  
+**Tests actuales:** 386  
+**Servicios implementados:** 8 (+ NPCRespawnService)  
+**Efectos de tick:** 4  
+**NPCs con respawn:** 4 (Goblin, Lobo, Orco, Araña)
