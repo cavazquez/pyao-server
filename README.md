@@ -383,6 +383,9 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 ### Bug Fixes y Troubleshooting
 - **[Bug Fix: Tile Occupation](docs/BUGFIX_TILE_OCCUPATION.md)**: Solución al bug de tiles bloqueados al remover NPCs 🐛 **NUEVO**
 
+### TODOs y Mejoras Futuras
+- **[TODO: NPC Factory](docs/TODO_NPC_FACTORY.md)**: Sistema de factory methods para crear NPCs con FX 📝 **NUEVO**
+
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
