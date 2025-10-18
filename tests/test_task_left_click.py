@@ -45,6 +45,7 @@ class TestTaskLeftClick:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=5,
             gold_max=20,
         )
@@ -143,6 +144,7 @@ class TestTaskLeftClick:
             is_attackable=False,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=0,
             gold_max=0,
         )

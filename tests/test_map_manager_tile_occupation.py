@@ -33,7 +33,8 @@ def sample_npc():
         is_hostile=True,
         is_attackable=True,
         movement_type="static",
-        respawn_time=60,
+        respawn_time=30,
+        respawn_time_max=60,
         gold_min=10,
         gold_max=50,
     )
@@ -88,7 +89,8 @@ def test_tile_occupation_with_multiple_npcs(map_manager):
         is_hostile=True,
         is_attackable=True,
         movement_type="static",
-        respawn_time=60,
+        respawn_time=30,
+        respawn_time_max=60,
         gold_min=10,
         gold_max=50,
     )
@@ -111,7 +113,8 @@ def test_tile_occupation_with_multiple_npcs(map_manager):
         is_hostile=True,
         is_attackable=True,
         movement_type="random",
-        respawn_time=60,
+        respawn_time=30,
+        respawn_time_max=60,
         gold_min=20,
         gold_max=60,
     )
@@ -165,7 +168,8 @@ def test_cannot_add_two_npcs_same_position(map_manager):
         is_hostile=True,
         is_attackable=True,
         movement_type="static",
-        respawn_time=60,
+        respawn_time=30,
+        respawn_time_max=60,
         gold_min=10,
         gold_max=50,
     )
@@ -188,7 +192,8 @@ def test_cannot_add_two_npcs_same_position(map_manager):
         is_hostile=True,
         is_attackable=True,
         movement_type="random",
-        respawn_time=60,
+        respawn_time=30,
+        respawn_time_max=60,
         gold_min=20,
         gold_max=60,
     )

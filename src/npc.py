@@ -38,7 +38,8 @@ class NPC:
     is_hostile: bool  # ¿Ataca a jugadores?
     is_attackable: bool  # ¿Puede ser atacado?
     movement_type: str  # "static", "patrol", "random"
-    respawn_time: int  # Segundos para respawn después de morir
+    respawn_time: int  # Tiempo mínimo de respawn en segundos
+    respawn_time_max: int  # Tiempo máximo de respawn en segundos (aleatorio entre min y max)
 
     # Loot
     gold_min: int

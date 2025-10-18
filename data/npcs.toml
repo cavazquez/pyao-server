@@ -13,6 +13,8 @@ nivel = 5
 hp_max = 100
 oro_min = 10
 oro_max = 50
+respawn_time = 30        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 60    # Tiempo máximo de respawn en segundos
 
 [[npc]]
 id = 2
@@ -26,6 +28,8 @@ nivel = 0
 hp_max = 0
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
 
 [[npc]]
 id = 3
@@ -39,6 +43,8 @@ nivel = 20
 hp_max = 500
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
 
 [[npc]]
 id = 4
@@ -52,6 +58,8 @@ nivel = 10
 hp_max = 200
 oro_min = 20
 oro_max = 100
+respawn_time = 60        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 120   # Tiempo máximo de respawn en segundos
 
 [[npc]]
 id = 5
@@ -65,6 +73,8 @@ nivel = 0
 hp_max = 0
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
 
 [[npc]]
 id = 6
@@ -78,6 +88,8 @@ nivel = 0
 hp_max = 0
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
 
 [[npc]]
 id = 7
@@ -91,6 +103,8 @@ nivel = 3
 hp_max = 80
 oro_min = 5
 oro_max = 20
+respawn_time = 20        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 40    # Tiempo máximo de respawn en segundos
 
 [[npc]]
 id = 8
@@ -104,6 +118,8 @@ nivel = 8
 hp_max = 150
 oro_min = 15
 oro_max = 75
+respawn_time = 45        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 90    # Tiempo máximo de respawn en segundos
 
 [[npc]]
 id = 9
@@ -117,6 +133,8 @@ nivel = 0
 hp_max = 0
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
 
 [[npc]]
 id = 10
@@ -130,3 +148,5 @@ nivel = 0
 hp_max = 0
 oro_min = 0
 oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0

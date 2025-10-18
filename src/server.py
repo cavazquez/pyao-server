@@ -23,6 +23,7 @@ from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_catalog import NPCCatalog
 from src.npc_repository import NPCRepository
+from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
 from src.packet_handlers import TASK_HANDLERS
 from src.player_repository import PlayerRepository
@@ -92,6 +93,7 @@ class ArgentumServer:
         self.map_manager: MapManager | None = None  # Gestor de jugadores y NPCs por mapa
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
         self.npc_service: NPCService | None = None  # Servicio de NPCs
+        self.npc_respawn_service: NPCRespawnService | None = None  # Servicio de respawn de NPCs
         self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
         self.spell_service: SpellService | None = None  # Servicio de hechizos
         self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
@@ -236,6 +238,7 @@ class ArgentumServer:
                 self.map_manager,
                 self.npc_service,
                 self.broadcast_service,
+                self.npc_respawn_service,
                 session_data,
             )
         if task_class is TaskPickup:
@@ -480,6 +483,10 @@ class ArgentumServer:
             )
             await self.npc_service.initialize_world_npcs()
             logger.info("Sistema de NPCs inicializado")
+
+            # Inicializar servicio de respawn de NPCs
+            self.npc_respawn_service = NPCRespawnService(self.npc_service)
+            logger.info("Sistema de respawn de NPCs inicializado")
 
             # Agregar efecto de movimiento de NPCs
             self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))

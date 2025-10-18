@@ -30,6 +30,7 @@ class TestMapManagerNPCs:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=10,
             gold_max=50,
         )
@@ -64,6 +65,7 @@ class TestMapManagerNPCs:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=10,
             gold_max=50,
         )
@@ -108,6 +110,7 @@ class TestMapManagerNPCs:
                 is_attackable=True,
                 movement_type="static",
                 respawn_time=0,
+                respawn_time_max=0,
                 gold_min=0,
                 gold_max=0,
             )
@@ -144,6 +147,7 @@ class TestMapManagerNPCs:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=10,
             gold_max=50,
         )
@@ -191,6 +195,7 @@ class TestMapManagerNPCs:
                     is_attackable=True,
                     movement_type="static",
                     respawn_time=0,
+                    respawn_time_max=0,
                     gold_min=0,
                     gold_max=0,
                 )
@@ -224,6 +229,7 @@ class TestMapManagerNPCs:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=0,
             gold_max=0,
         )
@@ -249,6 +255,7 @@ class TestMapManagerNPCs:
             is_attackable=True,
             movement_type="static",
             respawn_time=0,
+            respawn_time_max=0,
             gold_min=0,
             gold_max=0,
         )

@@ -141,6 +141,7 @@ class NPCService:
             is_attackable=cast("bool", npc_data.get("es_atacable", True)),
             movement_type="static",  # Por ahora todos estáticos
             respawn_time=cast("int", npc_data.get("respawn_time", 0)),
+            respawn_time_max=cast("int", npc_data.get("respawn_time_max", 0)),
             gold_min=cast("int", npc_data.get("oro_min", 0)),
             gold_max=cast("int", npc_data.get("oro_max", 0)),
         )

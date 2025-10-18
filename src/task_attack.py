@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
 
@@ -32,6 +33,7 @@ class TaskAttack(Task):
         map_manager: MapManager | None = None,
         npc_service: NPCService | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
+        npc_respawn_service: NPCRespawnService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -44,6 +46,7 @@ class TaskAttack(Task):
             map_manager: Gestor de mapas.
             npc_service: Servicio de NPCs.
             broadcast_service: Servicio de broadcast.
+            npc_respawn_service: Servicio de respawn de NPCs.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -52,6 +55,7 @@ class TaskAttack(Task):
         self.map_manager = map_manager
         self.npc_service = npc_service
         self.broadcast_service = broadcast_service
+        self.npc_respawn_service = npc_respawn_service
         self.session_data = session_data or {}
 
     async def execute(self) -> None:  # noqa: PLR0914, PLR0912, PLR0915, C901
@@ -193,6 +197,10 @@ class TaskAttack(Task):
 
             # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
             await self.npc_service.remove_npc(target_npc)
+
+            # Programar respawn del NPC
+            if self.npc_respawn_service:
+                await self.npc_respawn_service.schedule_respawn(target_npc)
 
             # TODO: Dropear items según tabla de loot
             # TODO: Verificar si sube de nivel

@@ -46,6 +46,7 @@ def create_test_npc(
         is_attackable=True,
         movement_type="random",
         respawn_time=60,
+        respawn_time_max=60,
         gold_min=10,
         gold_max=50,
     )

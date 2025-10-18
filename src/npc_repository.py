@@ -45,6 +45,7 @@ class NPCRepository:
         is_attackable: bool,
         movement_type: str,
         respawn_time: int,
+        respawn_time_max: int,
         gold_min: int,
         gold_max: int,
     ) -> NPC:
@@ -67,7 +68,8 @@ class NPCRepository:
             is_hostile: ¿Ataca a jugadores?
             is_attackable: ¿Puede ser atacado?
             movement_type: Tipo de movimiento.
-            respawn_time: Tiempo de respawn en segundos.
+            respawn_time: Tiempo mínimo de respawn en segundos.
+            respawn_time_max: Tiempo máximo de respawn en segundos.
             gold_min: Oro mínimo al morir.
             gold_max: Oro máximo al morir.
 
@@ -95,6 +97,7 @@ class NPCRepository:
             is_attackable=is_attackable,
             movement_type=movement_type,
             respawn_time=respawn_time,
+            respawn_time_max=respawn_time_max,
             gold_min=gold_min,
             gold_max=gold_max,
         )
@@ -120,6 +123,7 @@ class NPCRepository:
             "is_attackable": str(is_attackable),
             "movement_type": movement_type,
             "respawn_time": str(respawn_time),
+            "respawn_time_max": str(respawn_time_max),
             "gold_min": str(gold_min),
             "gold_max": str(gold_max),
         }
@@ -176,6 +180,7 @@ class NPCRepository:
             is_attackable=result["is_attackable"].lower() == "true",
             movement_type=result["movement_type"],
             respawn_time=int(result["respawn_time"]),
+            respawn_time_max=int(result.get("respawn_time_max", result["respawn_time"])),
             gold_min=int(result["gold_min"]),
             gold_max=int(result["gold_max"]),
         )
