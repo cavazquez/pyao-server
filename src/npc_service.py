@@ -55,10 +55,12 @@ class NPCService:
         Args:
             spawns_path: Ruta al archivo de configuración de spawns.
         """
-        logger.info("Inicializando NPCs del mundo...")
+        logger.info("Inicializando NPCs del mundo desde %s...", spawns_path)
 
         # Limpiar NPCs existentes (reinicio limpio)
+        logger.info("Limpiando NPCs existentes en Redis...")
         await self.npc_repository.clear_all_npcs()
+        logger.info("NPCs limpiados. Cargando nuevos spawns...")
 
         # Cargar configuración de spawns
         try:
@@ -91,8 +93,17 @@ class NPCService:
                 npc = await self.spawn_npc(npc_id, map_id, x, y, heading)
                 if npc:
                     spawned_count += 1
+                    logger.debug(
+                        "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
+                        npc.name,
+                        npc_id,
+                        map_id,
+                        x,
+                        y,
+                        npc.char_index,
+                    )
 
-            logger.info("NPCs inicializados: %d spawns creados", spawned_count)
+            logger.info("✅ NPCs inicializados: %d spawns creados exitosamente", spawned_count)
 
         except Exception:
             logger.exception("Error al inicializar NPCs del mundo desde %s", spawns_path)
@@ -257,3 +268,25 @@ class NPCService:
             new_x,
             new_y,
         )
+
+    async def send_npcs_in_map(self, map_id: int, message_sender: MessageSender) -> None:
+        """Envía CHARACTER_CREATE de todos los NPCs en un mapa a un jugador.
+
+        Args:
+            map_id: ID del mapa.
+            message_sender: MessageSender del jugador.
+        """
+        npcs = self.map_manager.get_npcs_in_map(map_id)
+
+        for npc in npcs:
+            await message_sender.send_character_create(
+                char_index=npc.char_index,
+                body=npc.body_id,
+                head=npc.head_id,
+                heading=npc.heading,
+                x=npc.x,
+                y=npc.y,
+                name=npc.name,
+            )
+
+        logger.info("Enviados %d NPCs del mapa %d al jugador", len(npcs), map_id)

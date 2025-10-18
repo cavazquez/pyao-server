@@ -140,7 +140,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: C901
+    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: C901, PLR0912, PLR0915
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
@@ -258,6 +258,10 @@ class TaskLogin(Task):
 
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)
+
+        # Enviar todos los NPCs del mapa al jugador
+        if self.npc_service:
+            await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
 
         # Broadcast multijugador: agregar jugador al mapa y notificar a otros
         if self.map_manager and self.account_repo:
