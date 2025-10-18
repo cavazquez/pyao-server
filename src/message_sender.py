@@ -497,6 +497,24 @@ class MessageSender:  # noqa: PLR0904
         )
         await self.connection.send(response)
 
+    async def send_create_fx(self, char_index: int, fx: int, loops: int) -> None:
+        """Envía paquete CreateFX para mostrar un efecto visual en el cliente.
+
+        Args:
+            char_index: ID del personaje/objeto que genera el efecto.
+            fx: ID del efecto visual.
+            loops: Número de loops. -1 = infinito, 0 = una vez, >0 = número específico.
+        """
+        response = build_create_fx_response(char_index=char_index, fx=fx, loops=loops)
+        logger.debug(
+            "[%s] Enviando CREATE_FX: char_index=%d, fx=%d, loops=%d",
+            self.connection.address,
+            char_index,
+            fx,
+            loops,
+        )
+        await self.connection.send(response)
+
     # Métodos de conveniencia para sonidos comunes
     async def play_sound_login(self) -> None:
         """Reproduce el sonido de login."""
@@ -538,24 +556,6 @@ class MessageSender:  # noqa: PLR0904
     async def play_music_dungeon(self) -> None:
         """Reproduce música de mazmorra."""
         await self.send_play_midi(midi_id=MusicID.DUNGEON)
-
-    async def send_create_fx(self, char_index: int, fx: int, loops: int) -> None:
-        """Envía paquete CreateFX para mostrar un efecto visual.
-
-        Args:
-            char_index: ID del personaje/objeto que genera el efecto (int16).
-            fx: ID del efecto visual (int16). Usar VisualEffectID para constantes.
-            loops: Número de loops (int16). Usar FXLoops para constantes.
-        """
-        response = build_create_fx_response(char_index=char_index, fx=fx, loops=loops)
-        logger.debug(
-            "[%s] Enviando CREATE_FX: charIndex=%d, fx=%d, loops=%d",
-            self.connection.address,
-            char_index,
-            fx,
-            loops,
-        )
-        await self.connection.send(response)
 
     # Métodos de conveniencia para efectos comunes
     async def play_effect_spawn(self, char_index: int) -> None:

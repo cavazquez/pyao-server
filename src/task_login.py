@@ -205,6 +205,12 @@ class TaskLogin(Task):
         # Obtener/crear y enviar stats (envía UPDATE_USER_STATS)
         await player_service.send_stats(user_id)
 
+        # Resetear estado de meditación al hacer login
+        # Si el jugador se desconectó meditando, debe dejar de meditar al reconectar
+        if self.player_repo:
+            await self.player_repo.set_meditating(user_id, is_meditating=False)
+            logger.debug("Estado de meditación reseteado para user_id %d al hacer login", user_id)
+
         # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
         await player_service.send_hunger_thirst(user_id)
 

@@ -58,14 +58,29 @@ class TaskMeditate(Task):
             # Enviar toggle de meditación al cliente
             await self.message_sender.send_meditate_toggle()
 
-            # Mensaje al jugador
+            # Mensaje al jugador y efectos visuales
             if new_state:
                 await self.message_sender.send_console_msg(
                     "Comienzas a meditar. Recuperaras mana automaticamente."
                 )
+                # Enviar FX de meditación con loop infinito (loops=-1)
+                # FX 16 es el efecto de meditación en Argentum Online
+                # Para jugadores, char_index = user_id (NPCs usan char_index >= 10001)
+                await self.message_sender.send_create_fx(
+                    char_index=user_id,
+                    fx=16,
+                    loops=-1,  # loops=-1 = infinito
+                )
                 logger.info("user_id %d comenzó a meditar", user_id)
             else:
                 await self.message_sender.send_console_msg("Dejas de meditar.")
+                # Cancelar FX de meditación enviando el mismo FX con loops=0
+                # Esto detiene el efecto visual inmediatamente
+                await self.message_sender.send_create_fx(
+                    char_index=user_id,
+                    fx=16,
+                    loops=0,  # loops=0 = cancela el FX
+                )
                 logger.info("user_id %d dejó de meditar", user_id)
 
         except Exception:

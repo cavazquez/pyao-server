@@ -322,7 +322,7 @@ def build_create_fx_response(char_index: int, fx: int, loops: int) -> bytes:
     Args:
         char_index: ID del personaje/objeto que genera el efecto (int16).
         fx: ID del efecto visual (int16).
-        loops: Número de loops (int16). -1 = una vez, 0 = infinito, >0 = número específico.
+        loops: Número de loops (int16). -1 = infinito, 0 = una vez, >0 = número específico.
 
     Returns:
         Paquete de bytes: PacketID (44) + charIndex (int16) + fx (int16) + loops (int16).
