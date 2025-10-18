@@ -149,6 +149,19 @@ class NPCService:
         # Agregar al MapManager
         self.map_manager.add_npc(map_id, npc)
 
+        # Broadcast CHARACTER_CREATE a todos los jugadores en el mapa
+        if self.broadcast_service:
+            await self.broadcast_service.broadcast_character_create(
+                map_id=map_id,
+                char_index=npc.char_index,
+                body=npc.body_id,
+                head=npc.head_id,
+                heading=npc.heading,
+                x=npc.x,
+                y=npc.y,
+                name=npc.name,
+            )
+
         logger.debug(
             "NPC spawneado: %s (CharIndex: %d) en mapa %d (%d, %d)",
             npc.name,
