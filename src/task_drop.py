@@ -96,15 +96,16 @@ class TaskDrop(Task):
 
         current_gold = stats.get("gold", 0)
 
-        # Validar que tiene suficiente oro
-        if current_gold < quantity:
-            await self.message_sender.send_console_msg(
-                f"No tienes suficiente oro. Tienes {current_gold} y quieres tirar {quantity}."
-            )
-            return
-
+        # Validar cantidad
         if quantity <= 0:
             await self.message_sender.send_console_msg("Cantidad inválida.")
+            return
+
+        # Ajustar cantidad al mínimo entre lo que tiene y lo que quiere tirar
+        actual_quantity = min(quantity, current_gold)
+
+        if actual_quantity == 0:
+            await self.message_sender.send_console_msg("No tienes oro para tirar.")
             return
 
         # Obtener posición del jugador
@@ -117,7 +118,7 @@ class TaskDrop(Task):
         y = position["y"]
 
         # Reducir oro del jugador
-        new_gold = current_gold - quantity
+        new_gold = current_gold - actual_quantity
         await self.player_repo.update_gold(user_id, new_gold)
 
         # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
@@ -144,7 +145,7 @@ class TaskDrop(Task):
         # Crear ground item
         ground_item: dict[str, int | str | None] = {
             "item_id": GOLD_ITEM_ID,
-            "quantity": quantity,
+            "quantity": actual_quantity,
             "grh_index": GOLD_GRH_INDEX,
             "owner_id": None,
             "spawn_time": None,
@@ -160,5 +161,7 @@ class TaskDrop(Task):
             )
 
         # Notificar al jugador
-        await self.message_sender.send_console_msg(f"Tiraste {quantity} monedas de oro al suelo.")
-        logger.info("Jugador %d tiró %d de oro en (%d,%d)", user_id, quantity, x, y)
+        await self.message_sender.send_console_msg(
+            f"Tiraste {actual_quantity} monedas de oro al suelo."
+        )
+        logger.info("Jugador %d tiró %d de oro en (%d,%d)", user_id, actual_quantity, x, y)
