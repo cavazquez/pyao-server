@@ -65,6 +65,51 @@ class TaskAttack(Task):
         self.item_catalog = item_catalog
         self.session_data = session_data or {}
 
+    def _find_free_position_for_drop(
+        self, map_id: int, center_x: int, center_y: int, radius: int = 2
+    ) -> tuple[int, int] | None:
+        """Busca una posición libre cercana para dropear un item.
+
+        Args:
+            map_id: ID del mapa.
+            center_x: Coordenada X central.
+            center_y: Coordenada Y central.
+            radius: Radio de búsqueda.
+
+        Returns:
+            Tupla (x, y) con una posición libre, o None si no encuentra.
+        """
+        import random  # noqa: PLC0415
+
+        if not self.map_manager:
+            return None
+
+        # Intentar primero la posición central
+        if self.map_manager.can_move_to(map_id, center_x, center_y):
+            items = self.map_manager.get_ground_items(map_id, center_x, center_y)
+            if not items:
+                return (center_x, center_y)
+
+        # Buscar en posiciones cercanas
+        for _ in range(20):  # Máximo 20 intentos
+            offset_x = random.randint(-radius, radius)  # noqa: S311
+            offset_y = random.randint(-radius, radius)  # noqa: S311
+
+            x = center_x + offset_x
+            y = center_y + offset_y
+
+            # Verificar límites del mapa
+            if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+                continue
+
+            # Verificar si la posición está libre y no tiene items
+            if self.map_manager.can_move_to(map_id, x, y):
+                items = self.map_manager.get_ground_items(map_id, x, y)
+                if not items:
+                    return (x, y)
+
+        return None
+
     async def execute(self) -> None:  # noqa: PLR0914, PLR0912, PLR0915, C901
         """Procesa el ataque del jugador."""
         # Obtener user_id de la sesión
@@ -180,6 +225,22 @@ class TaskAttack(Task):
                         logger.warning("Item %d no tiene GrhIndex en el catálogo", item_id)
                         continue
 
+                    # Buscar posición libre cercana para dropear el item
+                    drop_pos = self._find_free_position_for_drop(
+                        target_npc.map_id, target_npc.x, target_npc.y, radius=2
+                    )
+
+                    if not drop_pos:
+                        logger.warning(
+                            "No se encontró posición libre para dropear %s cerca de (%d,%d)",
+                            self.item_catalog.get_item_name(item_id),
+                            target_npc.x,
+                            target_npc.y,
+                        )
+                        continue
+
+                    drop_x, drop_y = drop_pos
+
                     # Crear ground item
                     ground_item: dict[str, int | str | None] = {
                         "item_id": item_id,
@@ -191,15 +252,15 @@ class TaskAttack(Task):
 
                     # Agregar al MapManager
                     self.map_manager.add_ground_item(
-                        map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, item=ground_item
+                        map_id=target_npc.map_id, x=drop_x, y=drop_y, item=ground_item
                     )
 
                     # Broadcast OBJECT_CREATE a jugadores cercanos
                     if self.broadcast_service:
                         await self.broadcast_service.broadcast_object_create(
                             map_id=target_npc.map_id,
-                            x=target_npc.x,
-                            y=target_npc.y,
+                            x=drop_x,
+                            y=drop_y,
                             grh_index=grh_index,
                         )
 
@@ -209,8 +270,8 @@ class TaskAttack(Task):
                         target_npc.name,
                         quantity,
                         item_name,
-                        target_npc.x,
-                        target_npc.y,
+                        drop_x,
+                        drop_y,
                     )
 
             # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
