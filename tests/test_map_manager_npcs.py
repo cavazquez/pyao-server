@@ -177,7 +177,7 @@ class TestMapManagerNPCs:
                     char_index=10000 + map_id * 100 + i,
                     instance_id=f"test-id-{map_id}-{i}",
                     map_id=map_id,
-                    x=50,
+                    x=50 + i,  # Diferentes posiciones X para evitar colisión
                     y=50,
                     heading=3,
                     name=f"NPC-Map{map_id}-{i}",

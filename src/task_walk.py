@@ -93,7 +93,11 @@ class TaskWalk(Task):
             )
             return
 
-        logger.debug("TaskWalk: Recibido WALK con heading=%d desde %s", heading, self.message_sender.connection.address)
+        logger.debug(
+            "TaskWalk: Recibido WALK con heading=%d desde %s",
+            heading,
+            self.message_sender.connection.address,
+        )
 
         # Verificar que el player_repo esté disponible
         if self.player_repo is None:
