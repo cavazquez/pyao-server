@@ -63,11 +63,16 @@ class MeditationEffect(TickEffect):
             message_sender: Enviador de mensajes (puede ser None).
         """
         try:
+            logger.debug("MeditationEffect.apply llamado para user_id %d", user_id)
+
             # Verificar si está meditando
             is_meditating = await player_repo.is_meditating(user_id)
+            logger.debug("user_id %d - is_meditating: %s", user_id, is_meditating)
+
             if not is_meditating:
                 # Resetear contador si no está meditando
                 if user_id in self._tick_counters:
+                    logger.debug("user_id %d dejó de meditar, reseteando contador", user_id)
                     del self._tick_counters[user_id]
                 return
 

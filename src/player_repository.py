@@ -283,8 +283,13 @@ class PlayerRepository:
             is_meditating: True si está meditando, False si no.
         """
         key = RedisKeys.player_user_stats(user_id)
+        logger.info(
+            "SET_MEDITATING: user_id=%d, is_meditating=%s, key=%s", user_id, is_meditating, key
+        )
         await self.redis.redis.hset(key, "meditating", "1" if is_meditating else "0")  # type: ignore[misc]
-        logger.debug("Estado de meditación actualizado para user_id %d: %s", user_id, is_meditating)
+        logger.info(
+            "Estado de meditación GUARDADO en Redis para user_id %d: %s", user_id, is_meditating
+        )
 
     async def is_meditating(self, user_id: int) -> bool:
         """Verifica si el jugador está meditando.
@@ -297,7 +302,16 @@ class PlayerRepository:
         """
         key = RedisKeys.player_user_stats(user_id)
         result = await self.redis.redis.hget(key, "meditating")  # type: ignore[misc]
-        return result == b"1" if result else False
+        # Redis puede retornar bytes (b"1") o string ("1") dependiendo de la configuración
+        is_med = result in {b"1", "1", 1} if result else False
+        logger.debug(
+            "IS_MEDITATING: user_id=%d, result=%s (type=%s), is_meditating=%s",
+            user_id,
+            result,
+            type(result).__name__,
+            is_med,
+        )
+        return is_med
 
     async def update_hp(self, user_id: int, hp: int) -> None:
         """Actualiza el HP del jugador.
