@@ -139,28 +139,75 @@ class InventoryRepository:
         """
         return await self.set_slot(user_id, slot, 0, 0)
 
-    async def add_item(self, user_id: int, item_id: int, quantity: int = 1) -> int | None:
+    async def add_item(
+        self, user_id: int, item_id: int, quantity: int = 1, max_stack: int = 20
+    ) -> list[tuple[int, int]]:
         """Agrega un item al inventario.
 
         Args:
             user_id: ID del jugador.
             item_id: ID del item a agregar.
             quantity: Cantidad a agregar.
+            max_stack: Cantidad máxima por stack.
 
         Returns:
-            Número de slot donde se agregó, o None si no hay espacio.
+            Lista de tuplas (slot, cantidad_en_slot) de los slots modificados.
+            Lista vacía si no hay espacio.
         """
         inventory = await self.get_inventory(user_id)
+        remaining_quantity = quantity
+        modified_slots: list[tuple[int, int]] = []
 
-        # Buscar primer slot vacío
+        # Primero intentar apilar en slots existentes del mismo item
         for i in range(1, self.MAX_SLOTS + 1):
-            slot_key = f"slot_{i}"
-            if not inventory.get(slot_key, ""):
-                await self.set_slot(user_id, i, item_id, quantity)
-                return i
+            if remaining_quantity <= 0:
+                break
 
-        logger.warning("No hay espacio en inventario para user_id %d", user_id)
-        return None
+            slot_key = f"slot_{i}"
+            slot_value = inventory.get(slot_key, "")
+
+            if slot_value and isinstance(slot_value, str):
+                parts = slot_value.split(":")
+                if len(parts) == 2:  # noqa: PLR2004
+                    existing_item_id = int(parts[0])
+                    existing_quantity = int(parts[1])
+
+                    # Si es el mismo item y no está lleno el stack
+                    if existing_item_id == item_id and existing_quantity < max_stack:
+                        # Calcular cuánto podemos agregar a este stack
+                        space_in_stack = max_stack - existing_quantity
+                        to_add = min(remaining_quantity, space_in_stack)
+
+                        # Actualizar el slot
+                        new_quantity = existing_quantity + to_add
+                        await self.set_slot(user_id, i, item_id, new_quantity)
+
+                        remaining_quantity -= to_add
+                        modified_slots.append((i, new_quantity))
+
+        # Si todavía queda cantidad, buscar slots vacíos
+        while remaining_quantity > 0:
+            empty_slot = None
+            for i in range(1, self.MAX_SLOTS + 1):
+                slot_key = f"slot_{i}"
+                if not inventory.get(slot_key, ""):
+                    empty_slot = i
+                    break
+
+            if empty_slot is None:
+                logger.warning("No hay espacio en inventario para user_id %d", user_id)
+                return []
+
+            # Agregar lo que quepa en este slot
+            to_add = min(remaining_quantity, max_stack)
+            await self.set_slot(user_id, empty_slot, item_id, to_add)
+            remaining_quantity -= to_add
+
+            # Actualizar inventory local para el siguiente loop
+            inventory[f"slot_{empty_slot}"] = f"{item_id}:{to_add}"
+            modified_slots.append((empty_slot, to_add))
+
+        return modified_slots
 
     async def remove_item(self, user_id: int, slot: int, quantity: int = 1) -> bool:
         """Remueve cantidad de un item de un slot.

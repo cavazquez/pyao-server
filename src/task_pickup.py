@@ -1,7 +1,7 @@
 """Task para manejar recogida de items del suelo."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from src.item_constants import GOLD_ITEM_ID
 from src.session_manager import SessionManager
@@ -9,6 +9,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.inventory_repository import InventoryRepository
+    from src.item_catalog import ItemCatalog
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -28,6 +29,7 @@ class TaskPickup(Task):
         inventory_repo: InventoryRepository | None = None,
         map_manager: MapManager | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
+        item_catalog: ItemCatalog | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -39,6 +41,7 @@ class TaskPickup(Task):
             inventory_repo: Repositorio de inventario.
             map_manager: Gestor de mapas.
             broadcast_service: Servicio de broadcast.
+            item_catalog: Catálogo de items.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -46,6 +49,7 @@ class TaskPickup(Task):
         self.inventory_repo = inventory_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
+        self.item_catalog = item_catalog
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
@@ -165,17 +169,42 @@ class TaskPickup(Task):
             x: Posición X.
             y: Posición Y.
         """
-        if not self.inventory_repo or not item_id:
+        if not self.inventory_repo or not item_id or not self.item_catalog:
             return
 
-        # TODO: Validar que el inventario no esté lleno
-        # TODO: Agregar item al inventario
-        # TODO: Enviar CHANGE_INVENTORY_SLOT
+        # Obtener datos del item del catálogo
+        item_data = self.item_catalog.get_item_data(item_id)
+        if not item_data:
+            logger.warning("Item %d no encontrado en el catálogo", item_id)
+            return
 
-        # Por ahora solo mostramos mensaje
-        await self.message_sender.send_console_msg(
-            f"Recogiste un item (ID: {item_id}, cantidad: {quantity})."
-        )
+        # Agregar item al inventario
+        modified_slots = await self.inventory_repo.add_item(user_id, item_id, quantity)
+
+        if not modified_slots:
+            await self.message_sender.send_console_msg("Tu inventario está lleno.")
+            return
+
+        # Enviar CHANGE_INVENTORY_SLOT para todos los slots modificados
+        for slot, slot_quantity in modified_slots:
+            await self.message_sender.send_change_inventory_slot(
+                slot=slot,
+                item_id=item_id,
+                name=str(item_data.get("Name", "Item")),
+                amount=slot_quantity,
+                equipped=False,
+                grh_id=cast("int", item_data.get("GrhIndex", 0)),
+                item_type=cast("int", item_data.get("ObjType", 0)),
+                max_hit=cast("int", item_data.get("MaxHit", 0)),
+                min_hit=cast("int", item_data.get("MinHit", 0)),
+                max_def=cast("int", item_data.get("MaxDef", 0)),
+                min_def=cast("int", item_data.get("MinDef", 0)),
+                sale_price=cast("float", item_data.get("Valor", 0)),
+            )
+
+        # Notificar al jugador
+        item_name = item_data.get("Name", f"Item {item_id}")
+        await self.message_sender.send_console_msg(f"Recogiste {quantity}x {item_name}.")
 
         # Remover del suelo
         if self.map_manager:

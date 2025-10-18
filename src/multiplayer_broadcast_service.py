@@ -401,12 +401,20 @@ class MultiplayerBroadcastService:
             notified += 1
 
         if notified > 0:
-            logger.debug(
+            logger.info(
                 "Broadcast OBJECT_CREATE: pos=(%d,%d) grh=%d - %d notificados",
                 x,
                 y,
                 grh_index,
                 notified,
+            )
+        else:
+            logger.warning(
+                "Broadcast OBJECT_CREATE: pos=(%d,%d) grh=%d - 0 jugadores en mapa %d",
+                x,
+                y,
+                grh_index,
+                map_id,
             )
 
         return notified

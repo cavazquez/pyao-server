@@ -255,6 +255,7 @@ class ArgentumServer:
                 self.inventory_repo,
                 self.map_manager,
                 self.broadcast_service,
+                self.item_catalog,
                 session_data,
             )
         if task_class is TaskDrop:

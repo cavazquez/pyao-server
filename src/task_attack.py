@@ -84,11 +84,10 @@ class TaskAttack(Task):
         if not self.map_manager:
             return None
 
-        # Intentar primero la posición central
-        if self.map_manager.can_move_to(map_id, center_x, center_y):
-            items = self.map_manager.get_ground_items(map_id, center_x, center_y)
-            if not items:
-                return (center_x, center_y)
+        # Intentar primero la posición central (puede haber jugadores/NPCs)
+        items = self.map_manager.get_ground_items(map_id, center_x, center_y)
+        if not items:
+            return (center_x, center_y)
 
         # Buscar en posiciones cercanas
         for _ in range(20):  # Máximo 20 intentos
@@ -102,11 +101,10 @@ class TaskAttack(Task):
             if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
                 continue
 
-            # Verificar si la posición está libre y no tiene items
-            if self.map_manager.can_move_to(map_id, x, y):
-                items = self.map_manager.get_ground_items(map_id, x, y)
-                if not items:
-                    return (x, y)
+            # Verificar que no haya otro item en esa posición
+            items = self.map_manager.get_ground_items(map_id, x, y)
+            if not items:
+                return (x, y)
 
         return None
 
@@ -224,6 +222,13 @@ class TaskAttack(Task):
                     if grh_index is None:
                         logger.warning("Item %d no tiene GrhIndex en el catálogo", item_id)
                         continue
+
+                    logger.debug(
+                        "Dropeando item_id=%d grh_index=%d quantity=%d",
+                        item_id,
+                        grh_index,
+                        quantity,
+                    )
 
                     # Buscar posición libre cercana para dropear el item
                     drop_pos = self._find_free_position_for_drop(
