@@ -53,6 +53,13 @@ class NPCRespawnService:
         if self.npc_service.map_manager.can_move_to(map_id, x, y):
             return (x, y)
 
+        # Posición bloqueada
+        occupant = self.npc_service.map_manager.get_tile_occupant(map_id, x, y)
+        if occupant:
+            logger.info("Posición (%d,%d) mapa %d bloqueada por: %s", x, y, map_id, occupant)
+        else:
+            logger.info("Posición (%d,%d) mapa %d bloqueada (tile del mapa)", x, y, map_id)
+
         return None
 
     async def schedule_respawn(self, npc: NPC) -> None:
@@ -135,13 +142,14 @@ class NPCRespawnService:
                                 attempt,
                             )
                             break  # Respawn exitoso, salir del loop
-                    except ValueError:
+                    except ValueError as e:
                         # Tile ocupado, intentar de nuevo
-                        logger.debug(
-                            "Tile (%d,%d) ocupado al intentar respawnear %s, reintentando...",
+                        logger.info(
+                            "Tile (%d,%d) bloqueado al intentar respawnear %s: %s",
                             spawn_x,
                             spawn_y,
                             npc.name,
+                            e,
                         )
 
                 # Si no encontró posición o falló el spawn, esperar un poco antes de reintentar
