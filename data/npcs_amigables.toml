@@ -1,0 +1,92 @@
+# NPCs Amigables - NPCs que ofrecen servicios a los jugadores
+# Estos NPCs no atacan y generalmente son permanentes (no respawnean)
+
+[[npc]]
+id = 2
+nombre = "Comerciante"
+descripcion = "Un comerciante amigable que vende pociones y equipamiento básico."
+body_id = 501
+head_id = 1
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
+
+[[npc]]
+id = 3
+nombre = "Guardia Real"
+descripcion = "Un guardia que protege la ciudad de criminales y monstruos."
+body_id = 502
+head_id = 2
+es_hostil = false
+es_atacable = true
+nivel = 20
+hp_max = 500
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
+
+[[npc]]
+id = 5
+nombre = "Banquero"
+descripcion = "Gestiona tu banco personal de forma segura."
+body_id = 504
+head_id = 3
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
+
+[[npc]]
+id = 6
+nombre = "Entrenador"
+descripcion = "Te ayuda a mejorar tus habilidades mediante entrenamiento."
+body_id = 505
+head_id = 4
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
+
+[[npc]]
+id = 9
+nombre = "Herrero"
+descripcion = "Forja armas y armaduras de gran calidad."
+body_id = 508
+head_id = 5
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0
+
+[[npc]]
+id = 10
+nombre = "Sacerdote"
+descripcion = "Ofrece servicios de curación y bendiciones."
+body_id = 509
+head_id = 6
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 0
+oro_min = 0
+oro_max = 0
+respawn_time = 0         # No respawnea (NPC permanente)
+respawn_time_max = 0

@@ -1,0 +1,62 @@
+# NPCs Hostiles - Criaturas que atacan a los jugadores
+# Estos NPCs tienen IA agresiva y dropean loot al morir
+
+[[npc]]
+id = 1
+nombre = "Goblin"
+descripcion = "Un goblin salvaje que ataca a los viajeros."
+body_id = 58  # Body ID real de Goblin en AO
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 5
+hp_max = 100
+oro_min = 10
+oro_max = 50
+respawn_time = 30        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 60    # Tiempo máximo de respawn en segundos
+
+[[npc]]
+id = 4
+nombre = "Orco"
+descripcion = "Un orco feroz con gran fuerza física."
+body_id = 8  # Body ID real de Orco en AO
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 10
+hp_max = 200
+oro_min = 20
+oro_max = 100
+respawn_time = 60        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 120   # Tiempo máximo de respawn en segundos
+
+[[npc]]
+id = 7
+nombre = "Lobo"
+descripcion = "Un lobo salvaje que merodea por los bosques."
+body_id = 138  # Body ID real de Lobo en AO
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 3
+hp_max = 80
+oro_min = 5
+oro_max = 20
+respawn_time = 20        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 40    # Tiempo máximo de respawn en segundos
+
+[[npc]]
+id = 8
+nombre = "Araña Gigante"
+descripcion = "Una araña de tamaño descomunal con veneno mortal."
+body_id = 149  # Body ID real de Araña en AO
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 8
+hp_max = 150
+oro_min = 15
+oro_max = 75
+respawn_time = 45        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 90    # Tiempo máximo de respawn en segundos
