@@ -77,13 +77,25 @@ class MeditationEffect(TickEffect):
 
             self._tick_counters[user_id] += 1
 
-            # Solo aplicar efecto cada interval_seconds ticks
-            # GameTick corre cada 1 segundo, así que necesitamos interval_seconds ticks
-            if self._tick_counters[user_id] < self.interval_seconds:
+            # Calcular cuántos ticks necesitamos (GameTick corre cada 0.5s)
+            # Para 3 segundos con tick de 0.5s: 3 / 0.5 = 6 ticks
+            ticks_needed = int(self.interval_seconds / 0.5)  # 0.5s es el tick_interval del GameTick
+
+            logger.debug(
+                "user_id %d meditando - tick %d/%d",
+                user_id,
+                self._tick_counters[user_id],
+                ticks_needed,
+            )
+
+            # Solo aplicar efecto cuando alcancemos los ticks necesarios
+            if self._tick_counters[user_id] < ticks_needed:
                 return
 
             # Resetear contador
             self._tick_counters[user_id] = 0
+
+            logger.info("user_id %d: aplicando recuperación de maná", user_id)
 
             # Obtener stats del jugador
             stats = await player_repo.get_stats(user_id)
