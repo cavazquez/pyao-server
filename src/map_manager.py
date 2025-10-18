@@ -260,6 +260,33 @@ class MapManager(SpatialIndexMixin):
 
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
+    def move_npc(
+        self, map_id: int, char_index: int, old_x: int, old_y: int, new_x: int, new_y: int
+    ) -> None:
+        """Mueve un NPC de una posición a otra.
+
+        Args:
+            map_id: ID del mapa.
+            char_index: CharIndex del NPC.
+            old_x: Posición X anterior.
+            old_y: Posición Y anterior.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+        """
+        # Liberar tile anterior
+        old_tile_key = (map_id, old_x, old_y)
+        if old_tile_key in self._tile_occupation:
+            del self._tile_occupation[old_tile_key]
+
+        # Buscar el NPC por char_index
+        if map_id in self._npcs_by_map:
+            for npc in self._npcs_by_map[map_id].values():
+                if npc.char_index == char_index:
+                    # Ocupar nuevo tile
+                    new_tile_key = (map_id, new_x, new_y)
+                    self._tile_occupation[new_tile_key] = f"npc:{npc.instance_id}"
+                    break
+
     def remove_npc(self, map_id: int, instance_id: str) -> None:
         """Remueve un NPC de un mapa.
 
@@ -299,6 +326,17 @@ class MapManager(SpatialIndexMixin):
 
         return list(self._npcs_by_map[map_id].values())
 
+    def get_all_npcs(self) -> list[NPC]:
+        """Obtiene todos los NPCs de todos los mapas.
+
+        Returns:
+            Lista de todos los NPCs.
+        """
+        all_npcs: list[NPC] = []
+        for npcs_in_map in self._npcs_by_map.values():
+            all_npcs.extend(npcs_in_map.values())
+        return all_npcs
+
     def get_npc_by_char_index(self, map_id: int, char_index: int) -> NPC | None:
         """Obtiene un NPC por su CharIndex en un mapa.
 
@@ -317,17 +355,6 @@ class MapManager(SpatialIndexMixin):
                 return npc
 
         return None
-
-    def get_all_npcs(self) -> list[NPC]:
-        """Obtiene todos los NPCs del mundo.
-
-        Returns:
-            Lista de todos los NPCs.
-        """
-        npcs: list[NPC] = []
-        for map_npcs in self._npcs_by_map.values():
-            npcs.extend(map_npcs.values())
-        return npcs
 
     # Ground Items Methods
 

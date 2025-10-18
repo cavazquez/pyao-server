@@ -23,6 +23,8 @@ from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
 from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.npc_ai_effect import NPCAIEffect
+from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
 from src.npc_repository import NPCRepository
 from src.npc_respawn_service import NPCRespawnService
@@ -504,10 +506,6 @@ class ArgentumServer:
             self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))
             logger.info("Efecto de movimiento de NPCs habilitado")
 
-            # Iniciar el sistema de tick después de agregar todos los efectos
-            self.game_tick.start()
-            logger.info("Sistema de tick del juego iniciado con todos los efectos")
-
             # Inicializar sistema de magia
             self.spell_catalog = SpellCatalog()
             # map_manager ya está inicializado arriba
@@ -533,6 +531,26 @@ class ArgentumServer:
                 self.inventory_repo,
             )
             logger.info("Sistema de combate inicializado")
+
+            # Inicializar servicio de IA de NPCs (después de combat_service)
+            self.npc_ai_service = NPCAIService(
+                self.npc_service,
+                self.map_manager,
+                self.player_repo,
+                self.combat_service,
+                self.broadcast_service,
+            )
+            logger.info("Sistema de IA de NPCs inicializado")
+
+            # Agregar efecto de IA de NPCs hostiles
+            self.game_tick.add_effect(
+                NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=2.0)
+            )
+            logger.info("Efecto de IA de NPCs hostiles habilitado")
+
+            # Iniciar el sistema de tick después de agregar todos los efectos
+            self.game_tick.start()
+            logger.info("Sistema de tick del juego iniciado con todos los efectos")
 
             # Inicializar configuración de efectos en Redis (si no existe)
             await self._initialize_effects_config()

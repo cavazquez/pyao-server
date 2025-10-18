@@ -246,49 +246,6 @@ class CombatService:
 
         # TODO: Verificar si sube de nivel
 
-    async def npc_attack_player(self, npc: NPC, user_id: int) -> dict[str, int | bool] | None:
-        """NPC ataca a un jugador.
-
-        Args:
-            npc: NPC atacante.
-            user_id: ID del jugador objetivo.
-
-        Returns:
-            Diccionario con resultado del ataque:
-            - damage: Daño infligido
-            - player_died: Si el jugador murió
-            None si el ataque falló por validaciones.
-        """
-        # Obtener stats del jugador
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            logger.error("No se encontraron stats para user_id %d", user_id)
-            return None
-
-        # Calcular daño
-        damage = self._calculate_npc_damage(npc, stats)
-
-        # Aplicar daño al jugador
-        current_hp = stats.get("hp", 0)
-        new_hp = max(0, current_hp - damage)
-        player_died = new_hp <= 0
-
-        # Actualizar HP del jugador
-        await self.player_repo.update_hp(user_id, new_hp)
-
-        logger.info(
-            "NPC %s atacó a jugador %d por %d de daño (murió=%s)",
-            npc.name,
-            user_id,
-            damage,
-            player_died,
-        )
-
-        return {
-            "damage": damage,
-            "player_died": player_died,
-        }
-
     def _calculate_npc_damage(  # noqa: PLR6301
         self,
         npc: NPC,
@@ -334,3 +291,50 @@ class CombatService:
             attacker_pos["y"] - target_pos["y"]
         )
         return distance == 1  # Solo ataque cuerpo a cuerpo por ahora
+
+    async def npc_attack_player(
+        self, npc: NPC, target_user_id: int
+    ) -> dict[str, int | bool] | None:
+        """NPC ataca a un jugador.
+
+        Args:
+            npc: NPC atacante.
+            target_user_id: ID del jugador objetivo.
+
+        Returns:
+            Diccionario con resultado del ataque o None si falla.
+            - damage: Daño infligido
+            - player_died: Si el jugador murió
+        """
+        # Obtener stats del jugador
+        player_stats = await self.player_repo.get_stats(target_user_id)
+        if not player_stats:
+            logger.warning("No se encontraron stats del jugador %d", target_user_id)
+            return None
+
+        # Calcular daño
+        damage = self._calculate_npc_damage(npc, player_stats)
+
+        # Aplicar daño al jugador
+        current_hp = player_stats.get("min_hp", 100)
+        new_hp = max(0, current_hp - damage)
+
+        await self.player_repo.update_hp(target_user_id, new_hp)
+
+        # Verificar si el jugador murió
+        player_died = new_hp <= 0
+
+        logger.info(
+            "NPC %s (nivel %d) atacó a jugador %d por %d de daño (HP: %d -> %d)",
+            npc.name,
+            npc.level,
+            target_user_id,
+            damage,
+            current_hp,
+            new_hp,
+        )
+
+        return {
+            "damage": damage,
+            "player_died": player_died,
+        }
