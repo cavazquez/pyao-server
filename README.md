@@ -378,6 +378,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ### Sistema de Juego
 - **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo ⭐ **NUEVO**
+- **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo 📝 **NUEVO**
 
 ### Bug Fixes y Troubleshooting
 - **[Bug Fix: Tile Occupation](docs/BUGFIX_TILE_OCCUPATION.md)**: Solución al bug de tiles bloqueados al remover NPCs 🐛 **NUEVO**
