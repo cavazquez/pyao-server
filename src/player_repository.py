@@ -99,7 +99,9 @@ class PlayerRepository:
 
         return {
             "max_hp": int(result.get("max_hp", 100)),
-            "min_hp": int(result.get("min_hp", 100)),
+            "min_hp": int(
+                result.get("hp", result.get("min_hp", 100))
+            ),  # Priorizar "hp" sobre "min_hp"
             "max_mana": int(result.get("max_mana", 100)),
             "min_mana": int(result.get("min_mana", 100)),
             "max_sta": int(result.get("max_sta", 100)),

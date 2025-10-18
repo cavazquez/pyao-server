@@ -63,6 +63,11 @@ class NPCAIService:
         min_distance = float("inf")
 
         for user_id in user_ids:
+            # Verificar que el jugador esté vivo
+            stats = await self.player_repo.get_stats(user_id)
+            if not stats or stats.get("min_hp", 0) <= 0:
+                continue  # Jugador muerto, ignorar
+
             # Obtener posición del jugador
             player_pos = await self.player_repo.get_position(user_id)
             if not player_pos or player_pos["map"] != npc.map_id:
@@ -113,6 +118,11 @@ class NPCAIService:
         Returns:
             True si atacó exitosamente.
         """
+        # Verificar que el jugador esté vivo
+        stats = await self.player_repo.get_stats(target_user_id)
+        if not stats or stats.get("min_hp", 0) <= 0:
+            return False  # Jugador muerto, no atacar
+
         # Obtener posición del jugador
         target_pos = await self.player_repo.get_position(target_user_id)
         if not target_pos:
@@ -133,6 +143,60 @@ class NPCAIService:
         result = await self.combat_service.npc_attack_player(npc, target_user_id)
 
         if result and result.get("damage", 0) > 0:
+            # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar
+            message_sender = self.map_manager.get_message_sender(target_user_id)
+            if message_sender:
+                stats = await self.player_repo.get_stats(target_user_id)
+                if stats:
+                    await message_sender.send_update_user_stats(
+                        max_hp=stats.get("max_hp", 100),
+                        min_hp=stats.get("min_hp", 100),
+                        max_mana=stats.get("max_mana", 100),
+                        min_mana=stats.get("min_mana", 100),
+                        max_sta=stats.get("max_sta", 100),
+                        min_sta=stats.get("min_sta", 100),
+                        gold=stats.get("gold", 0),
+                        level=stats.get("level", 1),
+                        elu=stats.get("elu", 300),
+                        experience=stats.get("exp", 0),
+                    )
+
+                    # Si el jugador murió, revivirlo temporalmente (para testing)
+                    if result.get("player_died", False):
+                        await message_sender.send_console_msg(
+                            f"¡Has sido asesinado por {npc.name}! (Reviviendo...)"
+                        )
+                        logger.info(
+                            "Jugador %d fue asesinado por NPC %s - Reviviendo automáticamente",
+                            target_user_id,
+                            npc.name,
+                        )
+
+                        # Revivir con HP completo (temporal para testing)
+                        max_hp = stats.get("max_hp", 100)
+                        await self.player_repo.update_hp(target_user_id, max_hp)
+
+                        # Enviar UPDATE_USER_STATS con HP restaurado
+                        await message_sender.send_update_user_stats(
+                            max_hp=max_hp,
+                            min_hp=max_hp,
+                            max_mana=stats.get("max_mana", 100),
+                            min_mana=stats.get("min_mana", 100),
+                            max_sta=stats.get("max_sta", 100),
+                            min_sta=stats.get("min_sta", 100),
+                            gold=stats.get("gold", 0),
+                            level=stats.get("level", 1),
+                            elu=stats.get("elu", 300),
+                            experience=stats.get("exp", 0),
+                        )
+
+                        # TODO: Implementar lógica de muerte completa
+                        # - Convertir en fantasma (cambiar body)
+                        # - Dropear items/oro
+                        # - Teletransportar a punto de respawn
+                        # - Penalización de experiencia
+                        # - etc.
+
             logger.info(
                 "NPC %s atacó a jugador %d por %d de daño",
                 npc.name,
