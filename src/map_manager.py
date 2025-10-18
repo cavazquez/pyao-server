@@ -236,14 +236,25 @@ class MapManager(SpatialIndexMixin):
         Args:
             map_id: ID del mapa.
             npc: Instancia del NPC.
+
+        Raises:
+            ValueError: Si el tile ya está ocupado por otro NPC o jugador.
         """
         if map_id not in self._npcs_by_map:
             self._npcs_by_map[map_id] = {}
 
+        # Verificar que el tile no esté ocupado
+        tile_key = (map_id, npc.x, npc.y)
+        if tile_key in self._tile_occupation:
+            occupant = self._tile_occupation[tile_key]
+            raise ValueError(
+                f"No se puede agregar NPC {npc.name} en ({npc.x},{npc.y}): "
+                f"tile ya ocupado por {occupant}"
+            )
+
         self._npcs_by_map[map_id][npc.instance_id] = npc
         
         # Marcar tile como ocupado en el índice espacial
-        tile_key = (map_id, npc.x, npc.y)
         self._tile_occupation[tile_key] = f"npc:{npc.instance_id}"
         
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)

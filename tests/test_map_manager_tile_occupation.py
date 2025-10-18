@@ -147,6 +147,62 @@ def test_remove_npc_nonexistent_does_not_crash(map_manager):
     assert True
 
 
+def test_cannot_add_two_npcs_same_position(map_manager):
+    """Verifica que no se pueden agregar dos NPCs en la misma posición."""
+    npc1 = NPC(
+        npc_id=1,
+        char_index=10001,
+        instance_id="npc_001",
+        map_id=1,
+        x=50,
+        y=50,
+        heading=3,
+        name="Goblin",
+        description="Un goblin hostil",
+        body_id=1,
+        head_id=1,
+        hp=100,
+        max_hp=100,
+        level=1,
+        is_hostile=True,
+        is_attackable=True,
+        movement_type="static",
+        respawn_time=60,
+        gold_min=10,
+        gold_max=50,
+    )
+    
+    npc2 = NPC(
+        npc_id=2,
+        char_index=10002,
+        instance_id="npc_002",
+        map_id=1,
+        x=50,  # ← Misma posición que npc1
+        y=50,  # ← Misma posición que npc1
+        heading=3,
+        name="Lobo",
+        description="Un lobo salvaje",
+        body_id=2,
+        head_id=2,
+        hp=80,
+        max_hp=80,
+        level=2,
+        is_hostile=True,
+        is_attackable=True,
+        movement_type="random",
+        respawn_time=60,
+        gold_min=20,
+        gold_max=60,
+    )
+    
+    # Agregar primer NPC
+    map_manager.add_npc(npc1.map_id, npc1)
+    
+    # Intentar agregar segundo NPC en la misma posición debe lanzar ValueError
+    with pytest.raises(ValueError, match="tile ya ocupado"):
+        map_manager.add_npc(npc2.map_id, npc2)
+
+
 def test_tile_occupation_after_npc_death_and_gold_drop(map_manager, sample_npc):
     """Simula el flujo completo: NPC muere, dropea oro, jugador recoge.
     
