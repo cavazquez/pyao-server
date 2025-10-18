@@ -62,7 +62,7 @@ respawn_time = 0         # No respawnea (NPC permanente)
 respawn_time_max = 0
 
 [[npc]]
-id = 9
+id = 11
 nombre = "Herrero"
 descripcion = "Forja armas y armaduras de gran calidad."
 body_id = 508
@@ -77,7 +77,7 @@ respawn_time = 0         # No respawnea (NPC permanente)
 respawn_time_max = 0
 
 [[npc]]
-id = 10
+id = 12
 nombre = "Sacerdote"
 descripcion = "Ofrece servicios de curación y bendiciones."
 body_id = 509

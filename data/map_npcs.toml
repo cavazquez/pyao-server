@@ -29,7 +29,7 @@ heading = 1  # Norte (mirando al jugador)
 
 [[spawn]]
 map_id = 1
-npc_id = 9  # Herrero
+npc_id = 11  # Herrero (ID actualizado)
 x = 50
 y = 56
 heading = 1  # Norte
@@ -49,6 +49,13 @@ x = 56
 y = 50
 heading = 4  # Oeste
 
+[[spawn]]
+map_id = 1
+npc_id = 8  # Araña Gigante
+x = 59
+y = 50
+heading = 4  # Oeste
+
 # Oeste (izquierda)
 [[spawn]]
 map_id = 1
@@ -56,3 +63,10 @@ npc_id = 1  # Goblin
 x = 47
 y = 50
 heading = 2  # Este (mirando al jugador)
+
+[[spawn]]
+map_id = 1
+npc_id = 9  # Serpiente
+x = 44
+y = 50
+heading = 2  # Este

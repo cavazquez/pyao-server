@@ -60,3 +60,18 @@ oro_min = 15
 oro_max = 75
 respawn_time = 45        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 90    # Tiempo máximo de respawn en segundos
+
+[[npc]]
+id = 9
+nombre = "Serpiente"
+descripcion = "Una serpiente venenosa que se desliza sigilosamente."
+body_id = 84  # Body ID real de Serpiente en AO
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 4
+hp_max = 60
+oro_min = 3
+oro_max = 15
+respawn_time = 15        # Tiempo mínimo de respawn en segundos
+respawn_time_max = 30    # Tiempo máximo de respawn en segundos

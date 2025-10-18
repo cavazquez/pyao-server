@@ -37,3 +37,12 @@ items = [
     { item_id = 12, probability = 1.0, min_quantity = 15, max_quantity = 75 },  # Oro (siempre)
     { item_id = 1, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Manzana Roja (25%)
 ]
+
+# Serpiente (npc_id=9)
+[[loot_table]]
+id = 9
+name = "Serpiente"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 3, max_quantity = 15 },  # Oro (siempre)
+    { item_id = 1, probability = 0.2, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
+]
