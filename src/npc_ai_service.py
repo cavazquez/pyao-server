@@ -2,6 +2,7 @@
 
 import logging
 import random
+import time
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -17,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 class NPCAIService:
     """Servicio que maneja la IA de NPCs hostiles."""
+
+    ATTACK_COOLDOWN = 3.0  # Segundos entre ataques
 
     def __init__(
         self,
@@ -108,7 +111,7 @@ class NPCAIService:
         # Movimiento vertical
         return 3 if dy > 0 else 1  # Sur o Norte
 
-    async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:
+    async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:  # noqa: C901
         """Intenta que el NPC ataque a un jugador.
 
         Args:
@@ -139,8 +142,17 @@ class NPCAIService:
         if dx + dy != 1:  # No están adyacentes
             return False
 
+        # Verificar cooldown de ataque
+        current_time = time.time()
+        if current_time - npc.last_attack_time < self.ATTACK_COOLDOWN:
+            return False  # Todavía en cooldown
+
         # Realizar ataque NPC -> Jugador
         result = await self.combat_service.npc_attack_player(npc, target_user_id)
+
+        # Actualizar timestamp del último ataque
+        if result and result.get("damage", 0) > 0:
+            npc.last_attack_time = current_time
 
         if result and result.get("damage", 0) > 0:
             # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar

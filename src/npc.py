@@ -44,3 +44,6 @@ class NPC:
     # Loot
     gold_min: int
     gold_max: int
+
+    # Combat
+    last_attack_time: float = 0.0  # Timestamp del último ataque
