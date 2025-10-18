@@ -17,6 +17,8 @@ from src.equipment_repository import EquipmentRepository
 from src.game_tick import GameTick
 from src.ground_items_repository import GroundItemsRepository
 from src.inventory_repository import InventoryRepository
+from src.item_catalog import ItemCatalog
+from src.loot_table_service import LootTableService
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
 from src.message_sender import MessageSender
@@ -94,6 +96,8 @@ class ArgentumServer:
         self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
         self.npc_service: NPCService | None = None  # Servicio de NPCs
         self.npc_respawn_service: NPCRespawnService | None = None  # Servicio de respawn de NPCs
+        self.item_catalog: ItemCatalog | None = None  # Catálogo de items
+        self.loot_table_service: LootTableService | None = None  # Servicio de loot tables
         self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
         self.spell_service: SpellService | None = None  # Servicio de hechizos
         self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
@@ -239,6 +243,8 @@ class ArgentumServer:
                 self.npc_service,
                 self.broadcast_service,
                 self.npc_respawn_service,
+                self.loot_table_service,
+                self.item_catalog,
                 session_data,
             )
         if task_class is TaskPickup:
@@ -487,6 +493,11 @@ class ArgentumServer:
             # Inicializar servicio de respawn de NPCs
             self.npc_respawn_service = NPCRespawnService(self.npc_service)
             logger.info("Sistema de respawn de NPCs inicializado")
+
+            # Inicializar catálogo de items y loot tables
+            self.item_catalog = ItemCatalog()
+            self.loot_table_service = LootTableService()
+            logger.info("Sistema de items y loot tables inicializado")
 
             # Agregar efecto de movimiento de NPCs
             self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))

@@ -1,0 +1,39 @@
+# Loot Tables para NPCs
+# Define qué items dropean los NPCs al morir y con qué probabilidad
+
+# Goblin (npc_id=1)
+[[loot_table]]
+id = 1
+name = "Goblin"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 50 },  # Oro (siempre)
+    { item_id = 1, probability = 0.3, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (30%)
+    { item_id = 15, probability = 0.1, min_quantity = 1, max_quantity = 1 },    # Daga (10%)
+]
+
+# Lobo (npc_id=7)
+[[loot_table]]
+id = 7
+name = "Lobo"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 5, max_quantity = 20 },  # Oro (siempre)
+]
+
+# Orco (npc_id=4)
+[[loot_table]]
+id = 4
+name = "Orco"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 20, max_quantity = 100 },  # Oro (siempre)
+    { item_id = 3, probability = 0.2, min_quantity = 1, max_quantity = 1 },      # Hacha (20%)
+    { item_id = 2, probability = 0.15, min_quantity = 1, max_quantity = 1 },     # Espada Larga (15%)
+]
+
+# Araña Gigante (npc_id=8)
+[[loot_table]]
+id = 8
+name = "Araña Gigante"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 15, max_quantity = 75 },  # Oro (siempre)
+    { item_id = 1, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Manzana Roja (25%)
+]

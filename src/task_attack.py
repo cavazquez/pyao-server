@@ -3,7 +3,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.item_constants import GOLD_GRH_INDEX, GOLD_ITEM_ID
 from src.session_manager import SessionManager
 from src.sounds import SoundID
 from src.task import Task
@@ -11,6 +10,8 @@ from src.visual_effects import VisualEffectID
 
 if TYPE_CHECKING:
     from src.combat_service import CombatService
+    from src.item_catalog import ItemCatalog
+    from src.loot_table_service import LootTableService
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -34,6 +35,8 @@ class TaskAttack(Task):
         npc_service: NPCService | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
         npc_respawn_service: NPCRespawnService | None = None,
+        loot_table_service: LootTableService | None = None,
+        item_catalog: ItemCatalog | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -47,6 +50,8 @@ class TaskAttack(Task):
             npc_service: Servicio de NPCs.
             broadcast_service: Servicio de broadcast.
             npc_respawn_service: Servicio de respawn de NPCs.
+            loot_table_service: Servicio de loot tables.
+            item_catalog: Catálogo de items.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -56,6 +61,8 @@ class TaskAttack(Task):
         self.npc_service = npc_service
         self.broadcast_service = broadcast_service
         self.npc_respawn_service = npc_respawn_service
+        self.loot_table_service = loot_table_service
+        self.item_catalog = item_catalog
         self.session_data = session_data or {}
 
     async def execute(self) -> None:  # noqa: PLR0914, PLR0912, PLR0915, C901
@@ -157,43 +164,54 @@ class TaskAttack(Task):
         # Si el NPC murió
         if npc_died:
             experience = result.get("experience", 0)
-            gold = result.get("gold", 0)
 
             await self.message_sender.send_console_msg(
                 f"¡Has matado a {target_npc.name}! Ganaste {experience} EXP."
             )
 
-            # Dropear oro en el suelo
-            if gold > 0:
-                ground_item: dict[str, int | str | None] = {
-                    "item_id": GOLD_ITEM_ID,
-                    "quantity": gold,
-                    "grh_index": GOLD_GRH_INDEX,
-                    "owner_id": None,
-                    "spawn_time": None,
-                }
+            # Dropear items según loot table
+            if self.loot_table_service and self.item_catalog:
+                loot = self.loot_table_service.get_loot_for_npc(target_npc.npc_id)
 
-                # Agregar al MapManager
-                self.map_manager.add_ground_item(
-                    map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, item=ground_item
-                )
+                for item_id, quantity in loot:
+                    # Obtener GrhIndex del catálogo
+                    grh_index = self.item_catalog.get_grh_index(item_id)
+                    if grh_index is None:
+                        logger.warning("Item %d no tiene GrhIndex en el catálogo", item_id)
+                        continue
 
-                # Broadcast OBJECT_CREATE a jugadores cercanos
-                if self.broadcast_service:
-                    await self.broadcast_service.broadcast_object_create(
-                        map_id=target_npc.map_id,
-                        x=target_npc.x,
-                        y=target_npc.y,
-                        grh_index=GOLD_GRH_INDEX,
+                    # Crear ground item
+                    ground_item: dict[str, int | str | None] = {
+                        "item_id": item_id,
+                        "quantity": quantity,
+                        "grh_index": grh_index,
+                        "owner_id": None,
+                        "spawn_time": None,
+                    }
+
+                    # Agregar al MapManager
+                    self.map_manager.add_ground_item(
+                        map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, item=ground_item
                     )
 
-                logger.info(
-                    "NPC %s dropeó %d de oro en (%d, %d)",
-                    target_npc.name,
-                    gold,
-                    target_npc.x,
-                    target_npc.y,
-                )
+                    # Broadcast OBJECT_CREATE a jugadores cercanos
+                    if self.broadcast_service:
+                        await self.broadcast_service.broadcast_object_create(
+                            map_id=target_npc.map_id,
+                            x=target_npc.x,
+                            y=target_npc.y,
+                            grh_index=grh_index,
+                        )
+
+                    item_name = self.item_catalog.get_item_name(item_id) or f"Item {item_id}"
+                    logger.info(
+                        "NPC %s dropeó %dx %s en (%d, %d)",
+                        target_npc.name,
+                        quantity,
+                        item_name,
+                        target_npc.x,
+                        target_npc.y,
+                    )
 
             # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
             await self.npc_service.remove_npc(target_npc)
@@ -202,7 +220,6 @@ class TaskAttack(Task):
             if self.npc_respawn_service:
                 await self.npc_respawn_service.schedule_respawn(target_npc)
 
-            # TODO: Dropear items según tabla de loot
             # TODO: Verificar si sube de nivel
         else:
             # Mostrar HP restante del NPC
