@@ -93,9 +93,12 @@ class MeditationEffect(TickEffect):
 
             # Enviar actualización de stats al cliente
             if message_sender:
+                # Enviar UPDATE_MANA específico
+                await message_sender.send_update_mana(stats["min_mana"])
+                # También enviar UPDATE_USER_STATS completo
                 await message_sender.send_update_user_stats(**stats)
 
-            logger.debug(
+            logger.info(
                 "user_id %d recuperó %d mana meditando (%d/%d)",
                 user_id,
                 mana_recovered,
