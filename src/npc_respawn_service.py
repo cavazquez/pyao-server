@@ -24,6 +24,37 @@ class NPCRespawnService:
         self.npc_service = npc_service
         self._respawn_tasks: dict[str, asyncio.Task[None]] = {}  # instance_id -> Task
 
+    def _find_random_free_position(
+        self, map_id: int, center_x: int, center_y: int, radius: int = 5
+    ) -> tuple[int, int] | None:
+        """Busca una posición libre aleatoria cerca de un punto central.
+
+        Args:
+            map_id: ID del mapa.
+            center_x: Coordenada X central.
+            center_y: Coordenada Y central.
+            radius: Radio de búsqueda alrededor del centro.
+
+        Returns:
+            Tupla (x, y) con una posición libre, o None si no encuentra.
+        """
+        # Generar posición aleatoria dentro del radio
+        offset_x = random.randint(-radius, radius)  # noqa: S311
+        offset_y = random.randint(-radius, radius)  # noqa: S311
+
+        x = center_x + offset_x
+        y = center_y + offset_y
+
+        # Verificar límites del mapa (1-100)
+        if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+            return None
+
+        # Verificar si la posición está libre
+        if self.npc_service.map_manager.can_move_to(map_id, x, y):
+            return (x, y)
+
+        return None
+
     async def schedule_respawn(self, npc: NPC) -> None:
         """Programa el respawn de un NPC después de que muere.
 
@@ -69,33 +100,63 @@ class NPCRespawnService:
             # Esperar el tiempo de respawn
             await asyncio.sleep(delay_seconds)
 
-            # Spawnear el NPC en la misma posición
-            new_npc = await self.npc_service.spawn_npc(
-                npc_id=npc.npc_id,
-                map_id=npc.map_id,
-                x=npc.x,
-                y=npc.y,
-                heading=npc.heading,
-            )
+            # Intentar respawnear hasta encontrar una posición libre
+            attempt = 0
+            while True:
+                attempt += 1
 
-            if new_npc:
-                logger.info(
-                    "NPC %s respawneado en (%d,%d) mapa %d (CharIndex: %d)",
-                    new_npc.name,
-                    new_npc.x,
-                    new_npc.y,
-                    new_npc.map_id,
-                    new_npc.char_index,
-                )
-            else:
-                logger.warning(
-                    "No se pudo respawnear NPC %s (npc_id=%d) en (%d,%d) mapa %d",
-                    npc.name,
-                    npc.npc_id,
-                    npc.x,
-                    npc.y,
-                    npc.map_id,
-                )
+                # Buscar posición libre aleatoria cercana a la posición original
+                spawn_pos = self._find_random_free_position(npc.map_id, npc.x, npc.y, radius=5)
+
+                if spawn_pos:
+                    spawn_x, spawn_y = spawn_pos
+
+                    # Intentar spawnear el NPC
+                    try:
+                        new_npc = await self.npc_service.spawn_npc(
+                            npc_id=npc.npc_id,
+                            map_id=npc.map_id,
+                            x=spawn_x,
+                            y=spawn_y,
+                            heading=npc.heading,
+                        )
+
+                        if new_npc:
+                            logger.info(
+                                "NPC %s respawneado en (%d,%d) mapa %d (CharIndex: %d) "
+                                "[original: (%d,%d), intento: %d]",
+                                new_npc.name,
+                                new_npc.x,
+                                new_npc.y,
+                                new_npc.map_id,
+                                new_npc.char_index,
+                                npc.x,
+                                npc.y,
+                                attempt,
+                            )
+                            break  # Respawn exitoso, salir del loop
+                    except ValueError:
+                        # Tile ocupado, intentar de nuevo
+                        logger.debug(
+                            "Tile (%d,%d) ocupado al intentar respawnear %s, reintentando...",
+                            spawn_x,
+                            spawn_y,
+                            npc.name,
+                        )
+
+                # Si no encontró posición o falló el spawn, esperar un poco antes de reintentar
+                if attempt % 10 == 0:
+                    logger.warning(
+                        "NPC %s: %d intentos de respawn sin éxito cerca de (%d,%d) mapa %d",
+                        npc.name,
+                        attempt,
+                        npc.x,
+                        npc.y,
+                        npc.map_id,
+                    )
+
+                # Esperar 1 segundo antes de reintentar (no bloqueante)
+                await asyncio.sleep(1)
 
         except asyncio.CancelledError:
             logger.debug("Respawn cancelado para NPC %s", npc.name)
