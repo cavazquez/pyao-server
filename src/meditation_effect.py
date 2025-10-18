@@ -30,6 +30,8 @@ class MeditationEffect(TickEffect):
             interval_seconds: Intervalo en segundos entre recuperaciones (default: 3s).
         """
         self.interval_seconds = interval_seconds
+        # Contadores por jugador: {user_id: ticks_elapsed}
+        self._tick_counters: dict[int, int] = {}
 
     def get_interval_seconds(self) -> float:
         """Retorna el intervalo en segundos entre aplicaciones del efecto.
@@ -47,7 +49,7 @@ class MeditationEffect(TickEffect):
         """
         return "Meditation"
 
-    async def apply(  # noqa: PLR6301
+    async def apply(
         self,
         user_id: int,
         player_repo: PlayerRepository,
@@ -64,7 +66,24 @@ class MeditationEffect(TickEffect):
             # Verificar si está meditando
             is_meditating = await player_repo.is_meditating(user_id)
             if not is_meditating:
+                # Resetear contador si no está meditando
+                if user_id in self._tick_counters:
+                    del self._tick_counters[user_id]
                 return
+
+            # Incrementar contador de ticks
+            if user_id not in self._tick_counters:
+                self._tick_counters[user_id] = 0
+
+            self._tick_counters[user_id] += 1
+
+            # Solo aplicar efecto cada interval_seconds ticks
+            # GameTick corre cada 1 segundo, así que necesitamos interval_seconds ticks
+            if self._tick_counters[user_id] < self.interval_seconds:
+                return
+
+            # Resetear contador
+            self._tick_counters[user_id] = 0
 
             # Obtener stats del jugador
             stats = await player_repo.get_stats(user_id)
