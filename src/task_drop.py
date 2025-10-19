@@ -3,9 +3,14 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.item_constants import GOLD_GRH_INDEX, GOLD_ITEM_ID
+from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.task import Task
+
+# Constantes para el oro
+GOLD_ITEM_ID = 12  # ID del item oro en el catálogo
+GOLD_GRH_INDEX = 511  # Índice gráfico del oro
 
 if TYPE_CHECKING:
     from src.inventory_repository import InventoryRepository
@@ -57,13 +62,18 @@ class TaskDrop(Task):
             return
 
         # Parsear datos: slot (u8) + quantity (u16)
-        expected_size = 4  # PacketID (1) + slot (1) + quantity (2)
-        if len(self.data) < expected_size:
-            logger.warning("Packet DROP inválido: tamaño incorrecto")
-            return
+        # Parsear y validar packet
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        slot = validator.read_slot(min_slot=1, max_slot=20)
+        quantity = validator.read_quantity(min_qty=1, max_qty=10000)
 
-        slot = self.data[1]  # Segundo byte es el slot
-        quantity = int.from_bytes(self.data[2:4], byteorder="little")  # Bytes 3-4 son quantity
+        if validator.has_errors() or slot is None or quantity is None:
+            error_msg = (
+                validator.get_error_message() if validator.has_errors() else "Datos inválidos"
+            )
+            await self.message_sender.send_console_msg(error_msg)
+            return
 
         logger.info("TaskDrop: user_id=%d slot=%d quantity=%d", user_id, slot, quantity)
 

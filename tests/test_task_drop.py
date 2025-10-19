@@ -177,8 +177,10 @@ class TestTaskDrop:
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_with("Cantidad inválida.")
+        # Assert - El validador da un mensaje más descriptivo
+        message_sender.send_console_msg.assert_called_once()
+        call_args = message_sender.send_console_msg.call_args[0][0]
+        assert "Cantidad inválida" in call_args
         player_repo.update_gold.assert_not_called()
 
     async def test_drop_gold_no_gold_available(self) -> None:
@@ -234,6 +236,7 @@ class TestTaskDrop:
         """Test con packet de tamaño inválido."""
         # Setup
         message_sender = MagicMock()
+        message_sender.send_console_msg = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
 
         # Packet muy corto
@@ -246,13 +249,14 @@ class TestTaskDrop:
         # Execute
         await task.execute()
 
-        # Assert
-        player_repo.get_stats.assert_not_called()
+        # Debe enviar mensaje de error
+        message_sender.send_console_msg.assert_called_once()
 
     async def test_drop_without_dependencies(self) -> None:
         """Test sin dependencias necesarias."""
         # Setup
         message_sender = MagicMock()
+        message_sender.send_console_msg = AsyncMock()
 
         data = bytes([0x10, 0x01, 0x64, 0x00])
         session_data = {"user_id": 1}

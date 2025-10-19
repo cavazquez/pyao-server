@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
 from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
@@ -73,14 +74,22 @@ class TaskLeftClick(Task):
             logger.error("Dependencias no disponibles para click en NPC")
             return
 
+        # Parsear y validar packet
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        coords = validator.read_coordinates(max_x=100, max_y=100)
+
+        if validator.has_errors() or coords is None:
+            error_msg = (
+                validator.get_error_message() if validator.has_errors() else "Coordenadas inválidas"
+            )
+            await self.message_sender.send_console_msg(error_msg)
+            return
+
+        x, y = coords
+        logger.info("user_id %d hizo click en posición (%d, %d)", user_id, x, y)
+
         try:
-            # Extraer coordenadas X, Y (1 byte cada una)
-            reader = PacketReader(self.data)
-            x = reader.read_byte()
-            y = reader.read_byte()
-
-            logger.info("user_id %d hizo click en posición (%d, %d)", user_id, x, y)
-
             # Obtener posición del jugador para saber en qué mapa está
             position = await self.player_repo.get_position(user_id)
             if not position:

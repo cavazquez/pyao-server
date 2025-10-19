@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
 from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -58,22 +59,22 @@ class TaskBankExtract(Task):
             await self.message_sender.send_console_msg("Error al extraer del banco")
             return
 
-        # Parsear el packet usando PacketReader
+        # Parsear y validar packet
         reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        slot = validator.read_slot(min_slot=1, max_slot=20)
+        quantity = validator.read_quantity(min_qty=1, max_qty=10000)
+
+        if validator.has_errors() or slot is None or quantity is None:
+            error_msg = (
+                validator.get_error_message() if validator.has_errors() else "Datos inválidos"
+            )
+            await self.message_sender.send_console_msg(error_msg)
+            return
+
+        logger.info("user_id %d extrayendo %d items del slot %d del banco", user_id, quantity, slot)
 
         try:
-            slot = reader.read_byte()
-            quantity = reader.read_int16()
-
-            logger.info(
-                "user_id %d extrayendo %d items del slot %d del banco", user_id, quantity, slot
-            )
-
-            # Validar cantidad
-            if quantity <= 0:
-                await self.message_sender.send_console_msg("Cantidad inválida")
-                return
-
             # Obtener item del banco
             bank_item = await self.bank_repo.get_item(user_id, slot)
             if not bank_item:

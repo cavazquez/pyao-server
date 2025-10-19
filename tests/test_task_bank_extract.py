@@ -109,8 +109,10 @@ class TestTaskBankExtract:
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_with("Cantidad inválida")
+        # Assert - El validador da un mensaje más descriptivo
+        message_sender.send_console_msg.assert_called_once()
+        call_args = message_sender.send_console_msg.call_args[0][0]
+        assert "Cantidad inválida" in call_args
         bank_repo.extract_item.assert_not_called()
 
     async def test_extract_empty_slot(self) -> None:
@@ -255,6 +257,7 @@ class TestTaskBankExtract:
         """Test con packet de tamaño inválido."""
         # Setup
         message_sender = MagicMock()
+        message_sender.send_console_msg = AsyncMock()
         bank_repo = MagicMock(spec=BankRepository)
         inventory_repo = MagicMock(spec=InventoryRepository)
         player_repo = MagicMock(spec=PlayerRepository)
@@ -276,7 +279,8 @@ class TestTaskBankExtract:
         # Execute
         await task.execute()
 
-        # Assert - no debe crashear
+        # Assert - debe enviar mensaje de error
+        message_sender.send_console_msg.assert_called_once()
         bank_repo.extract_item.assert_not_called()
 
     async def test_extract_without_dependencies(self) -> None:

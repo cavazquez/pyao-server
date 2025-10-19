@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
 from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -59,11 +60,19 @@ class TaskDoubleClick(Task):
             logger.warning("Intento de doble click sin estar logueado")
             return
 
-        try:
-            # Extraer el segundo byte (slot o CharIndex)
-            reader = PacketReader(self.data)
-            target = reader.read_byte()
+        # Parsear y validar packet
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        target = validator.read_slot(min_slot=1, max_slot=255)  # Puede ser slot o CharIndex
 
+        if validator.has_errors() or target is None:
+            error_msg = (
+                validator.get_error_message() if validator.has_errors() else "Target inválido"
+            )
+            await self.message_sender.send_console_msg(error_msg)
+            return
+
+        try:
             # Si el target es > MAX_INVENTORY_SLOT, probablemente es un CharIndex de NPC
             # Los slots de inventario van de 1-20 típicamente
             if target > MAX_INVENTORY_SLOT:
@@ -72,7 +81,7 @@ class TaskDoubleClick(Task):
                 await self._handle_item_use(user_id, target)
 
         except Exception:
-            logger.exception("Error al parsear packet DOUBLE_CLICK")
+            logger.exception("Error procesando DOUBLE_CLICK")
 
     async def _handle_item_use(self, user_id: int, slot: int) -> None:
         """Maneja el uso de un item del inventario.

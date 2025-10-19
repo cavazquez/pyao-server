@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.equipment_service import EquipmentService
 from src.inventory_repository import InventoryRepository
 from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.player_service import PlayerService
 from src.session_manager import SessionManager
 from src.task import Task
@@ -62,13 +63,20 @@ class TaskEquipItem(Task):
             logger.error("Dependencias no disponibles para equipar item")
             return
 
+        # Parsear y validar packet
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        slot = validator.read_slot(min_slot=1, max_slot=20)
+
+        if validator.has_errors() or slot is None:
+            error_msg = validator.get_error_message() if validator.has_errors() else "Slot inválido"
+            await self.message_sender.send_console_msg(error_msg)
+            return
+
+        # Slot garantizado como válido
+        logger.info("user_id %d intenta equipar/desequipar item en slot %d", user_id, slot)
+
         try:
-            # Extraer el slot del inventario (segundo byte)
-            reader = PacketReader(self.data)
-            slot = reader.read_byte()
-
-            logger.info("user_id %d intenta equipar/desequipar item en slot %d", user_id, slot)
-
             # Crear servicio de equipamiento
             inventory_repo = InventoryRepository(self.player_repo.redis)
             equipment_service = EquipmentService(self.equipment_repo, inventory_repo)
@@ -82,4 +90,4 @@ class TaskEquipItem(Task):
                 await player_service.send_inventory(user_id, self.equipment_repo)
 
         except Exception:
-            logger.exception("Error al parsear packet EQUIP_ITEM")
+            logger.exception("Error procesando EQUIP_ITEM")
