@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import (
+from src.msg_player_stats import (
     build_update_exp_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,

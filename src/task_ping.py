@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_pong_response
+from src.msg_inventory import build_pong_response
 from src.task import Task
 
 if TYPE_CHECKING:

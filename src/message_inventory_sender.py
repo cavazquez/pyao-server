@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import (
+from src.msg_inventory import (
     build_change_bank_slot_response,
     build_change_inventory_slot_response,
     build_change_npc_inventory_slot_response,

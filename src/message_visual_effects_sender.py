@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_create_fx_response
+from src.msg_visual_effects import build_create_fx_response
 from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:

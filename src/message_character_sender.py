@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import (
+from src.msg_character import (
     build_character_change_response,
     build_character_create_response,
     build_character_move_response,
