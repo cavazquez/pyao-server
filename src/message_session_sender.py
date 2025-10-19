@@ -7,6 +7,7 @@ from src.msg_session import (
     build_attributes_response,
     build_dice_roll_response,
     build_logged_response,
+    build_pong_response,
     build_user_char_index_in_server_response,
 )
 
@@ -109,4 +110,10 @@ class SessionMessageSender:
             self.connection.address,
             char_index,
         )
+        await self.connection.send(response)
+
+    async def send_pong(self) -> None:
+        """Envía paquete PONG en respuesta a un PING del cliente."""
+        response = build_pong_response()
+        logger.debug("[%s] Enviando PONG", self.connection.address)
         await self.connection.send(response)

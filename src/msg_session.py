@@ -90,3 +90,14 @@ def build_user_char_index_in_server_response(char_index: int) -> bytes:
     packet.add_byte(ServerPacketID.USER_CHAR_INDEX_IN_SERVER)
     packet.add_int16(char_index)
     return packet.to_bytes()
+
+
+def build_pong_response() -> bytes:
+    """Construye el paquete PONG del protocolo AO estándar.
+
+    Returns:
+        Paquete de bytes con solo el PacketID PONG.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.PONG)
+    return packet.to_bytes()

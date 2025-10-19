@@ -7,7 +7,6 @@ from src.msg_inventory import (
     build_change_spell_slot_response,
     build_commerce_end_response,
     build_commerce_init_response,
-    build_pong_response,
 )
 from src.packet_id import ServerPacketID
 
@@ -99,12 +98,3 @@ def test_build_commerce_init_response() -> None:
 
     assert isinstance(response, bytes)
     assert response[0] == ServerPacketID.COMMERCE_INIT
-
-
-def test_build_pong_response() -> None:
-    """Verifica que build_pong_response construye el paquete correctamente."""
-    response = build_pong_response()
-
-    assert isinstance(response, bytes)
-    assert len(response) == 1
-    assert response[0] == ServerPacketID.PONG

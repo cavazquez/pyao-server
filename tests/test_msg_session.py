@@ -4,6 +4,7 @@ from src.msg_session import (
     build_attributes_response,
     build_dice_roll_response,
     build_logged_response,
+    build_pong_response,
     build_user_char_index_in_server_response,
 )
 from src.packet_id import ServerPacketID
@@ -61,3 +62,12 @@ def test_build_user_char_index_in_server_response() -> None:
     # int16 little-endian: 42 = 0x002A = [0x2A, 0x00]
     assert response[1] == 42
     assert response[2] == 0
+
+
+def test_build_pong_response() -> None:
+    """Verifica que build_pong_response construye el paquete correctamente."""
+    response = build_pong_response()
+
+    assert isinstance(response, bytes)
+    assert len(response) == 1
+    assert response[0] == ServerPacketID.PONG

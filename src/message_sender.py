@@ -564,6 +564,10 @@ class MessageSender:  # noqa: PLR0904
         """Envía paquete MEDITATE_TOGGLE para confirmar meditación."""
         await self.inventory.send_meditate_toggle()
 
+    async def send_pong(self) -> None:
+        """Envía paquete PONG en respuesta a un PING del cliente."""
+        await self.session.send_pong()
+
     async def send_create_fx_at_position(self, _x: int, _y: int, fx: int, loops: int) -> None:
         """Envía efecto visual en una posición específica del mapa.
 

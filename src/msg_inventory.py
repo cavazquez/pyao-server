@@ -222,14 +222,3 @@ def build_commerce_init_response(
         packet.add_int16(min_def)
 
     return packet.to_bytes()
-
-
-def build_pong_response() -> bytes:
-    """Construye el paquete PONG del protocolo AO estándar.
-
-    Returns:
-        Paquete de bytes con solo el PacketID PONG.
-    """
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.PONG)
-    return packet.to_bytes()
