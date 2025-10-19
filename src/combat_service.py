@@ -1,10 +1,19 @@
-"""Servicio de combate para PyAO Server."""
+"""Servicio de combate para PyAO Server.
+
+Este servicio ahora actúa como fachada que coordina los componentes:
+- DamageCalculator: Cálculos de daño
+- RewardCalculator: Cálculos de recompensas
+- CombatValidator: Validaciones de combate
+- WeaponService: Stats de equipamiento
+"""
 
 import logging
-import random
 from typing import TYPE_CHECKING
 
-from src.equipment_slot import EquipmentSlot
+from src.combat_damage_calculator import DamageCalculator
+from src.combat_reward_calculator import RewardCalculator
+from src.combat_validator import CombatValidator
+from src.combat_weapon_service import WeaponService
 
 if TYPE_CHECKING:
     from src.equipment_repository import EquipmentRepository
@@ -18,7 +27,10 @@ logger = logging.getLogger(__name__)
 
 
 class CombatService:
-    """Servicio para gestionar combate entre jugadores y NPCs."""
+    """Servicio para gestionar combate entre jugadores y NPCs.
+
+    Esta clase actúa como fachada que coordina los componentes de combate.
+    """
 
     def __init__(
         self,
@@ -39,6 +51,16 @@ class CombatService:
         self.npc_repository = npc_repository
         self.equipment_repo = equipment_repo
         self.inventory_repo = inventory_repo
+
+        # Inicializar componentes
+        self.damage_calculator = DamageCalculator()
+        self.reward_calculator = RewardCalculator()
+        self.validator = CombatValidator()
+
+        # WeaponService solo si tenemos los repositorios necesarios
+        self.weapon_service = None
+        if equipment_repo and inventory_repo:
+            self.weapon_service = WeaponService(equipment_repo, inventory_repo)
 
     async def player_attack_npc(
         self, user_id: int, npc: NPC, message_sender: MessageSender | None = None
@@ -69,8 +91,16 @@ class CombatService:
             logger.error("No se encontraron stats para user_id %d", user_id)
             return None
 
-        # Calcular daño
-        damage, is_critical = await self._calculate_player_damage(user_id, stats, npc)
+        # Obtener daño del arma
+        weapon_damage = await self._get_weapon_damage(user_id)
+
+        # Calcular daño usando el calculador
+        strength = stats.get("strength", 10)
+        damage, is_critical = self.damage_calculator.calculate_player_damage(
+            strength=strength,
+            weapon_damage=weapon_damage,
+            target_level=npc.level,
+        )
 
         # Aplicar daño al NPC
         npc.hp -= damage
@@ -99,8 +129,8 @@ class CombatService:
 
         # Si el NPC murió, calcular experiencia y loot
         if npc_died:
-            experience = self._calculate_experience(npc.level)
-            gold = self._calculate_gold_drop(npc.level)
+            experience = self.reward_calculator.calculate_experience(npc.level)
+            gold = self.reward_calculator.calculate_gold_drop(npc.level)
 
             result["experience"] = experience
             result["gold"] = gold  # Oro para dropear en el suelo, no dar directamente
@@ -113,45 +143,6 @@ class CombatService:
 
         return result
 
-    async def _calculate_player_damage(
-        self, user_id: int, stats: dict[str, int], npc: NPC
-    ) -> tuple[int, bool]:
-        """Calcula el daño que hace un jugador a un NPC.
-
-        Args:
-            user_id: ID del jugador.
-            stats: Stats del jugador.
-            npc: NPC objetivo.
-
-        Returns:
-            Tupla (daño, es_crítico).
-        """
-        # Daño base del jugador (basado en fuerza)
-        strength = stats.get("strength", 10)
-        base_damage = strength // 2  # Fuerza / 2
-
-        # Bonus de arma equipada (si tiene)
-        weapon_damage = await self._get_weapon_damage(user_id)
-
-        # Daño total antes de defensa
-        total_damage = base_damage + weapon_damage
-
-        # Reducción por defensa del NPC (10% por nivel)
-        defense_reduction = npc.level * 0.1
-        damage_after_defense = int(total_damage * (1 - defense_reduction))
-
-        # Asegurar daño mínimo de 1
-        damage_after_defense = max(1, damage_after_defense)
-
-        # Chance de crítico (5% base)
-        critical_chance = 0.05  # 5%
-        is_critical = random.random() < critical_chance  # noqa: S311
-
-        if is_critical:
-            damage_after_defense = int(damage_after_defense * 1.5)
-
-        return damage_after_defense, is_critical
-
     async def _get_weapon_damage(self, user_id: int) -> int:
         """Obtiene el daño del arma equipada del jugador.
 
@@ -159,63 +150,11 @@ class CombatService:
             user_id: ID del jugador.
 
         Returns:
-            Daño del arma (0 si no tiene arma equipada).
+            Daño del arma.
         """
-        if not self.equipment_repo or not self.inventory_repo:
-            return 5  # Default si no hay repositorios
-
-        # Obtener equipamiento
-        equipment = await self.equipment_repo.get_all_equipment(user_id)
-        weapon_inventory_slot = equipment.get(EquipmentSlot.WEAPON)
-
-        if not weapon_inventory_slot:
-            return 2  # Daño base sin arma (puños)
-
-        # Obtener item del inventario
-        slot_data = await self.inventory_repo.get_slot(user_id, weapon_inventory_slot)
-        if not slot_data:
-            return 2
-
-        # Obtener daño del item (por ahora hardcodeado, debería venir del catálogo)
-        # TODO: Obtener del item catalog
-        item_id, _quantity = slot_data
-
-        # Valores temporales basados en item_id
-        weapon_damages = {
-            2: 15,  # Espada Larga
-            3: 12,  # Hacha
-            # Agregar más armas aquí
-        }
-
-        return weapon_damages.get(item_id, 5)
-
-    def _calculate_experience(self, npc_level: int) -> int:  # noqa: PLR6301
-        """Calcula la experiencia que da un NPC al morir.
-
-        Args:
-            npc_level: Nivel del NPC.
-
-        Returns:
-            Experiencia otorgada.
-        """
-        # Fórmula: nivel * 10 + bonus aleatorio
-        base_exp = npc_level * 10
-        bonus = random.randint(0, npc_level * 2)  # noqa: S311
-        return base_exp + bonus
-
-    def _calculate_gold_drop(self, npc_level: int) -> int:  # noqa: PLR6301
-        """Calcula el oro que dropea un NPC al morir.
-
-        Args:
-            npc_level: Nivel del NPC.
-
-        Returns:
-            Cantidad de oro.
-        """
-        # Fórmula: nivel * 5 + bonus aleatorio (1-50)
-        base_gold = npc_level * 5
-        bonus = random.randint(1, 50)  # noqa: S311
-        return base_gold + bonus
+        if self.weapon_service:
+            return await self.weapon_service.get_weapon_damage(user_id)
+        return 5  # Default si no hay weapon service
 
     async def _give_experience(
         self, user_id: int, experience: int, message_sender: MessageSender | None = None
@@ -246,38 +185,7 @@ class CombatService:
 
         # TODO: Verificar si sube de nivel
 
-    def _calculate_npc_damage(  # noqa: PLR6301
-        self,
-        npc: NPC,
-        player_stats: dict[str, int],  # noqa: ARG002
-    ) -> int:
-        """Calcula el daño que hace un NPC a un jugador.
-
-        Args:
-            npc: NPC atacante.
-            player_stats: Stats del jugador.
-
-        Returns:
-            Daño infligido.
-        """
-        # Daño base del NPC (basado en nivel)
-        base_damage = npc.level * 3
-
-        # Variación aleatoria (±20%)
-        variation = random.uniform(0.8, 1.2)  # noqa: S311
-        damage = int(base_damage * variation)
-
-        # Reducción por armadura del jugador
-        # TODO: Obtener armadura equipada y reducir daño
-        armor_reduction = 0.1  # 10% de reducción por ahora
-        damage_after_armor = int(damage * (1 - armor_reduction))
-
-        # Asegurar daño mínimo de 1
-        return max(1, damage_after_armor)
-
-    def can_attack(  # noqa: PLR6301
-        self, attacker_pos: dict[str, int], target_pos: dict[str, int]
-    ) -> bool:
+    def can_attack(self, attacker_pos: dict[str, int], target_pos: dict[str, int]) -> bool:
         """Verifica si un atacante puede atacar a un objetivo (rango).
 
         Args:
@@ -285,12 +193,9 @@ class CombatService:
             target_pos: Posición del objetivo (x, y).
 
         Returns:
-            True si está en rango de ataque (1 tile adyacente).
+            True si está en rango de ataque.
         """
-        distance = abs(attacker_pos["x"] - target_pos["x"]) + abs(
-            attacker_pos["y"] - target_pos["y"]
-        )
-        return distance == 1  # Solo ataque cuerpo a cuerpo por ahora
+        return self.validator.can_attack(attacker_pos, target_pos)
 
     async def npc_attack_player(
         self, npc: NPC, target_user_id: int
@@ -312,8 +217,16 @@ class CombatService:
             logger.warning("No se encontraron stats del jugador %d", target_user_id)
             return None
 
-        # Calcular daño
-        damage = self._calculate_npc_damage(npc, player_stats)
+        # Obtener reducción de armadura
+        armor_reduction = 0.1  # TODO: Obtener de WeaponService
+        if self.weapon_service:
+            armor_reduction = await self.weapon_service.get_armor_reduction(target_user_id)
+
+        # Calcular daño usando el calculador
+        damage = self.damage_calculator.calculate_npc_damage(
+            npc_level=npc.level,
+            armor_reduction=armor_reduction,
+        )
 
         # Aplicar daño al jugador
         current_hp = player_stats.get("min_hp", 100)
