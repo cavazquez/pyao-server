@@ -35,12 +35,14 @@ class CharacterMessageSender:
         heading: int,
         x: int,
         y: int,
-        weapon: int,
-        shield: int,
-        helmet: int,
-        fx: int,
-        loops: int,
-        name: str,
+        weapon: int = 0,
+        shield: int = 0,
+        helmet: int = 0,
+        fx: int = 0,
+        loops: int = 0,
+        name: str = "",
+        nick_color: int = 0,
+        privileges: int = 0,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -51,12 +53,14 @@ class CharacterMessageSender:
             heading: Dirección (byte): 1=Norte, 2=Este, 3=Sur, 4=Oeste.
             x: Posición X (byte).
             y: Posición Y (byte).
-            weapon: ID del arma (int16).
-            shield: ID del escudo (int16).
-            helmet: ID del casco (int16).
-            fx: ID del efecto visual (int16).
-            loops: Número de loops del efecto (int16).
-            name: Nombre del personaje (string).
+            weapon: ID del arma (int16), por defecto 0.
+            shield: ID del escudo (int16), por defecto 0.
+            helmet: ID del casco (int16), por defecto 0.
+            fx: ID del efecto visual (int16), por defecto 0.
+            loops: Número de loops del efecto (int16), por defecto 0.
+            name: Nombre del personaje (string), por defecto vacío.
+            nick_color: Color del nick (byte), por defecto 0.
+            privileges: Privilegios del personaje (byte), por defecto 0.
         """
         response = build_character_create_response(
             char_index=char_index,
@@ -71,6 +75,8 @@ class CharacterMessageSender:
             fx=fx,
             loops=loops,
             name=name,
+            nick_color=nick_color,
+            privileges=privileges,
         )
         logger.debug(
             "[%s] Enviando CHARACTER_CREATE: charIndex=%d, name=%s, pos=(%d,%d)",

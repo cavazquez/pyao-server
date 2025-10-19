@@ -151,15 +151,23 @@ pyao-server/
 │   ├── npcs.toml                # Catálogo de NPCs (10 NPCs)
 │   └── map_npcs.toml            # Configuración de spawns de NPCs
 │
-├── tests/                       # Tests unitarios (276 tests)
+├── tests/                       # Tests unitarios (716 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   ├── # Tests de Servicios (24 tests nuevos)
 │   ├── test_player_service.py      # Tests de PlayerService (7 tests)
 │   ├── test_authentication_service.py # Tests de AuthenticationService (4 tests)
 │   ├── test_session_manager.py     # Tests de SessionManager (13 tests)
-│   ├── # Tests de Tasks
-│   ├── test_client_connection.py   # Tests de ClientConnection
+│   ├── # Tests de MessageSender Components (75 tests)
 │   ├── test_message_sender.py      # Tests de MessageSender
+│   ├── test_message_map_sender.py  # Tests de MapMessageSender (9 tests)
+│   ├── test_message_console_sender.py # Tests de ConsoleMessageSender (9 tests)
+│   ├── test_message_audio_sender.py # Tests de AudioMessageSender (15 tests)
+│   ├── test_message_visual_effects_sender.py # Tests de VisualEffectsMessageSender (9 tests)
+│   ├── test_message_player_stats_sender.py # Tests de PlayerStatsMessageSender (8 tests)
+│   ├── test_message_character_sender.py # Tests de CharacterMessageSender (8 tests)
+│   ├── test_message_inventory_sender.py # Tests de InventoryMessageSender (11 tests)
+│   ├── test_message_session_sender.py # Tests de SessionMessageSender (6 tests)
+│   ├── # Tests de Tasks
 │   ├── test_account_creation.py    # Tests de creación de cuentas
 │   ├── test_task_change_heading.py # Tests de cambio de dirección
 │   ├── test_task_dice.py           # Tests de TaskDice
@@ -178,6 +186,10 @@ pyao-server/
 │   ├── LOGIN_FLOW.md            # Flujo de login
 │   ├── ACCOUNT_CREATION.md      # Creación de cuentas
 │   ├── NPC_SYSTEM.md            # Sistema de NPCs
+│   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender y componentes
+│   ├── MIGRATION_MAP_SENDER.md  # Migración de MapMessageSender
+│   ├── MIGRATION_SUMMARY.md     # Resumen de migraciones
+│   ├── REFACTOR_EXAMPLE_MAP_COMPONENT.md # Ejemplos de refactorización
 │   ├── redis_architecture.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios

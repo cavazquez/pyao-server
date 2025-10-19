@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_console_msg_response
+from src.msg import build_console_msg_response, build_error_msg_response
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection
@@ -54,10 +54,11 @@ class ConsoleMessageSender:
                 await self.send_console_msg(line, font_color)
 
     async def send_error_msg(self, error_message: str) -> None:
-        """Envía un mensaje de error a la consola del cliente.
+        """Envía paquete ErrorMsg del protocolo AO estándar.
 
         Args:
             error_message: Mensaje de error a enviar.
         """
-        # Color rojo (1) para errores
-        await self.send_console_msg(f"Error: {error_message}", font_color=1)
+        response = build_error_msg_response(error_message)
+        logger.info("[%s] Enviando ERROR_MSG: %s", self.connection.address, error_message)
+        await self.connection.send(response)

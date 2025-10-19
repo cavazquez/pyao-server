@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_change_inventory_slot_response
+from src.msg import build_change_inventory_slot_response, build_commerce_init_response
 from src.packet_builder import PacketBuilder
 from src.packet_id import ServerPacketID
 
@@ -181,6 +181,28 @@ class InventoryMessageSender:
         """Envía paquete COMMERCE_INIT vacío (solo abre la ventana)."""
         response = bytes([ServerPacketID.COMMERCE_INIT])
         logger.debug("[%s] Enviando COMMERCE_INIT (vacío)", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_commerce_init(
+        self,
+        npc_id: int,
+        items: list[tuple[int, int, str, int, int, int, int, int, int, int, int]],
+    ) -> None:
+        """Envía paquete COMMERCE_INIT para abrir ventana de comercio con inventario del mercader.
+
+        Args:
+            npc_id: ID del NPC mercader.
+            items: Lista de tuplas con formato:
+                (slot, item_id, name, quantity, price, grh_index, obj_type,
+                 max_hit, min_hit, max_def, min_def)
+        """
+        response = build_commerce_init_response(npc_id=npc_id, items=items)
+        logger.debug(
+            "[%s] Enviando COMMERCE_INIT: npc_id=%d, num_items=%d",
+            self.connection.address,
+            npc_id,
+            len(items),
+        )
         await self.connection.send(response)
 
     async def send_commerce_end(self) -> None:
