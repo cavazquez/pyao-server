@@ -20,7 +20,7 @@ class MapManager(SpatialIndexMixin):
 
     MAX_ITEMS_PER_TILE = 10  # Límite de items por tile
 
-    def __init__(self, ground_items_repo: GroundItemsRepository | None = None) -> None:
+    def __init__(self, ground_items_repo: "GroundItemsRepository | None" = None) -> None:  # noqa: UP037
         """Inicializa el gestor de mapas.
 
         Args:
