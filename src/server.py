@@ -591,8 +591,8 @@ class ArgentumServer:
             self.commerce_service = CommerceService(
                 self.inventory_repo,
                 self.merchant_repo,
-                self.player_repo,
                 ITEMS_CATALOG,
+                self.player_repo,
             )
             logger.info("Servicio de comercio inicializado")
 

@@ -19,8 +19,8 @@ class EquipmentService:
 
     def __init__(
         self,
-        equipment_repo: EquipmentRepository,
-        inventory_repo: InventoryRepository,
+        equipment_repo: "EquipmentRepository",  # noqa: UP037
+        inventory_repo: "InventoryRepository",  # noqa: UP037
     ) -> None:
         """Inicializa el servicio de equipamiento.
 

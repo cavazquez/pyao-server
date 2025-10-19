@@ -17,23 +17,23 @@ class CommerceService:
 
     def __init__(
         self,
-        inventory_repo: InventoryRepository,
-        merchant_repo: MerchantRepository,
-        player_repo: PlayerRepository,
-        items_catalog: dict[int, Item],
+        inventory_repo: "InventoryRepository",  # noqa: UP037
+        merchant_repo: "MerchantRepository",  # noqa: UP037
+        item_catalog: "dict[int, Item]",  # noqa: UP037
+        player_repo: "PlayerRepository",  # noqa: UP037
     ) -> None:
         """Inicializa el servicio de comercio.
 
         Args:
             inventory_repo: Repositorio de inventarios de jugadores.
             merchant_repo: Repositorio de inventarios de mercaderes.
+            item_catalog: Catálogo de items del juego.
             player_repo: Repositorio de datos de jugadores.
-            items_catalog: Catálogo de items del juego.
         """
         self.inventory_repo = inventory_repo
         self.merchant_repo = merchant_repo
         self.player_repo = player_repo
-        self.items_catalog = items_catalog
+        self.items_catalog = item_catalog
 
     async def buy_item(
         self,

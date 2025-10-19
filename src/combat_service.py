@@ -22,10 +22,10 @@ class CombatService:
 
     def __init__(
         self,
-        player_repo: PlayerRepository,
-        npc_repository: NPCRepository,
-        equipment_repo: EquipmentRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
+        player_repo: "PlayerRepository",  # noqa: UP037
+        npc_repository: "NPCRepository",  # noqa: UP037
+        equipment_repo: "EquipmentRepository | None" = None,  # noqa: UP037
+        inventory_repo: "InventoryRepository | None" = None,  # noqa: UP037
     ) -> None:
         """Inicializa el servicio de combate.
 
