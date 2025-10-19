@@ -45,10 +45,12 @@ from src.task_account import TaskCreateAccount
 from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_bank_deposit import TaskBankDeposit
+from src.task_bank_end import TaskBankEnd
 from src.task_bank_extract import TaskBankExtract
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_buy import TaskCommerceBuy
+from src.task_commerce_end import TaskCommerceEnd
 from src.task_commerce_sell import TaskCommerceSell
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
@@ -326,6 +328,10 @@ class ArgentumServer:
                 self.player_repo,
                 session_data,
             )
+        if task_class is TaskBankEnd:
+            return TaskBankEnd(data, message_sender, session_data)
+        if task_class is TaskCommerceEnd:
+            return TaskCommerceEnd(data, message_sender)
 
         return task_class(data, message_sender)
 

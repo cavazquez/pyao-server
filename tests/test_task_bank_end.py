@@ -1,6 +1,6 @@
 """Tests para TaskBankEnd."""
 
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -15,6 +15,7 @@ class TestTaskBankEnd:
         """Test de cerrar banco con sesión activa."""
         # Setup
         message_sender = MagicMock()
+        message_sender.send_bank_end = AsyncMock()
 
         # Packet: BANK_END (solo PacketID)
         data = bytes([0x15])
@@ -49,6 +50,7 @@ class TestTaskBankEnd:
         """Test básico de TaskBankEnd."""
         # Setup
         message_sender = MagicMock()
+        message_sender.send_bank_end = AsyncMock()
         data = bytes([0x15])
         session_data = {"user_id": 42}
 
@@ -56,6 +58,9 @@ class TestTaskBankEnd:
 
         # Execute - debe completar sin errores
         await task.execute()
+
+        # Verify
+        message_sender.send_bank_end.assert_called_once()
 
         # Assert - simplemente verificar que no crashea
         assert task.session_data["user_id"] == 42
