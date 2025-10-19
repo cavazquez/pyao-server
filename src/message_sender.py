@@ -594,6 +594,12 @@ class MessageSender:  # noqa: PLR0904
         await self.connection.send(packet.to_bytes())
 
     async def send_bank_init_empty(self) -> None:
+    async def send_bank_end(self) -> None:
+        """Envía packet BANK_END para cerrar la ventana de banco."""
+        response = bytes([ServerPacketID.BANK_END])
+        logger.info("[%s] Enviando BANK_END", self.connection.address)
+        await self.connection.send(response)
+
         """Envía paquete BANK_INIT vacío (solo abre la ventana).
 
         El cliente Godot espera que los items se envíen previamente

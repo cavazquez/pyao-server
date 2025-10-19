@@ -116,9 +116,38 @@ class TaskBankExtract(Task):
                 logger.error("Item %d no encontrado en catálogo", bank_item.item_id)
                 return
 
-            # Actualizar slot del banco en el cliente
+            # PRIMERO: Actualizar slots del inventario en el cliente (igual que deposit)
+            for inv_slot, inv_quantity in modified_slots:
+                logger.info(
+                    "Enviando ChangeInventorySlot: slot=%d, item_id=%d, cantidad=%d",
+                    inv_slot,
+                    bank_item.item_id,
+                    inv_quantity,
+                )
+                await self.message_sender.send_change_inventory_slot(
+                    slot=inv_slot,
+                    item_id=bank_item.item_id,
+                    name=item.name,
+                    amount=inv_quantity,
+                    equipped=False,
+                    grh_id=item.graphic_id,
+                    item_type=item.item_type.to_client_type(),
+                    max_hit=item.max_damage or 0,
+                    min_hit=item.min_damage or 0,
+                    max_def=item.defense or 0,
+                    min_def=item.defense or 0,
+                    sale_price=float(item.value),
+                )
+
+            # DESPUÉS: Actualizar slot del banco en el cliente
             remaining_bank = bank_item.quantity - quantity
             if remaining_bank > 0:
+                logger.info(
+                    "Enviando ChangeBankSlot: slot=%d, item_id=%d, cantidad=%d",
+                    slot,
+                    bank_item.item_id,
+                    remaining_bank,
+                )
                 await self.message_sender.send_change_bank_slot(
                     slot=slot,
                     item_id=bank_item.item_id,
@@ -133,6 +162,7 @@ class TaskBankExtract(Task):
                 )
             else:
                 # Slot vacío
+                logger.info("Enviando ChangeBankSlot: slot=%d vaciado", slot)
                 await self.message_sender.send_change_bank_slot(
                     slot=slot,
                     item_id=0,
@@ -144,23 +174,6 @@ class TaskBankExtract(Task):
                     min_hit=0,
                     max_def=0,
                     min_def=0,
-                )
-
-            # Actualizar slots del inventario en el cliente
-            for inv_slot, inv_quantity in modified_slots:
-                await self.message_sender.send_change_inventory_slot(
-                    slot=inv_slot,
-                    item_id=bank_item.item_id,
-                    name=item.name,
-                    amount=inv_quantity,
-                    equipped=False,
-                    grh_id=item.graphic_id,
-                    item_type=item.item_type.to_client_type(),
-                    max_hit=item.max_damage or 0,
-                    min_hit=item.min_damage or 0,
-                    max_def=item.defense or 0,
-                    min_def=item.defense or 0,
-                    sale_price=float(item.value),
                 )
 
             await self.message_sender.send_console_msg(

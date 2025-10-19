@@ -40,8 +40,7 @@ class TaskBankEnd(Task):
             logger.debug("BANK_END recibido sin sesión (pre-login)")
             return
 
-        # Por ahora solo loguear, el sistema de banco no está implementado
         logger.info("user_id %d cerró la ventana del banco", user_id)
 
-        # No es necesario enviar respuesta al cliente
-        # El cliente ya cerró la ventana por su cuenta
+        # Enviar confirmación al cliente para cerrar la ventana
+        await self.message_sender.send_bank_end()
