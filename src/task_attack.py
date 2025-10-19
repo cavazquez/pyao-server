@@ -108,7 +108,7 @@ class TaskAttack(Task):
 
         return None
 
-    async def execute(self) -> None:  # noqa: PLR0914, PLR0912, PLR0915, C901
+    async def execute(self) -> None:  # noqa: PLR0914, PLR0915
         """Procesa el ataque del jugador."""
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)

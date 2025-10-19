@@ -82,7 +82,7 @@ class TaskWalk(Task):
         else:
             return heading
 
-    async def execute(self) -> None:  # noqa: C901, PLR0912, PLR0915
+    async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()

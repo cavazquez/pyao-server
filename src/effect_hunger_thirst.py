@@ -32,7 +32,7 @@ class HungerThirstEffect(TickEffect):
         # Cache de configuración (se recarga en cada apply)
         self._config_cache: dict[str, int] = {}
 
-    async def apply(  # noqa: C901
+    async def apply(
         self,
         user_id: int,
         player_repo: PlayerRepository,

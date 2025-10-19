@@ -12,6 +12,12 @@
 - Usar `ruff` para linting y formatting
 - Todo el código fuente debe estar en `src/`
 
+## Gestión de Datos Iniciales
+- **OBLIGATORIO**: Todo dato inicial debe estar en un archivo TOML en `data/`
+- Los datos deben cargarse en Redis antes de iniciar el servidor (scripts de inicialización)
+- Durante la ejecución, el servidor solo lee/escribe desde Redis
+- Ejemplos: inventarios de mercaderes, configuración de NPCs, items, mapas, etc.
+
 ## Protocolo de Red
 - Basado en el cliente Argentum Online Godot: https://github.com/brian-christopher/ArgentumOnlineGodot
 - Usar little-endian para todos los números multi-byte

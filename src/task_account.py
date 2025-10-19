@@ -69,7 +69,7 @@ class TaskCreateAccount(Task):
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
 
-    def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: C901, PLR0915
+    def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: PLR0915
         """Parsea el paquete de creación de cuenta.
 
         El formato esperado es:

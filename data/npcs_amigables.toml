@@ -37,6 +37,7 @@ nombre = "Banquero"
 descripcion = "Gestiona tu banco personal de forma segura."
 body_id = 504
 head_id = 3
+es_banquero = true
 es_hostil = false
 es_atacable = false
 nivel = 0

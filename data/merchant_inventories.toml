@@ -1,0 +1,68 @@
+# Inventarios iniciales de mercaderes
+# Formato: cada mercader tiene una lista de items con item_id y quantity
+
+[[merchant]]
+npc_id = 2
+nombre = "Comerciante"
+descripcion = "Vende pociones, equipamiento básico y suministros"
+
+[[merchant.item]]
+item_id = 1
+quantity = 50
+nombre = "Poción de Vida"
+
+[[merchant.item]]
+item_id = 2
+quantity = 30
+nombre = "Poción de Maná"
+
+[[merchant.item]]
+item_id = 3
+quantity = 20
+nombre = "Espada de Hierro"
+
+[[merchant.item]]
+item_id = 4
+quantity = 15
+nombre = "Escudo de Madera"
+
+[[merchant.item]]
+item_id = 5
+quantity = 10
+nombre = "Armadura de Cuero"
+
+[[merchant.item]]
+item_id = 6
+quantity = 25
+nombre = "Pan"
+
+[[merchant.item]]
+item_id = 7
+quantity = 20
+nombre = "Agua"
+
+[[merchant.item]]
+item_id = 8
+quantity = 5
+nombre = "Anillo de Protección"
+
+[[merchant.item]]
+item_id = 9
+quantity = 10
+nombre = "Casco de Hierro"
+
+[[merchant.item]]
+item_id = 10
+quantity = 15
+nombre = "Flechas"
+
+# Puedes agregar más mercaderes aquí
+# [[merchant]]
+# npc_id = 9
+# nombre = "Herrero"
+# descripcion = "Vende armas y armaduras de calidad"
+#
+# [[merchant.item]]
+# item_id = 11
+# quantity = 5
+# nombre = "Espada de Acero"

@@ -150,6 +150,8 @@ class NPCService:
             level=cast("int", npc_data.get("nivel", 1)),
             is_hostile=cast("bool", npc_data.get("es_hostil", False)),
             is_attackable=cast("bool", npc_data.get("es_atacable", True)),
+            is_merchant=cast("bool", npc_data.get("es_mercader", False)),
+            is_banker=cast("bool", npc_data.get("es_banquero", False)),
             movement_type="static",  # Por ahora todos estáticos
             respawn_time=cast("int", npc_data.get("respawn_time", 0)),
             respawn_time_max=cast("int", npc_data.get("respawn_time_max", 0)),

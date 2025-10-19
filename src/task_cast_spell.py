@@ -49,7 +49,7 @@ class TaskCastSpell(Task):
         self.session_data = session_data or {}
         self.spellbook_repo = spellbook_repo
 
-    async def execute(self) -> None:  # noqa: C901, PLR0912
+    async def execute(self) -> None:
         """Ejecuta el lanzamiento de hechizo."""
         # Parsear el packet: PacketID (1 byte) + Slot (1 byte) [+ X (2 bytes) + Y (2 bytes)]
         # Soporta formato antiguo (2 bytes) y nuevo (6 bytes)

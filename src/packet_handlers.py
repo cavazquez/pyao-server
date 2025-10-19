@@ -7,10 +7,14 @@ from src.task_account import TaskCreateAccount
 from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_ayuda import TaskAyuda
+from src.task_bank_deposit import TaskBankDeposit
 from src.task_bank_end import TaskBankEnd
+from src.task_bank_extract import TaskBankExtract
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
+from src.task_commerce_buy import TaskCommerceBuy
 from src.task_commerce_end import TaskCommerceEnd
+from src.task_commerce_sell import TaskCommerceSell
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
 from src.task_drop import TaskDrop
@@ -52,6 +56,10 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.EQUIP_ITEM: TaskEquipItem,  # Equipar/desequipar item
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
+    ClientPacketID.COMMERCE_BUY: TaskCommerceBuy,  # Comprar item del mercader
+    ClientPacketID.BANK_EXTRACT_ITEM: TaskBankExtract,  # Extraer item del banco
+    ClientPacketID.COMMERCE_SELL: TaskCommerceSell,  # Vender item al mercader
+    ClientPacketID.BANK_DEPOSIT: TaskBankDeposit,  # Depositar item en el banco
     ClientPacketID.COMMERCE_END: TaskCommerceEnd,  # Cerrar ventana de comercio
     ClientPacketID.BANK_END: TaskBankEnd,  # Cerrar ventana de banco
     ClientPacketID.AYUDA: TaskAyuda,

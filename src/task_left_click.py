@@ -4,14 +4,19 @@ import logging
 import struct
 from typing import TYPE_CHECKING
 
+from src.items_catalog import ITEMS_CATALOG
+from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
+    from src.bank_repository import BankRepository
     from src.map_manager import MapManager
+    from src.merchant_repository import MerchantRepository
     from src.message_sender import MessageSender
     from src.npc import NPC
     from src.player_repository import PlayerRepository
+    from src.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +30,9 @@ class TaskLeftClick(Task):
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
+        merchant_repo: MerchantRepository | None = None,
+        bank_repo: BankRepository | None = None,
+        redis_client: RedisClient | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de click izquierdo.
@@ -34,11 +42,17 @@ class TaskLeftClick(Task):
             message_sender: Enviador de mensajes.
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para obtener NPCs.
+            merchant_repo: Repositorio de mercaderes.
+            bank_repo: Repositorio de banco.
+            redis_client: Cliente Redis.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
+        self.merchant_repo = merchant_repo
+        self.bank_repo = bank_repo
+        self.redis_client = redis_client
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
@@ -99,6 +113,16 @@ class TaskLeftClick(Task):
             user_id: ID del usuario.
             npc: Instancia del NPC.
         """
+        # Si es un mercader, abrir ventana de comercio
+        if npc.is_merchant:
+            await self._open_merchant_window(user_id, npc)
+            return
+
+        # Si es un banquero, abrir ventana de banco
+        if npc.is_banker:
+            await self._open_bank_window(user_id, npc)
+            return
+
         # Mostrar información básica del NPC (solo ASCII para evitar crashes)
         info_parts = [f"[{npc.name}]"]
 
@@ -120,4 +144,144 @@ class TaskLeftClick(Task):
             user_id,
             npc.name,
             npc.char_index,
+        )
+
+    async def _open_merchant_window(self, user_id: int, npc: NPC) -> None:
+        """Abre la ventana de comercio con un mercader.
+
+        Args:
+            user_id: ID del usuario.
+            npc: Instancia del NPC mercader.
+        """
+        if not self.merchant_repo or not self.redis_client:
+            logger.error("Dependencias no disponibles para abrir comercio")
+            await self.message_sender.send_console_msg("Error al abrir comercio")
+            return
+
+        logger.info(
+            "user_id %d abriendo comercio con %s (npc_id=%d)", user_id, npc.name, npc.npc_id
+        )
+
+        # Obtener inventario del mercader
+        merchant_items = await self.merchant_repo.get_all_items(npc.npc_id)
+
+        if not merchant_items:
+            await self.message_sender.send_console_msg(f"{npc.name} no tiene nada para vender.")
+            logger.warning("Mercader %d no tiene inventario", npc.npc_id)
+            return
+
+        # Preparar lista de items para el packet COMMERCE_INIT
+        # Formato: (slot, item_id, name, quantity, price, grh_index, obj_type,
+        #           max_hit, min_hit, max_def, min_def)
+        items_data = []
+        for merchant_item in merchant_items:
+            item = ITEMS_CATALOG.get(merchant_item.item_id)
+            if not item:
+                logger.warning("Item %d no encontrado en catálogo", merchant_item.item_id)
+                continue
+
+            items_data.append(
+                (
+                    merchant_item.slot,
+                    merchant_item.item_id,
+                    item.name,
+                    merchant_item.quantity,
+                    item.value,  # Precio de compra
+                    item.graphic_id,
+                    item.item_type.to_client_type(),  # Convertir enum a número del protocolo
+                    item.max_damage or 0,
+                    item.min_damage or 0,
+                    item.defense or 0,
+                    item.defense or 0,
+                )
+            )
+
+        # Guardar mercader activo en sesión de Redis
+        key = RedisKeys.session_active_merchant(user_id)
+        await self.redis_client.redis.set(key, str(npc.npc_id))
+
+        # Enviar items del mercader usando ChangeNPCInventorySlot
+        for item_data in items_data:
+            (
+                slot,
+                item_id,
+                name,
+                quantity,
+                price,
+                grh_index,
+                obj_type,
+                max_hit,
+                min_hit,
+                max_def,
+                min_def,
+            ) = item_data
+            await self.message_sender.send_change_npc_inventory_slot(
+                slot=slot,
+                name=name,
+                amount=quantity,
+                sale_price=float(price),
+                grh_id=grh_index,
+                item_id=item_id,
+                item_type=obj_type,
+                max_hit=max_hit,
+                min_hit=min_hit,
+                max_def=max_def,
+                min_def=min_def,
+            )
+
+        # Enviar packet COMMERCE_INIT vacío (solo abre la ventana)
+        await self.message_sender.send_commerce_init_empty()
+
+        logger.info(
+            "Ventana de comercio abierta para user_id %d con mercader %s (%d items)",
+            user_id,
+            npc.name,
+            len(items_data),
+        )
+
+    async def _open_bank_window(self, user_id: int, npc: NPC) -> None:
+        """Abre la ventana de banco para el jugador.
+
+        Args:
+            user_id: ID del usuario.
+            npc: Instancia del NPC banquero.
+        """
+        if not self.bank_repo:
+            logger.error("BankRepository no disponible")
+            await self.message_sender.send_console_msg("El banco no está disponible")
+            return
+
+        logger.info("user_id %d abriendo banco con %s (npc_id=%d)", user_id, npc.name, npc.npc_id)
+
+        # Obtener todos los items del banco
+        bank_items = await self.bank_repo.get_all_items(user_id)
+
+        # Enviar items del banco usando ChangeBankSlot
+        for bank_item in bank_items:
+            item = ITEMS_CATALOG.get(bank_item.item_id)
+            if not item:
+                logger.warning("Item %d no encontrado en catálogo", bank_item.item_id)
+                continue
+
+            await self.message_sender.send_change_bank_slot(
+                slot=bank_item.slot,
+                item_id=bank_item.item_id,
+                name=item.name,
+                amount=bank_item.quantity,
+                grh_id=item.graphic_id,
+                item_type=item.item_type.to_client_type(),
+                max_hit=item.max_damage or 0,
+                min_hit=item.min_damage or 0,
+                max_def=item.defense or 0,
+                min_def=item.defense or 0,
+            )
+
+        # Enviar packet BANK_INIT vacío (solo abre la ventana)
+        await self.message_sender.send_bank_init_empty()
+
+        logger.info(
+            "Ventana de banco abierta para user_id %d con banquero %s (%d items)",
+            user_id,
+            npc.name,
+            len(bank_items),
         )

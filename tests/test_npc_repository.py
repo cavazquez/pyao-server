@@ -34,7 +34,6 @@ class TestNPCRepository:
             level=5,
             is_hostile=True,
             is_attackable=True,
-            movement_type="static",
             respawn_time=0,
             respawn_time_max=0,
             gold_min=10,

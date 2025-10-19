@@ -1,4 +1,4 @@
-"""Catálogo de NPCs cargado desde npcs.toml."""
+"""Catálogo de NPCs cargado desde archivos TOML."""
 
 import logging
 import tomllib
@@ -16,36 +16,22 @@ class NPCCatalog:
     Carga NPCs desde múltiples archivos:
     - npcs_hostiles.toml: Criaturas agresivas
     - npcs_amigables.toml: NPCs de servicios
-    - npcs.toml: Archivo legacy (retrocompatibilidad)
     """
 
     def __init__(
         self,
-        data_path: str | None = None,  # Retrocompatibilidad
         hostile_path: str = "data/npcs_hostiles.toml",
         friendly_path: str = "data/npcs_amigables.toml",
-        legacy_path: str = "data/npcs.toml",
     ) -> None:
         """Inicializa el catálogo de NPCs.
 
         Args:
-            data_path: Ruta al archivo legacy (retrocompatibilidad con tests).
             hostile_path: Ruta al archivo de NPCs hostiles.
             friendly_path: Ruta al archivo de NPCs amigables.
-            legacy_path: Ruta al archivo legacy (retrocompatibilidad).
         """
         self._npcs: dict[int, dict[str, object]] = {}
-
-        # Retrocompatibilidad: si se pasa data_path, usarlo como legacy_path
-        if data_path is not None:
-            self._hostile_path = ""
-            self._friendly_path = ""
-            self._legacy_path = data_path
-        else:
-            self._hostile_path = hostile_path
-            self._friendly_path = friendly_path
-            self._legacy_path = legacy_path
-
+        self._hostile_path = hostile_path
+        self._friendly_path = friendly_path
         self._load_catalog()
 
     def _load_file(self, file_path: str, file_type: str) -> None:
@@ -55,10 +41,6 @@ class NPCCatalog:
             file_path: Ruta al archivo.
             file_type: Tipo de archivo para logging (hostile/friendly/legacy).
         """
-        # Skip si el path está vacío (retrocompatibilidad)
-        if not file_path:
-            return
-
         try:
             path = Path(file_path)
             if not path.exists():
@@ -95,9 +77,6 @@ class NPCCatalog:
 
         # Cargar NPCs amigables
         self._load_file(self._friendly_path, "amigables")
-
-        # Cargar archivo legacy si existe (retrocompatibilidad)
-        self._load_file(self._legacy_path, "legacy")
 
         logger.info("Catálogo de NPCs cargado: %d NPCs totales", len(self._npcs))
 

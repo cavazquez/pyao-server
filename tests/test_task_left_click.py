@@ -56,7 +56,13 @@ class TestTaskLeftClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskLeftClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskLeftClick(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
@@ -85,7 +91,13 @@ class TestTaskLeftClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskLeftClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskLeftClick(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
@@ -105,7 +117,13 @@ class TestTaskLeftClick:
         data = bytes([0x1A, 50, 50])
         session_data = {}  # Sin user_id
 
-        task = TaskLeftClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskLeftClick(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
@@ -153,7 +171,13 @@ class TestTaskLeftClick:
         data = bytes([0x1A, 69, 67])
         session_data = {"user_id": 1}
 
-        task = TaskLeftClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskLeftClick(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
@@ -176,7 +200,13 @@ class TestTaskLeftClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskLeftClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskLeftClick(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()

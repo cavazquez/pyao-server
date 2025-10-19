@@ -111,7 +111,7 @@ class NPCAIService:
         # Movimiento vertical
         return 3 if dy > 0 else 1  # Sur o Norte
 
-    async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:  # noqa: C901
+    async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:
         """Intenta que el NPC ataque a un jugador.
 
         Args:

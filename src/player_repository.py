@@ -335,6 +335,19 @@ class PlayerRepository:
         await self.redis.redis.hset(key, "experience", str(exp))  # type: ignore[misc]
         logger.debug("Experiencia actualizada para user_id %d: %d", user_id, exp)
 
+    async def get_gold(self, user_id: int) -> int:
+        """Obtiene el oro del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Cantidad de oro del jugador.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "gold")  # type: ignore[misc]
+        return int(result) if result else 0
+
     async def update_gold(self, user_id: int, gold: int) -> None:
         """Actualiza el oro del jugador.
 

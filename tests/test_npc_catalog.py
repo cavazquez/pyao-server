@@ -10,9 +10,9 @@ class TestNPCCatalog:
 
     def test_load_catalog_success(self, tmp_path: Path) -> None:
         """Test de carga exitosa del catálogo."""
-        # Crear archivo temporal con NPCs
-        npc_file = tmp_path / "npcs.toml"
-        npc_file.write_text("""
+        # Crear archivos temporales con NPCs hostiles y amigables
+        hostile_file = tmp_path / "npcs_hostiles.toml"
+        hostile_file.write_text("""
 [[npc]]
 id = 1
 nombre = "Goblin"
@@ -25,7 +25,10 @@ nivel = 5
 hp_max = 100
 oro_min = 10
 oro_max = 50
+""")
 
+        friendly_file = tmp_path / "npcs_amigables.toml"
+        friendly_file.write_text("""
 [[npc]]
 id = 2
 nombre = "Comerciante"
@@ -40,7 +43,10 @@ oro_min = 0
 oro_max = 0
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(
+            hostile_path=str(hostile_file),
+            friendly_path=str(friendly_file),
+        )
 
         # Verificar que se cargaron los NPCs
         assert catalog.npc_exists(1)
@@ -62,7 +68,7 @@ oro_max = 0
 
     def test_get_all_npc_ids(self, tmp_path: Path) -> None:
         """Test de obtención de todos los IDs de NPCs."""
-        npc_file = tmp_path / "npcs.toml"
+        npc_file = tmp_path / "npcs_hostiles.toml"
         npc_file.write_text("""
 [[npc]]
 id = 1
@@ -80,7 +86,7 @@ nombre = "NPC10"
 body_id = 510
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(hostile_path=str(npc_file), friendly_path="")
         ids = catalog.get_all_npc_ids()
 
         assert len(ids) == 3
@@ -90,7 +96,7 @@ body_id = 510
 
     def test_get_npc_data_not_found(self, tmp_path: Path) -> None:
         """Test de obtención de NPC inexistente."""
-        npc_file = tmp_path / "npcs.toml"
+        npc_file = tmp_path / "npcs_hostiles.toml"
         npc_file.write_text("""
 [[npc]]
 id = 1
@@ -98,34 +104,34 @@ nombre = "NPC1"
 body_id = 500
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(hostile_path=str(npc_file), friendly_path="")
         result = catalog.get_npc_data(999)
 
         assert result is None
 
     def test_load_catalog_file_not_found(self) -> None:
         """Test de carga con archivo inexistente."""
-        catalog = NPCCatalog("nonexistent.toml")
+        catalog = NPCCatalog(hostile_path="nonexistent.toml", friendly_path="nonexistent2.toml")
 
         # No debe fallar, solo no cargar NPCs
         assert len(catalog.get_all_npc_ids()) == 0
 
     def test_load_catalog_no_npc_section(self, tmp_path: Path) -> None:
         """Test de carga con archivo sin sección [npc]."""
-        npc_file = tmp_path / "npcs.toml"
+        npc_file = tmp_path / "npcs_hostiles.toml"
         npc_file.write_text("""
 [other_section]
 key = "value"
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(hostile_path=str(npc_file), friendly_path="")
 
         # No debe fallar, solo no cargar NPCs
         assert len(catalog.get_all_npc_ids()) == 0
 
     def test_load_catalog_npc_without_id(self, tmp_path: Path) -> None:
         """Test de carga con NPC sin ID (debe ignorarse)."""
-        npc_file = tmp_path / "npcs.toml"
+        npc_file = tmp_path / "npcs_hostiles.toml"
         npc_file.write_text("""
 [[npc]]
 nombre = "NPC sin ID"
@@ -137,7 +143,7 @@ nombre = "NPC con ID"
 body_id = 501
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(hostile_path=str(npc_file), friendly_path="")
 
         # Solo debe cargar el NPC con ID
         assert len(catalog.get_all_npc_ids()) == 1
@@ -145,7 +151,7 @@ body_id = 501
 
     def test_npc_exists(self, tmp_path: Path) -> None:
         """Test de verificación de existencia de NPC."""
-        npc_file = tmp_path / "npcs.toml"
+        npc_file = tmp_path / "npcs_hostiles.toml"
         npc_file.write_text("""
 [[npc]]
 id = 1
@@ -153,7 +159,7 @@ nombre = "NPC1"
 body_id = 500
 """)
 
-        catalog = NPCCatalog(str(npc_file))
+        catalog = NPCCatalog(hostile_path=str(npc_file), friendly_path="")
 
         assert catalog.npc_exists(1) is True
         assert catalog.npc_exists(999) is False

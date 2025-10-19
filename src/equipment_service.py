@@ -31,7 +31,7 @@ class EquipmentService:
         self.equipment_repo = equipment_repo
         self.inventory_repo = inventory_repo
 
-    async def toggle_equip_item(  # noqa: PLR0911
+    async def toggle_equip_item(
         self, user_id: int, inventory_slot: int, message_sender: MessageSender
     ) -> bool:
         """Equipa o desequipa un item del inventario.

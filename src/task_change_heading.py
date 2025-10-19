@@ -78,7 +78,7 @@ class TaskChangeHeading(Task):
         else:
             return heading
 
-    async def execute(self) -> None:  # noqa: C901
+    async def execute(self) -> None:
         """Ejecuta el cambio de dirección del personaje."""
         # Parsear dirección
         heading = self._parse_packet()

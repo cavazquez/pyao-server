@@ -184,6 +184,35 @@ class RedisKeys:
         """
         return f"npc:map:{map_id}"
 
+    # Mercaderes
+    @staticmethod
+    def merchant_inventory(npc_id: int) -> str:
+        """Clave para inventario de un mercader.
+
+        Returns:
+            Clave de Redis para el inventario del mercader.
+        """
+        return f"merchant:{npc_id}:inventory"
+
+    @staticmethod
+    def session_active_merchant(user_id: int) -> str:
+        """Clave para mercader activo en sesión de comercio.
+
+        Returns:
+            Clave de Redis para el mercader activo.
+        """
+        return f"session:{user_id}:active_merchant"
+
+    # Banco
+    @staticmethod
+    def bank(user_id: int) -> str:
+        """Clave para bóveda bancaria del jugador.
+
+        Returns:
+            Clave de Redis para la bóveda bancaria.
+        """
+        return f"bank:{user_id}:vault"
+
 
 # Valores por defecto para configuración del servidor
 DEFAULT_SERVER_CONFIG = {

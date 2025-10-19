@@ -8,8 +8,10 @@ from typing import TYPE_CHECKING
 
 import redis
 from src.account_repository import AccountRepository
+from src.bank_repository import BankRepository
 from src.client_connection import ClientConnection
 from src.combat_service import CombatService
+from src.commerce_service import CommerceService
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
@@ -18,9 +20,11 @@ from src.game_tick import GameTick
 from src.ground_items_repository import GroundItemsRepository
 from src.inventory_repository import InventoryRepository
 from src.item_catalog import ItemCatalog
+from src.items_catalog import ITEMS_CATALOG
 from src.loot_table_service import LootTableService
 from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
+from src.merchant_repository import MerchantRepository
 from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_ai_effect import NPCAIEffect
@@ -40,8 +44,12 @@ from src.spellbook_repository import SpellbookRepository
 from src.task_account import TaskCreateAccount
 from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
+from src.task_bank_deposit import TaskBankDeposit
+from src.task_bank_extract import TaskBankExtract
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
+from src.task_commerce_buy import TaskCommerceBuy
+from src.task_commerce_sell import TaskCommerceSell
 from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
 from src.task_drop import TaskDrop
@@ -105,12 +113,15 @@ class ArgentumServer:
         self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
         self.equipment_repo: EquipmentRepository | None = None  # Repositorio de equipamiento
         self.broadcast_service: MultiplayerBroadcastService | None = None  # Servicio de broadcast
+        self.merchant_repo: MerchantRepository | None = None  # Repositorio de mercaderes
+        self.bank_repo: BankRepository | None = None  # Repositorio de banco
+        self.commerce_service: CommerceService | None = None  # Servicio de comercio
 
     # TODO: Revisar la separación de capas y responsabilidades.
     # Este método tiene demasiada lógica de creación de tasks con dependencias.
     # Ver TODO_ARQUITECTURA.md sección 2 para propuestas de mejora.
     # Considerar: Service Container, Dependency Injection, o Factory Pattern.
-    def create_task(  # noqa: PLR0911, C901, PLR0912
+    def create_task(
         self,
         data: bytes,
         message_sender: MessageSender,
@@ -214,7 +225,14 @@ class ArgentumServer:
             )
         if task_class is TaskLeftClick:
             return TaskLeftClick(
-                data, message_sender, self.player_repo, self.map_manager, session_data
+                data,
+                message_sender,
+                self.player_repo,
+                self.map_manager,
+                self.merchant_repo,
+                self.bank_repo,
+                self.redis_client,
+                session_data,
             )
         if task_class is TaskCastSpell:
             return TaskCastSpell(
@@ -268,6 +286,44 @@ class ArgentumServer:
                 self.inventory_repo,
                 self.map_manager,
                 self.broadcast_service,
+                session_data,
+            )
+        if task_class is TaskCommerceBuy:
+            return TaskCommerceBuy(
+                data,
+                message_sender,
+                self.commerce_service,
+                self.player_repo,
+                self.inventory_repo,
+                self.redis_client,
+                session_data,
+            )
+        if task_class is TaskCommerceSell:
+            return TaskCommerceSell(
+                data,
+                message_sender,
+                self.commerce_service,
+                self.player_repo,
+                self.inventory_repo,
+                self.redis_client,
+                session_data,
+            )
+        if task_class is TaskBankDeposit:
+            return TaskBankDeposit(
+                data,
+                message_sender,
+                self.bank_repo,
+                self.inventory_repo,
+                self.player_repo,
+                session_data,
+            )
+        if task_class is TaskBankExtract:
+            return TaskBankExtract(
+                data,
+                message_sender,
+                self.bank_repo,
+                self.inventory_repo,
+                self.player_repo,
                 session_data,
             )
 
@@ -522,6 +578,23 @@ class ArgentumServer:
             # Inicializar sistema de inventario
             self.inventory_repo = InventoryRepository(self.redis_client)
             logger.info("Sistema de inventario inicializado")
+
+            # Inicializar sistema de mercaderes
+            self.merchant_repo = MerchantRepository(self.redis_client)
+            logger.info("Sistema de mercaderes inicializado")
+
+            # Inicializar sistema de banco
+            self.bank_repo = BankRepository(self.redis_client)
+            logger.info("Sistema de banco inicializado")
+
+            # Inicializar servicio de comercio
+            self.commerce_service = CommerceService(
+                self.inventory_repo,
+                self.merchant_repo,
+                self.player_repo,
+                ITEMS_CATALOG,
+            )
+            logger.info("Servicio de comercio inicializado")
 
             # Inicializar sistema de combate
             self.combat_service = CombatService(

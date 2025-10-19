@@ -43,11 +43,13 @@ class NPCRepository:
         level: int,
         is_hostile: bool,
         is_attackable: bool,
-        movement_type: str,
         respawn_time: int,
         respawn_time_max: int,
         gold_min: int,
         gold_max: int,
+        is_merchant: bool = False,
+        is_banker: bool = False,
+        movement_type: str = "static",
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -67,6 +69,8 @@ class NPCRepository:
             level: Nivel del NPC.
             is_hostile: ¿Ataca a jugadores?
             is_attackable: ¿Puede ser atacado?
+            is_merchant: ¿Es un mercader?
+            is_banker: ¿Es un banquero?
             movement_type: Tipo de movimiento.
             respawn_time: Tiempo mínimo de respawn en segundos.
             respawn_time_max: Tiempo máximo de respawn en segundos.
@@ -95,6 +99,8 @@ class NPCRepository:
             level=level,
             is_hostile=is_hostile,
             is_attackable=is_attackable,
+            is_merchant=is_merchant,
+            is_banker=is_banker,
             movement_type=movement_type,
             respawn_time=respawn_time,
             respawn_time_max=respawn_time_max,
@@ -121,6 +127,8 @@ class NPCRepository:
             "level": str(level),
             "is_hostile": str(is_hostile),
             "is_attackable": str(is_attackable),
+            "is_merchant": str(is_merchant),
+            "is_banker": str(is_banker),
             "movement_type": movement_type,
             "respawn_time": str(respawn_time),
             "respawn_time_max": str(respawn_time_max),
@@ -178,6 +186,8 @@ class NPCRepository:
             level=int(result["level"]),
             is_hostile=result["is_hostile"].lower() == "true",
             is_attackable=result["is_attackable"].lower() == "true",
+            is_merchant=result.get("is_merchant", "False").lower() == "true",
+            is_banker=result.get("is_banker", "False").lower() == "true",
             movement_type=result["movement_type"],
             respawn_time=int(result["respawn_time"]),
             respawn_time_max=int(result.get("respawn_time_max", result["respawn_time"])),

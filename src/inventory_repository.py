@@ -16,7 +16,7 @@ class InventoryRepository:
 
     MAX_SLOTS = 20  # Número máximo de slots de inventario
 
-    def __init__(self, redis_client: RedisClient) -> None:
+    def __init__(self, redis_client: "RedisClient") -> None:
         """Inicializa el repositorio de inventario.
 
         Args:

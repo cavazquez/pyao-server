@@ -140,7 +140,7 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: C901, PLR0912, PLR0915
+    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: PLR0915
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:

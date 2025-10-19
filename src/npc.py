@@ -37,13 +37,15 @@ class NPC:
     # Comportamiento
     is_hostile: bool  # ¿Ataca a jugadores?
     is_attackable: bool  # ¿Puede ser atacado?
-    movement_type: str  # "static", "patrol", "random"
-    respawn_time: int  # Tiempo mínimo de respawn en segundos
-    respawn_time_max: int  # Tiempo máximo de respawn en segundos (aleatorio entre min y max)
+    is_merchant: bool = False  # ¿Es un mercader? (abre ventana de comercio)
+    is_banker: bool = False  # ¿Es un banquero? (abre ventana de banco)
+    movement_type: str = "static"  # "static", "patrol", "random"
+    respawn_time: int = 0  # Tiempo mínimo de respawn en segundos
+    respawn_time_max: int = 0  # Tiempo máximo de respawn en segundos (aleatorio entre min y max)
 
     # Loot
-    gold_min: int
-    gold_max: int
+    gold_min: int = 0
+    gold_max: int = 0
 
     # Combat
     last_attack_time: float = 0.0  # Timestamp del último ataque

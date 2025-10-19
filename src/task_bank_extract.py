@@ -1,0 +1,179 @@
+"""Tarea para extraer items del banco."""
+
+import logging
+import struct
+from typing import TYPE_CHECKING
+
+from src.items_catalog import ITEMS_CATALOG
+from src.session_manager import SessionManager
+from src.task import Task
+
+if TYPE_CHECKING:
+    from src.bank_repository import BankRepository
+    from src.inventory_repository import InventoryRepository
+    from src.message_sender import MessageSender
+    from src.player_repository import PlayerRepository
+
+logger = logging.getLogger(__name__)
+
+
+class TaskBankExtract(Task):
+    """Maneja la extracción de items del banco."""
+
+    def __init__(
+        self,
+        data: bytes,
+        message_sender: MessageSender,
+        bank_repo: BankRepository | None = None,
+        inventory_repo: InventoryRepository | None = None,
+        player_repo: PlayerRepository | None = None,
+        session_data: dict[str, dict[str, int]] | None = None,
+    ) -> None:
+        """Inicializa la tarea de extracción bancaria.
+
+        Args:
+            data: Datos del packet.
+            message_sender: Enviador de mensajes.
+            bank_repo: Repositorio de banco.
+            inventory_repo: Repositorio de inventario.
+            player_repo: Repositorio de jugadores.
+            session_data: Datos de sesión.
+        """
+        super().__init__(data, message_sender)
+        self.bank_repo = bank_repo
+        self.inventory_repo = inventory_repo
+        self.player_repo = player_repo
+        self.session_data = session_data or {}
+
+    async def execute(self) -> None:
+        """Ejecuta la extracción de un item del banco."""
+        # Verificar que el jugador esté logueado
+        user_id = SessionManager.get_user_id(self.session_data)
+        if user_id is None:
+            logger.warning("Intento de extracción bancaria sin estar logueado")
+            return
+
+        if not self.bank_repo or not self.inventory_repo or not self.player_repo:
+            logger.error("Dependencias no disponibles para extracción bancaria")
+            await self.message_sender.send_console_msg("Error al extraer del banco")
+            return
+
+        # Parsear el packet: PacketID (1 byte) + slot (1 byte) + quantity (2 bytes)
+        min_packet_size = 4
+        if len(self.data) < min_packet_size:
+            logger.warning("Packet BANK_EXTRACT_ITEM inválido: tamaño incorrecto")
+            return
+
+        try:
+            slot = struct.unpack("B", self.data[1:2])[0]
+            quantity = struct.unpack("<H", self.data[2:4])[0]
+
+            logger.info(
+                "user_id %d extrayendo %d items del slot %d del banco", user_id, quantity, slot
+            )
+
+            # Validar cantidad
+            if quantity <= 0:
+                await self.message_sender.send_console_msg("Cantidad inválida")
+                return
+
+            # Obtener item del banco
+            bank_item = await self.bank_repo.get_item(user_id, slot)
+            if not bank_item:
+                await self.message_sender.send_console_msg(
+                    "No hay ningún item en ese slot del banco"
+                )
+                return
+
+            if bank_item.quantity < quantity:
+                await self.message_sender.send_console_msg(
+                    f"Solo tienes {bank_item.quantity} items en ese slot del banco"
+                )
+                return
+
+            # Extraer del banco
+            success = await self.bank_repo.extract_item(user_id, slot, quantity)
+
+            if not success:
+                await self.message_sender.send_console_msg("Error al extraer del banco")
+                return
+
+            # Agregar al inventario
+            modified_slots = await self.inventory_repo.add_item(
+                user_id, bank_item.item_id, quantity
+            )
+
+            if not modified_slots:
+                logger.error("Error al agregar item al inventario después de extraer")
+                # Revertir extracción
+                await self.bank_repo.deposit_item(user_id, bank_item.item_id, quantity)
+                await self.message_sender.send_console_msg("No tienes espacio en el inventario")
+                return
+
+            # Obtener datos del item para enviar al cliente
+            item = ITEMS_CATALOG.get(bank_item.item_id)
+            if not item:
+                logger.error("Item %d no encontrado en catálogo", bank_item.item_id)
+                return
+
+            # Actualizar slot del banco en el cliente
+            remaining_bank = bank_item.quantity - quantity
+            if remaining_bank > 0:
+                await self.message_sender.send_change_bank_slot(
+                    slot=slot,
+                    item_id=bank_item.item_id,
+                    name=item.name,
+                    amount=remaining_bank,
+                    grh_id=item.graphic_id,
+                    item_type=item.item_type.to_client_type(),
+                    max_hit=item.max_damage or 0,
+                    min_hit=item.min_damage or 0,
+                    max_def=item.defense or 0,
+                    min_def=item.defense or 0,
+                )
+            else:
+                # Slot vacío
+                await self.message_sender.send_change_bank_slot(
+                    slot=slot,
+                    item_id=0,
+                    name="",
+                    amount=0,
+                    grh_id=0,
+                    item_type=0,
+                    max_hit=0,
+                    min_hit=0,
+                    max_def=0,
+                    min_def=0,
+                )
+
+            # Actualizar slots del inventario en el cliente
+            for inv_slot, inv_quantity in modified_slots:
+                await self.message_sender.send_change_inventory_slot(
+                    slot=inv_slot,
+                    item_id=bank_item.item_id,
+                    name=item.name,
+                    amount=inv_quantity,
+                    equipped=False,
+                    grh_id=item.graphic_id,
+                    item_type=item.item_type.to_client_type(),
+                    max_hit=item.max_damage or 0,
+                    min_hit=item.min_damage or 0,
+                    max_def=item.defense or 0,
+                    min_def=item.defense or 0,
+                    sale_price=float(item.value),
+                )
+
+            await self.message_sender.send_console_msg(
+                f"Extrajiste {quantity}x {item.name} del banco"
+            )
+
+            logger.info(
+                "user_id %d extrajo %d x item_id %d del banco (slot %d)",
+                user_id,
+                quantity,
+                bank_item.item_id,
+                slot,
+            )
+
+        except struct.error:
+            logger.exception("Error al parsear packet BANK_EXTRACT_ITEM")

@@ -56,10 +56,10 @@ class ClientPacketID(IntEnum):
     # EQUIP_ITEM = 36
     # MODIFY_SKILLS = 38
     # TRAIN = 39
-    # COMMERCE_BUY = 40
-    # BANK_EXTRACT_ITEM = 41
-    # COMMERCE_SELL = 42
-    # BANK_DEPOSIT = 43
+    COMMERCE_BUY = 40  # Comprar item del mercader
+    BANK_EXTRACT_ITEM = 41  # Extraer item del banco
+    COMMERCE_SELL = 42  # Vender item al mercader
+    BANK_DEPOSIT = 43  # Depositar item en el banco
     # FORUM_POST = 44
     # MOVE_SPELL = 45
     # MOVE_BANK = 46
@@ -101,7 +101,7 @@ class ClientPacketID(IntEnum):
     AYUDA = 82
     REQUEST_STATS = 83
     # COMMERCE_START = 84
-    # BANK_START = 85
+    BANK_START = 85  # Abrir ventana de banco
     # ENLIST = 86
     INFORMATION = 87
     # REWARD = 88
@@ -182,11 +182,11 @@ class ServerPacketID(IntEnum):
     # NAVIGATE_TOGGLE = 3
     # DISCONNECT = 4
     COMMERCE_END = 5  # Cerrar ventana de comercio
-    # BANK_END = 6
-    # COMMERCE_INIT = 7
-    # BANK_INIT = 8
-    # USER_COMMERCE_INIT = 9
-    # USER_COMMERCE_END = 10
+    BANK_END = 6  # Cerrar ventana de banco
+    COMMERCE_INIT = 7  # Abrir ventana de comercio con inventario del mercader
+    BANK_INIT = 8  # Abrir ventana de banco
+    USER_COMMERCE_INIT = 9  # Iniciar comercio entre usuarios
+    USER_COMMERCE_END = 10  # Finalizar comercio entre usuarios
     # SHOW_BLACK_SCREEN = 11
     # SHOW_SIGN = 12
     # CHANGE_INVENTORY_SLOT = 13
@@ -211,7 +211,7 @@ class ServerPacketID(IntEnum):
     # CREATE_FX = 44
     # WORK_REQUEST_TARGET = 46
     # CHANGE_INVENTORY_SLOT = 47
-    # CHANGE_BANK_SLOT = 48
+    CHANGE_BANK_SLOT = 48  # Actualizar slot de la bóveda bancaria
     CHANGE_SPELL_SLOT = 49  # Actualizar slot de hechizo
     # BLACKSMITH_WEAPONS = 51
     # BLACKSMITH_ARMORS = 52
@@ -220,7 +220,7 @@ class ServerPacketID(IntEnum):
     # BLIND = 56
     # DUMB = 57
     # SHOW_SIGNAL = 58
-    # CHANGE_NPC_INVENTORY_SLOT = 59
+    CHANGE_NPC_INVENTORY_SLOT = 59  # Actualizar slot del inventario del mercader
     # UPDATE_HUNGER_AND_THIRST = 60
     # FAME = 61
     # MINI_STATS = 62
@@ -245,7 +245,7 @@ class ServerPacketID(IntEnum):
     # PARALIZE_OK = 82
     # SHOW_USER_REQUEST = 83
     # TRADE_OK = 84
-    # BANK_OK = 85
+    BANK_OK = 85  # Confirmar operación bancaria
     # CHANGE_USER_TRADE_SLOT = 86
     # SEND_NIGHT = 87
     PONG = 88

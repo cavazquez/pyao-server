@@ -385,6 +385,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ### TODOs y Mejoras Futuras
 - **[TODO: NPC Factory](docs/TODO_NPC_FACTORY.md)**: Sistema de factory methods para crear NPCs con FX 📝 **NUEVO**
+- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: PacketReader y otras mejoras de arquitectura 📝 **NUEVO**
 
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño

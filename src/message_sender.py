@@ -13,6 +13,7 @@ from src.msg import (
     build_character_move_response,
     build_character_remove_response,
     build_commerce_end_response,
+    build_commerce_init_response,
     build_console_msg_response,
     build_create_fx_response,
     build_dice_roll_response,
@@ -471,6 +472,135 @@ class MessageSender:  # noqa: PLR0904
         """Envía paquete CommerceEnd para cerrar la ventana de comercio."""
         response = build_commerce_end_response()
         logger.debug("[%s] Enviando COMMERCE_END", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_commerce_init(
+        self,
+        npc_id: int,
+        items: list[tuple[int, int, str, int, int, int, int, int, int, int, int]],
+    ) -> None:
+        """Envía paquete COMMERCE_INIT para abrir ventana de comercio con inventario del mercader.
+
+        Args:
+            npc_id: ID del NPC mercader.
+            items: Lista de tuplas con formato:
+                (slot, item_id, name, quantity, price, grh_index, obj_type,
+                 max_hit, min_hit, max_def, min_def)
+        """
+        response = build_commerce_init_response(npc_id=npc_id, items=items)
+        logger.debug(
+            "[%s] Enviando COMMERCE_INIT: npc_id=%d, num_items=%d",
+            self.connection.address,
+            npc_id,
+            len(items),
+        )
+        await self.connection.send(response)
+
+    async def send_commerce_init_empty(self) -> None:
+        """Envía paquete COMMERCE_INIT vacío (solo abre la ventana).
+
+        El cliente Godot espera que los items se envíen previamente
+        con ChangeNPCInventorySlot.
+        """
+        response = bytes([ServerPacketID.COMMERCE_INIT])
+        logger.debug("[%s] Enviando COMMERCE_INIT vacío", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_change_npc_inventory_slot(
+        self,
+        slot: int,
+        name: str,
+        amount: int,
+        sale_price: float,
+        grh_id: int,
+        item_id: int,
+        item_type: int,
+        max_hit: int,
+        min_hit: int,
+        max_def: int,
+        min_def: int,
+    ) -> None:
+        """Envía paquete ChangeNPCInventorySlot para actualizar un slot del inventario del mercader.
+
+        Args:
+            slot: Número de slot (1-20).
+            name: Nombre del item.
+            amount: Cantidad.
+            sale_price: Precio de venta (float).
+            grh_id: ID gráfico.
+            item_id: ID del item.
+            item_type: Tipo de item.
+            max_hit: Daño máximo.
+            min_hit: Daño mínimo.
+            max_def: Defensa máxima.
+            min_def: Defensa mínima.
+        """
+        packet = PacketBuilder()
+        packet.add_byte(ServerPacketID.CHANGE_NPC_INVENTORY_SLOT)
+        packet.add_byte(slot)
+        packet.add_unicode_string(name)
+        packet.add_int16(amount)
+        packet.add_float(sale_price)
+        packet.add_int16(grh_id)
+        packet.add_int16(item_id)
+        packet.add_byte(item_type)
+        packet.add_int16(max_hit)
+        packet.add_int16(min_hit)
+        packet.add_int16(max_def)
+        packet.add_int16(min_def)
+
+        await self.connection.send(packet.to_bytes())
+
+    async def send_change_bank_slot(
+        self,
+        slot: int,
+        item_id: int,
+        name: str,
+        amount: int,
+        grh_id: int,
+        item_type: int,
+        max_hit: int,
+        min_hit: int,
+        max_def: int,
+        min_def: int,
+    ) -> None:
+        """Envía paquete ChangeBankSlot para actualizar un slot de la bóveda bancaria.
+
+        Args:
+            slot: Número de slot (1-20).
+            item_id: ID del item.
+            name: Nombre del item.
+            amount: Cantidad.
+            grh_id: ID gráfico.
+            item_type: Tipo de item.
+            max_hit: Daño máximo.
+            min_hit: Daño mínimo.
+            max_def: Defensa máxima.
+            min_def: Defensa mínima.
+        """
+        packet = PacketBuilder()
+        packet.add_byte(ServerPacketID.CHANGE_BANK_SLOT)
+        packet.add_byte(slot)
+        packet.add_int16(item_id)
+        packet.add_unicode_string(name)
+        packet.add_int16(amount)
+        packet.add_int16(grh_id)
+        packet.add_byte(item_type)
+        packet.add_int16(max_hit)
+        packet.add_int16(min_hit)
+        packet.add_int16(max_def)
+        packet.add_int16(min_def)
+
+        await self.connection.send(packet.to_bytes())
+
+    async def send_bank_init_empty(self) -> None:
+        """Envía paquete BANK_INIT vacío (solo abre la ventana).
+
+        El cliente Godot espera que los items se envíen previamente
+        con ChangeBankSlot.
+        """
+        response = bytes([ServerPacketID.BANK_INIT])
+        logger.debug("[%s] Enviando BANK_INIT vacío", self.connection.address)
         await self.connection.send(response)
 
     async def send_play_midi(self, midi_id: int) -> None:
