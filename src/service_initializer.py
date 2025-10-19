@@ -1,7 +1,7 @@
 """Inicializador de servicios."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.combat_service import CombatService
 from src.commerce_service import CommerceService
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class ServiceInitializer:
     """Inicializa todos los servicios del servidor."""
 
-    def __init__(self, repositories: dict, map_manager: MapManager) -> None:
+    def __init__(self, repositories: dict[str, Any], map_manager: MapManager) -> None:
         """Inicializa el inicializador de servicios.
 
         Args:
@@ -35,7 +35,7 @@ class ServiceInitializer:
         self.repositories = repositories
         self.map_manager = map_manager
 
-    async def initialize_all(self) -> dict:
+    async def initialize_all(self) -> dict[str, Any]:
         """Crea e inicializa todos los servicios.
 
         Returns:
@@ -96,7 +96,8 @@ class ServiceInitializer:
         combat_service = CombatService(
             self.repositories["player_repo"],
             self.repositories["npc_repo"],
-            self.map_manager,
+            self.repositories["equipment_repo"],
+            self.repositories["inventory_repo"],
         )
         logger.info("✓ Sistema de combate inicializado")
 
@@ -105,6 +106,8 @@ class ServiceInitializer:
             npc_service,
             self.map_manager,
             self.repositories["player_repo"],
+            combat_service,
+            broadcast_service,
         )
         logger.info("✓ Servicio de IA de NPCs inicializado")
 

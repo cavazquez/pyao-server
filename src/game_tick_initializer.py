@@ -13,6 +13,7 @@ from src.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
+    from src.npc_ai_service import NPCAIService
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository
@@ -29,6 +30,7 @@ class GameTickInitializer:
         server_repo: ServerRepository,
         map_manager: MapManager,
         npc_service: NPCService,
+        npc_ai_service: NPCAIService,
     ) -> None:
         """Inicializa el inicializador de Game Tick.
 
@@ -37,11 +39,13 @@ class GameTickInitializer:
             server_repo: Repositorio del servidor.
             map_manager: Manager de mapas.
             npc_service: Servicio de NPCs.
+            npc_ai_service: Servicio de IA de NPCs.
         """
         self.player_repo = player_repo
         self.server_repo = server_repo
         self.map_manager = map_manager
         self.npc_service = npc_service
+        self.npc_ai_service = npc_ai_service
 
     async def initialize(self) -> GameTick:
         """Crea e inicializa el sistema de Game Tick con sus efectos.
@@ -91,5 +95,7 @@ class GameTickInitializer:
         logger.info("✓ Efecto de movimiento de NPCs habilitado")
 
         # Efecto de IA de NPCs
-        game_tick.add_effect(NPCAIEffect(self.npc_service, interval_seconds=2.0))
+        game_tick.add_effect(
+            NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=2.0)
+        )
         logger.info("✓ Efecto de IA de NPCs habilitado")

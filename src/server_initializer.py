@@ -16,7 +16,8 @@ logger = logging.getLogger(__name__)
 class ServerInitializer:
     """Orquestador principal de inicialización del servidor."""
 
-    async def initialize_all(self) -> tuple[DependencyContainer, str, int]:
+    @staticmethod
+    async def initialize_all() -> tuple[DependencyContainer, str, int]:
         """Inicializa todos los componentes del servidor.
 
         Returns:
@@ -27,8 +28,7 @@ class ServerInitializer:
         logger.info("=" * 60)
 
         # 1. Inicializar Redis y datos
-        redis_init = RedisInitializer()
-        redis_client = await redis_init.initialize()
+        redis_client = await RedisInitializer.initialize()
 
         # Obtener configuración de host y port desde Redis
         host = await redis_client.get_server_host()
@@ -58,6 +58,7 @@ class ServerInitializer:
             repositories["server_repo"],
             map_manager,
             services["npc_service"],
+            services["npc_ai_service"],
         )
         game_tick = await game_tick_init.initialize()
 

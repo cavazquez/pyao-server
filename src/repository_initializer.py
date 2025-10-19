@@ -1,7 +1,7 @@
 """Inicializador de repositorios."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.account_repository import AccountRepository
 from src.bank_repository import BankRepository
@@ -31,7 +31,7 @@ class RepositoryInitializer:
         """
         self.redis_client = redis_client
 
-    def initialize_all(self) -> dict:
+    def initialize_all(self) -> dict[str, Any]:
         """Crea e inicializa todos los repositorios.
 
         Returns:

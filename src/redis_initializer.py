@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 class RedisInitializer:
     """Inicializa Redis y carga datos iniciales."""
 
-    async def initialize(self) -> RedisClient:
+    @staticmethod
+    async def initialize() -> RedisClient:
         """Conecta a Redis y carga datos iniciales.
 
         Returns:
@@ -40,18 +41,19 @@ class RedisInitializer:
         logger.info("✓ Timestamp de inicio establecido")
 
         # Inicializar configuración de dados
-        await self._initialize_dice_config(redis_client, server_repo)
+        await RedisInitializer._initialize_dice_config(redis_client, server_repo)
 
         # Inicializar MOTD
-        await self._initialize_motd(server_repo)
+        await RedisInitializer._initialize_motd(server_repo)
 
         # Inicializar configuración de efectos
-        await self._initialize_effects_config(redis_client)
+        await RedisInitializer._initialize_effects_config(redis_client)
 
         return redis_client
 
+    @staticmethod
     async def _initialize_dice_config(
-        self, redis_client: RedisClient, server_repo: ServerRepository
+        redis_client: RedisClient, server_repo: ServerRepository
     ) -> None:
         """Inicializa la configuración de dados en Redis si no existe."""
         dice_min_key = "server:dice:min_value"
@@ -70,7 +72,8 @@ class RedisInitializer:
         dice_max = await server_repo.get_dice_max_value()
         logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
 
-    async def _initialize_motd(self, server_repo: ServerRepository) -> None:
+    @staticmethod
+    async def _initialize_motd(server_repo: ServerRepository) -> None:
         """Inicializa el MOTD (Message of the Day) si es necesario."""
         motd = await server_repo.get_motd()
         if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
@@ -84,7 +87,8 @@ class RedisInitializer:
             await server_repo.set_motd(initial_motd)
             logger.info("MOTD inicializado")
 
-    async def _initialize_effects_config(self, redis_client: RedisClient) -> None:
+    @staticmethod
+    async def _initialize_effects_config(redis_client: RedisClient) -> None:
         """Inicializa la configuración de efectos en Redis si no existe."""
         # Hambre y Sed - 180 segundos (3 minutos)
         # SIEMPRE establecer valores correctos (sobrescribe valores de testing)
