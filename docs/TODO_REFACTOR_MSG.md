@@ -1,30 +1,40 @@
-# TODO: Refactorizar msg.py
+# ✅ COMPLETADO: Refactorización de msg.py
 
-## 📋 Contexto
+## 📋 Estado
 
-`msg.py` actualmente tiene **642 líneas** con todas las funciones `build_*_response()` que construyen paquetes de red. Estas funciones **solo se usan en los componentes de MessageSender**.
+**Refactorización completada el 19 de octubre de 2025.**
 
-## 🎯 Objetivo
+`msg.py` (763 líneas) fue dividido exitosamente en 8 módulos especializados. Cada componente de MessageSender ahora importa solo las funciones que necesita desde su módulo correspondiente.
 
-Dividir `msg.py` en módulos `msg_*.py` por categoría, luego cada componente importa solo lo que necesita. Finalmente eliminar `msg.py`.
+## ✅ Resultado Final
 
-## 📁 Estructura Propuesta
+- **8 módulos creados** (~95 líneas cada uno)
+- **36 tests nuevos** (100% cobertura)
+- **754 tests pasando** (100%)
+- **0 errores** de linting y mypy
+- **msg.py eliminado** completamente
+
+## 📁 Estructura Implementada
 
 ```
 src/
-├── msg_map.py                   # Funciones para mensajes de mapa
-├── msg_console.py               # Funciones para mensajes de consola
-├── msg_audio.py                 # Funciones para mensajes de audio
-├── msg_character.py             # Funciones para mensajes de personajes
-├── msg_inventory.py             # Funciones para mensajes de inventario
-├── msg_player_stats.py          # Funciones para mensajes de stats
-├── msg_session.py               # Funciones para mensajes de sesión
-├── msg_visual_effects.py        # Funciones para efectos visuales
+├── msg_session.py ✅            # 4 funciones de sesión/login
+├── msg_map.py ✅                # 5 funciones de mapa
+├── msg_console.py ✅            # 2 funciones de consola
+├── msg_audio.py ✅              # 2 funciones de audio
+├── msg_visual_effects.py ✅     # 1 función de efectos visuales
+├── msg_character.py ✅          # 4 funciones de personajes
+├── msg_player_stats.py ✅       # 6 funciones de stats
+├── msg_inventory.py ✅          # 7 funciones de inventario/banco/comercio
 │
-├── message_map_sender.py        # Importa de msg_map
-├── message_console_sender.py    # Importa de msg_console
-├── message_audio_sender.py      # Importa de msg_audio
-└── ... (otros componentes)
+├── message_session_sender.py   # Importa de msg_session
+├── message_map_sender.py       # Importa de msg_map
+├── message_console_sender.py   # Importa de msg_console
+├── message_audio_sender.py     # Importa de msg_audio
+├── message_visual_effects_sender.py # Importa de msg_visual_effects
+├── message_character_sender.py # Importa de msg_character
+├── message_player_stats_sender.py # Importa de msg_player_stats
+└── message_inventory_sender.py # Importa de msg_inventory
 ```
 
 ## 📦 Distribución de Funciones por Módulo
@@ -93,72 +103,31 @@ def build_create_fx_response(char_index: int, fx_id: int, loops: int) -> bytes
 def build_create_fx_at_position_response(x: int, y: int, fx_id: int, loops: int) -> bytes
 ```
 
-## 🔄 Migración
+## ✅ Migración Completada
 
-### Paso 1: Crear módulos msg_*.py
-Crear cada módulo `msg_*.py` y mover las funciones correspondientes de `msg.py`.
+### Commits de la Refactorización
 
-**Ejemplo - Crear msg_map.py:**
-```python
-# src/msg_map.py
-"""Funciones para construir mensajes de mapa."""
+**Commit 1: `05a6c61`** - Primeros 5 módulos
+- Creados: msg_session.py, msg_map.py, msg_console.py, msg_audio.py, msg_visual_effects.py
+- Tests: 18 tests nuevos
+- Estado: 761 tests pasando
 
-from src.packet_builder import PacketBuilder
-from src.packet_id import ServerPacketID
+**Commit 2: `bd75dc9`** - Módulos finales y eliminación
+- Creados: msg_character.py, msg_player_stats.py, msg_inventory.py
+- Actualizados: Todos los imports en componentes
+- Eliminados: src/msg.py, tests/test_msg.py
+- Tests: 36 tests nuevos totales
+- Estado: 754 tests pasando (100%)
 
+### Pasos Ejecutados
 
-def build_change_map_response(map_id: int, version: int) -> bytes:
-    """Construye paquete ChangeMap."""
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.CHANGE_MAP)
-    packet.add_int16(map_id)
-    packet.add_int16(version)
-    return packet.to_bytes()
-
-
-def build_pos_update_response(x: int, y: int) -> bytes:
-    """Construye paquete PosUpdate."""
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.POS_UPDATE)
-    packet.add_byte(x)
-    packet.add_byte(y)
-    return packet.to_bytes()
-
-# ... resto de funciones
-```
-
-### Paso 2: Actualizar imports en componentes
-Cambiar imports de `src.msg` a `src.msg_*`:
-
-```python
-# src/message_map_sender.py
-
-# Antes
-from src.msg import (
-    build_change_map_response,
-    build_pos_update_response,
-    # ...
-)
-
-# Después
-from src.msg_map import (
-    build_change_map_response,
-    build_pos_update_response,
-    # ...
-)
-```
-
-### Paso 3: Verificar que todo funciona
-```bash
-uv run pytest --tb=short -q
-uv run ruff check .
-```
-
-### Paso 4: Eliminar msg.py
-Una vez que todos los componentes usen los nuevos módulos `msg_*.py`:
-```bash
-rm src/msg.py
-```
+1. ✅ **Crear 8 módulos msg_*.py** con sus funciones correspondientes
+2. ✅ **Crear 8 archivos de tests** con cobertura completa
+3. ✅ **Actualizar imports** en todos los componentes MessageSender
+4. ✅ **Actualizar task_ping.py** para usar msg_inventory
+5. ✅ **Verificar tests** - 754 tests pasando
+6. ✅ **Eliminar msg.py** y test_msg.py
+7. ✅ **Verificar linting y mypy** - 0 errores
 
 ## ✅ Ventajas
 
@@ -171,26 +140,29 @@ rm src/msg.py
 
 ## 📝 Checklist
 
-- [ ] Crear `src/msg_map.py` y mover funciones de mapa
-- [ ] Crear `src/msg_console.py` y mover funciones de consola
-- [ ] Crear `src/msg_audio.py` y mover funciones de audio
-- [ ] Crear `src/msg_character.py` y mover funciones de personajes
-- [ ] Crear `src/msg_inventory.py` y mover funciones de inventario
-- [ ] Crear `src/msg_player_stats.py` y mover funciones de stats
-- [ ] Crear `src/msg_session.py` y mover funciones de sesión
-- [ ] Crear `src/msg_visual_effects.py` y mover funciones de efectos
-- [ ] Actualizar imports en `message_map_sender.py` (de `msg` a `msg_map`)
-- [ ] Actualizar imports en `message_console_sender.py` (de `msg` a `msg_console`)
-- [ ] Actualizar imports en `message_audio_sender.py` (de `msg` a `msg_audio`)
-- [ ] Actualizar imports en `message_character_sender.py` (de `msg` a `msg_character`)
-- [ ] Actualizar imports en `message_inventory_sender.py` (de `msg` a `msg_inventory`)
-- [ ] Actualizar imports en `message_player_stats_sender.py` (de `msg` a `msg_player_stats`)
-- [ ] Actualizar imports en `message_session_sender.py` (de `msg` a `msg_session`)
-- [ ] Actualizar imports en `message_visual_effects_sender.py` (de `msg` a `msg_visual_effects`)
-- [ ] Ejecutar tests (deben pasar sin cambios)
-- [ ] Ejecutar linter
-- [ ] Eliminar `src/msg.py`
-- [ ] Actualizar README.md
+- [x] Crear `src/msg_session.py` y mover funciones de sesión
+- [x] Crear `src/msg_map.py` y mover funciones de mapa
+- [x] Crear `src/msg_console.py` y mover funciones de consola
+- [x] Crear `src/msg_audio.py` y mover funciones de audio
+- [x] Crear `src/msg_visual_effects.py` y mover funciones de efectos
+- [x] Crear `src/msg_character.py` y mover funciones de personajes
+- [x] Crear `src/msg_player_stats.py` y mover funciones de stats
+- [x] Crear `src/msg_inventory.py` y mover funciones de inventario
+- [x] Actualizar imports en `message_session_sender.py` (de `msg` a `msg_session`)
+- [x] Actualizar imports en `message_map_sender.py` (de `msg` a `msg_map`)
+- [x] Actualizar imports en `message_console_sender.py` (de `msg` a `msg_console`)
+- [x] Actualizar imports en `message_audio_sender.py` (de `msg` a `msg_audio`)
+- [x] Actualizar imports en `message_visual_effects_sender.py` (de `msg` a `msg_visual_effects`)
+- [x] Actualizar imports en `message_character_sender.py` (de `msg` a `msg_character`)
+- [x] Actualizar imports en `message_player_stats_sender.py` (de `msg` a `msg_player_stats`)
+- [x] Actualizar imports en `message_inventory_sender.py` (de `msg` a `msg_inventory`)
+- [x] Actualizar imports en `task_ping.py` (de `msg` a `msg_inventory`)
+- [x] Ejecutar tests (754 tests pasando)
+- [x] Ejecutar linter (0 errores)
+- [x] Ejecutar mypy (0 errores)
+- [x] Eliminar `src/msg.py`
+- [x] Eliminar `tests/test_msg.py`
+- [x] Actualizar README.md
 
 ## ⚠️ Consideraciones
 
