@@ -91,14 +91,33 @@ uv run ruff check .
 uv run mypy .
 ```
 
+## 🏗️ Arquitectura
+
+El servidor utiliza una **arquitectura modular** con patrones de diseño modernos:
+
+- **Factory Pattern** - TaskFactory para creación de tasks
+- **Dependency Injection** - DependencyContainer centralizado
+- **Facade Pattern** - ServerInitializer para inicialización
+- **Repository Pattern** - Abstracción de acceso a datos
+- **Strategy Pattern** - Dictionary-based task creation
+
+Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de la arquitectura.
+
+### Estadísticas del Código
+
+- **server.py:** 685 → 194 líneas (-72% reducción) ✅
+- **msg.py:** 763 líneas → 8 módulos especializados ✅
+- **Tests:** 767 tests pasando (100%) ✅
+- **Calidad:** 0 errores de linting, 0 errores de mypy ✅
+
 ## 📦 Estructura del Proyecto
 
 ```
 pyao-server/
-├── src/                         # Código fuente (679 líneas → refactorizar)
+├── src/                         # Código fuente (refactorizado ✅)
 │   ├── __init__.py              # Inicialización del paquete
 │   ├── run_server.py            # Entry point del servidor
-│   ├── server.py                # Servidor TCP principal (679 líneas)
+│   ├── server.py                # Servidor TCP principal (194 líneas, -72%)
 │   ├── client_connection.py     # Gestión de conexiones TCP
 │   │
 │   ├── # MessageSender (Patrón Facade) ✅ REFACTORIZADO
@@ -111,6 +130,15 @@ pyao-server/
 │   ├── message_character_sender.py # Personajes (4 métodos)
 │   ├── message_inventory_sender.py # Inventario/Banco/Comercio (9 métodos)
 │   ├── message_session_sender.py # Sesión/Login (4 métodos)
+│   │
+│   ├── # Arquitectura (Initializers & Containers) ✅ REFACTORIZADO
+│   ├── dependency_container.py  # Contenedor de dependencias (24 deps)
+│   ├── task_factory.py          # Factory para crear tasks (25 tipos)
+│   ├── server_initializer.py    # Orquestador principal
+│   ├── redis_initializer.py     # Inicialización de Redis
+│   ├── repository_initializer.py # Creación de repositorios (10)
+│   ├── service_initializer.py   # Creación de servicios (8)
+│   ├── game_tick_initializer.py # Configuración de GameTick
 │   │
 │   ├── # Data Loaders (Inicialización de Datos) ✅ NUEVO
 │   ├── base_data_loader.py      # Clase base abstracta para loaders
@@ -204,8 +232,15 @@ pyao-server/
 │   ├── loot_tables.toml         # Tablas de loot de NPCs
 │   └── maps/                    # Archivos de mapas (.json)
 │
-├── tests/                       # Tests unitarios (743 tests)
+├── tests/                       # Tests unitarios (767 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
+│   │
+│   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO
+│   ├── test_dependency_container.py # Tests de DependencyContainer (1 test)
+│   ├── test_task_factory.py     # Tests de TaskFactory (6 tests)
+│   ├── test_repository_initializer.py # Tests de RepositoryInitializer (2 tests)
+│   ├── test_service_initializer.py # Tests de ServiceInitializer (1 test)
+│   ├── test_game_tick_initializer.py # Tests de GameTickInitializer (3 tests)
 │   │
 │   ├── # Tests de Data Loaders (21 tests) ✅ NUEVO
 │   ├── test_merchant_data_loader.py # Tests de MerchantDataLoader (11 tests)
@@ -242,14 +277,15 @@ pyao-server/
 │   └── README.md                # Documentación de Redis
 │
 ├── docs/                        # Documentación
+│   ├── ARCHITECTURE.md          # Arquitectura completa del servidor ⭐ NUEVO
 │   ├── LOGIN_FLOW.md            # Flujo de login
 │   ├── ACCOUNT_CREATION.md      # Creación de cuentas
 │   ├── NPC_SYSTEM.md            # Sistema de NPCs
 │   ├── COMMERCE_SYSTEM.md       # Sistema de comercio con mercaderes
 │   ├── GAME_TICK_SYSTEM.md      # Sistema de tick y efectos periódicos
 │   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender
-│   ├── TODO_REFACTOR_MSG.md     # Plan para refactorizar msg.py
-│   ├── TODO_REFACTOR_SERVER.md  # Plan para refactorizar server.py
+│   ├── REFACTOR_MSG_COMPLETED.md # Refactorización de msg.py ✅ COMPLETADO
+│   ├── REFACTOR_SERVER_COMPLETED.md # Refactorización de server.py ✅ COMPLETADO
 │   ├── redis_architecture.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios
@@ -444,27 +480,29 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ## 📚 Documentación
 
+### Arquitectura ⭐
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Arquitectura completa del servidor, patrones de diseño y componentes **NUEVO**
+- **[Refactorización Server](docs/REFACTOR_SERVER_COMPLETED.md)**: Refactorización completada de server.py ✅
+- **[Refactorización MSG](docs/REFACTOR_MSG_COMPLETED.md)**: Refactorización completada de msg.py ✅
+
 ### Protocolo y Flujos
 - **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login
 - **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
 
 ### Sistema de Juego
-- **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo ⭐ **NUEVO**
-- **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo 📝 **NUEVO**
-
-### Bug Fixes y Troubleshooting
-- **[Bug Fix: Tile Occupation](docs/BUGFIX_TILE_OCCUPATION.md)**: Solución al bug de tiles bloqueados al remover NPCs 🐛 **NUEVO**
+- **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo
+- **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo
+- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Sistema genérico de efectos periódicos
 
 ### TODOs y Mejoras Futuras
-- **[TODO: NPC Factory](docs/TODO_NPC_FACTORY.md)**: Sistema de factory methods para crear NPCs con FX 📝 **NUEVO**
-- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: PacketReader y otras mejoras de arquitectura 📝 **NUEVO**
+- **[TODO: NPC Factory](docs/TODO_NPC_FACTORY.md)**: Sistema de factory methods para crear NPCs con FX
+- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: PacketReader y otras mejoras de arquitectura
 
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
 - **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
 - **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
 - **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
-- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Sistema genérico de efectos periódicos
 
 ### Calidad y Testing
 - **[Análisis de Cobertura](docs/COVERAGE_ANALYSIS.md)**: Análisis detallado de cobertura de tests
