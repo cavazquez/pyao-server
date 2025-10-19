@@ -12,6 +12,7 @@ from src.bank_repository import BankRepository
 from src.client_connection import ClientConnection
 from src.combat_service import CombatService
 from src.commerce_service import CommerceService
+from src.data_initializer import DataInitializer
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
@@ -630,6 +631,11 @@ class ArgentumServer:
             # Iniciar el sistema de tick después de agregar todos los efectos
             self.game_tick.start()
             logger.info("Sistema de tick del juego iniciado con todos los efectos")
+
+            # Inicializar datos en Redis (inventarios de mercaderes, etc.)
+            data_initializer = DataInitializer(self.redis_client)
+            await data_initializer.initialize_all(force_clear=False)
+            logger.info("Datos iniciales cargados en Redis")
 
             # Inicializar configuración de efectos en Redis (si no existe)
             await self._initialize_effects_config()
