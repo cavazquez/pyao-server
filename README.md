@@ -107,7 +107,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 
 - **server.py:** 685 → 194 líneas (-72% reducción) ✅
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
-- **Tests:** 767 tests pasando (100%) ✅
+- **Tests:** 782 tests pasando (100%) ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ## 📦 Estructura del Proyecto
@@ -204,6 +204,7 @@ pyao-server/
 │   ├── packet_id.py             # IDs de paquetes (enums)
 │   ├── packet_handlers.py       # Mapeo packet ID → handler
 │   ├── packet_builder.py        # Constructor de paquetes
+│   ├── packet_reader.py         # Lectura estructurada de packets ✅ NUEVO
 │   ├── msg.py                   # Construcción de mensajes (642 líneas → refactorizar)
 │   │
 │   ├── # Sistema de Juego
@@ -261,6 +262,10 @@ pyao-server/
 │   ├── test_message_character_sender.py # Tests de CharacterMessageSender (8 tests)
 │   ├── test_message_inventory_sender.py # Tests de InventoryMessageSender (11 tests)
 │   ├── test_message_session_sender.py # Tests de SessionMessageSender (6 tests)
+│   │
+│   ├── # Tests de Protocolo (15 tests) ✅ NUEVO
+│   ├── test_packet_reader.py       # Tests de PacketReader (15 tests)
+│   │
 │   ├── # Tests de Tasks
 │   ├── test_account_creation.py    # Tests de creación de cuentas
 │   ├── test_task_change_heading.py # Tests de cambio de dirección
@@ -286,6 +291,7 @@ pyao-server/
 │   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender
 │   ├── REFACTOR_MSG_COMPLETED.md # Refactorización de msg.py ✅ COMPLETADO
 │   ├── REFACTOR_SERVER_COMPLETED.md # Refactorización de server.py ✅ COMPLETADO
+│   ├── TODO_PACKET_VALIDATOR.md # TODO: Sistema de validación de packets ⭐ NUEVO
 │   ├── redis_architecture.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios

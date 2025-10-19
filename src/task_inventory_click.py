@@ -1,11 +1,11 @@
 """Tarea para manejar clicks en el inventario."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -67,7 +67,8 @@ class TaskInventoryClick(Task):
 
         try:
             # Extraer el slot del inventario (segundo byte)
-            slot = struct.unpack("B", self.data[1:2])[0]
+            reader = PacketReader(self.data)
+            slot = reader.read_byte()
 
             logger.info("user_id %d hace click en slot %d", user_id, slot)
 
@@ -133,5 +134,5 @@ class TaskInventoryClick(Task):
                 item.graphic_id,
             )
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet INVENTORY_CLICK")

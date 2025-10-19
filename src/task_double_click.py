@@ -1,11 +1,11 @@
 """Tarea para doble click (items del inventario o NPCs)."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -61,7 +61,8 @@ class TaskDoubleClick(Task):
 
         try:
             # Extraer el segundo byte (slot o CharIndex)
-            target = struct.unpack("B", self.data[1:2])[0]
+            reader = PacketReader(self.data)
+            target = reader.read_byte()
 
             # Si el target es > MAX_INVENTORY_SLOT, probablemente es un CharIndex de NPC
             # Los slots de inventario van de 1-20 típicamente
@@ -70,7 +71,7 @@ class TaskDoubleClick(Task):
             else:
                 await self._handle_item_use(user_id, target)
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet DOUBLE_CLICK")
 
     async def _handle_item_use(self, user_id: int, slot: int) -> None:

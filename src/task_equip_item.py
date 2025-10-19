@@ -1,11 +1,11 @@
 """Tarea para equipar/desequipar items."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.equipment_service import EquipmentService
 from src.inventory_repository import InventoryRepository
+from src.packet_reader import PacketReader
 from src.player_service import PlayerService
 from src.session_manager import SessionManager
 from src.task import Task
@@ -64,7 +64,8 @@ class TaskEquipItem(Task):
 
         try:
             # Extraer el slot del inventario (segundo byte)
-            slot = struct.unpack("B", self.data[1:2])[0]
+            reader = PacketReader(self.data)
+            slot = reader.read_byte()
 
             logger.info("user_id %d intenta equipar/desequipar item en slot %d", user_id, slot)
 
@@ -80,5 +81,5 @@ class TaskEquipItem(Task):
                 player_service = PlayerService(self.player_repo, self.message_sender)
                 await player_service.send_inventory(user_id, self.equipment_repo)
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet EQUIP_ITEM")

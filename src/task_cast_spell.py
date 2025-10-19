@@ -1,9 +1,9 @@
 """Tarea para lanzar hechizos."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.spellbook_repository import SpellbookRepository
 from src.task import Task
@@ -49,7 +49,7 @@ class TaskCastSpell(Task):
         self.session_data = session_data or {}
         self.spellbook_repo = spellbook_repo
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: PLR0915 - Método complejo por naturaleza del protocolo
         """Ejecuta el lanzamiento de hechizo."""
         # Parsear el packet: PacketID (1 byte) + Slot (1 byte) [+ X (2 bytes) + Y (2 bytes)]
         # Soporta formato antiguo (2 bytes) y nuevo (6 bytes)
@@ -69,14 +69,16 @@ class TaskCastSpell(Task):
 
         try:
             # Extraer el slot del hechizo (segundo byte)
-            slot = struct.unpack("B", self.data[1:2])[0]
+            reader = PacketReader(self.data)
+            slot = reader.read_byte()
 
             # Determinar si el packet incluye coordenadas del target
             has_target_coords = len(self.data) >= PACKET_SIZE_WITH_COORDS
 
             if has_target_coords:
                 # Formato nuevo: coordenadas del target incluidas
-                target_x, target_y = struct.unpack("<HH", self.data[2:6])  # Little-endian uint16
+                target_x = reader.read_int16()  # Little-endian uint16
+                target_y = reader.read_int16()  # Little-endian uint16
                 logger.info(
                     "user_id %d intenta lanzar hechizo desde slot %d hacia (%d, %d)",
                     user_id,
@@ -160,5 +162,5 @@ class TaskCastSpell(Task):
             if not success:
                 logger.debug("Fallo al lanzar hechizo")
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet CAST_SPELL")

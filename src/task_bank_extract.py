@@ -1,7 +1,6 @@
 """Tarea para extraer items del banco."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
@@ -186,5 +185,5 @@ class TaskBankExtract(Task):
                 slot,
             )
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet BANK_EXTRACT_ITEM")

@@ -1,10 +1,10 @@
 """Tarea para click izquierdo en personajes/NPCs."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_reader import PacketReader
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
@@ -75,8 +75,9 @@ class TaskLeftClick(Task):
 
         try:
             # Extraer coordenadas X, Y (1 byte cada una)
-            x = struct.unpack("B", self.data[1:2])[0]
-            y = struct.unpack("B", self.data[2:3])[0]
+            reader = PacketReader(self.data)
+            x = reader.read_byte()
+            y = reader.read_byte()
 
             logger.info("user_id %d hizo click en posición (%d, %d)", user_id, x, y)
 
@@ -103,7 +104,7 @@ class TaskLeftClick(Task):
                 logger.debug("No se encontró NPC en posición (%d, %d) del mapa %d", x, y, map_id)
                 await self.message_sender.send_console_msg(f"No hay nadie en ({x}, {y}).")
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet LEFT_CLICK")
 
     async def _handle_npc_click(self, user_id: int, npc: NPC) -> None:

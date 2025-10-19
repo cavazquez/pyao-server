@@ -1,7 +1,6 @@
 """Tarea para depositar items en el banco."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
@@ -169,5 +168,5 @@ class TaskBankDeposit(Task):
                 bank_slot,
             )
 
-        except struct.error:
+        except Exception:
             logger.exception("Error al parsear packet BANK_DEPOSIT")

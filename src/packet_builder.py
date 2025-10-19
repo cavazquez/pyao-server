@@ -8,11 +8,14 @@ MIN_BYTE_VALUE = 0
 
 
 class PacketBuilder:
-    """Construye paquetes de bytes de forma incremental."""
+    """Construye paquetes de bytes de forma incremental.
+
+    Usa bytearray internamente para mejor rendimiento en operaciones de bytes.
+    """
 
     def __init__(self) -> None:
         """Inicializa un nuevo constructor de paquetes."""
-        self._data: list[int] = []
+        self._data = bytearray()
 
     def add_byte(self, value: int) -> PacketBuilder:
         """Agrega un byte al paquete.
@@ -115,9 +118,6 @@ class PacketBuilder:
 
     def to_bytes(self) -> bytes:
         """Convierte el paquete a bytes.
-
-        Cada entero en el buffer se convierte directamente a su valor
-        de byte correspondiente (0-255).
 
         Returns:
             Representación en bytes del paquete.

@@ -1,10 +1,10 @@
 """Tarea para vender items a un mercader."""
 
 import logging
-import struct
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_reader import PacketReader
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
@@ -57,8 +57,9 @@ class TaskCommerceSell(Task):
         """
         # Leer parámetros del packet
         # Formato: PacketID (1 byte) + Slot (1 byte) + Quantity (2 bytes little-endian)
-        slot = struct.unpack("B", self.data[1:2])[0]  # Slot del jugador (1-based)
-        quantity = struct.unpack("<H", self.data[2:4])[0]  # Cantidad a vender (uint16 LE)
+        reader = PacketReader(self.data)
+        slot = reader.read_byte()  # Slot del jugador (1-based)
+        quantity = reader.read_int16()  # Cantidad a vender (uint16 LE)
 
         logger.debug(
             "Cliente %s intenta vender: slot=%d, quantity=%d",
