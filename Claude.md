@@ -38,6 +38,49 @@
 ## Testing
 - Preguntar antes de crear tests
 - Priorizar tests de integración para el protocolo de red
+- **Coverage objetivo**: Mantener cobertura global > 45%
+- **Branch coverage**: Priorizar tests que cubran todas las ramas (if/else, try/except)
+- Usar `pytest --cov=src --cov-report=term-missing --cov-report=html` para ver cobertura detallada
+- Archivo HTML de cobertura se genera en `htmlcov/index.html`
+
+### Estrategia de Testing
+1. **Tests unitarios**: Para repositorios y servicios (mocks de Redis)
+2. **Tests de integración**: Para tasks y protocolo de red
+3. **Tests de casos límite**: Validaciones, errores, datos inválidos
+4. **Tests de rollback**: Transacciones que fallan deben revertirse
+5. **Tests de aislamiento**: Múltiples usuarios no deben interferir entre sí
+
+### Cobertura por Módulo
+- **Repositorios**: Objetivo 90-100% (lógica crítica de datos)
+- **Tasks**: Objetivo 80-95% (handlers de protocolo)
+- **Servicios**: Objetivo 70-90% (lógica de negocio)
+- **Efectos/Ticks**: Objetivo 60-80% (lógica de juego)
+
+### Mejorando Branch Coverage
+Para maximizar la cobertura de ramas, asegurar tests para:
+
+**Validaciones:**
+- ✅ Valores válidos (happy path)
+- ✅ Valores inválidos (0, negativos, None, vacíos)
+- ✅ Valores límite (min, max, fuera de rango)
+
+**Manejo de Errores:**
+- ✅ Operación exitosa
+- ✅ Operación fallida (return False, None, exception)
+- ✅ Dependencias no disponibles (None)
+- ✅ Rollback en transacciones
+
+**Estados del Sistema:**
+- ✅ Usuario logueado vs no logueado
+- ✅ Recursos disponibles vs no disponibles
+- ✅ Slots vacíos vs ocupados
+- ✅ Cantidad suficiente vs insuficiente
+
+**Casos Especiales:**
+- ✅ Packets malformados (tamaño incorrecto)
+- ✅ Múltiples usuarios (aislamiento)
+- ✅ Persistencia (datos sobreviven reconexión)
+- ✅ Apilamiento de items del mismo tipo
 
 ## NO Hacer Sin Confirmar
 - NO crear múltiples archivos/módulos de una vez
@@ -55,9 +98,13 @@
 2. **Implementar**: Solo después de la aprobación, realizar los cambios en el código
 3. **Ejecutar tests**: Correr `./run_tests.sh` y verificar que no haya errores ni warnings
 4. **Generar tests**: Crear o actualizar los tests necesarios para los cambios realizados
-5. **Ejecutar tests nuevamente**: Correr `./run_tests.sh` hasta que no haya ningún error ni warning
-6. **Actualizar README.md**: Si se agregaron/eliminaron archivos o cambió la arquitectura
-7. **Commit y Push**: Solo cuando todo esté limpio y funcionando
+5. **Verificar coverage**: Ejecutar `pytest --cov=src --cov-report=term` y verificar que:
+   - La cobertura global se mantenga o mejore
+   - Los nuevos módulos tengan cobertura adecuada según su tipo
+   - Se cubran las ramas principales (if/else, try/except)
+6. **Ejecutar tests nuevamente**: Correr `./run_tests.sh` hasta que no haya ningún error ni warning
+7. **Actualizar README.md**: Si se agregaron/eliminaron archivos o cambió la arquitectura
+8. **Commit y Push**: Solo cuando todo esté limpio y funcionando
 
 ## Pre-commit
 - **OBLIGATORIO**: Antes de cada commit, ejecutar `./run_tests.sh` y verificar que todo pase
