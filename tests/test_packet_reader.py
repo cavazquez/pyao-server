@@ -3,6 +3,7 @@
 import struct
 
 import pytest
+
 from src.packet_reader import PacketReader
 
 
@@ -178,7 +179,7 @@ def test_packet_reader_read_empty_string() -> None:
 
     value = reader.read_string()
 
-    assert value == ""
+    assert not value  # Empty string
     assert reader.offset == 3  # PacketID + 2 bytes de length
 
 

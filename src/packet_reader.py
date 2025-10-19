@@ -5,10 +5,10 @@ import struct
 
 class PacketReader:
     """Lee datos de un packet de forma secuencial y type-safe.
-    
+
     Simplifica la lectura de packets eliminando código repetitivo de struct.unpack
     y manejo manual de offsets.
-    
+
     Example:
         >>> reader = PacketReader(data)
         >>> slot = reader.read_byte()
@@ -18,7 +18,7 @@ class PacketReader:
 
     def __init__(self, data: bytes) -> None:
         """Inicializa el reader con los datos del packet.
-        
+
         Args:
             data: Datos del packet (incluye PacketID en posición 0).
         """
@@ -27,56 +27,43 @@ class PacketReader:
 
     def read_byte(self) -> int:
         """Lee un uint8 (1 byte).
-        
+
         Returns:
             Valor entero sin signo (0-255).
-            
-        Raises:
-            struct.error: Si no hay suficientes bytes disponibles.
         """
-        value = struct.unpack("B", self.data[self.offset : self.offset + 1])[0]
+        value: int = struct.unpack("B", self.data[self.offset : self.offset + 1])[0]
         self.offset += 1
         return value
 
     def read_int16(self) -> int:
         """Lee un int16 little-endian (2 bytes).
-        
+
         Returns:
             Valor entero sin signo (0-65535).
-            
-        Raises:
-            struct.error: Si no hay suficientes bytes disponibles.
         """
-        value = struct.unpack("<H", self.data[self.offset : self.offset + 2])[0]
+        value: int = struct.unpack("<H", self.data[self.offset : self.offset + 2])[0]
         self.offset += 2
         return value
 
     def read_int32(self) -> int:
         """Lee un int32 little-endian (4 bytes).
-        
+
         Returns:
             Valor entero sin signo (0-4294967295).
-            
-        Raises:
-            struct.error: Si no hay suficientes bytes disponibles.
         """
-        value = struct.unpack("<I", self.data[self.offset : self.offset + 4])[0]
+        value: int = struct.unpack("<I", self.data[self.offset : self.offset + 4])[0]
         self.offset += 4
         return value
 
     def read_string(self) -> str:
         """Lee un string: length (uint16 LE) + UTF-16LE bytes.
-        
+
         El formato es:
         - 2 bytes: longitud del string en bytes (uint16 little-endian)
         - N bytes: string codificado en UTF-16LE
-        
+
         Returns:
             String decodificado.
-            
-        Raises:
-            struct.error: Si no hay suficientes bytes para la longitud.
-            UnicodeDecodeError: Si los bytes no son UTF-16LE válido.
         """
         length = self.read_int16()
         value = self.data[self.offset : self.offset + length].decode("utf-16-le")
@@ -85,7 +72,7 @@ class PacketReader:
 
     def remaining_bytes(self) -> int:
         """Retorna el número de bytes restantes sin leer.
-        
+
         Returns:
             Cantidad de bytes disponibles desde el offset actual.
         """
@@ -93,7 +80,7 @@ class PacketReader:
 
     def has_more_data(self) -> bool:
         """Verifica si quedan bytes por leer.
-        
+
         Returns:
             True si hay más datos disponibles, False en caso contrario.
         """
@@ -105,7 +92,7 @@ class PacketReader:
 
     def get_packet_id(self) -> int:
         """Retorna el PacketID (primer byte del packet).
-        
+
         Returns:
             PacketID del packet.
         """

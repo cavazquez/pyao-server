@@ -5,6 +5,7 @@ import struct
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -58,15 +59,12 @@ class TaskBankDeposit(Task):
             await self.message_sender.send_console_msg("Error al depositar en el banco")
             return
 
-        # Parsear el packet: PacketID (1 byte) + slot (1 byte) + quantity (2 bytes)
-        min_packet_size = 4
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet BANK_DEPOSIT inválido: tamaño incorrecto")
-            return
+        # Parsear el packet usando PacketReader
+        reader = PacketReader(self.data)
 
         try:
-            slot = struct.unpack("B", self.data[1:2])[0]
-            quantity = struct.unpack("<H", self.data[2:4])[0]
+            slot = reader.read_byte()
+            quantity = reader.read_int16()
 
             logger.info("user_id %d depositando %d items del slot %d", user_id, quantity, slot)
 
