@@ -162,6 +162,13 @@ class TaskLeftClick(Task):
             "user_id %d abriendo comercio con %s (npc_id=%d)", user_id, npc.name, npc.npc_id
         )
 
+        # Guardar mercader activo en sesión de Redis
+        key = RedisKeys.session_active_merchant(user_id)
+        await self.redis_client.redis.set(key, str(npc.npc_id))
+
+        # Enviar packet COMMERCE_INIT vacío PRIMERO (abre la ventana)
+        await self.message_sender.send_commerce_init_empty()
+
         # Obtener inventario del mercader
         merchant_items = await self.merchant_repo.get_all_items(npc.npc_id)
 
@@ -196,10 +203,6 @@ class TaskLeftClick(Task):
                 )
             )
 
-        # Guardar mercader activo en sesión de Redis
-        key = RedisKeys.session_active_merchant(user_id)
-        await self.redis_client.redis.set(key, str(npc.npc_id))
-
         # Enviar items del mercader usando ChangeNPCInventorySlot
         for item_data in items_data:
             (
@@ -229,9 +232,6 @@ class TaskLeftClick(Task):
                 min_def=min_def,
             )
 
-        # Enviar packet COMMERCE_INIT vacío (solo abre la ventana)
-        await self.message_sender.send_commerce_init_empty()
-
         logger.info(
             "Ventana de comercio abierta para user_id %d con mercader %s (%d items)",
             user_id,
@@ -252,6 +252,9 @@ class TaskLeftClick(Task):
             return
 
         logger.info("user_id %d abriendo banco con %s (npc_id=%d)", user_id, npc.name, npc.npc_id)
+
+        # Enviar packet BANK_INIT vacío PRIMERO (abre la ventana)
+        await self.message_sender.send_bank_init_empty()
 
         # Obtener todos los items del banco
         bank_items = await self.bank_repo.get_all_items(user_id)
@@ -275,9 +278,6 @@ class TaskLeftClick(Task):
                 max_def=item.defense or 0,
                 min_def=item.defense or 0,
             )
-
-        # Enviar packet BANK_INIT vacío (solo abre la ventana)
-        await self.message_sender.send_bank_init_empty()
 
         logger.info(
             "Ventana de banco abierta para user_id %d con banquero %s (%d items)",
