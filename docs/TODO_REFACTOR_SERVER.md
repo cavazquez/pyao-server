@@ -10,18 +10,32 @@ Separar la inicialización del servidor en componentes más pequeños y manejabl
 
 ## 🏗️ Arquitectura Propuesta
 
+**Opción 1: Sin subcarpetas** (Recomendada - Más simple)
 ```
 src/
 ├── server.py                    # Servidor principal (simplificado)
 ├── server_initializer.py        # Orquestador de inicialización
 ├── dependency_container.py      # Contenedor de dependencias
+├── redis_initializer.py         # Inicialización de Redis
+├── repository_initializer.py    # Inicialización de repositorios
+├── service_initializer.py       # Inicialización de servicios
+├── game_tick_initializer.py     # Inicialización del game tick
+└── npc_initializer.py           # Inicialización de NPCs
+```
+
+**Opción 2: Con subcarpeta** (Solo si crece mucho)
+```
+src/
+├── server.py
+├── server_initializer.py
+├── dependency_container.py
 └── initializers/
     ├── __init__.py
-    ├── redis_initializer.py     # Inicialización de Redis
-    ├── repository_initializer.py # Inicialización de repositorios
-    ├── service_initializer.py   # Inicialización de servicios
-    ├── game_tick_initializer.py # Inicialización del game tick
-    └── npc_initializer.py       # Inicialización de NPCs
+    ├── redis_initializer.py
+    ├── repository_initializer.py
+    ├── service_initializer.py
+    ├── game_tick_initializer.py
+    └── npc_initializer.py
 ```
 
 ## 📦 Componentes
@@ -284,16 +298,17 @@ class Server:
 ## 📝 Checklist
 
 - [ ] Crear `src/dependency_container.py`
-- [ ] Crear carpeta `src/initializers/`
-- [ ] Crear `redis_initializer.py`
-- [ ] Crear `repository_initializer.py`
-- [ ] Crear `service_initializer.py`
-- [ ] Crear `game_tick_initializer.py`
-- [ ] Crear `npc_initializer.py`
-- [ ] Crear `server_initializer.py`
+- [ ] Crear `src/redis_initializer.py`
+- [ ] Crear `src/repository_initializer.py`
+- [ ] Crear `src/service_initializer.py`
+- [ ] Crear `src/game_tick_initializer.py`
+- [ ] Crear `src/npc_initializer.py`
+- [ ] Crear `src/server_initializer.py`
 - [ ] Refactorizar `server.py` para usar initializers
 - [ ] Ejecutar tests (deben pasar)
 - [ ] Actualizar README.md
+
+**Nota:** Empezar sin subcarpeta `initializers/`. Solo crear subcarpeta si en el futuro hay más de 10 initializers.
 
 ## ⚠️ Consideraciones
 
