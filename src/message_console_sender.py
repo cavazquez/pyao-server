@@ -30,11 +30,11 @@ class ConsoleMessageSender:
             font_color: Color de la fuente (0-15). Por defecto 7 (gris claro).
         """
         response = build_console_msg_response(message, font_color)
-        MAX_LOG_LENGTH = 50
+        max_log_length = 50
         logger.debug(
             "[%s] Enviando CONSOLE_MSG: %s (color=%d)",
             self.connection.address,
-            message[:MAX_LOG_LENGTH] + "..." if len(message) > MAX_LOG_LENGTH else message,
+            message[:max_log_length] + "..." if len(message) > max_log_length else message,
             font_color,
         )
         await self.connection.send(response)

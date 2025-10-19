@@ -3,8 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.audio_constants import MusicID, SoundID
 from src.msg import build_play_midi_response, build_play_wave_response
+from src.sounds import MusicID, SoundID
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection

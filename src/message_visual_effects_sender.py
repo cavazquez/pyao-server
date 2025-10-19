@@ -3,8 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.audio_constants import FXLoops, VisualEffectID
 from src.msg import build_create_fx_response
+from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection
