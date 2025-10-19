@@ -1,18 +1,21 @@
 """Inicializador del sistema de Game Tick y efectos."""
 
 import logging
+from typing import TYPE_CHECKING
 
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
 from src.game_tick import GameTick
-from src.map_manager import MapManager
 from src.meditation_effect import MeditationEffect
 from src.npc_ai_effect import NPCAIEffect
-from src.npc_service import NPCService
-from src.player_repository import PlayerRepository
 from src.redis_config import RedisKeys
-from src.server_repository import ServerRepository
+
+if TYPE_CHECKING:
+    from src.map_manager import MapManager
+    from src.npc_service import NPCService
+    from src.player_repository import PlayerRepository
+    from src.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 

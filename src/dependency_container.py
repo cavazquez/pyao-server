@@ -1,31 +1,33 @@
 """Contenedor de dependencias del servidor."""
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from src.account_repository import AccountRepository
-from src.bank_repository import BankRepository
-from src.combat_service import CombatService
-from src.commerce_service import CommerceService
-from src.equipment_repository import EquipmentRepository
-from src.game_tick import GameTick
-from src.ground_items_repository import GroundItemsRepository
-from src.inventory_repository import InventoryRepository
-from src.item_catalog import ItemCatalog
-from src.loot_table_service import LootTableService
-from src.map_manager import MapManager
-from src.merchant_repository import MerchantRepository
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-from src.npc_ai_service import NPCAIService
-from src.npc_catalog import NPCCatalog
-from src.npc_repository import NPCRepository
-from src.npc_respawn_service import NPCRespawnService
-from src.npc_service import NPCService
-from src.player_repository import PlayerRepository
-from src.redis_client import RedisClient
-from src.server_repository import ServerRepository
-from src.spell_catalog import SpellCatalog
-from src.spell_service import SpellService
-from src.spellbook_repository import SpellbookRepository
+if TYPE_CHECKING:
+    from src.account_repository import AccountRepository
+    from src.bank_repository import BankRepository
+    from src.combat_service import CombatService
+    from src.commerce_service import CommerceService
+    from src.equipment_repository import EquipmentRepository
+    from src.game_tick import GameTick
+    from src.ground_items_repository import GroundItemsRepository
+    from src.inventory_repository import InventoryRepository
+    from src.item_catalog import ItemCatalog
+    from src.loot_table_service import LootTableService
+    from src.map_manager import MapManager
+    from src.merchant_repository import MerchantRepository
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.npc_ai_service import NPCAIService
+    from src.npc_catalog import NPCCatalog
+    from src.npc_repository import NPCRepository
+    from src.npc_respawn_service import NPCRespawnService
+    from src.npc_service import NPCService
+    from src.player_repository import PlayerRepository
+    from src.redis_client import RedisClient
+    from src.server_repository import ServerRepository
+    from src.spell_catalog import SpellCatalog
+    from src.spell_service import SpellService
+    from src.spellbook_repository import SpellbookRepository
 
 
 @dataclass

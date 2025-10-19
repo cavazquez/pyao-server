@@ -3,45 +3,13 @@
 import asyncio
 import logging
 import sys
-import time
 from typing import TYPE_CHECKING
 
 import redis
 from src.client_connection import ClientConnection
-from src.dependency_container import DependencyContainer
-from src.server_initializer import ServerInitializer
-from src.combat_service import CombatService
-from src.commerce_service import CommerceService
-from src.data_initializer import DataInitializer
-from src.effect_gold_decay import GoldDecayEffect
-from src.effect_hunger_thirst import HungerThirstEffect
-from src.effect_npc_movement import NPCMovementEffect
-from src.equipment_repository import EquipmentRepository
-from src.game_tick import GameTick
-from src.ground_items_repository import GroundItemsRepository
-from src.inventory_repository import InventoryRepository
-from src.item_catalog import ItemCatalog
-from src.items_catalog import ITEMS_CATALOG
-from src.loot_table_service import LootTableService
-from src.map_manager import MapManager
-from src.meditation_effect import MeditationEffect
-from src.merchant_repository import MerchantRepository
 from src.message_sender import MessageSender
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-from src.npc_ai_effect import NPCAIEffect
-from src.npc_ai_service import NPCAIService
-from src.npc_catalog import NPCCatalog
-from src.npc_repository import NPCRepository
-from src.npc_respawn_service import NPCRespawnService
-from src.npc_service import NPCService
 from src.packet_handlers import TASK_HANDLERS
-from src.player_repository import PlayerRepository
-from src.redis_client import RedisClient
-from src.redis_config import RedisKeys
-from src.server_repository import ServerRepository
-from src.spell_catalog import SpellCatalog
-from src.spell_service import SpellService
-from src.spellbook_repository import SpellbookRepository
+from src.server_initializer import ServerInitializer
 from src.task_account import TaskCreateAccount
 from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
@@ -74,6 +42,7 @@ from src.task_uptime import TaskUptime
 from src.task_walk import TaskWalk
 
 if TYPE_CHECKING:
+    from src.dependency_container import DependencyContainer
     from src.task import Task
 
 logger = logging.getLogger(__name__)
@@ -98,10 +67,6 @@ class ArgentumServer:
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
 
-    # TODO: Revisar la separación de capas y responsabilidades.
-    # Este método tiene demasiada lógica de creación de tasks con dependencias.
-    # Ver TODO_ARQUITECTURA.md sección 2 para propuestas de mejora.
-    # Considerar: Service Container, Dependency Injection, o Factory Pattern.
     def create_task(
         self,
         data: bytes,
@@ -121,6 +86,9 @@ class ArgentumServer:
         if len(data) == 0:
             return TaskNull(data, message_sender)
 
+        if not self.deps:
+            return TaskNull(data, message_sender)
+
         packet_id = data[0]
 
         # Buscar handler en el diccionario
@@ -131,180 +99,186 @@ class ArgentumServer:
             return TaskLogin(
                 data,
                 message_sender,
-                self.player_repo,
-                self.account_repo,
-                self.map_manager,
+                self.deps.player_repo,
+                self.deps.account_repo,
+                self.deps.map_manager,
                 session_data,
-                self.npc_service,
-                self.server_repo,
-                self.spellbook_repo,
-                self.spell_catalog,
-                self.equipment_repo,
+                self.deps.npc_service,
+                self.deps.server_repo,
+                self.deps.spellbook_repo,
+                self.deps.spell_catalog,
+                self.deps.equipment_repo,
             )
         if task_class is TaskCreateAccount:
             return TaskCreateAccount(
                 data,
                 message_sender,
-                self.player_repo,
-                self.account_repo,
-                self.map_manager,
+                self.deps.player_repo,
+                self.deps.account_repo,
+                self.deps.map_manager,
                 session_data,
-                self.npc_service,
-                self.server_repo,
-                self.spellbook_repo,
-                self.spell_catalog,
-                self.equipment_repo,
+                self.deps.npc_service,
+                self.deps.server_repo,
+                self.deps.spellbook_repo,
+                self.deps.spell_catalog,
+                self.deps.equipment_repo,
             )
         if task_class is TaskDice:
-            return TaskDice(data, message_sender, session_data, self.server_repo)
+            return TaskDice(data, message_sender, session_data, self.deps.server_repo)
         if task_class is TaskRequestAttributes:
-            return TaskRequestAttributes(data, message_sender, self.player_repo, session_data)
+            return TaskRequestAttributes(data, message_sender, self.deps.player_repo, session_data)
         if task_class is TaskTalk:
             return TaskTalk(
                 data,
                 message_sender,
-                self.player_repo,
-                self.account_repo,
-                self.map_manager,
+                self.deps.player_repo,
+                self.deps.account_repo,
+                self.deps.map_manager,
                 session_data,
             )
         if task_class is TaskWalk:
             return TaskWalk(
                 data,
                 message_sender,
-                self.player_repo,
-                self.map_manager,
-                self.broadcast_service,
+                self.deps.player_repo,
+                self.deps.map_manager,
+                self.deps.broadcast_service,
                 session_data,
             )
         if task_class is TaskChangeHeading:
             return TaskChangeHeading(
                 data,
                 message_sender,
-                self.player_repo,
-                self.account_repo,
-                self.map_manager,
+                self.deps.player_repo,
+                self.deps.account_repo,
+                self.deps.map_manager,
                 session_data,
             )
         if task_class is TaskRequestStats:
-            return TaskRequestStats(data, message_sender, self.player_repo, session_data)
+            return TaskRequestStats(data, message_sender, self.deps.player_repo, session_data)
         if task_class is TaskRequestPositionUpdate:
-            return TaskRequestPositionUpdate(data, message_sender, self.player_repo, session_data)
+            return TaskRequestPositionUpdate(
+                data, message_sender, self.deps.player_repo, session_data
+            )
         if task_class is TaskOnline:
-            return TaskOnline(data, message_sender, self.map_manager, session_data)
+            return TaskOnline(data, message_sender, self.deps.map_manager, session_data)
         if task_class is TaskMotd:
-            return TaskMotd(data, message_sender, self.server_repo)
+            return TaskMotd(data, message_sender, self.deps.server_repo)
         if task_class is TaskInformation:
-            return TaskInformation(data, message_sender, self.server_repo, self.map_manager)
+            return TaskInformation(
+                data, message_sender, self.deps.server_repo, self.deps.map_manager
+            )
         if task_class is TaskUptime:
-            return TaskUptime(data, message_sender, self.server_repo)
+            return TaskUptime(data, message_sender, self.deps.server_repo)
         if task_class is TaskQuit:
-            return TaskQuit(data, message_sender, self.player_repo, self.map_manager, session_data)
+            return TaskQuit(
+                data, message_sender, self.deps.player_repo, self.deps.map_manager, session_data
+            )
         if task_class is TaskDoubleClick:
             return TaskDoubleClick(
-                data, message_sender, self.player_repo, self.map_manager, session_data
+                data, message_sender, self.deps.player_repo, self.deps.map_manager, session_data
             )
         if task_class is TaskLeftClick:
             return TaskLeftClick(
                 data,
                 message_sender,
-                self.player_repo,
-                self.map_manager,
-                self.merchant_repo,
-                self.bank_repo,
-                self.redis_client,
+                self.deps.player_repo,
+                self.deps.map_manager,
+                self.deps.merchant_repo,
+                self.deps.bank_repo,
+                self.deps.redis_client,
                 session_data,
             )
         if task_class is TaskCastSpell:
             return TaskCastSpell(
                 data,
                 message_sender,
-                self.player_repo,
-                self.spell_service,
+                self.deps.player_repo,
+                self.deps.spell_service,
                 session_data,
-                self.spellbook_repo,
+                self.deps.spellbook_repo,
             )
         if task_class is TaskMeditate:
-            return TaskMeditate(data, message_sender, self.player_repo, session_data)
+            return TaskMeditate(data, message_sender, self.deps.player_repo, session_data)
         if task_class is TaskInventoryClick:
             return TaskInventoryClick(
-                data, message_sender, self.player_repo, session_data, self.equipment_repo
+                data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
             )
         if task_class is TaskEquipItem:
             return TaskEquipItem(
-                data, message_sender, self.player_repo, session_data, self.equipment_repo
+                data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
             )
         if task_class is TaskAttack:
             return TaskAttack(
                 data,
                 message_sender,
-                self.player_repo,
-                self.combat_service,
-                self.map_manager,
-                self.npc_service,
-                self.broadcast_service,
-                self.npc_respawn_service,
-                self.loot_table_service,
-                self.item_catalog,
+                self.deps.player_repo,
+                self.deps.combat_service,
+                self.deps.map_manager,
+                self.deps.npc_service,
+                self.deps.broadcast_service,
+                self.deps.npc_respawn_service,
+                self.deps.loot_table_service,
+                self.deps.item_catalog,
                 session_data,
             )
         if task_class is TaskPickup:
             return TaskPickup(
                 data,
                 message_sender,
-                self.player_repo,
-                self.inventory_repo,
-                self.map_manager,
-                self.broadcast_service,
-                self.item_catalog,
+                self.deps.player_repo,
+                self.deps.inventory_repo,
+                self.deps.map_manager,
+                self.deps.broadcast_service,
+                self.deps.item_catalog,
                 session_data,
             )
         if task_class is TaskDrop:
             return TaskDrop(
                 data,
                 message_sender,
-                self.player_repo,
-                self.inventory_repo,
-                self.map_manager,
-                self.broadcast_service,
+                self.deps.player_repo,
+                self.deps.inventory_repo,
+                self.deps.map_manager,
+                self.deps.broadcast_service,
                 session_data,
             )
         if task_class is TaskCommerceBuy:
             return TaskCommerceBuy(
                 data,
                 message_sender,
-                self.commerce_service,
-                self.player_repo,
-                self.inventory_repo,
-                self.redis_client,
+                self.deps.commerce_service,
+                self.deps.player_repo,
+                self.deps.inventory_repo,
+                self.deps.redis_client,
                 session_data,
             )
         if task_class is TaskCommerceSell:
             return TaskCommerceSell(
                 data,
                 message_sender,
-                self.commerce_service,
-                self.player_repo,
-                self.inventory_repo,
-                self.redis_client,
+                self.deps.commerce_service,
+                self.deps.player_repo,
+                self.deps.inventory_repo,
+                self.deps.redis_client,
                 session_data,
             )
         if task_class is TaskBankDeposit:
             return TaskBankDeposit(
                 data,
                 message_sender,
-                self.bank_repo,
-                self.inventory_repo,
-                self.player_repo,
+                self.deps.bank_repo,
+                self.deps.inventory_repo,
+                self.deps.player_repo,
                 session_data,
             )
         if task_class is TaskBankExtract:
             return TaskBankExtract(
                 data,
                 message_sender,
-                self.bank_repo,
-                self.inventory_repo,
-                self.player_repo,
+                self.deps.bank_repo,
+                self.deps.inventory_repo,
+                self.deps.player_repo,
                 session_data,
             )
         if task_class is TaskBankEnd:

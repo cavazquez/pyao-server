@@ -1,6 +1,7 @@
 """Inicializador de repositorios."""
 
 import logging
+from typing import TYPE_CHECKING
 
 from src.account_repository import AccountRepository
 from src.bank_repository import BankRepository
@@ -10,9 +11,11 @@ from src.inventory_repository import InventoryRepository
 from src.merchant_repository import MerchantRepository
 from src.npc_repository import NPCRepository
 from src.player_repository import PlayerRepository
-from src.redis_client import RedisClient
 from src.server_repository import ServerRepository
 from src.spellbook_repository import SpellbookRepository
+
+if TYPE_CHECKING:
+    from src.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 
