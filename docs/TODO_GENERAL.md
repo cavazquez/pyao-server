@@ -1,85 +1,95 @@
-# TODO - PyAO Server
+# TODO General - PyAO Server
 
-Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor.
+**Estado:** 📋 Lista maestra de tareas y mejoras  
+**Prioridad:** Mixta  
+**Última actualización:** 2025-01-19
 
-## 🔧 Refactoring y Limpieza de Código
+---
 
-### Análisis de Código
-- [ ] **Revisar todos los `# noqa`** - Analizar si son necesarios o si se puede arreglar el código
-- [ ] **Revisar todos los `# type: ignore`** - Analizar si se pueden eliminar mejorando los tipos
-- [ ] **Dividir MessageSender** - Archivo muy grande, considerar separar en módulos
-  - Podría ser: `message_sender_stats.py`, `message_sender_combat.py`, etc.
-- [ ] **Analizar complejidad ciclomática** - Métodos con `C901` y `PLR0912`
-- [ ] **Reducir variables locales** - Métodos con `PLR0914` (too many local variables)
+## 📚 Índice de Documentación TODO
 
-### Mapas y Datos
-- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
-- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
-- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
-- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
+Este proyecto tiene varios documentos TODO especializados:
 
-### Integración de Colisiones
-- [x] **Integrar validación en TaskWalk** - Usar `map_manager.can_move_to()` ✅ v0.2.0
-- [x] **Integrar validación en NPCMovementEffect** - Prevenir NPCs encima de jugadores ✅ v0.2.0
-- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
-- [x] **Actualizar índice en todos los movimientos** - `update_player_tile()`, `update_npc_tile()` ✅ v0.2.0
-- [x] **Método get_tile_occupant** - Identificar qué bloquea un tile ✅ v0.2.0
+- **TODO_REFACTORING.md** - Refactorings técnicos (PacketReader, MessageSender)
+- **TODO_ARQUITECTURA.md** - Mejoras arquitecturales (DI, Event System, etc.)
+- **TODO_NPC_FACTORY.md** - Sistema de factory para NPCs
+- **TODO_PACKET_READER_REFACTORING.md** - Migración de tasks a PacketReader
+- **TODO_CLIENTE.md** - Mejoras del cliente Godot
+- **TODO_GENERAL.md** (este archivo) - Lista general de features y mejoras
 
-### Estructura de Datos Redis
-- [ ] **Reorganizar datos en Redis** - Muchos datos del mismo tipo están en diferentes lugares
-  - Revisar keys de jugadores, NPCs, items, etc.
-  - Estandarizar nomenclatura de keys
-  - Agrupar datos relacionados
-  - Documentar estructura de datos en Redis
+---
 
-## 🎯 Próximas Tareas Sugeridas (Post v0.3.0)
+## 🎯 Roadmap de Versiones
 
-### Opción 1: Loot Tables y Items Variados
-- [ ] Implementar sistema de loot tables configurables
-- [ ] Crear catálogo de items (armas, armaduras, pociones)
-- [ ] NPCs dropean items según probabilidades
-- [ ] Mejorar visualización de items en el suelo
+### ✅ Versión 0.2.0-alpha - Sistema de Movimiento y Colisiones
+- [x] Sistema de colisiones completo
+- [x] Detección de NPCs y jugadores bloqueando
+- [x] Minimapa actualizado al login
+- [x] REQUEST_POSITION_UPDATE (tecla L)
+- [x] Heading guardado y cargado correctamente
+- [x] Fix bug parsing CHARACTER_MOVE
+- [x] Broadcast de movimiento optimizado
+- [x] Bug fix: Tiles bloqueados al remover NPCs
+- [x] Validación de tiles ocupados en add_npc
 
-### Opción 2: IA de NPCs Mejorada
-- [ ] NPCs hostiles atacan jugadores automáticamente
-- [ ] Pathfinding básico para movimiento inteligente
-- [ ] NPCs patrullan rutas predefinidas
-- [ ] Rango de agresión configurable
+### ✅ Versión 0.3.0-alpha - Sistema de Respawn de NPCs
+- [x] Respawn automático con tiempo aleatorio
+- [x] Búsqueda de posición libre aleatoria cercana
+- [x] Reintentos no bloqueantes con asyncio
+- [x] Logs INFO para diagnóstico de bloqueos
+- [x] NPCs permanentes (respawn_time=0)
 
-### Opción 3: Sistema de Comercio
-- [ ] NPCs vendedores funcionales
-- [ ] Ventana de comercio (comprar/vender)
-- [ ] Inventario de comerciantes
-- [ ] Precios configurables por item
+### 🔄 Versión 0.4.0 - Sistemas de Economía (En Progreso)
+- [x] Sistema de banco completo
+- [x] Sistema de comercio completo
+- [ ] Loot tables configurables
+- [ ] Items variados (armas, armaduras, pociones)
 
-### Opción 4: Optimizaciones y Performance
-- [ ] Broadcast inteligente (solo jugadores en rango)
-- [ ] Cargar mapas desde archivos `.map`
-- [ ] Redis pipeline para comandos batch
-- [ ] Profiling y optimización de cuellos de botella
+### 📝 Versión 0.5.0 - Refactorings y Calidad
+- [x] MessageSender refactoring (100% completado)
+- [x] PacketReader implementado (3/9 tasks migradas)
+- [ ] Completar migración de PacketReader (6 tasks pendientes)
+- [ ] NPC Factory Pattern
+- [ ] Configuration Management
+
+### 📝 Versión 0.6.0 - Social y Party
+- [ ] Sistema de party
+- [ ] Chat mejorado con canales
+- [ ] Sistema de amigos
+
+### 📝 Versión 0.7.0 - Contenido
+- [ ] Más mapas y NPCs
+- [ ] Sistema de quests
+- [ ] Eventos mundiales
+
+### 📝 Versión 1.0.0 - Producción
+- [ ] Todas las funcionalidades core
+- [ ] Performance optimizado
+- [ ] Seguridad robusta
+- [ ] Documentación completa
+- [ ] Coverage > 90%
+
+---
 
 ## 🔥 Prioridad Alta
 
 ### Sistema de Combate
-- [x] Implementar `CombatService` para combate jugador vs NPC ✅ v0.2.0
-- [x] Calcular daño basado en stats (fuerza, armas, armadura) ✅ v0.2.0
+- [x] Implementar `CombatService` para combate jugador vs NPC ✅
+- [x] Calcular daño basado en stats (fuerza, armas, armadura) ✅
+- [x] Animaciones de ataque (FX) ✅
+- [x] Muerte de NPCs ✅
+- [x] Experiencia al matar NPCs ✅
+- [x] Packet `ATTACK` para iniciar combate ✅
+- [x] Sistema de Respawn de NPCs ✅
 - [ ] Sistema de críticos y esquives
-- [x] Animaciones de ataque (FX) ✅ v0.2.0
-- [x] Muerte de NPCs ✅ v0.2.0
-- [x] Experiencia al matar NPCs ✅ v0.2.0
-- [x] Packet `ATTACK` para iniciar combate ✅ v0.2.0
 - [ ] Packet `DAMAGE` para mostrar daño recibido
-- [x] **Sistema de Respawn de NPCs** ✅ v0.3.0
-  - [x] Respawn automático con tiempo aleatorio (min-max)
-  - [x] Búsqueda de posición libre aleatoria cercana
-  - [x] Reintentos no bloqueantes
-  - [x] Logs INFO para diagnóstico
 
 ### Sistema de Loot
-- [x] Drops de oro al matar NPCs ✅ v0.2.0
+- [x] Drops de oro al matar NPCs ✅
+- [x] Recoger items del suelo (`PICK_UP`) ✅
+- [x] Visualización de items en el mapa ✅
 - [ ] Drops de items según tabla de probabilidades
-- [x] Recoger items del suelo (`PICK_UP`) ✅ v0.2.0
-- [x] Visualización de items en el mapa ✅ v0.2.0
+- [ ] Loot tables configurables por NPC
 - [ ] Inventario lleno - manejar casos límite
 
 ### IA de NPCs Mejorada
@@ -91,21 +101,23 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Rango de agresión configurable por NPC
 - [ ] Cooldown entre ataques
 
+---
+
 ## 🎯 Prioridad Media
 
 ### Sistema de Comercio
-- [ ] `TradeService` para comercio con NPCs
-- [ ] Ventana de comercio (comprar/vender)
+- [x] `TradeService` para comercio con NPCs ✅
+- [x] Ventana de comercio (comprar/vender) ✅
+- [x] Inventario de comerciantes ✅
+- [x] Packet `COMMERCE_BUY` y `COMMERCE_SELL` ✅
 - [ ] Precios dinámicos según oferta/demanda
-- [ ] Inventario de comerciantes
-- [ ] Packet `COMMERCE_BUY` y `COMMERCE_SELL`
 
 ### Sistema de Banco
-- [ ] `BankService` para gestión de banco
-- [ ] Depositar/retirar items
+- [x] `BankService` para gestión de banco ✅
+- [x] Depositar/retirar items ✅
+- [x] Límite de slots en banco ✅
+- [x] Packet `BANK_DEPOSIT` y `BANK_EXTRACT_ITEM` ✅
 - [ ] Depositar/retirar oro
-- [ ] Límite de slots en banco
-- [ ] Packet `BANK_DEPOSIT` y `BANK_WITHDRAW`
 
 ### Sistema de Skills
 - [ ] Subir skills con uso (minería, tala, pesca)
@@ -128,6 +140,39 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Cooldowns de hechizos
 - [ ] Animaciones y efectos visuales
 
+---
+
+## 🔧 Refactoring y Limpieza de Código
+
+### Análisis de Código
+- [ ] **Revisar todos los `# noqa`** - Analizar si son necesarios o si se puede arreglar el código
+- [ ] **Revisar todos los `# type: ignore`** - Analizar si se pueden eliminar mejorando los tipos
+- [x] **Dividir MessageSender** ✅ - Completado con 8 componentes especializados
+- [ ] **Analizar complejidad ciclomática** - Métodos con `C901` y `PLR0912`
+- [ ] **Reducir variables locales** - Métodos con `PLR0914` (too many local variables)
+
+### Mapas y Datos
+- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
+- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
+- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
+- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
+
+### Integración de Colisiones
+- [x] **Integrar validación en TaskWalk** ✅
+- [x] **Integrar validación en NPCMovementEffect** ✅
+- [x] **Actualizar índice en todos los movimientos** ✅
+- [x] **Método get_tile_occupant** ✅
+- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
+
+### Estructura de Datos Redis
+- [ ] **Reorganizar datos en Redis** - Muchos datos del mismo tipo están en diferentes lugares
+  - Revisar keys de jugadores, NPCs, items, etc.
+  - Estandarizar nomenclatura de keys
+  - Agrupar datos relacionados
+  - Documentar estructura de datos en Redis
+
+---
+
 ## 📊 Optimizaciones y Performance
 
 ### Broadcast Inteligente
@@ -143,10 +188,12 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Índices secundarios para búsquedas rápidas
 
 ### Validaciones de Mapa
-- [ ] Validar tiles bloqueados antes de mover
+- [x] Validar tiles bloqueados antes de mover ✅
 - [ ] Cargar datos de mapas desde archivos `.map`
 - [ ] Colisiones con objetos del mapa
 - [ ] Zonas seguras (no PvP)
+
+---
 
 ## 🧪 Testing y Calidad
 
@@ -164,6 +211,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Métricas de performance (latencia, throughput)
 - [ ] Profiling de código (identificar cuellos de botella)
 
+---
+
 ## 🔒 Seguridad
 
 ### Validaciones
@@ -179,6 +228,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Logout automático por inactividad
 - [ ] Límite de intentos de login fallidos
 - [ ] 2FA opcional
+
+---
 
 ## 🎮 Gameplay
 
@@ -210,6 +261,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Penalizaciones por matar jugadores
 - [ ] Duelos 1v1
 
+---
+
 ## 🛠️ Herramientas y Utilidades
 
 ### Panel de Administración
@@ -235,6 +288,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Editor de NPCs
 - [ ] Editor de items
 
+---
+
 ## 📡 Protocolo
 
 ### Mejoras de Protocolo
@@ -243,6 +298,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Encriptación de comunicación (TLS)
 - [ ] Heartbeat para detectar desconexiones
 - [ ] Reconexión automática
+
+---
 
 ## 📈 Monitoreo y Observabilidad
 
@@ -260,6 +317,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Rotación de logs automática
 - [ ] Logs de auditoría
 
+---
+
 ## 🌐 Infraestructura
 
 ### Escalabilidad
@@ -276,6 +335,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Automated deployment
 - [ ] Rollback automático en errores
 - [ ] Health checks y auto-restart
+
+---
 
 ## 📚 Documentación
 
@@ -298,6 +359,8 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Cómo crear un nuevo hechizo
 - [ ] Cómo agregar un nuevo efecto de tick
 - [ ] Cómo hacer debugging
+
+---
 
 ## 🎨 Contenido
 
@@ -322,21 +385,7 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Clima (lluvia, nieve)
 - [ ] Portales entre mapas
 
-## 🔄 Refactoring
-
-### Código
-- [ ] Extraer constantes mágicas a configuración
-- [ ] Reducir complejidad ciclomática (< 10)
-- [ ] Eliminar código duplicado
-- [ ] Mejorar nombres de variables/funciones
-- [ ] Type hints completos (mypy strict)
-
-### Arquitectura
-- [ ] Event-driven architecture para desacoplar
-- [ ] Domain-driven design para lógica compleja
-- [ ] CQRS para separar lectura/escritura
-- [ ] Repository pattern más estricto
-- [ ] Dependency injection más clara
+---
 
 ## 💡 Ideas Innovadoras
 
@@ -362,9 +411,11 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 - [ ] Battle pass / temporadas
 - [ ] Eventos limitados
 
-## 📝 Notas
+---
 
-### Decisiones de Diseño Pendientes
+## 📝 Notas y Decisiones Pendientes
+
+### Decisiones de Diseño
 - [ ] ¿Usar WebSockets en lugar de TCP raw?
 - [ ] ¿Migrar a PostgreSQL para algunos datos?
 - [ ] ¿Implementar sharding de jugadores por mapa?
@@ -378,57 +429,17 @@ Lista de tareas pendientes, mejoras y próximas funcionalidades para el servidor
 
 ---
 
-## 🎯 Roadmap Sugerido
+## 📊 Estado Actual del Proyecto
 
-### Versión 0.2.0-alpha - Sistema de Movimiento y Colisiones ✅
-- [x] Sistema de colisiones completo
-- [x] Detección de NPCs y jugadores bloqueando
-- [x] Minimapa actualizado al login
-- [x] REQUEST_POSITION_UPDATE (tecla L)
-- [x] Heading guardado y cargado correctamente
-- [x] Fix bug parsing CHARACTER_MOVE
-- [x] Broadcast de movimiento optimizado
-- [x] Bug fix: Tiles bloqueados al remover NPCs
-- [x] Validación de tiles ocupados en add_npc
-
-### Versión 0.3.0-alpha - Sistema de Respawn de NPCs ✅
-- [x] Respawn automático con tiempo aleatorio
-- [x] Búsqueda de posición libre aleatoria cercana
-- [x] Reintentos no bloqueantes con asyncio
-- [x] Logs INFO para diagnóstico de bloqueos
-- [x] NPCs permanentes (respawn_time=0)
-
-### Versión 0.4.0 - Loot Tables y Items
-- [ ] Drops de items según tabla de probabilidades
-- [ ] Loot tables configurables por NPC
-- [ ] Items variados (armas, armaduras, pociones)
-
-### Versión 0.3.0 - Economía
-- Sistema de comercio
-- Sistema de banco
-- Más items y equipamiento
-
-### Versión 0.4.0 - Social
-- Sistema de party
-- Chat mejorado
-- Sistema de amigos
-
-### Versión 0.5.0 - Contenido
-- Más mapas y NPCs
-- Sistema de quests
-- Eventos mundiales
-
-### Versión 1.0.0 - Producción
-- Todas las funcionalidades core
-- Performance optimizado
-- Seguridad robusta
-- Documentación completa
+**Versión actual:** 0.4.0-alpha  
+**Tests actuales:** 716 (100% pasando)  
+**Servicios implementados:** 10+  
+**Efectos de tick:** 4  
+**NPCs con respawn:** 4 (Goblin, Lobo, Orco, Araña)  
+**Sistemas completados:** Login, Movimiento, Combate, Loot, Banco, Comercio, Magia
 
 ---
 
-**Última actualización:** 2025-10-17  
-**Versión actual:** 0.3.0-alpha  
-**Tests actuales:** 386  
-**Servicios implementados:** 8 (+ NPCRespawnService)  
-**Efectos de tick:** 4  
-**NPCs con respawn:** 4 (Goblin, Lobo, Orco, Araña)
+**Última actualización:** 2025-01-19  
+**Mantenido por:** Equipo PyAO  
+**Estado:** 🔄 En desarrollo activo

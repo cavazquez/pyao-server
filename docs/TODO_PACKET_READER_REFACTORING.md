@@ -232,20 +232,20 @@ if reader.has_more_data():
 
 ## Plan de Refactorización Sugerido
 
-### Fase 1: Alta Prioridad (30-45 min)
-1. ✅ task_commerce_sell.py (idéntico a commerce_buy)
-2. ✅ task_inventory_click.py (muy simple)
-3. ✅ task_equip_item.py (muy simple)
-4. ✅ task_double_click.py (simple)
+### Fase 1: Alta Prioridad (30-45 min) - 📝 PENDIENTE
+1. 📝 task_commerce_sell.py (idéntico a commerce_buy)
+2. 📝 task_inventory_click.py (muy simple)
+3. 📝 task_equip_item.py (muy simple)
+4. 📝 task_double_click.py (simple)
 
-### Fase 2: Media Prioridad (15-20 min)
-5. ✅ task_left_click.py (2 bytes secuenciales)
-6. ✅ task_cast_spell.py (packet variable)
+### Fase 2: Media Prioridad (15-20 min) - 📝 PENDIENTE
+5. 📝 task_left_click.py (2 bytes secuenciales)
+6. 📝 task_cast_spell.py (packet variable)
 
-### Fase 3: Validación
-- Ejecutar todos los tests
-- Verificar que 782 tests siguen pasando
-- Commit con mensaje descriptivo
+### Fase 3: Validación - ✅ LISTA
+- ✅ Ejecutar todos los tests
+- ✅ Verificar que tests siguen pasando (716 tests actualmente)
+- 📝 Commit con mensaje descriptivo (pendiente al completar fases 1-2)
 
 ---
 
@@ -360,6 +360,25 @@ Para cada task:
 
 ---
 
+---
+
+## 📊 Progreso Actual
+
+**Tasks completadas:** 3/9 (33%)  
+**Tests pasando:** 716 (100%)  
+**Cobertura PacketReader:** 100% (15 tests)
+
+**Tiempo invertido:** ~45 minutos  
+**Tiempo restante estimado:** ~1 hora
+
+**Próximos pasos recomendados:**
+1. Completar Fase 1 (alta prioridad) - 30-45 min
+2. Completar Fase 2 (media prioridad) - 15-20 min
+3. Ejecutar suite completa de tests
+4. Commit con mensaje: "refactor: migrate remaining tasks to PacketReader"
+
+---
+
 **Última actualización:** 2025-01-19  
-**Estado:** 3/9 tasks completadas (33%)  
-**Próximo paso:** Refactorizar tasks de alta prioridad
+**Estado:** 3/9 tasks completadas (33%) - En progreso  
+**Próximo paso:** Refactorizar tasks de alta prioridad (Fase 1)
