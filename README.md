@@ -151,7 +151,7 @@ pyao-server/
 │   ├── npcs.toml                # Catálogo de NPCs (10 NPCs)
 │   └── map_npcs.toml            # Configuración de spawns de NPCs
 │
-├── tests/                       # Tests unitarios (716 tests)
+├── tests/                       # Tests unitarios (743 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   ├── # Tests de Servicios (24 tests nuevos)
 │   ├── test_player_service.py      # Tests de PlayerService (7 tests)
