@@ -3,8 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import build_change_inventory_slot_response, build_commerce_init_response
-from src.packet_builder import PacketBuilder
+from src.msg import (
+    build_change_bank_slot_response,
+    build_change_inventory_slot_response,
+    build_change_npc_inventory_slot_response,
+    build_change_spell_slot_response,
+    build_commerce_init_response,
+)
 from src.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
@@ -105,20 +110,19 @@ class InventoryMessageSender:
             max_def: Defensa máxima.
             min_def: Defensa mínima.
         """
-        packet = PacketBuilder()
-        packet.add_byte(ServerPacketID.CHANGE_BANK_SLOT)
-        packet.add_byte(slot)
-        packet.add_int16(item_id)
-        packet.add_unicode_string(name)
-        packet.add_int16(amount)
-        packet.add_int16(grh_id)
-        packet.add_byte(item_type)
-        packet.add_int16(max_hit)
-        packet.add_int16(min_hit)
-        packet.add_int16(max_def)
-        packet.add_int16(min_def)
-
-        await self.connection.send(packet.to_bytes())
+        response = build_change_bank_slot_response(
+            slot=slot,
+            item_id=item_id,
+            name=name,
+            amount=amount,
+            grh_id=grh_id,
+            item_type=item_type,
+            max_hit=max_hit,
+            min_hit=min_hit,
+            max_def=max_def,
+            min_def=min_def,
+        )
+        await self.connection.send(response)
 
     async def send_change_npc_inventory_slot(
         self,
@@ -149,21 +153,20 @@ class InventoryMessageSender:
             max_def: Defensa máxima.
             min_def: Defensa mínima.
         """
-        packet = PacketBuilder()
-        packet.add_byte(ServerPacketID.CHANGE_NPC_INVENTORY_SLOT)
-        packet.add_byte(slot)
-        packet.add_unicode_string(name)
-        packet.add_int16(amount)
-        packet.add_float(sale_price)
-        packet.add_int16(grh_id)
-        packet.add_int16(item_id)
-        packet.add_byte(item_type)
-        packet.add_int16(max_hit)
-        packet.add_int16(min_hit)
-        packet.add_int16(max_def)
-        packet.add_int16(min_def)
-
-        await self.connection.send(packet.to_bytes())
+        response = build_change_npc_inventory_slot_response(
+            slot=slot,
+            name=name,
+            amount=amount,
+            sale_price=sale_price,
+            grh_id=grh_id,
+            item_id=item_id,
+            item_type=item_type,
+            max_hit=max_hit,
+            min_hit=min_hit,
+            max_def=max_def,
+            min_def=min_def,
+        )
+        await self.connection.send(response)
 
     async def send_bank_init_empty(self) -> None:
         """Envía paquete BANK_INIT vacío (solo abre la ventana)."""
@@ -219,13 +222,9 @@ class InventoryMessageSender:
             spell_id: ID del hechizo.
             spell_name: Nombre del hechizo.
         """
-        packet = PacketBuilder()
-        packet.add_byte(ServerPacketID.CHANGE_SPELL_SLOT)
-        packet.add_byte(slot)
-        packet.add_int16(spell_id)
-        packet.add_unicode_string(spell_name)
-        response = packet.to_bytes()
-
+        response = build_change_spell_slot_response(
+            slot=slot, spell_id=spell_id, spell_name=spell_name
+        )
         logger.debug(
             "[%s] Enviando CHANGE_SPELL_SLOT: slot=%d, spell_id=%d, name=%s",
             self.connection.address,

@@ -639,3 +639,124 @@ def build_object_delete_response(x: int, y: int) -> bytes:
     packet.add_byte(x)
     packet.add_byte(y)
     return packet.to_bytes()
+
+
+def build_change_bank_slot_response(
+    slot: int,
+    item_id: int,
+    name: str,
+    amount: int,
+    grh_id: int,
+    item_type: int,
+    max_hit: int,
+    min_hit: int,
+    max_def: int,
+    min_def: int,
+) -> bytes:
+    """Construye el paquete ChangeBankSlot del protocolo AO estándar.
+
+    Args:
+        slot: Número de slot (byte).
+        item_id: ID del item (int16).
+        name: Nombre del item (string).
+        amount: Cantidad (int16).
+        grh_id: ID gráfico (int16).
+        item_type: Tipo de item (byte).
+        max_hit: Daño máximo (int16).
+        min_hit: Daño mínimo (int16).
+        max_def: Defensa máxima (int16).
+        min_def: Defensa mínima (int16).
+
+    Returns:
+        Paquete de bytes con el formato ChangeBankSlot.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHANGE_BANK_SLOT)
+    packet.add_byte(slot)
+    packet.add_int16(item_id)
+    packet.add_unicode_string(name)
+    packet.add_int16(amount)
+    packet.add_int16(grh_id)
+    packet.add_byte(item_type)
+    packet.add_int16(max_hit)
+    packet.add_int16(min_hit)
+    packet.add_int16(max_def)
+    packet.add_int16(min_def)
+    return packet.to_bytes()
+
+
+def build_change_npc_inventory_slot_response(
+    slot: int,
+    name: str,
+    amount: int,
+    sale_price: float,
+    grh_id: int,
+    item_id: int,
+    item_type: int,
+    max_hit: int,
+    min_hit: int,
+    max_def: int,
+    min_def: int,
+) -> bytes:
+    """Construye el paquete ChangeNPCInventorySlot del protocolo AO estándar.
+
+    Args:
+        slot: Número de slot (byte).
+        name: Nombre del item (string).
+        amount: Cantidad (int16).
+        sale_price: Precio de venta (float).
+        grh_id: ID gráfico (int16).
+        item_id: ID del item (int16).
+        item_type: Tipo de item (byte).
+        max_hit: Daño máximo (int16).
+        min_hit: Daño mínimo (int16).
+        max_def: Defensa máxima (int16).
+        min_def: Defensa mínima (int16).
+
+    Returns:
+        Paquete de bytes con el formato ChangeNPCInventorySlot.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHANGE_NPC_INVENTORY_SLOT)
+    packet.add_byte(slot)
+    packet.add_unicode_string(name)
+    packet.add_int16(amount)
+    packet.add_float(sale_price)
+    packet.add_int16(grh_id)
+    packet.add_int16(item_id)
+    packet.add_byte(item_type)
+    packet.add_int16(max_hit)
+    packet.add_int16(min_hit)
+    packet.add_int16(max_def)
+    packet.add_int16(min_def)
+    return packet.to_bytes()
+
+
+def build_change_spell_slot_response(slot: int, spell_id: int, spell_name: str) -> bytes:
+    """Construye el paquete ChangeSpellSlot del protocolo AO estándar.
+
+    Args:
+        slot: Número de slot (byte).
+        spell_id: ID del hechizo (int16).
+        spell_name: Nombre del hechizo (string).
+
+    Returns:
+        Paquete de bytes con el formato ChangeSpellSlot.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.CHANGE_SPELL_SLOT)
+    packet.add_byte(slot)
+    packet.add_int16(spell_id)
+    packet.add_unicode_string(spell_name)
+    return packet.to_bytes()
+
+
+def build_pong_response() -> bytes:
+    """Construye el paquete PONG del protocolo AO estándar.
+
+    Returns:
+        Paquete de bytes con solo el PacketID PONG.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.PONG)
+    return packet.to_bytes()

@@ -3,8 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.packet_builder import PacketBuilder
-from src.packet_id import ServerPacketID
+from src.msg import build_pong_response
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -33,9 +32,7 @@ class TaskPing(Task):
         """Procesa el ping y envía pong."""
         logger.debug("Ping recibido desde %s", self.message_sender.connection.address)
 
-        # Construir paquete PONG (solo PacketID)
-        pong_packet = PacketBuilder().add_byte(ServerPacketID.PONG).to_bytes()
-
-        # Enviar PONG
+        # Construir y enviar paquete PONG
+        pong_packet = build_pong_response()
         await self.message_sender.connection.send(pong_packet)
         logger.debug("Pong enviado a %s", self.message_sender.connection.address)
