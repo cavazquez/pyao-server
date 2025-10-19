@@ -15,11 +15,11 @@ from src.loot_table_service import LootTableService
 from src.map_manager import MapManager
 from src.merchant_repository import MerchantRepository
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
 from src.npc_repository import NPCRepository
 from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
-from src.npc_ai_service import NPCAIService
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
 from src.server_repository import ServerRepository
@@ -31,7 +31,7 @@ from src.spellbook_repository import SpellbookRepository
 @dataclass
 class DependencyContainer:
     """Contenedor de todas las dependencias del servidor.
-    
+
     Este contenedor centraliza todas las dependencias del servidor,
     facilitando la inyección de dependencias y el testing.
     """

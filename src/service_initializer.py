@@ -11,7 +11,6 @@ from src.map_manager import MapManager
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
-from src.npc_repository import NPCRepository
 from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
 from src.spell_catalog import SpellCatalog
@@ -23,9 +22,9 @@ logger = logging.getLogger(__name__)
 class ServiceInitializer:
     """Inicializa todos los servicios del servidor."""
 
-    def __init__(self, repositories: dict, map_manager: MapManager):
+    def __init__(self, repositories: dict, map_manager: MapManager) -> None:
         """Inicializa el inicializador de servicios.
-        
+
         Args:
             repositories: Diccionario con todos los repositorios.
             map_manager: Manager de mapas ya inicializado.
@@ -35,7 +34,7 @@ class ServiceInitializer:
 
     async def initialize_all(self) -> dict:
         """Crea e inicializa todos los servicios.
-        
+
         Returns:
             Diccionario con todos los servicios creados.
         """

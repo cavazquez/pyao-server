@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 class RepositoryInitializer:
     """Inicializa todos los repositorios del servidor."""
 
-    def __init__(self, redis_client: RedisClient):
+    def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el inicializador de repositorios.
-        
+
         Args:
             redis_client: Cliente de Redis ya conectado.
         """
@@ -30,7 +30,7 @@ class RepositoryInitializer:
 
     def initialize_all(self) -> dict:
         """Crea e inicializa todos los repositorios.
-        
+
         Returns:
             Diccionario con todos los repositorios creados.
         """

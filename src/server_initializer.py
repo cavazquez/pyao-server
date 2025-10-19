@@ -18,7 +18,7 @@ class ServerInitializer:
 
     async def initialize_all(self) -> tuple[DependencyContainer, str, int]:
         """Inicializa todos los componentes del servidor.
-        
+
         Returns:
             Tupla con (DependencyContainer, host, port)
         """

@@ -16,7 +16,7 @@ class RedisInitializer:
 
     async def initialize(self) -> RedisClient:
         """Conecta a Redis y carga datos iniciales.
-        
+
         Returns:
             Cliente de Redis conectado y configurado.
         """

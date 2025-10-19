@@ -26,9 +26,9 @@ class GameTickInitializer:
         server_repo: ServerRepository,
         map_manager: MapManager,
         npc_service: NPCService,
-    ):
+    ) -> None:
         """Inicializa el inicializador de Game Tick.
-        
+
         Args:
             player_repo: Repositorio de jugadores.
             server_repo: Repositorio del servidor.
@@ -42,7 +42,7 @@ class GameTickInitializer:
 
     async def initialize(self) -> GameTick:
         """Crea e inicializa el sistema de Game Tick con sus efectos.
-        
+
         Returns:
             Sistema de Game Tick configurado.
         """
