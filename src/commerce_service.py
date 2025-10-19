@@ -71,6 +71,16 @@ class CommerceService:
             logger.error("Item %d no encontrado en catálogo", merchant_item.item_id)
             return False, "Item no encontrado"
 
+        # Verificar que el item tenga precio
+        if item.value <= 0:
+            logger.warning(
+                "Intento de comprar item %d (%s) sin precio del mercader %d",
+                item.item_id,
+                item.name,
+                npc_id,
+            )
+            return False, "Este item no está a la venta"
+
         # Calcular precio total
         total_price = item.value * quantity
 

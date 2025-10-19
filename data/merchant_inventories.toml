@@ -9,52 +9,52 @@ descripcion = "Vende pociones, equipamiento básico y suministros"
 [[merchant.item]]
 item_id = 1
 quantity = 50
-nombre = "Poción de Vida"
+nombre = "Manzana Roja"  # Comida, Valor=2
 
 [[merchant.item]]
-item_id = 2
+item_id = 24
 quantity = 30
-nombre = "Poción de Maná"
+nombre = "Poción Roja"  # Poción de HP, Valor=120
+
+[[merchant.item]]
+item_id = 25
+quantity = 30
+nombre = "Poción Azul"  # Poción de Mana, Valor=25
 
 [[merchant.item]]
 item_id = 3
-quantity = 20
-nombre = "Espada de Hierro"
+quantity = 10
+nombre = "Espada Corta"  # Arma, Valor=210
 
 [[merchant.item]]
 item_id = 4
-quantity = 15
-nombre = "Escudo de Madera"
-
-[[merchant.item]]
-item_id = 5
 quantity = 10
-nombre = "Armadura de Cuero"
+nombre = "Hacha"  # Arma, Valor=140
 
 [[merchant.item]]
-item_id = 6
-quantity = 25
-nombre = "Pan"
-
-[[merchant.item]]
-item_id = 7
+item_id = 29
 quantity = 20
-nombre = "Agua"
+nombre = "Escudo de Madera"  # Escudo, Valor=4600
 
 [[merchant.item]]
-item_id = 8
-quantity = 5
-nombre = "Anillo de Protección"
-
-[[merchant.item]]
-item_id = 9
-quantity = 10
-nombre = "Casco de Hierro"
-
-[[merchant.item]]
-item_id = 10
+item_id = 30
 quantity = 15
-nombre = "Flechas"
+nombre = "Casco de Cuero"  # Casco, Valor=50
+
+[[merchant.item]]
+item_id = 31
+quantity = 15
+nombre = "Túnica"  # Armadura, Valor=50
+
+[[merchant.item]]
+item_id = 40
+quantity = 20
+nombre = "Cerveza"  # Bebida, Valor=10
+
+[[merchant.item]]
+item_id = 41
+quantity = 20
+nombre = "Agua"  # Bebida, Valor=3
 
 # Puedes agregar más mercaderes aquí
 # [[merchant]]

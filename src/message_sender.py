@@ -158,8 +158,8 @@ class MessageSender:  # noqa: PLR0904
         """
         # Por ahora solo enviamos un mensaje de consola
         # TODO: Implementar packet específico de oro o enviar UPDATE_USER_STATS completo
-        await self.send_console_msg(f"¡Has ganado {gold} monedas de oro!")
-        logger.info("[%s] Jugador ganó %d de oro", self.connection.address, gold)
+        await self.send_console_msg(f"Oro: {gold}")
+        logger.info("[%s] Oro actualizado a %d", self.connection.address, gold)
 
     async def send_update_hunger_and_thirst(
         self, max_water: int, min_water: int, max_hunger: int, min_hunger: int
