@@ -7,9 +7,9 @@ import time
 from typing import TYPE_CHECKING
 
 import redis
-from src.account_repository import AccountRepository
-from src.bank_repository import BankRepository
 from src.client_connection import ClientConnection
+from src.dependency_container import DependencyContainer
+from src.server_initializer import ServerInitializer
 from src.combat_service import CombatService
 from src.commerce_service import CommerceService
 from src.data_initializer import DataInitializer
@@ -93,32 +93,10 @@ class ArgentumServer:
             host: Dirección IP donde escuchar (se sobrescribe con Redis).
             port: Puerto donde escuchar (se sobrescribe con Redis).
         """
-        # TODO: Los objetos deberían crearse lo más completos posibles y funcionales.
-        # Analizar si se puede cambiar el orden y reducir la cantidad de None.
-        # Ver TODO_ARQUITECTURA.md sección 3 para propuestas de solución.
-        # Considerar usar Builder Pattern o Factory para inicialización completa.
         self.host = host
         self.port = port
         self.server: asyncio.Server | None = None
-        self.redis_client: RedisClient | None = None
-        self.player_repo: PlayerRepository | None = None
-        self.account_repo: AccountRepository | None = None
-        self.server_repo: ServerRepository | None = None
-        self.ground_items_repo: GroundItemsRepository | None = None
-        self.map_manager: MapManager | None = None  # Gestor de jugadores y NPCs por mapa
-        self.game_tick: GameTick | None = None  # Sistema de tick genérico del juego
-        self.npc_service: NPCService | None = None  # Servicio de NPCs
-        self.npc_respawn_service: NPCRespawnService | None = None  # Servicio de respawn de NPCs
-        self.item_catalog: ItemCatalog | None = None  # Catálogo de items
-        self.loot_table_service: LootTableService | None = None  # Servicio de loot tables
-        self.spell_catalog: SpellCatalog | None = None  # Catálogo de hechizos
-        self.spell_service: SpellService | None = None  # Servicio de hechizos
-        self.spellbook_repo: SpellbookRepository | None = None  # Repositorio de libro de hechizos
-        self.equipment_repo: EquipmentRepository | None = None  # Repositorio de equipamiento
-        self.broadcast_service: MultiplayerBroadcastService | None = None  # Servicio de broadcast
-        self.merchant_repo: MerchantRepository | None = None  # Repositorio de mercaderes
-        self.bank_repo: BankRepository | None = None  # Repositorio de banco
-        self.commerce_service: CommerceService | None = None  # Servicio de comercio
+        self.deps: DependencyContainer | None = None  # Contenedor de dependencias
 
     # TODO: Revisar la separación de capas y responsabilidades.
     # Este método tiene demasiada lógica de creación de tasks con dependencias.
@@ -352,9 +330,9 @@ class ArgentumServer:
         logger.info("Nueva conexión desde %s", connection.address)
 
         # Incrementar contador de conexiones en Redis
-        if self.redis_client:
-            await self.redis_client.increment_connections()
-            connections = await self.redis_client.get_connections_count()
+        if self.deps and self.deps.redis_client:
+            await self.deps.redis_client.increment_connections()
+            connections = await self.deps.redis_client.get_connections_count()
             logger.info("Conexiones activas: %d", connections)
 
         # Datos de sesión compartidos entre tareas (mutable)
@@ -376,18 +354,18 @@ class ArgentumServer:
             logger.info("Cerrando conexión con %s", connection.address)
 
             # Broadcast multijugador: notificar desconexión
-            if "user_id" in session_data and self.player_repo:
+            if "user_id" in session_data and self.deps and self.deps.player_repo:
                 user_id_value = session_data["user_id"]
                 if not isinstance(user_id_value, dict):
                     user_id = int(user_id_value)
 
                     # Obtener el mapa del jugador antes de removerlo
-                    position = await self.player_repo.get_position(user_id)
+                    position = await self.deps.player_repo.get_position(user_id)
                     if position:
                         map_id = position["map"]
 
                         # Enviar CHARACTER_REMOVE a todos los jugadores en el mapa
-                        other_senders = self.map_manager.get_all_message_senders_in_map(
+                        other_senders = self.deps.map_manager.get_all_message_senders_in_map(
                             map_id, exclude_user_id=user_id
                         )
                         for sender in other_senders:
@@ -400,248 +378,28 @@ class ArgentumServer:
                             map_id,
                         )
 
-                    # Remover jugador del MapManager
-                    self.map_manager.remove_player_from_all_maps(user_id)
+                    # Remover jugador del mapa
+                    self.deps.map_manager.remove_player(user_id)
 
             connection.close()
             await connection.wait_closed()
 
             # Decrementar contador de conexiones en Redis
-            if self.redis_client:
-                await self.redis_client.decrement_connections()
-                connections = await self.redis_client.get_connections_count()
+            if self.deps and self.deps.redis_client:
+                await self.deps.redis_client.decrement_connections()
+                connections = await self.deps.redis_client.get_connections_count()
                 logger.info("Conexiones activas: %d", connections)
 
-    async def _initialize_dice_config(self) -> None:
-        """Inicializa la configuración de dados en Redis si no existe."""
-        if not self.redis_client or not self.server_repo:
-            return
-
-        dice_min_key = "server:dice:min_value"
-        dice_max_key = "server:dice:max_value"
-
-        # Verificar si existen, si no, crear con valores por defecto
-        if await self.redis_client.redis.get(dice_min_key) is None:
-            await self.server_repo.set_dice_min_value(6)
-            logger.info("Valor mínimo de dados inicializado: 6")
-
-        if await self.redis_client.redis.get(dice_max_key) is None:
-            await self.server_repo.set_dice_max_value(18)
-            logger.info("Valor máximo de dados inicializado: 18")
-
-        dice_min = await self.server_repo.get_dice_min_value()
-        dice_max = await self.server_repo.get_dice_max_value()
-        logger.info("Configuración de dados: min=%d, max=%d", dice_min, dice_max)
-
-    async def _initialize_effects_config(self) -> None:
-        """Inicializa la configuración de efectos en Redis si no existe."""
-        if not self.redis_client:
-            return
-
-        # Hambre y Sed - 180 segundos (3 minutos)
-        # SIEMPRE establecer valores correctos (sobrescribe valores de testing)
-        await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
-        logger.info("Intervalo de sed configurado: 180 segundos (3 minutos)")
-
-        await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
-        logger.info("Intervalo de hambre configurado: 180 segundos (3 minutos)")
-
-        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
-            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")
-            logger.info("Reducción de agua inicializada: 10 puntos")
-
-        if (
-            await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE)
-            is None
-        ):
-            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10")
-            logger.info("Reducción de hambre inicializada: 10 puntos")
-
-        if await self.redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED) is None:
-            await self.redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
-            logger.info("Sistema de hambre/sed habilitado por defecto")
-
-    async def _load_ground_items(self) -> None:
-        """Carga ground items desde Redis para mapas activos."""
-        if not self.map_manager:
-            return
-
-        # Por ahora cargar solo mapa 1 (el mapa principal)
-        # TODO: Cargar dinámicamente según mapas con jugadores/NPCs
-        await self.map_manager.load_ground_items(1)
-
-    async def start(self) -> None:  # noqa: PLR0915
+    async def start(self) -> None:
         """Inicia el servidor TCP."""
-        # Conectar a Redis (obligatorio)
         try:
-            self.redis_client = RedisClient()
-            await self.redis_client.connect()
+            # Inicializar todas las dependencias usando ServerInitializer
+            initializer = ServerInitializer()
+            self.deps, self.host, self.port = await initializer.initialize_all()
 
-            # Crear repositorios
-            self.player_repo = PlayerRepository(self.redis_client)
-            self.account_repo = AccountRepository(self.redis_client)
-            self.server_repo = ServerRepository(self.redis_client)
-
-            # Obtener configuración desde Redis
-            self.host = await self.redis_client.get_server_host()
-            self.port = await self.redis_client.get_server_port()
-            logger.info("Configuración cargada desde Redis: %s:%d", self.host, self.port)
-
-            # Resetear contador de conexiones
-            await self.redis_client.redis.set("server:connections:count", "0")
-
-            # Establecer timestamp de inicio del servidor
-            await self.server_repo.set_uptime_start(int(time.time()))
-
-            # Inicializar configuración de dados
-            await self._initialize_dice_config()
-
-            # Obtener MOTD desde Redis
-            motd = await self.server_repo.get_motd()
-            if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
-                # Es el mensaje por defecto, establecer uno inicial
-                initial_motd = (
-                    "» Bienvenido a Argentum Online! «\n"
-                    "• Servidor en desarrollo.\n"
-                    "• Usa /AYUDA para ver los comandos disponibles.\n"
-                    "¡Buena suerte en tu aventura!"
-                )
-                await self.server_repo.set_motd(initial_motd)
-                logger.info("MOTD inicial establecido")
-
-            # Inicializar sistema de ground items y MapManager (necesario para otros servicios)
-            self.ground_items_repo = GroundItemsRepository(self.redis_client)
-            self.map_manager = MapManager(self.ground_items_repo)
-            logger.info("Sistema de ground items y MapManager inicializados")
-
-            # Inicializar sistema de tick del juego
-            self.game_tick = GameTick(
-                player_repo=self.player_repo,
-                map_manager=self.map_manager,
-                tick_interval=0.5,  # 0.5 segundos por tick (cada efecto decide su intervalo)
-            )
-
-            # Agregar efectos al sistema de tick (configuración desde Redis)
-            hunger_thirst_enabled = await self.server_repo.get_effect_config_bool(
-                RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, default=True
-            )
-            if hunger_thirst_enabled:
-                self.game_tick.add_effect(HungerThirstEffect(self.server_repo))
-                logger.info("Efecto de hambre/sed habilitado")
-
-            gold_decay_enabled = await self.server_repo.get_effect_config_bool(
-                RedisKeys.CONFIG_GOLD_DECAY_ENABLED, default=True
-            )
-            if gold_decay_enabled:
-                self.game_tick.add_effect(GoldDecayEffect(self.server_repo))
-                logger.info("Efecto de reducción de oro habilitado")
-
-            # Agregar efecto de meditación (siempre habilitado)
-            self.game_tick.add_effect(MeditationEffect(interval_seconds=3.0))
-            logger.info("Efecto de meditación habilitado")
-
-            # Inicializar servicio de broadcast multijugador
-            self.broadcast_service = MultiplayerBroadcastService(
-                self.map_manager, self.player_repo, self.account_repo
-            )
-            logger.info("Servicio de broadcast multijugador inicializado")
-
-            # Inicializar sistema de NPCs
-            npc_catalog = NPCCatalog()
-            npc_repository = NPCRepository(self.redis_client)
-            # map_manager ya está inicializado arriba
-            self.npc_service = NPCService(
-                npc_repository, npc_catalog, self.map_manager, self.broadcast_service
-            )
-            await self.npc_service.initialize_world_npcs()
-            logger.info("Sistema de NPCs inicializado")
-
-            # Inicializar servicio de respawn de NPCs
-            self.npc_respawn_service = NPCRespawnService(self.npc_service)
-            logger.info("Sistema de respawn de NPCs inicializado")
-
-            # Inicializar catálogo de items y loot tables
-            self.item_catalog = ItemCatalog()
-            self.loot_table_service = LootTableService()
-            logger.info("Sistema de items y loot tables inicializado")
-
-            # Agregar efecto de movimiento de NPCs
-            self.game_tick.add_effect(NPCMovementEffect(self.npc_service, interval_seconds=5.0))
-            logger.info("Efecto de movimiento de NPCs habilitado")
-
-            # Inicializar sistema de magia
-            self.spell_catalog = SpellCatalog()
-            # map_manager ya está inicializado arriba
-            self.spell_service = SpellService(
-                self.spell_catalog, self.player_repo, npc_repository, self.map_manager
-            )
-            self.spellbook_repo = SpellbookRepository(self.redis_client)
-            logger.info("Sistema de magia inicializado")
-
-            # Inicializar sistema de equipamiento
-            self.equipment_repo = EquipmentRepository(self.redis_client)
-            logger.info("Sistema de equipamiento inicializado")
-
-            # Inicializar sistema de inventario
-            self.inventory_repo = InventoryRepository(self.redis_client)
-            logger.info("Sistema de inventario inicializado")
-
-            # Inicializar sistema de mercaderes
-            self.merchant_repo = MerchantRepository(self.redis_client)
-            logger.info("Sistema de mercaderes inicializado")
-
-            # Inicializar sistema de banco
-            self.bank_repo = BankRepository(self.redis_client)
-            logger.info("Sistema de banco inicializado")
-
-            # Inicializar servicio de comercio
-            self.commerce_service = CommerceService(
-                self.inventory_repo,
-                self.merchant_repo,
-                ITEMS_CATALOG,
-                self.player_repo,
-            )
-            logger.info("Servicio de comercio inicializado")
-
-            # Inicializar sistema de combate
-            self.combat_service = CombatService(
-                self.player_repo,
-                npc_repository,
-                self.equipment_repo,
-                self.inventory_repo,
-            )
-            logger.info("Sistema de combate inicializado")
-
-            # Inicializar servicio de IA de NPCs (después de combat_service)
-            self.npc_ai_service = NPCAIService(
-                self.npc_service,
-                self.map_manager,
-                self.player_repo,
-                self.combat_service,
-                self.broadcast_service,
-            )
-            logger.info("Sistema de IA de NPCs inicializado")
-
-            # Agregar efecto de IA de NPCs hostiles
-            self.game_tick.add_effect(
-                NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=2.0)
-            )
-            logger.info("Efecto de IA de NPCs hostiles habilitado")
-
-            # Iniciar el sistema de tick después de agregar todos los efectos
-            self.game_tick.start()
-            logger.info("Sistema de tick del juego iniciado con todos los efectos")
-
-            # Inicializar datos en Redis (inventarios de mercaderes, etc.)
-            data_initializer = DataInitializer(self.redis_client)
-            await data_initializer.initialize_all(force_clear=False)
-            logger.info("Datos iniciales cargados en Redis")
-
-            # Inicializar configuración de efectos en Redis (si no existe)
-            await self._initialize_effects_config()
-
-            # Cargar ground items desde Redis para todos los mapas activos
-            await self._load_ground_items()
+            # Iniciar el sistema de tick
+            self.deps.game_tick.start()
+            logger.info("✓ Sistema de tick del juego iniciado")
 
         except redis.ConnectionError as e:
             logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
@@ -670,8 +428,8 @@ class ArgentumServer:
     async def stop(self) -> None:
         """Detiene el servidor."""
         # Detener sistema de tick del juego
-        if self.game_tick:
-            await self.game_tick.stop()
+        if self.deps and self.deps.game_tick:
+            await self.deps.game_tick.stop()
             logger.info("Sistema de tick del juego detenido")
 
         if self.server:
@@ -680,5 +438,5 @@ class ArgentumServer:
             logger.info("Servidor detenido")
 
         # Desconectar de Redis
-        if self.redis_client:
-            await self.redis_client.disconnect()
+        if self.deps and self.deps.redis_client:
+            await self.deps.redis_client.disconnect()
