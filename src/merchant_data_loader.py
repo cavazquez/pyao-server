@@ -80,7 +80,7 @@ class MerchantDataLoader(BaseDataLoader):
 
                 slot_key = f"slot_{slot}"
                 value = f"{item_id}:{quantity}"
-                await self.redis_client.redis.hset(key, slot_key, value)
+                await self.redis_client.redis.hset(key, slot_key, value)  # type: ignore[misc]
 
                 slot += 1
                 total_items += 1
@@ -88,9 +88,7 @@ class MerchantDataLoader(BaseDataLoader):
             total_merchants += 1
             logger.debug("  → %d items cargados", len(items))
 
-        logger.info(
-            "Cargados %d mercaderes con %d items totales", total_merchants, total_items
-        )
+        logger.info("Cargados %d mercaderes con %d items totales", total_merchants, total_items)
 
     async def clear(self) -> None:
         """Limpia todos los inventarios de mercaderes existentes."""

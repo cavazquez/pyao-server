@@ -95,69 +95,128 @@ uv run mypy .
 
 ```
 pyao-server/
-├── src/                         # Código fuente
+├── src/                         # Código fuente (679 líneas → refactorizar)
 │   ├── __init__.py              # Inicialización del paquete
 │   ├── run_server.py            # Entry point del servidor
-│   ├── server.py                # Servidor TCP principal (ArgentumServer)
-│   ├── client_connection.py     # Gestión de conexiones TCP (send/receive)
-│   ├── message_sender.py        # Envío de mensajes específicos del juego
+│   ├── server.py                # Servidor TCP principal (679 líneas)
+│   ├── client_connection.py     # Gestión de conexiones TCP
 │   │
-│   ├── # Capa de Servicios (Lógica Reutilizable)
-│   ├── player_service.py        # Servicio de gestión de jugadores
-│   ├── npc_service.py           # Servicio de gestión de NPCs
-│   ├── authentication_service.py # Servicio de autenticación
-│   ├── session_manager.py       # Gestión de sesiones de usuario
+│   ├── # MessageSender (Patrón Facade) ✅ REFACTORIZADO
+│   ├── message_sender.py        # Facade que delega a componentes
+│   ├── message_map_sender.py    # Mensajes de mapa (5 métodos)
+│   ├── message_console_sender.py # Mensajes de consola (3 métodos)
+│   ├── message_audio_sender.py  # Mensajes de audio (12 métodos)
+│   ├── message_visual_effects_sender.py # Efectos visuales (6 métodos)
+│   ├── message_player_stats_sender.py # Stats del jugador (6 métodos)
+│   ├── message_character_sender.py # Personajes (4 métodos)
+│   ├── message_inventory_sender.py # Inventario/Banco/Comercio (9 métodos)
+│   ├── message_session_sender.py # Sesión/Login (4 métodos)
+│   │
+│   ├── # Data Loaders (Inicialización de Datos) ✅ NUEVO
+│   ├── base_data_loader.py      # Clase base abstracta para loaders
+│   ├── merchant_data_loader.py  # Carga inventarios de mercaderes
+│   ├── data_initializer.py      # Orquestador de loaders
+│   │
+│   ├── # Servicios (Lógica Reutilizable)
+│   ├── player_service.py        # Gestión de jugadores
+│   ├── npc_service.py           # Gestión de NPCs
+│   ├── npc_ai_service.py        # IA de NPCs hostiles
+│   ├── npc_respawn_service.py   # Respawn de NPCs
+│   ├── combat_service.py        # Sistema de combate
+│   ├── commerce_service.py      # Sistema de comercio
+│   ├── spell_service.py         # Sistema de hechizos
+│   ├── loot_table_service.py    # Sistema de loot
+│   ├── authentication_service.py # Autenticación
+│   ├── session_manager.py       # Gestión de sesiones
 │   ├── multiplayer_broadcast_service.py # Broadcast multijugador
 │   ├── password_utils.py        # Utilidades de contraseñas
 │   │
-│   ├── # Capa de Datos (Repositorios)
-│   ├── player_repository.py     # Repositorio de datos de jugadores
-│   ├── npc_repository.py        # Repositorio de NPCs en Redis
-│   ├── account_repository.py    # Repositorio de cuentas de usuario
-│   ├── server_repository.py     # Repositorio de configuración del servidor
-│   ├── inventory_repository.py  # Repositorio de inventarios
+│   ├── # Repositorios (Capa de Datos)
+│   ├── player_repository.py     # Datos de jugadores
+│   ├── npc_repository.py        # NPCs en Redis
+│   ├── account_repository.py    # Cuentas de usuario
+│   ├── server_repository.py     # Configuración del servidor
+│   ├── inventory_repository.py  # Inventarios de jugadores
+│   ├── equipment_repository.py  # Equipamiento de jugadores
+│   ├── merchant_repository.py   # Inventarios de mercaderes
+│   ├── bank_repository.py       # Bóvedas bancarias
+│   ├── spellbook_repository.py  # Libros de hechizos
+│   ├── ground_items_repository.py # Items en el suelo
 │   ├── redis_client.py          # Cliente Redis (bajo nivel)
-│   ├── redis_config.py          # Configuración y constantes de Redis
+│   ├── redis_config.py          # Configuración y keys de Redis
 │   │
-│   ├── # Lógica de Negocio (Tasks)
-│   ├── task.py                  # Sistema de tareas base (clase abstracta)
-│   ├── task_login.py            # Tarea de login 
-│   ├── task_account.py          # Tarea de creación de cuentas
-│   ├── task_attributes.py       # Tarea de solicitud de atributos
-│   ├── task_dice.py             # Tarea de tirada de dados
-│   ├── task_talk.py             # Tarea de chat
-│   ├── task_walk.py             # Tarea de movimiento
-│   ├── task_change_heading.py   # Tarea de cambio de dirección
-│   ├── task_motd.py             # Tarea de MOTD
-│   ├── task_inventory_click.py  # Tarea de click en inventario
-│   ├── task_use_item.py         # Tarea de uso de items
-│   ├── task_null.py             # Tarea para packets desconocidos
+│   ├── # Tasks (Lógica de Negocio por Packet)
+│   ├── task.py                  # Clase base abstracta
+│   ├── task_login.py            # Login
+│   ├── task_account.py          # Creación de cuentas
+│   ├── task_attributes.py       # Solicitud de atributos
+│   ├── task_dice.py             # Tirada de dados
+│   ├── task_talk.py             # Chat
+│   ├── task_walk.py             # Movimiento
+│   ├── task_attack.py           # Ataque
+│   ├── task_cast_spell.py       # Lanzar hechizo
+│   ├── task_meditate.py         # Meditación
+│   ├── task_drop.py             # Tirar item
+│   ├── task_pickup.py           # Recoger item
+│   ├── task_equip_item.py       # Equipar item
+│   ├── task_left_click.py       # Click en NPC
+│   ├── task_double_click.py     # Doble click
+│   ├── task_commerce_buy.py     # Comprar item
+│   ├── task_commerce_sell.py    # Vender item
+│   ├── task_commerce_end.py     # Cerrar comercio
+│   ├── task_bank_deposit.py     # Depositar en banco
+│   ├── task_bank_extract.py     # Extraer del banco
+│   ├── task_bank_end.py         # Cerrar banco
+│   ├── task_change_heading.py   # Cambio de dirección
+│   ├── task_motd.py             # MOTD
+│   ├── task_inventory_click.py  # Click en inventario
+│   ├── task_null.py             # Packets desconocidos
 │   │
 │   ├── # Protocolo
-│   ├── packet_id.py             # Definición de IDs de paquetes (enums)
-│   ├── packet_handlers.py       # Mapeo de packet IDs a handlers
-│   ├── packet_builder.py        # Constructor de paquetes de bytes
-│   ├── msg.py                   # Construcción de mensajes del servidor
+│   ├── packet_id.py             # IDs de paquetes (enums)
+│   ├── packet_handlers.py       # Mapeo packet ID → handler
+│   ├── packet_builder.py        # Constructor de paquetes
+│   ├── msg.py                   # Construcción de mensajes (642 líneas → refactorizar)
 │   │
 │   ├── # Sistema de Juego
-│   ├── map_manager.py           # Gestor de mapas, jugadores y NPCs
-│   ├── game_tick.py             # Sistema de tick del juego
+│   ├── map_manager.py           # Gestor de mapas/jugadores/NPCs
+│   ├── map_manager_spatial.py   # Índices espaciales
+│   ├── game_tick.py             # Sistema de tick (efectos periódicos)
+│   ├── effect_hunger_thirst.py  # Efecto de hambre y sed
+│   ├── effect_gold_decay.py     # Efecto de decaimiento de oro
+│   ├── effect_npc_movement.py   # Efecto de movimiento de NPCs
+│   ├── meditation_effect.py     # Efecto de meditación
+│   ├── npc_ai_effect.py         # Efecto de IA de NPCs
 │   ├── items_catalog.py         # Catálogo de items (1049 items)
+│   ├── item_catalog.py          # Clase ItemCatalog
+│   ├── item.py                  # Modelo de Item
 │   ├── npc_catalog.py           # Catálogo de NPCs
-│   ├── npc.py                   # Modelo de datos de NPCs
-│   └── effect_*.py              # Efectos del juego (hambre, oro, etc.)
+│   ├── npc.py                   # Modelo de NPC
+│   ├── spell_catalog.py         # Catálogo de hechizos
+│   └── inventory_stacking_strategy.py # Estrategia de stacking
 │
 ├── data/                        # Datos del juego
-│   ├── npcs.toml                # Catálogo de NPCs (10 NPCs)
-│   └── map_npcs.toml            # Configuración de spawns de NPCs
+│   ├── npcs_hostiles.toml       # NPCs hostiles (Goblin, Lobo, etc.)
+│   ├── npcs_amigables.toml      # NPCs amigables (Comerciante, Banquero, etc.)
+│   ├── map_npcs.toml            # Spawns de NPCs en mapas
+│   ├── merchant_inventories.toml # Inventarios de mercaderes
+│   ├── items.toml               # Catálogo de items (1049 items)
+│   ├── loot_tables.toml         # Tablas de loot de NPCs
+│   └── maps/                    # Archivos de mapas (.json)
 │
 ├── tests/                       # Tests unitarios (743 tests)
 │   ├── __init__.py              # Inicialización del paquete de tests
-│   ├── # Tests de Servicios (24 tests nuevos)
+│   │
+│   ├── # Tests de Data Loaders (21 tests) ✅ NUEVO
+│   ├── test_merchant_data_loader.py # Tests de MerchantDataLoader (11 tests)
+│   ├── test_data_initializer.py  # Tests de DataInitializer (10 tests)
+│   │
+│   ├── # Tests de Servicios (24 tests)
 │   ├── test_player_service.py      # Tests de PlayerService (7 tests)
 │   ├── test_authentication_service.py # Tests de AuthenticationService (4 tests)
 │   ├── test_session_manager.py     # Tests de SessionManager (13 tests)
-│   ├── # Tests de MessageSender Components (75 tests)
+│   │
+│   ├── # Tests de MessageSender Components (75 tests) ✅ REFACTORIZADO
 │   ├── test_message_sender.py      # Tests de MessageSender
 │   ├── test_message_map_sender.py  # Tests de MapMessageSender (9 tests)
 │   ├── test_message_console_sender.py # Tests de ConsoleMessageSender (9 tests)
@@ -186,10 +245,11 @@ pyao-server/
 │   ├── LOGIN_FLOW.md            # Flujo de login
 │   ├── ACCOUNT_CREATION.md      # Creación de cuentas
 │   ├── NPC_SYSTEM.md            # Sistema de NPCs
-│   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender y componentes
-│   ├── MIGRATION_MAP_SENDER.md  # Migración de MapMessageSender
-│   ├── MIGRATION_SUMMARY.md     # Resumen de migraciones
-│   ├── REFACTOR_EXAMPLE_MAP_COMPONENT.md # Ejemplos de refactorización
+│   ├── COMMERCE_SYSTEM.md       # Sistema de comercio con mercaderes
+│   ├── GAME_TICK_SYSTEM.md      # Sistema de tick y efectos periódicos
+│   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender
+│   ├── TODO_REFACTOR_MSG.md     # Plan para refactorizar msg.py
+│   ├── TODO_REFACTOR_SERVER.md  # Plan para refactorizar server.py
 │   ├── redis_architecture.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios
