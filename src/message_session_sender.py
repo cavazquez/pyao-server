@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg import (
+from src.msg_session import (
     build_attributes_response,
     build_dice_roll_response,
     build_logged_response,
