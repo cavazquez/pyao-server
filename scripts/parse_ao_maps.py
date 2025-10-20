@@ -8,6 +8,49 @@ import struct
 from pathlib import Path
 
 
+def detect_tile_type(layer1: int, layer2: int) -> str:
+    """Detecta el tipo de tile bloqueado según el gráfico.
+    
+    Basado en análisis de GRH reales de los mapas de AO.
+    
+    Args:
+        layer1: Gráfico de capa 1
+        layer2: Gráfico de capa 2
+    
+    Returns:
+        Tipo de tile: "tree", "rock", "wall", "building", "water", "blocked"
+    """
+    # Agua (debe tener layer2 == 0)
+    if layer2 == 0:
+        if (1505 <= layer1 <= 1520) or \
+           (5665 <= layer1 <= 5680) or \
+           (13547 <= layer1 <= 13562):
+            return "water"
+    
+    # Edificios y paredes (rango 6000-6200 muy común en mapas)
+    if 6000 <= layer1 <= 6200:
+        return "building"
+    
+    # Árboles (rangos comunes)
+    if (6076 <= layer1 <= 6120) or \
+       (5500 <= layer1 <= 5600) or \
+       (8600 <= layer1 <= 8700):
+        return "tree"
+    
+    # Rocas y montañas
+    if (6200 <= layer1 <= 6400) or \
+       (5700 <= layer1 <= 5800):
+        return "rock"
+    
+    # Muros y vallas
+    if (5400 <= layer1 <= 5500) or \
+       (8500 <= layer1 <= 8600):
+        return "wall"
+    
+    # Por defecto, bloqueado genérico
+    return "blocked"
+
+
 def parse_map_file(map_path: Path) -> dict:
     """Parsea un archivo .map de Argentum Online.
     
@@ -28,7 +71,7 @@ def parse_map_file(map_path: Path) -> dict:
         Diccionario con información del mapa
     """
     blocked_tiles = []
-    water_tiles = []
+    tile_types_count = {}
     
     with map_path.open('rb') as f:
         # Saltar header (273 bytes)
@@ -49,10 +92,6 @@ def parse_map_file(map_path: Path) -> dict:
                     break
                 layer1 = struct.unpack('<H', layer1_bytes)[0]
                 
-                # Verificar si está bloqueado (bit 0x1)
-                if flags & 0x1:
-                    blocked_tiles.append({"x": x + 1, "y": y + 1, "type": "wall"})
-                
                 # Layer 2 (si flags & 0x2)
                 layer2 = 0
                 if flags & 0x2:
@@ -72,18 +111,20 @@ def parse_map_file(map_path: Path) -> dict:
                 if flags & 0x10:
                     f.read(2)  # Saltar trigger
                 
-                # Detectar agua (rangos específicos de gráficos)
-                is_water = False
-                if layer2 == 0:
-                    if (1505 <= layer1 <= 1520) or \
-                       (5665 <= layer1 <= 5680) or \
-                       (13547 <= layer1 <= 13562):
-                        is_water = True
-                        water_tiles.append({"x": x + 1, "y": y + 1, "type": "water"})
+                # Verificar si está bloqueado (bit 0x1)
+                if flags & 0x1:
+                    tile_type = detect_tile_type(layer1, layer2)
+                    blocked_tiles.append({
+                        "x": x + 1,
+                        "y": y + 1,
+                        "type": tile_type,
+                        "grh": layer1
+                    })
+                    tile_types_count[tile_type] = tile_types_count.get(tile_type, 0) + 1
     
     return {
         "blocked_tiles": blocked_tiles,
-        "water_tiles": water_tiles
+        "tile_types_count": tile_types_count
     }
 
 
@@ -106,8 +147,13 @@ def extract_map_data(map_id: int, maps_dir: str = "./clientes/ArgentumOnlineGodo
     print(f"📖 Parseando mapa{map_id}.map...")
     data = parse_map_file(map_path)
     
-    print(f"   ✅ {len(data['blocked_tiles'])} tiles bloqueados")
-    print(f"   ✅ {len(data['water_tiles'])} tiles de agua")
+    total_blocked = len(data['blocked_tiles'])
+    print(f"   ✅ {total_blocked} tiles bloqueados:")
+    
+    # Mostrar desglose por tipo
+    for tile_type, count in sorted(data['tile_types_count'].items()):
+        percentage = (count / total_blocked * 100) if total_blocked > 0 else 0
+        print(f"      - {tile_type}: {count} ({percentage:.1f}%)")
     
     return data
 
@@ -123,15 +169,12 @@ def generate_map_json(map_id: int, name: str, map_data: dict) -> dict:
     Returns:
         Diccionario con estructura del mapa
     """
-    # Combinar tiles bloqueados y agua
-    all_blocked = map_data['blocked_tiles'] + map_data['water_tiles']
-    
     return {
         "id": map_id,
         "name": name,
         "width": 100,
         "height": 100,
-        "blocked_tiles": all_blocked,
+        "blocked_tiles": map_data['blocked_tiles'],
         "spawn_points": [
             {"x": 50, "y": 50, "description": f"Centro de {name}"}
         ]
@@ -167,7 +210,7 @@ def update_all_maps():
         
         if not map_data:
             print(f"   ⚠️  Usando datos vacíos para mapa {map_id}\n")
-            map_data = {"blocked_tiles": [], "water_tiles": []}
+            map_data = {"blocked_tiles": [], "tile_types_count": {}}
         
         # Generar JSON
         map_json = generate_map_json(map_id, name, map_data)
