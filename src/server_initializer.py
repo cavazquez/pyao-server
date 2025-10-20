@@ -1,6 +1,7 @@
 """Orquestador principal de inicialización del servidor."""
 
 import logging
+from pathlib import Path
 
 from src.dependency_container import DependencyContainer
 from src.game_tick_initializer import GameTickInitializer
@@ -43,6 +44,20 @@ class ServerInitializer:
         ground_items_repo = GroundItemsRepository(redis_client)
         map_manager = MapManager(ground_items_repo)
         logger.info("✓ MapManager inicializado")
+
+        # Cargar tiles bloqueados de todos los mapas
+        maps_dir = Path("maps")
+        if maps_dir.exists():
+            map_files = list(maps_dir.glob("map_*.json"))
+            for map_file in sorted(map_files):
+                try:
+                    map_id = int(map_file.stem.replace("map_", ""))
+                    map_manager.load_map_data(map_id, map_file)
+                except ValueError:
+                    logger.warning("Error parseando ID de mapa: %s", map_file)
+            logger.info("✓ %d mapas cargados con tiles bloqueados", len(map_files))
+        else:
+            logger.warning("⚠️  Directorio maps/ no encontrado")
 
         # Cargar ground items del mapa principal
         await map_manager.load_ground_items(1)
