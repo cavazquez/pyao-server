@@ -18,8 +18,10 @@ async def test_game_tick_initializer_creates_game_tick() -> None:
     npc_service = Mock()
     npc_ai_service = Mock()
 
+    stamina_service = Mock()
+
     initializer = GameTickInitializer(
-        player_repo, server_repo, map_manager, npc_service, npc_ai_service
+        player_repo, server_repo, map_manager, npc_service, npc_ai_service, stamina_service
     )
 
     game_tick = await initializer.initialize()
@@ -39,8 +41,10 @@ async def test_game_tick_initializer_adds_effects() -> None:
     npc_service = Mock()
     npc_ai_service = Mock()
 
+    stamina_service = Mock()
+
     initializer = GameTickInitializer(
-        player_repo, server_repo, map_manager, npc_service, npc_ai_service
+        player_repo, server_repo, map_manager, npc_service, npc_ai_service, stamina_service
     )
 
     game_tick = await initializer.initialize()
@@ -60,8 +64,10 @@ async def test_game_tick_initializer_respects_config() -> None:
     npc_service = Mock()
     npc_ai_service = Mock()
 
+    stamina_service = Mock()
+
     initializer = GameTickInitializer(
-        player_repo, server_repo, map_manager, npc_service, npc_ai_service
+        player_repo, server_repo, map_manager, npc_service, npc_ai_service, stamina_service
     )
 
     game_tick = await initializer.initialize()

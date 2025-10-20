@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.effect_gold_decay import GoldDecayEffect
 from src.effect_hunger_thirst import HungerThirstEffect
 from src.effect_npc_movement import NPCMovementEffect
+from src.effect_stamina_regen import StaminaRegenEffect
 from src.game_tick import GameTick
 from src.meditation_effect import MeditationEffect
 from src.npc_ai_effect import NPCAIEffect
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository
+    from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,7 @@ class GameTickInitializer:
         map_manager: MapManager,
         npc_service: NPCService,
         npc_ai_service: NPCAIService,
+        stamina_service: StaminaService,
     ) -> None:
         """Inicializa el inicializador de Game Tick.
 
@@ -40,12 +43,14 @@ class GameTickInitializer:
             map_manager: Manager de mapas.
             npc_service: Servicio de NPCs.
             npc_ai_service: Servicio de IA de NPCs.
+            stamina_service: Servicio de stamina.
         """
         self.player_repo = player_repo
         self.server_repo = server_repo
         self.map_manager = map_manager
         self.npc_service = npc_service
         self.npc_ai_service = npc_ai_service
+        self.stamina_service = stamina_service
 
     async def initialize(self) -> GameTick:
         """Crea e inicializa el sistema de Game Tick con sus efectos.
@@ -99,3 +104,7 @@ class GameTickInitializer:
             NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=2.0)
         )
         logger.info("✓ Efecto de IA de NPCs habilitado")
+
+        # Efecto de regeneración de stamina (siempre habilitado)
+        game_tick.add_effect(StaminaRegenEffect(self.stamina_service))
+        logger.info("✓ Efecto de regeneración de stamina habilitado")

@@ -83,6 +83,7 @@ class ServerInitializer:
             map_manager,
             services["npc_service"],
             services["npc_ai_service"],
+            services["stamina_service"],
         )
         game_tick = await game_tick_init.initialize()
 

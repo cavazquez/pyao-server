@@ -26,13 +26,31 @@ class StaminaRegenEffect(TickEffect):
     Si alguno de estos valores es 0, la stamina no se regenera.
     """
 
-    def __init__(self, stamina_service: StaminaService) -> None:
+    def __init__(self, stamina_service: StaminaService, interval_seconds: float = 1.0) -> None:
         """Inicializa el efecto de regeneración de stamina.
 
         Args:
             stamina_service: Servicio de stamina.
+            interval_seconds: Intervalo en segundos entre regeneraciones.
         """
         self.stamina_service = stamina_service
+        self.interval_seconds = interval_seconds
+
+    def get_name(self) -> str:  # noqa: PLR6301
+        """Retorna el nombre del efecto.
+
+        Returns:
+            Nombre del efecto.
+        """
+        return "StaminaRegen"
+
+    def get_interval_seconds(self) -> float:
+        """Retorna el intervalo en segundos entre ejecuciones.
+
+        Returns:
+            Intervalo en segundos.
+        """
+        return self.interval_seconds
 
     async def apply(
         self,
