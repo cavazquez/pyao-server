@@ -168,12 +168,59 @@ class PacketValidator:
         """Lee y valida un slot de hechizo.
 
         Args:
-            max_slot: Slot máximo válido para hechizos (default: 35).
+            max_slot: Slot máximo válido (default: 35 para spellbook).
 
         Returns:
-            Slot de hechizo válido o None si hay error.
+            Slot validado o None si es inválido.
         """
         return self.read_slot(min_slot=1, max_slot=max_slot)
+
+    def read_string(
+        self, min_length: int = 1, max_length: int = 255, encoding: str = "utf-8"
+    ) -> str | None:
+        """Lee y valida un string con longitud variable.
+
+        Formato: length (int16 LE) + string bytes
+
+        Args:
+            min_length: Longitud mínima del string.
+            max_length: Longitud máxima del string.
+            encoding: Encoding del string (default: utf-8).
+
+        Returns:
+            String validado o None si es inválido.
+        """
+        try:
+            # Leer longitud del string
+            length = self.reader.read_int16()
+
+            # Validar longitud
+            if length < min_length:
+                self.errors.append(f"String muy corto (mínimo {min_length} caracteres)")
+                return None
+
+            if length > max_length:
+                self.errors.append(f"String muy largo (máximo {max_length} caracteres)")
+                return None
+
+            # Verificar que hay suficientes bytes
+            if len(self.reader.data) < self.reader.offset + length:
+                self.errors.append("Datos insuficientes para leer string")
+                return None
+
+            # Leer string
+            string_bytes = self.reader.data[self.reader.offset : self.reader.offset + length]
+            self.reader.offset += length
+
+            # Decodificar y retornar
+            return string_bytes.decode(encoding)
+
+        except (ValueError, UnicodeDecodeError) as e:
+            self.errors.append(f"Error al decodificar string: {e}")
+            return None
+        except struct.error as e:
+            self.errors.append(f"Error al leer longitud del string: {e}")
+            return None
 
     def has_errors(self) -> bool:
         """Verifica si hubo errores durante la validación.

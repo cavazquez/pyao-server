@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.packet_data import TalkData
 from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -57,30 +58,16 @@ class TaskTalk(Task):
         Returns:
             TalkData con el mensaje validado o None si el paquete es inválido.
         """
-        try:
-            if len(self.data) < MIN_TALK_PACKET_SIZE:
-                return None
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        message = validator.read_string(
+            min_length=1, max_length=MAX_MESSAGE_LENGTH, encoding="utf-8"
+        )
 
-            reader = PacketReader(self.data)
-            # Leer longitud del mensaje
-            msg_length = reader.read_int16()
-
-            # Validar longitud
-            if msg_length < 1 or msg_length > MAX_MESSAGE_LENGTH:
-                return None
-
-            # Verificar que hay suficientes bytes
-            if len(self.data) < 3 + msg_length:
-                return None
-
-            # Leer mensaje (UTF-8)
-            message_bytes = self.data[3 : 3 + msg_length]
-            message = message_bytes.decode("utf-8")
-
-            return TalkData(message=message)
-
-        except (ValueError, UnicodeDecodeError):
+        if validator.has_errors() or message is None:
             return None
+
+        return TalkData(message=message)
 
     async def execute(self) -> None:
         """Procesa el mensaje de chat."""
