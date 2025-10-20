@@ -2,7 +2,24 @@
 
 **Estado:** 📋 Lista maestra de tareas y mejoras  
 **Prioridad:** Mixta  
-**Última actualización:** 2025-01-19
+**Última actualización:** 2025-01-20
+
+---
+
+## 📊 Estado Actual del Proyecto
+
+**Versión:** 0.5.0-alpha (90% completado)  
+**Tests:** 807 pasando (100%)  
+**Cobertura:** Alta  
+**Commits en sesión:** 43  
+**Calidad:** Excelente (0 errores linting/mypy)
+
+**Sistemas Completados Recientemente:**
+- ✅ Sistema de Energía/Stamina (100%)
+- ✅ Sistema de Críticos basado en Agilidad (100%)
+- ✅ NPC Factory Pattern
+- ✅ Loot Tables Configurables
+- ✅ PacketReader (21/33 tasks migradas)
 
 ---
 
@@ -45,17 +62,23 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Loot tables configurables
 - [x] Items variados (armas, armaduras, pociones)
 
-### 🔄 Versión 0.5.0-alpha - Refactorings y Contenido (En Progreso)
+### ✅ Versión 0.5.0-alpha - Refactorings y Contenido (90% COMPLETADO)
 - [x] MessageSender refactoring (100% completado)
 - [x] PacketReader implementado (21/33 tasks migradas - 64%)
 - [x] NPC Factory Pattern
-- [x] Sistema de Energía/Stamina - Infraestructura
-- [ ] **Sistema de Energía/Stamina - Completo:**
-  - [ ] Consumo de energía por acción (walk, attack, spell, work)
-  - [ ] Regeneración automática (si hambre > 0 y sed > 0)
-  - [ ] Efectos de energía baja (no atacar/lanzar si energía = 0)
-  - [ ] Balance de energía (ajustar consumo y regeneración)
-- [ ] Sistema de críticos y esquives
+- [x] **Sistema de Energía/Stamina - COMPLETADO ✅**
+  - [x] Consumo de energía por acción (walk: 1, attack: 2, spell: 3)
+  - [x] Regeneración automática (2 puntos/segundo)
+  - [x] Condiciones: solo regenera si hambre > 0 y sed > 0
+  - [x] Efectos de energía baja (bloquea acciones si energía = 0)
+  - [x] Balance de energía configurado
+  - [x] StaminaService y StaminaRegenEffect integrados
+- [x] **Sistema de críticos basado en agilidad ✅**
+  - [x] CriticalCalculator implementado
+  - [x] Probabilidad base 15% + bonus por AGI
+  - [x] Multiplicador de daño 2x
+  - [x] Integrado en CombatService
+- [ ] Sistema de esquives (preparado, pendiente integrar)
 - [ ] Más mapas y NPCs usando NPC Factory
 - [ ] Packet DAMAGE para mostrar daño recibido
 - [ ] Pathfinding básico (A*)
@@ -98,7 +121,8 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Experiencia al matar NPCs ✅
 - [x] Packet `ATTACK` para iniciar combate ✅
 - [x] Sistema de Respawn de NPCs ✅
-- [ ] Sistema de críticos y esquives
+- [x] Sistema de críticos basado en agilidad ✅
+- [ ] Sistema de esquives (preparado, pendiente integrar)
 - [ ] Packet `DAMAGE` para mostrar daño recibido
 
 ### Sistema de Loot
