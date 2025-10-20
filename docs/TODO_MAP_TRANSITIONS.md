@@ -2,7 +2,43 @@
 
 **Fecha:** 2025-10-19  
 **Prioridad:** ALTA  
-**Estado:** Planificado
+**Estado:** Planificado  
+**Compatibilidad:** ✅ Cliente Godot, ✅ Cliente VB6, ✅ Servidor VB6
+
+## 📡 Protocolo Argentum Online Estándar
+
+### Packets Involucrados
+
+**CHANGE_MAP (Server → Client, ID: 21)**
+```
+Formato: PacketID (1 byte) + MapNumber (int16 LE) + Version (int16 LE)
+Total: 5 bytes
+```
+- **MapNumber:** ID del mapa a cargar (1-65535)
+- **Version:** Versión del mapa, siempre 0 en PyAO
+
+**POS_UPDATE (Server → Client, ID: 22)**
+```
+Formato: PacketID (1 byte) + X (1 byte) + Y (1 byte)
+Total: 3 bytes
+```
+- **X:** Coordenada X (1-100)
+- **Y:** Coordenada Y (1-100)
+
+### Secuencia de Cambio de Mapa
+
+Cuando un jugador cruza un borde, el servidor debe:
+
+1. **Enviar CHANGE_MAP** con el nuevo map_number
+2. **Enviar POS_UPDATE** con la nueva posición (x, y)
+3. **Broadcast CHARACTER_REMOVE** en mapa anterior
+4. **Broadcast CHARACTER_CREATE** en mapa nuevo
+
+El cliente al recibir CHANGE_MAP:
+- Descarga/carga el archivo del mapa (.map)
+- Limpia entidades del mapa anterior
+- Renderiza el nuevo mapa
+- Espera POS_UPDATE para posicionar al jugador
 
 ## 🐛 Problema Identificado
 
@@ -262,21 +298,44 @@ new_x, new_y, new_map, changed_map = await self._calculate_new_position(
 
 # Si cambió de mapa, enviar CHANGE_MAP
 if changed_map:
+    # IMPORTANTE: Orden correcto de packets según protocolo AO
+    
+    # 1. Enviar CHANGE_MAP (ID: 21) - Cliente carga nuevo mapa
     await self.message_sender.send_change_map(new_map)
     
-    # Remover personaje del mapa anterior
-    await self.map_manager.remove_character(user_id, current_map)
+    # 2. Actualizar posición en Redis ANTES de POS_UPDATE
+    await self.player_repo.set_position(user_id, new_x, new_y, new_map)
     
-    # Agregar personaje al nuevo mapa
-    await self.map_manager.add_character(user_id, new_map, new_x, new_y)
+    # 3. Enviar POS_UPDATE (ID: 22) - Cliente posiciona jugador
+    await self.message_sender.send_pos_update(new_x, new_y)
     
-    # Broadcast CHARACTER_REMOVE en mapa anterior
-    await self.broadcast_service.broadcast_character_remove(
-        current_map, user_id, exclude_user_id=user_id
+    # 4. Actualizar heading en Redis
+    await self.player_repo.set_heading(user_id, heading)
+    
+    # 5. Remover personaje del mapa anterior en MapManager
+    if self.map_manager:
+        await self.map_manager.remove_character(user_id, current_map)
+    
+    # 6. Broadcast CHARACTER_REMOVE en mapa anterior
+    if self.broadcast_service:
+        await self.broadcast_service.broadcast_character_remove(
+            current_map, user_id, exclude_user_id=user_id
+        )
+    
+    # 7. Agregar personaje al nuevo mapa en MapManager
+    if self.map_manager:
+        await self.map_manager.add_character(user_id, new_map, new_x, new_y)
+    
+    # 8. Broadcast CHARACTER_CREATE en nuevo mapa
+    # (esto se hace más adelante en el flujo normal de execute())
+    
+    logger.info(
+        "User %d cambió de mapa: %d -> %d, pos (%d,%d) -> (%d,%d)",
+        user_id, current_map, new_map, current_x, current_y, new_x, new_y
     )
     
-    # Broadcast CHARACTER_CREATE en nuevo mapa
-    # (esto se hace más adelante en el flujo normal)
+    # IMPORTANTE: Retornar aquí para evitar procesamiento adicional
+    return
 ```
 
 ### Paso 4: Integrar en server_initializer.py
@@ -355,6 +414,59 @@ class TestMapTransitionService:
         transition = service.get_transition(99999, "north")
         assert transition is None
 ```
+
+## 🎮 Compatibilidad con Clientes
+
+### Cliente Godot (ArgentumOnlineGodot)
+
+El cliente Godot ya está preparado para recibir CHANGE_MAP:
+- **Handler:** `game_protocol.gd` procesa packet ID 21
+- **Comportamiento:** 
+  - Recibe CHANGE_MAP → Carga nuevo mapa
+  - Recibe POS_UPDATE → Posiciona jugador
+  - Limpia NPCs y jugadores del mapa anterior
+  - Renderiza nuevo mapa automáticamente
+
+**No requiere cambios en el cliente Godot** ✅
+
+### Cliente VB6 Original
+
+El cliente VB6 de Argentum Online maneja transiciones de mapa de forma estándar:
+- **Protocolo:** Idéntico (CHANGE_MAP + POS_UPDATE)
+- **Archivos .map:** Carga desde `Mapas/MapaXXX.map`
+- **Comportamiento:** Igual que cliente Godot
+
+**Compatibilidad 100% con servidor VB6 original** ✅
+
+### Servidor VB6 Original
+
+En el servidor VB6, las transiciones se manejan en:
+- **Archivo:** `Modulo_UsUaRiOs.bas` → `MoveUserChar()`
+- **Lógica:**
+  ```vb
+  ' Cuando el jugador sale del mapa por un borde
+  If NewX < 1 Or NewX > 100 Or NewY < 1 Or NewY > 100 Then
+      ' Buscar mapa conectado
+      NewMap = MapData(CurrentMap).Exits(Direction)
+      If NewMap > 0 Then
+          ' Calcular posición de entrada
+          Call WarpUserChar(UserIndex, NewMap, NewX, NewY)
+      End If
+  End If
+  ```
+- **Configuración:** Mapas tienen array `Exits(1 To 4)` con IDs de mapas conectados
+- **Posición de entrada:** Se calcula automáticamente (borde opuesto)
+
+### Diferencias con Servidor VB6
+
+| Aspecto | Servidor VB6 | PyAO Server (Propuesto) |
+|---------|--------------|-------------------------|
+| **Configuración** | Hardcoded en .map | TOML configurable |
+| **Posición entrada** | Auto (borde opuesto) | Configurable por transición |
+| **Flexibilidad** | Baja | Alta |
+| **Mantenibilidad** | Difícil | Fácil |
+
+**Ventaja de PyAO:** Configuración más flexible y fácil de mantener sin recompilar.
 
 ## 📝 Checklist de Implementación
 
