@@ -119,6 +119,27 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Packet `BANK_DEPOSIT` y `BANK_EXTRACT_ITEM` ✅
 - [ ] Depositar/retirar oro
 
+### Sistema de Energía (Stamina)
+- [ ] **Consumo de energía por acción**
+  - Cada movimiento consume energía
+  - Cada ataque consume energía
+  - Cada hechizo consume energía
+  - Trabajar consume energía
+- [ ] **Regeneración de energía**
+  - Se regenera automáticamente si hambre > 0 y sed > 0
+  - No se regenera si hambre = 0 o sed = 0
+  - Velocidad de regeneración configurable
+  - Regeneración más rápida descansando (sin moverse)
+- [ ] **Efectos de energía baja**
+  - No poder atacar si energía = 0
+  - No poder lanzar hechizos si energía = 0
+  - Movimiento más lento si energía < 20%
+  - Indicador visual de energía baja
+- [ ] **Balance de energía**
+  - Ajustar consumo por acción
+  - Ajustar velocidad de regeneración
+  - Testing de balance en combate prolongado
+
 ### Sistema de Skills
 - [ ] Subir skills con uso (minería, tala, pesca)
 - [ ] Experiencia de skills
