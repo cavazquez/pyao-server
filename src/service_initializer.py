@@ -8,6 +8,7 @@ from src.commerce_service import CommerceService
 from src.item_catalog import ItemCatalog
 from src.items_catalog import ITEMS_CATALOG
 from src.loot_table_service import LootTableService
+from src.map_transition_service import MapTransitionService
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
@@ -74,6 +75,10 @@ class ServiceInitializer:
         loot_table_service = LootTableService()
         logger.info("✓ Sistema de loot tables inicializado")
 
+        # Servicio de transiciones de mapa
+        map_transition_service = MapTransitionService()
+        logger.info("✓ Sistema de transiciones de mapa inicializado")
+
         # Servicio de magia
         spell_service = SpellService(
             spell_catalog,
@@ -116,6 +121,7 @@ class ServiceInitializer:
             "npc_service": npc_service,
             "npc_respawn_service": npc_respawn_service,
             "loot_table_service": loot_table_service,
+            "map_transition_service": map_transition_service,
             "spell_service": spell_service,
             "commerce_service": commerce_service,
             "combat_service": combat_service,

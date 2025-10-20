@@ -9,6 +9,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
+    from src.map_transition_service import MapTransitionService
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_repository import PlayerRepository
@@ -39,6 +40,7 @@ class TaskWalk(Task):
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
+        map_transition_service: MapTransitionService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
@@ -49,12 +51,14 @@ class TaskWalk(Task):
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para broadcast.
             broadcast_service: Servicio de broadcast multijugador.
+            map_transition_service: Servicio de transiciones entre mapas.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
+        self.map_transition_service = map_transition_service
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -76,7 +80,7 @@ class TaskWalk(Task):
 
         return heading
 
-    async def execute(self) -> None:  # noqa: PLR0915
+    async def execute(self) -> None:
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -131,24 +135,23 @@ class TaskWalk(Task):
         current_y = position["y"]
         current_map = position["map"]
 
-        # Calcular nueva posición según la dirección
-        new_x = current_x
-        new_y = current_y
+        # Calcular nueva posición y detectar transiciones de mapa
+        new_x, new_y, new_map, changed_map = await self._calculate_new_position(
+            heading, current_x, current_y, current_map
+        )
 
-        if heading == HEADING_NORTH:
-            new_y = max(MIN_MAP_COORDINATE, current_y - 1)
-        elif heading == HEADING_EAST:
-            new_x = min(MAX_MAP_COORDINATE, current_x + 1)
-        elif heading == HEADING_SOUTH:
-            new_y = min(MAX_MAP_COORDINATE, current_y + 1)
-        elif heading == HEADING_WEST:
-            new_x = max(MIN_MAP_COORDINATE, current_x - 1)
+        # Si cambió de mapa, manejar transición
+        if changed_map:
+            await self._handle_map_transition(
+                user_id, heading, current_x, current_y, current_map, new_x, new_y, new_map
+            )
+            return
 
         # Verificar si realmente se movió
         moved = new_x != current_x or new_y != current_y
 
         if not moved:
-            # No se movió (límite del mapa o bloqueado)
+            # No se movió (límite del mapa sin transición)
             # Solo actualizar heading si cambió
             current_heading = position.get("heading", 3)
             if heading != current_heading:
@@ -200,3 +203,127 @@ class TaskWalk(Task):
                 old_y=current_y,
                 old_heading=position.get("heading", 3),
             )
+
+    async def _calculate_new_position(
+        self, heading: int, current_x: int, current_y: int, current_map: int
+    ) -> tuple[int, int, int, bool]:
+        """Calcula nueva posición y detecta transiciones de mapa.
+
+        Args:
+            heading: Dirección del movimiento.
+            current_x: Posición X actual.
+            current_y: Posición Y actual.
+            current_map: ID del mapa actual.
+
+        Returns:
+            Tupla (new_x, new_y, new_map, changed_map).
+        """
+        new_x = current_x
+        new_y = current_y
+        new_map = current_map
+        changed_map = False
+
+        # Detectar si estamos en el borde y hay transición
+        edge = None
+
+        if heading == HEADING_NORTH and current_y == MIN_MAP_COORDINATE:
+            edge = "north"
+        elif heading == HEADING_EAST and current_x == MAX_MAP_COORDINATE:
+            edge = "east"
+        elif heading == HEADING_SOUTH and current_y == MAX_MAP_COORDINATE:
+            edge = "south"
+        elif heading == HEADING_WEST and current_x == MIN_MAP_COORDINATE:
+            edge = "west"
+
+        # Si estamos en un borde, verificar transición
+        if edge and self.map_transition_service:
+            transition = self.map_transition_service.get_transition(current_map, edge)
+
+            if transition:
+                # Cambiar de mapa
+                new_map = transition.to_map
+                new_x = transition.to_x
+                new_y = transition.to_y
+                changed_map = True
+
+                logger.info(
+                    "Transición de mapa detectada: %d -> %d, pos (%d,%d) -> (%d,%d)",
+                    current_map,
+                    new_map,
+                    current_x,
+                    current_y,
+                    new_x,
+                    new_y,
+                )
+
+                return new_x, new_y, new_map, changed_map
+
+        # Movimiento normal (sin transición)
+        if heading == HEADING_NORTH:
+            new_y = max(MIN_MAP_COORDINATE, current_y - 1)
+        elif heading == HEADING_EAST:
+            new_x = min(MAX_MAP_COORDINATE, current_x + 1)
+        elif heading == HEADING_SOUTH:
+            new_y = min(MAX_MAP_COORDINATE, current_y + 1)
+        elif heading == HEADING_WEST:
+            new_x = max(MIN_MAP_COORDINATE, current_x - 1)
+
+        return new_x, new_y, new_map, changed_map
+
+    async def _handle_map_transition(
+        self,
+        user_id: int,
+        heading: int,
+        current_x: int,
+        current_y: int,
+        current_map: int,
+        new_x: int,
+        new_y: int,
+        new_map: int,
+    ) -> None:
+        """Maneja la transición de un jugador a un nuevo mapa.
+
+        Args:
+            user_id: ID del jugador.
+            heading: Dirección del movimiento.
+            current_x: Posición X actual.
+            current_y: Posición Y actual.
+            current_map: ID del mapa actual.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+            new_map: ID del nuevo mapa.
+        """
+        # IMPORTANTE: Orden correcto de packets según protocolo AO
+
+        # 1. Enviar CHANGE_MAP (ID: 21) - Cliente carga nuevo mapa
+        await self.message_sender.send_change_map(new_map)
+
+        # 2. Actualizar posición en Redis ANTES de POS_UPDATE
+        if self.player_repo:
+            await self.player_repo.set_position(user_id, new_x, new_y, new_map)
+
+        # 3. Enviar POS_UPDATE (ID: 22) - Cliente posiciona jugador
+        await self.message_sender.send_pos_update(new_x, new_y)
+
+        # 4. Actualizar heading en Redis
+        if self.player_repo:
+            await self.player_repo.set_heading(user_id, heading)
+
+        # 5. Broadcast CHARACTER_REMOVE en mapa anterior
+        if self.broadcast_service:
+            await self.broadcast_service.broadcast_character_remove(current_map, user_id)
+
+        # 6. Broadcast CHARACTER_CREATE en nuevo mapa
+        # NOTA: Para simplificar, no hacemos broadcast aquí.
+        # El jugador aparecerá en el nuevo mapa cuando otros jugadores lo vean moverse.
+
+        logger.info(
+            "User %d cambió de mapa: %d -> %d, pos (%d,%d) -> (%d,%d)",
+            user_id,
+            current_map,
+            new_map,
+            current_x,
+            current_y,
+            new_x,
+            new_y,
+        )

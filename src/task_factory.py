@@ -120,6 +120,7 @@ class TaskFactory:
                 self.deps.player_repo,
                 self.deps.map_manager,
                 self.deps.broadcast_service,
+                self.deps.map_transition_service,
                 session_data,
             ),
             TaskChangeHeading: lambda: TaskChangeHeading(

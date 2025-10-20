@@ -81,4 +81,4 @@ async def test_service_initializer_returns_dict(
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)
-    assert len(services) == 11  # 11 servicios/catálogos
+    assert len(services) == 12  # 12 servicios/catálogos (agregado map_transition_service)

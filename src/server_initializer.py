@@ -85,6 +85,7 @@ class ServerInitializer:
             npc_ai_service=services["npc_ai_service"],
             npc_respawn_service=services["npc_respawn_service"],
             loot_table_service=services["loot_table_service"],
+            map_transition_service=services["map_transition_service"],
             broadcast_service=services["broadcast_service"],
             # Managers
             map_manager=map_manager,
