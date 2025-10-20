@@ -359,6 +359,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             ClientPacketID.WALK: self.validate_walk_packet,
             ClientPacketID.ATTACK: self.validate_attack_packet,
             ClientPacketID.LOGIN: self.validate_login_packet,
+            ClientPacketID.CREATE_ACCOUNT: self.validate_create_account_packet,
             ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
             ClientPacketID.DROP: self.validate_drop_packet,
             ClientPacketID.PICK_UP: self.validate_pickup_packet,
@@ -737,3 +738,99 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             )
 
         return ValidationResult(success=True, data={"heading": heading}, error_message=None)
+
+    def validate_create_account_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet CREATE_ACCOUNT completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (CREATE_ACCOUNT = 2)
+        - String: Username (UTF-8, 3-20 chars)
+        - String: Password (UTF-8, 6-32 chars)
+        - Byte: Race
+        - Int16: Unknown
+        - Byte: Gender
+        - Byte: Job/Class
+        - Byte: Unknown
+        - Int16: Head
+        - String: Email (UTF-8, 1-100 chars)
+        - Byte: Home
+
+        Returns:
+            ValidationResult con datos del personaje si es válido.
+        """
+        # Username
+        username = self.read_string(min_length=3, max_length=20, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        # Password
+        password = self.read_string(min_length=6, max_length=32, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        # Datos del personaje
+        try:
+            race = self.reader.read_byte()
+            _ = self.reader.read_int16()  # Unknown
+            gender = self.reader.read_byte()
+            job = self.reader.read_byte()
+            _ = self.reader.read_byte()  # Unknown
+            head = self.reader.read_int16()
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo datos del personaje: {e}")
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        # Email
+        email = self.read_string(min_length=1, max_length=100, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        # Home
+        try:
+            home = self.reader.read_byte()
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo home: {e}")
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True,
+            data={
+                "username": username,
+                "password": password,
+                "email": email,
+                "race": race,
+                "gender": gender,
+                "job": job,
+                "head": head,
+                "home": home,
+            },
+            error_message=None,
+        )
+
+    def validate_inventory_click_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet INVENTORY_CLICK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID
+        - Byte: Slot del inventario (1-20)
+
+        Returns:
+            ValidationResult con {"slot": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
