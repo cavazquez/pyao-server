@@ -140,3 +140,14 @@ class TalkData:
     """
 
     message: str
+
+
+@dataclass
+class DoubleClickData:
+    """Datos validados de un packet DOUBLE_CLICK.
+
+    Attributes:
+        target: Slot o CharIndex del objetivo (1-255).
+    """
+
+    target: int
