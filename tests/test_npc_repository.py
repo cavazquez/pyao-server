@@ -351,3 +351,46 @@ class TestNPCRepository:
         names = {npc.name for npc in all_npcs}
         assert "NPC1" in names
         assert "NPC2" in names
+
+    async def test_update_npc_hp(self, redis_client: RedisClient) -> None:
+        """Test de actualización de HP de NPC."""
+        repo = NPCRepository(redis_client)
+
+        # Crear NPC
+        npc = await repo.create_npc_instance(
+            npc_id=1,
+            char_index=10001,
+            map_id=1,
+            x=50,
+            y=50,
+            heading=3,
+            name="Test NPC",
+            description="",
+            body_id=500,
+            head_id=0,
+            hp=100,
+            max_hp=100,
+            level=1,
+            is_hostile=True,
+            is_attackable=True,
+            movement_type="static",
+            respawn_time=0,
+            respawn_time_max=0,
+            gold_min=0,
+            gold_max=0,
+        )
+
+        # Actualizar HP
+        await repo.update_npc_hp(npc.instance_id, 50)
+
+        # Verificar actualización
+        updated_npc = await repo.get_npc(npc.instance_id)
+        assert updated_npc is not None
+        assert updated_npc.hp == 50
+
+    async def test_remove_npc_not_found(self, redis_client: RedisClient) -> None:
+        """Test de eliminación de NPC inexistente."""
+        repo = NPCRepository(redis_client)
+
+        # Intentar eliminar NPC que no existe (no debería lanzar error)
+        await repo.remove_npc("nonexistent-id")
