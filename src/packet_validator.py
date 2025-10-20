@@ -175,6 +175,28 @@ class PacketValidator:
         """
         return self.read_slot(min_slot=1, max_slot=max_slot)
 
+    def read_heading(self) -> int | None:
+        """Lee y valida una dirección (heading).
+
+        Valores válidos: 1=Norte, 2=Este, 3=Sur, 4=Oeste
+
+        Returns:
+            Heading validado (1-4) o None si es inválido.
+        """
+        try:
+            heading = self.reader.read_byte()
+
+            # Validar rango (1-4)
+            if heading < 1 or heading > 4:
+                self.errors.append(f"Dirección inválida: {heading} (debe ser 1-4)")
+                return None
+
+            return heading
+
+        except struct.error as e:
+            self.errors.append(f"Error al leer heading: {e}")
+            return None
+
     def read_string(
         self, min_length: int = 1, max_length: int = 255, encoding: str = "utf-8"
     ) -> str | None:
