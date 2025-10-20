@@ -54,3 +54,39 @@ items = [
     { item_id = 1, probability = 0.20, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
     { item_id = 11, probability = 0.15, min_quantity = 1, max_quantity = 1 },   # Veneno (15%)
 ]
+
+# Dragón (npc_id=10) - BOSS legendario con loot épico
+[[loot_table]]
+id = 10
+name = "Dragón"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 500, max_quantity = 1000 },  # Oro (siempre - mucho)
+    { item_id = 2, probability = 0.50, min_quantity = 1, max_quantity = 1 },       # Espada Larga (50%)
+    { item_id = 3, probability = 0.40, min_quantity = 1, max_quantity = 1 },       # Hacha (40%)
+    { item_id = 4, probability = 0.80, min_quantity = 5, max_quantity = 10 },      # Poción de Vida (80%)
+    { item_id = 5, probability = 0.60, min_quantity = 3, max_quantity = 8 },       # Poción de Maná (60%)
+    { item_id = 15, probability = 0.20, min_quantity = 1, max_quantity = 1 },      # Daga (20% - item raro)
+]
+
+# Esqueleto (npc_id=11) - Guerrero no-muerto
+[[loot_table]]
+id = 11
+name = "Esqueleto"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 40 },   # Oro (siempre)
+    { item_id = 2, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Espada Larga (25%)
+    { item_id = 3, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Hacha (20%)
+    { item_id = 1, probability = 0.15, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (15%)
+    { item_id = 13, probability = 0.30, min_quantity = 1, max_quantity = 3 },    # Huesos (30% - item temático)
+]
+
+# Zombie (npc_id=12) - Muerto viviente putrefacto
+[[loot_table]]
+id = 12
+name = "Zombie"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 8, max_quantity = 30 },    # Oro (siempre)
+    { item_id = 1, probability = 0.30, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (30%)
+    { item_id = 4, probability = 0.20, min_quantity = 1, max_quantity = 2 },     # Poción de Vida (20%)
+    { item_id = 14, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Carne Podrida (25% - item temático)
+]

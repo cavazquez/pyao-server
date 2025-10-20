@@ -75,3 +75,48 @@ oro_min = 3
 oro_max = 15
 respawn_time = 15        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 30    # Tiempo máximo de respawn en segundos
+
+[[npc]]
+id = 10
+nombre = "Dragón"
+descripcion = "Un dragón ancestral, guardián de tesoros legendarios."
+body_id = 200  # Body ID de Dragón
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 50
+hp_max = 1000
+oro_min = 500
+oro_max = 1000
+respawn_time = 600       # 10 minutos - Boss raro
+respawn_time_max = 900   # 15 minutos
+
+[[npc]]
+id = 11
+nombre = "Esqueleto"
+descripcion = "Un guerrero caído que vaga eternamente."
+body_id = 5  # Body ID de Esqueleto
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 7
+hp_max = 120
+oro_min = 10
+oro_max = 40
+respawn_time = 40
+respawn_time_max = 80
+
+[[npc]]
+id = 12
+nombre = "Zombie"
+descripcion = "Un muerto viviente que busca carne fresca."
+body_id = 6  # Body ID de Zombie
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 6
+hp_max = 100
+oro_min = 8
+oro_max = 30
+respawn_time = 35
+respawn_time_max = 70
