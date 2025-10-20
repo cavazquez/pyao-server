@@ -85,7 +85,7 @@ class TaskWalk(Task):
 
         return heading
 
-    async def execute(self) -> None:
+    async def execute(self) -> None:  # noqa: PLR0915, PLR0914
         """Ejecuta el movimiento del personaje."""
         # Parsear dirección
         heading = self._parse_packet()
@@ -207,6 +207,83 @@ class TaskWalk(Task):
             heading,
         )
 
+        # Después del movimiento, verificar si estamos en el último tile jugable
+        # y si el siguiente tile en la dirección del movimiento está bloqueado
+        # Si es así y hay transición, cambiar de mapa
+        if changed_map is False and self.map_transition_service and self.map_manager:
+            # Calcular el siguiente tile en la dirección del movimiento
+            check_x, check_y = new_x, new_y
+            if heading == HEADING_NORTH:
+                check_y = new_y - 1
+            elif heading == HEADING_EAST:
+                check_x = new_x + 1
+            elif heading == HEADING_SOUTH:
+                check_y = new_y + 1
+            elif heading == HEADING_WEST:
+                check_x = new_x - 1
+
+            # Verificar si ese tile está bloqueado
+            is_next_blocked = not self.map_manager.can_move_to(new_map, check_x, check_y)
+
+            logger.info(
+                "Verificando siguiente tile (%d,%d) desde (%d,%d): bloqueado=%s",
+                check_x,
+                check_y,
+                new_x,
+                new_y,
+                is_next_blocked,
+            )
+
+            if is_next_blocked:
+                # El siguiente tile está bloqueado
+                # Solo activar transición si estamos CERCA del borde del mapa (últimos 10 tiles)
+                map_width, map_height = self.map_manager.get_map_size(new_map)
+                near_border = False
+                edge = None
+
+                if heading == HEADING_NORTH and check_y <= MIN_MAP_COORDINATE + 10:
+                    near_border = True
+                    edge = "north"
+                elif heading == HEADING_EAST and check_x >= map_width - 10:
+                    near_border = True
+                    edge = "east"
+                elif heading == HEADING_SOUTH and check_y >= map_height - 10:
+                    near_border = True
+                    edge = "south"
+                elif heading == HEADING_WEST and check_x <= MIN_MAP_COORDINATE + 10:
+                    near_border = True
+                    edge = "west"
+
+                if near_border and edge:
+                    transition = self.map_transition_service.get_transition(new_map, edge)
+                    if transition:
+                        # Hay transición, cambiar de mapa inmediatamente
+                        logger.info(
+                            "Último tile jugable detectado en (%d,%d), cambiando a mapa %d",
+                            new_x,
+                            new_y,
+                            transition.to_map,
+                        )
+
+                        # Actualizar a la nueva posición en el nuevo mapa
+                        new_map = transition.to_map
+                        new_x = transition.to_x
+                        new_y = transition.to_y
+                        changed_map = True
+
+                        # Ejecutar la transición
+                        await self._handle_map_transition(
+                            user_id,
+                            heading,
+                            current_x,
+                            current_y,
+                            current_map,
+                            new_x,
+                            new_y,
+                            new_map,
+                        )
+                        return
+
         # Broadcast multijugador: notificar movimiento a otros jugadores
         # Nota: NO enviamos POS_UPDATE al cliente que se movió porque causa saltos visuales
         if self.broadcast_service:
@@ -271,20 +348,39 @@ class TaskWalk(Task):
         elif next_x < MIN_MAP_COORDINATE:
             edge = "west"
 
-        # Si el siguiente tile está bloqueado, verificar si es borde del mapa
-        if not edge and self.map_manager:
-            is_blocked = not self.map_manager.can_move_to(current_map, next_x, next_y)
-            if is_blocked:
-                # Verificar si estamos cerca del borde y el tile está bloqueado
-                # Esto maneja el caso donde los bordes del mapa están bloqueados
-                if heading == HEADING_NORTH and next_y <= MIN_MAP_COORDINATE + 5:
-                    edge = "north"
-                elif heading == HEADING_EAST and next_x >= map_width - 5:
-                    edge = "east"
-                elif heading == HEADING_SOUTH and next_y >= map_height - 5:
-                    edge = "south"
-                elif heading == HEADING_WEST and next_x <= MIN_MAP_COORDINATE + 5:
-                    edge = "west"
+        # Verificar si estamos en el último tile jugable antes de un borde bloqueado
+        # El cliente no envía movimientos a tiles bloqueados, así que debemos detectar
+        # cuando el jugador está en el último tile jugable y hay una transición
+        if not edge and self.map_transition_service:
+            # Verificar si hay transición en la dirección del movimiento
+            potential_edge = None
+            if heading == HEADING_NORTH:
+                potential_edge = "north"
+            elif heading == HEADING_EAST:
+                potential_edge = "east"
+            elif heading == HEADING_SOUTH:
+                potential_edge = "south"
+            elif heading == HEADING_WEST:
+                potential_edge = "west"
+
+            if potential_edge:
+                transition = self.map_transition_service.get_transition(current_map, potential_edge)
+                if transition and self.map_manager:
+                    # Hay transición configurada, verificar si el siguiente tile está bloqueado
+                    is_blocked = not self.map_manager.can_move_to(current_map, next_x, next_y)
+                    if is_blocked:
+                        # Estamos en el último tile jugable, activar transición
+                        edge = potential_edge
+                        logger.info(
+                            "Último tile jugable (%d,%d), siguiente tile (%d,%d) bloqueado, "
+                            "activando transición %s -> mapa %d",
+                            current_x,
+                            current_y,
+                            next_x,
+                            next_y,
+                            edge,
+                            transition.to_map,
+                        )
 
         # Si estamos en un borde, verificar transición
         if edge and self.map_transition_service:

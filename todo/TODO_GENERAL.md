@@ -86,6 +86,13 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Sistema de esquives ✅
 - [x] Mensajes de daño al jugador (usando CONSOLE_MSG) ✅
 - [x] Inventario lleno - manejar casos límite ✅
+- [x] Sistema de transiciones de mapa (funcional, pendiente sincronización) ✅
+
+**Bug conocido - Transiciones de mapa:**
+- [ ] Cliente se congela después de cambiar de mapa
+- Causa: No se envían los NPCs/jugadores/objetos del nuevo mapa
+- Solución: Implementar broadcast de entidades al cambiar de mapa
+- Prioridad: Alta (pero funcionalidad básica implementada)
 
 **Movido a v0.5.0+ (Features más complejas):**
 - [ ] Precios dinámicos según oferta/demanda

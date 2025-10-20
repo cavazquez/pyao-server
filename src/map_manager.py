@@ -563,7 +563,24 @@ class MapManager(SpatialIndexMixin):
             height = map_data.get("height", 100)
             self._map_sizes[map_id] = (width, height)
 
-            logger.info("Mapa %d cargado: %dx%d", map_id, width, height)
+            # Cargar tiles bloqueados
+            blocked_tiles = map_data.get("blocked_tiles", [])
+            blocked_set = set()
+            for tile in blocked_tiles:
+                x = tile.get("x")
+                y = tile.get("y")
+                if x is not None and y is not None:
+                    blocked_set.add((x, y))
+
+            self._blocked_tiles[map_id] = blocked_set
+
+            logger.info(
+                "Mapa %d cargado: %dx%d, %d tiles bloqueados",
+                map_id,
+                width,
+                height,
+                len(blocked_set),
+            )
 
         except (OSError, json.JSONDecodeError):
             logger.exception("Error cargando mapa %d", map_id)
