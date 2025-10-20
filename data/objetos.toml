@@ -2,6 +2,13 @@
 # Este archivo reemplaza la sección [OBJ] de localindex.dat
 # Nota: El catálogo completo de items ya existe en src/items_catalog.py (1049 items)
 # Este archivo es para información adicional de texto (descripciones, etc.)
+#
+# Sistema de Rareza:
+# - "comun" (blanco) - Items básicos y comunes
+# - "poco_comun" (verde) - Items de calidad media
+# - "raro" (azul) - Items difíciles de conseguir
+# - "epico" (morado) - Items muy valiosos
+# - "legendario" (naranja) - Items únicos y extremadamente raros
 
 [[objeto]]
 id = 1
@@ -122,3 +129,40 @@ id = 20
 nombre = "Llave Oxidada"
 descripcion = "Una vieja llave que podría abrir algo."
 texto_uso = "Has usado la llave oxidada."
+
+# Items Temáticos de Loot (agregados 2025-10-19)
+
+[[objeto]]
+id = 10
+nombre = "Piel de Lobo"
+descripcion = "Piel de un lobo salvaje. Útil para crear armaduras ligeras."
+texto_uso = "Piel de lobo de buena calidad."
+rareza = "raro"  # Drop 10% de Lobos
+
+[[objeto]]
+id = 11
+nombre = "Veneno"
+descripcion = "Veneno extraído de criaturas venenosas. Muy peligroso."
+texto_uso = "Veneno concentrado. ¡Manéjalo con cuidado!"
+rareza = "poco_comun"  # Drop de Arañas y Serpientes
+
+[[objeto]]
+id = 13
+nombre = "Huesos"
+descripcion = "Huesos de esqueletos. Pueden usarse en alquimia."
+texto_uso = "Huesos blanqueados por el tiempo."
+rareza = "comun"  # Drop común de Esqueletos
+
+[[objeto]]
+id = 14
+nombre = "Carne Podrida"
+descripcion = "Carne putrefacta de zombies. Inútil para comer."
+texto_uso = "Carne podrida que huele horrible."
+rareza = "comun"  # Drop común de Zombies
+
+[[objeto]]
+id = 22
+nombre = "Escama de Dragón"
+descripcion = "Escama de un dragón ancestral. Extremadamente valiosa y resistente."
+texto_uso = "Una escama de dragón brillante e iridiscente."
+rareza = "legendario"  # Drop de BOSS Dragón
