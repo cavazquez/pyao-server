@@ -45,20 +45,37 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Loot tables configurables
 - [x] Items variados (armas, armaduras, pociones)
 
-### ✅ Versión 0.5.0-alpha - Refactorings y Calidad
+### 🔄 Versión 0.5.0-alpha - Refactorings y Contenido (En Progreso)
 - [x] MessageSender refactoring (100% completado)
-- [x] PacketReader implementado (15/15 tasks migradas - 100%)
+- [x] PacketReader implementado (21/33 tasks migradas - 64%)
 - [x] NPC Factory Pattern
-- [x] Sistema de Energía/Stamina - Consumo y regeneración
-- [ ] Configuration Management
+- [x] Sistema de Energía/Stamina - Infraestructura
+- [ ] **Sistema de Energía/Stamina - Completo:**
+  - [ ] Consumo de energía por acción (walk, attack, spell, work)
+  - [ ] Regeneración automática (si hambre > 0 y sed > 0)
+  - [ ] Efectos de energía baja (no atacar/lanzar si energía = 0)
+  - [ ] Balance de energía (ajustar consumo y regeneración)
+- [ ] Sistema de críticos y esquives
+- [ ] Más mapas y NPCs usando NPC Factory
+- [ ] Packet DAMAGE para mostrar daño recibido
+- [ ] Pathfinding básico (A*)
+- [ ] NPCs que patrullan rutas
+- [ ] Cooldown entre ataques de NPCs
+- [ ] Inventario lleno - manejar casos límite
 
-### 📝 Versión 0.6.0 - Social y Party
+### 📝 Versión 0.6.0-alpha - Skills, Social y Party
+- [ ] **Sistema de Skills:**
+  - [ ] Subir skills con uso (minería, tala, pesca)
+  - [ ] Experiencia de skills
+  - [ ] Niveles de skills (0-100)
+  - [ ] Bonificadores por nivel de skill
+  - [ ] Packet WORK para trabajar
 - [ ] Sistema de party
 - [ ] Chat mejorado con canales
 - [ ] Sistema de amigos
 
-### 📝 Versión 0.7.0 - Contenido
-- [ ] Más mapas y NPCs
+### 📝 Versión 0.7.0 - Configuración y Quests
+- [ ] Configuration Management
 - [ ] Sistema de quests
 - [ ] Eventos mundiales
 
@@ -88,8 +105,8 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Drops de oro al matar NPCs ✅
 - [x] Recoger items del suelo (`PICK_UP`) ✅
 - [x] Visualización de items en el mapa ✅
-- [ ] Drops de items según tabla de probabilidades
-- [ ] Loot tables configurables por NPC
+- [x] Drops de items según tabla de probabilidades ✅
+- [x] Loot tables configurables por NPC ✅
 - [ ] Inventario lleno - manejar casos límite
 
 ### IA de NPCs Mejorada
@@ -118,34 +135,6 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Límite de slots en banco ✅
 - [x] Packet `BANK_DEPOSIT` y `BANK_EXTRACT_ITEM` ✅
 - [ ] Depositar/retirar oro
-
-### Sistema de Energía (Stamina)
-- [ ] **Consumo de energía por acción**
-  - Cada movimiento consume energía
-  - Cada ataque consume energía
-  - Cada hechizo consume energía
-  - Trabajar consume energía
-- [ ] **Regeneración de energía**
-  - Se regenera automáticamente si hambre > 0 y sed > 0
-  - No se regenera si hambre = 0 o sed = 0
-  - Velocidad de regeneración configurable
-  - Regeneración más rápida descansando (sin moverse)
-- [ ] **Efectos de energía baja**
-  - No poder atacar si energía = 0
-  - No poder lanzar hechizos si energía = 0
-  - Movimiento más lento si energía < 20%
-  - Indicador visual de energía baja
-- [ ] **Balance de energía**
-  - Ajustar consumo por acción
-  - Ajustar velocidad de regeneración
-  - Testing de balance en combate prolongado
-
-### Sistema de Skills
-- [ ] Subir skills con uso (minería, tala, pesca)
-- [ ] Experiencia de skills
-- [ ] Niveles de skills (0-100)
-- [ ] Bonificadores por nivel de skill
-- [ ] Packet `WORK` para trabajar
 
 ### Sistema de Clases
 - [ ] Atributos base por clase (Guerrero, Mago, etc.)

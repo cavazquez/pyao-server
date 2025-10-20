@@ -16,6 +16,7 @@ from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
 from src.spell_catalog import SpellCatalog
 from src.spell_service import SpellService
+from src.stamina_service import StaminaService
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
@@ -116,6 +117,10 @@ class ServiceInitializer:
         )
         logger.info("✓ Servicio de IA de NPCs inicializado")
 
+        # Servicio de stamina
+        stamina_service = StaminaService(self.repositories["player_repo"])
+        logger.info("✓ Servicio de stamina inicializado")
+
         services = {
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
@@ -126,6 +131,7 @@ class ServiceInitializer:
             "commerce_service": commerce_service,
             "combat_service": combat_service,
             "npc_ai_service": npc_ai_service,
+            "stamina_service": stamina_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,
             "item_catalog": item_catalog,

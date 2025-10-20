@@ -29,6 +29,7 @@ if TYPE_CHECKING:
     from src.spell_catalog import SpellCatalog
     from src.spell_service import SpellService
     from src.spellbook_repository import SpellbookRepository
+    from src.stamina_service import StaminaService
 
 
 @dataclass
@@ -64,6 +65,7 @@ class DependencyContainer:
     loot_table_service: LootTableService
     map_transition_service: MapTransitionService
     broadcast_service: MultiplayerBroadcastService
+    stamina_service: StaminaService
 
     # Managers
     map_manager: MapManager
