@@ -1,6 +1,6 @@
 {
-  "id": 1,
-  "name": "Ullathorpe",
+  "id": 9,
+  "name": "Paso de Montaña",
   "width": 100,
   "height": 100,
   "blocked_tiles": [
@@ -129,7 +129,7 @@
     {
       "x": 50,
       "y": 50,
-      "description": "Centro de Ullathorpe"
+      "description": "Centro de Paso de Montaña"
     }
   ]
 }
