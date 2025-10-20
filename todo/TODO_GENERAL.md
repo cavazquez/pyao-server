@@ -105,6 +105,54 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Rango de agresión configurable por NPC
 - [ ] Cooldown entre ataques
 
+---
+
+## 🐉 Sistema de NPCs por Bioma (Propuesto)
+
+### Objetivo
+Spawn automático de NPCs hostiles según el bioma/tipo de mapa para crear un mundo más dinámico.
+
+### Diseño
+- [ ] **Definir biomas en mapas** - Agregar campo `biome` en JSON (forest, dungeon, desert, snow, swamp, cave)
+- [ ] **Configuración por bioma** - `data/npc_spawns_by_biome.toml` con NPCs y weights por bioma
+- [ ] **NPCBiomeSpawnService** - Servicio de spawn automático
+- [ ] **Spawn zones** - Áreas específicas en mapas donde pueden aparecer NPCs
+- [ ] **Respawn automático** - Cuando NPC muere, respawnear otro del mismo bioma
+- [ ] **Selección ponderada** - Weight para controlar frecuencia de cada NPC
+- [ ] **Nivel aleatorio** - min_level/max_level por NPC según bioma
+
+### Ejemplo Configuración
+```toml
+[forest]
+npcs = [
+    { name = "lobo", weight = 40, min_level = 1, max_level = 5 },
+    { name = "araña", weight = 30, min_level = 3, max_level = 7 },
+    { name = "goblin", weight = 20, min_level = 2, max_level = 6 }
+]
+max_npcs = 15
+
+[dungeon]
+npcs = [
+    { name = "esqueleto", weight = 40, min_level = 5, max_level = 10 },
+    { name = "dragon", weight = 5, min_level = 15, max_level = 20 }
+]
+max_npcs = 20
+```
+
+### Beneficios
+- 🌍 Mundo más dinámico y variado
+- ⚙️ Configurable sin cambiar código
+- 🔄 Respawn automático mantiene mundo poblado
+- 📊 Balance por nivel (min/max level)
+
+### Prioridad
+Media - Mejora significativa de gameplay
+
+### Esfuerzo
+4-6 horas
+
+---
+
 ### 📝 Versión 0.6.0-alpha - Clases, Hechizos y Social
 
 **Sistema de Clases:**
