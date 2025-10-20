@@ -122,165 +122,45 @@ class TaskLogin(Task):
         username, password = parsed
         await self.execute_with_credentials(username, password)
 
-    async def execute_with_credentials(self, username: str, password: str) -> None:  # noqa: PLR0915
+    async def execute_with_credentials(self, username: str, password: str) -> None:
         """Ejecuta el login con credenciales ya parseadas.
 
         Args:
             username: Nombre de usuario.
             password: Contraseña en texto plano.
         """
-        # Verificar que los repositorios estén disponibles
-        if self.account_repo is None or self.player_repo is None:
-            logger.error("Repositorios no están disponibles para login")
-            await self.message_sender.send_error_msg("Servicio no disponible")
+        # Validar repositorios
+        if not self._validate_repositories():
             return
 
         # Autenticar usuario
-        auth_service = AuthenticationService(self.account_repo, self.message_sender)
-        auth_result = await auth_service.authenticate(username, password)
-
+        auth_result = await self._authenticate_user(username, password)
         if auth_result is None:
-            # La autenticación falló (el servicio ya envió el error al cliente)
             return
 
         user_id, user_class = auth_result
         logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
-        # Guardar user_id y username en session_data para uso posterior
-        if self.session_data is not None:
-            SessionManager.set_user_session(self.session_data, user_id, username)
+        # Configurar sesión
+        self._setup_session(user_id, username)
 
-        # IMPORTANTE: Orden de envío de paquetes durante el login
-        # Este orden es crítico para evitar problemas de parsing en el cliente.
-        # El cliente lee los paquetes de forma secuencial y puede malinterpretar
-        # los bytes si llegan concatenados por TCP en un orden incorrecto.
-        #
-        # Orden correcto:
-        # 1. LOGGED (ID: 0)
-        # 2. USER_CHAR_INDEX_IN_SERVER (ID: 28)
-        # 3. CHANGE_MAP (ID: 21)
-        # 4. ATTRIBUTES (ID: 50)
-        # 5. UPDATE_USER_STATS (ID: 45)
-        # 6. UPDATE_HUNGER_AND_THIRST (ID: 60)
-        # 7. CHARACTER_CREATE (ID: 29) - DEBE IR AL FINAL antes del broadcast
+        # Enviar paquetes iniciales y obtener posición
+        position = await self._send_login_packets(user_id, user_class)
 
-        # Enviar paquete Logged con la clase del personaje
-        await self.message_sender.send_logged(user_class)
+        # Inicializar datos del jugador
+        await self._initialize_player_data(user_id)
 
-        # Enviar índice del personaje en el servidor
-        await self.message_sender.send_user_char_index_in_server(user_id)
+        # Enviar libro de hechizos
+        await self._send_spellbook(user_id)
 
-        # Crear servicio de jugador para encapsular lógica de datos + envío
-        player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+        # Spawn del jugador
+        await self._spawn_player(user_id, username, position)
 
-        # TODO: La GUI del cliente debería mostrar la posición del jugador (X, Y, Mapa).
-        # Esto ayuda en debugging y testing. Considerar agregar un packet para actualizar
-        # la posición en la GUI o incluirlo en algún packet existente.
+        # Enviar datos del mapa y finalizar login
+        await self._send_map_data(user_id, username, position)
 
-        # Obtener/crear y enviar posición (envía CHANGE_MAP)
-        position = await player_service.send_position(user_id)
-
-        # Crear atributos por defecto si no existen (NO se envían al login)
-        # El cliente los solicitará con /EST
-        await player_service.send_attributes(user_id)
-
-        # Obtener/crear y enviar stats (envía UPDATE_USER_STATS)
-        await player_service.send_stats(user_id)
-
-        # Resetear estado de meditación al hacer login
-        # Si el jugador se desconectó meditando, debe dejar de meditar al reconectar
-        if self.player_repo:
-            await self.player_repo.set_meditating(user_id, is_meditating=False)
-            logger.debug("Estado de meditación reseteado para user_id %d al hacer login", user_id)
-
-        # Obtener/crear y enviar hambre/sed (envía UPDATE_HUNGER_AND_THIRST)
-        await player_service.send_hunger_thirst(user_id)
-
-        # Inicializar y enviar hechizos desde Redis
-        if self.spellbook_repo and self.spell_catalog:
-            # Inicializar libro de hechizos con hechizos por defecto si es necesario
-            await self.spellbook_repo.initialize_default_spells(user_id)
-
-            # Cargar y enviar todos los hechizos del jugador
-            logger.info("Cargando libro de hechizos para user_id %d desde Redis", user_id)
-            spells = await self.spellbook_repo.get_all_spells(user_id)
-
-            if spells:
-                logger.info(
-                    "user_id %d tiene %d hechizo(s) en su libro: %s",
-                    user_id,
-                    len(spells),
-                    dict(sorted(spells.items())),
-                )
-
-                for slot, spell_id in sorted(spells.items()):
-                    spell_data = self.spell_catalog.get_spell_data(spell_id)
-                    if spell_data:
-                        spell_name = spell_data.get("name", f"Spell {spell_id}")
-                        await self.message_sender.send_change_spell_slot(slot, spell_id, spell_name)
-                        logger.info(
-                            "Hechizo enviado al cliente: slot=%d, spell_id=%d (%s)",
-                            slot,
-                            spell_id,
-                            spell_name,
-                        )
-            else:
-                logger.info("user_id %d no tiene hechizos en su libro", user_id)
-
-        # Reproducir sonido de login
-        await self.message_sender.play_sound_login()
-
-        # TODO: Agregar música de fondo cuando el cliente implemente el handler de PLAY_MIDI
-
-        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
-        await player_service.spawn_character(user_id, username, position)
-
-        # Enviar actualización de posición para actualizar el minimapa
-        await self.message_sender.send_pos_update(position["x"], position["y"])
-
-        # Mostrar efecto visual de spawn
-        await self.message_sender.play_effect_spawn(char_index=user_id)
-
-        # Cargar ground items desde Redis si no están en memoria
-        if self.map_manager:
-            await self.map_manager.load_ground_items(position["map"])
-
-        # Usar PlayerMapService para spawnear en el mapa (envía jugadores, NPCs, items)
-        if self.player_map_service:
-            await self.player_map_service.spawn_in_map(
-                user_id=user_id,
-                map_id=position["map"],
-                x=position["x"],
-                y=position["y"],
-                heading=position.get("heading", 3),
-                message_sender=self.message_sender,
-            )
-        else:
-            logger.warning("PlayerMapService no disponible, usando método legacy")
-            # Fallback al método antiguo si no hay PlayerMapService
-            if self.npc_service:
-                await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
-            if self.map_manager and self.account_repo:
-                broadcast_service = MultiplayerBroadcastService(
-                    self.map_manager,
-                    self.player_repo,
-                    self.account_repo,
-                )
-                await broadcast_service.notify_player_spawn(
-                    user_id,
-                    username,
-                    position,
-                    self.message_sender,
-                )
-            if self.map_manager:
-                await self._send_ground_items_to_player(position["map"])
-
-        # Enviar inventario (después del delay automático de spawn_character)
-        await player_service.send_inventory(user_id, self.equipment_repo)
-
-        # Enviar MOTD (Mensaje del Día) - reutilizar TaskMotd
-        motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)
-        await motd_task.execute()
+        # Enviar inventario y MOTD
+        await self._finalize_login(user_id)
 
     async def _send_ground_items_to_player(self, map_id: int) -> None:
         """Envía OBJECT_CREATE de todos los ground items del mapa al jugador.
@@ -311,3 +191,235 @@ class TaskLogin(Task):
 
         if items_sent > 0:
             logger.info("Enviados %d ground items al jugador en mapa %d", items_sent, map_id)
+
+    def _validate_repositories(self) -> bool:
+        """Valida que los repositorios necesarios estén disponibles.
+
+        Returns:
+            True si están disponibles, False en caso contrario.
+        """
+        if self.account_repo is None or self.player_repo is None:
+            logger.error("Repositorios no están disponibles para login")
+            # Enviar error al cliente (fire and forget)
+            task = asyncio.create_task(self.message_sender.send_error_msg("Servicio no disponible"))
+            task.add_done_callback(lambda _: None)  # Evitar warning de task no awaited
+            return False
+        return True
+
+    async def _authenticate_user(self, username: str, password: str) -> tuple[int, int] | None:
+        """Autentica al usuario.
+
+        Args:
+            username: Nombre de usuario.
+            password: Contraseña.
+
+        Returns:
+            Tupla (user_id, user_class) si la autenticación es exitosa, None en caso contrario.
+        """
+        if self.account_repo is None:
+            return None
+
+        auth_service = AuthenticationService(self.account_repo, self.message_sender)
+        return await auth_service.authenticate(username, password)
+
+    def _setup_session(self, user_id: int, username: str) -> None:
+        """Configura la sesión del usuario.
+
+        Args:
+            user_id: ID del usuario.
+            username: Nombre de usuario.
+        """
+        if self.session_data is not None:
+            SessionManager.set_user_session(self.session_data, user_id, username)
+
+    async def _send_login_packets(self, user_id: int, user_class: int) -> dict[str, int]:
+        """Envía los paquetes iniciales de login.
+
+        IMPORTANTE: Orden de envío de paquetes durante el login.
+        Este orden es crítico para evitar problemas de parsing en el cliente.
+
+        Orden correcto:
+        1. LOGGED (ID: 0)
+        2. USER_CHAR_INDEX_IN_SERVER (ID: 28)
+        3. CHANGE_MAP (ID: 21)
+        4. ATTRIBUTES (ID: 50)
+        5. UPDATE_USER_STATS (ID: 45)
+        6. UPDATE_HUNGER_AND_THIRST (ID: 60)
+
+        Args:
+            user_id: ID del usuario.
+            user_class: Clase del personaje.
+
+        Returns:
+            Diccionario con la posición del jugador.
+        """
+        # Enviar paquete Logged con la clase del personaje
+        await self.message_sender.send_logged(user_class)
+
+        # Enviar índice del personaje en el servidor
+        await self.message_sender.send_user_char_index_in_server(user_id)
+
+        # Crear servicio de jugador
+        if self.player_repo is None:
+            return {"x": 50, "y": 50, "map": 1, "heading": 3}
+
+        player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+
+        # Obtener/crear y enviar posición (envía CHANGE_MAP)
+        position = await player_service.send_position(user_id)
+
+        # Crear atributos por defecto si no existen
+        await player_service.send_attributes(user_id)
+
+        # Obtener/crear y enviar stats
+        await player_service.send_stats(user_id)
+
+        return position
+
+    async def _initialize_player_data(self, user_id: int) -> None:
+        """Inicializa los datos del jugador.
+
+        Args:
+            user_id: ID del usuario.
+        """
+        # Resetear estado de meditación al hacer login
+        if self.player_repo:
+            await self.player_repo.set_meditating(user_id, is_meditating=False)
+            logger.debug("Estado de meditación reseteado para user_id %d al hacer login", user_id)
+
+        # Obtener/crear y enviar hambre/sed
+        if self.player_repo:
+            player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+            await player_service.send_hunger_thirst(user_id)
+
+    async def _send_spellbook(self, user_id: int) -> None:
+        """Envía el libro de hechizos al jugador.
+
+        Args:
+            user_id: ID del usuario.
+        """
+        if not self.spellbook_repo or not self.spell_catalog:
+            return
+
+        # Inicializar libro de hechizos con hechizos por defecto si es necesario
+        await self.spellbook_repo.initialize_default_spells(user_id)
+
+        # Cargar y enviar todos los hechizos del jugador
+        logger.info("Cargando libro de hechizos para user_id %d desde Redis", user_id)
+        spells = await self.spellbook_repo.get_all_spells(user_id)
+
+        if spells:
+            logger.info(
+                "user_id %d tiene %d hechizo(s) en su libro: %s",
+                user_id,
+                len(spells),
+                dict(sorted(spells.items())),
+            )
+
+            for slot, spell_id in sorted(spells.items()):
+                spell_data = self.spell_catalog.get_spell_data(spell_id)
+                if spell_data:
+                    spell_name = spell_data.get("name", f"Spell {spell_id}")
+                    await self.message_sender.send_change_spell_slot(slot, spell_id, spell_name)
+                    logger.info(
+                        "Hechizo enviado al cliente: slot=%d, spell_id=%d (%s)",
+                        slot,
+                        spell_id,
+                        spell_name,
+                    )
+        else:
+            logger.info("user_id %d no tiene hechizos en su libro", user_id)
+
+    async def _spawn_player(self, user_id: int, username: str, position: dict[str, int]) -> None:
+        """Realiza el spawn del jugador en el mundo.
+
+        Args:
+            user_id: ID del usuario.
+            username: Nombre de usuario.
+            position: Posición del jugador.
+        """
+        # Reproducir sonido de login
+        await self.message_sender.play_sound_login()
+
+        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
+        if self.player_repo:
+            player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+            await player_service.spawn_character(user_id, username, position)
+
+        # Enviar actualización de posición para actualizar el minimapa
+        await self.message_sender.send_pos_update(position["x"], position["y"])
+
+        # Mostrar efecto visual de spawn
+        await self.message_sender.play_effect_spawn(char_index=user_id)
+
+    async def _send_map_data(self, user_id: int, username: str, position: dict[str, int]) -> None:
+        """Envía los datos del mapa al jugador.
+
+        Args:
+            user_id: ID del usuario.
+            username: Nombre de usuario.
+            position: Posición del jugador.
+        """
+        # Cargar ground items desde Redis si no están en memoria
+        if self.map_manager:
+            await self.map_manager.load_ground_items(position["map"])
+
+        # Usar PlayerMapService para spawnear en el mapa
+        if self.player_map_service:
+            await self.player_map_service.spawn_in_map(
+                user_id=user_id,
+                map_id=position["map"],
+                x=position["x"],
+                y=position["y"],
+                heading=position.get("heading", 3),
+                message_sender=self.message_sender,
+            )
+        else:
+            # Fallback al método legacy
+            await self._send_map_data_legacy(user_id, username, position)
+
+    async def _send_map_data_legacy(
+        self, user_id: int, username: str, position: dict[str, int]
+    ) -> None:
+        """Envía datos del mapa usando método legacy.
+
+        Args:
+            user_id: ID del usuario.
+            username: Nombre de usuario.
+            position: Posición del jugador.
+        """
+        logger.warning("PlayerMapService no disponible, usando método legacy")
+
+        if self.npc_service:
+            await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
+
+        if self.map_manager and self.account_repo and self.player_repo:
+            broadcast_service = MultiplayerBroadcastService(
+                self.map_manager,
+                self.player_repo,
+                self.account_repo,
+            )
+            await broadcast_service.notify_player_spawn(
+                user_id,
+                username,
+                position,
+                self.message_sender,
+            )
+
+        if self.map_manager:
+            await self._send_ground_items_to_player(position["map"])
+
+    async def _finalize_login(self, user_id: int) -> None:
+        """Finaliza el proceso de login.
+
+        Args:
+            user_id: ID del usuario.
+        """
+        # Enviar inventario
+        if self.player_repo:
+            player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+            await player_service.send_inventory(user_id, self.equipment_repo)
+
+        # Enviar MOTD (Mensaje del Día)
+        motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)
+        await motd_task.execute()
