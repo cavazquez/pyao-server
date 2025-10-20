@@ -53,7 +53,7 @@ class ValidationResult[T]:
             )
 
 
-class PacketValidator:
+class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
     """Valida y parsea packets usando PacketReader.
 
     Centraliza la lógica de parsing y validación para evitar duplicación
@@ -362,6 +362,16 @@ class PacketValidator:
             ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
             ClientPacketID.DROP: self.validate_drop_packet,
             ClientPacketID.PICK_UP: self.validate_pickup_packet,
+            ClientPacketID.TALK: self.validate_talk_packet,
+            ClientPacketID.DOUBLE_CLICK: self.validate_double_click_packet,
+            ClientPacketID.LEFT_CLICK: self.validate_left_click_packet,
+            ClientPacketID.EQUIP_ITEM: self.validate_equip_item_packet,
+            ClientPacketID.USE_ITEM: self.validate_use_item_packet,
+            ClientPacketID.COMMERCE_BUY: self.validate_commerce_buy_packet,
+            ClientPacketID.COMMERCE_SELL: self.validate_commerce_sell_packet,
+            ClientPacketID.BANK_DEPOSIT: self.validate_bank_deposit_packet,
+            ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
+            ClientPacketID.CHANGE_HEADING: self.validate_change_heading_packet,
         }
 
         validator_method = validators.get(packet_id)
@@ -508,3 +518,222 @@ class PacketValidator:
                 success=False, data=None, error_message=self.get_error_message()
             )
         return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_talk_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet TALK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (TALK = 3)
+        - String: Mensaje (UTF-8)
+
+        Returns:
+            ValidationResult con {"message": str} si es válido.
+        """
+        message = self.read_string(min_length=1, max_length=255, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"message": message}, error_message=None)
+
+    def validate_double_click_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet DOUBLE_CLICK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (DOUBLE_CLICK = 27)
+        - Byte: Slot del inventario (1-20)
+
+        Returns:
+            ValidationResult con {"slot": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+
+    def validate_left_click_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet LEFT_CLICK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (LEFT_CLICK = 26)
+        - Byte: X
+        - Byte: Y
+
+        Returns:
+            ValidationResult con {"x": int, "y": int} si es válido.
+        """
+        coords = self.read_coordinates(max_x=100, max_y=100)
+        if self.has_errors() or coords is None:
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"x": coords[0], "y": coords[1]}, error_message=None
+        )
+
+    def validate_equip_item_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet EQUIP_ITEM completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (EQUIP_ITEM = 36)
+        - Byte: Slot del inventario (1-20)
+
+        Returns:
+            ValidationResult con {"slot": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+
+    def validate_use_item_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet USE_ITEM completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (USE_ITEM = 30)
+        - Byte: Slot del inventario (1-20)
+
+        Returns:
+            ValidationResult con {"slot": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+
+    def validate_commerce_buy_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet COMMERCE_BUY completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (COMMERCE_BUY = 40)
+        - Byte: Slot del mercader
+        - Int16: Cantidad
+
+        Returns:
+            ValidationResult con {"slot": int, "quantity": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=50)  # Mercaderes tienen más slots
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        quantity = self.read_quantity(min_qty=1, max_qty=10000)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
+        )
+
+    def validate_commerce_sell_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet COMMERCE_SELL completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (COMMERCE_SELL = 42)
+        - Byte: Slot del inventario (1-20)
+        - Int16: Cantidad
+
+        Returns:
+            ValidationResult con {"slot": int, "quantity": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        quantity = self.read_quantity(min_qty=1, max_qty=10000)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
+        )
+
+    def validate_bank_deposit_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet BANK_DEPOSIT completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (BANK_DEPOSIT = 43)
+        - Byte: Slot del inventario (1-20)
+        - Int16: Cantidad
+
+        Returns:
+            ValidationResult con {"slot": int, "quantity": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        quantity = self.read_quantity(min_qty=1, max_qty=10000)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
+        )
+
+    def validate_bank_extract_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet BANK_EXTRACT_ITEM completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (BANK_EXTRACT_ITEM = 41)
+        - Byte: Slot del banco (1-40)
+        - Int16: Cantidad
+
+        Returns:
+            ValidationResult con {"slot": int, "quantity": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=40)  # Banco tiene 40 slots
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        quantity = self.read_quantity(min_qty=1, max_qty=10000)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
+        )
+
+    def validate_change_heading_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet CHANGE_HEADING completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (CHANGE_HEADING = 37)
+        - Byte: Heading (1-4)
+
+        Returns:
+            ValidationResult con {"heading": int} si es válido.
+        """
+        heading = self.read_heading()
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"heading": heading}, error_message=None)
