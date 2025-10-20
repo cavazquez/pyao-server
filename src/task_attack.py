@@ -204,7 +204,18 @@ class TaskAttack(Task):
 
         damage = result["damage"]
         is_critical = result["critical"]
+        is_dodged = result.get("dodged", False)
         npc_died = result["npc_died"]
+
+        # Si el NPC esquivó, mostrar mensaje y salir
+        if is_dodged:
+            await self.message_sender.send_console_msg(f"¡{target_npc.name} esquivó tu ataque!")
+            await self.message_sender.send_create_fx(
+                target_npc.char_index,
+                VisualEffectID.MEDITATION,
+                loops=1,  # Efecto de esquive
+            )
+            return
 
         # Reproducir sonido de golpe
         await self.message_sender.send_play_wave(SoundID.SWORD_HIT, target_x, target_y)

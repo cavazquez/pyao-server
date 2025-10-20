@@ -99,6 +99,29 @@ class CombatService:
         strength = stats.get("strength", 10)
         agility = attributes.get("agility", 10) if attributes else 10
 
+        # Calcular agilidad del NPC (basada en nivel)
+        npc_agility = npc.level * 2
+
+        # Verificar si el NPC esquiva el ataque
+        is_dodged = self.damage_calculator.critical_calculator.is_dodged(npc_agility)
+
+        if is_dodged:
+            # El NPC esquivó el ataque
+            logger.info(
+                "¡%s esquivó el ataque del jugador %d!",
+                npc.name,
+                user_id,
+            )
+
+            esquiva_resultado: dict[str, int | bool] = {
+                "damage": 0,
+                "critical": False,
+                "dodged": True,
+                "npc_died": False,
+            }
+
+            return esquiva_resultado
+
         # Calcular daño usando el calculador
         damage, is_critical = self.damage_calculator.calculate_player_damage(
             strength=strength,
@@ -129,6 +152,7 @@ class CombatService:
         result: dict[str, int | bool] = {
             "damage": damage,
             "critical": is_critical,
+            "dodged": False,
             "npc_died": npc_died,
         }
 
