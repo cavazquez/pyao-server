@@ -90,3 +90,27 @@ items = [
     { item_id = 4, probability = 0.20, min_quantity = 1, max_quantity = 2 },     # Poción de Vida (20%)
     { item_id = 14, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Carne Podrida (25% - item temático)
 ]
+
+# Troll (npc_id=13) - Gigante brutal
+[[loot_table]]
+id = 13
+name = "Troll"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 30, max_quantity = 120 },  # Oro (siempre)
+    { item_id = 2, probability = 0.30, min_quantity = 1, max_quantity = 1 },     # Espada Larga (30%)
+    { item_id = 3, probability = 0.35, min_quantity = 1, max_quantity = 1 },     # Hacha (35%)
+    { item_id = 4, probability = 0.40, min_quantity = 2, max_quantity = 5 },     # Poción de Vida (40%)
+    { item_id = 13, probability = 0.25, min_quantity = 2, max_quantity = 4 },    # Huesos (25%)
+]
+
+# Ogro (npc_id=14) - Bestia poderosa
+[[loot_table]]
+id = 14
+name = "Ogro"
+items = [
+    { item_id = 12, probability = 1.0, min_quantity = 50, max_quantity = 150 },  # Oro (siempre)
+    { item_id = 2, probability = 0.40, min_quantity = 1, max_quantity = 1 },     # Espada Larga (40%)
+    { item_id = 3, probability = 0.45, min_quantity = 1, max_quantity = 1 },     # Hacha (45%)
+    { item_id = 4, probability = 0.50, min_quantity = 3, max_quantity = 7 },     # Poción de Vida (50%)
+    { item_id = 5, probability = 0.30, min_quantity = 2, max_quantity = 5 },     # Poción de Maná (30%)
+]

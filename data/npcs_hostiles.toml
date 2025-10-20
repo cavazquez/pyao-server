@@ -120,3 +120,33 @@ oro_min = 8
 oro_max = 30
 respawn_time = 35
 respawn_time_max = 70
+
+[[npc]]
+id = 13
+nombre = "Troll"
+descripcion = "Un troll gigante con fuerza descomunal."
+body_id = 11  # Body ID de Troll
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 12
+hp_max = 250
+oro_min = 30
+oro_max = 120
+respawn_time = 70
+respawn_time_max = 140
+
+[[npc]]
+id = 14
+nombre = "Ogro"
+descripcion = "Un ogro brutal que aplasta todo a su paso."
+body_id = 12  # Body ID de Ogro
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 15
+hp_max = 300
+oro_min = 50
+oro_max = 150
+respawn_time = 90
+respawn_time_max = 180

@@ -70,6 +70,8 @@ class TestLootTableService:
         assert service.has_loot_table(10) is True  # Dragón
         assert service.has_loot_table(11) is True  # Esqueleto
         assert service.has_loot_table(12) is True  # Zombie
+        assert service.has_loot_table(13) is True  # Troll
+        assert service.has_loot_table(14) is True  # Ogro
 
         # NPC que no existe
         assert service.has_loot_table(99999) is False
