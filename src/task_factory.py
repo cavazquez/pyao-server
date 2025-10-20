@@ -121,6 +121,7 @@ class TaskFactory:
                 self.deps.map_manager,
                 self.deps.broadcast_service,
                 self.deps.map_transition_service,
+                self.deps.stamina_service,
                 session_data,
             ),
             TaskChangeHeading: lambda: TaskChangeHeading(
@@ -189,6 +190,7 @@ class TaskFactory:
                 self.deps.npc_respawn_service,
                 self.deps.loot_table_service,
                 self.deps.item_catalog,
+                self.deps.stamina_service,
                 session_data,
             ),
             TaskPickup: lambda: TaskPickup(

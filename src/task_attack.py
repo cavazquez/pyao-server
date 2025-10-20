@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.sounds import SoundID
+from src.stamina_service import STAMINA_COST_ATTACK
 from src.task import Task
 from src.visual_effects import VisualEffectID
 
@@ -19,6 +20,7 @@ if TYPE_CHECKING:
     from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
+    from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,7 @@ class TaskAttack(Task):
         npc_respawn_service: NPCRespawnService | None = None,
         loot_table_service: LootTableService | None = None,
         item_catalog: ItemCatalog | None = None,
+        stamina_service: StaminaService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -53,6 +56,7 @@ class TaskAttack(Task):
             npc_respawn_service: Servicio de respawn de NPCs.
             loot_table_service: Servicio de loot tables.
             item_catalog: Catálogo de items.
+            stamina_service: Servicio de stamina.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -64,6 +68,7 @@ class TaskAttack(Task):
         self.npc_respawn_service = npc_respawn_service
         self.loot_table_service = loot_table_service
         self.item_catalog = item_catalog
+        self.stamina_service = stamina_service
         self.session_data = session_data or {}
 
     def _find_free_position_for_drop(
@@ -129,6 +134,18 @@ class TaskAttack(Task):
         ):
             logger.error("Dependencias no disponibles para atacar")
             return
+
+        # Consumir stamina por ataque
+        if self.stamina_service:
+            can_attack = await self.stamina_service.consume_stamina(
+                user_id=user_id,
+                amount=STAMINA_COST_ATTACK,
+                message_sender=self.message_sender,
+            )
+
+            if not can_attack:
+                logger.debug("user_id %d no tiene suficiente stamina para atacar", user_id)
+                return
 
         # Obtener posición del jugador
         position = await self.player_repo.get_position(user_id)

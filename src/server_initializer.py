@@ -111,6 +111,7 @@ class ServerInitializer:
             loot_table_service=services["loot_table_service"],
             map_transition_service=services["map_transition_service"],
             broadcast_service=services["broadcast_service"],
+            stamina_service=services["stamina_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,

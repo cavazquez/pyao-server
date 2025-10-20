@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
+from src.stamina_service import STAMINA_COST_WALK
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -13,6 +14,7 @@ if TYPE_CHECKING:
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_repository import PlayerRepository
+    from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +43,7 @@ class TaskWalk(Task):
         map_manager: MapManager | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
         map_transition_service: MapTransitionService | None = None,
+        stamina_service: StaminaService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
@@ -52,6 +55,7 @@ class TaskWalk(Task):
             map_manager: Gestor de mapas para broadcast.
             broadcast_service: Servicio de broadcast multijugador.
             map_transition_service: Servicio de transiciones entre mapas.
+            stamina_service: Servicio de stamina.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
@@ -59,6 +63,7 @@ class TaskWalk(Task):
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
         self.map_transition_service = map_transition_service
+        self.stamina_service = stamina_service
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -124,6 +129,18 @@ class TaskWalk(Task):
             await self.message_sender.send_meditate_toggle()
             await self.message_sender.send_console_msg("Dejas de meditar al moverte.")
             logger.info("user_id %d dejó de meditar al moverse", user_id)
+
+        # Consumir stamina por movimiento
+        if self.stamina_service:
+            can_move = await self.stamina_service.consume_stamina(
+                user_id=user_id,
+                amount=STAMINA_COST_WALK,
+                message_sender=self.message_sender,
+            )
+
+            if not can_move:
+                logger.debug("user_id %d no tiene suficiente stamina para moverse", user_id)
+                return
 
         # Obtener posición actual
         position = await self.player_repo.get_position(user_id)

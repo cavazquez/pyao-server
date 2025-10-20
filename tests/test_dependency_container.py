@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from src.dependency_container import DependencyContainer
 
 
-def test_dependency_container_creation() -> None:  # noqa: PLR0914
+def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     """Verifica que DependencyContainer se puede crear con todas las dependencias."""
     # Crear mocks para todas las dependencias
     redis_client = Mock()
@@ -27,6 +27,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914
     npc_respawn_service = Mock()
     loot_table_service = Mock()
     broadcast_service = Mock()
+    stamina_service = Mock()
     map_manager = Mock()
     game_tick = Mock()
     npc_catalog = Mock()
@@ -55,6 +56,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914
         loot_table_service=loot_table_service,
         map_transition_service=Mock(),
         broadcast_service=broadcast_service,
+        stamina_service=stamina_service,
         map_manager=map_manager,
         game_tick=game_tick,
         npc_catalog=npc_catalog,
@@ -82,6 +84,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914
     assert container.npc_respawn_service is npc_respawn_service
     assert container.loot_table_service is loot_table_service
     assert container.broadcast_service is broadcast_service
+    assert container.stamina_service is stamina_service
     assert container.map_manager is map_manager
     assert container.game_tick is game_tick
     assert container.npc_catalog is npc_catalog
