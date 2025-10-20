@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_data import LeftClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.redis_config import RedisKeys
@@ -86,8 +87,12 @@ class TaskLeftClick(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        x, y = coords
-        logger.info("user_id %d hizo click en posición (%d, %d)", user_id, x, y)
+        # Crear dataclass con datos validados
+        click_data = LeftClickData(x=coords[0], y=coords[1])
+
+        logger.info(
+            "user_id %d hizo click en posición (%d, %d)", user_id, click_data.x, click_data.y
+        )
 
         try:
             # Obtener posición del jugador para saber en qué mapa está
@@ -102,7 +107,7 @@ class TaskLeftClick(Task):
             all_npcs = self.map_manager.get_npcs_in_map(map_id)
             npc_found = None
             for npc in all_npcs:
-                if npc.x == x and npc.y == y:
+                if npc.x == click_data.x and npc.y == click_data.y:
                     npc_found = npc
                     break
 
@@ -110,8 +115,15 @@ class TaskLeftClick(Task):
                 await self._handle_npc_click(user_id, npc_found)
             else:
                 # No hay NPC en esa posición, podría ser otro jugador
-                logger.debug("No se encontró NPC en posición (%d, %d) del mapa %d", x, y, map_id)
-                await self.message_sender.send_console_msg(f"No hay nadie en ({x}, {y}).")
+                logger.debug(
+                    "No se encontró NPC en posición (%d, %d) del mapa %d",
+                    click_data.x,
+                    click_data.y,
+                    map_id,
+                )
+                await self.message_sender.send_console_msg(
+                    f"No hay nadie en ({click_data.x}, {click_data.y})."
+                )
 
         except Exception:
             logger.exception("Error al parsear packet LEFT_CLICK")

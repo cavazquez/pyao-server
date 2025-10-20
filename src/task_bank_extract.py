@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_data import BankExtractData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
@@ -72,25 +73,35 @@ class TaskBankExtract(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        logger.info("user_id %d extrayendo %d items del slot %d del banco", user_id, quantity, slot)
+        # Crear dataclass con datos validados
+        extract_data = BankExtractData(slot=slot, quantity=quantity)
+
+        logger.info(
+            "user_id %d extrayendo %d items del slot %d del banco",
+            user_id,
+            extract_data.quantity,
+            extract_data.slot,
+        )
 
         try:
             # Obtener item del banco
-            bank_item = await self.bank_repo.get_item(user_id, slot)
+            bank_item = await self.bank_repo.get_item(user_id, extract_data.slot)
             if not bank_item:
                 await self.message_sender.send_console_msg(
                     "No hay ningún item en ese slot del banco"
                 )
                 return
 
-            if bank_item.quantity < quantity:
+            if bank_item.quantity < extract_data.quantity:
                 await self.message_sender.send_console_msg(
                     f"Solo tienes {bank_item.quantity} items en ese slot del banco"
                 )
                 return
 
             # Extraer del banco
-            success = await self.bank_repo.extract_item(user_id, slot, quantity)
+            success = await self.bank_repo.extract_item(
+                user_id, extract_data.slot, extract_data.quantity
+            )
 
             if not success:
                 await self.message_sender.send_console_msg("Error al extraer del banco")
@@ -98,13 +109,13 @@ class TaskBankExtract(Task):
 
             # Agregar al inventario
             modified_slots = await self.inventory_repo.add_item(
-                user_id, bank_item.item_id, quantity
+                user_id, bank_item.item_id, extract_data.quantity
             )
 
             if not modified_slots:
                 logger.error("Error al agregar item al inventario después de extraer")
                 # Revertir extracción
-                await self.bank_repo.deposit_item(user_id, bank_item.item_id, quantity)
+                await self.bank_repo.deposit_item(user_id, bank_item.item_id, extract_data.quantity)
                 await self.message_sender.send_console_msg("No tienes espacio en el inventario")
                 return
 

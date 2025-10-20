@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_data import BankDepositData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
@@ -72,36 +73,39 @@ class TaskBankDeposit(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        logger.info("user_id %d depositando %d items del slot %d", user_id, quantity, slot)
+        # Crear dataclass con datos validados
+        deposit_data = BankDepositData(slot=slot, quantity=quantity)
+
+        logger.info(
+            "user_id %d depositando %d items del slot %d",
+            user_id,
+            deposit_data.quantity,
+            deposit_data.slot,
+        )
 
         try:
             # Obtener item del inventario
-            inv_slot_data = await self.inventory_repo.get_slot(user_id, slot)
+            inv_slot_data = await self.inventory_repo.get_slot(user_id, deposit_data.slot)
             if not inv_slot_data:
                 await self.message_sender.send_console_msg("No tienes ningún item en ese slot")
                 return
 
             item_id, amount = inv_slot_data
-            if amount < quantity:
+            if amount < deposit_data.quantity:
                 await self.message_sender.send_console_msg(
                     f"Solo tienes {amount} items en ese slot"
                 )
                 return
 
             # Depositar en el banco
-            bank_slot = await self.bank_repo.deposit_item(user_id, item_id, quantity)
+            bank_slot = await self.bank_repo.deposit_item(user_id, item_id, deposit_data.quantity)
 
             if bank_slot is None:
                 await self.message_sender.send_console_msg("No tienes espacio en el banco")
                 return
 
             # Remover del inventario
-            success = await self.inventory_repo.remove_item(user_id, slot, quantity)
-
-            if not success:
-                logger.error("Error al remover item del inventario después de depositar")
-                await self.message_sender.send_console_msg("Error al depositar")
-                return
+            await self.inventory_repo.remove_item(user_id, deposit_data.slot, deposit_data.quantity)
 
             # Obtener datos del item para enviar al cliente
             item = ITEMS_CATALOG.get(item_id)
@@ -110,10 +114,10 @@ class TaskBankDeposit(Task):
                 return
 
             # Actualizar slot del inventario en el cliente
-            remaining = amount - quantity
+            remaining = amount - deposit_data.quantity
             if remaining > 0:
                 await self.message_sender.send_change_inventory_slot(
-                    slot=slot,
+                    slot=deposit_data.slot,
                     item_id=item_id,
                     name=item.name,
                     amount=remaining,
@@ -129,7 +133,7 @@ class TaskBankDeposit(Task):
             else:
                 # Slot vacío
                 await self.message_sender.send_change_inventory_slot(
-                    slot=slot,
+                    slot=deposit_data.slot,
                     item_id=0,
                     name="",
                     amount=0,

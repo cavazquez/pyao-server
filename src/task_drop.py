@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_data import DropData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
@@ -75,7 +76,12 @@ class TaskDrop(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        logger.info("TaskDrop: user_id=%d slot=%d quantity=%d", user_id, slot, quantity)
+        # Crear dataclass con datos validados
+        drop_data = DropData(slot=slot, quantity=quantity)
+
+        logger.info(
+            "TaskDrop: user_id=%d slot=%d quantity=%d", user_id, drop_data.slot, drop_data.quantity
+        )
 
         # Validar que tenemos los servicios necesarios
         if not self.player_repo or not self.map_manager:
@@ -87,7 +93,7 @@ class TaskDrop(Task):
         # TODO: Implementar drop de items reales del inventario
 
         # Intentar dropear oro (asumimos que cualquier drop es oro por ahora)
-        await self._drop_gold(user_id, quantity)
+        await self._drop_gold(user_id, drop_data.quantity)
 
     async def _drop_gold(self, user_id: int, quantity: int) -> None:
         """Tira oro del jugador al suelo.

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.packet_data import DoubleClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
@@ -72,13 +73,16 @@ class TaskDoubleClick(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
+        # Crear dataclass con datos validados
+        click_data = DoubleClickData(target=target)
+
         try:
             # Si el target es > MAX_INVENTORY_SLOT, probablemente es un CharIndex de NPC
             # Los slots de inventario van de 1-20 típicamente
-            if target > MAX_INVENTORY_SLOT:
-                await self._handle_npc_double_click(user_id, target)
+            if click_data.target > MAX_INVENTORY_SLOT:
+                await self._handle_npc_double_click(user_id, click_data.target)
             else:
-                await self._handle_item_use(user_id, target)
+                await self._handle_item_use(user_id, click_data.target)
 
         except Exception:
             logger.exception("Error procesando DOUBLE_CLICK")
