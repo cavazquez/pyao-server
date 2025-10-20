@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -65,22 +67,14 @@ class TaskWalk(Task):
         Returns:
             Dirección del movimiento o None si hay error.
         """
-        try:
-            if len(self.data) < MIN_WALK_PACKET_SIZE:
-                return None
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
+        heading = validator.read_heading()
 
-            heading = int(self.data[1])
-
-            # Validar dirección (1-4)
-            if heading < HEADING_NORTH or heading > HEADING_WEST:
-                logger.warning("Dirección inválida: %d", heading)
-                return None
-
-        except (ValueError, IndexError) as e:
-            logger.warning("Error parseando paquete de movimiento: %s", e)
+        if validator.has_errors() or heading is None:
             return None
-        else:
-            return heading
+
+        return heading
 
     async def execute(self) -> None:  # noqa: PLR0915
         """Ejecuta el movimiento del personaje."""

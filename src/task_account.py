@@ -4,6 +4,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
+from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.password_utils import hash_password
 from src.task import Task
 from src.task_login import TaskLogin
@@ -23,7 +25,9 @@ logger = logging.getLogger(__name__)
 
 # Constantes de validación
 MIN_USERNAME_LENGTH = 3
+MAX_USERNAME_LENGTH = 20
 MIN_PASSWORD_LENGTH = 6
+MAX_PASSWORD_LENGTH = 32
 
 
 class TaskCreateAccount(Task):
@@ -69,7 +73,7 @@ class TaskCreateAccount(Task):
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
 
-    def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:  # noqa: PLR0915
+    def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:
         """Parsea el paquete de creación de cuenta.
 
         El formato esperado es:
@@ -92,49 +96,29 @@ class TaskCreateAccount(Task):
             Tupla (username, password, email, char_data) o None si hay error.
         """
         try:
-            offset = 1  # Saltar PacketID
+            # Usar PacketValidator para leer username y password
+            # NOTA: task_account usa UTF-8, no UTF-16LE como otros packets
+            reader = PacketReader(self.data)
+            validator = PacketValidator(reader)
 
-            # Leer username
-            if len(self.data) < offset + 2:
-                logger.warning("Paquete muy corto para leer longitud de username")
-                return None
-            username_len = int.from_bytes(
-                self.data[offset : offset + 2],
-                byteorder="little",
-                signed=False,
+            username = validator.read_string(
+                min_length=MIN_USERNAME_LENGTH, max_length=MAX_USERNAME_LENGTH, encoding="utf-8"
             )
-            offset += 2
-            logger.debug("Username length: %d, offset: %d", username_len, offset)
+            password = validator.read_string(
+                min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH, encoding="utf-8"
+            )
 
-            if len(self.data) < offset + username_len:
+            if validator.has_errors() or username is None or password is None:
                 logger.warning(
-                    "Paquete muy corto para leer username (esperado: %d, disponible: %d)",
-                    username_len,
-                    len(self.data) - offset,
+                    "Error validando username/password: %s", validator.get_error_message()
                 )
                 return None
-            username = self.data[offset : offset + username_len].decode("utf-8")
-            offset += username_len
-            logger.debug("Username: %s, offset: %d", username, offset)
 
-            # Leer password
-            if len(self.data) < offset + 2:
-                logger.warning("Paquete muy corto para leer longitud de password")
-                return None
-            password_len = int.from_bytes(
-                self.data[offset : offset + 2],
-                byteorder="little",
-                signed=False,
-            )
-            offset += 2
-            logger.debug("Password length: %d, offset: %d", password_len, offset)
+            logger.debug("Username: %s", username)
+            logger.debug("Password parsed")
 
-            if len(self.data) < offset + password_len:
-                logger.warning("Paquete muy corto para leer password")
-                return None
-            password = self.data[offset : offset + password_len].decode("utf-8")
-            offset += password_len
-            logger.debug("Password parsed, offset: %d", offset)
+            # Actualizar offset para continuar leyendo datos del personaje
+            offset = reader.offset
 
             # Leer datos del personaje (vienen antes del email)
             char_data = {}
@@ -161,23 +145,16 @@ class TaskCreateAccount(Task):
                 offset += 2
                 logger.debug("Char data parsed, offset: %d", offset)
 
-            # Leer email
-            if len(self.data) < offset + 2:
-                logger.warning("Paquete muy corto para leer longitud de email")
-                return None
-            email_len = int.from_bytes(
-                self.data[offset : offset + 2],
-                byteorder="little",
-                signed=False,
-            )
-            offset += 2
-            logger.debug("Email length: %d, offset: %d", email_len, offset)
+            # Leer email usando PacketValidator
+            # Actualizar el reader al offset actual
+            reader.offset = offset
+            email = validator.read_string(min_length=1, max_length=100, encoding="utf-8")
 
-            if len(self.data) < offset + email_len:
-                logger.warning("Paquete muy corto para leer email")
+            if validator.has_errors() or email is None:
+                logger.warning("Error validando email: %s", validator.get_error_message())
                 return None
-            email = self.data[offset : offset + email_len].decode("utf-8")
-            offset += email_len
+
+            offset = reader.offset
             logger.debug("Email: %s, offset: %d", email, offset)
 
             # Leer home (último byte)
