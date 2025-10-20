@@ -4,10 +4,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
-from src.message_sender import MessageSender
 from src.packet_reader import PacketReader
-from src.player_repository import PlayerRepository
-from src.redis_client import RedisClient
+from src.packet_validator import PacketValidator
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
@@ -58,10 +56,18 @@ class TaskCommerceBuy(Task):
 
         El cliente envía: PacketID (1 byte) + Slot (1 byte) + Quantity (2 bytes)
         """
-        # Leer parámetros del packet usando PacketReader
+        # Parsear y validar packet
         reader = PacketReader(self.data)
-        slot = reader.read_byte()  # Slot del mercader (1-based)
-        quantity = reader.read_int16()  # Cantidad a comprar
+        validator = PacketValidator(reader)
+        slot = validator.read_slot(min_slot=1, max_slot=20)
+        quantity = validator.read_quantity(min_qty=1, max_qty=10000)
+
+        if validator.has_errors() or slot is None or quantity is None:
+            error_msg = (
+                validator.get_error_message() if validator.has_errors() else "Datos inválidos"
+            )
+            await self.message_sender.send_console_msg(error_msg)
+            return
 
         logger.debug(
             "Cliente %s intenta comprar: slot=%d, quantity=%d",

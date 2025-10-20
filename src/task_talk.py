@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -16,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 # Constantes
 MIN_TALK_PACKET_SIZE = 3  # PacketID + int16
+MAX_MESSAGE_LENGTH = 255  # Longitud máxima del mensaje de chat
 
 
 class TaskTalk(Task):
@@ -58,15 +60,21 @@ class TaskTalk(Task):
             if len(self.data) < MIN_TALK_PACKET_SIZE:
                 return None
 
-            # Leer longitud del mensaje (int16, little-endian)
-            msg_length = int.from_bytes(self.data[1:3], byteorder="little", signed=False)
+            reader = PacketReader(self.data)
+            # Leer longitud del mensaje
+            msg_length = reader.read_int16()
+
+            # Validar longitud
+            if msg_length < 1 or msg_length > MAX_MESSAGE_LENGTH:
+                return None
 
             # Verificar que hay suficientes bytes
             if len(self.data) < 3 + msg_length:
                 return None
 
-            # Leer y retornar mensaje
-            return self.data[3 : 3 + msg_length].decode("utf-8")
+            # Leer mensaje (UTF-8)
+            message_bytes = self.data[3 : 3 + msg_length]
+            return message_bytes.decode("utf-8")
 
         except (ValueError, UnicodeDecodeError):
             return None
