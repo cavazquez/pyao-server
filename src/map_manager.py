@@ -1,7 +1,9 @@
 """Gestor de mapas y jugadores para broadcast multijugador."""
 
 import asyncio
+import json
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from src.map_manager_spatial import SpatialIndexMixin
@@ -38,6 +40,9 @@ class MapManager(SpatialIndexMixin):
 
         # Tiles bloqueados por mapa (paredes, agua, etc.)
         self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
+
+        # Tamaños de mapas: {map_id: (width, height)}
+        self._map_sizes: dict[int, tuple[int, int]] = {}
 
         # Ground items: {(map_id, x, y): [Item, Item, ...]}
         self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
@@ -535,3 +540,43 @@ class MapManager(SpatialIndexMixin):
         if map_items:
             total_items = sum(len(items) for items in map_items.values())
             logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)
+
+    def load_map_data(self, map_id: int, map_file_path: str | Path) -> None:
+        """Carga los datos de un mapa desde un archivo JSON.
+
+        Args:
+            map_id: ID del mapa.
+            map_file_path: Ruta al archivo JSON del mapa.
+        """
+        try:
+            map_path = Path(map_file_path)
+            if not map_path.exists():
+                logger.warning("Archivo de mapa no encontrado: %s", map_file_path)
+                # Usar tamaño por defecto 100x100
+                self._map_sizes[map_id] = (100, 100)
+                return
+
+            with map_path.open("r", encoding="utf-8") as f:
+                map_data = json.load(f)
+
+            width = map_data.get("width", 100)
+            height = map_data.get("height", 100)
+            self._map_sizes[map_id] = (width, height)
+
+            logger.info("Mapa %d cargado: %dx%d", map_id, width, height)
+
+        except (OSError, json.JSONDecodeError):
+            logger.exception("Error cargando mapa %d", map_id)
+            # Usar tamaño por defecto
+            self._map_sizes[map_id] = (100, 100)
+
+    def get_map_size(self, map_id: int) -> tuple[int, int]:
+        """Obtiene el tamaño de un mapa.
+
+        Args:
+            map_id: ID del mapa.
+
+        Returns:
+            Tupla (width, height). Si el mapa no está cargado, retorna (100, 100).
+        """
+        return self._map_sizes.get(map_id, (100, 100))

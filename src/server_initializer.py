@@ -65,7 +65,7 @@ class ServerInitializer:
         map_manager = MapManager(ground_items_repo)
         logger.info("✓ MapManager inicializado")
 
-        # Cargar tiles bloqueados de todos los mapas
+        # Cargar tiles bloqueados y datos de todos los mapas
         ServerInitializer._load_map_tiles(map_manager)
 
         # Cargar ground items del mapa principal

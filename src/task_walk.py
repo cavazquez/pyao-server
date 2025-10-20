@@ -240,14 +240,20 @@ class TaskWalk(Task):
         new_map = current_map
         changed_map = False
 
+        # Obtener tamaño del mapa actual
+        if self.map_manager:
+            map_width, map_height = self.map_manager.get_map_size(current_map)
+        else:
+            map_width, map_height = MAX_MAP_COORDINATE, MAX_MAP_COORDINATE
+
         # Detectar si estamos en el borde y hay transición
         edge = None
 
         if heading == HEADING_NORTH and current_y == MIN_MAP_COORDINATE:
             edge = "north"
-        elif heading == HEADING_EAST and current_x == MAX_MAP_COORDINATE:
+        elif heading == HEADING_EAST and current_x == map_width:
             edge = "east"
-        elif heading == HEADING_SOUTH and current_y == MAX_MAP_COORDINATE:
+        elif heading == HEADING_SOUTH and current_y == map_height:
             edge = "south"
         elif heading == HEADING_WEST and current_x == MIN_MAP_COORDINATE:
             edge = "west"
@@ -279,9 +285,9 @@ class TaskWalk(Task):
         if heading == HEADING_NORTH:
             new_y = max(MIN_MAP_COORDINATE, current_y - 1)
         elif heading == HEADING_EAST:
-            new_x = min(MAX_MAP_COORDINATE, current_x + 1)
+            new_x = min(map_width, current_x + 1)
         elif heading == HEADING_SOUTH:
-            new_y = min(MAX_MAP_COORDINATE, current_y + 1)
+            new_y = min(map_height, current_y + 1)
         elif heading == HEADING_WEST:
             new_x = max(MIN_MAP_COORDINATE, current_x - 1)
 

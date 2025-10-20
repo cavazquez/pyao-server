@@ -30,6 +30,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -72,6 +73,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -112,6 +114,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -152,6 +155,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -192,6 +196,7 @@ class TestTaskWalk:
 
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=False)  # Bloqueado
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 
@@ -229,6 +234,7 @@ class TestTaskWalk:
         player_repo.set_heading = AsyncMock()
 
         map_manager = MagicMock(spec=MapManager)
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 
         data = bytes([0x06, 0x01])  # NORTH
@@ -269,6 +275,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
