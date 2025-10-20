@@ -129,3 +129,14 @@ class CastSpellData:
     slot: int
     target_x: int | None = None
     target_y: int | None = None
+
+
+@dataclass
+class TalkData:
+    """Datos validados de un packet TALK.
+
+    Attributes:
+        message: Mensaje de chat (1-255 caracteres).
+    """
+
+    message: str

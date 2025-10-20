@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_data import TalkData
 from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
@@ -48,13 +49,13 @@ class TaskTalk(Task):
         self.map_manager = map_manager
         self.session_data = session_data
 
-    def _parse_packet(self) -> str | None:
+    def _parse_packet(self) -> TalkData | None:
         """Parsea el paquete Talk.
 
         Formato: PacketID (1 byte) + longitud (int16) + mensaje (string UTF-8)
 
         Returns:
-            Mensaje de chat o None si el paquete es inválido.
+            TalkData con el mensaje validado o None si el paquete es inválido.
         """
         try:
             if len(self.data) < MIN_TALK_PACKET_SIZE:
@@ -74,16 +75,18 @@ class TaskTalk(Task):
 
             # Leer mensaje (UTF-8)
             message_bytes = self.data[3 : 3 + msg_length]
-            return message_bytes.decode("utf-8")
+            message = message_bytes.decode("utf-8")
+
+            return TalkData(message=message)
 
         except (ValueError, UnicodeDecodeError):
             return None
 
     async def execute(self) -> None:
         """Procesa el mensaje de chat."""
-        message = self._parse_packet()
+        talk_data = self._parse_packet()
 
-        if message is None:
+        if talk_data is None:
             logger.warning(
                 "Paquete Talk inválido desde %s",
                 self.message_sender.connection.address,
@@ -103,7 +106,7 @@ class TaskTalk(Task):
         logger.info(
             "Mensaje de chat de user_id %d: %s",
             user_id,
-            message,
+            talk_data.message,
         )
 
         # Broadcast multijugador: enviar mensaje a todos los jugadores en el mapa
@@ -127,7 +130,7 @@ class TaskTalk(Task):
                 map_id = position["map"]
 
                 # Formatear mensaje con el nombre del usuario
-                formatted_message = f"{username}: {message}"
+                formatted_message = f"{username}: {talk_data.message}"
 
                 # Enviar a todos los jugadores en el mapa (incluyendo el emisor)
                 all_senders = self.map_manager.get_all_message_senders_in_map(map_id)

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.equipment_service import EquipmentService
 from src.inventory_repository import InventoryRepository
+from src.packet_data import EquipItemData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.player_service import PlayerService
@@ -73,8 +74,12 @@ class TaskEquipItem(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        # Slot garantizado como válido
-        logger.info("user_id %d intenta equipar/desequipar item en slot %d", user_id, slot)
+        # Crear dataclass con datos validados
+        equip_data = EquipItemData(slot=slot)
+
+        logger.info(
+            "user_id %d intenta equipar/desequipar item en slot %d", user_id, equip_data.slot
+        )
 
         try:
             # Crear servicio de equipamiento
@@ -82,7 +87,9 @@ class TaskEquipItem(Task):
             equipment_service = EquipmentService(self.equipment_repo, inventory_repo)
 
             # Equipar o desequipar el item
-            success = await equipment_service.toggle_equip_item(user_id, slot, self.message_sender)
+            success = await equipment_service.toggle_equip_item(
+                user_id, equip_data.slot, self.message_sender
+            )
 
             if success:
                 # Reenviar el inventario completo para actualizar el estado de equipamiento

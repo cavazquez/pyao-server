@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.packet_data import CommerceBuyData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.redis_config import RedisKeys
@@ -69,11 +70,14 @@ class TaskCommerceBuy(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
+        # Crear dataclass con datos validados
+        buy_data = CommerceBuyData(slot=slot, quantity=quantity)
+
         logger.debug(
             "Cliente %s intenta comprar: slot=%d, quantity=%d",
             self.message_sender.connection.address,
-            slot,
-            quantity,
+            buy_data.slot,
+            buy_data.quantity,
         )
 
         # Obtener user_id de la sesión
@@ -94,7 +98,9 @@ class TaskCommerceBuy(Task):
             return
 
         # Ejecutar compra
-        success, message = await self.commerce_service.buy_item(user_id, npc_id, slot, quantity)
+        success, message = await self.commerce_service.buy_item(
+            user_id, npc_id, buy_data.slot, buy_data.quantity
+        )
 
         # Enviar mensaje de resultado
         await self.message_sender.send_console_msg(message)
