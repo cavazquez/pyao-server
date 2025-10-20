@@ -45,11 +45,11 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Loot tables configurables
 - [x] Items variados (armas, armaduras, pociones)
 
-### 📝 Versión 0.5.0 - Refactorings y Calidad
+### ✅ Versión 0.5.0-alpha - Refactorings y Calidad
 - [x] MessageSender refactoring (100% completado)
-- [x] PacketReader implementado (3/9 tasks migradas)
-- [ ] Completar migración de PacketReader (6 tasks pendientes)
-- [ ] NPC Factory Pattern
+- [x] PacketReader implementado (15/15 tasks migradas - 100%)
+- [x] NPC Factory Pattern
+- [x] Sistema de Energía/Stamina - Consumo y regeneración
 - [ ] Configuration Management
 
 ### 📝 Versión 0.6.0 - Social y Party
@@ -452,13 +452,13 @@ Este proyecto tiene varios documentos TODO especializados:
 
 ## 📊 Estado Actual del Proyecto
 
-**Versión actual:** 0.4.0-alpha  
+**Versión actual:** 0.5.0-alpha  
 **Tests actuales:** 807 (100% pasando)  
-**Servicios implementados:** 12+  
-**Efectos de tick:** 4  
+**Servicios implementados:** 14+ (StaminaService, NPCFactory)  
+**Efectos de tick:** 5 (StaminaRegenEffect)  
 **NPCs con loot tables:** 10 (Goblin, Lobo, Orco, Araña, Serpiente, Dragón, Esqueleto, Zombie, Troll, Ogro)  
 **Mapas con colisiones:** 290  
-**Sistemas completados:** Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones
+**Sistemas completados:** Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones, Energía/Stamina
 
 ---
 

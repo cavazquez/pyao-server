@@ -358,3 +358,29 @@ class PlayerRepository:
         key = RedisKeys.player_user_stats(user_id)
         await self.redis.redis.hset(key, "gold", str(gold))  # type: ignore[misc]
         logger.debug("Oro actualizado para user_id %d: %d", user_id, gold)
+
+    async def get_stamina(self, user_id: int) -> tuple[int, int]:
+        """Obtiene la stamina actual y máxima del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Tupla (min_sta, max_sta) con stamina actual y máxima.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result: list[str | None] = await self.redis.redis.hmget(key, ["min_sta", "max_sta"])  # type: ignore[misc]
+        min_sta = int(result[0]) if result[0] else 100
+        max_sta = int(result[1]) if result[1] else 100
+        return (min_sta, max_sta)
+
+    async def update_stamina(self, user_id: int, stamina: int) -> None:
+        """Actualiza la stamina actual del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            stamina: Nueva stamina actual.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "min_sta", str(stamina))  # type: ignore[misc]
+        logger.debug("Stamina actualizada para user_id %d: %d", user_id, stamina)
