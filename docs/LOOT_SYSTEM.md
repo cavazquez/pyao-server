@@ -323,6 +323,85 @@ packet.add_int32(value)
 packet.add_byte(equipped)  # 1 si está equipado
 ```
 
+## 🎓 Guía: Cómo Agregar Nuevos NPCs con Loot
+
+### Paso 1: Crear el NPC en data/npcs.toml
+
+```toml
+[[npc]]
+id = 10
+nombre = "Dragón"
+body_id = 200
+head_id = 0
+nivel = 50
+hp = 1000
+es_hostil = true
+```
+
+### Paso 2: Configurar Loot Table en data/loot_tables.toml
+
+```toml
+# Dragón (npc_id=10) - Boss poderoso
+[[loot_table]]
+id = 10
+name = "Dragón"
+items = [
+    # Oro (siempre dropea mucho)
+    { item_id = 12, probability = 1.0, min_quantity = 500, max_quantity = 1000 },
+    
+    # Items raros (baja probabilidad)
+    { item_id = 20, probability = 0.05, min_quantity = 1, max_quantity = 1 },  # Espada Legendaria (5%)
+    { item_id = 21, probability = 0.10, min_quantity = 1, max_quantity = 1 },  # Escudo Dragón (10%)
+    
+    # Pociones (probabilidad media)
+    { item_id = 4, probability = 0.50, min_quantity = 5, max_quantity = 10 },  # Poción Vida (50%)
+    { item_id = 5, probability = 0.40, min_quantity = 3, max_quantity = 8 },   # Poción Maná (40%)
+    
+    # Items temáticos
+    { item_id = 22, probability = 0.30, min_quantity = 1, max_quantity = 3 },  # Escama de Dragón (30%)
+]
+```
+
+### Paso 3: Reiniciar el Servidor
+
+El sistema carga las loot tables automáticamente al iniciar:
+
+```bash
+# El servidor carga data/loot_tables.toml
+# LootTableService se inicializa en service_initializer.py
+# Las loot tables se registran automáticamente
+```
+
+### Paso 4: Verificar en Logs
+
+```
+INFO - Loot tables cargadas: 6 NPCs
+DEBUG - Loot table cargada: NPC 10 - Dragón (5 items)
+```
+
+### Consejos de Balance
+
+**Probabilidades recomendadas:**
+- **Oro**: 100% (siempre dropea)
+- **Items comunes**: 30-50%
+- **Items poco comunes**: 15-30%
+- **Items raros**: 5-15%
+- **Items épicos**: 1-5%
+- **Items legendarios**: 0.1-1%
+
+**Cantidades:**
+- **Oro**: `nivel * 10` a `nivel * 20`
+- **Pociones**: 1-5 para NPCs normales, 5-10 para bosses
+- **Armas/Armaduras**: Siempre 1
+- **Materiales**: 1-3 para NPCs normales, 3-10 para bosses
+
+**Items temáticos:**
+- Lobos → Pieles, Colmillos
+- Arañas → Veneno, Tela de Araña
+- Dragones → Escamas, Garras
+- Zombies → Huesos, Carne Podrida
+- Esqueletos → Huesos, Armadura Vieja
+
 ## ⚙️ Configuración
 
 ### Oro Dropeado
@@ -490,15 +569,51 @@ gold = base_gold + bonus
 
 ## 📜 Changelog
 
+### 2025-10-19 ✅ SISTEMA COMPLETADO
+- ✅ **LootTableService implementado** - Sistema completo de loot tables
+- ✅ **Loot tables configurables** - Archivo `data/loot_tables.toml`
+- ✅ **Integración con task_attack** - NPCs dropean items al morir
+- ✅ **Ground items funcionando** - Items aparecen en el mapa
+- ✅ **5 NPCs con loot mejorado** - Goblin, Lobo, Orco, Araña, Serpiente
+- ✅ **Items temáticos** - Cada NPC dropea items apropiados
+- ✅ **Sistema de probabilidades** - Drops con % configurables
+- ✅ **Items raros** - Algunos items tienen baja probabilidad (10-15%)
+
+### Mejoras Realizadas (2025-10-19)
+
+**Goblin (NPC débil, común):**
+- Oro: 10-50 (100%)
+- Manzana Roja: 1-3 (40%)
+- Daga: 1 (15%)
+- Poción de Vida: 1-2 (25%) ← NUEVO
+
+**Lobo (Criatura rápida):**
+- Oro: 5-20 (100%)
+- Manzana Roja: 1 (20%)
+- Piel de Lobo: 1 (10%) ← NUEVO (item raro)
+
+**Orco (Guerrero fuerte):**
+- Oro: 20-100 (100%)
+- Hacha: 1 (25%)
+- Espada Larga: 1 (20%)
+- Poción de Vida: 2-5 (30%) ← NUEVO
+- Poción de Maná: 1-2 (15%) ← NUEVO
+
+**Araña Gigante (Venenosa):**
+- Oro: 15-75 (100%)
+- Manzana Roja: 1-2 (25%)
+- Veneno de Araña: 1-3 (20%) ← NUEVO
+- Poción de Vida: 1-2 (15%) ← NUEVO
+
+**Serpiente (Ágil):**
+- Oro: 3-15 (100%)
+- Manzana Roja: 1 (20%)
+- Veneno: 1 (15%) ← NUEVO
+
 ### 2025-10-16
 - ✅ Cálculo de oro dropeado implementado
 - ✅ Experiencia se da directamente
-- ⏳ Ground items en progreso
-- ⏳ Packets OBJECT_CREATE/DELETE pendientes
-- ⏳ TaskPickup pendiente
-
-### Próxima Sesión
-- [ ] Implementar ground items en MapManager
-- [ ] Implementar packets OBJECT_CREATE/DELETE
-- [ ] Implementar TaskPickup
-- [ ] Dropear oro visible en el suelo
+- ✅ Ground items implementado
+- ✅ Packets OBJECT_CREATE/DELETE implementados
+- ✅ TaskPickup implementado
+- ✅ Oro visible en el suelo
