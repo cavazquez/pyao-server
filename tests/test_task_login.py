@@ -1,14 +1,11 @@
 """Tests para TaskLogin."""
 
 import struct
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.authentication_service import AuthenticationService
-from src.player_service import PlayerService
 from src.task_login import TaskLogin
-from src.task_motd import TaskMotd
 
 
 @pytest.mark.asyncio
@@ -102,16 +99,16 @@ class TestTaskLogin:
         message_sender = MagicMock()
         account_repo = MagicMock()
 
-        # Mock del AuthenticationService
-        AuthenticationService.authenticate = AsyncMock(return_value=(1, 2))
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
             account_repo=account_repo,
         )
 
-        result = await task._authenticate_user("testuser", "password")  # noqa: SLF001
+        # Mock del AuthenticationService usando patch
+        with patch("src.task_login.AuthenticationService") as mock_auth:
+            mock_auth.return_value.authenticate = AsyncMock(return_value=(1, 2))
+            result = await task._authenticate_user("testuser", "password")  # noqa: SLF001
 
         assert result is not None
         assert result == (1, 2)
@@ -121,15 +118,16 @@ class TestTaskLogin:
         message_sender = MagicMock()
         account_repo = MagicMock()
 
-        AuthenticationService.authenticate = AsyncMock(return_value=None)
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
             account_repo=account_repo,
         )
 
-        result = await task._authenticate_user("testuser", "wrongpass")  # noqa: SLF001
+        # Mock del AuthenticationService usando patch
+        with patch("src.task_login.AuthenticationService") as mock_auth:
+            mock_auth.return_value.authenticate = AsyncMock(return_value=None)
+            result = await task._authenticate_user("testuser", "wrongpass")  # noqa: SLF001
 
         assert result is None
 
@@ -171,13 +169,6 @@ class TestTaskLogin:
         player_repo = MagicMock()
         account_repo = MagicMock()
 
-        # Mock del PlayerService
-        PlayerService.send_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
-        )
-        PlayerService.send_attributes = AsyncMock()
-        PlayerService.send_stats = AsyncMock()
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
@@ -185,7 +176,15 @@ class TestTaskLogin:
             account_repo=account_repo,
         )
 
-        position = await task._send_login_packets(1, 2)  # noqa: SLF001
+        # Mock del PlayerService usando patch
+        with patch("src.task_login.PlayerService") as mock_service:
+            mock_service.return_value.send_position = AsyncMock(
+                return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
+            )
+            mock_service.return_value.send_attributes = AsyncMock()
+            mock_service.return_value.send_stats = AsyncMock()
+
+            position = await task._send_login_packets(1, 2)  # noqa: SLF001
 
         assert position is not None
         assert position["x"] == 50
@@ -200,8 +199,6 @@ class TestTaskLogin:
         player_repo.set_meditating = AsyncMock()
         account_repo = MagicMock()
 
-        PlayerService.send_hunger_thirst = AsyncMock()
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
@@ -209,7 +206,9 @@ class TestTaskLogin:
             account_repo=account_repo,
         )
 
-        await task._initialize_player_data(1)  # noqa: SLF001
+        with patch("src.task_login.PlayerService") as mock_service:
+            mock_service.return_value.send_hunger_thirst = AsyncMock()
+            await task._initialize_player_data(1)  # noqa: SLF001
 
         player_repo.set_meditating.assert_called_once_with(1, is_meditating=False)
 
@@ -286,8 +285,6 @@ class TestTaskLogin:
         player_repo = MagicMock()
         account_repo = MagicMock()
 
-        PlayerService.spawn_character = AsyncMock()
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
@@ -296,7 +293,10 @@ class TestTaskLogin:
         )
 
         position = {"x": 50, "y": 50, "map": 1, "heading": 3}
-        await task._spawn_player(1, "testuser", position)  # noqa: SLF001
+
+        with patch("src.task_login.PlayerService") as mock_service:
+            mock_service.return_value.spawn_character = AsyncMock()
+            await task._spawn_player(1, "testuser", position)  # noqa: SLF001
 
         message_sender.play_sound_login.assert_called_once()
         message_sender.send_pos_update.assert_called_once_with(50, 50)
@@ -355,9 +355,6 @@ class TestTaskLogin:
         account_repo = MagicMock()
         server_repo = MagicMock()
 
-        PlayerService.send_inventory = AsyncMock()
-        TaskMotd.execute = AsyncMock()
-
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
@@ -366,7 +363,13 @@ class TestTaskLogin:
             server_repo=server_repo,
         )
 
-        await task._finalize_login(1)  # noqa: SLF001
+        with (
+            patch("src.task_login.PlayerService") as mock_service,
+            patch("src.task_login.TaskMotd") as mock_motd,
+        ):
+            mock_service.return_value.send_inventory = AsyncMock()
+            mock_motd.return_value.execute = AsyncMock()
+            await task._finalize_login(1)  # noqa: SLF001
 
         # Verificar que se llamó a send_inventory
         # (PlayerService.send_inventory se llama dentro)

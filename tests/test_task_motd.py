@@ -4,8 +4,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
-from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID
 from src.task_motd import TaskMotd
 
@@ -13,13 +11,9 @@ from src.task_motd import TaskMotd
 @pytest.mark.asyncio
 async def test_task_motd_with_server_repo() -> None:
     """Verifica que TaskMotd muestre el mensaje desde el repositorio."""
-    writer = MagicMock()
-    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
-    writer.drain = AsyncMock()
-
-    reader = MagicMock()
-    connection = ClientConnection(reader, writer)
-    message_sender = MessageSender(connection)
+    # Mock del message_sender
+    message_sender = MagicMock()
+    message_sender.connection.address = "127.0.0.1:12345"
     message_sender.send_multiline_console_msg = AsyncMock()
 
     # Mock del server_repo
@@ -48,13 +42,9 @@ async def test_task_motd_with_server_repo() -> None:
 @pytest.mark.asyncio
 async def test_task_motd_without_server_repo() -> None:
     """Verifica que TaskMotd funcione sin repositorio con mensaje por defecto."""
-    writer = MagicMock()
-    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
-    writer.drain = AsyncMock()
-
-    reader = MagicMock()
-    connection = ClientConnection(reader, writer)
-    message_sender = MessageSender(connection)
+    # Mock del message_sender
+    message_sender = MagicMock()
+    message_sender.connection.address = "127.0.0.1:12345"
     message_sender.send_multiline_console_msg = AsyncMock()
 
     # Sin server_repo
@@ -74,13 +64,9 @@ async def test_task_motd_without_server_repo() -> None:
 @pytest.mark.asyncio
 async def test_task_motd_multiline_message() -> None:
     """Verifica que TaskMotd maneje correctamente mensajes multilínea."""
-    writer = MagicMock()
-    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
-    writer.drain = AsyncMock()
-
-    reader = MagicMock()
-    connection = ClientConnection(reader, writer)
-    message_sender = MessageSender(connection)
+    # Mock del message_sender
+    message_sender = MagicMock()
+    message_sender.connection.address = "127.0.0.1:12345"
     message_sender.send_multiline_console_msg = AsyncMock()
 
     # Mock del server_repo con mensaje multilínea
@@ -103,13 +89,9 @@ async def test_task_motd_multiline_message() -> None:
 @pytest.mark.asyncio
 async def test_task_motd_multiple_requests() -> None:
     """Verifica que TaskMotd responda correctamente a múltiples solicitudes."""
-    writer = MagicMock()
-    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
-    writer.drain = AsyncMock()
-
-    reader = MagicMock()
-    connection = ClientConnection(reader, writer)
-    message_sender = MessageSender(connection)
+    # Mock del message_sender
+    message_sender = MagicMock()
+    message_sender.connection.address = "127.0.0.1:12345"
     message_sender.send_multiline_console_msg = AsyncMock()
 
     server_repo = MagicMock()
