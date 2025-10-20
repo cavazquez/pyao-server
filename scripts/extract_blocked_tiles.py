@@ -6,6 +6,8 @@ qué tiles están bloqueados en cada mapa.
 Formato del archivo .map de AO:
 - Archivo binario con información de cada tile (100x100 tiles)
 - Cada tile tiene información sobre si es bloqueado o no
+
+ruff: noqa: PLR2004, BLE001
 """
 
 from pathlib import Path
@@ -55,7 +57,7 @@ def read_map_file(map_path: Path) -> dict[tuple[int, int], bool]:
 
                 # El byte de bloqueo suele estar cerca del final del tile
                 # Típicamente en posición -4 o -3
-                if len(tile_data) >= 4:
+                if len(tile_data) >= 4:  # noqa: PLR2004
                     blocked_byte = tile_data[-4]
                     is_blocked = (blocked_byte & 0x01) != 0  # Bit 0 = bloqueado
 
@@ -66,7 +68,7 @@ def read_map_file(map_path: Path) -> dict[tuple[int, int], bool]:
 
         print(f"  Tiles bloqueados: {len(blocked_tiles)}")
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         print(f"Error leyendo {map_path.name}: {e}")
 
     return blocked_tiles
@@ -84,7 +86,7 @@ def extract_all_maps(
         Diccionario con map_id -> {(x, y) -> is_blocked}
     """
     maps_path = Path(maps_dir)
-    all_blocked_tiles = {}
+    all_blocked_tiles: dict[int, dict[tuple[int, int], bool]] = {}
 
     if not maps_path.exists():
         print(f"Directorio no encontrado: {maps_dir}")

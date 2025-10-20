@@ -2,13 +2,17 @@
 
 Este script crea archivos JSON para los mapas configurados en map_transitions.toml
 con tiles bloqueados en los bordes para testing.
+
+ruff: noqa: PLR2004
 """
 
 import json
 from pathlib import Path
 
 
-def generate_map_json(map_id: int, name: str, blocked_tiles: list[dict]) -> dict:
+def generate_map_json(
+    map_id: int, name: str, blocked_tiles: list[dict[str, int | str]]
+) -> dict[str, int | str | list[dict[str, int | str]]]:
     """Genera estructura JSON para un mapa.
 
     Args:
@@ -29,13 +33,13 @@ def generate_map_json(map_id: int, name: str, blocked_tiles: list[dict]) -> dict
     }
 
 
-def create_basic_blocked_tiles() -> list[dict]:
+def create_basic_blocked_tiles() -> list[dict[str, int | str]]:
     """Crea tiles bloqueados básicos (bordes del mapa).
 
     Returns:
         Lista de tiles bloqueados en los bordes
     """
-    blocked = []
+    blocked: list[dict[str, int | str]] = []
 
     # Bordes del mapa (opcional, para testing)
     # Por ahora dejamos los mapas abiertos para que las transiciones funcionen
@@ -44,7 +48,7 @@ def create_basic_blocked_tiles() -> list[dict]:
     # (esto es solo para demostración, en producción se cargarían desde los .map)
     for x in range(48, 53):
         for y in range(48, 53):
-            if x == 50 and y == 50:
+            if x == 50 and y == 50:  # noqa: PLR2004
                 continue  # Dejar el centro libre
             blocked.append({"x": x, "y": y, "type": "wall"})
 

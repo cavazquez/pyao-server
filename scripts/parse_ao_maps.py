@@ -5,6 +5,29 @@ Basado en el código del cliente Godot en game_assets.gd
 
 import struct
 from pathlib import Path
+from typing import Any
+
+# Rangos de GRH para detección de tipos de tiles
+WATER_RANGE_1 = (1505, 1520)
+WATER_RANGE_2 = (5665, 5680)
+WATER_RANGE_3 = (13547, 13562)
+BUILDING_RANGE = (6000, 6200)
+TREE_RANGE_1 = (6076, 6120)
+TREE_RANGE_2 = (5500, 5600)
+TREE_RANGE_3 = (8600, 8700)
+ROCK_RANGE_1 = (6200, 6400)
+ROCK_RANGE_2 = (5700, 5800)
+WALL_RANGE_1 = (5400, 5500)
+WALL_RANGE_2 = (8500, 8600)
+HEADER_SIZE = 273
+MAP_SIZE = 100
+LAYER_FLAGS = {
+    "layer2": 0x2,
+    "layer3": 0x4,
+    "layer4": 0x8,
+    "trigger": 0x10,
+}
+BLOCKED_FLAG = 0x1
 
 
 def detect_tile_type(layer1: int, layer2: int) -> str:
@@ -20,31 +43,42 @@ def detect_tile_type(layer1: int, layer2: int) -> str:
         Tipo de tile: "tree", "rock", "wall", "building", "water", "blocked"
     """
     # Agua (debe tener layer2 == 0)
-    if layer2 == 0:
-        if (1505 <= layer1 <= 1520) or (5665 <= layer1 <= 5680) or (13547 <= layer1 <= 13562):
-            return "water"
+    if layer2 == 0 and (
+        (WATER_RANGE_1[0] <= layer1 <= WATER_RANGE_1[1])
+        or (WATER_RANGE_2[0] <= layer1 <= WATER_RANGE_2[1])
+        or (WATER_RANGE_3[0] <= layer1 <= WATER_RANGE_3[1])
+    ):
+        return "water"
 
-    # Edificios y paredes (rango 6000-6200 muy común en mapas)
-    if 6000 <= layer1 <= 6200:
+    # Edificios y paredes
+    if BUILDING_RANGE[0] <= layer1 <= BUILDING_RANGE[1]:
         return "building"
 
-    # Árboles (rangos comunes)
-    if (6076 <= layer1 <= 6120) or (5500 <= layer1 <= 5600) or (8600 <= layer1 <= 8700):
+    # Árboles
+    if (
+        (TREE_RANGE_1[0] <= layer1 <= TREE_RANGE_1[1])
+        or (TREE_RANGE_2[0] <= layer1 <= TREE_RANGE_2[1])
+        or (TREE_RANGE_3[0] <= layer1 <= TREE_RANGE_3[1])
+    ):
         return "tree"
 
     # Rocas y montañas
-    if (6200 <= layer1 <= 6400) or (5700 <= layer1 <= 5800):
+    if (ROCK_RANGE_1[0] <= layer1 <= ROCK_RANGE_1[1]) or (
+        ROCK_RANGE_2[0] <= layer1 <= ROCK_RANGE_2[1]
+    ):
         return "rock"
 
     # Muros y vallas
-    if (5400 <= layer1 <= 5500) or (8500 <= layer1 <= 8600):
+    if (WALL_RANGE_1[0] <= layer1 <= WALL_RANGE_1[1]) or (
+        WALL_RANGE_2[0] <= layer1 <= WALL_RANGE_2[1]
+    ):
         return "wall"
 
     # Por defecto, bloqueado genérico
     return "blocked"
 
 
-def parse_map_file(map_path: Path) -> dict:
+def parse_map_file(map_path: Path) -> dict[str, Any]:
     """Parsea un archivo .map de Argentum Online.
 
     Formato del archivo:
@@ -63,16 +97,16 @@ def parse_map_file(map_path: Path) -> dict:
     Returns:
         Diccionario con información del mapa
     """
-    blocked_tiles = []
-    tile_types_count = {}
+    blocked_tiles: list[dict[str, Any]] = []
+    tile_types_count: dict[str, int] = {}
 
     with map_path.open("rb") as f:
-        # Saltar header (273 bytes)
-        f.seek(2 + 255 + 4 + 4 + 8)
+        # Saltar header
+        f.seek(HEADER_SIZE)
 
-        # Leer 100x100 tiles
-        for y in range(100):
-            for x in range(100):
+        # Leer tiles del mapa
+        for y in range(MAP_SIZE):
+            for x in range(MAP_SIZE):
                 # Leer flags
                 flags_byte = f.read(1)
                 if not flags_byte:
@@ -85,27 +119,27 @@ def parse_map_file(map_path: Path) -> dict:
                     break
                 layer1 = struct.unpack("<H", layer1_bytes)[0]
 
-                # Layer 2 (si flags & 0x2)
+                # Layer 2
                 layer2 = 0
-                if flags & 0x2:
+                if flags & LAYER_FLAGS["layer2"]:
                     layer2_bytes = f.read(2)
                     if layer2_bytes:
                         layer2 = struct.unpack("<H", layer2_bytes)[0]
 
-                # Layer 3 (si flags & 0x4)
-                if flags & 0x4:
+                # Layer 3
+                if flags & LAYER_FLAGS["layer3"]:
                     f.read(2)  # Saltar layer3
 
-                # Layer 4 (si flags & 0x8)
-                if flags & 0x8:
+                # Layer 4
+                if flags & LAYER_FLAGS["layer4"]:
                     f.read(2)  # Saltar layer4
 
-                # Trigger (si flags & 0x10)
-                if flags & 0x10:
+                # Trigger
+                if flags & LAYER_FLAGS["trigger"]:
                     f.read(2)  # Saltar trigger
 
-                # Verificar si está bloqueado (bit 0x1)
-                if flags & 0x1:
+                # Verificar si está bloqueado
+                if flags & BLOCKED_FLAG:
                     tile_type = detect_tile_type(layer1, layer2)
                     blocked_tiles.append({"x": x + 1, "y": y + 1, "type": tile_type})
                     tile_types_count[tile_type] = tile_types_count.get(tile_type, 0) + 1
@@ -115,7 +149,7 @@ def parse_map_file(map_path: Path) -> dict:
 
 def extract_map_data(
     map_id: int, maps_dir: str = "./clientes/ArgentumOnlineGodot/Assets/Maps"
-) -> dict | None:
+) -> dict[str, Any] | None:
     """Extrae datos de un mapa específico.
 
     Args:
@@ -145,7 +179,7 @@ def extract_map_data(
     return data
 
 
-def generate_map_json(map_id: int, name: str, map_data: dict) -> dict:
+def generate_map_json(map_id: int, name: str, map_data: dict[str, Any]) -> dict[str, Any]:
     """Genera estructura JSON para un mapa.
 
     Args:

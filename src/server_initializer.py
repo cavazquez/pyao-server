@@ -47,8 +47,8 @@ class ServerInitializer:
 
         # Cargar tiles bloqueados de todos los mapas
         maps_dir = Path("maps")
-        if maps_dir.exists():
-            map_files = list(maps_dir.glob("map_*.json"))
+        if maps_dir.exists():  # noqa: ASYNC240
+            map_files = list(maps_dir.glob("map_*.json"))  # noqa: ASYNC240
             for map_file in sorted(map_files):
                 try:
                     map_id = int(map_file.stem.replace("map_", ""))
