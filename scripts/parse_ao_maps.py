@@ -215,10 +215,31 @@ def update_all_maps():
         # Generar JSON
         map_json = generate_map_json(map_id, name, map_data)
         
-        # Guardar archivo
+        # Guardar archivo con formato compacto para blocked_tiles
         output_file = maps_dir / f"map_{map_id}.json"
         with output_file.open('w', encoding='utf-8') as f:
-            json.dump(map_json, f, indent=2, ensure_ascii=False)
+            # Escribir manualmente para formato horizontal
+            f.write('{\n')
+            f.write(f'  "id": {map_json["id"]},\n')
+            f.write(f'  "name": "{map_json["name"]}",\n')
+            f.write(f'  "width": {map_json["width"]},\n')
+            f.write(f'  "height": {map_json["height"]},\n')
+            f.write('  "blocked_tiles": [\n')
+            
+            # Escribir tiles en formato horizontal (un tile por línea)
+            for i, tile in enumerate(map_json["blocked_tiles"]):
+                comma = "," if i < len(map_json["blocked_tiles"]) - 1 else ""
+                f.write(f'    {{"x": {tile["x"]}, "y": {tile["y"]}, "type": "{tile["type"]}", "grh": {tile["grh"]}}}{comma}\n')
+            
+            f.write('  ],\n')
+            f.write('  "spawn_points": [\n')
+            
+            for i, spawn in enumerate(map_json["spawn_points"]):
+                comma = "," if i < len(map_json["spawn_points"]) - 1 else ""
+                f.write(f'    {{"x": {spawn["x"]}, "y": {spawn["y"]}, "description": "{spawn["description"]}"}}{comma}\n')
+            
+            f.write('  ]\n')
+            f.write('}\n')
         
         total_blocked = len(map_json['blocked_tiles'])
         print(f"   💾 Guardado: {output_file} ({total_blocked} tiles bloqueados)")
