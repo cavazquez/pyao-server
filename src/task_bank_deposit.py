@@ -105,7 +105,20 @@ class TaskBankDeposit(Task):
                 return
 
             # Remover del inventario
-            await self.inventory_repo.remove_item(user_id, deposit_data.slot, deposit_data.quantity)
+            removed = await self.inventory_repo.remove_item(
+                user_id, deposit_data.slot, deposit_data.quantity
+            )
+
+            # Verificar que la remoción fue exitosa
+            if not removed:
+                # Rollback: devolver items al banco
+                await self.bank_repo.extract_item(user_id, bank_slot, deposit_data.quantity)
+                await self.message_sender.send_console_msg("Error al depositar")
+                logger.error(
+                    "Fallo al remover items del inventario después de depositar. "
+                    "Rollback ejecutado."
+                )
+                return
 
             # Obtener datos del item para enviar al cliente
             item = ITEMS_CATALOG.get(item_id)

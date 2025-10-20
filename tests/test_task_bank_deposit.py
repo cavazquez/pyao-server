@@ -215,9 +215,7 @@ class TestTaskBankDeposit:
     async def test_deposit_remove_fails(self) -> None:
         """Test cuando falla la remoción del inventario.
 
-        NOTA: El código actual NO verifica el retorno de remove_item,
-        por lo que el depósito se completa exitosamente incluso si falla.
-        Esto es técnicamente un bug pero no es el foco de esta refactorización.
+        Verifica que se hace rollback del depósito en el banco.
         """
         # Setup
         message_sender = MagicMock()
@@ -227,6 +225,7 @@ class TestTaskBankDeposit:
 
         bank_repo = MagicMock(spec=BankRepository)
         bank_repo.deposit_item = AsyncMock(return_value=1)
+        bank_repo.extract_item = AsyncMock(return_value=True)
 
         inventory_repo = MagicMock(spec=InventoryRepository)
         inventory_repo.get_slot = AsyncMock(return_value=(10, 5))
@@ -249,10 +248,11 @@ class TestTaskBankDeposit:
         # Execute
         await task.execute()
 
-        # Assert - El código actual completa exitosamente (bug conocido)
-        # TODO: Debería verificar el retorno de remove_item y hacer rollback si falla
-        message_sender.send_change_bank_slot.assert_called_once()
-        inventory_repo.remove_item.assert_called_once()
+        # Assert - Debe hacer rollback
+        message_sender.send_console_msg.assert_called_with("Error al depositar")
+        bank_repo.extract_item.assert_called_once_with(1, 1, 5)  # Rollback
+        message_sender.send_change_bank_slot.assert_not_called()
+        message_sender.send_change_inventory_slot.assert_not_called()
 
     async def test_deposit_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
