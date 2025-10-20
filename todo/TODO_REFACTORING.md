@@ -1,16 +1,18 @@
 # TODO: Refactorings y Mejoras
 
-**Estado:** 🔄 En progreso - PacketReader implementado, MessageSender completado  
+**Estado:** ✅ Mayormente completado - PacketReader/Validator ✅, MessageSender ✅  
 **Prioridad:** Media  
-**Versión objetivo:** 0.5.0+
+**Versión objetivo:** 0.5.0+  
+**Última actualización:** 19 de octubre, 2025
 
 ---
 
 ## 🎯 Mejoras de Arquitectura
 
-### 1. ✅ PacketReader - IMPLEMENTADO
+### 1. ✅ PacketReader + PacketValidator - COMPLETADO
 
-**Estado:** ✅ **COMPLETADO** - 3/9 tasks refactorizadas (33%)
+**Estado:** ✅ **COMPLETADO** - 8/8 tasks migradas (100%)  
+**Fecha:** 19 de octubre, 2025
 
 **Problema original:**
 Cada Task leía los parámetros del packet usando `struct.unpack` directamente sobre `self.data`, resultando en código repetitivo y propenso a errores.
@@ -68,37 +70,34 @@ slot = reader.read_byte()
 quantity = reader.read_int16()
 ```
 
-**Tasks refactorizadas (3/9):**
-- ✅ `task_bank_deposit.py`
-- ✅ `task_bank_extract.py`
-- ✅ `task_commerce_buy.py`
+**Tasks migradas a PacketValidator (8/8):**
+- ✅ `task_inventory_click.py` - Validación de slot
+- ✅ `task_equip_item.py` - Validación de slot
+- ✅ `task_commerce_sell.py` - Validación de slot + quantity
+- ✅ `task_double_click.py` - Validación de target
+- ✅ `task_left_click.py` - Validación de coordenadas
+- ✅ `task_drop.py` - Validación de slot + quantity
+- ✅ `task_bank_deposit.py` - Validación de slot + quantity
+- ✅ `task_bank_extract.py` - Validación de slot + quantity
 
-**Tasks pendientes (6/9):**
-- 📝 `task_commerce_sell.py` (alta prioridad)
-- 📝 `task_inventory_click.py` (alta prioridad)
-- 📝 `task_equip_item.py` (alta prioridad)
-- 📝 `task_double_click.py` (media prioridad)
-- 📝 `task_left_click.py` (media prioridad)
-- 📝 `task_cast_spell.py` (baja prioridad)
+**Archivos creados:**
+- ✅ `src/packet_reader.py` (lectura de packets)
+- ✅ `src/packet_validator.py` (204 líneas, 8 métodos de validación)
+- ✅ `src/packet_data.py` (130 líneas, 9 dataclasses)
+- ✅ `tests/test_packet_reader.py` (15 tests)
+- ✅ `tests/test_packet_validator.py` (19 tests)
 
 **Beneficios logrados:**
 - ✅ Código más limpio y legible
-- ✅ Menos propenso a errores de offset
-- ✅ Centraliza la lógica de parsing
-- ✅ Facilita agregar validaciones
-- ✅ Type hints completos
-- ✅ 15 tests unitarios pasando (100% cobertura)
-
-**Archivos creados:**
-- ✅ `src/packet_reader.py` (implementado)
-- ✅ `tests/test_packet_reader.py` (15 tests)
+- ✅ Validaciones centralizadas
+- ✅ Mensajes de error descriptivos
+- ✅ Type narrowing automático
+- ✅ Menos propenso a errores
+- ✅ 34 tests unitarios (100% cobertura)
 
 **Documentación:**
-- Ver `docs/TODO_PACKET_READER_REFACTORING.md` para detalles completos
-
-**Próximos pasos:**
-- Refactorizar las 6 tasks pendientes (~1 hora)
-- Priorizar tasks de alta prioridad primero
+- Ver `todo/TODO_PACKET_READER_REFACTORING.md` (COMPLETADO)
+- Ver `todo/TODO_PACKET_VALIDATOR.md` (COMPLETADO)
 
 ---
 
