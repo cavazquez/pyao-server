@@ -1,48 +1,56 @@
 # Loot Tables para NPCs
 # Define qué items dropean los NPCs al morir y con qué probabilidad
 
-# Goblin (npc_id=1)
+# Goblin (npc_id=1) - Criatura débil pero común
 [[loot_table]]
 id = 1
 name = "Goblin"
 items = [
-    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 50 },  # Oro (siempre)
-    { item_id = 1, probability = 0.3, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (30%)
-    { item_id = 15, probability = 0.1, min_quantity = 1, max_quantity = 1 },    # Daga (10%)
+    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 50 },   # Oro (siempre)
+    { item_id = 1, probability = 0.4, min_quantity = 1, max_quantity = 3 },      # Manzana Roja (40%)
+    { item_id = 15, probability = 0.15, min_quantity = 1, max_quantity = 1 },    # Daga (15%)
+    { item_id = 4, probability = 0.25, min_quantity = 1, max_quantity = 2 },     # Poción de Vida (25%)
 ]
 
-# Lobo (npc_id=7)
+# Lobo (npc_id=7) - Criatura rápida y agresiva
 [[loot_table]]
 id = 7
 name = "Lobo"
 items = [
-    { item_id = 12, probability = 1.0, min_quantity = 5, max_quantity = 20 },  # Oro (siempre)
+    { item_id = 12, probability = 1.0, min_quantity = 5, max_quantity = 20 },   # Oro (siempre)
+    { item_id = 1, probability = 0.2, min_quantity = 1, max_quantity = 1 },     # Manzana Roja (20%)
+    { item_id = 10, probability = 0.1, min_quantity = 1, max_quantity = 1 },    # Piel de Lobo (10%) - item raro
 ]
 
-# Orco (npc_id=4)
+# Orco (npc_id=4) - Guerrero fuerte con buen equipo
 [[loot_table]]
 id = 4
 name = "Orco"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 20, max_quantity = 100 },  # Oro (siempre)
-    { item_id = 3, probability = 0.2, min_quantity = 1, max_quantity = 1 },      # Hacha (20%)
-    { item_id = 2, probability = 0.15, min_quantity = 1, max_quantity = 1 },     # Espada Larga (15%)
+    { item_id = 3, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Hacha (25%)
+    { item_id = 2, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Espada Larga (20%)
+    { item_id = 4, probability = 0.30, min_quantity = 2, max_quantity = 5 },     # Poción de Vida (30%)
+    { item_id = 5, probability = 0.15, min_quantity = 1, max_quantity = 2 },     # Poción de Maná (15%)
 ]
 
-# Araña Gigante (npc_id=8)
+# Araña Gigante (npc_id=8) - Criatura venenosa peligrosa
 [[loot_table]]
 id = 8
 name = "Araña Gigante"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 15, max_quantity = 75 },  # Oro (siempre)
     { item_id = 1, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Manzana Roja (25%)
+    { item_id = 11, probability = 0.20, min_quantity = 1, max_quantity = 3 },   # Veneno de Araña (20%)
+    { item_id = 4, probability = 0.15, min_quantity = 1, max_quantity = 2 },    # Poción de Vida (15%)
 ]
 
-# Serpiente (npc_id=9)
+# Serpiente (npc_id=9) - Criatura ágil y esquiva
 [[loot_table]]
 id = 9
 name = "Serpiente"
 items = [
-    { item_id = 12, probability = 1.0, min_quantity = 3, max_quantity = 15 },  # Oro (siempre)
-    { item_id = 1, probability = 0.2, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
+    { item_id = 12, probability = 1.0, min_quantity = 3, max_quantity = 15 },   # Oro (siempre)
+    { item_id = 1, probability = 0.20, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
+    { item_id = 11, probability = 0.15, min_quantity = 1, max_quantity = 1 },   # Veneno (15%)
 ]
