@@ -10,6 +10,8 @@ from src.map_manager import MapManager
 from src.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_service import NPCService
+from src.packet_reader import PacketReader
+from src.packet_validator import PacketValidator
 from src.player_repository import PlayerRepository
 from src.player_service import PlayerService
 from src.server_repository import ServerRepository
@@ -88,43 +90,19 @@ class TaskLogin(Task):
         Returns:
             Tupla (username, password) o None si hay error.
         """
-        try:
-            offset = 1  # Saltar PacketID
+        # Usar PacketValidator para leer username y password
+        # NOTA: task_login usa UTF-8, igual que task_account
+        reader = PacketReader(self.data)
+        validator = PacketValidator(reader)
 
-            # Leer username
-            if len(self.data) < offset + 2:
-                return None
-            username_len = int.from_bytes(
-                self.data[offset : offset + 2],
-                byteorder="little",
-                signed=False,
-            )
-            offset += 2
+        username = validator.read_string(min_length=1, max_length=20, encoding="utf-8")
+        password = validator.read_string(min_length=1, max_length=32, encoding="utf-8")
 
-            if len(self.data) < offset + username_len:
-                return None
-            username = self.data[offset : offset + username_len].decode("utf-8")
-            offset += username_len
-
-            # Leer password
-            if len(self.data) < offset + 2:
-                return None
-            password_len = int.from_bytes(
-                self.data[offset : offset + 2],
-                byteorder="little",
-                signed=False,
-            )
-            offset += 2
-
-            if len(self.data) < offset + password_len:
-                return None
-            password = self.data[offset : offset + password_len].decode("utf-8")
-
-        except (ValueError, UnicodeDecodeError) as e:
-            logger.warning("Error parseando paquete de login: %s", e)
+        if validator.has_errors() or username is None or password is None:
+            logger.warning("Error validando login: %s", validator.get_error_message())
             return None
-        else:
-            return (username, password)
+
+        return (username, password)
 
     async def execute(self) -> None:
         """Ejecuta el login del usuario."""
