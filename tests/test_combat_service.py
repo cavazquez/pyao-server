@@ -53,6 +53,7 @@ class TestCombatService:
 
         # Setup mocks
         player_repo.get_stats = AsyncMock(return_value={"strength": 20})
+        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(return_value={})
         inventory_repo.get_slot = AsyncMock(return_value=None)
@@ -78,7 +79,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_damage_calculator.random.random", return_value=1.0):
+        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None
@@ -97,6 +98,7 @@ class TestCombatService:
 
         # Setup mocks
         player_repo.get_stats = AsyncMock(return_value={"strength": 100, "exp": 0})
+        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
         player_repo.update_experience = AsyncMock()
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(return_value={})
@@ -122,7 +124,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_damage_calculator.random.random", return_value=1.0):
+        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None
@@ -202,6 +204,7 @@ class TestCombatService:
         inventory_repo = MagicMock()
 
         player_repo.get_stats = AsyncMock(return_value={"strength": 20})
+        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(
             return_value={1: 5}  # Arma en slot 5
@@ -229,7 +232,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_damage_calculator.random.random", return_value=1.0):
+        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None

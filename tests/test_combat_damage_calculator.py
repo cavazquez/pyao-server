@@ -12,21 +12,17 @@ class TestDamageCalculator:
         """Test de inicialización con valores por defecto."""
         calculator = DamageCalculator()
 
-        assert calculator.critical_chance == 0.05
-        assert calculator.critical_multiplier == 1.5
         assert calculator.defense_per_level == 0.1
+        assert calculator.critical_calculator is not None
 
     def test_init_custom_values(self) -> None:
         """Test de inicialización con valores personalizados."""
         calculator = DamageCalculator(
-            critical_chance=0.1,
-            critical_multiplier=2.0,
             defense_per_level=0.15,
         )
 
-        assert calculator.critical_chance == 0.1
-        assert calculator.critical_multiplier == 2.0
         assert calculator.defense_per_level == 0.15
+        assert calculator.critical_calculator is not None
 
     def test_calculate_player_damage_basic(self) -> None:
         """Test de cálculo de daño básico del jugador."""
@@ -49,16 +45,17 @@ class TestDamageCalculator:
         """Test de daño con crítico."""
         calculator = DamageCalculator()
 
-        with patch("src.combat_damage_calculator.random.random", return_value=0.01):
+        with patch("src.combat_critical_calculator.random.random", return_value=0.01):
             damage, is_critical = calculator.calculate_player_damage(
                 strength=20,
                 weapon_damage=10,
                 target_level=5,
+                agility=20,  # Alta agilidad para crítico
             )
 
             # Daño base: 10 (después de defensa)
-            # Crítico: 10 * 1.5 = 15
-            assert damage == 15
+            # Crítico: 10 * 2.0 = 20 (nuevo multiplicador)
+            assert damage == 20
             assert is_critical is True
 
     def test_calculate_player_damage_minimum(self) -> None:

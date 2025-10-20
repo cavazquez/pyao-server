@@ -94,12 +94,17 @@ class CombatService:
         # Obtener daño del arma
         weapon_damage = await self._get_weapon_damage(user_id)
 
-        # Calcular daño usando el calculador
+        # Obtener atributos del jugador
+        attributes = await self.player_repo.get_attributes(user_id)
         strength = stats.get("strength", 10)
+        agility = attributes.get("agility", 10) if attributes else 10
+
+        # Calcular daño usando el calculador
         damage, is_critical = self.damage_calculator.calculate_player_damage(
             strength=strength,
             weapon_damage=weapon_damage,
             target_level=npc.level,
+            agility=agility,
         )
 
         # Aplicar daño al NPC
