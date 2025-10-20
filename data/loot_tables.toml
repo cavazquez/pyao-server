@@ -9,7 +9,7 @@ items = [
     { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 50 },   # Oro (siempre)
     { item_id = 1, probability = 0.4, min_quantity = 1, max_quantity = 3 },      # Manzana Roja (40%)
     { item_id = 15, probability = 0.15, min_quantity = 1, max_quantity = 1 },    # Daga (15%)
-    { item_id = 4, probability = 0.25, min_quantity = 1, max_quantity = 2 },     # Poción de Vida (25%)
+    { item_id = 38, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Poción Roja - HP (25%)
 ]
 
 # Lobo (npc_id=7) - Criatura rápida y agresiva
@@ -19,7 +19,7 @@ name = "Lobo"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 5, max_quantity = 20 },   # Oro (siempre)
     { item_id = 1, probability = 0.2, min_quantity = 1, max_quantity = 1 },     # Manzana Roja (20%)
-    { item_id = 10, probability = 0.1, min_quantity = 1, max_quantity = 1 },    # Piel de Lobo (10%) - item raro
+    { item_id = 58, probability = 0.1, min_quantity = 1, max_quantity = 3 },    # Leña (10%)
 ]
 
 # Orco (npc_id=4) - Guerrero fuerte con buen equipo
@@ -30,8 +30,8 @@ items = [
     { item_id = 12, probability = 1.0, min_quantity = 20, max_quantity = 100 },  # Oro (siempre)
     { item_id = 3, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Hacha (25%)
     { item_id = 2, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Espada Larga (20%)
-    { item_id = 4, probability = 0.30, min_quantity = 2, max_quantity = 5 },     # Poción de Vida (30%)
-    { item_id = 5, probability = 0.15, min_quantity = 1, max_quantity = 2 },     # Poción de Maná (15%)
+    { item_id = 38, probability = 0.30, min_quantity = 2, max_quantity = 5 },    # Poción Roja - HP (30%)
+    { item_id = 37, probability = 0.15, min_quantity = 1, max_quantity = 2 },    # Poción Azul - Maná (15%)
 ]
 
 # Araña Gigante (npc_id=8) - Criatura venenosa peligrosa
@@ -41,8 +41,8 @@ name = "Araña Gigante"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 15, max_quantity = 75 },  # Oro (siempre)
     { item_id = 1, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Manzana Roja (25%)
-    { item_id = 11, probability = 0.20, min_quantity = 1, max_quantity = 3 },   # Veneno de Araña (20%)
-    { item_id = 4, probability = 0.15, min_quantity = 1, max_quantity = 2 },    # Poción de Vida (15%)
+    { item_id = 39, probability = 0.20, min_quantity = 1, max_quantity = 3 },   # Poción Verde - Veneno (20%)
+    { item_id = 38, probability = 0.15, min_quantity = 1, max_quantity = 2 },   # Poción Roja - HP (15%)
 ]
 
 # Serpiente (npc_id=9) - Criatura ágil y esquiva
@@ -52,7 +52,7 @@ name = "Serpiente"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 3, max_quantity = 15 },   # Oro (siempre)
     { item_id = 1, probability = 0.20, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
-    { item_id = 11, probability = 0.15, min_quantity = 1, max_quantity = 1 },   # Veneno (15%)
+    { item_id = 39, probability = 0.15, min_quantity = 1, max_quantity = 1 },   # Poción Verde - Veneno (15%)
 ]
 
 # Dragón (npc_id=10) - BOSS legendario con loot épico
@@ -61,11 +61,11 @@ id = 10
 name = "Dragón"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 500, max_quantity = 1000 },  # Oro (siempre - mucho)
-    { item_id = 2, probability = 0.50, min_quantity = 1, max_quantity = 1 },       # Espada Larga (50%)
-    { item_id = 3, probability = 0.40, min_quantity = 1, max_quantity = 1 },       # Hacha (40%)
-    { item_id = 4, probability = 0.80, min_quantity = 5, max_quantity = 10 },      # Poción de Vida (80%)
-    { item_id = 5, probability = 0.60, min_quantity = 3, max_quantity = 8 },       # Poción de Maná (60%)
-    { item_id = 15, probability = 0.20, min_quantity = 1, max_quantity = 1 },      # Daga (20% - item raro)
+    { item_id = 123, probability = 0.50, min_quantity = 1, max_quantity = 1 },     # Espada Vikinga (50%)
+    { item_id = 126, probability = 0.40, min_quantity = 1, max_quantity = 1 },     # Hacha Larga de Guerra (40%)
+    { item_id = 38, probability = 0.80, min_quantity = 5, max_quantity = 10 },     # Poción Roja - HP (80%)
+    { item_id = 37, probability = 0.60, min_quantity = 3, max_quantity = 8 },      # Poción Azul - Maná (60%)
+    { item_id = 128, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Escudo de Hierro (20%)
 ]
 
 # Esqueleto (npc_id=11) - Guerrero no-muerto
@@ -77,7 +77,7 @@ items = [
     { item_id = 2, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Espada Larga (25%)
     { item_id = 3, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Hacha (20%)
     { item_id = 1, probability = 0.15, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (15%)
-    { item_id = 13, probability = 0.30, min_quantity = 1, max_quantity = 3 },    # Huesos (30% - item temático)
+    { item_id = 58, probability = 0.30, min_quantity = 1, max_quantity = 3 },    # Leña (30%)
 ]
 
 # Zombie (npc_id=12) - Muerto viviente putrefacto
@@ -87,8 +87,8 @@ name = "Zombie"
 items = [
     { item_id = 12, probability = 1.0, min_quantity = 8, max_quantity = 30 },    # Oro (siempre)
     { item_id = 1, probability = 0.30, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (30%)
-    { item_id = 4, probability = 0.20, min_quantity = 1, max_quantity = 2 },     # Poción de Vida (20%)
-    { item_id = 14, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Carne Podrida (25% - item temático)
+    { item_id = 38, probability = 0.20, min_quantity = 1, max_quantity = 2 },    # Poción Roja - HP (20%)
+    { item_id = 58, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Leña (25%)
 ]
 
 # Troll (npc_id=13) - Gigante brutal
@@ -99,8 +99,8 @@ items = [
     { item_id = 12, probability = 1.0, min_quantity = 30, max_quantity = 120 },  # Oro (siempre)
     { item_id = 2, probability = 0.30, min_quantity = 1, max_quantity = 1 },     # Espada Larga (30%)
     { item_id = 3, probability = 0.35, min_quantity = 1, max_quantity = 1 },     # Hacha (35%)
-    { item_id = 4, probability = 0.40, min_quantity = 2, max_quantity = 5 },     # Poción de Vida (40%)
-    { item_id = 13, probability = 0.25, min_quantity = 2, max_quantity = 4 },    # Huesos (25%)
+    { item_id = 38, probability = 0.40, min_quantity = 2, max_quantity = 5 },    # Poción Roja - HP (40%)
+    { item_id = 58, probability = 0.25, min_quantity = 2, max_quantity = 4 },    # Leña (25%)
 ]
 
 # Ogro (npc_id=14) - Bestia poderosa
@@ -111,6 +111,6 @@ items = [
     { item_id = 12, probability = 1.0, min_quantity = 50, max_quantity = 150 },  # Oro (siempre)
     { item_id = 2, probability = 0.40, min_quantity = 1, max_quantity = 1 },     # Espada Larga (40%)
     { item_id = 3, probability = 0.45, min_quantity = 1, max_quantity = 1 },     # Hacha (45%)
-    { item_id = 4, probability = 0.50, min_quantity = 3, max_quantity = 7 },     # Poción de Vida (50%)
-    { item_id = 5, probability = 0.30, min_quantity = 2, max_quantity = 5 },     # Poción de Maná (30%)
+    { item_id = 38, probability = 0.50, min_quantity = 3, max_quantity = 7 },    # Poción Roja - HP (50%)
+    { item_id = 37, probability = 0.30, min_quantity = 2, max_quantity = 5 },    # Poción Azul - Maná (30%)
 ]

@@ -39,11 +39,11 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Logs INFO para diagnóstico de bloqueos
 - [x] NPCs permanentes (respawn_time=0)
 
-### 🔄 Versión 0.4.0 - Sistemas de Economía (En Progreso)
+### ✅ Versión 0.4.0-alpha - Sistemas de Economía
 - [x] Sistema de banco completo
 - [x] Sistema de comercio completo
-- [ ] Loot tables configurables
-- [ ] Items variados (armas, armaduras, pociones)
+- [x] Loot tables configurables
+- [x] Items variados (armas, armaduras, pociones)
 
 ### 📝 Versión 0.5.0 - Refactorings y Calidad
 - [x] MessageSender refactoring (100% completado)
@@ -453,14 +453,15 @@ Este proyecto tiene varios documentos TODO especializados:
 ## 📊 Estado Actual del Proyecto
 
 **Versión actual:** 0.4.0-alpha  
-**Tests actuales:** 716 (100% pasando)  
-**Servicios implementados:** 10+  
+**Tests actuales:** 807 (100% pasando)  
+**Servicios implementados:** 12+  
 **Efectos de tick:** 4  
-**NPCs con respawn:** 4 (Goblin, Lobo, Orco, Araña)  
-**Sistemas completados:** Login, Movimiento, Combate, Loot, Banco, Comercio, Magia
+**NPCs con loot tables:** 10 (Goblin, Lobo, Orco, Araña, Serpiente, Dragón, Esqueleto, Zombie, Troll, Ogro)  
+**Mapas con colisiones:** 290  
+**Sistemas completados:** Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones
 
 ---
 
-**Última actualización:** 2025-01-19  
+**Última actualización:** 2025-01-20  
 **Mantenido por:** Equipo PyAO  
 **Estado:** 🔄 En desarrollo activo
