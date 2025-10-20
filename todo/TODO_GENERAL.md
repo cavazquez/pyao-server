@@ -118,15 +118,15 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Bonificadores por nivel de skill
 - [ ] Packet WORK para trabajar
 
-**Social y Party:**
-- [ ] Sistema de party
-- [ ] Chat mejorado con canales
-- [ ] Sistema de amigos
-
-### 📝 Versión 0.7.0 - Configuración y Quests
+### 📝 Versión 0.7.0-alpha - Configuración, Quests y Social
 - [ ] Configuration Management
 - [ ] Sistema de quests
 - [ ] Eventos mundiales
+- [ ] Sistema de amigos
+
+### 📝 Versión 0.8.0-alpha - Social y Party
+- [ ] Sistema de party
+- [ ] Chat mejorado con canales
 
 ### 📝 Versión 1.0.0 - Producción
 - [ ] Todas las funcionalidades core
