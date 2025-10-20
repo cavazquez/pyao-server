@@ -197,6 +197,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=False)  # Bloqueado
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager._blocked_tiles = {1: {(50, 49)}}  # noqa: SLF001
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 

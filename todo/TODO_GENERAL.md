@@ -88,11 +88,11 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Inventario lleno - manejar casos límite ✅
 - [x] Sistema de transiciones de mapa (funcional, pendiente sincronización) ✅
 
-**Bug conocido - Transiciones de mapa:**
-- [ ] Cliente se congela después de cambiar de mapa
-- Causa: No se envían los NPCs/jugadores/objetos del nuevo mapa
-- Solución: Implementar broadcast de entidades al cambiar de mapa
-- Prioridad: Alta (pero funcionalidad básica implementada)
+**Bug resuelto - Transiciones de mapa:** ✅
+- [x] Cliente se congela después de cambiar de mapa - **RESUELTO**
+- Causa: No se enviaban los NPCs/jugadores/objetos del nuevo mapa
+- Solución: Implementado envío completo de entidades en `_handle_map_transition()`
+- Documentación: `docs/MAP_TRANSITION_FIX.md`
 
 **Movido a v0.5.0+ (Features más complejas):**
 - [ ] Precios dinámicos según oferta/demanda
@@ -206,6 +206,34 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] **Dividir MessageSender** ✅ - Completado con 8 componentes especializados
 - [ ] **Analizar complejidad ciclomática** - Métodos con `C901` y `PLR0912`
 - [ ] **Reducir variables locales** - Métodos con `PLR0914` (too many local variables)
+
+### Refactoring Prioritario
+- [ ] **Refactorizar PacketValidator** - Cada task debería tener un método `validate_*()` que retorne bool
+  - Problema actual: Métodos como `read_slot()`, `read_quantity()` retornan valores o None
+  - Propuesta: Métodos como `validate_bank_deposit()` que retornan bool y guardan datos parseados
+  - Beneficio: API más clara, validación centralizada, mejor separación de responsabilidades
+  - Ejemplo: `validator.validate_gm_teleport()` retorna tupla o None (ya implementado parcialmente)
+  
+- [ ] **Encapsular secuencia de cambio de mapa** - Código duplicado en 3 lugares
+  - Lugares con duplicación:
+    1. `task_login.py` - Al hacer login inicial
+    2. `task_walk.py` - Al cambiar de mapa por transición
+    3. `task_gm_commands.py` - Al teletransportarse
+  - Secuencia común:
+    1. Enviar CHANGE_MAP
+    2. Delay 100ms para carga del mapa
+    3. Actualizar posición en Redis
+    4. Enviar POS_UPDATE
+    5. Remover jugador del mapa anterior (MapManager)
+    6. Broadcast CHARACTER_REMOVE en mapa anterior
+    7. Agregar jugador al nuevo mapa (MapManager)
+    8. Enviar CHARACTER_CREATE del propio jugador
+    9. Enviar todos los jugadores existentes
+    10. Enviar todos los NPCs
+    11. Enviar todos los objetos del suelo
+    12. Broadcast CHARACTER_CREATE a otros jugadores
+  - Propuesta: Crear `MapTransitionService.transition_player_to_map()`
+  - Beneficio: DRY, menos bugs, más fácil de mantener y testear
 
 ### Mapas y Datos
 - [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON

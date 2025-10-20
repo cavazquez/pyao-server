@@ -19,6 +19,7 @@ from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
 from src.task_drop import TaskDrop
 from src.task_equip_item import TaskEquipItem
+from src.task_gm_commands import TaskGMCommands
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
 from src.task_left_click import TaskLeftClick
@@ -71,4 +72,5 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.ONLINE: TaskOnline,
     ClientPacketID.QUIT: TaskQuit,
     ClientPacketID.PING: TaskPing,
+    ClientPacketID.GM_COMMANDS: TaskGMCommands,  # Comandos GM (teletransporte)
 }

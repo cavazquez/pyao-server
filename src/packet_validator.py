@@ -253,12 +253,50 @@ class PacketValidator:
         return len(self.errors) > 0
 
     def get_error_message(self) -> str:
-        """Retorna el primer mensaje de error o un mensaje genérico.
+        """Obtiene mensaje de error concatenado.
 
         Returns:
-            Mensaje de error descriptivo.
+            String con todos los errores separados por comas.
         """
-        return self.errors[0] if self.errors else "Error desconocido"
+        return ", ".join(self.errors)
+
+    def validate_gm_teleport(self) -> tuple[int, str, int, int, int] | None:
+        """Valida packet GM_COMMANDS (teletransporte).
+
+        Formato esperado:
+        - Byte: Subcomando GM (ej: WARP_CHAR)
+        - String: Username (UTF-16LE con length prefix)
+        - Int16: Map ID
+        - Byte: X
+        - Byte: Y
+
+        Returns:
+            Tupla (subcommand, username, map_id, x, y) o None si hay error.
+        """
+        try:
+            subcommand = self.reader.read_byte()
+            username = self.reader.read_string()
+            map_id = self.reader.read_int16()
+            x = self.reader.read_byte()
+            y = self.reader.read_byte()
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo packet GM_COMMANDS: {e}")
+            return None
+
+        # Validar rangos
+        if map_id < 1 or map_id > 1000:  # noqa: PLR2004
+            self.errors.append(f"Map ID inválido: {map_id} (debe estar entre 1-1000)")
+            return None
+
+        if not (1 <= x <= 100 and 1 <= y <= 100):  # noqa: PLR2004
+            self.errors.append(f"Posición inválida: ({x}, {y}) (debe estar entre 1-100)")
+            return None
+
+        if not username or len(username) > 20:  # noqa: PLR2004
+            self.errors.append(f"Username inválido: '{username}' (longitud: {len(username)})")
+            return None
+
+        return subcommand, username, map_id, x, y
 
     def get_all_errors(self) -> list[str]:
         """Retorna todos los mensajes de error.

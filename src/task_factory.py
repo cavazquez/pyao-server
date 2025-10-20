@@ -19,6 +19,7 @@ from src.task_dice import TaskDice
 from src.task_double_click import TaskDoubleClick
 from src.task_drop import TaskDrop
 from src.task_equip_item import TaskEquipItem
+from src.task_gm_commands import TaskGMCommands
 from src.task_information import TaskInformation
 from src.task_inventory_click import TaskInventoryClick
 from src.task_left_click import TaskLeftClick
@@ -122,6 +123,14 @@ class TaskFactory:
                 self.deps.broadcast_service,
                 self.deps.map_transition_service,
                 self.deps.stamina_service,
+                session_data,
+            ),
+            TaskGMCommands: lambda: TaskGMCommands(
+                data,
+                message_sender,
+                self.deps.player_repo,
+                self.deps.map_manager,
+                self.deps.broadcast_service,
                 session_data,
             ),
             TaskChangeHeading: lambda: TaskChangeHeading(

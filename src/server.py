@@ -95,6 +95,9 @@ class ArgentumServer:
                 task = self.create_task(data, message_sender, session_data)
                 await task.execute()
 
+        except (KeyboardInterrupt, asyncio.CancelledError):
+            # Shutdown graceful, no loguear como error
+            logger.debug("Cliente %s desconectado por shutdown del servidor", connection.address)
         except Exception:
             logger.exception("Error manejando cliente %s", connection.address)
         finally:
@@ -125,8 +128,8 @@ class ArgentumServer:
                             map_id,
                         )
 
-                    # Remover jugador del mapa
-                    self.deps.map_manager.remove_player(user_id)
+                    # Remover jugador de todos los mapas
+                    self.deps.map_manager.remove_player_from_all_maps(user_id)
 
             connection.close()
             await connection.wait_closed()

@@ -138,7 +138,7 @@ class ClientPacketID(IntEnum):
     PING = 119
     # REQUEST_PARTY_FORM = 120
     # ITEM_UPGRADE = 121
-    # GM_COMMANDS = 122
+    GM_COMMANDS = 122  # Comandos de Game Master (teletransporte, etc.)
     # INIT_CRAFTING = 123
     # HOME = 124
     # SHOW_GUILD_NEWS = 125

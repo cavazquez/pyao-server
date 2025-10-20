@@ -56,7 +56,7 @@ class PacketReader:
         return value
 
     def read_string(self) -> str:
-        """Lee un string: length (uint16 LE) + UTF-16LE bytes.
+        """Lee un string del packet.
 
         El formato es:
         - 2 bytes: longitud del string en bytes (uint16 little-endian)
@@ -65,9 +65,24 @@ class PacketReader:
         Returns:
             String decodificado.
         """
+        import logging  # noqa: PLC0415
+
+        logger = logging.getLogger(__name__)
+
         length = self.read_int16()
-        value = self.data[self.offset : self.offset + length].decode("utf-16-le")
+        string_bytes = self.data[self.offset : self.offset + length]
+
+        logger.debug(
+            "read_string: length=%d, bytes=%s",
+            length,
+            string_bytes.hex() if string_bytes else "empty",
+        )
+
+        value = string_bytes.decode("utf-16-le")
         self.offset += length
+
+        logger.debug("read_string: decoded='%s'", value)
+
         return value
 
     def remaining_bytes(self) -> int:
