@@ -356,23 +356,28 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         from src.packet_id import ClientPacketID  # noqa: PLC0415
 
         validators: dict[int, object] = {
-            ClientPacketID.WALK: self.validate_walk_packet,
-            ClientPacketID.ATTACK: self.validate_attack_packet,
             ClientPacketID.LOGIN: self.validate_login_packet,
+            ClientPacketID.THROW_DICES: self.validate_throw_dices_packet,
             ClientPacketID.CREATE_ACCOUNT: self.validate_create_account_packet,
-            ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
-            ClientPacketID.DROP: self.validate_drop_packet,
-            ClientPacketID.PICK_UP: self.validate_pickup_packet,
             ClientPacketID.TALK: self.validate_talk_packet,
-            ClientPacketID.DOUBLE_CLICK: self.validate_double_click_packet,
+            ClientPacketID.WALK: self.validate_walk_packet,
+            ClientPacketID.REQUEST_POSITION_UPDATE: self.validate_request_position_update_packet,
+            ClientPacketID.ATTACK: self.validate_attack_packet,
+            ClientPacketID.PICK_UP: self.validate_pickup_packet,
+            ClientPacketID.REQUEST_ATTRIBUTES: self.validate_request_attributes_packet,
+            ClientPacketID.COMMERCE_END: self.validate_commerce_end_packet,
+            ClientPacketID.BANK_END: self.validate_bank_end_packet,
+            ClientPacketID.DROP: self.validate_drop_packet,
+            ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
             ClientPacketID.LEFT_CLICK: self.validate_left_click_packet,
-            ClientPacketID.EQUIP_ITEM: self.validate_equip_item_packet,
+            ClientPacketID.DOUBLE_CLICK: self.validate_double_click_packet,
             ClientPacketID.USE_ITEM: self.validate_use_item_packet,
+            ClientPacketID.EQUIP_ITEM: self.validate_equip_item_packet,
+            ClientPacketID.CHANGE_HEADING: self.validate_change_heading_packet,
             ClientPacketID.COMMERCE_BUY: self.validate_commerce_buy_packet,
+            ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
             ClientPacketID.COMMERCE_SELL: self.validate_commerce_sell_packet,
             ClientPacketID.BANK_DEPOSIT: self.validate_bank_deposit_packet,
-            ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
-            ClientPacketID.CHANGE_HEADING: self.validate_change_heading_packet,
         }
 
         validator_method = validators.get(packet_id)
@@ -834,3 +839,78 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             )
 
         return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+
+    def validate_throw_dices_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet THROW_DICES completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (THROW_DICES = 1)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_request_attributes_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet REQUEST_ATTRIBUTES completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (REQUEST_ATTRIBUTES = 13)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_commerce_end_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet COMMERCE_END completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (COMMERCE_END = 17)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_bank_end_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet BANK_END completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (BANK_END = 21)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_request_position_update_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet REQUEST_POSITION_UPDATE completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (REQUEST_POSITION_UPDATE = 7)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
