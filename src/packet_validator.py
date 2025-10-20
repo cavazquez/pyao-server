@@ -378,6 +378,16 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
             ClientPacketID.COMMERCE_SELL: self.validate_commerce_sell_packet,
             ClientPacketID.BANK_DEPOSIT: self.validate_bank_deposit_packet,
+            ClientPacketID.ONLINE: self.validate_online_packet,
+            ClientPacketID.QUIT: self.validate_quit_packet,
+            ClientPacketID.MEDITATE: self.validate_meditate_packet,
+            ClientPacketID.AYUDA: self.validate_ayuda_packet,
+            ClientPacketID.REQUEST_STATS: self.validate_request_stats_packet,
+            ClientPacketID.INFORMATION: self.validate_information_packet,
+            ClientPacketID.REQUEST_MOTD: self.validate_request_motd_packet,
+            ClientPacketID.UPTIME: self.validate_uptime_packet,
+            ClientPacketID.PING: self.validate_ping_packet,
+            ClientPacketID.GM_COMMANDS: self.validate_gm_commands_packet,
         }
 
         validator_method = validators.get(packet_id)
@@ -908,6 +918,147 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         Returns:
             ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_gm_commands_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet GM_COMMANDS completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (GM_COMMANDS)
+        - Byte: Subcomando
+        - String: Username
+        - Int16: Map ID
+        - Byte: X
+        - Byte: Y
+
+        Returns:
+            ValidationResult con datos del comando si es válido.
+        """
+        result = self.validate_gm_teleport()
+        if result is None:
+            return ValidationResult(
+                success=False, data=None, error_message="Error validando GM_COMMANDS"
+            )
+
+        subcommand, username, map_id, x, y = result
+        return ValidationResult(
+            success=True,
+            data={
+                "subcommand": subcommand,
+                "username": username,
+                "map_id": map_id,
+                "x": x,
+                "y": y,
+            },
+            error_message=None,
+        )
+
+    def validate_meditate_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet MEDITATE completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_request_stats_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet REQUEST_STATS completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_information_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet INFORMATION completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_request_motd_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet REQUEST_MOTD completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_uptime_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet UPTIME completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_online_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet ONLINE completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_quit_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet QUIT completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_ping_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet PING completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
+        """
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)
+
+    def validate_ayuda_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet AYUDA completo (sin parámetros).
+
+        Returns:
+            ValidationResult con {} si es válido.
         """
         if self.has_errors():
             return ValidationResult(
