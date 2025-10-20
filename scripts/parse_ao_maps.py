@@ -117,8 +117,7 @@ def parse_map_file(map_path: Path) -> dict:
                     blocked_tiles.append({
                         "x": x + 1,
                         "y": y + 1,
-                        "type": tile_type,
-                        "grh": layer1
+                        "type": tile_type
                     })
                     tile_types_count[tile_type] = tile_types_count.get(tile_type, 0) + 1
     
@@ -182,22 +181,22 @@ def generate_map_json(map_id: int, name: str, map_data: dict) -> dict:
 
 
 def update_all_maps():
-    """Actualiza archivos JSON de todos los mapas configurados."""
+    """Actualiza archivos JSON de todos los mapas disponibles."""
     maps_dir = Path("maps")
     maps_dir.mkdir(exist_ok=True)
     
-    # Mapas configurados en map_transitions.toml
-    maps_config = [
-        (1, "Ullathorpe"),
-        (2, "Bosque Norte"),
-        (3, "Campo Sur"),
-        (4, "Bosque Este"),
-        (5, "Montañas Oeste"),
-        (6, "Bosque Profundo"),
-        (7, "Camino del Desierto"),
-        (8, "Tierras Salvajes"),
-        (9, "Paso de Montaña"),
-    ]
+    # Buscar todos los archivos .map disponibles
+    client_maps_dir = Path("./clientes/ArgentumOnlineGodot/Assets/Maps")
+    map_files = sorted(client_maps_dir.glob("mapa*.map"))
+    
+    # Extraer IDs de los mapas
+    maps_config = []
+    for map_file in map_files:
+        try:
+            map_id = int(map_file.stem.replace("mapa", ""))
+            maps_config.append((map_id, f"Mapa {map_id}"))
+        except ValueError:
+            continue
     
     print("=" * 70)
     print("Parser de Mapas de Argentum Online")
@@ -229,7 +228,7 @@ def update_all_maps():
             # Escribir tiles en formato horizontal (un tile por línea)
             for i, tile in enumerate(map_json["blocked_tiles"]):
                 comma = "," if i < len(map_json["blocked_tiles"]) - 1 else ""
-                f.write(f'    {{"x": {tile["x"]}, "y": {tile["y"]}, "type": "{tile["type"]}", "grh": {tile["grh"]}}}{comma}\n')
+                f.write(f'    {{"x": {tile["x"]}, "y": {tile["y"]}, "type": "{tile["type"]}"}}{comma}\n')
             
             f.write('  ],\n')
             f.write('  "spawn_points": [\n')
