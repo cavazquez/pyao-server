@@ -221,7 +221,7 @@ class TaskWalk(Task):
                 old_heading=position.get("heading", 3),
             )
 
-    async def _calculate_new_position(
+    async def _calculate_new_position(  # noqa: PLR0915
         self, heading: int, current_x: int, current_y: int, current_map: int
     ) -> tuple[int, int, int, bool]:
         """Calcula nueva posición y detecta transiciones de mapa.
@@ -240,23 +240,51 @@ class TaskWalk(Task):
         new_map = current_map
         changed_map = False
 
+        # Calcular la posición tentativa del siguiente movimiento
+        next_x = current_x
+        next_y = current_y
+
+        if heading == HEADING_NORTH:
+            next_y = current_y - 1
+        elif heading == HEADING_EAST:
+            next_x = current_x + 1
+        elif heading == HEADING_SOUTH:
+            next_y = current_y + 1
+        elif heading == HEADING_WEST:
+            next_x = current_x - 1
+
         # Obtener tamaño del mapa actual
         if self.map_manager:
             map_width, map_height = self.map_manager.get_map_size(current_map)
         else:
             map_width, map_height = MAX_MAP_COORDINATE, MAX_MAP_COORDINATE
 
-        # Detectar si estamos en el borde y hay transición
+        # Detectar si el siguiente tile está fuera del mapa (transición)
         edge = None
 
-        if heading == HEADING_NORTH and current_y == MIN_MAP_COORDINATE:
+        if next_y < MIN_MAP_COORDINATE:
             edge = "north"
-        elif heading == HEADING_EAST and current_x == map_width:
+        elif next_x > map_width:
             edge = "east"
-        elif heading == HEADING_SOUTH and current_y == map_height:
+        elif next_y > map_height:
             edge = "south"
-        elif heading == HEADING_WEST and current_x == MIN_MAP_COORDINATE:
+        elif next_x < MIN_MAP_COORDINATE:
             edge = "west"
+
+        # Si el siguiente tile está bloqueado, verificar si es borde del mapa
+        if not edge and self.map_manager:
+            is_blocked = not self.map_manager.can_move_to(current_map, next_x, next_y)
+            if is_blocked:
+                # Verificar si estamos cerca del borde y el tile está bloqueado
+                # Esto maneja el caso donde los bordes del mapa están bloqueados
+                if heading == HEADING_NORTH and next_y <= MIN_MAP_COORDINATE + 5:
+                    edge = "north"
+                elif heading == HEADING_EAST and next_x >= map_width - 5:
+                    edge = "east"
+                elif heading == HEADING_SOUTH and next_y >= map_height - 5:
+                    edge = "south"
+                elif heading == HEADING_WEST and next_x <= MIN_MAP_COORDINATE + 5:
+                    edge = "west"
 
         # Si estamos en un borde, verificar transición
         if edge and self.map_transition_service:

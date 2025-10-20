@@ -87,7 +87,7 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Mensajes de daño al jugador (usando CONSOLE_MSG) ✅
 - [x] Inventario lleno - manejar casos límite ✅
 
-**Movido a v0.6.0+ (Features más complejas):**
+**Movido a v0.5.0+ (Features más complejas):**
 - [ ] Precios dinámicos según oferta/demanda
 - [ ] Depositar/retirar oro
 - [ ] Pathfinding básico (A* o similar)
