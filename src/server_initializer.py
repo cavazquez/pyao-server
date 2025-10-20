@@ -18,6 +18,26 @@ class ServerInitializer:
     """Orquestador principal de inicialización del servidor."""
 
     @staticmethod
+    def _load_map_tiles(map_manager: MapManager) -> None:
+        """Carga tiles bloqueados de todos los mapas.
+
+        Args:
+            map_manager: Instancia del MapManager.
+        """
+        maps_dir = Path("maps")
+        if maps_dir.exists():
+            map_files = list(maps_dir.glob("map_*.json"))
+            for map_file in sorted(map_files):
+                try:
+                    map_id = int(map_file.stem.replace("map_", ""))
+                    map_manager.load_map_data(map_id, map_file)
+                except ValueError:
+                    logger.warning("Error parseando ID de mapa: %s", map_file)
+            logger.info("✓ %d mapas cargados con tiles bloqueados", len(map_files))
+        else:
+            logger.warning("⚠️  Directorio maps/ no encontrado")
+
+    @staticmethod
     async def initialize_all() -> tuple[DependencyContainer, str, int]:
         """Inicializa todos los componentes del servidor.
 
@@ -46,18 +66,7 @@ class ServerInitializer:
         logger.info("✓ MapManager inicializado")
 
         # Cargar tiles bloqueados de todos los mapas
-        maps_dir = Path("maps")
-        if maps_dir.exists():  # noqa: ASYNC240
-            map_files = list(maps_dir.glob("map_*.json"))  # noqa: ASYNC240
-            for map_file in sorted(map_files):
-                try:
-                    map_id = int(map_file.stem.replace("map_", ""))
-                    map_manager.load_map_data(map_id, map_file)
-                except ValueError:
-                    logger.warning("Error parseando ID de mapa: %s", map_file)
-            logger.info("✓ %d mapas cargados con tiles bloqueados", len(map_files))
-        else:
-            logger.warning("⚠️  Directorio maps/ no encontrado")
+        ServerInitializer._load_map_tiles(map_manager)
 
         # Cargar ground items del mapa principal
         await map_manager.load_ground_items(1)
