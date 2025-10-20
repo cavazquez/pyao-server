@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -37,6 +38,9 @@ class TaskMeditate(Task):
 
     async def execute(self) -> None:
         """Ejecuta el toggle de meditación."""
+        # Validar packet (no tiene datos, solo PacketID)
+        _ = PacketReader(self.data)  # Valida que el packet sea válido
+
         # Verificar que el jugador esté logueado
         user_id = SessionManager.get_user_id(self.session_data)
         if user_id is None:

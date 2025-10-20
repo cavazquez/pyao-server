@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -29,6 +30,9 @@ class TaskPing(Task):
 
     async def execute(self) -> None:
         """Procesa el ping y envía pong."""
+        # Validar packet (no tiene datos, solo PacketID)
+        _ = PacketReader(self.data)  # Valida que el packet sea válido
+
         logger.debug("Ping recibido desde %s", self.message_sender.connection.address)
 
         # Enviar paquete PONG usando MessageSender

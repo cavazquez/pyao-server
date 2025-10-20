@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -41,6 +42,9 @@ class TaskQuit(Task):
 
     async def execute(self) -> None:
         """Procesa la desconexión ordenada del jugador."""
+        # Validar packet (no tiene datos, solo PacketID)
+        _ = PacketReader(self.data)  # Valida que el packet sea válido
+
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)
 

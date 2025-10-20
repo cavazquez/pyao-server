@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.sounds import SoundID
 from src.task import Task
@@ -110,6 +111,9 @@ class TaskAttack(Task):
 
     async def execute(self) -> None:  # noqa: PLR0914, PLR0915
         """Procesa el ataque del jugador."""
+        # Validar packet (no tiene datos, solo PacketID)
+        _ = PacketReader(self.data)  # Valida que el packet sea válido
+
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)
         if user_id is None:
