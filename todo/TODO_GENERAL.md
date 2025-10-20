@@ -63,6 +63,8 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Items variados (armas, armaduras, pociones)
 
 ### ✅ Versión 0.5.0-alpha - Refactorings y Contenido (90% COMPLETADO)
+
+**Completado:**
 - [x] MessageSender refactoring (100% completado)
 - [x] PacketReader implementado (21/33 tasks migradas - 64%)
 - [x] NPC Factory Pattern
@@ -78,21 +80,45 @@ Este proyecto tiene varios documentos TODO especializados:
   - [x] Probabilidad base 15% + bonus por AGI
   - [x] Multiplicador de daño 2x
   - [x] Integrado en CombatService
-- [ ] Sistema de esquives (preparado, pendiente integrar)
-- [ ] Más mapas y NPCs usando NPC Factory
-- [ ] Packet DAMAGE para mostrar daño recibido
-- [ ] Pathfinding básico (A*)
-- [ ] NPCs que patrullan rutas
-- [ ] Cooldown entre ataques de NPCs
-- [ ] Inventario lleno - manejar casos límite
 
-### 📝 Versión 0.6.0-alpha - Skills, Social y Party
-- [ ] **Sistema de Skills:**
-  - [ ] Subir skills con uso (minería, tala, pesca)
-  - [ ] Experiencia de skills
-  - [ ] Niveles de skills (0-100)
-  - [ ] Bonificadores por nivel de skill
-  - [ ] Packet WORK para trabajar
+**Pendiente:**
+- [ ] Sistema de esquives (preparado, pendiente integrar)
+- [ ] Packet DAMAGE para mostrar daño recibido
+- [ ] Inventario lleno - manejar casos límite
+- [ ] Precios dinámicos según oferta/demanda
+- [ ] Depositar/retirar oro
+- [ ] Pathfinding básico (A* o similar)
+- [ ] NPCs que patrullan rutas predefinidas
+- [ ] NPCs que huyen cuando tienen poca vida
+- [ ] NPCs que llaman refuerzos
+- [ ] Diferentes comportamientos por tipo de NPC
+- [ ] Rango de agresión configurable por NPC
+- [ ] Cooldown entre ataques
+
+### 📝 Versión 0.6.0-alpha - Clases, Hechizos y Social
+
+**Sistema de Clases:**
+- [ ] Atributos base por clase (Guerrero, Mago, etc.)
+- [ ] Habilidades especiales por clase
+- [ ] Restricciones de equipamiento por clase
+- [ ] Balance de clases
+
+**Hechizos Avanzados:**
+- [ ] Hechizos de área (AOE)
+- [ ] Hechizos de buff/debuff
+- [ ] Hechizos de curación
+- [ ] Hechizos de invocación
+- [ ] Cooldowns de hechizos
+- [ ] Animaciones y efectos visuales
+
+**Sistema de Skills:**
+- [ ] Subir skills con uso (minería, tala, pesca)
+- [ ] Experiencia de skills
+- [ ] Niveles de skills (0-100)
+- [ ] Bonificadores por nivel de skill
+- [ ] Packet WORK para trabajar
+
+**Social y Party:**
 - [ ] Sistema de party
 - [ ] Chat mejorado con canales
 - [ ] Sistema de amigos
@@ -151,28 +177,14 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Ventana de comercio (comprar/vender) ✅
 - [x] Inventario de comerciantes ✅
 - [x] Packet `COMMERCE_BUY` y `COMMERCE_SELL` ✅
-- [ ] Precios dinámicos según oferta/demanda
+- [ ] Precios dinámicos según oferta/demanda (→ v0.5.0)
 
 ### Sistema de Banco
 - [x] `BankService` para gestión de banco ✅
 - [x] Depositar/retirar items ✅
 - [x] Límite de slots en banco ✅
 - [x] Packet `BANK_DEPOSIT` y `BANK_EXTRACT_ITEM` ✅
-- [ ] Depositar/retirar oro
-
-### Sistema de Clases
-- [ ] Atributos base por clase (Guerrero, Mago, etc.)
-- [ ] Habilidades especiales por clase
-- [ ] Restricciones de equipamiento por clase
-- [ ] Balance de clases
-
-### Hechizos Avanzados
-- [ ] Hechizos de área (AOE)
-- [ ] Hechizos de buff/debuff
-- [ ] Hechizos de curación
-- [ ] Hechizos de invocación
-- [ ] Cooldowns de hechizos
-- [ ] Animaciones y efectos visuales
+- [ ] Depositar/retirar oro (→ v0.5.0)
 
 ---
 
