@@ -214,11 +214,13 @@ pyao-server/
 │   ├── task_inventory_click.py  # Click en inventario
 │   ├── task_null.py             # Packets desconocidos
 │   │
-│   ├── # Protocolo
+│   ├── # Protocolo y Validación ✅ REFACTORIZADO
 │   ├── packet_id.py             # IDs de paquetes (enums)
 │   ├── packet_handlers.py       # Mapeo packet ID → handler
 │   ├── packet_builder.py        # Constructor de paquetes
-│   ├── packet_reader.py         # Lectura estructurada de packets ✅ NUEVO
+│   ├── packet_reader.py         # Lectura estructurada de packets
+│   ├── packet_validator.py      # Validación de packets (32 validadores) ✅ NUEVO
+│   ├── task_factory.py          # Factory con pre-validación automática ✅ MEJORADO
 │   ├── msg.py                   # Construcción de mensajes (642 líneas → refactorizar)
 │   │
 │   ├── # Sistema de Juego
@@ -368,6 +370,41 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 - **`msg.py`**: Funciones para construir mensajes específicos del protocolo
 - **`packet_id.py`**: Enums de IDs de paquetes
 - **`packet_handlers.py`**: Mapeo de packet IDs a handlers
+
+#### Sistema de Validación de Packets ✅ NUEVO
+El servidor implementa un **sistema de validación en dos capas** (defensa en profundidad) para todos los packets del cliente:
+
+**Capa 1: Pre-validación en TaskFactory**
+- **`PacketValidator`**: 32 métodos `validate_*()` para cada tipo de packet
+- **`ValidationResult`**: Dataclass que encapsula el resultado de validación
+- **Fail-fast**: Valida ANTES de crear la task
+- **Logging automático**: Registra todas las validaciones (✓ exitosas, ✗ fallidas)
+- **Envío de errores**: Notifica al cliente inmediatamente si hay error
+- **Performance**: Evita crear tasks innecesarias para packets inválidos
+
+**Capa 2: Validación en Tasks**
+- Validación defensiva dentro de cada task
+- Segunda capa de seguridad
+- Permite tests unitarios directos de tasks
+
+**Packets con Validación (32/32 = 100% cobertura):**
+- Con parámetros: LOGIN, CREATE_ACCOUNT, WALK, ATTACK, CAST_SPELL, DROP, TALK, DOUBLE_CLICK, LEFT_CLICK, EQUIP_ITEM, USE_ITEM, COMMERCE_BUY/SELL, BANK_DEPOSIT/EXTRACT, CHANGE_HEADING, GM_COMMANDS
+- Sin parámetros: THROW_DICES, REQUEST_ATTRIBUTES, PICK_UP, COMMERCE_END, BANK_END, REQUEST_POSITION_UPDATE, MEDITATE, REQUEST_STATS, INFORMATION, REQUEST_MOTD, UPTIME, ONLINE, QUIT, PING, AYUDA
+
+**Ejemplo de uso:**
+```python
+# En TaskFactory.create_task()
+validation_result = validator.validate_walk_packet()
+validation_result.log_validation("WALK", 6, "127.0.0.1:12345")
+
+if not validation_result.success:
+    await message_sender.send_console_msg(validation_result.error_message)
+    return TaskNull(data, message_sender)
+
+# Logs generados automáticamente:
+# [127.0.0.1:12345] ✓ Packet WALK (ID:6) validado correctamente: {'heading': 1}
+# [127.0.0.1:12345] ✗ Packet WALK (ID:6) inválido: Dirección inválida: 5 (debe ser 1-4)
+```
 
 ```
 ┌─────────────────────────────────────────┐
