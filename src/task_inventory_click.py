@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
+from src.packet_data import InventoryClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
@@ -76,18 +77,20 @@ class TaskInventoryClick(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        # Slot garantizado como válido
-        logger.info("user_id %d hace click en slot %d", user_id, slot)
+        # Crear dataclass con datos validados
+        click_data = InventoryClickData(slot=slot)
+
+        logger.info("user_id %d hace click en slot %d", user_id, click_data.slot)
 
         try:
             # Obtener el inventario
             inventory_repo = InventoryRepository(self.player_repo.redis)
-            slot_data = await inventory_repo.get_slot(user_id, slot)
+            slot_data = await inventory_repo.get_slot(user_id, click_data.slot)
 
             if not slot_data:
                 # Slot vacío - enviar actualización con slot vacío
                 await self.message_sender.send_change_inventory_slot(
-                    slot=slot,
+                    slot=click_data.slot,
                     item_id=0,
                     name="",
                     amount=0,
@@ -114,12 +117,12 @@ class TaskInventoryClick(Task):
             # Verificar si el item está equipado
             is_equipped = False
             if self.equipment_repo:
-                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, slot)
+                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, click_data.slot)
                 is_equipped = equipped_slot is not None
 
             # Enviar información del slot actualizada
             await self.message_sender.send_change_inventory_slot(
-                slot=slot,
+                slot=click_data.slot,
                 item_id=item.item_id,
                 name=item.name,
                 amount=quantity,
