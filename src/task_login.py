@@ -26,6 +26,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.npc_service import NPCService
+    from src.player_map_service import PlayerMapService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository
     from src.spell_catalog import SpellCatalog
@@ -50,6 +51,7 @@ class TaskLogin(Task):
         spellbook_repo: SpellbookRepository | None = None,
         spell_catalog: SpellCatalog | None = None,
         equipment_repo: EquipmentRepository | None = None,
+        player_map_service: PlayerMapService | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -65,6 +67,7 @@ class TaskLogin(Task):
             spellbook_repo: Repositorio de libro de hechizos.
             spell_catalog: Catálogo de hechizos.
             equipment_repo: Repositorio de equipamiento.
+            player_map_service: Servicio de mapas de jugador.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -76,6 +79,7 @@ class TaskLogin(Task):
         self.spellbook_repo = spellbook_repo
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
+        self.player_map_service = player_map_service
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -237,37 +241,39 @@ class TaskLogin(Task):
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)
 
-        # Enviar todos los NPCs del mapa al jugador
-        if self.npc_service:
-            await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
-
-        # Broadcast multijugador: agregar jugador al mapa y notificar a otros
-        if self.map_manager and self.account_repo:
-            broadcast_service = MultiplayerBroadcastService(
-                self.map_manager,
-                self.player_repo,
-                self.account_repo,
-            )
-            await broadcast_service.notify_player_spawn(
-                user_id,
-                username,
-                position,
-                self.message_sender,
-            )
-
-        # Enviar NPCs del mapa al jugador
-        if self.npc_service:
-            await self.npc_service.send_npcs_to_player(
-                self.message_sender,
-                position["map"],
-            )
-
-        # Cargar y enviar ground items del mapa al jugador
+        # Cargar ground items desde Redis si no están en memoria
         if self.map_manager:
-            # Cargar desde Redis si no están en memoria
             await self.map_manager.load_ground_items(position["map"])
-            # Enviar al jugador
-            await self._send_ground_items_to_player(position["map"])
+
+        # Usar PlayerMapService para spawnear en el mapa (envía jugadores, NPCs, items)
+        if self.player_map_service:
+            await self.player_map_service.spawn_in_map(
+                user_id=user_id,
+                map_id=position["map"],
+                x=position["x"],
+                y=position["y"],
+                heading=position.get("heading", 3),
+                message_sender=self.message_sender,
+            )
+        else:
+            logger.warning("PlayerMapService no disponible, usando método legacy")
+            # Fallback al método antiguo si no hay PlayerMapService
+            if self.npc_service:
+                await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
+            if self.map_manager and self.account_repo:
+                broadcast_service = MultiplayerBroadcastService(
+                    self.map_manager,
+                    self.player_repo,
+                    self.account_repo,
+                )
+                await broadcast_service.notify_player_spawn(
+                    user_id,
+                    username,
+                    position,
+                    self.message_sender,
+                )
+            if self.map_manager:
+                await self._send_ground_items_to_player(position["map"])
 
         # Enviar inventario (después del delay automático de spawn_character)
         await player_service.send_inventory(user_id, self.equipment_repo)
@@ -278,6 +284,8 @@ class TaskLogin(Task):
 
     async def _send_ground_items_to_player(self, map_id: int) -> None:
         """Envía OBJECT_CREATE de todos los ground items del mapa al jugador.
+
+        Método legacy, usado solo como fallback si PlayerMapService no está disponible.
 
         Args:
             map_id: ID del mapa.

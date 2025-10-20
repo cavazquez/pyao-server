@@ -160,6 +160,7 @@ pyao-server/
 │   │
 │   ├── # Servicios (Lógica Reutilizable)
 │   ├── player_service.py        # Gestión de jugadores
+│   ├── player_map_service.py    # Spawn y transiciones de mapa ✅ NUEVO
 │   ├── npc_service.py           # Gestión de NPCs
 │   ├── npc_ai_service.py        # IA de NPCs hostiles
 │   ├── npc_respawn_service.py   # Respawn de NPCs
@@ -338,6 +339,18 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 - **`AccountRepository`**: Gestión de cuentas (crear, obtener, verificar password)
 - **`RedisClient`**: Cliente Redis de bajo nivel (conexión, configuración, sesiones)
 - **`RedisConfig`**: Configuración y constantes de Redis
+
+#### Capa de Servicios
+- **`PlayerMapService`**: ✅ **NUEVO** - Centraliza lógica de spawn y transiciones de mapa
+  - `spawn_in_map()`: Aparición inicial del jugador (login)
+  - `transition_to_map()`: Cambio de mapa (transiciones, teletransporte)
+  - Elimina ~400 líneas de código duplicado en 3 archivos
+  - Encapsula secuencia de 12 pasos para cambios de mapa
+- **`CombatService`**: Sistema de combate jugador vs NPC
+- **`CommerceService`**: Sistema de comercio con NPCs
+- **`SpellService`**: Sistema de hechizos y magia
+- **`NPCService`**: Gestión de NPCs (spawn, respawn, movimiento)
+- **`AuthenticationService`**: Autenticación de usuarios
 
 #### Capa de Lógica de Negocio (Tasks)
 - **`Task`**: Clase base abstracta para procesamiento de paquetes

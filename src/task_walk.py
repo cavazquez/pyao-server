@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from src.map_transition_service import MapTransitionService
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.player_map_service import PlayerMapService
     from src.player_repository import PlayerRepository
     from src.stamina_service import StaminaService
 
@@ -44,6 +45,7 @@ class TaskWalk(Task):
         broadcast_service: MultiplayerBroadcastService | None = None,
         map_transition_service: MapTransitionService | None = None,
         stamina_service: StaminaService | None = None,
+        player_map_service: PlayerMapService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
@@ -56,6 +58,7 @@ class TaskWalk(Task):
             broadcast_service: Servicio de broadcast multijugador.
             map_transition_service: Servicio de transiciones entre mapas.
             stamina_service: Servicio de stamina.
+            player_map_service: Servicio de mapas de jugador.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
@@ -64,6 +67,7 @@ class TaskWalk(Task):
         self.broadcast_service = broadcast_service
         self.map_transition_service = map_transition_service
         self.stamina_service = stamina_service
+        self.player_map_service = player_map_service
         self.session_data = session_data
 
     def _parse_packet(self) -> int | None:
@@ -445,7 +449,7 @@ class TaskWalk(Task):
 
         return new_x, new_y, new_map, changed_map
 
-    async def _handle_map_transition(  # noqa: PLR0915
+    async def _handle_map_transition(
         self,
         user_id: int,
         heading: int,
@@ -468,176 +472,18 @@ class TaskWalk(Task):
             new_y: Nueva posición Y.
             new_map: ID del nuevo mapa.
         """
-        import asyncio  # noqa: PLC0415
-
-        from src.account_repository import AccountRepository  # noqa: PLC0415
-
-        # IMPORTANTE: Orden correcto de packets según protocolo AO
-
-        # 1. Enviar CHANGE_MAP (ID: 21) - Cliente carga nuevo mapa
-        await self.message_sender.send_change_map(new_map)
-
-        # 2. Dar tiempo al cliente para cargar el mapa (crítico)
-        await asyncio.sleep(0.1)
-
-        # 3. Actualizar posición en Redis ANTES de POS_UPDATE
-        if self.player_repo:
-            await self.player_repo.set_position(user_id, new_x, new_y, new_map, heading)
-
-        # 4. Enviar POS_UPDATE (ID: 22) - Cliente posiciona jugador
-        await self.message_sender.send_pos_update(new_x, new_y)
-
-        # 5. Remover jugador del mapa anterior en MapManager
-        if self.map_manager:
-            self.map_manager.remove_player(current_map, user_id)
-
-        # 6. Broadcast CHARACTER_REMOVE en mapa anterior
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_character_remove(current_map, user_id)
-
-        # 7. Agregar jugador al nuevo mapa en MapManager
-        if self.map_manager and self.player_repo:
-            account_repo = AccountRepository(self.player_repo.redis)
-            account_data = await account_repo.get_account_by_user_id(user_id)
-            username = (
-                account_data.get("username", f"Player{user_id}")
-                if account_data
-                else f"Player{user_id}"
-            )
-            self.map_manager.add_player(new_map, user_id, self.message_sender, username)
-
-        # 8. Enviar CHARACTER_CREATE del propio jugador (para que aparezca en su cliente)
-        if self.player_repo:
-            account_repo = AccountRepository(self.player_repo.redis)
-            account_data = await account_repo.get_account_by_user_id(user_id)
-
-            char_body = 1
-            char_head = 1
-            username = f"Player{user_id}"
-
-            if account_data:
-                char_body = int(account_data.get("char_race", 1))
-                char_head = int(account_data.get("char_head", 1))
-                username = account_data.get("username", f"Player{user_id}")
-                if char_body == 0:
-                    char_body = 1
-
-            await self.message_sender.send_character_create(
-                char_index=user_id,
-                body=char_body,
-                head=char_head,
+        # Usar PlayerMapService para manejar la transición
+        if self.player_map_service:
+            await self.player_map_service.transition_to_map(
+                user_id=user_id,
+                current_map=current_map,
+                current_x=current_x,
+                current_y=current_y,
+                new_map=new_map,
+                new_x=new_x,
+                new_y=new_y,
                 heading=heading,
-                x=new_x,
-                y=new_y,
-                name=username,
+                message_sender=self.message_sender,
             )
-
-        # 9. Enviar todos los jugadores existentes en el nuevo mapa
-        if self.map_manager and self.player_repo:
-            existing_players = self.map_manager.get_players_in_map(new_map)
-            account_repo = AccountRepository(self.player_repo.redis)
-
-            for other_user_id in existing_players:
-                if other_user_id == user_id:
-                    continue
-
-                other_position = await self.player_repo.get_position(other_user_id)
-                if not other_position:
-                    continue
-
-                other_account = await account_repo.get_account_by_user_id(other_user_id)
-                if not other_account:
-                    continue
-
-                other_body = int(other_account.get("char_race", 1))
-                other_head = int(other_account.get("char_head", 1))
-                other_username = other_account.get("username", "")
-
-                if other_body == 0:
-                    other_body = 1
-
-                await self.message_sender.send_character_create(
-                    char_index=other_user_id,
-                    body=other_body,
-                    head=other_head,
-                    heading=other_position.get("heading", 3),
-                    x=other_position["x"],
-                    y=other_position["y"],
-                    name=other_username,
-                )
-                await asyncio.sleep(0.01)
-
-        # 10. Enviar todos los NPCs del nuevo mapa
-        if self.map_manager:
-            npcs = self.map_manager.get_npcs_in_map(new_map)
-            for npc in npcs:
-                await self.message_sender.send_character_create(
-                    char_index=npc.char_index,
-                    body=npc.body_id,
-                    head=npc.head_id,
-                    heading=npc.heading,
-                    x=npc.x,
-                    y=npc.y,
-                    weapon=0,
-                    shield=0,
-                    helmet=0,
-                    fx=0,
-                    loops=0,
-                    name=npc.name,
-                )
-                await asyncio.sleep(0.01)
-
-        # 11. Enviar todos los objetos del suelo en el nuevo mapa
-        if self.map_manager:
-            items_sent = 0
-            for (item_map_id, x, y), items in self.map_manager._ground_items.items():  # noqa: SLF001
-                if item_map_id != new_map:
-                    continue
-
-                for item in items:
-                    grh_index = item.get("grh_index")
-                    if grh_index and isinstance(grh_index, int):
-                        await self.message_sender.send_object_create(x, y, grh_index)
-                        items_sent += 1
-                        await asyncio.sleep(0.01)
-
-            if items_sent > 0:
-                logger.info("Enviados %d ground items en transición a mapa %d", items_sent, new_map)
-
-        # 12. Broadcast CHARACTER_CREATE del jugador a otros en el nuevo mapa
-        if self.broadcast_service and self.player_repo:
-            account_repo = AccountRepository(self.player_repo.redis)
-            account_data = await account_repo.get_account_by_user_id(user_id)
-
-            char_body = 1
-            char_head = 1
-            username = f"Player{user_id}"
-
-            if account_data:
-                char_body = int(account_data.get("char_race", 1))
-                char_head = int(account_data.get("char_head", 1))
-                username = account_data.get("username", f"Player{user_id}")
-                if char_body == 0:
-                    char_body = 1
-
-            await self.broadcast_service.broadcast_character_create(
-                map_id=new_map,
-                char_index=user_id,
-                body=char_body,
-                head=char_head,
-                heading=heading,
-                x=new_x,
-                y=new_y,
-                name=username,
-            )
-
-        logger.info(
-            "User %d cambió de mapa: %d -> %d, pos (%d,%d) -> (%d,%d)",
-            user_id,
-            current_map,
-            new_map,
-            current_x,
-            current_y,
-            new_x,
-            new_y,
-        )
+        else:
+            logger.error("PlayerMapService no disponible para transición de mapa")

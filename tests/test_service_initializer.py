@@ -81,4 +81,4 @@ async def test_service_initializer_returns_dict(
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)
-    assert len(services) == 13  # 13 servicios/catálogos (agregado stamina_service)
+    assert len(services) == 14  # 14 servicios/catálogos (agregado player_map_service)

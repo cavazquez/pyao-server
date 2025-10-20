@@ -113,6 +113,7 @@ class ServerInitializer:
             map_transition_service=services["map_transition_service"],
             broadcast_service=services["broadcast_service"],
             stamina_service=services["stamina_service"],
+            player_map_service=services["player_map_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,

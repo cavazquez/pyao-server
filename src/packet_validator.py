@@ -1,13 +1,16 @@
 """Validador de paquetes para centralizar parsing y validación."""
 
+import logging
 import struct
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 if TYPE_CHECKING:
     from src.packet_reader import PacketReader
 
 T = TypeVar("T")
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -23,6 +26,31 @@ class ValidationResult[T]:
     success: bool
     data: T | None = None
     error_message: str | None = None
+
+    def log_validation(self, packet_name: str, packet_id: int, client_address: str) -> None:
+        """Registra el resultado de la validación en los logs.
+
+        Args:
+            packet_name: Nombre del packet (ej: "WALK", "ATTACK").
+            packet_id: ID del packet.
+            client_address: Dirección del cliente (IP:Puerto).
+        """
+        if self.success:
+            logger.debug(
+                "[%s] ✓ Packet %s (ID:%d) validado correctamente: %s",
+                client_address,
+                packet_name,
+                packet_id,
+                self.data,
+            )
+        else:
+            logger.warning(
+                "[%s] ✗ Packet %s (ID:%d) inválido: %s",
+                client_address,
+                packet_name,
+                packet_id,
+                self.error_message,
+            )
 
 
 class PacketValidator:
@@ -309,3 +337,174 @@ class PacketValidator:
     def clear_errors(self) -> None:
         """Limpia todos los errores acumulados."""
         self.errors.clear()
+
+    # ========== Métodos de Validación Completa de Packets ==========
+    # Estos métodos validan un packet completo y retornan ValidationResult
+    # con todos los datos parseados listos para usar en las tasks.
+
+    def validate_packet_by_id(self, packet_id: int) -> ValidationResult[dict[str, Any]] | None:
+        """Valida un packet según su ID usando el método validate_* correspondiente.
+
+        Args:
+            packet_id: ID del packet a validar.
+
+        Returns:
+            ValidationResult si hay un validador para este packet_id, None si no existe.
+        """
+        # Mapeo de packet_id a método de validación
+        # Importar aquí para evitar dependencia circular
+        from src.packet_id import ClientPacketID  # noqa: PLC0415
+
+        validators: dict[int, object] = {
+            ClientPacketID.WALK: self.validate_walk_packet,
+            ClientPacketID.ATTACK: self.validate_attack_packet,
+            ClientPacketID.LOGIN: self.validate_login_packet,
+            ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
+            ClientPacketID.DROP: self.validate_drop_packet,
+            ClientPacketID.PICK_UP: self.validate_pickup_packet,
+        }
+
+        validator_method = validators.get(packet_id)
+        if validator_method and callable(validator_method):
+            return validator_method()  # type: ignore[no-any-return]
+
+        # No hay validador para este packet_id
+        return None
+
+    def validate_walk_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet WALK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (WALK = 6)
+        - Byte 1: Dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste)
+
+        Returns:
+            ValidationResult con {"heading": int} si es válido.
+        """
+        heading = self.read_heading()
+
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"heading": heading}, error_message=None)
+
+    def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet ATTACK completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (ATTACK = 8)
+        - Int16: CharIndex del objetivo
+
+        Returns:
+            ValidationResult con {"char_index": int} si es válido.
+        """
+        try:
+            char_index = self.reader.read_int16()
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo char_index: {e}")
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        # Validar rango (CharIndex debe ser > 0)
+        if char_index <= 0:
+            self.errors.append(f"CharIndex inválido: {char_index} (debe ser > 0)")
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"char_index": char_index}, error_message=None)
+
+    def validate_login_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet LOGIN completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (LOGIN = 2)
+        - String: Username (UTF-8)
+        - String: Password (UTF-8)
+
+        Returns:
+            ValidationResult con {"username": str, "password": str} si es válido.
+        """
+        username = self.read_string(min_length=3, max_length=20, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        password = self.read_string(min_length=6, max_length=32, encoding="utf-8")
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True,
+            data={"username": username, "password": password},
+            error_message=None,
+        )
+
+    def validate_cast_spell_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet CAST_SPELL completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (CAST_SPELL = 13)
+        - Byte: Slot del hechizo (1-35)
+
+        Returns:
+            ValidationResult con {"spell_slot": int} si es válido.
+        """
+        spell_slot = self.read_spell_slot()
+
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"spell_slot": spell_slot}, error_message=None)
+
+    def validate_drop_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet DROP completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (DROP = 18)
+        - Byte: Slot del inventario (1-20)
+        - Int16: Cantidad a tirar
+
+        Returns:
+            ValidationResult con {"slot": int, "quantity": int} si es válido.
+        """
+        slot = self.read_slot(min_slot=1, max_slot=20)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        quantity = self.read_quantity(min_qty=1, max_qty=10000)
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
+        )
+
+    def validate_pickup_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet PICK_UP completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (PICK_UP = 19)
+
+        Returns:
+            ValidationResult con {} (sin datos adicionales) si es válido.
+        """
+        # PICK_UP no tiene parámetros adicionales, solo el PacketID
+        # Verificamos que no haya errores previos
+        if self.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+        return ValidationResult(success=True, data={}, error_message=None)

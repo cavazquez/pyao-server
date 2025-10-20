@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from src.npc_repository import NPCRepository
     from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
+    from src.player_map_service import PlayerMapService
     from src.player_repository import PlayerRepository
     from src.redis_client import RedisClient
     from src.server_repository import ServerRepository
@@ -66,6 +67,7 @@ class DependencyContainer:
     map_transition_service: MapTransitionService
     broadcast_service: MultiplayerBroadcastService
     stamina_service: StaminaService
+    player_map_service: PlayerMapService
 
     # Managers
     map_manager: MapManager
