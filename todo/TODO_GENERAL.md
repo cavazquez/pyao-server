@@ -8,15 +8,16 @@
 
 ## 📊 Estado Actual del Proyecto
 
-**Versión:** 0.5.0-alpha (90% completado)  
+**Versión:** 0.5.0-alpha (100% COMPLETADO) 🎉  
 **Tests:** 807 pasando (100%)  
 **Cobertura:** Alta  
-**Commits en sesión:** 43  
+**Commits en sesión:** 47  
 **Calidad:** Excelente (0 errores linting/mypy)
 
 **Sistemas Completados Recientemente:**
 - ✅ Sistema de Energía/Stamina (100%)
 - ✅ Sistema de Críticos basado en Agilidad (100%)
+- ✅ Sistema de Esquives basado en Agilidad (100%)
 - ✅ NPC Factory Pattern
 - ✅ Loot Tables Configurables
 - ✅ PacketReader (21/33 tasks migradas)
@@ -62,7 +63,7 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Loot tables configurables
 - [x] Items variados (armas, armaduras, pociones)
 
-### ✅ Versión 0.5.0-alpha - Refactorings y Contenido (90% COMPLETADO)
+### ✅ Versión 0.5.0-alpha - Refactorings y Contenido (100% COMPLETADO) 🎉
 
 **Completado:**
 - [x] MessageSender refactoring (100% completado)
@@ -81,10 +82,12 @@ Este proyecto tiene varios documentos TODO especializados:
   - [x] Multiplicador de daño 2x
   - [x] Integrado en CombatService
 
-**Pendiente:**
-- [ ] Sistema de esquives (preparado, pendiente integrar)
-- [ ] Packet DAMAGE para mostrar daño recibido
-- [ ] Inventario lleno - manejar casos límite
+**Completado adicional:**
+- [x] Sistema de esquives ✅
+- [x] Mensajes de daño al jugador (usando CONSOLE_MSG) ✅
+- [x] Inventario lleno - manejar casos límite ✅
+
+**Movido a v0.6.0+ (Features más complejas):**
 - [ ] Precios dinámicos según oferta/demanda
 - [ ] Depositar/retirar oro
 - [ ] Pathfinding básico (A* o similar)
