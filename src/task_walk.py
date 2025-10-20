@@ -89,9 +89,9 @@ class TaskWalk(Task):
 
         return heading
 
-    async def execute(self) -> None:  # noqa: PLR0915, PLR0914
+    async def execute(self) -> None:
         """Ejecuta el movimiento del personaje."""
-        # Parsear dirección
+        # Parsear y validar packet
         heading = self._parse_packet()
         if heading is None:
             logger.warning(
@@ -106,47 +106,24 @@ class TaskWalk(Task):
             self.message_sender.connection.address,
         )
 
-        # Verificar que el player_repo esté disponible
-        if self.player_repo is None:
-            logger.error("PlayerRepository no está disponible para movimiento")
+        # Validar dependencias y obtener user_id
+        if not self._validate_dependencies():
             return
 
-        # Obtener user_id de la sesión
-        if self.session_data is None or "user_id" not in self.session_data:
-            logger.warning(
-                "Intento de movimiento sin user_id en sesión desde %s",
-                self.message_sender.connection.address,
-            )
+        user_id = self._get_user_id()
+        if user_id is None:
             return
 
-        user_id_value = self.session_data["user_id"]
-        if isinstance(user_id_value, dict):
-            logger.error("user_id en sesión es un dict, esperaba int")
+        # Cancelar meditación y consumir stamina
+        await self._cancel_meditation_if_active(user_id)
+
+        if not await self._consume_stamina(user_id):
             return
-
-        user_id = int(user_id_value)
-
-        # Cancelar meditación si está meditando
-        is_meditating = await self.player_repo.is_meditating(user_id)
-        if is_meditating:
-            await self.player_repo.set_meditating(user_id, is_meditating=False)
-            await self.message_sender.send_meditate_toggle()
-            await self.message_sender.send_console_msg("Dejas de meditar al moverte.")
-            logger.info("user_id %d dejó de meditar al moverse", user_id)
-
-        # Consumir stamina por movimiento
-        if self.stamina_service:
-            can_move = await self.stamina_service.consume_stamina(
-                user_id=user_id,
-                amount=STAMINA_COST_WALK,
-                message_sender=self.message_sender,
-            )
-
-            if not can_move:
-                logger.debug("user_id %d no tiene suficiente stamina para moverse", user_id)
-                return
 
         # Obtener posición actual
+        if self.player_repo is None:
+            return
+
         position = await self.player_repo.get_position(user_id)
         if position is None:
             logger.warning("No se encontró posición para user_id %d", user_id)
@@ -174,161 +151,35 @@ class TaskWalk(Task):
         if not moved:
             # No se movió (límite del mapa sin transición)
             # Solo actualizar heading si cambió
-            current_heading = position.get("heading", 3)
-            if heading != current_heading:
-                await self.player_repo.set_heading(user_id, heading)
-                logger.debug("User %d cambió dirección a %d sin moverse", user_id, heading)
+            if self.player_repo:
+                current_heading = position.get("heading", 3)
+                if heading != current_heading:
+                    await self.player_repo.set_heading(user_id, heading)
+                    logger.debug("User %d cambió dirección a %d sin moverse", user_id, heading)
             return
 
         # Validar colisiones con MapManager
         if self.map_manager and not self.map_manager.can_move_to(current_map, new_x, new_y):
-            # Determinar la razón del bloqueo
-            reason = "desconocida"
-
-            # Verificar límites del mapa
-            if new_x < 1 or new_x > 100 or new_y < 1 or new_y > 100:  # noqa: PLR2004
-                reason = "fuera de límites del mapa"
-            # Verificar si es un tile bloqueado del mapa (pared, agua, etc.)
-            elif (
-                current_map in self.map_manager._blocked_tiles  # noqa: SLF001
-                and (new_x, new_y) in self.map_manager._blocked_tiles[current_map]  # noqa: SLF001
-            ):
-                reason = "tile bloqueado del mapa (pared/agua)"
-            # Verificar si está ocupado por jugador o NPC
-            else:
-                occupant = self.map_manager.get_tile_occupant(current_map, new_x, new_y)
-                if occupant:
-                    if occupant.startswith("player:"):
-                        player_id = occupant.split(":")[1]
-                        reason = f"ocupado por jugador {player_id}"
-                    elif occupant.startswith("npc:"):
-                        npc_id = occupant.split(":")[1]
-                        reason = f"ocupado por NPC {npc_id}"
-
-            logger.info(
-                "User %d no puede moverse a (%d,%d) en mapa %d - Razón: %s",
-                user_id,
-                new_x,
-                new_y,
-                current_map,
-                reason,
+            await self._handle_blocked_movement(
+                user_id, heading, current_map, new_x, new_y, position
             )
-
-            # Solo cambiar dirección
-            current_heading = position.get("heading", 3)
-            if heading != current_heading:
-                await self.player_repo.set_heading(user_id, heading)
             return
 
-        # Actualizar posición en Redis (incluyendo heading)
-        await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
-
-        # Actualizar índice espacial
-        if self.map_manager:
-            self.map_manager.update_player_tile(
-                user_id, current_map, current_x, current_y, new_x, new_y
-            )
-
-        logger.info(
-            "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
-            user_id,
-            current_x,
-            current_y,
-            new_x,
-            new_y,
-            heading,
+        # Actualizar posición y broadcast
+        await self._update_position_and_spatial_index(
+            user_id, heading, current_x, current_y, current_map, new_x, new_y
         )
 
-        # Después del movimiento, verificar si estamos en el último tile jugable
-        # y si el siguiente tile en la dirección del movimiento está bloqueado
-        # Si es así y hay transición, cambiar de mapa
-        if changed_map is False and self.map_transition_service and self.map_manager:
-            # Calcular el siguiente tile en la dirección del movimiento
-            check_x, check_y = new_x, new_y
-            if heading == HEADING_NORTH:
-                check_y = new_y - 1
-            elif heading == HEADING_EAST:
-                check_x = new_x + 1
-            elif heading == HEADING_SOUTH:
-                check_y = new_y + 1
-            elif heading == HEADING_WEST:
-                check_x = new_x - 1
+        # Verificar transición post-movimiento
+        if await self._check_post_movement_transition(
+            user_id, heading, current_x, current_y, current_map, new_x, new_y, new_map, changed_map
+        ):
+            return
 
-            # Verificar si ese tile está bloqueado
-            is_next_blocked = not self.map_manager.can_move_to(new_map, check_x, check_y)
-
-            logger.info(
-                "Verificando siguiente tile (%d,%d) desde (%d,%d): bloqueado=%s",
-                check_x,
-                check_y,
-                new_x,
-                new_y,
-                is_next_blocked,
-            )
-
-            if is_next_blocked:
-                # El siguiente tile está bloqueado
-                # Solo activar transición si estamos CERCA del borde del mapa (últimos 10 tiles)
-                map_width, map_height = self.map_manager.get_map_size(new_map)
-                near_border = False
-                edge = None
-
-                if heading == HEADING_NORTH and check_y <= MIN_MAP_COORDINATE + 10:
-                    near_border = True
-                    edge = "north"
-                elif heading == HEADING_EAST and check_x >= map_width - 10:
-                    near_border = True
-                    edge = "east"
-                elif heading == HEADING_SOUTH and check_y >= map_height - 10:
-                    near_border = True
-                    edge = "south"
-                elif heading == HEADING_WEST and check_x <= MIN_MAP_COORDINATE + 10:
-                    near_border = True
-                    edge = "west"
-
-                if near_border and edge:
-                    transition = self.map_transition_service.get_transition(new_map, edge)
-                    if transition:
-                        # Hay transición, cambiar de mapa inmediatamente
-                        logger.info(
-                            "Último tile jugable detectado en (%d,%d), cambiando a mapa %d",
-                            new_x,
-                            new_y,
-                            transition.to_map,
-                        )
-
-                        # Actualizar a la nueva posición en el nuevo mapa
-                        new_map = transition.to_map
-                        new_x = transition.to_x
-                        new_y = transition.to_y
-                        changed_map = True
-
-                        # Ejecutar la transición
-                        await self._handle_map_transition(
-                            user_id,
-                            heading,
-                            current_x,
-                            current_y,
-                            current_map,
-                            new_x,
-                            new_y,
-                            new_map,
-                        )
-                        return
-
-        # Broadcast multijugador: notificar movimiento a otros jugadores
-        # Nota: NO enviamos POS_UPDATE al cliente que se movió porque causa saltos visuales
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_character_move(
-                map_id=current_map,
-                char_index=user_id,
-                new_x=new_x,
-                new_y=new_y,
-                new_heading=heading,
-                old_x=current_x,
-                old_y=current_y,
-                old_heading=position.get("heading", 3),
-            )
+        # Broadcast a otros jugadores
+        await self._broadcast_movement(
+            user_id, heading, current_x, current_y, current_map, new_x, new_y, position
+        )
 
     async def _calculate_new_position(  # noqa: PLR0915
         self, heading: int, current_x: int, current_y: int, current_map: int
@@ -487,3 +338,336 @@ class TaskWalk(Task):
             )
         else:
             logger.error("PlayerMapService no disponible para transición de mapa")
+
+    def _validate_dependencies(self) -> bool:
+        """Valida que las dependencias necesarias estén disponibles.
+
+        Returns:
+            True si todas las dependencias están disponibles, False en caso contrario.
+        """
+        if self.player_repo is None:
+            logger.error("PlayerRepository no está disponible para movimiento")
+            return False
+        return True
+
+    def _get_user_id(self) -> int | None:
+        """Obtiene y valida el user_id de la sesión.
+
+        Returns:
+            user_id si es válido, None en caso contrario.
+        """
+        if self.session_data is None or "user_id" not in self.session_data:
+            logger.warning(
+                "Intento de movimiento sin user_id en sesión desde %s",
+                self.message_sender.connection.address,
+            )
+            return None
+
+        user_id_value = self.session_data["user_id"]
+        if isinstance(user_id_value, dict):
+            logger.error("user_id en sesión es un dict, esperaba int")
+            return None
+
+        return int(user_id_value)
+
+    async def _cancel_meditation_if_active(self, user_id: int) -> None:
+        """Cancela la meditación si el jugador está meditando.
+
+        Args:
+            user_id: ID del jugador.
+        """
+        if self.player_repo is None:
+            return
+
+        is_meditating = await self.player_repo.is_meditating(user_id)
+        if is_meditating:
+            await self.player_repo.set_meditating(user_id, is_meditating=False)
+            await self.message_sender.send_meditate_toggle()
+            await self.message_sender.send_console_msg("Dejas de meditar al moverte.")
+            logger.info("user_id %d dejó de meditar al moverse", user_id)
+
+    async def _consume_stamina(self, user_id: int) -> bool:
+        """Consume stamina por el movimiento.
+
+        Args:
+            user_id: ID del jugador.
+
+        Returns:
+            True si se pudo consumir stamina, False si no tiene suficiente.
+        """
+        if self.stamina_service:
+            can_move = await self.stamina_service.consume_stamina(
+                user_id=user_id,
+                amount=STAMINA_COST_WALK,
+                message_sender=self.message_sender,
+            )
+
+            if not can_move:
+                logger.debug("user_id %d no tiene suficiente stamina para moverse", user_id)
+                return False
+
+        return True
+
+    async def _handle_blocked_movement(
+        self,
+        user_id: int,
+        heading: int,
+        current_map: int,
+        new_x: int,
+        new_y: int,
+        position: dict[str, int],
+    ) -> None:
+        """Maneja el caso cuando el movimiento está bloqueado.
+
+        Args:
+            user_id: ID del jugador.
+            heading: Dirección del movimiento.
+            current_map: ID del mapa actual.
+            new_x: Nueva posición X (bloqueada).
+            new_y: Nueva posición Y (bloqueada).
+            position: Posición actual del jugador.
+        """
+        reason = self._get_block_reason(current_map, new_x, new_y)
+
+        logger.info(
+            "User %d no puede moverse a (%d,%d) en mapa %d - Razón: %s",
+            user_id,
+            new_x,
+            new_y,
+            current_map,
+            reason,
+        )
+
+        # Solo cambiar dirección
+        if self.player_repo:
+            current_heading = position.get("heading", 3)
+            if heading != current_heading:
+                await self.player_repo.set_heading(user_id, heading)
+
+    def _get_block_reason(self, current_map: int, new_x: int, new_y: int) -> str:
+        """Determina la razón por la cual un tile está bloqueado.
+
+        Args:
+            current_map: ID del mapa.
+            new_x: Posición X del tile.
+            new_y: Posición Y del tile.
+
+        Returns:
+            Descripción de la razón del bloqueo.
+        """
+        # Verificar límites del mapa
+        if new_x < 1 or new_x > 100 or new_y < 1 or new_y > 100:  # noqa: PLR2004
+            return "fuera de límites del mapa"
+
+        if not self.map_manager:
+            return "desconocida"
+
+        # Verificar si es un tile bloqueado del mapa (pared, agua, etc.)
+        if (
+            current_map in self.map_manager._blocked_tiles  # noqa: SLF001
+            and (new_x, new_y) in self.map_manager._blocked_tiles[current_map]  # noqa: SLF001
+        ):
+            return "tile bloqueado del mapa (pared/agua)"
+
+        # Verificar si está ocupado por jugador o NPC
+        occupant = self.map_manager.get_tile_occupant(current_map, new_x, new_y)
+        if occupant:
+            if occupant.startswith("player:"):
+                player_id = occupant.split(":")[1]
+                return f"ocupado por jugador {player_id}"
+            if occupant.startswith("npc:"):
+                npc_id = occupant.split(":")[1]
+                return f"ocupado por NPC {npc_id}"
+
+        return "desconocida"
+
+    async def _update_position_and_spatial_index(
+        self,
+        user_id: int,
+        heading: int,
+        current_x: int,
+        current_y: int,
+        current_map: int,
+        new_x: int,
+        new_y: int,
+    ) -> None:
+        """Actualiza la posición del jugador en Redis y el índice espacial.
+
+        Args:
+            user_id: ID del jugador.
+            heading: Dirección del movimiento.
+            current_x: Posición X actual.
+            current_y: Posición Y actual.
+            current_map: ID del mapa.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+        """
+        if self.player_repo:
+            await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
+
+        if self.map_manager:
+            self.map_manager.update_player_tile(
+                user_id, current_map, current_x, current_y, new_x, new_y
+            )
+
+        logger.info(
+            "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
+            user_id,
+            current_x,
+            current_y,
+            new_x,
+            new_y,
+            heading,
+        )
+
+    async def _check_post_movement_transition(
+        self,
+        user_id: int,
+        heading: int,
+        current_x: int,
+        current_y: int,
+        current_map: int,
+        new_x: int,
+        new_y: int,
+        new_map: int,
+        changed_map: bool,
+    ) -> bool:
+        """Verifica si hay transición de mapa después del movimiento.
+
+        Args:
+            user_id: ID del jugador.
+            heading: Dirección del movimiento.
+            current_x: Posición X antes del movimiento.
+            current_y: Posición Y antes del movimiento.
+            current_map: ID del mapa antes del movimiento.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+            new_map: ID del nuevo mapa.
+            changed_map: Si ya cambió de mapa.
+
+        Returns:
+            True si se ejecutó una transición, False en caso contrario.
+        """
+        if changed_map or not self.map_transition_service or not self.map_manager:
+            return False
+
+        # Calcular el siguiente tile en la dirección del movimiento
+        check_x, check_y = new_x, new_y
+        if heading == HEADING_NORTH:
+            check_y = new_y - 1
+        elif heading == HEADING_EAST:
+            check_x = new_x + 1
+        elif heading == HEADING_SOUTH:
+            check_y = new_y + 1
+        elif heading == HEADING_WEST:
+            check_x = new_x - 1
+
+        # Verificar si ese tile está bloqueado
+        is_next_blocked = not self.map_manager.can_move_to(new_map, check_x, check_y)
+
+        logger.info(
+            "Verificando siguiente tile (%d,%d) desde (%d,%d): bloqueado=%s",
+            check_x,
+            check_y,
+            new_x,
+            new_y,
+            is_next_blocked,
+        )
+
+        if not is_next_blocked:
+            return False
+
+        # El siguiente tile está bloqueado, verificar si hay transición cerca del borde
+        map_width, map_height = self.map_manager.get_map_size(new_map)
+        edge = self._get_edge_if_near_border(heading, check_x, check_y, map_width, map_height)
+
+        if not edge:
+            return False
+
+        transition = self.map_transition_service.get_transition(new_map, edge)
+        if not transition:
+            return False
+
+        # Hay transición, cambiar de mapa inmediatamente
+        logger.info(
+            "Último tile jugable detectado en (%d,%d), cambiando a mapa %d",
+            new_x,
+            new_y,
+            transition.to_map,
+        )
+
+        await self._handle_map_transition(
+            user_id,
+            heading,
+            current_x,
+            current_y,
+            current_map,
+            transition.to_x,
+            transition.to_y,
+            transition.to_map,
+        )
+        return True
+
+    @staticmethod
+    def _get_edge_if_near_border(
+        heading: int, check_x: int, check_y: int, map_width: int, map_height: int
+    ) -> str | None:
+        """Determina si estamos cerca del borde del mapa.
+
+        Args:
+            heading: Dirección del movimiento.
+            check_x: Posición X a verificar.
+            check_y: Posición Y a verificar.
+            map_width: Ancho del mapa.
+            map_height: Alto del mapa.
+
+        Returns:
+            Nombre del borde si estamos cerca, None en caso contrario.
+        """
+        border_threshold = 10
+
+        if heading == HEADING_NORTH and check_y <= MIN_MAP_COORDINATE + border_threshold:
+            return "north"
+        if heading == HEADING_EAST and check_x >= map_width - border_threshold:
+            return "east"
+        if heading == HEADING_SOUTH and check_y >= map_height - border_threshold:
+            return "south"
+        if heading == HEADING_WEST and check_x <= MIN_MAP_COORDINATE + border_threshold:
+            return "west"
+
+        return None
+
+    async def _broadcast_movement(
+        self,
+        user_id: int,
+        heading: int,
+        current_x: int,
+        current_y: int,
+        current_map: int,
+        new_x: int,
+        new_y: int,
+        position: dict[str, int],
+    ) -> None:
+        """Hace broadcast del movimiento a otros jugadores.
+
+        Args:
+            user_id: ID del jugador.
+            heading: Dirección del movimiento.
+            current_x: Posición X anterior.
+            current_y: Posición Y anterior.
+            current_map: ID del mapa.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+            position: Posición completa del jugador.
+        """
+        if self.broadcast_service:
+            await self.broadcast_service.broadcast_character_move(
+                map_id=current_map,
+                char_index=user_id,
+                new_x=new_x,
+                new_y=new_y,
+                new_heading=heading,
+                old_x=current_x,
+                old_y=current_y,
+                old_heading=position.get("heading", 3),
+            )
