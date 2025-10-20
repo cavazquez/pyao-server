@@ -167,6 +167,7 @@ class TaskFactory:
                 message_sender,
                 self.deps.player_repo,
                 self.deps.spell_service,
+                self.deps.stamina_service,
                 session_data,
                 self.deps.spellbook_repo,
             ),

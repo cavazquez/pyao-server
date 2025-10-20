@@ -7,6 +7,7 @@ from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.spellbook_repository import SpellbookRepository
+from src.stamina_service import STAMINA_COST_SPELL
 from src.task import Task
 
 if TYPE_CHECKING:
@@ -14,6 +15,7 @@ if TYPE_CHECKING:
     from src.player_repository import PlayerRepository
     from src.spell_service import SpellService
     from src.spellbook_repository import SpellbookRepository
+    from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +33,7 @@ class TaskCastSpell(Task):
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         spell_service: SpellService | None = None,
+        stamina_service: StaminaService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
         spellbook_repo: SpellbookRepository | None = None,
     ) -> None:
@@ -41,12 +44,14 @@ class TaskCastSpell(Task):
             message_sender: Enviador de mensajes.
             player_repo: Repositorio de jugadores.
             spell_service: Servicio de hechizos.
+            stamina_service: Servicio de stamina.
             session_data: Datos de sesión.
             spellbook_repo: Repositorio de libro de hechizos.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.spell_service = spell_service
+        self.stamina_service = stamina_service
         self.session_data = session_data or {}
         self.spellbook_repo = spellbook_repo
 
@@ -79,6 +84,18 @@ class TaskCastSpell(Task):
             error_msg = validator.get_error_message() if validator.has_errors() else "Slot inválido"
             await self.message_sender.send_console_msg(error_msg)
             return
+
+        # Consumir stamina por lanzar hechizo
+        if self.stamina_service:
+            can_cast = await self.stamina_service.consume_stamina(
+                user_id=user_id,
+                amount=STAMINA_COST_SPELL,
+                message_sender=self.message_sender,
+            )
+
+            if not can_cast:
+                logger.debug("user_id %d no tiene suficiente stamina para lanzar hechizo", user_id)
+                return
 
         try:
             # Determinar si el packet incluye coordenadas del target

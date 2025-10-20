@@ -34,7 +34,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -67,7 +67,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -99,7 +99,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -132,7 +132,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -162,7 +162,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -187,7 +187,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
@@ -217,7 +217,7 @@ class TestSpellTargeting:
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, session_data, spellbook_repo
+            data, message_sender, player_repo, spell_service, None, session_data, spellbook_repo
         )
 
         await task.execute()
