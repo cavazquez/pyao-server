@@ -50,6 +50,9 @@ class NPCRepository:
         is_merchant: bool = False,
         is_banker: bool = False,
         movement_type: str = "static",
+        attack_damage: int = 10,
+        attack_cooldown: float = 3.0,
+        aggro_range: int = 8,
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -76,6 +79,9 @@ class NPCRepository:
             respawn_time_max: Tiempo máximo de respawn en segundos.
             gold_min: Oro mínimo al morir.
             gold_max: Oro máximo al morir.
+            attack_damage: Daño base del NPC.
+            attack_cooldown: Segundos entre ataques.
+            aggro_range: Rango de detección/agresión en tiles.
 
         Returns:
             Instancia de NPC creada.
@@ -106,6 +112,9 @@ class NPCRepository:
             respawn_time_max=respawn_time_max,
             gold_min=gold_min,
             gold_max=gold_max,
+            attack_damage=attack_damage,
+            attack_cooldown=attack_cooldown,
+            aggro_range=aggro_range,
         )
 
         # Guardar en Redis
@@ -134,6 +143,9 @@ class NPCRepository:
             "respawn_time_max": str(respawn_time_max),
             "gold_min": str(gold_min),
             "gold_max": str(gold_max),
+            "attack_damage": str(attack_damage),
+            "attack_cooldown": str(attack_cooldown),
+            "aggro_range": str(aggro_range),
         }
 
         await self.redis.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
@@ -193,6 +205,9 @@ class NPCRepository:
             respawn_time_max=int(result.get("respawn_time_max", result["respawn_time"])),
             gold_min=int(result["gold_min"]),
             gold_max=int(result["gold_max"]),
+            attack_damage=int(result.get("attack_damage", "10")),
+            attack_cooldown=float(result.get("attack_cooldown", "3.0")),
+            aggro_range=int(result.get("aggro_range", "8")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:

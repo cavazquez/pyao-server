@@ -1,5 +1,10 @@
 # NPCs Hostiles - Criaturas que atacan a los jugadores
 # Estos NPCs tienen IA agresiva y dropean loot al morir
+#
+# Parámetros de IA:
+# - ataque: Daño base del NPC (default: 10)
+# - cooldown_ataque: Segundos entre ataques (default: 3.0)
+# - rango_agresion: Tiles de detección/persecución (default: 8)
 
 [[npc]]
 id = 1
@@ -15,6 +20,9 @@ oro_min = 10
 oro_max = 50
 respawn_time = 30        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 60    # Tiempo máximo de respawn en segundos
+ataque = 8               # Daño base
+cooldown_ataque = 2.5    # Segundos entre ataques (rápido)
+rango_agresion = 6       # Tiles de detección
 
 [[npc]]
 id = 4
@@ -30,6 +38,9 @@ oro_min = 20
 oro_max = 100
 respawn_time = 60        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 120   # Tiempo máximo de respawn en segundos
+ataque = 15              # Daño base (fuerte)
+cooldown_ataque = 3.0    # Segundos entre ataques (medio)
+rango_agresion = 10      # Tiles de detección (alto - muy agresivo)
 
 [[npc]]
 id = 7
@@ -45,6 +56,9 @@ oro_min = 5
 oro_max = 20
 respawn_time = 20        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 40    # Tiempo máximo de respawn en segundos
+ataque = 6               # Daño base (bajo)
+cooldown_ataque = 2.0    # Segundos entre ataques (muy rápido)
+rango_agresion = 7       # Tiles de detección
 
 [[npc]]
 id = 8
@@ -60,6 +74,9 @@ oro_min = 15
 oro_max = 75
 respawn_time = 45        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 90    # Tiempo máximo de respawn en segundos
+ataque = 12              # Daño base (veneno)
+cooldown_ataque = 2.5    # Segundos entre ataques
+rango_agresion = 8       # Tiles de detección (medio)
 
 [[npc]]
 id = 9
@@ -75,6 +92,9 @@ oro_min = 3
 oro_max = 15
 respawn_time = 15        # Tiempo mínimo de respawn en segundos
 respawn_time_max = 30    # Tiempo máximo de respawn en segundos
+ataque = 5               # Daño base (muy bajo)
+cooldown_ataque = 1.5    # Segundos entre ataques (rapidísimo)
+rango_agresion = 5       # Tiles de detección (corto)
 
 [[npc]]
 id = 10
@@ -90,6 +110,9 @@ oro_min = 500
 oro_max = 1000
 respawn_time = 600       # 10 minutos - Boss raro
 respawn_time_max = 900   # 15 minutos
+ataque = 50              # Daño base (BOSS - letal)
+cooldown_ataque = 4.0    # Segundos entre ataques (lento pero devastador)
+rango_agresion = 15      # Tiles de detección (muy alto - detecta de lejos)
 
 [[npc]]
 id = 11
@@ -105,6 +128,9 @@ oro_min = 10
 oro_max = 40
 respawn_time = 40
 respawn_time_max = 80
+ataque = 10              # Daño base
+cooldown_ataque = 3.0    # Segundos entre ataques
+rango_agresion = 7       # Tiles de detección
 
 [[npc]]
 id = 12
@@ -120,6 +146,9 @@ oro_min = 8
 oro_max = 30
 respawn_time = 35
 respawn_time_max = 70
+ataque = 8               # Daño base (bajo - lentos)
+cooldown_ataque = 2.0    # Segundos entre ataques (rápido)
+rango_agresion = 6       # Tiles de detección
 
 [[npc]]
 id = 13
@@ -135,6 +164,9 @@ oro_min = 30
 oro_max = 120
 respawn_time = 70
 respawn_time_max = 140
+ataque = 18              # Daño base (muy fuerte)
+cooldown_ataque = 3.5    # Segundos entre ataques
+rango_agresion = 9       # Tiles de detección
 
 [[npc]]
 id = 14
@@ -150,3 +182,6 @@ oro_min = 50
 oro_max = 150
 respawn_time = 90
 respawn_time_max = 180
+ataque = 20              # Daño base (brutal)
+cooldown_ataque = 3.5    # Segundos entre ataques
+rango_agresion = 10      # Tiles de detección (alto)

@@ -157,6 +157,9 @@ class NPCService:
             respawn_time_max=cast("int", npc_data.get("respawn_time_max", 0)),
             gold_min=cast("int", npc_data.get("oro_min", 0)),
             gold_max=cast("int", npc_data.get("oro_max", 0)),
+            attack_damage=cast("int", npc_data.get("ataque", 10)),
+            attack_cooldown=cast("float", npc_data.get("cooldown_ataque", 3.0)),
+            aggro_range=cast("int", npc_data.get("rango_agresion", 8)),
         )
 
         # Agregar al MapManager

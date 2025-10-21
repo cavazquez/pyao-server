@@ -19,8 +19,6 @@ logger = logging.getLogger(__name__)
 class NPCAIService:
     """Servicio que maneja la IA de NPCs hostiles."""
 
-    ATTACK_COOLDOWN = 3.0  # Segundos entre ataques
-
     def __init__(
         self,
         npc_service: NPCService,
@@ -45,17 +43,18 @@ class NPCAIService:
         self.broadcast_service = broadcast_service
 
     async def find_nearest_player(
-        self, npc: NPC, max_range: int = 8
+        self, npc: NPC
     ) -> tuple[int, int, int] | None:
         """Encuentra el jugador más cercano al NPC.
 
         Args:
             npc: NPC que busca jugadores.
-            max_range: Rango máximo de detección.
 
         Returns:
             Tupla (user_id, x, y) del jugador más cercano, o None si no hay ninguno.
         """
+        # Usar el rango de agresión configurado en el NPC
+        max_range = npc.aggro_range
         # Obtener todos los jugadores en el mapa
         user_ids = self.map_manager.get_players_in_map(npc.map_id)
 
@@ -142,9 +141,9 @@ class NPCAIService:
         if dx + dy != 1:  # No están adyacentes
             return False
 
-        # Verificar cooldown de ataque
+        # Verificar cooldown de ataque (usar el configurado en el NPC)
         current_time = time.time()
-        if current_time - npc.last_attack_time < self.ATTACK_COOLDOWN:
+        if current_time - npc.last_attack_time < npc.attack_cooldown:
             return False  # Todavía en cooldown
 
         # Realizar ataque NPC -> Jugador
@@ -293,8 +292,8 @@ class NPCAIService:
         if not npc.is_hostile:
             return
 
-        # Buscar jugador más cercano
-        nearest = await self.find_nearest_player(npc, max_range=8)
+        # Buscar jugador más cercano (usa aggro_range del NPC)
+        nearest = await self.find_nearest_player(npc)
 
         if not nearest:
             # No hay jugadores cerca, comportamiento idle

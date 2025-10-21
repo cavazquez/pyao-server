@@ -49,3 +49,6 @@ class NPC:
 
     # Combat
     last_attack_time: float = 0.0  # Timestamp del último ataque
+    attack_damage: int = 10  # Daño base del NPC
+    attack_cooldown: float = 3.0  # Segundos entre ataques
+    aggro_range: int = 8  # Rango de detección/agresión en tiles

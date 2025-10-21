@@ -112,13 +112,16 @@ Este proyecto tiene varios documentos TODO especializados:
   - Validación consistente en toda la aplicación
 
 ### IA de NPCs Mejorada
+- [x] **Parámetros de IA configurables** ✅ - Completado
+  - Rango de agresión configurable por NPC
+  - Cooldown entre ataques configurable
+  - Daño base configurable
+  - 11 NPCs balanceados con personalidades únicas
+  - Documentación: `docs/NPC_AI_CONFIGURABLE.md`
 - [ ] Pathfinding básico (A* o similar)
 - [ ] NPCs que patrullan rutas predefinidas
 - [ ] NPCs que huyen cuando tienen poca vida
 - [ ] NPCs que llaman refuerzos
-- [ ] Diferentes comportamientos por tipo de NPC
-- [ ] Rango de agresión configurable por NPC
-- [ ] Cooldown entre ataques
 
 ### Sistema de Skills
 - [ ] Subir skills con uso (minería, tala, pesca)
