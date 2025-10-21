@@ -251,11 +251,11 @@ pyao-server/
 │   └── loot_tables.toml         # Tablas de loot de NPCs
 │
 ├── map_data/                    # Datos de mapas (290 mapas)
-│   ├── map_1.json               # Datos del mapa 1 (tiles, bloqueados, etc.)
-│   ├── resources_1.json         # Recursos del mapa 1 (objetos, NPCs, etc.)
-│   ├── map_2.json
-│   ├── resources_2.json
-│   └── ...                      # map_*.json y resources_*.json para cada mapa
+│   ├── 001_map.json             # Datos del mapa 1 (tiles, bloqueados, etc.)
+│   ├── 001_resources.json       # Recursos del mapa 1 (objetos, NPCs, etc.)
+│   ├── 002_map.json             # Datos del mapa 2
+│   ├── 002_resources.json       # Recursos del mapa 2
+│   └── ...                      # XXX_map.json y XXX_resources.json (ordenados en pares)
 │
 ├── tests/                       # Tests unitarios (767 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests

@@ -30,10 +30,11 @@ class ServerInitializer:
 
         map_data_dir = Path("map_data")
         if map_data_dir.exists():
-            map_files = list(map_data_dir.glob("map_*.json"))
+            map_files = list(map_data_dir.glob("*_map.json"))
             for map_file in sorted(map_files):
                 try:
-                    map_id = int(map_file.stem.replace("map_", ""))
+                    # Parsear formato: 001_map.json -> 1
+                    map_id = int(map_file.stem.split("_")[0])
                     map_manager.load_map_data(map_id, map_file)
                 except ValueError:
                     logger.warning("Error parseando ID de mapa: %s", map_file)

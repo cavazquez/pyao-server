@@ -35,26 +35,32 @@ Para convertir un archivo `.map` del AO original:
 
 ```bash
 # TODO: Implementar script de conversión
-python scripts/convert_map.py clientes/Mapa1.map map_data/map_1.json
+python scripts/convert_map.py clientes/Mapa1.map map_data/001_map.json
 ```
 
 ## Estructura de Archivos
 
 La carpeta contiene **580 archivos** (290 mapas × 2 archivos cada uno):
 
-### Archivos de Tiles (`map_*.json`)
-- `map_1.json` - Datos del mapa 1 (tiles bloqueados, dimensiones, etc.)
-- `map_2.json` - Datos del mapa 2
-- `map_3.json` - Datos del mapa 3
-- ... hasta `map_290.json`
+### Formato de Nombres
 
-### Archivos de Recursos (`resources_*.json`)
-- `resources_1.json` - Recursos del mapa 1 (objetos, NPCs spawn, etc.)
-- `resources_2.json` - Recursos del mapa 2
-- `resources_3.json` - Recursos del mapa 3
-- ... hasta `resources_290.json`
+Los archivos usan **padding de 3 dígitos** para ordenarse alfabéticamente en pares:
 
-Cada mapa tiene **dos archivos asociados** con el mismo número de ID.
+```
+001_map.json         # Datos del mapa 1 (tiles bloqueados, dimensiones)
+001_resources.json   # Recursos del mapa 1 (objetos, NPCs spawn)
+002_map.json         # Datos del mapa 2
+002_resources.json   # Recursos del mapa 2
+...
+290_map.json         # Datos del mapa 290
+290_resources.json   # Recursos del mapa 290
+```
+
+**Ventajas de este formato:**
+- ✅ Se ordenan alfabéticamente con cada par junto
+- ✅ Fácil identificar archivos relacionados
+- ✅ Nombres descriptivos (`_map` vs `_resources`)
+- ✅ Padding uniforme para todos los números (001-290)
 
 ## Notas
 
