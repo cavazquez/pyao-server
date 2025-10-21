@@ -221,3 +221,147 @@ respawn_time_max = 20
 ataque = 4               # Daño base (muy débil)
 cooldown_ataque = 1.0    # Segundos entre ataques (rapidísimo)
 rango_agresion = 4       # Tiles de detección (muy corto)
+
+[[npc]]
+id = 17
+nombre = "Escorpión"
+descripcion = "Un escorpión venenoso del desierto."
+body_id = 51  # Body ID correcto de Escorpión en AO VB6 (NPC529)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 4
+hp_max = 40
+oro_min = 5
+oro_max = 20
+respawn_time = 25
+respawn_time_max = 50
+ataque = 6
+cooldown_ataque = 2.0
+rango_agresion = 6
+
+[[npc]]
+id = 18
+nombre = "Bandido"
+descripcion = "Un bandido peligroso que asalta a los viajeros."
+body_id = 47  # Body ID correcto de Bandido en AO VB6 (NPC530)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 7
+hp_max = 120
+oro_min = 15
+oro_max = 60
+respawn_time = 40
+respawn_time_max = 80
+ataque = 12
+cooldown_ataque = 2.5
+rango_agresion = 8
+
+[[npc]]
+id = 19
+nombre = "Oso Pardo"
+descripcion = "Un oso salvaje territorial."
+body_id = 73  # Body ID correcto de Oso Pardo en AO VB6 (NPC538)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 9
+hp_max = 180
+oro_min = 10
+oro_max = 40
+respawn_time = 50
+respawn_time_max = 100
+ataque = 20
+cooldown_ataque = 3.0
+rango_agresion = 7
+
+[[npc]]
+id = 20
+nombre = "Tigre Salvaje"
+descripcion = "Un tigre feroz y ágil."
+body_id = 147  # Body ID correcto de Tigre en AO VB6 (NPC521)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 12
+hp_max = 220
+oro_min = 20
+oro_max = 80
+respawn_time = 60
+respawn_time_max = 120
+ataque = 25
+cooldown_ataque = 2.0
+rango_agresion = 9
+
+[[npc]]
+id = 21
+nombre = "Licántropo"
+descripcion = "Una criatura mitad hombre, mitad lobo."
+body_id = 212  # Body ID correcto de Licántropo en AO VB6 (NPC545)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 15
+hp_max = 400
+oro_min = 50
+oro_max = 150
+respawn_time = 80
+respawn_time_max = 160
+ataque = 35
+cooldown_ataque = 2.5
+rango_agresion = 10
+
+[[npc]]
+id = 22
+nombre = "Liche"
+descripcion = "Un hechicero no-muerto con poderes oscuros."
+body_id = 149  # Body ID correcto de Liche en AO VB6 (NPC554)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 20
+hp_max = 800
+oro_min = 100
+oro_max = 300
+respawn_time = 120
+respawn_time_max = 240
+ataque = 50
+cooldown_ataque = 3.5
+rango_agresion = 12
+
+[[npc]]
+id = 23
+nombre = "Golem"
+descripcion = "Una criatura de piedra animada."
+body_id = 141  # Body ID correcto de Golem en AO VB6 (NPC552)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 16
+hp_max = 600
+oro_min = 80
+oro_max = 200
+respawn_time = 100
+respawn_time_max = 200
+ataque = 40
+cooldown_ataque = 4.0
+rango_agresion = 8
+
+[[npc]]
+id = 24
+nombre = "Elemental de Fuego"
+descripcion = "Un espíritu de fuego puro."
+body_id = 153  # Body ID correcto de Elemental de Fuego en AO VB6 (NPC588)
+head_id = 0
+es_hostil = true
+es_atacable = true
+nivel = 22
+hp_max = 1200
+oro_min = 150
+oro_max = 400
+respawn_time = 150
+respawn_time_max = 300
+ataque = 60
+cooldown_ataque = 3.0
+rango_agresion = 12
