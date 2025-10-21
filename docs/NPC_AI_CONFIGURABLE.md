@@ -135,19 +135,30 @@ rango_agresion = 6       # Tiles de detección
 
 ## 🧪 Testing
 
-### Tests Existentes
-- ✅ **955 tests pasando** (100%)
+### Tests Automatizados (Nuevos)
+- ✅ **962 tests pasando** (100%) - +7 tests nuevos
 - ✅ **0 errores de linting**
+- ✅ **`test_npc_ai_configurable.py`** - 7 tests específicos:
+  1. `test_create_npc_with_custom_attack_damage` - Daño configurable
+  2. `test_create_npc_with_custom_attack_cooldown` - Cooldown configurable
+  3. `test_create_npc_with_custom_aggro_range` - Rango configurable
+  4. `test_npc_persistence_with_configurable_params` - Persistencia en Redis
+  5. `test_npc_default_values_for_configurable_params` - Valores por defecto
+  6. `test_npc_ai_respects_attack_cooldown` - IA respeta cooldown
+  7. `test_npc_ai_uses_custom_aggro_range` - IA usa rango configurado
+
+### Tests Existentes
 - ✅ Tests de `NPCRepository` validan persistencia
 - ✅ Tests de `CombatService` validan daño
+- ✅ Tests de `NPCAIEffect` validan integración
 
 ### Testing Manual Recomendado
 
 1. **Spawner varios NPCs diferentes**
 2. **Observar comportamiento de cada uno:**
-   - Serpientes deben atacar muy rápido
-   - Orcos deben detectarte de más lejos
-   - Dragón debe hacer daño masivo pero lento
+   - Serpientes deben atacar muy rápido (1.5s)
+   - Orcos deben detectarte de más lejos (rango 10)
+   - Dragón debe hacer daño masivo (50) pero lento (4.0s)
 
 ---
 
