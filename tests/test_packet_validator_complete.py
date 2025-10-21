@@ -37,7 +37,7 @@ def test_validate_walk_packet_invalid_heading() -> None:
 
 def test_validate_attack_packet_success() -> None:
     """Verifica que validate_attack_packet valida correctamente un packet ATTACK válido.
-    
+
     Nota: El packet ATTACK no tiene parámetros. El jugador ataca en la dirección
     que está mirando (según su heading).
     """

@@ -443,7 +443,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         return ValidationResult(success=True, data={"heading": heading}, error_message=None)
 
-    def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:
+    def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:  # noqa: PLR6301
         """Valida packet ATTACK completo.
 
         Formato esperado:
