@@ -249,7 +249,7 @@ class NPCDeathService:
         )
 
         # Eliminar de Redis
-        await self.npc_repo.delete_npc(npc.instance_id)
+        await self.npc_repo.remove_npc(npc.instance_id)
 
     def _find_free_position_for_drop(
         self, map_id: int, center_x: int, center_y: int, radius: int = 2
@@ -263,13 +263,12 @@ class NPCDeathService:
             radius: Radio de búsqueda.
 
         Returns:
-            Tupla (x, y) con una posición libre, o None si no encuentra.
+            Tupla (x, y) con una posición libre y no bloqueada, o None si no encuentra.
         """
         import random  # noqa: PLC0415
 
         # Intentar primero la posición central
-        items = self.map_manager.get_ground_items(map_id, center_x, center_y)
-        if not items:
+        if self._is_valid_drop_position(map_id, center_x, center_y):
             return (center_x, center_y)
 
         # Buscar en posiciones cercanas
@@ -280,9 +279,27 @@ class NPCDeathService:
             x = center_x + offset_x
             y = center_y + offset_y
 
-            # Verificar que no haya otro item en esa posición
-            items = self.map_manager.get_ground_items(map_id, x, y)
-            if not items:
+            # Verificar que sea posición válida
+            if self._is_valid_drop_position(map_id, x, y):
                 return (x, y)
 
         return None
+
+    def _is_valid_drop_position(self, map_id: int, x: int, y: int) -> bool:
+        """Verifica si una posición es válida para dropear items.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            True si la posición es válida para dropear.
+        """
+        # Verificar que no haya items en esa posición
+        items = self.map_manager.get_ground_items(map_id, x, y)
+        if items:
+            return False
+
+        # Verificar que la casilla no esté bloqueada
+        return self.map_manager.can_move_to(map_id, x, y)
