@@ -248,8 +248,14 @@ pyao-server/
 │   ├── map_npcs.toml            # Spawns de NPCs en mapas
 │   ├── merchant_inventories.toml # Inventarios de mercaderes
 │   ├── items.toml               # Catálogo de items (1049 items)
-│   ├── loot_tables.toml         # Tablas de loot de NPCs
-│   └── maps/                    # Archivos de mapas (.json)
+│   └── loot_tables.toml         # Tablas de loot de NPCs
+│
+├── map_data/                    # Datos de mapas (290 mapas)
+│   ├── map_1.json               # Datos del mapa 1 (tiles, bloqueados, etc.)
+│   ├── resources_1.json         # Recursos del mapa 1 (objetos, NPCs, etc.)
+│   ├── map_2.json
+│   ├── resources_2.json
+│   └── ...                      # map_*.json y resources_*.json para cada mapa
 │
 ├── tests/                       # Tests unitarios (767 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests

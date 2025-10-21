@@ -28,9 +28,9 @@ class ServerInitializer:
         logger.info("Iniciando carga de mapas...")
         start_time = time.perf_counter()
 
-        maps_dir = Path("maps")
-        if maps_dir.exists():
-            map_files = list(maps_dir.glob("map_*.json"))
+        map_data_dir = Path("map_data")
+        if map_data_dir.exists():
+            map_files = list(map_data_dir.glob("map_*.json"))
             for map_file in sorted(map_files):
                 try:
                     map_id = int(map_file.stem.replace("map_", ""))
@@ -45,7 +45,7 @@ class ServerInitializer:
                 elapsed_time,
             )
         else:
-            logger.warning("⚠️  Directorio maps/ no encontrado")
+            logger.warning("⚠️  Directorio map_data/ no encontrado")
 
     @staticmethod
     async def initialize_all() -> tuple[DependencyContainer, str, int]:

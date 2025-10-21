@@ -1,6 +1,6 @@
-# Mapas de PyAO Server
+# Datos de Mapas - PyAO Server
 
-Esta carpeta contiene los mapas del juego en formato JSON.
+Esta carpeta contiene todos los datos de mapas del juego en formato JSON, consolidando información de tiles y recursos.
 
 ## Formato de Mapa
 
@@ -35,15 +35,26 @@ Para convertir un archivo `.map` del AO original:
 
 ```bash
 # TODO: Implementar script de conversión
-python scripts/convert_map.py clientes/Mapa1.map maps/map_1.json
+python scripts/convert_map.py clientes/Mapa1.map map_data/map_1.json
 ```
 
 ## Estructura de Archivos
 
-- `map_1.json` - Ullathorpe (Ciudad inicial)
-- `map_2.json` - Bosque Norte
-- `map_3.json` - Dungeon 1
-- etc.
+La carpeta contiene **580 archivos** (290 mapas × 2 archivos cada uno):
+
+### Archivos de Tiles (`map_*.json`)
+- `map_1.json` - Datos del mapa 1 (tiles bloqueados, dimensiones, etc.)
+- `map_2.json` - Datos del mapa 2
+- `map_3.json` - Datos del mapa 3
+- ... hasta `map_290.json`
+
+### Archivos de Recursos (`resources_*.json`)
+- `resources_1.json` - Recursos del mapa 1 (objetos, NPCs spawn, etc.)
+- `resources_2.json` - Recursos del mapa 2
+- `resources_3.json` - Recursos del mapa 3
+- ... hasta `resources_290.json`
+
+Cada mapa tiene **dos archivos asociados** con el mismo número de ID.
 
 ## Notas
 
