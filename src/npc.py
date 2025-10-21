@@ -52,3 +52,7 @@ class NPC:
     attack_damage: int = 10  # Daño base del NPC
     attack_cooldown: float = 3.0  # Segundos entre ataques
     aggro_range: int = 8  # Rango de detección/agresión en tiles
+
+    # Efectos visuales
+    fx: int = 0  # FX ID al morir (one-shot)
+    fx_loop: int = 0  # FX ID continuo (aura, loop infinito)

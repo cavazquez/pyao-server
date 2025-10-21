@@ -30,6 +30,8 @@ class NPCFactory:
         respawn_time_max: int = 120,
         gold_min: int = 5,
         gold_max: int = 20,
+        fx: int = 0,
+        fx_loop: int = 0,
     ) -> NPC:
         """Crea un NPC hostil base con configuración común.
 
@@ -50,6 +52,8 @@ class NPCFactory:
             respawn_time_max: Tiempo máximo de respawn en segundos.
             gold_min: Oro mínimo que dropea.
             gold_max: Oro máximo que dropea.
+            fx: ID de efecto visual al morir (one-shot).
+            fx_loop: ID de efecto visual continuo (aura, loop infinito).
 
         Returns:
             Instancia de NPC configurada.
@@ -78,6 +82,8 @@ class NPCFactory:
             respawn_time_max=respawn_time_max,
             gold_min=gold_min,
             gold_max=gold_max,
+            fx=fx,
+            fx_loop=fx_loop,
         )
 
     @staticmethod
@@ -168,6 +174,7 @@ class NPCFactory:
             description="Un goblin pequeño y malicioso",
             gold_min=10,
             gold_max=50,
+            fx=5,  # Sangre al morir
         )
 
     @staticmethod
@@ -196,6 +203,7 @@ class NPCFactory:
             description="Un lobo salvaje y hambriento",
             gold_min=5,
             gold_max=20,
+            fx=5,  # Sangre al morir
         )
 
     @staticmethod
@@ -224,6 +232,7 @@ class NPCFactory:
             description="Un orco brutal y poderoso",
             gold_min=20,
             gold_max=100,
+            fx=5,  # Sangre al morir
         )
 
     @staticmethod
@@ -252,6 +261,8 @@ class NPCFactory:
             description="Una araña gigante y venenosa",
             gold_min=15,
             gold_max=75,
+            fx=10,  # Veneno al morir
+            fx_loop=15,  # Aura venenosa
         )
 
     # ==================== NPCs Amigables ====================
