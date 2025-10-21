@@ -36,32 +36,36 @@ def test_validate_walk_packet_invalid_heading() -> None:
 
 
 def test_validate_attack_packet_success() -> None:
-    """Verifica que validate_attack_packet retorna éxito con char_index válido."""
-    # Packet ATTACK con char_index=10001
-    data = bytes([8]) + struct.pack("<H", 10001)  # PacketID=8, char_index=10001 (little-endian)
+    """Verifica que validate_attack_packet valida correctamente un packet ATTACK válido.
+    
+    Nota: El packet ATTACK no tiene parámetros. El jugador ataca en la dirección
+    que está mirando (según su heading).
+    """
+    # Packet ATTACK (solo PacketID, sin datos adicionales)
+    data = bytes([8])  # PacketID=8 (ATTACK)
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
     result = validator.validate_attack_packet()
 
     assert result.success is True
-    assert result.data == {"char_index": 10001}
+    assert result.data == {}  # No hay datos, solo PacketID
     assert result.error_message is None
 
 
-def test_validate_attack_packet_invalid_char_index() -> None:
-    """Verifica que validate_attack_packet retorna error con char_index <= 0."""
-    # Packet ATTACK con char_index=0 (inválido)
-    data = bytes([8]) + struct.pack("<H", 0)  # PacketID=8, char_index=0
+def test_validate_attack_packet_minimal() -> None:
+    """Verifica que validate_attack_packet acepta packet mínimo (solo PacketID)."""
+    # Packet ATTACK mínimo (solo PacketID)
+    data = bytes([8])  # PacketID=8 (ATTACK)
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
     result = validator.validate_attack_packet()
 
-    assert result.success is False
-    assert result.data is None
-    assert result.error_message is not None
-    assert "CharIndex inválido" in result.error_message
+    # El packet es válido incluso con solo el PacketID
+    assert result.success is True
+    assert result.data == {}
+    assert result.error_message is None
 
 
 def test_validate_login_packet_success() -> None:

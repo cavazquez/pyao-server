@@ -448,27 +448,16 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         Formato esperado:
         - Byte 0: PacketID (ATTACK = 8)
-        - Int16: CharIndex del objetivo
+
+        Nota: El packet ATTACK NO tiene parámetros. El jugador ataca en la dirección
+        que está mirando (según su heading).
 
         Returns:
-            ValidationResult con {"char_index": int} si es válido.
+            ValidationResult con dict vacío (packet válido solo con PacketID).
         """
-        try:
-            char_index = self.reader.read_int16()
-        except (ValueError, IndexError, struct.error) as e:
-            self.errors.append(f"Error leyendo char_index: {e}")
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        # Validar rango (CharIndex debe ser > 0)
-        if char_index <= 0:
-            self.errors.append(f"CharIndex inválido: {char_index} (debe ser > 0)")
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"char_index": char_index}, error_message=None)
+        # El packet ATTACK no tiene datos adicionales, solo el PacketID
+        # El jugador ataca en la dirección que está mirando
+        return ValidationResult(success=True, data={}, error_message=None)
 
     def validate_login_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet LOGIN completo.
