@@ -117,9 +117,7 @@ class NPCDeathService:
         await self.player_repo.update_experience(user_id, new_exp)
         await message_sender.send_update_exp(new_exp)
 
-        logger.info(
-            "Jugador %d ganó %d de experiencia (total: %d)", user_id, experience, new_exp
-        )
+        logger.info("Jugador %d ganó %d de experiencia (total: %d)", user_id, experience, new_exp)
 
     async def _drop_gold(self, npc: NPC) -> None:
         """Dropea oro del NPC en el suelo.
@@ -145,9 +143,9 @@ class NPCDeathService:
 
         drop_x, drop_y = drop_pos
 
-        # Crear ground item de oro (item_id=13 es oro en AO)
-        gold_item = {
-            "item_id": 13,
+        # Crear ground item de oro
+        gold_item: dict[str, int | str | None] = {
+            "item_id": 12,  # ID del oro
             "quantity": gold_amount,
             "grh_index": 511,  # GrhIndex del oro
             "owner_id": None,
@@ -155,9 +153,7 @@ class NPCDeathService:
         }
 
         # Agregar al mapa
-        self.map_manager.add_ground_item(
-            map_id=npc.map_id, x=drop_x, y=drop_y, item=gold_item
-        )
+        self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=gold_item)
 
         # Broadcast a todos los jugadores
         await self.broadcast_service.broadcast_object_create(
@@ -203,18 +199,16 @@ class NPCDeathService:
             drop_x, drop_y = drop_pos
 
             # Crear ground item
-            ground_item = {
+            item: dict[str, int | str | None] = {
                 "item_id": item_id,
-                "quantity": quantity,
                 "grh_index": grh_index,
+                "quantity": quantity,
                 "owner_id": None,
                 "spawn_time": None,
             }
 
             # Agregar al mapa
-            self.map_manager.add_ground_item(
-                map_id=npc.map_id, x=drop_x, y=drop_y, item=ground_item
-            )
+            self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=item)
 
             # Broadcast a todos los jugadores
             await self.broadcast_service.broadcast_object_create(
@@ -240,7 +234,7 @@ class NPCDeathService:
             npc: NPC a eliminar.
         """
         # Remover del MapManager
-        self.map_manager.remove_npc(npc.map_id, npc.char_index)
+        self.map_manager.remove_npc(npc.map_id, str(npc.char_index))
 
         # Broadcast CHARACTER_REMOVE a todos los jugadores
         await self.broadcast_service.broadcast_character_remove(

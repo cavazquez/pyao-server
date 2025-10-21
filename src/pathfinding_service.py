@@ -144,9 +144,7 @@ class PathfindingService:
 
             # Límite de profundidad (evitar búsquedas infinitas)
             if nodes_explored > max_depth:
-                logger.debug(
-                    "Pathfinding: límite de profundidad alcanzado (%d nodos)", max_depth
-                )
+                logger.debug("Pathfinding: límite de profundidad alcanzado (%d nodos)", max_depth)
                 return None
 
             # Explorar vecinos (4 direcciones)

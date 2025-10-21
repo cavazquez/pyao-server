@@ -18,9 +18,7 @@ if TYPE_CHECKING:
 class TestNPCConfigurableAI:
     """Tests para parámetros de IA configurables en NPCs."""
 
-    async def test_create_npc_with_custom_attack_damage(
-        self, redis_client: RedisClient
-    ) -> None:
+    async def test_create_npc_with_custom_attack_damage(self, redis_client: RedisClient) -> None:
         """Test que los NPCs se crean con daño de ataque personalizado."""
         repo = NPCRepository(redis_client)
 
@@ -80,9 +78,7 @@ class TestNPCConfigurableAI:
 
         assert boss_npc.attack_damage == 50
 
-    async def test_create_npc_with_custom_attack_cooldown(
-        self, redis_client: RedisClient
-    ) -> None:
+    async def test_create_npc_with_custom_attack_cooldown(self, redis_client: RedisClient) -> None:
         """Test que los NPCs se crean con cooldown de ataque personalizado."""
         repo = NPCRepository(redis_client)
 
@@ -142,9 +138,7 @@ class TestNPCConfigurableAI:
 
         assert slow_npc.attack_cooldown == 4.0
 
-    async def test_create_npc_with_custom_aggro_range(
-        self, redis_client: RedisClient
-    ) -> None:
+    async def test_create_npc_with_custom_aggro_range(self, redis_client: RedisClient) -> None:
         """Test que los NPCs se crean con rango de agresión personalizado."""
         repo = NPCRepository(redis_client)
 

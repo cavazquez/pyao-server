@@ -46,9 +46,7 @@ class NPCAIService:
         self.broadcast_service = broadcast_service
         self.pathfinding_service = pathfinding_service
 
-    async def find_nearest_player(
-        self, npc: NPC
-    ) -> tuple[int, int, int] | None:
+    async def find_nearest_player(self, npc: NPC) -> tuple[int, int, int] | None:
         """Encuentra el jugador más cercano al NPC.
 
         Args:
@@ -244,7 +242,7 @@ class NPCAIService:
             )
             if result:
                 new_x, new_y, direction = result
-                
+
                 # IMPORTANTE: Verificar que el tile no esté ocupado por un jugador
                 if self.map_manager.is_tile_occupied(npc.map_id, new_x, new_y):
                     logger.debug(
@@ -254,7 +252,7 @@ class NPCAIService:
                         new_y,
                     )
                     return False
-                
+
                 logger.debug(
                     "NPC %s usando pathfinding: (%d,%d) -> (%d,%d)",
                     npc.name,

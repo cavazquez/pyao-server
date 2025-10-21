@@ -1,4 +1,4 @@
-"""Tarea de login de usuario."""
+"""Tarea que maneja el login de usuarios."""
 
 import asyncio
 import logging
@@ -33,6 +33,9 @@ if TYPE_CHECKING:
     from src.spellbook_repository import SpellbookRepository
 
 logger = logging.getLogger(__name__)
+
+# Constantes para tamaño del mapa
+MAX_MAP_COORDINATE = 100
 
 
 class TaskLogin(Task):
@@ -149,7 +152,7 @@ class TaskLogin(Task):
 
         # Buscar casilla libre si la posición está ocupada
         new_position = self._find_free_spawn_position(position)
-        
+
         # Si cambió la posición, actualizar en Redis
         if new_position != position and self.player_repo:
             await self.player_repo.set_position(
@@ -161,7 +164,7 @@ class TaskLogin(Task):
             )
             # Enviar actualización al cliente también
             await self.message_sender.send_pos_update(new_position["x"], new_position["y"])
-        
+
         position = new_position
 
         # Inicializar datos del jugador
@@ -289,14 +292,18 @@ class TaskLogin(Task):
                     new_y = y + dy
 
                     # Verificar que esté dentro del mapa
-                    if new_x < 1 or new_y < 1 or new_x > 100 or new_y > 100:
+                    if (
+                        new_x < 1
+                        or new_y < 1
+                        or new_x > MAX_MAP_COORDINATE
+                        or new_y > MAX_MAP_COORDINATE
+                    ):
                         continue
 
                     # Verificar que no esté bloqueado y no esté ocupado
-                    if (
-                        self.map_manager.can_move_to(map_id, new_x, new_y)
-                        and not self.map_manager.is_tile_occupied(map_id, new_x, new_y)
-                    ):
+                    if self.map_manager.can_move_to(
+                        map_id, new_x, new_y
+                    ) and not self.map_manager.is_tile_occupied(map_id, new_x, new_y):
                         logger.info(
                             "Casilla libre encontrada en (%d,%d), moviendo spawn de (%d,%d)",
                             new_x,

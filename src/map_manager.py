@@ -593,7 +593,12 @@ class MapManager(SpatialIndexMixin):
                             exit_count += 1
                             logger.debug(
                                 "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
-                                map_id, x, y, to_map, to_x, to_y
+                                map_id,
+                                x,
+                                y,
+                                to_map,
+                                to_x,
+                                to_y,
                             )
 
                     # Todos los tiles (incluyendo exits) bloquean el movimiento normal

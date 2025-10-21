@@ -136,7 +136,7 @@ class TestNPCDeathService:
         )
 
         # Assert - NPC removido del MapManager
-        map_manager.remove_npc.assert_called_once_with(1, 100)
+        map_manager.remove_npc.assert_called_once_with(1, "100")
 
         # Assert - Broadcast CHARACTER_REMOVE
         broadcast_service.broadcast_character_remove.assert_called_once_with(
