@@ -118,7 +118,12 @@ Este proyecto tiene varios documentos TODO especializados:
   - Daño base configurable
   - 11 NPCs balanceados con personalidades únicas
   - Documentación: `docs/NPC_AI_CONFIGURABLE.md`
-- [ ] Pathfinding básico (A* o similar)
+- [x] **Pathfinding A*** ✅ - Completado
+  - Algoritmo A* optimizado para tiles (4 direcciones)
+  - NPCs rodean obstáculos inteligentemente
+  - Límite de profundidad configurable
+  - Fallback a movimiento simple
+  - Documentación: `docs/PATHFINDING_ASTAR.md`
 - [ ] NPCs que patrullan rutas predefinidas
 - [ ] NPCs que huyen cuando tienen poca vida
 - [ ] NPCs que llaman refuerzos
