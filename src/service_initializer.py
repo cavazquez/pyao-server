@@ -14,6 +14,7 @@ from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
 from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
+from src.pathfinding_service import PathfindingService
 from src.player_map_service import PlayerMapService
 from src.spell_catalog import SpellCatalog
 from src.spell_service import SpellService
@@ -38,7 +39,7 @@ class ServiceInitializer:
         self.repositories = repositories
         self.map_manager = map_manager
 
-    async def initialize_all(self) -> dict[str, Any]:
+    async def initialize_all(self) -> dict[str, Any]:  # noqa: PLR0914
         """Crea e inicializa todos los servicios.
 
         Returns:
@@ -108,6 +109,10 @@ class ServiceInitializer:
         )
         logger.info("✓ Sistema de combate inicializado")
 
+        # Servicio de pathfinding
+        pathfinding_service = PathfindingService(self.map_manager)
+        logger.info("✓ Servicio de pathfinding inicializado")
+
         # Servicio de IA de NPCs
         npc_ai_service = NPCAIService(
             npc_service,
@@ -115,8 +120,9 @@ class ServiceInitializer:
             self.repositories["player_repo"],
             combat_service,
             broadcast_service,
+            pathfinding_service,  # Agregar pathfinding
         )
-        logger.info("✓ Servicio de IA de NPCs inicializado")
+        logger.info("✓ Servicio de IA de NPCs inicializado (con pathfinding A*)")
 
         # Servicio de stamina
         stamina_service = StaminaService(self.repositories["player_repo"])

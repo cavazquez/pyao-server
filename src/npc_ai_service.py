@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc import NPC
     from src.npc_service import NPCService
+    from src.pathfinding_service import PathfindingService
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class NPCAIService:
         player_repo: PlayerRepository,
         combat_service: CombatService,
         broadcast_service: MultiplayerBroadcastService,
+        pathfinding_service: PathfindingService | None = None,
     ) -> None:
         """Inicializa el servicio de IA.
 
@@ -35,12 +37,14 @@ class NPCAIService:
             player_repo: Repositorio de jugadores.
             combat_service: Servicio de combate.
             broadcast_service: Servicio de broadcast.
+            pathfinding_service: Servicio de pathfinding (opcional).
         """
         self.npc_service = npc_service
         self.map_manager = map_manager
         self.player_repo = player_repo
         self.combat_service = combat_service
         self.broadcast_service = broadcast_service
+        self.pathfinding_service = pathfinding_service
 
     async def find_nearest_player(
         self, npc: NPC
@@ -221,6 +225,8 @@ class NPCAIService:
     async def try_move_towards(self, npc: NPC, target_x: int, target_y: int) -> bool:
         """Intenta mover el NPC hacia una posición objetivo.
 
+        Usa pathfinding inteligente (A*) si está disponible, sino movimiento simple.
+
         Args:
             npc: NPC a mover.
             target_x: Coordenada X objetivo.
@@ -229,28 +235,56 @@ class NPCAIService:
         Returns:
             True si se movió exitosamente.
         """
-        # Calcular dirección hacia el objetivo
-        direction = self.get_direction_to_target(npc.x, npc.y, target_x, target_y)
+        new_x, new_y, direction = None, None, None
 
-        # Calcular nueva posición según dirección
-        new_x, new_y = npc.x, npc.y
+        # Intentar usar pathfinding si está disponible
+        if self.pathfinding_service:
+            result = self.pathfinding_service.get_next_step(
+                npc.map_id, npc.x, npc.y, target_x, target_y
+            )
+            if result:
+                new_x, new_y, direction = result
+                logger.debug(
+                    "NPC %s usando pathfinding: (%d,%d) -> (%d,%d)",
+                    npc.name,
+                    npc.x,
+                    npc.y,
+                    new_x,
+                    new_y,
+                )
+            else:
+                # Pathfinding no encontró camino
+                logger.debug(
+                    "NPC %s: pathfinding no encontró camino hacia (%d,%d)",
+                    npc.name,
+                    target_x,
+                    target_y,
+                )
+                return False
 
-        if direction == 1:  # Norte
-            new_y -= 1
-        elif direction == 2:  # Este  # noqa: PLR2004
-            new_x += 1
-        elif direction == 3:  # Sur  # noqa: PLR2004
-            new_y += 1
-        elif direction == 4:  # Oeste  # noqa: PLR2004
-            new_x -= 1
+        # Fallback: movimiento simple en línea recta
+        if new_x is None or new_y is None or direction is None:
+            direction = self.get_direction_to_target(npc.x, npc.y, target_x, target_y)
 
-        # Verificar que la nueva posición es válida
-        if not self.map_manager.can_move_to(npc.map_id, new_x, new_y):
-            return False
+            # Calcular nueva posición según dirección
+            new_x, new_y = npc.x, npc.y
 
-        # Verificar que no esté ocupada
-        if self.map_manager.is_tile_occupied(npc.map_id, new_x, new_y):
-            return False
+            if direction == 1:  # Norte
+                new_y -= 1
+            elif direction == 2:  # Este  # noqa: PLR2004
+                new_x += 1
+            elif direction == 3:  # Sur  # noqa: PLR2004
+                new_y += 1
+            elif direction == 4:  # Oeste  # noqa: PLR2004
+                new_x -= 1
+
+            # Verificar que la nueva posición es válida
+            if not self.map_manager.can_move_to(npc.map_id, new_x, new_y):
+                return False
+
+            # Verificar que no esté ocupada
+            if self.map_manager.is_tile_occupied(npc.map_id, new_x, new_y):
+                return False
 
         # Mover el NPC
         old_x, old_y = npc.x, npc.y
