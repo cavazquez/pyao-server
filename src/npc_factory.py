@@ -1,4 +1,4 @@
-"""Factory para crear NPCs con configuraciones predefinidas."""
+"""Factory para creación de NPCs con configuraciones predefinidas."""
 
 import uuid
 
@@ -6,14 +6,15 @@ from src.npc import NPC
 
 
 class NPCFactory:
-    """Factory para crear instancias de NPCs con configuraciones predefinidas.
+    """Factory para crear instancias de NPCs.
 
-    Centraliza la creación de NPCs para evitar duplicación de código
-    y facilitar el mantenimiento de stats y configuraciones.
+    Este factory crea NPCs basándose en parámetros configurables.
+    Los parámetros típicamente provienen de archivos TOML (npcs_hostiles.toml, etc.)
+    y son procesados por NPCService.
     """
 
     @staticmethod
-    def _create_hostile_base(
+    def create_hostile(
         npc_id: int,
         name: str,
         body_id: int,
@@ -30,10 +31,13 @@ class NPCFactory:
         respawn_time_max: int = 120,
         gold_min: int = 5,
         gold_max: int = 20,
+        attack_damage: int = 10,
+        attack_cooldown: float = 3.0,
+        aggro_range: int = 8,
         fx: int = 0,
         fx_loop: int = 0,
     ) -> NPC:
-        """Crea un NPC hostil base con configuración común.
+        """Crea un NPC hostil genérico con configuración completa.
 
         Args:
             npc_id: ID del tipo de NPC.
@@ -52,6 +56,9 @@ class NPCFactory:
             respawn_time_max: Tiempo máximo de respawn en segundos.
             gold_min: Oro mínimo que dropea.
             gold_max: Oro máximo que dropea.
+            attack_damage: Daño base del ataque.
+            attack_cooldown: Segundos entre ataques.
+            aggro_range: Tiles de detección/persecución.
             fx: ID de efecto visual al morir (one-shot).
             fx_loop: ID de efecto visual continuo (aura, loop infinito).
 
@@ -82,12 +89,15 @@ class NPCFactory:
             respawn_time_max=respawn_time_max,
             gold_min=gold_min,
             gold_max=gold_max,
+            attack_damage=attack_damage,
+            attack_cooldown=attack_cooldown,
+            aggro_range=aggro_range,
             fx=fx,
             fx_loop=fx_loop,
         )
 
     @staticmethod
-    def _create_friendly_base(
+    def create_friendly(
         npc_id: int,
         name: str,
         body_id: int,
@@ -101,7 +111,7 @@ class NPCFactory:
         is_merchant: bool = False,
         is_banker: bool = False,
     ) -> NPC:
-        """Crea un NPC amigable base con configuración común.
+        """Crea un NPC amigable genérico con configuración completa.
 
         Args:
             npc_id: ID del tipo de NPC.
@@ -161,11 +171,11 @@ class NPCFactory:
         Returns:
             Instancia de Goblin.
         """
-        return NPCFactory._create_hostile_base(
+        return NPCFactory.create_hostile(
             npc_id=1,
             name="Goblin",
             body_id=14,
-            hp=100,
+            hp=110,
             level=5,
             x=x,
             y=y,
@@ -174,6 +184,9 @@ class NPCFactory:
             description="Un goblin pequeño y malicioso",
             gold_min=10,
             gold_max=50,
+            attack_damage=8,
+            attack_cooldown=2.5,
+            aggro_range=6,
             fx=5,  # Sangre al morir
         )
 
@@ -190,7 +203,7 @@ class NPCFactory:
         Returns:
             Instancia de Lobo.
         """
-        return NPCFactory._create_hostile_base(
+        return NPCFactory.create_hostile(
             npc_id=7,
             name="Lobo",
             body_id=10,
@@ -219,7 +232,7 @@ class NPCFactory:
         Returns:
             Instancia de Orco.
         """
-        return NPCFactory._create_hostile_base(
+        return NPCFactory.create_hostile(
             npc_id=4,
             name="Orco",
             body_id=185,
@@ -248,7 +261,7 @@ class NPCFactory:
         Returns:
             Instancia de Araña Gigante.
         """
-        return NPCFactory._create_hostile_base(
+        return NPCFactory.create_hostile(
             npc_id=8,
             name="Araña Gigante",
             body_id=42,
@@ -280,7 +293,7 @@ class NPCFactory:
         Returns:
             Instancia de Comerciante.
         """
-        return NPCFactory._create_friendly_base(
+        return NPCFactory.create_friendly(
             npc_id=2,
             name="Comerciante",
             body_id=501,
@@ -305,7 +318,7 @@ class NPCFactory:
         Returns:
             Instancia de Banquero.
         """
-        return NPCFactory._create_friendly_base(
+        return NPCFactory.create_friendly(
             npc_id=5,
             name="Banquero",
             body_id=504,
@@ -330,7 +343,7 @@ class NPCFactory:
         Returns:
             Instancia de Guardia Real.
         """
-        return NPCFactory._create_friendly_base(
+        return NPCFactory.create_friendly(
             npc_id=3,
             name="Guardia Real",
             body_id=502,
