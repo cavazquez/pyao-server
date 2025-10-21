@@ -147,6 +147,23 @@ class TaskLogin(Task):
         # Enviar paquetes iniciales y obtener posición
         position = await self._send_login_packets(user_id, user_class)
 
+        # Buscar casilla libre si la posición está ocupada
+        new_position = self._find_free_spawn_position(position)
+        
+        # Si cambió la posición, actualizar en Redis
+        if new_position != position and self.player_repo:
+            await self.player_repo.set_position(
+                user_id,
+                new_position["x"],
+                new_position["y"],
+                new_position["map"],
+                new_position["heading"],
+            )
+            # Enviar actualización al cliente también
+            await self.message_sender.send_pos_update(new_position["x"], new_position["y"])
+        
+        position = new_position
+
         # Inicializar datos del jugador
         await self._initialize_player_data(user_id)
 
@@ -231,6 +248,77 @@ class TaskLogin(Task):
         """
         if self.session_data is not None:
             SessionManager.set_user_session(self.session_data, user_id, username)
+
+    def _find_free_spawn_position(self, position: dict[str, int]) -> dict[str, int]:
+        """Busca una posición libre cercana si la posición de spawn está ocupada.
+
+        Args:
+            position: Posición original de spawn.
+
+        Returns:
+            Posición libre (original o una cercana).
+        """
+        if not self.map_manager:
+            return position
+
+        map_id = position["map"]
+        x = position["x"]
+        y = position["y"]
+
+        # Verificar si la posición original está libre
+        if not self.map_manager.is_tile_occupied(map_id, x, y):
+            return position
+
+        # Posición ocupada, buscar una libre cercana
+        logger.info(
+            "Spawn position (%d,%d) en mapa %d ocupada, buscando casilla libre...",
+            x,
+            y,
+            map_id,
+        )
+
+        # Buscar en espiral hacia afuera (radio 1-5 tiles)
+        for radius in range(1, 6):
+            for dx in range(-radius, radius + 1):
+                for dy in range(-radius, radius + 1):
+                    # Solo verificar el borde del radio actual
+                    if abs(dx) != radius and abs(dy) != radius:
+                        continue
+
+                    new_x = x + dx
+                    new_y = y + dy
+
+                    # Verificar que esté dentro del mapa
+                    if new_x < 1 or new_y < 1 or new_x > 100 or new_y > 100:
+                        continue
+
+                    # Verificar que no esté bloqueado y no esté ocupado
+                    if (
+                        self.map_manager.can_move_to(map_id, new_x, new_y)
+                        and not self.map_manager.is_tile_occupied(map_id, new_x, new_y)
+                    ):
+                        logger.info(
+                            "Casilla libre encontrada en (%d,%d), moviendo spawn de (%d,%d)",
+                            new_x,
+                            new_y,
+                            x,
+                            y,
+                        )
+                        return {
+                            "x": new_x,
+                            "y": new_y,
+                            "map": map_id,
+                            "heading": position["heading"],
+                        }
+
+        # No se encontró casilla libre (muy raro)
+        logger.warning(
+            "No se encontró casilla libre cerca de (%d,%d) en mapa %d, usando original",
+            x,
+            y,
+            map_id,
+        )
+        return position
 
     async def _send_login_packets(self, user_id: int, user_class: int) -> dict[str, int]:
         """Envía los paquetes iniciales de login.

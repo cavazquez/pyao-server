@@ -244,6 +244,17 @@ class NPCAIService:
             )
             if result:
                 new_x, new_y, direction = result
+                
+                # IMPORTANTE: Verificar que el tile no esté ocupado por un jugador
+                if self.map_manager.is_tile_occupied(npc.map_id, new_x, new_y):
+                    logger.debug(
+                        "NPC %s: tile destino (%d,%d) ocupado, no puede moverse",
+                        npc.name,
+                        new_x,
+                        new_y,
+                    )
+                    return False
+                
                 logger.debug(
                     "NPC %s usando pathfinding: (%d,%d) -> (%d,%d)",
                     npc.name,
