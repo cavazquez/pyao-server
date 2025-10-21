@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
+    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc_repository import NPCRepository
     from src.player_repository import PlayerRepository
     from src.spell_catalog import SpellCatalog
@@ -25,6 +26,7 @@ class SpellService:
         player_repo: PlayerRepository,
         npc_repo: NPCRepository,
         map_manager: MapManager,
+        broadcast_service: MultiplayerBroadcastService | None = None,
     ) -> None:
         """Inicializa el servicio de hechizos.
 
@@ -33,11 +35,13 @@ class SpellService:
             player_repo: Repositorio de jugadores.
             npc_repo: Repositorio de NPCs.
             map_manager: Gestor de mapas.
+            broadcast_service: Servicio de broadcast (opcional).
         """
         self.spell_catalog = spell_catalog
         self.player_repo = player_repo
         self.npc_repo = npc_repo
         self.map_manager = map_manager
+        self.broadcast_service = broadcast_service
 
     async def cast_spell(  # noqa: PLR0914
         self,
@@ -112,9 +116,11 @@ class SpellService:
 
         # Aplicar daño al NPC
         target_npc.hp = max(0, target_npc.hp - total_damage)
-        await self.npc_repo.update_npc_position(
-            target_npc.instance_id, target_npc.x, target_npc.y, target_npc.heading
-        )
+        npc_died = target_npc.hp <= 0
+
+        # Actualizar HP en Redis (si no murió)
+        if not npc_died:
+            await self.npc_repo.update_npc_hp(target_npc.instance_id, target_npc.hp)
 
         # Enviar mensajes
         spell_name = spell_data.get("name", "hechizo")
@@ -123,11 +129,22 @@ class SpellService:
             f"{caster_msg}{target_npc.name}. Daño: {total_damage}"
         )
 
-        # Enviar efecto visual
+        # Enviar efecto visual (broadcast a todos en el mapa)
         fx_grh = spell_data.get("fx_grh", 0)
         loops = spell_data.get("loops", 1)
         if fx_grh > 0:
-            await message_sender.send_create_fx_at_position(target_x, target_y, fx_grh, loops)
+            if self.broadcast_service:
+                # Broadcast a todos los jugadores en el mapa
+                await self.broadcast_service.broadcast_create_fx(
+                    map_id=map_id,
+                    x=target_x,
+                    y=target_y,
+                    fx_id=fx_grh,
+                    loops=loops,
+                )
+            else:
+                # Fallback: solo al caster
+                await message_sender.send_create_fx_at_position(target_x, target_y, fx_grh, loops)
 
         # Log
         logger.info(
@@ -140,9 +157,30 @@ class SpellService:
             target_npc.max_hp,
         )
 
-        # Si el NPC murió
-        if target_npc.hp <= 0:
+        # Si el NPC murió, eliminarlo del juego
+        if npc_died:
             await message_sender.send_console_msg(f"Has matado a {target_npc.name}!")
-            # TODO: Drop de oro/items, experiencia, etc.
+
+            # Remover NPC del MapManager
+            self.map_manager.remove_npc(map_id, target_npc.char_index)
+
+            # Broadcast CHARACTER_REMOVE a todos los jugadores en el mapa
+            if self.broadcast_service:
+                await self.broadcast_service.broadcast_character_remove(
+                    map_id=map_id,
+                    char_index=target_npc.char_index,
+                )
+
+            # Eliminar de Redis
+            await self.npc_repo.delete_npc(target_npc.instance_id)
+
+            logger.info(
+                "NPC %s (CharIndex: %d) eliminado tras ser matado por hechizo de user_id %d",
+                target_npc.name,
+                target_npc.char_index,
+                user_id,
+            )
+
+            # TODO: Drop de oro/items, experiencia, respawn
 
         return True

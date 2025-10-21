@@ -88,8 +88,9 @@ class ServiceInitializer:
             self.repositories["player_repo"],
             self.repositories["npc_repo"],
             self.map_manager,
+            broadcast_service,  # Agregar broadcast para efectos visuales
         )
-        logger.info("✓ Sistema de magia inicializado")
+        logger.info("✓ Sistema de magia inicializado (con broadcast de efectos)")
 
         # Servicio de comercio
         commerce_service = CommerceService(
