@@ -1,8 +1,10 @@
 # TODO: Sistema de NPC Factory
 
-**Estado:** 📝 Diseño propuesto - Pendiente implementación  
+**Estado:** ✅ **COMPLETADO** - 21 de octubre, 2025  
 **Prioridad:** Media  
-**Versión objetivo:** 0.5.0
+**Versión objetivo:** 0.6.0-alpha
+
+> **NOTA:** Este sistema ha sido completamente implementado. Ver `docs/NPC_FACTORY_COMPLETED.md` para documentación completa.
 
 ---
 

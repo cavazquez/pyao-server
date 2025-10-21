@@ -108,7 +108,8 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - **server.py:** 685 → 194 líneas (-72% reducción) ✅
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
-- **Tests:** 801 tests pasando (100%) ✅
+- **NPCFactory:** 16 factory methods (14 NPCs) ✅ **NUEVO**
+- **Tests:** 990 tests pasando (100%) ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ### Sistema de Validación de Packets
@@ -162,6 +163,7 @@ pyao-server/
 │   ├── player_service.py        # Gestión de jugadores
 │   ├── player_map_service.py    # Spawn y transiciones de mapa ✅ NUEVO
 │   ├── npc_service.py           # Gestión de NPCs
+│   ├── npc_factory.py           # Factory methods para crear NPCs ✅ NUEVO
 │   ├── npc_ai_service.py        # IA de NPCs hostiles
 │   ├── npc_respawn_service.py   # Respawn de NPCs
 │   ├── combat_service.py        # Sistema de combate
@@ -563,9 +565,12 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo
 - **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Sistema genérico de efectos periódicos
 
+### Sistemas Completados ✅
+- **[NPC Factory](docs/NPC_FACTORY_COMPLETED.md)**: Sistema de factory methods para crear NPCs con FX ✅ **COMPLETADO**
+- **[Sistema de Validación](docs/PACKET_VALIDATOR_MIGRATION.md)**: PacketValidator centralizado ✅ **COMPLETADO**
+
 ### TODOs y Mejoras Futuras
-- **[TODO: NPC Factory](docs/TODO_NPC_FACTORY.md)**: Sistema de factory methods para crear NPCs con FX
-- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: PacketReader y otras mejoras de arquitectura
+- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: Mejoras de arquitectura pendientes
 
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño

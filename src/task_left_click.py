@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
+from src.map_resources_service import MapResourcesService
 from src.packet_data import LeftClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
@@ -36,6 +37,7 @@ class TaskLeftClick(Task):
         bank_repo: BankRepository | None = None,
         redis_client: RedisClient | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Inicializa la tarea de click izquierdo.
 
@@ -48,6 +50,7 @@ class TaskLeftClick(Task):
             bank_repo: Repositorio de banco.
             redis_client: Cliente Redis.
             session_data: Datos de sesión.
+            map_resources: Servicio de recursos del mapa.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -56,6 +59,7 @@ class TaskLeftClick(Task):
         self.bank_repo = bank_repo
         self.redis_client = redis_client
         self.session_data = session_data or {}
+        self.map_resources = map_resources or MapResourcesService()
 
     async def execute(self) -> None:
         """Ejecuta click izquierdo en personaje/NPC."""
@@ -114,16 +118,8 @@ class TaskLeftClick(Task):
             if npc_found:
                 await self._handle_npc_click(user_id, npc_found)
             else:
-                # No hay NPC en esa posición, podría ser otro jugador
-                logger.debug(
-                    "No se encontró NPC en posición (%d, %d) del mapa %d",
-                    click_data.x,
-                    click_data.y,
-                    map_id,
-                )
-                await self.message_sender.send_console_msg(
-                    f"No hay nadie en ({click_data.x}, {click_data.y})."
-                )
+                # No hay NPC, mostrar información del tile
+                await self._show_tile_info(map_id, click_data.x, click_data.y)
 
         except Exception:
             logger.exception("Error al parsear packet LEFT_CLICK")
@@ -312,3 +308,55 @@ class TaskLeftClick(Task):
             len(bank_items),
             bank_gold,
         )
+
+    async def _show_tile_info(self, map_id: int, x: int, y: int) -> None:
+        """Muestra información detallada de un tile.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X del tile.
+            y: Coordenada Y del tile.
+        """
+        max_items_to_show = 5
+        info_lines = [f"=== Tile ({x}, {y}) - Mapa {map_id} ==="]
+
+        # Verificar recursos del mapa
+        resources = []
+        if self.map_resources.has_water(map_id, x, y):
+            resources.append("Agua")
+        if self.map_resources.has_tree(map_id, x, y):
+            resources.append("Arbol")
+        if self.map_resources.has_mine(map_id, x, y):
+            resources.append("Yacimiento")
+
+        if resources:
+            info_lines.append(f"Recursos: {', '.join(resources)}")
+
+        # Verificar objetos en el suelo
+        if self.map_manager:
+            ground_items = self.map_manager.get_ground_items(map_id, x, y)
+            if ground_items:
+                items_str = []
+                for item_data in ground_items[:max_items_to_show]:
+                    item_id = item_data.get("item_id")
+                    quantity = item_data.get("quantity", 1)
+                    item = (
+                        ITEMS_CATALOG.get(int(item_id))
+                        if item_id and isinstance(item_id, int)
+                        else None
+                    )
+                    if item:
+                        items_str.append(f"{item.name} x{quantity}")
+
+                if items_str:
+                    info_lines.append(f"Items en el suelo: {', '.join(items_str)}")
+                    if len(ground_items) > max_items_to_show:
+                        info_lines.append(f"... y {len(ground_items) - max_items_to_show} mas")
+
+        # Si no hay nada interesante
+        if len(info_lines) == 1:
+            info_lines.append("Tile vacio")
+
+        # Enviar mensaje
+        message = " | ".join(info_lines)
+        await self.message_sender.send_console_msg(message)

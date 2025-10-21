@@ -46,7 +46,7 @@ class ClientPacketID(IntEnum):
     CAST_SPELL = 25  # Lanzar hechizo
     LEFT_CLICK = 26  # Click en personaje/NPC
     DOUBLE_CLICK = 27  # Doble click en inventario (usar item)
-    # WORK = 28
+    WORK = 28  # Trabajar (talar, minar, pescar)
     # USE_SPELL_MACRO = 29
     # CRAFT_BLACKSMITH = 31
     # CRAFT_CARPENTER = 32

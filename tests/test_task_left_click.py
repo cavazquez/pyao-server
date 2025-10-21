@@ -102,10 +102,12 @@ class TestTaskLeftClick:
         # Execute
         await task.execute()
 
-        # Assert
+        # Assert - ahora debería mostrar información del tile
         message_sender.send_console_msg.assert_called_once()
         call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "No hay nadie" in call_args
+        # Verificar que muestra información del tile
+        assert "Tile" in call_args
+        assert "(50, 50)" in call_args or "50" in call_args
 
     async def test_click_without_session(self) -> None:
         """Test de click sin sesión activa."""

@@ -182,6 +182,8 @@ class NPCFactory:
             map_id=map_id,
             char_index=char_index,
             description="Un goblin pequeño y malicioso",
+            respawn_time=30,
+            respawn_time_max=60,
             gold_min=10,
             gold_max=50,
             attack_damage=8,
@@ -214,8 +216,13 @@ class NPCFactory:
             map_id=map_id,
             char_index=char_index,
             description="Un lobo salvaje y hambriento",
+            respawn_time=20,
+            respawn_time_max=40,
             gold_min=5,
             gold_max=20,
+            attack_damage=6,
+            attack_cooldown=2.0,
+            aggro_range=7,
             fx=5,  # Sangre al morir
         )
 
@@ -243,8 +250,13 @@ class NPCFactory:
             map_id=map_id,
             char_index=char_index,
             description="Un orco brutal y poderoso",
+            respawn_time=60,
+            respawn_time_max=120,
             gold_min=20,
             gold_max=114,
+            attack_damage=35,
+            attack_cooldown=3.0,
+            aggro_range=10,
             fx=5,  # Sangre al morir
         )
 
@@ -274,8 +286,279 @@ class NPCFactory:
             description="Una araña gigante y venenosa",
             gold_min=15,
             gold_max=75,
+            attack_damage=12,
+            attack_cooldown=2.5,
+            aggro_range=8,
             fx=10,  # Veneno al morir
             fx_loop=15,  # Aura venenosa
+        )
+
+    @staticmethod
+    def create_serpiente(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea una Serpiente - Criatura venenosa muy rápida.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Serpiente.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=9,
+            name="Serpiente",
+            body_id=13,
+            hp=22,
+            level=2,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Una serpiente venenosa y sigilosa",
+            gold_min=1,
+            gold_max=10,
+            attack_damage=1,
+            attack_cooldown=1.5,
+            aggro_range=5,
+            fx=10,  # Veneno al morir
+        )
+
+    @staticmethod
+    def create_dragon_rojo(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Dragón Rojo - Boss poderoso con tesoros.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Dragón Rojo.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=10,
+            name="Dragón Rojo",
+            body_id=41,
+            hp=5000,
+            level=50,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Un dragón ancestral rojo, guardián de tesoros legendarios",
+            respawn_time=600,  # 10 minutos
+            respawn_time_max=900,  # 15 minutos
+            gold_min=1000,
+            gold_max=4700,
+            attack_damage=300,
+            attack_cooldown=4.0,
+            aggro_range=15,
+            fx=25,  # Explosión de fuego al morir
+            fx_loop=20,  # Aura de fuego
+        )
+
+    @staticmethod
+    def create_esqueleto(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Esqueleto - No-muerto común.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Esqueleto.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=11,
+            name="Esqueleto",
+            body_id=12,
+            hp=50,
+            level=5,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Un guerrero caído que vaga eternamente",
+            gold_min=8,
+            gold_max=16,
+            attack_damage=8,
+            attack_cooldown=3.0,
+            aggro_range=7,
+            fx=5,  # Sangre al morir
+        )
+
+    @staticmethod
+    def create_zombie(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Zombie - No-muerto resistente.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Zombie.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=12,
+            name="Zombie",
+            body_id=196,
+            hp=250,
+            level=8,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            head_id=507,  # Zombie tiene cabeza
+            description="Un muerto viviente que busca carne fresca",
+            gold_min=21,
+            gold_max=50,
+            attack_damage=12,
+            attack_cooldown=2.5,
+            aggro_range=6,
+            fx=10,  # Veneno/descomposición al morir
+        )
+
+    @staticmethod
+    def create_gran_dragon_rojo(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Gran Dragón Rojo - Boss final épico.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Gran Dragón Rojo.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=13,
+            name="Gran Dragón Rojo",
+            body_id=82,
+            hp=200000,
+            level=100,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="El más poderoso de todos los dragones, un boss legendario",
+            respawn_time=3600,  # 1 hora
+            respawn_time_max=7200,  # 2 horas
+            gold_min=50000,
+            gold_max=65000,
+            attack_damage=5000,
+            attack_cooldown=5.0,
+            aggro_range=20,
+            fx=25,  # Explosión de fuego al morir
+            fx_loop=20,  # Aura de fuego
+        )
+
+    @staticmethod
+    def create_ogro(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Ogro - Gigante brutal.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Ogro.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=14,
+            name="Ogro",
+            body_id=76,
+            hp=2250,
+            level=18,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Un ogro brutal que aplasta todo a su paso",
+            gold_min=200,
+            gold_max=512,
+            attack_damage=232,
+            attack_cooldown=3.5,
+            aggro_range=10,
+            fx=5,  # Sangre al morir
+        )
+
+    @staticmethod
+    def create_demonio(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Demonio - Criatura infernal poderosa.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Demonio.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=15,
+            name="Demonio",
+            body_id=83,
+            hp=5000,
+            level=25,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Una criatura infernal surgida de las profundidades",
+            respawn_time=300,  # 5 minutos
+            respawn_time_max=600,  # 10 minutos
+            gold_min=500,
+            gold_max=2000,
+            attack_damage=400,
+            attack_cooldown=4.0,
+            aggro_range=15,
+            fx=25,  # Explosión al morir
+            fx_loop=50,  # Aura oscura
+        )
+
+    @staticmethod
+    def create_murcielago(x: int, y: int, map_id: int, char_index: int) -> NPC:
+        """Crea un Murciélago - Criatura muy débil y rápida.
+
+        Args:
+            x: Posición X.
+            y: Posición Y.
+            map_id: ID del mapa.
+            char_index: CharIndex único.
+
+        Returns:
+            Instancia de Murciélago.
+        """
+        return NPCFactory.create_hostile(
+            npc_id=16,
+            name="Murciélago",
+            body_id=9,
+            hp=15,
+            level=1,
+            x=x,
+            y=y,
+            map_id=map_id,
+            char_index=char_index,
+            description="Un murciélago salvaje de las cavernas",
+            respawn_time=10,
+            respawn_time_max=20,
+            gold_min=1,
+            gold_max=70,
+            attack_damage=4,
+            attack_cooldown=1.0,
+            aggro_range=4,
+            fx=5,  # Sangre al morir
         )
 
     # ==================== NPCs Amigables ====================
