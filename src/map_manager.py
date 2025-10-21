@@ -41,6 +41,9 @@ class MapManager(SpatialIndexMixin):
         # Tiles bloqueados por mapa (paredes, agua, etc.)
         self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
 
+        # Tiles de exit por mapa: {(map_id, x, y): {"to_map": int, "to_x": int, "to_y": int}}
+        self._exit_tiles: dict[tuple[int, int, int], dict[str, int]] = {}
+
         # Tamaños de mapas: {map_id: (width, height)}
         self._map_sizes: dict[int, tuple[int, int]] = {}
 
@@ -563,23 +566,48 @@ class MapManager(SpatialIndexMixin):
             height = map_data.get("height", 100)
             self._map_sizes[map_id] = (width, height)
 
-            # Cargar tiles bloqueados
+            # Cargar tiles bloqueados y tiles de exit
             blocked_tiles = map_data.get("blocked_tiles", [])
             blocked_set = set()
+            exit_count = 0
+
             for tile in blocked_tiles:
                 x = tile.get("x")
                 y = tile.get("y")
+                tile_type = tile.get("type")
+
                 if x is not None and y is not None:
+                    # Si es un tile de exit, guardar la información de transición
+                    if tile_type == "exit":
+                        to_map = tile.get("to_map")
+                        to_x = tile.get("to_x")
+                        to_y = tile.get("to_y")
+
+                        if to_map and to_x is not None and to_y is not None:
+                            exit_key = (map_id, x, y)
+                            self._exit_tiles[exit_key] = {
+                                "to_map": to_map,
+                                "to_x": to_x,
+                                "to_y": to_y,
+                            }
+                            exit_count += 1
+                            logger.debug(
+                                "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
+                                map_id, x, y, to_map, to_x, to_y
+                            )
+
+                    # Todos los tiles (incluyendo exits) bloquean el movimiento normal
                     blocked_set.add((x, y))
 
             self._blocked_tiles[map_id] = blocked_set
 
             logger.info(
-                "Mapa %d cargado: %dx%d, %d tiles bloqueados",
+                "Mapa %d cargado: %dx%d, %d tiles bloqueados, %d exits",
                 map_id,
                 width,
                 height,
                 len(blocked_set),
+                exit_count,
             )
 
         except (OSError, json.JSONDecodeError):
@@ -597,3 +625,16 @@ class MapManager(SpatialIndexMixin):
             Tupla (width, height). Si el mapa no está cargado, retorna (100, 100).
         """
         return self._map_sizes.get(map_id, (100, 100))
+
+    def get_exit_tile(self, map_id: int, x: int, y: int) -> dict[str, int] | None:
+        """Verifica si una posición es un tile de exit y retorna su destino.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            Dict con {to_map, to_x, to_y} si es un exit, None si no.
+        """
+        return self._exit_tiles.get((map_id, x, y))

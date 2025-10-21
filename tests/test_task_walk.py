@@ -31,6 +31,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -74,6 +75,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)  # No hay exit tile
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -115,6 +117,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -156,6 +159,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -197,6 +201,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=False)  # Bloqueado
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
         map_manager._blocked_tiles = {1: {(50, 49)}}  # noqa: SLF001
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
@@ -236,6 +241,7 @@ class TestTaskWalk:
 
         map_manager = MagicMock(spec=MapManager)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 
         data = bytes([0x06, 0x01])  # NORTH
@@ -462,6 +468,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.update_player_tile = MagicMock()
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
         broadcast_service.broadcast_character_move = AsyncMock()
@@ -526,6 +533,7 @@ class TestTaskWalk:
 
         map_manager = MagicMock(spec=MapManager)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         data = bytes([0x06, 0x03])  # SOUTH
         session_data = {"user_id": 1}
@@ -559,6 +567,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=False)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
         map_manager._blocked_tiles = {}  # noqa: SLF001
         map_manager.get_tile_occupant = MagicMock(return_value="player:2")
 
@@ -594,6 +603,7 @@ class TestTaskWalk:
         map_manager = MagicMock(spec=MapManager)
         map_manager.can_move_to = MagicMock(return_value=False)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        map_manager.get_exit_tile = MagicMock(return_value=None)
         map_manager._blocked_tiles = {}  # noqa: SLF001
         map_manager.get_tile_occupant = MagicMock(return_value="npc:100")
 

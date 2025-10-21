@@ -59,7 +59,7 @@
     {"x": 53, "y": 1, "type": "building"},
     {"x": 54, "y": 1, "type": "building"},
     {"x": 55, "y": 1, "type": "building"},
-    {"x": 56, "y": 1, "type": "building"},
+    {"x": 56, "y": 1, "type": "exit", "to_map": 2, "to_x": 50, "to_y": 99},
     {"x": 57, "y": 1, "type": "building"},
     {"x": 58, "y": 1, "type": "building"},
     {"x": 59, "y": 1, "type": "building"},
