@@ -1,6 +1,5 @@
 """Tests para NPCFactory."""
 
-import pytest
 
 from src.npc import NPC
 from src.npc_factory import NPCFactory
