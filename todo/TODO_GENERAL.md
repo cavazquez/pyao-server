@@ -8,8 +8,8 @@
 
 ## 📊 Estado Actual del Proyecto
 
-**Versión:** 0.5.0-alpha (100% COMPLETADO) 🎉  
-**Tests:** 945 pasando (100%)  
+**Versión:** 0.6.0-alpha (en progreso)  
+**Tests:** 955 pasando (100%)  
 **Cobertura:** 74%  
 **Calidad:** Excelente (0 errores linting/mypy)
 
@@ -21,7 +21,9 @@
 - ✅ Loot Tables Configurables
 - ✅ MapTransitionService y PlayerMapService
 - ✅ PacketValidator (100%)
-- ⚠️ PacketReader (3/9 tasks migradas - 33%)
+- ✅ PacketReader (100%) - ¡Migración completa!
+- ✅ Oro en Banco (PacketIDs 111, 112)
+- ✅ Refactorización de Validación Centralizada
 
 ---
 
@@ -29,10 +31,9 @@
 
 Este proyecto tiene varios documentos TODO especializados:
 
-- **TODO_REFACTORING.md** - Refactorings técnicos (PacketReader, MessageSender)
+- **TODO_REFACTORING.md** - Refactorings técnicos pendientes
 - **TODO_ARQUITECTURA.md** - Mejoras arquitecturales (DI, Event System, etc.)
 - **TODO_NPC_FACTORY.md** - Sistema de factory para NPCs
-- **TODO_PACKET_READER_REFACTORING.md** - Migración de tasks a PacketReader
 - **TODO_CLIENTE.md** - Mejoras del cliente Godot
 - **TODO_GENERAL.md** (este archivo) - Lista general de features y mejoras
 
@@ -99,15 +100,16 @@ Este proyecto tiene varios documentos TODO especializados:
 
 ## 📝 Versión 0.6.0-alpha - Refactorings, IA de NPCs y Economía
 
-### Refactorings Pendientes (Prioridad Alta)
+### Refactorings Completados ✅
 - [x] **MapTransitionService encapsulado** ✅ - Ya implementado en `player_map_service.py`
-- [ ] **Completar migración PacketReader** - 6 tasks restantes (~1 hora)
-  - task_commerce_sell.py
-  - task_inventory_click.py
-  - task_equip_item.py
-  - task_double_click.py
-  - task_left_click.py
-  - task_cast_spell.py
+- [x] **Refactorización de validación de packets** ✅ - Completado (TaskCommerceSell, TaskCommerceBuy, TaskInventoryClick)
+  - Validación centralizada en TaskFactory
+  - Tasks reciben datos ya validados
+  - ~70 líneas de código eliminadas
+- [x] **Migración PacketReader 100% completa** ✅
+  - Todas las tasks usan PacketReader y PacketValidator
+  - Eliminado uso de struct.unpack directo
+  - Validación consistente en toda la aplicación
 
 ### IA de NPCs Mejorada
 - [ ] Pathfinding básico (A* o similar)
@@ -125,7 +127,13 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Packet WORK para trabajar
 
 ### Economía Avanzada
-- [ ] Depositar/retirar oro en banco
+- [x] **Depositar/retirar oro en banco** ✅ - Completado (PacketIDs 111, 112)
+  - TaskBankExtractGold y TaskBankDepositGold implementadas
+  - UPDATE_BANK_GOLD (PacketID 19) enviado al cliente
+  - Métodos add_gold() y remove_gold() en PlayerRepository y BankRepository
+  - Redis como almacenamiento (key: bank:{user_id}:gold)
+  - Validación de amount=0 con mensajes claros
+  - +10 tests unitarios (955 tests total)
 - [ ] Precios dinámicos según oferta/demanda
 
 ### Combate
