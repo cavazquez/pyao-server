@@ -384,7 +384,7 @@ class TaskWalk(Task):
         """
         reason = self._get_block_reason(current_map, new_x, new_y)
 
-        logger.info(
+        logger.debug(
             "User %d no puede moverse a (%d,%d) en mapa %d - Razón: %s",
             user_id,
             new_x,
@@ -465,7 +465,7 @@ class TaskWalk(Task):
                 user_id, current_map, current_x, current_y, new_x, new_y
             )
 
-        logger.info(
+        logger.debug(
             "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
             user_id,
             current_x,
@@ -520,7 +520,7 @@ class TaskWalk(Task):
         # Verificar si ese tile está bloqueado
         is_next_blocked = not self.map_manager.can_move_to(new_map, check_x, check_y)
 
-        logger.info(
+        logger.debug(
             "Verificando siguiente tile (%d,%d) desde (%d,%d): bloqueado=%s",
             check_x,
             check_y,
