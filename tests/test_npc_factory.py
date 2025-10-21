@@ -1,6 +1,5 @@
 """Tests para NPCFactory."""
 
-
 from src.npc import NPC
 from src.npc_factory import NPCFactory
 
@@ -95,7 +94,7 @@ class TestNPCFactory:
         # Verificar valores por defecto
         assert npc.heading == 3  # Sur por defecto
         assert npc.head_id == 0  # Sin cabeza
-        assert npc.description == ""
+        assert not npc.description  # Empty string
         assert npc.respawn_time == 60
         assert npc.respawn_time_max == 120
         assert npc.gold_min == 5
@@ -268,7 +267,7 @@ class TestNPCFactory:
 
         assert npc.heading == 3  # Sur por defecto
         assert npc.head_id == 1  # Con cabeza por defecto
-        assert npc.description == ""
+        assert not npc.description  # Empty string
         assert npc.hp == 100
         assert npc.max_hp == 100
         assert npc.level == 1
