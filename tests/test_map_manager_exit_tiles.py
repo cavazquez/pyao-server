@@ -25,7 +25,9 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -68,7 +70,9 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -113,7 +117,9 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -145,7 +151,9 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -191,9 +199,14 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f1, tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f2:
+        with (
+            tempfile.NamedTemporaryFile(
+                mode="w", suffix=".json", delete=False, encoding="utf-8"
+            ) as f1,
+            tempfile.NamedTemporaryFile(
+                mode="w", suffix=".json", delete=False, encoding="utf-8"
+            ) as f2,
+        ):
             json.dump(map_1_data, f1)
             json.dump(map_2_data, f2)
             temp_path_1 = Path(f1.name)
