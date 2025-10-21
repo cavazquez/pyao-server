@@ -1,6 +1,7 @@
 """Orquestador principal de inicialización del servidor."""
 
 import logging
+import time
 from pathlib import Path
 
 from src.dependency_container import DependencyContainer
@@ -24,6 +25,9 @@ class ServerInitializer:
         Args:
             map_manager: Instancia del MapManager.
         """
+        logger.info("Iniciando carga de mapas...")
+        start_time = time.perf_counter()
+
         maps_dir = Path("maps")
         if maps_dir.exists():
             map_files = list(maps_dir.glob("map_*.json"))
@@ -33,7 +37,13 @@ class ServerInitializer:
                     map_manager.load_map_data(map_id, map_file)
                 except ValueError:
                     logger.warning("Error parseando ID de mapa: %s", map_file)
-            logger.info("✓ %d mapas cargados con tiles bloqueados", len(map_files))
+
+            elapsed_time = time.perf_counter() - start_time
+            logger.info(
+                "✓ %d mapas cargados con tiles bloqueados en %.3f segundos",
+                len(map_files),
+                elapsed_time,
+            )
         else:
             logger.warning("⚠️  Directorio maps/ no encontrado")
 
