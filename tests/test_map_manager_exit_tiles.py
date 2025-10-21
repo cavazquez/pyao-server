@@ -25,7 +25,7 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -68,7 +68,7 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -113,7 +113,7 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
@@ -145,7 +145,7 @@ class TestMapManagerExitTiles:
             ],
         }
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
             json.dump(map_data, f)
             temp_path = Path(f.name)
 
