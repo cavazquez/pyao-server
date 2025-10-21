@@ -222,8 +222,8 @@ class NPCFactory:
         return NPCFactory._create_hostile_base(
             npc_id=4,
             name="Orco",
-            body_id=8,
-            hp=200,
+            body_id=185,
+            hp=350,
             level=10,
             x=x,
             y=y,
@@ -231,7 +231,7 @@ class NPCFactory:
             char_index=char_index,
             description="Un orco brutal y poderoso",
             gold_min=20,
-            gold_max=100,
+            gold_max=114,
             fx=5,  # Sangre al morir
         )
 
