@@ -127,8 +127,8 @@ class ClientPacketID(IntEnum):
     # GAMBLE = 108
     # INQUIRY_VOTE = 109
     # LEAVE_FACTION = 110
-    # BANK_EXTRACT_GOLD = 111
-    # BANK_DEPOSIT_GOLD = 112
+    BANK_EXTRACT_GOLD = 111  # Retirar oro del banco
+    BANK_DEPOSIT_GOLD = 112  # Depositar oro en banco
     # DENOUNCE = 113
     # GUILD_FUNDATE = 114
     # GUILD_FUNDATION = 115
@@ -192,7 +192,7 @@ class ServerPacketID(IntEnum):
     # CHANGE_INVENTORY_SLOT = 13
     # CHANGE_SPELL_SLOT = 14  # ID incorrecto, el correcto es 49
     # UPDATE_STA = 15  # Ya definido arriba
-    # UPDATE_BANK_GOLD = 19
+    UPDATE_BANK_GOLD = 19  # Actualizar oro del banco
     UPDATE_EXP = 20  # Actualizar experiencia
     # GUILD_CHAT = 25
     # SHOW_MESSAGE_BOX = 26

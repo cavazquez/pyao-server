@@ -44,6 +44,8 @@ class TestTaskCommerceSell:
         task = TaskCommerceSell(
             data,
             message_sender,
+            slot=3,
+            quantity=5,
             commerce_service=commerce_service,
             player_repo=player_repo,
             inventory_repo=inventory_repo,
@@ -82,6 +84,8 @@ class TestTaskCommerceSell:
         task = TaskCommerceSell(
             data,
             message_sender,
+            slot=3,
+            quantity=5,
             commerce_service=commerce_service,
             player_repo=player_repo,
             inventory_repo=inventory_repo,
@@ -110,6 +114,8 @@ class TestTaskCommerceSell:
         task = TaskCommerceSell(
             data,
             message_sender,
+            slot=3,
+            quantity=5,
             commerce_service=commerce_service,
             session_data=session_data,
         )
@@ -132,6 +138,8 @@ class TestTaskCommerceSell:
         task = TaskCommerceSell(
             data,
             message_sender,
+            slot=3,
+            quantity=5,
             commerce_service=None,  # Sin dependencias
             player_repo=None,
             inventory_repo=None,
@@ -163,6 +171,8 @@ class TestTaskCommerceSell:
         task = TaskCommerceSell(
             data,
             message_sender,
+            slot=3,
+            quantity=5,
             commerce_service=commerce_service,
             player_repo=player_repo,
             inventory_repo=inventory_repo,

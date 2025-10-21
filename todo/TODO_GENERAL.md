@@ -2,16 +2,15 @@
 
 **Estado:** 📋 Lista maestra de tareas y mejoras  
 **Prioridad:** Mixta  
-**Última actualización:** 2025-01-20
+**Última actualización:** 2025-10-20
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
 **Versión:** 0.5.0-alpha (100% COMPLETADO) 🎉  
-**Tests:** 807 pasando (100%)  
-**Cobertura:** Alta  
-**Commits en sesión:** 47  
+**Tests:** 945 pasando (100%)  
+**Cobertura:** 74%  
 **Calidad:** Excelente (0 errores linting/mypy)
 
 **Sistemas Completados Recientemente:**
@@ -20,7 +19,9 @@
 - ✅ Sistema de Esquives basado en Agilidad (100%)
 - ✅ NPC Factory Pattern
 - ✅ Loot Tables Configurables
-- ✅ PacketReader (21/33 tasks migradas)
+- ✅ MapTransitionService y PlayerMapService
+- ✅ PacketValidator (100%)
+- ⚠️ PacketReader (3/9 tasks migradas - 33%)
 
 ---
 
@@ -94,128 +95,19 @@ Este proyecto tiene varios documentos TODO especializados:
 - Solución: Implementado envío completo de entidades en `_handle_map_transition()`
 - Documentación: `docs/MAP_TRANSITION_FIX.md`
 
-**Movido a v0.5.0+ (Features más complejas):**
-- [ ] Precios dinámicos según oferta/demanda
-- [ ] Depositar/retirar oro
-- [ ] Pathfinding básico (A* o similar)
-- [ ] NPCs que patrullan rutas predefinidas
-- [ ] NPCs que huyen cuando tienen poca vida
-- [ ] NPCs que llaman refuerzos
-- [ ] Diferentes comportamientos por tipo de NPC
-- [ ] Rango de agresión configurable por NPC
-- [ ] Cooldown entre ataques
-
 ---
 
-## 🐉 Sistema de NPCs por Bioma (Propuesto)
+## 📝 Versión 0.6.0-alpha - Refactorings, IA de NPCs y Economía
 
-### Objetivo
-Spawn automático de NPCs hostiles según el bioma/tipo de mapa para crear un mundo más dinámico.
-
-### Diseño
-- [ ] **Definir biomas en mapas** - Agregar campo `biome` en JSON (forest, dungeon, desert, snow, swamp, cave)
-- [ ] **Configuración por bioma** - `data/npc_spawns_by_biome.toml` con NPCs y weights por bioma
-- [ ] **NPCBiomeSpawnService** - Servicio de spawn automático
-- [ ] **Spawn zones** - Áreas específicas en mapas donde pueden aparecer NPCs
-- [ ] **Respawn automático** - Cuando NPC muere, respawnear otro del mismo bioma
-- [ ] **Selección ponderada** - Weight para controlar frecuencia de cada NPC
-- [ ] **Nivel aleatorio** - min_level/max_level por NPC según bioma
-
-### Ejemplo Configuración
-```toml
-[forest]
-npcs = [
-    { name = "lobo", weight = 40, min_level = 1, max_level = 5 },
-    { name = "araña", weight = 30, min_level = 3, max_level = 7 },
-    { name = "goblin", weight = 20, min_level = 2, max_level = 6 }
-]
-max_npcs = 15
-
-[dungeon]
-npcs = [
-    { name = "esqueleto", weight = 40, min_level = 5, max_level = 10 },
-    { name = "dragon", weight = 5, min_level = 15, max_level = 20 }
-]
-max_npcs = 20
-```
-
-### Beneficios
-- 🌍 Mundo más dinámico y variado
-- ⚙️ Configurable sin cambiar código
-- 🔄 Respawn automático mantiene mundo poblado
-- 📊 Balance por nivel (min/max level)
-
-### Prioridad
-Media - Mejora significativa de gameplay
-
-### Esfuerzo
-4-6 horas
-
----
-
-### 📝 Versión 0.6.0-alpha - Clases, Hechizos y Social
-
-**Sistema de Clases:**
-- [ ] Atributos base por clase (Guerrero, Mago, etc.)
-- [ ] Habilidades especiales por clase
-- [ ] Restricciones de equipamiento por clase
-- [ ] Balance de clases
-
-**Hechizos Avanzados:**
-- [ ] Hechizos de área (AOE)
-- [ ] Hechizos de buff/debuff
-- [ ] Hechizos de curación
-- [ ] Hechizos de invocación
-- [ ] Cooldowns de hechizos
-- [ ] Animaciones y efectos visuales
-
-**Sistema de Skills:**
-- [ ] Subir skills con uso (minería, tala, pesca)
-- [ ] Experiencia de skills
-- [ ] Niveles de skills (0-100)
-- [ ] Bonificadores por nivel de skill
-- [ ] Packet WORK para trabajar
-
-### 📝 Versión 0.7.0-alpha - Configuración, Quests y Social
-- [ ] Configuration Management
-- [ ] Sistema de quests
-- [ ] Eventos mundiales
-- [ ] Sistema de amigos
-
-### 📝 Versión 0.8.0-alpha - Social y Party
-- [ ] Sistema de party
-- [ ] Chat mejorado con canales
-
-### 📝 Versión 1.0.0 - Producción
-- [ ] Todas las funcionalidades core
-- [ ] Performance optimizado
-- [ ] Seguridad robusta
-- [ ] Documentación completa
-- [ ] Coverage > 90%
-
----
-
-## 🔥 Prioridad Alta
-
-### Sistema de Combate
-- [x] Implementar `CombatService` para combate jugador vs NPC ✅
-- [x] Calcular daño basado en stats (fuerza, armas, armadura) ✅
-- [x] Animaciones de ataque (FX) ✅
-- [x] Muerte de NPCs ✅
-- [x] Experiencia al matar NPCs ✅
-- [x] Packet `ATTACK` para iniciar combate ✅
-- [x] Sistema de Respawn de NPCs ✅
-- [x] Sistema de críticos basado en agilidad ✅
-- [ ] Sistema de esquives (preparado, pendiente integrar)
-- [ ] Packet `DAMAGE` para mostrar daño recibido
-
-### Sistema de Loot
-- [x] Drops de oro al matar NPCs ✅
-- [x] Recoger items del suelo (`PICK_UP`) ✅
-- [x] Visualización de items en el mapa ✅
-- [x] Drops de items según tabla de probabilidades ✅
-- [x] Loot tables configurables por NPC ✅
-- [ ] Inventario lleno - manejar casos límite
+### Refactorings Pendientes (Prioridad Alta)
+- [x] **MapTransitionService encapsulado** ✅ - Ya implementado en `player_map_service.py`
+- [ ] **Completar migración PacketReader** - 6 tasks restantes (~1 hora)
+  - task_commerce_sell.py
+  - task_inventory_click.py
+  - task_equip_item.py
+  - task_double_click.py
+  - task_left_click.py
+  - task_cast_spell.py
 
 ### IA de NPCs Mejorada
 - [ ] Pathfinding básico (A* o similar)
@@ -226,151 +118,40 @@ Media - Mejora significativa de gameplay
 - [ ] Rango de agresión configurable por NPC
 - [ ] Cooldown entre ataques
 
----
+### Sistema de Skills
+- [ ] Subir skills con uso (minería, tala, pesca)
+- [ ] Experiencia de skills (0-100)
+- [ ] Niveles de skills con bonificadores
+- [ ] Packet WORK para trabajar
 
-## 🎯 Prioridad Media
+### Economía Avanzada
+- [ ] Depositar/retirar oro en banco
+- [ ] Precios dinámicos según oferta/demanda
 
-### Sistema de Comercio
-- [x] `TradeService` para comercio con NPCs ✅
-- [x] Ventana de comercio (comprar/vender) ✅
-- [x] Inventario de comerciantes ✅
-- [x] Packet `COMMERCE_BUY` y `COMMERCE_SELL` ✅
-- [ ] Precios dinámicos según oferta/demanda (→ v0.5.0)
-
-### Sistema de Banco
-- [x] `BankService` para gestión de banco ✅
-- [x] Depositar/retirar items ✅
-- [x] Límite de slots en banco ✅
-- [x] Packet `BANK_DEPOSIT` y `BANK_EXTRACT_ITEM` ✅
-- [ ] Depositar/retirar oro (→ v0.5.0)
+### Combate
+- [ ] Packet DAMAGE para mostrar daño recibido
 
 ---
 
-## 🔧 Refactoring y Limpieza de Código
+## 📝 Versión 0.7.0-alpha - Clases y Hechizos Avanzados
 
-### Análisis de Código
-- [ ] **Revisar todos los `# noqa`** - Analizar si son necesarios o si se puede arreglar el código
-- [ ] **Revisar todos los `# type: ignore`** - Analizar si se pueden eliminar mejorando los tipos
-- [x] **Dividir MessageSender** ✅ - Completado con 8 componentes especializados
-- [ ] **Analizar complejidad ciclomática** - Métodos con `C901` y `PLR0912`
-- [ ] **Reducir variables locales** - Métodos con `PLR0914` (too many local variables)
+### Sistema de Clases
+- [ ] Atributos base por clase (Guerrero, Mago, Arquero, etc.)
+- [ ] Habilidades especiales por clase
+- [ ] Restricciones de equipamiento por clase
+- [ ] Balance de clases
 
-### Refactoring Prioritario
-- [ ] **Refactorizar PacketValidator** - Cada task debería tener un método `validate_*()` que retorne bool
-  - Problema actual: Métodos como `read_slot()`, `read_quantity()` retornan valores o None
-  - Propuesta: Métodos como `validate_bank_deposit()` que retornan bool y guardan datos parseados
-  - Beneficio: API más clara, validación centralizada, mejor separación de responsabilidades
-  - Ejemplo: `validator.validate_gm_teleport()` retorna tupla o None (ya implementado parcialmente)
-  
-- [ ] **Encapsular secuencia de cambio de mapa** - Código duplicado en 3 lugares
-  - Lugares con duplicación:
-    1. `task_login.py` - Al hacer login inicial
-    2. `task_walk.py` - Al cambiar de mapa por transición
-    3. `task_gm_commands.py` - Al teletransportarse
-  - Secuencia común:
-    1. Enviar CHANGE_MAP
-    2. Delay 100ms para carga del mapa
-    3. Actualizar posición en Redis
-    4. Enviar POS_UPDATE
-    5. Remover jugador del mapa anterior (MapManager)
-    6. Broadcast CHARACTER_REMOVE en mapa anterior
-    7. Agregar jugador al nuevo mapa (MapManager)
-    8. Enviar CHARACTER_CREATE del propio jugador
-    9. Enviar todos los jugadores existentes
-    10. Enviar todos los NPCs
-    11. Enviar todos los objetos del suelo
-    12. Broadcast CHARACTER_CREATE a otros jugadores
-  - Propuesta: Crear `MapTransitionService.transition_player_to_map()`
-  - Beneficio: DRY, menos bugs, más fácil de mantener y testear
-
-### Mapas y Datos
-- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
-- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
-- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
-- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
-
-### Integración de Colisiones
-- [x] **Integrar validación en TaskWalk** ✅
-- [x] **Integrar validación en NPCMovementEffect** ✅
-- [x] **Actualizar índice en todos los movimientos** ✅
-- [x] **Método get_tile_occupant** ✅
-- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
-
-### Estructura de Datos Redis
-- [ ] **Reorganizar datos en Redis** - Muchos datos del mismo tipo están en diferentes lugares
-  - Revisar keys de jugadores, NPCs, items, etc.
-  - Estandarizar nomenclatura de keys
-  - Agrupar datos relacionados
-  - Documentar estructura de datos en Redis
+### Hechizos Avanzados
+- [ ] Hechizos de área (AOE)
+- [ ] Hechizos de buff/debuff
+- [ ] Hechizos de curación
+- [ ] Hechizos de invocación
+- [ ] Cooldowns de hechizos
+- [ ] Animaciones y efectos visuales mejorados
 
 ---
 
-## 📊 Optimizaciones y Performance
-
-### Broadcast Inteligente
-- [ ] Solo enviar updates a jugadores en rango visible (15x15 tiles)
-- [ ] Batch de múltiples updates en un solo packet
-- [ ] Throttling de movimiento (no enviar cada tile)
-- [ ] Compresión de packets grandes
-
-### Redis Optimizations
-- [ ] Pipeline de comandos Redis
-- [ ] Caché en memoria para datos frecuentes
-- [ ] TTL automático para datos temporales
-- [ ] Índices secundarios para búsquedas rápidas
-
-### Validaciones de Mapa
-- [x] Validar tiles bloqueados antes de mover ✅
-- [ ] Cargar datos de mapas desde archivos `.map`
-- [ ] Colisiones con objetos del mapa
-- [ ] Zonas seguras (no PvP)
-
----
-
-## 🧪 Testing y Calidad
-
-### Tests Faltantes
-- [ ] Tests de integración end-to-end
-- [ ] Tests de carga (múltiples jugadores simultáneos)
-- [ ] Tests de stress (límites del servidor)
-- [ ] Tests de concurrencia (race conditions)
-- [ ] Tests de desconexión inesperada
-- [ ] Coverage > 90%
-
-### Herramientas de Testing
-- [ ] Bot de prueba automatizado (simula cliente)
-- [ ] Generador de tráfico para load testing
-- [ ] Métricas de performance (latencia, throughput)
-- [ ] Profiling de código (identificar cuellos de botella)
-
----
-
-## 🔒 Seguridad
-
-### Validaciones
-- [ ] Rate limiting por IP (anti-spam)
-- [ ] Validación de rangos en todos los packets
-- [ ] Sanitización de strings (nombres, chat)
-- [ ] Prevención de exploits conocidos
-- [ ] Logs de seguridad (intentos de hack)
-
-### Autenticación
-- [ ] Hash de passwords con bcrypt/argon2
-- [ ] Tokens de sesión con expiración
-- [ ] Logout automático por inactividad
-- [ ] Límite de intentos de login fallidos
-- [ ] 2FA opcional
-
----
-
-## 🎮 Gameplay
-
-### Sistema de Quests
-- [ ] `QuestService` para misiones
-- [ ] Objetivos de quest (matar X NPCs, recolectar Y items)
-- [ ] Recompensas (oro, experiencia, items)
-- [ ] Cadenas de quests
-- [ ] Quest log del jugador
+## 📝 Versión 0.8.0-alpha - Social y Multiplayer
 
 ### Sistema de Party
 - [ ] Crear/unirse a party
@@ -379,25 +160,128 @@ Media - Mejora significativa de gameplay
 - [ ] Líder de party
 - [ ] Expulsar miembros
 
-### Sistema de Guild
+### Sistema de Quests
+- [ ] QuestService para misiones
+- [ ] Objetivos (matar X NPCs, recolectar Y items)
+- [ ] Recompensas (oro, experiencia, items)
+- [ ] Cadenas de quests
+- [ ] Quest log del jugador
+
+### Social
+- [ ] Chat mejorado con canales (global, local, party)
+- [ ] Sistema de amigos
+- [ ] Mensajes privados
+- [ ] Emotes y gestos
+
+---
+
+## 📝 Versión 0.9.0-alpha - Seguridad, Testing y Optimización
+
+### Seguridad
+- [ ] Rate limiting por IP (anti-spam)
+- [ ] Hash de passwords con bcrypt/argon2
+- [ ] Validación de rangos en todos los packets
+- [ ] Sanitización de strings (nombres, chat)
+- [ ] Prevención de exploits conocidos
+- [ ] Tokens de sesión con expiración
+- [ ] Límite de intentos de login fallidos
+
+### Testing y Calidad
+- [ ] Tests de integración end-to-end
+- [ ] Tests de carga (múltiples jugadores simultáneos)
+- [ ] Tests de stress (límites del servidor)
+- [ ] Tests de concurrencia (race conditions)
+- [ ] Coverage > 90%
+- [ ] Bot de prueba automatizado (simula cliente)
+
+### Optimización
+- [ ] Broadcast inteligente (solo jugadores en rango visible 15x15)
+- [ ] Batch de múltiples updates en un solo packet
+- [ ] Throttling de movimiento
+- [ ] Pipeline de comandos Redis
+- [ ] Caché en memoria para datos frecuentes
+- [ ] TTL automático para datos temporales
+
+### Refactoring y Limpieza
+- [ ] **Revisar y limpiar todos los `# noqa`** - Analizar si son necesarios
+- [ ] **Revisar y limpiar todos los `# type: ignore`** - Mejorar tipos
+- [ ] **Analizar complejidad ciclomática** - Simplificar métodos con C901, PLR0912
+- [ ] **Reducir variables locales** - Refactorizar métodos con PLR0914
+- [ ] **Reorganizar datos en Redis** - Estandarizar nomenclatura de keys
+
+---
+
+## 📝 Versión 1.0.0 - Producción
+
+### Documentación
+- [ ] API documentation (OpenAPI/Swagger)
+- [ ] Guía de contribución (CONTRIBUTING.md)
+- [ ] Guía de deployment completa
+- [ ] Troubleshooting común
+- [ ] Changelog detallado
+- [ ] Tutoriales (crear packet, agregar NPC, crear hechizo)
+
+### CI/CD y DevOps
+- [ ] CI/CD robusto con GitHub Actions
+- [ ] Automated testing en CI
+- [ ] Automated deployment
+- [ ] Rollback automático en errores
+- [ ] Health checks y auto-restart
+- [ ] Docker Compose para desarrollo
+
+### Monitoreo y Observabilidad
+- [ ] Prometheus para métricas
+- [ ] Grafana para dashboards
+- [ ] Métricas de jugadores (online, nuevos, activos)
+- [ ] Métricas de performance (CPU, RAM, Redis)
+- [ ] Alertas automáticas
+- [ ] Structured logging (JSON)
+- [ ] Agregación de logs (ELK stack)
+
+### Performance Final
+- [ ] Performance optimizado y validado
+- [ ] Profiling de código (identificar cuellos de botella)
+- [ ] Validaciones de mapa optimizadas
+- [ ] Cargar mapas al iniciar servidor
+
+### Últimos Fixes
+- [ ] Revisión final de bugs
+- [ ] Validación de seguridad
+- [ ] Testing exhaustivo
+
+---
+
+## 📋 Features Post-1.0.0 (Expansiones Futuras)
+
+### 🐉 Sistema de NPCs por Bioma
+**Requisito:** Cliente terminado con soporte de biomas
+
+- [ ] Definir biomas en mapas (forest, dungeon, desert, snow, swamp, cave)
+- [ ] Configuración por bioma en `data/npc_spawns_by_biome.toml`
+- [ ] NPCBiomeSpawnService para spawn automático
+- [ ] Spawn zones configurables por mapa
+- [ ] Respawn automático según bioma
+- [ ] Selección ponderada de NPCs (weights)
+- [ ] Nivel aleatorio (min_level/max_level)
+
+**Esfuerzo estimado:** 4-6 horas  
+**Beneficios:** Mundo más dinámico, configurable, balance por nivel
+
+### Sistema de Guild (Largo plazo)
 - [ ] Crear/unirse a guild
 - [ ] Rangos en guild
 - [ ] Chat de guild
 - [ ] Guerra entre guilds
 - [ ] Territorio de guild
 
-### PvP
+### PvP (Largo plazo)
 - [ ] Combate jugador vs jugador
 - [ ] Zonas PvP/seguras
 - [ ] Sistema de karma/criminal
 - [ ] Penalizaciones por matar jugadores
 - [ ] Duelos 1v1
 
----
-
-## 🛠️ Herramientas y Utilidades
-
-### Panel de Administración
+### Panel de Administración (Largo plazo)
 - [ ] Dashboard web para administradores
 - [ ] Ver jugadores online
 - [ ] Kickear/banear jugadores
@@ -405,174 +289,60 @@ Media - Mejora significativa de gameplay
 - [ ] Spawn de items/NPCs
 - [ ] Logs en tiempo real
 
-### Comandos de GM
-- [ ] `/summon <npc_id>` - Invocar NPC
-- [ ] `/teleport <x> <y>` - Teletransportar
-- [ ] `/give <item_id> <cantidad>` - Dar items
-- [ ] `/setlevel <nivel>` - Cambiar nivel
-- [ ] `/kick <usuario>` - Expulsar jugador
-- [ ] `/ban <usuario>` - Banear jugador
-
-### Herramientas de Desarrollo
-- [ ] Hot reload de configuración (sin reiniciar)
-- [ ] Modo debug con comandos especiales
-- [ ] Generador de mapas
-- [ ] Editor de NPCs
-- [ ] Editor de items
-
----
-
-## 📡 Protocolo
-
-### Mejoras de Protocolo
+### Protocolo Avanzado (Largo plazo)
 - [ ] Versionado de protocolo (compatibilidad)
 - [ ] Compresión de packets (zlib/gzip)
 - [ ] Encriptación de comunicación (TLS)
 - [ ] Heartbeat para detectar desconexiones
 - [ ] Reconexión automática
 
----
-
-## 📈 Monitoreo y Observabilidad
-
-### Métricas
-- [ ] Prometheus para métricas
-- [ ] Grafana para dashboards
-- [ ] Métricas de jugadores (online, nuevos, activos)
-- [ ] Métricas de performance (CPU, RAM, Redis)
-- [ ] Alertas automáticas
-
-### Logging
-- [ ] Structured logging (JSON)
-- [ ] Agregación de logs (ELK stack)
-- [ ] Niveles de log configurables por módulo
-- [ ] Rotación de logs automática
-- [ ] Logs de auditoría
-
----
-
-## 🌐 Infraestructura
-
-### Escalabilidad
+### Escalabilidad (Largo plazo)
 - [ ] Soporte para múltiples instancias del servidor
 - [ ] Load balancer
 - [ ] Redis Cluster para alta disponibilidad
 - [ ] Separación de servicios (microservicios)
 - [ ] Message queue (RabbitMQ/Kafka)
 
-### DevOps
-- [ ] Docker Compose para desarrollo
-- [ ] CI/CD con GitHub Actions
-- [ ] Automated testing en CI
-- [ ] Automated deployment
-- [ ] Rollback automático en errores
-- [ ] Health checks y auto-restart
-
 ---
 
-## 📚 Documentación
+## 📚 Mapas y Contenido (Tareas Técnicas)
 
-### Docs Faltantes
-- [ ] API documentation (OpenAPI/Swagger)
-- [ ] Guía de contribución (CONTRIBUTING.md)
-- [ ] Guía de deployment
-- [ ] Troubleshooting común
-- [ ] Changelog detallado
-- [ ] **Documentación de movimiento de personajes** - Explicar flujo completo
-  - Cliente: _MovePlayer, _CanMoveTo, WriteWalk
-  - Servidor: TaskWalk, validaciones, broadcast
-  - Paquetes: WALK, CHARACTER_MOVE, CHARACTER_CHANGE, POS_UPDATE
-  - Colisiones: can_move_to, get_tile_occupant
-  - Heading: guardado en Redis, sincronización cliente-servidor
+### Mapas y Datos
+- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
+- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
+- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
+- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
+- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
 
-### Tutoriales
-- [ ] Cómo crear un nuevo packet
-- [ ] Cómo agregar un nuevo NPC
-- [ ] Cómo crear un nuevo hechizo
-- [ ] Cómo agregar un nuevo efecto de tick
-- [ ] Cómo hacer debugging
-
----
-
-## 🎨 Contenido
-
-### NPCs
+### Contenido (NPCs, Items, Mapas)
 - [ ] Más variedad de monstruos
 - [ ] NPCs con diálogos
 - [ ] NPCs que dan quests
 - [ ] Bosses con mecánicas especiales
-- [ ] NPCs aliados (guardias)
-
-### Items
 - [ ] Más armas y armaduras
-- [ ] Pociones y consumibles
+- [ ] Pociones y consumibles variados
 - [ ] Items únicos/legendarios
-- [ ] Sets de items con bonos
-- [ ] Items craftables
-
-### Mapas
 - [ ] Más ciudades y dungeons
-- [ ] Mapas con eventos especiales
-- [ ] Mapas dinámicos (día/noche)
-- [ ] Clima (lluvia, nieve)
-- [ ] Portales entre mapas
 
 ---
 
-## 💡 Ideas Innovadoras
+## 📊 Estadísticas del Proyecto
 
-### Gameplay Único
-- [ ] Sistema de clima que afecta stats
-- [ ] Eventos mundiales (invasiones, bosses)
-- [ ] Economía dinámica (inflación, deflación)
-- [ ] Construcción de casas/bases
-- [ ] Farming y agricultura
-- [ ] Mascotas que ayudan en combate
+**Versión actual:** 0.5.0-alpha (100% completado)  
+**Próxima versión:** 0.6.0-alpha (Refactorings, IA de NPCs, Skills)
 
-### Social
-- [ ] Chat global con canales
-- [ ] Sistema de amigos
-- [ ] Mensajes privados
-- [ ] Emotes y gestos
-- [ ] Ranking de jugadores
-
-### Progresión
-- [ ] Sistema de achievements
-- [ ] Títulos desbloqueables
-- [ ] Skins y cosméticos
-- [ ] Battle pass / temporadas
-- [ ] Eventos limitados
-
----
-
-## 📝 Notas y Decisiones Pendientes
-
-### Decisiones de Diseño
-- [ ] ¿Usar WebSockets en lugar de TCP raw?
-- [ ] ¿Migrar a PostgreSQL para algunos datos?
-- [ ] ¿Implementar sharding de jugadores por mapa?
-- [ ] ¿Agregar sistema de plugins/mods?
-
-### Investigación Necesaria
-- [ ] Mejores prácticas de game server architecture
-- [ ] Anti-cheat systems
-- [ ] Netcode optimization
-- [ ] Database sharding strategies
-
----
-
-## 📊 Estado Actual del Proyecto
-
-**Versión actual:** 0.5.0-alpha  
-**Tests actuales:** 807 (100% pasando)  
-**Servicios implementados:** 14+ (StaminaService, NPCFactory)  
+**Tests actuales:** 945 (100% pasando)  
+**Cobertura:** 74%  
+**Servicios implementados:** 14+ (StaminaService, NPCFactory, PlayerMapService)  
 **Efectos de tick:** 5 (StaminaRegenEffect)  
-**NPCs con loot tables:** 10 (Goblin, Lobo, Orco, Araña, Serpiente, Dragón, Esqueleto, Zombie, Troll, Ogro)  
+**NPCs con loot tables:** 10  
 **Mapas con colisiones:** 290  
-**Sistemas completados:** Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones, Energía/Stamina
+
+**Sistemas completados:**  
+Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones, Energía/Stamina, Transiciones de Mapa
 
 ---
 
-**Última actualización:** 2025-01-20  
+**Última actualización:** 2025-10-20  
 **Mantenido por:** Equipo PyAO  
 **Estado:** 🔄 En desarrollo activo

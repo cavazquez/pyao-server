@@ -161,6 +161,14 @@ class MessageSender:  # noqa: PLR0904
         await self.send_console_msg(f"Oro: {gold}")
         logger.info("[%s] Oro actualizado a %d", self.connection.address, gold)
 
+    async def send_update_bank_gold(self, bank_gold: int) -> None:
+        """Envía actualización de oro del banco al cliente.
+
+        Args:
+            bank_gold: Cantidad de oro en el banco.
+        """
+        await self.player_stats.send_update_bank_gold(bank_gold)
+
     async def send_update_hunger_and_thirst(
         self, max_water: int, min_water: int, max_hunger: int, min_hunger: int
     ) -> None:

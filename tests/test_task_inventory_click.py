@@ -55,7 +55,13 @@ class TestTaskInventoryClick:
             # Crear packet: PacketID (0x1E) + Slot (1)
             data = struct.pack("BB", 0x1E, 1)
 
-            task = TaskInventoryClick(data, message_sender, mock_player_repo, session_data)
+            task = TaskInventoryClick(
+                data,
+                message_sender,
+                slot=1,
+                player_repo=mock_player_repo,
+                session_data=session_data,
+            )
             await task.execute()
 
             # Verificar que se envió el paquete de actualización de inventario
@@ -78,7 +84,13 @@ class TestTaskInventoryClick:
             # Crear packet: PacketID (0x1E) + Slot (5) - slot vacío
             data = struct.pack("BB", 0x1E, 5)
 
-            task = TaskInventoryClick(data, message_sender, mock_player_repo, session_data)
+            task = TaskInventoryClick(
+                data,
+                message_sender,
+                slot=5,
+                player_repo=mock_player_repo,
+                session_data=session_data,
+            )
             await task.execute()
 
             # Verificar que se envió un paquete
@@ -91,7 +103,9 @@ class TestTaskInventoryClick:
         # Sin session_data
         data = struct.pack("BB", 0x1E, 1)
 
-        task = TaskInventoryClick(data, message_sender, mock_player_repo, None)
+        task = TaskInventoryClick(
+            data, message_sender, slot=1, player_repo=mock_player_repo, session_data=None
+        )
         await task.execute()
 
         # No debería enviar nada
@@ -104,7 +118,9 @@ class TestTaskInventoryClick:
         session_data = {}  # Sin user_id
         data = struct.pack("BB", 0x1E, 1)
 
-        task = TaskInventoryClick(data, message_sender, mock_player_repo, session_data)
+        task = TaskInventoryClick(
+            data, message_sender, slot=1, player_repo=mock_player_repo, session_data=session_data
+        )
         await task.execute()
 
         # No debería enviar actualización de inventario
@@ -117,7 +133,9 @@ class TestTaskInventoryClick:
         session_data = {"user_id": 1}
         data = struct.pack("BB", 0x1E, 1)
 
-        task = TaskInventoryClick(data, message_sender, None, session_data)
+        task = TaskInventoryClick(
+            data, message_sender, slot=1, player_repo=None, session_data=session_data
+        )
         await task.execute()
 
         # No debería enviar nada
@@ -130,7 +148,9 @@ class TestTaskInventoryClick:
         session_data = {"user_id": 1}
         data = struct.pack("B", 0x1E)  # Solo 1 byte, faltan datos
 
-        task = TaskInventoryClick(data, message_sender, mock_player_repo, session_data)
+        task = TaskInventoryClick(
+            data, message_sender, slot=1, player_repo=mock_player_repo, session_data=session_data
+        )
         await task.execute()
 
         # No debería enviar nada
@@ -149,7 +169,13 @@ class TestTaskInventoryClick:
 
             # Click en el slot
             data = struct.pack("BB", 0x1E, 1)
-            task = TaskInventoryClick(data, message_sender, mock_player_repo, session_data)
+            task = TaskInventoryClick(
+                data,
+                message_sender,
+                slot=1,
+                player_repo=mock_player_repo,
+                session_data=session_data,
+            )
             await task.execute()
 
             # Debería enviar un mensaje de error

@@ -64,6 +64,21 @@ def build_update_exp_response(experience: int) -> bytes:
     return packet.to_bytes()
 
 
+def build_update_bank_gold_response(bank_gold: int) -> bytes:
+    """Construye el paquete UpdateBankGold del protocolo AO estándar.
+
+    Args:
+        bank_gold: Cantidad de oro en el banco (int32).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (19) + bank_gold (int32).
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_BANK_GOLD)
+    packet.add_int32(bank_gold)
+    return packet.to_bytes()
+
+
 def build_update_hunger_and_thirst_response(
     max_water: int, min_water: int, max_hunger: int, min_hunger: int
 ) -> bytes:

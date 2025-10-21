@@ -120,6 +120,31 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
                 return None
             return quantity
 
+    def read_gold_amount(self, min_amount: int = 0, max_amount: int = 999999999) -> int | None:
+        """Lee y valida una cantidad de oro (int32).
+
+        Args:
+            min_amount: Cantidad mínima válida (default: 0).
+            max_amount: Cantidad máxima válida (default: 999999999).
+
+        Returns:
+            Cantidad de oro válida o None si hay error.
+        """
+        try:
+            amount = self.reader.read_int32()
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo cantidad de oro: {e}")
+            return None
+        else:
+            if not min_amount <= amount <= max_amount:
+                msg = (
+                    f"Cantidad de oro inválida: {amount} "
+                    f"(debe estar entre {min_amount}-{max_amount})"
+                )
+                self.errors.append(msg)
+                return None
+            return amount
+
     def read_username(self, max_length: int = 20) -> str | None:
         """Lee y valida un nombre de usuario.
 
@@ -387,6 +412,8 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             ClientPacketID.REQUEST_MOTD: self.validate_request_motd_packet,
             ClientPacketID.UPTIME: self.validate_uptime_packet,
             ClientPacketID.PING: self.validate_ping_packet,
+            ClientPacketID.BANK_EXTRACT_GOLD: self.validate_bank_extract_gold_packet,
+            ClientPacketID.BANK_DEPOSIT_GOLD: self.validate_bank_deposit_gold_packet,
             ClientPacketID.GM_COMMANDS: self.validate_gm_commands_packet,
         }
 
@@ -735,6 +762,44 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         return ValidationResult(
             success=True, data={"slot": slot, "quantity": quantity}, error_message=None
         )
+
+    def validate_bank_extract_gold_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet BANK_EXTRACT_GOLD completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (BANK_EXTRACT_GOLD = 111)
+        - Int32: Cantidad de oro a retirar
+
+        Returns:
+            ValidationResult con {"amount": int} si es válido.
+        """
+        amount = self.read_gold_amount(min_amount=0, max_amount=999999999)
+
+        if self.has_errors() or amount is None:
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"amount": amount}, error_message=None)
+
+    def validate_bank_deposit_gold_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet BANK_DEPOSIT_GOLD completo.
+
+        Formato esperado:
+        - Byte 0: PacketID (BANK_DEPOSIT_GOLD = 112)
+        - Int32: Cantidad de oro a depositar
+
+        Returns:
+            ValidationResult con {"amount": int} si es válido.
+        """
+        amount = self.read_gold_amount(min_amount=0, max_amount=999999999)
+
+        if self.has_errors() or amount is None:
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"amount": amount}, error_message=None)
 
     def validate_change_heading_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet CHANGE_HEADING completo.

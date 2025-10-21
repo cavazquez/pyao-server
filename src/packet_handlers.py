@@ -8,8 +8,10 @@ from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_ayuda import TaskAyuda
 from src.task_bank_deposit import TaskBankDeposit
+from src.task_bank_deposit_gold import TaskBankDepositGold
 from src.task_bank_end import TaskBankEnd
 from src.task_bank_extract import TaskBankExtract
+from src.task_bank_extract_gold import TaskBankExtractGold
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_buy import TaskCommerceBuy
@@ -72,5 +74,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.ONLINE: TaskOnline,
     ClientPacketID.QUIT: TaskQuit,
     ClientPacketID.PING: TaskPing,
+    ClientPacketID.BANK_EXTRACT_GOLD: TaskBankExtractGold,  # Retirar oro del banco
+    ClientPacketID.BANK_DEPOSIT_GOLD: TaskBankDepositGold,  # Depositar oro en el banco
     ClientPacketID.GM_COMMANDS: TaskGMCommands,  # Comandos GM (teletransporte)
 }

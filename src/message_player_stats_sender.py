@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.msg_player_stats import (
+    build_update_bank_gold_response,
     build_update_exp_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
@@ -67,6 +68,21 @@ class PlayerStatsMessageSender:
         """
         response = build_update_exp_response(experience=experience)
         logger.info("[%s] Enviando UPDATE_EXP: %d", self.connection.address, experience)
+        await self.connection.send(response)
+
+    async def send_update_bank_gold(self, bank_gold: int) -> None:
+        """Envía paquete UpdateBankGold del protocolo AO estándar.
+
+        Args:
+            bank_gold: Cantidad de oro en el banco (int32).
+        """
+        response = build_update_bank_gold_response(bank_gold=bank_gold)
+        logger.info(
+            "[%s] Enviando UPDATE_BANK_GOLD: %d | Bytes (hex): %s",
+            self.connection.address,
+            bank_gold,
+            response.hex(),
+        )
         await self.connection.send(response)
 
     async def send_update_hunger_and_thirst(

@@ -213,6 +213,15 @@ class RedisKeys:
         """
         return f"bank:{user_id}:vault"
 
+    @staticmethod
+    def bank_gold(user_id: int) -> str:
+        """Clave para oro almacenado en el banco del jugador.
+
+        Returns:
+            Clave de Redis para el oro en el banco.
+        """
+        return f"bank:{user_id}:gold"
+
 
 # Valores por defecto para configuración del servidor
 DEFAULT_SERVER_CONFIG = {

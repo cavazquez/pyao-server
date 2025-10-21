@@ -301,9 +301,14 @@ class TaskLeftClick(Task):
                 min_def=item.defense or 0,
             )
 
+        # Enviar oro del banco
+        bank_gold = await self.bank_repo.get_gold(user_id)
+        await self.message_sender.send_update_bank_gold(bank_gold)
+
         logger.info(
-            "Ventana de banco abierta para user_id %d con banquero %s (%d items)",
+            "Ventana de banco abierta para user_id %d con banquero %s (%d items, %d oro)",
             user_id,
             npc.name,
             len(bank_items),
+            bank_gold,
         )

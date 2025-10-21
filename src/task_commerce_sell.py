@@ -4,9 +4,6 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
-from src.packet_data import CommerceSellData
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task
@@ -28,6 +25,8 @@ class TaskCommerceSell(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
+        slot: int,
+        quantity: int,
         commerce_service: CommerceService | None = None,
         player_repo: PlayerRepository | None = None,
         inventory_repo: InventoryRepository | None = None,
@@ -39,6 +38,8 @@ class TaskCommerceSell(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
+            slot: Slot del inventario a vender (ya validado).
+            quantity: Cantidad a vender (ya validada).
             commerce_service: Servicio de comercio.
             player_repo: Repositorio de jugadores.
             inventory_repo: Repositorio de inventario.
@@ -46,6 +47,8 @@ class TaskCommerceSell(Task):
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
+        self.slot = slot
+        self.quantity = quantity
         self.commerce_service = commerce_service
         self.player_repo = player_repo
         self.inventory_repo = inventory_repo
@@ -55,29 +58,13 @@ class TaskCommerceSell(Task):
     async def execute(self) -> None:
         """Procesa la venta de un item al mercader.
 
-        El cliente envía: PacketID (1 byte) + Slot (1 byte) + Quantity (2 bytes)
+        Los datos (slot, quantity) ya fueron validados por TaskFactory.
         """
-        # Parsear y validar packet
-        reader = PacketReader(self.data)
-        validator = PacketValidator(reader)
-        slot = validator.read_slot(min_slot=1, max_slot=20)
-        quantity = validator.read_quantity(min_qty=1, max_qty=10000)
-
-        if validator.has_errors() or slot is None or quantity is None:
-            error_msg = (
-                validator.get_error_message() if validator.has_errors() else "Datos inválidos"
-            )
-            await self.message_sender.send_console_msg(error_msg)
-            return
-
-        # Crear dataclass con datos validados
-        sell_data = CommerceSellData(slot=slot, quantity=quantity)
-
         logger.debug(
             "Cliente %s intenta vender: slot=%d, quantity=%d",
             self.message_sender.connection.address,
-            sell_data.slot,
-            sell_data.quantity,
+            self.slot,
+            self.quantity,
         )
 
         # Obtener user_id de la sesión
@@ -99,7 +86,7 @@ class TaskCommerceSell(Task):
 
         # Ejecutar venta
         success, message = await self.commerce_service.sell_item(
-            user_id, npc_id, sell_data.slot, sell_data.quantity
+            user_id, npc_id, self.slot, self.quantity
         )
 
         # Enviar mensaje de resultado

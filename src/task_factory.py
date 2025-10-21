@@ -11,8 +11,10 @@ from src.task_account import TaskCreateAccount
 from src.task_attack import TaskAttack
 from src.task_attributes import TaskRequestAttributes
 from src.task_bank_deposit import TaskBankDeposit
+from src.task_bank_deposit_gold import TaskBankDepositGold
 from src.task_bank_end import TaskBankEnd
 from src.task_bank_extract import TaskBankExtract
+from src.task_bank_extract_gold import TaskBankExtractGold
 from src.task_cast_spell import TaskCastSpell
 from src.task_change_heading import TaskChangeHeading
 from src.task_commerce_buy import TaskCommerceBuy
@@ -86,11 +88,86 @@ class TaskFactory:
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
 
         # Pre-validación opcional (si está habilitada)
+        parsed_data = None
         if self.enable_prevalidation:
             validation_result = self._prevalidate_packet(data, packet_id, message_sender)
             if validation_result is not None and not validation_result.success:
                 # Validación falló, retornar TaskNull
                 return TaskNull(data, message_sender)
+            # Si la validación pasó, extraer datos
+            if validation_result is not None and validation_result.success:
+                parsed_data = validation_result.data
+
+        # Manejar tasks refactorizadas que reciben datos validados directamente
+        if parsed_data is not None:
+            # TaskCommerceSell (packet_id 42) - recibe slot y quantity
+            if (
+                task_class == TaskCommerceSell
+                and "slot" in parsed_data
+                and "quantity" in parsed_data
+            ):
+                return TaskCommerceSell(
+                    data=data,
+                    message_sender=message_sender,
+                    slot=parsed_data["slot"],
+                    quantity=parsed_data["quantity"],
+                    commerce_service=self.deps.commerce_service,
+                    player_repo=self.deps.player_repo,
+                    inventory_repo=self.deps.inventory_repo,
+                    redis_client=self.deps.redis_client,
+                    session_data=session_data,
+                )
+
+            # TaskCommerceBuy (packet_id 40) - recibe slot y quantity
+            if (
+                task_class == TaskCommerceBuy
+                and "slot" in parsed_data
+                and "quantity" in parsed_data
+            ):
+                return TaskCommerceBuy(
+                    data=data,
+                    message_sender=message_sender,
+                    slot=parsed_data["slot"],
+                    quantity=parsed_data["quantity"],
+                    commerce_service=self.deps.commerce_service,
+                    player_repo=self.deps.player_repo,
+                    inventory_repo=self.deps.inventory_repo,
+                    redis_client=self.deps.redis_client,
+                    session_data=session_data,
+                )
+
+            # TaskInventoryClick (packet_id 23) - recibe slot
+            if task_class == TaskInventoryClick and "slot" in parsed_data:
+                return TaskInventoryClick(
+                    data=data,
+                    message_sender=message_sender,
+                    slot=parsed_data["slot"],
+                    player_repo=self.deps.player_repo,
+                    session_data=session_data,
+                    equipment_repo=self.deps.equipment_repo,
+                )
+
+            # TaskBankExtractGold (packet_id 111) - recibe amount
+            if task_class == TaskBankExtractGold and "amount" in parsed_data:
+                return TaskBankExtractGold(
+                    data=data,
+                    message_sender=message_sender,
+                    amount=parsed_data["amount"],
+                    bank_repo=self.deps.bank_repo,
+                    player_repo=self.deps.player_repo,
+                    session_data=session_data,
+                )
+
+            # TaskBankDepositGold (packet_id 112) - recibe amount
+            if task_class == TaskBankDepositGold and "amount" in parsed_data:
+                return TaskBankDepositGold(
+                    data=data,
+                    message_sender=message_sender,
+                    amount=parsed_data["amount"],
+                    bank_repo=self.deps.bank_repo,
+                    player_repo=self.deps.player_repo,
+                    session_data=session_data,
+                )
 
         # Mapeo de task_class a función constructora con dependencias
         task_factories: dict[type, Callable[[], Task]] = {
@@ -203,9 +280,7 @@ class TaskFactory:
             TaskMeditate: lambda: TaskMeditate(
                 data, message_sender, self.deps.player_repo, session_data
             ),
-            TaskInventoryClick: lambda: TaskInventoryClick(
-                data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
-            ),
+            # TaskInventoryClick: manejada arriba con datos validados
             TaskEquipItem: lambda: TaskEquipItem(
                 data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
             ),
@@ -242,24 +317,8 @@ class TaskFactory:
                 self.deps.broadcast_service,
                 session_data,
             ),
-            TaskCommerceBuy: lambda: TaskCommerceBuy(
-                data,
-                message_sender,
-                self.deps.commerce_service,
-                self.deps.player_repo,
-                self.deps.inventory_repo,
-                self.deps.redis_client,
-                session_data,
-            ),
-            TaskCommerceSell: lambda: TaskCommerceSell(
-                data,
-                message_sender,
-                self.deps.commerce_service,
-                self.deps.player_repo,
-                self.deps.inventory_repo,
-                self.deps.redis_client,
-                session_data,
-            ),
+            # TaskCommerceBuy: manejada arriba con datos validados
+            # TaskCommerceSell: manejada arriba con datos validados
             TaskBankDeposit: lambda: TaskBankDeposit(
                 data,
                 message_sender,

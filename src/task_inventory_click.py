@@ -5,9 +5,6 @@ from typing import TYPE_CHECKING
 
 from src.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
-from src.packet_data import InventoryClickData
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
 from src.task import Task
 
@@ -26,6 +23,7 @@ class TaskInventoryClick(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
+        slot: int,
         player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
         equipment_repo: EquipmentRepository | None = None,
@@ -35,23 +33,22 @@ class TaskInventoryClick(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
+            slot: Slot del inventario (ya validado).
             player_repo: Repositorio de jugadores.
             session_data: Datos de sesión.
             equipment_repo: Repositorio de equipamiento.
         """
         super().__init__(data, message_sender)
+        self.slot = slot
         self.player_repo = player_repo
         self.session_data = session_data or {}
         self.equipment_repo = equipment_repo
 
     async def execute(self) -> None:
-        """Ejecuta el click en un slot del inventario."""
-        # Parsear el packet: PacketID (1 byte) + Slot (1 byte)
-        min_packet_size = 2
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet INVENTORY_CLICK inválido: tamaño incorrecto")
-            return
+        """Ejecuta el click en un slot del inventario.
 
+        El slot ya fue validado por TaskFactory.
+        """
         # Verificar que el jugador esté logueado
         if not self.session_data:
             logger.warning("session_data no disponible")
@@ -67,30 +64,17 @@ class TaskInventoryClick(Task):
             logger.error("player_repo no disponible")
             return
 
-        # Parsear y validar packet
-        reader = PacketReader(self.data)
-        validator = PacketValidator(reader)
-        slot = validator.read_slot(min_slot=1, max_slot=20)
-
-        if validator.has_errors() or slot is None:
-            error_msg = validator.get_error_message() if validator.has_errors() else "Slot inválido"
-            await self.message_sender.send_console_msg(error_msg)
-            return
-
-        # Crear dataclass con datos validados
-        click_data = InventoryClickData(slot=slot)
-
-        logger.info("user_id %d hace click en slot %d", user_id, click_data.slot)
+        logger.info("user_id %d hace click en slot %d", user_id, self.slot)
 
         try:
             # Obtener el inventario
             inventory_repo = InventoryRepository(self.player_repo.redis)
-            slot_data = await inventory_repo.get_slot(user_id, click_data.slot)
+            slot_data = await inventory_repo.get_slot(user_id, self.slot)
 
             if not slot_data:
                 # Slot vacío - enviar actualización con slot vacío
                 await self.message_sender.send_change_inventory_slot(
-                    slot=click_data.slot,
+                    slot=self.slot,
                     item_id=0,
                     name="",
                     amount=0,
@@ -117,12 +101,12 @@ class TaskInventoryClick(Task):
             # Verificar si el item está equipado
             is_equipped = False
             if self.equipment_repo:
-                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, click_data.slot)
+                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, self.slot)
                 is_equipped = equipped_slot is not None
 
             # Enviar información del slot actualizada
             await self.message_sender.send_change_inventory_slot(
-                slot=click_data.slot,
+                slot=self.slot,
                 item_id=item.item_id,
                 name=item.name,
                 amount=quantity,
@@ -139,7 +123,7 @@ class TaskInventoryClick(Task):
             logger.info(
                 "user_id %d - Slot %d: %s x%d (GrhIndex: %d)",
                 user_id,
-                slot,
+                self.slot,
                 item.name,
                 quantity,
                 item.graphic_id,

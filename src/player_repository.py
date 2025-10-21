@@ -359,6 +359,47 @@ class PlayerRepository:
         await self.redis.redis.hset(key, "gold", str(gold))  # type: ignore[misc]
         logger.debug("Oro actualizado para user_id %d: %d", user_id, gold)
 
+    async def add_gold(self, user_id: int, amount: int) -> int:
+        """Agrega oro al jugador.
+
+        Args:
+            user_id: ID del usuario.
+            amount: Cantidad de oro a agregar.
+
+        Returns:
+            Nueva cantidad total de oro.
+        """
+        current_gold = await self.get_gold(user_id)
+        new_gold = current_gold + amount
+        await self.update_gold(user_id, new_gold)
+        logger.info("user_id %d recibió %d oro. Total: %d", user_id, amount, new_gold)
+        return new_gold
+
+    async def remove_gold(self, user_id: int, amount: int) -> bool:
+        """Remueve oro del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            amount: Cantidad de oro a remover.
+
+        Returns:
+            True si se pudo remover, False si no tiene suficiente oro.
+        """
+        current_gold = await self.get_gold(user_id)
+        if current_gold < amount:
+            logger.debug(
+                "user_id %d no tiene suficiente oro: tiene %d, intenta usar %d",
+                user_id,
+                current_gold,
+                amount,
+            )
+            return False
+
+        new_gold = current_gold - amount
+        await self.update_gold(user_id, new_gold)
+        logger.info("user_id %d gastó %d oro. Restante: %d", user_id, amount, new_gold)
+        return True
+
     async def get_stamina(self, user_id: int) -> tuple[int, int]:
         """Obtiene la stamina actual y máxima del jugador.
 

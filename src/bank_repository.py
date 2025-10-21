@@ -280,3 +280,70 @@ class BankRepository:
         key = RedisKeys.bank(user_id)
         slot_key = f"slot_{slot}"
         await self.redis_client.redis.hset(key, slot_key, "")  # type: ignore[misc]
+
+    async def get_gold(self, user_id: int) -> int:
+        """Obtiene la cantidad de oro almacenado en el banco.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Cantidad de oro en el banco (0 si no hay).
+        """
+        key = RedisKeys.bank_gold(user_id)
+        gold = await self.redis_client.redis.get(key)
+        if gold is None:
+            return 0
+        try:
+            return int(gold)
+        except (ValueError, TypeError):
+            logger.warning("Oro inválido en banco de user_id %d: %s", user_id, gold)
+            return 0
+
+    async def add_gold(self, user_id: int, amount: int) -> int:
+        """Agrega oro al banco del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            amount: Cantidad de oro a agregar (debe ser positivo).
+
+        Returns:
+            Nueva cantidad total de oro en el banco.
+        """
+        if amount <= 0:
+            logger.warning("Intento de agregar cantidad inválida de oro: %d", amount)
+            return await self.get_gold(user_id)
+
+        key = RedisKeys.bank_gold(user_id)
+        new_gold = await self.redis_client.redis.incrby(key, amount)
+        logger.info("user_id %d depositó %d oro en banco. Total: %d", user_id, amount, new_gold)
+        return int(new_gold)
+
+    async def remove_gold(self, user_id: int, amount: int) -> bool:
+        """Retira oro del banco del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            amount: Cantidad de oro a retirar (debe ser positivo).
+
+        Returns:
+            True si se pudo retirar, False si no hay suficiente oro.
+        """
+        if amount <= 0:
+            logger.warning("Intento de retirar cantidad inválida de oro: %d", amount)
+            return False
+
+        current_gold = await self.get_gold(user_id)
+        if current_gold < amount:
+            logger.debug(
+                "user_id %d no tiene suficiente oro en banco: tiene %d, intenta retirar %d",
+                user_id,
+                current_gold,
+                amount,
+            )
+            return False
+
+        key = RedisKeys.bank_gold(user_id)
+        new_gold = await self.redis_client.redis.decrby(key, amount)
+        logger.info("user_id %d retiró %d oro del banco. Restante: %d", user_id, amount, new_gold)
+        return True
