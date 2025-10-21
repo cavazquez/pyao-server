@@ -178,6 +178,22 @@ class NPCService:
                 name=npc.name,
             )
 
+            # Enviar efecto visual de aura si el NPC lo tiene configurado
+            if npc.fx_loop > 0:
+                await self.broadcast_service.broadcast_create_fx(
+                    map_id=map_id,
+                    char_index=npc.char_index,
+                    fx=npc.fx_loop,
+                    loops=-1,  # Loop infinito
+                )
+                logger.debug(
+                    "FX aura enviado para %s: fx_loop=%d en (%d,%d)",
+                    npc.name,
+                    npc.fx_loop,
+                    x,
+                    y,
+                )
+
         logger.debug(
             "NPC spawneado: %s (CharIndex: %d) en mapa %d (%d, %d)",
             npc.name,
@@ -209,8 +225,8 @@ class NPCService:
                 weapon=0,  # NPCs no tienen armas visibles por ahora
                 shield=0,
                 helmet=0,
-                fx=0,  # Sin efecto visual
-                loops=0,
+                fx=npc.fx_loop,  # Aura continua del NPC
+                loops=-1 if npc.fx_loop > 0 else 0,  # Loop infinito si tiene aura
                 name=npc.name,
             )
             # Delay entre NPCs para que el cliente Godot los procese correctamente

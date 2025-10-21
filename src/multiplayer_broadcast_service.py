@@ -419,26 +419,44 @@ class MultiplayerBroadcastService:
 
         return notified
 
-    async def broadcast_object_delete(self, map_id: int, x: int, y: int) -> int:
-        """Broadcast de OBJECT_DELETE a todos los jugadores en un mapa.
+    async def broadcast_object_delete(self, map_id: int, x: int, y: int) -> None:
+        """Envía OBJECT_DELETE a todos los jugadores en un mapa.
 
         Args:
             map_id: ID del mapa.
-            x: Posición X del objeto.
-            y: Posición Y del objeto.
-
-        Returns:
-            Número de jugadores notificados.
+            x: Posición X.
+            y: Posición Y.
         """
-        # Obtener todos los jugadores en el mapa
-        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+        if not self.map_manager:
+            return
 
+        players = self.map_manager.get_all_message_senders_in_map(map_id)
+        for message_sender in players:
+            await message_sender.send_object_delete(x, y)
+
+    async def broadcast_create_fx(self, map_id: int, char_index: int, fx: int, loops: int) -> None:
+        """Envía CREATE_FX a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            char_index: CharIndex del personaje/NPC.
+            fx: ID del efecto visual.
+            loops: Número de loops (-1 = infinito, 1 = one-shot).
+        """
+        if not self.map_manager:
+            return
+
+        players = self.map_manager.get_all_message_senders_in_map(map_id)
         notified = 0
-        for sender in all_senders:
-            await sender.send_object_delete(x, y)
+        for message_sender in players:
+            await message_sender.send_create_fx(char_index, fx, loops)
             notified += 1
 
         if notified > 0:
-            logger.debug("Broadcast OBJECT_DELETE: pos=(%d,%d) - %d notificados", x, y, notified)
-
-        return notified
+            logger.debug(
+                "Broadcast CREATE_FX: CharIndex=%d fx=%d loops=%d - %d notificados",
+                char_index,
+                fx,
+                loops,
+                notified,
+            )

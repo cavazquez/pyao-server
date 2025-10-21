@@ -233,6 +233,22 @@ class NPCDeathService:
         Args:
             npc: NPC a eliminar.
         """
+        # Enviar efecto visual de muerte si el NPC lo tiene configurado
+        if npc.fx > 0:
+            await self.broadcast_service.broadcast_create_fx(
+                map_id=npc.map_id,
+                char_index=npc.char_index,
+                fx=npc.fx,
+                loops=1,  # One-shot: reproducir una sola vez
+            )
+            logger.debug(
+                "FX de muerte enviado para %s: fx=%d en (%d,%d)",
+                npc.name,
+                npc.fx,
+                npc.x,
+                npc.y,
+            )
+
         # Remover del MapManager
         self.map_manager.remove_npc(npc.map_id, str(npc.char_index))
 
