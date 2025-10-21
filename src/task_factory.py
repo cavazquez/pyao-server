@@ -292,6 +292,7 @@ class TaskFactory:
                 self.deps.map_manager,
                 self.deps.npc_service,
                 self.deps.broadcast_service,
+                self.deps.npc_death_service,  # Agregar NPCDeathService
                 self.deps.npc_respawn_service,
                 self.deps.loot_table_service,
                 self.deps.item_catalog,
