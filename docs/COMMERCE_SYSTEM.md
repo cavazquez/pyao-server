@@ -416,26 +416,26 @@ func _on_btn_close_pressed() -> void:
 
 ## 🔧 Implementación del Servidor
 
-### Archivos a Crear
+### Archivos Creados
 
 ```
 src/
-├── task_commerce_buy.py        # ⚠️ PENDIENTE
-├── task_commerce_sell.py       # ⚠️ PENDIENTE
-├── commerce_service.py         # ⚠️ PENDIENTE
-├── merchant_repository.py      # ⚠️ PENDIENTE
-└── task_commerce_end.py        # ✅ YA EXISTE
+├── task_commerce_buy.py        # ✅ COMPLETADO
+├── task_commerce_sell.py       # ✅ COMPLETADO
+├── commerce_service.py         # ✅ COMPLETADO
+├── merchant_repository.py      # ✅ COMPLETADO
+├── merchant_data_loader.py     # ✅ COMPLETADO
+└── task_commerce_end.py        # ✅ COMPLETADO
 ```
 
-### Archivos a Modificar
+### Archivos Modificados
 
 ```
 src/
-├── packet_id.py                # Descomentar COMMERCE_BUY, COMMERCE_SELL, COMMERCE_INIT
-├── packet_handlers.py          # Agregar handlers para commerce_buy y commerce_sell
-├── msg.py                      # Agregar build_commerce_init_response()
-├── message_sender.py           # Agregar send_commerce_init()
-└── task_left_click.py          # Detectar NPCs mercaderes y abrir comercio
+├── packet_id.py                # ✅ COMMERCE_BUY, COMMERCE_SELL, COMMERCE_INIT activos
+├── packet_handlers.py          # ✅ Handlers agregados
+├── message_inventory_sender.py # ✅ send_commerce_init() implementado
+└── task_left_click.py          # ✅ Detecta mercaderes y abre comercio
 ```
 
 ### Estructura de Datos en Redis
@@ -453,43 +453,43 @@ session:{user_id}:active_merchant = npc_id  # String con ID del mercader
 
 ---
 
-## ✅ Checklist de Implementación
+## ✅ Checklist de Implementación - COMPLETADO
 
-### Fase 1: Infraestructura Básica
-- [ ] Crear `MerchantRepository` para gestionar inventarios de mercaderes
-- [ ] Agregar campo `is_merchant` a NPCs en `data/npcs.toml`
-- [ ] Crear inventarios iniciales de mercaderes en Redis
-- [ ] Agregar método `get_merchant_inventory()` en `MerchantRepository`
+### Fase 1: Infraestructura Básica ✅
+- [x] Crear `MerchantRepository` para gestionar inventarios de mercaderes
+- [x] Agregar campo `is_merchant` a NPCs en `data/npcs_amigables.toml`
+- [x] Crear `MerchantDataLoader` para cargar inventarios desde TOML
+- [x] Agregar método `get_merchant_inventory()` en `MerchantRepository`
 
-### Fase 2: Protocolo
-- [ ] Descomentar packet IDs en `packet_id.py`
-- [ ] Implementar `build_commerce_init_response()` en `msg.py`
-- [ ] Implementar `send_commerce_init()` en `message_sender.py`
-- [ ] Agregar handlers en `packet_handlers.py`
+### Fase 2: Protocolo ✅
+- [x] Descomentar packet IDs en `packet_id.py`
+- [x] Implementar `send_commerce_init()` en `message_inventory_sender.py`
+- [x] Agregar handlers en `packet_handlers.py`
 
-### Fase 3: Lógica de Negocio
-- [ ] Crear `CommerceService` con métodos `buy_item()` y `sell_item()`
-- [ ] Implementar validaciones (oro, espacio, cantidad)
-- [ ] Implementar transacciones atómicas
-- [ ] Agregar logs de auditoría
+### Fase 3: Lógica de Negocio ✅
+- [x] Crear `CommerceService` con métodos `buy_item()` y `sell_item()`
+- [x] Implementar validaciones (oro, espacio, cantidad)
+- [x] Implementar transacciones atómicas
+- [x] Agregar logs de auditoría
 
-### Fase 4: Tasks
-- [ ] Modificar `TaskLeftClick` para detectar mercaderes
-- [ ] Crear `TaskCommerceBuy` para compras
-- [ ] Crear `TaskCommerceSell` para ventas
-- [ ] Verificar `TaskCommerceEnd` (ya existe)
+### Fase 4: Tasks ✅
+- [x] Modificar `TaskLeftClick` para detectar mercaderes
+- [x] Crear `TaskCommerceBuy` para compras
+- [x] Crear `TaskCommerceSell` para ventas
+- [x] `TaskCommerceEnd` ya existía
 
-### Fase 5: Testing
-- [ ] Tests unitarios de `CommerceService`
-- [ ] Tests de `MerchantRepository`
-- [ ] Tests de integración de compra/venta
-- [ ] Tests de validaciones y errores
+### Fase 5: Testing ✅
+- [x] Tests unitarios de `CommerceService`
+- [x] Tests de `MerchantRepository`
+- [x] Tests de `MerchantDataLoader`
+- [x] Tests de integración de compra/venta
+- [x] Tests de validaciones y errores
 
-### Fase 6: Datos
-- [ ] Configurar NPCs mercaderes en `data/npcs.toml`
-- [ ] Crear inventarios iniciales de mercaderes
-- [ ] Configurar precios de items en `data/items.toml`
-- [ ] Agregar campo `sellable` a items
+### Fase 6: Datos ✅
+- [x] Configurar NPCs mercaderes en `data/npcs_amigables.toml`
+- [x] Crear archivo `data/merchant_inventories.toml`
+- [x] Precios configurados en `data/items.toml`
+- [x] Items tienen campo `sale_price`
 
 ---
 
@@ -525,6 +525,6 @@ session:{user_id}:active_merchant = npc_id  # String con ID del mercader
 
 ---
 
-**Última actualización:** 2025-10-18  
-**Versión:** 0.4.0-alpha (planificado)  
-**Estado:** 📝 Documentación completa - Pendiente implementación
+**Última actualización:** 2025-10-21  
+**Versión:** 0.6.0-alpha  
+**Estado:** ✅ COMPLETADO - Sistema implementado y funcionando

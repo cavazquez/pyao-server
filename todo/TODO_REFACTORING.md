@@ -1,9 +1,9 @@
 # TODO: Refactorings y Mejoras
 
-**Estado:** ✅ Mayormente completado - PacketReader/Validator ✅, MessageSender ✅  
-**Prioridad:** Media  
-**Versión objetivo:** 0.5.0+  
-**Última actualización:** 19 de octubre, 2025
+**Estado:** ✅ COMPLETADO - Todas las refactorizaciones principales finalizadas  
+**Prioridad:** Completado  
+**Versión:** 0.6.0-alpha  
+**Última actualización:** 21 de octubre, 2025
 
 ---
 
@@ -134,24 +134,32 @@ quantity = reader.read_int16()
 
 ---
 
-## 🔄 Otras Mejoras Pendientes
+## ✅ Refactorizaciones Completadas
 
-### 3. NPC Factory Pattern
+### 3. ✅ NPC Factory Pattern - COMPLETADO
 
-**Estado:** 📝 Diseño propuesto - Pendiente implementación
+**Estado:** ✅ **COMPLETADO**
+**Fecha:** 21 de octubre, 2025
 
-Crear factory methods para encapsular creación de NPCs y evitar duplicación.
+**Archivo creado:** `src/npc_factory.py` (620 líneas)
 
-**Documentación:** Ver `docs/TODO_NPC_FACTORY.md`
+**Factory Methods Implementados (16 total):**
+- Base: `create_hostile()`, `create_friendly()`
+- NPCs Hostiles (11): Goblin, Lobo, Orco, Araña, Serpiente, Dragón, Esqueleto, Zombie, Gran Dragón, Ogro, Demonio, Murciélago
+- NPCs Amigables (3): Comerciante, Banquero, Guardia
 
-**Beneficios:**
-- DRY: No duplicar código entre criaturas similares
-- Type-safe: Métodos tipados que retornan `NPC`
-- Efectos visuales integrados (fx, fx_loop)
-- Centralizado: Un solo lugar para crear NPCs
+**Beneficios logrados:**
+- ✅ DRY: No duplicar código entre criaturas similares
+- ✅ Type-safe: Métodos tipados que retornan `NPC`
+- ✅ Efectos visuales integrados (fx, fx_loop)
+- ✅ Centralizado: Un solo lugar para crear NPCs
+- ✅ Body IDs verificados con AO VB6 0.13.3
 
-**Prioridad:** Media  
-**Esfuerzo:** 3-4 horas
+**Tests:**
+- ✅ 17 tests específicos de NPCFactory
+- ✅ 990 tests totales pasando
+
+**Documentación:** Ver `docs/NPC_FACTORY_COMPLETED.md`
 
 ---
 
@@ -205,21 +213,18 @@ Considerar usar logging estructurado (JSON) para facilitar análisis de logs en 
 
 ## 📊 Resumen de Estado
 
-### Completadas ✅
-1. **PacketReader** - 3/9 tasks refactorizadas (33%)
-2. **MessageSender Refactoring** - 100% completado
+### Completadas ✅ (3/3)
+1. **PacketReader + PacketValidator** - 100% completado (8/8 tasks migradas)
+2. **MessageSender Refactoring** - 100% completado (8 componentes, 75 tests)
+3. **NPC Factory Pattern** - 100% completado (16 factory methods, 17 tests)
 
-### En Progreso 🔄
-1. **PacketReader** - 6 tasks pendientes de refactorizar
-
-### Pendientes 📝
-1. **NPC Factory** - Diseño completo, pendiente implementación
-2. **Service Container** - Propuesta pendiente
-3. **Validación de Packets** - Mejora de robustez
-4. **Logging Estructurado** - Mejora de observabilidad
+### Mejoras Futuras Opcionales 📝
+1. **Service Container** - Propuesta pendiente (prioridad baja)
+2. **Validación de longitud de Packets** - Mejora de robustez (prioridad baja)
+3. **Logging Estructurado** - Mejora de observabilidad (prioridad baja)
 
 ---
 
-**Última actualización:** 2025-01-19  
+**Última actualización:** 2025-10-21  
 **Autor:** Actualizado con estado actual del proyecto  
-**Estado:** 🔄 En progreso - 2/6 mejoras completadas
+**Estado:** ✅ COMPLETADO - Todas las refactorizaciones principales finalizadas
