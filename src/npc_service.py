@@ -187,17 +187,20 @@ class NPCService:
                     loops=-1,  # Loop infinito
                 )
                 logger.debug(
-                    "FX aura enviado para %s: fx_loop=%d en (%d,%d)",
+                    "FX aura enviado para %s (body_id:%d): fx_loop=%d en pos:(%d,%d)",
                     npc.name,
+                    npc.body_id,
                     npc.fx_loop,
                     x,
                     y,
                 )
 
         logger.debug(
-            "NPC spawneado: %s (CharIndex: %d) en mapa %d (%d, %d)",
+            "NPC spawneado: %s (ID:%d) CharIndex:%d body_id:%d en mapa %d pos:(%d,%d)",
             npc.name,
+            npc.npc_id,
             npc.char_index,
+            npc.body_id,
             map_id,
             x,
             y,

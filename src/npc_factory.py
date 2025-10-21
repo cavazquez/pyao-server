@@ -164,7 +164,7 @@ class NPCFactory:
         return NPCFactory._create_hostile_base(
             npc_id=1,
             name="Goblin",
-            body_id=58,
+            body_id=14,
             hp=100,
             level=5,
             x=x,
@@ -193,7 +193,7 @@ class NPCFactory:
         return NPCFactory._create_hostile_base(
             npc_id=7,
             name="Lobo",
-            body_id=138,
+            body_id=10,
             hp=80,
             level=3,
             x=x,
@@ -251,7 +251,7 @@ class NPCFactory:
         return NPCFactory._create_hostile_base(
             npc_id=8,
             name="Araña Gigante",
-            body_id=149,
+            body_id=42,
             hp=150,
             level=8,
             x=x,
