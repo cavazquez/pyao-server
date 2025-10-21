@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.npc_death_service import NPCDeathService
     from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
@@ -37,6 +38,7 @@ class TaskAttack(Task):
         map_manager: MapManager | None = None,
         npc_service: NPCService | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
+        npc_death_service: NPCDeathService | None = None,
         npc_respawn_service: NPCRespawnService | None = None,
         loot_table_service: LootTableService | None = None,
         item_catalog: ItemCatalog | None = None,
@@ -53,6 +55,7 @@ class TaskAttack(Task):
             map_manager: Gestor de mapas.
             npc_service: Servicio de NPCs.
             broadcast_service: Servicio de broadcast.
+            npc_death_service: Servicio de muerte de NPCs.
             npc_respawn_service: Servicio de respawn de NPCs.
             loot_table_service: Servicio de loot tables.
             item_catalog: Catálogo de items.
@@ -65,6 +68,7 @@ class TaskAttack(Task):
         self.map_manager = map_manager
         self.npc_service = npc_service
         self.broadcast_service = broadcast_service
+        self.npc_death_service = npc_death_service
         self.npc_respawn_service = npc_respawn_service
         self.loot_table_service = loot_table_service
         self.item_catalog = item_catalog
@@ -236,89 +240,100 @@ class TaskAttack(Task):
                 f"Le hiciste {damage} de daño a {target_npc.name}."
             )
 
-        # Si el NPC murió
+        # Si el NPC murió, usar servicio centralizado
         if npc_died:
             experience = result.get("experience", 0)
 
-            await self.message_sender.send_console_msg(
-                f"¡Has matado a {target_npc.name}! Ganaste {experience} EXP."
-            )
+            # Usar NPCDeathService si está disponible
+            if self.npc_death_service:
+                await self.npc_death_service.handle_npc_death(
+                    npc=target_npc,
+                    killer_user_id=user_id,
+                    experience=experience,
+                    message_sender=self.message_sender,
+                    death_reason="combate",
+                )
+            else:
+                # Fallback: lógica antigua (para tests que no tienen el servicio)
+                await self.message_sender.send_console_msg(
+                    f"¡Has matado a {target_npc.name}! Ganaste {experience} EXP."
+                )
 
-            # Dropear items según loot table
-            if self.loot_table_service and self.item_catalog:
-                loot = self.loot_table_service.get_loot_for_npc(target_npc.npc_id)
+                # Dropear items según loot table
+                if self.loot_table_service and self.item_catalog:
+                    loot = self.loot_table_service.get_loot_for_npc(target_npc.npc_id)
 
-                for item_id, quantity in loot:
-                    # Obtener GrhIndex del catálogo
-                    grh_index = self.item_catalog.get_grh_index(item_id)
-                    if grh_index is None:
-                        logger.warning("Item %d no tiene GrhIndex en el catálogo", item_id)
-                        continue
+                    for item_id, quantity in loot:
+                        # Obtener GrhIndex del catálogo
+                        grh_index = self.item_catalog.get_grh_index(item_id)
+                        if grh_index is None:
+                            logger.warning("Item %d no tiene GrhIndex en el catálogo", item_id)
+                            continue
 
-                    logger.debug(
-                        "Dropeando item_id=%d grh_index=%d quantity=%d",
-                        item_id,
-                        grh_index,
-                        quantity,
-                    )
-
-                    # Buscar posición libre cercana para dropear el item
-                    drop_pos = self._find_free_position_for_drop(
-                        target_npc.map_id, target_npc.x, target_npc.y, radius=2
-                    )
-
-                    if not drop_pos:
-                        logger.warning(
-                            "No se encontró posición libre para dropear %s cerca de (%d,%d)",
-                            self.item_catalog.get_item_name(item_id),
-                            target_npc.x,
-                            target_npc.y,
-                        )
-                        continue
-
-                    drop_x, drop_y = drop_pos
-
-                    # Crear ground item
-                    ground_item: dict[str, int | str | None] = {
-                        "item_id": item_id,
-                        "quantity": quantity,
-                        "grh_index": grh_index,
-                        "owner_id": None,
-                        "spawn_time": None,
-                    }
-
-                    # Agregar al MapManager
-                    self.map_manager.add_ground_item(
-                        map_id=target_npc.map_id, x=drop_x, y=drop_y, item=ground_item
-                    )
-
-                    # Broadcast OBJECT_CREATE a jugadores cercanos
-                    if self.broadcast_service:
-                        await self.broadcast_service.broadcast_object_create(
-                            map_id=target_npc.map_id,
-                            x=drop_x,
-                            y=drop_y,
-                            grh_index=grh_index,
+                        logger.debug(
+                            "Dropeando item_id=%d grh_index=%d quantity=%d",
+                            item_id,
+                            grh_index,
+                            quantity,
                         )
 
-                    item_name = self.item_catalog.get_item_name(item_id) or f"Item {item_id}"
-                    logger.info(
-                        "NPC %s dropeó %dx %s en (%d, %d)",
-                        target_npc.name,
-                        quantity,
-                        item_name,
-                        drop_x,
-                        drop_y,
-                    )
+                        # Buscar posición libre cercana para dropear el item
+                        drop_pos = self._find_free_position_for_drop(
+                            target_npc.map_id, target_npc.x, target_npc.y, radius=2
+                        )
 
-            # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
-            await self.npc_service.remove_npc(target_npc)
+                        if not drop_pos:
+                            logger.warning(
+                                "No se encontró posición libre para dropear %s cerca de (%d,%d)",
+                                self.item_catalog.get_item_name(item_id),
+                                target_npc.x,
+                                target_npc.y,
+                            )
+                            continue
 
-            # Programar respawn del NPC
-            if self.npc_respawn_service:
-                await self.npc_respawn_service.schedule_respawn(target_npc)
+                        drop_x, drop_y = drop_pos
 
-            # TODO: Verificar si sube de nivel
+                        # Crear ground item
+                        ground_item: dict[str, int | str | None] = {
+                            "item_id": item_id,
+                            "quantity": quantity,
+                            "grh_index": grh_index,
+                            "owner_id": None,
+                            "spawn_time": None,
+                        }
+
+                        # Agregar al MapManager
+                        self.map_manager.add_ground_item(
+                            map_id=target_npc.map_id, x=drop_x, y=drop_y, item=ground_item
+                        )
+
+                        # Broadcast OBJECT_CREATE a jugadores cercanos
+                        if self.broadcast_service:
+                            await self.broadcast_service.broadcast_object_create(
+                                map_id=target_npc.map_id,
+                                x=drop_x,
+                                y=drop_y,
+                                grh_index=grh_index,
+                            )
+
+                        item_name = self.item_catalog.get_item_name(item_id) or f"Item {item_id}"
+                        logger.info(
+                            "NPC %s dropeó %dx %s en (%d, %d)",
+                            target_npc.name,
+                            quantity,
+                            item_name,
+                            drop_x,
+                            drop_y,
+                        )
+
+                # Remover NPC del mapa (esto también libera el tile en _tile_occupation)
+                await self.npc_service.remove_npc(target_npc)
+
+                # Programar respawn del NPC
+                if self.npc_respawn_service:
+                    await self.npc_respawn_service.schedule_respawn(target_npc)
+
+                # TODO: Verificar si sube de nivel
         else:
             # Mostrar HP restante del NPC
             hp_percent = int((target_npc.hp / target_npc.max_hp) * 100)

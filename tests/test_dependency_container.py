@@ -24,6 +24,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     spell_service = Mock()
     npc_service = Mock()
     npc_ai_service = Mock()
+    npc_death_service = Mock()
     npc_respawn_service = Mock()
     loot_table_service = Mock()
     broadcast_service = Mock()
@@ -53,6 +54,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
         spell_service=spell_service,
         npc_service=npc_service,
         npc_ai_service=npc_ai_service,
+        npc_death_service=npc_death_service,
         npc_respawn_service=npc_respawn_service,
         loot_table_service=loot_table_service,
         map_transition_service=Mock(),
@@ -83,6 +85,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     assert container.spell_service is spell_service
     assert container.npc_service is npc_service
     assert container.npc_ai_service is npc_ai_service
+    assert container.npc_death_service is npc_death_service
     assert container.npc_respawn_service is npc_respawn_service
     assert container.loot_table_service is loot_table_service
     assert container.broadcast_service is broadcast_service

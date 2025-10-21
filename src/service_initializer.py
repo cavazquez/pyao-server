@@ -12,6 +12,7 @@ from src.map_transition_service import MapTransitionService
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
+from src.npc_death_service import NPCDeathService
 from src.npc_respawn_service import NPCRespawnService
 from src.npc_service import NPCService
 from src.pathfinding_service import PathfindingService
@@ -78,6 +79,18 @@ class ServiceInitializer:
         loot_table_service = LootTableService()
         logger.info("✓ Sistema de loot tables inicializado")
 
+        # Servicio de muerte de NPCs (centralizado)
+        npc_death_service = NPCDeathService(
+            self.map_manager,
+            self.repositories["npc_repo"],
+            self.repositories["player_repo"],
+            broadcast_service,
+            loot_table_service,
+            item_catalog,
+            npc_respawn_service,
+        )
+        logger.info("✓ Sistema de muerte de NPCs inicializado")
+
         # Servicio de transiciones de mapa
         map_transition_service = MapTransitionService()
         logger.info("✓ Sistema de transiciones de mapa inicializado")
@@ -88,9 +101,9 @@ class ServiceInitializer:
             self.repositories["player_repo"],
             self.repositories["npc_repo"],
             self.map_manager,
-            broadcast_service,  # Agregar broadcast para efectos visuales
+            npc_death_service,  # Usar NPCDeathService centralizado
         )
-        logger.info("✓ Sistema de magia inicializado (con broadcast de efectos)")
+        logger.info("✓ Sistema de magia inicializado (con NPCDeathService)")
 
         # Servicio de comercio
         commerce_service = CommerceService(
@@ -142,6 +155,7 @@ class ServiceInitializer:
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
             "npc_respawn_service": npc_respawn_service,
+            "npc_death_service": npc_death_service,
             "loot_table_service": loot_table_service,
             "map_transition_service": map_transition_service,
             "spell_service": spell_service,

@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.message_sender import MessageSender
-    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.npc_death_service import NPCDeathService
     from src.npc_repository import NPCRepository
     from src.player_repository import PlayerRepository
     from src.spell_catalog import SpellCatalog
@@ -26,7 +26,7 @@ class SpellService:
         player_repo: PlayerRepository,
         npc_repo: NPCRepository,
         map_manager: MapManager,
-        broadcast_service: MultiplayerBroadcastService | None = None,
+        npc_death_service: NPCDeathService | None = None,
     ) -> None:
         """Inicializa el servicio de hechizos.
 
@@ -35,13 +35,13 @@ class SpellService:
             player_repo: Repositorio de jugadores.
             npc_repo: Repositorio de NPCs.
             map_manager: Gestor de mapas.
-            broadcast_service: Servicio de broadcast (opcional).
+            npc_death_service: Servicio de muerte de NPCs (opcional).
         """
         self.spell_catalog = spell_catalog
         self.player_repo = player_repo
         self.npc_repo = npc_repo
         self.map_manager = map_manager
-        self.broadcast_service = broadcast_service
+        self.npc_death_service = npc_death_service
 
     async def cast_spell(  # noqa: PLR0914
         self,
@@ -129,22 +129,11 @@ class SpellService:
             f"{caster_msg}{target_npc.name}. Daño: {total_damage}"
         )
 
-        # Enviar efecto visual (broadcast a todos en el mapa)
+        # Enviar efecto visual (solo al caster por ahora, broadcast lo maneja el death service)
         fx_grh = spell_data.get("fx_grh", 0)
         loops = spell_data.get("loops", 1)
         if fx_grh > 0:
-            if self.broadcast_service:
-                # Broadcast a todos los jugadores en el mapa
-                await self.broadcast_service.broadcast_create_fx(
-                    map_id=map_id,
-                    x=target_x,
-                    y=target_y,
-                    fx_id=fx_grh,
-                    loops=loops,
-                )
-            else:
-                # Fallback: solo al caster
-                await message_sender.send_create_fx_at_position(target_x, target_y, fx_grh, loops)
+            await message_sender.send_create_fx_at_position(target_x, target_y, fx_grh, loops)
 
         # Log
         logger.info(
@@ -157,30 +146,22 @@ class SpellService:
             target_npc.max_hp,
         )
 
-        # Si el NPC murió, eliminarlo del juego
-        if npc_died:
-            await message_sender.send_console_msg(f"Has matado a {target_npc.name}!")
+        # Si el NPC murió, usar servicio centralizado
+        if npc_died and self.npc_death_service:
+            # Calcular experiencia (similar a CombatService)
+            experience = target_npc.level * 10  # 10 EXP por nivel del NPC
 
-            # Remover NPC del MapManager
-            self.map_manager.remove_npc(map_id, target_npc.char_index)
-
-            # Broadcast CHARACTER_REMOVE a todos los jugadores en el mapa
-            if self.broadcast_service:
-                await self.broadcast_service.broadcast_character_remove(
-                    map_id=map_id,
-                    char_index=target_npc.char_index,
-                )
-
-            # Eliminar de Redis
-            await self.npc_repo.delete_npc(target_npc.instance_id)
-
-            logger.info(
-                "NPC %s (CharIndex: %d) eliminado tras ser matado por hechizo de user_id %d",
-                target_npc.name,
-                target_npc.char_index,
-                user_id,
+            # Delegar toda la lógica de muerte al servicio centralizado
+            await self.npc_death_service.handle_npc_death(
+                npc=target_npc,
+                killer_user_id=user_id,
+                experience=experience,
+                message_sender=message_sender,
+                death_reason="hechizo",
             )
-
-            # TODO: Drop de oro/items, experiencia, respawn
+        elif npc_died:
+            # Fallback si no hay death service
+            await message_sender.send_console_msg(f"Has matado a {target_npc.name}!")
+            logger.warning("NPCDeathService no disponible - NPC no fue eliminado correctamente")
 
         return True

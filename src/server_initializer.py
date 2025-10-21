@@ -108,6 +108,7 @@ class ServerInitializer:
             spell_service=services["spell_service"],
             npc_service=services["npc_service"],
             npc_ai_service=services["npc_ai_service"],
+            npc_death_service=services["npc_death_service"],
             npc_respawn_service=services["npc_respawn_service"],
             loot_table_service=services["loot_table_service"],
             map_transition_service=services["map_transition_service"],

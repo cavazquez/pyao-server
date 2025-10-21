@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc_ai_service import NPCAIService
     from src.npc_catalog import NPCCatalog
+    from src.npc_death_service import NPCDeathService
     from src.npc_repository import NPCRepository
     from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
@@ -62,6 +63,7 @@ class DependencyContainer:
     spell_service: SpellService
     npc_service: NPCService
     npc_ai_service: NPCAIService
+    npc_death_service: NPCDeathService
     npc_respawn_service: NPCRespawnService
     loot_table_service: LootTableService
     map_transition_service: MapTransitionService
