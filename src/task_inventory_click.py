@@ -129,17 +129,18 @@ class TaskInventoryClick(Task):
                 item.graphic_id,
             )
 
-            # Detectar herramientas y cambiar cursor al modo de trabajo
+            # Detectar herramientas equipadas y cambiar cursor al modo de trabajo
+            # Solo enviar si ESTÁ equipada (lista para usar)
             work_tools = {
                 561: 1,  # Hacha de Leñador → Talar
                 562: 2,  # Piquete de Minero → Minería
                 563: 3,  # Caña de pescar → Pesca
             }
 
-            if item_id in work_tools:
+            if item_id in work_tools and is_equipped:
                 skill_type = work_tools[item_id]
                 await self.message_sender.send_work_request_target(skill_type)
-                logger.info("Cursor cambiado a modo de trabajo: skill_type=%d", skill_type)
+                logger.info("Herramienta equipada - Cursor cambiado a modo trabajo: skill_type=%d", skill_type)
 
         except Exception:
             logger.exception("Error procesando INVENTORY_CLICK")
