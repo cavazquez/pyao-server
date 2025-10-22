@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.player_repository import PlayerRepository
-from src.task_meditate import TaskMeditate
+from src.tasks.player.task_meditate import TaskMeditate
 
 
 @pytest.mark.asyncio

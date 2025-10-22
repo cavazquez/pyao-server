@@ -7,7 +7,7 @@ import pytest
 from src.bank_repository import BankItem, BankRepository
 from src.inventory_repository import InventoryRepository
 from src.player_repository import PlayerRepository
-from src.task_bank_deposit import TaskBankDeposit
+from src.tasks.banking.task_bank_deposit import TaskBankDeposit
 
 
 @pytest.mark.asyncio

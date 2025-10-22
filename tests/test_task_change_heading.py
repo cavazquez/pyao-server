@@ -8,7 +8,7 @@ from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID
 from src.player_repository import PlayerRepository
-from src.task_change_heading import TaskChangeHeading
+from src.tasks.player.task_change_heading import TaskChangeHeading
 
 
 @pytest.mark.asyncio

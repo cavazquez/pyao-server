@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.task_login import TaskLogin
+from src.tasks.player.task_login import TaskLogin
 
 
 @pytest.mark.asyncio
@@ -106,7 +106,7 @@ class TestTaskLogin:
         )
 
         # Mock del AuthenticationService usando patch
-        with patch("src.task_login.AuthenticationService") as mock_auth:
+        with patch("src.tasks.player.task_login.AuthenticationService") as mock_auth:
             mock_auth.return_value.authenticate = AsyncMock(return_value=(1, 2))
             result = await task._authenticate_user("testuser", "password")  # noqa: SLF001
 
@@ -125,7 +125,7 @@ class TestTaskLogin:
         )
 
         # Mock del AuthenticationService usando patch
-        with patch("src.task_login.AuthenticationService") as mock_auth:
+        with patch("src.tasks.player.task_login.AuthenticationService") as mock_auth:
             mock_auth.return_value.authenticate = AsyncMock(return_value=None)
             result = await task._authenticate_user("testuser", "wrongpass")  # noqa: SLF001
 
@@ -177,7 +177,7 @@ class TestTaskLogin:
         )
 
         # Mock del PlayerService usando patch
-        with patch("src.task_login.PlayerService") as mock_service:
+        with patch("src.tasks.player.task_login.PlayerService") as mock_service:
             mock_service.return_value.send_position = AsyncMock(
                 return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
             )
@@ -206,7 +206,7 @@ class TestTaskLogin:
             account_repo=account_repo,
         )
 
-        with patch("src.task_login.PlayerService") as mock_service:
+        with patch("src.tasks.player.task_login.PlayerService") as mock_service:
             mock_service.return_value.send_hunger_thirst = AsyncMock()
             await task._initialize_player_data(1)  # noqa: SLF001
 
@@ -294,7 +294,7 @@ class TestTaskLogin:
 
         position = {"x": 50, "y": 50, "map": 1, "heading": 3}
 
-        with patch("src.task_login.PlayerService") as mock_service:
+        with patch("src.tasks.player.task_login.PlayerService") as mock_service:
             mock_service.return_value.spawn_character = AsyncMock()
             await task._spawn_player(1, "testuser", position)  # noqa: SLF001
 
@@ -364,8 +364,8 @@ class TestTaskLogin:
         )
 
         with (
-            patch("src.task_login.PlayerService") as mock_service,
-            patch("src.task_login.TaskMotd") as mock_motd,
+            patch("src.tasks.player.task_login.PlayerService") as mock_service,
+            patch("src.tasks.player.task_login.TaskMotd") as mock_motd,
         ):
             mock_service.return_value.send_inventory = AsyncMock()
             mock_motd.return_value.execute = AsyncMock()

@@ -7,7 +7,7 @@ import pytest
 from src.map_manager import MapManager
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.player_repository import PlayerRepository
-from src.task_drop import TaskDrop
+from src.tasks.inventory.task_drop import TaskDrop
 
 
 @pytest.mark.asyncio

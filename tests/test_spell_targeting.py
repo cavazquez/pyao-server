@@ -6,7 +6,7 @@ import pytest
 
 from src.player_repository import PlayerRepository
 from src.spell_service import SpellService
-from src.task_cast_spell import TaskCastSpell
+from src.tasks.spells.task_cast_spell import TaskCastSpell
 
 
 class TestSpellTargeting:

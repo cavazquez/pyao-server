@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.message_sender import MessageSender
-from src.task_inventory_click import TaskInventoryClick
+from src.tasks.inventory.task_inventory_click import TaskInventoryClick
 
 
 @pytest.fixture
@@ -48,7 +48,7 @@ class TestTaskInventoryClick:
         session_data = {"user_id": 1}
 
         # Mock del inventario con un item
-        with patch("src.task_inventory_click.InventoryRepository") as mock_inv_repo:
+        with patch("src.tasks.inventory.task_inventory_click.InventoryRepository") as mock_inv_repo:
             mock_inv_instance = mock_inv_repo.return_value
             mock_inv_instance.get_slot = AsyncMock(return_value=(1, 5))  # Item 1, cantidad 5
 
@@ -77,7 +77,7 @@ class TestTaskInventoryClick:
         session_data = {"user_id": 1}
 
         # Mock del inventario con slot vacío
-        with patch("src.task_inventory_click.InventoryRepository") as mock_inv_repo:
+        with patch("src.tasks.inventory.task_inventory_click.InventoryRepository") as mock_inv_repo:
             mock_inv_instance = mock_inv_repo.return_value
             mock_inv_instance.get_slot = AsyncMock(return_value=None)
 
@@ -163,7 +163,7 @@ class TestTaskInventoryClick:
         session_data = {"user_id": 1}
 
         # Mock del inventario con un item que no existe en el catálogo
-        with patch("src.task_inventory_click.InventoryRepository") as mock_inv_repo:
+        with patch("src.tasks.inventory.task_inventory_click.InventoryRepository") as mock_inv_repo:
             mock_inv_instance = mock_inv_repo.return_value
             mock_inv_instance.get_slot = AsyncMock(return_value=(99999, 1))  # Item inexistente
 

@@ -8,7 +8,7 @@ from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.password_utils import hash_password
 from src.task import Task
-from src.task_login import TaskLogin
+from src.tasks.player.task_login import TaskLogin
 
 if TYPE_CHECKING:
     from src.account_repository import AccountRepository

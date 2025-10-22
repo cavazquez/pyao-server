@@ -8,7 +8,7 @@ import pytest
 from src.client_connection import ClientConnection
 from src.message_sender import MessageSender
 from src.packet_id import ClientPacketID
-from src.task_information import TaskInformation
+from src.tasks.interaction.task_information import TaskInformation
 
 
 @pytest.mark.asyncio

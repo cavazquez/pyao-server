@@ -7,7 +7,7 @@ import pytest
 from src.map_manager import MapManager
 from src.npc import NPC
 from src.player_repository import PlayerRepository
-from src.task_left_click import TaskLeftClick
+from src.tasks.interaction.task_left_click import TaskLeftClick
 
 
 @pytest.mark.asyncio

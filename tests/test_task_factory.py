@@ -7,9 +7,9 @@ import pytest
 from src.dependency_container import DependencyContainer
 from src.packet_id import ClientPacketID
 from src.task_factory import TaskFactory
-from src.task_login import TaskLogin
 from src.task_null import TaskNull
-from src.task_walk import TaskWalk
+from src.tasks.player.task_login import TaskLogin
+from src.tasks.player.task_walk import TaskWalk
 
 
 @pytest.fixture

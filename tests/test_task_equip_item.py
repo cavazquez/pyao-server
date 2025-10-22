@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.task_equip_item import TaskEquipItem
+from src.tasks.inventory.task_equip_item import TaskEquipItem
 
 
 @pytest.mark.asyncio
@@ -28,9 +28,9 @@ class TestTaskEquipItem:
 
         # Mock de los servicios
         with (
-            patch("src.task_equip_item.InventoryRepository"),
-            patch("src.task_equip_item.EquipmentService") as mock_equip_service,
-            patch("src.task_equip_item.PlayerService") as mock_player_service,
+            patch("src.tasks.inventory.task_equip_item.InventoryRepository"),
+            patch("src.tasks.inventory.task_equip_item.EquipmentService") as mock_equip_service,
+            patch("src.tasks.inventory.task_equip_item.PlayerService") as mock_player_service,
         ):
             mock_equip_service_instance = MagicMock()
             mock_equip_service_instance.toggle_equip_item = AsyncMock(return_value=True)
@@ -71,9 +71,9 @@ class TestTaskEquipItem:
         session_data = {"user_id": 1}
 
         with (
-            patch("src.task_equip_item.InventoryRepository"),
-            patch("src.task_equip_item.EquipmentService") as mock_equip_service,
-            patch("src.task_equip_item.PlayerService") as mock_player_service,
+            patch("src.tasks.inventory.task_equip_item.InventoryRepository"),
+            patch("src.tasks.inventory.task_equip_item.EquipmentService") as mock_equip_service,
+            patch("src.tasks.inventory.task_equip_item.PlayerService") as mock_player_service,
         ):
             mock_equip_service_instance = MagicMock()
             mock_equip_service_instance.toggle_equip_item = AsyncMock(return_value=False)

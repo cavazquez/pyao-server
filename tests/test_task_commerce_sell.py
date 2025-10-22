@@ -8,7 +8,7 @@ from src.commerce_service import CommerceService
 from src.inventory_repository import InventoryRepository
 from src.player_repository import PlayerRepository
 from src.redis_client import RedisClient
-from src.task_commerce_sell import TaskCommerceSell
+from src.tasks.commerce.task_commerce_sell import TaskCommerceSell
 
 
 @pytest.mark.asyncio
