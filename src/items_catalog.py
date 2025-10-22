@@ -15,12 +15,16 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
 
     Returns:
         Diccionario con items indexados por ID.
+
+    Raises:
+        ValueError: Si el archivo TOML tiene errores de sintaxis.
     """
     try:
         with file_path.open("rb") as f:
             data = tomllib.load(f)
     except tomllib.TOMLDecodeError as e:
-        raise ValueError(f"Error parsing {file_path}: {e}") from e
+        error_msg = f"Error parsing {file_path}: {e}"
+        raise ValueError(error_msg) from e
 
     items = {}
 

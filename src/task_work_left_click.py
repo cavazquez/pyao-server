@@ -143,6 +143,9 @@ class TaskWorkLeftClick(Task):
 
     async def _update_inventory_ui(self, user_id: int, item_id: int, slot: int) -> None:
         """Actualiza la UI del inventario del cliente con el item obtenido."""
+        if not self.inventory_repo:
+            return
+
         item = get_item(item_id)
         if item:
             slot_data = await self.inventory_repo.get_slot(user_id, slot)

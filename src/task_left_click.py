@@ -322,12 +322,13 @@ class TaskLeftClick(Task):
 
         # Verificar recursos del mapa
         resources = []
-        if self.map_resources.has_water(map_id, x, y):
-            resources.append("Agua")
-        if self.map_resources.has_tree(map_id, x, y):
-            resources.append("Arbol")
-        if self.map_resources.has_mine(map_id, x, y):
-            resources.append("Yacimiento")
+        if self.map_resources:
+            if self.map_resources.has_water(map_id, x, y):
+                resources.append("Agua")
+            if self.map_resources.has_tree(map_id, x, y):
+                resources.append("Arbol")
+            if self.map_resources.has_mine(map_id, x, y):
+                resources.append("Yacimiento")
 
         if resources:
             info_lines.append(f"Recursos: {', '.join(resources)}")

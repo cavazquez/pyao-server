@@ -168,19 +168,22 @@ class TaskWork(Task):
         has_cana = any(slot.item_id == ToolID.CANA_PESCAR for slot in inventory.values())
 
         # Verificar recursos usando MapResourcesService
-        if has_hacha and self.map_resources.has_tree(map_id, target_x, target_y):
-            await self.inventory_repo.add_item(user_id, item_id=ResourceItemID.LENA, quantity=5)
-            return ("Leña", ResourceItemID.LENA, 5)
+        if self.map_resources:
+            if has_hacha and self.map_resources.has_tree(map_id, target_x, target_y):
+                await self.inventory_repo.add_item(user_id, item_id=ResourceItemID.LENA, quantity=5)
+                return ("Leña", ResourceItemID.LENA, 5)
 
-        if has_pico and self.map_resources.has_mine(map_id, target_x, target_y):
-            await self.inventory_repo.add_item(
-                user_id, item_id=ResourceItemID.MINERAL_HIERRO, quantity=3
-            )
-            return ("Mineral de Hierro", ResourceItemID.MINERAL_HIERRO, 3)
+            if has_pico and self.map_resources.has_mine(map_id, target_x, target_y):
+                await self.inventory_repo.add_item(
+                    user_id, item_id=ResourceItemID.MINERAL_HIERRO, quantity=3
+                )
+                return ("Mineral de Hierro", ResourceItemID.MINERAL_HIERRO, 3)
 
-        if has_cana and self.map_resources.has_water(map_id, target_x, target_y):
-            await self.inventory_repo.add_item(user_id, item_id=ResourceItemID.PESCADO, quantity=2)
-            return ("Pescado", ResourceItemID.PESCADO, 2)
+            if has_cana and self.map_resources.has_water(map_id, target_x, target_y):
+                await self.inventory_repo.add_item(
+                    user_id, item_id=ResourceItemID.PESCADO, quantity=2
+                )
+                return ("Pescado", ResourceItemID.PESCADO, 2)
 
         # Si no tiene herramienta
         if not (has_hacha or has_pico or has_cana):
