@@ -11,6 +11,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# Índices de mensajes para MULTI_MESSAGE
+WORK_REQUEST_TARGET_MSG = 17  # enum Messages.WorkRequestTarget
+
 
 class WorkMessageSender:
     """Maneja el envío de mensajes relacionados con trabajo."""
@@ -24,17 +27,22 @@ class WorkMessageSender:
         self.connection = connection
 
     async def send_work_request_target(self, skill_type: int) -> None:
-        """Envía paquete WORK_REQUEST_TARGET para solicitar objetivo de trabajo.
+        """Envía mensaje MULTI_MESSAGE con WorkRequestTarget.
 
-        Este packet cambia el cursor del cliente al modo de trabajo correspondiente.
+        Este mensaje cambia el cursor del cliente al modo de trabajo correspondiente.
 
         Args:
-            skill_type: Tipo de habilidad (1=Talar, 2=Minería, 3=Pesca).
+            skill_type: Tipo de habilidad (9=Talar, 12=Pesca, 13=Minería según enum Skill).
         """
+        # MULTI_MESSAGE format:
+        # PacketID (1 byte) = 104
+        # Message Index (1 byte) = 17 (WorkRequestTarget)
+        # arg1 (1 byte) = skill_type
         packet = struct.pack(
-            "<BB",
-            ServerPacketID.WORK_REQUEST_TARGET,
+            "<BBB",
+            ServerPacketID.MULTI_MESSAGE,
+            WORK_REQUEST_TARGET_MSG,
             skill_type,
         )
         await self.connection.send(packet)
-        logger.debug("WORK_REQUEST_TARGET enviado (skill_type=%d)", skill_type)
+        logger.debug("MULTI_MESSAGE.WorkRequestTarget enviado (skill_type=%d)", skill_type)

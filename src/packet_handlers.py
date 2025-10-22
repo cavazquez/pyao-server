@@ -38,6 +38,7 @@ from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
 from src.task_walk import TaskWalk
 from src.task_work import TaskWork
+from src.task_work_left_click import TaskWorkLeftClick
 
 if TYPE_CHECKING:
     from src.task import Task
@@ -60,6 +61,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.EQUIP_ITEM: TaskEquipItem,  # Equipar/desequipar item
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.WORK: TaskWork,  # Trabajar (talar, minar, pescar)
+    ClientPacketID.WORK_LEFT_CLICK: TaskWorkLeftClick,  # Trabajar con click en coordenadas
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
     ClientPacketID.COMMERCE_BUY: TaskCommerceBuy,  # Comprar item del mercader
     ClientPacketID.BANK_EXTRACT_ITEM: TaskBankExtract,  # Extraer item del banco

@@ -50,7 +50,7 @@ class ClientPacketID(IntEnum):
     # USE_SPELL_MACRO = 29
     # CRAFT_BLACKSMITH = 31
     # CRAFT_CARPENTER = 32
-    # WORK_LEFT_CLICK = 33
+    WORK_LEFT_CLICK = 33  # Click en modo trabajo (con coordenadas)
     # CREATE_NEW_GUILD = 34
     # SPELL_INFO = 35
     # EQUIP_ITEM = 36
@@ -209,7 +209,7 @@ class ServerPacketID(IntEnum):
     # PAUSE_TOGGLE = 42
     # RAIN_TOGGLE = 43
     # CREATE_FX = 44
-    WORK_REQUEST_TARGET = 46  # Solicitar objetivo para trabajar (cambia cursor)
+    # WORK_REQUEST_TARGET = 46  # Ya no se usa, WorkRequestTarget va en MULTI_MESSAGE (104)
     # CHANGE_INVENTORY_SLOT = 47
     CHANGE_BANK_SLOT = 48  # Actualizar slot de la bóveda bancaria
     CHANGE_SPELL_SLOT = 49  # Actualizar slot de hechizo
@@ -264,6 +264,6 @@ class ServerPacketID(IntEnum):
     # UPDATE_STRENGTH = 101
     # UPDATE_DEXTERITY = 102
     # ADD_SLOTS = 103
-    # MULTI_MESSAGE = 104
+    MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
     # STOP_WORKING = 105
     # CANCEL_OFFER_ITEM = 106

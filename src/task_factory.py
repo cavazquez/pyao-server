@@ -41,6 +41,7 @@ from src.task_talk import TaskTalk
 from src.task_uptime import TaskUptime
 from src.task_walk import TaskWalk
 from src.task_work import TaskWork
+from src.task_work_left_click import TaskWorkLeftClick
 
 if TYPE_CHECKING:
     from src.dependency_container import DependencyContainer
@@ -341,6 +342,15 @@ class TaskFactory:
             TaskBankEnd: lambda: TaskBankEnd(data, message_sender, session_data),
             TaskCommerceEnd: lambda: TaskCommerceEnd(data, message_sender),
             TaskWork: lambda: TaskWork(
+                data,
+                message_sender,
+                self.deps.player_repo,
+                self.deps.inventory_repo,
+                self.deps.map_manager,
+                session_data,
+                self.deps.map_resources_service,
+            ),
+            TaskWorkLeftClick: lambda: TaskWorkLeftClick(
                 data,
                 message_sender,
                 self.deps.player_repo,
