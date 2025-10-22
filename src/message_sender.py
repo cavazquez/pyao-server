@@ -11,6 +11,7 @@ from src.message_map_sender import MapMessageSender
 from src.message_player_stats_sender import PlayerStatsMessageSender
 from src.message_session_sender import SessionMessageSender
 from src.message_visual_effects_sender import VisualEffectsMessageSender
+from src.message_work_sender import WorkMessageSender
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection
@@ -37,6 +38,7 @@ class MessageSender:  # noqa: PLR0904
         self.player_stats = PlayerStatsMessageSender(connection)
         self.session = SessionMessageSender(connection)
         self.visual_effects = VisualEffectsMessageSender(connection)
+        self.work = WorkMessageSender(connection)
 
     async def send_dice_roll(
         self,
@@ -573,8 +575,16 @@ class MessageSender:  # noqa: PLR0904
         await self.inventory.send_meditate_toggle()
 
     async def send_pong(self) -> None:
-        """Envía paquete PONG en respuesta a un PING del cliente."""
+        """Envía paquete PONG en respuesta a un PING."""
         await self.session.send_pong()
+
+    async def send_work_request_target(self, skill_type: int) -> None:
+        """Envía paquete WORK_REQUEST_TARGET para cambiar cursor al modo de trabajo.
+
+        Args:
+            skill_type: Tipo de habilidad (1=Talar, 2=Minería, 3=Pesca).
+        """
+        await self.work.send_work_request_target(skill_type)
 
     async def send_create_fx_at_position(self, _x: int, _y: int, fx: int, loops: int) -> None:
         """Envía efecto visual en una posición específica del mapa.

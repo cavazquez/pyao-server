@@ -209,7 +209,7 @@ class ServerPacketID(IntEnum):
     # PAUSE_TOGGLE = 42
     # RAIN_TOGGLE = 43
     # CREATE_FX = 44
-    # WORK_REQUEST_TARGET = 46
+    WORK_REQUEST_TARGET = 46  # Solicitar objetivo para trabajar (cambia cursor)
     # CHANGE_INVENTORY_SLOT = 47
     CHANGE_BANK_SLOT = 48  # Actualizar slot de la bóveda bancaria
     CHANGE_SPELL_SLOT = 49  # Actualizar slot de hechizo
