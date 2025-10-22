@@ -1,7 +1,7 @@
 """Tests para gestión de NPCs en MapManager."""
 
 from src.map_manager import MapManager
-from src.npc import NPC
+from src.models.npc import NPC
 
 
 class TestMapManagerNPCs:

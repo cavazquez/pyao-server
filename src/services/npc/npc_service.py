@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.npc import NPC
+    from src.models.npc import NPC
     from src.npc_catalog import NPCCatalog
     from src.repositories.npc_repository import NPCRepository
 

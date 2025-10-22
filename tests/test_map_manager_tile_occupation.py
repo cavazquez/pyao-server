@@ -3,7 +3,7 @@
 import pytest
 
 from src.map_manager import MapManager
-from src.npc import NPC
+from src.models.npc import NPC
 
 
 @pytest.fixture

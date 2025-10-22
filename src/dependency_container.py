@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.redis_client import RedisClient
     from src.repositories.server_repository import ServerRepository
-    from src.spell_catalog import SpellCatalog
+    from src.models.spell_catalog import SpellCatalog
     from src.services.player.spell_service import SpellService
     from src.repositories.spellbook_repository import SpellbookRepository
     from src.services.player.stamina_service import StaminaService

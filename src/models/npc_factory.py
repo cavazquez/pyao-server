@@ -2,7 +2,7 @@
 
 import uuid
 
-from src.npc import NPC
+from src.models.npc import NPC
 
 
 class NPCFactory:

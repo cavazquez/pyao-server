@@ -1,6 +1,6 @@
 """Tests para los enums de tipos de items."""
 
-from src.item_types import ObjType, TipoPocion
+from src.models.item_types import ObjType, TipoPocion
 
 
 class TestObjType:

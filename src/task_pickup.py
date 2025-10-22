@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING, cast
 
-from src.item_constants import GOLD_ITEM_ID
+from src.models.item_constants import GOLD_ITEM_ID
 from src.packet_reader import PacketReader
 from src.session_manager import SessionManager
 from src.task import Task

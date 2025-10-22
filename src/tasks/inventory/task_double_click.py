@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.repositories.inventory_repository import InventoryRepository
-from src.items_catalog import get_item
+from src.models.items_catalog import get_item
 from src.packet_data import DoubleClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator

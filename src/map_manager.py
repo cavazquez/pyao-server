@@ -11,7 +11,7 @@ from src.map_manager_spatial import SpatialIndexMixin
 if TYPE_CHECKING:
     from src.repositories.ground_items_repository import GroundItemsRepository
     from src.messaging.message_sender import MessageSender
-    from src.npc import NPC
+    from src.models.npc import NPC
 
 
 logger = logging.getLogger(__name__)

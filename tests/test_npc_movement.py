@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.effect_npc_movement import NPCMovementEffect
-from src.npc import NPC
+from src.models.npc import NPC
 
 
 def create_test_npc(

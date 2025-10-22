@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.equipment_slot import EquipmentSlot
-from src.items_catalog import get_item
+from src.models.items_catalog import get_item
 
 if TYPE_CHECKING:
     from src.repositories.equipment_repository import EquipmentRepository

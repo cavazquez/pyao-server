@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.items_catalog import ITEMS_CATALOG
+from src.models.items_catalog import ITEMS_CATALOG
 from src.redis_config import RedisKeys
 from src.session_manager import SessionManager
 from src.task import Task

@@ -1,6 +1,6 @@
 """Tests para SpellCatalog."""
 
-from src.spell_catalog import SpellCatalog
+from src.models.spell_catalog import SpellCatalog
 
 
 class TestSpellCatalog:

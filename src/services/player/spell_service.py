@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_death_service import NPCDeathService
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
-    from src.spell_catalog import SpellCatalog
+    from src.models.spell_catalog import SpellCatalog
 
 logger = logging.getLogger(__name__)
 

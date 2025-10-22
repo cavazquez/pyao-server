@@ -6,7 +6,7 @@ import pytest
 
 from src.services.player.equipment_service import EquipmentService
 from src.equipment_slot import EquipmentSlot
-from src.item import Item, ItemType
+from src.models.item import Item, ItemType
 
 
 @pytest.fixture

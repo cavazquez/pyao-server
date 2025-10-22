@@ -3,8 +3,8 @@
 import tomllib
 from pathlib import Path
 
-from src.item import Item, ItemType
-from src.item_types import ObjType
+from src.models.item import Item, ItemType
+from src.models.item_types import ObjType
 
 
 def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
@@ -87,7 +87,7 @@ def _load_items_from_toml() -> dict[int, Item]:
     Returns:
         Diccionario con todos los items indexados por ID.
     """
-    data_dir = Path(__file__).parent.parent / "data"
+    data_dir = Path(__file__).parent.parent.parent / "data"
     items_dir = data_dir / "items"
     legacy_file = data_dir / "items.toml"
 

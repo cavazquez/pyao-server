@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.items_catalog import ITEMS_CATALOG
+from src.models.items_catalog import ITEMS_CATALOG
 from src.packet_data import LeftClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from src.services.map.map_resources_service import MapResourcesService
     from src.repositories.merchant_repository import MerchantRepository
     from src.messaging.message_sender import MessageSender
-    from src.npc import NPC
+    from src.models.npc import NPC
     from src.repositories.player_repository import PlayerRepository
     from src.redis_client import RedisClient
 

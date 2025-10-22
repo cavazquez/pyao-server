@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.repositories.inventory_repository import InventoryRepository
-    from src.item import Item
+    from src.models.item import Item
     from src.repositories.merchant_repository import MerchantRepository
     from src.repositories.player_repository import PlayerRepository
 

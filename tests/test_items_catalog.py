@@ -1,7 +1,7 @@
 """Tests para el catálogo de items."""
 
-from src.item import Item, ItemType
-from src.items_catalog import ITEMS_CATALOG, get_all_items, get_item
+from src.models.item import Item, ItemType
+from src.models.items_catalog import ITEMS_CATALOG, get_all_items, get_item
 
 
 class TestItemsCatalog:

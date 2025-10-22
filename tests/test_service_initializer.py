@@ -8,7 +8,7 @@ from src.item_catalog import ItemCatalog
 from src.services.npc.loot_table_service import LootTableService
 from src.npc_catalog import NPCCatalog
 from src.service_initializer import ServiceInitializer
-from src.spell_catalog import SpellCatalog
+from src.models.spell_catalog import SpellCatalog
 
 
 @pytest.fixture

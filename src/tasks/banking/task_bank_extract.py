@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.items_catalog import ITEMS_CATALOG
+from src.models.items_catalog import ITEMS_CATALOG
 from src.packet_data import BankExtractData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator

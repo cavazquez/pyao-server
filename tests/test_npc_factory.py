@@ -1,7 +1,7 @@
 """Tests para NPCFactory."""
 
-from src.npc import NPC
-from src.npc_factory import NPCFactory
+from src.models.npc import NPC
+from src.models.npc_factory import NPCFactory
 
 
 class TestNPCFactory:

@@ -4,7 +4,7 @@ import logging
 import uuid
 from typing import TYPE_CHECKING
 
-from src.npc import NPC
+from src.models.npc import NPC
 from src.redis_config import RedisKeys
 
 if TYPE_CHECKING:

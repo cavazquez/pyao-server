@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_service import NPCService
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
-    from src.spell_catalog import SpellCatalog
+    from src.models.spell_catalog import SpellCatalog
     from src.repositories.spellbook_repository import SpellbookRepository
 
 logger = logging.getLogger(__name__)

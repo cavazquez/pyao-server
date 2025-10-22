@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.npc import NPC
+from src.models.npc import NPC
 from src.services.npc.npc_death_service import NPCDeathService
 
 
