@@ -4,7 +4,6 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.items_catalog import ITEMS_CATALOG
-from src.map_resources_service import MapResourcesService
 from src.packet_data import LeftClickData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
@@ -15,6 +14,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.bank_repository import BankRepository
     from src.map_manager import MapManager
+    from src.map_resources_service import MapResourcesService
     from src.merchant_repository import MerchantRepository
     from src.message_sender import MessageSender
     from src.npc import NPC
@@ -59,7 +59,7 @@ class TaskLeftClick(Task):
         self.bank_repo = bank_repo
         self.redis_client = redis_client
         self.session_data = session_data or {}
-        self.map_resources = map_resources or MapResourcesService()
+        self.map_resources = map_resources
 
     async def execute(self) -> None:
         """Ejecuta click izquierdo en personaje/NPC."""

@@ -268,6 +268,7 @@ class TaskFactory:
                 self.deps.bank_repo,
                 self.deps.redis_client,
                 session_data,
+                self.deps.map_resources_service,
             ),
             TaskCastSpell: lambda: TaskCastSpell(
                 data,
@@ -346,6 +347,7 @@ class TaskFactory:
                 self.deps.inventory_repo,
                 self.deps.map_manager,
                 session_data,
+                self.deps.map_resources_service,
             ),
         }
 

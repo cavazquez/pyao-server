@@ -16,7 +16,7 @@ class MapResourcesService:
         Args:
             maps_dir: Directorio con los archivos JSON de recursos (opcional).
         """
-        self.maps_dir = Path(maps_dir) if maps_dir else Path("resources")
+        self.maps_dir = Path(maps_dir) if maps_dir else Path("map_data")
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
         self._load_all_maps()
 
@@ -28,19 +28,19 @@ class MapResourcesService:
                 self.maps_dir.mkdir(parents=True, exist_ok=True)
                 return
 
-            # Buscar todos los archivos *.json (formato: 1.json, 2.json, etc.)
-            map_files = list(self.maps_dir.glob("*.json"))
+            # Buscar archivos de recursos (formato: XXX_resources.json)
+            map_files = list(self.maps_dir.glob("*_resources.json"))
 
             if not map_files:
                 logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
                 return
 
             for map_file in map_files:
-                # Extraer map_id del nombre del archivo (ej: "1.json" -> 1)
+                # Extraer map_id del nombre (ej: "001_resources.json" -> 1)
                 try:
-                    map_id = int(map_file.stem)
+                    map_id = int(map_file.stem.split("_")[0])
                     self._load_map(map_id, map_file)
-                except ValueError:
+                except (ValueError, IndexError):
                     logger.warning("Ignorando archivo con nombre inválido: %s", map_file.name)
                     continue
 

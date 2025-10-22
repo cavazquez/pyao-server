@@ -97,6 +97,7 @@ class TestTaskLeftClick:
             player_repo=player_repo,
             map_manager=map_manager,
             session_data=session_data,
+            map_resources=MagicMock(),
         )
 
         # Execute
@@ -125,6 +126,7 @@ class TestTaskLeftClick:
             player_repo=player_repo,
             map_manager=map_manager,
             session_data=session_data,
+            map_resources=MagicMock(),
         )
 
         # Execute

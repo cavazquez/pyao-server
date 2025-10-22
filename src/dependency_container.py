@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from src.item_catalog import ItemCatalog
     from src.loot_table_service import LootTableService
     from src.map_manager import MapManager
+    from src.map_resources_service import MapResourcesService
     from src.map_transition_service import MapTransitionService
     from src.merchant_repository import MerchantRepository
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -67,6 +68,7 @@ class DependencyContainer:
     npc_respawn_service: NPCRespawnService
     loot_table_service: LootTableService
     map_transition_service: MapTransitionService
+    map_resources_service: MapResourcesService
     broadcast_service: MultiplayerBroadcastService
     stamina_service: StaminaService
     player_map_service: PlayerMapService

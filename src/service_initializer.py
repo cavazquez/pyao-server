@@ -8,6 +8,7 @@ from src.commerce_service import CommerceService
 from src.item_catalog import ItemCatalog
 from src.items_catalog import ITEMS_CATALOG
 from src.loot_table_service import LootTableService
+from src.map_resources_service import MapResourcesService
 from src.map_transition_service import MapTransitionService
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_ai_service import NPCAIService
@@ -151,6 +152,10 @@ class ServiceInitializer:
         )
         logger.info("✓ Servicio de mapas de jugador inicializado")
 
+        # Servicio de recursos de mapas (agua, árboles, minas)
+        map_resources_service = MapResourcesService()
+        logger.info("✓ Servicio de recursos de mapas inicializado")
+
         services = {
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
@@ -164,6 +169,7 @@ class ServiceInitializer:
             "npc_ai_service": npc_ai_service,
             "stamina_service": stamina_service,
             "player_map_service": player_map_service,
+            "map_resources_service": map_resources_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,
             "item_catalog": item_catalog,

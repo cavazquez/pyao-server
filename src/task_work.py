@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING
 from src.constants.items import ResourceItemID, ToolID
 from src.inventory_repository import InventoryRepository
 from src.map_manager import MapManager
-from src.map_resources_service import MapResourcesService
 from src.message_sender import MessageSender
 from src.player_repository import PlayerRepository
 from src.task import Task
@@ -14,6 +13,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.inventory_repository import InventoryRepository
     from src.map_manager import MapManager
+    from src.map_resources_service import MapResourcesService
     from src.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
@@ -55,7 +55,7 @@ class TaskWork(Task):
         self.inventory_repo = inventory_repo
         self.map_manager = map_manager
         self.session_data = session_data
-        self.map_resources = map_resources or MapResourcesService()
+        self.map_resources = map_resources
 
     async def execute(self) -> None:
         """Ejecuta la lógica de trabajo."""
