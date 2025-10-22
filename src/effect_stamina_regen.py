@@ -8,7 +8,7 @@ from src.tick_effect import TickEffect
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
-    from src.stamina_service import StaminaService
+    from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 

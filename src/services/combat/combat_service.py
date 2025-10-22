@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 from src.combat_damage_calculator import DamageCalculator
 from src.combat_reward_calculator import RewardCalculator
 from src.combat_validator import CombatValidator
-from src.combat_weapon_service import WeaponService
+from src.services.combat.combat_weapon_service import WeaponService
 
 if TYPE_CHECKING:
     from src.repositories.equipment_repository import EquipmentRepository

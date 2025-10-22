@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.npc_death_service import NPCDeathService
+    from src.services.npc.npc_death_service import NPCDeathService
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
     from src.spell_catalog import SpellCatalog

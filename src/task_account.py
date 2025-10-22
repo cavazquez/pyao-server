@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from src.repositories.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.npc_service import NPCService
+    from src.services.npc.npc_service import NPCService
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.spell_catalog import SpellCatalog

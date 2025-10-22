@@ -10,7 +10,7 @@ from src.tick_effect import TickEffect
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.npc import NPC
-    from src.npc_service import NPCService
+    from src.services.npc.npc_service import NPCService
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 
 class TestBroadcastMovement:

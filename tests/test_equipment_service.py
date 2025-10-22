@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.equipment_service import EquipmentService
+from src.services.player.equipment_service import EquipmentService
 from src.equipment_slot import EquipmentSlot
 from src.item import Item, ItemType
 
@@ -77,7 +77,7 @@ class TestEquipmentService:
         def mock_get_item(item_id: int) -> Item | None:
             return mock_item if item_id == 2 else None
 
-        monkeypatch.setattr("src.equipment_service.get_item", mock_get_item)
+        monkeypatch.setattr("src.services.player.equipment_service.get_item", mock_get_item)
 
         # Equipar
         result = await equipment_service.toggle_equip_item(
@@ -124,7 +124,7 @@ class TestEquipmentService:
         def mock_get_item(item_id: int) -> Item | None:
             return mock_item if item_id == 2 else None
 
-        monkeypatch.setattr("src.equipment_service.get_item", mock_get_item)
+        monkeypatch.setattr("src.services.player.equipment_service.get_item", mock_get_item)
 
         # Desequipar
         result = await equipment_service.toggle_equip_item(
@@ -164,7 +164,7 @@ class TestEquipmentService:
         def mock_get_item(item_id: int) -> Item | None:
             return mock_item if item_id == 1 else None
 
-        monkeypatch.setattr("src.equipment_service.get_item", mock_get_item)
+        monkeypatch.setattr("src.services.player.equipment_service.get_item", mock_get_item)
 
         # Intentar equipar
         result = await equipment_service.toggle_equip_item(
@@ -232,7 +232,7 @@ class TestEquipmentService:
         def mock_get_item(item_id: int) -> Item | None:
             return mock_item if item_id == 2 else None
 
-        monkeypatch.setattr("src.equipment_service.get_item", mock_get_item)
+        monkeypatch.setattr("src.services.player.equipment_service.get_item", mock_get_item)
 
         # Equipar (debería desequipar el anterior)
         result = await equipment_service.toggle_equip_item(

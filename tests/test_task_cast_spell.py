@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.repositories.player_repository import PlayerRepository
-from src.spell_service import SpellService
+from src.services.player.spell_service import SpellService
 from src.tasks.spells.task_cast_spell import TaskCastSpell
 
 

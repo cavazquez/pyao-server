@@ -6,33 +6,33 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
     from src.repositories.bank_repository import BankRepository
-    from src.combat_service import CombatService
-    from src.commerce_service import CommerceService
+    from src.services.combat.combat_service import CombatService
+    from src.services.commerce_service import CommerceService
     from src.repositories.equipment_repository import EquipmentRepository
     from src.game_tick import GameTick
     from src.repositories.ground_items_repository import GroundItemsRepository
     from src.repositories.inventory_repository import InventoryRepository
     from src.item_catalog import ItemCatalog
-    from src.loot_table_service import LootTableService
+    from src.services.npc.loot_table_service import LootTableService
     from src.map_manager import MapManager
-    from src.map_resources_service import MapResourcesService
-    from src.map_transition_service import MapTransitionService
+    from src.services.map.map_resources_service import MapResourcesService
+    from src.services.map.map_transition_service import MapTransitionService
     from src.repositories.merchant_repository import MerchantRepository
-    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.npc_ai_service import NPCAIService
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.npc.npc_ai_service import NPCAIService
     from src.npc_catalog import NPCCatalog
-    from src.npc_death_service import NPCDeathService
+    from src.services.npc.npc_death_service import NPCDeathService
     from src.repositories.npc_repository import NPCRepository
-    from src.npc_respawn_service import NPCRespawnService
-    from src.npc_service import NPCService
-    from src.player_map_service import PlayerMapService
+    from src.services.npc.npc_respawn_service import NPCRespawnService
+    from src.services.npc.npc_service import NPCService
+    from src.services.map.player_map_service import PlayerMapService
     from src.repositories.player_repository import PlayerRepository
     from src.redis_client import RedisClient
     from src.repositories.server_repository import ServerRepository
     from src.spell_catalog import SpellCatalog
-    from src.spell_service import SpellService
+    from src.services.player.spell_service import SpellService
     from src.repositories.spellbook_repository import SpellbookRepository
-    from src.stamina_service import StaminaService
+    from src.services.player.stamina_service import StaminaService
 
 
 @dataclass

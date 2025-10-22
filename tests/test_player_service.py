@@ -7,7 +7,7 @@ import pytest
 from src.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
 from src.repositories.player_repository import PlayerRepository
-from src.player_service import PlayerService
+from src.services.player.player_service import PlayerService
 
 
 @pytest.mark.asyncio

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.npc import NPC
-    from src.npc_service import NPCService
+    from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
 

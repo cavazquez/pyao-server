@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.npc import NPC
-from src.npc_ai_service import NPCAIService
+from src.services.npc.npc_ai_service import NPCAIService
 from src.repositories.npc_repository import NPCRepository
 
 if TYPE_CHECKING:

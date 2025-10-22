@@ -6,12 +6,12 @@ import time
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.combat_service import CombatService
+    from src.services.combat.combat_service import CombatService
     from src.map_manager import MapManager
-    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc import NPC
-    from src.npc_service import NPCService
-    from src.pathfinding_service import PathfindingService
+    from src.services.npc.npc_service import NPCService
+    from src.services.map.pathfinding_service import PathfindingService
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

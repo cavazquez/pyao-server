@@ -9,7 +9,7 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.commerce_service import CommerceService
+    from src.services.commerce_service import CommerceService
     from src.repositories.inventory_repository import InventoryRepository
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository

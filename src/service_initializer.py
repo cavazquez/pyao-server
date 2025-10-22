@@ -3,24 +3,24 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
-from src.combat_service import CombatService
-from src.commerce_service import CommerceService
+from src.services.combat.combat_service import CombatService
+from src.services.commerce_service import CommerceService
 from src.item_catalog import ItemCatalog
 from src.items_catalog import ITEMS_CATALOG
-from src.loot_table_service import LootTableService
-from src.map_resources_service import MapResourcesService
-from src.map_transition_service import MapTransitionService
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-from src.npc_ai_service import NPCAIService
+from src.services.npc.loot_table_service import LootTableService
+from src.services.map.map_resources_service import MapResourcesService
+from src.services.map.map_transition_service import MapTransitionService
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.npc.npc_ai_service import NPCAIService
 from src.npc_catalog import NPCCatalog
-from src.npc_death_service import NPCDeathService
-from src.npc_respawn_service import NPCRespawnService
-from src.npc_service import NPCService
-from src.pathfinding_service import PathfindingService
-from src.player_map_service import PlayerMapService
+from src.services.npc.npc_death_service import NPCDeathService
+from src.services.npc.npc_respawn_service import NPCRespawnService
+from src.services.npc.npc_service import NPCService
+from src.services.map.pathfinding_service import PathfindingService
+from src.services.map.player_map_service import PlayerMapService
 from src.spell_catalog import SpellCatalog
-from src.spell_service import SpellService
-from src.stamina_service import StaminaService
+from src.services.player.spell_service import SpellService
+from src.services.player.stamina_service import StaminaService
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager

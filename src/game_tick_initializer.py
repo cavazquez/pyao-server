@@ -14,11 +14,11 @@ from src.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
-    from src.npc_ai_service import NPCAIService
-    from src.npc_service import NPCService
+    from src.services.npc.npc_ai_service import NPCAIService
+    from src.services.npc.npc_service import NPCService
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
-    from src.stamina_service import StaminaService
+    from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 

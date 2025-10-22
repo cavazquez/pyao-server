@@ -14,7 +14,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.repositories.bank_repository import BankRepository
     from src.map_manager import MapManager
-    from src.map_resources_service import MapResourcesService
+    from src.services.map.map_resources_service import MapResourcesService
     from src.repositories.merchant_repository import MerchantRepository
     from src.messaging.message_sender import MessageSender
     from src.npc import NPC

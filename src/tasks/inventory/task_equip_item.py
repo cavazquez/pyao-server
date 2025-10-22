@@ -3,12 +3,12 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.equipment_service import EquipmentService
+from src.services.player.equipment_service import EquipmentService
 from src.repositories.inventory_repository import InventoryRepository
 from src.packet_data import EquipItemData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
-from src.player_service import PlayerService
+from src.services.player.player_service import PlayerService
 from src.session_manager import SessionManager
 from src.task import Task
 

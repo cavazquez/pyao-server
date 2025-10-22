@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.commerce_service import CommerceService
+from src.services.commerce_service import CommerceService
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.player_repository import PlayerRepository
 from src.redis_client import RedisClient

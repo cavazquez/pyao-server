@@ -5,17 +5,17 @@ from typing import TYPE_CHECKING
 
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
-from src.stamina_service import STAMINA_COST_WALK
+from src.services.player.stamina_service import STAMINA_COST_WALK
 from src.task import Task
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
-    from src.map_transition_service import MapTransitionService
+    from src.services.map.map_transition_service import MapTransitionService
     from src.messaging.message_sender import MessageSender
-    from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.player_map_service import PlayerMapService
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.map.player_map_service import PlayerMapService
     from src.repositories.player_repository import PlayerRepository
-    from src.stamina_service import StaminaService
+    from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
 

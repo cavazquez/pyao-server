@@ -5,15 +5,15 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.repositories.account_repository import AccountRepository
-from src.authentication_service import AuthenticationService
+from src.services.player.authentication_service import AuthenticationService
 from src.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-from src.npc_service import NPCService
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.npc.npc_service import NPCService
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.repositories.player_repository import PlayerRepository
-from src.player_service import PlayerService
+from src.services.player.player_service import PlayerService
 from src.repositories.server_repository import ServerRepository
 from src.session_manager import SessionManager
 from src.repositories.spellbook_repository import SpellbookRepository
@@ -25,8 +25,8 @@ if TYPE_CHECKING:
     from src.repositories.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.npc_service import NPCService
-    from src.player_map_service import PlayerMapService
+    from src.services.npc.npc_service import NPCService
+    from src.services.map.player_map_service import PlayerMapService
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.spell_catalog import SpellCatalog

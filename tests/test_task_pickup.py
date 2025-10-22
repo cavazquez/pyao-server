@@ -8,7 +8,7 @@ from src.repositories.inventory_repository import InventoryRepository
 from src.item_catalog import ItemCatalog
 from src.item_constants import GOLD_ITEM_ID
 from src.map_manager import MapManager
-from src.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.repositories.player_repository import PlayerRepository
 from src.task_pickup import TaskPickup
 

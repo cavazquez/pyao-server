@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.combat_weapon_service import WeaponService
+from src.services.combat.combat_weapon_service import WeaponService
 from src.equipment_slot import EquipmentSlot
 
 

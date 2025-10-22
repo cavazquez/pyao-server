@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.stamina_service import (
+from src.services.player.stamina_service import (
     STAMINA_COST_ATTACK,
     STAMINA_COST_SPELL,
     STAMINA_COST_WALK,

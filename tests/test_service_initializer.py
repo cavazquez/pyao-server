@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from src.item_catalog import ItemCatalog
-from src.loot_table_service import LootTableService
+from src.services.npc.loot_table_service import LootTableService
 from src.npc_catalog import NPCCatalog
 from src.service_initializer import ServiceInitializer
 from src.spell_catalog import SpellCatalog

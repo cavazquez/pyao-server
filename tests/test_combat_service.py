@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.combat_service import CombatService
+from src.services.combat.combat_service import CombatService
 from src.npc import NPC
 
 

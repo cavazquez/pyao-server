@@ -1,6 +1,6 @@
 """Tests para LootTableService."""
 
-from src.loot_table_service import LootTableService
+from src.services.npc.loot_table_service import LootTableService
 
 
 class TestLootTableService:

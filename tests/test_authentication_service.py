@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.repositories.account_repository import AccountRepository
-from src.authentication_service import AuthenticationService
+from src.services.player.authentication_service import AuthenticationService
 from src.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
 
