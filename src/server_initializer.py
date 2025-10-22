@@ -123,6 +123,7 @@ class ServerInitializer:
             npc_respawn_service=services["npc_respawn_service"],
             loot_table_service=services["loot_table_service"],
             map_transition_service=services["map_transition_service"],
+            map_resources_service=services["map_resources_service"],
             broadcast_service=services["broadcast_service"],
             stamina_service=services["stamina_service"],
             player_map_service=services["player_map_service"],
