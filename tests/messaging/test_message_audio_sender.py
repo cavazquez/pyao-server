@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.network.client_connection import ClientConnection
 from src.messaging.senders.message_audio_sender import AudioMessageSender
+from src.network.client_connection import ClientConnection
 from src.network.packet_id import ServerPacketID
 from src.utils.sounds import MusicID, SoundID
 

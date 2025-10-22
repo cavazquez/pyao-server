@@ -3,16 +3,16 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
+from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.repositories.inventory_repository import InventoryRepository
     from src.game.map_manager import MapManager
-    from src.services.map.map_resources_service import MapResourcesService
     from src.messaging.message_sender import MessageSender
+    from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.map_resources_service import MapResourcesService
 
 logger = logging.getLogger(__name__)
 

@@ -7,17 +7,17 @@ from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_stamina_regen import StaminaRegenEffect
-from src.game.game_tick import GameTick
 from src.effects.meditation_effect import MeditationEffect
 from src.effects.npc_ai_effect import NPCAIEffect
+from src.game.game_tick import GameTick
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
-    from src.services.npc.npc_ai_service import NPCAIService
-    from src.services.npc.npc_service import NPCService
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
+    from src.services.npc.npc_ai_service import NPCAIService
+    from src.services.npc.npc_service import NPCService
     from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)

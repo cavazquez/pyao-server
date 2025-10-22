@@ -6,11 +6,11 @@ from pathlib import Path
 
 from src.core.dependency_container import DependencyContainer
 from src.core.game_tick_initializer import GameTickInitializer
-from src.repositories.ground_items_repository import GroundItemsRepository
-from src.game.map_manager import MapManager
 from src.core.redis_initializer import RedisInitializer
 from src.core.repository_initializer import RepositoryInitializer
 from src.core.service_initializer import ServiceInitializer
+from src.game.map_manager import MapManager
+from src.repositories.ground_items_repository import GroundItemsRepository
 
 logger = logging.getLogger(__name__)
 

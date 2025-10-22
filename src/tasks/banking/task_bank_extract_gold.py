@@ -7,8 +7,8 @@ from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.repositories.bank_repository import BankRepository
     from src.messaging.message_sender import MessageSender
+    from src.repositories.bank_repository import BankRepository
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

@@ -3,23 +3,23 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.repositories.inventory_repository import InventoryRepository
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
-from src.utils.password_utils import hash_password
-from src.tasks.task import Task
+from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.player.task_login import TaskLogin
+from src.tasks.task import Task
+from src.utils.password_utils import hash_password
 
 if TYPE_CHECKING:
-    from src.repositories.account_repository import AccountRepository
-    from src.repositories.equipment_repository import EquipmentRepository
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.services.npc.npc_service import NPCService
+    from src.models.spell_catalog import SpellCatalog
+    from src.repositories.account_repository import AccountRepository
+    from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
-    from src.models.spell_catalog import SpellCatalog
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
 

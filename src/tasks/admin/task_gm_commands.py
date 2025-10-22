@@ -10,9 +10,9 @@ from src.tasks.task import Task
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.services.map.player_map_service import PlayerMapService
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.player_map_service import PlayerMapService
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
 

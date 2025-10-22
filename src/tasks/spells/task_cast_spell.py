@@ -13,8 +13,8 @@ from src.tasks.task import Task
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
-    from src.services.player.spell_service import SpellService
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.player.spell_service import SpellService
     from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)

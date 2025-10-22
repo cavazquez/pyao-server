@@ -4,15 +4,15 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.models.items_catalog import ITEMS_CATALOG
-from src.utils.redis_config import RedisKeys
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
-    from src.services.commerce_service import CommerceService
-    from src.repositories.inventory_repository import InventoryRepository
     from src.messaging.message_sender import MessageSender
+    from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.commerce_service import CommerceService
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)

@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.services.combat.combat_service import CombatService
 from src.models.npc import NPC
+from src.services.combat.combat_service import CombatService
 
 
 @pytest.mark.asyncio

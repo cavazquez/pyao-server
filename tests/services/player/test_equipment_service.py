@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.models.item import Item, ItemType
 from src.services.player.equipment_service import EquipmentService
 from src.utils.equipment_slot import EquipmentSlot
-from src.models.item import Item, ItemType
 
 
 @pytest.fixture

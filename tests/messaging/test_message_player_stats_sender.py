@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.network.client_connection import ClientConnection
 from src.messaging.senders.message_player_stats_sender import PlayerStatsMessageSender
+from src.network.client_connection import ClientConnection
 from src.network.packet_id import ServerPacketID
 
 

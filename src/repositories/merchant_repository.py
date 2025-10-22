@@ -2,12 +2,9 @@
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
+from src.utils.redis_client import RedisClient  # noqa: TC001
 from src.utils.redis_config import RedisKeys
-
-if TYPE_CHECKING:
-    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 

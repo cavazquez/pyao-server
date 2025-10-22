@@ -5,14 +5,11 @@ los componentes más simples: InventoryStorage y InventoryStackingStrategy.
 """
 
 import logging
-from typing import TYPE_CHECKING
 
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
 from src.utils.inventory_storage import InventoryStorage
-
-if TYPE_CHECKING:
-    from src.utils.redis_client import RedisClient
+from src.utils.redis_client import RedisClient  # noqa: TC001
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +23,7 @@ class InventoryRepository:
 
     MAX_SLOTS = 20  # Número máximo de slots de inventario
 
-    def __init__(self, redis_client: "RedisClient", max_stack: int = 20) -> None:
+    def __init__(self, redis_client: RedisClient, max_stack: int = 20) -> None:
         """Inicializa el repositorio de inventario.
 
         Args:

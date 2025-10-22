@@ -6,10 +6,10 @@ import pytest
 
 from src.core.dependency_container import DependencyContainer
 from src.network.packet_id import ClientPacketID
-from src.tasks.task_factory import TaskFactory
-from src.tasks.task_null import TaskNull
 from src.tasks.player.task_login import TaskLogin
 from src.tasks.player.task_walk import TaskWalk
+from src.tasks.task_factory import TaskFactory
+from src.tasks.task_null import TaskNull
 
 
 @pytest.fixture

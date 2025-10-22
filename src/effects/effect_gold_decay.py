@@ -3,8 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.utils.redis_config import RedisKeys
 from src.effects.tick_effect import TickEffect
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender

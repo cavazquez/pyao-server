@@ -3,22 +3,22 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
-from src.services.combat.combat_service import CombatService
-from src.services.commerce_service import CommerceService
 from src.models.item_catalog import ItemCatalog
 from src.models.items_catalog import ITEMS_CATALOG
-from src.services.npc.loot_table_service import LootTableService
+from src.models.npc_catalog import NPCCatalog
+from src.models.spell_catalog import SpellCatalog
+from src.services.combat.combat_service import CombatService
+from src.services.commerce_service import CommerceService
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.map_transition_service import MapTransitionService
+from src.services.map.pathfinding_service import PathfindingService
+from src.services.map.player_map_service import PlayerMapService
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.npc.loot_table_service import LootTableService
 from src.services.npc.npc_ai_service import NPCAIService
-from src.models.npc_catalog import NPCCatalog
 from src.services.npc.npc_death_service import NPCDeathService
 from src.services.npc.npc_respawn_service import NPCRespawnService
 from src.services.npc.npc_service import NPCService
-from src.services.map.pathfinding_service import PathfindingService
-from src.services.map.player_map_service import PlayerMapService
-from src.models.spell_catalog import SpellCatalog
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
 

@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.network.client_connection import ClientConnection
 from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
+from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID
 from src.tasks.task_online import TaskOnline
 

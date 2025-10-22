@@ -4,8 +4,8 @@
 import asyncio
 import sys
 
-from src.inventory_repository import InventoryRepository
-from src.redis_client import RedisClient
+from src.repositories.inventory_repository import InventoryRepository
+from src.utils.redis_client import RedisClient
 
 
 async def add_test_items(user_id: int) -> None:

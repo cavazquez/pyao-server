@@ -4,12 +4,12 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.repositories.inventory_repository import InventoryRepository
+from src.game.map_manager import MapManager
 from src.models.item_catalog import ItemCatalog
 from src.models.item_constants import GOLD_ITEM_ID
-from src.game.map_manager import MapManager
-from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.player_repository import PlayerRepository
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.tasks.interaction.task_pickup import TaskPickup
 
 

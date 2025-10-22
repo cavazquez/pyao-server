@@ -3,13 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.utils.equipment_slot import EquipmentSlot
 from src.models.items_catalog import get_item
+from src.utils.equipment_slot import EquipmentSlot
 
 if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
     from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.inventory_repository import InventoryRepository
-    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

@@ -6,9 +6,9 @@ import sys
 from typing import TYPE_CHECKING
 
 import redis
-from src.network.client_connection import ClientConnection
-from src.messaging.message_sender import MessageSender
 from src.core.server_initializer import ServerInitializer
+from src.messaging.message_sender import MessageSender
+from src.network.client_connection import ClientConnection
 from src.tasks.task_factory import TaskFactory
 from src.tasks.task_null import TaskNull
 

@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.models.npc import NPC
     from src.models.npc_catalog import NPCCatalog
     from src.repositories.npc_repository import NPCRepository
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
 

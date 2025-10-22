@@ -6,7 +6,12 @@ from typing import Any, Self, cast
 
 import redis.asyncio as redis
 
-from src.utils.redis_config import DEFAULT_EFFECTS_CONFIG, DEFAULT_SERVER_CONFIG, RedisConfig, RedisKeys
+from src.utils.redis_config import (
+    DEFAULT_EFFECTS_CONFIG,
+    DEFAULT_SERVER_CONFIG,
+    RedisConfig,
+    RedisKeys,
+)
 
 logger = logging.getLogger(__name__)
 

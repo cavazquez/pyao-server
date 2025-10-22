@@ -7,18 +7,18 @@ from src.models.items_catalog import ITEMS_CATALOG
 from src.network.packet_data import LeftClickData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
-from src.utils.redis_config import RedisKeys
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
-    from src.repositories.bank_repository import BankRepository
     from src.game.map_manager import MapManager
-    from src.services.map.map_resources_service import MapResourcesService
-    from src.repositories.merchant_repository import MerchantRepository
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
+    from src.repositories.bank_repository import BankRepository
+    from src.repositories.merchant_repository import MerchantRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.map_resources_service import MapResourcesService
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)

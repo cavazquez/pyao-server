@@ -2,12 +2,9 @@
 
 import logging
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
+from src.utils.redis_client import RedisClient  # noqa: TC001
 from src.utils.redis_config import RedisKeys
-
-if TYPE_CHECKING:
-    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +26,7 @@ class BankRepository:
 
     MAX_SLOTS = 20
 
-    def __init__(self, redis_client: "RedisClient") -> None:
+    def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el repositorio de banco.
 
         Args:

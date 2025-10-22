@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.models.npc import NPC
-from src.services.npc.npc_ai_service import NPCAIService
 from src.repositories.npc_repository import NPCRepository
+from src.services.npc.npc_ai_service import NPCAIService
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient

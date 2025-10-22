@@ -5,15 +5,15 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from src.services.player.equipment_service import EquipmentService
-from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
+from src.repositories.inventory_repository import InventoryRepository
+from src.services.player.equipment_service import EquipmentService
 from src.utils.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
     from src.repositories.equipment_repository import EquipmentRepository
-    from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

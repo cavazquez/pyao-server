@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.services.npc.npc_death_service import NPCDeathService
+    from src.models.spell_catalog import SpellCatalog
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
-    from src.models.spell_catalog import SpellCatalog
+    from src.services.npc.npc_death_service import NPCDeathService
 
 logger = logging.getLogger(__name__)
 

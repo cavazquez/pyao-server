@@ -4,9 +4,9 @@ import logging
 import time
 
 from src.core.data_initializer import DataInitializer
+from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisKeys
-from src.repositories.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 

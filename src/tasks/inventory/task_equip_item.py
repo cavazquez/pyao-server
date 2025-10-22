@@ -3,18 +3,18 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.services.player.equipment_service import EquipmentService
-from src.repositories.inventory_repository import InventoryRepository
 from src.network.packet_data import EquipItemData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
-from src.services.player.player_service import PlayerService
 from src.network.session_manager import SessionManager
+from src.repositories.inventory_repository import InventoryRepository
+from src.services.player.equipment_service import EquipmentService
+from src.services.player.player_service import PlayerService
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.repositories.equipment_repository import EquipmentRepository
     from src.messaging.message_sender import MessageSender
+    from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

@@ -4,15 +4,15 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.models.item_catalog import ItemCatalog
-    from src.services.npc.loot_table_service import LootTableService
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.models.item_catalog import ItemCatalog
     from src.models.npc import NPC
     from src.repositories.npc_repository import NPCRepository
-    from src.services.npc.npc_respawn_service import NPCRespawnService
     from src.repositories.player_repository import PlayerRepository
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.npc.loot_table_service import LootTableService
+    from src.services.npc.npc_respawn_service import NPCRespawnService
 
 logger = logging.getLogger(__name__)
 

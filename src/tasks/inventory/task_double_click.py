@@ -3,12 +3,12 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
 from src.network.packet_data import DoubleClickData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
+from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.task import Task
 
 if TYPE_CHECKING:

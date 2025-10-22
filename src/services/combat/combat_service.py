@@ -16,10 +16,10 @@ from src.combat.combat_validator import CombatValidator
 from src.services.combat.combat_weapon_service import WeaponService
 
 if TYPE_CHECKING:
-    from src.repositories.equipment_repository import EquipmentRepository
-    from src.repositories.inventory_repository import InventoryRepository
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
+    from src.repositories.equipment_repository import EquipmentRepository
+    from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
 
