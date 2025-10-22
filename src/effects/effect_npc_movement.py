@@ -88,9 +88,9 @@ class NPCMovementEffect(TickEffect):
         npcs_to_move = random.sample(all_npcs, min(len(all_npcs), max(1, len(all_npcs) // 3)))
 
         for npc in npcs_to_move:
-            # Solo mover NPCs hostiles (lobos, goblins, etc.)
+            # Solo mover NPCs hostiles (lobos, goblins, arañas, etc.)
             # Los NPCs amigables (comerciantes, banqueros) no se mueven
-            if npc.npc_id in {1, 7}:  # Goblin=1, Lobo=7
+            if npc.is_hostile:
                 await self._move_npc_with_ai(npc, self._player_repo)
 
     async def _move_npc_with_ai(self, npc: NPC, player_repo: PlayerRepository | None) -> None:

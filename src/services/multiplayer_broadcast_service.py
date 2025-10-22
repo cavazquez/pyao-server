@@ -1,7 +1,10 @@
-"""Servicio para broadcast multijugador."""
+"""Servicio para broadcast de mensajes a múltiples jugadores."""
 
 import logging
 from typing import TYPE_CHECKING
+
+# Constante para identificar NPCs
+NPC_CHAR_INDEX_START = 10001
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -238,20 +241,8 @@ class MultiplayerBroadcastService:
             # Solo enviar CHARACTER_CHANGE si el heading cambió
             # (CHARACTER_MOVE no incluye heading para compatibilidad con cliente Godot)
             if old_heading is None or new_heading != old_heading:
-                # Obtener body y head desde Redis
-                char_body = 1  # Valor por defecto
-                char_head = 1  # Valor por defecto
-
-                # Obtener username del char_index
-                username = self.map_manager.get_username(char_index, map_id)
-                if username and self.account_repo:
-                    account_data = await self.account_repo.get_account(username)
-                    if account_data:
-                        char_body = int(account_data.get("char_race", 1))
-                        char_head = int(account_data.get("char_head", 1))
-                        # Si body es 0, usar valor por defecto
-                        if char_body == 0:
-                            char_body = 1
+                # Obtener body_id y head_id según si es NPC o jugador
+                char_body, char_head = await self._get_character_appearance(char_index, map_id)
 
                 await sender.send_character_change(
                     char_index, body=char_body, head=char_head, heading=new_heading
@@ -270,6 +261,41 @@ class MultiplayerBroadcastService:
             )
 
         return notified
+
+    async def _get_character_appearance(self, char_index: int, map_id: int) -> tuple[int, int]:
+        """Obtiene el body_id y head_id de un personaje (NPC o jugador).
+
+        Args:
+            char_index: Índice del personaje.
+            map_id: ID del mapa.
+
+        Returns:
+            Tupla (body_id, head_id).
+        """
+        # Detectar si es NPC o jugador
+        if char_index >= NPC_CHAR_INDEX_START:
+            # Es un NPC - obtener desde MapManager
+            npc = self.map_manager.get_npc_by_char_index(map_id, char_index)
+            if npc:
+                return (npc.body_id, npc.head_id)
+            # NPC no encontrado, usar valores por defecto
+            return (1, 0)
+
+        # Es un jugador - obtener desde Redis
+        char_body = 1  # Valor por defecto
+        char_head = 1  # Valor por defecto
+
+        username = self.map_manager.get_username(char_index, map_id)
+        if username and self.account_repo:
+            account_data = await self.account_repo.get_account(username)
+            if account_data:
+                char_body = int(account_data.get("char_race", 1))
+                char_head = int(account_data.get("char_head", 1))
+                # Si body es 0, usar valor por defecto
+                if char_body == 0:
+                    char_body = 1
+
+        return (char_body, char_head)
 
     async def broadcast_character_create(
         self,

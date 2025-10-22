@@ -29,9 +29,7 @@ class CombatMessageSender:
         """
         self.connection = connection
 
-    async def send_npc_hit_user(
-        self, damage: int, body_part: BodyPart | None = None
-    ) -> None:
+    async def send_npc_hit_user(self, damage: int, body_part: BodyPart | None = None) -> None:
         """Envía mensaje cuando un NPC golpea al jugador.
 
         Este mensaje se envía mediante MULTI_MESSAGE con índice NPCHitUser (12).

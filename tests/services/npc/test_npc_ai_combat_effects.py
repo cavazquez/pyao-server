@@ -68,9 +68,7 @@ def test_npc():
 
 
 @pytest.mark.asyncio
-async def test_npc_attack_sends_damage_message(
-    npc_ai_service, mock_services, test_npc
-):
+async def test_npc_attack_sends_damage_message(npc_ai_service, mock_services, test_npc):
     """Verifica que al atacar se envíe el mensaje NPCHitUser."""
     # Configurar mocks
     target_user_id = 1
@@ -82,12 +80,8 @@ async def test_npc_attack_sends_damage_message(
     )
 
     # Mock player_repo
-    mock_services["player_repo"].get_stats = AsyncMock(
-        return_value={"min_hp": 85, "max_hp": 100}
-    )
-    mock_services["player_repo"].get_position = AsyncMock(
-        return_value={"map": 1, "x": 51, "y": 50}
-    )
+    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     # Mock message_sender
     message_sender = MagicMock()
@@ -96,9 +90,7 @@ async def test_npc_attack_sends_damage_message(
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
 
-    mock_services["map_manager"].get_message_sender = MagicMock(
-        return_value=message_sender
-    )
+    mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
     # Ejecutar ataque
     with patch("time.time", return_value=10.0):
@@ -110,9 +102,7 @@ async def test_npc_attack_sends_damage_message(
 
 
 @pytest.mark.asyncio
-async def test_npc_attack_sends_sound_effect(
-    npc_ai_service, mock_services, test_npc
-):
+async def test_npc_attack_sends_sound_effect(npc_ai_service, mock_services, test_npc):
     """Verifica que al atacar se envíe el sonido SWORD_HIT."""
     target_user_id = 1
     damage = 15
@@ -121,12 +111,8 @@ async def test_npc_attack_sends_sound_effect(
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": damage, "player_died": False, "new_hp": 85}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(
-        return_value={"min_hp": 85, "max_hp": 100}
-    )
-    mock_services["player_repo"].get_position = AsyncMock(
-        return_value={"map": 1, "x": 51, "y": 50}
-    )
+    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
     message_sender.send_npc_hit_user = AsyncMock()
@@ -134,24 +120,18 @@ async def test_npc_attack_sends_sound_effect(
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
 
-    mock_services["map_manager"].get_message_sender = MagicMock(
-        return_value=message_sender
-    )
+    mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
     # Ejecutar ataque
     with patch("time.time", return_value=10.0):
         await npc_ai_service.try_attack_player(test_npc, target_user_id)
 
     # Verificar que se llamó send_play_wave con SWORD_HIT
-    message_sender.send_play_wave.assert_called_once_with(
-        SoundID.SWORD_HIT, test_npc.x, test_npc.y
-    )
+    message_sender.send_play_wave.assert_called_once_with(SoundID.SWORD_HIT, test_npc.x, test_npc.y)
 
 
 @pytest.mark.asyncio
-async def test_npc_attack_sends_visual_effect(
-    npc_ai_service, mock_services, test_npc
-):
+async def test_npc_attack_sends_visual_effect(npc_ai_service, mock_services, test_npc):
     """Verifica que al atacar se envíe el efecto visual BLOOD."""
     target_user_id = 1
     damage = 15
@@ -160,12 +140,8 @@ async def test_npc_attack_sends_visual_effect(
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": damage, "player_died": False, "new_hp": 85}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(
-        return_value={"min_hp": 85, "max_hp": 100}
-    )
-    mock_services["player_repo"].get_position = AsyncMock(
-        return_value={"map": 1, "x": 51, "y": 50}
-    )
+    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
     message_sender.send_npc_hit_user = AsyncMock()
@@ -173,9 +149,7 @@ async def test_npc_attack_sends_visual_effect(
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
 
-    mock_services["map_manager"].get_message_sender = MagicMock(
-        return_value=message_sender
-    )
+    mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
     # Ejecutar ataque
     with patch("time.time", return_value=10.0):
@@ -190,9 +164,7 @@ async def test_npc_attack_sends_visual_effect(
 
 
 @pytest.mark.asyncio
-async def test_npc_attack_no_effects_if_no_damage(
-    npc_ai_service, mock_services, test_npc
-):
+async def test_npc_attack_no_effects_if_no_damage(npc_ai_service, mock_services, test_npc):
     """Verifica que no se envíen efectos si el ataque no hace daño."""
     target_user_id = 1
 
@@ -200,21 +172,15 @@ async def test_npc_attack_no_effects_if_no_damage(
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": 0, "player_died": False}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(
-        return_value={"min_hp": 100, "max_hp": 100}
-    )
-    mock_services["player_repo"].get_position = AsyncMock(
-        return_value={"map": 1, "x": 51, "y": 50}
-    )
+    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 100, "max_hp": 100})
+    mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
 
-    mock_services["map_manager"].get_message_sender = MagicMock(
-        return_value=message_sender
-    )
+    mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
     # Ejecutar ataque
     with patch("time.time", return_value=10.0):
@@ -227,9 +193,7 @@ async def test_npc_attack_no_effects_if_no_damage(
 
 
 @pytest.mark.asyncio
-async def test_npc_attack_complete_sequence(
-    npc_ai_service, mock_services, test_npc
-):
+async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_npc):
     """Verifica la secuencia completa: mensaje + sonido + FX + stats."""
     target_user_id = 1
     damage = 20
@@ -252,9 +216,7 @@ async def test_npc_attack_complete_sequence(
             "exp": 1000,
         }
     )
-    mock_services["player_repo"].get_position = AsyncMock(
-        return_value={"map": 1, "x": 51, "y": 50}
-    )
+    mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
     message_sender.send_npc_hit_user = AsyncMock()
@@ -262,9 +224,7 @@ async def test_npc_attack_complete_sequence(
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
 
-    mock_services["map_manager"].get_message_sender = MagicMock(
-        return_value=message_sender
-    )
+    mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
     # Ejecutar ataque
     with patch("time.time", return_value=10.0):
@@ -277,9 +237,7 @@ async def test_npc_attack_complete_sequence(
     message_sender.send_npc_hit_user.assert_called_once_with(damage)
 
     # 2. Sonido
-    message_sender.send_play_wave.assert_called_once_with(
-        SoundID.SWORD_HIT, test_npc.x, test_npc.y
-    )
+    message_sender.send_play_wave.assert_called_once_with(SoundID.SWORD_HIT, test_npc.x, test_npc.y)
 
     # 3. Efecto visual
     message_sender.send_create_fx.assert_called_once_with(
