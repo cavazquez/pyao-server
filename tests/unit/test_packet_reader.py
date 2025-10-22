@@ -4,7 +4,7 @@ import struct
 
 import pytest
 
-from src.packet_reader import PacketReader
+from src.network.packet_reader import PacketReader
 
 
 def test_packet_reader_read_byte() -> None:

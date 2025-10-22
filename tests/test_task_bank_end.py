@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.task_bank_end import TaskBankEnd
+from src.tasks.banking.task_bank_end import TaskBankEnd
 
 
 @pytest.mark.asyncio

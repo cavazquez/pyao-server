@@ -6,15 +6,15 @@ import sys
 from typing import TYPE_CHECKING
 
 import redis
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
-from src.server_initializer import ServerInitializer
-from src.task_factory import TaskFactory
-from src.task_null import TaskNull
+from src.core.server_initializer import ServerInitializer
+from src.tasks.task_factory import TaskFactory
+from src.tasks.task_null import TaskNull
 
 if TYPE_CHECKING:
-    from src.dependency_container import DependencyContainer
-    from src.task import Task
+    from src.core.dependency_container import DependencyContainer
+    from src.tasks.task import Task
 
 logger = logging.getLogger(__name__)
 

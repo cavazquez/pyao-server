@@ -3,13 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator
+from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.services.player.stamina_service import STAMINA_COST_WALK
-from src.task import Task
+from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.services.map.map_transition_service import MapTransitionService
     from src.messaging.message_sender import MessageSender
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService

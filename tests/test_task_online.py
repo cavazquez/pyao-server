@@ -4,11 +4,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
-from src.map_manager import MapManager
+from src.network.client_connection import ClientConnection
+from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
-from src.packet_id import ClientPacketID
-from src.task_online import TaskOnline
+from src.network.packet_id import ClientPacketID
+from src.tasks.task_online import TaskOnline
 
 
 @pytest.mark.asyncio

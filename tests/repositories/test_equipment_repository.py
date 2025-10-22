@@ -8,10 +8,10 @@ import pytest
 import pytest_asyncio
 
 from src.repositories.equipment_repository import EquipmentRepository
-from src.equipment_slot import EquipmentSlot
+from src.utils.equipment_slot import EquipmentSlot
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 
 @pytest_asyncio.fixture

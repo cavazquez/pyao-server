@@ -6,7 +6,7 @@ import pytest
 
 from src.repositories.bank_repository import BankRepository
 from src.repositories.player_repository import PlayerRepository
-from src.task_bank_extract_gold import TaskBankExtractGold
+from src.tasks.banking.task_bank_extract_gold import TaskBankExtractGold
 
 
 @pytest.mark.asyncio

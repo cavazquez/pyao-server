@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.map_manager import MapManager
+from src.game.map_manager import MapManager
 from src.models.npc import NPC
 
 

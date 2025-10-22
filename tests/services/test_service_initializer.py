@@ -4,10 +4,10 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from src.item_catalog import ItemCatalog
+from src.models.item_catalog import ItemCatalog
 from src.services.npc.loot_table_service import LootTableService
-from src.npc_catalog import NPCCatalog
-from src.service_initializer import ServiceInitializer
+from src.models.npc_catalog import NPCCatalog
+from src.core.service_initializer import ServiceInitializer
 from src.models.spell_catalog import SpellCatalog
 
 
@@ -43,7 +43,7 @@ async def test_service_initializer_creates_all_services(
 
     # Patchear NPCService para que retorne nuestro mock
     with pytest.MonkeyPatch.context() as m:
-        m.setattr("src.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service)
+        m.setattr("src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service)
         services = await initializer.initialize_all()
 
     # Verificar que se crearon todos los servicios
@@ -77,7 +77,7 @@ async def test_service_initializer_returns_dict(
     initializer = ServiceInitializer(mock_repositories, mock_map_manager)
 
     with pytest.MonkeyPatch.context() as m:
-        m.setattr("src.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service)
+        m.setattr("src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service)
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)

@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.merchant_data_loader import MerchantDataLoader
-from src.redis_client import RedisClient
-from src.redis_config import RedisKeys
+from src.models.merchant_data_loader import MerchantDataLoader
+from src.utils.redis_client import RedisClient
+from src.utils.redis_config import RedisKeys
 
 
 @pytest.fixture

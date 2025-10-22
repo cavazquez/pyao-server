@@ -3,11 +3,11 @@
 import logging
 from typing import TYPE_CHECKING, Any, cast
 
-from src.equipment_slot import EquipmentSlot
-from src.redis_config import RedisKeys
+from src.utils.equipment_slot import EquipmentSlot
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 

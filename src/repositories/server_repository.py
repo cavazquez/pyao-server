@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 

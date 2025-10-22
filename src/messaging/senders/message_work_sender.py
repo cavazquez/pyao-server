@@ -4,10 +4,10 @@ import logging
 import struct
 from typing import TYPE_CHECKING
 
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

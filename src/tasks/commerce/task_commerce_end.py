@@ -2,7 +2,7 @@
 
 import logging
 
-from src.task import Task
+from src.tasks.task import Task
 
 logger = logging.getLogger(__name__)
 

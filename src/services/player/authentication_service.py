@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.password_utils import hash_password
+from src.utils.password_utils import hash_password
 
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository

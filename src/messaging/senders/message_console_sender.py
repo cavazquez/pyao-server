@@ -3,10 +3,10 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_console import build_console_msg_response, build_error_msg_response
+from src.network.msg_console import build_console_msg_response, build_error_msg_response
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

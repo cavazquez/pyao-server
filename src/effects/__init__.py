@@ -1,0 +1,1 @@
+"""Efectos del juego."""

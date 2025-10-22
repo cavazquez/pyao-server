@@ -14,7 +14,7 @@ from src.messaging.senders.message_visual_effects_sender import VisualEffectsMes
 from src.messaging.senders.message_work_sender import WorkMessageSender
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

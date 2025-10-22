@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.base_data_loader import BaseDataLoader
-from src.data_initializer import DataInitializer
-from src.redis_client import RedisClient
+from src.utils.base_data_loader import BaseDataLoader
+from src.core.data_initializer import DataInitializer
+from src.utils.redis_client import RedisClient
 
 
 class MockLoader(BaseDataLoader):

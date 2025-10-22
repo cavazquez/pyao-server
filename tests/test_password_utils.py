@@ -1,6 +1,6 @@
 """Tests para password_utils."""
 
-from src.password_utils import hash_password, verify_password
+from src.utils.password_utils import hash_password, verify_password
 
 
 def test_hash_password_generates_sha256():

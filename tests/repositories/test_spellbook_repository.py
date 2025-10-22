@@ -8,7 +8,7 @@ import pytest
 from src.repositories.spellbook_repository import SpellbookRepository
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 
 @pytest.mark.asyncio

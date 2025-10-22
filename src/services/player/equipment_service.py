@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.equipment_slot import EquipmentSlot
+from src.utils.equipment_slot import EquipmentSlot
 from src.models.items_catalog import get_item
 
 if TYPE_CHECKING:

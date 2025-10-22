@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.effect_hunger_thirst import HungerThirstEffect
+from src.effects.effect_hunger_thirst import HungerThirstEffect
 
 
 @pytest.fixture

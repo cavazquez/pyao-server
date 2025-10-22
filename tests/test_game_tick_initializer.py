@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from src.game_tick import GameTick
-from src.game_tick_initializer import GameTickInitializer
+from src.game.game_tick import GameTick
+from src.core.game_tick_initializer import GameTickInitializer
 
 
 @pytest.mark.asyncio

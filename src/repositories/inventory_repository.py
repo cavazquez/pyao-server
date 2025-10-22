@@ -7,12 +7,12 @@ los componentes más simples: InventoryStorage y InventoryStackingStrategy.
 import logging
 from typing import TYPE_CHECKING
 
-from src.inventory_slot import InventorySlot
-from src.inventory_stacking_strategy import InventoryStackingStrategy
-from src.inventory_storage import InventoryStorage
+from src.utils.inventory_slot import InventorySlot
+from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
+from src.utils.inventory_storage import InventoryStorage
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 

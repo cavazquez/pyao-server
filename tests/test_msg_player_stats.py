@@ -1,6 +1,6 @@
 """Tests para msg_player_stats.py."""
 
-from src.msg_player_stats import (
+from src.network.msg_player_stats import (
     build_update_exp_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
@@ -8,7 +8,7 @@ from src.msg_player_stats import (
     build_update_sta_response,
     build_update_user_stats_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_update_hp_response() -> None:

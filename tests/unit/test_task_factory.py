@@ -4,10 +4,10 @@ from unittest.mock import Mock
 
 import pytest
 
-from src.dependency_container import DependencyContainer
-from src.packet_id import ClientPacketID
-from src.task_factory import TaskFactory
-from src.task_null import TaskNull
+from src.core.dependency_container import DependencyContainer
+from src.network.packet_id import ClientPacketID
+from src.tasks.task_factory import TaskFactory
+from src.tasks.task_null import TaskNull
 from src.tasks.player.task_login import TaskLogin
 from src.tasks.player.task_walk import TaskWalk
 

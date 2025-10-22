@@ -2,7 +2,7 @@
 
 from unittest.mock import Mock
 
-from src.dependency_container import DependencyContainer
+from src.core.dependency_container import DependencyContainer
 
 
 def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915

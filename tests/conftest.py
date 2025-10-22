@@ -3,7 +3,7 @@
 import pytest_asyncio
 from fakeredis import aioredis
 
-from src.redis_client import RedisClient
+from src.utils.redis_client import RedisClient
 
 
 @pytest_asyncio.fixture

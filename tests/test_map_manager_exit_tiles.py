@@ -4,7 +4,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from src.map_manager import MapManager
+from src.game.map_manager import MapManager
 
 
 class TestMapManagerExitTiles:

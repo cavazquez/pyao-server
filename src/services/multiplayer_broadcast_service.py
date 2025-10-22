@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
 

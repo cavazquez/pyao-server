@@ -7,7 +7,7 @@ import pytest
 from src.repositories.bank_repository import BankRepository
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 
 @pytest.mark.asyncio

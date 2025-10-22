@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 
 from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
-from src.task import Task
+from src.tasks.task import Task
 
 if TYPE_CHECKING:
     from src.repositories.inventory_repository import InventoryRepository
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.services.map.map_resources_service import MapResourcesService
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository

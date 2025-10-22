@@ -1,12 +1,12 @@
 """Tests para msg_character.py."""
 
-from src.msg_character import (
+from src.network.msg_character import (
     build_character_change_response,
     build_character_create_response,
     build_character_move_response,
     build_character_remove_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_character_remove_response() -> None:

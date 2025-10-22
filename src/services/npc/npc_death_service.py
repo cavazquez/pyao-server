@@ -4,9 +4,9 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.item_catalog import ItemCatalog
+    from src.models.item_catalog import ItemCatalog
     from src.services.npc.loot_table_service import LootTableService
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.models.npc import NPC

@@ -1,0 +1,1 @@
+"""Mecánicas de juego."""

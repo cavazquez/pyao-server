@@ -1,6 +1,6 @@
 """Tests básicos para MeditationEffect."""
 
-from src.meditation_effect import MeditationEffect
+from src.effects.meditation_effect import MeditationEffect
 
 
 class TestMeditationEffect:

@@ -3,9 +3,9 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.packet_reader import PacketReader
-from src.session_manager import SessionManager
-from src.task import Task
+from src.network.packet_reader import PacketReader
+from src.network.session_manager import SessionManager
+from src.tasks.task import Task
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender

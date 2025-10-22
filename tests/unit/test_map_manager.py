@@ -4,8 +4,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
-from src.map_manager import MapManager
+from src.network.client_connection import ClientConnection
+from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
 
 

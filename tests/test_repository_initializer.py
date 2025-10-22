@@ -10,7 +10,7 @@ from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.merchant_repository import MerchantRepository
 from src.repositories.npc_repository import NPCRepository
 from src.repositories.player_repository import PlayerRepository
-from src.repository_initializer import RepositoryInitializer
+from src.core.repository_initializer import RepositoryInitializer
 from src.repositories.server_repository import ServerRepository
 from src.repositories.spellbook_repository import SpellbookRepository
 

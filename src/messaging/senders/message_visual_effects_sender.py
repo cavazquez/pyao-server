@@ -3,11 +3,11 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_visual_effects import build_create_fx_response
-from src.visual_effects import FXLoops, VisualEffectID
+from src.network.msg_visual_effects import build_create_fx_response
+from src.utils.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

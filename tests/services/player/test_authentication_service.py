@@ -6,7 +6,7 @@ import pytest
 
 from src.repositories.account_repository import AccountRepository
 from src.services.player.authentication_service import AuthenticationService
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
 
 

@@ -1,13 +1,13 @@
 """Tests para msg_map.py."""
 
-from src.msg_map import (
+from src.network.msg_map import (
     build_block_position_response,
     build_change_map_response,
     build_object_create_response,
     build_object_delete_response,
     build_pos_update_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_change_map_response() -> None:

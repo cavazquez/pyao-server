@@ -8,8 +8,8 @@ import pytest_asyncio
 from fakeredis import aioredis
 
 import redis
-from src.redis_client import RedisClient
-from src.redis_config import RedisConfig, RedisKeys
+from src.utils.redis_client import RedisClient
+from src.utils.redis_config import RedisConfig, RedisKeys
 
 
 @pytest_asyncio.fixture

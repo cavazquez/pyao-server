@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.packet_id import ClientPacketID
-from src.task_motd import TaskMotd
+from src.network.packet_id import ClientPacketID
+from src.tasks.task_motd import TaskMotd
 
 
 @pytest.mark.asyncio

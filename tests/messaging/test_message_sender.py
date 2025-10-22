@@ -20,7 +20,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
 
 

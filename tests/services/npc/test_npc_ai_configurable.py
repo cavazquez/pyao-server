@@ -11,7 +11,7 @@ from src.services.npc.npc_ai_service import NPCAIService
 from src.repositories.npc_repository import NPCRepository
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 
 
 @pytest.mark.asyncio

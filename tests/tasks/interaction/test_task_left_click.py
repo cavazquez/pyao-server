@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.map_manager import MapManager
+from src.game.map_manager import MapManager
 from src.models.npc import NPC
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.interaction.task_left_click import TaskLeftClick

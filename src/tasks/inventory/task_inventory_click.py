@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 
 from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
-from src.session_manager import SessionManager
-from src.task import Task
+from src.network.session_manager import SessionManager
+from src.tasks.task import Task
 
 if TYPE_CHECKING:
     from src.repositories.equipment_repository import EquipmentRepository

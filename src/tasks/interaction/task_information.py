@@ -4,10 +4,10 @@ import logging
 import time
 from typing import TYPE_CHECKING
 
-from src.task import Task
+from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.repositories.server_repository import ServerRepository
 

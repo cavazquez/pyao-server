@@ -5,10 +5,10 @@ import uuid
 from typing import TYPE_CHECKING
 
 from src.models.npc import NPC
-from src.redis_config import RedisKeys
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
-    from src.redis_client import RedisClient
+    from src.utils.redis_client import RedisClient
 else:
     RedisClient = object
 

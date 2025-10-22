@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from src.services.player.equipment_service import EquipmentService
 from src.repositories.inventory_repository import InventoryRepository
 from src.models.items_catalog import get_item
-from src.visual_effects import FXLoops, VisualEffectID
+from src.utils.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository

@@ -7,7 +7,7 @@ import pytest
 from src.services.commerce_service import CommerceService
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.player_repository import PlayerRepository
-from src.redis_client import RedisClient
+from src.utils.redis_client import RedisClient
 from src.tasks.commerce.task_commerce_buy import TaskCommerceBuy
 
 

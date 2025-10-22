@@ -2,7 +2,7 @@
 
 from unittest.mock import mock_open, patch
 
-from src.item_catalog import ItemCatalog
+from src.models.item_catalog import ItemCatalog
 
 
 class TestItemCatalog:

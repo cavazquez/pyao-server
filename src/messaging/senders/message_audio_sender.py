@@ -3,11 +3,11 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_audio import build_play_midi_response, build_play_wave_response
-from src.sounds import MusicID, SoundID
+from src.network.msg_audio import build_play_midi_response, build_play_wave_response
+from src.utils.sounds import MusicID, SoundID
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

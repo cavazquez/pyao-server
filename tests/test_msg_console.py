@@ -1,7 +1,7 @@
 """Tests para msg_console.py."""
 
-from src.msg_console import build_console_msg_response, build_error_msg_response
-from src.packet_id import ServerPacketID
+from src.network.msg_console import build_console_msg_response, build_error_msg_response
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_console_msg_response() -> None:

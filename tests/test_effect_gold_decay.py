@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.effect_gold_decay import GoldDecayEffect
+from src.effects.effect_gold_decay import GoldDecayEffect
 
 
 @pytest.fixture

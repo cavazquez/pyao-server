@@ -3,8 +3,8 @@
 import struct
 from typing import TYPE_CHECKING
 
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator
+from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 
 if TYPE_CHECKING:
     import pytest

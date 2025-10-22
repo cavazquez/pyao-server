@@ -5,7 +5,7 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
 
 logger = logging.getLogger(__name__)
 

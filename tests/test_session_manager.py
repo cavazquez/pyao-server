@@ -1,6 +1,6 @@
 """Tests para SessionManager."""
 
-from src.session_manager import SessionManager
+from src.network.session_manager import SessionManager
 
 
 def test_get_user_id_success():

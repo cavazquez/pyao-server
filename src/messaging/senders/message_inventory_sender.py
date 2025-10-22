@@ -3,17 +3,17 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_inventory import (
+from src.network.msg_inventory import (
     build_change_bank_slot_response,
     build_change_inventory_slot_response,
     build_change_npc_inventory_slot_response,
     build_change_spell_slot_response,
     build_commerce_init_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

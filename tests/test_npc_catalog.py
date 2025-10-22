@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from src.npc_catalog import NPCCatalog
+from src.models.npc_catalog import NPCCatalog
 
 
 class TestNPCCatalog:

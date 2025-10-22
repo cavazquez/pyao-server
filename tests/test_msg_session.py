@@ -1,13 +1,13 @@
 """Tests para msg_session.py."""
 
-from src.msg_session import (
+from src.network.msg_session import (
     build_attributes_response,
     build_dice_roll_response,
     build_logged_response,
     build_pong_response,
     build_user_char_index_in_server_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_dice_roll_response() -> None:

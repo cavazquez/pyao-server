@@ -2,8 +2,8 @@
 
 import struct
 
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator, ValidationResult
+from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator, ValidationResult
 
 
 def test_packet_validator_read_slot_valid() -> None:

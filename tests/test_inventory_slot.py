@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.inventory_slot import InventorySlot
+from src.utils.inventory_slot import InventorySlot
 
 
 class TestInventorySlot:

@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock
 
-from src.npc_ai_effect import NPCAIEffect
+from src.effects.npc_ai_effect import NPCAIEffect
 
 
 class TestNPCAIEffect:

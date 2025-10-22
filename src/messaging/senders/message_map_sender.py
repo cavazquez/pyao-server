@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_map import (
+from src.network.msg_map import (
     build_block_position_response,
     build_change_map_response,
     build_object_create_response,
@@ -12,7 +12,7 @@ from src.msg_map import (
 )
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

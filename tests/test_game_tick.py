@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.effect_gold_decay import GoldDecayEffect
-from src.effect_hunger_thirst import HungerThirstEffect
-from src.game_tick import GameTick
+from src.effects.effect_gold_decay import GoldDecayEffect
+from src.effects.effect_hunger_thirst import HungerThirstEffect
+from src.game.game_tick import GameTick
 
 
 @pytest.fixture

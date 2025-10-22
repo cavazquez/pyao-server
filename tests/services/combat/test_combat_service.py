@@ -79,7 +79,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
+        with patch("src.combat.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None
@@ -124,7 +124,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
+        with patch("src.combat.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None
@@ -232,7 +232,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_critical_calculator.random.random", return_value=1.0):
+        with patch("src.combat.combat_critical_calculator.random.random", return_value=1.0):
             result = await service.player_attack_npc(1, npc)
 
         assert result is not None
@@ -268,7 +268,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_damage_calculator.random.uniform", return_value=1.0):
+        with patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.0):
             result = await service.npc_attack_player(npc, 1)
 
         assert result is not None
@@ -308,7 +308,7 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat_damage_calculator.random.uniform", return_value=1.2):
+        with patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.2):
             result = await service.npc_attack_player(npc, 1)
 
         assert result is not None

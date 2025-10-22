@@ -1,7 +1,7 @@
 """Tests para msg_visual_effects.py."""
 
-from src.msg_visual_effects import build_create_fx_response
-from src.packet_id import ServerPacketID
+from src.network.msg_visual_effects import build_create_fx_response
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_create_fx_response() -> None:

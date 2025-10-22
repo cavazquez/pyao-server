@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.packet_builder import PacketBuilder
+from src.network.packet_builder import PacketBuilder
 
 
 def test_packet_builder_empty() -> None:

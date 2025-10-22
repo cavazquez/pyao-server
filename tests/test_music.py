@@ -4,10 +4,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
-from src.packet_id import ServerPacketID
-from src.sounds import MusicID
+from src.network.packet_id import ServerPacketID
+from src.utils.sounds import MusicID
 
 
 @pytest.mark.asyncio

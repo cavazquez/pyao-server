@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.senders.message_inventory_sender import InventoryMessageSender
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 @pytest.mark.asyncio

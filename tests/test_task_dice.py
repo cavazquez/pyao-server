@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
-from src.task_dice import TaskDice
+from src.tasks.task_dice import TaskDice
 
 
 @pytest.mark.asyncio

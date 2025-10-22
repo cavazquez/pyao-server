@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.msg_character import (
+from src.network.msg_character import (
     build_character_change_response,
     build_character_create_response,
     build_character_move_response,
@@ -11,7 +11,7 @@ from src.msg_character import (
 )
 
 if TYPE_CHECKING:
-    from src.client_connection import ClientConnection
+    from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
 

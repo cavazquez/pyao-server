@@ -5,12 +5,12 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.repositories.account_repository import AccountRepository
-from src.client_connection import ClientConnection
+from src.network.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
-from src.packet_id import ClientPacketID, ServerPacketID
-from src.password_utils import hash_password
+from src.network.packet_id import ClientPacketID, ServerPacketID
+from src.utils.password_utils import hash_password
 from src.repositories.player_repository import PlayerRepository
-from src.task_account import TaskCreateAccount
+from src.tasks.player.task_account import TaskCreateAccount
 
 
 @pytest.mark.asyncio

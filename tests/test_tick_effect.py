@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.tick_effect import TickEffect
+from src.effects.tick_effect import TickEffect
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.services.combat.combat_service import CombatService
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.models.npc import NPC
     from src.services.npc.npc_service import NPCService

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.services.combat.combat_weapon_service import WeaponService
-from src.equipment_slot import EquipmentSlot
+from src.utils.equipment_slot import EquipmentSlot
 
 
 @pytest.mark.asyncio

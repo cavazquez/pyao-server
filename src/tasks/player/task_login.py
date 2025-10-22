@@ -6,24 +6,24 @@ from typing import TYPE_CHECKING
 
 from src.repositories.account_repository import AccountRepository
 from src.services.player.authentication_service import AuthenticationService
-from src.map_manager import MapManager
+from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.services.npc.npc_service import NPCService
-from src.packet_reader import PacketReader
-from src.packet_validator import PacketValidator
+from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.repositories.player_repository import PlayerRepository
 from src.services.player.player_service import PlayerService
 from src.repositories.server_repository import ServerRepository
-from src.session_manager import SessionManager
+from src.network.session_manager import SessionManager
 from src.repositories.spellbook_repository import SpellbookRepository
-from src.task import Task
-from src.task_motd import TaskMotd
+from src.tasks.task import Task
+from src.tasks.task_motd import TaskMotd
 
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
     from src.repositories.equipment_repository import EquipmentRepository
-    from src.map_manager import MapManager
+    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.services.npc.npc_service import NPCService
     from src.services.map.player_map_service import PlayerMapService

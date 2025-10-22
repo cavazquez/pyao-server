@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.map_manager import MapManager
+from src.game.map_manager import MapManager
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.player.task_walk import TaskWalk

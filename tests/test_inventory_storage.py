@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.inventory_slot import InventorySlot
-from src.inventory_storage import InventoryStorage
+from src.utils.inventory_slot import InventorySlot
+from src.utils.inventory_storage import InventoryStorage
 
 
 @pytest.mark.asyncio

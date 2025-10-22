@@ -1,7 +1,7 @@
 """Tests para msg_audio.py."""
 
-from src.msg_audio import build_play_midi_response, build_play_wave_response
-from src.packet_id import ServerPacketID
+from src.network.msg_audio import build_play_midi_response, build_play_wave_response
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_play_midi_response() -> None:

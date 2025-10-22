@@ -1,6 +1,6 @@
 """Tests para msg_inventory.py."""
 
-from src.msg_inventory import (
+from src.network.msg_inventory import (
     build_change_bank_slot_response,
     build_change_inventory_slot_response,
     build_change_npc_inventory_slot_response,
@@ -8,7 +8,7 @@ from src.msg_inventory import (
     build_commerce_end_response,
     build_commerce_init_response,
 )
-from src.packet_id import ServerPacketID
+from src.network.packet_id import ServerPacketID
 
 
 def test_build_change_inventory_slot_response() -> None:
