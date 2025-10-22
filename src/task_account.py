@@ -294,11 +294,15 @@ class TaskCreateAccount(Task):
             await inventory_repo.add_item(user_id, item_id=3, quantity=10)  # 10 Manzanas
             await inventory_repo.add_item(user_id, item_id=4, quantity=10)  # 10 Aguas
             await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
+            # Armadura inicial (Newbie)
+            await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
             # Herramientas de trabajo (Newbie)
             await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador
             await inventory_repo.add_item(user_id, item_id=562, quantity=1)  # Piquete de Minero
             await inventory_repo.add_item(user_id, item_id=563, quantity=1)  # Caña de Pescar
-            logger.info("Inventario inicial creado para user_id %d", user_id)
+            logger.info(
+                "Inventario inicial creado para user_id %d (incluye Armadura de Aprendiz)", user_id
+            )
 
             # Ejecutar login automático después de crear la cuenta
             login_task = TaskLogin(

@@ -12266,3 +12266,320 @@ Crucial = 1
 Newbie = 1
 ClasesProhibidas = ["PIRATA", "MAGO", "PALADIN", "CLERIGO", "ASESINO", "LADRON", "BANDIDO", "GUERRERO", "BARDO", "DRUIDA", "TRABAJADOR"]
 
+# ============================================
+# SETS DE ARMADURAS COMPLETOS
+# Agregados: 21 de octubre, 2025
+# ============================================
+
+# ============================================
+# SET DE NOVATO - Defensa Baja (5-10)
+# ============================================
+
+[[item]]
+id = 1053
+Name = "Armadura de Cuero Reforzado"
+GrhIndex = 526
+ObjType = 3  # Armadura
+NumRopaje = 22
+Agarrable = 0
+MaxDef = 18
+MinDef = 12
+Valor = 5500
+sale_price = 5500
+Crucial = 1
+ClasesProhibidas = ["MAGO"]
+
+[[item]]
+id = 1054
+Name = "Casco de Cuero"
+GrhIndex = 559
+ObjType = 17  # Casco
+NumRopaje = 2
+Agarrable = 0
+Anim = 1
+MaxDef = 8
+MinDef = 5
+Valor = 1200
+sale_price = 1200
+Crucial = 1
+ClasesProhibidas = ["MAGO"]
+
+[[item]]
+id = 1055
+Name = "Botas de Cuero"
+GrhIndex = 546
+ObjType = 20  # Botas
+NumRopaje = 1
+Agarrable = 0
+MaxDef = 5
+MinDef = 3
+Valor = 800
+sale_price = 800
+Crucial = 1
+
+[[item]]
+id = 1056
+Name = "Guantes de Cuero"
+GrhIndex = 548
+ObjType = 19  # Guantes
+Agarrable = 0
+MaxDef = 5
+MinDef = 3
+Valor = 750
+sale_price = 750
+Crucial = 1
+
+# ============================================
+# SET DE GUERRERO - Defensa Media (15-25)
+# ============================================
+
+[[item]]
+id = 1057
+Name = "Armadura de Placas de Hierro"
+GrhIndex = 605
+ObjType = 3  # Armadura
+NumRopaje = 45
+Agarrable = 0
+MaxDef = 35
+MinDef = 25
+Valor = 15000
+sale_price = 15000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO"]
+
+[[item]]
+id = 1058
+Name = "Yelmo de Placas de Hierro"
+GrhIndex = 560
+ObjType = 17  # Casco
+NumRopaje = 3
+Agarrable = 0
+Anim = 2
+MaxDef = 18
+MinDef = 12
+Valor = 4500
+sale_price = 4500
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO"]
+
+[[item]]
+id = 1059
+Name = "Botas de Placas de Hierro"
+GrhIndex = 3043
+ObjType = 20  # Botas
+NumRopaje = 3
+Agarrable = 0
+MaxDef = 15
+MinDef = 10
+Valor = 3000
+sale_price = 3000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO"]
+
+[[item]]
+id = 1060
+Name = "Guantes de Placas de Hierro"
+GrhIndex = 3044
+ObjType = 19  # Guantes
+Agarrable = 0
+MaxDef = 15
+MinDef = 10
+Valor = 2800
+sale_price = 2800
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO"]
+
+# ============================================
+# SET DE DRAGÓN - Defensa Alta (35-55)
+# ============================================
+
+[[item]]
+id = 1061
+Name = "Armadura de Escamas de Dragón"
+GrhIndex = 756
+ObjType = 3  # Armadura
+NumRopaje = 89
+Agarrable = 0
+MaxDef = 70
+MinDef = 55
+Valor = 50000
+sale_price = 50000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA"]
+
+[[item]]
+id = 1062
+Name = "Yelmo de Escamas de Dragón"
+GrhIndex = 561
+ObjType = 17  # Casco
+NumRopaje = 4
+Agarrable = 0
+Anim = 3
+MaxDef = 38
+MinDef = 28
+Valor = 18000
+sale_price = 18000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA"]
+
+[[item]]
+id = 1063
+Name = "Botas de Escamas de Dragón"
+GrhIndex = 3045
+ObjType = 20  # Botas
+NumRopaje = 5
+Agarrable = 0
+MaxDef = 28
+MinDef = 20
+Valor = 12000
+sale_price = 12000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA"]
+
+[[item]]
+id = 1064
+Name = "Guantes de Escamas de Dragón"
+GrhIndex = 3046
+ObjType = 19  # Guantes
+Agarrable = 0
+MaxDef = 28
+MinDef = 20
+Valor = 11000
+sale_price = 11000
+Crucial = 1
+ClasesProhibidas = ["MAGO", "DRUIDA"]
+
+# ============================================
+# SET DE SOMBRAS - Defensa Media/Sigilo
+# ============================================
+
+[[item]]
+id = 1065
+Name = "Túnica de las Sombras"
+GrhIndex = 680
+ObjType = 3  # Armadura
+NumRopaje = 48
+Agarrable = 0
+MaxDef = 40
+MinDef = 32
+Valor = 25000
+sale_price = 25000
+Crucial = 1
+ClasesProhibidas = ["GUERRERO", "PALADIN", "CLERIGO"]
+
+[[item]]
+id = 1066
+Name = "Capucha de las Sombras"
+GrhIndex = 467
+ObjType = 17  # Casco
+NumRopaje = 2
+Agarrable = 0
+Anim = 9
+MaxDef = 22
+MinDef = 15
+Valor = 8000
+sale_price = 8000
+Crucial = 1
+ClasesProhibidas = ["GUERRERO", "PALADIN", "CLERIGO"]
+
+[[item]]
+id = 1067
+Name = "Botas de las Sombras"
+GrhIndex = 546
+ObjType = 20  # Botas
+NumRopaje = 2
+Agarrable = 0
+MaxDef = 18
+MinDef = 12
+Valor = 6000
+sale_price = 6000
+Crucial = 1
+
+[[item]]
+id = 1068
+Name = "Guantes de las Sombras"
+GrhIndex = 548
+ObjType = 19  # Guantes
+Agarrable = 0
+MaxDef = 18
+MinDef = 12
+Valor = 5500
+sale_price = 5500
+Crucial = 1
+
+# ============================================
+# SET MÁGICO - Para Magos/Druidas
+# ============================================
+
+[[item]]
+id = 1069
+Name = "Túnica Arcana Reforzada"
+GrhIndex = 606
+ObjType = 3  # Armadura
+NumRopaje = 46
+Agarrable = 0
+MaxDef = 20
+MinDef = 15
+Valor = 12000
+sale_price = 12000
+Crucial = 1
+ClasesProhibidas = ["GUERRERO", "PALADIN", "CAZADOR", "ASESINO", "BANDIDO", "PIRATA"]
+
+[[item]]
+id = 1070
+Name = "Sombrero de Mago Élfico"
+GrhIndex = 585
+ObjType = 17  # Casco
+NumRopaje = 17
+Agarrable = 0
+Anim = 15
+MaxDef = 12
+MinDef = 8
+Valor = 5000
+sale_price = 5000
+Crucial = 1
+ClasesProhibidas = ["GUERRERO", "PALADIN", "CAZADOR", "ASESINO", "BANDIDO", "PIRATA"]
+
+[[item]]
+id = 1071
+Name = "Botas Arcanas"
+GrhIndex = 546
+ObjType = 20  # Botas
+NumRopaje = 1
+Agarrable = 0
+MaxDef = 10
+MinDef = 6
+Valor = 4000
+sale_price = 4000
+Crucial = 1
+
+[[item]]
+id = 1072
+Name = "Guantes Arcanos"
+GrhIndex = 548
+ObjType = 19  # Guantes
+Agarrable = 0
+MaxDef = 10
+MinDef = 6
+Valor = 3800
+sale_price = 3800
+Crucial = 1
+
+# ============================================
+# ARMADURA DE INICIO (Newbie)
+# ============================================
+
+[[item]]
+id = 1073
+Name = "Armadura de Aprendiz (Newbie)"
+GrhIndex = 527
+ObjType = 3  # Armadura
+NumRopaje = 1
+Agarrable = 0
+MaxDef = 12
+MinDef = 8
+Valor = 500
+sale_price = 250
+Newbie = 1
+Crucial = 1
+ClasesProhibidas = []
