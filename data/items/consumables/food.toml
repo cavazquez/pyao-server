@@ -1,0 +1,203 @@
+# Food - 20 items
+# Generated from items.toml
+
+[[item]]
+id = 1
+Name = "Manzana Roja"
+GrhIndex = 506
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHAM = 10
+Valor = 2
+
+[[item]]
+id = 21
+Name = "Porción de Tarta"
+GrhIndex = 515
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 15
+Valor = 2
+
+[[item]]
+id = 22
+Name = "Frutas del Bosque"
+GrhIndex = 516
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 15
+Valor = 2
+
+[[item]]
+id = 23
+Name = "Pan de Trigo"
+GrhIndex = 517
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 25
+Valor = 3
+
+[[item]]
+id = 24
+Name = "Pan de Maíz"
+GrhIndex = 518
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 25
+Valor = 3
+
+[[item]]
+id = 25
+Name = "Pastel"
+GrhIndex = 519
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 90
+Valor = 9
+
+[[item]]
+id = 26
+Name = "Pollo"
+GrhIndex = 520
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 75
+Valor = 7
+
+[[item]]
+id = 27
+Name = "Chuleta"
+GrhIndex = 521
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 100
+Valor = 10
+
+[[item]]
+id = 28
+Name = "Queso de Cabra"
+GrhIndex = 522
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 50
+Valor = 6
+
+[[item]]
+id = 29
+Name = "Sandía"
+GrhIndex = 523
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 40
+Valor = 5
+
+[[item]]
+id = 64
+Name = "Manzana Roja"
+GrhIndex = 506
+ObjType = 1
+MinHam = 10
+Respawn = "1 ' Hace ReSpawn"
+Valor = 2
+
+[[item]]
+id = 81
+Name = "Sandía"
+GrhIndex = 523
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHP = 4
+MinHam = 25
+Valor = 5
+
+[[item]]
+id = 139
+Name = "Pescado"
+GrhIndex = 573
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 75
+Valor = 8
+
+[[item]]
+id = 158
+Name = "Banana"
+GrhIndex = 581
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHAM = 10
+Valor = 2
+
+[[item]]
+id = 467
+Name = "Manzana Roja (Newbie)"
+GrhIndex = 506
+ObjType = 1
+Agarrable = 0
+Crucial = 0
+MinHAM = 10
+newbie = 1
+
+[[item]]
+id = 544
+Name = "Pez Dorado"
+GrhIndex = 845
+ObjType = 1
+Agarrable = 0
+Crucial = 0
+MinHam = 75
+Valor = 16
+
+[[item]]
+id = 545
+Name = "Pez Espada"
+GrhIndex = 846
+ObjType = 1
+Agarrable = 0
+Crucial = 0
+MinHam = 75
+Valor = 13
+
+[[item]]
+id = 546
+Name = "Merluza"
+GrhIndex = 847
+ObjType = 1
+Agarrable = 0
+Crucial = 0
+MinHam = 75
+Valor = 13
+
+[[item]]
+id = 754
+Name = "Rábano"
+GrhIndex = 591
+ObjType = 1
+Agarrable = 0
+Crucial = 1
+MinHam = 40
+Valor = 5
+
+[[item]]
+id = 775
+Name = "Hipocampo"
+GrhIndex = 848
+ObjType = 1
+Agarrable = 0
+Crucial = 0
+MinHam = 75
+Valor = 13
+

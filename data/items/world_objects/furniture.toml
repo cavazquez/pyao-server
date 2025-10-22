@@ -1,0 +1,984 @@
+# Furniture - 127 items
+# Generated from items.toml
+
+[[item]]
+id = 155
+Name = "Cama"
+GrhIndex = 575
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Valor = 100
+
+[[item]]
+id = 156
+Name = "Cama"
+GrhIndex = 576
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Valor = 100
+
+[[item]]
+id = 162
+Name = "Silla"
+GrhIndex = 586
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 25
+SkCarpinteria = 9
+Valor = 15
+
+[[item]]
+id = 163
+Name = "Cuchara"
+GrhIndex = 587
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 3
+SkCarpinteria = 5
+Valor = 6
+
+[[item]]
+id = 167
+Name = "Mueble Rústico"
+GrhIndex = 593
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 400
+SkCarpinteria = 56
+Valor = 1024
+
+[[item]]
+id = 168
+Name = "Silla"
+GrhIndex = 598
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 25
+SkCarpinteria = 9
+Valor = 52
+
+[[item]]
+id = 709
+Name = "Columna Egipcia"
+GrhIndex = 1460
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 716
+Name = "Rueca"
+GrhIndex = 14
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 717
+Name = "Antorcha"
+GrhIndex = 25
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 718
+Name = "Salamandra"
+GrhIndex = 30
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 719
+Name = "Lancero"
+GrhIndex = 31
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 720
+Name = "Viga"
+GrhIndex = 32
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 721
+Name = "Marmita"
+GrhIndex = 36
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 722
+Name = "Caldero"
+GrhIndex = 37
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 723
+Name = "Humo Verde"
+GrhIndex = 49
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 724
+Name = "Mesa"
+GrhIndex = 50
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 725
+Name = "Maceta"
+GrhIndex = 51
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 726
+Name = "Biblioteca"
+GrhIndex = 52
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 727
+Name = "Biblioteca"
+GrhIndex = 492
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 728
+Name = "Biblioteca"
+GrhIndex = 534
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 729
+Name = "Hogar"
+GrhIndex = 60
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 730
+Name = "Cántaro"
+GrhIndex = 99
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 731
+Name = "Mueble con Espejo"
+GrhIndex = 309
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 732
+Name = "Mesa Circular"
+GrhIndex = 311
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 733
+Name = "Butaca"
+GrhIndex = 312
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 25
+SkCarpinteria = 9
+Valor = 15
+
+[[item]]
+id = 735
+Name = "Grilletes"
+GrhIndex = 313
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 737
+Name = "Cómoda"
+GrhIndex = 493
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 741
+Name = "Cuadro"
+GrhIndex = 497
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 742
+Name = "Cuadro"
+GrhIndex = 498
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 743
+Name = "Cuadro"
+GrhIndex = 532
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 744
+Name = "Cuadro"
+GrhIndex = 533
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 745
+Name = "Escritorio"
+GrhIndex = 499
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 746
+Name = "Farol"
+GrhIndex = 507
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 747
+Name = "Cama Doble"
+GrhIndex = 524
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 748
+Name = "Sillón"
+GrhIndex = 525
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 400
+SkCarpinteria = 56
+Valor = 666
+
+[[item]]
+id = 749
+Name = "Carretilla"
+GrhIndex = 577
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 750
+Name = "Carretilla"
+GrhIndex = 578
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 751
+Name = "Barril Pequeño"
+GrhIndex = 580
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 752
+Name = "Barril Pequeño"
+GrhIndex = 582
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 755
+Name = "Tinaja"
+GrhIndex = 592
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 756
+Name = "Mueble Rústico"
+GrhIndex = 594
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 400
+SkCarpinteria = 56
+Valor = 666
+
+[[item]]
+id = 757
+Name = "Balde"
+GrhIndex = 595
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 758
+Name = "Reloj de Arena"
+GrhIndex = 596
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 759
+Name = "Vasija"
+GrhIndex = 597
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 760
+Name = "Mesa con Mantel"
+GrhIndex = 642
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 761
+Name = "Cantero"
+GrhIndex = 648
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 762
+Name = "Cantero"
+GrhIndex = 649
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 763
+Name = "Carreta"
+GrhIndex = 650
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 764
+Name = "Carreta"
+GrhIndex = 651
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 765
+Name = "Carreta"
+GrhIndex = 652
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 766
+Name = "Arbolito"
+GrhIndex = 653
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 771
+Name = "Enorme Tinaja"
+GrhIndex = 727
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 772
+Name = "Mesa de Alquimia"
+GrhIndex = 739
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 773
+Name = "Pianola"
+GrhIndex = 747
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 774
+Name = "Cepo"
+GrhIndex = 748
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 776
+Name = "Atril"
+GrhIndex = 879
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 777
+Name = "Grilletes"
+GrhIndex = 1472
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 778
+Name = "Restos de Brazos"
+GrhIndex = 1473
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 779
+Name = "Mesa de Carpintero"
+GrhIndex = 1474
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 780
+Name = "Mesa de Comedor"
+GrhIndex = 1475
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 781
+Name = "Órgano"
+GrhIndex = 1477
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 782
+Name = "Potro"
+GrhIndex = 1479
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 783
+Name = "Potro"
+GrhIndex = 1480
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 784
+Name = "Tesoro"
+GrhIndex = 1478
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 785
+Name = "Utencillos"
+GrhIndex = 1481
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 786
+Name = "Ventana"
+GrhIndex = 1482
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 787
+Name = "Ventana"
+GrhIndex = 1483
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 788
+Name = "Sillón"
+GrhIndex = 1484
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 50
+SkCarpinteria = 9
+Valor = 84
+
+[[item]]
+id = 789
+Name = "Sillón"
+GrhIndex = 1485
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 60
+SkCarpinteria = 15
+Valor = 100
+
+[[item]]
+id = 790
+Name = "Sillón Azul"
+GrhIndex = 1485
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 60
+SkCarpinteria = 15
+Valor = 100
+
+[[item]]
+id = 791
+Name = "Sillón Azul Doble"
+GrhIndex = 1485
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 120
+SkCarpinteria = 25
+Valor = 100
+
+[[item]]
+id = 792
+Name = "Escudo de Armas"
+GrhIndex = 1488
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 793
+Name = "Escudo de Armas"
+GrhIndex = 1489
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 794
+Name = "Arbolito en Maceta"
+GrhIndex = 1490
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 795
+Name = "Arbolito en Maceta"
+GrhIndex = 1491
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 796
+Name = "Arbolito en Maceta"
+GrhIndex = 1492
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 797
+Name = "Hoguera"
+GrhIndex = 1496
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 798
+Name = "Desperdicios"
+GrhIndex = 1497
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 799
+Name = "Banqueta"
+GrhIndex = 1498
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 50
+SkCarpinteria = 9
+Valor = 84
+
+[[item]]
+id = 800
+Name = "Armario"
+GrhIndex = 1499
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+Madera = 200
+SkCarpinteria = 30
+Valor = 334
+
+[[item]]
+id = 801
+Name = "Estantes"
+GrhIndex = 1501
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 802
+Name = "Barriles"
+GrhIndex = 1502
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 803
+Name = "Utensillos"
+GrhIndex = 1503
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 804
+Name = "Mesa Real"
+GrhIndex = 1504
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 805
+Name = "Silla Real"
+GrhIndex = 2130
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 806
+Name = "Silla Real"
+GrhIndex = 2131
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 807
+Name = "Silla Real"
+GrhIndex = 2132
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 808
+Name = "Silla Real"
+GrhIndex = 2133
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 813
+Name = "Candelabro de Pie"
+GrhIndex = 2172
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 814
+Name = "Relicario"
+GrhIndex = 2173
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 815
+Name = "Altar"
+GrhIndex = 2174
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 816
+Name = "Vitreaux"
+GrhIndex = 2175
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 817
+Name = "Trofeo de Pesca"
+GrhIndex = 2138
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 818
+Name = "Trofeo de Pesca"
+GrhIndex = 2139
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 819
+Name = "Boya"
+GrhIndex = 2634
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 820
+Name = "Hojitas"
+GrhIndex = 1524
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 821
+Name = "Estalagmitas"
+GrhIndex = 1525
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 822
+Name = "Estalagmitas"
+GrhIndex = 1526
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 823
+Name = "Estalagmitas"
+GrhIndex = 1527
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 824
+Name = "Restos Mortales"
+GrhIndex = 1528
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 832
+Name = "Arbusto"
+GrhIndex = 1536
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 833
+Name = "Taza"
+GrhIndex = 1537
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 834
+Name = "Fósil"
+GrhIndex = 1538
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 835
+Name = "Fósil"
+GrhIndex = 1539
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 836
+Name = "Cuadro"
+GrhIndex = 2619
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 837
+Name = "Cuadro"
+GrhIndex = 2620
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 838
+Name = "Cuadro"
+GrhIndex = 2621
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 839
+Name = "Cuadro"
+GrhIndex = 2622
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 840
+Name = "Cuadro"
+GrhIndex = 2623
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 841
+Name = "Cuadro"
+GrhIndex = 2624
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 842
+Name = "Cuadro"
+GrhIndex = 2625
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 843
+Name = "Cuadro"
+GrhIndex = 2626
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 844
+Name = "Cuadro"
+GrhIndex = 2627
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 845
+Name = "Cuadro"
+GrhIndex = 2628
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 846
+Name = "Cuadro"
+GrhIndex = 2629
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 847
+Name = "Estandarte Legionario"
+GrhIndex = 3300
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 848
+Name = "Estandarte Real"
+GrhIndex = 3877
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 849
+Name = "Tonel"
+GrhIndex = 12429
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 852
+Name = "Tonel"
+GrhIndex = 4488
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 853
+Name = "Tonel"
+GrhIndex = 4489
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 997
+Name = "Antorcha Olímpica"
+GrhIndex = 20405
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 1011
+Name = "Farola"
+GrhIndex = 2639
+ObjType = 20
+Agarrable = 1
+
+[[item]]
+id = 1055
+Name = "Botas de Cuero"
+GrhIndex = 546
+ObjType = 20
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 1
+Valor = 800
+sale_price = 800
+
+[[item]]
+id = 1059
+Name = "Botas de Placas de Hierro"
+GrhIndex = 3043
+ObjType = 20
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+NumRopaje = 3
+Valor = 3000
+sale_price = 3000
+
+[[item]]
+id = 1063
+Name = "Botas de Escamas de Dragón"
+GrhIndex = 3045
+ObjType = 20
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 28
+MinDef = 20
+NumRopaje = 5
+Valor = 12000
+sale_price = 12000
+
+[[item]]
+id = 1067
+Name = "Botas de las Sombras"
+GrhIndex = 546
+ObjType = 20
+Agarrable = 0
+Crucial = 1
+MaxDef = 18
+MinDef = 12
+NumRopaje = 2
+Valor = 6000
+sale_price = 6000
+
+[[item]]
+id = 1071
+Name = "Botas Arcanas"
+GrhIndex = 546
+ObjType = 20
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 6
+NumRopaje = 1
+Valor = 4000
+sale_price = 4000
+

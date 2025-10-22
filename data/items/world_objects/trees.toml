@@ -1,0 +1,164 @@
+# Trees - 23 items
+# Generated from items.toml
+
+[[item]]
+id = 4
+Name = "Árbol"
+GrhIndex = 7000
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 5
+Name = "Árbol"
+GrhIndex = 7001
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 6
+Name = "Árbol"
+GrhIndex = 7002
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 46
+Name = "Árbol"
+GrhIndex = 641
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 47
+Name = "Árbol"
+GrhIndex = 642
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 48
+Name = "Árbol"
+GrhIndex = 641
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 49
+Name = "Árbol"
+GrhIndex = 644
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 50
+Name = "Árbol"
+GrhIndex = 647
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 147
+Name = "Árbol"
+GrhIndex = 7001
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 148
+Name = "Árbol de la Jungla"
+GrhIndex = 7002
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 149
+Name = "Árbol"
+GrhIndex = 7000
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 150
+Name = "Árbol"
+GrhIndex = 7222
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 151
+Name = "Árbol"
+GrhIndex = 7223
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 152
+Name = "Árbol"
+GrhIndex = 7224
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 153
+Name = "Árbol"
+GrhIndex = 7225
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 154
+Name = "Árbol"
+GrhIndex = 7226
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 472
+Name = "Palmera"
+GrhIndex = 735
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 825
+Name = "Árbol"
+GrhIndex = 1529
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 826
+Name = "Árbol"
+GrhIndex = 1530
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 827
+Name = "Árbol"
+GrhIndex = 1531
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 828
+Name = "Árbol"
+GrhIndex = 1532
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 829
+Name = "Árbol"
+GrhIndex = 1533
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 830
+Name = "Árbol"
+GrhIndex = 1534
+ObjType = 4
+Agarrable = 1
+

@@ -1,0 +1,10 @@
+# Money - 1 items
+# Generated from items.toml
+
+[[item]]
+id = 12
+Name = "Monedas de Oro"
+GrhIndex = 511
+ObjType = 5
+Agarrable = 0
+

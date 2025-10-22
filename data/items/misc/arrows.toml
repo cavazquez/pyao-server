@@ -1,0 +1,74 @@
+# Arrows - 5 items
+# Generated from items.toml
+
+[[item]]
+id = 480
+Name = "Flecha"
+GrhIndex = 752
+ObjType = 32
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+Madera = 1
+MaxHit = 3
+MinHit = 1
+SkCarpinteria = 20
+Upgrade = 551
+Valor = 16
+
+[[item]]
+id = 551
+Name = "Flecha +1"
+GrhIndex = 755
+ObjType = 32
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+Madera = 4
+MaxHit = 4
+MinHit = 1
+SkCarpinteria = 40
+Upgrade = 552
+Valor = 10
+
+[[item]]
+id = 552
+Name = "Flecha +2"
+GrhIndex = 754
+ObjType = 32
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+Madera = 6
+MaxHit = 5
+MinHit = 1
+SkCarpinteria = 65
+Valor = 16
+
+[[item]]
+id = 553
+Name = "Flecha +3"
+GrhIndex = 753
+ObjType = 32
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaderaElfica = 2
+MaxHit = 6
+MinHit = 1
+SkCarpinteria = 90
+Valor = 23
+
+[[item]]
+id = 860
+Name = "Flecha (Newbie)"
+GrhIndex = 752
+ObjType = 32
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxHit = 1
+MinHit = 1
+Newbie = 1
+Valor = 2
+

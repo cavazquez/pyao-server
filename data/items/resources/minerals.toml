@@ -1,0 +1,132 @@
+# Minerals - 15 items
+# Generated from items.toml
+
+[[item]]
+id = 188
+Name = "Yacimiento de Hierro"
+GrhIndex = 8616
+ObjType = 22
+Agarrable = 1
+MineralIndex = 192
+
+[[item]]
+id = 189
+Name = "Yacimiento de Hierro"
+GrhIndex = 8617
+ObjType = 22
+Agarrable = 1
+MineralIndex = 192
+
+[[item]]
+id = 190
+Name = "Yacimiento de Hierro"
+GrhIndex = 8618
+ObjType = 22
+Agarrable = 1
+MineralIndex = 192
+
+[[item]]
+id = 191
+Name = "Yacimiento de Hierro"
+GrhIndex = 8619
+ObjType = 22
+Agarrable = 1
+MineralIndex = 192
+
+[[item]]
+id = 192
+Name = "Minerales de Hierro"
+GrhIndex = 604
+ObjType = 23
+Agarrable = 0
+Crucial = 0
+Lingoteindex = 386
+MinSkill = 25
+Valor = 10
+
+[[item]]
+id = 193
+Name = "Minerales de Plata"
+GrhIndex = 632
+ObjType = 23
+Agarrable = 0
+Crucial = 0
+Lingoteindex = 387
+MinSkill = 50
+Valor = 12
+
+[[item]]
+id = 194
+Name = "Minerales de Oro"
+GrhIndex = 631
+ObjType = 23
+Agarrable = 0
+Crucial = 0
+Lingoteindex = 388
+MinSkill = 100
+Valor = 20
+
+[[item]]
+id = 228
+Name = "Yacimiento de Oro"
+GrhIndex = 8608
+ObjType = 22
+Agarrable = 1
+MineralIndex = 194
+
+[[item]]
+id = 229
+Name = "Yacimiento de Oro"
+GrhIndex = 8609
+ObjType = 22
+Agarrable = 1
+MineralIndex = 194
+
+[[item]]
+id = 230
+Name = "Yacimiento de Oro"
+GrhIndex = 8610
+ObjType = 22
+Agarrable = 1
+MineralIndex = 194
+
+[[item]]
+id = 231
+Name = "Yacimiento de Oro"
+GrhIndex = 8611
+ObjType = 22
+Agarrable = 1
+MineralIndex = 194
+
+[[item]]
+id = 232
+Name = "Yacimiento de Plata"
+GrhIndex = 8612
+ObjType = 22
+Agarrable = 1
+MineralIndex = 193
+
+[[item]]
+id = 233
+Name = "Yacimiento de Plata"
+GrhIndex = 8613
+ObjType = 22
+Agarrable = 1
+MineralIndex = 193
+
+[[item]]
+id = 234
+Name = "Yacimiento de Plata"
+GrhIndex = 8614
+ObjType = 22
+Agarrable = 1
+MineralIndex = 193
+
+[[item]]
+id = 235
+Name = "Yacimiento de Plata"
+GrhIndex = 8615
+ObjType = 22
+Agarrable = 1
+MineralIndex = 193
+

@@ -1,0 +1,2520 @@
+# Doors - 196 items
+# Generated from items.toml
+
+[[item]]
+id = 7
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 7
+IndexCerrada = 8
+IndexCerradaLlave = 8
+Llave = 0
+
+[[item]]
+id = 8
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 7
+IndexCerrada = 8
+IndexCerradaLlave = 8
+Llave = 0
+
+[[item]]
+id = 16
+Name = "Puerta de madera abierta 2"
+GrhIndex = 5599
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 16
+IndexCerrada = 17
+IndexCerradaLlave = 17
+Llave = 0
+
+[[item]]
+id = 17
+Name = "Puerta de madera cerrada 2"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 16
+IndexCerrada = 17
+IndexCerradaLlave = 17
+Llave = 0
+
+[[item]]
+id = 44
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Llave = 1
+
+[[item]]
+id = 51
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 2
+IndexAbierta = 51
+IndexCerrada = 52
+IndexCerradaLlave = 53
+Llave = 0
+
+[[item]]
+id = 52
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 2
+IndexAbierta = 51
+IndexCerrada = 52
+IndexCerradaLlave = 53
+Llave = 0
+
+[[item]]
+id = 53
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 2
+IndexAbierta = 51
+IndexCerrada = 52
+IndexCerradaLlave = 53
+Llave = 1
+
+[[item]]
+id = 55
+Name = "Puerta de madera abierta"
+GrhIndex = 5599
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 3
+Llave = 0
+
+[[item]]
+id = 56
+Name = "Puerta de madera cerrada"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 3
+Llave = 0
+
+[[item]]
+id = 57
+Name = "Puerta de madera cerrada"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 3
+Llave = 1
+
+[[item]]
+id = 66
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 4
+IndexAbierta = 66
+IndexCerrada = 67
+IndexCerradaLlave = 68
+Llave = 0
+
+[[item]]
+id = 67
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 4
+IndexAbierta = 66
+IndexCerrada = 67
+IndexCerradaLlave = 68
+Llave = 0
+
+[[item]]
+id = 68
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 4
+IndexAbierta = 66
+IndexCerrada = 67
+IndexCerradaLlave = 68
+Llave = 1
+
+[[item]]
+id = 70
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 5
+IndexAbierta = 70
+IndexCerrada = 71
+IndexCerradaLlave = 72
+Llave = 0
+
+[[item]]
+id = 71
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 5
+IndexAbierta = 70
+IndexCerrada = 71
+IndexCerradaLlave = 72
+Llave = 0
+
+[[item]]
+id = 72
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 5
+IndexAbierta = 70
+IndexCerrada = 71
+IndexCerradaLlave = 72
+Llave = 1
+
+[[item]]
+id = 74
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 6
+IndexAbierta = 74
+IndexCerrada = 75
+IndexCerradaLlave = 76
+Llave = 0
+
+[[item]]
+id = 75
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 6
+IndexAbierta = 74
+IndexCerrada = 75
+IndexCerradaLlave = 76
+Llave = 0
+
+[[item]]
+id = 76
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 6
+IndexAbierta = 74
+IndexCerrada = 75
+IndexCerradaLlave = 76
+Llave = 1
+
+[[item]]
+id = 88
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 7
+IndexAbierta = 88
+IndexCerrada = 89
+IndexCerradaLlave = 90
+Llave = 0
+
+[[item]]
+id = 89
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 7
+IndexAbierta = 88
+IndexCerrada = 89
+IndexCerradaLlave = 90
+Llave = 0
+
+[[item]]
+id = 90
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 7
+IndexAbierta = 88
+IndexCerrada = 89
+IndexCerradaLlave = 90
+Llave = 1
+
+[[item]]
+id = 92
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 8
+IndexAbierta = 92
+IndexCerrada = 93
+IndexCerradaLlave = 94
+Llave = 0
+
+[[item]]
+id = 93
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 8
+IndexAbierta = 92
+IndexCerrada = 93
+IndexCerradaLlave = 94
+Llave = 0
+
+[[item]]
+id = 94
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 8
+IndexAbierta = 92
+IndexCerrada = 93
+IndexCerradaLlave = 94
+Llave = 1
+
+[[item]]
+id = 96
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 9
+IndexAbierta = 96
+IndexCerrada = 97
+IndexCerradaLlave = 98
+Llave = 0
+
+[[item]]
+id = 97
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 9
+IndexAbierta = 96
+IndexCerrada = 97
+IndexCerradaLlave = 98
+Llave = 0
+
+[[item]]
+id = 98
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 9
+IndexAbierta = 96
+IndexCerrada = 97
+IndexCerradaLlave = 98
+Llave = 1
+
+[[item]]
+id = 100
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 10
+IndexAbierta = 100
+IndexCerrada = 101
+IndexCerradaLlave = 102
+Llave = 0
+
+[[item]]
+id = 101
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 10
+IndexAbierta = 100
+IndexCerrada = 101
+IndexCerradaLlave = 102
+Llave = 0
+
+[[item]]
+id = 102
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 10
+IndexAbierta = 100
+IndexCerrada = 101
+IndexCerradaLlave = 102
+Llave = 1
+
+[[item]]
+id = 104
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 11
+IndexAbierta = 104
+IndexCerrada = 105
+IndexCerradaLlave = 106
+Llave = 0
+
+[[item]]
+id = 105
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 11
+IndexAbierta = 104
+IndexCerrada = 105
+IndexCerradaLlave = 106
+Llave = 0
+
+[[item]]
+id = 106
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 11
+IndexAbierta = 104
+IndexCerrada = 105
+IndexCerradaLlave = 106
+Llave = 1
+
+[[item]]
+id = 108
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 12
+IndexAbierta = 108
+IndexCerrada = 109
+IndexCerradaLlave = 110
+Llave = 0
+
+[[item]]
+id = 109
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 12
+IndexAbierta = 108
+IndexCerrada = 109
+IndexCerradaLlave = 110
+Llave = 0
+
+[[item]]
+id = 110
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 12
+IndexAbierta = 108
+IndexCerrada = 109
+IndexCerradaLlave = 110
+Llave = 1
+
+[[item]]
+id = 112
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 13
+IndexAbierta = 112
+IndexCerrada = 113
+IndexCerradaLlave = 114
+Llave = 0
+
+[[item]]
+id = 113
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 13
+IndexAbierta = 112
+IndexCerrada = 113
+IndexCerradaLlave = 114
+Llave = 0
+
+[[item]]
+id = 114
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 13
+IndexAbierta = 112
+IndexCerrada = 113
+IndexCerradaLlave = 114
+Llave = 1
+
+[[item]]
+id = 116
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 14
+IndexAbierta = 116
+IndexCerrada = 117
+IndexCerradaLlave = 118
+Llave = 0
+
+[[item]]
+id = 117
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 14
+IndexAbierta = 116
+IndexCerrada = 117
+IndexCerradaLlave = 118
+Llave = 0
+
+[[item]]
+id = 118
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 14
+IndexAbierta = 116
+IndexCerrada = 117
+IndexCerradaLlave = 118
+Llave = 1
+
+[[item]]
+id = 120
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 15
+IndexAbierta = 120
+IndexCerrada = 121
+IndexCerradaLlave = 122
+Llave = 0
+
+[[item]]
+id = 121
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 15
+IndexAbierta = 120
+IndexCerrada = 121
+IndexCerradaLlave = 122
+Llave = 0
+
+[[item]]
+id = 122
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 15
+IndexAbierta = 120
+IndexCerrada = 121
+IndexCerradaLlave = 122
+Llave = 1
+
+[[item]]
+id = 141
+Name = "Puerta de madera abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 16
+IndexAbierta = 141
+IndexCerrada = 142
+IndexCerradaLlave = 143
+Llave = 0
+
+[[item]]
+id = 142
+Name = "Puerta de madera cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 16
+IndexAbierta = 141
+IndexCerrada = 142
+IndexCerradaLlave = 143
+Llave = 0
+
+[[item]]
+id = 143
+Name = "Puerta de madera cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 16
+IndexAbierta = 141
+IndexCerrada = 142
+IndexCerradaLlave = 143
+Llave = 1
+
+[[item]]
+id = 171
+Name = "Puerta"
+GrhIndex = 5599
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 17
+IndexAbierta = 171
+IndexCerrada = 172
+IndexCerradaLlave = 173
+Llave = 0
+
+[[item]]
+id = 172
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 17
+IndexAbierta = 171
+IndexCerrada = 172
+IndexCerradaLlave = 173
+Llave = 0
+
+[[item]]
+id = 173
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 17
+IndexAbierta = 171
+IndexCerrada = 172
+IndexCerradaLlave = 173
+Llave = 1
+
+[[item]]
+id = 175
+Name = "Puerta"
+GrhIndex = 5599
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 18
+IndexAbierta = 175
+IndexCerrada = 176
+IndexCerradaLlave = 177
+Llave = 0
+
+[[item]]
+id = 176
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 18
+IndexAbierta = 175
+IndexCerrada = 176
+IndexCerradaLlave = 177
+Llave = 0
+
+[[item]]
+id = 177
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 18
+IndexAbierta = 175
+IndexCerrada = 176
+IndexCerradaLlave = 177
+Llave = 1
+
+[[item]]
+id = 179
+Name = "Puerta"
+GrhIndex = 5599
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 19
+IndexAbierta = 179
+IndexCerrada = 180
+IndexCerradaLlave = 181
+Llave = 0
+
+[[item]]
+id = 180
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 19
+IndexAbierta = 179
+IndexCerrada = 180
+IndexCerradaLlave = 181
+Llave = 0
+
+[[item]]
+id = 181
+Name = "Puerta"
+GrhIndex = 5600
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 19
+IndexAbierta = 179
+IndexCerrada = 180
+IndexCerradaLlave = 181
+Llave = 1
+
+[[item]]
+id = 184
+Name = "Puerta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 20
+IndexAbierta = 184
+IndexCerrada = 185
+IndexCerradaLlave = 186
+Llave = 0
+
+[[item]]
+id = 185
+Name = "Puerta"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 20
+IndexAbierta = 184
+IndexCerrada = 185
+IndexCerradaLlave = 186
+Llave = 0
+
+[[item]]
+id = 186
+Name = "Puerta"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 20
+IndexAbierta = 184
+IndexCerrada = 185
+IndexCerradaLlave = 186
+Llave = 1
+
+[[item]]
+id = 241
+Name = "Puerta de madera abierta"
+GrhIndex = 8685
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 241
+IndexCerrada = 242
+IndexCerradaLlave = 241
+Llave = 0
+
+[[item]]
+id = 242
+Name = "Puerta de madera cerrada"
+GrhIndex = 8684
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 241
+IndexCerrada = 242
+IndexCerradaLlave = 241
+Llave = 0
+
+[[item]]
+id = 244
+Name = "Puerta de madera abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 244
+IndexCerrada = 245
+IndexCerradaLlave = 245
+Llave = 0
+
+[[item]]
+id = 245
+Name = "Puerta de madera cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 244
+IndexCerrada = 245
+IndexCerradaLlave = 245
+Llave = 0
+
+[[item]]
+id = 246
+Name = "Puerta de madera abierta"
+GrhIndex = 9200
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 246
+IndexCerrada = 247
+IndexCerradaLlave = 247
+Llave = 0
+
+[[item]]
+id = 247
+Name = "Puerta de madera cerrada"
+GrhIndex = 9194
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 246
+IndexCerrada = 247
+IndexCerradaLlave = 247
+Llave = 0
+
+[[item]]
+id = 248
+Name = "Puerta de madera abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 248
+IndexCerrada = 249
+IndexCerradaLlave = 249
+Llave = 0
+
+[[item]]
+id = 249
+Name = "Puerta de madera cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 248
+IndexCerrada = 249
+IndexCerradaLlave = 249
+Llave = 0
+
+[[item]]
+id = 250
+Name = "Puerta de madera abierta"
+GrhIndex = 9202
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 250
+IndexCerrada = 251
+IndexCerradaLlave = 251
+Llave = 0
+
+[[item]]
+id = 251
+Name = "Puerta de madera cerrada"
+GrhIndex = 9196
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 250
+IndexCerrada = 251
+IndexCerradaLlave = 251
+Llave = 0
+
+[[item]]
+id = 252
+Name = "Puerta de madera abierta"
+GrhIndex = 9203
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 252
+IndexCerrada = 253
+IndexCerradaLlave = 253
+Llave = 0
+
+[[item]]
+id = 253
+Name = "Puerta de madera cerrada"
+GrhIndex = 9197
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 252
+IndexCerrada = 253
+IndexCerradaLlave = 253
+Llave = 0
+
+[[item]]
+id = 254
+Name = "Puerta de madera abierta"
+GrhIndex = 9204
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+IndexAbierta = 254
+IndexCerrada = 255
+IndexCerradaLlave = 255
+Llave = 0
+
+[[item]]
+id = 255
+Name = "Puerta de madera cerrada"
+GrhIndex = 9198
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+IndexAbierta = 254
+IndexCerrada = 255
+IndexCerradaLlave = 255
+Llave = 0
+
+[[item]]
+id = 263
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 25
+IndexAbierta = 263
+IndexCerrada = 264
+IndexCerradaLlave = 265
+Llave = 0
+
+[[item]]
+id = 264
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 25
+IndexAbierta = 263
+IndexCerrada = 264
+IndexCerradaLlave = 265
+Llave = 0
+
+[[item]]
+id = 265
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 25
+IndexAbierta = 263
+IndexCerrada = 264
+IndexCerradaLlave = 265
+Llave = 1
+
+[[item]]
+id = 267
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 26
+IndexAbierta = 267
+IndexCerrada = 268
+IndexCerradaLlave = 269
+Llave = 0
+
+[[item]]
+id = 268
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 26
+IndexAbierta = 267
+IndexCerrada = 268
+IndexCerradaLlave = 269
+Llave = 0
+
+[[item]]
+id = 269
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 26
+IndexAbierta = 267
+IndexCerrada = 268
+IndexCerradaLlave = 269
+Llave = 1
+
+[[item]]
+id = 271
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 27
+IndexAbierta = 271
+IndexCerrada = 272
+IndexCerradaLlave = 273
+Llave = 0
+
+[[item]]
+id = 272
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 27
+IndexAbierta = 271
+IndexCerrada = 272
+IndexCerradaLlave = 273
+Llave = 0
+
+[[item]]
+id = 273
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 27
+IndexAbierta = 271
+IndexCerrada = 272
+IndexCerradaLlave = 273
+Llave = 1
+
+[[item]]
+id = 275
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 28
+IndexAbierta = 275
+IndexCerrada = 276
+IndexCerradaLlave = 277
+Llave = 0
+
+[[item]]
+id = 276
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 28
+IndexAbierta = 275
+IndexCerrada = 276
+IndexCerradaLlave = 277
+Llave = 0
+
+[[item]]
+id = 277
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 28
+IndexAbierta = 275
+IndexCerrada = 276
+IndexCerradaLlave = 277
+Llave = 1
+
+[[item]]
+id = 279
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 29
+IndexAbierta = 279
+IndexCerrada = 280
+IndexCerradaLlave = 281
+Llave = 0
+
+[[item]]
+id = 280
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 29
+IndexAbierta = 279
+IndexCerrada = 280
+IndexCerradaLlave = 281
+Llave = 0
+
+[[item]]
+id = 281
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 29
+IndexAbierta = 279
+IndexCerrada = 280
+IndexCerradaLlave = 281
+Llave = 1
+
+[[item]]
+id = 283
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 30
+IndexAbierta = 283
+IndexCerrada = 284
+IndexCerradaLlave = 285
+Llave = 0
+
+[[item]]
+id = 284
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 30
+IndexAbierta = 283
+IndexCerrada = 284
+IndexCerradaLlave = 285
+Llave = 0
+
+[[item]]
+id = 285
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 30
+IndexAbierta = 283
+IndexCerrada = 284
+IndexCerradaLlave = 285
+Llave = 1
+
+[[item]]
+id = 287
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 31
+IndexAbierta = 287
+IndexCerrada = 288
+IndexCerradaLlave = 289
+Llave = 0
+
+[[item]]
+id = 288
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 31
+IndexAbierta = 287
+IndexCerrada = 288
+IndexCerradaLlave = 289
+Llave = 0
+
+[[item]]
+id = 289
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 31
+IndexAbierta = 287
+IndexCerrada = 288
+IndexCerradaLlave = 289
+Llave = 1
+
+[[item]]
+id = 291
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 32
+IndexAbierta = 291
+IndexCerrada = 292
+IndexCerradaLlave = 293
+Llave = 0
+
+[[item]]
+id = 292
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 32
+IndexAbierta = 291
+IndexCerrada = 292
+IndexCerradaLlave = 293
+Llave = 0
+
+[[item]]
+id = 293
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 32
+IndexAbierta = 291
+IndexCerrada = 292
+IndexCerradaLlave = 293
+Llave = 1
+
+[[item]]
+id = 295
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 33
+IndexAbierta = 295
+IndexCerrada = 296
+IndexCerradaLlave = 297
+Llave = 0
+
+[[item]]
+id = 296
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 33
+IndexAbierta = 295
+IndexCerrada = 296
+IndexCerradaLlave = 297
+Llave = 0
+
+[[item]]
+id = 297
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 33
+IndexAbierta = 295
+IndexCerrada = 296
+IndexCerradaLlave = 297
+Llave = 1
+
+[[item]]
+id = 299
+Name = "Puerta abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 34
+IndexAbierta = 299
+IndexCerrada = 300
+IndexCerradaLlave = 301
+Llave = 0
+
+[[item]]
+id = 300
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 34
+IndexAbierta = 299
+IndexCerrada = 300
+IndexCerradaLlave = 301
+Llave = 0
+
+[[item]]
+id = 301
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 34
+IndexAbierta = 299
+IndexCerrada = 300
+IndexCerradaLlave = 301
+Llave = 1
+
+[[item]]
+id = 303
+Name = "Puerta abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 35
+IndexAbierta = 303
+IndexCerrada = 304
+IndexCerradaLlave = 305
+Llave = 0
+
+[[item]]
+id = 304
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 35
+IndexAbierta = 303
+IndexCerrada = 304
+IndexCerradaLlave = 305
+Llave = 0
+
+[[item]]
+id = 305
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 35
+IndexAbierta = 303
+IndexCerrada = 304
+IndexCerradaLlave = 305
+Llave = 1
+
+[[item]]
+id = 307
+Name = "Puerta abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 36
+IndexAbierta = 307
+IndexCerrada = 308
+IndexCerradaLlave = 309
+Llave = 0
+
+[[item]]
+id = 308
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 36
+IndexAbierta = 307
+IndexCerrada = 308
+IndexCerradaLlave = 309
+Llave = 0
+
+[[item]]
+id = 309
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 36
+IndexAbierta = 307
+IndexCerrada = 308
+IndexCerradaLlave = 309
+Llave = 1
+
+[[item]]
+id = 311
+Name = "Puerta abierta"
+GrhIndex = 9199
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 999
+IndexAbierta = 311
+IndexCerrada = 312
+IndexCerradaLlave = 313
+Llave = 0
+
+[[item]]
+id = 312
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 78
+IndexAbierta = 311
+IndexCerrada = 312
+IndexCerradaLlave = 313
+Llave = 0
+
+[[item]]
+id = 313
+Name = "Puerta cerrada"
+GrhIndex = 9193
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 78
+IndexAbierta = 311
+IndexCerrada = 312
+IndexCerradaLlave = 313
+Llave = 1
+
+[[item]]
+id = 320
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 37
+IndexAbierta = 320
+IndexCerrada = 321
+IndexCerradaLlave = 322
+Llave = 0
+
+[[item]]
+id = 321
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 37
+IndexAbierta = 320
+IndexCerrada = 321
+IndexCerradaLlave = 322
+Llave = 0
+
+[[item]]
+id = 322
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 37
+IndexAbierta = 320
+IndexCerrada = 321
+IndexCerradaLlave = 322
+Llave = 1
+
+[[item]]
+id = 324
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 38
+IndexAbierta = 324
+IndexCerrada = 325
+IndexCerradaLlave = 326
+Llave = 0
+
+[[item]]
+id = 325
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 38
+IndexAbierta = 324
+IndexCerrada = 325
+IndexCerradaLlave = 326
+Llave = 0
+
+[[item]]
+id = 326
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 38
+IndexAbierta = 324
+IndexCerrada = 325
+IndexCerradaLlave = 326
+Llave = 1
+
+[[item]]
+id = 328
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 39
+IndexAbierta = 328
+IndexCerrada = 329
+IndexCerradaLlave = 330
+Llave = 0
+
+[[item]]
+id = 329
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 39
+IndexAbierta = 328
+IndexCerrada = 329
+IndexCerradaLlave = 330
+Llave = 0
+
+[[item]]
+id = 330
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 39
+IndexAbierta = 328
+IndexCerrada = 329
+IndexCerradaLlave = 330
+Llave = 1
+
+[[item]]
+id = 332
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 40
+IndexAbierta = 332
+IndexCerrada = 333
+IndexCerradaLlave = 334
+Llave = 0
+
+[[item]]
+id = 333
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 40
+IndexAbierta = 332
+IndexCerrada = 333
+IndexCerradaLlave = 334
+Llave = 0
+
+[[item]]
+id = 334
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 40
+IndexAbierta = 332
+IndexCerrada = 333
+IndexCerradaLlave = 334
+Llave = 1
+
+[[item]]
+id = 336
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 41
+IndexAbierta = 336
+IndexCerrada = 337
+IndexCerradaLlave = 338
+Llave = 0
+
+[[item]]
+id = 337
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 41
+IndexAbierta = 336
+IndexCerrada = 337
+IndexCerradaLlave = 338
+Llave = 0
+
+[[item]]
+id = 338
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 41
+IndexAbierta = 336
+IndexCerrada = 337
+IndexCerradaLlave = 338
+Llave = 1
+
+[[item]]
+id = 340
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 42
+IndexAbierta = 340
+IndexCerrada = 341
+IndexCerradaLlave = 342
+Llave = 0
+
+[[item]]
+id = 341
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 42
+IndexAbierta = 340
+IndexCerrada = 341
+IndexCerradaLlave = 342
+Llave = 0
+
+[[item]]
+id = 342
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 42
+IndexAbierta = 340
+IndexCerrada = 341
+IndexCerradaLlave = 342
+Llave = 1
+
+[[item]]
+id = 344
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 43
+IndexAbierta = 344
+IndexCerrada = 345
+IndexCerradaLlave = 346
+Llave = 0
+
+[[item]]
+id = 345
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 43
+IndexAbierta = 344
+IndexCerrada = 345
+IndexCerradaLlave = 346
+Llave = 0
+
+[[item]]
+id = 346
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 43
+IndexAbierta = 344
+IndexCerrada = 345
+IndexCerradaLlave = 346
+Llave = 1
+
+[[item]]
+id = 348
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 44
+IndexAbierta = 348
+IndexCerrada = 349
+IndexCerradaLlave = 350
+Llave = 0
+
+[[item]]
+id = 349
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 44
+IndexAbierta = 348
+IndexCerrada = 349
+IndexCerradaLlave = 350
+Llave = 0
+
+[[item]]
+id = 350
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 44
+IndexAbierta = 348
+IndexCerrada = 349
+IndexCerradaLlave = 350
+Llave = 1
+
+[[item]]
+id = 352
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 45
+IndexAbierta = 352
+IndexCerrada = 353
+IndexCerradaLlave = 354
+Llave = 0
+
+[[item]]
+id = 353
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 45
+IndexAbierta = 352
+IndexCerrada = 353
+IndexCerradaLlave = 354
+Llave = 0
+
+[[item]]
+id = 354
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 45
+IndexAbierta = 352
+IndexCerrada = 353
+IndexCerradaLlave = 354
+Llave = 1
+
+[[item]]
+id = 373
+Name = "Puerta abierta"
+GrhIndex = 9201
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 49
+IndexAbierta = 373
+IndexCerrada = 374
+IndexCerradaLlave = 375
+Llave = 0
+
+[[item]]
+id = 374
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 49
+IndexAbierta = 373
+IndexCerrada = 374
+IndexCerradaLlave = 375
+Llave = 0
+
+[[item]]
+id = 375
+Name = "Puerta cerrada"
+GrhIndex = 9195
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 49
+IndexAbierta = 373
+IndexCerrada = 374
+IndexCerradaLlave = 375
+Llave = 1
+
+[[item]]
+id = 417
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 50
+IndexAbierta = 417
+IndexCerrada = 418
+IndexCerradaLlave = 419
+Llave = 0
+
+[[item]]
+id = 418
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 50
+IndexAbierta = 417
+IndexCerrada = 418
+IndexCerradaLlave = 419
+Llave = 0
+
+[[item]]
+id = 419
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 50
+IndexAbierta = 417
+IndexCerrada = 418
+IndexCerradaLlave = 419
+Llave = 1
+
+[[item]]
+id = 421
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 51
+IndexAbierta = 421
+IndexCerrada = 422
+IndexCerradaLlave = 423
+Llave = 0
+
+[[item]]
+id = 422
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 51
+IndexAbierta = 421
+IndexCerrada = 422
+IndexCerradaLlave = 423
+Llave = 0
+
+[[item]]
+id = 423
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 51
+IndexAbierta = 421
+IndexCerrada = 422
+IndexCerradaLlave = 423
+Llave = 1
+
+[[item]]
+id = 425
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 52
+IndexAbierta = 425
+IndexCerrada = 426
+IndexCerradaLlave = 427
+Llave = 0
+
+[[item]]
+id = 426
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 52
+IndexAbierta = 425
+IndexCerrada = 426
+IndexCerradaLlave = 427
+Llave = 0
+
+[[item]]
+id = 427
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 52
+IndexAbierta = 425
+IndexCerrada = 426
+IndexCerradaLlave = 427
+Llave = 1
+
+[[item]]
+id = 429
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 53
+IndexAbierta = 429
+IndexCerrada = 430
+IndexCerradaLlave = 431
+Llave = 0
+
+[[item]]
+id = 430
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 53
+IndexAbierta = 429
+IndexCerrada = 430
+IndexCerradaLlave = 431
+Llave = 0
+
+[[item]]
+id = 431
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 53
+IndexAbierta = 429
+IndexCerrada = 430
+IndexCerradaLlave = 431
+Llave = 1
+
+[[item]]
+id = 433
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 54
+IndexAbierta = 433
+IndexCerrada = 434
+IndexCerradaLlave = 435
+Llave = 0
+
+[[item]]
+id = 434
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 54
+IndexAbierta = 433
+IndexCerrada = 434
+IndexCerradaLlave = 435
+Llave = 0
+
+[[item]]
+id = 435
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 54
+IndexAbierta = 433
+IndexCerrada = 434
+IndexCerradaLlave = 435
+Llave = 1
+
+[[item]]
+id = 437
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 55
+IndexAbierta = 437
+IndexCerrada = 438
+IndexCerradaLlave = 439
+Llave = 0
+
+[[item]]
+id = 438
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 55
+IndexAbierta = 437
+IndexCerrada = 438
+IndexCerradaLlave = 439
+Llave = 0
+
+[[item]]
+id = 439
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 55
+IndexAbierta = 437
+IndexCerrada = 438
+IndexCerradaLlave = 439
+Llave = 1
+
+[[item]]
+id = 441
+Name = "Puerta de madera abierta"
+GrhIndex = 9203
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 56
+IndexAbierta = 441
+IndexCerrada = 442
+IndexCerradaLlave = 443
+Llave = 0
+
+[[item]]
+id = 442
+Name = "Puerta de madera cerrada"
+GrhIndex = 9197
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 56
+IndexAbierta = 441
+IndexCerrada = 442
+IndexCerradaLlave = 443
+Llave = 0
+
+[[item]]
+id = 443
+Name = "Puerta de madera cerrada"
+GrhIndex = 9197
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 56
+IndexAbierta = 441
+IndexCerrada = 442
+IndexCerradaLlave = 443
+Llave = 1
+
+[[item]]
+id = 445
+Name = "Puerta de madera abierta"
+GrhIndex = 9203
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 57
+IndexAbierta = 445
+IndexCerrada = 446
+IndexCerradaLlave = 447
+Llave = 0
+
+[[item]]
+id = 446
+Name = "Puerta de madera cerrada"
+GrhIndex = 9197
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 57
+IndexAbierta = 445
+IndexCerrada = 446
+IndexCerradaLlave = 447
+Llave = 0
+
+[[item]]
+id = 447
+Name = "Puerta de madera cerrada"
+GrhIndex = 9197
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 57
+IndexAbierta = 445
+IndexCerrada = 446
+IndexCerradaLlave = 447
+Llave = 1
+
+[[item]]
+id = 449
+Name = "Puerta de madera abierta"
+GrhIndex = 9202
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 58
+IndexAbierta = 449
+IndexCerrada = 450
+IndexCerradaLlave = 451
+Llave = 0
+
+[[item]]
+id = 450
+Name = "Puerta de madera cerrada"
+GrhIndex = 9196
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 58
+IndexAbierta = 449
+IndexCerrada = 450
+IndexCerradaLlave = 451
+Llave = 0
+
+[[item]]
+id = 451
+Name = "Puerta de madera cerrada"
+GrhIndex = 9196
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 58
+IndexAbierta = 449
+IndexCerrada = 450
+IndexCerradaLlave = 451
+Llave = 1
+
+[[item]]
+id = 580
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 70
+IndexAbierta = 580
+IndexCerrada = 581
+IndexCerradaLlave = 582
+Llave = 0
+
+[[item]]
+id = 581
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 70
+IndexAbierta = 580
+IndexCerrada = 581
+IndexCerradaLlave = 582
+Llave = 0
+
+[[item]]
+id = 582
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 70
+IndexAbierta = 580
+IndexCerrada = 581
+IndexCerradaLlave = 582
+Llave = 1
+
+[[item]]
+id = 584
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 71
+IndexAbierta = 584
+IndexCerrada = 585
+IndexCerradaLlave = 586
+Llave = 0
+
+[[item]]
+id = 585
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 71
+IndexAbierta = 584
+IndexCerrada = 585
+IndexCerradaLlave = 586
+Llave = 0
+
+[[item]]
+id = 586
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 71
+IndexAbierta = 584
+IndexCerrada = 585
+IndexCerradaLlave = 586
+Llave = 1
+
+[[item]]
+id = 588
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 72
+IndexAbierta = 588
+IndexCerrada = 589
+IndexCerradaLlave = 590
+Llave = 0
+
+[[item]]
+id = 589
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 72
+IndexAbierta = 588
+IndexCerrada = 589
+IndexCerradaLlave = 590
+Llave = 0
+
+[[item]]
+id = 590
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 72
+IndexAbierta = 588
+IndexCerrada = 589
+IndexCerradaLlave = 590
+Llave = 1
+
+[[item]]
+id = 592
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 73
+IndexAbierta = 592
+IndexCerrada = 593
+IndexCerradaLlave = 594
+Llave = 0
+
+[[item]]
+id = 593
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 73
+IndexAbierta = 592
+IndexCerrada = 593
+IndexCerradaLlave = 594
+Llave = 0
+
+[[item]]
+id = 594
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 73
+IndexAbierta = 592
+IndexCerrada = 593
+IndexCerradaLlave = 594
+Llave = 1
+
+[[item]]
+id = 596
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 74
+IndexAbierta = 596
+IndexCerrada = 597
+IndexCerradaLlave = 598
+Llave = 0
+
+[[item]]
+id = 597
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 74
+IndexAbierta = 596
+IndexCerrada = 597
+IndexCerradaLlave = 598
+Llave = 0
+
+[[item]]
+id = 598
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 74
+IndexAbierta = 596
+IndexCerrada = 597
+IndexCerradaLlave = 598
+Llave = 1
+
+[[item]]
+id = 600
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 75
+IndexAbierta = 600
+IndexCerrada = 601
+IndexCerradaLlave = 602
+Llave = 0
+
+[[item]]
+id = 601
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 75
+IndexAbierta = 600
+IndexCerrada = 601
+IndexCerradaLlave = 602
+Llave = 0
+
+[[item]]
+id = 602
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 75
+IndexAbierta = 600
+IndexCerrada = 601
+IndexCerradaLlave = 602
+Llave = 1
+
+[[item]]
+id = 604
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 76
+IndexAbierta = 604
+IndexCerrada = 605
+IndexCerradaLlave = 606
+Llave = 0
+
+[[item]]
+id = 605
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 76
+IndexAbierta = 604
+IndexCerrada = 605
+IndexCerradaLlave = 606
+Llave = 0
+
+[[item]]
+id = 606
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 76
+IndexAbierta = 604
+IndexCerrada = 605
+IndexCerradaLlave = 606
+Llave = 1
+
+[[item]]
+id = 608
+Name = "Puerta de madera abierta"
+GrhIndex = 5592
+ObjType = 6
+Abierta = 0
+Agarrable = 1
+Clave = 77
+IndexAbierta = 608
+IndexCerrada = 609
+IndexCerradaLlave = 610
+Llave = 0
+
+[[item]]
+id = 609
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 77
+IndexAbierta = 608
+IndexCerrada = 609
+IndexCerradaLlave = 610
+Llave = 0
+
+[[item]]
+id = 610
+Name = "Puerta de madera cerrada"
+GrhIndex = 5593
+ObjType = 6
+Abierta = 1
+Agarrable = 1
+Clave = 77
+IndexAbierta = 608
+IndexCerrada = 609
+IndexCerradaLlave = 610
+Llave = 1
+

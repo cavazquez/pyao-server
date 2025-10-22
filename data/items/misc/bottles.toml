@@ -1,0 +1,27 @@
+# Bottles - 2 items
+# Generated from items.toml
+
+[[item]]
+id = 533
+Name = "Odre"
+GrhIndex = 850
+ObjType = 34
+Agarrable = 0
+Crucial = 1
+IndexAbierta = 533
+IndexCerrada = 534
+MinAgu = 90
+MinST = 5
+Valor = 10
+
+[[item]]
+id = 534
+Name = "Odre Vacía"
+GrhIndex = 849
+ObjType = 33
+Agarrable = 0
+Crucial = 1
+IndexAbierta = 533
+IndexCerrada = 534
+Valor = 10
+

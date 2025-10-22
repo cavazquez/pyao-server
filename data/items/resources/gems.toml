@@ -1,0 +1,123 @@
+# Gems - 15 items
+# Generated from items.toml
+
+[[item]]
+id = 386
+Name = "Lingote de Hierro"
+GrhIndex = 724
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+Valor = 70
+
+[[item]]
+id = 387
+Name = "Lingote de Plata"
+GrhIndex = 725
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+Valor = 120
+
+[[item]]
+id = 388
+Name = "Lingote de Oro"
+GrhIndex = 723
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+Valor = 350
+
+[[item]]
+id = 406
+Name = "Gema Lunar"
+GrhIndex = 700
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 407
+Name = "Gema Azul"
+GrhIndex = 701
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 408
+Name = "Gema Naranja"
+GrhIndex = 702
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 409
+Name = "Gema Celeste"
+GrhIndex = 703
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 410
+Name = "Gema Lila"
+GrhIndex = 704
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 411
+Name = "Gema Roja"
+GrhIndex = 705
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 412
+Name = "Gema Verde"
+GrhIndex = 706
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 413
+Name = "Gema Violeta"
+GrhIndex = 707
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 560
+Name = "Gema Sagrada Recuperada por Shadow VX"
+GrhIndex = 705
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 613
+Name = "Gema Sagrada"
+GrhIndex = 700
+ObjType = 29
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 618
+Name = "Monedas de Oro"
+GrhIndex = 511
+ObjType = 29
+Agarrable = 0
+
+[[item]]
+id = 652
+Name = "Piedra de Arghâl"
+GrhIndex = 705
+ObjType = 29
+

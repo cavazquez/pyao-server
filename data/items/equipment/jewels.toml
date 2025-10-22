@@ -1,0 +1,36 @@
+# Jewels - 4 items
+# Generated from items.toml
+
+[[item]]
+id = 157
+Name = "Copa de Plata"
+GrhIndex = 579
+ObjType = 21
+Agarrable = 0
+Crucial = 0
+Valor = 2000
+
+[[item]]
+id = 710
+Name = "Copa de Oro"
+GrhIndex = 54
+ObjType = 21
+Agarrable = 0
+Valor = 4000
+
+[[item]]
+id = 734
+Name = "Jarra de Losa"
+GrhIndex = 310
+ObjType = 21
+Agarrable = 0
+Crucial = 0
+Valor = 2000
+
+[[item]]
+id = 736
+Name = "Candelabro Simple"
+GrhIndex = 314
+ObjType = 21
+Agarrable = 1
+

@@ -1,0 +1,178 @@
+# Rings - 12 items
+# Generated from items.toml
+
+[[item]]
+id = 208
+Name = "Flauta Mágica"
+GrhIndex = 686
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'BARDO', 'TRABAJADOR']
+Crucial = 0
+Madera = 1500
+MaxHit = 1
+MinHit = 1
+SkCarpinteria = 100
+StaffPower = 2
+Valor = 4500
+
+[[item]]
+id = 696
+Name = "Laúd Mágico"
+GrhIndex = 685
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+Madera = 1500
+MaxHit = 1
+MinHit = 1
+SkCarpinteria = 100
+StaffPower = 2
+Valor = 6030
+
+[[item]]
+id = 697
+Name = "Anillo Mágico"
+GrhIndex = 4900
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'GUERRERO', 'PIRATA', 'BANDIDO', 'TRABAJADOR']
+Crucial = 0
+DefensaMagicaMax = 6
+DefensaMagicaMin = 4
+LingH = 50
+LingO = 0
+LingP = 0
+SkHerreria = 50
+Valor = 3500
+
+[[item]]
+id = 698
+Name = "Anillo de Resistencia Mágica"
+GrhIndex = 4901
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'GUERRERO', 'PIRATA', 'BANDIDO', 'PALADIN', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+DefensaMagicaMax = 12
+DefensaMagicaMin = 8
+LingH = 50
+LingO = 0
+LingP = 50
+SkHerreria = 75
+Valor = 9500
+
+[[item]]
+id = 699
+Name = "Anillo de Disolución Mágica"
+GrhIndex = 4902
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'GUERRERO', 'PIRATA', 'BANDIDO', 'PALADIN', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+DefensaMagicaMax = 22
+DefensaMagicaMin = 18
+LingH = 200
+LingO = 50
+LingP = 100
+SkHerreria = 90
+Valor = 43500
+
+[[item]]
+id = 700
+Name = "Anillo de los Dioses"
+GrhIndex = 4903
+ObjType = 18
+Agarrable = 0
+Crucial = 0
+DefensaMagicaMax = 210
+DefensaMagicaMin = 200
+LingH = 3000
+LingO = 3000
+LingP = 2000
+SkHerreria = 101
+Valor = 1500000
+
+[[item]]
+id = 863
+Name = "Flauta Mágica (Newbie)"
+GrhIndex = 686
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'BARDO', 'TRABAJADOR']
+Crucial = 0
+MaxHit = 1
+MinHit = 1
+Newbie = 1
+Valor = 100
+
+[[item]]
+id = 864
+Name = "Laúd Mágico (Newbie)"
+GrhIndex = 685
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxHit = 1
+MinHit = 1
+Newbie = 1
+Valor = 100
+
+[[item]]
+id = 873
+Name = "Guantes de Hurto"
+GrhIndex = 1469
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'CAZADOR', 'PALADIN', 'ASESINO', 'DRUIDA', 'BARDO', 'GUERRERO', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+Guante = 1
+MaxHit = 2
+MinHit = 1
+Valor = 5000
+
+[[item]]
+id = 1036
+Name = "Guantes de Lucha"
+GrhIndex = 22033
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'CAZADOR', 'PALADIN', 'ASESINO', 'DRUIDA', 'BARDO', 'GUERRERO', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+Guante = 1
+MaxHit = 5
+MinHit = 2
+Valor = 10000
+
+[[item]]
+id = 1049
+Name = "Laúd Élfico"
+GrhIndex = 1523
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaderaElfica = 1150
+MaxHit = 1
+MinHit = 1
+SkCarpinteria = 100
+StaffPower = 2
+Valor = 11000
+
+[[item]]
+id = 1050
+Name = "Flauta Élfica"
+GrhIndex = 1522
+ObjType = 18
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'MAGO', 'BARDO', 'TRABAJADOR']
+Crucial = 0
+MaderaElfica = 1000
+MaxHit = 1
+MinHit = 1
+SkCarpinteria = 100
+StaffPower = 2
+Valor = 10000
+

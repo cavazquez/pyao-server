@@ -1,0 +1,30 @@
+# Wood - 3 items
+# Generated from items.toml
+
+[[item]]
+id = 58
+Name = "Leña"
+GrhIndex = 550
+ObjType = 14
+Agarrable = 0
+Crucial = 0
+Valor = 5
+
+[[item]]
+id = 136
+Name = "Ramitas"
+GrhIndex = 572
+ObjType = 14
+Agarrable = 0
+Crucial = 0
+Valor = 3
+
+[[item]]
+id = 1006
+Name = "Leña Elfica"
+GrhIndex = 1999
+ObjType = 14
+Agarrable = 0
+Crucial = 0
+Valor = 5
+

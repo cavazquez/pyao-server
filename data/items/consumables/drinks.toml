@@ -1,0 +1,116 @@
+# Drinks - 11 items
+# Generated from items.toml
+
+[[item]]
+id = 42
+Name = "Vino"
+GrhIndex = 536
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 90
+MinST = 5
+Valor = 10
+
+[[item]]
+id = 43
+Name = "Botella de Agua"
+GrhIndex = 537
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 30
+MinST = 3
+Valor = 3
+
+[[item]]
+id = 160
+Name = "Cerveza"
+GrhIndex = 585
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 60
+Valor = 7
+
+[[item]]
+id = 161
+Name = "Jugo de Frutas"
+GrhIndex = 584
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 100
+Valor = 12
+
+[[item]]
+id = 468
+Name = "Botella de Agua (Newbie)"
+GrhIndex = 537
+ObjType = 13
+Agarrable = 0
+Crucial = 0
+MinAgu = 30
+MinST = 3
+newbie = 1
+
+[[item]]
+id = 498
+Name = "Sidra"
+GrhIndex = 20509
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 30
+Valor = 30
+
+[[item]]
+id = 522
+Name = "Hipocrás"
+GrhIndex = 20507
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 40
+Valor = 40
+
+[[item]]
+id = 550
+Name = "Porrón de cerveza"
+GrhIndex = 20508
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 50
+Valor = 50
+
+[[item]]
+id = 557
+Name = "Vino de canela"
+GrhIndex = 20504
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 70
+Valor = 70
+
+[[item]]
+id = 612
+Name = "Cerveza de los enanos"
+GrhIndex = 20506
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 90
+Valor = 90
+
+[[item]]
+id = 622
+Name = "Barrilito de cerveza"
+GrhIndex = 20505
+ObjType = 13
+Agarrable = 0
+Crucial = 1
+MinAgu = 100
+Valor = 100
+

@@ -1,0 +1,64 @@
+# Boats - 4 items
+# Generated from items.toml
+
+[[item]]
+id = 474
+Name = "Barca"
+GrhIndex = 749
+ObjType = 31
+Agarrable = 0
+Crucial = 0
+Madera = 10000
+MaxDef = 10
+MaxHit = 25
+MinDef = 5
+MinHit = 10
+MinSkill = 35
+NumRopaje = 84
+SkCarpinteria = 40
+Valor = 24000
+
+[[item]]
+id = 475
+Name = "Galera"
+GrhIndex = 5587
+ObjType = 31
+Agarrable = 0
+Crucial = 0
+MaderaElfica = 10000
+MaxDef = 20
+MaxHit = 35
+MinDef = 10
+MinHit = 25
+MinSkill = 55
+NumRopaje = 85
+SkCarpinteria = 65
+Upgrade = 476
+Valor = 53000
+
+[[item]]
+id = 476
+Name = "Galeón"
+GrhIndex = 5594
+ObjType = 31
+Agarrable = 0
+Crucial = 0
+MaderaElfica = 15000
+MaxDef = 25
+MaxHit = 55
+MinDef = 15
+MinHit = 45
+MinSkill = 65
+NumRopaje = 86
+SkCarpinteria = 90
+Valor = 87000
+
+[[item]]
+id = 477
+Name = "Fragata Fantasmal"
+GrhIndex = 749
+ObjType = 31
+Agarrable = 0
+Crucial = 0
+NumRopaje = 87
+

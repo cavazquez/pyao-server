@@ -1,0 +1,185 @@
+# Teleports - 21 items
+# Generated from items.toml
+
+[[item]]
+id = 144
+Name = "Teleport a Dungeon Newbie"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 145
+Name = "Teleport a Nix"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 146
+Name = "Teleport a Ullathorpe"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 358
+Name = "Teleport a Banderbill"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 378
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 0
+
+[[item]]
+id = 456
+Name = "Teleport a Lindos"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 692
+Name = "Teleport a Nemahuak"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 988
+Name = "Teleport a Arghal"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 1012
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 0
+
+[[item]]
+id = 1013
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 1
+
+[[item]]
+id = 1014
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 2
+
+[[item]]
+id = 1015
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 3
+
+[[item]]
+id = 1016
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 4
+
+[[item]]
+id = 1017
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 5
+
+[[item]]
+id = 1018
+Name = "Teleport"
+GrhIndex = 669
+ObjType = 19
+Agarrable = 1
+Radio = 6
+
+[[item]]
+id = 1043
+Name = "No ves nada interesante."
+GrhIndex = 0
+ObjType = 19
+Agarrable = 1
+
+[[item]]
+id = 1056
+Name = "Guantes de Cuero"
+GrhIndex = 548
+ObjType = 19
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+Valor = 750
+sale_price = 750
+
+[[item]]
+id = 1060
+Name = "Guantes de Placas de Hierro"
+GrhIndex = 3044
+ObjType = 19
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+Valor = 2800
+sale_price = 2800
+
+[[item]]
+id = 1064
+Name = "Guantes de Escamas de Dragón"
+GrhIndex = 3046
+ObjType = 19
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 28
+MinDef = 20
+Valor = 11000
+sale_price = 11000
+
+[[item]]
+id = 1068
+Name = "Guantes de las Sombras"
+GrhIndex = 548
+ObjType = 19
+Agarrable = 0
+Crucial = 1
+MaxDef = 18
+MinDef = 12
+Valor = 5500
+sale_price = 5500
+
+[[item]]
+id = 1072
+Name = "Guantes Arcanos"
+GrhIndex = 548
+ObjType = 19
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 6
+Valor = 3800
+sale_price = 3800
+

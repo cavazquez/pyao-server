@@ -1,0 +1,585 @@
+# Keys - 59 items
+# Generated from items.toml
+
+[[item]]
+id = 14
+Name = "Llave"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 2
+Crucial = 0
+
+[[item]]
+id = 54
+Name = "Llave Ullathorpe Casa Nro 1"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 2
+Crucial = 0
+Valor = 10000000
+
+[[item]]
+id = 65
+Name = "Llave Ullathorpe Casa Nro 2"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 4
+Crucial = 0
+Valor = 10000000
+
+[[item]]
+id = 69
+Name = "Llave Ullathorpe Casa Nro 3"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 5
+Crucial = 0
+Valor = 10000000
+
+[[item]]
+id = 73
+Name = "Llave Ullathorpe Casa Nro 4"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 6
+Crucial = 0
+Valor = 10000000
+
+[[item]]
+id = 87
+Name = "Llave Nix casa Nro 1"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 7
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 91
+Name = "Llave Nix Casa Nro 2"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 8
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 95
+Name = "Llave Nix Casa Nro 3"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 9
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 99
+Name = "Llave Nix Casa Nro 4"
+GrhIndex = 509
+ObjType = 9
+Clave = 10
+Valor = 6000000
+
+[[item]]
+id = 103
+Name = "Llave Nix Casa Nro 5"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 11
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 107
+Name = "Llave Nix Casa Nro 6"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 12
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 111
+Name = "Llave Nix Casa Nro 7"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 13
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 115
+Name = "Llave Nix Casa Nro 8"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 14
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 119
+Name = "Llave Nix Casa Nro 9"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 15
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 140
+Name = "Llave Nix Mansión"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 16
+Crucial = 0
+Valor = 16000000
+
+[[item]]
+id = 174
+Name = "Llave Catacumbas de Ullathorpe"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 17
+Crucial = 0
+
+[[item]]
+id = 178
+Name = "Llave Dungeon Maleheing"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 18
+Crucial = 0
+
+[[item]]
+id = 182
+Name = "Llave Dungeon Maleheing"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 19
+Crucial = 0
+
+[[item]]
+id = 183
+Name = "Llave Fuerte"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 20
+Crucial = 0
+
+[[item]]
+id = 266
+Name = "Llave Banderbill Casa Nro 1"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 25
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 270
+Name = "Llave Banderbill Casa Nro 2"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 26
+Crucial = 0
+Valor = 4600000
+
+[[item]]
+id = 274
+Name = "Llave Banderbill Casa Nro 3"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 27
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 278
+Name = "Llave Banderbill Casa Nro 4"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 28
+Crucial = 0
+Valor = 3250000
+
+[[item]]
+id = 282
+Name = "Llave Banderbill Casa Nro 5"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 29
+Crucial = 0
+Valor = 4600000
+
+[[item]]
+id = 286
+Name = "Llave Banderbill Casa Nro 6"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 30
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 290
+Name = "Llave Banderbill Casa Nro 7"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 31
+Crucial = 0
+Valor = 3250000
+
+[[item]]
+id = 294
+Name = "Llave Banderbill Casa Nro 8"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 32
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 298
+Name = "Llave Banderbill Casa Nro 9"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 33
+Crucial = 0
+Valor = 6000000
+
+[[item]]
+id = 302
+Name = "Llave del Gran Consejo"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 34
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 306
+Name = "Llave Bóveda del Gran Consejo"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 35
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 310
+Name = "Llave Bóveda del Gran Consejo"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 36
+Crucial = 0
+
+[[item]]
+id = 314
+Name = "Llave del la Bóveda Goliath"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 78
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 323
+Name = "Llave Banderbill Casa Nro 10"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 37
+Crucial = 0
+Valor = 8000000
+
+[[item]]
+id = 327
+Name = "Llave Banderbill Casa Nro 11"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 38
+Crucial = 0
+Valor = 9000000
+
+[[item]]
+id = 331
+Name = "Llave Banderbill Casa Nro 12"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 39
+Crucial = 0
+Valor = 8000000
+
+[[item]]
+id = 335
+Name = "Llave Banderbill Casa Nro 13"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 40
+Crucial = 0
+Valor = 8000000
+
+[[item]]
+id = 339
+Name = "Llave Banderbill Casa Nro 14"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 41
+Crucial = 0
+Valor = 10000000
+
+[[item]]
+id = 343
+Name = "Llave Banderbill Casa Nro 15"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 42
+Crucial = 0
+Valor = 2500000
+
+[[item]]
+id = 347
+Name = "Llave Banderbill Casa Nro 16"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 43
+Crucial = 0
+Valor = 2500000
+
+[[item]]
+id = 351
+Name = "Llave Banderbill Casa Nro 17"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 44
+Crucial = 0
+Valor = 2500000
+
+[[item]]
+id = 355
+Name = "Llave Banderbill Casa Nro 18"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 45
+Crucial = 0
+Valor = 2500000
+
+[[item]]
+id = 376
+Name = "Llave Isla Beleta"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 49
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 420
+Name = "Llave Lindos Casa Nro 1"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 50
+Crucial = 0
+Valor = 1800000
+
+[[item]]
+id = 424
+Name = "Llave Lindos Casa Nro 2"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 51
+Crucial = 0
+Valor = 1800000
+
+[[item]]
+id = 428
+Name = "Llave Lindos Casa Nro 3"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 52
+Crucial = 0
+Valor = 1800000
+
+[[item]]
+id = 432
+Name = "Llave Lindos Casa Nro 4"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 53
+Crucial = 0
+Valor = 1000000
+
+[[item]]
+id = 436
+Name = "Llave Lindos Casa Nro 5"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 54
+Crucial = 0
+Valor = 1000000
+
+[[item]]
+id = 440
+Name = "Llave Lindos Casa Nro 6"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 55
+Crucial = 0
+Valor = 1000000
+
+[[item]]
+id = 444
+Name = "Llave Abadía de Lindos"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 56
+Crucial = 0
+Valor = 20000000
+
+[[item]]
+id = 448
+Name = "Llave Vault de la Abadía de Lindos"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 57
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 452
+Name = "Llave Prisión de Banderbill"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 58
+Crucial = 0
+Valor = 0
+
+[[item]]
+id = 583
+Name = "Llave Arkhein Casa Nro 1"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 70
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 587
+Name = "Llave Arkhein Casa Nro 2"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 71
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 591
+Name = "Llave Arkhein Casa Nro 3"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 72
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 595
+Name = "Llave Arkhein Casa Nro 4"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 73
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 599
+Name = "Llave Arkhein Casa Nro 5"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 74
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 603
+Name = "Llave Arkhein Casa Nro 6"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 75
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 607
+Name = "Llave Arkhein Casa Nro 7"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 76
+Crucial = 0
+Valor = 1700000
+
+[[item]]
+id = 611
+Name = "Llave Arkhein Casa Nro 8"
+GrhIndex = 509
+ObjType = 9
+Agarrable = 0
+Clave = 77
+Crucial = 0
+Valor = 1700000
+

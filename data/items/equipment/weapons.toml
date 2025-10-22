@@ -1,0 +1,895 @@
+# Weapons - 53 items
+# Generated from items.toml
+
+[[item]]
+id = 2
+Name = "Espada Larga"
+GrhIndex = 504
+ObjType = 2
+Agarrable = 0
+Anim = 21
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA']
+Crucial = 1
+LingH = 3
+LingO = 0
+LingP = 0
+MaxHit = 8
+MinHit = 1
+RazaEnanaAnim = 72
+SkHerreria = 25
+Valor = 210
+
+[[item]]
+id = 3
+Name = "Hacha"
+GrhIndex = 505
+ObjType = 2
+Agarrable = 0
+Anim = 25
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'ASESINO', 'CLERIGO']
+Crucial = 1
+LingH = 2
+LingO = 0
+LingP = 0
+MaxHit = 6
+MinHit = 2
+SkHerreria = 15
+Valor = 140
+
+[[item]]
+id = 9
+Name = "Horquilla"
+GrhIndex = 508
+ObjType = 2
+Agarrable = 0
+Anim = 26
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'ASESINO', 'CLERIGO']
+Crucial = 1
+LingH = 1
+LingO = 0
+LingP = 0
+MaxHit = 2
+MinHit = 1
+SkHerreria = 10
+Valor = 70
+
+[[item]]
+id = 15
+Name = "Daga"
+GrhIndex = 510
+ObjType = 2
+Agarrable = 0
+Anim = 12
+"Apuñala" = 1
+Crucial = 1
+LingH = 2
+LingO = 0
+LingP = 0
+MaxHit = 2
+MinHit = 1
+RazaEnanaAnim = 48
+SkHerreria = 10
+Upgrade = 165
+Valor = 140
+
+[[item]]
+id = 19
+Name = "Espada Dos Manos"
+GrhIndex = 5748
+ObjType = 2
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'ASESINO', 'CLERIGO']
+Crucial = 1
+LingH = 16
+LingO = 0
+LingP = 0
+MaxHit = 9
+MinHit = 4
+RazaEnanaAnim = 66
+SkHerreria = 20
+Valor = 1120
+
+[[item]]
+id = 123
+Name = "Espada Vikinga"
+GrhIndex = 561
+ObjType = 2
+Agarrable = 0
+Anim = 22
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'ASESINO', 'PALADIN', 'PIRATA']
+Crucial = 1
+LingH = 60
+LingO = 0
+LingP = 0
+MaxHit = 17
+MinHit = 6
+RazaEnanaAnim = 55
+SkHerreria = 70
+Valor = 4200
+
+[[item]]
+id = 124
+Name = "Katana"
+GrhIndex = 562
+ObjType = 2
+Agarrable = 0
+Anim = 27
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+LingH = 43
+LingO = 0
+LingP = 0
+MaxHit = 15
+MinHit = 5
+RazaEnanaAnim = 54
+SkHerreria = 55
+Valor = 3010
+
+[[item]]
+id = 125
+Name = "Sable"
+GrhIndex = 22723
+ObjType = 2
+Agarrable = 0
+Anim = 56
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'DRUIDA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+LingH = 60
+LingO = 0
+LingP = 0
+MaxHit = 17
+MinHit = 6
+RazaEnanaAnim = 57
+SkHerreria = 70
+Valor = 4200
+
+[[item]]
+id = 126
+Name = "Hacha Larga de Guerra"
+GrhIndex = 564
+ObjType = 2
+Agarrable = 0
+Anim = 3
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'CLERIGO', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 90
+LingO = 0
+LingP = 0
+MaxHit = 18
+MinHit = 10
+RazaEnanaAnim = 67
+SkHerreria = 90
+Valor = 6300
+
+[[item]]
+id = 127
+Name = "Hacha de Leñador"
+GrhIndex = 565
+ObjType = 2
+Agarrable = 0
+Anim = 23
+Crucial = 1
+LingH = 5
+LingO = 0
+LingP = 0
+MaxHit = 3
+MinHit = 2
+SkHerreria = 12
+Valor = 350
+
+[[item]]
+id = 129
+Name = "Hacha de Guerra Dos Filos"
+GrhIndex = 566
+ObjType = 2
+Agarrable = 0
+Anim = 24
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR', 'BANDIDO']
+Crucial = 0
+LingH = 85
+LingO = 0
+LingP = 0
+MaxHit = 20
+MinHit = 7
+SkHerreria = 86
+Valor = 5950
+
+[[item]]
+id = 138
+Name = "Caña de Pescar"
+GrhIndex = 574
+ObjType = 2
+Agarrable = 0
+Anim = 20
+Crucial = 1
+Madera = 70
+MaxHit = 1
+MinHit = 1
+RazaEnanaAnim = 76
+SkCarpinteria = 12
+Valor = 200
+
+[[item]]
+id = 159
+Name = "Hacha de Bárbaro"
+GrhIndex = 583
+ObjType = 2
+Agarrable = 0
+Anim = 19
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'CLERIGO', 'ASESINO']
+Crucial = 0
+LingH = 67
+LingO = 0
+LingP = 0
+MaxHit = 19
+MinHit = 6
+SkHerreria = 63
+Valor = 4690
+
+[[item]]
+id = 164
+Name = "Espada Corta"
+GrhIndex = 588
+ObjType = 2
+Agarrable = 0
+Anim = 14
+"Apuñala" = 1
+Crucial = 1
+LingH = 15
+LingO = 0
+LingP = 0
+MaxHit = 5
+MinHit = 1
+RazaEnanaAnim = 64
+SkHerreria = 40
+Valor = 1050
+
+[[item]]
+id = 165
+Name = "Daga +1"
+GrhIndex = 4999
+ObjType = 2
+Agarrable = 0
+Anim = 34
+"Apuñala" = 1
+Crucial = 0
+LingH = 7
+LingO = 0
+LingP = 0
+MaxHit = 4
+MinHit = 2
+RazaEnanaAnim = 49
+SkHerreria = 15
+Upgrade = 365
+Valor = 490
+
+[[item]]
+id = 187
+Name = "Piquete de Minero"
+GrhIndex = 608
+ObjType = 2
+Agarrable = 0
+Anim = 30
+Crucial = 1
+LingH = 3
+LingO = 0
+LingP = 0
+MaxHit = 3
+MinHit = 2
+RazaEnanaAnim = 74
+SkHerreria = 12
+Valor = 210
+
+[[item]]
+id = 198
+Name = "Serrucho"
+GrhIndex = 607
+ObjType = 2
+Agarrable = 0
+Anim = 31
+Crucial = 1
+LingH = 2
+LingO = 0
+LingP = 0
+MaxHit = 2
+MinHit = 1
+RazaEnanaAnim = 73
+SkHerreria = 12
+Valor = 140
+
+[[item]]
+id = 365
+Name = "Daga +2"
+GrhIndex = 710
+ObjType = 2
+Agarrable = 0
+Anim = 35
+"Apuñala" = 1
+Crucial = 0
+LingH = 28
+LingO = 0
+LingP = 0
+MaxHit = 6
+MinHit = 3
+RazaEnanaAnim = 50
+SkHerreria = 35
+Upgrade = 366
+Valor = 1960
+
+[[item]]
+id = 366
+Name = "Daga +3"
+GrhIndex = 711
+ObjType = 2
+Agarrable = 0
+Anim = 36
+"Apuñala" = 1
+ClasesProhibidas = ['GUERRERO', 'PIRATA']
+Crucial = 0
+LingH = 38
+LingO = 0
+LingP = 0
+MaxHit = 7
+MinHit = 4
+RazaEnanaAnim = 51
+SkHerreria = 50
+Upgrade = 367
+Valor = 2660
+
+[[item]]
+id = 367
+Name = "Daga +4"
+GrhIndex = 5595
+ObjType = 2
+Agarrable = 0
+Anim = 52
+"Apuñala" = 1
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'CAZADOR', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+LingH = 50
+LingO = 0
+LingP = 0
+MaxHit = 8
+MinHit = 5
+RazaEnanaAnim = 53
+SkHerreria = 75
+Valor = 3500
+
+[[item]]
+id = 389
+Name = "Martillo de Herrero"
+GrhIndex = 726
+ObjType = 2
+Agarrable = 0
+Anim = 29
+Crucial = 1
+LingH = 2
+LingO = 0
+LingP = 0
+MaxHit = 2
+MinHit = 2
+RazaEnanaAnim = 75
+SkHerreria = 20
+Valor = 140
+
+[[item]]
+id = 398
+Name = "Garrote"
+GrhIndex = 714
+ObjType = 2
+Agarrable = 0
+Anim = 4
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+MaxHit = 3
+MinHit = 1
+RazaEnanaAnim = 70
+Valor = 100
+
+[[item]]
+id = 399
+Name = "Cimitarra"
+GrhIndex = 709
+ObjType = 2
+Agarrable = 0
+Anim = 5
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'PIRATA']
+Crucial = 0
+LingH = 50
+LingO = 0
+LingP = 0
+MaxHit = 13
+MinHit = 7
+RazaEnanaAnim = 71
+SkHerreria = 59
+Valor = 3500
+
+[[item]]
+id = 400
+Name = "Vara de Mago"
+GrhIndex = 715
+ObjType = 2
+Agarrable = 0
+Anim = 6
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+LingH = 50
+LingO = 200
+LingP = 100
+MaxHit = 15
+MinHit = 5
+RazaEnanaAnim = 58
+SkHerreria = 90
+StaffDamageBonus = 38
+StaffPower = 2
+Valor = 85500
+
+[[item]]
+id = 401
+Name = "Martillo de Guerra"
+GrhIndex = 708
+ObjType = 2
+Agarrable = 0
+Anim = 28
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+LingH = 33
+LingO = 0
+LingP = 0
+MaxHit = 11
+MinHit = 6
+RazaEnanaAnim = 77
+SkHerreria = 30
+Valor = 2310
+
+[[item]]
+id = 402
+Name = "Espada Mata Dragones"
+GrhIndex = 716
+ObjType = 2
+Agarrable = 0
+Anim = 15
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'TRABAJADOR']
+Crucial = 0
+LingH = 500
+LingO = 300
+LingP = 400
+Log = 1
+MaxHit = 100
+MinHit = 100
+RazaEnanaAnim = 65
+SkHerreria = 100
+Valor = 188000
+
+[[item]]
+id = 403
+Name = "Espada de Plata"
+GrhIndex = 713
+ObjType = 2
+Agarrable = 0
+Anim = 13
+ClasesProhibidas = ['MAGO', 'CLERIGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'CAZADOR', 'ASESINO', 'BANDIDO', 'TRABAJADOR']
+Crucial = 0
+LingH = 140
+LingO = 0
+LingP = 220
+MaxHit = 20
+MinHit = 13
+RazaEnanaAnim = 63
+SkHerreria = 90
+Valor = 36200
+
+[[item]]
+id = 460
+Name = "Daga (Newbie)"
+GrhIndex = 510
+ObjType = 2
+Agarrable = 0
+Anim = 12
+"Apuñala" = 1
+Crucial = 0
+MaxHit = 3
+MinHit = 1
+RazaEnanaAnim = 48
+newbie = 1
+
+[[item]]
+id = 478
+Name = "Arco Simple"
+GrhIndex = 750
+ObjType = 2
+Agarrable = 0
+Anim = 41
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 0
+Madera = 42
+MaxHit = 4
+MinHit = 1
+Municiones = 1
+Proyectil = 1
+RazaEnanaAnim = 40
+SkCarpinteria = 20
+Upgrade = 663
+Valor = 92
+
+[[item]]
+id = 479
+Name = "Arco Compuesto"
+GrhIndex = 751
+ObjType = 2
+Agarrable = 0
+Anim = 7
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+Madera = 450
+MaxHit = 10
+MinHit = 4
+Municiones = 1
+Proyectil = 1
+RazaEnanaAnim = 59
+SkCarpinteria = 40
+Upgrade = 664
+Valor = 1080
+
+[[item]]
+id = 543
+Name = "Red de Pesca"
+GrhIndex = 844
+ObjType = 2
+Agarrable = 0
+Crucial = 0
+Valor = 5000
+
+[[item]]
+id = 556
+Name = "Espada Mata Dragones NatOs"
+GrhIndex = 716
+ObjType = 2
+Agarrable = 0
+Anim = 15
+Crucial = 0
+LingH = 500
+LingO = 300
+LingP = 400
+MaxHit = 1000
+MinHit = 1000
+RazaEnanaAnim = 65
+SkHerreria = 1000
+Valor = 188000
+
+[[item]]
+id = 559
+Name = "Daga de Plata"
+GrhIndex = 711
+ObjType = 2
+Agarrable = 0
+Anim = 12
+"Apuñala" = 1
+ClasesProhibidas = ['PIRATA']
+Crucial = 0
+LingH = 58
+LingO = 0
+LingP = 0
+MaxHit = 8
+MinHit = 6
+SkHerreria = 69
+Valor = 4060
+
+[[item]]
+id = 561
+Name = "Hacha de Leñador (Newbie)"
+GrhIndex = 565
+ObjType = 2
+Agarrable = 0
+Anim = 23
+Crucial = 1
+MaxHit = 2
+MinHit = 1
+Newbie = 1
+Valor = 150
+
+[[item]]
+id = 562
+Name = "Piquete de Minero (Newbie)"
+GrhIndex = 608
+ObjType = 2
+Agarrable = 0
+Anim = 30
+Crucial = 1
+MaxHit = 2
+MinHit = 1
+Newbie = 1
+RazaEnanaAnim = 74
+Valor = 150
+
+[[item]]
+id = 563
+Name = "Caña de pescar (Newbie)"
+GrhIndex = 574
+ObjType = 2
+Agarrable = 0
+Anim = 20
+Crucial = 1
+MaxHit = 2
+MinHit = 1
+Newbie = 1
+RazaEnanaAnim = 76
+Valor = 150
+
+[[item]]
+id = 564
+Name = "Serrucho (Newbie)"
+GrhIndex = 607
+ObjType = 2
+Agarrable = 0
+Anim = 31
+Crucial = 1
+MaxHit = 2
+MinHit = 1
+Newbie = 1
+RazaEnanaAnim = 73
+Valor = 150
+
+[[item]]
+id = 565
+Name = "Martillo de Herrero (Newbie)"
+GrhIndex = 726
+ObjType = 2
+Agarrable = 0
+Anim = 29
+Crucial = 1
+MaxHit = 2
+MinHit = 1
+Newbie = 1
+RazaEnanaAnim = 75
+Valor = 150
+
+[[item]]
+id = 619
+Name = "Daga Envenenada"
+GrhIndex = 510
+ObjType = 2
+Agarrable = 0
+Anim = 12
+"Apuñala" = 1
+Crucial = 1
+Envenena = 1
+LingH = 5
+LingO = 0
+LingP = 0
+MaxHit = 3
+MinHit = 2
+SkHerreria = 10
+Valor = 350
+
+[[item]]
+id = 658
+Name = "Vara de Fresno"
+GrhIndex = 932
+ObjType = 2
+Agarrable = 0
+Anim = 8
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxHit = 1
+MinHit = 1
+RazaEnanaAnim = 60
+StaffDamageBonus = 22
+StaffPower = 1
+Valor = 800
+
+[[item]]
+id = 659
+Name = "Bastón Nudoso"
+GrhIndex = 959
+ObjType = 2
+Agarrable = 0
+Anim = 9
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxHit = 1
+MinHit = 1
+RazaEnanaAnim = 61
+StaffDamageBonus = 30
+StaffPower = 2
+Valor = 2500
+
+[[item]]
+id = 660
+Name = "Báculo Engarzado"
+GrhIndex = 986
+ObjType = 2
+Agarrable = 0
+Anim = 10
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaderaElfica = 2900
+MaxHit = 1
+MinHit = 1
+RazaEnanaAnim = 62
+SkCarpinteria = 85
+StaffDamageBonus = 34
+StaffPower = 2
+Valor = 13000
+
+[[item]]
+id = 663
+Name = "Arco Simple Reforzado"
+GrhIndex = 1024
+ObjType = 2
+Agarrable = 0
+Anim = 43
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 0
+Madera = 175
+MaxHit = 4
+MinHit = 2
+Municiones = 1
+Proyectil = 1
+RazaEnanaAnim = 42
+Refuerzo = 4
+SkCarpinteria = 50
+Valor = 438
+
+[[item]]
+id = 664
+Name = "Arco Compuesto Reforzado"
+GrhIndex = 1025
+ObjType = 2
+Agarrable = 0
+Anim = 45
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+Madera = 650
+MaxHit = 10
+MinHit = 5
+Municiones = 1
+Proyectil = 1
+RazaEnanaAnim = 44
+Refuerzo = 8
+SkCarpinteria = 75
+Valor = 1788
+
+[[item]]
+id = 665
+Name = "Arco de Cazador"
+GrhIndex = 1023
+ObjType = 2
+Agarrable = 0
+Anim = 47
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaderaElfica = 500
+MaxHit = 11
+MinHit = 6
+Municiones = 1
+Proyectil = 1
+RazaEnanaAnim = 46
+Refuerzo = 12
+SkCarpinteria = 100
+Valor = 3000
+
+[[item]]
+id = 753
+Name = "Mayal Triple"
+GrhIndex = 590
+ObjType = 2
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+LingH = 2
+LingO = 0
+LingP = 0
+MaxHit = 5
+MinHit = 1
+SkHerreria = 25
+Valor = 140
+
+[[item]]
+id = 859
+Name = "Arco (Newbie)"
+GrhIndex = 750
+ObjType = 2
+Agarrable = 0
+Anim = 41
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 0
+MaxHit = 2
+MinHit = 1
+Municiones = 1
+Newbie = 1
+Proyectil = 1
+RazaEnanaAnim = 40
+Valor = 100
+
+[[item]]
+id = 861
+Name = "Espada (Newbie)"
+GrhIndex = 504
+ObjType = 2
+Agarrable = 0
+Anim = 21
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA']
+Crucial = 1
+MaxHit = 3
+MinHit = 1
+Newbie = 1
+Valor = 150
+
+[[item]]
+id = 862
+Name = "Bastón de Mago (Newbie)"
+GrhIndex = 932
+ObjType = 2
+Agarrable = 0
+Anim = 8
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxHit = 1
+MinHit = 1
+Newbie = 1
+Valor = 100
+
+[[item]]
+id = 990
+Name = "Mazo del Juicio"
+GrhIndex = 20233
+ObjType = 2
+Agarrable = 0
+Anim = 32
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'GUERRERO', 'BANDIDO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+MaxHit = 16
+MinHit = 5
+RazaEnanaAnim = 68
+Valor = 4100
+
+[[item]]
+id = 1000
+Name = "Antorcha Olímpica de Mano"
+GrhIndex = 20460
+ObjType = 2
+Agarrable = 0
+Anim = 33
+Crucial = 0
+MaxHit = 8
+MinHit = 1
+RazaEnanaAnim = 69
+Valor = 210
+
+[[item]]
+id = 1005
+Name = "Hacha de leña Elfica"
+GrhIndex = 603
+ObjType = 2
+Agarrable = 0
+Anim = 37
+Crucial = 1
+LingH = 15
+LingO = 0
+LingP = 0
+MaxHit = 8
+MinHit = 3
+SkHerreria = 30
+Valor = 1750
+
+[[item]]
+id = 1009
+Name = "Cuchillas"
+GrhIndex = 2341
+ObjType = 2
+Acuchilla = 1
+Agarrable = 0
+Anim = 38
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'DRUIDA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+LingH = 1
+MaxHit = 16
+MinHit = 7
+Proyectil = 1
+RazaEnanaAnim = 39
+SkHerreria = 10
+Valor = 50
+

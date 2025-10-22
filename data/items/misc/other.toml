@@ -1,0 +1,83 @@
+# Other - 10 items
+# Generated from items.toml
+
+[[item]]
+id = 63
+Name = "Fogata"
+GrhIndex = 1521
+ObjType = 15
+Agarrable = 1
+
+[[item]]
+id = 554
+Name = "Sangre"
+GrhIndex = 264
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 555
+Name = "Sangre"
+GrhIndex = 263
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 653
+Name = "Reja"
+GrhIndex = 12402
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 654
+Name = "Reja"
+GrhIndex = 12408
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 655
+Name = "Reja"
+GrhIndex = 12410
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 674
+Name = "Sangre de Liche"
+GrhIndex = 264
+ObjType = 35
+Agarrable = 1
+
+[[item]]
+id = 865
+Name = "Alforja"
+GrhIndex = 388
+ObjType = 37
+Agarrable = 0
+Anim = 16
+Crucial = 0
+MochilaType = 2
+Valor = 15000
+
+[[item]]
+id = 866
+Name = "Mochila de Viajero"
+GrhIndex = 403
+ObjType = 37
+Agarrable = 0
+Anim = 17
+Crucial = 0
+MaxHit = 1
+MinHit = 1
+MochilaType = 1
+Valor = 10000
+
+[[item]]
+id = 1008
+Name = "Árbol élfico"
+GrhIndex = 18802
+ObjType = 36
+Agarrable = 1
+

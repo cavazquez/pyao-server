@@ -1,0 +1,859 @@
+# Signs - 95 items
+# Generated from items.toml
+
+[[item]]
+id = 13
+Name = "Cartel Armas"
+GrhIndex = 500
+ObjType = 8
+Agarrable = 1
+Texto = "Tenemos las mejores armas para los mejores guerreros."
+VGrande = 501
+
+[[item]]
+id = 18
+Name = "Cartel Comida"
+GrhIndex = 512
+ObjType = 8
+Agarrable = 1
+Texto = "¡La mejor comida, al mejor precio!"
+VGrande = 501
+
+[[item]]
+id = 20
+Name = "Lápida"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yace Durmin Van Brick, otrora gran guerrero del Imperio."
+VGrande = 514
+
+[[item]]
+id = 33
+Name = "Cartel Sastre"
+GrhIndex = 530
+ObjType = 8
+Agarrable = 1
+Texto = "Ropa Azrra, los mejores precios!"
+VGrande = 501
+
+[[item]]
+id = 59
+Name = "Cartel Pociones"
+GrhIndex = 546
+ObjType = 8
+Agarrable = 1
+Texto = "Pociones, aumente su fuerza, agilidad, recupere salud y demás efectos mágicos!!"
+VGrande = 501
+
+[[item]]
+id = 60
+Name = "Casa Número 1"
+GrhIndex = 547
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 61
+Name = "Cartel Carpintería"
+GrhIndex = 548
+ObjType = 8
+Agarrable = 1
+Texto = "¡Compra y venta de madera!"
+VGrande = 501
+
+[[item]]
+id = 62
+Name = "Cartel Propiedades"
+GrhIndex = 549
+ObjType = 8
+Agarrable = 1
+Texto = "Compra y venta de propiedades. ¡Stock limitado!"
+VGrande = 501
+
+[[item]]
+id = 77
+Name = "Casa Número 2"
+GrhIndex = 553
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 78
+Name = "Casa Número 3"
+GrhIndex = 552
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 79
+Name = "Casa Número 4"
+GrhIndex = 551
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 82
+Name = "Casa Número 5"
+GrhIndex = 555
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 83
+Name = "Casa Número 6"
+GrhIndex = 556
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 84
+Name = "Casa Número 7"
+GrhIndex = 567
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 85
+Name = "Casa Número 8"
+GrhIndex = 568
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 86
+Name = "Casa Número 9"
+GrhIndex = 569
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 134
+Name = "Cartel Armaduras"
+GrhIndex = 570
+ObjType = 8
+Agarrable = 1
+Texto = "Compra y venta de armaduras, cascos y escudos."
+VGrande = 501
+
+[[item]]
+id = 209
+Name = "Cartel Mineros"
+GrhIndex = 610
+ObjType = 8
+Agarrable = 1
+Texto = "Bienvenidos al Gremio de los Mineros, contamos con fabulosas herramientas y los mejores minerales de todo Argentum."
+VGrande = 501
+
+[[item]]
+id = 210
+Name = "Casa Número 11"
+GrhIndex = 611
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 211
+Name = "Casa Número 12"
+GrhIndex = 612
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 212
+Name = "Casa Número 13"
+GrhIndex = 613
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 213
+Name = "Casa Número 14"
+GrhIndex = 614
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 214
+Name = "Casa Número 15"
+GrhIndex = 615
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 215
+Name = "Casa Número 16"
+GrhIndex = 616
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 216
+Name = "Casa Número 17"
+GrhIndex = 617
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 217
+Name = "Casa Número 18"
+GrhIndex = 618
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 218
+Name = "Casa Número 19"
+GrhIndex = 619
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 219
+Name = "Casa Número 10"
+GrhIndex = 620
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 220
+Name = "Casa Número 20"
+GrhIndex = 621
+ObjType = 8
+Agarrable = 1
+Texto = "Residencia Privada."
+VGrande = 501
+
+[[item]]
+id = 221
+Name = "Cartel Hechizos"
+GrhIndex = 622
+ObjType = 8
+Agarrable = 1
+Texto = "¡Entrad noble Mago! Puedo ofrecerte mis mejores Hechizos."
+VGrande = 501
+
+[[item]]
+id = 222
+Name = "Cartel Pescadores"
+GrhIndex = 623
+ObjType = 8
+Agarrable = 1
+Texto = "Gremio de Pescadores"
+VGrande = 501
+
+[[item]]
+id = 223
+Name = "Cartel"
+GrhIndex = 625
+ObjType = 8
+Agarrable = 1
+Texto = "Hola aventurero, unos cuantos kilómentros al Norte se encuentra el pueblo de Ullathorpe y al Oeste encontrarás la ciudad de Nix. ¡Buena Suerte, viajero!"
+VGrande = 501
+
+[[item]]
+id = 224
+Name = "Cartel"
+GrhIndex = 624
+ObjType = 8
+Agarrable = 1
+Texto = "Forasteros: Este Pueblo forma parte del Gran Imperio de Argentum, cualquier acción criminal será reprimida por la Guardia Real. Todo criminal será perseguido y ajusticiado.                                Ordenanza Real."
+VGrande = 501
+
+[[item]]
+id = 225
+Name = "Cartel Newbie Dungeon"
+GrhIndex = 626
+ObjType = 8
+Agarrable = 1
+Texto = "¡Hola osados aventureros, sed bienvenidos en el Dungeon Newbie! Aquí podrán entrenar sus habilidades sin correr ningún riesgo ya que el Dungeon está fuertemente custodiado por la Guardia Imperial. Adentrándose encontrarán criaturas perversas con las cuales podrán luchar, también encontrarán un Sacerdote para ser resucitados, provisiones, etc. ¡Suerte y que lo disfruteís!"
+VGrande = 501
+
+[[item]]
+id = 226
+Name = "Cartel"
+GrhIndex = 628
+ObjType = 8
+Agarrable = 1
+Texto = "Sigue el camino del Sur para ir a Nix, hacia al Oeste encontrarás el peligroso bosque de Dorck."
+VGrande = 501
+
+[[item]]
+id = 227
+Name = "Cartel Bosque Dorck"
+GrhIndex = 627
+ObjType = 8
+Agarrable = 1
+Texto = "Entrada al bosque de Dorck. Manténgase alejado, zona de peligro."
+VGrande = 501
+
+[[item]]
+id = 258
+Name = "Cartel Banco"
+GrhIndex = 670
+ObjType = 8
+Agarrable = 1
+Texto = "Banco Goliath. La mayor seguridad."
+VGrande = 501
+
+[[item]]
+id = 259
+Name = "Cartel Provisiones"
+GrhIndex = 672
+ObjType = 8
+Agarrable = 1
+Texto = "Provisiones."
+VGrande = 501
+
+[[item]]
+id = 260
+Name = "Cartel Sacerdote"
+GrhIndex = 673
+ObjType = 8
+Agarrable = 1
+Texto = "Sacerdote."
+VGrande = 501
+
+[[item]]
+id = 261
+Name = "Cartel Mesón Hostigado"
+GrhIndex = 671
+ObjType = 8
+Agarrable = 1
+Texto = "El Mesón Hostigado."
+VGrande = 501
+
+[[item]]
+id = 262
+Name = "Cartel"
+GrhIndex = 719
+ObjType = 8
+Agarrable = 1
+Texto = "El Gran Consejo."
+VGrande = 501
+
+[[item]]
+id = 315
+Name = "Cartel Muelles"
+GrhIndex = 675
+ObjType = 8
+Agarrable = 1
+Texto = "Muelles:¡Prohibido arrojar basura al mar!. Todo aquél que incurra en una infracción será multado."
+VGrande = 501
+
+[[item]]
+id = 316
+Name = "Cartel Goliath"
+GrhIndex = 676
+ObjType = 8
+Agarrable = 1
+Texto = "Casa Central del Banco Goliath."
+VGrande = 501
+
+[[item]]
+id = 317
+Name = "Cartel Palacio Real"
+GrhIndex = 677
+ObjType = 8
+Agarrable = 1
+Texto = "Bienvenido al Palacio Real."
+VGrande = 501
+
+[[item]]
+id = 368
+Name = "Lápida"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yace Altair de Oteren. Fue conocido y amado por todos, sobre todo en Nix donde siempre mostraba su generosidad y su paciencia con los newbies, ayudando con todo lo que tenía a todos, pescando por horas para dar a los demás. Altair, descansa en paz... el pueblo de Nix siempre honrará tu memoria."
+VGrande = 514
+
+[[item]]
+id = 371
+Name = "Tumba de Nebeth"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Bajo este mármol descansan los restos del Dios Nebeth, ese pequeño demiurgo de grandes sueños."
+VGrande = 514
+
+[[item]]
+id = 457
+Name = "Cartel"
+GrhIndex = 718
+ObjType = 8
+Agarrable = 1
+Texto = "Prisión del Reino"
+VGrande = 501
+
+[[item]]
+id = 458
+Name = "Cartel"
+GrhIndex = 720
+ObjType = 8
+Agarrable = 1
+Texto = "Prisión"
+VGrande = 501
+
+[[item]]
+id = 459
+Name = "Cartel"
+GrhIndex = 721
+ObjType = 8
+Agarrable = 1
+Texto = "Abadía de Lindos"
+VGrande = 501
+
+[[item]]
+id = 535
+Name = "Tumba de Gulfas Morgolock"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Lápida en homenaje a nuestro gran demiurgo, Gulfas Morgolock, quien desapareció físicamente de estas tierras para salvarnos del oscuro poder del mal."
+VGrande = 514
+
+[[item]]
+id = 547
+Name = "Cartel Dungeon Veriil"
+GrhIndex = 863
+ObjType = 8
+Agarrable = 1
+Texto = "¡¡Cuidado!! El Dúngeon de Veriil es uno de los lugares más peligrosos de todo Argentum; pocos son los aventureros que logran salir con vida de él."
+VGrande = 501
+
+[[item]]
+id = 548
+Name = "Cartel Arghâl"
+GrhIndex = 864
+ObjType = 8
+Agarrable = 1
+Texto = "¡¡¡Bienvenidos a Arghâl!!!"
+VGrande = 501
+
+[[item]]
+id = 574
+Name = "Cartel"
+GrhIndex = 875
+ObjType = 8
+Agarrable = 1
+Texto = "La mística ciudad de Arghâl se encuentra hacia el este."
+VGrande = 501
+
+[[item]]
+id = 577
+Name = "Cartel"
+GrhIndex = 876
+ObjType = 8
+Agarrable = 1
+Texto = "El refugio de los aventureros, lugar propicio para beber y emprender nuevas aventuras."
+VGrande = 501
+
+[[item]]
+id = 578
+Name = "Cartel"
+GrhIndex = 877
+ObjType = 8
+Agarrable = 1
+Texto = "Al este se encuentra el centro histórico de Arghâl."
+VGrande = 501
+
+[[item]]
+id = 579
+Name = "Cartel"
+GrhIndex = 878
+ObjType = 8
+Agarrable = 1
+Texto = "El famoso espacio donde se congregan los más grandes artistas y poetas de Argentum."
+VGrande = 501
+
+[[item]]
+id = 620
+Name = "Lápida"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yace el cuerpo del Pollo Encantado."
+VGrande = 514
+
+[[item]]
+id = 621
+Name = "Cartel"
+GrhIndex = 500
+ObjType = 8
+Agarrable = 1
+Texto = "Teleport a las Catacumbas."
+VGrande = 501
+
+[[item]]
+id = 642
+Name = "Tumba de Calixto"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansa el alma pura de Calixto, diosa eterna de estas tierras."
+VGrande = 514
+
+[[item]]
+id = 643
+Name = "Tumba de Lobonegro"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yace el caballero más oscuro de la noche, el lobo más fiero. El restaurador del orden."
+VGrande = 514
+
+[[item]]
+id = 644
+Name = "Tumba de Almendra"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yacen los restos de la Gran Diosa Almendra, quien será recordada por toda la eternidad por haber sido la única Diosa con barba."
+VGrande = 514
+
+[[item]]
+id = 647
+Name = "Cartel"
+GrhIndex = 500
+ObjType = 8
+Agarrable = 1
+Texto = "Vd está entrando en territorio del Imperio Pretoriano. Los visitantes NO son bienvenidos y serán atacados sin piedad."
+VGrande = 501
+
+[[item]]
+id = 649
+Name = "Cartel"
+GrhIndex = 500
+ObjType = 8
+Agarrable = 1
+Texto = "La reglamentación del robo de NPCs no se aplica aquí. Es un lugar de entrenamiento común y nadie puede proclamarse dueño de las criaturas."
+VGrande = 501
+
+[[item]]
+id = 666
+Name = "Objetos Voodoo Satánicos"
+GrhIndex = 740
+ObjType = 8
+Agarrable = 0
+Crucial = 0
+Texto = "OAAAAAAAAAAAAAA!!! :-D"
+VGrande = 740
+
+[[item]]
+id = 703
+Name = "Tumba de Cronos"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí yace el alma de Cronos, un dios que ha dado mucho por nuestro mundo. Descansa, hermano... el pueblo de Argentum jamás te olvidará!"
+VGrande = 514
+
+[[item]]
+id = 706
+Name = "Cartel de Advertencia"
+GrhIndex = 500
+ObjType = 8
+Agarrable = 1
+Texto = "PROHIBIDO TOCAR (¡dioses y semidioses incluidos!). Este pergamino fue encargado al imperio real por los dioses de Argentum para su estudio."
+Vgrande = 501
+
+[[item]]
+id = 711
+Name = "Tumba de Valkira"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos de la Diosa Valkira, quien dejó todo de ella para ser la gran fuerza ordenadora de estas tierras durante largos años. El mundo de Argentum siempre te lo agradecerá."
+VGrande = 514
+
+[[item]]
+id = 712
+Name = "Tumba de Jennifer"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos de Jennifer de Nix. Largo fue el camino desde su infancia como gitana hasta diosa de la ciudad del sur, quien luchó con los peores males que estas tierras han conocido. Que este mundo no olvide tu sacrificio y tu lucha contra los dioses malignos que gobernaron en otras épocas. Que tu hijo EL OSO vele por tu espíritu en este pacífico lugar."
+VGrande = 514
+
+[[item]]
+id = 713
+Name = "Tumba de Jareth"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos de Jareth. Antiguo luchador y líder del ejército real de Banderbill. Que tu espíritu proteja a la ciudad."
+VGrande = 514
+
+[[item]]
+id = 714
+Name = "Tumba de Gold Fire"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos de Gold Fire. Líder supremo del ejército de Banderbill en la séptima era de este mundo."
+VGrande = 514
+
+[[item]]
+id = 715
+Name = "Tumba de Amenakhte"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos de Amenakhte. Líder supremo del ejército de la legión oscura en la novena era, ganó el respeto de este mundo a fuerza de espada y sangre."
+VGrande = 514
+
+[[item]]
+id = 868
+Name = "Tumba de Chatillon"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Yacen bajo esta tumba los restos del Gran Dios Chatillon, que dejó su vida por la gloria y el orden de estas tierras."
+VGrande = 514
+
+[[item]]
+id = 869
+Name = "Tumba de Nightsorrow"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos del Dios Nightsorrow, que mucho colaboró por la justicia del Argentum."
+VGrande = 514
+
+[[item]]
+id = 870
+Name = "Tumba de Shep"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Bajo esta piedra reposan en paz los restos del gran Shep, aquel Dios que dedicó su vida entera a estas tierras y sus habitantes."
+VGrande = 514
+
+[[item]]
+id = 871
+Name = "Tumba de Patrick"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Yacen aquí los restos de Patrick, aquel bondadoso Dios que con esfuerzo y trabajo mucho dió por estas tierras."
+VGrande = 514
+
+[[item]]
+id = 872
+Name = "Tumba de EL OSO"
+GrhIndex = 513
+ObjType = 8
+Agarrable = 1
+Texto = "Aquí descansan los restos del mítico EL OSO, poderoso Dios que durante siglos fue el responsable de darle el hálito de vida a este hermoso mundo gracias a su gran ciencia, bondad y dedicación. Por siempre el pueblo del Argentum glorificará tu paso por estas tierras y te estrará eternamente agradecido."
+VGrande = 514
+
+[[item]]
+id = 987
+Name = "Estatua de Otto Wallace"
+GrhIndex = 0
+ObjType = 8
+Agarrable = 1
+Texto = ""
+VGrande = 18996
+
+[[item]]
+id = 989
+Name = "Estatua del Panda"
+GrhIndex = 0
+ObjType = 8
+Agarrable = 1
+Texto = ""
+VGrande = 19715
+
+[[item]]
+id = 1019
+Name = "Cartel Asesino"
+GrhIndex = 21969
+ObjType = 8
+Agarrable = 1
+Texto = "Asesinos"
+VGrande = 501
+
+[[item]]
+id = 1020
+Name = "Cartel Bandido"
+GrhIndex = 21970
+ObjType = 8
+Agarrable = 1
+Texto = "Bandidos"
+VGrande = 501
+
+[[item]]
+id = 1021
+Name = "Cartel Bardo"
+GrhIndex = 21971
+ObjType = 8
+Agarrable = 1
+Texto = "Bardos"
+VGrande = 501
+
+[[item]]
+id = 1022
+Name = "Cartel Clérigo"
+GrhIndex = 21972
+ObjType = 8
+Agarrable = 1
+Texto = "Clérigos"
+VGrande = 501
+
+[[item]]
+id = 1023
+Name = "Cartel Druida"
+GrhIndex = 21973
+ObjType = 8
+Agarrable = 1
+Texto = "Druidas"
+VGrande = 501
+
+[[item]]
+id = 1024
+Name = "Cartel Guerrero"
+GrhIndex = 21974
+ObjType = 8
+Agarrable = 1
+Texto = "Guerreros"
+VGrande = 501
+
+[[item]]
+id = 1025
+Name = "Cartel Cazador"
+GrhIndex = 21975
+ObjType = 8
+Agarrable = 1
+Texto = "Cazadores"
+VGrande = 501
+
+[[item]]
+id = 1026
+Name = "Cartel Ladrón"
+GrhIndex = 21976
+ObjType = 8
+Agarrable = 1
+Texto = "Ladrónes"
+VGrande = 501
+
+[[item]]
+id = 1027
+Name = "Cartel Mago"
+GrhIndex = 21977
+ObjType = 8
+Agarrable = 1
+Texto = "Magos"
+VGrande = 501
+
+[[item]]
+id = 1028
+Name = "Cartel Paladín"
+GrhIndex = 21978
+ObjType = 8
+Agarrable = 1
+Texto = "Paladínes"
+VGrande = 501
+
+[[item]]
+id = 1029
+Name = "Cartel Pirata"
+GrhIndex = 21979
+ObjType = 8
+Agarrable = 1
+Texto = "Piratas"
+VGrande = 501
+
+[[item]]
+id = 1030
+Name = "Cartel Trabajador"
+GrhIndex = 21980
+ObjType = 8
+Agarrable = 1
+Texto = "Trabajadores"
+VGrande = 501
+
+[[item]]
+id = 1031
+Name = "Cartel Gremio de Trabajadores"
+GrhIndex = 4909
+ObjType = 8
+Agarrable = 1
+Texto = "Gremio de Trabajadores"
+VGrande = 501
+
+[[item]]
+id = 1032
+Name = "Cartel Leñadores"
+GrhIndex = 3716
+ObjType = 8
+Agarrable = 1
+Texto = "Leñadores"
+VGrande = 501
+
+[[item]]
+id = 1033
+Name = "Cartel"
+GrhIndex = 4986
+ObjType = 8
+Agarrable = 1
+Texto = "Desde que se desató la Guerra que conllevó a la Plaga, Ullathorpe dejó de formar parte del Reino de Banderbill, para pasar a ser una zona comercial e ideal para todos los viajeros. Aquí podrás pasear, comerciar y platicar libremente, mientras no disturbes a sus pobladores, la paz ni el orden."
+VGrande = 4987
+
+[[item]]
+id = 1034
+Name = "Cartel"
+GrhIndex = 4986
+ObjType = 8
+Agarrable = 1
+Texto = "Has llegado a la gran Ciudad de Nix, conocida por tener la Bahía de los Pescadores, actualmente es una ciudad neutral, ya que el Reino de Banderbill decidió retirar sus Guardias Reales. Desde ese momento Nix se convirtió en una zona portuaria ideal para los pescadores. Esta es una ciudad libre, donde ningún reino apuesta sus guardias, regida bajo nuestras propias leyes de paz y seguridad."
+VGrande = 4987
+
+[[item]]
+id = 1035
+Name = "Cartel Nemahuak"
+GrhIndex = 4923
+ObjType = 8
+Agarrable = 1
+Texto = "Bienvenido a Nemahuak"
+VGrande = 501
+

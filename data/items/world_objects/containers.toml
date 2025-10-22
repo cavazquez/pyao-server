@@ -1,0 +1,47 @@
+# Containers - 5 items
+# Generated from items.toml
+
+[[item]]
+id = 10
+Name = "Cofre Abierto"
+GrhIndex = 502
+ObjType = 7
+Abierta = 0
+Agarrable = 0
+CantItems = 10
+Llave = 0
+NroItems = 0
+
+[[item]]
+id = 11
+Name = "Cofre Cerrado"
+GrhIndex = 503
+ObjType = 7
+Abierta = 0
+Agarrable = 0
+CantItems = 10
+Llave = 0
+NroItems = 0
+
+[[item]]
+id = 738
+Name = "Carcaj"
+GrhIndex = 494
+ObjType = 7
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 739
+Name = "Baúl Abierto"
+GrhIndex = 496
+ObjType = 7
+Agarrable = 0
+
+[[item]]
+id = 740
+Name = "Baúl Cerrado"
+GrhIndex = 495
+ObjType = 7
+Agarrable = 0
+

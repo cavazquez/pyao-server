@@ -1,0 +1,24 @@
+# Blacksmith - 3 items
+# Generated from items.toml
+
+[[item]]
+id = 169
+Name = "Yunque"
+GrhIndex = 600
+ObjType = 27
+Agarrable = 1
+
+[[item]]
+id = 384
+Name = "Yunque"
+GrhIndex = 600
+ObjType = 27
+Agarrable = 1
+
+[[item]]
+id = 385
+Name = "Fragua"
+GrhIndex = 722
+ObjType = 28
+Agarrable = 1
+

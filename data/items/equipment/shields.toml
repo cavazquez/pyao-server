@@ -1,0 +1,194 @@
+# Shields - 11 items
+# Generated from items.toml
+
+[[item]]
+id = 128
+Name = "Escudo de Hierro"
+GrhIndex = 557
+ObjType = 16
+Agarrable = 0
+Anim = 4
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 60
+LingO = 0
+LingP = 0
+MaxDef = 3
+MinDef = 1
+NumRopaje = 2
+SkHerreria = 55
+Valor = 4200
+
+[[item]]
+id = 130
+Name = "Escudo de Plata"
+GrhIndex = 4860
+ObjType = 16
+Agarrable = 0
+Anim = 6
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 100
+LingO = 0
+LingP = 50
+MaxDef = 5
+MinDef = 2
+NumRopaje = 2
+SkHerreria = 85
+Valor = 13000
+
+[[item]]
+id = 133
+Name = "Escudo Imperial"
+GrhIndex = 560
+ObjType = 16
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 60
+LingO = 0
+LingP = 30
+MaxDef = 4
+MinDef = 1
+NumRopaje = 2
+Real = 1
+SkHerreria = 70
+Valor = 7800
+
+[[item]]
+id = 404
+Name = "Escudo de Tortuga"
+GrhIndex = 712
+ObjType = 16
+Agarrable = 0
+Anim = 3
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA', 'LADRON']
+Crucial = 1
+LingH = 5
+LingO = 0
+LingP = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+SkHerreria = 20
+Valor = 350
+
+[[item]]
+id = 491
+Name = "Escudo Real RM"
+GrhIndex = 560
+ObjType = 16
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Valor = 350
+
+[[item]]
+id = 494
+Name = "Escudo Legionario RM"
+GrhIndex = 13255
+ObjType = 16
+Agarrable = 0
+Anim = 5
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Valor = 1
+
+[[item]]
+id = 625
+Name = "Escudo AlejoLp"
+GrhIndex = 560
+ObjType = 16
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 25000
+LingO = 0
+LingP = 0
+MaxDef = 12
+MinDef = 10
+NumRopaje = 2
+SkHerreria = 6500
+Valor = 1750000
+
+[[item]]
+id = 708
+Name = "Escudo Infernal"
+GrhIndex = 13255
+ObjType = 16
+Agarrable = 0
+Anim = 5
+Caos = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 60
+LingO = 0
+LingP = 30
+MaxDef = 4
+MinDef = 1
+NumRopaje = 2
+SkHerreria = 70
+Valor = 7800
+
+[[item]]
+id = 1037
+Name = "Escudo Legionario"
+GrhIndex = 23069
+ObjType = 16
+Agarrable = 0
+Anim = 9
+Caos = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA', 'LADRON']
+Crucial = 1
+LingH = 5
+LingO = 0
+LingP = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+SkHerreria = 20
+Valor = 350
+
+[[item]]
+id = 1038
+Name = "Escudo Real"
+GrhIndex = 23068
+ObjType = 16
+Agarrable = 0
+Anim = 7
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA', 'LADRON']
+Crucial = 1
+LingH = 5
+LingO = 0
+LingP = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Real = 1
+SkHerreria = 20
+Valor = 350
+
+[[item]]
+id = 1048
+Name = "Escudo (Newbie)"
+GrhIndex = 712
+ObjType = 16
+Agarrable = 0
+Anim = 3
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA', 'LADRON']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+Newbie = 1
+NumRopaje = 2
+Valor = 100
+

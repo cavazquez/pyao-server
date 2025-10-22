@@ -1,0 +1,315 @@
+# Helmets - 20 items
+# Generated from items.toml
+
+[[item]]
+id = 131
+Name = "Casco de Hierro Completo"
+GrhIndex = 558
+ObjType = 17
+Agarrable = 0
+Anim = 6
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA']
+Crucial = 0
+LingH = 65
+LingO = 0
+LingP = 0
+MaxDef = 20
+MinDef = 10
+NumRopaje = 2
+SkHerreria = 75
+Valor = 4550
+
+[[item]]
+id = 132
+Name = "Casco de Hierro"
+GrhIndex = 559
+ObjType = 17
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+LingH = 10
+LingO = 0
+LingP = 0
+MaxDef = 8
+MinDef = 3
+NumRopaje = 2
+SkHerreria = 45
+Upgrade = 131
+Valor = 700
+
+[[item]]
+id = 370
+Name = "Capucha de Cazador"
+GrhIndex = 467
+ObjType = 17
+Agarrable = 0
+Anim = 9
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 14
+MinDef = 6
+NumRopaje = 2
+Valor = 4550
+
+[[item]]
+id = 383
+Name = "Sombrero Mágico"
+GrhIndex = 18994
+ObjType = 17
+Agarrable = 0
+Anim = 7
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 10
+DefensaMagicaMin = 7
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Valor = 10000
+
+[[item]]
+id = 405
+Name = "Casco de Plata"
+GrhIndex = 717
+ObjType = 17
+Agarrable = 0
+Anim = 8
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA']
+Crucial = 0
+LingH = 150
+LingO = 0
+LingP = 130
+MaxDef = 25
+MinDef = 20
+NumRopaje = 2
+SkHerreria = 85
+Valor = 26100
+
+[[item]]
+id = 661
+Name = "Sombrero de Aprendiz"
+GrhIndex = 1013
+ObjType = 17
+Agarrable = 0
+Anim = 3
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 7
+DefensaMagicaMin = 4
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Valor = 6000
+
+[[item]]
+id = 662
+Name = "Sombrero de Mago"
+GrhIndex = 1018
+ObjType = 17
+Agarrable = 0
+Anim = 4
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 15
+DefensaMagicaMin = 10
+MaxDef = 1
+MinDef = 1
+NumRopaje = 2
+Valor = 25000
+
+[[item]]
+id = 851
+Name = "Laureles"
+GrhIndex = 55
+ObjType = 17
+Agarrable = 0
+Anim = 5
+Crucial = 0
+DefensaMagicaMax = 0
+DefensaMagicaMin = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 2
+Valor = 10000
+
+[[item]]
+id = 1001
+Name = "Casco de Águila"
+GrhIndex = 20238
+ObjType = 17
+Agarrable = 0
+Anim = 14
+ClasesProhibidas = ['PIRATA']
+Crucial = 0
+MaxDef = 5
+MinDef = 1
+NumRopaje = 2
+Valor = 2500
+
+[[item]]
+id = 1002
+Name = "Casco de Lobo"
+GrhIndex = 20066
+ObjType = 17
+Agarrable = 0
+Anim = 11
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 7
+MinDef = 3
+NumRopaje = 2
+Valor = 4200
+
+[[item]]
+id = 1003
+Name = "Casco de Oso"
+GrhIndex = 20067
+ObjType = 17
+Agarrable = 0
+Anim = 12
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'PIRATA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 6
+DefensaMagicaMin = 4
+MaxDef = 15
+MinDef = 10
+NumRopaje = 2
+Valor = 10500
+
+[[item]]
+id = 1004
+Name = "Casco de Tigre"
+GrhIndex = 20068
+ObjType = 17
+Agarrable = 0
+Anim = 13
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'PIRATA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 12
+DefensaMagicaMin = 8
+MaxDef = 15
+MinDef = 10
+NumRopaje = 2
+Valor = 18500
+
+[[item]]
+id = 1010
+Name = "Sombrero Pirata"
+GrhIndex = 22034
+ObjType = 17
+Agarrable = 0
+Anim = 15
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'DRUIDA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 9
+DefensaMagicaMin = 5
+MaxDef = 6
+MinDef = 2
+Valor = 25000
+
+[[item]]
+id = 1051
+Name = "Casco Simple (Newbie)"
+GrhIndex = 559
+ObjType = 17
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+Newbie = 1
+NumRopaje = 2
+Valor = 120
+
+[[item]]
+id = 1052
+Name = "Capucha de Cazador (Newbie)"
+GrhIndex = 467
+ObjType = 17
+Agarrable = 0
+Anim = 9
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+Newbie = 1
+NumRopaje = 2
+Valor = 125
+
+[[item]]
+id = 1054
+Name = "Casco de Cuero"
+GrhIndex = 559
+ObjType = 17
+Agarrable = 0
+Anim = 1
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 8
+MinDef = 5
+NumRopaje = 2
+Valor = 1200
+sale_price = 1200
+
+[[item]]
+id = 1058
+Name = "Yelmo de Placas de Hierro"
+GrhIndex = 560
+ObjType = 17
+Agarrable = 0
+Anim = 2
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+MaxDef = 18
+MinDef = 12
+NumRopaje = 3
+Valor = 4500
+sale_price = 4500
+
+[[item]]
+id = 1062
+Name = "Yelmo de Escamas de Dragón"
+GrhIndex = 561
+ObjType = 17
+Agarrable = 0
+Anim = 3
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 38
+MinDef = 28
+NumRopaje = 4
+Valor = 18000
+sale_price = 18000
+
+[[item]]
+id = 1066
+Name = "Capucha de las Sombras"
+GrhIndex = 467
+ObjType = 17
+Agarrable = 0
+Anim = 9
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CLERIGO']
+Crucial = 1
+MaxDef = 22
+MinDef = 15
+NumRopaje = 2
+Valor = 8000
+sale_price = 8000
+
+[[item]]
+id = 1070
+Name = "Sombrero de Mago Élfico"
+GrhIndex = 585
+ObjType = 17
+Agarrable = 0
+Anim = 15
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'BANDIDO', 'PIRATA']
+Crucial = 1
+MaxDef = 12
+MinDef = 8
+NumRopaje = 17
+Valor = 5000
+sale_price = 5000
+

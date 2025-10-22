@@ -7,16 +7,20 @@ from src.item import Item, ItemType
 from src.item_types import ObjType
 
 
-def _load_items_from_toml() -> dict[int, Item]:
-    """Carga todos los items desde el archivo items.toml.
+def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
+    """Carga items desde un archivo TOML.
+
+    Args:
+        file_path: Ruta al archivo TOML.
 
     Returns:
-        Diccionario con todos los items indexados por ID.
+        Diccionario con items indexados por ID.
     """
-    toml_path = Path(__file__).parent.parent / "data" / "items.toml"
-
-    with Path(toml_path).open("rb") as f:
-        data = tomllib.load(f)
+    try:
+        with file_path.open("rb") as f:
+            data = tomllib.load(f)
+    except tomllib.TOMLDecodeError as e:
+        raise ValueError(f"Error parsing {file_path}: {e}") from e
 
     items = {}
 
@@ -67,6 +71,41 @@ def _load_items_from_toml() -> dict[int, Item]:
         )
 
     return items
+
+
+def _load_items_from_toml() -> dict[int, Item]:
+    """Carga todos los items desde archivos TOML.
+
+    Soporta dos formatos:
+    1. Nuevo: data/items/ con múltiples archivos organizados
+    2. Legacy: data/items.toml (archivo único)
+
+    Returns:
+        Diccionario con todos los items indexados por ID.
+    """
+    data_dir = Path(__file__).parent.parent / "data"
+    items_dir = data_dir / "items"
+    legacy_file = data_dir / "items.toml"
+
+    all_items = {}
+
+    # Opción 1: Cargar desde directorio data/items/ (nuevo formato)
+    if items_dir.exists() and items_dir.is_dir():
+        toml_files = sorted(items_dir.glob("**/*.toml"))
+        # Excluir archivos que no sean de items (como README)
+        toml_files = [f for f in toml_files if f.stem.lower() != "readme"]
+        if toml_files:
+            for toml_file in toml_files:
+                file_items = _load_items_from_single_file(toml_file)
+                all_items.update(file_items)
+            return all_items
+
+    # Opción 2: Fallback a items.toml legacy
+    if legacy_file.exists():
+        return _load_items_from_single_file(legacy_file)
+
+    # Si no encuentra nada, retornar vacío
+    return all_items
 
 
 def _map_obj_type_to_item_type(obj_type: int) -> ItemType:

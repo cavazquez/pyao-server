@@ -1,0 +1,174 @@
+# Flowers - 23 items
+# Generated from items.toml
+
+[[item]]
+id = 414
+Name = "Piel Lobo"
+GrhIndex = 697
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+Valor = 21
+
+[[item]]
+id = 415
+Name = "Piel Oso Pardo"
+GrhIndex = 699
+ObjType = 30
+Crucial = 0
+Valor = 51
+
+[[item]]
+id = 416
+Name = "Piel Oso Polar"
+GrhIndex = 698
+ObjType = 30
+Crucial = 0
+Valor = 100
+
+[[item]]
+id = 473
+Name = "Flor"
+GrhIndex = 731
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 566
+Name = "Flores"
+GrhIndex = 867
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 567
+Name = "Flores"
+GrhIndex = 868
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 568
+Name = "Flores"
+GrhIndex = 869
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 569
+Name = "Flores"
+GrhIndex = 870
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 570
+Name = "Flores"
+GrhIndex = 871
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 571
+Name = "Flores"
+GrhIndex = 872
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 572
+Name = "Flores"
+GrhIndex = 873
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 573
+Name = "Flores"
+GrhIndex = 874
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 651
+Name = "Portal Mágico"
+GrhIndex = 308
+ObjType = 30
+Agarrable = 1
+VGrande = 501
+
+[[item]]
+id = 767
+Name = "Margarita"
+GrhIndex = 729
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 768
+Name = "Hongo"
+GrhIndex = 730
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 769
+Name = "Hongos"
+GrhIndex = 732
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 770
+Name = "Algas"
+GrhIndex = 733
+ObjType = 30
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 809
+Name = "Hongos Amarillos"
+GrhIndex = 2134
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 810
+Name = "Hongos Azules"
+GrhIndex = 2135
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 811
+Name = "Hongos Rojos"
+GrhIndex = 2136
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 812
+Name = "Hongos Violetas"
+GrhIndex = 2137
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 831
+Name = "Arbusto"
+GrhIndex = 1535
+ObjType = 30
+Agarrable = 1
+
+[[item]]
+id = 850
+Name = "Arco de Flores"
+GrhIndex = 95
+ObjType = 30
+Agarrable = 1
+

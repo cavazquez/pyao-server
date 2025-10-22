@@ -1,0 +1,356 @@
+# Scrolls - 35 items
+# Generated from items.toml
+
+[[item]]
+id = 197
+Name = "Flecha Mágica"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 6
+Valor = 2300
+
+[[item]]
+id = 199
+Name = "Dardo Mágico"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 2
+Valor = 500
+
+[[item]]
+id = 200
+Name = "Antídoto Mágico"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 1
+Valor = 200
+
+[[item]]
+id = 201
+Name = "Curar Heridas Leves"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 3
+Valor = 500
+
+[[item]]
+id = 202
+Name = "Toxina"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 4
+Valor = 3000
+
+[[item]]
+id = 203
+Name = "Curar Heridas Graves"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 5
+Valor = 35000
+
+[[item]]
+id = 204
+Name = "Flecha Eléctrica"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 7
+Valor = 4500
+
+[[item]]
+id = 205
+Name = "Proyectil Mágico"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 8
+Valor = 9000
+
+[[item]]
+id = 206
+Name = "Paralizar"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 9
+Valor = 50000
+
+[[item]]
+id = 207
+Name = "Devolver Movilidad"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 10
+Valor = 33000
+
+[[item]]
+id = 318
+Name = "Invisibilidad"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 14
+Valor = 210000
+
+[[item]]
+id = 319
+Name = "Resucitar"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 11
+Valor = 290000
+
+[[item]]
+id = 361
+Name = "Tormenta de Fuego"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 15
+Valor = 32000
+
+[[item]]
+id = 363
+Name = "Ataque de Hambre"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 12
+Valor = 100
+
+[[item]]
+id = 364
+Name = "Terrible Hambre de Igôr"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 13
+Valor = 350
+
+[[item]]
+id = 380
+Name = "Invocación de Ultratumba"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 33
+Valor = 100000
+
+[[item]]
+id = 394
+Name = "Llamado a la Naturaleza"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 16
+Valor = 15000
+
+[[item]]
+id = 395
+Name = "Llamado Nigromante"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 17
+Valor = 40000
+
+[[item]]
+id = 396
+Name = "Celeridad"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 18
+Valor = 12050
+
+[[item]]
+id = 397
+Name = "Torpeza"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 19
+Valor = 13450
+
+[[item]]
+id = 470
+Name = "Fuerza"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 20
+Valor = 15000
+
+[[item]]
+id = 471
+Name = "Debilidad"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 21
+Valor = 13450
+
+[[item]]
+id = 530
+Name = "Inmovilizar"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 24
+Valor = 110000
+
+[[item]]
+id = 531
+Name = "Descarga Eléctrica"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 23
+Log = 1
+Valor = 1200000
+
+[[item]]
+id = 532
+Name = "Apocalipsis"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 25
+Log = 1
+Valor = 2400000
+
+[[item]]
+id = 536
+Name = "Invocar Elemental de Fuego"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 26
+Valor = 950000
+
+[[item]]
+id = 537
+Name = "Invocar Elemental de Agua"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 27
+Log = 1
+Valor = 350000
+
+[[item]]
+id = 538
+Name = "Invocar Elemental de Tierra"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 28
+Valor = 500000
+
+[[item]]
+id = 539
+Name = "Implorar Ayuda"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 29
+Valor = 90000
+
+[[item]]
+id = 541
+Name = "Ceguera"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 30
+Valor = 200000
+
+[[item]]
+id = 542
+Name = "Aturdir"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 31
+Valor = 100000
+
+[[item]]
+id = 657
+Name = "Desaturdir"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 41
+Valor = 50000
+
+[[item]]
+id = 673
+Name = "Mimetismo"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 42
+Valor = 400000
+
+[[item]]
+id = 705
+Name = "El Ojo del Demiurgo"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 0
+HechizoIndex = 43
+Valor = 6000000
+
+[[item]]
+id = 1007
+Name = "Invocar Mascota"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 46
+Valor = 100000
+

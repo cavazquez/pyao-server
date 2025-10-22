@@ -1,0 +1,152 @@
+# Potions - 12 items
+# Generated from items.toml
+
+[[item]]
+id = 36
+Name = "Poción Amarilla"
+GrhIndex = 540
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+DuracionEfecto = 1000
+MaxModificador = 5
+MinModificador = 3
+TipoPocion = 1
+Valor = 120
+
+[[item]]
+id = 37
+Name = "Poción Azul"
+GrhIndex = 541
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+MaxModificador = 20
+MinModificador = 12
+TipoPocion = 4
+Valor = 25
+
+[[item]]
+id = 38
+Name = "Poción Roja"
+GrhIndex = 542
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+MaxModificador = 30
+MinModificador = 30
+TipoPocion = 3
+Valor = 20
+
+[[item]]
+id = 39
+Name = "Poción Verde"
+GrhIndex = 543
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+DuracionEfecto = 1000
+MaxModificador = 6
+MinModificador = 2
+TipoPocion = 2
+Valor = 180
+
+[[item]]
+id = 166
+Name = "Poción Violeta"
+GrhIndex = 601
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+TipoPocion = 5
+Valor = 10
+
+[[item]]
+id = 461
+Name = "Poción Roja (Newbie)"
+GrhIndex = 542
+ObjType = 11
+Agarrable = 0
+Crucial = 0
+MaxModificador = 30
+MinModificador = 30
+TipoPocion = 3
+newbie = 1
+
+[[item]]
+id = 462
+Name = "Poción Verde (Newbie)"
+GrhIndex = 543
+ObjType = 11
+Agarrable = 0
+Crucial = 0
+DuracionEfecto = 1000
+MaxModificador = 5
+MinModificador = 1
+TipoPocion = 2
+newbie = 1
+
+[[item]]
+id = 645
+Name = "Poción Negra"
+GrhIndex = 53
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+TipoPocion = 6
+Valor = 1000
+
+[[item]]
+id = 855
+Name = "Poción Amarilla (Newbie)"
+GrhIndex = 540
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+DuracionEfecto = 1000
+MaxModificador = 5
+MinModificador = 3
+Newbie = 1
+TipoPocion = 1
+Valor = 4
+
+[[item]]
+id = 856
+Name = "Poción Azul (Newbie)"
+GrhIndex = 541
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+MaxModificador = 20
+MinModificador = 12
+Newbie = 1
+TipoPocion = 4
+Valor = 10
+
+[[item]]
+id = 857
+Name = "Poción Roja (Newbie)"
+GrhIndex = 542
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+MaxModificador = 10
+MinModificador = 10
+Newbie = 1
+TipoPocion = 3
+Valor = 4
+
+[[item]]
+id = 858
+Name = "Poción Verde (Newbie)"
+GrhIndex = 543
+ObjType = 11
+Agarrable = 0
+Crucial = 1
+DuracionEfecto = 1000
+MaxModificador = 6
+MinModificador = 2
+Newbie = 1
+TipoPocion = 2
+Valor = 8
+

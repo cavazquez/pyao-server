@@ -1,0 +1,139 @@
+# Books - 17 items
+# Generated from items.toml
+
+[[item]]
+id = 34
+Name = "Foro de Ullathorpe"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Ullathorpe"
+
+[[item]]
+id = 40
+Name = "Atlas Argentum"
+GrhIndex = 538
+ObjType = 12
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 41
+Name = "Libro Antiguo"
+GrhIndex = 539
+ObjType = 12
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 137
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Nix"
+
+[[item]]
+id = 236
+Name = "Atlas Argentum"
+GrhIndex = 538
+ObjType = 12
+Agarrable = 0
+Crucial = 0
+
+[[item]]
+id = 256
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "El Gran Consejo"
+
+[[item]]
+id = 257
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Mesón Hostigado"
+
+[[item]]
+id = 377
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Beleta"
+
+[[item]]
+id = 453
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Prision"
+
+[[item]]
+id = 454
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Lindos"
+
+[[item]]
+id = 455
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Abadia"
+
+[[item]]
+id = 575
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Arghal1"
+
+[[item]]
+id = 576
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "Arghal2"
+
+[[item]]
+id = 623
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "FOROGMS1"
+
+[[item]]
+id = 624
+Name = "Foro"
+GrhIndex = 529
+ObjType = 10
+Agarrable = 1
+ID = "FOROGMS2"
+
+[[item]]
+id = 626
+Name = "No ves nada interesante."
+GrhIndex = 145
+ObjType = 12
+Agarrable = 1
+VGrande = 501
+
+[[item]]
+id = 627
+Name = "No ves nada interesante."
+GrhIndex = 275
+ObjType = 12
+Agarrable = 1
+VGrande = 501
+

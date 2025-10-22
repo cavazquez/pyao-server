@@ -1,0 +1,69 @@
+# Instruments - 5 items
+# Generated from items.toml
+
+[[item]]
+id = 362
+Name = "Tambor"
+GrhIndex = 684
+ObjType = 26
+Agarrable = 0
+Crucial = 0
+Madera = 800
+SND1 = 48
+SND2 = 48
+SND3 = 48
+SkCarpinteria = 75
+Valor = 2200
+
+[[item]]
+id = 469
+Name = "Laúd"
+GrhIndex = 685
+ObjType = 26
+Agarrable = 0
+Crucial = 0
+Madera = 800
+SND1 = 39
+SND2 = 49
+SND3 = 40
+SkCarpinteria = 75
+Valor = 2200
+
+[[item]]
+id = 540
+Name = "Flauta"
+GrhIndex = 686
+ObjType = 26
+Agarrable = 0
+Crucial = 0
+Madera = 800
+SND1 = 51
+SND2 = 51
+SND3 = 51
+SkCarpinteria = 75
+Valor = 2200
+
+[[item]]
+id = 874
+Name = "Cuerno de llamado Armada"
+GrhIndex = 11980
+ObjType = 26
+Agarrable = 0
+Crucial = 0
+NoSeCae = 1
+Real = 1
+Snd1 = 122
+Valor = 0
+
+[[item]]
+id = 875
+Name = "Cuerno de llamado Legionario"
+GrhIndex = 11979
+ObjType = 26
+Agarrable = 0
+Caos = 1
+Crucial = 0
+NoSeCae = 1
+Snd1 = 123
+Valor = 0
+

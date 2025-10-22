@@ -1,0 +1,3902 @@
+# Armors - 263 items
+# Generated from items.toml
+
+[[item]]
+id = 30
+Name = "Armadura de Cuero"
+GrhIndex = 526
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+NumRopaje = 22
+Valor = 4600
+
+[[item]]
+id = 31
+Name = "Vestimentas Comunes"
+GrhIndex = 527
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 1
+Valor = 50
+
+[[item]]
+id = 32
+Name = "Vestimentas Comunes"
+GrhIndex = 528
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 2
+Valor = 50
+
+[[item]]
+id = 35
+Name = "Vestimentas Comunes"
+GrhIndex = 535
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 3
+Valor = 50
+
+[[item]]
+id = 45
+Name = "Ropa de Clan"
+GrhIndex = 544
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 35
+Valor = 80
+
+[[item]]
+id = 80
+Name = "Ropa de Clan"
+GrhIndex = 554
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 35
+Valor = 80
+
+[[item]]
+id = 135
+Name = "Túnica Roja Burda"
+GrhIndex = 657
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 2
+NumRopaje = 50
+Valor = 600
+
+[[item]]
+id = 170
+Name = "Vestimenta de Mujer (H/E/EO-M)"
+GrhIndex = 602
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+Mujer = 1
+NumRopaje = 44
+Valor = 50
+
+[[item]]
+id = 195
+Name = "Armadura de Placas Completa"
+GrhIndex = 605
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 392
+LingO = 0
+LingP = 0
+MaxDef = 40
+MinDef = 35
+NumRopaje = 45
+SkHerreria = 70
+Upgrade = 390
+Valor = 27440
+
+[[item]]
+id = 196
+Name = "Túnica de Mago"
+GrhIndex = 606
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 12
+MinDef = 8
+NumRopaje = 46
+Valor = 3200
+
+[[item]]
+id = 238
+Name = "Túnica Azul"
+GrhIndex = 656
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 5
+NumRopaje = 49
+Valor = 2700
+
+[[item]]
+id = 239
+Name = "Túnica Roja"
+GrhIndex = 657
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 5
+NumRopaje = 50
+Valor = 2700
+
+[[item]]
+id = 240
+Name = "Ropa de Enano (E/G)"
+GrhIndex = 658
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 52
+RazaEnana = 1
+Valor = 40
+
+[[item]]
+id = 243
+Name = "Armadura de Placas Completa (E/G)"
+GrhIndex = 659
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR']
+Crucial = 1
+LingH = 392
+LingO = 0
+LingP = 0
+MaxDef = 40
+MinDef = 35
+NumRopaje = 54
+RazaEnana = 1
+SkHerreria = 70
+Upgrade = 392
+Valor = 27440
+
+[[item]]
+id = 356
+Name = "Armadura de las Sombras"
+GrhIndex = 680
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO', 'PIRATA', 'CAZADOR', 'GUERRERO', 'PALADIN', 'BANDIDO', 'CLERIGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 329
+LingO = 0
+LingP = 0
+MaxDef = 37
+MinDef = 30
+NumRopaje = 48
+SkHerreria = 75
+Valor = 23030
+
+[[item]]
+id = 357
+Name = "Túnica de Monje"
+GrhIndex = 693
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 79
+Valor = 10500
+
+[[item]]
+id = 359
+Name = "Cota de Mallas"
+GrhIndex = 682
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+NumRopaje = 57
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 360
+Name = "Armadura de Cazador"
+GrhIndex = 683
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 10
+NumRopaje = 58
+Valor = 17000
+
+[[item]]
+id = 369
+Name = "Armadura Legionaria"
+GrhIndex = 691
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['DRUIDA', 'CLERIGO', 'BARDO', 'MAGO']
+Crucial = 1
+LingH = 43
+LingO = 0
+LingP = 0
+MaxDef = 13
+MinDef = 7
+NumRopaje = 77
+SkHerreria = 35
+Valor = 3010
+
+[[item]]
+id = 372
+Name = "Manto de Sacerdote del Imperio"
+GrhIndex = 759
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 6
+NumRopaje = 92
+Real = 1
+Valor = 2900
+
+[[item]]
+id = 379
+Name = "Armadura Legionaria (E/G)"
+GrhIndex = 695
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+LingH = 43
+LingO = 0
+LingP = 0
+MaxDef = 13
+MinDef = 7
+NumRopaje = 81
+Razaenana = 1
+SkHerreria = 35
+Valor = 3010
+
+[[item]]
+id = 381
+Name = "Túnica Antigua"
+GrhIndex = 571
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 15
+MinDef = 6
+NumRopaje = 38
+Valor = 3400
+
+[[item]]
+id = 382
+Name = "Vestido Azul (H/E/EO-M)"
+GrhIndex = 694
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 2
+Mujer = 1
+NumRopaje = 80
+Valor = 275
+
+[[item]]
+id = 390
+Name = "Armadura de Placas Completa +1"
+GrhIndex = 3226
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 505
+LingO = 0
+LingP = 0
+MaxDef = 45
+MinDef = 40
+NumRopaje = 194
+SkHerreria = 85
+Upgrade = 391
+Valor = 35350
+
+[[item]]
+id = 391
+Name = "Armadura de Placas Completa +2"
+GrhIndex = 3253
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 680
+LingO = 0
+LingP = 0
+MaxDef = 50
+MinDef = 45
+NumRopaje = 195
+SkHerreria = 90
+Valor = 47600
+
+[[item]]
+id = 392
+Name = "Armadura de Placas Completa +1 (E/G)"
+GrhIndex = 3156
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 505
+LingO = 0
+LingP = 0
+MaxDef = 45
+MinDef = 40
+NumRopaje = 192
+RazaEnana = 1
+SkHerreria = 85
+Upgrade = 393
+Valor = 35350
+
+[[item]]
+id = 393
+Name = "Armadura de Placas Completa +2 (E/G)"
+GrhIndex = 3155
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 680
+LingO = 0
+LingP = 0
+MaxDef = 50
+MinDef = 45
+NumRopaje = 191
+RazaEnana = 1
+SkHerreria = 90
+Valor = 47600
+
+[[item]]
+id = 463
+Name = "Vestimentas Comunes (Newbie)"
+GrhIndex = 527
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 1
+newbie = 1
+
+[[item]]
+id = 464
+Name = "Vestimentas Comunes (Newbie)"
+GrhIndex = 528
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 2
+newbie = 1
+
+[[item]]
+id = 465
+Name = "Vestimentas Comunes (Newbie)"
+GrhIndex = 535
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 3
+newbie = 1
+
+[[item]]
+id = 466
+Name = "Harapos de Mendigo (E/G) (Newbie)"
+GrhIndex = 15249
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+Newbie = 1
+NumRopaje = 300
+RazaEnana = 1
+
+[[item]]
+id = 481
+Name = "Armadura de Dragón"
+GrhIndex = 756
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 1000
+LingO = 1000
+LingP = 1000
+MaxDef = 65
+MinDef = 60
+NumRopaje = 89
+SkHerreria = 100
+Valor = 540000
+
+[[item]]
+id = 482
+Name = "Armadura de Dragón (H/E/EO-M)"
+GrhIndex = 757
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 1000
+LingO = 1000
+LingP = 1000
+MaxDef = 65
+MinDef = 60
+Mujer = 1
+NumRopaje = 90
+SkHerreria = 100
+Valor = 540000
+
+[[item]]
+id = 483
+Name = "Armadura de Dragón (E/G)"
+GrhIndex = 758
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 1000
+LingO = 1000
+LingP = 1000
+MaxDef = 65
+MinDef = 60
+NumRopaje = 91
+RazaEnana = 1
+SkHerreria = 100
+Valor = 540000
+
+[[item]]
+id = 484
+Name = "Manto de Noble"
+GrhIndex = 760
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 66
+LingO = 0
+LingP = 0
+MaxDef = 15
+MinDef = 10
+NumRopaje = 93
+SkHerreria = 50
+Valor = 4620
+
+[[item]]
+id = 485
+Name = "Armadura Legendaria"
+GrhIndex = 761
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 1000
+LingO = 600
+LingP = 400
+MaxDef = 60
+MinDef = 55
+NumRopaje = 94
+SkHerreria = 100
+Valor = 328000
+
+[[item]]
+id = 486
+Name = "Ropa de Estilo (E/G)"
+GrhIndex = 762
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 95
+RazaEnana = 1
+Valor = 120
+
+[[item]]
+id = 487
+Name = "Dama de las Tinieblas (H/E/EO-M)"
+GrhIndex = 763
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 1000
+LingO = 800
+LingP = 400
+MaxDef = 60
+MinDef = 55
+Mujer = 1
+NumRopaje = 96
+SkHerreria = 100
+Valor = 398000
+
+[[item]]
+id = 488
+Name = "White Lady (H/E/EO-M)"
+GrhIndex = 764
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 9
+MinDef = 7
+Mujer = 1
+NumRopaje = 97
+Valor = 3000
+
+[[item]]
+id = 489
+Name = "Armadura de Placas Azul"
+GrhIndex = 765
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 500
+LingO = 0
+LingP = 200
+MaxDef = 45
+MinDef = 40
+NumRopaje = 98
+SkHerreria = 80
+Valor = 59000
+
+[[item]]
+id = 490
+Name = "Ropa de Minero"
+GrhIndex = 766
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'DRUIDA']
+Crucial = 1
+MaxDef = 16
+MinDef = 12
+NumRopaje = 100
+Valor = 5000
+
+[[item]]
+id = 492
+Name = "Armadura Real (E/G)"
+GrhIndex = 768
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'CLERIGO', 'BARDO']
+Crucial = 1
+LingH = 43
+LingO = 0
+LingP = 0
+MaxDef = 13
+MinDef = 7
+NumRopaje = 102
+RazaEnana = 1
+Real = 1
+SkHerreria = 35
+Valor = 3010
+
+[[item]]
+id = 493
+Name = "Armadura de Placas Rojas (H/E/EO-M)"
+GrhIndex = 769
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 425
+LingO = 0
+LingP = 200
+MaxDef = 40
+MinDef = 35
+Mujer = 1
+NumRopaje = 103
+SkHerreria = 82
+Valor = 53750
+
+[[item]]
+id = 495
+Name = "Armadura Escarlata"
+GrhIndex = 771
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 800
+LingO = 0
+LingP = 250
+MaxDef = 55
+MinDef = 50
+NumRopaje = 105
+SkHerreria = 100
+Valor = 86000
+
+[[item]]
+id = 496
+Name = "Armadura de la Ciénaga"
+GrhIndex = 772
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 650
+LingO = 0
+LingP = 200
+MaxDef = 50
+MinDef = 45
+NumRopaje = 106
+SkHerreria = 90
+Valor = 69500
+
+[[item]]
+id = 497
+Name = "Armadura de Placas de Gala"
+GrhIndex = 773
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 600
+LingO = 0
+LingP = 122
+MaxDef = 47
+MinDef = 42
+NumRopaje = 107
+SkHerreria = 85
+Valor = 56640
+
+[[item]]
+id = 499
+Name = "Cota de Mallas (H/E/EO-M)"
+GrhIndex = 775
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+Mujer = 1
+NumRopaje = 109
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 500
+Name = "Armadura Bruñida (E/G)"
+GrhIndex = 776
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 500
+LingO = 0
+LingP = 200
+MaxDef = 45
+MinDef = 40
+NumRopaje = 110
+RazaEnana = 1
+SkHerreria = 82
+Valor = 59000
+
+[[item]]
+id = 501
+Name = "Ropa de Campesino"
+GrhIndex = 777
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA']
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 111
+Valor = 650
+
+[[item]]
+id = 502
+Name = "Ropa de Campesino (E/G)"
+GrhIndex = 778
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA']
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 112
+RazaEnana = 1
+Valor = 650
+
+[[item]]
+id = 503
+Name = "Trampa Visual (H/E/EO-M)"
+GrhIndex = 779
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'ASESINO', 'BARDO', 'CAZADOR', 'DRUIDA']
+Crucial = 1
+LingH = 360
+LingO = 0
+LingP = 0
+MaxDef = 40
+MinDef = 30
+Mujer = 1
+NumRopaje = 113
+SkHerreria = 80
+Valor = 25200
+
+[[item]]
+id = 504
+Name = "Atuendo Combinado (H/E/EO-M)"
+GrhIndex = 780
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA']
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+Mujer = 1
+NumRopaje = 114
+Valor = 200
+
+[[item]]
+id = 505
+Name = "Atuendo Azul (H/E/EO-M)"
+GrhIndex = 781
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+Mujer = 1
+NumRopaje = 115
+Valor = 200
+
+[[item]]
+id = 506
+Name = "Atuendo Rosa (H/E/EO-M)"
+GrhIndex = 782
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+Mujer = 1
+NumRopaje = 116
+Valor = 200
+
+[[item]]
+id = 507
+Name = "Ropa Violeta (E/G)"
+GrhIndex = 783
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 4
+MinDef = 2
+NumRopaje = 117
+RazaEnana = 1
+Valor = 410
+
+[[item]]
+id = 508
+Name = "Ropa Estuaria (H/E/EO-M)"
+GrhIndex = 784
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 15
+MinDef = 8
+Mujer = 1
+NumRopaje = 118
+Valor = 4000
+
+[[item]]
+id = 509
+Name = "Túnica de Maga Oscura (H/E/EO-M)"
+GrhIndex = 785
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+Mujer = 1
+NumRopaje = 119
+Valor = 2800
+
+[[item]]
+id = 510
+Name = "Vestido Indulgente (H/E/EO-M)"
+GrhIndex = 786
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+Mujer = 1
+NumRopaje = 120
+Valor = 10500
+
+[[item]]
+id = 511
+Name = "Vestido de Novia Sensual (H/E/EO-M)"
+GrhIndex = 787
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 3
+Mujer = 1
+NumRopaje = 121
+Valor = 1600
+
+[[item]]
+id = 512
+Name = "Vestido Calipso (E/G-M)"
+GrhIndex = 789
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO']
+Crucial = 1
+MaxDef = 10
+MinDef = 6
+Mujer = 1
+NumRopaje = 123
+RazaEnana = 1
+Valor = 3075
+
+[[item]]
+id = 513
+Name = "Vestido de Bruja (H/E/EO-M)"
+GrhIndex = 790
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+Mujer = 1
+NumRopaje = 124
+Valor = 10500
+
+[[item]]
+id = 514
+Name = "Vestido de Bruja Especial (H/E/EO-M)"
+GrhIndex = 791
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'MAGO']
+Crucial = 1
+MaxDef = 26
+MinDef = 19
+Mujer = 1
+NumRopaje = 125
+Valor = 15200
+
+[[item]]
+id = 515
+Name = "Ropa Legendaria"
+GrhIndex = 792
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 14
+MinDef = 9
+NumRopaje = 126
+Valor = 3900
+
+[[item]]
+id = 516
+Name = "Túnica de Maga del Imperio (H/E/EO-M)"
+GrhIndex = 793
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+Mujer = 1
+NumRopaje = 127
+Real = 1
+Valor = 2800
+
+[[item]]
+id = 517
+Name = "Túnica de Mago del Imperio"
+GrhIndex = 794
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+NumRopaje = 128
+Real = 1
+Valor = 2800
+
+[[item]]
+id = 518
+Name = "Túnica de Mago Oscuro"
+GrhIndex = 795
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+NumRopaje = 129
+Valor = 2800
+
+[[item]]
+id = 519
+Name = "Túnica Legendaria"
+GrhIndex = 796
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 130
+Valor = 20000
+
+[[item]]
+id = 520
+Name = "Armadura de Gran Sacerdotisa Imperial (H/E/EO-M)"
+GrhIndex = 797
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 15
+Mujer = 1
+NumRopaje = 131
+Real = 1
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 521
+Name = "Armadura Real"
+GrhIndex = 690
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'CLERIGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 43
+LingO = 0
+LingP = 0
+MaxDef = 13
+MinDef = 7
+NumRopaje = 64
+Real = 1
+SkHerreria = 35
+Valor = 3010
+
+[[item]]
+id = 523
+Name = "Manto de Sacerdote Demoníaco"
+GrhIndex = 800
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 6
+NumRopaje = 134
+Valor = 2900
+
+[[item]]
+id = 524
+Name = "Túnica Roja Especial (E/G)"
+GrhIndex = 801
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 135
+RazaEnana = 1
+Valor = 10500
+
+[[item]]
+id = 525
+Name = "Túnica Combinada (E/G)"
+GrhIndex = 802
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 136
+RazaEnana = 1
+Valor = 20000
+
+[[item]]
+id = 526
+Name = "Túnica Combinada de Mujer (E/G-M)"
+GrhIndex = 803
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+Mujer = 1
+NumRopaje = 137
+RazaEnana = 1
+Valor = 20000
+
+[[item]]
+id = 527
+Name = "Ropa de Enana (E/G-M)"
+GrhIndex = 804
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 4
+MinDef = 2
+Mujer = 1
+NumRopaje = 138
+RazaEnana = 1
+Valor = 400
+
+[[item]]
+id = 528
+Name = "Túnica Negra"
+GrhIndex = 806
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO']
+Crucial = 1
+MaxDef = 8
+MinDef = 5
+NumRopaje = 140
+Valor = 3000
+
+[[item]]
+id = 529
+Name = "Armadura de Cuero (H/E/EO-M)"
+GrhIndex = 807
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+Mujer = 1
+NumRopaje = 142
+Valor = 4600
+
+[[item]]
+id = 549
+Name = "Túnica de Mago del Imperio (E/G)"
+GrhIndex = 799
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+NumRopaje = 133
+RazaEnana = 1
+Real = 1
+Valor = 2800
+
+[[item]]
+id = 558
+Name = "Túnica de Mago Oscuro (E/G)"
+GrhIndex = 774
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 5
+NumRopaje = 23
+RazaEnana = 1
+Valor = 2800
+
+[[item]]
+id = 614
+Name = "Túnica de Archimago"
+GrhIndex = 806
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 40
+MinDef = 38
+NoSeCae = 1
+NumRopaje = 140
+Valor = 0
+
+[[item]]
+id = 615
+Name = "Túnica de Archimago (E/G)"
+GrhIndex = 657
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 40
+MinDef = 38
+NoSeCae = 1
+NumRopaje = 135
+RazaEnana = 1
+Valor = 0
+
+[[item]]
+id = 616
+Name = "Armadura de Guerrero Campeón"
+GrhIndex = 756
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 85
+MinDef = 80
+NoSeCae = 1
+NumRopaje = 89
+Valor = 0
+
+[[item]]
+id = 617
+Name = "Armadura de Guerrero Campeón (E/G)"
+GrhIndex = 758
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 65
+MinDef = 60
+NoSeCae = 1
+NumRopaje = 91
+RazaEnana = 1
+Valor = 60000
+
+[[item]]
+id = 628
+Name = "Túnica de Archimago Imperial"
+GrhIndex = 687
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 35
+MinDef = 35
+NumRopaje = 61
+Real = 1
+Valor = 0
+
+[[item]]
+id = 629
+Name = "Armadura Nobilísima"
+GrhIndex = 688
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['CLERIGO', 'BARDO', 'DRUIDA', 'MAGO']
+Crucial = 1
+LingH = 169
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 15
+NumRopaje = 62
+Real = 1
+SkHerreria = 70
+Valor = 11830
+
+[[item]]
+id = 630
+Name = "Túnica Celestial"
+GrhIndex = 767
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'CAZADOR', 'PALADIN', 'GUERRERO', 'ASESINO', 'LADRON', 'BANDIDO', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 40
+MinDef = 40
+NumRopaje = 101
+Real = 1
+Valor = 0
+
+[[item]]
+id = 631
+Name = "Armadura de Líder Imperial (H/E/EO-M)"
+GrhIndex = 797
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'CAZADOR', 'CLERIGO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+MaxDef = 55
+MinDef = 55
+NumRopaje = 131
+Real = 1
+Valor = 0
+
+[[item]]
+id = 632
+Name = "Armadura de Guerrero Real (E/G)"
+GrhIndex = 776
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'CLERIGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+MaxDef = 55
+MinDef = 55
+NumRopaje = 110
+RazaEnana = 1
+Real = 1
+Valor = 0
+
+[[item]]
+id = 633
+Name = "Túnica Marrón de Mago Imperial (E/G)"
+GrhIndex = 802
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 35
+MinDef = 35
+NumRopaje = 136
+RazaEnana = 1
+Real = 1
+Valor = 0
+
+[[item]]
+id = 634
+Name = "Túnica Egregia de Mago Oscuro"
+GrhIndex = 692
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 78
+Valor = 9500
+
+[[item]]
+id = 635
+Name = "Armadura Lóbrega (H/E/EO-M)"
+GrhIndex = 770
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['DRUIDA', 'CLERIGO', 'BARDO', 'MAGO', 'PIRATA']
+Crucial = 1
+LingH = 169
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 15
+Mujer = 1
+NumRopaje = 104
+SkHerreria = 70
+Valor = 11830
+
+[[item]]
+id = 636
+Name = "Túnica de Líder del Caos (E/G)"
+GrhIndex = 657
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 35
+MinDef = 35
+NumRopaje = 135
+RazaEnana = 1
+Valor = 0
+
+[[item]]
+id = 637
+Name = "Túnica de líder del Caos"
+GrhIndex = 806
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO', 'PIRATA', 'CAZADOR', 'PALADIN', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 40
+MinDef = 40
+NumRopaje = 140
+Valor = 0
+
+[[item]]
+id = 638
+Name = "Armadura de Guardián del Demonio"
+GrhIndex = 756
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO', 'CLERIGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+MaxDef = 55
+MinDef = 55
+NumRopaje = 89
+Valor = 0
+
+[[item]]
+id = 639
+Name = "Armadura de Guardián del Demonio (E/G)"
+GrhIndex = 758
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO', 'CLERIGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+MaxDef = 55
+MinDef = 55
+NumRopaje = 91
+RazaEnana = 1
+Valor = 0
+
+[[item]]
+id = 640
+Name = "Túnica de Archimago del Caos"
+GrhIndex = 657
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['PIRATA', 'CAZADOR', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+MaxDef = 55
+MinDef = 55
+NumRopaje = 50
+Valor = 0
+
+[[item]]
+id = 641
+Name = "Ropa de Pordiosero"
+GrhIndex = 654
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 47
+Valor = 110
+
+[[item]]
+id = 646
+Name = "Túnica Real Pretoriana"
+GrhIndex = 689
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 63
+Valor = 675000
+
+[[item]]
+id = 648
+Name = "Armadura de Cazador (E/G)"
+GrhIndex = 1100
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA', 'MAGO', 'PALADIN', 'CLERIGO', 'ASESINO', 'LADRON', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 10
+NumRopaje = 155
+RazaEnana = 1
+Valor = 17000
+
+[[item]]
+id = 650
+Name = "Túnica Pretoriana"
+GrhIndex = 657
+ObjType = 3
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+Nosecae = 1
+NumRopaje = 50
+Valor = 0
+
+[[item]]
+id = 656
+Name = "Túnica Pretoriana (E/G)"
+GrhIndex = 657
+ObjType = 3
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+Nosecae = 1
+NumRopaje = 135
+RazaEnana = 1
+Valor = 0
+
+[[item]]
+id = 667
+Name = "Cota de Mallas (E/G)"
+GrhIndex = 1127
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+NumRopaje = 156
+RazaEnana = 1
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 668
+Name = "Armadura de Cuero (E/G)"
+GrhIndex = 1154
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA']
+Crucial = 1
+MaxDef = 17
+MinDef = 10
+NumRopaje = 157
+RazaEnana = 1
+Valor = 4700
+
+[[item]]
+id = 669
+Name = "Ropa Real"
+GrhIndex = 1181
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'DRUIDA', 'ASESINO', 'CAZADOR', 'PALADIN', 'CLERIGO', 'BANDIDO', 'PIRATA']
+Crucial = 0
+MaxDef = 20
+MinDef = 20
+NumRopaje = 158
+Real = 1
+Valor = 0
+
+[[item]]
+id = 670
+Name = "Túnica de Mago (E/G)"
+GrhIndex = 1208
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 12
+MinDef = 8
+NumRopaje = 159
+RazaEnana = 1
+Valor = 3200
+
+[[item]]
+id = 671
+Name = "Túnica de Monje (E/G)"
+GrhIndex = 1235
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 15
+MinDef = 6
+NumRopaje = 160
+RazaEnana = 1
+Valor = 3400
+
+[[item]]
+id = 672
+Name = "Armadura de Elite (E/G)"
+GrhIndex = 1262
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'MAGO', 'DRUIDA']
+Crucial = 1
+LingH = 314
+LingO = 0
+LingP = 0
+MaxDef = 35
+MinDef = 30
+NumRopaje = 161
+RazaEnana = 1
+SkHerreria = 75
+Valor = 21980
+
+[[item]]
+id = 675
+Name = "Vestimenta Imperial"
+GrhIndex = 4924
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 174
+Real = 1
+Valor = 175
+
+[[item]]
+id = 676
+Name = "Vestimenta Imperial (E/G)"
+GrhIndex = 4925
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 175
+RazaEnana = 1
+Real = 1
+Valor = 175
+
+[[item]]
+id = 677
+Name = "Vestimenta Legionaria"
+GrhIndex = 4926
+ObjType = 3
+Agarrable = 0
+Caos = 1
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 176
+Valor = 175
+
+[[item]]
+id = 678
+Name = "Vestimenta Legionaria (E/G)"
+GrhIndex = 4927
+ObjType = 3
+Agarrable = 0
+Caos = 1
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 177
+RazaEnana = 1
+Valor = 175
+
+[[item]]
+id = 679
+Name = "Túnica Conspicua de Mago Imperial"
+GrhIndex = 1181
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 173
+Real = 1
+Valor = 9500
+
+[[item]]
+id = 680
+Name = "Armadura de Gran Sacerdote Imperial"
+GrhIndex = 4922
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 15
+NumRopaje = 172
+Real = 1
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 681
+Name = "Armadura Nobilísima (E/G)"
+GrhIndex = 4921
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+LingH = 169
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 15
+NumRopaje = 179
+Razaenana = 1
+Real = 1
+SkHerreria = 70
+Valor = 11830
+
+[[item]]
+id = 682
+Name = "Túnica Conspicua de Mago Imperial (E/G)"
+GrhIndex = 4920
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 171
+Razaenana = 1
+Real = 1
+Valor = 9500
+
+[[item]]
+id = 683
+Name = "Armadura Lóbrega"
+GrhIndex = 4919
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['DRUIDA', 'CLERIGO', 'BARDO', 'MAGO']
+Crucial = 1
+LingH = 169
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 15
+NumRopaje = 170
+SkHerreria = 70
+Valor = 11830
+
+[[item]]
+id = 684
+Name = "Armadura de Gran Sacerdote Demoníaco"
+GrhIndex = 4918
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 15
+NumRopaje = 169
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 685
+Name = "Armadura Lóbrega (E/G)"
+GrhIndex = 4917
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+LingH = 169
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 15
+NumRopaje = 168
+RazaEnana = 1
+SkHerreria = 70
+Valor = 11830
+
+[[item]]
+id = 686
+Name = "Túnica Egregia de Mago Oscuro (E/G)"
+GrhIndex = 4916
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'DRUIDA', 'CAZADOR', 'CLERIGO', 'ASESINO', 'PIRATA', 'BANDIDO', 'BARDO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 167
+RazaEnana = 1
+Valor = 9500
+
+[[item]]
+id = 687
+Name = "Túnica Palatina"
+GrhIndex = 687
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 61
+Real = 1
+Valor = 18000
+
+[[item]]
+id = 688
+Name = "Pequeña Túnica Palatina (E/G)"
+GrhIndex = 4915
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 166
+Razaenana = 1
+Real = 1
+Valor = 18000
+
+[[item]]
+id = 689
+Name = "Túnica Avernal"
+GrhIndex = 806
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 140
+Valor = 18000
+
+[[item]]
+id = 690
+Name = "Pequeña Túnica Avernal (E/G)"
+GrhIndex = 4914
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+NumRopaje = 165
+RazaEnana = 1
+Valor = 18000
+
+[[item]]
+id = 691
+Name = "Armadura de Ilustre Caballero"
+GrhIndex = 4913
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 250
+LingO = 0
+LingP = 63
+MaxDef = 40
+MinDef = 35
+NumRopaje = 178
+Real = 1
+SkHerreria = 80
+Valor = 25060
+
+[[item]]
+id = 693
+Name = "Armadura Magna (H/E/EO-M)"
+GrhIndex = 798
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 250
+LingO = 0
+LingP = 70
+MaxDef = 40
+MinDef = 35
+Mujer = 1
+NumRopaje = 132
+Real = 1
+SkHerreria = 80
+Valor = 25900
+
+[[item]]
+id = 694
+Name = "Armadura de Ilustre Caballero (E/G)"
+GrhIndex = 4912
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 250
+LingO = 0
+LingP = 63
+MaxDef = 40
+MinDef = 35
+NumRopaje = 164
+Razaenana = 1
+Real = 1
+SkHerreria = 80
+Valor = 25060
+
+[[item]]
+id = 695
+Name = "Armadura de Pequeño Pandemonium (E/G)"
+GrhIndex = 4910
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 250
+LingO = 0
+LingP = 63
+MaxDef = 40
+MinDef = 35
+NumRopaje = 163
+RazaEnana = 1
+SkHerreria = 80
+Valor = 25060
+
+[[item]]
+id = 701
+Name = "Armadura Infame"
+GrhIndex = 4911
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+LingH = 250
+LingO = 0
+LingP = 63
+MaxDef = 40
+MinDef = 35
+NumRopaje = 162
+SkHerreria = 80
+Valor = 25060
+
+[[item]]
+id = 707
+Name = "Vestimenta de Noble (E/G)"
+GrhIndex = 13282
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 180
+Razaenana = 1
+Valor = 700
+
+[[item]]
+id = 854
+Name = "Armadura de las Sombras (E/G)"
+GrhIndex = 22039
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO', 'PIRATA', 'CAZADOR', 'GUERRERO', 'PALADIN', 'BANDIDO', 'CLERIGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 329
+LingO = 0
+LingP = 0
+MaxDef = 37
+MinDef = 30
+NumRopaje = 539
+RazaEnana = 1
+SkHerreria = 75
+Valor = 23030
+
+[[item]]
+id = 867
+Name = "Túnica de Gnomo (E/G)"
+GrhIndex = 5326
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 34
+RazaEnana = 1
+Valor = 40
+
+[[item]]
+id = 876
+Name = "Vestimenta de Game Master"
+GrhIndex = 1470
+ObjType = 3
+Agarrable = 0
+MaxDef = 0
+MinDef = 0
+NoSeCae = 1
+NumRopaje = 255
+
+[[item]]
+id = 877
+Name = "Túnica de Gran Hechicero (E/G)"
+GrhIndex = 15519
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 311
+RazaEnana = 1
+Valor = 10500
+
+[[item]]
+id = 878
+Name = "Túnica de Gran Hechicera (E/G-M)"
+GrhIndex = 15303
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+Mujer = 1
+NumRopaje = 302
+RazaEnana = 1
+Valor = 10500
+
+[[item]]
+id = 879
+Name = "Vestido Bordado de Gala (H/E/EO-M)"
+GrhIndex = 16302
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+Mujer = 1
+NumRopaje = 340
+Valor = 105
+
+[[item]]
+id = 880
+Name = "Túnica del Oráculo (H/E/EO-M)"
+GrhIndex = 16194
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+Mujer = 1
+NumRopaje = 336
+Valor = 120
+
+[[item]]
+id = 881
+Name = "Armadura de la Ciénaga (H/E/EO-M)"
+GrhIndex = 772
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 0
+LingH = 650
+LingO = 0
+LingP = 200
+MaxDef = 50
+MinDef = 45
+Mujer = 1
+NumRopaje = 232
+SkHerreria = 90
+Valor = 69500
+
+[[item]]
+id = 882
+Name = "Anillas Livianas de Aventurero (H/E/EO)"
+GrhIndex = 16167
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 17
+LingO = 0
+LingP = 0
+MaxDef = 8
+MinDef = 3
+NumRopaje = 329
+SkHerreria = 15
+Valor = 1190
+
+[[item]]
+id = 883
+Name = "Cota de Anillas Compuesta (H/E/EO)"
+GrhIndex = 15627
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+LingH = 36
+LingO = 0
+LingP = 0
+MaxDef = 9
+MinDef = 5
+NumRopaje = 315
+SkHerreria = 32
+Valor = 2520
+
+[[item]]
+id = 884
+Name = "Cota de Anillas Compuesta (H/E/EO-M)"
+GrhIndex = 15870
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+LingH = 36
+LingO = 0
+LingP = 0
+MaxDef = 9
+MinDef = 5
+Mujer = 1
+NumRopaje = 324
+SkHerreria = 32
+Valor = 2520
+
+[[item]]
+id = 885
+Name = "Armadura Liviana de Hierro (H/E/EO)"
+GrhIndex = 15789
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'DRUIDA']
+Crucial = 1
+LingH = 57
+LingO = 0
+LingP = 0
+MaxDef = 15
+MinDef = 8
+NumRopaje = 321
+SkHerreria = 44
+Valor = 3990
+
+[[item]]
+id = 886
+Name = "Vestido de Arquera (H/E/EO-M)"
+GrhIndex = 15897
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'PALADIN', 'ASESINO', 'BANDIDO', 'BARDO', 'DRUIDA', 'GUERRERO', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 15
+MinDef = 5
+Mujer = 1
+NumRopaje = 325
+Valor = 3500
+
+[[item]]
+id = 887
+Name = "Cotas de Manto Marrón (H/E/EO)"
+GrhIndex = 16221
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+MaxDef = 25
+MinDef = 8
+NumRopaje = 337
+Valor = 6800
+
+[[item]]
+id = 888
+Name = "Brial del Bosque (H/E/EO)"
+GrhIndex = 16275
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO', 'GUERRERO', 'PALADIN']
+Crucial = 1
+MaxDef = 22
+MinDef = 10
+NumRopaje = 339
+Valor = 6500
+
+[[item]]
+id = 889
+Name = "Anillas Con Manto Verde (H/E/EO)"
+GrhIndex = 15600
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+NumRopaje = 314
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 890
+Name = "Armadura de Cuero de Oso Pardo (H/E/EO)"
+GrhIndex = 15762
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'GUERRERO', 'BARDO', 'PALADIN']
+Crucial = 1
+MaxDef = 20
+MinDef = 10
+NumRopaje = 320
+Valor = 6000
+
+[[item]]
+id = 891
+Name = "Armadura de Cuero de Oso Pardo (H/E/EO-M)"
+GrhIndex = 15951
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'GUERRERO', 'BARDO', 'PALADIN']
+Crucial = 1
+MaxDef = 20
+MinDef = 10
+Mujer = 1
+NumRopaje = 327
+Valor = 6000
+
+[[item]]
+id = 892
+Name = "Coraza Compuesta Roja (H/E/EO-M)"
+GrhIndex = 15978
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'ASESINO', 'PIRATA']
+Crucial = 1
+LingH = 175
+LingO = 0
+LingP = 0
+MaxDef = 23
+MinDef = 15
+Mujer = 1
+NumRopaje = 328
+SkHerreria = 72
+Valor = 12250
+
+[[item]]
+id = 893
+Name = "Anillas Con Manto Verde (H/E/EO-M)"
+GrhIndex = 16005
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+Mujer = 1
+NumRopaje = 329
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 894
+Name = "Armadura de Cruzada (H/E/EO-M)"
+GrhIndex = 16032
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'CAZADOR', 'ASESINO', 'BANDIDO', 'BARDO', 'DRUIDA', 'GUERRERO', 'TRABAJADOR']
+Crucial = 1
+LingH = 122
+LingO = 0
+LingP = 0
+MaxDef = 23
+MinDef = 13
+Mujer = 1
+NumRopaje = 330
+SkHerreria = 72
+Valor = 8540
+
+[[item]]
+id = 895
+Name = "Armadura Legendaria (H/E/EO-M)"
+GrhIndex = 761
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO']
+Crucial = 0
+LingH = 1000
+LingO = 600
+LingP = 400
+MaxDef = 60
+MinDef = 55
+Mujer = 1
+NumRopaje = 319
+SkHerreria = 100
+Valor = 358000
+
+[[item]]
+id = 896
+Name = "Túnica de Morgana (H/E/EO-M)"
+GrhIndex = 16248
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['BARDO']
+Crucial = 1
+MaxDef = 23
+MinDef = 17
+Mujer = 1
+NumRopaje = 338
+Valor = 13500
+
+[[item]]
+id = 897
+Name = "Cota de Piquero (H/E/EO)"
+GrhIndex = 16113
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+NumRopaje = 333
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 898
+Name = "Armadura de Placas de Gala (H/E/EO-M)"
+GrhIndex = 773
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO', 'CLERIGO', 'PIRATA', 'ASESINO', 'TRABAJADOR']
+Crucial = 0
+LingH = 600
+LingO = 0
+LingP = 122
+MaxDef = 47
+MinDef = 42
+NumRopaje = 313
+SkHerreria = 85
+Valor = 56640
+
+[[item]]
+id = 899
+Name = "Cota de Peto Liso (H/E/EO-M)"
+GrhIndex = 15924
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 175
+LingO = 0
+LingP = 0
+MaxDef = 24
+MinDef = 14
+Mujer = 1
+NumRopaje = 326
+SkHerreria = 72
+Valor = 12250
+
+[[item]]
+id = 900
+Name = "Anillas Con Manto Desgastado (H/E/EO-M)"
+GrhIndex = 16140
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 24
+MinDef = 13
+Mujer = 1
+NumRopaje = 334
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 901
+Name = "Coraza Compuesta de Mujer (H/E/EO-M)"
+GrhIndex = 15816
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 200
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 17
+Mujer = 1
+NumRopaje = 322
+SkHerreria = 70
+Valor = 14000
+
+[[item]]
+id = 902
+Name = "Cota de Mallas Enteriza (H/E/EO-M)"
+GrhIndex = 15843
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 211
+LingO = 0
+LingP = 0
+MaxDef = 25
+MinDef = 19
+Mujer = 1
+NumRopaje = 332
+SkHerreria = 73
+Valor = 14770
+
+[[item]]
+id = 903
+Name = "Armadura de Campeón (H/E/EO)"
+GrhIndex = 15681
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'ASESINO', 'PIRATA']
+Crucial = 0
+LingH = 320
+LingO = 0
+LingP = 0
+MaxDef = 40
+MinDef = 25
+NumRopaje = 317
+SkHerreria = 80
+Valor = 22400
+
+[[item]]
+id = 904
+Name = "Placas Combinadas (H/E/EO-M)"
+GrhIndex = 16059
+ObjType = 3
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+LingH = 210
+LingO = 0
+LingP = 70
+MaxDef = 37
+MinDef = 30
+Mujer = 1
+NumRopaje = 331
+SkHerreria = 80
+Valor = 23100
+
+[[item]]
+id = 905
+Name = "Suprema Armadura Dorada (H/E/EO)"
+GrhIndex = 15708
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+LingH = 150
+LingO = 100
+LingP = 50
+MaxDef = 45
+MinDef = 35
+NumRopaje = 318
+SkHerreria = 85
+Valor = 51500
+
+[[item]]
+id = 906
+Name = "Manto del Dragón (H/E/EO)"
+GrhIndex = 16329
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'BARDO', 'DRUIDA', 'TRABAJADOR']
+Crucial = 0
+LingH = 1000
+LingO = 1200
+LingP = 1100
+MaxDef = 68
+MinDef = 63
+NumRopaje = 342
+SkHerreria = 100
+Valor = 622000
+
+[[item]]
+id = 907
+Name = "Túnica Real Pretoriana (E/G)"
+GrhIndex = 13282
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 0
+MinDef = 0
+NumRopaje = 180
+RazaEnana = 1
+Valor = 675000
+
+[[item]]
+id = 908
+Name = "Vestimentas de Pescador (E/G)"
+GrhIndex = 15276
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+NumRopaje = 301
+RazaEnana = 1
+Valor = 100
+
+[[item]]
+id = 909
+Name = "Vestido de Novia (E/G-M)"
+GrhIndex = 14952
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 12
+MinDef = 7
+Mujer = 1
+NumRopaje = 289
+RazaEnana = 1
+Valor = 3400
+
+[[item]]
+id = 910
+Name = "Atuendo de Gnomo (E/G)"
+GrhIndex = 14655
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 278
+RazaEnana = 1
+Valor = 110
+
+[[item]]
+id = 911
+Name = "Vestimenta Bordo de Poblador (E/G)"
+GrhIndex = 15141
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 296
+RazaEnana = 1
+Valor = 110
+
+[[item]]
+id = 912
+Name = "Vestimenta Verde de Poblador (E/G)"
+GrhIndex = 15087
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 294
+RazaEnana = 1
+Valor = 110
+
+[[item]]
+id = 913
+Name = "Ropaje de Ermitaño (E/G)"
+GrhIndex = 14736
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 2
+MinDef = 1
+NumRopaje = 281
+RazaEnana = 1
+Valor = 150
+
+[[item]]
+id = 914
+Name = "Ropaje de Aldeana (E/G-M)"
+GrhIndex = 14925
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 2
+MinDef = 1
+Mujer = 1
+NumRopaje = 288
+RazaEnana = 1
+Valor = 150
+
+[[item]]
+id = 915
+Name = "Ropaje de Aldeano (E/G)"
+GrhIndex = 15006
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 2
+MinDef = 1
+NumRopaje = 291
+RazaEnana = 1
+Valor = 150
+
+[[item]]
+id = 916
+Name = "Vestimenta Elegante (E/G)"
+GrhIndex = 15033
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 292
+RazaEnana = 1
+Valor = 200
+
+[[item]]
+id = 917
+Name = "Vestimenta de Minero (E/G)"
+GrhIndex = 15114
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 295
+RazaEnana = 1
+Valor = 200
+
+[[item]]
+id = 918
+Name = "Gabán de Cuero Pequeño (E/G)"
+GrhIndex = 14574
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 2
+MinDef = 2
+NumRopaje = 282
+RazaEnana = 1
+Valor = 200
+
+[[item]]
+id = 919
+Name = "Alifafe de Serpiente (E/G)"
+GrhIndex = 14979
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+MaxDef = 2
+MinDef = 2
+NumRopaje = 290
+RazaEnana = 1
+Valor = 200
+
+[[item]]
+id = 920
+Name = "Ropaje de Herrero (E/G)"
+GrhIndex = 15060
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 3
+MinDef = 2
+NumRopaje = 293
+RazaEnana = 1
+Valor = 275
+
+[[item]]
+id = 921
+Name = "Túnica Sírica Elegante (E/G)"
+GrhIndex = 15168
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 1
+NumRopaje = 297
+RazaEnana = 1
+Valor = 450
+
+[[item]]
+id = 922
+Name = "Traje de Capitán Pirata (E/G)"
+GrhIndex = 15195
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 5
+MinDef = 2
+NumRopaje = 298
+RazaEnana = 1
+Valor = 600
+
+[[item]]
+id = 923
+Name = "Traje de Noble (E/G)"
+GrhIndex = 15222
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 299
+RazaEnana = 1
+Valor = 700
+
+[[item]]
+id = 924
+Name = "Vestimenta de Explorador (E/G)"
+GrhIndex = 14520
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 6
+MinDef = 3
+NumRopaje = 278
+RazaEnana = 1
+Valor = 900
+
+[[item]]
+id = 925
+Name = "Peto de Gladiadora (E/G-M)"
+GrhIndex = 14547
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+LingH = 17
+LingO = 0
+LingP = 0
+MaxDef = 8
+MinDef = 3
+Mujer = 1
+NumRopaje = 274
+RazaEnana = 1
+SkHerreria = 15
+Valor = 1190
+
+[[item]]
+id = 926
+Name = "Hombreras de Amazona (E/G-M)"
+GrhIndex = 14601
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 6
+MinDef = 4
+Mujer = 1
+NumRopaje = 276
+RazaEnana = 1
+Valor = 1000
+
+[[item]]
+id = 927
+Name = "Alifafe de Lobo (E/G)"
+GrhIndex = 14682
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'PALADIN', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 7
+MinDef = 5
+NumRopaje = 279
+RazaEnana = 1
+Valor = 1400
+
+[[item]]
+id = 928
+Name = "Barragán de Cazador (E/G)"
+GrhIndex = 14628
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 9
+MinDef = 6
+NumRopaje = 277
+RazaEnana = 1
+Valor = 2550
+
+[[item]]
+id = 929
+Name = "Barragán Compuesto (E/G)"
+GrhIndex = 14709
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'PIRATA']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+NumRopaje = 280
+RazaEnana = 1
+Valor = 4600
+
+[[item]]
+id = 930
+Name = "Toga de Aprendiz (E/G)"
+GrhIndex = 15465
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 10
+MinDef = 5
+NumRopaje = 309
+RazaEnana = 1
+Valor = 2700
+
+[[item]]
+id = 931
+Name = "Vestido Elegante Púrpura (E/G-M)"
+GrhIndex = 15384
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 11
+MinDef = 7
+Mujer = 1
+NumRopaje = 307
+RazaEnana = 1
+Valor = 3175
+
+[[item]]
+id = 932
+Name = "Sotana de Gran Hechicero (E/G)"
+GrhIndex = 15492
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'PIRATA', 'ASESINO', 'BANDIDO', 'CAZADOR', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 8
+NumRopaje = 310
+RazaEnana = 1
+Valor = 3200
+
+[[item]]
+id = 933
+Name = "Cota Liviana Verde (E/G-M)"
+GrhIndex = 14817
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+LingH = 53
+LingO = 0
+LingP = 0
+MaxDef = 13
+MinDef = 9
+Mujer = 1
+NumRopaje = 284
+RazaEnana = 1
+SkHerreria = 40
+Valor = 3710
+
+[[item]]
+id = 934
+Name = "Cotas Livianas (E/G)"
+GrhIndex = 14871
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'BARDO']
+Crucial = 1
+MaxDef = 15
+MinDef = 10
+NumRopaje = 286
+RazaEnana = 1
+Valor = 4600
+
+[[item]]
+id = 935
+Name = "Cotas con Peto Compuesto (E/G-M)"
+GrhIndex = 14844
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 86
+LingO = 0
+LingP = 0
+MaxDef = 17
+MinDef = 13
+Mujer = 1
+NumRopaje = 285
+RazaEnana = 1
+SkHerreria = 57
+Valor = 6020
+
+[[item]]
+id = 936
+Name = "Túnica de Gran Hechicera (E/G-M)"
+GrhIndex = 15303
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+Mujer = 1
+NumRopaje = 302
+RazaEnana = 1
+Valor = 10500
+
+[[item]]
+id = 937
+Name = "Cota de Peto Púrpura (E/G)"
+GrhIndex = 14790
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 105
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 12
+NumRopaje = 283
+RazaEnana = 1
+SkHerreria = 65
+Valor = 7350
+
+[[item]]
+id = 938
+Name = "Traje de Bruja (E/G-M)"
+GrhIndex = 15330
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+Mujer = 1
+NumRopaje = 303
+RazaEnana = 1
+Valor = 10500
+
+[[item]]
+id = 939
+Name = "Túnica de Gala Roja (E/G)"
+GrhIndex = 15546
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 23
+MinDef = 19
+NumRopaje = 312
+RazaEnana = 1
+Valor = 13500
+
+[[item]]
+id = 940
+Name = "Cota de Mallas Enteriza (E/G)"
+GrhIndex = 14898
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 219
+LingO = 0
+LingP = 0
+MaxDef = 26
+MinDef = 20
+NumRopaje = 287
+RazaEnana = 1
+SkHerreria = 75
+Valor = 15330
+
+[[item]]
+id = 941
+Name = "Traje Seductor de Pitonisa (E/G-M)"
+GrhIndex = 15411
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 30
+MinDef = 25
+Mujer = 1
+NumRopaje = 306
+RazaEnana = 1
+Valor = 18000
+
+[[item]]
+id = 942
+Name = "Vestido de Gala Turquesa (E/G-M)"
+GrhIndex = 15438
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 35
+MinDef = 30
+Mujer = 1
+NumRopaje = 308
+RazaEnana = 1
+Valor = 22000
+
+[[item]]
+id = 943
+Name = "Sobrevesta Élfica (H/E/EO)"
+GrhIndex = 16356
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 390
+Valor = 50
+
+[[item]]
+id = 944
+Name = "Vestido Aurë (H/E/EO-M)"
+GrhIndex = 16410
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+Mujer = 1
+NumRopaje = 343
+Valor = 50
+
+[[item]]
+id = 945
+Name = "Vestido de Gala Alcarinqua (H/E/EO-M)"
+GrhIndex = 16383
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+Mujer = 1
+NumRopaje = 341
+Valor = 105
+
+[[item]]
+id = 946
+Name = "Vestimentas de Poblador Élfico (H/E/EO)"
+GrhIndex = 16625
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 1
+NumRopaje = 351
+Valor = 110
+
+[[item]]
+id = 947
+Name = "Hábito Liviano de Ritual (H/E/EO)"
+GrhIndex = 16679
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 4
+MinDef = 2
+NumRopaje = 353
+Valor = 420
+
+[[item]]
+id = 948
+Name = "Vestido Bordado de Elite (H/E/EO-M)"
+GrhIndex = 16707
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 2
+Mujer = 1
+NumRopaje = 354
+Valor = 300
+
+[[item]]
+id = 949
+Name = "Hábito Liviano de Ritual (H/E/EO-M)"
+GrhIndex = 16571
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 4
+MinDef = 2
+Mujer = 1
+NumRopaje = 349
+Valor = 450
+
+[[item]]
+id = 950
+Name = "Sírica Élfica Rojiza (H/E/EO-M)"
+GrhIndex = 16652
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 4
+MinDef = 3
+Mujer = 1
+NumRopaje = 352
+Valor = 550
+
+[[item]]
+id = 951
+Name = "Prenda de la Naturaleza (H/E/EO-M)"
+GrhIndex = 16598
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'PALADIN', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+Mujer = 1
+NumRopaje = 350
+Valor = 700
+
+[[item]]
+id = 952
+Name = "Ropa de Explorador Élfico (H/E/EO)"
+GrhIndex = 16544
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 5
+MinDef = 4
+NumRopaje = 348
+Valor = 850
+
+[[item]]
+id = 953
+Name = "Manto Élfico Púrpura (H/E/EO-M)"
+GrhIndex = 16437
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 16
+MinDef = 5
+Mujer = 1
+NumRopaje = 345
+Valor = 3550
+
+[[item]]
+id = 954
+Name = "Hábito de Ritual de Hombre (H/E/EO)"
+GrhIndex = 16490
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 11
+NumRopaje = 346
+Valor = 8000
+
+[[item]]
+id = 955
+Name = "Hábito de Ritual Femenino (H/E/EO-M)"
+GrhIndex = 16517
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 11
+Mujer = 1
+NumRopaje = 347
+Valor = 8000
+
+[[item]]
+id = 956
+Name = "Valya Silmeanar (H/E/EO-M)"
+GrhIndex = 16734
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+LingH = 156
+LingO = 0
+LingP = 34
+MaxDef = 25
+MinDef = 20
+Mujer = 1
+NumRopaje = 355
+SkHerreria = 73
+Valor = 15000
+
+[[item]]
+id = 957
+Name = "Vestido de Enana (E/G-M)"
+GrhIndex = 17274
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+Mujer = 1
+NumRopaje = 375
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 958
+Name = "Vestimenta Común (E/G)"
+GrhIndex = 17139
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 370
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 959
+Name = "Ropa de Carpintero Enano (E/G)"
+GrhIndex = 17220
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+NumRopaje = 373
+RazaEnana = 1
+Valor = 100
+
+[[item]]
+id = 960
+Name = "Ropa de Leñador (E/G)"
+GrhIndex = 17085
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+NumRopaje = 368
+RazaEnana = 1
+Valor = 100
+
+[[item]]
+id = 961
+Name = "Ropa de Minero (E/G)"
+GrhIndex = 16977
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'PIRATA', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO']
+Crucial = 1
+MaxDef = 2
+MinDef = 0
+NumRopaje = 364
+RazaEnana = 1
+Valor = 125
+
+[[item]]
+id = 962
+Name = "Túnica Elegante (E/G)"
+GrhIndex = 17166
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 3
+MinDef = 1
+NumRopaje = 371
+RazaEnana = 1
+Valor = 200
+
+[[item]]
+id = 963
+Name = "Ropaje de Luchador de Las Minas (E/G)"
+GrhIndex = 17247
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+Hombre = 1
+MaxDef = 3
+MinDef = 2
+NumRopaje = 374
+RazaEnana = 1
+Valor = 275
+
+[[item]]
+id = 964
+Name = "Ropa de Viajero (E/G)"
+GrhIndex = 16896
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 4
+MinDef = 2
+NumRopaje = 361
+RazaEnana = 1
+Valor = 400
+
+[[item]]
+id = 965
+Name = "Antigua Armadura Dorada (E/G)"
+GrhIndex = 16869
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['DRUIDA']
+Crucial = 1
+MaxDef = 5
+MinDef = 3
+NumRopaje = 360
+RazaEnana = 1
+Valor = 700
+
+[[item]]
+id = 966
+Name = "Alifafe de Pirata (E/G)"
+GrhIndex = 17193
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'LADRON', 'ASESINO', 'BANDIDO', 'GUERRERO', 'BARDO', 'DRUIDA', 'PALADIN', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 16
+MinDef = 4
+NumRopaje = 372
+RazaEnana = 1
+Valor = 3200
+
+[[item]]
+id = 967
+Name = "Ropas de Buscador (E/G)"
+GrhIndex = 17301
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['PIRATA']
+Crucial = 1
+MaxDef = 17
+MinDef = 4
+NumRopaje = 376
+RazaEnana = 1
+Valor = 3600
+
+[[item]]
+id = 968
+Name = "Armadura Grabada Completa (E/G)"
+GrhIndex = 16842
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 64
+LingO = 0
+LingP = 0
+MaxDef = 19
+MinDef = 5
+NumRopaje = 359
+RazaEnana = 1
+SkHerreria = 47
+Valor = 4480
+
+[[item]]
+id = 969
+Name = "Túnica Dorada de Gala (E/G)"
+GrhIndex = 16950
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 18
+MinDef = 16
+NumRopaje = 363
+RazaEnana = 1
+Valor = 10000
+
+[[item]]
+id = 970
+Name = "Armadura de Placas Livianas Thor (E/G)"
+GrhIndex = 16761
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 22
+MinDef = 18
+NumRopaje = 356
+RazaEnana = 1
+Valor = 13350
+
+[[item]]
+id = 971
+Name = "Armadura Metal Oscuro (E/G)"
+GrhIndex = 16923
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 196
+LingO = 0
+LingP = 0
+MaxDef = 23
+MinDef = 19
+NumRopaje = 362
+RazaEnana = 1
+SkHerreria = 70
+Valor = 13720
+
+[[item]]
+id = 972
+Name = "Túnica de Mahal (E/G)"
+GrhIndex = 17004
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 25
+MinDef = 20
+NumRopaje = 365
+RazaEnana = 1
+Valor = 15000
+
+[[item]]
+id = 973
+Name = "Armadura de Placas Livianas Thor (E/G-M)"
+GrhIndex = 17328
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+LingH = 141
+LingO = 0
+LingP = 29
+MaxDef = 22
+MinDef = 18
+Mujer = 1
+NumRopaje = 377
+RazaEnana = 1
+SkHerreria = 70
+Valor = 13350
+
+[[item]]
+id = 974
+Name = "Capa de Monje Cocida con Mithril (E/G)"
+GrhIndex = 17058
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+MaxDef = 35
+MinDef = 23
+NumRopaje = 367
+RazaEnana = 1
+Valor = 19000
+
+[[item]]
+id = 975
+Name = "Cota de Mallas Larga (E/G)"
+GrhIndex = 17031
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+LingH = 330
+LingO = 0
+LingP = 0
+MaxDef = 40
+MinDef = 28
+NumRopaje = 366
+RazaEnana = 1
+SkHerreria = 80
+Valor = 23100
+
+[[item]]
+id = 976
+Name = "Armadura Pesada de Hierro y Bronce (E/G)"
+GrhIndex = 16788
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 0
+LingH = 600
+LingO = 0
+LingP = 100
+MaxDef = 50
+MinDef = 30
+NumRopaje = 357
+RazaEnana = 1
+SkHerreria = 85
+Valor = 54000
+
+[[item]]
+id = 977
+Name = "Vestimenta Esclava (EO)"
+GrhIndex = 17409
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+NumRopaje = 380
+RazaDrow = 1
+Valor = 50
+
+[[item]]
+id = 978
+Name = "Harapos de la Cueva (EO)"
+GrhIndex = 17382
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+NumRopaje = 379
+RazaDrow = 1
+Valor = 105
+
+[[item]]
+id = 979
+Name = "Armadura Maghtere Roja (EO)"
+GrhIndex = 17355
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['DRUIDA']
+Crucial = 1
+LingH = 100
+LingO = 0
+LingP = 0
+MaxDef = 20
+MinDef = 10
+NumRopaje = 378
+RazaDrow = 1
+SkHerreria = 63
+Valor = 7000
+
+[[item]]
+id = 980
+Name = "Armadura de Combate Liviana (EO)"
+GrhIndex = 16706
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['DRUIDA']
+Crucial = 1
+MaxDef = 20
+MinDef = 14
+NumRopaje = 344
+RazaDrow = 1
+Valor = 10000
+
+[[item]]
+id = 981
+Name = "Piwafwi de Fuego (EO)"
+GrhIndex = 17436
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 20
+MinDef = 16
+NumRopaje = 381
+RazaDrow = 1
+Valor = 11000
+
+[[item]]
+id = 982
+Name = "Armadura Melee de Explorador (EO)"
+GrhIndex = 17463
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA', 'PIRATA']
+Crucial = 1
+MaxDef = 22
+MinDef = 18
+NumRopaje = 382
+RazaDrow = 1
+Valor = 13400
+
+[[item]]
+id = 983
+Name = "Piwafwi Purpura del Silencio (EO-M)"
+GrhIndex = 17490
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 24
+MinDef = 20
+Mujer = 1
+NumRopaje = 383
+RazaDrow = 1
+Valor = 14500
+
+[[item]]
+id = 984
+Name = "Piwafwi Alto Narbondel (EO)"
+GrhIndex = 17517
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 25
+MinDef = 20
+NumRopaje = 384
+RazaDrow = 1
+Valor = 15000
+
+[[item]]
+id = 985
+Name = "Piwafwi Socere de Lloth (EO-M)"
+GrhIndex = 17544
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 35
+MinDef = 25
+Mujer = 1
+NumRopaje = 385
+RazaDrow = 1
+Valor = 20000
+
+[[item]]
+id = 986
+Name = "Túnica de Druida"
+GrhIndex = 681
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 25
+MinDef = 20
+NumRopaje = 56
+Valor = 17000
+
+[[item]]
+id = 991
+Name = "Vestimentas Olímpicas (EO)"
+GrhIndex = 20239
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 479
+RazaDrow = 1
+Valor = 50
+
+[[item]]
+id = 992
+Name = "Vestimentas Olímpicas (EO-M)"
+GrhIndex = 20266
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+Mujer = 1
+NumRopaje = 480
+RazaDrow = 1
+Valor = 50
+
+[[item]]
+id = 993
+Name = "Vestimentas Olímpicas (E-M)"
+GrhIndex = 20293
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+Mujer = 1
+NumRopaje = 481
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 994
+Name = "Vestimentas Olímpicas (E)"
+GrhIndex = 20320
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 482
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 995
+Name = "Vestimentas Olímpicas (H-M)"
+GrhIndex = 20347
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+Mujer = 1
+NumRopaje = 483
+RazaDrow = 0
+Valor = 50
+
+[[item]]
+id = 996
+Name = "Vestimentas Olímpicas (H)"
+GrhIndex = 20374
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 484
+RazaDrow = 0
+Valor = 50
+
+[[item]]
+id = 998
+Name = "Vestimentas Olímpicas (G-M)"
+GrhIndex = 20406
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+Mujer = 1
+NumRopaje = 485
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 999
+Name = "Vestimentas Olímpicas (G)"
+GrhIndex = 20433
+ObjType = 3
+Agarrable = 0
+Crucial = 0
+MaxDef = 1
+MinDef = 1
+NumRopaje = 486
+RazaEnana = 1
+Valor = 50
+
+[[item]]
+id = 1039
+Name = "Manto de Sacerdote del Imperio (E/G)"
+GrhIndex = 23150
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 6
+NumRopaje = 547
+RazaEnana = 1
+Real = 1
+Valor = 2900
+
+[[item]]
+id = 1040
+Name = "Armadura de Gran Sacerdote Imperial (E/G)"
+GrhIndex = 23096
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 15
+NumRopaje = 545
+RazaEnana = 1
+Real = 1
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 1041
+Name = "Manto de Sacerdote Demoníaco (E/G)"
+GrhIndex = 23177
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+MaxDef = 12
+MinDef = 6
+NumRopaje = 548
+RazaEnana = 1
+Valor = 2900
+
+[[item]]
+id = 1042
+Name = "Armadura de Gran Sacerdote Demoníaco (E/G)"
+GrhIndex = 23123
+ObjType = 3
+Agarrable = 0
+Caos = 1
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'PIRATA', 'BANDIDO', 'MAGO', 'LADRON', 'TRABAJADOR']
+Crucial = 1
+LingH = 132
+LingO = 0
+LingP = 0
+MaxDef = 22
+MinDef = 15
+NumRopaje = 546
+RazaEnana = 1
+SkHerreria = 70
+Valor = 9240
+
+[[item]]
+id = 1044
+Name = "Túnica (H/E/EO) (Newbie)"
+GrhIndex = 606
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+Newbie = 1
+NumRopaje = 46
+Valor = 40
+
+[[item]]
+id = 1045
+Name = "Túnica (E/G) (Newbie)"
+GrhIndex = 1208
+ObjType = 3
+Agarrable = 0
+Crucial = 1
+MaxDef = 0
+MinDef = 0
+Newbie = 1
+NumRopaje = 159
+RazaEnana = 1
+Valor = 40
+
+[[item]]
+id = 1046
+Name = "Armadura de Cuero (H/E/EO) (Newbie)"
+GrhIndex = 526
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+Newbie = 1
+NumRopaje = 22
+Valor = 60
+
+[[item]]
+id = 1047
+Name = "Armadura de Cuero (E/G) (Newbie)"
+GrhIndex = 1154
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'BARDO', 'DRUIDA']
+Crucial = 1
+MaxDef = 1
+MinDef = 0
+Newbie = 1
+NumRopaje = 157
+RazaEnana = 1
+Valor = 60
+
+[[item]]
+id = 1053
+Name = "Armadura de Cuero Reforzado"
+GrhIndex = 526
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 18
+MinDef = 12
+NumRopaje = 22
+Valor = 5500
+sale_price = 5500
+
+[[item]]
+id = 1057
+Name = "Armadura de Placas de Hierro"
+GrhIndex = 605
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
+Crucial = 1
+MaxDef = 35
+MinDef = 25
+NumRopaje = 45
+Valor = 15000
+sale_price = 15000
+
+[[item]]
+id = 1061
+Name = "Armadura de Escamas de Dragón"
+GrhIndex = 756
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['MAGO', 'DRUIDA']
+Crucial = 1
+MaxDef = 70
+MinDef = 55
+NumRopaje = 89
+Valor = 50000
+sale_price = 50000
+
+[[item]]
+id = 1065
+Name = "Túnica de las Sombras"
+GrhIndex = 680
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CLERIGO']
+Crucial = 1
+MaxDef = 40
+MinDef = 32
+NumRopaje = 48
+Valor = 25000
+sale_price = 25000
+
+[[item]]
+id = 1069
+Name = "Túnica Arcana Reforzada"
+GrhIndex = 606
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = ['GUERRERO', 'PALADIN', 'CAZADOR', 'ASESINO', 'BANDIDO', 'PIRATA']
+Crucial = 1
+MaxDef = 20
+MinDef = 15
+NumRopaje = 46
+Valor = 12000
+sale_price = 12000
+
+[[item]]
+id = 1073
+Name = "Armadura de Aprendiz (Newbie)"
+GrhIndex = 527
+ObjType = 3
+Agarrable = 0
+ClasesProhibidas = []
+Crucial = 1
+MaxDef = 12
+MinDef = 8
+Newbie = 1
+NumRopaje = 1
+Valor = 500
+sale_price = 250
+
