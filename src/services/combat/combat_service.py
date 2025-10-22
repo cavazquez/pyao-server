@@ -140,6 +140,10 @@ class CombatService:
         else:
             npc.hp = 0
 
+        # Enviar mensaje de daño al cliente
+        if message_sender:
+            await message_sender.send_user_hit_npc(damage)
+
         logger.info(
             "Jugador %d atacó a %s por %d de daño (crítico=%s, murió=%s)",
             user_id,
@@ -279,4 +283,5 @@ class CombatService:
         return {
             "damage": damage,
             "player_died": player_died,
+            "new_hp": new_hp,
         }

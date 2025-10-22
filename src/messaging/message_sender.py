@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.messaging.senders.message_audio_sender import AudioMessageSender
 from src.messaging.senders.message_character_sender import CharacterMessageSender
+from src.messaging.senders.message_combat_sender import CombatMessageSender
 from src.messaging.senders.message_console_sender import ConsoleMessageSender
 from src.messaging.senders.message_inventory_sender import InventoryMessageSender
 from src.messaging.senders.message_map_sender import MapMessageSender
@@ -14,6 +15,7 @@ from src.messaging.senders.message_visual_effects_sender import VisualEffectsMes
 from src.messaging.senders.message_work_sender import WorkMessageSender
 
 if TYPE_CHECKING:
+    from src.models.body_part import BodyPart
     from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,7 @@ class MessageSender:  # noqa: PLR0904
         # Componentes especializados
         self.audio = AudioMessageSender(connection)
         self.character = CharacterMessageSender(connection)
+        self.combat = CombatMessageSender(connection)
         self.console = ConsoleMessageSender(connection)
         self.inventory = InventoryMessageSender(connection)
         self.map = MapMessageSender(connection)
@@ -645,3 +648,21 @@ class MessageSender:  # noqa: PLR0904
             y: Posición Y del objeto.
         """
         await self.map.send_object_delete(x, y)
+
+    # Métodos de combate
+    async def send_npc_hit_user(self, damage: int, body_part: "BodyPart | None" = None) -> None:  # noqa: UP037
+        """Envía mensaje cuando un NPC golpea al jugador.
+
+        Args:
+            damage: Cantidad de daño infligido.
+            body_part: Parte del cuerpo golpeada. Si es None, se elige aleatoriamente.
+        """
+        await self.combat.send_npc_hit_user(damage, body_part)
+
+    async def send_user_hit_npc(self, damage: int) -> None:
+        """Envía mensaje cuando el jugador golpea a un NPC.
+
+        Args:
+            damage: Cantidad de daño infligido al NPC.
+        """
+        await self.combat.send_user_hit_npc(damage)

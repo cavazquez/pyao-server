@@ -100,10 +100,11 @@ class GameTickInitializer:
         logger.info("✓ Efecto de movimiento de NPCs habilitado")
 
         # Efecto de IA de NPCs
+        # Intervalo aumentado a 3.5s para evitar spam de ataques con múltiples NPCs
         game_tick.add_effect(
-            NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=2.0)
+            NPCAIEffect(self.npc_service, self.npc_ai_service, interval_seconds=3.5)
         )
-        logger.info("✓ Efecto de IA de NPCs habilitado")
+        logger.info("✓ Efecto de IA de NPCs habilitado (intervalo: 3.5s)")
 
         # Efecto de regeneración de stamina (siempre habilitado)
         game_tick.add_effect(StaminaRegenEffect(self.stamina_service))

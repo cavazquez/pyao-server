@@ -5,6 +5,9 @@ import random
 import time
 from typing import TYPE_CHECKING
 
+from src.utils.sounds import SoundID
+from src.utils.visual_effects import VisualEffectID
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.models.npc import NPC
@@ -156,6 +159,23 @@ class NPCAIService:
             npc.last_attack_time = current_time
 
         if result and result.get("damage", 0) > 0:
+            damage = result.get("damage", 0)
+
+            # Enviar mensaje de daño NPCHitUser al jugador
+            message_sender = self.map_manager.get_message_sender(target_user_id)
+            if message_sender:
+                await message_sender.send_npc_hit_user(damage)
+
+                # Enviar sonido de golpe
+                await message_sender.send_play_wave(SoundID.SWORD_HIT, npc.x, npc.y)
+
+                # Enviar efecto visual de sangre sobre el jugador
+                # El efecto se muestra en el char_index del jugador
+                player_char_index = target_user_id  # user_id es el char_index del jugador
+                await message_sender.send_create_fx(
+                    player_char_index, VisualEffectID.BLOOD, loops=1
+                )
+
             # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar
             message_sender = self.map_manager.get_message_sender(target_user_id)
             if message_sender:
@@ -333,6 +353,11 @@ class NPCAIService:
             npc: NPC a procesar.
         """
         if not npc.is_hostile:
+            return
+
+        # Desincronización: 30% probabilidad de skip para evitar spam
+        # Esto distribuye los ataques en el tiempo en lugar de todos a la vez
+        if random.random() < 0.3:  # noqa: PLR2004, S311
             return
 
         # Buscar jugador más cercano (usa aggro_range del NPC)
