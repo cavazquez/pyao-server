@@ -106,6 +106,14 @@ class MapManager(SpatialIndexMixin):
 
         return players
 
+    def get_maps_with_players(self) -> list[int]:
+        """Obtiene lista de IDs de mapas que tienen jugadores.
+
+        Returns:
+            Lista de map_ids con al menos un jugador.
+        """
+        return list(self._players_by_map.keys())
+
     def get_username(self, user_id: int, map_id: int | None = None) -> str | None:
         """Obtiene el username de un jugador.
 

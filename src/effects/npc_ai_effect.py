@@ -1,5 +1,6 @@
 """Efecto de IA para NPCs hostiles en el GameTick."""
 
+import asyncio
 import logging
 from typing import TYPE_CHECKING
 
@@ -66,11 +67,39 @@ class NPCAIEffect(TickEffect):
         # Obtener todos los NPCs del mundo
         all_npcs = self.npc_service.map_manager.get_all_npcs()
 
-        hostile_count = 0
-        for npc in all_npcs:
-            if npc.is_hostile and npc.hp > 0:
-                hostile_count += 1
-                await self.npc_ai_service.process_hostile_npc(npc)
+        # Filtrar solo NPCs hostiles vivos
+        hostile_npcs = [npc for npc in all_npcs if npc.is_hostile and npc.hp > 0]
 
-        if hostile_count > 0:
-            logger.debug("Procesados %d NPCs hostiles", hostile_count)
+        if not hostile_npcs:
+            return
+
+        # Optimización: Obtener mapas con jugadores para evitar procesar NPCs en mapas vacíos
+        maps_with_players = set(self.npc_service.map_manager.get_maps_with_players())
+
+        # Filtrar NPCs que están en mapas con jugadores
+        active_npcs = [npc for npc in hostile_npcs if npc.map_id in maps_with_players]
+
+        if not active_npcs:
+            logger.debug(
+                "No hay NPCs hostiles en mapas con jugadores (%d NPCs totales)",
+                len(hostile_npcs),
+            )
+            return
+
+        # Procesar NPCs en paralelo usando asyncio.gather
+        # Esto permite que múltiples NPCs procesen su IA simultáneamente
+        tasks = [self.npc_ai_service.process_hostile_npc(npc) for npc in active_npcs]
+
+        # gather con return_exceptions=True para que un error en un NPC no afecte a los demás
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Contar errores si los hay
+        errors = sum(1 for r in results if isinstance(r, Exception))
+        if errors > 0:
+            logger.warning("Errores procesando %d/%d NPCs hostiles", errors, len(active_npcs))
+
+        logger.debug(
+            "Procesados %d NPCs hostiles en paralelo (%d en mapas vacíos ignorados)",
+            len(active_npcs),
+            len(hostile_npcs) - len(active_npcs),
+        )
