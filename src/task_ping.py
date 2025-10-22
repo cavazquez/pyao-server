@@ -7,7 +7,7 @@ from src.packet_reader import PacketReader
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

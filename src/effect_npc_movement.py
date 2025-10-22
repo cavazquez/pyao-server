@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from src.tick_effect import TickEffect
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc import NPC
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository

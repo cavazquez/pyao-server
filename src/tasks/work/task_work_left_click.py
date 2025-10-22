@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from src.inventory_repository import InventoryRepository
     from src.map_manager import MapManager
     from src.map_resources_service import MapResourcesService
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

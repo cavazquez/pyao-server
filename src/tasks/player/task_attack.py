@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from src.item_catalog import ItemCatalog
     from src.loot_table_service import LootTableService
     from src.map_manager import MapManager
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc_death_service import NPCDeathService
     from src.npc_respawn_service import NPCRespawnService

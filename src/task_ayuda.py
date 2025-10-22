@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

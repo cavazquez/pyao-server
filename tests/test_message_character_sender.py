@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.client_connection import ClientConnection
-from src.message_character_sender import CharacterMessageSender
+from src.messaging.senders.message_character_sender import CharacterMessageSender
 from src.packet_id import ServerPacketID
 
 

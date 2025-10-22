@@ -21,7 +21,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.client_connection import ClientConnection
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 
 
 def test_message_sender_initialization() -> None:

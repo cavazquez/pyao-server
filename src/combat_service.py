@@ -18,7 +18,7 @@ from src.combat_weapon_service import WeaponService
 if TYPE_CHECKING:
     from src.equipment_repository import EquipmentRepository
     from src.inventory_repository import InventoryRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc import NPC
     from src.npc_repository import NPCRepository
     from src.player_repository import PlayerRepository

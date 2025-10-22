@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from src.account_repository import AccountRepository
 from src.authentication_service import AuthenticationService
 from src.map_manager import MapManager
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_service import NPCService
 from src.packet_reader import PacketReader
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from src.account_repository import AccountRepository
     from src.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc_service import NPCService
     from src.player_map_service import PlayerMapService
     from src.player_repository import PlayerRepository

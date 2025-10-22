@@ -6,7 +6,7 @@ import pytest
 
 from src.client_connection import ClientConnection
 from src.map_manager import MapManager
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 
 
 @pytest.fixture

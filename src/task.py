@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 
 class Task(ABC):

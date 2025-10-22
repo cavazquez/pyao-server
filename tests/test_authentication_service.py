@@ -7,7 +7,7 @@ import pytest
 from src.account_repository import AccountRepository
 from src.authentication_service import AuthenticationService
 from src.client_connection import ClientConnection
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 
 
 @pytest.mark.asyncio

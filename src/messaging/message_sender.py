@@ -3,15 +3,15 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.message_audio_sender import AudioMessageSender
-from src.message_character_sender import CharacterMessageSender
-from src.message_console_sender import ConsoleMessageSender
-from src.message_inventory_sender import InventoryMessageSender
-from src.message_map_sender import MapMessageSender
-from src.message_player_stats_sender import PlayerStatsMessageSender
-from src.message_session_sender import SessionMessageSender
-from src.message_visual_effects_sender import VisualEffectsMessageSender
-from src.message_work_sender import WorkMessageSender
+from src.messaging.senders.message_audio_sender import AudioMessageSender
+from src.messaging.senders.message_character_sender import CharacterMessageSender
+from src.messaging.senders.message_console_sender import ConsoleMessageSender
+from src.messaging.senders.message_inventory_sender import InventoryMessageSender
+from src.messaging.senders.message_map_sender import MapMessageSender
+from src.messaging.senders.message_player_stats_sender import PlayerStatsMessageSender
+from src.messaging.senders.message_session_sender import SessionMessageSender
+from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
+from src.messaging.senders.message_work_sender import WorkMessageSender
 
 if TYPE_CHECKING:
     from src.client_connection import ClientConnection

@@ -11,7 +11,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.commerce_service import CommerceService
     from src.inventory_repository import InventoryRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.player_repository import PlayerRepository
     from src.redis_client import RedisClient
 

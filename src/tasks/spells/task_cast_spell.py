@@ -11,7 +11,7 @@ from src.stamina_service import STAMINA_COST_SPELL
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.player_repository import PlayerRepository
     from src.spell_service import SpellService
     from src.spellbook_repository import SpellbookRepository

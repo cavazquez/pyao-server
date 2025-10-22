@@ -13,7 +13,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.bank_repository import BankRepository
     from src.inventory_repository import InventoryRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)

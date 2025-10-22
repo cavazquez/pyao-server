@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 from src.tasks.inventory.task_inventory_click import TaskInventoryClick
 
 

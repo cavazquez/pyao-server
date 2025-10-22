@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from src.account_repository import AccountRepository
     from src.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc_service import NPCService
     from src.player_repository import PlayerRepository
     from src.server_repository import ServerRepository

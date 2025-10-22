@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.client_connection import ClientConnection
-from src.message_visual_effects_sender import VisualEffectsMessageSender
+from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
 from src.packet_id import ServerPacketID
 
 

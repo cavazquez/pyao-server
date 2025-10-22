@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 import redis
 from src.client_connection import ClientConnection
-from src.message_sender import MessageSender
+from src.messaging.message_sender import MessageSender
 from src.server_initializer import ServerInitializer
 from src.task_factory import TaskFactory
 from src.task_null import TaskNull

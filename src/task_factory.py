@@ -45,7 +45,7 @@ from src.tasks.work.task_work_left_click import TaskWorkLeftClick
 
 if TYPE_CHECKING:
     from src.dependency_container import DependencyContainer
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.task import Task
 
 logger = logging.getLogger(__name__)

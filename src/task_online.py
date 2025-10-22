@@ -8,7 +8,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

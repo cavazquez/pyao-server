@@ -9,7 +9,7 @@ from src.items_catalog import get_item
 if TYPE_CHECKING:
     from src.equipment_repository import EquipmentRepository
     from src.inventory_repository import InventoryRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

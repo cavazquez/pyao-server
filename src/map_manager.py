@@ -10,7 +10,7 @@ from src.map_manager_spatial import SpatialIndexMixin
 
 if TYPE_CHECKING:
     from src.ground_items_repository import GroundItemsRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc import NPC
 
 

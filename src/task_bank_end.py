@@ -7,7 +7,7 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 

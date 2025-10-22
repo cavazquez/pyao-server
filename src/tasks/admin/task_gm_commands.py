@@ -9,7 +9,7 @@ from src.task import Task
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_map_service import PlayerMapService
     from src.player_repository import PlayerRepository

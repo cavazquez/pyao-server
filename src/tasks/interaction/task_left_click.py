@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.map_resources_service import MapResourcesService
     from src.merchant_repository import MerchantRepository
-    from src.message_sender import MessageSender
+    from src.messaging.message_sender import MessageSender
     from src.npc import NPC
     from src.player_repository import PlayerRepository
     from src.redis_client import RedisClient
