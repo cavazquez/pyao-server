@@ -6,15 +6,15 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.equipment_service import EquipmentService
-from src.inventory_repository import InventoryRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.items_catalog import get_item
 from src.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
-    from src.account_repository import AccountRepository
-    from src.equipment_repository import EquipmentRepository
+    from src.repositories.account_repository import AccountRepository
+    from src.repositories.equipment_repository import EquipmentRepository
     from src.messaging.message_sender import MessageSender
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

@@ -6,15 +6,15 @@ from typing import TYPE_CHECKING
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
 from src.session_manager import SessionManager
-from src.spellbook_repository import SpellbookRepository
+from src.repositories.spellbook_repository import SpellbookRepository
 from src.stamina_service import STAMINA_COST_SPELL
 from src.task import Task
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
     from src.spell_service import SpellService
-    from src.spellbook_repository import SpellbookRepository
+    from src.repositories.spellbook_repository import SpellbookRepository
     from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)

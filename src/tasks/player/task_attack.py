@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from src.npc_death_service import NPCDeathService
     from src.npc_respawn_service import NPCRespawnService
     from src.npc_service import NPCService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
     from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)

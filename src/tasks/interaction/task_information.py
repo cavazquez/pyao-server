@@ -9,7 +9,7 @@ from src.task import Task
 if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.server_repository import ServerRepository
+    from src.repositories.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 

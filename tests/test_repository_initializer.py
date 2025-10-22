@@ -2,17 +2,17 @@
 
 from unittest.mock import Mock
 
-from src.account_repository import AccountRepository
-from src.bank_repository import BankRepository
-from src.equipment_repository import EquipmentRepository
-from src.ground_items_repository import GroundItemsRepository
-from src.inventory_repository import InventoryRepository
-from src.merchant_repository import MerchantRepository
-from src.npc_repository import NPCRepository
-from src.player_repository import PlayerRepository
+from src.repositories.account_repository import AccountRepository
+from src.repositories.bank_repository import BankRepository
+from src.repositories.equipment_repository import EquipmentRepository
+from src.repositories.ground_items_repository import GroundItemsRepository
+from src.repositories.inventory_repository import InventoryRepository
+from src.repositories.merchant_repository import MerchantRepository
+from src.repositories.npc_repository import NPCRepository
+from src.repositories.player_repository import PlayerRepository
 from src.repository_initializer import RepositoryInitializer
-from src.server_repository import ServerRepository
-from src.spellbook_repository import SpellbookRepository
+from src.repositories.server_repository import ServerRepository
+from src.repositories.spellbook_repository import SpellbookRepository
 
 
 def test_repository_initializer_creates_all_repositories() -> None:

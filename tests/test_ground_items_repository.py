@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.ground_items_repository import GroundItemsRepository
+from src.repositories.ground_items_repository import GroundItemsRepository
 
 
 @pytest.mark.asyncio

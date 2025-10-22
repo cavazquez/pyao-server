@@ -15,7 +15,7 @@ from src.tick_effect import TickEffect
 
 if TYPE_CHECKING:
     from src.map_manager import MapManager
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

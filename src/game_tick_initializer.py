@@ -16,8 +16,8 @@ if TYPE_CHECKING:
     from src.map_manager import MapManager
     from src.npc_ai_service import NPCAIService
     from src.npc_service import NPCService
-    from src.player_repository import PlayerRepository
-    from src.server_repository import ServerRepository
+    from src.repositories.player_repository import PlayerRepository
+    from src.repositories.server_repository import ServerRepository
     from src.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)

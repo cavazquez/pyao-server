@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.player_repository import PlayerRepository
+from src.repositories.player_repository import PlayerRepository
 from src.tasks.player.task_attack import TaskAttack
 
 

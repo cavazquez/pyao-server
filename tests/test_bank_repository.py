@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from src.bank_repository import BankRepository
+from src.repositories.bank_repository import BankRepository
 
 if TYPE_CHECKING:
     from src.redis_client import RedisClient

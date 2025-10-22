@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 from src.equipment_slot import EquipmentSlot
 
 if TYPE_CHECKING:
-    from src.equipment_repository import EquipmentRepository
-    from src.inventory_repository import InventoryRepository
+    from src.repositories.equipment_repository import EquipmentRepository
+    from src.repositories.inventory_repository import InventoryRepository
 
 logger = logging.getLogger(__name__)
 

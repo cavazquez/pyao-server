@@ -9,12 +9,12 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.inventory_repository import InventoryRepository
+    from src.repositories.inventory_repository import InventoryRepository
     from src.item_catalog import ItemCatalog
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

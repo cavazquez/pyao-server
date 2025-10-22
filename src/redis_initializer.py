@@ -6,7 +6,7 @@ import time
 from src.data_initializer import DataInitializer
 from src.redis_client import RedisClient
 from src.redis_config import RedisKeys
-from src.server_repository import ServerRepository
+from src.repositories.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 

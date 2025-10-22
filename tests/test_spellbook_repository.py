@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.spellbook_repository import SpellbookRepository
+from src.repositories.spellbook_repository import SpellbookRepository
 
 if TYPE_CHECKING:
     from src.redis_client import RedisClient

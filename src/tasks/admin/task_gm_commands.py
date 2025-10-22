@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.player_map_service import PlayerMapService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +142,7 @@ class TaskGMCommands(Task):
             new_x: Nueva posición X.
             new_y: Nueva posición Y.
         """
-        from src.account_repository import AccountRepository  # noqa: PLC0415
+        from src.repositories.account_repository import AccountRepository  # noqa: PLC0415
 
         if not self.player_repo or not self.map_manager:
             return

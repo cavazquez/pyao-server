@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.equipment_service import EquipmentService
-from src.inventory_repository import InventoryRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.packet_data import EquipItemData
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
@@ -13,9 +13,9 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.equipment_repository import EquipmentRepository
+    from src.repositories.equipment_repository import EquipmentRepository
     from src.messaging.message_sender import MessageSender
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

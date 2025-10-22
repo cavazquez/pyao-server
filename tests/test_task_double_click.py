@@ -7,7 +7,7 @@ import pytest
 
 from src.map_manager import MapManager
 from src.npc import NPC
-from src.player_repository import PlayerRepository
+from src.repositories.player_repository import PlayerRepository
 from src.tasks.inventory.task_double_click import TaskDoubleClick
 
 

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.npc_ai_service import NPCAIService
     from src.npc_service import NPCService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

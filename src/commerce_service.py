@@ -4,10 +4,10 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.inventory_repository import InventoryRepository
+    from src.repositories.inventory_repository import InventoryRepository
     from src.item import Item
-    from src.merchant_repository import MerchantRepository
-    from src.player_repository import PlayerRepository
+    from src.repositories.merchant_repository import MerchantRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

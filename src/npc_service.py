@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc import NPC
     from src.npc_catalog import NPCCatalog
-    from src.npc_repository import NPCRepository
+    from src.repositories.npc_repository import NPCRepository
 
 logger = logging.getLogger(__name__)
 

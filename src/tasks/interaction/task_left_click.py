@@ -12,13 +12,13 @@ from src.session_manager import SessionManager
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.bank_repository import BankRepository
+    from src.repositories.bank_repository import BankRepository
     from src.map_manager import MapManager
     from src.map_resources_service import MapResourcesService
-    from src.merchant_repository import MerchantRepository
+    from src.repositories.merchant_repository import MerchantRepository
     from src.messaging.message_sender import MessageSender
     from src.npc import NPC
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
     from src.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)

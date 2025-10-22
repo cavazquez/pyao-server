@@ -4,10 +4,10 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.account_repository import AccountRepository
+    from src.repositories.account_repository import AccountRepository
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

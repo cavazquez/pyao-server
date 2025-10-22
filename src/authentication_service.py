@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from src.password_utils import hash_password
 
 if TYPE_CHECKING:
-    from src.account_repository import AccountRepository
+    from src.repositories.account_repository import AccountRepository
     from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)

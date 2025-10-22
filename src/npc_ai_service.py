@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from src.npc import NPC
     from src.npc_service import NPCService
     from src.pathfinding_service import PathfindingService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

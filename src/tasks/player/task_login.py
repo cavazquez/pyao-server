@@ -4,7 +4,7 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING
 
-from src.account_repository import AccountRepository
+from src.repositories.account_repository import AccountRepository
 from src.authentication_service import AuthenticationService
 from src.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
@@ -12,25 +12,25 @@ from src.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.npc_service import NPCService
 from src.packet_reader import PacketReader
 from src.packet_validator import PacketValidator
-from src.player_repository import PlayerRepository
+from src.repositories.player_repository import PlayerRepository
 from src.player_service import PlayerService
-from src.server_repository import ServerRepository
+from src.repositories.server_repository import ServerRepository
 from src.session_manager import SessionManager
-from src.spellbook_repository import SpellbookRepository
+from src.repositories.spellbook_repository import SpellbookRepository
 from src.task import Task
 from src.task_motd import TaskMotd
 
 if TYPE_CHECKING:
-    from src.account_repository import AccountRepository
-    from src.equipment_repository import EquipmentRepository
+    from src.repositories.account_repository import AccountRepository
+    from src.repositories.equipment_repository import EquipmentRepository
     from src.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.npc_service import NPCService
     from src.player_map_service import PlayerMapService
-    from src.player_repository import PlayerRepository
-    from src.server_repository import ServerRepository
+    from src.repositories.player_repository import PlayerRepository
+    from src.repositories.server_repository import ServerRepository
     from src.spell_catalog import SpellCatalog
-    from src.spellbook_repository import SpellbookRepository
+    from src.repositories.spellbook_repository import SpellbookRepository
 
 logger = logging.getLogger(__name__)
 

@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.bank_repository import BankItem, BankRepository
-from src.inventory_repository import InventoryRepository
-from src.player_repository import PlayerRepository
+from src.repositories.bank_repository import BankItem, BankRepository
+from src.repositories.inventory_repository import InventoryRepository
+from src.repositories.player_repository import PlayerRepository
 from src.tasks.banking.task_bank_extract import TaskBankExtract
 
 

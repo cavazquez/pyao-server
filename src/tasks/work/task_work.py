@@ -4,18 +4,18 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.constants.items import ResourceItemID, ToolID
-from src.inventory_repository import InventoryRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
-from src.player_repository import PlayerRepository
+from src.repositories.player_repository import PlayerRepository
 from src.task import Task
 
 if TYPE_CHECKING:
-    from src.inventory_repository import InventoryRepository
+    from src.repositories.inventory_repository import InventoryRepository
     from src.map_manager import MapManager
     from src.map_resources_service import MapResourcesService
     from src.messaging.message_sender import MessageSender
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

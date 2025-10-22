@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import pytest
 import pytest_asyncio
 
-from src.equipment_repository import EquipmentRepository
+from src.repositories.equipment_repository import EquipmentRepository
 from src.equipment_slot import EquipmentSlot
 
 if TYPE_CHECKING:

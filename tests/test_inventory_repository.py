@@ -13,7 +13,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.inventory_repository import InventoryRepository
+from src.repositories.inventory_repository import InventoryRepository
 
 
 @pytest.mark.asyncio

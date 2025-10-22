@@ -6,7 +6,7 @@ from pathlib import Path
 
 from src.dependency_container import DependencyContainer
 from src.game_tick_initializer import GameTickInitializer
-from src.ground_items_repository import GroundItemsRepository
+from src.repositories.ground_items_repository import GroundItemsRepository
 from src.map_manager import MapManager
 from src.redis_initializer import RedisInitializer
 from src.repository_initializer import RepositoryInitializer

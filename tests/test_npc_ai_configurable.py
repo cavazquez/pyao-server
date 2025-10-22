@@ -8,7 +8,7 @@ import pytest
 
 from src.npc import NPC
 from src.npc_ai_service import NPCAIService
-from src.npc_repository import NPCRepository
+from src.repositories.npc_repository import NPCRepository
 
 if TYPE_CHECKING:
     from src.redis_client import RedisClient

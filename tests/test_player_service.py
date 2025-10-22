@@ -6,7 +6,7 @@ import pytest
 
 from src.client_connection import ClientConnection
 from src.messaging.message_sender import MessageSender
-from src.player_repository import PlayerRepository
+from src.repositories.player_repository import PlayerRepository
 from src.player_service import PlayerService
 
 

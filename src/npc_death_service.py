@@ -10,9 +10,9 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.npc import NPC
-    from src.npc_repository import NPCRepository
+    from src.repositories.npc_repository import NPCRepository
     from src.npc_respawn_service import NPCRespawnService
-    from src.player_repository import PlayerRepository
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 

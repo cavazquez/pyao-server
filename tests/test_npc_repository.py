@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from src.npc_repository import NPCRepository
+from src.repositories.npc_repository import NPCRepository
 
 if TYPE_CHECKING:
     from src.redis_client import RedisClient
