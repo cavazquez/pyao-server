@@ -10,10 +10,3 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    
-
-  # La configuración corregida para Python
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
