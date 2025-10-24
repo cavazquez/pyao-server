@@ -16,6 +16,12 @@ from src.utils.redis_config import (
 logger = logging.getLogger(__name__)
 
 
+def _ensure_ping_success(result: bool) -> None:
+    if not result:
+        error_msg = "Redis ping failed"
+        raise redis.ConnectionError(error_msg)
+
+
 class RedisClient:
     """Cliente Redis singleton con soporte async."""
 
@@ -54,8 +60,13 @@ class RedisClient:
                 socket_timeout=config.socket_timeout,
                 socket_connect_timeout=config.socket_connect_timeout,
             )
-            # Verificar conexión
-            await self._redis.ping()
+            # Verificar conexión (compatibilidad con API sync/async)
+            ping_response = self._redis.ping()
+            if isinstance(ping_response, bool):
+                _ensure_ping_success(ping_response)
+            else:
+                awaited_result = await ping_response
+                _ensure_ping_success(awaited_result)
             logger.info("Conectado a Redis en %s:%d", config.host, config.port)
 
             # Inicializar configuración por defecto si no existe
