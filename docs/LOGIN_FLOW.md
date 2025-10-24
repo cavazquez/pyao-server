@@ -198,7 +198,7 @@ El servidor realiza las siguientes validaciones durante el login (`src/task.py:2
 1. **Parseo del paquete**: Verifica que el formato sea correcto
 2. **Disponibilidad de Redis**: Verifica que Redis esté conectado
 3. **Existencia de cuenta**: Verifica que el username exista en Redis
-4. **Verificación de contraseña**: Compara el hash SHA-256 de la contraseña
+4. **Verificación de contraseña**: Valida la contraseña contra el hash Argon2id almacenado
 5. **Sesión**: Guarda el `user_id` en `session_data` para uso posterior
 
 ## Almacenamiento en Redis
@@ -305,7 +305,7 @@ Según el protocolo estándar de AO (comentados en `src/packet_id.py`), los sigu
 
 ## Consideraciones de Seguridad
 
-1. **Hashing de Contraseñas**: Se usa SHA-256 (considerar migrar a bcrypt/argon2)
+1. **Hashing de Contraseñas**: Se usa Argon2id con salt aleatorio y parámetros configurables
 2. **Validación de Entrada**: Todos los campos son validados
 3. **Sesión Temporal**: Los datos de sesión se limpian al cerrar la conexión
 4. **Redis**: Las contraseñas nunca se almacenan en texto plano

@@ -105,9 +105,10 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     call_args = account_repo.create_account.call_args
     assert call_args.kwargs["username"] == username
     assert call_args.kwargs["email"] == email
-    # Verificar que la contraseña fue hasheada (no es la original)
-    assert call_args.kwargs["password_hash"] != password
-    assert len(call_args.kwargs["password_hash"]) == 64  # SHA-256 hex
+    # Verificar que la contraseña fue hasheada (no es la original) y usa Argon2id
+    password_hash = call_args.kwargs["password_hash"]
+    assert password_hash != password
+    assert password_hash.startswith("$argon2id$")
 
     # Verificar que se enviaron los paquetes esperados:
     # 1. Logged
@@ -433,7 +434,7 @@ async def test_task_create_account_unicode_username() -> None:
 
 
 def test_task_create_account_password_hashing() -> None:
-    """Verifica que las contraseñas se hasheen correctamente."""
+    """Verifica que el hash de contraseñas utilice Argon2id con salt aleatorio."""
     password1 = "password123"
     password2 = "password123"
     password3 = "different"
@@ -442,12 +443,12 @@ def test_task_create_account_password_hashing() -> None:
     hash2 = hash_password(password2)
     hash3 = hash_password(password3)
 
-    # Misma contraseña debe generar mismo hash
-    assert hash1 == hash2
+    # Misma contraseña debe generar hashes distintos (salt aleatorio)
+    assert hash1 != hash2
 
     # Contraseña diferente debe generar hash diferente
     assert hash1 != hash3
 
-    # Hash debe ser hexadecimal de 64 caracteres (SHA-256)
-    assert len(hash1) == 64
-    assert all(c in "0123456789abcdef" for c in hash1)
+    # Hash debe incluir el prefijo Argon2id y no contener la contraseña en texto plano
+    assert hash1.startswith("$argon2id$")
+    assert password1 not in hash1

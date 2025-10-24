@@ -3,8 +3,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.utils.password_utils import hash_password
-
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
@@ -69,9 +67,8 @@ class AuthenticationService:
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return None
 
-        # Hashear la contraseña para compararla
-        password_hash = hash_password(password)
-        if not await self.account_repo.verify_password(username, password_hash):
+        # Verificar la contraseña
+        if not await self.account_repo.verify_password(username, password):
             logger.warning("Contraseña incorrecta para usuario: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return None

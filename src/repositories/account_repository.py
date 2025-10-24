@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.utils.password_utils import verify_password as verify_password_hash
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -98,12 +99,12 @@ class AccountRepository:
 
         return result
 
-    async def verify_password(self, username: str, password_hash: str) -> bool:
+    async def verify_password(self, username: str, password: str) -> bool:
         """Verifica si la contraseña es correcta.
 
         Args:
             username: Nombre de usuario.
-            password_hash: Hash de la contraseña a verificar.
+            password: Contraseña en texto plano enviada por el cliente.
 
         Returns:
             True si la contraseña es correcta, False en caso contrario.
@@ -114,7 +115,7 @@ class AccountRepository:
             return False
 
         stored_hash = account_data.get("password_hash", "")
-        return stored_hash == password_hash
+        return verify_password_hash(password, stored_hash)
 
     async def get_account_by_user_id(self, user_id: int) -> dict[str, str] | None:
         """Obtiene los datos de una cuenta por user_id.

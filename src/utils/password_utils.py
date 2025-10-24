@@ -1,28 +1,33 @@
 """Utilidades para manejo seguro de contraseñas."""
 
-import hashlib
+from argon2 import PasswordHasher
+from argon2.exceptions import InvalidHashError, VerificationError
+
+_PASSWORD_HASHER = PasswordHasher(
+    time_cost=3,
+    memory_cost=64_000,
+    parallelism=4,
+    hash_len=32,
+    salt_len=16,
+)
 
 
 def hash_password(password: str) -> str:
-    """Genera un hash SHA-256 de la contraseña.
-
-    Args:
-        password: Contraseña en texto plano.
+    """Genera un hash Argon2id de la contraseña.
 
     Returns:
-        Hash hexadecimal de la contraseña.
+        str: Hash Argon2id que incluye salt y parámetros de costo.
     """
-    return hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return _PASSWORD_HASHER.hash(password)
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    """Verifica si una contraseña coincide con su hash.
-
-    Args:
-        password: Contraseña en texto plano a verificar.
-        password_hash: Hash almacenado de la contraseña.
+    """Verifica si una contraseña coincide con su hash Argon2id almacenado.
 
     Returns:
-        True si la contraseña coincide con el hash, False en caso contrario.
+        bool: True si la contraseña es válida, False en caso contrario.
     """
-    return hash_password(password) == password_hash
+    try:
+        return _PASSWORD_HASHER.verify(password_hash, password)
+    except (VerificationError, InvalidHashError):
+        return False

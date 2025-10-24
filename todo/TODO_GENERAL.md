@@ -195,7 +195,7 @@ Este proyecto tiene varios documentos TODO especializados:
 
 ### Seguridad
 - [ ] Rate limiting por IP (anti-spam)
-- [ ] Hash de passwords con bcrypt/argon2
+- [x] Hash de passwords con argon2
 - [ ] Validación de rangos en todos los packets
 - [ ] Sanitización de strings (nombres, chat)
 - [ ] Prevención de exploits conocidos

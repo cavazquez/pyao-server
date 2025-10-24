@@ -4,7 +4,7 @@ Este documento describe la funcionalidad de creación de cuentas en PyAO Server.
 
 ## Descripción General
 
-El servidor soporta la creación de cuentas de usuario mediante el protocolo de paquetes. Las cuentas se almacenan en Redis con contraseñas hasheadas usando SHA-256.
+El servidor soporta la creación de cuentas de usuario mediante el protocolo de paquetes. Las cuentas se almacenan en Redis con contraseñas hasheadas usando Argon2id.
 
 ## Protocolo de Paquetes
 
@@ -123,8 +123,8 @@ Cada cuenta se almacena usando las siguientes claves:
 
 ### Seguridad
 
-- Las contraseñas se hashean usando **SHA-256** antes de almacenarse
-- El hash es hexadecimal de 64 caracteres
+- Las contraseñas se hashean usando **Argon2id** antes de almacenarse
+- El hash incluye salt aleatorio y parámetros de costo
 - Las contraseñas en texto plano nunca se almacenan
 
 ## Uso desde el Código
@@ -133,7 +133,7 @@ Cada cuenta se almacena usando las siguientes claves:
 
 ```python
 from src.redis_client import RedisClient
-import hashlib
+from src.utils.password_utils import hash_password
 
 # Conectar a Redis
 redis_client = RedisClient()
@@ -145,7 +145,7 @@ password = "mipassword"
 email = "jugador@example.com"
 
 # Hashear contraseña
-password_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+password_hash = hash_password(password)
 
 # Crear cuenta
 user_id = await redis_client.create_account(
@@ -213,7 +213,7 @@ uv run pytest tests/test_account_creation.py -v
 
 ## Consideraciones de Seguridad
 
-1. **Hashing de Contraseñas**: Se usa SHA-256 para hashear contraseñas
+1. **Hashing de Contraseñas**: Se usa Argon2id para hashear contraseñas
 2. **Validación de Entrada**: Todos los campos son validados antes de procesarse
 3. **Prevención de Duplicados**: Se verifica la existencia antes de crear
 4. **Encoding Seguro**: Todo el texto usa UTF-8 para evitar problemas de encoding
@@ -222,8 +222,8 @@ uv run pytest tests/test_account_creation.py -v
 
 Posibles mejoras a considerar:
 
-- [ ] Usar bcrypt o argon2 en lugar de SHA-256 para mayor seguridad
-- [ ] Agregar salt a las contraseñas
+- [x] Usar Argon2id en lugar de SHA-256 para mayor seguridad
+- [x] Agregar salt a las contraseñas
 - [ ] Implementar rate limiting para prevenir ataques de fuerza bruta
 - [ ] Agregar verificación de email
 - [ ] Implementar recuperación de contraseña
