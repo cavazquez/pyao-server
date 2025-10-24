@@ -19,7 +19,7 @@ dev = [
     "fakeredis==2.26.0",
 ]
 build = [
-    "hatchling==1.25.0",
+    "hatchling==1.27.0",
 ]
 
 [build-system]
