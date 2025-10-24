@@ -6,15 +6,14 @@
 version: 2
 updates:
   # Tu configuración existente para "uv"
-  #- package-ecosystem: "uv"
-  #  directory: "/"
-  #  schedule:
-  #    interval: "weekly"
-  #  open-pull-requests-limit: 10
-
-  # La configuración de "python" que agregamos
-  - package-ecosystem: "python"
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    
+
+  # La configuración corregida para Python
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
