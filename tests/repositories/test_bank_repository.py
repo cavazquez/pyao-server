@@ -1,5 +1,7 @@
 """Tests para el repositorio de banco."""
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 import pytest

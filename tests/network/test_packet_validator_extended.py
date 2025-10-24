@@ -1,5 +1,7 @@
 """Tests extendidos para PacketValidator - Cobertura completa de todos los validadores."""
 
+from __future__ import annotations
+
 import struct
 from typing import TYPE_CHECKING
 

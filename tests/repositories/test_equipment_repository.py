@@ -1,6 +1,6 @@
 """Tests para EquipmentRepository."""
 
-# ruff: noqa: DOC402
+from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
@@ -25,7 +25,11 @@ async def equipment_repo(redis_client: RedisClient) -> EquipmentRepository:
 
 @pytest_asyncio.fixture(autouse=True)
 async def cleanup_redis(redis_client: RedisClient) -> None:
-    """Limpia Redis antes y después de cada test."""
+    """Limpia Redis antes y después de cada test.
+
+    Yields:
+        None: Control back to the test after limpiar la instancia.
+    """
     if redis_client.redis:
         await redis_client.redis.flushdb()
     yield

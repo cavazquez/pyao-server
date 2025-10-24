@@ -1,5 +1,7 @@
 """Tests para SpellbookRepository."""
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 

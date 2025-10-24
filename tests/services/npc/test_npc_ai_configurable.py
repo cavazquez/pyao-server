@@ -1,5 +1,7 @@
 """Tests para sistema de IA configurable de NPCs."""
 
+from __future__ import annotations
+
 import time
 from typing import TYPE_CHECKING
 from unittest.mock import AsyncMock, MagicMock
