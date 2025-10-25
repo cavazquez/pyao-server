@@ -250,12 +250,16 @@ pyao-server/
 │   ├── items.toml               # Catálogo de items (1049 items)
 │   └── loot_tables.toml         # Tablas de loot de NPCs
 │
-├── map_data/                    # Datos de mapas (290 mapas)
-│   ├── 001_map.json             # Datos del mapa 1 (tiles, bloqueados, etc.)
-│   ├── 001_resources.json       # Recursos del mapa 1 (objetos, NPCs, etc.)
-│   ├── 002_map.json             # Datos del mapa 2
-│   ├── 002_resources.json       # Recursos del mapa 2
-│   └── ...                      # XXX_map.json y XXX_resources.json (ordenados en pares)
+├── map_data/                    # Datos de mapas (generados desde clientes VB6/Godot)
+│   ├── 001_metadata.json        # Metadatos del mapa (nombre, clima, tamaño)
+│   ├── 001_ground.json          # Tiles de capa base (100x100)
+│   ├── 001_upper.json           # Sprites de la capa superior
+│   ├── 001_graphics.json        # Sprites adicionales/efectos
+│   ├── 001_flags.json           # Flags originales del mapa (desde VB6)
+│   ├── 001_triggers.json        # Triggers detectados (zonas seguras, portales, etc.)
+│   ├── 001_blocked.json         # Tiles bloqueados y agua detectada
+│   ├── 001_resources.json       # Recursos del mapa (agua, árboles, minas)
+│   └── ...                      # Archivos XXX_*.json por cada capa del mapa
 │
 ├── tests/                       # Tests unitarios (767 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests

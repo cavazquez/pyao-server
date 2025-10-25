@@ -553,30 +553,39 @@ class MapManager(SpatialIndexMixin):
             logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)
 
     def load_map_data(self, map_id: int, map_file_path: str | Path) -> None:
-        """Carga los datos de un mapa desde un archivo JSON.
+        """Carga metadatos y tiles bloqueados de un mapa.
 
         Args:
             map_id: ID del mapa.
-            map_file_path: Ruta al archivo JSON del mapa.
+            map_file_path: Ruta al archivo *_metadata.json del mapa.
         """
+        metadata_path = Path(map_file_path)
+        prefix = metadata_path.stem.split("_")[0]
+        blocked_path = metadata_path.with_name(f"{prefix}_blocked.json")
+
+        width = 100
+        height = 100
+
         try:
-            map_path = Path(map_file_path)
-            if not map_path.exists():
-                logger.warning("Archivo de mapa no encontrado: %s", map_file_path)
-                # Usar tamaño por defecto 100x100
-                self._map_sizes[map_id] = (100, 100)
-                return
+            if metadata_path.exists():
+                with metadata_path.open("r", encoding="utf-8") as f:
+                    metadata = json.load(f)
+                width = int(metadata.get("width", width))
+                height = int(metadata.get("height", height))
+            else:
+                logger.warning("Metadata de mapa no encontrada: %s", metadata_path)
 
-            with map_path.open("r", encoding="utf-8") as f:
-                map_data = json.load(f)
-
-            width = map_data.get("width", 100)
-            height = map_data.get("height", 100)
             self._map_sizes[map_id] = (width, height)
 
-            # Cargar tiles bloqueados y tiles de exit
-            blocked_tiles = map_data.get("blocked_tiles", [])
-            blocked_set = set()
+            if not blocked_path.exists():
+                logger.warning("Archivo de tiles bloqueados no encontrado: %s", blocked_path)
+                self._blocked_tiles[map_id] = set()
+                return
+
+            with blocked_path.open("r", encoding="utf-8") as f:
+                blocked_tiles = json.load(f)
+
+            blocked_set: set[tuple[int, int]] = set()
             exit_count = 0
 
             for tile in blocked_tiles:
@@ -584,33 +593,34 @@ class MapManager(SpatialIndexMixin):
                 y = tile.get("y")
                 tile_type = tile.get("type")
 
-                if x is not None and y is not None:
-                    # Si es un tile de exit, guardar la información de transición
-                    if tile_type == "exit":
-                        to_map = tile.get("to_map")
-                        to_x = tile.get("to_x")
-                        to_y = tile.get("to_y")
+                if x is None or y is None:
+                    continue
 
-                        if to_map and to_x is not None and to_y is not None:
-                            exit_key = (map_id, x, y)
-                            self._exit_tiles[exit_key] = {
-                                "to_map": to_map,
-                                "to_x": to_x,
-                                "to_y": to_y,
-                            }
-                            exit_count += 1
-                            logger.debug(
-                                "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
-                                map_id,
-                                x,
-                                y,
-                                to_map,
-                                to_x,
-                                to_y,
-                            )
+                # Guardar información de transición si está disponible
+                if tile_type == "exit":
+                    to_map = tile.get("to_map")
+                    to_x = tile.get("to_x")
+                    to_y = tile.get("to_y")
 
-                    # Todos los tiles (incluyendo exits) bloquean el movimiento normal
-                    blocked_set.add((x, y))
+                    if to_map and to_x is not None and to_y is not None:
+                        self._exit_tiles[(map_id, x, y)] = {
+                            "to_map": to_map,
+                            "to_x": to_x,
+                            "to_y": to_y,
+                        }
+                        exit_count += 1
+                        logger.debug(
+                            "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
+                            map_id,
+                            x,
+                            y,
+                            to_map,
+                            to_x,
+                            to_y,
+                        )
+
+                # Todos los tiles (incluyendo agua y exits) bloquean movimiento normal
+                blocked_set.add((x, y))
 
             self._blocked_tiles[map_id] = blocked_set
 
@@ -625,8 +635,7 @@ class MapManager(SpatialIndexMixin):
 
         except (OSError, json.JSONDecodeError):
             logger.exception("Error cargando mapa %d", map_id)
-            # Usar tamaño por defecto
-            self._map_sizes[map_id] = (100, 100)
+            self._map_sizes[map_id] = (width, height)
 
     def get_map_size(self, map_id: int) -> tuple[int, int]:
         """Obtiene el tamaño de un mapa.

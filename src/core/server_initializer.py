@@ -30,7 +30,7 @@ class ServerInitializer:
 
         map_data_dir = Path("map_data")
         if map_data_dir.exists():
-            map_files = list(map_data_dir.glob("*_map.json"))
+            map_files = list(map_data_dir.glob("*_metadata.json"))
             for map_file in sorted(map_files):
                 try:
                     # Parsear formato: 001_map.json -> 1
