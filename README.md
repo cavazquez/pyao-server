@@ -261,6 +261,10 @@ pyao-server/
 │   ├── 001_resources.json       # Recursos del mapa (agua, árboles, minas)
 │   └── ...                      # Archivos XXX_*.json por cada capa del mapa
 │
+├── tools/                       # Scripts utilitarios
+│   ├── compress_map_data.py     # Comprime map_data en archives/map_data.xz (LZMA)
+│   └── decompress_map_data.py   # Restaura map_data desde archives/map_data.xz
+│
 ├── tests/                       # Tests unitarios (767 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
