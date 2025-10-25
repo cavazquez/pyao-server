@@ -552,6 +552,108 @@ class MapManager(SpatialIndexMixin):
             total_items = sum(len(items) for items in map_items.values())
             logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)
 
+    @staticmethod
+    def _load_metadata_file(metadata_path: Path) -> tuple[int, int, list[dict[str, object]] | None]:
+        """Lee el archivo de metadatos devolviendo tamaño y bloqueados embebidos.
+
+        Returns:
+            tuple[int, int, list[dict[str, object]] | None]: width, height y bloqueados opcionales.
+        """
+        width = 100
+        height = 100
+        blocked_tiles: list[dict[str, object]] | None = None
+
+        if metadata_path.exists():
+            with metadata_path.open("r", encoding="utf-8") as f:
+                metadata = json.load(f)
+
+            width = int(metadata.get("width", width))
+            height = int(metadata.get("height", height))
+
+            if "blocked_tiles" in metadata:
+                raw_blocked = metadata.get("blocked_tiles")
+                if isinstance(raw_blocked, list):
+                    blocked_tiles = [tile for tile in raw_blocked if isinstance(tile, dict)]
+                else:
+                    blocked_tiles = []
+        else:
+            logger.warning("Metadata de mapa no encontrada: %s", metadata_path)
+
+        return width, height, blocked_tiles
+
+    @staticmethod
+    def _load_blocked_file(blocked_path: Path) -> list[dict[str, object]] | None:
+        """Obtiene los tiles bloqueados desde un archivo dedicado.
+
+        Returns:
+            list[dict[str, object]] | None: Lista de tiles o None si falta el archivo.
+        """
+        if not blocked_path.exists():
+            logger.warning("Archivo de tiles bloqueados no encontrado: %s", blocked_path)
+            return None
+
+        with blocked_path.open("r", encoding="utf-8") as f:
+            raw_blocked = json.load(f)
+
+        if isinstance(raw_blocked, list):
+            return [tile for tile in raw_blocked if isinstance(tile, dict)]
+
+        return []
+
+    @staticmethod
+    def _build_blocked_data(
+        map_id: int, blocked_tiles: list[dict[str, object]]
+    ) -> tuple[set[tuple[int, int]], int, dict[tuple[int, int, int], dict[str, int]]]:
+        """Procesa tiles bloqueados generando sets y salidas.
+
+        Returns:
+            tuple[set[tuple[int, int]], int, dict[tuple[int, int, int], dict[str, int]]]:
+                Conjunto de tiles bloqueados, cantidad de exits y mapping de exits.
+        """
+        blocked_set: set[tuple[int, int]] = set()
+        exit_tiles: dict[tuple[int, int, int], dict[str, int]] = {}
+        exit_count = 0
+
+        for tile in blocked_tiles:
+            raw_x = tile.get("x")
+            raw_y = tile.get("y")
+            tile_type = tile.get("type")
+
+            x = MapManager._coerce_int(raw_x)
+            y = MapManager._coerce_int(raw_y)
+            if x is None or y is None:
+                continue
+
+            if tile_type == "exit":
+                to_map_raw = tile.get("to_map")
+                to_x_raw = tile.get("to_x")
+                to_y_raw = tile.get("to_y")
+
+                to_map = MapManager._coerce_int(to_map_raw)
+                to_x = MapManager._coerce_int(to_x_raw)
+                to_y = MapManager._coerce_int(to_y_raw)
+
+                if to_map and to_x is not None and to_y is not None and to_map > 0:
+                    exit_tiles[map_id, x, y] = {
+                        "to_map": to_map,
+                        "to_x": to_x,
+                        "to_y": to_y,
+                    }
+                    exit_count += 1
+                    logger.debug(
+                        "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
+                        map_id,
+                        x,
+                        y,
+                        to_map,
+                        to_x,
+                        to_y,
+                    )
+
+            blocked_set.add((x, y))
+
+        return blocked_set, exit_count, exit_tiles
+
     def load_map_data(self, map_id: int, map_file_path: str | Path) -> None:
         """Carga metadatos y tiles bloqueados de un mapa.
 
@@ -563,64 +665,18 @@ class MapManager(SpatialIndexMixin):
         prefix = metadata_path.stem.split("_")[0]
         blocked_path = metadata_path.with_name(f"{prefix}_blocked.json")
 
-        width = 100
-        height = 100
-
         try:
-            if metadata_path.exists():
-                with metadata_path.open("r", encoding="utf-8") as f:
-                    metadata = json.load(f)
-                width = int(metadata.get("width", width))
-                height = int(metadata.get("height", height))
-            else:
-                logger.warning("Metadata de mapa no encontrada: %s", metadata_path)
-
+            width, height, blocked_tiles = self._load_metadata_file(metadata_path)
             self._map_sizes[map_id] = (width, height)
 
-            if not blocked_path.exists():
-                logger.warning("Archivo de tiles bloqueados no encontrado: %s", blocked_path)
-                self._blocked_tiles[map_id] = set()
-                return
+            if blocked_tiles is None:
+                blocked_tiles = self._load_blocked_file(blocked_path)
+                if blocked_tiles is None:
+                    self._blocked_tiles[map_id] = set()
+                    return
 
-            with blocked_path.open("r", encoding="utf-8") as f:
-                blocked_tiles = json.load(f)
-
-            blocked_set: set[tuple[int, int]] = set()
-            exit_count = 0
-
-            for tile in blocked_tiles:
-                x = tile.get("x")
-                y = tile.get("y")
-                tile_type = tile.get("type")
-
-                if x is None or y is None:
-                    continue
-
-                # Guardar información de transición si está disponible
-                if tile_type == "exit":
-                    to_map = tile.get("to_map")
-                    to_x = tile.get("to_x")
-                    to_y = tile.get("to_y")
-
-                    if to_map and to_x is not None and to_y is not None:
-                        self._exit_tiles[(map_id, x, y)] = {
-                            "to_map": to_map,
-                            "to_x": to_x,
-                            "to_y": to_y,
-                        }
-                        exit_count += 1
-                        logger.debug(
-                            "Exit tile en mapa %d (%d,%d) -> mapa %d (%d,%d)",
-                            map_id,
-                            x,
-                            y,
-                            to_map,
-                            to_x,
-                            to_y,
-                        )
-
-                # Todos los tiles (incluyendo agua y exits) bloquean movimiento normal
-                blocked_set.add((x, y))
+            blocked_set, exit_count, exit_tiles = self._build_blocked_data(map_id, blocked_tiles)
+            self._exit_tiles.update(exit_tiles)
 
             self._blocked_tiles[map_id] = blocked_set
 
@@ -636,6 +692,30 @@ class MapManager(SpatialIndexMixin):
         except (OSError, json.JSONDecodeError):
             logger.exception("Error cargando mapa %d", map_id)
             self._map_sizes[map_id] = (width, height)
+
+    @staticmethod
+    def _coerce_int(value: object) -> int | None:
+        """Convierte un valor a int devolviendo None si no es posible.
+
+        Returns:
+            int | None: El entero convertido o None si no se pudo convertir.
+        """
+        if isinstance(value, bool) or value is None:
+            return None
+
+        if isinstance(value, (int, float)):
+            return int(value)
+
+        if isinstance(value, str):
+            value = value.strip()
+            if not value:
+                return None
+            try:
+                return int(value)
+            except ValueError:
+                return None
+
+        return None
 
     def get_map_size(self, map_id: int) -> tuple[int, int]:
         """Obtiene el tamaño de un mapa.

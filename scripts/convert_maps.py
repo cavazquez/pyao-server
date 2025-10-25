@@ -7,14 +7,14 @@ directorio ``map_data``.
 """
 
 import json
+import operator
 import re
 import struct
 import sys
+import tomllib
 import traceback
 from pathlib import Path
 from typing import Any, TextIO, TypedDict
-
-import tomllib
 
 # Configuración de fuentes de mapas
 VB6_MAPS_SOURCE_DIR = Path("clientes/ArgentumOnline0.13.3-Cliente-Servidor/client/Mapas")
@@ -184,15 +184,18 @@ def _parse_map_data(data: bytes, map_path: Path, debug: bool) -> MapData | None:
     truncated_warnings: list[str] = []
 
     def read_bytes(num_bytes: int, description: str) -> bytes:
-        """Lee bytes del buffer y rellena con ceros si faltan datos."""
+        """Lee bytes del buffer y rellena con ceros si faltan datos.
 
+        Returns:
+            bytes: Secuencia de longitud fija representando la lectura.
+        """
         nonlocal offset
         end = offset + num_bytes
         if end <= len(data):
             chunk = data[offset:end]
         else:
             available = max(0, len(data) - offset)
-            chunk = data[offset: len(data)] if offset < len(data) else b""
+            chunk = data[offset : len(data)] if offset < len(data) else b""
             missing = num_bytes - available
             chunk += b"\x00" * missing
             truncated_warnings.append(
@@ -211,11 +214,13 @@ def _parse_map_data(data: bytes, map_path: Path, debug: bool) -> MapData | None:
     result["metadata"]["header"] = header.strip()
 
     # Leer clima (llueve, nieba)
-    weather_mapping = ["llueve", "nieba"]
-    for weather_type in weather_mapping:
+    for weather_type in ("llueve", "nieba"):
         value_bytes = read_bytes(2, f"valor de clima {weather_type}")
         value = struct.unpack("<H", value_bytes)[0]
-        result["metadata"][weather_type] = value
+        if weather_type == "llueve":
+            result["metadata"]["llueve"] = value
+        else:
+            result["metadata"]["nieba"] = value
 
     # Saltar campos temporales (4 * 2 bytes = 8 bytes)
     read_bytes(8, "campos temporales reservados")
@@ -280,7 +285,11 @@ def _parse_map_data(data: bytes, map_path: Path, debug: bool) -> MapData | None:
 
 
 def _load_map_transitions(path: Path) -> dict[tuple[int, str], dict[str, int]]:
-    """Carga las transiciones de mapas desde un archivo TOML."""
+    """Carga las transiciones de mapas desde un archivo TOML.
+
+    Returns:
+        dict[tuple[int, str], dict[str, int]]: Transiciones indexadas por mapa y borde.
+    """
     if not path.exists():
         return {}
 
@@ -296,7 +305,7 @@ def _load_map_transitions(path: Path) -> dict[tuple[int, str], dict[str, int]]:
         try:
             from_map = int(entry["from_map"])
             edge = str(entry["edge"])
-            transitions[(from_map, edge)] = {
+            transitions[from_map, edge] = {
                 "to_map": int(entry["to_map"]),
                 "to_x": int(entry["to_x"]),
                 "to_y": int(entry["to_y"]),
@@ -383,7 +392,9 @@ def save_map_components(map_data: MapData, output_dir: Path, map_id: int) -> boo
         # 8. Guardar tiles bloqueados
         blocked_tiles: list[dict[str, int | str]] = []
         edge_threshold = 4
-        transitions_for_map = {edge: data for (mid, edge), data in TRANSITIONS.items() if mid == map_id}
+        transitions_for_map = {
+            edge: data for (mid, edge), data in TRANSITIONS.items() if mid == map_id
+        }
 
         def _maybe_add_exit_tile(x: int, y: int) -> dict[str, int | str] | None:
             if not transitions_for_map:
@@ -459,13 +470,17 @@ def _save_json_file(file_path: Path, data: dict[str, Any] | list[Any]) -> bool:
         return False
 
 
-def _write_matrix_rows(file_handle: TextIO, data: Any) -> bool:
-    """Escribe matrices numéricas con una fila por línea."""
+def _write_matrix_rows(file_handle: TextIO, data: object) -> bool:
+    """Escribe matrices numéricas con una fila por línea.
+
+    Returns:
+        bool: True si se aplicó este formateo, False en caso contrario.
+    """
     if (
         not isinstance(data, list)
         or not data
         or not all(isinstance(row, list) for row in data)
-        or not all(all(isinstance(value, int) for value in row) for row in data)
+        or not all(all(isinstance(value, (int, float)) for value in row) for row in data)
     ):
         return False
 
@@ -481,8 +496,12 @@ def _write_matrix_rows(file_handle: TextIO, data: Any) -> bool:
     return True
 
 
-def _write_object_rows(file_handle: TextIO, data: Any) -> bool:
-    """Escribe listas de diccionarios con un objeto por línea."""
+def _write_object_rows(file_handle: TextIO, data: object) -> bool:
+    """Escribe listas de diccionarios con un objeto por línea.
+
+    Returns:
+        bool: True si se aplicó este formateo, False en caso contrario.
+    """
     if not isinstance(data, list) or not data or not all(isinstance(item, dict) for item in data):
         return False
 
@@ -549,17 +568,19 @@ def main() -> None:
 
         # Priorizar mapas VB6 frente a Godot si hay duplicados
         deduped: dict[int, tuple[Path, str]] = {}
-        for map_id, map_path, source_name in sorted(map_candidates, key=lambda item: item[0]):
+        for map_id, map_path, source_name in sorted(map_candidates, key=operator.itemgetter(0)):
             if map_id in deduped:
                 # Preferir VB6 si existe, dejar aviso para otros duplicados
                 if deduped[map_id][1] == "VB6":
                     print(
-                        f"  ⚠️  Mapa {map_id:03d} duplicado en {source_name}, se mantiene versión VB6"
+                        f"  ⚠️  Mapa {map_id:03d} duplicado en {source_name}, "
+                        "se mantiene versión VB6"
                     )
                     continue
                 if source_name == "VB6":
                     print(
-                        f"  ⚠️  Mapa {map_id:03d} existe en Godot, pero se reemplazará por versión VB6"
+                        f"  ⚠️  Mapa {map_id:03d} existe en Godot, pero se "
+                        "reemplazará por versión VB6"
                     )
                 deduped[map_id] = (map_path, source_name)
             else:
@@ -586,17 +607,11 @@ def main() -> None:
         # Guardar los componentes del mapa en archivos separados
         if save_map_components(map_data, MAPS_OUTPUT_DIR, map_id):
             success_count += 1
-            print(
-                f"  ✓ Convertido a JSON en {MAPS_OUTPUT_DIR}/ como {map_id:03d}_*.json"
-            )
+            print(f"  ✓ Convertido a JSON en {MAPS_OUTPUT_DIR}/ como {map_id:03d}_*.json")
         else:
-            print(
-                f"  ✗ Error al guardar los archivos JSON en {MAPS_OUTPUT_DIR}/"
-            )
+            print(f"  ✗ Error al guardar los archivos JSON en {MAPS_OUTPUT_DIR}/")
 
-    print(
-        f"\nConversión completada: {success_count}/{total_maps} mapas convertidos exitosamente"
-    )
+    print(f"\nConversión completada: {success_count}/{total_maps} mapas convertidos exitosamente")
     if success_count < total_maps:
         print(f"  - {total_maps - success_count} mapas con errores")
 
