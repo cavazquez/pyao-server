@@ -265,6 +265,19 @@ class NPCService:
             new_y: Nueva posición Y.
             new_heading: Nueva dirección.
         """
+        if not self.map_manager.can_move_to(npc.map_id, new_x, new_y):
+            reason = self.map_manager.get_tile_block_reason(npc.map_id, new_x, new_y)
+            logger.info(
+                "Movimiento NPC bloqueado: %s (inst:%s) -> map=%d (%d,%d) heading=%d - razón=%s",
+                npc.name,
+                npc.instance_id,
+                npc.map_id,
+                new_x,
+                new_y,
+                new_heading,
+                reason,
+            )
+            return
         # Actualizar en Redis
         await self.npc_repository.update_npc_position(npc.instance_id, new_x, new_y, new_heading)
 
@@ -284,13 +297,14 @@ class NPCService:
         )
 
         logger.debug(
-            "NPC movido: %s (CharIndex: %d) de (%d, %d) a (%d, %d)",
+            "NPC movido: %s (inst:%s) de (%d,%d) a (%d,%d) heading=%d",
             npc.name,
-            npc.char_index,
+            npc.instance_id,
             old_x,
             old_y,
             new_x,
             new_y,
+            new_heading,
         )
 
     async def send_npcs_in_map(self, map_id: int, message_sender: MessageSender) -> None:

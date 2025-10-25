@@ -159,11 +159,22 @@ class TaskWalk(Task):
             return
 
         # Validar colisiones con MapManager
-        if self.map_manager and not self.map_manager.can_move_to(current_map, new_x, new_y):
-            await self._handle_blocked_movement(
-                user_id, heading, current_map, new_x, new_y, position
+        if self.map_manager:
+            can_move = self.map_manager.can_move_to(current_map, new_x, new_y)
+            if not can_move:
+                await self._handle_blocked_movement(
+                    user_id, heading, current_map, new_x, new_y, position
+                )
+                return
+
+            logger.debug(
+                "Movement allowed for user %d -> map=%d (%d,%d) heading=%d",
+                user_id,
+                current_map,
+                new_x,
+                new_y,
+                heading,
             )
-            return
 
         # Actualizar posición y broadcast
         await self._update_position_and_spatial_index(
@@ -384,12 +395,13 @@ class TaskWalk(Task):
         """
         reason = self._get_block_reason(current_map, new_x, new_y)
 
-        logger.debug(
-            "User %d no puede moverse a (%d,%d) en mapa %d - Razón: %s",
+        logger.info(
+            "Movimiento bloqueado: user_id=%d -> mapa=%d (%d,%d) heading=%d - razón=%s",
             user_id,
+            current_map,
             new_x,
             new_y,
-            current_map,
+            heading,
             reason,
         )
 
@@ -410,29 +422,12 @@ class TaskWalk(Task):
         Returns:
             Descripción de la razón del bloqueo.
         """
-        # Verificar límites del mapa
-        if new_x < 1 or new_x > 100 or new_y < 1 or new_y > 100:  # noqa: PLR2004
-            return "fuera de límites del mapa"
-
         if not self.map_manager:
             return "desconocida"
 
-        # Verificar si es un tile bloqueado del mapa (pared, agua, etc.)
-        if (
-            current_map in self.map_manager._blocked_tiles  # noqa: SLF001
-            and (new_x, new_y) in self.map_manager._blocked_tiles[current_map]  # noqa: SLF001
-        ):
-            return "tile bloqueado del mapa (pared/agua)"
-
-        # Verificar si está ocupado por jugador o NPC
-        occupant = self.map_manager.get_tile_occupant(current_map, new_x, new_y)
-        if occupant:
-            if occupant.startswith("player:"):
-                player_id = occupant.split(":")[1]
-                return f"ocupado por jugador {player_id}"
-            if occupant.startswith("npc:"):
-                npc_id = occupant.split(":")[1]
-                return f"ocupado por NPC {npc_id}"
+        reason = self.map_manager.get_tile_block_reason(current_map, new_x, new_y)
+        if reason is not None:
+            return reason
 
         return "desconocida"
 

@@ -1,8 +1,11 @@
 """Extensión de MapManager con índice espacial para colisiones."""
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
+from typing import cast
 
 logger = logging.getLogger(__name__)
 
@@ -21,17 +24,24 @@ class SpatialIndexMixin:
         Returns:
             True si la posición está libre, False si está bloqueada u ocupada.
         """
+        map_sizes = cast("dict[int, tuple[int, int]]", getattr(self, "_map_sizes", {}))
+        width, height = map_sizes.get(map_id, (100, 100))
+
         # Verificar límites del mapa
-        if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+        if x < 1 or x > width or y < 1 or y > height:
             return False
 
         # Verificar tiles bloqueados (paredes, agua, etc.)
-        if map_id in self._blocked_tiles and (x, y) in self._blocked_tiles[map_id]:  # type: ignore[attr-defined]
+        blocked_tiles = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_blocked_tiles", {}))
+        if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
             return False
 
         # Verificar si hay un jugador o NPC en esa posición
+        tile_occupation = cast(
+            "dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {})
+        )
         key = (map_id, x, y)
-        return key not in self._tile_occupation  # type: ignore[attr-defined]
+        return key not in tile_occupation
 
     def is_tile_occupied(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si un tile está ocupado por un jugador o NPC.
@@ -58,8 +68,44 @@ class SpatialIndexMixin:
         Returns:
             String con formato 'player:user_id' o 'npc:instance_id', o None si está libre.
         """
+        tile_occupation = cast(
+            "dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {})
+        )
         key = (map_id, x, y)
-        return self._tile_occupation.get(key)  # type: ignore[attr-defined, no-any-return]
+        return tile_occupation.get(key)
+
+    def get_tile_block_reason(self, map_id: int, x: int, y: int) -> str | None:
+        """Retorna la razón por la que un tile está bloqueado.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            Cadena describiendo la causa del bloqueo o ``None`` si el tile está libre.
+        """
+        map_sizes = cast("dict[int, tuple[int, int]]", getattr(self, "_map_sizes", {}))
+        width, height = map_sizes.get(map_id, (100, 100))
+        if x < 1 or x > width or y < 1 or y > height:
+            return "fuera de límites del mapa"
+
+        blocked_tiles = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_blocked_tiles", {}))
+        if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
+            return "tile bloqueado del mapa (map_data)"
+
+        tile_occupation = cast(
+            "dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {})
+        )
+        occupant = tile_occupation.get((map_id, x, y))
+        if occupant:
+            if occupant.startswith("player:"):
+                return f"ocupado por jugador {occupant.split(':', 1)[1]}"
+            if occupant.startswith("npc:"):
+                return f"ocupado por NPC {occupant.split(':', 1)[1]}"
+            return f"ocupado ({occupant})"
+
+        return None
 
     def update_player_tile(
         self, user_id: int, map_id: int, old_x: int, old_y: int, new_x: int, new_y: int
