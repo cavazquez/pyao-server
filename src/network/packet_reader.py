@@ -55,6 +55,24 @@ class PacketReader:
         self.offset += 4
         return value
 
+    def read_spell_slot(self, max_slot: int = 35) -> int:
+        """Lee un slot de hechizo (byte) y valida su rango.
+
+        Args:
+            max_slot: Máximo slot permitido (inclusive).
+
+        Returns:
+            Slot leído (1-based).
+
+        Raises:
+            ValueError: Si el slot está fuera del rango permitido.
+        """
+        slot = self.read_byte()
+        if not 1 <= slot <= max_slot:
+            message = f"Slot de hechizo fuera de rango: {slot}"
+            raise ValueError(message)
+        return slot
+
     def read_string(self) -> str:
         """Lee un string del packet.
 

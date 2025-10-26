@@ -88,9 +88,10 @@ class PacketBuilder:
         return self
 
     def add_unicode_string(self, text: str) -> PacketBuilder:
-        """Agrega una cadena Unicode con longitud prefijada (int16).
+        """Agrega una cadena AO (longitud int16 + bytes latin-1).
 
-        El formato es: longitud (int16) + texto en UTF-8.
+        El cliente oficial interpreta estos campos como Latin-1/Windows-1252, por lo
+        que debemos usar dicha codificación para mantener compatibilidad.
 
         Args:
             text: Texto a agregar.
@@ -98,7 +99,7 @@ class PacketBuilder:
         Returns:
             Self para permitir encadenamiento de métodos.
         """
-        encoded = text.encode("utf-8")
+        encoded = text.encode("latin-1", errors="replace")
         self.add_int16(len(encoded))
         self._data.extend(encoded)
         return self

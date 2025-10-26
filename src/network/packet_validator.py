@@ -459,6 +459,39 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         # El jugador ataca en la dirección que está mirando
         return ValidationResult(success=True, data={}, error_message=None)
 
+    def validate_move_spell_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida el packet MOVE_SPELL y retorna el resultado.
+
+        Formato esperado:
+            - Byte: flag 1/0 indicando si se mueve hacia arriba.
+            - Byte: slot origen (1-based).
+
+        Returns:
+            Resultado de validación con ``slot`` y ``upwards`` en ``data``.
+        """
+        try:
+            upwards_flag = self.reader.read_byte()
+            slot = self.reader.read_spell_slot(max_slot=35)
+        except (ValueError, IndexError, struct.error) as e:
+            self.errors.append(f"Error leyendo MoveSpell: {e}")
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=self.get_error_message(),
+            )
+
+        upwards = upwards_flag != 0
+
+        if self.has_errors() or slot is None:
+            error_message = self.get_error_message() or "Movimiento de hechizo inválido"
+            return ValidationResult(success=False, data=None, error_message=error_message)
+
+        return ValidationResult(
+            success=True,
+            data={"slot": slot, "upwards": upwards},
+            error_message=None,
+        )
+
     def validate_login_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet LOGIN completo.
 

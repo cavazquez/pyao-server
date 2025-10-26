@@ -77,7 +77,7 @@ async def test_send_change_bank_slot() -> None:
 
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.CHANGE_BANK_SLOT
-    name_bytes = "Poción".encode()
+    name_bytes = "Poción".encode("latin-1")
     assert name_bytes in written_data
 
 

@@ -35,6 +35,7 @@ pyao-server = "src.run_server:main"
 [tool.ruff]
 line-length = 100
 target-version = "py314"
+extend-exclude = ["tools", "scripts"]
 
 [tool.ruff.lint]
 select = [
@@ -90,6 +91,13 @@ strict_concatenate = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    "tools.*",
+    "scripts.*",
+]
 ignore_errors = true
 
 [tool.pytest.ini_options]

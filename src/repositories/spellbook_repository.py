@@ -1,6 +1,7 @@
 """Repositorio para gestionar el libro de hechizos de los jugadores en Redis."""
 
 import logging
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
 
 from src.utils.redis_config import RedisKeys
@@ -9,6 +10,18 @@ if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(slots=True)
+class MoveSpellResult:
+    """Resultado de mover un hechizo dentro del libro."""
+
+    success: bool
+    slot: int
+    target_slot: int
+    slot_spell_id: int | None
+    target_slot_spell_id: int | None
+    reason: str | None = None
 
 
 class SpellbookRepository:
@@ -125,6 +138,114 @@ class SpellbookRepository:
         except Exception:
             logger.exception("Error al obtener todos los hechizos del user_id %d", user_id)
             return {}
+
+    async def move_spell(
+        self,
+        user_id: int,
+        slot: int,
+        upwards: bool,
+        max_slot: int = 35,
+    ) -> MoveSpellResult | None:
+        """Intercambia el hechizo en ``slot`` con el adyacente.
+
+        Args:
+            user_id: ID del usuario.
+            slot: Slot del hechizo a mover (1-based).
+            upwards: True para mover hacia arriba (slot-1), False hacia abajo (slot+1).
+            max_slot: Límite superior de slots válidos.
+
+        Returns:
+            MoveSpellResult con información del intercambio, o None si Redis no está disponible.
+        """
+        if self.redis is None:
+            logger.error("Cliente Redis no disponible")
+            return None
+
+        if not 1 <= slot <= max_slot:
+            logger.debug("Slot inválido para mover hechizo: %d", slot)
+            return MoveSpellResult(
+                success=False,
+                slot=slot,
+                target_slot=slot,
+                slot_spell_id=None,
+                target_slot_spell_id=None,
+                reason="invalid_slot",
+            )
+
+        target_slot = slot - 1 if upwards else slot + 1
+
+        if not 1 <= target_slot <= max_slot:
+            logger.debug(
+                "Movimiento de hechizo fuera de rango: slot=%d, target_slot=%d",
+                slot,
+                target_slot,
+            )
+            return MoveSpellResult(
+                success=False,
+                slot=slot,
+                target_slot=target_slot,
+                slot_spell_id=None,
+                target_slot_spell_id=None,
+                reason="out_of_bounds",
+            )
+
+        key = RedisKeys.player_spellbook(user_id)
+
+        try:
+            pipe = cast("Any", self.redis).pipeline()
+            pipe.hget(key, str(slot))
+            pipe.hget(key, str(target_slot))
+            slot_value, target_value = await pipe.execute()
+
+            new_slot_value = target_value
+            new_target_value = slot_value
+
+            pipe = cast("Any", self.redis).pipeline(transaction=True)
+
+            if new_slot_value is None:
+                pipe.hdel(key, str(slot))
+            else:
+                pipe.hset(key, str(slot), str(new_slot_value))
+
+            if new_target_value is None:
+                pipe.hdel(key, str(target_slot))
+            else:
+                pipe.hset(key, str(target_slot), str(new_target_value))
+
+            await pipe.execute()
+
+            slot_spell_id = int(new_slot_value) if new_slot_value is not None else None
+            target_spell_id = int(new_target_value) if new_target_value is not None else None
+
+            logger.debug(
+                "Hechizos intercambiados para user_id %d: slot %d <-> %d",
+                user_id,
+                slot,
+                target_slot,
+            )
+
+            return MoveSpellResult(
+                success=True,
+                slot=slot,
+                target_slot=target_slot,
+                slot_spell_id=slot_spell_id,
+                target_slot_spell_id=target_spell_id,
+            )
+        except Exception:
+            logger.exception(
+                "Error al mover hechizo: user_id=%d, slot=%d, target_slot=%d",
+                user_id,
+                slot,
+                target_slot,
+            )
+            return MoveSpellResult(
+                success=False,
+                slot=slot,
+                target_slot=target_slot,
+                slot_spell_id=None,
+                target_slot_spell_id=None,
+                reason="error",
+            )
 
     async def clear_spellbook(self, user_id: int) -> bool:
         """Limpia todo el libro de hechizos del jugador.

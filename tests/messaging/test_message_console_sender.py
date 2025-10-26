@@ -139,7 +139,7 @@ async def test_send_error_msg() -> None:
     # Verificar que sea un ERROR_MSG (packet 55)
     assert written_data[0] == ServerPacketID.ERROR_MSG
     # Verificar que el mensaje esté en UTF-8
-    message_bytes = "Algo salió mal".encode()
+    message_bytes = "Algo salió mal".encode("latin-1")
     assert message_bytes in written_data
 
 
