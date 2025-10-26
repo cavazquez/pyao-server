@@ -124,9 +124,7 @@ Este proyecto tiene varios documentos TODO especializados:
   - Límite de profundidad configurable
   - Fallback a movimiento simple
   - Documentación: `docs/PATHFINDING_ASTAR.md`
-- [ ] NPCs que patrullan rutas predefinidas
-- [ ] NPCs que huyen cuando tienen poca vida
-- [ ] NPCs que llaman refuerzos
+- 💡 Las funcionalidades avanzadas de IA (patrullas, huida, refuerzos) se posponen para una versión posterior.
 
 ### Sistema de Skills
 - [ ] Subir skills con uso (minería, tala, pesca)
@@ -142,10 +140,7 @@ Este proyecto tiene varios documentos TODO especializados:
   - Redis como almacenamiento (key: bank:{user_id}:gold)
   - Validación de amount=0 con mensajes claros
   - +10 tests unitarios (955 tests total)
-- [ ] Precios dinámicos según oferta/demanda
-
-### Combate
-- [ ] Packet DAMAGE para mostrar daño recibido
+- 💡 Precios dinámicos globales según oferta/demanda se posponen para una versión posterior.
 
 ---
 
@@ -156,6 +151,11 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Habilidades especiales por clase
 - [ ] Restricciones de equipamiento por clase
 - [ ] Balance de clases
+
+### IA avanzada (pospuesta desde 0.6.0)
+- [ ] NPCs que patrullan rutas predefinidas
+- [ ] NPCs que huyen cuando tienen poca vida
+- [ ] NPCs que llaman refuerzos
 
 ### Hechizos Avanzados
 - [ ] Hechizos de área (AOE)
@@ -188,6 +188,9 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Sistema de amigos
 - [ ] Mensajes privados
 - [ ] Emotes y gestos
+
+### Economía dinámica (pospuesta desde 0.6.0)
+- [ ] Precios dinámicos según oferta/demanda en todo el juego
 
 ---
 
