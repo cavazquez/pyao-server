@@ -19,22 +19,27 @@ pyao-server --help
 
 **Salida:**
 ```
-usage: pyao-server [-h] [--debug] [--host HOST] [--port PORT] [--version]
+usage: pyao-server [-h] [--debug] [--host HOST] [--port PORT] [--ssl]
+                   [--ssl-cert SSL_CERT] [--ssl-key SSL_KEY] [--version]
 
 PyAO Server - Servidor de Argentum Online en Python
 
 options:
-  -h, --help     show this help message and exit
-  --debug        Habilitar logs de debug (muestra información detallada)
-  --host HOST    Host donde escuchar (default: 0.0.0.0)
-  --port PORT    Puerto donde escuchar (default: 7666)
-  --version      show program's version number and exit
+  -h, --help            show this help message and exit
+  --debug               Habilitar logs de debug (muestra información detallada)
+  --host HOST           Host donde escuchar (default: 0.0.0.0)
+  --port PORT           Puerto donde escuchar (default: 7666)
+  --ssl                 Habilita TLS/SSL para el socket del servidor. Si no se proporcionan rutas personalizadas, el servidor generará automáticamente un certificado y clave autofirmados en `certs/server.{crt,key}` (requiere `openssl`).
+  --ssl-cert SSL_CERT   Ruta al certificado PEM del servidor (default: certs/server.crt)
+  --ssl-key SSL_KEY     Ruta a la clave privada PEM del servidor (default: certs/server.key)
+  --version             show program's version number and exit
 
 Ejemplos:
   pyao-server                    # Iniciar servidor en modo normal
   pyao-server --debug            # Iniciar con logs de debug
   pyao-server --host 127.0.0.1   # Iniciar en localhost
   pyao-server --port 8000        # Usar puerto personalizado
+  pyao-server --ssl              # Iniciar con TLS (usar certificados en certs/)
 ```
 
 ### --debug

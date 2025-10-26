@@ -66,11 +66,15 @@ Ver [redis/README.md](redis/README.md) para documentación completa de Redis y R
 
 ```bash
 uv run pyao-server
+
+# Para habilitar TLS/SSL (usa certificados en certs/server.{crt,key} por defecto)
+uv run pyao-server --ssl --ssl-cert certs/server.crt --ssl-key certs/server.key
 ```
 
 El servidor cargará automáticamente la configuración desde Redis (host, puerto, etc.) y almacenará el estado del juego.
 
 **Nota:** Redis es obligatorio. El servidor no iniciará sin una conexión activa a Redis.
+**Nuevo:** El login de Godot incluye un checkbox "Usar conexión SSL" que recuerda la preferencia del usuario.
 
 ## 🧪 Testing
 

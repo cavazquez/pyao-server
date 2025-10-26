@@ -37,6 +37,9 @@ class TestServerCLI:
             assert args.debug is False
             assert args.host == "0.0.0.0"
             assert args.port == 7666
+            assert args.ssl is False
+            assert args.ssl_cert is None
+            assert args.ssl_key is None
 
     def test_parse_args_debug(self) -> None:
         """Test de parsing con flag debug."""
@@ -69,12 +72,30 @@ class TestServerCLI:
         """Test de parsing con todas las opciones."""
         cli = ServerCLI()
 
-        with patch("sys.argv", ["pyao-server", "--debug", "--host", "localhost", "--port", "9000"]):
+        with patch(
+            "sys.argv",
+            [
+                "pyao-server",
+                "--debug",
+                "--host",
+                "localhost",
+                "--port",
+                "9000",
+                "--ssl",
+                "--ssl-cert",
+                "custom.crt",
+                "--ssl-key",
+                "custom.key",
+            ],
+        ):
             args = cli.parse_args()
 
             assert args.debug is True
             assert args.host == "localhost"
             assert args.port == 9000
+            assert args.ssl is True
+            assert args.ssl_cert == "custom.crt"
+            assert args.ssl_key == "custom.key"
 
     def test_configure_logging_info(self) -> None:
         """Test de configuración de logging en modo INFO."""

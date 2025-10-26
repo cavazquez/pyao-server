@@ -51,6 +51,23 @@ Ejemplos:
             help="Puerto donde escuchar (default: 7666)",
         )
         parser.add_argument(
+            "--ssl",
+            action="store_true",
+            help="Habilitar TLS/SSL para el socket del servidor",
+        )
+        parser.add_argument(
+            "--ssl-cert",
+            type=str,
+            default=None,
+            help="Ruta al certificado PEM del servidor (default: certs/server.crt)",
+        )
+        parser.add_argument(
+            "--ssl-key",
+            type=str,
+            default=None,
+            help="Ruta a la clave privada PEM del servidor (default: certs/server.key)",
+        )
+        parser.add_argument(
             "--version",
             action="version",
             version=f"PyAO Server {self.VERSION}",
