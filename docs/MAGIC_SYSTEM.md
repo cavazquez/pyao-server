@@ -87,6 +87,12 @@ PacketID (1 byte) + Slot (1 byte)
 0x23 0x01  # Info del hechizo en slot 1
 ```
 
+**Implementación (Servidor Python):** ✅
+- Handler: `TaskSpellInfo`
+- Dependencias: `SpellbookRepository`, `SpellCatalog`
+- Respuesta: `ConsoleMsg` multilínea con nombre, descripción, skill requerido, maná y energía
+- Validación previa: `PacketValidator.validate_spell_info_packet()`
+
 ---
 
 #### USE_SPELL_MACRO (29 / 0x1D)

@@ -33,6 +33,7 @@ from src.tasks.player.task_request_position_update import TaskRequestPositionUpd
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
 from src.tasks.spells.task_move_spell import TaskMoveSpell
+from src.tasks.spells.task_spell_info import TaskSpellInfo
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_null import TaskNull
@@ -158,6 +159,17 @@ class TaskFactory:
                     session_data=session_data,
                     spellbook_repo=self.deps.spellbook_repo,
                     spell_catalog=self.deps.spell_catalog,
+                )
+
+            # TaskSpellInfo (packet_id 35) - recibe slot
+            if task_class == TaskSpellInfo and "slot" in parsed_data:
+                return TaskSpellInfo(
+                    data=data,
+                    message_sender=message_sender,
+                    spellbook_repo=self.deps.spellbook_repo,
+                    spell_catalog=self.deps.spell_catalog,
+                    session_data=session_data,
+                    slot=parsed_data["slot"],
                 )
 
             # TaskBankExtractGold (packet_id 111) - recibe amount
@@ -364,6 +376,13 @@ class TaskFactory:
                 session_data=session_data,
                 spellbook_repo=self.deps.spellbook_repo,
                 spell_catalog=self.deps.spell_catalog,
+            ),
+            TaskSpellInfo: lambda: TaskSpellInfo(
+                data,
+                message_sender,
+                self.deps.spellbook_repo,
+                self.deps.spell_catalog,
+                session_data,
             ),
         }
 

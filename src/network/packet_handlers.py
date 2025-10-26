@@ -31,6 +31,7 @@ from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
 from src.tasks.spells.task_cast_spell import TaskCastSpell
 from src.tasks.spells.task_move_spell import TaskMoveSpell
+from src.tasks.spells.task_spell_info import TaskSpellInfo
 from src.tasks.task_ayuda import TaskAyuda
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
@@ -65,6 +66,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.WORK: TaskWork,  # Trabajar (talar, minar, pescar)
     ClientPacketID.WORK_LEFT_CLICK: TaskWorkLeftClick,  # Trabajar con click en coordenadas
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
+    ClientPacketID.SPELL_INFO: TaskSpellInfo,  # Solicitar información de hechizo
     ClientPacketID.COMMERCE_BUY: TaskCommerceBuy,  # Comprar item del mercader
     ClientPacketID.BANK_EXTRACT_ITEM: TaskBankExtract,  # Extraer item del banco
     ClientPacketID.COMMERCE_SELL: TaskCommerceSell,  # Vender item al mercader

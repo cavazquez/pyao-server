@@ -400,6 +400,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             ClientPacketID.EQUIP_ITEM: self.validate_equip_item_packet,
             ClientPacketID.CHANGE_HEADING: self.validate_change_heading_packet,
             ClientPacketID.COMMERCE_BUY: self.validate_commerce_buy_packet,
+            ClientPacketID.SPELL_INFO: self.validate_spell_info_packet,
             ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
             ClientPacketID.COMMERCE_SELL: self.validate_commerce_sell_packet,
             ClientPacketID.BANK_DEPOSIT: self.validate_bank_deposit_packet,
@@ -539,6 +540,21 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
             )
 
         return ValidationResult(success=True, data={"spell_slot": spell_slot}, error_message=None)
+
+    def validate_spell_info_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet SPELL_INFO completo.
+
+        Returns:
+            ValidationResult con el slot solicitado si es válido.
+        """
+        slot = self.read_spell_slot(max_slot=35)
+
+        if self.has_errors() or slot is None:
+            return ValidationResult(
+                success=False, data=None, error_message=self.get_error_message()
+            )
+
+        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
 
     def validate_drop_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet DROP completo.

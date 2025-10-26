@@ -52,7 +52,7 @@ class ClientPacketID(IntEnum):
     # CRAFT_CARPENTER = 32
     WORK_LEFT_CLICK = 33  # Click en modo trabajo (con coordenadas)
     # CREATE_NEW_GUILD = 34
-    # SPELL_INFO = 35
+    SPELL_INFO = 35
     # EQUIP_ITEM = 36
     # MODIFY_SKILLS = 38
     # TRAIN = 39
