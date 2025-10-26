@@ -88,6 +88,9 @@ uv run pytest -v
 # Tests con cobertura
 uv run pytest -v --cov=src --cov-report=term-missing
 
+# Tests de seguridad (SSL)
+uv run pytest tests/security/test_ssl_manager.py
+
 # Solo linter
 uv run ruff check .
 
