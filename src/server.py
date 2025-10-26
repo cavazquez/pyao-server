@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import ssl
 import sys
 from typing import TYPE_CHECKING
 
@@ -26,15 +27,24 @@ class ArgentumServer:
         self,
         host: str = "0.0.0.0",
         port: int = 7666,
+        enable_ssl: bool = False,
+        ssl_cert_path: str | None = None,
+        ssl_key_path: str | None = None,
     ) -> None:
         """Inicializa el servidor.
 
         Args:
             host: Dirección IP donde escuchar (se sobrescribe con Redis).
             port: Puerto donde escuchar (se sobrescribe con Redis).
+            enable_ssl: Si True, habilita TLS para el socket TCP.
+            ssl_cert_path: Ruta al certificado PEM del servidor.
+            ssl_key_path: Ruta a la clave privada PEM del servidor.
         """
         self.host = host
         self.port = port
+        self.enable_ssl = enable_ssl
+        self.ssl_cert_path = ssl_cert_path
+        self.ssl_key_path = ssl_key_path
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
         self.task_factory: TaskFactory | None = None  # Factory para crear tasks
@@ -166,10 +176,28 @@ class ArgentumServer:
             logger.exception("Error inesperado al conectar con Redis")
             sys.exit(1)
 
+        ssl_context: ssl.SSLContext | None = None
+        if self.enable_ssl:
+            if not self.ssl_cert_path or not self.ssl_key_path:
+                logger.error("SSL habilitado, pero faltan rutas de certificado o clave privada")
+                sys.exit(1)
+
+            try:
+                ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+                ssl_context.load_cert_chain(self.ssl_cert_path, self.ssl_key_path)
+                logger.info("✓ Contexto SSL inicializado correctamente")
+            except FileNotFoundError:
+                logger.exception("No se encontró el archivo de certificado o clave privada")
+                sys.exit(1)
+            except ssl.SSLError:  # pragma: no cover - depende del entorno SSL
+                logger.exception("Error inicializando el contexto SSL")
+                sys.exit(1)
+
         self.server = await asyncio.start_server(
             self.handle_client,
             self.host,
             self.port,
+            ssl=ssl_context,
         )
 
         addrs = ", ".join(str(sock.getsockname()) for sock in self.server.sockets)

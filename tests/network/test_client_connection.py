@@ -17,7 +17,9 @@ def test_client_connection_initialization() -> None:
     assert connection.reader is reader
     assert connection.writer is writer
     assert connection.address == ("192.168.1.100", 54321)
-    writer.get_extra_info.assert_called_once_with("peername")
+    writer.get_extra_info.assert_any_call("peername")
+    writer.get_extra_info.assert_any_call("ssl_object")
+    assert writer.get_extra_info.call_count == 2
 
 
 @pytest.mark.asyncio

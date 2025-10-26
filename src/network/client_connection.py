@@ -22,6 +22,7 @@ class ClientConnection:
         self.reader = reader
         self.writer = writer
         self.address = writer.get_extra_info("peername")
+        self.is_ssl_enabled = writer.get_extra_info("ssl_object") is not None
 
     async def send(self, data: bytes) -> None:
         """Envía datos al cliente.

@@ -39,6 +39,7 @@ from src.tasks.task_motd import TaskMotd
 from src.tasks.task_null import TaskNull
 from src.tasks.task_online import TaskOnline
 from src.tasks.task_quit import TaskQuit
+from src.tasks.task_tls_handshake import TaskTLSHandshake
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
 from src.tasks.work.task_work_left_click import TaskWorkLeftClick
@@ -49,6 +50,11 @@ if TYPE_CHECKING:
     from src.tasks.task import Task
 
 logger = logging.getLogger(__name__)
+
+TLS_HEADER_MIN_LENGTH = 3
+TLS_CONTENT_TYPE_HANDSHAKE = 0x16
+TLS_PROTOCOL_MAJOR_VERSION = 0x03
+TLS_CLIENT_HELLO_MINOR_VERSIONS = {0x00, 0x01, 0x02, 0x03, 0x04}
 
 
 class TaskFactory:
@@ -85,6 +91,9 @@ class TaskFactory:
         """
         if len(data) == 0:
             return TaskNull(data, message_sender)
+
+        if self._looks_like_tls_handshake(data, message_sender):
+            return TaskTLSHandshake(data, message_sender)
 
         packet_id = data[0]
         task_class = TASK_HANDLERS.get(packet_id, TaskNull)
@@ -449,3 +458,26 @@ class TaskFactory:
             # Si hay algún error en la validación, loguear y continuar sin validar
             logger.exception("Error inesperado en pre-validación de packet_id=%d", packet_id)
             return None
+
+    @staticmethod
+    def _looks_like_tls_handshake(data: bytes, message_sender: MessageSender) -> bool:
+        """Detecta si el paquete parece ser un ClientHello TLS y SSL está deshabilitado.
+
+        Returns:
+            bool: True si el paquete coincide con la cabecera de un ClientHello TLS.
+        """
+        if len(data) < TLS_HEADER_MIN_LENGTH:
+            return False
+
+        connection = getattr(message_sender, "connection", None)
+        if connection is None:
+            return False
+
+        if getattr(connection, "is_ssl_enabled", False):
+            return False
+
+        return (
+            data[0] == TLS_CONTENT_TYPE_HANDSHAKE
+            and data[1] == TLS_PROTOCOL_MAJOR_VERSION
+            and data[2] in TLS_CLIENT_HELLO_MINOR_VERSIONS
+        )

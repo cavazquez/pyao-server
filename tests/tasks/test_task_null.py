@@ -25,4 +25,6 @@ async def test_task_null_logs_unknown_packet() -> None:
     await task.execute()
 
     # Verificar que se obtuvo la info del cliente
-    writer.get_extra_info.assert_called_once_with("peername")
+    writer.get_extra_info.assert_any_call("peername")
+    writer.get_extra_info.assert_any_call("ssl_object")
+    assert writer.get_extra_info.call_count == 2
