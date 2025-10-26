@@ -30,6 +30,7 @@ from src.tasks.player.task_request_position_update import TaskRequestPositionUpd
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
 from src.tasks.spells.task_cast_spell import TaskCastSpell
+from src.tasks.spells.task_move_spell import TaskMoveSpell
 from src.tasks.task_ayuda import TaskAyuda
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
@@ -55,6 +56,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.PICK_UP: TaskPickup,  # Recoger item del suelo
     ClientPacketID.DROP: TaskDrop,  # Tirar item al suelo
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
+    ClientPacketID.MOVE_SPELL: TaskMoveSpell,  # Reordenar hechizo en el libro
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
     ClientPacketID.USE_ITEM: TaskInventoryClick,  # Click en inventario - mostrar info

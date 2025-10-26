@@ -152,6 +152,56 @@ class TestSpellbookRepository:
 
         assert result is True
 
+    async def test_move_spell_success(self, redis_client: RedisClient) -> None:
+        """Intercambia hechizos adyacentes correctamente."""
+        repo = SpellbookRepository(redis_client)
+
+        await repo.add_spell(user_id=1, slot=1, spell_id=10)
+        await repo.add_spell(user_id=1, slot=2, spell_id=20)
+
+        result = await repo.move_spell(user_id=1, slot=2, upwards=True)
+
+        assert result is not None
+        assert result.success is True
+        assert result.slot_spell_id == 10
+        assert result.target_slot_spell_id == 20
+
+        spells = await repo.get_all_spells(1)
+        assert spells[1] == 20
+        assert spells[2] == 10
+
+    async def test_move_spell_out_of_bounds(self, redis_client: RedisClient) -> None:
+        """Retorna out_of_bounds cuando el movimiento no es posible."""
+        repo = SpellbookRepository(redis_client)
+
+        await repo.add_spell(user_id=1, slot=1, spell_id=10)
+
+        result = await repo.move_spell(user_id=1, slot=1, upwards=True)
+
+        assert result is not None
+        assert result.success is False
+        assert result.reason == "out_of_bounds"
+
+    async def test_move_spell_invalid_slot(self, redis_client: RedisClient) -> None:
+        """Retorna invalid_slot cuando el slot no está en rango."""
+        repo = SpellbookRepository(redis_client)
+
+        result = await repo.move_spell(user_id=1, slot=0, upwards=True)
+
+        assert result is not None
+        assert result.success is False
+        assert result.reason == "invalid_slot"
+
+    async def test_move_spell_redis_unavailable(self) -> None:
+        """Retorna None cuando Redis no está disponible."""
+        redis_client = MagicMock()
+        redis_client.redis = None
+
+        repo = SpellbookRepository(redis_client)
+        result = await repo.move_spell(user_id=1, slot=1, upwards=True)
+
+        assert result is None
+
     async def test_initialize_default_spells_new_user(self, redis_client: RedisClient) -> None:
         """Test de inicializar hechizos por defecto para usuario nuevo."""
         repo = SpellbookRepository(redis_client)

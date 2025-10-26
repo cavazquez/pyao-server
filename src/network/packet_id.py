@@ -61,7 +61,7 @@ class ClientPacketID(IntEnum):
     COMMERCE_SELL = 42  # Vender item al mercader
     BANK_DEPOSIT = 43  # Depositar item en el banco
     # FORUM_POST = 44
-    # MOVE_SPELL = 45
+    MOVE_SPELL = 45  # Reordenar hechizo en el libro
     # MOVE_BANK = 46
     # CLAN_CODEX_UPDATE = 47
     # USER_COMMERCE_OFFER = 48

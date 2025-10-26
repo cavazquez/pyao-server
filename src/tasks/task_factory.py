@@ -29,11 +29,10 @@ from src.tasks.player.task_attack import TaskAttack
 from src.tasks.player.task_attributes import TaskRequestAttributes
 from src.tasks.player.task_change_heading import TaskChangeHeading
 from src.tasks.player.task_login import TaskLogin
-from src.tasks.player.task_meditate import TaskMeditate
 from src.tasks.player.task_request_position_update import TaskRequestPositionUpdate
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
-from src.tasks.spells.task_cast_spell import TaskCastSpell
+from src.tasks.spells.task_move_spell import TaskMoveSpell
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_null import TaskNull
@@ -147,6 +146,18 @@ class TaskFactory:
                     player_repo=self.deps.player_repo,
                     session_data=session_data,
                     equipment_repo=self.deps.equipment_repo,
+                )
+
+            # TaskMoveSpell (packet_id 45) - recibe slot y upwards
+            if task_class == TaskMoveSpell and "slot" in parsed_data and "upwards" in parsed_data:
+                return TaskMoveSpell(
+                    data=data,
+                    message_sender=message_sender,
+                    slot=parsed_data["slot"],
+                    upwards=parsed_data["upwards"],
+                    session_data=session_data,
+                    spellbook_repo=self.deps.spellbook_repo,
+                    spell_catalog=self.deps.spell_catalog,
                 )
 
             # TaskBankExtractGold (packet_id 111) - recibe amount
@@ -271,18 +282,6 @@ class TaskFactory:
                 session_data,
                 self.deps.map_resources_service,
             ),
-            TaskCastSpell: lambda: TaskCastSpell(
-                data,
-                message_sender,
-                self.deps.player_repo,
-                self.deps.spell_service,
-                self.deps.stamina_service,
-                session_data,
-                self.deps.spellbook_repo,
-            ),
-            TaskMeditate: lambda: TaskMeditate(
-                data, message_sender, self.deps.player_repo, session_data
-            ),
             # TaskInventoryClick: manejada arriba con datos validados
             TaskEquipItem: lambda: TaskEquipItem(
                 data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
@@ -358,6 +357,13 @@ class TaskFactory:
                 self.deps.map_manager,
                 session_data,
                 self.deps.map_resources_service,
+            ),
+            TaskMoveSpell: lambda: TaskMoveSpell(
+                data,
+                message_sender,
+                session_data=session_data,
+                spellbook_repo=self.deps.spellbook_repo,
+                spell_catalog=self.deps.spell_catalog,
             ),
         }
 
