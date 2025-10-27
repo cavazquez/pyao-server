@@ -28,55 +28,119 @@ class MapResourcesService:
                 self.maps_dir.mkdir(parents=True, exist_ok=True)
                 return
 
-            # Buscar archivos de recursos (formato: XXX_resources.json)
-            map_files = list(self.maps_dir.glob("*_resources.json"))
+            map_ids: set[int] = set()
 
-            if not map_files:
+            for blocked_file in self.maps_dir.glob("*_blocked.json"):
+                try:
+                    map_ids.add(int(blocked_file.stem.split("_")[0]))
+                except (ValueError, IndexError):
+                    logger.warning(
+                        "Ignorando archivo blocked con nombre inválido: %s",
+                        blocked_file.name,
+                    )
+
+            if not map_ids:
                 logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
                 return
 
-            for map_file in map_files:
-                # Extraer map_id del nombre (ej: "001_resources.json" -> 1)
-                try:
-                    map_id = int(map_file.stem.split("_")[0])
-                    self._load_map(map_id, map_file)
-                except (ValueError, IndexError):
-                    logger.warning("Ignorando archivo con nombre inválido: %s", map_file.name)
-                    continue
+            for map_id in sorted(map_ids):
+                self._load_map(map_id)
 
             logger.info("Recursos cargados desde %s (%d mapas)", self.maps_dir, len(self.resources))
 
         except Exception:
             logger.exception("Error cargando recursos de mapas")
 
-    def _load_map(self, map_id: int, map_file: Path) -> None:
-        """Carga un mapa específico desde su archivo JSON.
+    def _load_map(self, map_id: int) -> None:
+        """Carga un mapa específico desde sus archivos de datos disponibles.
 
         Args:
             map_id: ID del mapa.
-            map_file: Archivo JSON del mapa.
         """
-        try:
-            with map_file.open(encoding="utf-8") as f:
-                data = json.load(f)
+        map_key = f"map_{map_id}"
+        blocked_path = self.maps_dir / f"{map_id:03d}_blocked.json"
 
-            map_key = f"map_{map_id}"
+        try:
+            blocked: set[tuple[int, int]] = set()
+            water: set[tuple[int, int]] = set()
+            trees: set[tuple[int, int]] = set()
+            mines: set[tuple[int, int]] = set()
+
+            if blocked_path.exists():
+                with blocked_path.open(encoding="utf-8") as f:
+                    for line_number, raw_line in enumerate(f, start=1):
+                        line = raw_line.strip()
+                        if not line:
+                            continue
+                        try:
+                            entry = json.loads(line)
+                        except json.JSONDecodeError:
+                            logger.debug(
+                                "Entrada inválida en %s línea %d: %s",
+                                blocked_path.name,
+                                line_number,
+                                line,
+                            )
+                            continue
+
+                        tile_type = entry.get("type")
+                        x = entry.get("x")
+                        y = entry.get("y")
+
+                        if not isinstance(x, int) or not isinstance(y, int):
+                            continue
+
+                        if tile_type == "blocked":
+                            blocked.add((x, y))
+                        elif tile_type == "water":
+                            water.add((x, y))
+                            blocked.add((x, y))
+                        elif tile_type == "tree":
+                            trees.add((x, y))
+                            blocked.add((x, y))
+                        elif tile_type == "mine":
+                            mines.add((x, y))
+                            blocked.add((x, y))
+
+                source = blocked_path.name
+            else:
+                logger.warning("No se encontraron datos de recursos para mapa %03d", map_id)
+                source = "(sin datos)"
+
             self.resources[map_key] = {
-                "water": {tuple(coord) for coord in data.get("water", [])},
-                "trees": {tuple(coord) for coord in data.get("trees", [])},
-                "mines": {tuple(coord) for coord in data.get("mines", [])},
+                "blocked": blocked,
+                "water": water,
+                "trees": trees,
+                "mines": mines,
             }
 
             logger.info(
-                "  %s: %d agua, %d árboles, %d minas",
+                "  %s (%s): %d agua, %d árboles, %d minas",
                 map_key,
-                len(self.resources[map_key]["water"]),
-                len(self.resources[map_key]["trees"]),
-                len(self.resources[map_key]["mines"]),
+                source,
+                len(water),
+                len(trees),
+                len(mines),
             )
 
         except Exception:
-            logger.exception("Error cargando mapa %d desde %s", map_id, map_file)
+            logger.exception("Error cargando datos de recursos para mapa %d", map_id)
+
+    def is_blocked(self, map_id: int, x: int, y: int) -> bool:
+        """Indica si un tile está marcado como bloqueado en el mapa.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            True si el tile está bloqueado, False en caso contrario.
+        """
+        map_key = f"map_{map_id}"
+        if map_key not in self.resources:
+            return False
+        return (x, y) in self.resources[map_key]["blocked"]
 
     def has_water(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si una posición tiene agua.

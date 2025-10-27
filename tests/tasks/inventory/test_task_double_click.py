@@ -69,7 +69,7 @@ class TestTaskDoubleClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
 
         # Execute
         await task.execute()
@@ -122,7 +122,7 @@ class TestTaskDoubleClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
 
         # Execute
         await task.execute()
@@ -143,7 +143,7 @@ class TestTaskDoubleClick:
         data = bytes([0x1B, 5])
         session_data = {}  # Sin user_id
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
 
         # Execute
         await task.execute()
@@ -167,7 +167,7 @@ class TestTaskDoubleClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
 
         # Execute
         await task.execute()
@@ -189,7 +189,7 @@ class TestTaskDoubleClick:
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, session_data)
+        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
 
         # Execute
         await task.execute()

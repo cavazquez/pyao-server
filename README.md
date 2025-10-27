@@ -81,6 +81,17 @@ El servidor cargará automáticamente la configuración desde Redis (host, puert
 - Al iniciar `clientes/ArgentumOnlineGodot`, el autoload `MapExporter` exporta **todos los mapas** al directorio `user://map_data` (carpeta de datos del usuario) en formato JSON compatible con `map_data/`.
 - Esto mantiene sincronizados los recursos del servidor sin pasos manuales.
 
+### 🎒 Inventario inicial
+
+Al crear un personaje nuevo se entregan automáticamente:
+
+- 5 Pociones Rojas y 5 Pociones Azules
+- 10 Manzanas y 10 Aguas
+- 1 Daga y la Armadura de Aprendiz (ID 1073)
+- Herramientas de trabajo: Hacha de Leñador (ID 561), Piquete Minero (ID 562) y Caña de Pescar (ID 563)
+
+Las herramientas permiten entrar al modo de trabajo (tecla **U**) para talar, minar y pescar desde el inicio.
+
 ## 🧪 Testing
 
 ```bash
@@ -269,8 +280,7 @@ pyao-server/
 │   ├── 001_graphics.json        # Sprites adicionales/efectos
 │   ├── 001_flags.json           # Flags originales del mapa (desde VB6)
 │   ├── 001_triggers.json        # Triggers detectados (zonas seguras, portales, etc.)
-│   ├── 001_blocked.json         # Tiles bloqueados y agua detectada
-│   ├── 001_resources.json       # Recursos del mapa (agua, árboles, minas)
+│   ├── 001_blocked.json         # Tiles bloqueados y recursos detectados
 │   └── ...                      # Archivos XXX_*.json por cada capa del mapa
 │
 ├── tools/                       # Scripts utilitarios

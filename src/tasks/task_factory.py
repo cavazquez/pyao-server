@@ -289,7 +289,12 @@ class TaskFactory:
                 data, message_sender, self.deps.player_repo, self.deps.map_manager, session_data
             ),
             TaskDoubleClick: lambda: TaskDoubleClick(
-                data, message_sender, self.deps.player_repo, self.deps.map_manager, session_data
+                data,
+                message_sender,
+                self.deps.player_repo,
+                self.deps.map_manager,
+                self.deps.inventory_repo,
+                session_data,
             ),
             TaskLeftClick: lambda: TaskLeftClick(
                 data,

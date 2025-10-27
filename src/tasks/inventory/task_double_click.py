@@ -31,6 +31,7 @@ class TaskDoubleClick(Task):
         message_sender: MessageSender,
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
+        inventory_repo: InventoryRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de doble click.
@@ -40,11 +41,13 @@ class TaskDoubleClick(Task):
             message_sender: Enviador de mensajes.
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para obtener NPCs.
+            inventory_repo: Repositorio de inventario (inyectable para tests o cache).
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
+        self.inventory_repo = inventory_repo
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
@@ -64,7 +67,7 @@ class TaskDoubleClick(Task):
         # Parsear y validar packet
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        target = validator.read_slot(min_slot=1, max_slot=255)  # Puede ser slot o CharIndex
+        target = validator.read_slot(min_slot=0, max_slot=255)  # Puede ser slot, CharIndex o mapa
 
         if validator.has_errors() or target is None:
             error_msg = (
@@ -75,6 +78,22 @@ class TaskDoubleClick(Task):
 
         # Crear dataclass con datos validados
         click_data = DoubleClickData(target=target)
+
+        # Doble click en el mapa envía coordenadas adicionales (x, y)
+        if reader.has_more_data():
+            remaining_coords: list[int] = []
+            while reader.has_more_data():
+                remaining_coords.append(reader.read_byte())
+
+            logger.debug(
+                "Doble click sobre el mapa detectado: coords=%s, se ignora.",
+                [click_data.target, *remaining_coords],
+            )
+            return
+
+        if click_data.target == 0:
+            logger.debug("Doble click sobre el mapa (target=0), se ignora.")
+            return
 
         try:
             # Si el target es > MAX_INVENTORY_SLOT, probablemente es un CharIndex de NPC
@@ -101,8 +120,15 @@ class TaskDoubleClick(Task):
 
         logger.info("user_id %d intenta usar item en slot %d", user_id, slot)
 
-        # Obtener el inventario
-        inventory_repo = InventoryRepository(self.player_repo.redis)
+        inventory_repo = self.inventory_repo
+        if not inventory_repo:
+            player_redis = getattr(self.player_repo, "redis", None)
+            if not player_redis:
+                logger.error("inventory_repo no disponible")
+                return
+            inventory_repo = InventoryRepository(player_redis)
+            self.inventory_repo = inventory_repo
+
         slot_data = await inventory_repo.get_slot(user_id, slot)
 
         if not slot_data:
@@ -195,7 +221,46 @@ class TaskDoubleClick(Task):
                 )
 
         # Remover el item del inventario
-        await inventory_repo.remove_item(user_id, slot, 1)
+        removed = await inventory_repo.remove_item(user_id, slot, 1)
+
+        if not removed:
+            logger.warning("No se pudo consumir el item en slot %d para user_id %d", slot, user_id)
+            return
+
+        # Actualizar slot en cliente
+        updated_slot = await inventory_repo.get_slot(user_id, slot)
+
+        if not updated_slot:
+            await self.message_sender.send_change_inventory_slot(
+                slot=slot,
+                item_id=0,
+                name="",
+                amount=0,
+                equipped=False,
+                grh_id=0,
+                item_type=0,
+                max_hit=0,
+                min_hit=0,
+                max_def=0,
+                min_def=0,
+                sale_price=0.0,
+            )
+        else:
+            remaining_quantity = updated_slot[1]
+            await self.message_sender.send_change_inventory_slot(
+                slot=slot,
+                item_id=item.item_id,
+                name=item.name,
+                amount=remaining_quantity,
+                equipped=False,
+                grh_id=item.graphic_id,
+                item_type=item.item_type.to_client_type(),
+                max_hit=item.max_damage or 0,
+                min_hit=item.min_damage or 0,
+                max_def=item.defense or 0,
+                min_def=item.defense or 0,
+                sale_price=float(item.value),
+            )
 
         # Notificar al jugador
         effects_str = ", ".join(effects_applied) if effects_applied else "ningún efecto"

@@ -135,8 +135,8 @@ class TestNPCDeathService:
             death_reason="hechizo",
         )
 
-        # Assert - NPC removido del MapManager
-        map_manager.remove_npc.assert_called_once_with(1, "100")
+        # Assert - NPC removido del MapManager usando instance_id
+        map_manager.remove_npc.assert_called_once_with(1, "npc_123")
 
         # Assert - Broadcast CHARACTER_REMOVE
         broadcast_service.broadcast_character_remove.assert_called_once_with(

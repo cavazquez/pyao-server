@@ -24,6 +24,40 @@ class ItemCatalog:
         """Carga el catálogo de items desde el archivo TOML."""
         try:
             path = Path(self._data_path)
+            items_loaded = 0
+
+            # Nuevo formato: directorio data/items/ con múltiples archivos
+            items_dir = path.parent / "items"
+            if items_dir.exists() and items_dir.is_dir():
+                toml_files = sorted(items_dir.glob("**/*.toml"))
+                toml_files = [f for f in toml_files if f.stem.lower() != "readme"]
+
+                for toml_file in toml_files:
+                    with toml_file.open("rb") as f:
+                        data = tomllib.load(f)
+
+                    for item_data in data.get("item", []):
+                        item_id = item_data.get("id")
+                        if item_id is None:
+                            logger.warning(
+                                "Item sin ID encontrado en %s, ignorando: %s",
+                                toml_file,
+                                item_data,
+                            )
+                            continue
+
+                        self._items[item_id] = item_data
+                        items_loaded += 1
+
+                if items_loaded:
+                    logger.info(
+                        "Catálogo de items cargado desde %s: %d items",
+                        items_dir,
+                        items_loaded,
+                    )
+                    return
+
+            # Formato legacy: archivo único items.toml
             if not path.exists():
                 logger.warning("Archivo de items no encontrado: %s", self._data_path)
                 return
@@ -42,9 +76,13 @@ class ItemCatalog:
                     continue
 
                 self._items[item_id] = item_data
-                logger.debug("Item cargado: %d - %s", item_id, item_data.get("Name", "Sin nombre"))
+                items_loaded += 1
 
-            logger.info("Catálogo de items cargado: %d items", len(self._items))
+            logger.info(
+                "Catálogo de items cargado desde %s: %d items",
+                self._data_path,
+                items_loaded,
+            )
 
         except Exception:
             logger.exception("Error al cargar catálogo de items desde %s", self._data_path)

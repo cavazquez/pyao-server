@@ -74,6 +74,9 @@ class NPCDeathService:
         # Dar experiencia al jugador
         await self._give_experience(killer_user_id, experience, message_sender)
 
+        # Remover NPC de escena antes de dropear (libera el tile ocupado)
+        await self._remove_npc_from_game(npc)
+
         # Dropear oro si el NPC tiene
         if npc.gold_min > 0 or npc.gold_max > 0:
             await self._drop_gold(npc)
@@ -82,8 +85,8 @@ class NPCDeathService:
         if self.loot_table_service and self.item_catalog:
             await self._drop_loot(npc)
 
-        # Remover NPC del juego
-        await self._remove_npc_from_game(npc)
+        # Eliminar datos del NPC en Redis
+        await self.npc_repo.remove_npc(npc.instance_id)
 
         # Programar respawn
         if self.npc_respawn_service:
@@ -250,7 +253,7 @@ class NPCDeathService:
             )
 
         # Remover del MapManager
-        self.map_manager.remove_npc(npc.map_id, str(npc.char_index))
+        self.map_manager.remove_npc(npc.map_id, npc.instance_id)
 
         # Broadcast CHARACTER_REMOVE a todos los jugadores
         await self.broadcast_service.broadcast_character_remove(
@@ -258,11 +261,8 @@ class NPCDeathService:
             char_index=npc.char_index,
         )
 
-        # Eliminar de Redis
-        await self.npc_repo.remove_npc(npc.instance_id)
-
     def _find_free_position_for_drop(
-        self, map_id: int, center_x: int, center_y: int, radius: int = 2
+        self, map_id: int, center_x: int, center_y: int, radius: int = 4, max_attempts: int = 40
     ) -> tuple[int, int] | None:
         """Busca una posición libre cercana para dropear un item.
 
@@ -271,6 +271,7 @@ class NPCDeathService:
             center_x: Coordenada X central.
             center_y: Coordenada Y central.
             radius: Radio de búsqueda.
+            max_attempts: Cantidad máxima de intentos aleatorios para encontrar una posición.
 
         Returns:
             Tupla (x, y) con una posición libre y no bloqueada, o None si no encuentra.
@@ -282,7 +283,7 @@ class NPCDeathService:
             return (center_x, center_y)
 
         # Buscar en posiciones cercanas
-        for _ in range(20):  # Máximo 20 intentos
+        for _ in range(max_attempts):
             offset_x = random.randint(-radius, radius)  # noqa: S311
             offset_y = random.randint(-radius, radius)  # noqa: S311
 
