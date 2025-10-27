@@ -1,4 +1,6 @@
-"""Tests para verificar que _tile_occupation se limpia correctamente al remover NPCs."""
+"""Tests para verificar que _tile_occupation se limpia correctamente."""
+
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -253,3 +255,24 @@ def test_tile_occupation_after_npc_death_and_gold_drop(map_manager, sample_npc):
 
     # 5. Verificar que el tile SIGUE libre (items en el suelo no bloquean)
     assert map_manager.can_move_to(1, 50, 50)  # ✅ Libre para recoger oro
+
+
+def test_remove_player_clears_tile_occupation(map_manager):
+    """Verifica que al remover un jugador se libera su tile ocupado."""
+    map_id = 1
+    user_id = 42
+    start_x, start_y = 50, 50
+
+    # Registrar jugador en el mapa y marcar su posición en el índice espacial
+    map_manager.add_player(map_id, user_id, MagicMock(), username="TestPlayer")
+    map_manager.update_player_tile(user_id, map_id, old_x=0, old_y=0, new_x=start_x, new_y=start_y)
+
+    # Asegurar que el tile quedó ocupado por el jugador
+    assert map_manager.is_tile_occupied(map_id, start_x, start_y)
+    assert map_manager.get_tile_occupant(map_id, start_x, start_y) == f"player:{user_id}"
+
+    # Remover jugador y verificar que se libera la ocupación del tile
+    map_manager.remove_player(map_id, user_id)
+
+    assert not map_manager.is_tile_occupied(map_id, start_x, start_y)
+    assert map_manager.get_players_in_map(map_id) == []

@@ -78,6 +78,18 @@ class MapManager(SpatialIndexMixin):
             user_id: ID del usuario.
         """
         if map_id in self._players_by_map and user_id in self._players_by_map[map_id]:
+            # Limpiar tile occupation para que el tile quede libre
+            keys_to_remove = []
+            for key, occupant in self._tile_occupation.items():
+                if occupant == f"player:{user_id}" and key[0] == map_id:
+                    keys_to_remove.append(key)
+                    logger.debug(
+                        "Tile (%d,%d) liberado al remover jugador %d", key[1], key[2], user_id
+                    )
+
+            for key in keys_to_remove:
+                del self._tile_occupation[key]
+
             del self._players_by_map[map_id][user_id]
             logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
 
@@ -208,6 +220,22 @@ class MapManager(SpatialIndexMixin):
 
         for map_id, players in self._players_by_map.items():
             if user_id in players:
+                # Limpiar tile occupation para este mapa
+                keys_to_remove = []
+                for key, occupant in self._tile_occupation.items():
+                    if occupant == f"player:{user_id}" and key[0] == map_id:
+                        keys_to_remove.append(key)
+                        logger.debug(
+                            "Tile (%d,%d) liberado al remover jugador %d del mapa %d",
+                            key[1],
+                            key[2],
+                            user_id,
+                            map_id,
+                        )
+
+                for key in keys_to_remove:
+                    del self._tile_occupation[key]
+
                 del players[user_id]
                 logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
 
