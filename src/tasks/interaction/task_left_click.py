@@ -323,6 +323,9 @@ class TaskLeftClick(Task):
         # Verificar recursos del mapa
         resources = []
         if self.map_resources:
+            if self.map_resources.is_blocked(map_id, x, y):
+                info_lines.append("Estado: Bloqueado")
+
             if self.map_resources.has_water(map_id, x, y):
                 resources.append("Agua")
             if self.map_resources.has_tree(map_id, x, y):

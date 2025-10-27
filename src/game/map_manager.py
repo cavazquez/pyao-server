@@ -593,7 +593,28 @@ class MapManager(SpatialIndexMixin):
             return None
 
         with blocked_path.open("r", encoding="utf-8") as f:
-            raw_blocked = json.load(f)
+            try:
+                raw_blocked = json.load(f)
+            except json.JSONDecodeError:
+                f.seek(0)
+                ndjson_tiles: list[dict[str, object]] = []
+                for line_number, line in enumerate(f, start=1):
+                    stripped = line.strip()
+                    if not stripped:
+                        continue
+                    try:
+                        parsed_line = json.loads(stripped)
+                    except json.JSONDecodeError:
+                        logger.warning(
+                            "Formato inválido en %s línea %d: %s",
+                            blocked_path,
+                            line_number,
+                            stripped[:100],
+                        )
+                        continue
+                    if isinstance(parsed_line, dict):
+                        ndjson_tiles.append(parsed_line)
+                raw_blocked = ndjson_tiles
 
         if isinstance(raw_blocked, list):
             return [tile for tile in raw_blocked if isinstance(tile, dict)]

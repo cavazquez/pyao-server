@@ -1,39 +1,70 @@
 #!/bin/bash
 
-# Encuentra todos los archivos .json en el directorio map_data/
-find map_data/ -name "*.json" | while read -r file; do
+# Normaliza los .json de map_data/ escribiéndolos como NDJSON:
+# un objeto JSON compacto por línea, soportando entradas
+# formateadas en varias líneas o como arreglos.
+
+set -euo pipefail
+
+shopt -s nullglob
+
+for file in map_data/*.json; do
     echo "Formateando: $file"
-    
-    # Leer el archivo completo
-    content=$(cat "$file")
-    
-    # Extraer el array principal (asumiendo que es el último elemento)
-    array_content=$(echo "$content" | jq -c '.[-1]')
-    
-    # Reconstruir el archivo con el array formateado
-    {
-        # Imprimir todo excepto el último elemento
-        echo "$content" | jq -c '.[:-1][]'
-        # Imprimir el array formateado
-        echo "$array_content" | jq -c '.[]'
-        # Cerrar el array
-        echo "]"
-    } > "${file}.tmp"
-    
-    # Verificar si el archivo ya tiene el formato correcto
-    if diff -q "$file" "${file}.tmp" > /dev/null; then
-        echo "  Ya tiene el formato correcto"
-        rm -f "${file}.tmp"
-    else
-        # Si el archivo no está vacío después de formatear, reemplazarlo
-        if [ -s "${file}.tmp" ]; then
-            mv "${file}.tmp" "$file"
-            echo "  Formateado correctamente"
-        else
-            echo "  Error: El archivo está vacío después de formatear"
-            rm -f "${file}.tmp"
-        fi
-    fi
+
+    python3 - <<'PY' "$file"
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+
+def dump_lines(elements: list[object]) -> None:
+    with path.open("w", encoding="utf-8") as out:
+        for element in elements:
+            out.write(json.dumps(element, ensure_ascii=False))
+            out.write("\n")
+
+def parse_stream(source: str) -> list[object]:
+    decoder = json.JSONDecoder()
+    idx = 0
+    length = len(source)
+    items: list[object] = []
+
+    while idx < length:
+        while idx < length and source[idx] in " \t\r\n":
+            idx += 1
+        if idx >= length:
+            break
+        try:
+            value, end = decoder.raw_decode(source, idx)
+        except json.JSONDecodeError:
+            next_newline = source.find("\n", idx)
+            if next_newline == -1:
+                break
+            idx = next_newline + 1
+            continue
+        else:
+            items.append(value)
+            idx = end
+    return items
+
+try:
+    data = json.loads(text)
+except json.JSONDecodeError:
+    elements = parse_stream(text)
+    if not elements:
+        print("  No se pudo interpretar JSON válido", file=sys.stderr)
+        sys.exit(0)
+    dump_lines(elements)
+else:
+    if isinstance(data, list):
+        dump_lines(list(data))
+    else:
+        dump_lines([data])
+PY
+
+    echo "  Formateado correctamente"
 done
 
 echo "Proceso completado"

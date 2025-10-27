@@ -628,7 +628,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
+        slot = self.read_slot(min_slot=0, max_slot=255)
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()

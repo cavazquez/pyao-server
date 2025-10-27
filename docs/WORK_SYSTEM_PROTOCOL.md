@@ -445,6 +445,7 @@ await self.message_sender.send_change_inventory_slot(...)
 ```python
 # Cargado UNA SOLA VEZ al inicio del servidor
 # NO instanciar en cada task (causaría lag)
+# Lee *_blocked.json y detecta agua/árboles/minas + tiles bloqueados
 map_resources_service = MapResourcesService()  # En ServiceInitializer
 ```
 
