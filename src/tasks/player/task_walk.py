@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
-    from src.services.map.map_transition_service import MapTransitionService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.player.stamina_service import StaminaService
@@ -43,7 +42,6 @@ class TaskWalk(Task):
         player_repo: PlayerRepository | None = None,
         map_manager: MapManager | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
-        map_transition_service: MapTransitionService | None = None,
         stamina_service: StaminaService | None = None,
         player_map_service: PlayerMapService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
@@ -56,7 +54,6 @@ class TaskWalk(Task):
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas para broadcast.
             broadcast_service: Servicio de broadcast multijugador.
-            map_transition_service: Servicio de transiciones entre mapas.
             stamina_service: Servicio de stamina.
             player_map_service: Servicio de mapas de jugador.
             session_data: Datos de sesión compartidos (opcional).
@@ -65,7 +62,6 @@ class TaskWalk(Task):
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
-        self.map_transition_service = map_transition_service
         self.stamina_service = stamina_service
         self.player_map_service = player_map_service
         self.session_data = session_data
@@ -182,11 +178,6 @@ class TaskWalk(Task):
         )
 
         # Verificar transición post-movimiento
-        if await self._check_post_movement_transition(
-            user_id, heading, current_x, current_y, current_map, new_x, new_y, new_map, changed_map
-        ):
-            return
-
         # Broadcast a otros jugadores
         await self._broadcast_movement(
             user_id, heading, current_x, current_y, current_map, new_x, new_y, position
@@ -469,123 +460,6 @@ class TaskWalk(Task):
             new_y,
             heading,
         )
-
-    async def _check_post_movement_transition(
-        self,
-        user_id: int,
-        heading: int,
-        current_x: int,
-        current_y: int,
-        current_map: int,
-        new_x: int,
-        new_y: int,
-        new_map: int,
-        changed_map: bool,
-    ) -> bool:
-        """Verifica si hay transición de mapa después del movimiento.
-
-        Args:
-            user_id: ID del jugador.
-            heading: Dirección del movimiento.
-            current_x: Posición X antes del movimiento.
-            current_y: Posición Y antes del movimiento.
-            current_map: ID del mapa antes del movimiento.
-            new_x: Nueva posición X.
-            new_y: Nueva posición Y.
-            new_map: ID del nuevo mapa.
-            changed_map: Si ya cambió de mapa.
-
-        Returns:
-            True si se ejecutó una transición, False en caso contrario.
-        """
-        if changed_map or not self.map_transition_service or not self.map_manager:
-            return False
-
-        # Calcular el siguiente tile en la dirección del movimiento
-        check_x, check_y = new_x, new_y
-        if heading == HEADING_NORTH:
-            check_y = new_y - 1
-        elif heading == HEADING_EAST:
-            check_x = new_x + 1
-        elif heading == HEADING_SOUTH:
-            check_y = new_y + 1
-        elif heading == HEADING_WEST:
-            check_x = new_x - 1
-
-        # Verificar si ese tile está bloqueado
-        is_next_blocked = not self.map_manager.can_move_to(new_map, check_x, check_y)
-
-        logger.debug(
-            "Verificando siguiente tile (%d,%d) desde (%d,%d): bloqueado=%s",
-            check_x,
-            check_y,
-            new_x,
-            new_y,
-            is_next_blocked,
-        )
-
-        if not is_next_blocked:
-            return False
-
-        # El siguiente tile está bloqueado, verificar si hay transición cerca del borde
-        map_width, map_height = self.map_manager.get_map_size(new_map)
-        edge = self._get_edge_if_near_border(heading, check_x, check_y, map_width, map_height)
-
-        if not edge:
-            return False
-
-        transition = self.map_transition_service.get_transition(new_map, edge)
-        if not transition:
-            return False
-
-        # Hay transición, cambiar de mapa inmediatamente
-        logger.info(
-            "Último tile jugable detectado en (%d,%d), cambiando a mapa %d",
-            new_x,
-            new_y,
-            transition.to_map,
-        )
-
-        await self._handle_map_transition(
-            user_id,
-            heading,
-            current_x,
-            current_y,
-            current_map,
-            transition.to_x,
-            transition.to_y,
-            transition.to_map,
-        )
-        return True
-
-    @staticmethod
-    def _get_edge_if_near_border(
-        heading: int, check_x: int, check_y: int, map_width: int, map_height: int
-    ) -> str | None:
-        """Determina si estamos cerca del borde del mapa.
-
-        Args:
-            heading: Dirección del movimiento.
-            check_x: Posición X a verificar.
-            check_y: Posición Y a verificar.
-            map_width: Ancho del mapa.
-            map_height: Alto del mapa.
-
-        Returns:
-            Nombre del borde si estamos cerca, None en caso contrario.
-        """
-        border_threshold = 10
-
-        if heading == HEADING_NORTH and check_y <= MIN_MAP_COORDINATE + border_threshold:
-            return "north"
-        if heading == HEADING_EAST and check_x >= map_width - border_threshold:
-            return "east"
-        if heading == HEADING_SOUTH and check_y >= map_height - border_threshold:
-            return "south"
-        if heading == HEADING_WEST and check_x <= MIN_MAP_COORDINATE + border_threshold:
-            return "west"
-
-        return None
 
     async def _broadcast_movement(
         self,

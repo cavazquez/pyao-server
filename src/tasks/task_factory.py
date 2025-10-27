@@ -250,7 +250,6 @@ class TaskFactory:
                 self.deps.player_repo,
                 self.deps.map_manager,
                 self.deps.broadcast_service,
-                self.deps.map_transition_service,
                 self.deps.stamina_service,
                 self.deps.player_map_service,
                 session_data,

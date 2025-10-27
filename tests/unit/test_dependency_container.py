@@ -58,7 +58,6 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
         npc_death_service=npc_death_service,
         npc_respawn_service=npc_respawn_service,
         loot_table_service=loot_table_service,
-        map_transition_service=Mock(),
         map_resources_service=map_resources_service,
         broadcast_service=broadcast_service,
         stamina_service=stamina_service,

@@ -22,7 +22,6 @@ if TYPE_CHECKING:
     from src.services.combat.combat_service import CombatService
     from src.services.commerce_service import CommerceService
     from src.services.map.map_resources_service import MapResourcesService
-    from src.services.map.map_transition_service import MapTransitionService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.loot_table_service import LootTableService
@@ -67,7 +66,6 @@ class DependencyContainer:
     npc_death_service: NPCDeathService
     npc_respawn_service: NPCRespawnService
     loot_table_service: LootTableService
-    map_transition_service: MapTransitionService
     map_resources_service: MapResourcesService
     broadcast_service: MultiplayerBroadcastService
     stamina_service: StaminaService

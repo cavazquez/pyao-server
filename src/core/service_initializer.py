@@ -10,7 +10,6 @@ from src.models.spell_catalog import SpellCatalog
 from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
 from src.services.map.map_resources_service import MapResourcesService
-from src.services.map.map_transition_service import MapTransitionService
 from src.services.map.pathfinding_service import PathfindingService
 from src.services.map.player_map_service import PlayerMapService
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -92,10 +91,6 @@ class ServiceInitializer:
         )
         logger.info("✓ Sistema de muerte de NPCs inicializado")
 
-        # Servicio de transiciones de mapa
-        map_transition_service = MapTransitionService()
-        logger.info("✓ Sistema de transiciones de mapa inicializado")
-
         # Servicio de magia
         spell_service = SpellService(
             spell_catalog,
@@ -162,7 +157,6 @@ class ServiceInitializer:
             "npc_respawn_service": npc_respawn_service,
             "npc_death_service": npc_death_service,
             "loot_table_service": loot_table_service,
-            "map_transition_service": map_transition_service,
             "spell_service": spell_service,
             "commerce_service": commerce_service,
             "combat_service": combat_service,
