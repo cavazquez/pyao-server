@@ -1,0 +1,743 @@
+# Recetas de crafting - armor
+[armor_recipes]
+[[armor_recipes.recipes]]
+id = "Armadura1"
+name = "Casco de hierro"
+index = 132
+skill_requirement = 25
+success_rate = 62
+experience = 20
+tier = 2
+materials = [
+    {item = "hierro", quantity = 4}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura2"
+name = "Casco de hierro completo"
+index = 131
+skill_requirement = 25
+success_rate = 62
+experience = 20
+tier = 2
+materials = [
+    {item = "hierro", quantity = 4}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura3"
+name = "Casco de plata"
+index = 405
+skill_requirement = 55
+success_rate = 77
+experience = 25
+tier = 3
+materials = [
+    {item = "plata", quantity = 6}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura4"
+name = "Escudo de tortuga"
+index = 404
+skill_requirement = 25
+success_rate = 62
+experience = 15
+tier = 1
+materials = [
+    {item = "hueso", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura5"
+name = "Escudo de hierro"
+index = 128
+skill_requirement = 25
+success_rate = 62
+experience = 20
+tier = 2
+materials = [
+    {item = "hierro", quantity = 4}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura6"
+name = "Escudo de plata"
+index = 130
+skill_requirement = 60
+success_rate = 80
+experience = 25
+tier = 3
+materials = [
+    {item = "plata", quantity = 6}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura7"
+name = "Escudo Real"
+index = 1038
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura8"
+name = "Escudo imperial"
+index = 133
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura9"
+name = "Escudo Legionario"
+index = 1037
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura10"
+name = "Escudo infernal"
+index = 708
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura11"
+name = "Manto de Noble"
+index = 484
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura12"
+name = "Cota de Mallas"
+index = 359
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura13"
+name = "Cota de Mallas (Mujer)"
+index = 499
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura14"
+name = "Cota de Mallas (E/G)"
+index = 667
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura15"
+name = "Cota de Mallas Larga (E/G)"
+index = 975
+skill_requirement = 20
+success_rate = 60
+experience = 20
+tier = 2
+materials = [
+    {item = "cuero", quantity = 4}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura16"
+name = "Armadura de Campeón"
+index = 903
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura17"
+name = "Armadura placas"
+index = 195
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura18"
+name = "Armadura placas + 1"
+index = 390
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura19"
+name = "Armadura placas + 2"
+index = 391
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura20"
+name = "Armadura placas enanos"
+index = 243
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura21"
+name = "Armadura placas enanos + 1"
+index = 392
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura22"
+name = "Armadura placas enanos + 2"
+index = 393
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura23"
+name = "Armadura de Placas Rojas"
+index = 493
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura24"
+name = "Armadura de Placas Azul"
+index = 489
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura25"
+name = "Armadura de Placas de Gala"
+index = 497
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura26"
+name = "Trampa Visual (H/E/EO-M)"
+index = 503
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura27"
+name = "Placas Combinadas (H/E/EO-M)"
+index = 904
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura28"
+name = "Suprema Armadura Dorada (H/E/EO-M)"
+index = 905
+skill_requirement = 75
+success_rate = 87
+experience = 30
+tier = 4
+materials = [
+    {item = "acero", quantity = 8}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura29"
+name = "Armadura de las Sombras"
+index = 356
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura30"
+name = "Armadura de Elite (E/G)"
+index = 672
+skill_requirement = 30
+success_rate = 65
+experience = 25
+tier = 3
+materials = [
+    {item = "cuero", quantity = 5}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura31"
+name = "Armadura Bruñida (E/G)"
+index = 500
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura32"
+name = "Armadura Pesada de Hierro y Bronce (E/G)"
+index = 976
+skill_requirement = 25
+success_rate = 62
+experience = 20
+tier = 2
+materials = [
+    {item = "hierro", quantity = 4}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura33"
+name = "Cienaga"
+index = 496
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura34"
+name = "Escarlata"
+index = 495
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura35"
+name = "Dama de las tinieblas"
+index = 487
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura36"
+name = "Armadura Legendaria"
+index = 485
+skill_requirement = 40
+success_rate = 70
+experience = 30
+tier = 4
+materials = [
+    {item = "cuero", quantity = 6}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura37"
+name = "Armadura de Dragón (Hombre)"
+index = 481
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura38"
+name = "Armadura de Dragón (Mujer)"
+index = 482
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura39"
+name = "Armadura de Dragón (Enano/Enana)"
+index = 483
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura40"
+name = "Manto del Dragón (H/E/EO)"
+index = 906
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura41"
+name = "Anillo Mágico"
+index = 697
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura42"
+name = "Anillo de resistencia Mágica"
+index = 698
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura43"
+name = "Anillo de Disolución Mágica"
+index = 699
+skill_requirement = 15
+success_rate = 57
+experience = 15
+tier = 1
+materials = [
+    {item = "hierro", quantity = 1},
+    {item = "madera", quantity = 1}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura44"
+name = "Armadura Real"
+index = 521
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura45"
+name = "Armadura Real (E/G)"
+index = 492
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura46"
+name = "Armadura de Gran Sacerdote Imperial"
+index = 680
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura47"
+name = "Armadura de Gran Sacerdotisa Imperial (H/E/EO-M)"
+index = 520
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura48"
+name = "Armadura Nobilísima"
+index = 629
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura49"
+name = "Armadura Nobilísima (E/G)"
+index = 681
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura50"
+name = "Armadura de Ilustre Caballero"
+index = 691
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura51"
+name = "Armadura de Ilustre Caballero (E/G)"
+index = 694
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura52"
+name = "Armadura de las Sombras (E/G)"
+index = 854
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura53"
+name = "Armadura Magna (H/E/EO-M)"
+index = 693
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura54"
+name = "Armadura Legionaria"
+index = 369
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura55"
+name = "Armadura Legionaria (E/G)"
+index = 379
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura56"
+name = "Armadura de Gran Sacerdote Demoníaco"
+index = 684
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura57"
+name = "Armadura Lóbrega"
+index = 683
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura58"
+name = "Armadura Lóbrega (H/E/EO-M)"
+index = 635
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura59"
+name = "Armadura Lóbrega (E/G)"
+index = 685
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura60"
+name = "Armadura de Pequeño Pandemonium (E/G)"
+index = 695
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]
+
+[[armor_recipes.recipes]]
+id = "Armadura61"
+name = "Armadura Infame"
+index = 701
+skill_requirement = 10
+success_rate = 55
+experience = 15
+tier = 1
+materials = [
+    {item = "cuero", quantity = 3}
+]

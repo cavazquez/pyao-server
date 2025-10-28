@@ -201,7 +201,8 @@ pyao-server/
 │   ├── # Servicios de Juego ✅ NUEVO
 │   ├── game/
 │   │   ├── __init__.py          # Paquete de servicios de juego
-│   │   └── balance_service.py   # Balance de clases y razas (extraído de cliente)
+│   │   ├── balance_service.py   # Balance de clases y razas (extraído de cliente)
+│   │   └── crafting_service.py  # Sistema de crafting herrería (extraído de cliente)
 │   │
 │   ├── # Repositorios (Capa de Datos)
 │   ├── player_repository.py     # Datos de jugadores
@@ -277,7 +278,10 @@ pyao-server/
 │   ├── merchant_inventories.toml # Inventarios de mercaderes
 │   ├── items.toml               # Catálogo de items (1049 items)
 │   ├── loot_tables.toml         # Tablas de loot de NPCs
-│   └── classes_balance.toml     # Balance de clases y razas (extraído de cliente) ✅ NUEVO
+│   ├── classes_balance.toml     # Balance de clases y razas (extraído de cliente) ✅ NUEVO
+│   ├── weapons_crafting.toml    # Recetas de armas (extraído de cliente) ✅ NUEVO
+│   ├── armor_crafting.toml      # Recetas de armaduras (extraído de cliente) ✅ NUEVO
+│   └── crafting_materials.toml  # Materiales base para crafting ✅ NUEVO
 │
 ├── map_data/                    # Datos de mapas (generados desde clientes VB6/Godot)
 │   ├── 001_metadata.json        # Metadatos del mapa (nombre, clima, tamaño)
@@ -295,11 +299,12 @@ pyao-server/
 │   │
 │   └── extract_client_data/     # Extracción de datos del cliente ✅ NUEVO
 │       ├── extract_balance_data.py   # Extrae Balance.dat → TOML
+│       ├── extract_crafting_data.py  # Extrae ArmasHerrero/ArmadurasHerrero → TOML
 │       ├── extract_map_objects.py    # Extrae objetos de mapas .map → JSON consolidado
 │       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
 │       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (1056 tests) ✅
+├── tests/                       # Tests unitarios (1077 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO

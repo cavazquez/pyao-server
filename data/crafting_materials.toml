@@ -1,0 +1,43 @@
+# Materiales base para crafting
+[crafting_materials]
+[[crafting_materials.materials]]
+id = "hierro"
+name = "Lingote de Hierro"
+index = 1
+skill_requirement = 10
+
+[[crafting_materials.materials]]
+id = "plata"
+name = "Lingote de Plata"
+index = 2
+skill_requirement = 30
+
+[[crafting_materials.materials]]
+id = "oro"
+name = "Lingote de Oro"
+index = 3
+skill_requirement = 50
+
+[[crafting_materials.materials]]
+id = "acero"
+name = "Lingote de Acero"
+index = 4
+skill_requirement = 40
+
+[[crafting_materials.materials]]
+id = "madera"
+name = "Leña"
+index = 5
+skill_requirement = 1
+
+[[crafting_materials.materials]]
+id = "cuero"
+name = "Piel de Animal"
+index = 6
+skill_requirement = 5
+
+[[crafting_materials.materials]]
+id = "hueso"
+name = "Hueso de Animal"
+index = 7
+skill_requirement = 3
