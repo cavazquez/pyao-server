@@ -198,6 +198,11 @@ pyao-server/
 │   ├── multiplayer_broadcast_service.py # Broadcast multijugador
 │   ├── password_utils.py        # Utilidades de contraseñas
 │   │
+│   ├── # Servicios de Juego ✅ NUEVO
+│   ├── game/
+│   │   ├── __init__.py          # Paquete de servicios de juego
+│   │   └── balance_service.py   # Balance de clases y razas (extraído de cliente)
+│   │
 │   ├── # Repositorios (Capa de Datos)
 │   ├── player_repository.py     # Datos de jugadores
 │   ├── npc_repository.py        # NPCs en Redis
@@ -271,7 +276,8 @@ pyao-server/
 │   ├── map_npcs.toml            # Spawns de NPCs en mapas
 │   ├── merchant_inventories.toml # Inventarios de mercaderes
 │   ├── items.toml               # Catálogo de items (1049 items)
-│   └── loot_tables.toml         # Tablas de loot de NPCs
+│   ├── loot_tables.toml         # Tablas de loot de NPCs
+│   └── classes_balance.toml     # Balance de clases y razas (extraído de cliente) ✅ NUEVO
 │
 ├── map_data/                    # Datos de mapas (generados desde clientes VB6/Godot)
 │   ├── 001_metadata.json        # Metadatos del mapa (nombre, clima, tamaño)
@@ -285,9 +291,15 @@ pyao-server/
 │
 ├── tools/                       # Scripts utilitarios
 │   ├── compress_map_data.py     # Comprime map_data en archives/map_data.xz (LZMA)
-│   └── decompress_map_data.py   # Restaura map_data desde archives/map_data.xz
+│   ├── decompress_map_data.py   # Restaura map_data desde archives/map_data.xz
+│   │
+│   └── extract_client_data/     # Extracción de datos del cliente ✅ NUEVO
+│       ├── extract_balance_data.py   # Extrae Balance.dat → TOML
+│       ├── extract_map_objects.py    # Extrae objetos de mapas .map → JSON consolidado
+│       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
+│       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (767 tests) ✅
+├── tests/                       # Tests unitarios (1056 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO

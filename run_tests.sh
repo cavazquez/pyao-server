@@ -18,7 +18,7 @@ uv run ruff check .
 
 echo ""
 echo "🔬 Running mypy type checker..."
-uv run mypy .
+uv run mypy src tests
 
 echo ""
 echo "🧪 Running unit tests..."

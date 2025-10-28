@@ -1,0 +1,213 @@
+# Modificadores de atributos por raza
+[racial_modifiers]
+[[racial_modifiers.races]]
+name = "Humano"
+strength = 1
+agility = 1
+intelligence = 0
+charisma = 0
+constitution = 2
+
+[[racial_modifiers.races]]
+name = "Elfo"
+strength = -1
+agility = 3
+intelligence = 2
+charisma = 2
+constitution = 1
+
+[[racial_modifiers.races]]
+name = "Drow"
+strength = 2
+agility = 3
+intelligence = 2
+charisma = -3
+constitution = 0
+
+[[racial_modifiers.races]]
+name = "Enano"
+strength = 3
+agility = 0
+intelligence = -2
+charisma = -2
+constitution = 3
+
+[[racial_modifiers.races]]
+name = "Gnomo"
+strength = -2
+agility = 3
+intelligence = 4
+charisma = 1
+constitution = 0
+
+# Modificadores de combate por clase
+[class_modifiers]
+[[class_modifiers.classes]]
+name = "Guerrero"
+evasion = 1
+ataquearmas = 1
+ataqueproyectiles = 0.8
+ataquewrestling = 0.6
+damagearmas = 1.1
+damageproyectiles = 0.9
+escudo = 1
+vida = 10
+
+[[class_modifiers.classes]]
+name = "Cazador"
+evasion = 0.9
+ataquearmas = 0.8
+ataqueproyectiles = 1
+ataquewrestling = 0.5
+damagearmas = 0.9
+damageproyectiles = 1.1
+escudo = 0.8
+vida = 9.5
+
+[[class_modifiers.classes]]
+name = "Paladin"
+evasion = 0.9
+ataquearmas = 0.95
+ataqueproyectiles = 0.75
+ataquewrestling = 0.4
+damagearmas = 0.925
+damageproyectiles = 0.8
+escudo = 1
+vida = 9.5
+
+[[class_modifiers.classes]]
+name = "Bandido"
+evasion = 0.7
+ataquearmas = 0.85
+ataqueproyectiles = 0.8
+ataquewrestling = 0.95
+damagearmas = 0.85
+damageproyectiles = 0.7
+escudo = 2
+vida = 9.5
+
+[[class_modifiers.classes]]
+name = "Asesino"
+evasion = 1.1
+ataquearmas = 0.9
+ataqueproyectiles = 0.75
+ataquewrestling = 0.4
+damagearmas = 0.9
+damageproyectiles = 0.8
+escudo = 0.8
+vida = 8.5
+
+[[class_modifiers.classes]]
+name = "Pirata"
+evasion = 1.25
+ataquearmas = 0.9
+ataqueproyectiles = 0.9
+ataquewrestling = 0.5
+damagearmas = 0.95
+damageproyectiles = 0.8
+escudo = 0.6
+vida = 9.5
+
+[[class_modifiers.classes]]
+name = "Ladron"
+evasion = 1.1
+ataquearmas = 0.8
+ataqueproyectiles = 0.85
+ataquewrestling = 0.8
+damagearmas = 0.75
+damageproyectiles = 0.85
+escudo = 0.7
+vida = 10
+
+[[class_modifiers.classes]]
+name = "Clerigo"
+evasion = 0.8
+ataquearmas = 0.85
+ataqueproyectiles = 0.7
+ataquewrestling = 0.4
+damagearmas = 0.8
+damageproyectiles = 0.7
+escudo = 0.85
+vida = 8.5
+
+[[class_modifiers.classes]]
+name = "Bardo"
+evasion = 1.075
+ataquearmas = 0.7
+ataqueproyectiles = 0.7
+ataquewrestling = 0.4
+damagearmas = 0.75
+damageproyectiles = 0.7
+escudo = 0.8
+vida = 8.5
+
+[[class_modifiers.classes]]
+name = "Mago"
+evasion = 0.4
+ataquearmas = 0.5
+ataqueproyectiles = 0.5
+ataquewrestling = 0.3
+damagearmas = 0.5
+damageproyectiles = 0.5
+escudo = 0.6
+vida = 7.5
+
+[[class_modifiers.classes]]
+name = "Druida"
+evasion = 0.75
+ataquearmas = 0.65
+ataqueproyectiles = 0.75
+ataquewrestling = 0.4
+damagearmas = 0.7
+damageproyectiles = 0.75
+escudo = 0.75
+vida = 8.5
+
+[[class_modifiers.classes]]
+name = "Trabajador"
+evasion = 0.8
+ataquearmas = 0.8
+ataqueproyectiles = 0.7
+ataquewrestling = 0.5
+damagearmas = 0.8
+damageproyectiles = 0.7
+escudo = 0.7
+vida = 9.5
+
+# DISTRIBUCION
+[distribucion]
+e1 = 10
+e2 = 20
+e3 = 40
+e4 = 20
+e5 = 10
+s1 = 10
+s2 = 40
+s3 = 40
+s4 = 10
+
+# EXTRA
+[extra]
+porcentajerecuperomana = 6
+
+# PARTY
+[party]
+exponentenivelparty = 1.75
+
+# RECOMPENSAFACCION
+[recompensafaccion]
+rango1 = 5000
+rango2 = 7500
+rango3 = 10000
+rango4 = 20000
+rango5 = 25000
+rango6 = 30000
+rango7 = 40000
+rango8 = 50000
+rango9 = 60000
+rango10 = 70000
+rango11 = 80000
+rango12 = 100000
+rango13 = 150000
+rango14 = 220000
+rango15 = 340000
