@@ -1,72 +1,106 @@
 # Configuración de spawns de NPCs en mapas
 # Define qué NPCs aparecen en qué mapas y en qué posiciones
 
-# Mapa 1 - NPCs distribuidos alrededor de (50,50) para testing
-# Centro: jugador en (50,50)
+[map_npcs]
 
-# Norte (arriba)
-[[spawn]]
-map_id = 1
-npc_id = 2  # Comerciante
+# Mapa 1 - Ullathorpe
+[map_npcs.1]
+name = "Ullathorpe"
+description = "Ciudad principal del juego"
+
+# Spawn points fijos
+[[map_npcs.1.spawn_points]]
+npc_id = 1  # NPC Test 1 (pacífico)
 x = 50
-y = 47
-heading = 3  # Sur (mirando al jugador)
+y = 50
+direction = 3
 
-[[spawn]]
-map_id = 1
-npc_id = 5  # Banquero
+[[map_npcs.1.spawn_points]]
+npc_id = 3  # Trader NPC
+x = 55
+y = 48
+direction = 1
+
+# Áreas de spawns aleatorios (hostiles)
+[[map_npcs.1.random_spawns]]
+npc_type = "hostile"
+count = 5
+area = {x1 = 70, y1 = 70, x2 = 90, y2 = 90}
+
+[[map_npcs.1.random_spawns]]
+npc_type = "hostile"
+count = 3
+area = {x1 = 10, y1 = 10, x2 = 30, y2 = 30}
+
+# Mapa 34 - Nix
+[map_npcs.34]
+name = "Nix"
+description = "Ciudad de Nix"
+
+[[map_npcs.34.spawn_points]]
+npc_id = 1  # NPC Test 1
+x = 30
+y = 30
+direction = 2
+
+[[map_npcs.34.spawn_points]]
+npc_id = 2  # Hostile NPC
+x = 40
+y = 35
+direction = 4
+
+# Mapa 46 - Banderbill
+[map_npcs.46]
+name = "Banderbill"
+description = "Ciudad de Banderbill"
+
+[[map_npcs.46.spawn_points]]
+npc_id = 3  # Trader NPC
+x = 25
+y = 25
+direction = 1
+
+[[map_npcs.46.spawn_points]]
+npc_id = 1  # NPC Test 1
+x = 35
+y = 30
+direction = 3
+
+# Área de spawns aleatorios
+[[map_npcs.46.random_spawns]]
+npc_type = "hostile"
+count = 2
+area = {x1 = 60, y1 = 60, x2 = 80, y2 = 80}
+
+# Mapa 58 - Lindos
+[map_npcs.58]
+name = "Lindos"
+description = "Ciudad de Lindos"
+
+[[map_npcs.58.spawn_points]]
+npc_id = 2  # Hostile NPC (guardia)
+x = 45
+y = 45
+direction = 2
+
+[[map_npcs.58.spawn_points]]
+npc_id = 3  # Trader NPC
 x = 50
-y = 44
-heading = 3  # Sur
+y = 40
+direction = 3
 
-# Sur (abajo)
-[[spawn]]
-map_id = 1
-npc_id = 6  # Entrenador
-x = 50
-y = 53
-heading = 1  # Norte (mirando al jugador)
+# Mapa 259 - Dungeon de ejemplo
+[map_npcs.259]
+name = "Dungeon Oscuro"
+description = "Mazmorra con muchos monstruos"
 
-[[spawn]]
-map_id = 1
-npc_id = 11  # Herrero (ID actualizado)
-x = 50
-y = 56
-heading = 1  # Norte
+# Solo spawns aleatorios hostiles
+[[map_npcs.259.random_spawns]]
+npc_type = "hostile"
+count = 8
+area = {x1 = 20, y1 = 20, x2 = 80, y2 = 80}
 
-# Este (derecha)
-[[spawn]]
-map_id = 1
-npc_id = 7  # Lobo
-x = 53
-y = 50
-heading = 4  # Oeste (mirando al jugador)
-
-[[spawn]]
-map_id = 1
-npc_id = 1  # Goblin
-x = 56
-y = 50
-heading = 4  # Oeste
-
-[[spawn]]
-map_id = 1
-npc_id = 8  # Araña Gigante
-x = 59
-y = 50
-heading = 4  # Oeste
-
-# Oeste (izquierda)
-[[spawn]]
-map_id = 1
-npc_id = 1  # Goblin
-x = 47
-y = 50
-heading = 2  # Este (mirando al jugador)
-
-[[spawn]]
-map_id = 1
-npc_id = 9  # Serpiente
-x = 44
-y = 50
-heading = 2  # Este
+[[map_npcs.259.random_spawns]]
+npc_type = "hostile"
+count = 3
+area = {x1 = 40, y1 = 40, x2 = 60, y2 = 60}

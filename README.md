@@ -203,7 +203,9 @@ pyao-server/
 │   │   ├── __init__.py          # Paquete de servicios de juego
 │   │   ├── balance_service.py   # Balance de clases y razas (extraído de cliente)
 │   │   ├── crafting_service.py  # Sistema de crafting herrería (extraído de cliente)
-│   │   └── npc_service.py       # Sistema completo de gestión de NPCs (336 NPCs)
+│   │   ├── npc_service.py       # Sistema completo de gestión de NPCs (336 NPCs)
+│   │   ├── npc_spawn_service.py # Spawning de NPCs en mapas con visión dinámica
+│   │   └── npc_world_manager.py # Gestor de NPCs en el mundo (combate, movimiento)
 │   │
 │   ├── # Repositorios (Capa de Datos)
 │   ├── player_repository.py     # Datos de jugadores
@@ -306,7 +308,7 @@ pyao-server/
 │       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
 │       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (1088 tests) ✅
+├── tests/                       # Tests unitarios (1113 tests) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO
@@ -320,13 +322,15 @@ pyao-server/
 │   ├── test_merchant_data_loader.py # Tests de MerchantDataLoader (11 tests)
 │   ├── test_data_initializer.py  # Tests de DataInitializer (10 tests)
 │   │
-│   ├── # Tests de Servicios (35 tests)
+│   ├── # Tests de Servicios (60 tests)
 │   ├── test_player_service.py      # Tests de PlayerService (7 tests)
 │   ├── test_authentication_service.py # Tests de AuthenticationService (4 tests)
 │   ├── test_session_manager.py     # Tests de SessionManager (13 tests)
 │   ├── test_balance_service.py     # Tests de BalanceService (7 tests)
 │   ├── test_crafting_service.py    # Tests de CraftingService (8 tests)
-│   └── test_npc_service.py         # Tests de NPCService (11 tests) ✅ NUEVO
+│   ├── test_npc_service.py         # Tests de NPCService (11 tests) ✅ NUEVO
+│   ├── test_npc_spawn_service.py   # Tests de NPCSpawnService (15 tests) ✅ NUEVO
+│   └── test_npc_world_manager.py   # Tests de NPCWorldManager (25 tests) ✅ NUEVO
 │   │
 │   ├── # Tests de MessageSender Components (75 tests) ✅ REFACTORIZADO
 │   ├── test_message_sender.py      # Tests de MessageSender
