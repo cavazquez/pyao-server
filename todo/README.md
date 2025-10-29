@@ -11,6 +11,10 @@ Esta carpeta contiene documentos de tareas pendientes, ideas y refactorizaciones
 - **TODO_PACKET_VALIDATOR.md** - Sistema de validación de packets
 - **TODO_NPC_FACTORY.md** - Factory pattern para creación de NPCs
 - **TODO_CLIENTE.md** - Tareas relacionadas con el cliente Godot
+- **TODO_CARACTERISTICAS_VB6.md** - Características faltantes del servidor VB6 original
+- **TODO_MAP_TRANSITIONS.md** - Sistema de transiciones entre mapas
+- **TODO_POST_REORGANIZACION.md** - Mejoras post-reorganización
+- **TODO_SPELL_CLICK_TARGETING.md** - Sistema de targeting de hechizos
 
 ## Convención
 
