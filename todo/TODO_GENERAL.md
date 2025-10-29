@@ -1,16 +1,16 @@
 # TODO General - PyAO Server
 
-**Estado:** 📋 Lista maestra de tareas y mejoras  
+**Estado:** 📋 Roadmap de Versiones y Fechas  
 **Prioridad:** Mixta  
-**Última actualización:** 2025-10-20
+**Última actualización:** 2025-01-29
 
 ---
 
 ## 📊 Estado Actual del Proyecto
 
-**Versión:** 0.6.0-alpha (en progreso)  
-**Tests:** 955 pasando (100%)  
-**Cobertura:** 74%  
+**Versión:** 0.6.0-alpha (completado)  
+**Tests:** 1123 pasando (100%)  
+**Cobertura:** 78%  
 **Calidad:** Excelente (0 errores linting/mypy)
 
 **Sistemas Completados Recientemente:**
@@ -24,6 +24,8 @@
 - ✅ PacketReader (100%) - ¡Migración completa!
 - ✅ Oro en Banco (PacketIDs 111, 112)
 - ✅ Refactorización de Validación Centralizada
+- ✅ IA de NPCs configurable con Pathfinding A*
+- ✅ Sistema de Trabajo (Tala, Pesca, Minería)
 
 ---
 
@@ -35,7 +37,11 @@ Este proyecto tiene varios documentos TODO especializados:
 - **TODO_ARQUITECTURA.md** - Mejoras arquitecturales (DI, Event System, etc.)
 - **TODO_NPC_FACTORY.md** - Sistema de factory para NPCs
 - **TODO_CLIENTE.md** - Mejoras del cliente Godot
-- **TODO_GENERAL.md** (este archivo) - Lista general de features y mejoras
+- **TODO_CARACTERISTICAS_VB6.md** - 🎯 **Características del servidor VB6 faltantes (DETALLES TÉCNICOS)**
+- **TODO_MAP_TRANSITIONS.md** - Sistema de transiciones entre mapas
+- **TODO_SPELL_CLICK_TARGETING.md** - Sistema de targeting de hechizos
+- **TODO_POST_REORGANIZACION.md** - Mejoras post-reorganización
+- **TODO_GENERAL.md** (este archivo) - **Roadmap de versiones y fechas**
 
 ---
 
@@ -66,302 +72,206 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Items variados (armas, armaduras, pociones)
 
 ### ✅ Versión 0.5.0-alpha - Refactorings y Contenido (100% COMPLETADO) 🎉
-
-**Completado:**
 - [x] MessageSender refactoring (100% completado)
-- [x] PacketReader implementado (21/33 tasks migradas - 64%)
+- [x] PacketReader implementado (100% migrado)
 - [x] NPC Factory Pattern
-- [x] **Sistema de Energía/Stamina - COMPLETADO ✅**
-  - [x] Consumo de energía por acción (walk: 1, attack: 2, spell: 3)
-  - [x] Regeneración automática (2 puntos/segundo)
-  - [x] Condiciones: solo regenera si hambre > 0 y sed > 0
-  - [x] Efectos de energía baja (bloquea acciones si energía = 0)
-  - [x] Balance de energía configurado
-  - [x] StaminaService y StaminaRegenEffect integrados
-- [x] **Sistema de críticos basado en agilidad ✅**
-  - [x] CriticalCalculator implementado
-  - [x] Probabilidad base 15% + bonus por AGI
-  - [x] Multiplicador de daño 2x
-  - [x] Integrado en CombatService
-
-**Completado adicional:**
+- [x] Sistema de Energía/Stamina - COMPLETADO ✅
+- [x] Sistema de críticos basado en agilidad ✅
 - [x] Sistema de esquives ✅
-- [x] Mensajes de daño al jugador (usando CONSOLE_MSG) ✅
-- [x] Inventario lleno - manejar casos límite ✅
-- [x] Sistema de transiciones de mapa (funcional, pendiente sincronización) ✅
+- [x] Sistema de transiciones de mapa (funcional) ✅
 
-**Bug resuelto - Transiciones de mapa:** ✅
-- [x] Cliente se congela después de cambiar de mapa - **RESUELTO**
-- Causa: No se enviaban los NPCs/jugadores/objetos del nuevo mapa
-- Solución: Implementado envío completo de entidades en `_handle_map_transition()`
-- Documentación: `docs/MAP_TRANSITION_FIX.md`
-
----
-
-## 📝 Versión 0.6.0-alpha - Refactorings, IA de NPCs y Economía
-
-### Refactorings Completados ✅
-- [x] **MapTransitionService encapsulado** ✅ - Ya implementado en `player_map_service.py`
-- [x] **Refactorización de validación de packets** ✅ - Completado (TaskCommerceSell, TaskCommerceBuy, TaskInventoryClick)
-  - Validación centralizada en TaskFactory
-  - Tasks reciben datos ya validados
-  - ~70 líneas de código eliminadas
-- [x] **Migración PacketReader 100% completa** ✅
-  - Todas las tasks usan PacketReader y PacketValidator
-  - Eliminado uso de struct.unpack directo
-  - Validación consistente en toda la aplicación
-
-### IA de NPCs Mejorada
-- [x] **Parámetros de IA configurables** ✅ - Completado
-  - Rango de agresión configurable por NPC
-  - Cooldown entre ataques configurable
-  - Daño base configurable
-  - 11 NPCs balanceados con personalidades únicas
-  - Documentación: `docs/NPC_AI_CONFIGURABLE.md`
-- [x] **Pathfinding A*** ✅ - Completado
-  - Algoritmo A* optimizado para tiles (4 direcciones)
-  - NPCs rodean obstáculos inteligentemente
-  - Límite de profundidad configurable
-  - Fallback a movimiento simple
-  - Documentación: `docs/PATHFINDING_ASTAR.md`
-- 💡 Las funcionalidades avanzadas de IA (patrullas, huida, refuerzos) se posponen para una versión posterior.
-
-### Sistema de Skills
-- [ ] Subir skills con uso (minería, tala, pesca)
-- [ ] Experiencia de skills (0-100)
-- [ ] Niveles de skills con bonificadores
-- [ ] Packet WORK para trabajar
-
-### Economía Avanzada
-- [x] **Depositar/retirar oro en banco** ✅ - Completado (PacketIDs 111, 112)
-  - TaskBankExtractGold y TaskBankDepositGold implementadas
-  - UPDATE_BANK_GOLD (PacketID 19) enviado al cliente
-  - Métodos add_gold() y remove_gold() en PlayerRepository y BankRepository
-  - Redis como almacenamiento (key: bank:{user_id}:gold)
-  - Validación de amount=0 con mensajes claros
-  - +10 tests unitarios (955 tests total)
-- 💡 Precios dinámicos globales según oferta/demanda se posponen para una versión posterior.
+### ✅ Versión 0.6.0-alpha - IA de NPCs y Sistema de Trabajo (100% COMPLETADO) 🎉
+- [x] IA de NPCs configurable (daño, cooldown, aggro_range)
+- [x] Pathfinding A* para NPCs (4 direcciones)
+- [x] Sistema de trabajo completo (Tala, Pesca, Minería)
+- [x] Herramientas equipables y recursos
+- [x] Transiciones de mapa por rangos (120+ transiciones)
 
 ---
 
-## 📝 Versión 0.7.0-alpha - Clases y Hechizos Avanzados
+## 📝 Versión 0.7.0-alpha - Sistema Social
+
+### Sistema de Clanes/Guilds
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-clanesguilds`
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🔴 **Prioridad:** Alta
+- 📁 **Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)
+
+### Sistema de Partys/Grupos
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-partysgrupos`
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🔴 **Prioridad:** Alta
+- 📁 **Referencia VB6:** `clsParty.cls` (19KB), `mdParty.bas` (19KB)
 
 ### Sistema de Clases
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
 - [ ] Atributos base por clase (Guerrero, Mago, Arquero, etc.)
 - [ ] Habilidades especiales por clase
 - [ ] Restricciones de equipamiento por clase
 - [ ] Balance de clases
 
-### IA avanzada (pospuesta desde 0.6.0)
-- [ ] NPCs que patrullan rutas predefinidas
-- [ ] NPCs que huyen cuando tienen poca vida
-- [ ] NPCs que llaman refuerzos
-
-### Hechizos Avanzados
-- [ ] Hechizos de área (AOE)
-- [ ] Hechizos de buff/debuff
-- [ ] Hechizos de curación
-- [ ] Hechizos de invocación
-- [ ] Cooldowns de hechizos
-- [ ] Animaciones y efectos visuales mejorados
-
 ---
 
-## 📝 Versión 0.8.0-alpha - Social y Multiplayer
+## 📝 Versión 0.8.0-alpha - Expansión de Combate
 
-### Sistema de Party
-- [ ] Crear/unirse a party
-- [ ] Compartir experiencia
-- [ ] Chat de party
-- [ ] Líder de party
-- [ ] Expulsar miembros
+### Sistema de Facciones
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-facciones`
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
+- 📁 **Referencia VB6:** `ModFacciones.bas` (33KB), `praetorians.bas` (39KB)
+
+### Hechizos Avanzados
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-hechizos-avanzado`
+- 📅 **Fecha estimada:** 3-4 semanas
+- 🔴 **Prioridad:** Alta
+- 📁 **Referencia VB6:** `modHechizos.bas` (97KB)
 
 ### Sistema de Quests
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
 - [ ] QuestService para misiones
 - [ ] Objetivos (matar X NPCs, recolectar Y items)
 - [ ] Recompensas (oro, experiencia, items)
 - [ ] Cadenas de quests
 - [ ] Quest log del jugador
 
-### Social
+### Social Mejorado
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟡 **Prioridad:** Media
 - [ ] Chat mejorado con canales (global, local, party)
 - [ ] Sistema de amigos
 - [ ] Mensajes privados
 - [ ] Emotes y gestos
 
-### Economía dinámica (pospuesta desde 0.6.0)
+---
+
+## 📝 Versión 0.9.0-alpha - Economía Avanzada
+
+### Banco Avanzado
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-banco-avanzado`
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟡 **Prioridad:** Media
+- 📁 **Referencia VB6:** `modBanco.bas` (12KB)
+
+### Sistema de Foro/Noticias
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-foronoticias`
+- 📅 **Fecha estimada:** 1 semana
+- 🟢 **Prioridad:** Baja
+- 📁 **Referencia VB6:** `modForum.bas` (14KB)
+
+### Economía Dinámica
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
 - [ ] Precios dinámicos según oferta/demanda en todo el juego
+- [ ] Sistema de inflación/deflación
+- [ ] Eventos económicos globales
 
 ---
 
-## 📝 Versión 0.9.0-alpha - Seguridad, Testing y Optimización
+## 📝 Versión 0.10.0-alpha - Seguridad y Estadísticas
 
-### Seguridad
+### Sistema de Centinelas/Anti-cheat
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-centinelasanti-cheat`
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
+- 📁 **Referencia VB6:** `modCentinela.bas` (23KB), `clsAntiMassClon.cls`
+
+### Estadísticas Avanzadas
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-estadísticas-avanzado`
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟢 **Prioridad:** Baja
+- 📁 **Referencia VB6:** `Statistics.bas` (15KB), `clsEstadisticasIPC.cls`
+
+### Seguridad Mejorada
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟡 **Prioridad:** Media
 - [ ] Rate limiting por IP (anti-spam)
-- [x] Hash de passwords con argon2
-- [ ] Validación de rangos en todos los packets
-- [ ] Sanitización de strings (nombres, chat)
-- [ ] Prevención de exploits conocidos
-- [ ] Tokens de sesión con expiración
-- [ ] Límite de intentos de login fallidos
-
-### Testing y Calidad
-- [ ] Tests de integración end-to-end
-- [ ] Tests de carga (múltiples jugadores simultáneos)
-- [ ] Tests de stress (límites del servidor)
-- [ ] Tests de concurrencia (race conditions)
-- [ ] Coverage > 90%
-- [ ] Bot de prueba automatizado (simula cliente)
-
-### Optimización
-- [ ] Broadcast inteligente (solo jugadores en rango visible 15x15)
-- [ ] Batch de múltiples updates en un solo packet
-- [ ] Throttling de movimiento
-- [ ] Pipeline de comandos Redis
-- [ ] Caché en memoria para datos frecuentes
-- [ ] TTL automático para datos temporales
-
-### Refactoring y Limpieza
-- [ ] **Revisar y limpiar todos los `# noqa`** - Analizar si son necesarios
-- [ ] **Revisar y limpiar todos los `# type: ignore`** - Mejorar tipos
-- [ ] **Analizar complejidad ciclomática** - Simplificar métodos con C901, PLR0912
-- [ ] **Reducir variables locales** - Refactorizar métodos con PLR0914
-- [ ] **Reorganizar datos en Redis** - Estandarizar nomenclatura de keys
+- [ ] Validación avanzada de packets
+- [ ] Logs de seguridad
+- [ ] Sistema de bans automáticos
 
 ---
 
-## 📝 Versión 1.0.0 - Producción
+## 📝 Versión 0.11.0-alpha - Multimedia y Calidad
 
-### Documentación
-- [ ] API documentation (OpenAPI/Swagger)
-- [ ] Guía de contribución (CONTRIBUTING.md)
-- [ ] Guía de deployment completa
-- [ ] Troubleshooting común
-- [ ] Changelog detallado
-- [ ] Tutoriales (crear packet, agregar NPC, crear hechizo)
+### Sistema de Sonido por Mapa
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-sonido-por-mapa`
+- 📅 **Fecha estimada:** 1 semana
+- 🟢 **Prioridad:** Baja
+- 📁 **Referencia VB6:** `clsMapSoundManager.cls`
 
-### CI/CD y DevOps
-- [ ] CI/CD robusto con GitHub Actions
-- [ ] Automated testing en CI
-- [ ] Automated deployment
-- [ ] Rollback automático en errores
-- [ ] Health checks y auto-restart
-- [ ] Docker Compose para desarrollo
+### Historial y Logs Avanzados
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-historiallogs-avanzado`
+- 📅 **Fecha estimada:** 1 semana
+- 🟢 **Prioridad:** Baja
+- 📁 **Referencia VB6:** `History.bas` (5KB)
 
-### Monitoreo y Observabilidad
-- [ ] Prometheus para métricas
-- [ ] Grafana para dashboards
-- [ ] Métricas de jugadores (online, nuevos, activos)
-- [ ] Métricas de performance (CPU, RAM, Redis)
-- [ ] Alertas automáticas
-- [ ] Structured logging (JSON)
-- [ ] Agregación de logs (ELK stack)
-
-### Performance Final
-- [ ] Performance optimizado y validado
-- [ ] Profiling de código (identificar cuellos de botella)
-- [ ] Validaciones de mapa optimizadas
-- [ ] Cargar mapas al iniciar servidor
-
-### Últimos Fixes
-- [ ] Revisión final de bugs
-- [ ] Validación de seguridad
-- [ ] Testing exhaustivo
+### Mejoras de UI/UX
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟢 **Prioridad:** Baja
+- [ ] Animaciones de combate mejoradas
+- [ ] Efectos visuales especiales
+- [ ] Interfaz de administración web
+- [ ] Sistema de tutoriales
 
 ---
 
-## 📋 Features Post-1.0.0 (Expansiones Futuras)
+## 📝 Versión 0.12.0-alpha - Seguridad Avanzada
 
-### 🐉 Sistema de NPCs por Bioma
-**Requisito:** Cliente terminado con soporte de biomas
+### Seguridad IP
+**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-seguridad-ip`
+- 📅 **Fecha estimada:** 1 semana
+- 🟢 **Prioridad:** Baja
+- 📁 **Referencia VB6:** `SecurityIp.bas` (12KB)
 
-- [ ] Definir biomas en mapas (forest, dungeon, desert, snow, swamp, cave)
-- [ ] Configuración por bioma en `data/npc_spawns_by_biome.toml`
-- [ ] NPCBiomeSpawnService para spawn automático
-- [ ] Spawn zones configurables por mapa
-- [ ] Respawn automático según bioma
-- [ ] Selección ponderada de NPCs (weights)
-- [ ] Nivel aleatorio (min_level/max_level)
-
-**Esfuerzo estimado:** 4-6 horas  
-**Beneficios:** Mundo más dinámico, configurable, balance por nivel
-
-### Sistema de Guild (Largo plazo)
-- [ ] Crear/unirse a guild
-- [ ] Rangos en guild
-- [ ] Chat de guild
-- [ ] Guerra entre guilds
-- [ ] Territorio de guild
-
-### PvP (Largo plazo)
-- [ ] Combate jugador vs jugador
-- [ ] Zonas PvP/seguras
-- [ ] Sistema de karma/criminal
-- [ ] Penalizaciones por matar jugadores
-- [ ] Duelos 1v1
-
-### Panel de Administración (Largo plazo)
-- [ ] Dashboard web para administradores
-- [ ] Ver jugadores online
-- [ ] Kickear/banear jugadores
-- [ ] Modificar stats de jugadores
-- [ ] Spawn de items/NPCs
-- [ ] Logs en tiempo real
-
-### Protocolo Avanzado (Largo plazo)
-- [ ] Versionado de protocolo (compatibilidad)
-- [ ] Compresión de packets (zlib/gzip)
-- [ ] Encriptación de comunicación (TLS)
-- [ ] Heartbeat para detectar desconexiones
-- [ ] Reconexión automática
-
-### Escalabilidad (Largo plazo)
-- [ ] Soporte para múltiples instancias del servidor
-- [ ] Load balancer
-- [ ] Redis Cluster para alta disponibilidad
-- [ ] Separación de servicios (microservicios)
-- [ ] Message queue (RabbitMQ/Kafka)
+### Protección DDoS
+- 📅 **Fecha estimada:** 2-3 semanas
+- 🟡 **Prioridad:** Media
+- [ ] Detección de ataques DDoS básicos
+- [ ] Rate limiting avanzado
+- [ ] Sistema de whitelist/blacklist IP
 
 ---
 
-## 📚 Mapas y Contenido (Tareas Técnicas)
+## 🎯 **Criterios de Priorización y Planificación**
 
-### Mapas y Datos
-- [ ] **Importar mapas del AO Godot** - Convertir archivos `.map` a formato JSON
-- [ ] **Script de conversión** - `scripts/convert_map.py` para automatizar
-- [ ] **Validar todos los mapas** - Asegurar que tiles bloqueados sean correctos
-- [ ] **Optimizar formato de mapas** - Considerar formato binario más eficiente
-- [ ] **Cargar mapas al iniciar servidor** - `map_manager.load_map_data()`
+### 🔴 **Alta Prioridad** (Implementar primero)
+- Impacto directo en gameplay
+- Requerido para contenido end-game
+- Mejora significativa de experiencia social
+- Referencias claras en servidor VB6
 
-### Contenido (NPCs, Items, Mapas)
-- [ ] Más variedad de monstruos
-- [ ] NPCs con diálogos
-- [ ] NPCs que dan quests
-- [ ] Bosses con mecánicas especiales
-- [ ] Más armas y armaduras
-- [ ] Pociones y consumibles variados
-- [ ] Items únicos/legendarios
-- [ ] Más ciudades y dungeons
+### 🟡 **Media Prioridad** (Implementar después)
+- Funcionalidades importantes pero no críticas
+- Mejoras de sistemas existentes
+- Contenido para jugadores avanzados
 
----
-
-## 📊 Estadísticas del Proyecto
-
-**Versión actual:** 0.5.0-alpha (100% completado)  
-**Próxima versión:** 0.6.0-alpha (Refactorings, IA de NPCs, Skills)
-
-**Tests actuales:** 945 (100% pasando)  
-**Cobertura:** 74%  
-**Servicios implementados:** 14+ (StaminaService, NPCFactory, PlayerMapService)  
-**Efectos de tick:** 5 (StaminaRegenEffect)  
-**NPCs con loot tables:** 10  
-**Mapas con colisiones:** 290  
-
-**Sistemas completados:**  
-Login, Movimiento, Combate, Loot Tables, Banco, Comercio, Magia, Colisiones, Energía/Stamina, Transiciones de Mapa
+### 🟢 **Baja Prioridad** (Implementar al final)
+- Funcionalidades opcionales
+- Mejoras cosméticas/de calidad
+- Herramientas administrativas
 
 ---
 
-**Última actualización:** 2025-10-20  
-**Mantenido por:** Equipo PyAO  
-**Estado:** 🔄 En desarrollo activo
+## 📊 **Métricas de Progreso**
+
+- **Features Completados:** 45/67 (67%)
+- **Sistemas Críticos:** 28/35 (80%)
+- **Contenido End-game:** 8/25 (32%)
+- **Sistemas Sociales:** 3/15 (20%)
+
+---
+
+## 🔗 **Referencias Principales**
+
+- **Servidor VB6:** `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/`
+- **Características Faltantes:** `todo/TODO_CARACTERISTICAS_VB6.md` 🎯
+- **Documentación Técnica:** `docs/`
+- **Cliente Godot:** `clientes/ArgentumOnlineGodot/`
+
+---
+
+*Última actualización: 2025-01-29*  
+*Versión actual: v0.6.0-alpha (completado)*  
+*Próxima versión: v0.7.0-alpha (Sistema Social)*
