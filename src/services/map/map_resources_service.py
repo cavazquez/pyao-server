@@ -30,9 +30,17 @@ class MapResourcesService:
 
             map_ids: set[int] = set()
 
-            for blocked_file in self.maps_dir.glob("*_blocked.json"):
+            # Buscar archivos con formato: blocked_XXX-YYY.json
+            for blocked_file in self.maps_dir.glob("blocked_*.json"):
                 try:
-                    map_ids.add(int(blocked_file.stem.split("_")[0]))
+                    # Extraer rango del nombre: blocked_001-050.json -> [001, 050]
+                    stem = blocked_file.stem  # "blocked_001-050"
+                    range_part = stem.split("_")[1]  # "001-050"
+                    start_map = int(range_part.split("-")[0])
+                    end_map = int(range_part.split("-")[1])
+                    
+                    # Agregar todos los mapas del rango
+                    map_ids.update(range(start_map, end_map + 1))
                 except (ValueError, IndexError):
                     logger.warning(
                         "Ignorando archivo blocked con nombre inválido: %s",
@@ -58,7 +66,25 @@ class MapResourcesService:
             map_id: ID del mapa.
         """
         map_key = f"map_{map_id}"
-        blocked_path = self.maps_dir / f"{map_id:03d}_blocked.json"
+        
+        # Encontrar el archivo blocked que contiene este mapa
+        blocked_path = None
+        for blocked_file in self.maps_dir.glob("blocked_*.json"):
+            try:
+                stem = blocked_file.stem  # "blocked_001-050"
+                range_part = stem.split("_")[1]  # "001-050"
+                start_map = int(range_part.split("-")[0])
+                end_map = int(range_part.split("-")[1])
+                
+                if start_map <= map_id <= end_map:
+                    blocked_path = blocked_file
+                    break
+            except (ValueError, IndexError):
+                continue
+        
+        if blocked_path is None:
+            logger.debug("No se encontró archivo blocked para mapa %d", map_id)
+            return
 
         try:
             blocked: set[tuple[int, int]] = set()
@@ -83,22 +109,29 @@ class MapResourcesService:
                             )
                             continue
 
-                        tile_type = entry.get("type")
+                        # Filtrar por mapa específico
+                        entry_map = entry.get("m")
+                        if entry_map != map_id:
+                            continue
+
+                        # Formato compacto: {"t":"b","m":1,"x":0,"y":0}
+                        tile_type = entry.get("t")
                         x = entry.get("x")
                         y = entry.get("y")
 
                         if not isinstance(x, int) or not isinstance(y, int):
                             continue
 
-                        if tile_type == "blocked":
+                        # Convertir tipos compactos a nombres completos
+                        if tile_type == "b":  # blocked
                             blocked.add((x, y))
-                        elif tile_type == "water":
+                        elif tile_type == "w":  # water
                             water.add((x, y))
                             blocked.add((x, y))
-                        elif tile_type == "tree":
+                        elif tile_type == "t":  # tree
                             trees.add((x, y))
                             blocked.add((x, y))
-                        elif tile_type == "mine":
+                        elif tile_type == "m":  # mine
                             mines.add((x, y))
                             blocked.add((x, y))
 
