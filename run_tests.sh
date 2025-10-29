@@ -11,14 +11,15 @@ echo ""
 
 echo "🎨 Auto-formatting code..."
 uv run ruff format .
+uv run ruff check --unsafe-fixes --fix .
 
 echo ""
 echo "🧪 Running unit tests..."
-uv run pytest
+uv run pytest tests/
 
 echo ""
 echo "🔍 Running ruff linter..."
-uv run ruff check .
+uv run ruff check src tests
 
 echo ""
 echo "🔬 Running mypy type checker..."
