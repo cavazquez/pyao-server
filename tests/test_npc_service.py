@@ -105,13 +105,18 @@ class TestNPCServiceWithTestData:
         for npc in npcs[:5]:  # Revisar primeros 5 para no ser muy lento
             # Verificar campos obligatorios
             assert "id" in npc, f"NPC sin ID: {npc}"
-            assert "name" in npc, f"NPC sin nombre: {npc}"
-            assert "category" in npc, f"NPC sin categoría: {npc}"
+            assert "name" in npc or "nombre" in npc, f"NPC sin nombre: {npc}"
+            # category es opcional para NPCs amigables
+            if "category" not in npc:
+                assert "descripcion" in npc, f"NPC sin categoría y descripción: {npc}"
 
             # Verificar tipos de datos
             assert isinstance(npc["id"], int)
-            assert isinstance(npc["name"], str)
-            assert isinstance(npc["category"], str)
+            name = npc.get("name", npc.get("nombre", ""))
+            assert isinstance(name, str)
+            # category es opcional
+            if "category" in npc:
+                assert isinstance(npc["category"], str)
 
             # Tags debe ser lista
             assert isinstance(npc.get("tags", []), list)

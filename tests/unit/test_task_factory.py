@@ -34,6 +34,7 @@ def mock_deps() -> DependencyContainer:
         npc_ai_service=Mock(),
         npc_death_service=Mock(),
         npc_respawn_service=Mock(),
+        npc_world_manager=Mock(),
         loot_table_service=Mock(),
         map_resources_service=Mock(),
         broadcast_service=Mock(),

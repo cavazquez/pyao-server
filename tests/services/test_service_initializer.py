@@ -39,12 +39,18 @@ async def test_service_initializer_creates_all_services(
     mock_npc_service = Mock()
     mock_npc_service.initialize_world_npcs = AsyncMock()
 
+    # Mock para MapResourcesService (evita cargar 290 mapas)
+    mock_map_resources_service = Mock()
+
     initializer = ServiceInitializer(mock_repositories, mock_map_manager)
 
-    # Patchear NPCService para que retorne nuestro mock
+    # Patchear servicios lentos
     with pytest.MonkeyPatch.context() as m:
         m.setattr(
             "src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service
+        )
+        m.setattr(
+            "src.core.service_initializer.MapResourcesService", lambda: mock_map_resources_service
         )
         services = await initializer.initialize_all()
 
@@ -52,6 +58,7 @@ async def test_service_initializer_creates_all_services(
     assert "broadcast_service" in services
     assert "npc_service" in services
     assert "npc_respawn_service" in services
+    assert "npc_world_manager" in services
     assert "loot_table_service" in services
     assert "spell_service" in services
     assert "commerce_service" in services
@@ -75,6 +82,7 @@ async def test_service_initializer_returns_dict(
     """Verifica que ServiceInitializer retorna un diccionario."""
     mock_npc_service = Mock()
     mock_npc_service.initialize_world_npcs = AsyncMock()
+    mock_map_resources_service = Mock()
 
     initializer = ServiceInitializer(mock_repositories, mock_map_manager)
 
@@ -82,7 +90,12 @@ async def test_service_initializer_returns_dict(
         m.setattr(
             "src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service
         )
+        m.setattr(
+            "src.core.service_initializer.MapResourcesService", lambda: mock_map_resources_service
+        )
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)
-    assert len(services) == 15  # Servicios/catálogos sin MapTransitionService
+    assert (
+        len(services) == 16
+    )  # Servicios/catálogos sin MapTransitionService (+1 npc_world_manager)

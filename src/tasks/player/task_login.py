@@ -9,10 +9,7 @@ from src.messaging.message_sender import MessageSender
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
-from src.repositories.account_repository import AccountRepository
-from src.repositories.player_repository import PlayerRepository
-from src.repositories.server_repository import ServerRepository
-from src.repositories.spellbook_repository import SpellbookRepository
+from src.services.game.npc_map_spawner import NPCMapSpawner
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.services.npc.npc_service import NPCService
 from src.services.player.authentication_service import AuthenticationService
@@ -29,6 +26,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.game.npc_world_manager import NPCWorldManager
     from src.services.map.player_map_service import PlayerMapService
     from src.services.npc.npc_service import NPCService
 
@@ -55,6 +53,7 @@ class TaskLogin(Task):
         spell_catalog: SpellCatalog | None = None,
         equipment_repo: EquipmentRepository | None = None,
         player_map_service: PlayerMapService | None = None,
+        npc_world_manager: NPCWorldManager | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -71,6 +70,7 @@ class TaskLogin(Task):
             spell_catalog: Catálogo de hechizos.
             equipment_repo: Repositorio de equipamiento.
             player_map_service: Servicio de mapas de jugador.
+            npc_world_manager: Gestor de NPCs del mundo para spawning.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -83,6 +83,7 @@ class TaskLogin(Task):
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
         self.player_map_service = player_map_service
+        self.npc_world_manager = npc_world_manager
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -382,9 +383,10 @@ class TaskLogin(Task):
             await self.player_repo.set_meditating(user_id, is_meditating=False)
             logger.debug("Estado de meditación reseteado para user_id %d al hacer login", user_id)
 
-        # Obtener/crear y enviar hambre/sed
+        # Enviar stats iniciales (incluyendo experiencia)
         if self.player_repo:
             player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
+            await player_service.send_stats(user_id)
             await player_service.send_hunger_thirst(user_id)
 
     async def _send_spellbook(self, user_id: int) -> None:
@@ -485,7 +487,22 @@ class TaskLogin(Task):
         """
         logger.warning("PlayerMapService no disponible, usando método legacy")
 
-        if self.npc_service:
+        # Enviar NPCs usando NPCWorldManager si está disponible
+        if self.npc_world_manager and self.map_manager:
+            # Spawnear NPCs para el jugador
+            result = self.npc_world_manager.update_player_npcs(
+                str(user_id), position["map"], position["x"], position["y"]
+            )
+
+            # Usar NPCMapSpawner para agregar NPCs al MapManager y enviarlos al cliente
+            spawner = NPCMapSpawner(self.map_manager)
+            await spawner.spawn_npcs_for_player(result["spawned"], self.message_sender)
+
+            logger.info(
+                "Enviados %d NPCs del mapa %d al jugador", len(result["spawned"]), position["map"]
+            )
+        elif self.npc_service:
+            # Fallback al sistema antiguo
             await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
 
         if self.map_manager and self.account_repo and self.player_repo:

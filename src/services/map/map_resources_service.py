@@ -39,7 +39,7 @@ class MapResourcesService:
                         range_part = stem.split("_")[1]  # "001-050"
                         start_map = int(range_part.split("-")[0])
                         end_map = int(range_part.split("-")[1])
-                        
+
                         # Agregar todos los mapas del rango
                         map_ids.update(range(start_map, end_map + 1))
                     except (ValueError, IndexError):
@@ -60,6 +60,145 @@ class MapResourcesService:
         except Exception:
             logger.exception("Error cargando recursos de mapas")
 
+    def _find_file_for_map(self, pattern: str, map_id: int) -> Path | None:
+        """Encuentra el archivo que contiene el mapa especificado.
+
+        Args:
+            pattern: Patrón glob para buscar archivos (ej: "blocked_*.json").
+            map_id: ID del mapa a buscar.
+
+        Returns:
+            Path del archivo encontrado o None.
+        """
+        for file_path in self.maps_dir.glob(pattern):
+            try:
+                stem = file_path.stem
+                range_part = stem.split("_")[1]
+                start_map = int(range_part.split("-")[0])
+                end_map = int(range_part.split("-")[1])
+
+                if start_map <= map_id <= end_map:
+                    return file_path
+            except (ValueError, IndexError):
+                continue
+        return None
+
+    @staticmethod
+    def _process_blocked_file(
+        blocked_path: Path | None, map_id: int
+    ) -> tuple[
+        set[tuple[int, int]], set[tuple[int, int]], set[tuple[int, int]], set[tuple[int, int]]
+    ]:
+        """Procesa el archivo blocked para extraer tiles bloqueados, agua, árboles y minas.
+
+        Args:
+            blocked_path: Path al archivo blocked o None.
+            map_id: ID del mapa a filtrar.
+
+        Returns:
+            Tupla con (blocked, water, trees, mines).
+        """
+        blocked: set[tuple[int, int]] = set()
+        water: set[tuple[int, int]] = set()
+        trees: set[tuple[int, int]] = set()
+        mines: set[tuple[int, int]] = set()
+
+        if not blocked_path or not blocked_path.exists():
+            return blocked, water, trees, mines
+
+        with blocked_path.open(encoding="utf-8") as f:
+            for line_number, raw_line in enumerate(f, start=1):
+                line = raw_line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        "Entrada inválida en %s línea %d: %s",
+                        blocked_path.name,
+                        line_number,
+                        line,
+                    )
+                    continue
+
+                # Filtrar por mapa específico
+                if entry.get("m") != map_id:
+                    continue
+
+                tile_type = entry.get("t")
+                x = entry.get("x")
+                y = entry.get("y")
+
+                if not isinstance(x, int) or not isinstance(y, int):
+                    continue
+
+                # Convertir tipos compactos a nombres completos
+                if tile_type == "b":  # blocked
+                    blocked.add((x, y))
+                elif tile_type == "w":  # water
+                    water.add((x, y))
+                    blocked.add((x, y))
+                elif tile_type == "t":  # tree
+                    trees.add((x, y))
+                    blocked.add((x, y))
+                elif tile_type == "m":  # mine
+                    mines.add((x, y))
+                    blocked.add((x, y))
+
+        return blocked, water, trees, mines
+
+    @staticmethod
+    def _process_objects_file(
+        objects_path: Path | None,
+        trees: set[tuple[int, int]],
+        mines: set[tuple[int, int]],
+        blocked: set[tuple[int, int]],
+    ) -> None:
+        """Procesa el archivo objects para agregar árboles y minas.
+
+        Args:
+            objects_path: Path al archivo objects o None.
+            trees: Set de árboles a actualizar.
+            mines: Set de minas a actualizar.
+            blocked: Set de bloqueados a actualizar.
+        """
+        if not objects_path or not objects_path.exists():
+            return
+
+        with objects_path.open(encoding="utf-8") as f:
+            for line_number, raw_line in enumerate(f, start=1):
+                line = raw_line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        "Entrada inválida en %s línea %d: %s",
+                        objects_path.name,
+                        line_number,
+                        line,
+                    )
+                    continue
+
+                if not isinstance(entry, dict):
+                    continue
+
+                tile_type = entry.get("t")
+                x = entry.get("x")
+                y = entry.get("y")
+
+                if not isinstance(x, int) or not isinstance(y, int):
+                    continue
+
+                if tile_type == "tree":
+                    trees.add((x, y))
+                    blocked.add((x, y))
+                elif tile_type == "mine":
+                    mines.add((x, y))
+                    blocked.add((x, y))
+
     def _load_map(self, map_id: int) -> None:
         """Carga un mapa específico desde sus archivos de datos disponibles.
 
@@ -67,131 +206,31 @@ class MapResourcesService:
             map_id: ID del mapa.
         """
         map_key = f"map_{map_id}"
-        
-        # Encontrar el archivo blocked que contiene este mapa
-        blocked_path = None
-        for blocked_file in self.maps_dir.glob("blocked_*.json"):
-            try:
-                stem = blocked_file.stem  # "blocked_001-050"
-                range_part = stem.split("_")[1]  # "001-050"
-                start_map = int(range_part.split("-")[0])
-                end_map = int(range_part.split("-")[1])
-                
-                if start_map <= map_id <= end_map:
-                    blocked_path = blocked_file
-                    break
-            except (ValueError, IndexError):
-                continue
-        
-        # Encontrar el archivo objects que contiene este mapa
-        objects_path = None
-        for objects_file in self.maps_dir.glob("objects_*.json"):
-            try:
-                stem = objects_file.stem  # "objects_001-050"
-                range_part = stem.split("_")[1]  # "001-050"
-                start_map = int(range_part.split("-")[0])
-                end_map = int(range_part.split("-")[1])
-                
-                if start_map <= map_id <= end_map:
-                    objects_path = objects_file
-                    break
-            except (ValueError, IndexError):
-                continue
-        
+
+        # Encontrar archivos que contienen este mapa
+        blocked_path = self._find_file_for_map("blocked_*.json", map_id)
+        objects_path = self._find_file_for_map("objects_*.json", map_id)
+
         if blocked_path is None and objects_path is None:
             logger.debug("No se encontraron archivos de datos para mapa %d", map_id)
             return
 
         try:
-            blocked: set[tuple[int, int]] = set()
-            water: set[tuple[int, int]] = set()
-            trees: set[tuple[int, int]] = set()
-            mines: set[tuple[int, int]] = set()
-
-            if blocked_path.exists():
-                with blocked_path.open(encoding="utf-8") as f:
-                    for line_number, raw_line in enumerate(f, start=1):
-                        line = raw_line.strip()
-                        if not line:
-                            continue
-                        try:
-                            entry = json.loads(line)
-                        except json.JSONDecodeError:
-                            logger.debug(
-                                "Entrada inválida en %s línea %d: %s",
-                                blocked_path.name,
-                                line_number,
-                                line,
-                            )
-                            continue
-
-                        # Filtrar por mapa específico
-                        entry_map = entry.get("m")
-                        if entry_map != map_id:
-                            continue
-
-                        # Formato compacto: {"t":"b","m":1,"x":0,"y":0}
-                        tile_type = entry.get("t")
-                        x = entry.get("x")
-                        y = entry.get("y")
-
-                        if not isinstance(x, int) or not isinstance(y, int):
-                            continue
-
-                        # Convertir tipos compactos a nombres completos
-                        if tile_type == "b":  # blocked
-                            blocked.add((x, y))
-                        elif tile_type == "w":  # water
-                            water.add((x, y))
-                            blocked.add((x, y))
-                        elif tile_type == "t":  # tree
-                            trees.add((x, y))
-                            blocked.add((x, y))
-                        elif tile_type == "m":  # mine
-                            mines.add((x, y))
-                            blocked.add((x, y))
+            blocked, water, trees, mines = self._process_blocked_file(blocked_path, map_id)
 
             # Cargar árboles y minas desde archivo objects
-            if objects_path and objects_path.exists():
-                with objects_path.open(encoding="utf-8") as f:
-                    for line_number, raw_line in enumerate(f, start=1):
-                        line = raw_line.strip()
-                        if not line:
-                            continue
-                        try:
-                            entry = json.loads(line)
-                        except json.JSONDecodeError:
-                            logger.debug(
-                                "Entrada inválida en %s línea %d: %s",
-                                objects_path.name,
-                                line_number,
-                                line,
-                            )
-                            continue
+            self._process_objects_file(objects_path, trees, mines, blocked)
 
-                        # Filtrar por mapa específico
-                        entry_map = entry.get("m")
-                        if entry_map != map_id:
-                            continue
-
-                        # Formato: {"t":"tree","x":16,"y":12,"g":7002,"m":1}
-                        tile_type = entry.get("t")
-                        x = entry.get("x")
-                        y = entry.get("y")
-
-                        if not isinstance(x, int) or not isinstance(y, int):
-                            continue
-
-                        if tile_type == "tree":
-                            trees.add((x, y))
-                            blocked.add((x, y))
-                        elif tile_type == "mine":
-                            mines.add((x, y))
-                            blocked.add((x, y))
-
-                source = f"{blocked_path.name if blocked_path else '(sin blocked)'} + {objects_path.name}"
+            # Determinar fuente de datos para logging
+            if blocked_path and objects_path:
+                blocked_name = blocked_path.name if blocked_path else "(sin blocked)"
+                source = f"{blocked_name} + {objects_path.name}"
             else:
-                source = blocked_path.name if blocked_path else objects_path.name
+                source = (
+                    blocked_path.name
+                    if blocked_path
+                    else (objects_path.name if objects_path else "unknown")
+                )
 
             self.resources[map_key] = {
                 "blocked": blocked,

@@ -207,6 +207,7 @@ class TestTaskLogin:
         )
 
         with patch("src.tasks.player.task_login.PlayerService") as mock_service:
+            mock_service.return_value.send_stats = AsyncMock()
             mock_service.return_value.send_hunger_thirst = AsyncMock()
             await task._initialize_player_data(1)  # noqa: SLF001
 

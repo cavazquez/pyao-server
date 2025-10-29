@@ -22,7 +22,7 @@ class TestNPCDeathService:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"exp": 100})
+        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
 
         broadcast_service = MagicMock()
@@ -86,7 +86,7 @@ class TestNPCDeathService:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"exp": 100})
+        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
 
         broadcast_service = MagicMock()
@@ -159,7 +159,7 @@ class TestNPCDeathService:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"exp": 100})
+        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
 
         broadcast_service = MagicMock()
@@ -227,7 +227,7 @@ class TestNPCDeathService:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"exp": 100})
+        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
 
         broadcast_service = MagicMock()
@@ -296,7 +296,7 @@ class TestNPCDeathService:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"exp": 100})
+        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
 
         broadcast_service = MagicMock()
