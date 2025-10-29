@@ -218,6 +218,7 @@ class TaskFactory:
                 self.deps.spell_catalog,
                 self.deps.equipment_repo,
                 self.deps.player_map_service,
+                self.deps.npc_world_manager,
             ),
             TaskCreateAccount: lambda: TaskCreateAccount(
                 data,

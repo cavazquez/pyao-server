@@ -9,6 +9,7 @@ from src.models.npc_catalog import NPCCatalog
 from src.models.spell_catalog import SpellCatalog
 from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
+from src.services.game.npc_world_manager import NPCWorldManager
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.pathfinding_service import PathfindingService
 from src.services.map.player_map_service import PlayerMapService
@@ -74,6 +75,10 @@ class ServiceInitializer:
         # Servicio de respawn de NPCs
         npc_respawn_service = NPCRespawnService(npc_service)
         logger.info("✓ Sistema de respawn de NPCs inicializado")
+
+        # Servicio de NPCs del mundo
+        npc_world_manager = NPCWorldManager()
+        logger.info("✓ Servicio de NPCs del mundo inicializado")
 
         # Servicio de loot tables
         loot_table_service = LootTableService()
@@ -155,6 +160,7 @@ class ServiceInitializer:
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
             "npc_respawn_service": npc_respawn_service,
+            "npc_world_manager": npc_world_manager,
             "npc_death_service": npc_death_service,
             "loot_table_service": loot_table_service,
             "spell_service": spell_service,

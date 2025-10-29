@@ -204,7 +204,7 @@ class CombatService:
         if not stats:
             return
 
-        current_exp = stats.get("exp", 0)
+        current_exp = stats.get("experience", 0)
         new_exp = current_exp + experience
 
         # Actualizar experiencia

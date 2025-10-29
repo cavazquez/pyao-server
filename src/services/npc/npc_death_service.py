@@ -114,7 +114,7 @@ class NPCDeathService:
         if not stats:
             return
 
-        current_exp = stats.get("exp", 0)
+        current_exp = stats.get("experience", 0)
         new_exp = current_exp + experience
 
         await self.player_repo.update_experience(user_id, new_exp)

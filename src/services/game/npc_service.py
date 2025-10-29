@@ -98,6 +98,19 @@ class NPCService:
                             if npc.get("economics", {}).get("trades", 0) == 1
                         ]
 
+            # Cargar NPCs amigables
+            amigables_file = self.data_dir / "npcs_amigables.toml"
+            if amigables_file.exists():
+                with amigables_file.open("rb") as f:
+                    amigables_data = tomllib_load(f)
+                    amigables_npcs = amigables_data.get("npc", [])
+                    # Agregar NPCs amigables a la lista general
+                    self.all_npcs.extend(amigables_npcs)
+                    # Agregar comerciantes
+                    for npc in amigables_npcs:
+                        if npc.get("es_mercader", False):
+                            self.trader_npcs.append(npc)
+
             # Construir índices
             self._build_indices()
 
@@ -380,11 +393,16 @@ class NPCService:
         if not npc:
             return False
 
+        # Verificar formato economics.trades (nuevo)
         economics = npc.get("economics")
-        if not isinstance(economics, dict):
-            return False
-        trades_value = economics.get("trades", 0)
-        return bool(trades_value)
+        if isinstance(economics, dict):
+            trades_value = economics.get("trades", 0)
+            if bool(trades_value):
+                return True
+
+        # Verificar formato es_mercader (amigables)
+        es_mercader = npc.get("es_mercader", False)
+        return bool(es_mercader)
 
     def is_npc_hostile(self, npc_id: int) -> bool:
         """Verifica si un NPC es hostil.

@@ -191,7 +191,7 @@ class NPCAIService:
                         gold=stats.get("gold", 0),
                         level=stats.get("level", 1),
                         elu=stats.get("elu", 300),
-                        experience=stats.get("exp", 0),
+                        experience=stats.get("experience", 0),
                     )
 
                     # Si el jugador murió, revivirlo temporalmente (para testing)
@@ -220,7 +220,7 @@ class NPCAIService:
                             gold=stats.get("gold", 0),
                             level=stats.get("level", 1),
                             elu=stats.get("elu", 300),
-                            experience=stats.get("exp", 0),
+                            experience=stats.get("experience", 0),
                         )
 
                         # TODO: Implementar lógica de muerte completa

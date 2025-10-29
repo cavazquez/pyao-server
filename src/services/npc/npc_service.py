@@ -169,17 +169,30 @@ class NPCService:
             logger.exception("Error al leer archivo de spawns %s", spawns_path)
             return None
 
-        spawn_entries = data.get("spawn")
-        if not isinstance(spawn_entries, list):
-            logger.warning("No se encontró la sección [spawn] en %s", spawns_path)
+        spawn_entries = data.get("map_npcs")
+        if not isinstance(spawn_entries, dict):
+            logger.warning("No se encontró la sección [map_npcs] en %s", spawns_path)
             return None
 
         validated_entries: list[dict[str, Any]] = []
-        for entry in spawn_entries:
-            if isinstance(entry, dict):
-                validated_entries.append(entry)
-            else:
-                logger.debug("Entrada de spawn inválida ignorada: %s", entry)
+
+        # spawn_entries es un dict con mapas como claves
+        for map_id, map_data in spawn_entries.items():
+            if isinstance(map_data, dict):
+                # Agregar spawns fijos
+                for spawn_point in map_data.get("spawn_points", []):
+                    if isinstance(spawn_point, dict):
+                        spawn_point["map_id"] = int(map_id)
+                        validated_entries.append(spawn_point)
+
+                # Agregar spawns aleatorios
+                for random_spawn in map_data.get("random_spawns", []):
+                    if isinstance(random_spawn, dict):
+                        random_spawn["map_id"] = int(map_id)
+                        validated_entries.append(random_spawn)
+
+        if not validated_entries:
+            logger.warning("No se encontraron spawns de NPC en %s", spawns_path)
 
         return validated_entries
 

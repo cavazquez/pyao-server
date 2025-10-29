@@ -121,6 +121,7 @@ class ServerInitializer:
             npc_ai_service=services["npc_ai_service"],
             npc_death_service=services["npc_death_service"],
             npc_respawn_service=services["npc_respawn_service"],
+            npc_world_manager=services["npc_world_manager"],
             loot_table_service=services["loot_table_service"],
             map_resources_service=services["map_resources_service"],
             broadcast_service=services["broadcast_service"],

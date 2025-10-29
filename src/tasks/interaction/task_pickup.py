@@ -145,7 +145,7 @@ class TaskPickup(Task):
                 gold=new_gold,
                 level=stats.get("level", 1),
                 elu=stats.get("elu", 300),
-                experience=stats.get("exp", 0),
+                experience=stats.get("experience", 0),
             )
 
         # Remover del suelo

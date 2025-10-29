@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from src.repositories.spellbook_repository import SpellbookRepository
     from src.services.combat.combat_service import CombatService
     from src.services.commerce_service import CommerceService
+    from src.services.game.npc_world_manager import NPCWorldManager
     from src.services.map.map_resources_service import MapResourcesService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -65,6 +66,7 @@ class DependencyContainer:
     npc_ai_service: NPCAIService
     npc_death_service: NPCDeathService
     npc_respawn_service: NPCRespawnService
+    npc_world_manager: NPCWorldManager
     loot_table_service: LootTableService
     map_resources_service: MapResourcesService
     broadcast_service: MultiplayerBroadcastService

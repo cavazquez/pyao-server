@@ -151,14 +151,14 @@ class NPCSpawnService:
                     if npc_data:
                         npc_instance = {
                             "id": npc_data["id"],
-                            "name": npc_data["name"],
+                            "name": npc_data.get("nombre", npc_data.get("name", "Sin nombre")),
                             "map": player_map,
                             "x": npc_x,
                             "y": npc_y,
                             "direction": spawn_point.get("direction", 3),
-                            "type": npc_data["npc_type"],
-                            "category": npc_data["category"],
-                            "tags": npc_data["tags"],
+                            "type": npc_data.get("npc_type", 0),
+                            "category": npc_data.get("category", "NPCS VARIOS"),
+                            "tags": npc_data.get("tags", []),
                             "appearance": npc_data.get("appearance", {}),
                             "hostile": npc_service.is_npc_hostile(npc_id),
                             "trader": npc_service.can_npc_trade(npc_id),
