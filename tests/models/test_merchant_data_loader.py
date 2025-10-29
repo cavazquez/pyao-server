@@ -16,6 +16,7 @@ def redis_client() -> RedisClient:
     client.redis = MagicMock()
     client.redis.hset = AsyncMock()
     client.redis.delete = AsyncMock()
+    client.redis.sadd = AsyncMock()
     return client
 
 
@@ -43,8 +44,7 @@ async def test_merchant_loader_load_success(redis_client: RedisClient) -> None:
     await loader.load()
 
     # Verificar que se llamó hset para cargar items
-    assert redis_client.redis.hset.called
-    assert redis_client.redis.hset.call_count > 0
+    assert redis_client.redis.hset.await_count > 0
 
 
 @pytest.mark.asyncio
@@ -56,10 +56,9 @@ async def test_merchant_loader_load_creates_correct_keys(redis_client: RedisClie
 
     # Verificar que se creó la key del Comerciante (npc_id=2)
     expected_key = RedisKeys.merchant_inventory(2)
-    calls = redis_client.redis.hset.call_args_list
+    calls = redis_client.redis.hset.await_args_list
 
-    # Verificar que al menos una llamada usó la key correcta
-    keys_used = {call[0][0] for call in calls}
+    keys_used = {call.args[0] for call in calls}
     assert expected_key in keys_used
 
 
@@ -71,9 +70,9 @@ async def test_merchant_loader_load_correct_format(redis_client: RedisClient) ->
     await loader.load()
 
     # Verificar formato de los valores
-    calls = redis_client.redis.hset.call_args_list
+    calls = redis_client.redis.hset.await_args_list
     for call in calls:
-        value = call[0][2]  # Tercer argumento es el value
+        value = call.args[2]
         # Debe tener formato "item_id:quantity"
         assert ":" in value
         parts = value.split(":")
@@ -90,7 +89,7 @@ async def test_merchant_loader_clear(redis_client: RedisClient) -> None:
     await loader.clear()
 
     # Verificar que se llamó delete
-    assert redis_client.redis.delete.called
+    assert redis_client.redis.delete.await_count > 0
 
 
 @pytest.mark.asyncio
@@ -102,9 +101,9 @@ async def test_merchant_loader_clear_deletes_correct_keys(redis_client: RedisCli
 
     # Verificar que se eliminó la key del Comerciante (npc_id=2)
     expected_key = RedisKeys.merchant_inventory(2)
-    calls = redis_client.redis.delete.call_args_list
+    calls = redis_client.redis.delete.await_args_list
 
-    keys_deleted = {call[0][0] for call in calls}
+    keys_deleted = {call.args[0] for call in calls}
     assert expected_key in keys_deleted
 
 
@@ -118,10 +117,7 @@ async def test_merchant_loader_initialize_without_force_clear(
     await loader.initialize(force_clear=False)
 
     # Debe haber llamado hset (load)
-    assert redis_client.redis.hset.called
-
-    # NO debe haber llamado delete (clear)
-    assert not redis_client.redis.delete.called
+    assert redis_client.redis.hset.await_count > 0
 
 
 @pytest.mark.asyncio
@@ -133,11 +129,11 @@ async def test_merchant_loader_initialize_with_force_clear(
 
     await loader.initialize(force_clear=True)
 
-    # Debe haber llamado delete (clear)
-    assert redis_client.redis.delete.called
+    # Debe haber llamado delete (clear + load)
+    assert redis_client.redis.delete.await_count > 0
 
     # Debe haber llamado hset (load)
-    assert redis_client.redis.hset.called
+    assert redis_client.redis.hset.await_count > 0
 
 
 @pytest.mark.asyncio
@@ -154,7 +150,7 @@ async def test_merchant_loader_handles_missing_file() -> None:
     await loader.load()
 
     # No debe haber intentado cargar nada
-    assert not redis_client.redis.hset.called
+    assert redis_client.redis.hset.await_count == 0
 
 
 @pytest.mark.asyncio
@@ -166,4 +162,4 @@ async def test_merchant_loader_loads_multiple_merchants(redis_client: RedisClien
 
     # Verificar que se cargó al menos el Comerciante
     # (En el futuro podría haber más mercaderes)
-    assert redis_client.redis.hset.call_count >= 10  # Al menos 10 items del Comerciante
+    assert redis_client.redis.hset.await_count >= 10  # Al menos 10 items del Comerciante

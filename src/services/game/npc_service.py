@@ -46,7 +46,10 @@ class NPCService:
         self.npc_data: dict[str, Any] = {}
         self._initialized = False
 
-    async def load_npc_data(self) -> None:
+        # Cargar datos de NPCs inmediatamente
+        self.load_npc_data()
+
+    def load_npc_data(self) -> None:
         """Carga datos de NPCs desde archivos TOML."""
         try:
             # Cargar NPCs completos (usar test data si existe)
@@ -143,7 +146,7 @@ class NPCService:
 
         return cast("list[dict[str, Any]]", spawn_entries)
 
-    async def spawn_npc(
+    def spawn_npc(
         self, npc_id: int, map_id: int, x: int, y: int, heading: int
     ) -> dict[str, Any] | None:
         """Spawnea un NPC en el mapa.

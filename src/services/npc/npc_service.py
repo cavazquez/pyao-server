@@ -2,15 +2,16 @@
 
 import asyncio
 import logging
+import tomllib
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.models.npc_catalog import NPCCatalog
     from src.repositories.npc_repository import NPCRepository
-    from src.services.game.map_manager import MapManager
+    from src.services.game.map_manager import MapManager  # type: ignore[import-untyped]
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
@@ -67,6 +68,7 @@ class NPCService:
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
         self._next_char_index = 10001  # CharIndex inicial para NPCs
+        self._spawn_entries: list[dict[str, Any]] = []
 
         NPCService._initialized = True
         NPCService._instance = self
@@ -93,10 +95,13 @@ class NPCService:
         logger.info("NPCs limpiados. Cargando nuevos spawns...")
 
         # Cargar configuración de spawns
-        await self.load_npc_spawns(spawns_path)
+        spawn_entries = await self.load_npc_spawns(spawns_path)
+        if not spawn_entries:
+            logger.warning("No se encontraron spawns de NPC en %s", spawns_path)
+            return
 
         spawned_count = 0
-        for spawn_data in self.spawn_data:
+        for spawn_data in spawn_entries:
             map_id = spawn_data.get("map_id")
             npc_id = spawn_data.get("npc_id")
             x = spawn_data.get("x")
@@ -108,63 +113,75 @@ class NPCService:
                 continue
 
             # Spawnear el NPC
-            npc = await self.spawn_npc(npc_id, map_id, x, y, heading)
+            npc = await self.spawn_npc(int(npc_id), int(map_id), int(x), int(y), int(heading))
             if npc:
                 spawned_count += 1
                 logger.debug(
                     "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
                     npc.name,
-                    npc_id,
-                    map_id,
-                    x,
-                    y,
+                    int(npc_id),
+                    int(map_id),
+                    int(x),
+                    int(y),
                     npc.char_index,
                 )
 
         logger.info("✅ NPCs inicializados: %d spawns creados exitosamente", spawned_count)
 
-    async def load_npc_spawns(self, spawns_path: str) -> None:
+    async def load_npc_spawns(self, spawns_path: str) -> list[dict[str, Any]] | None:
         """Carga datos de spawns de NPCs desde archivo TOML.
 
         Args:
             spawns_path: Ruta al archivo de spawns.
+
+        Returns:
+            Lista de spawns leídos o ``None`` si no se pudieron cargar.
         """
         try:
             path = Path(spawns_path)
             entries = await asyncio.to_thread(NPCService._load_spawn_entries, path)
-            if not entries:
-                logger.warning("Archivo de spawns no encontrado: %s", spawns_path)
-                return
-
-            spawned_count = 0
-            for spawn_data in entries:
-                map_id = spawn_data.get("map_id")
-                npc_id = spawn_data.get("npc_id")
-                x = spawn_data.get("x")
-                y = spawn_data.get("y")
-                heading = spawn_data.get("heading", 3)  # Sur por defecto
-
-                if map_id is None or npc_id is None or x is None or y is None:
-                    logger.warning("Spawn incompleto, ignorando: %s", spawn_data)
-                    continue
-
-                npc = await self.spawn_npc(npc_id, map_id, x, y, heading)
-                if npc:
-                    spawned_count += 1
-                    logger.debug(
-                        "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
-                        npc.name,
-                        npc_id,
-                        map_id,
-                        x,
-                        y,
-                        npc.char_index,
-                    )
-
-            logger.info("✅ NPCs inicializados: %d spawns creados exitosamente", spawned_count)
-
         except Exception:
             logger.exception("Error al inicializar NPCs del mundo desde %s", spawns_path)
+            return None
+
+        if entries is None:
+            logger.warning("Archivo de spawns no encontrado: %s", spawns_path)
+            return None
+
+        self._spawn_entries = entries
+        return entries
+
+    @staticmethod
+    def _load_spawn_entries(spawns_path: Path) -> list[dict[str, Any]] | None:
+        """Carga entradas de spawn desde un archivo TOML.
+
+        Returns:
+            Lista de entradas válidas o ``None`` si ocurre un error.
+        """
+        if not spawns_path.exists():
+            logger.warning("Archivo de spawns no encontrado: %s", spawns_path)
+            return None
+
+        try:
+            with spawns_path.open("rb") as file:
+                data = tomllib.load(file)
+        except Exception:
+            logger.exception("Error al leer archivo de spawns %s", spawns_path)
+            return None
+
+        spawn_entries = data.get("spawn")
+        if not isinstance(spawn_entries, list):
+            logger.warning("No se encontró la sección [spawn] en %s", spawns_path)
+            return None
+
+        validated_entries: list[dict[str, Any]] = []
+        for entry in spawn_entries:
+            if isinstance(entry, dict):
+                validated_entries.append(entry)
+            else:
+                logger.debug("Entrada de spawn inválida ignorada: %s", entry)
+
+        return validated_entries
 
     async def spawn_npc(
         self, npc_id: int, map_id: int, x: int, y: int, heading: int = 3

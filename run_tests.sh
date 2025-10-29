@@ -13,6 +13,10 @@ echo "🎨 Auto-formatting code..."
 uv run ruff format .
 
 echo ""
+echo "🧪 Running unit tests..."
+uv run pytest
+
+echo ""
 echo "🔍 Running ruff linter..."
 uv run ruff check .
 
@@ -20,8 +24,5 @@ echo ""
 echo "🔬 Running mypy type checker..."
 uv run mypy src tests
 
-echo ""
-echo "🧪 Running unit tests..."
-uv run pytest
 echo ""
 echo "✅ All checks passed!"

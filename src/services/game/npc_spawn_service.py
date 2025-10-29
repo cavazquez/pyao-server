@@ -32,6 +32,12 @@ class NPCSpawnService:
     _instance: ClassVar[NPCSpawnService | None] = None
     _initialized: bool = False
 
+    def __new__(cls, *args: Any, **kwargs: Any) -> NPCSpawnService:  # noqa: ANN401, ARG004, PYI034
+        """Garantiza que todas las instancias compartan el mismo objeto singleton."""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     @classmethod
     def get_instance(cls, data_dir: Path | str = "data") -> NPCSpawnService:
         """Obtiene la instancia singleton del servicio de spawn.

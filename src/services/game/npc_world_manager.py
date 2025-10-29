@@ -59,7 +59,7 @@ class NPCWorldManager:
         """Reinicia la instancia singleton del gestor."""
         cls._instance = None
 
-    async def update_player_npcs(
+    def update_player_npcs(
         self, player_id: str, player_map: int, player_x: int, player_y: int
     ) -> dict[str, Any]:
         """Actualiza los NPCs visibles para un jugador.
@@ -92,16 +92,6 @@ class NPCWorldManager:
 
         if spawned_npcs:
             logger.debug("Jugador %s: spawned %d NPCs", player_id, len(spawned_npcs))
-
-        # Enviar NPCs al cliente si hay MessageSender disponible
-        if self.message_sender:
-            # Despawnear NPCs fuera de rango
-            for instance_id in despawned:
-                await self.message_sender.npc.send_npc_remove(instance_id)
-
-            # Spawnear NPCs nuevos
-            for npc_data in spawned_npcs:
-                await self.message_sender.npc.send_npc_create(npc_data)
 
         return result
 

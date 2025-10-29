@@ -3,8 +3,6 @@
 import sys
 from pathlib import Path
 
-import pytest
-
 # Agregar src al path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
@@ -25,10 +23,9 @@ class TestNPCWorldManager:
         assert self.manager.npc_service is not None
         assert isinstance(self.manager.active_combats, dict)
 
-    @pytest.mark.asyncio
-    async def test_update_player_npcs(self) -> None:
+    def test_update_player_npcs(self) -> None:
         """Test actualización de NPCs para jugador."""
-        result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
+        result = self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         assert "player_id" in result
         assert "player_map" in result
@@ -46,11 +43,10 @@ class TestNPCWorldManager:
         assert len(result["spawned"]) > 0
         assert result["total_visible"] > 0
 
-    @pytest.mark.asyncio
-    async def test_get_npc_interaction(self) -> None:
+    def test_get_npc_interaction(self) -> None:
         """Test obtención de datos de interacción."""
         # Spawnear NPC primero
-        spawn_result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
+        spawn_result = self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         if spawn_result["spawned"]:
             npc = spawn_result["spawned"][0]
@@ -198,9 +194,9 @@ class TestNPCWorldManager:
             assert instance_id not in self.manager.active_combats
             assert instance_id in self.manager.spawn_service.spawned_npcs
 
-    async def test_move_npc_randomly(self) -> None:
+    def test_move_npc_randomly(self) -> None:
         """Test movimiento aleatorio de NPC."""
-        spawn_result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
+        spawn_result = self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         if spawn_result["spawned"]:
             npc = spawn_result["spawned"][0]

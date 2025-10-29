@@ -218,6 +218,8 @@ class TestNPCSpawnServiceIntegration:
 
     def setup_method(self) -> None:
         """Configurar método de prueba."""
+        # Reset singleton to ensure clean state
+        NPCSpawnService.reset_instance()
         self.service = NPCSpawnService()
 
     def test_full_spawn_lifecycle(self) -> None:
