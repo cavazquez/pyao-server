@@ -30,22 +30,23 @@ class MapResourcesService:
 
             map_ids: set[int] = set()
 
-            # Buscar archivos con formato: blocked_XXX-YYY.json
-            for blocked_file in self.maps_dir.glob("blocked_*.json"):
-                try:
-                    # Extraer rango del nombre: blocked_001-050.json -> [001, 050]
-                    stem = blocked_file.stem  # "blocked_001-050"
-                    range_part = stem.split("_")[1]  # "001-050"
-                    start_map = int(range_part.split("-")[0])
-                    end_map = int(range_part.split("-")[1])
-                    
-                    # Agregar todos los mapas del rango
-                    map_ids.update(range(start_map, end_map + 1))
-                except (ValueError, IndexError):
-                    logger.warning(
-                        "Ignorando archivo blocked con nombre inválido: %s",
-                        blocked_file.name,
-                    )
+            # Buscar archivos con formato: blocked_XXX-YYY.json y objects_XXX-YYY.json
+            for file_pattern in ["blocked_*.json", "objects_*.json"]:
+                for data_file in self.maps_dir.glob(file_pattern):
+                    try:
+                        # Extraer rango del nombre: blocked_001-050.json -> [001, 050]
+                        stem = data_file.stem  # "blocked_001-050"
+                        range_part = stem.split("_")[1]  # "001-050"
+                        start_map = int(range_part.split("-")[0])
+                        end_map = int(range_part.split("-")[1])
+                        
+                        # Agregar todos los mapas del rango
+                        map_ids.update(range(start_map, end_map + 1))
+                    except (ValueError, IndexError):
+                        logger.warning(
+                            "Ignorando archivo con nombre inválido: %s",
+                            data_file.name,
+                        )
 
             if not map_ids:
                 logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
@@ -82,8 +83,23 @@ class MapResourcesService:
             except (ValueError, IndexError):
                 continue
         
-        if blocked_path is None:
-            logger.debug("No se encontró archivo blocked para mapa %d", map_id)
+        # Encontrar el archivo objects que contiene este mapa
+        objects_path = None
+        for objects_file in self.maps_dir.glob("objects_*.json"):
+            try:
+                stem = objects_file.stem  # "objects_001-050"
+                range_part = stem.split("_")[1]  # "001-050"
+                start_map = int(range_part.split("-")[0])
+                end_map = int(range_part.split("-")[1])
+                
+                if start_map <= map_id <= end_map:
+                    objects_path = objects_file
+                    break
+            except (ValueError, IndexError):
+                continue
+        
+        if blocked_path is None and objects_path is None:
+            logger.debug("No se encontraron archivos de datos para mapa %d", map_id)
             return
 
         try:
@@ -135,10 +151,47 @@ class MapResourcesService:
                             mines.add((x, y))
                             blocked.add((x, y))
 
-                source = blocked_path.name
+            # Cargar árboles y minas desde archivo objects
+            if objects_path and objects_path.exists():
+                with objects_path.open(encoding="utf-8") as f:
+                    for line_number, raw_line in enumerate(f, start=1):
+                        line = raw_line.strip()
+                        if not line:
+                            continue
+                        try:
+                            entry = json.loads(line)
+                        except json.JSONDecodeError:
+                            logger.debug(
+                                "Entrada inválida en %s línea %d: %s",
+                                objects_path.name,
+                                line_number,
+                                line,
+                            )
+                            continue
+
+                        # Filtrar por mapa específico
+                        entry_map = entry.get("m")
+                        if entry_map != map_id:
+                            continue
+
+                        # Formato: {"t":"tree","x":16,"y":12,"g":7002,"m":1}
+                        tile_type = entry.get("t")
+                        x = entry.get("x")
+                        y = entry.get("y")
+
+                        if not isinstance(x, int) or not isinstance(y, int):
+                            continue
+
+                        if tile_type == "tree":
+                            trees.add((x, y))
+                            blocked.add((x, y))
+                        elif tile_type == "mine":
+                            mines.add((x, y))
+                            blocked.add((x, y))
+
+                source = f"{blocked_path.name if blocked_path else '(sin blocked)'} + {objects_path.name}"
             else:
-                logger.warning("No se encontraron datos de recursos para mapa %03d", map_id)
-                source = "(sin datos)"
+                source = blocked_path.name if blocked_path else objects_path.name
 
             self.resources[map_key] = {
                 "blocked": blocked,
