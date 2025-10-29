@@ -41,7 +41,7 @@ class CombatMessageSender:
         """
         # Si no se especifica parte del cuerpo, elegir aleatoriamente
         if body_part is None:
-            body_part = random.choice(list(BodyPart))  # noqa: S311
+            body_part = random.choice(list(BodyPart))
 
         # Índice del mensaje NPCHitUser (12, no 13 - enum en Godot empieza en 0)
         message_index = 12

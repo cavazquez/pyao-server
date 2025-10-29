@@ -47,11 +47,11 @@ class TaskDice(Task):
             max_value = 18
 
         # Tirar 5 atributos (Fuerza, Agilidad, Inteligencia, Carisma, Constitución)
-        strength = random.randint(min_value, max_value)  # noqa: S311
-        agility = random.randint(min_value, max_value)  # noqa: S311
-        intelligence = random.randint(min_value, max_value)  # noqa: S311
-        charisma = random.randint(min_value, max_value)  # noqa: S311
-        constitution = random.randint(min_value, max_value)  # noqa: S311
+        strength = random.randint(min_value, max_value)
+        agility = random.randint(min_value, max_value)
+        intelligence = random.randint(min_value, max_value)
+        charisma = random.randint(min_value, max_value)
+        constitution = random.randint(min_value, max_value)
 
         logger.info(
             "Cliente %s tiró dados - STR:%d AGI:%d INT:%d CHA:%d CON:%d",

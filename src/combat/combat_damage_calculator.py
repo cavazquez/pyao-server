@@ -79,7 +79,7 @@ class DamageCalculator:
         base_damage = npc_level * 3
 
         # Variación aleatoria (±20%)
-        variation = random.uniform(0.8, 1.2)  # noqa: S311
+        variation = random.uniform(0.8, 1.2)
         damage = int(base_damage * variation)
 
         # Aplicar reducción por armadura

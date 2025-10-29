@@ -77,7 +77,7 @@ class CriticalCalculator:
             True si es crítico, False en caso contrario.
         """
         chance = self.calculate_critical_chance(agility)
-        return random.random() < chance  # noqa: S311
+        return random.random() < chance
 
     def is_dodged(self, agility: int) -> bool:
         """Determina si un ataque es esquivado.
@@ -89,7 +89,7 @@ class CriticalCalculator:
             True si esquiva, False en caso contrario.
         """
         chance = self.calculate_dodge_chance(agility)
-        return random.random() < chance  # noqa: S311
+        return random.random() < chance
 
     def apply_critical_damage(self, base_damage: int) -> int:
         """Aplica el multiplicador de daño crítico.

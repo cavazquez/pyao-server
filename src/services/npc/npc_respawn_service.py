@@ -39,8 +39,8 @@ class NPCRespawnService:
             Tupla (x, y) con una posición libre, o None si no encuentra.
         """
         # Generar posición aleatoria dentro del radio
-        offset_x = random.randint(-radius, radius)  # noqa: S311
-        offset_y = random.randint(-radius, radius)  # noqa: S311
+        offset_x = random.randint(-radius, radius)
+        offset_y = random.randint(-radius, radius)
 
         x = center_x + offset_x
         y = center_y + offset_y
@@ -75,7 +75,7 @@ class NPCRespawnService:
             return
 
         # Calcular tiempo aleatorio de respawn entre min y max
-        respawn_delay = random.randint(npc.respawn_time, npc.respawn_time_max)  # noqa: S311
+        respawn_delay = random.randint(npc.respawn_time, npc.respawn_time_max)
 
         # Cancelar respawn anterior si existe
         if npc.instance_id in self._respawn_tasks:

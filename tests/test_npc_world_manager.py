@@ -3,10 +3,12 @@
 import sys
 from pathlib import Path
 
-# Agregar src al path para poder importar servicios
+import pytest
+
+# Agregar src al path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
-from services.game.npc_world_manager import NPCWorldManager
+from src.services.game.npc_world_manager import NPCWorldManager
 
 
 class TestNPCWorldManager:
@@ -23,9 +25,10 @@ class TestNPCWorldManager:
         assert self.manager.npc_service is not None
         assert isinstance(self.manager.active_combats, dict)
 
-    def test_update_player_npcs(self) -> None:
+    @pytest.mark.asyncio
+    async def test_update_player_npcs(self) -> None:
         """Test actualización de NPCs para jugador."""
-        result = self.manager.update_player_npcs("test_player", 1, 50, 50)
+        result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         assert "player_id" in result
         assert "player_map" in result
@@ -43,10 +46,11 @@ class TestNPCWorldManager:
         assert len(result["spawned"]) > 0
         assert result["total_visible"] > 0
 
-    def test_get_npc_interaction(self) -> None:
+    @pytest.mark.asyncio
+    async def test_get_npc_interaction(self) -> None:
         """Test obtención de datos de interacción."""
         # Spawnear NPC primero
-        spawn_result = self.manager.update_player_npcs("test_player", 1, 50, 50)
+        spawn_result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         if spawn_result["spawned"]:
             npc = spawn_result["spawned"][0]
@@ -194,14 +198,13 @@ class TestNPCWorldManager:
             assert instance_id not in self.manager.active_combats
             assert instance_id in self.manager.spawn_service.spawned_npcs
 
-    def test_move_npc_randomly(self) -> None:
+    async def test_move_npc_randomly(self) -> None:
         """Test movimiento aleatorio de NPC."""
-        spawn_result = self.manager.update_player_npcs("test_player", 1, 50, 50)
+        spawn_result = await self.manager.update_player_npcs("test_player", 1, 50, 50)
 
         if spawn_result["spawned"]:
             npc = spawn_result["spawned"][0]
             instance_id = npc["instance_id"]
-            original_pos = {"x": npc["x"], "y": npc["y"]}
 
             # Mover NPC
             result = self.manager.move_npc_randomly(instance_id)

@@ -112,9 +112,9 @@ class LootTableService:
 
         for loot_item in loot_table.items:
             # Tirar dado para ver si dropea este item
-            if random.random() <= loot_item.probability:  # noqa: S311
+            if random.random() <= loot_item.probability:
                 # Calcular cantidad aleatoria
-                quantity = random.randint(loot_item.min_quantity, loot_item.max_quantity)  # noqa: S311
+                quantity = random.randint(loot_item.min_quantity, loot_item.max_quantity)
                 loot.append((loot_item.item_id, quantity))
                 logger.debug(
                     "NPC %d dropea: item_id=%d quantity=%d (prob=%.2f)",

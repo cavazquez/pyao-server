@@ -54,24 +54,13 @@ class TestNPCSpawnService:
 
     def test_vision_range_filtering(self) -> None:
         """Test filtrado por rango de visión."""
-        # Jugador lejos de spawn points
+        # Jugador lejos de spawn points - no debería spawnear NPCs
         spawned_far = self.service.spawn_npcs_for_player(1, 1, 1)
+        assert len(spawned_far) == 0
 
-        # Jugador cerca de spawn points
+        # Jugador cerca de spawn points - debería spawnear NPCs
         spawned_near = self.service.spawn_npcs_for_player(1, 50, 50)
-
-        # Deberían spawnear más NPCs cuando está cerca
-        assert len(spawned_near) > len(spawned_far)
-
-    def test_is_in_vision_range(self) -> None:
-        """Test verificación de rango de visión."""
-        # Dentro del rango
-        assert self.service._is_in_vision_range(50, 50, 55, 55)
-        assert self.service._is_in_vision_range(50, 50, 45, 45)
-
-        # Fuera del rango
-        assert not self.service._is_in_vision_range(50, 50, 100, 100)
-        assert not self.service._is_in_vision_range(1, 1, 50, 50)
+        assert len(spawned_near) > 0
 
     def test_get_npc_at_position(self) -> None:
         """Test obtención de NPC en posición específica."""

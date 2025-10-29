@@ -101,8 +101,8 @@ class TaskAttack(Task):
 
         # Buscar en posiciones cercanas
         for _ in range(20):  # Máximo 20 intentos
-            offset_x = random.randint(-radius, radius)  # noqa: S311
-            offset_y = random.randint(-radius, radius)  # noqa: S311
+            offset_x = random.randint(-radius, radius)
+            offset_y = random.randint(-radius, radius)
 
             x = center_x + offset_x
             y = center_y + offset_y

@@ -4,12 +4,17 @@ Coordina la interacción entre NPCs, jugadores y el sistema de juego,
 manejo de estados y eventos del mundo.
 """
 
+from __future__ import annotations
+
 import logging
 import random
-from typing import Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
-from .npc_spawn_service import get_npc_spawn_service
+if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
+
 from .npc_service import get_npc_service
+from .npc_spawn_service import get_npc_spawn_service
 
 logger = logging.getLogger(__name__)
 
@@ -24,13 +29,37 @@ NPC_MOVE_CHANCE = 0.1
 class NPCWorldManager:
     """Gestor principal de NPCs en el mundo del juego."""
 
+    _instance: ClassVar[NPCWorldManager | None] = None
+
     def __init__(self) -> None:
         """Inicializa NPCWorldManager."""
+        if getattr(self, "_initialized", False):
+            return
+
         self.spawn_service = get_npc_spawn_service()
         self.npc_service = get_npc_service()
+        self.message_sender: MessageSender | None = None
         self.active_combats: dict[str, dict[str, Any]] = {}  # npc_instance_id -> combat_data
 
-    def update_player_npcs(
+        self._initialized = True
+
+    @classmethod
+    def get_instance(cls) -> NPCWorldManager:
+        """Obtiene la instancia singleton del gestor.
+
+        Returns:
+            Instancia única del ``NPCWorldManager``.
+        """
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Reinicia la instancia singleton del gestor."""
+        cls._instance = None
+
+    async def update_player_npcs(
         self, player_id: str, player_map: int, player_x: int, player_y: int
     ) -> dict[str, Any]:
         """Actualiza los NPCs visibles para un jugador.
@@ -60,9 +89,19 @@ class NPCWorldManager:
 
         if despawned:
             logger.debug("Jugador %s: despawned %d NPCs", player_id, len(despawned))
-        
+
         if spawned_npcs:
             logger.debug("Jugador %s: spawned %d NPCs", player_id, len(spawned_npcs))
+
+        # Enviar NPCs al cliente si hay MessageSender disponible
+        if self.message_sender:
+            # Despawnear NPCs fuera de rango
+            for instance_id in despawned:
+                await self.message_sender.npc.send_npc_remove(instance_id)
+
+            # Spawnear NPCs nuevos
+            for npc_data in spawned_npcs:
+                await self.message_sender.npc.send_npc_create(npc_data)
 
         return result
 
@@ -154,7 +193,7 @@ class NPCWorldManager:
         """
         if instance_id not in self.active_combats:
             return {"error": "NPC no en combate", "instance_id": instance_id}
-        
+
         # Eliminar NPC si el jugador ganó
         despawned = False
         if winner == "player":
@@ -177,10 +216,10 @@ class NPCWorldManager:
 
     def move_npc_randomly(self, instance_id: str) -> dict[str, Any]:
         """Mueve un NPC aleatoriamente en su área.
-        
+
         Args:
             instance_id: ID de instancia del NPC.
-            
+
         Returns:
             Nueva posición del NPC o error.
         """
@@ -220,17 +259,17 @@ class NPCWorldManager:
 
     def process_npc_tick(self) -> dict[str, Any]:
         """Procesa un tick de juego para todos los NPCs activos.
-        
+
         Returns:
             Estadísticas del tick procesado.
         """
         processed_npcs = 0
         moved_npcs = 0
         combat_checks = 0
-        
+
         spawned_npcs = self.spawn_service.get_all_spawned_npcs()
-        
-        for instance_id in spawned_npcs.keys():
+
+        for instance_id in spawned_npcs:
             processed_npcs += 1
 
             # NPCs en combate no procesan comportamiento normal
@@ -300,23 +339,20 @@ class NPCWorldManager:
         }
 
 
-# Instancia global
-_npc_world_manager: NPCWorldManager | None = None
-
-
 def get_npc_world_manager() -> NPCWorldManager:
-    """Retorna la instancia global del NPCWorldManager.
+    """Obtiene la instancia singleton del gestor de NPCs del mundo.
 
     Returns:
-        Instancia global del NPCWorldManager.
+        Instancia única del ``NPCWorldManager``.
     """
-    global _npc_world_manager
-    if _npc_world_manager is None:
-        _npc_world_manager = NPCWorldManager()
-    return _npc_world_manager
+    return NPCWorldManager.get_instance()
 
 
-def initialize_npc_world_manager() -> None:
-    """Inicializa el servicio global del gestor de NPCs."""
-    global _npc_world_manager
-    _npc_world_manager = NPCWorldManager()
+def initialize_npc_world_manager() -> NPCWorldManager:
+    """Reinicia y retorna la instancia singleton del gestor de NPCs.
+
+    Returns:
+        Instancia única del ``NPCWorldManager`` reinicializada.
+    """
+    NPCWorldManager.reset_instance()
+    return NPCWorldManager.get_instance()

@@ -108,7 +108,7 @@ class SpellService:
         # Calcular daño
         min_damage = spell_data.get("min_damage", 0)
         max_damage = spell_data.get("max_damage", 0)
-        base_damage = random.randint(min_damage, max_damage)  # noqa: S311
+        base_damage = random.randint(min_damage, max_damage)
 
         # Bonus por inteligencia (10% por cada 10 puntos)
         intelligence_bonus = int(base_damage * (stats.get("attr_int", 0) / 100))

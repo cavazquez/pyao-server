@@ -4,11 +4,13 @@ Carga y gestiona las recetas de crafting para herrería
 y armaduras desde los archivos TOML extraídos del cliente.
 """
 
+from __future__ import annotations
+
 import logging
 import random
 from pathlib import Path
 from tomllib import load as tomllib_load
-from typing import Any
+from typing import Any, ClassVar
 
 logger = logging.getLogger(__name__)
 
@@ -16,18 +18,25 @@ logger = logging.getLogger(__name__)
 class CraftingService:
     """Servicio centralizado para manejar el sistema de crafting."""
 
+    _instance: ClassVar[CraftingService | None] = None
+
     def __init__(self, data_dir: Path | None = None) -> None:
         """Inicializa el servicio de crafting.
 
         Args:
             data_dir: Directorio donde se encuentran los datos de crafting.
         """
+        if getattr(self, "_initialized", False):
+            return
+
         self.data_dir = data_dir or Path("data")
         self.weapons_recipes: list[dict[str, Any]] = []
         self.armor_recipes: list[dict[str, Any]] = []
         self.materials: dict[str, dict[str, Any]] = {}
         self.crafting_data: dict[str, Any] = {}
         self._load_crafting_data()
+
+        self._initialized = True
 
     def _load_crafting_data(self) -> None:
         """Carga los datos de crafting desde archivos TOML."""
@@ -129,8 +138,9 @@ class CraftingService:
                 return recipe
         return None
 
+    @staticmethod
     def can_craft(
-        self, recipe: dict[str, Any], player_inventory: dict[str, int], player_skill: int
+        recipe: dict[str, Any], player_inventory: dict[str, int], player_skill: int
     ) -> tuple[bool, str]:
         """Verifica si un jugador puede crear un item.
 
@@ -178,52 +188,78 @@ class CraftingService:
         Returns:
             Tupla (exitoso, item_creado, mensaje).
         """
-        # Verificar si puede crear
         can_craft, reason = self.can_craft(recipe, player_inventory, player_skill)
         if not can_craft:
             return False, None, reason
 
-        # Calcular éxito
+        success, context = self._roll_crafting_success(recipe, player_skill)
+        if success:
+            created_item, message = self._apply_success_outcome(recipe, player_inventory, context)
+            return True, created_item, message
+
+        message = self._apply_failure_outcome(recipe, player_inventory)
+        return False, None, message
+
+    @staticmethod
+    def _roll_crafting_success(
+        recipe: dict[str, Any], player_skill: int
+    ) -> tuple[bool, dict[str, int]]:
+        """Determina si el crafting es exitoso.
+
+        Returns:
+            Tupla con ``(éxito, contexto)``, donde *contexto* incluye datos auxiliares
+            como el ``skill_bonus`` calculado.
+        """
         success_rate = recipe.get("success_rate", 50)
-        # Bonus de skill por encima del requerido
         required_skill = recipe.get("skill_requirement", 0)
         skill_bonus = max(0, (player_skill - required_skill) // 10)
         final_success_rate = min(95, success_rate + (skill_bonus * 5))
-
-        # Tirada de éxito
         roll = random.randint(1, 100)
-        success = roll <= final_success_rate
+        return roll <= final_success_rate, {
+            "skill_bonus": skill_bonus,
+            "final_success_rate": final_success_rate,
+        }
 
-        if success:
-            # Consumir materiales
-            materials = recipe.get("materials", [])
-            for material in materials:
-                material_id = material.get("item")
-                quantity = material.get("quantity", 0)
-                if material_id in player_inventory:
-                    player_inventory[material_id] -= quantity
-                    if player_inventory[material_id] <= 0:
-                        del player_inventory[material_id]
+    @staticmethod
+    def _apply_success_outcome(
+        recipe: dict[str, Any],
+        player_inventory: dict[str, int],
+        context: dict[str, int],
+    ) -> tuple[dict[str, Any], str]:
+        """Aplica los efectos de un crafting exitoso.
 
-            # Item creado
-            created_item = {
-                "index": recipe.get("index"),
-                "name": recipe.get("name"),
-                "id": recipe.get("id"),
-            }
+        Returns:
+            Tupla ``(item_creado, mensaje)`` con el resultado del crafting exitoso.
+        """
+        for material in recipe.get("materials", []):
+            material_id = material.get("item")
+            quantity = material.get("quantity", 0)
+            if material_id in player_inventory:
+                player_inventory[material_id] -= quantity
+                if player_inventory[material_id] <= 0:
+                    del player_inventory[material_id]
 
-            # Experiencia ganada
-            exp_gained = recipe.get("experience", 10)
-            skill_bonus_exp = min(exp_gained, skill_bonus * 2)
-            total_exp = exp_gained + skill_bonus_exp
+        created_item = {
+            "index": recipe.get("index"),
+            "name": recipe.get("name"),
+            "id": recipe.get("id"),
+        }
 
-            message = f"✅ ¡{recipe.get('name')} creado con éxito! (+{total_exp} exp)"
-            return True, created_item, message
-        # Fallar crafting - consumir la mitad de materiales
-        materials = recipe.get("materials", [])
-        consumed_materials = []
+        exp_gained = recipe.get("experience", 10)
+        skill_bonus_exp = min(exp_gained, context["skill_bonus"] * 2)
+        total_exp = exp_gained + skill_bonus_exp
+        message = f"✅ ¡{recipe.get('name')} creado con éxito! (+{total_exp} exp)"
+        return created_item, message
 
-        for material in materials:
+    @staticmethod
+    def _apply_failure_outcome(recipe: dict[str, Any], player_inventory: dict[str, int]) -> str:
+        """Aplica los efectos de un crafting fallido.
+
+        Returns:
+            Mensaje descriptivo del fallo y materiales consumidos.
+        """
+        consumed_materials: list[str] = []
+        for material in recipe.get("materials", []):
             material_id = material.get("item")
             required_qty = material.get("quantity", 0)
             consumed_qty = max(1, required_qty // 2)
@@ -234,8 +270,8 @@ class CraftingService:
                     del player_inventory[material_id]
                 consumed_materials.append(f"{consumed_qty}x {material_id}")
 
-        message = f"❌ Falló el crafting. Perdiste: {', '.join(consumed_materials)}"
-        return False, None, message
+        consumed_text = ", ".join(consumed_materials) or "ningún material"
+        return f"❌ Falló el crafting. Perdiste: {consumed_text}"
 
     def get_material_info(self, material_id: str) -> dict[str, Any] | None:
         """Obtiene información de un material.
@@ -296,31 +332,46 @@ class CraftingService:
         Returns:
             Lista de tiers disponibles.
         """
-        available_tiers = set()
+        available_tiers: set[int] = set()
         for recipe in self.get_all_recipes():
             if recipe.get("skill_requirement", 0) <= skill_level:
-                available_tiers.add(recipe.get("tier", 1))
-
+                available_tiers.add(recipe.get("tier", 0))
         return sorted(available_tiers)
 
+    @classmethod
+    def get_instance(cls, data_dir: Path | None = None) -> CraftingService:
+        """Obtiene la instancia singleton del servicio.
 
-# Instancia global del servicio
-_crafting_service: CraftingService | None = None
+        Returns:
+            Instancia única de ``CraftingService``.
+        """
+        if cls._instance is None:
+            cls._instance = cls(data_dir=data_dir)
+        return cls._instance
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Reinicia la instancia singleton."""
+        cls._instance = None
 
 
 def get_crafting_service() -> CraftingService:
-    """Retorna la instancia global del servicio de crafting.
+    """Retorna la instancia singleton del servicio de crafting.
 
     Returns:
-        Instancia global de CraftingService.
+        Instancia singleton de ``CraftingService``.
     """
-    global _crafting_service
-    if _crafting_service is None:
-        _crafting_service = CraftingService()
-    return _crafting_service
+    return CraftingService.get_instance()
 
 
-def initialize_crafting_service(data_dir: Path | None = None) -> None:
-    """Inicializa el servicio global de crafting."""
-    global _crafting_service
-    _crafting_service = CraftingService(data_dir)
+def initialize_crafting_service(data_dir: Path | None = None) -> CraftingService:
+    """Inicializa el servicio singleton con directorio personalizado.
+
+    Args:
+        data_dir: Directorio donde se encuentran los datos.
+
+    Returns:
+        Instancia del ``CraftingService``.
+    """
+    CraftingService.reset_instance()
+    return CraftingService.get_instance(data_dir=data_dir)

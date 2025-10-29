@@ -164,7 +164,8 @@ pyao-server/
 │   ├── message_audio_sender.py  # Mensajes de audio (12 métodos)
 │   ├── message_visual_effects_sender.py # Efectos visuales (6 métodos)
 │   ├── message_player_stats_sender.py # Stats del jugador (6 métodos)
-│   ├── message_character_sender.py # Personajes (4 métodos)
+│   │   ├── message_character_sender.py # Envío de personajes/NPCs
+│   │   ├── message_npc_sender.py     # Envío especializado de NPCs ✅ NUEVO (4 métodos)
 │   ├── message_inventory_sender.py # Inventario/Banco/Comercio (9 métodos)
 │   ├── message_session_sender.py # Sesión/Login (4 métodos)
 │   │
@@ -322,7 +323,7 @@ pyao-server/
 │   ├── test_merchant_data_loader.py # Tests de MerchantDataLoader (11 tests)
 │   ├── test_data_initializer.py  # Tests de DataInitializer (10 tests)
 │   │
-│   ├── # Tests de Servicios (60 tests)
+│   ├── # Tests de Servicios (76 tests)
 │   ├── test_player_service.py      # Tests de PlayerService (7 tests)
 │   ├── test_authentication_service.py # Tests de AuthenticationService (4 tests)
 │   ├── test_session_manager.py     # Tests de SessionManager (13 tests)
@@ -330,7 +331,8 @@ pyao-server/
 │   ├── test_crafting_service.py    # Tests de CraftingService (8 tests)
 │   ├── test_npc_service.py         # Tests de NPCService (11 tests) ✅ NUEVO
 │   ├── test_npc_spawn_service.py   # Tests de NPCSpawnService (15 tests) ✅ NUEVO
-│   └── test_npc_world_manager.py   # Tests de NPCWorldManager (25 tests) ✅ NUEVO
+│   ├── test_npc_world_manager.py   # Tests de NPCWorldManager (25 tests) ✅ NUEVO
+│   ├── test_npc_message_sender.py  # Tests de NPCMessageSender (16 tests) ✅ NUEVO
 │   │
 │   ├── # Tests de MessageSender Components (75 tests) ✅ REFACTORIZADO
 │   ├── test_message_sender.py      # Tests de MessageSender

@@ -357,7 +357,7 @@ class NPCAIService:
 
         # Desincronización: 30% probabilidad de skip para evitar spam
         # Esto distribuye los ataques en el tiempo en lugar de todos a la vez
-        if random.random() < 0.3:  # noqa: PLR2004, S311
+        if random.random() < 0.3:  # noqa: PLR2004
             return
 
         # Buscar jugador más cercano (usa aggro_range del NPC)
@@ -377,6 +377,6 @@ class NPCAIService:
         if distance == 1:
             await self.try_attack_player(npc, target_user_id)
         # Si está cerca pero no adyacente, perseguir
-        elif distance <= 8 and random.random() < 0.5:  # noqa: PLR2004, S311
+        elif distance <= 8 and random.random() < 0.5:  # noqa: PLR2004
             # 50% de probabilidad de moverse (para no ser demasiado agresivo)
             await self.try_move_towards(npc, target_x, target_y)

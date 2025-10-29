@@ -2,16 +2,15 @@
 
 import asyncio
 import logging
-import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.models.npc_catalog import NPCCatalog
     from src.repositories.npc_repository import NPCRepository
+    from src.services.game.map_manager import MapManager
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
@@ -19,6 +18,30 @@ logger = logging.getLogger(__name__)
 
 class NPCService:
     """Servicio para gestión de NPCs en el mundo."""
+
+    _instance: NPCService | None = None
+    _initialized: bool = False
+
+    @classmethod
+    def get_instance(cls) -> NPCService:
+        """Obtiene la instancia singleton del servicio.
+
+        Returns:
+            Instancia única de ``NPCService``.
+
+        Raises:
+            RuntimeError: Si el servicio aún no fue inicializado.
+        """
+        if cls._instance is None:
+            msg = "NPCService no ha sido inicializado"
+            raise RuntimeError(msg)
+        return cls._instance
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Reinicia la instancia singleton."""
+        cls._instance = None
+        cls._initialized = False
 
     def __init__(
         self,
@@ -35,11 +58,18 @@ class NPCService:
             map_manager: Gestor de mapas para trackear NPCs.
             broadcast_service: Servicio de broadcast multijugador.
         """
+        # Evitar reinicialización
+        if NPCService._initialized:
+            return
+
         self.npc_repository = npc_repository
         self.npc_catalog = npc_catalog
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
         self._next_char_index = 10001  # CharIndex inicial para NPCs
+
+        NPCService._initialized = True
+        NPCService._instance = self
 
     async def initialize_world_npcs(self, spawns_path: str = "data/map_npcs.toml") -> None:
         """Inicializa todos los NPCs del mundo al iniciar el servidor.
@@ -63,22 +93,51 @@ class NPCService:
         logger.info("NPCs limpiados. Cargando nuevos spawns...")
 
         # Cargar configuración de spawns
+        await self.load_npc_spawns(spawns_path)
+
+        spawned_count = 0
+        for spawn_data in self.spawn_data:
+            map_id = spawn_data.get("map_id")
+            npc_id = spawn_data.get("npc_id")
+            x = spawn_data.get("x")
+            y = spawn_data.get("y")
+            heading = spawn_data.get("heading", 3)  # Sur por defecto
+
+            if map_id is None or npc_id is None or x is None or y is None:
+                logger.warning("Spawn incompleto, ignorando: %s", spawn_data)
+                continue
+
+            # Spawnear el NPC
+            npc = await self.spawn_npc(npc_id, map_id, x, y, heading)
+            if npc:
+                spawned_count += 1
+                logger.debug(
+                    "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
+                    npc.name,
+                    npc_id,
+                    map_id,
+                    x,
+                    y,
+                    npc.char_index,
+                )
+
+        logger.info("✅ NPCs inicializados: %d spawns creados exitosamente", spawned_count)
+
+    async def load_npc_spawns(self, spawns_path: str) -> None:
+        """Carga datos de spawns de NPCs desde archivo TOML.
+
+        Args:
+            spawns_path: Ruta al archivo de spawns.
+        """
         try:
             path = Path(spawns_path)
-            if not path.exists():  # noqa: ASYNC240
+            entries = await asyncio.to_thread(NPCService._load_spawn_entries, path)
+            if not entries:
                 logger.warning("Archivo de spawns no encontrado: %s", spawns_path)
                 return
 
-            # Leer archivo de forma síncrona (solo se ejecuta una vez al inicio)
-            with path.open("rb") as f:  # noqa: ASYNC230
-                data = tomllib.load(f)
-
-            if "spawn" not in data:
-                logger.warning("No se encontró la sección [spawn] en %s", spawns_path)
-                return
-
             spawned_count = 0
-            for spawn_data in data["spawn"]:
+            for spawn_data in entries:
                 map_id = spawn_data.get("map_id")
                 npc_id = spawn_data.get("npc_id")
                 x = spawn_data.get("x")
@@ -89,7 +148,6 @@ class NPCService:
                     logger.warning("Spawn incompleto, ignorando: %s", spawn_data)
                     continue
 
-                # Spawnear el NPC
                 npc = await self.spawn_npc(npc_id, map_id, x, y, heading)
                 if npc:
                     spawned_count += 1

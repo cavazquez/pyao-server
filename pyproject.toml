@@ -60,6 +60,7 @@ ignore = [
     "FBT001",  # boolean positional argument (necesario para protocolos)
     "FBT002",  # boolean default positional argument (necesario para NPCs)
     "C901",    # function is too complex (lógica de negocio compleja)
+    "S311",    # standard pseudo-random generators (aceptable para NPCs/juego)
 ]
 preview = true  # Habilitar reglas experimentales
 

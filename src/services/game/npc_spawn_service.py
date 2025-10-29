@@ -7,9 +7,10 @@ de los NPCs dentro de los mapas del juego.
 import logging
 import random
 from pathlib import Path
-from typing import Any
-
 from tomllib import load as tomllib_load
+from typing import Any, ClassVar
+
+from .npc_service import get_npc_service
 
 logger = logging.getLogger(__name__)
 
@@ -28,17 +29,46 @@ NPC_MOVE_CHANCE = 0.1  # 10% probabilidad de moverse
 class NPCSpawnService:
     """Servicio para manejar el spawning de NPCs en el mundo."""
 
-    def __init__(self, data_dir: Path | None = None) -> None:
-        """Inicializa NPCSpawnService.
+    _instance: ClassVar[NPCSpawnService | None] = None
+    _initialized: bool = False
+
+    @classmethod
+    def get_instance(cls, data_dir: Path | str = "data") -> NPCSpawnService:
+        """Obtiene la instancia singleton del servicio de spawn.
+
+        Returns:
+            Instancia única de ``NPCSpawnService``.
+        """
+        if cls._instance is None:
+            cls(data_dir=data_dir)
+        return cls._instance  # type: ignore[return-value]
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Reinicia la instancia singleton."""
+        cls._instance = None
+        cls._initialized = False
+
+    def __init__(self, data_dir: Path | str = "data") -> None:
+        """Inicializa el servicio de spawning.
 
         Args:
-            data_dir: Directorio donde se encuentran los datos del juego.
+            data_dir: Directorio donde se encuentran los datos.
         """
-        self.data_dir = data_dir or Path("data")
+        if getattr(self, "_initialized", False):
+            return
+
+        self.data_dir = Path(data_dir)
         self.map_npcs: dict[int, dict[str, Any]] = {}
         self.spawned_npcs: dict[str, dict[str, Any]] = {}  # npc_id -> npc_data
         self.npc_positions: dict[str, dict[str, int]] = {}  # npc_id -> {map, x, y}
+
+        # Cargar configuración de NPCs por mapa
         self._load_map_npcs()
+
+        self._initialized = True
+        NPCSpawnService._initialized = True
+        NPCSpawnService._instance = self
 
     def _load_map_npcs(self) -> None:
         """Carga las configuraciones de NPCs por mapa."""
@@ -50,7 +80,7 @@ class NPCSpawnService:
                     raw_map_npcs = data.get("map_npcs", {})
                     # Convertir keys de string a int
                     self.map_npcs = {int(k): v for k, v in raw_map_npcs.items()}
-                logger.info(f"Cargados NPCs para {len(self.map_npcs)} mapas")
+                logger.info("Cargados NPCs para %d mapas", len(self.map_npcs))
             else:
                 logger.warning("No existe map_npcs.toml, usando defaults")
                 self._create_default_map_npcs()
@@ -104,13 +134,11 @@ class NPCSpawnService:
             npc_y = spawn_point["y"]
 
             # Verificar si está en rango de visión
-            if self._is_in_vision_range(player_x, player_y, npc_x, npc_y):
+            if NPCSpawnService._is_in_vision_range(player_x, player_y, npc_x, npc_y):
                 npc_key = f"{player_map}_{npc_id}_{npc_x}_{npc_y}"
 
                 if npc_key not in self.spawned_npcs:
                     # Obtener datos del NPC desde NPCService
-                    from .npc_service import get_npc_service
-
                     npc_service = get_npc_service()
                     npc_data = npc_service.get_npc_by_id(npc_id)
 
@@ -162,8 +190,6 @@ class NPCSpawnService:
         visible_npcs: list[dict[str, Any]],
     ) -> None:
         """Spawnea un NPC aleatorio en un área designada."""
-        from .npc_service import get_npc_service
-
         npc_service = get_npc_service()
 
         if spawn_config["npc_type"] == "hostile":
@@ -186,7 +212,7 @@ class NPCSpawnService:
         npc_y = random.randint(area["y1"], area["y2"])
 
         # Verificar si está en rango de visión
-        if self._is_in_vision_range(player_x, player_y, npc_x, npc_y):
+        if NPCSpawnService._is_in_vision_range(player_x, player_y, npc_x, npc_y):
             npc_key = f"{map_num}_random_{len(self.spawned_npcs)}"
 
             npc_instance = {
@@ -210,8 +236,19 @@ class NPCSpawnService:
             self.npc_positions[npc_key] = {"map": map_num, "x": npc_x, "y": npc_y}
             visible_npcs.append(npc_instance)
 
-    def _is_in_vision_range(self, player_x: int, player_y: int, npc_x: int, npc_y: int) -> bool:
-        """Verifica si un NPC está en el rango de visión del jugador."""
+    @staticmethod
+    def _is_in_vision_range(player_x: int, player_y: int, npc_x: int, npc_y: int) -> bool:
+        """Verifica si un NPC está en el rango de visión del jugador.
+
+        Args:
+            player_x: Posición X del jugador.
+            player_y: Posición Y del jugador.
+            npc_x: Posición X del NPC.
+            npc_y: Posición Y del NPC.
+
+        Returns:
+            True si el NPC está en rango de visión, False en caso contrario.
+        """
         distance = abs(player_x - npc_x) + abs(player_y - npc_y)
         return distance <= NPC_VISION_RANGE
 
@@ -297,7 +334,11 @@ class NPCSpawnService:
         return despawned
 
     def get_all_spawned_npcs(self) -> dict[str, dict[str, Any]]:
-        """Retorna todos los NPCs spawneados."""
+        """Retorna todos los NPCs spawneados.
+
+        Returns:
+            Copia del diccionario con todos los NPCs spawneados.
+        """
         return self.spawned_npcs.copy()
 
     def get_npcs_in_map(self, map_num: int) -> list[dict[str, Any]]:
@@ -313,7 +354,7 @@ class NPCSpawnService:
 
     def get_spawn_statistics(self) -> dict[str, Any]:
         """Retorna estadísticas de spawning.
-        
+
         Returns:
             Diccionario con estadísticas de spawn.
         """
@@ -341,27 +382,23 @@ class NPCSpawnService:
         }
 
 
-# Instancia global del servicio
-_npc_spawn_service: NPCSpawnService | None = None
-
-
 def get_npc_spawn_service() -> NPCSpawnService:
-    """Retorna la instancia global del NPCSpawnService.
+    """Obtiene la instancia singleton del ``NPCSpawnService``.
 
     Returns:
-        Instancia global del NPCSpawnService.
+        Instancia única del servicio de spawn de NPCs.
     """
-    global _npc_spawn_service
-    if _npc_spawn_service is None:
-        _npc_spawn_service = NPCSpawnService()
-    return _npc_spawn_service
+    return NPCSpawnService.get_instance()
 
 
-def initialize_npc_spawn_service(data_dir: Path | None = None) -> None:
-    """Inicializa el servicio global de spawning de NPCs.
+def initialize_npc_spawn_service(data_dir: Path | str) -> NPCSpawnService:
+    """Inicializa el servicio singleton con directorio personalizado.
 
     Args:
         data_dir: Directorio donde se encuentran los datos.
+
+    Returns:
+        Instancia del NPCSpawnService.
     """
-    global _npc_spawn_service
-    _npc_spawn_service = NPCSpawnService(data_dir)
+    NPCSpawnService.reset_instance()
+    return NPCSpawnService.get_instance(data_dir=data_dir)

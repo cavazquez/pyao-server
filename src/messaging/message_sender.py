@@ -9,6 +9,7 @@ from src.messaging.senders.message_combat_sender import CombatMessageSender
 from src.messaging.senders.message_console_sender import ConsoleMessageSender
 from src.messaging.senders.message_inventory_sender import InventoryMessageSender
 from src.messaging.senders.message_map_sender import MapMessageSender
+from src.messaging.senders.message_npc_sender import NPCMessageSender
 from src.messaging.senders.message_player_stats_sender import PlayerStatsMessageSender
 from src.messaging.senders.message_session_sender import SessionMessageSender
 from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
@@ -38,6 +39,7 @@ class MessageSender:  # noqa: PLR0904
         self.console = ConsoleMessageSender(connection)
         self.inventory = InventoryMessageSender(connection)
         self.map = MapMessageSender(connection)
+        self.npc = NPCMessageSender(connection)
         self.player_stats = PlayerStatsMessageSender(connection)
         self.session = SessionMessageSender(connection)
         self.visual_effects = VisualEffectsMessageSender(connection)

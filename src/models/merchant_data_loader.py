@@ -3,10 +3,9 @@
 import logging
 import tomllib
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.utils.base_data_loader import BaseDataLoader
-from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
@@ -35,76 +34,72 @@ class MerchantDataLoader(BaseDataLoader):
         """
         return "Merchant Inventories"
 
-    async def load(self) -> None:
-        """Carga los inventarios de mercaderes desde TOML a Redis."""
+    def load(self) -> dict[int, dict[str, Any]]:
+        """Carga los inventarios de mercaderes desde TOML a Redis.
+
+        Returns:
+            Diccionario de inventarios cargados. Vacío si no hay datos o ocurre un error.
+        """
+        try:
+            inventory_data = self._load_toml_data()
+        except Exception:
+            logger.exception("Error cargando inventarios de mercaderes")
+            return {}
+        else:
+            if not inventory_data:
+                return {}
+
+            total_items = 0
+            for npc_id, inventory in inventory_data.items():
+                npc_key = f"merchant:{npc_id}:inventory"
+                for item_id, item_data in inventory.items():
+                    item_key = f"{npc_key}:{item_id}"
+                    self.redis_client.hset(item_key, mapping=item_data)
+                    total_items += 1
+
+                items_key = f"merchant:{npc_id}:items"
+                self.redis_client.sadd(items_key, *inventory.keys())
+
+            logger.info(
+                "Cargados inventarios de %d mercaderes con %d items",
+                len(inventory_data),
+                total_items,
+            )
+            return inventory_data
+
+    def _load_toml_data(self) -> dict[int, dict[str, Any]] | None:
+        """Carga datos desde archivo TOML.
+
+        Returns:
+            Datos de inventarios o None si hay error.
+        """
         toml_path = Path(self.TOML_FILE)
-        if not toml_path.exists():  # noqa: ASYNC240
+        if not toml_path.exists():
             logger.error("Archivo %s no encontrado", toml_path)
+            return None
+
+        try:
+            with toml_path.open("rb") as f:
+                return tomllib.load(f)
+        except Exception:
+            logger.exception("Error leyendo archivo %s", toml_path)
+            return None
+
+    def clear(self) -> None:
+        """Limpia todos los inventarios de mercaderes de Redis."""
+        try:
+            inventory_data = self._load_toml_data()
+        except Exception:
+            logger.exception("Error limpiando inventarios de mercaderes")
             return
 
-        # Cargar archivo TOML
-        with toml_path.open("rb") as f:  # noqa: ASYNC230
-            data = tomllib.load(f)
-
-        merchants = data.get("merchant", [])
-        if not merchants:
-            logger.warning("No se encontraron mercaderes en %s", toml_path)
+        if not inventory_data:
             return
 
-        # Procesar cada mercader
-        total_merchants = 0
-        total_items = 0
+        for npc_id in inventory_data:
+            npc_key = f"merchant:{npc_id}:inventory"
+            items_key = f"merchant:{npc_id}:items"
+            self.redis_client.delete(npc_key)
+            self.redis_client.delete(items_key)
 
-        for merchant in merchants:
-            npc_id = merchant.get("npc_id")
-            nombre = merchant.get("nombre", f"Mercader {npc_id}")
-            items = merchant.get("item", [])
-
-            if not npc_id:
-                logger.warning("Mercader sin npc_id, saltando...")
-                continue
-
-            logger.debug("Cargando inventario de %s (npc_id=%d)", nombre, npc_id)
-
-            # Agregar items al inventario
-            key = RedisKeys.merchant_inventory(npc_id)
-            slot = 1
-
-            for item in items:
-                item_id = item.get("item_id")
-                quantity = item.get("quantity", 1)
-
-                if not item_id:
-                    logger.warning("Item sin item_id en mercader %s, saltando...", nombre)
-                    continue
-
-                slot_key = f"slot_{slot}"
-                value = f"{item_id}:{quantity}"
-                await self.redis_client.redis.hset(key, slot_key, value)  # type: ignore[misc]
-
-                slot += 1
-                total_items += 1
-
-            total_merchants += 1
-            logger.debug("  → %d items cargados", len(items))
-
-        logger.info("Cargados %d mercaderes con %d items totales", total_merchants, total_items)
-
-    async def clear(self) -> None:
-        """Limpia todos los inventarios de mercaderes existentes."""
-        # Cargar archivo para obtener los npc_ids
-        toml_path = Path(self.TOML_FILE)
-        if not toml_path.exists():  # noqa: ASYNC240
-            return
-
-        with toml_path.open("rb") as f:  # noqa: ASYNC230
-            data = tomllib.load(f)
-
-        merchants = data.get("merchant", [])
-
-        for merchant in merchants:
-            npc_id = merchant.get("npc_id")
-            if npc_id:
-                key = RedisKeys.merchant_inventory(npc_id)
-                await self.redis_client.redis.delete(key)
-                logger.debug("Limpiado inventario de mercader npc_id=%d", npc_id)
+        logger.info("Eliminados inventarios de %d mercaderes", len(inventory_data))

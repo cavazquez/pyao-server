@@ -200,7 +200,7 @@ skill_requirement = 1
         inventory = {"hierro": 5}
 
         # Forzar éxito mockeando random
-        # ruff: noqa: S311 - standard random is fine for tests
+
         original_random = random.randint
         random.randint = lambda _a, _b: 50  # Siempre exito
 
@@ -222,7 +222,7 @@ skill_requirement = 1
         inventory = {"hierro": 3}
 
         # Forzar fallo mockeando random
-        # ruff: noqa: S311 - standard random is fine for tests
+
         original_random = random.randint
         random.randint = lambda _a, _b: 100  # Siempre fallo
 
@@ -242,7 +242,7 @@ skill_requirement = 1
         inventory = {"hierro": 10, "madera": 5}
 
         # Mock random para testing
-        # ruff: noqa: S311 - standard random is fine for tests
+
         calls = []
 
         def mock_randint(_a, _b):
@@ -318,7 +318,7 @@ skill_requirement = 1
         assert can_craft is True
 
         # Test crafting (forzar exito)
-        # ruff: noqa: S311 - standard random is fine for tests
+
         original_random = random.randint
         random.randint = lambda _a, _b: 50
 

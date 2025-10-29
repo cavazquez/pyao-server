@@ -130,7 +130,7 @@ class NPCDeathService:
         """
         import random  # noqa: PLC0415
 
-        gold_amount = random.randint(npc.gold_min, npc.gold_max)  # noqa: S311
+        gold_amount = random.randint(npc.gold_min, npc.gold_max)
         if gold_amount <= 0:
             return
 
@@ -284,8 +284,8 @@ class NPCDeathService:
 
         # Buscar en posiciones cercanas
         for _ in range(max_attempts):
-            offset_x = random.randint(-radius, radius)  # noqa: S311
-            offset_y = random.randint(-radius, radius)  # noqa: S311
+            offset_x = random.randint(-radius, radius)
+            offset_y = random.randint(-radius, radius)
 
             x = center_x + offset_x
             y = center_y + offset_y

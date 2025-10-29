@@ -37,7 +37,7 @@ class RewardCalculator:
         """
         # Fórmula: nivel * base + bonus aleatorio
         base_exp = npc_level * self.exp_per_level
-        bonus = random.randint(0, npc_level * 2)  # noqa: S311
+        bonus = random.randint(0, npc_level * 2)
         return base_exp + bonus
 
     def calculate_gold_drop(self, npc_level: int) -> int:
@@ -51,5 +51,5 @@ class RewardCalculator:
         """
         # Fórmula: nivel * base + bonus aleatorio (1-50)
         base_gold = npc_level * self.gold_per_level
-        bonus = random.randint(1, 50)  # noqa: S311
+        bonus = random.randint(1, 50)
         return base_gold + bonus

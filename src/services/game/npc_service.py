@@ -4,11 +4,13 @@ Carga y gestiona todos los NPCs (336 totales) desde los archivos TOML
 extraídos del cliente, incluyendo hostiles, comerciantes y NPCs especiales.
 """
 
+from __future__ import annotations
+
 import logging
 import random
 from pathlib import Path
 from tomllib import load as tomllib_load
-from typing import Any
+from typing import Any, ClassVar, cast
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,9 @@ HARD_DIFFICULTY_THRESHOLD = 600
 
 
 class NPCService:
-    """Servicio centralizado para manejar el sistema completo de NPCs."""
+    """Servicio para gestión de NPCs."""
+
+    _instance: ClassVar[NPCService | None] = None
 
     def __init__(self, data_dir: Path | None = None) -> None:
         """Inicializa el NPCService.
@@ -28,6 +32,9 @@ class NPCService:
         Args:
             data_dir: Directorio donde se encuentran los datos TOML de NPCs.
         """
+        if getattr(self, "_initialized", False):
+            return
+
         self.data_dir = data_dir or Path("data")
         self.all_npcs: list[dict[str, Any]] = []
         self.npcs_by_id: dict[int, dict[str, Any]] = {}
@@ -37,10 +44,10 @@ class NPCService:
         self.npcs_by_category: dict[str, list[dict[str, Any]]] = {}
         self.npcs_by_type: dict[int, list[dict[str, Any]]] = {}
         self.npc_data: dict[str, Any] = {}
-        self._load_npc_data()
+        self._initialized = False
 
-    def _load_npc_data(self) -> None:
-        """Carga los datos de NPCs desde archivos TOML."""
+    async def load_npc_data(self) -> None:
+        """Carga datos de NPCs desde archivos TOML."""
         try:
             # Cargar NPCs completos (usar test data si existe)
             npcs_file = self.data_dir / "test_npcs.toml"
@@ -108,6 +115,69 @@ class NPCService:
 
         except Exception:
             logger.exception("Error cargando datos de NPCs")
+
+        self._initialized = True
+
+    @staticmethod
+    def _load_spawn_entries(spawns_path: Path) -> list[dict[str, Any]] | None:
+        """Carga entradas de spawn desde un archivo TOML.
+
+        Returns:
+            Lista de entradas de spawn o ``None`` si ocurre un error.
+        """
+        if not spawns_path.exists():
+            logger.warning("Archivo de spawns no encontrado: %s", spawns_path)
+            return None
+
+        try:
+            with spawns_path.open("rb") as file:
+                data = tomllib_load(file)
+        except Exception:
+            logger.exception("Error al leer archivo de spawns %s", spawns_path)
+            return None
+
+        spawn_entries = data.get("spawn", [])
+        if not isinstance(spawn_entries, list) or not spawn_entries:
+            logger.warning("No se encontró la sección [spawn] en %s", spawns_path)
+            return None
+
+        return cast("list[dict[str, Any]]", spawn_entries)
+
+    async def spawn_npc(
+        self, npc_id: int, map_id: int, x: int, y: int, heading: int
+    ) -> dict[str, Any] | None:
+        """Spawnea un NPC en el mapa.
+
+        Args:
+            npc_id: ID del NPC.
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+            heading: Dirección del NPC.
+
+        Returns:
+            NPC spawneado o ``None`` si no se pudo crear.
+        """
+        npc_template = self.get_npc_by_id(npc_id)
+        if npc_template is None:
+            logger.warning("Intento de spawn para NPC desconocido id=%s", npc_id)
+            return None
+
+        npc_instance: dict[str, Any] = {
+            "id": npc_id,
+            "map": map_id,
+            "x": x,
+            "y": y,
+            "heading": heading,
+        }
+        logger.debug(
+            "NPC template %s preparado para spawn en mapa %d (%d,%d)",
+            npc_template.get("name", "desconocido"),
+            map_id,
+            x,
+            y,
+        )
+        return npc_instance
 
     def _build_indices(self) -> None:
         """Construye índices para búsqueda rápida."""
@@ -188,7 +258,10 @@ class NPCService:
         Returns:
             Lista de NPCs de la categoría.
         """
-        return self.npcs_by_category.get(category, []).copy()
+        npcs = self.npcs_by_category.get(category)
+        if npcs is None:
+            return []
+        return npcs.copy()
 
     def get_npcs_by_type(self, npc_type: int) -> list[dict[str, Any]]:
         """Retorna NPCs de un tipo específico.
@@ -199,7 +272,10 @@ class NPCService:
         Returns:
             Lista de NPCs del tipo.
         """
-        return self.npcs_by_type.get(npc_type, []).copy()
+        npcs = self.npcs_by_type.get(npc_type)
+        if npcs is None:
+            return []
+        return npcs.copy()
 
     def get_npcs_by_level_range(self, min_level: int, max_level: int) -> list[dict[str, Any]]:
         """Retorna NPCs dentro de un rango de nivel (basado en HP).
@@ -237,7 +313,10 @@ class NPCService:
         matching_npcs = []
 
         for npc in self.all_npcs:
-            npc_tags = set(npc.get("tags", []))
+            raw_tags = npc.get("tags", [])
+            if not isinstance(raw_tags, list):
+                continue
+            npc_tags = {str(tag) for tag in raw_tags}
             if all(tag in npc_tags for tag in tags):
                 matching_npcs.append(npc)
 
@@ -256,8 +335,13 @@ class NPCService:
         if not npc:
             return []
 
-        inventory = npc.get("inventory", {})
-        return inventory.get("items", [])
+        inventory = npc.get("inventory")
+        if not isinstance(inventory, dict):
+            return []
+        items = inventory.get("items")
+        if not isinstance(items, list):
+            return []
+        return [item for item in items if isinstance(item, dict)]
 
     def get_npc_drops(self, npc_id: int) -> list[dict[str, Any]]:
         """Retorna los drops de un NPC.
@@ -272,8 +356,13 @@ class NPCService:
         if not npc:
             return []
 
-        inventory = npc.get("inventory", {})
-        return inventory.get("drops", [])
+        inventory = npc.get("inventory")
+        if not isinstance(inventory, dict):
+            return []
+        drops = inventory.get("drops")
+        if not isinstance(drops, list):
+            return []
+        return [drop for drop in drops if isinstance(drop, dict)]
 
     def can_npc_trade(self, npc_id: int) -> bool:
         """Verifica si un NPC puede comerciar.
@@ -288,8 +377,11 @@ class NPCService:
         if not npc:
             return False
 
-        economics = npc.get("economics", {})
-        return economics.get("trades", 0) == 1
+        economics = npc.get("economics")
+        if not isinstance(economics, dict):
+            return False
+        trades_value = economics.get("trades", 0)
+        return bool(trades_value)
 
     def is_npc_hostile(self, npc_id: int) -> bool:
         """Verifica si un NPC es hostil.
@@ -304,8 +396,10 @@ class NPCService:
         if not npc:
             return False
 
-        behavior = npc.get("behavior", {})
-        return behavior.get("hostile", 0) == 1
+        behavior = npc.get("behavior")
+        if not isinstance(behavior, dict):
+            return False
+        return bool(behavior.get("hostile", 0))
 
     def get_npc_dialog(self, npc_id: int) -> str:
         """Retorna el diálogo principal de un NPC.
@@ -320,7 +414,8 @@ class NPCService:
         if not npc:
             return ""
 
-        return npc.get("description", "")
+        description = npc.get("description", "")
+        return description if isinstance(description, str) else ""
 
     def calculate_npc_difficulty(self, npc: dict[str, Any]) -> str:  # noqa: PLR6301
         """Calcula la dificultad de un NPC.
@@ -360,7 +455,7 @@ class NPCService:
         if not npcs_in_category:
             return None
 
-        return random.choice(npcs_in_category)  # noqa: S311
+        return random.choice(npcs_in_category)
 
     def get_random_npc_by_level(
         self, target_level: int, variance: int = 5
@@ -381,7 +476,7 @@ class NPCService:
         if not npcs_in_range:
             return None
 
-        return random.choice(npcs_in_range)  # noqa: S311
+        return random.choice(npcs_in_range)
 
     def search_npcs(self, query: str) -> list[dict[str, Any]]:
         """Busca NPCs por nombre o descripción.
@@ -419,13 +514,13 @@ class NPCService:
         """Retorna NPCs por tipo de ubicación (basado en categoría).
 
         Args:
-            location_type: Tipo de ubicación (ciudad, mazmorra, etc.)
+            location_type: Tipo de ubicación (ciudad, mazmorra, etc.).
 
         Returns:
             Lista de NPCs del tipo de ubicación.
         """
         # Mapeo de categorías a tipos de ubicación
-        location_mapping = {
+        location_mapping: dict[str, list[str]] = {
             "ciudad": ["NPCS ULLATHORPE", "NPCS NIX", "NPCS BANDERBILL", "NPCS LINDOS"],
             "guardias": ["NPCS GUARDIAS ARMADA", "NPCS GUARDIAS LEGIÓN"],
             "hostiles": ["NPCS HOSTILES", "NPCS PRETORIANOS"],
@@ -434,7 +529,7 @@ class NPCService:
             "resucitadores": ["NPCS RESUCITADORES"],
         }
 
-        categories = location_mapping.get(location_type.lower, [])
+        categories = location_mapping.get(location_type.lower(), [])
         matching_npcs = []
 
         for category in categories:
@@ -448,51 +543,65 @@ class NPCService:
         Returns:
             Diccionario con estadísticas.
         """
-        stats = {
+        combat_npcs = [
+            npc for npc in self.all_npcs if npc.get("combat", {}).get("exp_given", 0) > 0
+        ]
+
+        categories_stats: dict[str, int] = {
+            category: len(npcs) for category, npcs in self.npcs_by_category.items()
+        }
+        types_stats: dict[int, int] = {
+            npc_type: len(npcs) for npc_type, npcs in self.npcs_by_type.items()
+        }
+        difficulty_stats: dict[str, int] = {"Fácil": 0, "Medio": 0, "Difícil": 0, "Extremo": 0}
+        for npc in self.all_npcs:
+            difficulty = self.calculate_npc_difficulty(npc)
+            difficulty_stats[difficulty] += 1
+
+        return {
             "total_npcs": len(self.all_npcs),
             "hostile_npcs": len(self.hostile_npcs),
             "trader_npcs": len(self.trader_npcs),
-            "combat_npcs": len(
-                [npc for npc in self.all_npcs if npc.get("combat", {}).get("exp_given", 0) > 0]
-            ),
-            "categories": {},
-            "types": {},
-            "npcs_by_difficulty": {"Fácil": 0, "Medio": 0, "Difícil": 0, "Extremo": 0},
+            "combat_npcs": len(combat_npcs),
+            "categories": categories_stats,
+            "types": types_stats,
+            "npcs_by_difficulty": difficulty_stats,
         }
 
-        # Estadísticas por categoría
-        for category, npcs in self.npcs_by_category.items():
-            stats["categories"][category] = len(npcs)
+    @classmethod
+    def get_instance(cls, data_dir: Path | None = None) -> NPCService:
+        """Obtiene la instancia singleton del servicio.
 
-        # Estadísticas por tipo
-        for npc_type, npcs in self.npcs_by_type.items():
-            stats["types"][npc_type] = len(npcs)
+        Returns:
+            Instancia única de ``NPCService``.
+        """
+        if cls._instance is None:
+            cls._instance = cls(data_dir=data_dir)
+        return cls._instance
 
-        # Estadísticas por dificultad
-        for npc in self.all_npcs:
-            difficulty = self.calculate_npc_difficulty(npc)
-            stats["npcs_by_difficulty"][difficulty] += 1
-
-        return stats
-
-
-# Instancia global del servicio
-_npc_service: NPCService | None = None
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Reinicia la instancia singleton."""
+        cls._instance = None
 
 
 def get_npc_service() -> NPCService:
-    """Retorna la instancia global del servicio de NPCs.
+    """Retorna la instancia singleton del NPCService.
 
     Returns:
-        Instancia global del NPCService.
+        Instancia singleton del NPCService.
     """
-    global _npc_service
-    if _npc_service is None:
-        _npc_service = NPCService()
-    return _npc_service
+    return NPCService.get_instance()
 
 
-def initialize_npc_service(data_dir: Path | None = None) -> None:
-    """Inicializa el servicio global de NPCs."""
-    global _npc_service
-    _npc_service = NPCService(data_dir)
+def initialize_npc_service(data_dir: Path | None = None) -> NPCService:
+    """Inicializa el servicio singleton con directorio personalizado.
+
+    Args:
+        data_dir: Directorio donde se encuentran los datos.
+
+    Returns:
+        Instancia del NPCService.
+    """
+    NPCService.reset_instance()
+    return NPCService.get_instance(data_dir=data_dir)

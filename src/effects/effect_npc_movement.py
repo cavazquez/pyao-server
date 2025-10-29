@@ -224,7 +224,7 @@ class NPCMovementEffect(TickEffect):
             npc: Instancia del NPC a mover.
         """
         # Elegir dirección aleatoria (1=Norte, 2=Este, 3=Sur, 4=Oeste)
-        direction = random.randint(1, 4)  # noqa: S311
+        direction = random.randint(1, 4)
 
         new_x = npc.x
         new_y = npc.y

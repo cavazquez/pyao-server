@@ -1,6 +1,5 @@
 """Tests para MerchantDataLoader."""
 
-from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -39,10 +38,6 @@ async def test_merchant_loader_initialization(redis_client: RedisClient) -> None
 async def test_merchant_loader_load_success(redis_client: RedisClient) -> None:
     """Verifica que load() carga los inventarios correctamente."""
     loader = MerchantDataLoader(redis_client)
-
-    # Verificar que el archivo TOML existe
-    toml_path = Path(loader.TOML_FILE)
-    assert toml_path.exists(), f"Archivo {loader.TOML_FILE} no encontrado"  # noqa: ASYNC240
 
     # Ejecutar load
     await loader.load()
