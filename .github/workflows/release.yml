@@ -102,17 +102,14 @@ jobs:
       shell: bash
       run: |
         if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          uv run python -m nuitka --onefile --standalone --output-filename=pyao-server.exe \
-            --enable-plugin=pyside6 --follow-imports --include-module=redis \
-            --include-module=argon2 --windows-disable-console src/run_server.py
+          uv run python -m nuitka --onefile --standalone --static-libpython=yes \
+            --output-filename=pyao-server.exe --windows-disable-console src/run_server.py
         elif [ "${{ matrix.os }}" = "macos-latest" ]; then
-          uv run python -m nuitka --onefile --standalone --output-filename=pyao-server-macos \
-            --enable-plugin=pyside6 --follow-imports --include-module=redis \
-            --include-module=argon2 src/run_server.py
+          uv run python -m nuitka --onefile --standalone --static-libpython=yes \
+            --output-filename=pyao-server-macos src/run_server.py
         else
-          uv run python -m nuitka --onefile --standalone --output-filename=pyao-server-linux \
-            --enable-plugin=pyside6 --follow-imports --include-module=redis \
-            --include-module=argon2 src/run_server.py
+          uv run python -m nuitka --onefile --standalone --static-libpython=yes \
+            --output-filename=pyao-server-linux src/run_server.py
         fi
     
     - name: Upload artifacts
