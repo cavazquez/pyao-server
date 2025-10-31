@@ -76,11 +76,6 @@ El servidor cargará automáticamente la configuración desde Redis (host, puert
 **Nota:** Redis es obligatorio. El servidor no iniciará sin una conexión activa a Redis.
 **Nuevo:** El login de Godot incluye un checkbox "Usar conexión SSL" que recuerda la preferencia del usuario.
 
-### Cliente Godot
-
-- Al iniciar `clientes/ArgentumOnlineGodot`, el autoload `MapExporter` exporta **todos los mapas** al directorio `user://map_data` (carpeta de datos del usuario) en formato JSON compatible con `map_data/`.
-- Esto mantiene sincronizados los recursos del servidor sin pasos manuales.
-
 ### 🎒 Inventario inicial
 
 Al crear un personaje nuevo se entregan automáticamente:
