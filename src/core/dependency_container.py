@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.merchant_repository import MerchantRepository
     from src.repositories.npc_repository import NPCRepository
+    from src.repositories.party_repository import PartyRepository
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
@@ -30,6 +31,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_death_service import NPCDeathService
     from src.services.npc.npc_respawn_service import NPCRespawnService
     from src.services.npc.npc_service import NPCService
+    from src.services.party_service import PartyService
     from src.services.player.spell_service import SpellService
     from src.services.player.stamina_service import StaminaService
     from src.utils.redis_client import RedisClient
@@ -54,6 +56,7 @@ class DependencyContainer:
     merchant_repo: MerchantRepository
     bank_repo: BankRepository
     npc_repo: NPCRepository
+    party_repo: PartyRepository
     spellbook_repo: SpellbookRepository
     ground_items_repo: GroundItemsRepository
     server_repo: ServerRepository
@@ -72,6 +75,7 @@ class DependencyContainer:
     broadcast_service: MultiplayerBroadcastService
     stamina_service: StaminaService
     player_map_service: PlayerMapService
+    party_service: PartyService
 
     # Managers
     map_manager: MapManager

@@ -110,6 +110,7 @@ class ServerInitializer:
             merchant_repo=repositories["merchant_repo"],
             bank_repo=repositories["bank_repo"],
             npc_repo=repositories["npc_repo"],
+            party_repo=repositories["party_repo"],
             spellbook_repo=repositories["spellbook_repo"],
             ground_items_repo=ground_items_repo,
             server_repo=repositories["server_repo"],
@@ -127,6 +128,7 @@ class ServerInitializer:
             broadcast_service=services["broadcast_service"],
             stamina_service=services["stamina_service"],
             player_map_service=services["player_map_service"],
+            party_service=services["party_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,

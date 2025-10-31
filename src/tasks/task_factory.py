@@ -38,6 +38,13 @@ from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_null import TaskNull
 from src.tasks.task_online import TaskOnline
+from src.tasks.task_party_accept_member import TaskPartyAcceptMember
+from src.tasks.task_party_create import TaskPartyCreate
+from src.tasks.task_party_join import TaskPartyJoin
+from src.tasks.task_party_kick import TaskPartyKick
+from src.tasks.task_party_leave import TaskPartyLeave
+from src.tasks.task_party_message import TaskPartyMessage
+from src.tasks.task_party_set_leader import TaskPartySetLeader
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_tls_handshake import TaskTLSHandshake
 from src.tasks.task_uptime import TaskUptime
@@ -366,6 +373,48 @@ class TaskFactory:
             ),
             TaskBankEnd: lambda: TaskBankEnd(data, message_sender, session_data),
             TaskCommerceEnd: lambda: TaskCommerceEnd(data, message_sender),
+            TaskPartyCreate: lambda: TaskPartyCreate(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartyJoin: lambda: TaskPartyJoin(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartyAcceptMember: lambda: TaskPartyAcceptMember(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartyLeave: lambda: TaskPartyLeave(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartyMessage: lambda: TaskPartyMessage(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartyKick: lambda: TaskPartyKick(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
+            TaskPartySetLeader: lambda: TaskPartySetLeader(
+                data,
+                message_sender,
+                self.deps.party_service,
+                session_data,
+            ),
             TaskWork: lambda: TaskWork(
                 data,
                 message_sender,

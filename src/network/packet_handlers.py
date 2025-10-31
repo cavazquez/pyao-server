@@ -36,6 +36,13 @@ from src.tasks.task_ayuda import TaskAyuda
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_online import TaskOnline
+from src.tasks.task_party_accept_member import TaskPartyAcceptMember
+from src.tasks.task_party_create import TaskPartyCreate
+from src.tasks.task_party_join import TaskPartyJoin
+from src.tasks.task_party_kick import TaskPartyKick
+from src.tasks.task_party_leave import TaskPartyLeave
+from src.tasks.task_party_message import TaskPartyMessage
+from src.tasks.task_party_set_leader import TaskPartySetLeader
 from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_uptime import TaskUptime
@@ -83,6 +90,13 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.QUIT: TaskQuit,
     ClientPacketID.PING: TaskPing,
     ClientPacketID.BANK_EXTRACT_GOLD: TaskBankExtractGold,  # Retirar oro del banco
-    ClientPacketID.BANK_DEPOSIT_GOLD: TaskBankDepositGold,  # Depositar oro en el banco
+    ClientPacketID.BANK_DEPOSIT_GOLD: TaskBankDepositGold,  # Depositar oro en banco
     ClientPacketID.GM_COMMANDS: TaskGMCommands,  # Comandos GM (teletransporte)
+    ClientPacketID.PARTY_LEAVE: TaskPartyLeave,  # /SALIRPARTY - Abandonar party
+    ClientPacketID.PARTY_CREATE: TaskPartyCreate,  # /CREARPARTY - Crear nueva party
+    ClientPacketID.PARTY_JOIN: TaskPartyJoin,  # /PARTY - Invitar a party
+    ClientPacketID.PARTY_MESSAGE: TaskPartyMessage,  # /PMSG - Mensaje de party
+    ClientPacketID.PARTY_KICK: TaskPartyKick,  # Expulsar miembro de party
+    ClientPacketID.PARTY_SET_LEADER: TaskPartySetLeader,  # Transferir liderazgo de party
+    ClientPacketID.PARTY_ACCEPT_MEMBER: TaskPartyAcceptMember,  # /ACCEPTPARTY - Aceptar invitación
 }

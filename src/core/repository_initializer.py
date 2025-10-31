@@ -10,6 +10,7 @@ from src.repositories.ground_items_repository import GroundItemsRepository
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.merchant_repository import MerchantRepository
 from src.repositories.npc_repository import NPCRepository
+from src.repositories.party_repository import PartyRepository
 from src.repositories.player_repository import PlayerRepository
 from src.repositories.server_repository import ServerRepository
 from src.repositories.spellbook_repository import SpellbookRepository
@@ -48,6 +49,7 @@ class RepositoryInitializer:
             "merchant_repo": MerchantRepository(self.redis_client),
             "bank_repo": BankRepository(self.redis_client),
             "npc_repo": NPCRepository(self.redis_client),
+            "party_repo": PartyRepository(self.redis_client),
             "spellbook_repo": SpellbookRepository(self.redis_client),
             "ground_items_repo": GroundItemsRepository(self.redis_client),
         }

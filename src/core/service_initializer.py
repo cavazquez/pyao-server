@@ -19,6 +19,7 @@ from src.services.npc.npc_ai_service import NPCAIService
 from src.services.npc.npc_death_service import NPCDeathService
 from src.services.npc.npc_respawn_service import NPCRespawnService
 from src.services.npc.npc_service import NPCService
+from src.services.party_service import PartyService
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
 
@@ -156,6 +157,24 @@ class ServiceInitializer:
         map_resources_service = MapResourcesService()
         logger.info("✓ Servicio de recursos de mapas inicializado")
 
+        # Servicio de parties
+        # Nota: El MessageSender real se inyectará por conexión en las tasks
+        # Aquí creamos uno solo para inicialización del servicio
+        from src.messaging.message_sender import MessageSender
+
+        # Creamos un MessageSender básico para el servicio (solo para inicialización)
+        message_sender_for_service = MessageSender(None)  # Sin conexión para inicialización
+
+        party_service = PartyService(
+            self.repositories["party_repo"],
+            self.repositories["player_repo"],
+            message_sender_for_service,
+            broadcast_service,
+            self.map_manager,
+        )
+        await party_service.party_repo.initialize()  # Inicializar repositorio de parties
+        logger.info("✓ Servicio de parties inicializado")
+
         services = {
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
@@ -170,6 +189,7 @@ class ServiceInitializer:
             "stamina_service": stamina_service,
             "player_map_service": player_map_service,
             "map_resources_service": map_resources_service,
+            "party_service": party_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,
             "item_catalog": item_catalog,
