@@ -263,6 +263,16 @@ Este proyecto tiene varios documentos TODO especializados:
 
 ---
 
+## 🧭 Backlog Adicional
+
+### Carga diferida de mapas
+- 🔶 **Prioridad:** Media
+- ⏱️ **Esfuerzo estimado:** 6-8 horas
+- 📝 **Descripción:** Ajustar el ciclo de vida de `MapResourcesService` y de los loaders asociados para que el mapa se cargue recién cuando el primer jugador ingrese a él, evitando el pre-load durante el arranque del servidor.
+- ✅ **Beneficios:** Reduce el tiempo de inicio, baja el consumo de memoria inicial y permite distribuir el costo de carga en tiempo de ejecución.
+
+---
+
 ## 🔗 **Referencias Principales**
 
 - **Servidor VB6:** `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/`

@@ -630,6 +630,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ### TODOs y Mejoras Futuras
 - **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: Mejoras de arquitectura pendientes
+- **[TODO General](todo/TODO_GENERAL.md#carga-diferida-de-mapas)**: Implementar carga diferida de mapas al ingreso del primer jugador para reducir el tiempo de arranque
 
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
