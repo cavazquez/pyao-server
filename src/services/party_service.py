@@ -668,17 +668,8 @@ class PartyService:
             return stats.get("min_hp", 0) > 0
 
         # Distribute experience
-        # Note: async functions passed as sync callbacks - Party.distribute_experience
-        # expects sync functions but we're passing async. This works because we don't
-        # await inside distribute_experience, but mypy doesn't know that.
-        distributed_exp = party.distribute_experience(
-            exp_amount,
-            map_id,
-            x,
-            y,
-            get_user_level,  # type: ignore[arg-type]
-            get_user_position,  # type: ignore[arg-type]
-            is_user_alive,  # type: ignore[arg-type]
+        distributed_exp = await party.distribute_experience(
+            exp_amount, map_id, x, y, get_user_level, get_user_position, is_user_alive
         )
 
         # Save updated party data

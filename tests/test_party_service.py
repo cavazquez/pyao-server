@@ -368,7 +368,8 @@ class TestExperienceDistribution:
     async def test_distribute_experience_success(self, party_service, mock_party_repo):
         """Test successful experience distribution."""
         mock_party = MagicMock()
-        mock_party.distribute_experience.return_value = {2: 50.0, 3: 50.0}
+        # distribute_experience is now async, so we need AsyncMock
+        mock_party.distribute_experience = AsyncMock(return_value={2: 50.0, 3: 50.0})
         mock_party.get_member.side_effect = lambda user_id: MagicMock(
             user_id=user_id, accumulated_exp=50.0
         )

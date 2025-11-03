@@ -5,7 +5,7 @@ Based on AO VB6 server implementation (clsParty.cls, mdParty.bas)
 
 import math
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -193,15 +193,15 @@ class Party:
             member.level**LEVEL_EXPONENT for member in self.members.values()
         )
 
-    def distribute_experience(
+    async def distribute_experience(
         self,
         total_exp: int,
         map_id: int,
         x: int,
         y: int,
-        get_user_level_func: Callable[[int], int | None],
-        get_user_position_func: Callable[[int], dict[str, Any] | None],
-        is_user_alive_func: Callable[[int], bool],
+        get_user_level_func: Callable[[int], Coroutine[Any, Any, int | None]],
+        get_user_position_func: Callable[[int], Coroutine[Any, Any, dict[str, Any] | None]],
+        is_user_alive_func: Callable[[int], Coroutine[Any, Any, bool]],
     ) -> dict[int, float]:
         """Distribute experience among eligible members.
 
@@ -225,11 +225,11 @@ class Party:
 
         for member in self.members.values():
             # Check if member is eligible for experience
-            user_pos = get_user_position_func(member.user_id)
+            user_pos = await get_user_position_func(member.user_id)
             if not user_pos:
                 continue
 
-            if not is_user_alive_func(member.user_id):
+            if not await is_user_alive_func(member.user_id):
                 continue
 
             if user_pos["map"] != map_id:
@@ -241,7 +241,7 @@ class Party:
                 continue
 
             # Calculate experience share using VB6 formula
-            user_level = get_user_level_func(member.user_id)
+            user_level = await get_user_level_func(member.user_id)
             if user_level:
                 exp_share = total_exp * (user_level**LEVEL_EXPONENT) / self.sum_elevated_levels
                 exp_share = math.floor(exp_share)  # VB6 uses Fix()

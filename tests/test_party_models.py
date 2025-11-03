@@ -2,6 +2,8 @@
 
 import time
 
+import pytest
+
 from src.models.party import (
     MAX_LEVEL_DIFFERENCE,
     MAX_PARTY_MEMBERS,
@@ -212,24 +214,25 @@ class TestParty:
         assert success is True
         assert party.get_member(1).is_online is True
 
-    def test_distribute_experience(self):
+    @pytest.mark.asyncio
+    async def test_distribute_experience(self):
         """Test experience distribution among members."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
         party.update_member_level(1, 20)  # Level 20 leader
         party.add_member(2, "Member2", 20)  # Level 20 member
         party.add_member(3, "Member3", 10)  # Level 10 member
 
-        # Mock helper functions
-        def get_level(user_id):
+        # Mock helper functions (now async)
+        async def get_level(user_id):
             return {1: 20, 2: 20, 3: 10}[user_id]
 
-        def get_position(_user_id):
+        async def get_position(_user_id):
             return {"map": 1, "x": 10, "y": 10}  # All nearby
 
-        def is_alive(_user_id):
+        async def is_alive(_user_id):
             return True
 
-        distributed = party.distribute_experience(
+        distributed = await party.distribute_experience(
             100,
             1,
             10,
