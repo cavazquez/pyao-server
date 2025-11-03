@@ -21,19 +21,19 @@ async def redis_client() -> AsyncGenerator[RedisClient]:
     """
     client = RedisClient()
     # Resetear el singleton para cada test
-    RedisClient._instance = None  # noqa: SLF001
-    RedisClient._redis = None  # noqa: SLF001
+    RedisClient._instance = None
+    RedisClient._redis = None
 
     client = RedisClient()
     # Usar fakeredis en lugar de Redis real
-    client._redis = await aioredis.FakeRedis(decode_responses=True)  # noqa: SLF001
+    client._redis = await aioredis.FakeRedis(decode_responses=True)
 
     yield client
 
     await client.disconnect()
     # Limpiar singleton
-    RedisClient._instance = None  # noqa: SLF001
-    RedisClient._redis = None  # noqa: SLF001
+    RedisClient._instance = None
+    RedisClient._redis = None
 
 
 class TestRedisClient:
@@ -133,8 +133,8 @@ class TestRedisClient:
     async def test_connection_error_handling(self) -> None:
         """Verifica que ConnectionError se captura correctamente."""
         # Resetear singleton
-        RedisClient._instance = None  # noqa: SLF001
-        RedisClient._redis = None  # noqa: SLF001
+        RedisClient._instance = None
+        RedisClient._redis = None
 
         client = RedisClient()
         config = RedisConfig(host="invalid-host", port=9999)
@@ -150,11 +150,11 @@ class TestRedisClient:
                 await client.connect(config)
 
             # Verificar que _redis se limpió
-            assert client._redis is None  # noqa: SLF001
+            assert client._redis is None
 
         # Limpiar singleton
-        RedisClient._instance = None  # noqa: SLF001
-        RedisClient._redis = None  # noqa: SLF001
+        RedisClient._instance = None
+        RedisClient._redis = None
 
 
 class TestRedisConfig:

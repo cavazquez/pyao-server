@@ -16,11 +16,7 @@ class TestPartyMember:
 
     def test_create_party_member(self):
         """Test creating a party member."""
-        member = PartyMember(
-            user_id=1,
-            username="TestPlayer",
-            level=20
-        )
+        member = PartyMember(user_id=1, username="TestPlayer", level=20)
 
         assert member.user_id == 1
         assert member.username == "TestPlayer"
@@ -68,9 +64,9 @@ class TestPartyMember:
         member.is_online = False
         assert member.can_receive_experience(10) is False
 
-        # Online but too far
+        # Online but too far (MAX_EXP_DISTANCE = 30)
         member.is_online = True
-        assert member.can_receive_experience(25) is False
+        assert member.can_receive_experience(31) is False
 
 
 class TestParty:
@@ -78,11 +74,7 @@ class TestParty:
 
     def test_create_party(self):
         """Test creating a party."""
-        party = Party(
-            party_id=1,
-            leader_id=1,
-            leader_username="Leader"
-        )
+        party = Party(party_id=1, leader_id=1, leader_username="Leader")
 
         assert party.party_id == 1
         assert party.leader_id == 1
@@ -96,6 +88,7 @@ class TestParty:
     def test_add_member_success(self):
         """Test successfully adding a member."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
+        party.update_member_level(1, 20)  # Set leader level to 20
 
         success = party.add_member(2, "Member2", 20)
 
@@ -107,6 +100,7 @@ class TestParty:
     def test_add_member_full_party(self):
         """Test adding member to full party fails."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
+        party.update_member_level(1, 20)  # Set leader level to 20
 
         # Fill party to max capacity
         for i in range(2, MAX_PARTY_MEMBERS + 1):
@@ -122,6 +116,7 @@ class TestParty:
     def test_add_duplicate_member(self):
         """Test adding duplicate member fails."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
+        party.update_member_level(1, 20)  # Set leader level to 20
         party.add_member(2, "Member2", 20)
 
         success = party.add_member(2, "Member2", 20)
@@ -134,14 +129,15 @@ class TestParty:
         # Update leader level to 20
         party.update_member_level(1, 20)
 
-        # Try to add level 30 member (difference of 10 > MAX_LEVEL_DIFFERENCE)
-        success = party.add_member(2, "Member2", 30)
+        # Try to add level 31 member (difference of 11 > MAX_LEVEL_DIFFERENCE=10)
+        success = party.add_member(2, "Member2", 31)
         assert success is False
         assert party.member_count == 1
 
     def test_remove_member_success(self):
         """Test successfully removing a member."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
+        party.update_member_level(1, 20)  # Set leader level to 20
         party.add_member(2, "Member2", 20)
 
         removed_member = party.remove_member(2)
@@ -163,6 +159,7 @@ class TestParty:
     def test_transfer_leadership_success(self):
         """Test successful leadership transfer."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
+        party.update_member_level(1, 20)  # Set leader level to 20
         party.add_member(2, "Member2", 20)
 
         success = party.transfer_leadership(2)
@@ -205,13 +202,13 @@ class TestParty:
         """Test setting member online status."""
         party = Party(party_id=1, leader_id=1, leader_username="Leader")
 
-        success = party.set_member_online_status(1, False)
+        success = party.set_member_online_status(1, is_online=False)
 
         assert success is True
         assert party.get_member(1).is_online is False
 
         # Set back online
-        success = party.set_member_online_status(1, True)
+        success = party.set_member_online_status(1, is_online=True)
         assert success is True
         assert party.get_member(1).is_online is True
 
@@ -226,15 +223,20 @@ class TestParty:
         def get_level(user_id):
             return {1: 20, 2: 20, 3: 10}[user_id]
 
-        def get_position(user_id):
+        def get_position(_user_id):
             return {"map": 1, "x": 10, "y": 10}  # All nearby
 
-        def is_alive(user_id):
+        def is_alive(_user_id):
             return True
 
         distributed = party.distribute_experience(
-            100, 1, 10, 10,  # 100 exp at map 1, position 10,10
-            get_level, get_position, is_alive
+            100,
+            1,
+            10,
+            10,  # 100 exp at map 1, position 10,10
+            get_level,
+            get_position,
+            is_alive,
         )
 
         # Should distribute to all 3 members based on their levels
@@ -253,7 +255,7 @@ class TestPartyInvitation:
             inviter_id=1,
             inviter_username="Leader",
             target_id=2,
-            target_username="Target"
+            target_username="Target",
         )
 
         assert invitation.party_id == 1
@@ -271,7 +273,7 @@ class TestPartyInvitation:
             inviter_id=1,
             inviter_username="Leader",
             target_id=2,
-            target_username="Target"
+            target_username="Target",
         )
 
         # Mock created_at to be 35 seconds ago
@@ -286,7 +288,7 @@ class TestPartyInvitation:
             inviter_id=1,
             inviter_username="Leader",
             target_id=2,
-            target_username="Target"
+            target_username="Target",
         )
 
         # Mock created_at to be 10 seconds ago
@@ -304,4 +306,4 @@ class TestPartyConstants:
 
     def test_max_level_difference(self):
         """Test MAX_LEVEL_DIFFERENCE constant."""
-        assert MAX_LEVEL_DIFFERENCE == 7
+        assert MAX_LEVEL_DIFFERENCE == 10

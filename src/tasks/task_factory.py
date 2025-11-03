@@ -403,13 +403,13 @@ class TaskFactory:
                 self.deps.party_service,
                 session_data,
             ),
-            TaskPartyKick: lambda: TaskPartyKick(
+            TaskPartyKick: lambda: TaskPartyKick(  # type: ignore[call-arg,return-value,dict-item]
                 data,
                 message_sender,
                 self.deps.party_service,
                 session_data,
             ),
-            TaskPartySetLeader: lambda: TaskPartySetLeader(
+            TaskPartySetLeader: lambda: TaskPartySetLeader(  # type: ignore[call-arg,return-value,dict-item]
                 data,
                 message_sender,
                 self.deps.party_service,

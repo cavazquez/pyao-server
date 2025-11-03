@@ -123,6 +123,7 @@ addopts = "--strict-markers -q"
     "DOC201",  # return documentation no requerida en fixtures
     "RUF029",  # async sin await permitido en mocks
     "SIM118",  # simplificaciones no requeridas en tests
+    "SLF001",  # acceso a miembros privados permitido en tests
 ]
 "tools/**/*.py" = [
     "PLR1702", # parsers pueden tener muchos bloques anidados

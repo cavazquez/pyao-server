@@ -27,6 +27,7 @@ def mock_deps() -> DependencyContainer:
         spellbook_repo=Mock(),
         ground_items_repo=Mock(),
         server_repo=Mock(),
+        party_repo=Mock(),
         combat_service=Mock(),
         commerce_service=Mock(),
         spell_service=Mock(),
@@ -45,6 +46,7 @@ def mock_deps() -> DependencyContainer:
         npc_catalog=Mock(),
         spell_catalog=Mock(),
         item_catalog=Mock(),
+        party_service=Mock(),
     )
 
 

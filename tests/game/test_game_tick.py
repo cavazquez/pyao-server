@@ -235,16 +235,16 @@ async def test_game_tick_start_and_stop(
 
     # Iniciar el tick
     game_tick.start()
-    assert game_tick._running is True  # noqa: SLF001
-    assert game_tick._task is not None  # noqa: SLF001
+    assert game_tick._running is True
+    assert game_tick._task is not None
 
     # Esperar un poco para que el loop se ejecute
     await asyncio.sleep(0.2)
 
     # Detener el tick
     await game_tick.stop()
-    assert game_tick._running is False  # noqa: SLF001
-    assert game_tick._task is None  # noqa: SLF001
+    assert game_tick._running is False
+    assert game_tick._task is None
 
 
 @pytest.mark.asyncio

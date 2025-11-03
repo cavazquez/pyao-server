@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
     from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
@@ -20,9 +21,9 @@ class TaskPartyCreate(Task):
     def __init__(
         self,
         data: bytes,
-        message_sender,
-        party_service: "PartyService",
-        session_data: dict,
+        message_sender: MessageSender,
+        party_service: PartyService,
+        session_data: dict[str, int],
     ) -> None:
         """Initialize task with dependencies."""
         super().__init__(data, message_sender)
@@ -46,15 +47,15 @@ class TaskPartyCreate(Task):
             # Send result message
             await self.message_sender.send_console_msg(
                 message,
-                font_color=7  # FONTTYPE_PARTY
+                font_color=7,  # FONTTYPE_PARTY
             )
 
             if party:
-                logger.info(f"User {user_id} created party {party.party_id}")
+                logger.info("User %d created party %d", user_id, party.party_id)
 
         except Exception:
             logger.exception("Error creating party for user")
             await self.message_sender.send_console_msg(
                 "Error al crear la party. Intenta nuevamente.",
-                font_color=1  # FONTTYPE_FIGHT (red for errors)
+                font_color=1,  # FONTTYPE_FIGHT (red for errors)
             )

@@ -21,6 +21,7 @@ def mock_repositories() -> dict:
         "inventory_repo": Mock(),
         "merchant_repo": Mock(),
         "equipment_repo": Mock(),
+        "party_repo": Mock(),
     }
 
 

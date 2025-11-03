@@ -35,7 +35,7 @@ def test_gold_decay_effect_initialization(mock_server_repo: AsyncMock) -> None:
     effect = GoldDecayEffect(mock_server_repo)
 
     assert effect.server_repo == mock_server_repo
-    assert effect._counters == {}  # noqa: SLF001
+    assert effect._counters == {}
 
 
 def test_gold_decay_effect_get_interval(mock_server_repo: AsyncMock) -> None:
@@ -218,15 +218,15 @@ def test_gold_decay_cleanup_player(mock_server_repo: AsyncMock) -> None:
     effect = GoldDecayEffect(mock_server_repo)
 
     # Agregar contadores manualmente
-    effect._counters[1] = 10  # noqa: SLF001
-    effect._counters[2] = 5  # noqa: SLF001
+    effect._counters[1] = 10
+    effect._counters[2] = 5
 
     # Limpiar jugador 1
     effect.cleanup_player(1)
 
     # Verificar que se eliminó el jugador 1 pero no el 2
-    assert 1 not in effect._counters  # noqa: SLF001
-    assert 2 in effect._counters  # noqa: SLF001
+    assert 1 not in effect._counters
+    assert 2 in effect._counters
 
 
 @pytest.mark.asyncio
@@ -288,10 +288,10 @@ async def test_gold_decay_counter_increment() -> None:
 
     # Aplicar 3 veces
     await effect.apply(user_id, mock_player_repo, None)
-    assert effect._counters[user_id] == 1  # noqa: SLF001
+    assert effect._counters[user_id] == 1
 
     await effect.apply(user_id, mock_player_repo, None)
-    assert effect._counters[user_id] == 2  # noqa: SLF001
+    assert effect._counters[user_id] == 2
 
     await effect.apply(user_id, mock_player_repo, None)
-    assert effect._counters[user_id] == 3  # noqa: SLF001
+    assert effect._counters[user_id] == 3

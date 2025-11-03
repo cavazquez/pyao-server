@@ -8,12 +8,12 @@
 
 ## 📊 Estado Actual del Proyecto
 
-**Versión:** 0.6.0-alpha (completado)  
+**Versión:** 0.6.0-alpha (EN PROGRESO - 78% completado)  
 **Tests:** 1123 pasando (100%)  
 **Cobertura:** 78%  
 **Calidad:** Excelente (0 errores linting/mypy)
 
-**Sistemas Completados Recientemente:**
+**Sistemas Completados en 0.6.0:**
 - ✅ Sistema de Energía/Stamina (100%)
 - ✅ Sistema de Críticos basado en Agilidad (100%)
 - ✅ Sistema de Esquives basado en Agilidad (100%)
@@ -27,21 +27,28 @@
 - ✅ IA de NPCs configurable con Pathfinding A*
 - ✅ Sistema de Trabajo (Tala, Pesca, Minería)
 
+**Pendientes para completar 0.6.0:**
+- ⏳ Tests faltantes (work/, admin/, map services) → 0.6.1-alpha
+- ⏳ Refactorizar secuencia de cambio de mapa → 0.6.2-alpha
+- ⏳ Validación de longitud de packets → 0.6.3-alpha
+- ⏳ Configuration Management → 0.6.4-alpha
+
 ---
 
 ## 📚 Índice de Documentación TODO
 
 Este proyecto tiene varios documentos TODO especializados:
 
+- **ROADMAP_VERSIONES.md** - 🎯 **DOCUMENTO MAESTRO - Roadmap completo 0.6.0 → 0.20.0**
+- **TODO_GENERAL.md** (este archivo) - Roadmap legacy (ver ROADMAP_VERSIONES.md)
 - **TODO_REFACTORING.md** - Refactorings técnicos pendientes
 - **TODO_ARQUITECTURA.md** - Mejoras arquitecturales (DI, Event System, etc.)
 - **TODO_NPC_FACTORY.md** - Sistema de factory para NPCs
 - **TODO_CLIENTE.md** - Mejoras del cliente Godot
-- **TODO_CARACTERISTICAS_VB6.md** - 🎯 **Características del servidor VB6 faltantes (DETALLES TÉCNICOS)**
+- **TODO_CARACTERISTICAS_VB6.md** - Características del servidor VB6 faltantes (DETALLES TÉCNICOS)
 - **TODO_MAP_TRANSITIONS.md** - Sistema de transiciones entre mapas
 - **TODO_SPELL_CLICK_TARGETING.md** - Sistema de targeting de hechizos
 - **TODO_POST_REORGANIZACION.md** - Mejoras post-reorganización
-- **TODO_GENERAL.md** (este archivo) - **Roadmap de versiones y fechas**
 
 ---
 
@@ -80,157 +87,95 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Sistema de esquives ✅
 - [x] Sistema de transiciones de mapa (funcional) ✅
 
-### ✅ Versión 0.6.0-alpha - IA de NPCs y Sistema de Trabajo (100% COMPLETADO) 🎉
+### ⏳ Versión 0.6.0-alpha - IA de NPCs y Sistema de Trabajo (EN PROGRESO - 78%)
 - [x] IA de NPCs configurable (daño, cooldown, aggro_range)
 - [x] Pathfinding A* para NPCs (4 direcciones)
 - [x] Sistema de trabajo completo (Tala, Pesca, Minería)
 - [x] Herramientas equipables y recursos
 - [x] Transiciones de mapa por rangos (120+ transiciones)
+- [ ] Tests faltantes (work/, admin/, map services) → **0.6.1-alpha**
+- [ ] Refactorizar secuencia de cambio de mapa → **0.6.2-alpha**
+- [ ] Validación de longitud de packets → **0.6.3-alpha**
+- [ ] Configuration Management → **0.6.4-alpha**
 
 ---
 
-## 📝 Versión 0.7.0-alpha - Sistema Social
+---
 
-### Sistema de Clanes/Guilds
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-clanesguilds`
+## 🚀 Versiones Futuras
+
+> **NOTA:** Para el roadmap completo y detallado, ver **`ROADMAP_VERSIONES.md`**
+
+### 📝 Versión 0.7.0-alpha - Sistema de Clases
 - 📅 **Fecha estimada:** 2-3 semanas
 - 🔴 **Prioridad:** Alta
-- 📁 **Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)
+- **Features:** Guerrero, Mago, Arquero, Clérigo con atributos y restricciones
 
-### Sistema de Partys/Grupos
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-partysgrupos`
+### 📝 Versión 0.8.0-alpha - Sistema de Partys/Grupos
 - 📅 **Fecha estimada:** 1-2 semanas
 - 🔴 **Prioridad:** Alta
-- 📁 **Referencia VB6:** `clsParty.cls` (19KB), `mdParty.bas` (19KB)
+- **Features:** Exp compartida, chat de party, loot compartido
 
-### Sistema de Clases
+### 📝 Versión 0.9.0-alpha - Sistema de Clanes/Guilds
 - 📅 **Fecha estimada:** 2-3 semanas
+- 🔴 **Prioridad:** Alta
+- **Features:** Creación, rangos, almacén, guerras entre clanes
+
+### 📝 Versión 0.10.0-alpha - Targeting por Click para Hechizos
+- 📅 **Fecha estimada:** 1 semana
 - 🟡 **Prioridad:** Media
-- [ ] Atributos base por clase (Guerrero, Mago, Arquero, etc.)
-- [ ] Habilidades especiales por clase
-- [ ] Restricciones de equipamiento por clase
-- [ ] Balance de clases
+- **Features:** Click para seleccionar target, cursor visual
 
----
-
-## 📝 Versión 0.8.0-alpha - Expansión de Combate
-
-### Sistema de Facciones
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-facciones`
-- 📅 **Fecha estimada:** 2-3 semanas
-- 🟡 **Prioridad:** Media
-- 📁 **Referencia VB6:** `ModFacciones.bas` (33KB), `praetorians.bas` (39KB)
-
-### Hechizos Avanzados
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-hechizos-avanzado`
+### 📝 Versión 0.11.0-alpha - Hechizos Avanzados
 - 📅 **Fecha estimada:** 3-4 semanas
 - 🔴 **Prioridad:** Alta
-- 📁 **Referencia VB6:** `modHechizos.bas` (97KB)
+- **Features:** Escuelas de magia, AoE, DoT, invocaciones
 
-### Sistema de Quests
+### 📝 Versión 0.12.0-alpha - Sistema de Facciones
 - 📅 **Fecha estimada:** 2-3 semanas
 - 🟡 **Prioridad:** Media
-- [ ] QuestService para misiones
-- [ ] Objetivos (matar X NPCs, recolectar Y items)
-- [ ] Recompensas (oro, experiencia, items)
-- [ ] Cadenas de quests
-- [ ] Quest log del jugador
+- **Features:** Legión/Caos/Real/Neutral, guerras, zonas controladas
 
-### Social Mejorado
-- 📅 **Fecha estimada:** 1-2 semanas
-- 🟡 **Prioridad:** Media
-- [ ] Chat mejorado con canales (global, local, party)
-- [ ] Sistema de amigos
-- [ ] Mensajes privados
-- [ ] Emotes y gestos
-
----
-
-## 📝 Versión 0.9.0-alpha - Economía Avanzada
-
-### Banco Avanzado
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-banco-avanzado`
-- 📅 **Fecha estimada:** 1-2 semanas
-- 🟡 **Prioridad:** Media
-- 📁 **Referencia VB6:** `modBanco.bas` (12KB)
-
-### Sistema de Foro/Noticias
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-foronoticias`
-- 📅 **Fecha estimada:** 1 semana
-- 🟢 **Prioridad:** Baja
-- 📁 **Referencia VB6:** `modForum.bas` (14KB)
-
-### Economía Dinámica
+### 📝 Versión 0.13.0-alpha - Sistema de Quests
 - 📅 **Fecha estimada:** 2-3 semanas
 - 🟡 **Prioridad:** Media
-- [ ] Precios dinámicos según oferta/demanda en todo el juego
-- [ ] Sistema de inflación/deflación
-- [ ] Eventos económicos globales
+- **Features:** Misiones, objetivos, recompensas, cadenas de quests
 
----
+### 📝 Versión 0.14.0-alpha - Banco Avanzado
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟡 **Prioridad:** Media
+- **Features:** Préstamos, intereses, transferencias
 
-## 📝 Versión 0.10.0-alpha - Seguridad y Estadísticas
+### 📝 Versión 0.15.0-alpha - Chat Mejorado
+- 📅 **Fecha estimada:** 1-2 semanas
+- 🟡 **Prioridad:** Media
+- **Features:** Canales, amigos, mensajes privados
 
-### Sistema de Centinelas/Anti-cheat
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-centinelasanti-cheat`
+### 📝 Versión 0.16.0-alpha - Sistema Anti-cheat
 - 📅 **Fecha estimada:** 2-3 semanas
 - 🟡 **Prioridad:** Media
-- 📁 **Referencia VB6:** `modCentinela.bas` (23KB), `clsAntiMassClon.cls`
+- **Features:** Speed hack detection, anti-mass cloning
 
-### Estadísticas Avanzadas
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-estadísticas-avanzado`
+### 📝 Versión 0.17.0-alpha - Estadísticas Avanzadas
 - 📅 **Fecha estimada:** 1-2 semanas
 - 🟢 **Prioridad:** Baja
-- 📁 **Referencia VB6:** `Statistics.bas` (15KB), `clsEstadisticasIPC.cls`
+- **Features:** Rankings, logros, API de estadísticas
 
-### Seguridad Mejorada
-- 📅 **Fecha estimada:** 1-2 semanas
-- 🟡 **Prioridad:** Media
-- [ ] Rate limiting por IP (anti-spam)
-- [ ] Validación avanzada de packets
-- [ ] Logs de seguridad
-- [ ] Sistema de bans automáticos
-
----
-
-## 📝 Versión 0.11.0-alpha - Multimedia y Calidad
-
-### Sistema de Sonido por Mapa
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-sonido-por-mapa`
+### 📝 Versión 0.18.0-alpha - Sistema de Sonido
 - 📅 **Fecha estimada:** 1 semana
 - 🟢 **Prioridad:** Baja
-- 📁 **Referencia VB6:** `clsMapSoundManager.cls`
+- **Features:** Música ambiental por mapa, efectos de sonido
 
-### Historial y Logs Avanzados
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-historiallogs-avanzado`
+### 📝 Versión 0.19.0-alpha - Foro/Noticias
 - 📅 **Fecha estimada:** 1 semana
 - 🟢 **Prioridad:** Baja
-- 📁 **Referencia VB6:** `History.bas` (5KB)
+- **Features:** Foro interno, anuncios, moderación
 
-### Mejoras de UI/UX
-- 📅 **Fecha estimada:** 1-2 semanas
-- 🟢 **Prioridad:** Baja
-- [ ] Animaciones de combate mejoradas
-- [ ] Efectos visuales especiales
-- [ ] Interfaz de administración web
-- [ ] Sistema de tutoriales
-
----
-
-## 📝 Versión 0.12.0-alpha - Seguridad Avanzada
-
-### Seguridad IP
-**Detalles técnicos en:** `TODO_CARACTERISTICAS_VB6.md#sistema-de-seguridad-ip`
+### 📝 Versión 0.20.0-alpha - Seguridad IP
 - 📅 **Fecha estimada:** 1 semana
 - 🟢 **Prioridad:** Baja
-- 📁 **Referencia VB6:** `SecurityIp.bas` (12KB)
+- **Features:** Whitelist/blacklist, límite de conexiones por IP
 
-### Protección DDoS
-- 📅 **Fecha estimada:** 2-3 semanas
-- 🟡 **Prioridad:** Media
-- [ ] Detección de ataques DDoS básicos
-- [ ] Rate limiting avanzado
-- [ ] Sistema de whitelist/blacklist IP
 
 ---
 
@@ -283,5 +228,12 @@ Este proyecto tiene varios documentos TODO especializados:
 ---
 
 *Última actualización: 2025-01-29*  
-*Versión actual: v0.6.0-alpha (completado)*  
-*Próxima versión: v0.7.0-alpha (Sistema Social)*
+*Versión actual: v0.6.0-alpha (EN PROGRESO - 78%)*  
+*Próxima versión: v0.7.0-alpha (Sistema de Clases)*
+
+---
+
+## 📌 Nota Importante
+
+**Para el roadmap completo y detallado de todas las versiones (0.6.0 → 0.20.0), ver:**
+- **`ROADMAP_VERSIONES.md`** - Documento maestro con todas las features, dependencias y detalles técnicos

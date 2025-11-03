@@ -44,7 +44,11 @@ class PartyRepository:
             await self.redis.redis.set(self.NEXT_PARTY_ID_KEY, 1)
 
     async def get_next_party_id(self) -> int:
-        """Get next available party ID."""
+        """Get next available party ID.
+
+        Returns:
+            int: The next party ID.
+        """
         party_id = await self.redis.redis.incr(self.NEXT_PARTY_ID_KEY)
         if party_id > self.MAX_PARTY_ID:
             # Reset to 1 if we exceed maximum
@@ -64,7 +68,7 @@ class PartyRepository:
             "created_at": party.created_at,
             "total_exp_earned": party.total_exp_earned,
             "sum_elevated_levels": party.sum_elevated_levels,
-            "member_count": party.member_count
+            "member_count": party.member_count,
         }
 
         # Save to main party key and hash
@@ -79,12 +83,12 @@ class PartyRepository:
                 "level": member.level,
                 "accumulated_exp": member.accumulated_exp,
                 "is_online": member.is_online,
-                "last_seen": member.last_seen
+                "last_seen": member.last_seen,
             }
             pipe.hset(
                 self.PARTY_MEMBERS_KEY.format(party_id=party.party_id),
                 str(member.user_id),
-                json.dumps(member_data)
+                json.dumps(member_data),
             )
 
             # Update user's current party
@@ -96,7 +100,11 @@ class PartyRepository:
         await pipe.execute()
 
     async def get_party(self, party_id: int) -> Party | None:
-        """Load party from Redis by ID."""
+        """Load party from Redis by ID.
+
+        Returns:
+            Party | None: The party if found, None otherwise.
+        """
         # Get party metadata
         party_json = await self.redis.redis.get(self.PARTY_KEY.format(party_id=party_id))
         if not party_json:
@@ -118,7 +126,7 @@ class PartyRepository:
                 level=member_data["level"],
                 accumulated_exp=member_data["accumulated_exp"],
                 is_online=member_data["is_online"],
-                last_seen=member_data["last_seen"]
+                last_seen=member_data["last_seen"],
             )
             members[member.user_id] = member
 
@@ -126,7 +134,7 @@ class PartyRepository:
         party = Party(
             party_id=party_data["party_id"],
             leader_id=party_data["leader_id"],
-            leader_username=party_data["leader_username"]
+            leader_username=party_data["leader_username"],
         )
         party.members = members
         party.created_at = party_data["created_at"]
@@ -136,7 +144,11 @@ class PartyRepository:
         return party
 
     async def get_user_party(self, user_id: int) -> Party | None:
-        """Get the party that user is currently in."""
+        """Get the party that user is currently in.
+
+        Returns:
+            Party | None: The user's party if found, None otherwise.
+        """
         party_id = await self.redis.redis.get(self.USER_PARTY_KEY.format(user_id=user_id))
         if not party_id:
             return None
@@ -172,13 +184,13 @@ class PartyRepository:
             "level": member.level,
             "accumulated_exp": member.accumulated_exp,
             "is_online": member.is_online,
-            "last_seen": member.last_seen
+            "last_seen": member.last_seen,
         }
 
         await self.redis.redis.hset(
             self.PARTY_MEMBERS_KEY.format(party_id=party_id),
             str(member.user_id),
-            json.dumps(member_data)
+            json.dumps(member_data),
         )
 
     async def remove_member_from_party(self, party_id: int, user_id: int) -> None:
@@ -201,7 +213,7 @@ class PartyRepository:
             "level": member.level,
             "accumulated_exp": member.accumulated_exp,
             "is_online": member.is_online,
-            "last_seen": member.last_seen
+            "last_seen": member.last_seen,
         }
 
         pipe = self.redis.redis.pipeline()
@@ -210,7 +222,7 @@ class PartyRepository:
         pipe.hset(
             self.PARTY_MEMBERS_KEY.format(party_id=party_id),
             str(member.user_id),
-            json.dumps(member_data)
+            json.dumps(member_data),
         )
 
         # Update user's party reference
@@ -220,9 +232,12 @@ class PartyRepository:
         current_data = await self.redis.redis.get(self.PARTY_KEY.format(party_id=party_id))
         if current_data:
             party_data = json.loads(current_data)
-            party_data["member_count"] = len(await self.redis.redis.hgetall(
-                self.PARTY_MEMBERS_KEY.format(party_id=party_id)
-            )) + 1  # +1 for the new member
+            party_data["member_count"] = (
+                len(
+                    await self.redis.redis.hgetall(self.PARTY_MEMBERS_KEY.format(party_id=party_id))
+                )
+                + 1
+            )  # +1 for the new member
 
             pipe.set(self.PARTY_KEY.format(party_id=party_id), json.dumps(party_data))
             pipe.hset(self.ALL_PARTIES_KEY, str(party_id), json.dumps(party_data))
@@ -230,12 +245,20 @@ class PartyRepository:
         await pipe.execute()
 
     async def get_all_parties(self) -> list[int]:
-        """Get list of all party IDs."""
+        """Get list of all party IDs.
+
+        Returns:
+            list[int]: List of all active party IDs.
+        """
         party_ids = await self.redis.redis.smembers(self.PARTY_INDEX_KEY)
         return [int(pid) for pid in party_ids]
 
     async def get_party_count(self) -> int:
-        """Get total number of active parties."""
+        """Get total number of active parties.
+
+        Returns:
+            int: Number of active parties.
+        """
         return await self.redis.redis.scard(self.PARTY_INDEX_KEY)
 
     async def save_invitation(self, invitation: PartyInvitation) -> None:
@@ -246,20 +269,23 @@ class PartyRepository:
             "inviter_username": invitation.inviter_username,
             "target_id": invitation.target_id,
             "target_username": invitation.target_username,
-            "created_at": invitation.created_at
+            "created_at": invitation.created_at,
         }
 
         await self.redis.redis.hset(
             self.INVITATIONS_KEY.format(target_id=invitation.target_id),
             str(invitation.party_id),
-            json.dumps(invitation_data)
+            json.dumps(invitation_data),
         )
 
     async def get_invitation(self, target_id: int, party_id: int) -> PartyInvitation | None:
-        """Get specific invitation for target user."""
+        """Get specific invitation for target user.
+
+        Returns:
+            PartyInvitation | None: The invitation if found, None otherwise.
+        """
         invitation_json = await self.redis.redis.hget(
-            self.INVITATIONS_KEY.format(target_id=target_id),
-            str(party_id)
+            self.INVITATIONS_KEY.format(target_id=target_id), str(party_id)
         )
 
         if not invitation_json:
@@ -271,14 +297,18 @@ class PartyRepository:
             inviter_id=invitation_data["inviter_id"],
             inviter_username=invitation_data["inviter_username"],
             target_id=invitation_data["target_id"],
-            target_username=invitation_data["target_username"]
+            target_username=invitation_data["target_username"],
         )
         invitation.created_at = invitation_data["created_at"]
 
         return invitation
 
     async def get_user_invitations(self, target_id: int) -> list[PartyInvitation]:
-        """Get all pending invitations for a user."""
+        """Get all pending invitations for a user.
+
+        Returns:
+            list[PartyInvitation]: List of pending invitations.
+        """
         invitations_json = await self.redis.redis.hgetall(
             self.INVITATIONS_KEY.format(target_id=target_id)
         )
@@ -289,12 +319,11 @@ class PartyRepository:
         for invitation_json in invitations_json.values():
             invitation_data = json.loads(invitation_json)
 
-            # Check if expired
-            if current_time - invitation_data["created_at"] > 30:
+            # Check if expired (30 seconds timeout)
+            if current_time - invitation_data["created_at"] > self.INVITATION_TIMEOUT:
                 # Remove expired invitation
                 await self.remove_invitation(
-                    invitation_data["target_id"],
-                    invitation_data["party_id"]
+                    invitation_data["target_id"], invitation_data["party_id"]
                 )
                 continue
 
@@ -303,7 +332,7 @@ class PartyRepository:
                 inviter_id=invitation_data["inviter_id"],
                 inviter_username=invitation_data["inviter_username"],
                 target_id=invitation_data["target_id"],
-                target_username=invitation_data["target_username"]
+                target_username=invitation_data["target_username"],
             )
             invitation.created_at = invitation_data["created_at"]
             invitations.append(invitation)
@@ -312,17 +341,19 @@ class PartyRepository:
 
     async def remove_invitation(self, target_id: int, party_id: int) -> None:
         """Remove a specific invitation."""
-        await self.redis.redis.hdel(
-            self.INVITATIONS_KEY.format(target_id=target_id),
-            str(party_id)
-        )
+        await self.redis.redis.hdel(self.INVITATIONS_KEY.format(target_id=target_id), str(party_id))
 
     async def clear_user_invitations(self, target_id: int) -> None:
         """Clear all invitations for a user."""
         await self.redis.redis.delete(self.INVITATIONS_KEY.format(target_id=target_id))
 
-    async def cleanup_expired_invitations(self) -> int:
-        """Remove all expired invitations and return count cleaned."""
+    @staticmethod
+    async def cleanup_expired_invitations() -> int:
+        """Remove all expired invitations and return count cleaned.
+
+        Returns:
+            int: Number of invitations cleaned.
+        """
         # This would require scanning all invitation keys
         # For now, we'll clean up when retrieving invitations
         return 0
@@ -336,7 +367,7 @@ class PartyRepository:
             "created_at": party.created_at,
             "total_exp_earned": party.total_exp_earned,
             "sum_elevated_levels": party.sum_elevated_levels,
-            "member_count": party.member_count
+            "member_count": party.member_count,
         }
 
         pipe = self.redis.redis.pipeline()

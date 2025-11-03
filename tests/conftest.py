@@ -14,11 +14,11 @@ async def redis_client() -> RedisClient:
         Cliente Redis configurado con fakeredis.
     """
     # Resetear singleton para cada test
-    RedisClient._instance = None  # noqa: SLF001
-    RedisClient._redis = None  # noqa: SLF001
+    RedisClient._instance = None
+    RedisClient._redis = None
 
     client = RedisClient()
     # Usar fakeredis en lugar de Redis real
-    client._redis = await aioredis.FakeRedis(decode_responses=True)  # noqa: SLF001
+    client._redis = await aioredis.FakeRedis(decode_responses=True)
 
     return client

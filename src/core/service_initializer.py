@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
+from src.messaging.message_sender import MessageSender
 from src.models.item_catalog import ItemCatalog
 from src.models.items_catalog import ITEMS_CATALOG
 from src.models.npc_catalog import NPCCatalog
@@ -160,16 +161,14 @@ class ServiceInitializer:
         # Servicio de parties
         # Nota: El MessageSender real se inyectará por conexión en las tasks
         # Aquí creamos uno solo para inicialización del servicio
-        from src.messaging.message_sender import MessageSender
-
         # Creamos un MessageSender básico para el servicio (solo para inicialización)
-        message_sender_for_service = MessageSender(None)  # Sin conexión para inicialización
+        message_sender_for_service = MessageSender(None)  # type: ignore[arg-type]  # Sin conexión para inicialización
 
         party_service = PartyService(
             self.repositories["party_repo"],
             self.repositories["player_repo"],
             message_sender_for_service,
-            broadcast_service,
+            broadcast_service,  # type: ignore[arg-type]
             self.map_manager,
         )
         await party_service.party_repo.initialize()  # Inicializar repositorio de parties

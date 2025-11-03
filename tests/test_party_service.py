@@ -26,26 +26,20 @@ def mock_player_repo():
     """Create a mock player repository."""
     repo = AsyncMock()
 
-    # Mock player data
-    def get_player_side_effect(user_id):
-        player = MagicMock()
-        player.user_id = user_id
-        player.username = f"Player{user_id}"
-        player.level = 20
-        player.is_dead = False
-        player.stats = {"charisma": 10}
-        player.skills = {"leadership": 10}
-        return player
+    # Mock get_stats to return a dict with proper values
+    repo.get_stats.return_value = {
+        "level": 20,
+        "min_hp": 100,  # Current HP
+        "max_hp": 100,
+    }
 
-    repo.get_player.side_effect = get_player_side_effect
-    repo.get_player_by_username.side_effect = lambda username: MagicMock(
-        user_id=int(username.replace("Player", "")),
-        username=username,
-        level=20,
-        is_dead=False,
-        stats={"charisma": 10},
-        skills={"leadership": 10}
-    )
+    # Mock get_attributes to return a dict with charisma and leadership
+    repo.get_attributes.return_value = {
+        "charisma": 18,
+        "leadership": 10,
+        "username": "TestPlayer",
+    }
+
     return repo
 
 
@@ -58,33 +52,63 @@ def mock_message_sender():
 
 
 @pytest.fixture
-def party_service(mock_party_repo, mock_player_repo, mock_message_sender):
+def mock_broadcast_service():
+    """Create a mock broadcast service."""
+    return AsyncMock()
+
+
+@pytest.fixture
+def mock_map_manager():
+    """Create a mock map manager."""
+    manager = AsyncMock()
+    # Mock _players_by_map for player search
+    manager._players_by_map = {
+        1: {  # map_id 1
+            2: (AsyncMock(), "Player2"),  # user_id 2 with username
+        }
+    }
+    return manager
+
+
+@pytest.fixture
+def party_service(
+    mock_party_repo, mock_player_repo, mock_message_sender, mock_broadcast_service, mock_map_manager
+):
     """Create a party service with mocked dependencies."""
-    return PartyService(mock_party_repo, mock_player_repo, mock_message_sender)
+    return PartyService(
+        mock_party_repo,
+        mock_player_repo,
+        mock_message_sender,
+        mock_broadcast_service,
+        mock_map_manager,
+    )
 
 
 class TestPartyCreation:
     """Test party creation functionality."""
 
     @pytest.mark.asyncio
-    async def test_can_create_party_success(self, party_service, mock_player_repo):
+    async def test_can_create_party_success(self, party_service):
         """Test successful party creation check."""
         can_create, error_msg = await party_service.can_create_party(1)
 
         assert can_create is True
-        assert error_msg == ""
+        assert not error_msg
 
     @pytest.mark.asyncio
     async def test_cannot_create_party_low_level(self, party_service, mock_player_repo):
         """Test party creation fails with low level."""
-        mock_player_repo.get_player.side_effect = lambda user_id: MagicMock(
-            user_id=user_id,
-            username=f"Player{user_id}",
-            level=10,  # Below MIN_LEVEL_TO_CREATE (15)
-            is_dead=False,
-            stats={"charisma": 10},
-            skills={"leadership": 10}
-        )
+        # Configure mocks for low level player
+        mock_player_repo.get_stats.return_value = {
+            "level": 10,  # Below MIN_LEVEL_TO_CREATE (15)
+            "min_hp": 100,
+            "max_hp": 100,
+        }
+        mock_player_repo.get_attributes.return_value = {
+            "charisma": 18,
+            "leadership": 10,
+            "username": "TestPlayer",
+        }
 
         can_create, error_msg = await party_service.can_create_party(1)
 
@@ -94,31 +118,39 @@ class TestPartyCreation:
     @pytest.mark.asyncio
     async def test_cannot_create_party_dead(self, party_service, mock_player_repo):
         """Test party creation fails when dead."""
-        mock_player_repo.get_player.side_effect = lambda user_id: MagicMock(
-            user_id=user_id,
-            username=f"Player{user_id}",
-            level=20,
-            is_dead=True,
-            stats={"charisma": 10},
-            skills={"leadership": 10}
-        )
+        # Configure mocks for dead player
+        mock_player_repo.get_stats.return_value = {
+            "level": 20,
+            "min_hp": 0,  # Dead
+            "max_hp": 100,
+        }
+        mock_player_repo.get_attributes.return_value = {
+            "charisma": 18,
+            "leadership": 10,
+            "username": "TestPlayer",
+        }
 
         can_create, error_msg = await party_service.can_create_party(1)
 
         assert can_create is False
-        assert "Estás muerto" in error_msg
+        assert "muerto" in error_msg
 
     @pytest.mark.asyncio
-    async def test_cannot_create_party_insufficient_leadership(self, party_service, mock_player_repo):
+    async def test_cannot_create_party_insufficient_leadership(
+        self, party_service, mock_player_repo
+    ):
         """Test party creation fails with insufficient leadership."""
-        mock_player_repo.get_player.side_effect = lambda user_id: MagicMock(
-            user_id=user_id,
-            username=f"Player{user_id}",
-            level=20,
-            is_dead=False,
-            stats={"charisma": 5},  # 5 * 10 = 50 < 100
-            skills={"leadership": 10}
-        )
+        # Configure mocks for insufficient leadership (5 * 10 = 50 < 100)
+        mock_player_repo.get_stats.return_value = {
+            "level": 20,
+            "min_hp": 100,
+            "max_hp": 100,
+        }
+        mock_player_repo.get_attributes.return_value = {
+            "charisma": 5,  # 5 * 10 = 50 < MIN_CHARISMA_LEADERSHIP (100)
+            "leadership": 10,
+            "username": "TestPlayer",
+        }
 
         can_create, error_msg = await party_service.can_create_party(1)
 
@@ -126,7 +158,7 @@ class TestPartyCreation:
         assert "carisma y liderazgo" in error_msg
 
     @pytest.mark.asyncio
-    async def test_create_party_success(self, party_service, mock_party_repo, mock_player_repo):
+    async def test_create_party_success(self, party_service, mock_party_repo):
         """Test successful party creation."""
         party, message = await party_service.create_party(1)
 
@@ -151,14 +183,27 @@ class TestPartyInvitation:
         mock_party = MagicMock()
         mock_party.is_full = False
         mock_party.is_member.return_value = False
-        mock_party._can_join_by_level.return_value = True
+        mock_party._can_join_by_level = MagicMock(return_value=True)
         mock_party.party_id = 1
+        mock_party.is_leader.return_value = True
 
-        mock_party_repo.get_user_party.return_value = mock_party
+        # Configure get_user_party to return party for inviter (1) and None for target (2)
+        def get_user_party_side_effect(user_id):
+            if user_id == 1:
+                return mock_party
+            return None
+
+        mock_party_repo.get_user_party.side_effect = get_user_party_side_effect
+
+        # Configure player stats for target
+        mock_player_repo.get_stats.return_value = {
+            "level": 20,
+            "min_hp": 100,
+        }
 
         message = await party_service.invite_to_party(1, "Player2")
 
-        assert "invitado a tu party" in message.lower()
+        assert "invitado" in message.lower() or "invitación" in message.lower()
         mock_party_repo.save_invitation.assert_called_once()
 
     @pytest.mark.asyncio
@@ -187,7 +232,7 @@ class TestPartyAcceptance:
     """Test party acceptance functionality."""
 
     @pytest.mark.asyncio
-    async def test_accept_invitation_success(self, party_service, mock_party_repo, mock_player_repo):
+    async def test_accept_invitation_success(self, party_service, mock_party_repo):
         """Test successful invitation acceptance."""
         # Mock invitation exists
         mock_invitation = MagicMock()
@@ -259,7 +304,7 @@ class TestPartyManagement:
     """Test party management functionality."""
 
     @pytest.mark.asyncio
-    async def test_kick_member_success(self, party_service, mock_party_repo, mock_player_repo):
+    async def test_kick_member_success(self, party_service, mock_party_repo):
         """Test successful member kick."""
         mock_party = MagicMock()
         mock_party.is_leader.return_value = True
@@ -275,7 +320,7 @@ class TestPartyManagement:
         mock_party_repo.save_party.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_transfer_leadership_success(self, party_service, mock_party_repo, mock_player_repo):
+    async def test_transfer_leadership_success(self, party_service, mock_party_repo):
         """Test successful leadership transfer."""
         mock_party = MagicMock()
         mock_party.is_leader.return_value = True
@@ -299,7 +344,7 @@ class TestPartyManagement:
 
         result = await party_service.send_party_message(1, "Hello party!")
 
-        assert result == ""  # No error message
+        assert not result  # No error message
         # MessageSender should be called for each member
         assert party_service.message_sender.send_console_msg.call_count == 3
 

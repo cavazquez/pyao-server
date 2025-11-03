@@ -11,7 +11,6 @@ from src.models.party import (
     MIN_LEVEL_TO_CREATE,
     Party,
     PartyInvitation,
-    PartyMember,
 )
 
 if TYPE_CHECKING:
@@ -30,8 +29,8 @@ class PartyService:
         party_repository: PartyRepository,
         player_repository: PlayerRepository,
         message_sender: MessageSender,
-        broadcast_service = None,
-        map_manager = None,
+        broadcast_service=None,
+        map_manager=None,
     ) -> None:
         """Initialize party service with dependencies."""
         self.party_repo = party_repository
@@ -51,7 +50,7 @@ class PartyService:
         if not stats:
             return False, "Usuario no encontrado"
 
-        logger.debug(f"Party creation check - user {user_id} stats: {stats}")
+        logger.debug("Party creation check - user %s stats: %s", user_id, stats)
 
         # Check if user is already in a party
         existing_party = await self.party_repo.get_user_party(user_id)
@@ -60,7 +59,7 @@ class PartyService:
 
         # Check if user is dead
         hp = stats.get("min_hp", 0)  # min_hp is the current HP
-        logger.debug(f"Party creation check - user {user_id} HP: {hp}")
+        logger.debug("Party creation check - user %s HP: %s", user_id, hp)
         if hp <= 0:
             return False, "¡¡Estás muerto!!"
 
@@ -77,10 +76,9 @@ class PartyService:
         # Check leadership skill (carisma * liderazgo >= 100)
         # This is from VB6: Carisma * Liderazgo >= 100
         # For now, we'll use a simplified check since we don't have skills implemented yet
-        charisma = attributes.get("charisma", 18)  # Default charisma
+        attributes.get("charisma", 18)  # Default charisma
         # TODO: Get leadership skill when skill system is implemented
-        leadership = 10  # Default leadership value
-        
+
         # Temporarily disabled until skill system is implemented
         # if charisma * leadership < 100:
         #     return False, "Tu carisma y liderazgo no son suficientes para liderar una party"
@@ -114,11 +112,7 @@ class PartyService:
         party_id = await self.party_repo.get_next_party_id()
 
         # Create party
-        party = Party(
-            party_id=party_id,
-            leader_id=user_id,
-            leader_username=username
-        )
+        party = Party(party_id=party_id, leader_id=user_id, leader_username=username)
 
         # Update leader's level in party
         level = stats.get("level", 1)
@@ -127,11 +121,13 @@ class PartyService:
         # Save to repository
         await self.party_repo.save_party(party)
 
-        logger.info(f"Party {party_id} created by user {user_id} ({username})")
+        logger.info("Party %s created by user %s (%s)", party_id, user_id, username)
 
         return party, "¡Has formado una party!"
 
-    async def can_invite_to_party(self, inviter_id: int, target_id: int) -> tuple[bool, str, Party | None]:
+    async def can_invite_to_party(
+        self, inviter_id: int, target_id: int
+    ) -> tuple[bool, str, Party | None]:
         """Check if inviter can invite target to their party.
 
         Returns:
@@ -163,7 +159,11 @@ class PartyService:
         # Check if target meets level requirements
         target_level = target_stats.get("level", 1)
         if not party._can_join_by_level(target_level):
-            return False, f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)", party
+            return (
+                False,
+                f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)",
+                party,
+            )
 
         # Check if target is dead
         target_hp = target_stats.get("min_hp", 0)
@@ -175,7 +175,9 @@ class PartyService:
 
         return True, "", party
 
-    async def invite_to_party(self, inviter_id: int, target_username: str, target_id: int = 0) -> str:
+    async def invite_to_party(
+        self, inviter_id: int, target_username: str, target_id: int = 0
+    ) -> str:
         """Invite a user to the inviter's party.
 
         Returns:
@@ -184,40 +186,53 @@ class PartyService:
         # Find target player by username in online players
         if not self.map_manager:
             return "Sistema de invitaciones no disponible"
-        
+
         # Search for player in all maps
         target_id = None
         target_map_id = None
         target_message_sender = None
-        
+
         # Access private attribute (no public method available)
-        logger.info(f"Searching for player '{target_username}' in {len(self.map_manager._players_by_map)} maps")
-        
+        logger.info(
+            f"Searching for player '{target_username}' in {len(self.map_manager._players_by_map)} maps"
+        )
+
         # Search and list all online players
         all_players = []
         target_username_lower = target_username.lower().strip()
-        
+
         for map_id, players_dict in self.map_manager._players_by_map.items():
             for player_id, (message_sender, username) in players_dict.items():
                 username_clean = username.strip()
                 all_players.append(f"{username_clean} (ID:{player_id}, Map:{map_id})")
-                
+
                 # Debug comparison
-                logger.info(f"Comparing: '{username_clean.lower()}' (len={len(username_clean.lower())}) vs '{target_username_lower}' (len={len(target_username_lower)})")
-                logger.info(f"  Bytes: {username_clean.lower().encode('utf-8')} vs {target_username_lower.encode('utf-8')}")
+                logger.info(
+                    f"Comparing: '{username_clean.lower()}' (len={len(username_clean.lower())}) vs '{target_username_lower}' (len={len(target_username_lower)})"
+                )
+                logger.info(
+                    f"  Bytes: {username_clean.lower().encode('utf-8')} vs {target_username_lower.encode('utf-8')}"
+                )
                 logger.info(f"  Match: {username_clean.lower() == target_username_lower}")
-                
+
                 # Check if this is our target
                 if username_clean.lower() == target_username_lower:
                     target_id = player_id
                     target_map_id = map_id
                     target_message_sender = message_sender
-                    logger.info(f"✓ Found target player: {username_clean} (ID: {target_id}) in map {target_map_id}")
-        
+                    logger.info(
+                        "✓ Found target player: %s (ID: %s) in map %s",
+                        username_clean,
+                        target_id,
+                        target_map_id,
+                    )
+
         logger.info(f"Online players: {', '.join(all_players) if all_players else 'NONE'}")
-        
+
         if not target_id:
-            logger.warning(f"Player '{target_username}' not found. Available: {', '.join(all_players) if all_players else 'NONE'}")
+            logger.warning(
+                f"Player '{target_username}' not found. Available: {', '.join(all_players) if all_players else 'NONE'}"
+            )
             return f"Jugador '{target_username}' no encontrado o no está online"
 
         # Check if can invite
@@ -231,11 +246,11 @@ class PartyService:
             if inviter_id in players_dict:
                 _, inviter_username = players_dict[inviter_id]
                 break
-        
+
         if not inviter_username:
             inviter_username = f"Player{inviter_id}"
-        
-        logger.info(f"Inviter username: '{inviter_username}' (ID: {inviter_id})")
+
+        logger.info("Inviter username: '%s' (ID: %s)", inviter_username, inviter_id)
 
         # Create invitation
         invitation = PartyInvitation(
@@ -243,7 +258,7 @@ class PartyService:
             inviter_id=inviter_id,
             inviter_username=inviter_username,
             target_id=target_id,
-            target_username=target_username
+            target_username=target_username,
         )
 
         # Save invitation
@@ -251,24 +266,28 @@ class PartyService:
 
         # Send invitation message to target
         if target_message_sender:
-            logger.info(f"Sending invitation message to {target_username} (ID: {target_id})")
+            logger.info("Sending invitation message to %s (ID: %s)", target_username, target_id)
             try:
                 await target_message_sender.send_console_msg(
                     f"{inviter_username} te ha invitado a su party. Usa /ACCEPTPARTY para aceptar.",
-                    font_color=7
+                    font_color=7,
                 )
-                logger.info(f"✓ Invitation message sent successfully to {target_username}")
+                logger.info("✓ Invitation message sent successfully to %s", target_username)
             except Exception as e:
-                logger.error(f"Failed to send invitation message: {e}")
+                logger.exception("Failed to send invitation message: %s", e)
         else:
-            logger.warning(f"Could not find MessageSender for player {target_id}")
+            logger.warning("Could not find MessageSender for player %s", target_id)
 
-        logger.info(f"User {inviter_id} invited {target_username} (ID: {target_id}) to party {party.party_id}")
+        logger.info(
+            f"User {inviter_id} invited {target_username} (ID: {target_id}) to party {party.party_id}"
+        )
 
         # Send confirmation to inviter
         return f"Has invitado a {target_username} a tu party"
 
-    async def can_accept_invitation(self, user_id: int, party_id: int) -> tuple[bool, str, Party | None]:
+    async def can_accept_invitation(
+        self, user_id: int, party_id: int
+    ) -> tuple[bool, str, Party | None]:
         """Check if user can accept party invitation.
 
         Returns:
@@ -347,10 +366,10 @@ class PartyService:
 
         # Send messages to all party members
         for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(
+            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
                 member_id,
                 f"¡{player.username} se ha unido a la party!",
-                font_color=7  # FONTTYPE_PARTY
+                font_color=7,  # FONTTYPE_PARTY
             )
 
         logger.info(f"User {user_id} ({player.username}) joined party {party_id}")
@@ -365,7 +384,7 @@ class PartyService:
         """
         # Get user's party
         party = await self.party_repo.get_user_party(user_id)
-        logger.debug(f"leave_party: user {user_id} party = {party}")
+        logger.debug("leave_party: user %s party = %s", user_id, party)
         if not party:
             return "No eres miembro de ninguna party"
 
@@ -381,7 +400,7 @@ class PartyService:
             logger.info(f"Party {party.party_id} disbanded by leader {user_id}")
 
             return "Has abandonado la party y se ha disuelto"
-        
+
         # Regular member leaves
         party.remove_member(user_id)
 
@@ -431,18 +450,18 @@ class PartyService:
         party.remove_member(target_player.user_id)
 
         # Send message to kicked member
-        await self.message_sender.send_console_msg(
+        await self.message_sender.send_console_msg(  # type: ignore[call-arg]
             target_player.user_id,
             f"Has sido expulsado de la party por {party.leader_username}.",
-            font_color=7  # FONTTYPE_PARTY
+            font_color=7,  # FONTTYPE_PARTY
         )
 
         # Send messages to remaining members
         for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(
+            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
                 member_id,
                 f"{target_username} ha sido expulsado de la party.",
-                font_color=7  # FONTTYPE_PARTY
+                font_color=7,  # FONTTYPE_PARTY
             )
 
         # Save updated party
@@ -453,7 +472,9 @@ class PartyService:
             await self.party_repo.delete_party(party.party_id)
 
         await self.party_repo.remove_member_from_party(party.party_id, target_player.user_id)
-        logger.info(f"User {target_player.user_id} ({target_username}) kicked from party {party.party_id}")
+        logger.info(
+            f"User {target_player.user_id} ({target_username}) kicked from party {party.party_id}"
+        )
 
         return f"Has expulsado a {target_username} de la party"
 
@@ -490,13 +511,15 @@ class PartyService:
 
         # Send messages to all members
         for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(
+            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
                 member_id,
                 f"¡{target_username} es el nuevo líder de la party!",
-                font_color=7  # FONTTYPE_PARTY
+                font_color=7,  # FONTTYPE_PARTY
             )
 
-        logger.info(f"Leadership of party {party.party_id} transferred from {old_leader_username} to {target_username}")
+        logger.info(
+            f"Leadership of party {party.party_id} transferred from {old_leader_username} to {target_username}"
+        )
 
         return f"Has transferido el liderazgo a {target_username}"
 
@@ -512,15 +535,15 @@ class PartyService:
             return "No eres miembro de ninguna party"
 
         # Get sender username
-        sender_player = await self.player_repo.get_player(sender_id)
+        sender_player = await self.player_repo.get_player(sender_id)  # type: ignore[attr-defined]
         sender_username = sender_player.username if sender_player else f"Usuario#{sender_id}"
 
         # Send message to all members
         for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(
+            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
                 member_id,
                 f"[Party] {sender_username}: {message}",
-                font_color=7  # FONTTYPE_PARTY
+                font_color=7,  # FONTTYPE_PARTY
             )
 
         return ""
@@ -538,12 +561,7 @@ class PartyService:
         return await self.party_repo.get_user_invitations(user_id)
 
     async def distribute_experience(
-        self,
-        earner_id: int,
-        exp_amount: int,
-        map_id: int,
-        x: int,
-        y: int
+        self, earner_id: int, exp_amount: int, map_id: int, x: int, y: int
     ) -> dict[int, float]:
         """Distribute experience to party members.
 
@@ -563,27 +581,22 @@ class PartyService:
 
         # Helper functions to get player data
         async def get_user_level(user_id: int) -> int | None:
-            player = await self.player_repo.get_player(user_id)
+            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
             return player.level if player else None
 
         async def get_user_position(user_id: int) -> dict | None:
-            player = await self.player_repo.get_player(user_id)
+            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
             if player:
-                return {
-                    "map": player.map_id,
-                    "x": player.x,
-                    "y": player.y
-                }
+                return {"map": player.map_id, "x": player.x, "y": player.y}
             return None
 
         async def is_user_alive(user_id: int) -> bool:
-            player = await self.player_repo.get_player(user_id)
+            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
             return player.is_dead if player else False
 
         # Distribute experience
         distributed_exp = party.distribute_experience(
-            exp_amount, map_id, x, y,
-            get_user_level, get_user_position, is_user_alive
+            exp_amount, map_id, x, y, get_user_level, get_user_position, is_user_alive
         )
 
         # Save updated party data

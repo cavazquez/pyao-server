@@ -35,8 +35,8 @@ def test_hunger_thirst_effect_initialization(mock_server_repo: AsyncMock) -> Non
     effect = HungerThirstEffect(mock_server_repo)
 
     assert effect.server_repo == mock_server_repo
-    assert effect._counters == {}  # noqa: SLF001
-    assert effect._config_cache == {}  # noqa: SLF001
+    assert effect._counters == {}
+    assert effect._config_cache == {}
 
 
 def test_hunger_thirst_effect_get_interval(mock_server_repo: AsyncMock) -> None:
@@ -179,15 +179,15 @@ def test_hunger_thirst_cleanup_player(mock_server_repo: AsyncMock) -> None:
     effect = HungerThirstEffect(mock_server_repo)
 
     # Agregar contadores manualmente
-    effect._counters[1] = {"water": 2, "hunger": 3}  # noqa: SLF001
-    effect._counters[2] = {"water": 1, "hunger": 1}  # noqa: SLF001
+    effect._counters[1] = {"water": 2, "hunger": 3}
+    effect._counters[2] = {"water": 1, "hunger": 1}
 
     # Limpiar jugador 1
     effect.cleanup_player(1)
 
     # Verificar que se eliminó el jugador 1 pero no el 2
-    assert 1 not in effect._counters  # noqa: SLF001
-    assert 2 in effect._counters  # noqa: SLF001
+    assert 1 not in effect._counters
+    assert 2 in effect._counters
 
 
 @pytest.mark.asyncio

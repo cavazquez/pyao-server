@@ -202,7 +202,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=False)  # Bloqueado
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
         map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {1: {(50, 49)}}  # noqa: SLF001
+        map_manager._blocked_tiles = {1: {(50, 49)}}
 
         broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 
@@ -568,7 +568,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=False)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
         map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {}  # noqa: SLF001
+        map_manager._blocked_tiles = {}
         map_manager.get_tile_occupant = MagicMock(return_value="player:2")
 
         data = bytes([0x06, 0x01])  # NORTH
@@ -604,7 +604,7 @@ class TestTaskWalk:
         map_manager.can_move_to = MagicMock(return_value=False)
         map_manager.get_map_size = MagicMock(return_value=(100, 100))
         map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {}  # noqa: SLF001
+        map_manager._blocked_tiles = {}
         map_manager.get_tile_occupant = MagicMock(return_value="npc:100")
 
         data = bytes([0x06, 0x02])  # EAST

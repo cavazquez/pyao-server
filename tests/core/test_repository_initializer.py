@@ -10,6 +10,7 @@ from src.repositories.ground_items_repository import GroundItemsRepository
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.merchant_repository import MerchantRepository
 from src.repositories.npc_repository import NPCRepository
+from src.repositories.party_repository import PartyRepository
 from src.repositories.player_repository import PlayerRepository
 from src.repositories.server_repository import ServerRepository
 from src.repositories.spellbook_repository import SpellbookRepository
@@ -33,6 +34,7 @@ def test_repository_initializer_creates_all_repositories() -> None:
     assert "npc_repo" in repositories
     assert "spellbook_repo" in repositories
     assert "ground_items_repo" in repositories
+    assert "party_repo" in repositories
 
     # Verificar tipos
     assert isinstance(repositories["player_repo"], PlayerRepository)
@@ -45,6 +47,7 @@ def test_repository_initializer_creates_all_repositories() -> None:
     assert isinstance(repositories["npc_repo"], NPCRepository)
     assert isinstance(repositories["spellbook_repo"], SpellbookRepository)
     assert isinstance(repositories["ground_items_repo"], GroundItemsRepository)
+    assert isinstance(repositories["party_repo"], PartyRepository)
 
     # Los repositorios fueron creados correctamente (no podemos verificar redis_client interno)
 
@@ -57,4 +60,4 @@ def test_repository_initializer_returns_dict() -> None:
     repositories = initializer.initialize_all()
 
     assert isinstance(repositories, dict)
-    assert len(repositories) == 10  # 10 repositorios
+    assert len(repositories) == 11  # 11 repositorios (incluye party_repo)

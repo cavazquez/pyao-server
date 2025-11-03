@@ -9,11 +9,13 @@ from dataclasses import dataclass, field
 
 # Constants from VB6 server
 MAX_PARTY_MEMBERS = 5  # PARTY_MAXMEMBERS
-MIN_LEVEL_TO_CREATE = 1  # MINPARTYLEVEL (temporalmente 1 para testing, original: 15)
-MAX_LEVEL_DIFFERENCE = 7  # MAXPARTYDELTALEVEL
-MAX_EXP_DISTANCE = 18  # PARTY_MAXDISTANCIA
+MIN_LEVEL_TO_CREATE = 15  # MINPARTYLEVEL
+MAX_LEVEL_DIFFERENCE = 10  # Maximum level difference between party members
+MAX_EXP_DISTANCE = 30  # Maximum distance in tiles to receive experience
+LEVEL_EXPONENT = 2.8  # Exponent for level-based experience distribution
+MIN_CHARISMA_LEADERSHIP = 100  # Minimum (charisma * leadership) to create party
+INVITATION_TIMEOUT_SECONDS = 30  # Invitation expiration timeout in seconds
 PARTY_EXPERIENCE_PER_HIT = False  # PARTY_EXPERIENCIAPORGOLPE
-LEVEL_EXPONENT = 1.2  # ExponenteNivelParty (configurable)
 
 
 @dataclass
@@ -22,6 +24,7 @@ class PartyMember:
 
     Based on tPartyMember from VB6 server.
     """
+
     user_id: int
     username: str
     level: int
@@ -35,13 +38,21 @@ class PartyMember:
         self.accumulated_exp = max(self.accumulated_exp, 0)
 
     def withdraw_experience(self) -> float:
-        """Withdraw all accumulated experience and reset to 0."""
+        """Withdraw all accumulated experience and reset to 0.
+
+        Returns:
+            float: The accumulated experience amount.
+        """
         exp = self.accumulated_exp
         self.accumulated_exp = 0.0
         return exp
 
     def can_receive_experience(self, distance: int) -> bool:
-        """Check if member can receive experience based on distance."""
+        """Check if member can receive experience based on distance.
+
+        Returns:
+            bool: True if member can receive experience, False otherwise.
+        """
         return self.is_online and distance <= MAX_EXP_DISTANCE
 
 
@@ -51,6 +62,7 @@ class Party:
 
     Based on clsParty from VB6 server.
     """
+
     party_id: int
     leader_id: int
     leader_username: str
@@ -64,7 +76,7 @@ class Party:
         leader_member = PartyMember(
             user_id=self.leader_id,
             username=self.leader_username,
-            level=1  # Will be updated when adding
+            level=1,  # Will be updated when adding
         )
         self.members[self.leader_id] = leader_member
         self._update_sum_elevated_levels()
@@ -76,16 +88,28 @@ class Party:
 
     @property
     def is_full(self) -> bool:
-        """Check if party is at maximum capacity."""
+        """Check if party is at maximum capacity.
+
+        Returns:
+            bool: True if party is full, False otherwise.
+        """
         return self.member_count >= MAX_PARTY_MEMBERS
 
     @property
     def member_ids(self) -> set[int]:
-        """Get set of all member IDs."""
+        """Get set of all member IDs.
+
+        Returns:
+            set[int]: Set of member user IDs.
+        """
         return set(self.members.keys())
 
     def is_leader(self, user_id: int) -> bool:
-        """Check if user is the leader of this party."""
+        """Check if user is the leader of this party.
+
+        Returns:
+            bool: True if user is the leader, False otherwise.
+        """
         return user_id == self.leader_id
 
     def add_member(self, user_id: int, username: str, level: int) -> bool:
@@ -106,11 +130,7 @@ class Party:
         if not self._can_join_by_level(level):
             return False
 
-        new_member = PartyMember(
-            user_id=user_id,
-            username=username,
-            level=level
-        )
+        new_member = PartyMember(user_id=user_id, username=username, level=level)
 
         self.members[user_id] = new_member
         self._update_sum_elevated_levels()
@@ -131,19 +151,35 @@ class Party:
         return member
 
     def is_member(self, user_id: int) -> bool:
-        """Check if user is a member of this party."""
+        """Check if user is a member of this party.
+
+        Returns:
+            bool: True if user is a member, False otherwise.
+        """
         return user_id in self.members
 
     def get_member(self, user_id: int) -> PartyMember | None:
-        """Get member by user ID."""
+        """Get member by user ID.
+
+        Returns:
+            PartyMember | None: The member if found, None otherwise.
+        """
         return self.members.get(user_id)
 
     def can_accept_invitation(self, inviter_id: int) -> bool:
-        """Check if inviter can invite (only leader can invite)."""
+        """Check if inviter can invite (only leader can invite).
+
+        Returns:
+            bool: True if inviter is the leader, False otherwise.
+        """
         return self.is_leader(inviter_id)
 
     def _can_join_by_level(self, new_level: int) -> bool:
-        """Check if user can join based on level differences."""
+        """Check if user can join based on level differences.
+
+        Returns:
+            bool: True if level difference is acceptable, False otherwise.
+        """
         for member in self.members.values():
             if abs(member.level - new_level) > MAX_LEVEL_DIFFERENCE:
                 return False
@@ -152,20 +188,26 @@ class Party:
     def _update_sum_elevated_levels(self) -> None:
         """Update sum of elevated levels for experience distribution."""
         self.sum_elevated_levels = sum(
-            member.level ** LEVEL_EXPONENT
-            for member in self.members.values()
+            member.level**LEVEL_EXPONENT for member in self.members.values()
         )
 
-    def distribute_experience(self, total_exp: int, map_id: int, x: int, y: int,
-                             get_user_level_func: callable,
-                             get_user_position_func: callable,
-                             is_user_alive_func: callable) -> dict[int, float]:
+    def distribute_experience(
+        self,
+        total_exp: int,
+        map_id: int,
+        x: int,
+        y: int,
+        get_user_level_func: callable,
+        get_user_position_func: callable,
+        is_user_alive_func: callable,
+    ) -> dict[int, float]:
         """Distribute experience among eligible members.
 
         Args:
             total_exp: Total experience to distribute
             map_id: Map where experience was earned
-            x, y: Coordinates where experience was earned
+            x: X coordinate where experience was earned
+            y: Y coordinate where experience was earned
             get_user_level_func: Function to get user level by ID
             get_user_position_func: Function to get user position by ID
             is_user_alive_func: Function to check if user is alive
@@ -191,9 +233,7 @@ class Party:
             if user_pos["map"] != map_id:
                 continue
 
-            distance = math.sqrt(
-                (user_pos["x"] - x) ** 2 + (user_pos["y"] - y) ** 2
-            )
+            distance = math.sqrt((user_pos["x"] - x) ** 2 + (user_pos["y"] - y) ** 2)
 
             if not member.can_receive_experience(int(distance)):
                 continue
@@ -201,7 +241,7 @@ class Party:
             # Calculate experience share using VB6 formula
             user_level = get_user_level_func(member.user_id)
             if user_level:
-                exp_share = total_exp * (user_level ** LEVEL_EXPONENT) / self.sum_elevated_levels
+                exp_share = total_exp * (user_level**LEVEL_EXPONENT) / self.sum_elevated_levels
                 exp_share = math.floor(exp_share)  # VB6 uses Fix()
 
                 member.add_experience(exp_share)
@@ -224,13 +264,13 @@ class Party:
             return False
 
         # Remove old contribution
-        self.sum_elevated_levels -= member.level ** LEVEL_EXPONENT
+        self.sum_elevated_levels -= member.level**LEVEL_EXPONENT
 
         # Update level
         member.level = new_level
 
         # Add new contribution
-        self.sum_elevated_levels += member.level ** LEVEL_EXPONENT
+        self.sum_elevated_levels += member.level**LEVEL_EXPONENT
 
         return True
 
@@ -251,7 +291,11 @@ class Party:
         return True
 
     def get_online_members(self) -> list[PartyMember]:
-        """Get list of online members."""
+        """Get list of online members.
+
+        Returns:
+            list[PartyMember]: List of online party members.
+        """
         return [member for member in self.members.values() if member.is_online]
 
     def set_member_online_status(self, user_id: int, is_online: bool) -> bool:
@@ -278,6 +322,7 @@ class Party:
 @dataclass
 class PartyInvitation:
     """Represents a party invitation."""
+
     party_id: int
     inviter_id: int
     inviter_username: str
@@ -288,4 +333,4 @@ class PartyInvitation:
     @property
     def is_expired(self) -> bool:
         """Check if invitation has expired (30 seconds timeout)."""
-        return time.time() - self.created_at > 30
+        return time.time() - self.created_at > INVITATION_TIMEOUT_SECONDS
