@@ -1,6 +1,5 @@
 """Tests para ServerCLI."""
 
-import logging
 from unittest.mock import patch
 
 import pytest
@@ -111,8 +110,10 @@ class TestServerCLI:
         """Test de configuración de logging en modo DEBUG."""
         cli = ServerCLI()
 
-        with patch("src.logging_config.configure_logging") as mock_configure, \
-             patch("src.logging_config.verbose_mode") as mock_verbose:
+        with (
+            patch("src.logging_config.configure_logging") as mock_configure,
+            patch("src.logging_config.verbose_mode") as mock_verbose,
+        ):
             cli.configure_logging(debug=True)
 
             # Verifica que configure_logging() y verbose_mode() fueron llamados

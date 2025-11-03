@@ -33,11 +33,11 @@ def mock_connection():
 
 def build_ascii_string_packet(packet_id: int, text: str) -> bytes:
     """Build a packet with ASCII/Latin-1 string (cliente Godot format).
-    
+
     Args:
         packet_id: Packet ID byte
         text: Text to encode
-        
+
     Returns:
         Packet bytes: packet_id + length (int16 LE) + text (latin-1)
     """
