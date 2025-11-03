@@ -9,8 +9,9 @@ LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 # Configuración de features para logging
 # Cada feature puede tener su propio nivel de logging
 FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
-    # Core
+    # Core (siempre en INFO para ver mensajes de inicio/fin)
     "core": "INFO",
+    "core.server_initializer": "INFO",  # Mensajes de servidor listo
     "server": "INFO",
     
     # Network
@@ -133,10 +134,16 @@ def enable_network_debug() -> None:
 
 
 def quiet_mode() -> None:
-    """Modo silencioso - solo errores."""
+    """Modo silencioso - solo errores.
+    
+    Nota: Los mensajes de core (inicio/fin del servidor) siempre se muestran.
+    """
     for feature in FEATURE_LOG_LEVELS:
+        # Mantener core en INFO para ver mensajes de inicio/fin
+        if feature.startswith("core"):
+            continue
         set_feature_log_level(feature, "ERROR")
-    logging.info("✓ Quiet mode enabled (errors only)")
+    logging.info("✓ Quiet mode enabled (errors only, core messages visible)")
 
 
 def verbose_mode() -> None:
