@@ -52,7 +52,7 @@ class PartyRepository:
         Returns:
             int: The next party ID.
         """
-        party_id = cast(int, await self.redis.redis.incr(self.NEXT_PARTY_ID_KEY))
+        party_id = cast("int", await self.redis.redis.incr(self.NEXT_PARTY_ID_KEY))
         if party_id > self.MAX_PARTY_ID:
             # Reset to 1 if we exceed maximum
             await self.redis.redis.set(self.NEXT_PARTY_ID_KEY, 1)
