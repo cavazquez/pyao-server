@@ -573,7 +573,7 @@ class PartyService:
                     logger.debug(f"Sending to member {member_id}: '{full_message}'")
                     await member_sender.send_console_msg(
                         full_message,
-                        font_color=7,  # FONTTYPE_PARTY
+                        font_color=7,  # FONTTYPE_PARTY (verde para party)
                     )
 
         return ""
