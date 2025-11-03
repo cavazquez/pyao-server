@@ -52,8 +52,9 @@ class PartyService:
         """
         if not self.map_manager:
             return None
-        # Search for player in all maps
-        for players_dict in self.map_manager._players_by_map.values():
+        # TODO: MapManager should expose a public method get_player_message_sender(user_id)
+        # to avoid accessing private _players_by_map attribute
+        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
             if user_id in players_dict:
                 message_sender, _ = players_dict[user_id]
                 return message_sender
@@ -73,12 +74,13 @@ class PartyService:
             return None
 
         # Search for player in all maps
+        # TODO: MapManager should expose find_player_by_username(username) -> user_id | None
         logger.debug(
             "Searching for username '%s' in %s maps",
             username,
-            len(self.map_manager._players_by_map),
+            len(self.map_manager._players_by_map),  # noqa: SLF001
         )
-        for players_dict in self.map_manager._players_by_map.values():
+        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
             for user_id, (_, player_username) in players_dict.items():
                 logger.debug("  Checking user_id=%s, username='%s'", user_id, player_username)
                 if player_username.lower() == username.lower():
@@ -203,8 +205,9 @@ class PartyService:
             return False, "Usuario objetivo no encontrado", party
 
         # Check if target meets level requirements
+        # TODO: Party should expose can_join_by_level(level) as public method
         target_level = target_stats.get("level", 1)
-        if not party._can_join_by_level(target_level):
+        if not party._can_join_by_level(target_level):  # noqa: SLF001
             return (
                 False,
                 f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)",
@@ -238,18 +241,20 @@ class PartyService:
         target_map_id = None
         target_message_sender = None
 
+        # TODO: MapManager should expose get_all_online_players()
+        # -> list[tuple[user_id, username, map_id]]
         # Access private attribute (no public method available)
         logger.info(
             "Searching for player '%s' in %s maps",
             target_username,
-            len(self.map_manager._players_by_map),
+            len(self.map_manager._players_by_map),  # noqa: SLF001
         )
 
         # Search and list all online players
         all_players = []
         target_username_lower = target_username.lower().strip()
 
-        for _map_id, players_dict in self.map_manager._players_by_map.items():
+        for _map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
             for player_id, (message_sender, username) in players_dict.items():
                 username_clean = username.strip()
                 all_players.append(f"{username_clean} (ID:{player_id}, Map:{_map_id})")
@@ -282,8 +287,9 @@ class PartyService:
             return error_msg
 
         # Get inviter username from MapManager (the account username, not character name)
+        # TODO: MapManager should expose get_player_username(user_id) -> str | None
         inviter_username = None
-        for _map_id, players_dict in self.map_manager._players_by_map.items():
+        for _map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
             if inviter_id in players_dict:
                 _, inviter_username = players_dict[inviter_id]
                 break
