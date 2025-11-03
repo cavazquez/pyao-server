@@ -46,7 +46,7 @@ class PartyService:
         if not self.map_manager:
             return None
         # Search for player in all maps
-        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
+        for players_dict in self.map_manager._players_by_map.values():
             if user_id in players_dict:
                 message_sender, _ = players_dict[user_id]
                 return message_sender
@@ -69,7 +69,7 @@ class PartyService:
         logger.debug(
             f"Searching for username '{username}' in {len(self.map_manager._players_by_map)} maps"
         )
-        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
+        for players_dict in self.map_manager._players_by_map.values():
             for user_id, (_, player_username) in players_dict.items():
                 logger.debug("  Checking user_id=%s, username='%s'", user_id, player_username)
                 if player_username.lower() == username.lower():
@@ -234,31 +234,24 @@ class PartyService:
 
         # Access private attribute (no public method available)
         logger.info(
-            f"Searching for player '{target_username}' in {len(self.map_manager._players_by_map)} maps"
+            "Searching for player '%s' in %s maps",
+            target_username,
+            len(self.map_manager._players_by_map),
         )
 
         # Search and list all online players
         all_players = []
         target_username_lower = target_username.lower().strip()
 
-        for map_id, players_dict in self.map_manager._players_by_map.items():
+        for _map_id, players_dict in self.map_manager._players_by_map.items():
             for player_id, (message_sender, username) in players_dict.items():
                 username_clean = username.strip()
-                all_players.append(f"{username_clean} (ID:{player_id}, Map:{map_id})")
-
-                # Debug comparison
-                logger.info(
-                    f"Comparing: '{username_clean.lower()}' (len={len(username_clean.lower())}) vs '{target_username_lower}' (len={len(target_username_lower)})"
-                )
-                logger.info(
-                    f"  Bytes: {username_clean.lower().encode('utf-8')} vs {target_username_lower.encode('utf-8')}"
-                )
-                logger.info(f"  Match: {username_clean.lower() == target_username_lower}")
+                all_players.append(f"{username_clean} (ID:{player_id}, Map:{_map_id})")
 
                 # Check if this is our target
                 if username_clean.lower() == target_username_lower:
                     target_id = player_id
-                    target_map_id = map_id
+                    target_map_id = _map_id
                     target_message_sender = message_sender
                     logger.info(
                         "✓ Found target player: %s (ID: %s) in map %s",
@@ -267,11 +260,13 @@ class PartyService:
                         target_map_id,
                     )
 
-        logger.info(f"Online players: {', '.join(all_players) if all_players else 'NONE'}")
+        logger.info("Online players: %s", ", ".join(all_players) if all_players else "NONE")
 
         if not target_id:
             logger.warning(
-                f"Player '{target_username}' not found. Available: {', '.join(all_players) if all_players else 'NONE'}"
+                "Player '%s' not found. Available: %s",
+                target_username,
+                ", ".join(all_players) if all_players else "NONE",
             )
             return f"Jugador '{target_username}' no encontrado o no está online"
 
@@ -282,7 +277,7 @@ class PartyService:
 
         # Get inviter username from MapManager (the account username, not character name)
         inviter_username = None
-        for map_id, players_dict in self.map_manager._players_by_map.items():
+        for _map_id, players_dict in self.map_manager._players_by_map.items():
             if inviter_id in players_dict:
                 _, inviter_username = players_dict[inviter_id]
                 break
@@ -313,13 +308,17 @@ class PartyService:
                     font_color=7,
                 )
                 logger.info("✓ Invitation message sent successfully to %s", target_username)
-            except Exception as e:
-                logger.exception("Failed to send invitation message: %s", e)
+            except Exception:
+                logger.exception("Failed to send invitation message")
         else:
             logger.warning("Could not find MessageSender for player %s", target_id)
 
         logger.info(
-            f"User {inviter_id} invited {target_username} (ID: {target_id}) to party {party.party_id}"
+            "User %s invited %s (ID: %s) to party %s",
+            inviter_id,
+            target_username,
+            target_id,
+            party.party_id,
         )
 
         # Send confirmation to inviter
@@ -440,7 +439,7 @@ class PartyService:
             # If leader leaves, disband party
             # TODO: Broadcast to members when we have their MessageSenders
             await self.party_repo.delete_party(party.party_id)
-            logger.info(f"Party {party.party_id} disbanded by leader {user_id}")
+            logger.info("Party %s disbanded by leader %s", party.party_id, user_id)
 
             return "Has abandonado la party y se ha disuelto"
 
@@ -457,7 +456,7 @@ class PartyService:
             await self.party_repo.delete_party(party.party_id)
 
         await self.party_repo.remove_member_from_party(party.party_id, user_id)
-        logger.info(f"User {user_id} ({username}) left party {party.party_id}")
+        logger.info("User %s (%s) left party %s", user_id, username, party.party_id)
 
         return "Has abandonado la party"
 
@@ -519,7 +518,9 @@ class PartyService:
             await self.party_repo.delete_party(party.party_id)
 
         await self.party_repo.remove_member_from_party(party.party_id, target_user_id)
-        logger.info(f"User {target_user_id} ({target_username}) kicked from party {party.party_id}")
+        logger.info(
+            "User %s (%s) kicked from party %s", target_user_id, target_username, party.party_id
+        )
 
         return f"Has expulsado a {target_username} de la party"
 
@@ -565,7 +566,10 @@ class PartyService:
                     )
 
         logger.info(
-            f"Leadership of party {party.party_id} transferred from {old_leader_username} to {target_username}"
+            "Leadership of party %s transferred from %s to %s",
+            party.party_id,
+            old_leader_username,
+            target_username,
         )
 
         return f"Has transferido el liderazgo a {target_username}"
@@ -612,24 +616,28 @@ class PartyService:
         return await self.party_repo.get_user_party(user_id)
 
     async def get_user_invitations(self, user_id: int) -> list[PartyInvitation]:
-        """Get all pending invitations for user."""
+        """Get all pending invitations for user.
+
+        Returns:
+            List of pending party invitations.
+        """
         return await self.party_repo.get_user_invitations(user_id)
 
     async def distribute_experience(
         self, earner_id: int, exp_amount: int, map_id: int, x: int, y: int
     ) -> dict[int, float]:
-        """Distribute experience to party members.
+        """Distribute experience to party members within range.
 
         Args:
-            earner_id: User ID who earned the experience
-            exp_amount: Amount of experience to distribute
-            map_id: Map where experience was earned
-            x, y: Coordinates where experience was earned
+            earner_id: ID of the user who earned the experience.
+            exp_amount: Amount of experience to distribute.
+            map_id: Map ID where experience was earned.
+            x: X coordinate where experience was earned.
+            y: Y coordinate where experience was earned.
 
         Returns:
             Dictionary mapping user_id -> experience_amount
         """
-        # Get earner's party
         party = await self.party_repo.get_user_party(earner_id)
         if not party:
             return {}

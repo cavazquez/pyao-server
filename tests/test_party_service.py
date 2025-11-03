@@ -338,9 +338,7 @@ class TestPartyManagement:
 
     @pytest.mark.skip(reason="Test necesita actualizar para mockear MapManager y AccountRepository")
     @pytest.mark.asyncio
-    async def test_send_party_message_success(
-        self, party_service, mock_party_repo, mock_broadcast_service
-    ):
+    async def test_send_party_message_success(self, party_service, mock_party_repo):
         """Test successful party message sending."""
         mock_party = MagicMock()
         mock_party.member_ids = {1, 2, 3}

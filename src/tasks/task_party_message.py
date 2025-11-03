@@ -42,8 +42,8 @@ class TaskPartyMessage(Task):
             # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
 
             # Log packet data for debugging
-            logger.debug(f"Party message packet data (hex): {self.data.hex()}")
-            logger.debug(f"Party message packet data (raw): {self.data}")
+            logger.debug("Party message packet data (hex): %s", self.data.hex())
+            logger.debug("Party message packet data (raw): %s", self.data)
 
             # Read message using PacketReader (cliente Godot envía ASCII)
             message = reader.read_ascii_string()
