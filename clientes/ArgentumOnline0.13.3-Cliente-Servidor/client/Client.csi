@@ -1,7 +1,0 @@
-[History]
-1=#P0#=mb	#P1#=DDrawTransGrhtoSurface	#P2#=ARGENTUM/Mod_TileEngine/DDrawTransGrhtoSurface	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208204427	#P7#=0	#P8#=62	.
-2=#P0#=mb	#P1#=RenderScreen	#P2#=ARGENTUM/Mod_TileEngine/RenderScreen	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208203547	#P7#=0	#P8#=187	.
-3=#P0#=mb	#P1#=DDrawTransGrhIndextoSurface	#P2#=ARGENTUM/Mod_TileEngine/DDrawTransGrhIndextoSurface	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208202321	#P7#=0	#P8#=23	.
-4=#P0#=mb	#P1#=WriteMoveItem	#P2#=ARGENTUM/Protocol/WriteMoveItem	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208204626	#P7#=0	#P8#=12	.
-5=#P0#=mb	#P1#=HandleIncomingData	#P2#=ARGENTUM/Protocol/HandleIncomingData	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208204621	#P7#=0	#P8#=338	.
-6=#P0#=mb	#P1#=HandleShowMenu	#P2#=ARGENTUM/Protocol/HandleShowMenu	#P3#=	#P4#=	#P5#=MembMethodPublic	#P6#=20131208194626	#P7#=0	#P8#=-4	.
