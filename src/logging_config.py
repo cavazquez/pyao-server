@@ -76,7 +76,8 @@ def set_feature_log_level(feature: str, level: LogLevel) -> None:
     logger_name = f"src.{feature.replace('.', '.')}"
     logger = logging.getLogger(logger_name)
     logger.setLevel(getattr(logging, level))
-    logging.info("Changed log level for %s to %s", feature, level)
+    config_logger = logging.getLogger(__name__)
+    config_logger.info("Changed log level for %s to %s", feature, level)
 
 
 def enable_debug_for_feature(feature: str) -> None:
@@ -106,24 +107,27 @@ def disable_debug_for_feature(feature: str) -> None:
 # Presets comunes
 def enable_party_debug() -> None:
     """Activa logging detallado para todo el sistema de party."""
+    logger = logging.getLogger(__name__)
     enable_debug_for_feature("services.party")
     enable_debug_for_feature("tasks.party")
-    logging.info("✓ Party debug mode enabled")
+    logger.info("✓ Party debug mode enabled")
 
 
 def enable_combat_debug() -> None:
     """Activa logging detallado para sistema de combate."""
+    logger = logging.getLogger(__name__)
     enable_debug_for_feature("tasks.combat")
     enable_debug_for_feature("services.npc")
-    logging.info("✓ Combat debug mode enabled")
+    logger.info("✓ Combat debug mode enabled")
 
 
 def enable_network_debug() -> None:
     """Activa logging detallado para red y packets."""
+    logger = logging.getLogger(__name__)
     enable_debug_for_feature("network")
     enable_debug_for_feature("packets")
     enable_debug_for_feature("messaging")
-    logging.info("✓ Network debug mode enabled")
+    logger.info("✓ Network debug mode enabled")
 
 
 def quiet_mode() -> None:
@@ -131,12 +135,13 @@ def quiet_mode() -> None:
 
     Nota: Los mensajes de core (inicio/fin del servidor) siempre se muestran.
     """
+    logger = logging.getLogger(__name__)
     for feature in FEATURE_LOG_LEVELS:
         # Mantener core en INFO para ver mensajes de inicio/fin
         if feature.startswith("core"):
             continue
         set_feature_log_level(feature, "ERROR")
-    logging.info("✓ Quiet mode enabled (errors only, core messages visible)")
+    logger.info("✓ Quiet mode enabled (errors only, core messages visible)")
 
 
 def verbose_mode() -> None:

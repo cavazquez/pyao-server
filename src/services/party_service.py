@@ -127,9 +127,7 @@ class PartyService:
         # For now, we'll use a simplified check since we don't have skills implemented yet
         attributes.get("charisma", 18)  # Default charisma
         # TODO: Get leadership skill when skill system is implemented
-
-        # TODO: Implement leadership check when skill system is ready
-        # Required: charisma * leadership >= 100
+        # TODO: Implement leadership check: charisma * leadership >= 100
 
         return True, ""
 
