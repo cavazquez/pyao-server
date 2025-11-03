@@ -31,10 +31,24 @@ def mock_connection():
     return MagicMock()
 
 
+def build_ascii_string_packet(packet_id: int, text: str) -> bytes:
+    """Build a packet with ASCII/Latin-1 string (cliente Godot format).
+    
+    Args:
+        packet_id: Packet ID byte
+        text: Text to encode
+        
+    Returns:
+        Packet bytes: packet_id + length (int16 LE) + text (latin-1)
+    """
+    encoded = text.encode("latin-1")
+    length = len(encoded).to_bytes(2, "little")
+    return bytes([packet_id]) + length + encoded
+
+
 class TestTaskPartyCreate:
     """Test PARTY_CREATE task handler."""
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful party creation."""
@@ -43,7 +57,7 @@ class TestTaskPartyCreate:
         session_data = {"user_id": 1}
 
         task = TaskPartyCreate(
-            data=b"\x00",  # Packet data
+            data=b"\x00",  # Packet data (no additional data needed)
             message_sender=mock_message_sender,
             party_service=mock_party_service,
             session_data=session_data,
@@ -104,7 +118,6 @@ class TestTaskPartyCreate:
 class TestTaskPartyJoin:
     """Test PARTY_JOIN task handler."""
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful party invitation."""
@@ -112,8 +125,8 @@ class TestTaskPartyJoin:
         mock_party_service.invite_to_party.return_value = "Player2 invitado a tu party"
         session_data = {"user_id": 1}
 
-        # Mock packet data with username
-        data = b"\x5d\x00P\x00l\x00a\x00y\x00e\x00r\x002\x00\x00\x00"  # PARTY_JOIN + "Player2"
+        # Mock packet data with username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x5D, "Player2")  # PARTY_JOIN + "Player2"
 
         task = TaskPartyJoin(
             data=data,
@@ -131,7 +144,6 @@ class TestTaskPartyJoin:
             "Player2 invitado a tu party", font_color=7
         )
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_empty_username(self, mock_party_service, mock_message_sender):
         """Test invitation with empty username."""
@@ -159,7 +171,6 @@ class TestTaskPartyJoin:
 class TestTaskPartyAcceptMember:
     """Test PARTY_ACCEPT_MEMBER task handler."""
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful invitation acceptance."""
@@ -171,8 +182,8 @@ class TestTaskPartyAcceptMember:
         mock_party_service.accept_invitation.return_value = "Te has unido a la party"
         session_data = {"user_id": 2}
 
-        # Mock packet data with leader username
-        data = b"\x76\x00L\x00e\x00a\x00d\x00e\x00r\x00\x00\x00"  # PARTY_ACCEPT_MEMBER + "Leader"
+        # Mock packet data with leader username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x76, "Leader")  # PARTY_ACCEPT_MEMBER + "Leader"
 
         task = TaskPartyAcceptMember(
             data=data,
@@ -191,14 +202,13 @@ class TestTaskPartyAcceptMember:
             "Te has unido a la party", font_color=7
         )
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_no_invitation(self, mock_party_service, mock_message_sender):
         """Test acceptance with no pending invitation."""
         session_data = {"user_id": 2}
 
-        # Mock packet data
-        data = b"\x76\x00L\x00e\x00a\x00d\x00e\x00r\x00\x00\x00"
+        # Mock packet data (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x76, "Leader")
 
         # Setup - no invitations
         mock_party_service.get_user_invitations.return_value = []
@@ -222,7 +232,6 @@ class TestTaskPartyAcceptMember:
 class TestTaskPartyLeave:
     """Test PARTY_LEAVE task handler."""
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful party leave."""
@@ -231,7 +240,7 @@ class TestTaskPartyLeave:
         session_data = {"user_id": 1}
 
         task = TaskPartyLeave(
-            data=b"\x00",
+            data=b"\x00",  # No additional data needed
             message_sender=mock_message_sender,
             party_service=mock_party_service,
             session_data=session_data,
@@ -272,27 +281,18 @@ class TestTaskPartyLeave:
 class TestTaskPartyMessage:
     """Test PARTY_MESSAGE task handler."""
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful party message."""
         # Setup
-        mock_party_service.send_party_message.return_value = None  # No error
+        mock_party_service.send_party_message.return_value = ""  # Empty string = success
         session_data = {"user_id": 1}
 
-        # Mock packet data with message
-        # Format: packet_id (1 byte) + string_length_in_bytes (2 bytes) + UTF-16LE string
-        message = "Hello party!"
-        message_bytes = message.encode("utf-16-le")
-        message_length_bytes = len(message_bytes)  # Length in BYTES, not characters
-        message_data = (
-            b"\x60"  # Packet ID
-            + message_length_bytes.to_bytes(2, "little")  # String length in bytes
-            + message_bytes  # UTF-16LE string
-        )
+        # Mock packet data with message (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x60, "Hello party!")  # PARTY_MESSAGE
 
         task = TaskPartyMessage(
-            data=message_data,
+            data=data,
             message_sender=mock_message_sender,
             party_service=mock_party_service,
             session_data=session_data,
@@ -306,15 +306,13 @@ class TestTaskPartyMessage:
         # No message should be sent on success
         mock_message_sender.send_console_msg.assert_not_called()
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_empty_message(self, mock_party_service, mock_message_sender):
         """Test party message with empty text."""
         session_data = {"user_id": 1}
 
-        # Mock packet data with empty message
-        # Format: packet_id (1 byte) + string_length (2 bytes, value=0)
-        data = b"\x60\x00\x00"  # PARTY_MESSAGE + empty string (length=0)
+        # Mock packet data with empty message (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x60, "")  # PARTY_MESSAGE + empty string
 
         task = TaskPartyMessage(
             data=data,
@@ -331,7 +329,6 @@ class TestTaskPartyMessage:
         args = mock_message_sender.send_console_msg.call_args[0]
         assert "Debes especificar un mensaje" in args[0]
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_error(self, mock_party_service, mock_message_sender):
         """Test party message when not in party."""
@@ -339,19 +336,11 @@ class TestTaskPartyMessage:
         mock_party_service.send_party_message.return_value = "No eres miembro de ninguna party"
         session_data = {"user_id": 1}
 
-        # Mock packet data
-        # Format: packet_id (1 byte) + string_length_in_bytes (2 bytes) + UTF-16LE string
-        message = "Hello"
-        message_bytes = message.encode("utf-16-le")
-        message_length_bytes = len(message_bytes)  # Length in BYTES, not characters
-        message_data = (
-            b"\x60"  # Packet ID
-            + message_length_bytes.to_bytes(2, "little")  # String length in bytes
-            + message_bytes  # UTF-16LE string
-        )
+        # Mock packet data (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x60, "Hello")  # PARTY_MESSAGE
 
         task = TaskPartyMessage(
-            data=message_data,
+            data=data,
             message_sender=mock_message_sender,
             party_service=mock_party_service,
             session_data=session_data,
@@ -369,21 +358,25 @@ class TestTaskPartyMessage:
 class TestTaskPartyKick:
     """Test PARTY_KICK task handler."""
 
-    @pytest.mark.skip(reason="API not finalized")
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful member kick."""
         # Setup
         mock_party_service.kick_member.return_value = "Player2 ha sido expulsado"
+        session_data = {"user_id": 1}
 
-        task = TaskPartyKick(mock_party_service, mock_message_sender)
+        # Mock packet data with target username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x74, "Player2")  # PARTY_KICK
 
-        # Mock packet data with target username
-        data = b"\x74\x00P\x00l\x00a\x00y\x00e\x00r\x002\x00\x00\x00"
+        task = TaskPartyKick(
+            data=data,
+            message_sender=mock_message_sender,
+            party_service=mock_party_service,
+            session_data=session_data,
+        )
 
         # Execute
-        await task.execute(mock_connection, 1, data)
+        await task.execute()
 
         # Verify
         mock_party_service.kick_member.assert_called_once_with(1, "Player2")
@@ -391,42 +384,52 @@ class TestTaskPartyKick:
             "Player2 ha sido expulsado", font_color=7
         )
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_empty_username(self, mock_party_service, mock_message_sender):
         """Test kick with empty username."""
-        task = TaskPartyKick(mock_party_service, mock_message_sender)
+        session_data = {"user_id": 1}
 
-        # Mock packet data with empty username
-        data = b"\x74\x00\x00"
+        # Mock packet data with empty username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x74, "")  # PARTY_KICK + empty string
+
+        task = TaskPartyKick(
+            data=data,
+            message_sender=mock_message_sender,
+            party_service=mock_party_service,
+            session_data=session_data,
+        )
 
         # Execute
-        await task.execute(mock_connection, 1, data)
+        await task.execute()
 
         # Verify error message
         mock_message_sender.send_console_msg.assert_called_once()
         args = mock_message_sender.send_console_msg.call_args[0]
-        assert "Debes especificar un nombre de usuario" in args[1]
+        assert "Debes especificar un nombre de usuario" in args[0]
 
 
 class TestTaskPartySetLeader:
     """Test PARTY_SET_LEADER task handler."""
 
-    @pytest.mark.skip(reason="API not finalized")
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_success(self, mock_party_service, mock_message_sender):
         """Test successful leadership transfer."""
         # Setup
         mock_party_service.transfer_leadership.return_value = "Liderazgo transferido a Player2"
+        session_data = {"user_id": 1}
 
-        task = TaskPartySetLeader(mock_party_service, mock_message_sender)
+        # Mock packet data with target username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x75, "Player2")  # PARTY_SET_LEADER
 
-        # Mock packet data with target username
-        data = b"\x75\x00P\x00l\x00a\x00y\x00e\x00r\x002\x00\x00\x00"
+        task = TaskPartySetLeader(
+            data=data,
+            message_sender=mock_message_sender,
+            party_service=mock_party_service,
+            session_data=session_data,
+        )
 
         # Execute
-        await task.execute(mock_connection, 1, data)
+        await task.execute()
 
         # Verify
         mock_party_service.transfer_leadership.assert_called_once_with(1, "Player2")
@@ -434,19 +437,25 @@ class TestTaskPartySetLeader:
             "Liderazgo transferido a Player2", font_color=7
         )
 
-    @pytest.mark.skip(reason="UTF-16LE packet format requires protocol investigation")
     @pytest.mark.asyncio
     async def test_execute_empty_username(self, mock_party_service, mock_message_sender):
         """Test leadership transfer with empty username."""
-        task = TaskPartySetLeader(mock_party_service, mock_message_sender)
+        session_data = {"user_id": 1}
 
-        # Mock packet data with empty username
-        data = b"\x75\x00\x00"
+        # Mock packet data with empty username (ASCII/Latin-1 format)
+        data = build_ascii_string_packet(0x75, "")  # PARTY_SET_LEADER + empty string
+
+        task = TaskPartySetLeader(
+            data=data,
+            message_sender=mock_message_sender,
+            party_service=mock_party_service,
+            session_data=session_data,
+        )
 
         # Execute
-        await task.execute(mock_connection, 1, data)
+        await task.execute()
 
         # Verify error message
         mock_message_sender.send_console_msg.assert_called_once()
         args = mock_message_sender.send_console_msg.call_args[0]
-        assert "Debes especificar un nombre de usuario" in args[1]
+        assert "Debes especificar un nombre de usuario" in args[0]

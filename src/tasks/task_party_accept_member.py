@@ -6,6 +6,7 @@ Handles /ACCEPTPARTY command - accepts a party invitation.
 import logging
 from typing import TYPE_CHECKING
 
+from src.network.packet_reader import PacketReader
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -39,12 +40,13 @@ class TaskPartyAcceptMember(Task):
 
         try:
             # Parse packet data
-            logger.info("Accept party packet data (hex): %s", self.data.hex())
-            logger.info("Accept party packet data (raw): %s", self.data)
+            reader = PacketReader(self.data)
+            # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
 
-            # The packet format is: [packet_id:1][length:2][string:N]
-            # Skip packet ID (byte 0) and length (bytes 1-2), read only the string part
-            leader_username = self.data[3:].decode("ascii").strip().rstrip("\x00")
+            logger.info("Party accept packet data (hex): %s", self.data.hex())
+
+            # Read leader username (cliente Godot envía ASCII/Latin-1)
+            leader_username = reader.read_ascii_string()
             logger.info("User %s trying to accept party from '%s'", user_id, leader_username)
 
             if not leader_username:

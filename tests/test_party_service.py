@@ -95,7 +95,6 @@ class TestPartyCreation:
         assert can_create is True
         assert not error_msg
 
-    @pytest.mark.skip(reason="MIN_LEVEL_TO_CREATE reducido a 1 para testing")
     @pytest.mark.asyncio
     async def test_cannot_create_party_low_level(self, party_service, mock_player_repo):
         """Test party creation fails with low level."""
@@ -136,7 +135,6 @@ class TestPartyCreation:
         assert can_create is False
         assert "muerto" in error_msg
 
-    @pytest.mark.skip(reason="Leadership check disabled until skill system is implemented")
     @pytest.mark.asyncio
     async def test_cannot_create_party_insufficient_leadership(
         self, party_service, mock_player_repo

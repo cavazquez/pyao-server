@@ -4,13 +4,11 @@ Handles /PARTY command - invites a user to party.
 """
 
 import logging
-from typing import TYPE_CHECKING
 
+from src.messaging.message_sender import MessageSender
+from src.network.packet_reader import PacketReader
+from src.services.party_service import PartyService
 from src.tasks.task import Task
-
-if TYPE_CHECKING:
-    from src.messaging.message_sender import MessageSender
-    from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
 
@@ -41,20 +39,14 @@ class TaskPartyJoin(Task):
 
         try:
             # Parse packet data
+            reader = PacketReader(self.data)
+            # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
+
             logger.info("Party invite packet data (hex): %s", self.data.hex())
             logger.info("Party invite packet data (raw): %s", self.data)
 
-            # Check if packet has data beyond packet ID
-            if len(self.data) <= 1:
-                await self.message_sender.send_console_msg(
-                    "Debes especificar un nombre de usuario. Uso: /PARTY <nombre>", font_color=7
-                )
-                return
-
-            # The packet format is: [packet_id:1][length:4][string:N]
-            # Skip packet ID (byte 0) and length (bytes 1-4), read only the string part
-            # Skip first 5 bytes (packet_id + int32 length)
-            target_username = self.data[5:].decode("ascii").strip().rstrip("\x00")
+            # Read target username (cliente Godot envía ASCII/Latin-1)
+            target_username = reader.read_ascii_string()
             logger.info("Decoded username (ASCII): '%s'", target_username)
 
             if not target_username:
