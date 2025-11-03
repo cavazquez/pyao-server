@@ -78,14 +78,18 @@ Ejemplos:
         """Configura el sistema de logging.
 
         Args:
-            debug: Si True, habilita logs de nivel DEBUG.
+            debug: Si True, habilita logs de nivel DEBUG para todo.
         """
-        log_level = logging.DEBUG if debug else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        )
-
+        # Importar configuración de logging por features
+        from src.logging_config import configure_logging, verbose_mode
+        
+        # Configurar logging por features
+        configure_logging()
+        
+        # Si debug está activado, poner todo en modo verbose
+        if debug:
+            verbose_mode()
+        
         if debug:
             self.logger.info("🐛 Modo DEBUG habilitado - Mostrando logs detallados")
 
