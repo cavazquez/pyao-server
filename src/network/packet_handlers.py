@@ -96,7 +96,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.PARTY_CREATE: TaskPartyCreate,  # /CREARPARTY - Crear nueva party
     ClientPacketID.PARTY_JOIN: TaskPartyJoin,  # /PARTY - Invitar a party
     ClientPacketID.PARTY_MESSAGE: TaskPartyMessage,  # /PMSG - Mensaje de party
-    ClientPacketID.PARTY_KICK: TaskPartyKick,  # type: ignore[dict-item]  # Expulsar miembro de party
-    ClientPacketID.PARTY_SET_LEADER: TaskPartySetLeader,  # type: ignore[dict-item]  # Transferir liderazgo
+    ClientPacketID.PARTY_KICK: TaskPartyKick,  # Expulsar miembro de party
+    ClientPacketID.PARTY_SET_LEADER: TaskPartySetLeader,  # Transferir liderazgo de party
     ClientPacketID.PARTY_ACCEPT_MEMBER: TaskPartyAcceptMember,  # /ACCEPTPARTY - Aceptar invitación
 }

@@ -14,6 +14,8 @@ from src.services.npc.loot_table_service import LootTableService
 @pytest.fixture
 def mock_repositories() -> dict:
     """Crea un diccionario con mocks de repositorios."""
+    party_repo = Mock()
+    party_repo.initialize = AsyncMock()
     return {
         "player_repo": Mock(),
         "account_repo": Mock(),
@@ -21,7 +23,7 @@ def mock_repositories() -> dict:
         "inventory_repo": Mock(),
         "merchant_repo": Mock(),
         "equipment_repo": Mock(),
-        "party_repo": Mock(),
+        "party_repo": party_repo,
     }
 
 
@@ -98,5 +100,5 @@ async def test_service_initializer_returns_dict(
 
     assert isinstance(services, dict)
     assert (
-        len(services) == 16
-    )  # Servicios/catálogos sin MapTransitionService (+1 npc_world_manager)
+        len(services) == 17
+    )  # Servicios/catálogos sin MapTransitionService (+1 npc_world_manager, +1 party_service)

@@ -368,11 +368,11 @@ class PartyService:
         for member_id in party.member_ids:
             await self.message_sender.send_console_msg(  # type: ignore[call-arg]
                 member_id,
-                f"¡{player.username} se ha unido a la party!",
+                f"¡{username} se ha unido a la party!",
                 font_color=7,  # FONTTYPE_PARTY
             )
 
-        logger.info(f"User {user_id} ({player.username}) joined party {party_id}")
+        logger.info(f"User {user_id} ({username}) joined party {party_id}")
 
         return f"¡Te has unido a la party de {party.leader_username}!"
 
