@@ -54,27 +54,29 @@ class PartyService:
 
     def _find_player_by_username(self, username: str) -> int | None:
         """Find player user_id by username from MapManager.
-        
+
         Args:
             username: Username to search for
-            
+
         Returns:
             user_id if found, None otherwise
         """
         if not self.map_manager:
             logger.warning("MapManager not available for username search")
             return None
-        
+
         # Search for player in all maps
-        logger.debug(f"Searching for username '{username}' in {len(self.map_manager._players_by_map)} maps")  # noqa: SLF001
-        for map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
+        logger.debug(
+            f"Searching for username '{username}' in {len(self.map_manager._players_by_map)} maps"
+        )
+        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
             for user_id, (_, player_username) in players_dict.items():
-                logger.debug(f"  Checking user_id={user_id}, username='{player_username}'")
+                logger.debug("  Checking user_id=%s, username='%s'", user_id, player_username)
                 if player_username.lower() == username.lower():
-                    logger.info(f"Found player '{username}' with user_id={user_id}")
+                    logger.info("Found player '%s' with user_id=%s", username, user_id)
                     return user_id
-        
-        logger.warning(f"Player '{username}' not found in any map")
+
+        logger.warning("Player '%s' not found in any map", username)
         return None
 
     async def can_create_party(self, user_id: int) -> tuple[bool, str]:
@@ -413,7 +415,7 @@ class PartyService:
                         font_color=7,  # FONTTYPE_PARTY
                     )
 
-        logger.info(f"User {user_id} ({username}) joined party {party_id}")
+        logger.info("User %s (%s) joined party %s", user_id, username, party_id)
 
         return f"¡Te has unido a la party de {party.leader_username}!"
 
@@ -517,9 +519,7 @@ class PartyService:
             await self.party_repo.delete_party(party.party_id)
 
         await self.party_repo.remove_member_from_party(party.party_id, target_user_id)
-        logger.info(
-            f"User {target_user_id} ({target_username}) kicked from party {party.party_id}"
-        )
+        logger.info(f"User {target_user_id} ({target_username}) kicked from party {party.party_id}")
 
         return f"Has expulsado a {target_username} de la party"
 
@@ -587,7 +587,7 @@ class PartyService:
             account_data = await self.account_repo.get_account_by_user_id(sender_id)
             if account_data:
                 sender_username = account_data.get("username", sender_username)
-        logger.info(f"Party message from {sender_username} (ID:{sender_id}): '{message}'")
+        logger.info("Party message from %s (ID:%s): '%s'", sender_username, sender_id, message)
 
         # Send message to all members
         if self.map_manager:
@@ -595,7 +595,7 @@ class PartyService:
                 member_sender = self._get_player_message_sender(member_id)
                 if member_sender:
                     full_message = f"[Party] {sender_username}: {message}"
-                    logger.debug(f"Sending to member {member_id}: '{full_message}'")
+                    logger.debug("Sending to member %s: '%s'", member_id, full_message)
                     await member_sender.send_console_msg(
                         full_message,
                         font_color=7,  # FONTTYPE_PARTY (verde para party)
@@ -641,7 +641,7 @@ class PartyService:
 
         async def get_user_position(user_id: int) -> dict | None:
             position = await self.player_repo.get_position(user_id)
-            return position if position else None
+            return position or None
 
         async def is_user_alive(user_id: int) -> bool:
             stats = await self.player_repo.get_stats(user_id)

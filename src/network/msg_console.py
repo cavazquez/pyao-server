@@ -23,7 +23,7 @@ def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
     packet.add_unicode_string(message)
     packet.add_byte(font_color)
     result = packet.to_bytes()
-    
+
     # Debug logging
     logger.debug(
         "build_console_msg_response: message='%s', len=%d, font_color=%d, packet_hex=%s",
@@ -32,7 +32,7 @@ def build_console_msg_response(message: str, font_color: int = 7) -> bytes:
         font_color,
         result.hex(),
     )
-    
+
     return result
 
 

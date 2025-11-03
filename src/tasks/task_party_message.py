@@ -47,7 +47,7 @@ class TaskPartyMessage(Task):
 
             # Read message using PacketReader (cliente Godot envía ASCII)
             message = reader.read_ascii_string()
-            logger.debug(f"Decoded message: '{message}'")
+            logger.debug("Decoded message: '%s'", message)
 
             if not message:
                 await self.message_sender.send_console_msg(

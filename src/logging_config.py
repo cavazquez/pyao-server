@@ -13,33 +13,26 @@ FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
     "core": "INFO",
     "core.server_initializer": "INFO",  # Mensajes de servidor listo
     "server": "INFO",
-    
     # Network
     "network": "WARNING",
     "packets": "WARNING",
-    
     # Tasks
     "tasks": "WARNING",
     "tasks.party": "INFO",  # Party tasks en INFO para debugging
     "tasks.player": "WARNING",
     "tasks.combat": "WARNING",
-    
     # Services
     "services": "WARNING",
     "services.party": "INFO",  # Party service en INFO para debugging
     "services.map": "WARNING",
     "services.npc": "WARNING",
-    
     # Messaging
     "messaging": "WARNING",
     "messaging.console": "WARNING",
-    
     # Effects
     "effects": "WARNING",
-    
     # Repositories
     "repositories": "WARNING",
-    
     # Game
     "game": "WARNING",
 }
@@ -56,13 +49,13 @@ def configure_logging() -> None:
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    
+
     # Aplicar niveles específicos por feature
     for feature, level in FEATURE_LOG_LEVELS.items():
         logger_name = f"src.{feature.replace('.', '.')}"
         logger = logging.getLogger(logger_name)
         logger.setLevel(getattr(logging, level))
-    
+
     # Silenciar librerías externas ruidosas
     logging.getLogger("asyncio").setLevel(logging.WARNING)
     logging.getLogger("redis").setLevel(logging.WARNING)
@@ -70,11 +63,11 @@ def configure_logging() -> None:
 
 def set_feature_log_level(feature: str, level: LogLevel) -> None:
     """Cambia el nivel de logging de una feature en runtime.
-    
+
     Args:
         feature: Nombre de la feature (ej: "services.party", "tasks.combat")
         level: Nivel de logging ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
-    
+
     Example:
         >>> set_feature_log_level("services.party", "DEBUG")
         >>> set_feature_log_level("tasks", "INFO")
@@ -88,10 +81,10 @@ def set_feature_log_level(feature: str, level: LogLevel) -> None:
 
 def enable_debug_for_feature(feature: str) -> None:
     """Activa DEBUG para una feature específica.
-    
+
     Args:
         feature: Nombre de la feature (ej: "services.party")
-    
+
     Example:
         >>> enable_debug_for_feature("services.party")
     """
@@ -100,10 +93,10 @@ def enable_debug_for_feature(feature: str) -> None:
 
 def disable_debug_for_feature(feature: str) -> None:
     """Desactiva DEBUG para una feature (vuelve a WARNING).
-    
+
     Args:
         feature: Nombre de la feature
-    
+
     Example:
         >>> disable_debug_for_feature("services.party")
     """
@@ -135,7 +128,7 @@ def enable_network_debug() -> None:
 
 def quiet_mode() -> None:
     """Modo silencioso - solo errores.
-    
+
     Nota: Los mensajes de core (inicio/fin del servidor) siempre se muestran.
     """
     for feature in FEATURE_LOG_LEVELS:
