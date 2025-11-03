@@ -3,9 +3,12 @@
 Handles storage and retrieval of parties, memberships, and invitations.
 """
 
+# mypy: disable-error-code="misc,no-any-return"
+# Redis operations return Any types which cause mypy warnings
+
 import json
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from src.models.party import Party, PartyInvitation, PartyMember
 
@@ -49,7 +52,7 @@ class PartyRepository:
         Returns:
             int: The next party ID.
         """
-        party_id = await self.redis.redis.incr(self.NEXT_PARTY_ID_KEY)
+        party_id = cast(int, await self.redis.redis.incr(self.NEXT_PARTY_ID_KEY))
         if party_id > self.MAX_PARTY_ID:
             # Reset to 1 if we exceed maximum
             await self.redis.redis.set(self.NEXT_PARTY_ID_KEY, 1)

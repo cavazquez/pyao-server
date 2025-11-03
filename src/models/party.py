@@ -5,7 +5,9 @@ Based on AO VB6 server implementation (clsParty.cls, mdParty.bas)
 
 import math
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import Any
 
 # Constants from VB6 server
 MAX_PARTY_MEMBERS = 5  # PARTY_MAXMEMBERS
@@ -197,9 +199,9 @@ class Party:
         map_id: int,
         x: int,
         y: int,
-        get_user_level_func: callable,
-        get_user_position_func: callable,
-        is_user_alive_func: callable,
+        get_user_level_func: Callable[[int], int | None],
+        get_user_position_func: Callable[[int], dict[str, Any] | None],
+        is_user_alive_func: Callable[[int], bool],
     ) -> dict[int, float]:
         """Distribute experience among eligible members.
 

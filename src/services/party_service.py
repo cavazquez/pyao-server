@@ -224,9 +224,7 @@ class PartyService:
 
         return True, "", party
 
-    async def invite_to_party(
-        self, inviter_id: int, target_username: str, target_id: int = 0
-    ) -> str:
+    async def invite_to_party(self, inviter_id: int, target_username: str) -> str:
         """Invite a user to the inviter's party.
 
         Returns:
@@ -237,9 +235,9 @@ class PartyService:
             return "Sistema de invitaciones no disponible"
 
         # Search for player in all maps
-        target_id = None
-        target_map_id = None
-        target_message_sender = None
+        target_id: int | None = None
+        target_map_id: int | None = None
+        target_message_sender: MessageSender | None = None
 
         # TODO: MapManager should expose get_all_online_players()
         # -> list[tuple[user_id, username, map_id]]
@@ -283,7 +281,7 @@ class PartyService:
 
         # Check if can invite
         can_invite, error_msg, party = await self.can_invite_to_party(inviter_id, target_id)
-        if not can_invite:
+        if not can_invite or not party:
             return error_msg
 
         # Get inviter username from MapManager (the account username, not character name)

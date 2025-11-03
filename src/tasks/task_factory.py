@@ -81,7 +81,7 @@ class TaskFactory:
         self,
         data: bytes,
         message_sender: MessageSender,
-        session_data: dict[str, dict[str, int]],
+        session_data: dict[str, Any],
     ) -> Task:
         """Crea la tarea apropiada según el PacketID recibido.
 
