@@ -191,7 +191,7 @@ class TestPartyInvitation:
         mock_party = MagicMock()
         mock_party.is_full = False
         mock_party.is_member.return_value = False
-        mock_party._can_join_by_level = MagicMock(return_value=True)
+        mock_party.can_join_by_level = MagicMock(return_value=True)
         mock_party.party_id = 1
         mock_party.is_leader.return_value = True
 

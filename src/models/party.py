@@ -129,7 +129,7 @@ class Party:
             return False
 
         # Check level difference with existing members
-        if not self._can_join_by_level(level):
+        if not self.can_join_by_level(level):
             return False
 
         new_member = PartyMember(user_id=user_id, username=username, level=level)
@@ -176,11 +176,14 @@ class Party:
         """
         return self.is_leader(inviter_id)
 
-    def _can_join_by_level(self, new_level: int) -> bool:
+    def can_join_by_level(self, new_level: int) -> bool:
         """Check if user can join based on level differences.
 
+        Args:
+            new_level: Level of the player trying to join
+
         Returns:
-            bool: True if level difference is acceptable, False otherwise.
+            True if level difference is acceptable, False otherwise
         """
         for member in self.members.values():
             if abs(member.level - new_level) > MAX_LEVEL_DIFFERENCE:

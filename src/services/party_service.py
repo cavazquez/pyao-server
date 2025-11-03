@@ -189,9 +189,8 @@ class PartyService:
             return False, "Usuario objetivo no encontrado", party
 
         # Check if target meets level requirements
-        # TODO: Party should expose can_join_by_level(level) as public method
         target_level = target_stats.get("level", 1)
-        if not party._can_join_by_level(target_level):  # noqa: SLF001
+        if not party.can_join_by_level(target_level):
             return (
                 False,
                 f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)",
