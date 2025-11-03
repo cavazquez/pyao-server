@@ -100,7 +100,7 @@ class TestServerCLI:
         """Test de configuración de logging en modo INFO."""
         cli = ServerCLI()
 
-        with patch("src.logging_config.configure_logging") as mock_configure:
+        with patch("src.server_cli.configure_logging") as mock_configure:
             cli.configure_logging(debug=False)
 
             # Verifica que configure_logging() fue llamado
@@ -111,8 +111,8 @@ class TestServerCLI:
         cli = ServerCLI()
 
         with (
-            patch("src.logging_config.configure_logging") as mock_configure,
-            patch("src.logging_config.verbose_mode") as mock_verbose,
+            patch("src.server_cli.configure_logging") as mock_configure,
+            patch("src.server_cli.verbose_mode") as mock_verbose,
         ):
             cli.configure_logging(debug=True)
 
