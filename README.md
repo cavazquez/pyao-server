@@ -601,6 +601,62 @@ INFO - user_id 2 tiene sed (agua = 0)
 
 Ver **[documentación completa del sistema de tick](docs/GAME_TICK_SYSTEM.md)** para crear efectos personalizados.
 
+## ⚙️ Configuración
+
+El servidor utiliza un sistema de configuración centralizado en `src/config.py` que permite sobrescribir valores mediante variables de entorno.
+
+### Variables de Entorno
+
+Crea un archivo `.env` en la raíz del proyecto (ver `.env.example` para referencia):
+
+```bash
+# Servidor
+SERVER_HOST=0.0.0.0
+SERVER_PORT=7666
+SERVER_MAX_CONNECTIONS=1000
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+
+# Gameplay
+GAME_MAX_INVENTORY_SLOTS=20
+GAME_MAX_BANK_SLOTS=40
+GAME_MAX_PARTY_MEMBERS=6
+GAME_RESPAWN_TIME_SECONDS=180
+GAME_MAX_LEVEL=50
+
+# Hambre y Sed
+HUNGER_THIRST_ENABLED=true
+HUNGER_THIRST_INTERVAL_SED=180
+HUNGER_THIRST_REDUCCION_AGUA=10
+
+# Reducción de Oro
+GOLD_DECAY_ENABLED=true
+GOLD_DECAY_PERCENTAGE=1.0
+GOLD_DECAY_INTERVAL_SECONDS=60.0
+```
+
+### Uso en Código
+
+```python
+from src.config import config
+
+# Acceder a configuraciones
+print(config.server.host)           # "0.0.0.0"
+print(config.redis.port)            # 6379
+print(config.game.max_level)        # 50
+print(config.hunger_thirst.enabled) # True
+```
+
+**Beneficios:**
+- ✅ Sin dependencias externas (solo stdlib)
+- ✅ Type hints completos para mypy
+- ✅ Inmutable (dataclasses frozen)
+- ✅ Valores por defecto sensatos
+- ✅ Fácil de testear y mockear
+
 ## 🎮 Cliente Compatible
 
 Este servidor implementa el **protocolo estándar de Argentum Online Godot** y es 100% compatible con:
