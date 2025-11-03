@@ -2,6 +2,7 @@
 
 import json
 import logging
+import time
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,7 @@ class MapResourcesService:
 
     def _load_all_maps(self) -> None:
         """Carga todos los mapas desde el directorio."""
+        start_time = time.time()
         try:
             if not self.maps_dir.exists():
                 logger.warning("Directorio de mapas no encontrado: %s", self.maps_dir)
@@ -55,7 +57,13 @@ class MapResourcesService:
             for map_id in sorted(map_ids):
                 self._load_map(map_id)
 
-            logger.info("Recursos cargados desde %s (%d mapas)", self.maps_dir, len(self.resources))
+            elapsed_time = time.time() - start_time
+            logger.info(
+                "✓ Recursos cargados desde %s: %d mapas en %.2f segundos",
+                self.maps_dir,
+                len(self.resources),
+                elapsed_time,
+            )
 
         except Exception:
             logger.exception("Error cargando recursos de mapas")
@@ -239,7 +247,7 @@ class MapResourcesService:
                 "mines": mines,
             }
 
-            logger.info(
+            logger.debug(
                 "  %s (%s): %d agua, %d árboles, %d minas",
                 map_key,
                 source,
