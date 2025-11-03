@@ -52,13 +52,7 @@ class PartyService:
         """
         if not self.map_manager:
             return None
-        # TODO: MapManager should expose a public method get_player_message_sender(user_id)
-        # to avoid accessing private _players_by_map attribute
-        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
-            if user_id in players_dict:
-                message_sender, _ = players_dict[user_id]
-                return message_sender
-        return None
+        return self.map_manager.get_player_message_sender(user_id)
 
     def _find_player_by_username(self, username: str) -> int | None:
         """Find player user_id by username from MapManager.
@@ -73,22 +67,12 @@ class PartyService:
             logger.warning("MapManager not available for username search")
             return None
 
-        # Search for player in all maps
-        # TODO: MapManager should expose find_player_by_username(username) -> user_id | None
-        logger.debug(
-            "Searching for username '%s' in %s maps",
-            username,
-            len(self.map_manager._players_by_map),  # noqa: SLF001
-        )
-        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
-            for user_id, (_, player_username) in players_dict.items():
-                logger.debug("  Checking user_id=%s, username='%s'", user_id, player_username)
-                if player_username.lower() == username.lower():
-                    logger.info("Found player '%s' with user_id=%s", username, user_id)
-                    return user_id
-
-        logger.warning("Player '%s' not found in any map", username)
-        return None
+        user_id = self.map_manager.find_player_by_username(username)
+        if user_id:
+            logger.info("Found player '%s' with user_id=%s", username, user_id)
+        else:
+            logger.warning("Player '%s' not found in any map", username)
+        return user_id
 
     async def can_create_party(self, user_id: int) -> tuple[bool, str]:
         """Check if user can create a party.
@@ -239,35 +223,37 @@ class PartyService:
         target_map_id: int | None = None
         target_message_sender: MessageSender | None = None
 
-        # TODO: MapManager should expose get_all_online_players()
-        # -> list[tuple[user_id, username, map_id]]
-        # Access private attribute (no public method available)
+        # Get all online players for debugging
+        online_players = self.map_manager.get_all_online_players()
+        all_players = [
+            f"{username} (ID:{user_id}, Map:{map_id})"
+            for user_id, username, map_id in online_players
+        ]
+
         logger.info(
             "Searching for player '%s' in %s maps",
             target_username,
-            len(self.map_manager._players_by_map),  # noqa: SLF001
+            len(self.map_manager.get_maps_with_players()),
         )
 
-        # Search and list all online players
-        all_players = []
-        target_username_lower = target_username.lower().strip()
+        # Find target player by username
+        target_id = self.map_manager.find_player_by_username(target_username)
+        target_map_id = None
+        target_message_sender = None
 
-        for _map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
-            for player_id, (message_sender, username) in players_dict.items():
-                username_clean = username.strip()
-                all_players.append(f"{username_clean} (ID:{player_id}, Map:{_map_id})")
-
-                # Check if this is our target
-                if username_clean.lower() == target_username_lower:
-                    target_id = player_id
-                    target_map_id = _map_id
-                    target_message_sender = message_sender
+        if target_id:
+            # Get target's map and message sender
+            for user_id, username, map_id in online_players:
+                if user_id == target_id:
+                    target_map_id = map_id
+                    target_message_sender = self.map_manager.get_player_message_sender(target_id)
                     logger.info(
                         "✓ Found target player: %s (ID: %s) in map %s",
-                        username_clean,
+                        username,
                         target_id,
                         target_map_id,
                     )
+                    break
 
         logger.info("Online players: %s", ", ".join(all_players) if all_players else "NONE")
 
@@ -285,13 +271,7 @@ class PartyService:
             return error_msg
 
         # Get inviter username from MapManager (the account username, not character name)
-        # TODO: MapManager should expose get_player_username(user_id) -> str | None
-        inviter_username = None
-        for _map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
-            if inviter_id in players_dict:
-                _, inviter_username = players_dict[inviter_id]
-                break
-
+        inviter_username = self.map_manager.get_player_username(inviter_id)
         if not inviter_username:
             inviter_username = f"Player{inviter_id}"
 

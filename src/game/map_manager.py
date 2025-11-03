@@ -26,7 +26,7 @@ MAP_RANGE_4 = 200
 MAP_RANGE_5 = 250
 
 
-class MapManager(SpatialIndexMixin):
+class MapManager(SpatialIndexMixin):  # noqa: PLR0904
     """Gestiona qué jugadores y NPCs están en qué mapa para broadcast de eventos."""
 
     MAX_ITEMS_PER_TILE = 10  # Límite de items por tile
@@ -134,6 +134,64 @@ class MapManager(SpatialIndexMixin):
             Lista de map_ids con al menos un jugador.
         """
         return list(self._players_by_map.keys())
+
+    def get_player_message_sender(self, user_id: int) -> MessageSender | None:
+        """Get MessageSender for a specific player.
+
+        Args:
+            user_id: User ID to search for
+
+        Returns:
+            MessageSender if player found online, None otherwise
+        """
+        for players_dict in self._players_by_map.values():
+            if user_id in players_dict:
+                message_sender, _ = players_dict[user_id]
+                return message_sender
+        return None
+
+    def find_player_by_username(self, username: str) -> int | None:
+        """Find online player by username (case-insensitive).
+
+        Args:
+            username: Username to search for
+
+        Returns:
+            user_id if player found online, None otherwise
+        """
+        username_lower = username.lower().strip()
+        for players_dict in self._players_by_map.values():
+            for user_id, (_, player_username) in players_dict.items():
+                if player_username.lower().strip() == username_lower:
+                    return user_id
+        return None
+
+    def get_all_online_players(self) -> list[tuple[int, str, int]]:
+        """Get list of all online players.
+
+        Returns:
+            List of tuples (user_id, username, map_id)
+        """
+        players = []
+        for map_id, players_dict in self._players_by_map.items():
+            for user_id, (_, username) in players_dict.items():
+                players.append((user_id, username, map_id))
+        return players
+
+    def get_player_username(self, user_id: int) -> str | None:
+        """Get username for a specific player.
+
+        Args:
+            user_id: User ID to search for
+
+        Returns:
+            Username if player found online, None otherwise
+        """
+        for players_dict in self._players_by_map.values():
+            if user_id in players_dict:
+                _, username = players_dict[user_id]
+                return username
+        return None
 
     def get_username(self, user_id: int, map_id: int | None = None) -> str | None:
         """Obtiene el username de un jugador.

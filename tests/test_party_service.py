@@ -60,13 +60,19 @@ def mock_broadcast_service():
 @pytest.fixture
 def mock_map_manager():
     """Create a mock map manager."""
-    manager = AsyncMock()
+    manager = MagicMock()
     # Mock _players_by_map for player search
     manager._players_by_map = {
         1: {  # map_id 1
             2: (AsyncMock(), "Player2"),  # user_id 2 with username
         }
     }
+    # Mock new public methods
+    manager.get_all_online_players.return_value = [(2, "Player2", 1)]
+    manager.find_player_by_username.return_value = 2
+    manager.get_player_message_sender.return_value = AsyncMock()
+    manager.get_player_username.return_value = "Player1"
+    manager.get_maps_with_players.return_value = [1]
     return manager
 
 
