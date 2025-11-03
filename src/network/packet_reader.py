@@ -31,6 +31,7 @@ class PacketReader:
         Returns:
             Valor entero sin signo (0-255).
         """
+        self.ensure_remaining_bytes(1, "read_byte")
         value: int = struct.unpack("B", self.data[self.offset : self.offset + 1])[0]
         self.offset += 1
         return value
@@ -41,6 +42,7 @@ class PacketReader:
         Returns:
             Valor entero sin signo (0-65535).
         """
+        self.ensure_remaining_bytes(2, "read_int16")
         value: int = struct.unpack("<H", self.data[self.offset : self.offset + 2])[0]
         self.offset += 2
         return value
@@ -51,6 +53,7 @@ class PacketReader:
         Returns:
             Valor entero sin signo (0-4294967295).
         """
+        self.ensure_remaining_bytes(4, "read_int32")
         value: int = struct.unpack("<I", self.data[self.offset : self.offset + 4])[0]
         self.offset += 4
         return value
@@ -88,6 +91,7 @@ class PacketReader:
         logger = logging.getLogger(__name__)
 
         length = self.read_int16()
+        self.ensure_remaining_bytes(length, "read_string")
         string_bytes = self.data[self.offset : self.offset + length]
 
         logger.debug(
@@ -118,6 +122,7 @@ class PacketReader:
         logger = logging.getLogger(__name__)
 
         length = self.read_int16()
+        self.ensure_remaining_bytes(length, "read_ascii_string")
         string_bytes = self.data[self.offset : self.offset + length]
 
         logger.debug(
@@ -160,3 +165,33 @@ class PacketReader:
             PacketID del packet.
         """
         return self.data[0] if len(self.data) > 0 else 0
+
+    def validate_remaining_bytes(self, required_bytes: int) -> bool:
+        """Valida que haya suficientes bytes restantes para leer.
+
+        Args:
+            required_bytes: Número de bytes requeridos.
+
+        Returns:
+            True si hay suficientes bytes, False en caso contrario.
+        """
+        return len(self.data) >= self.offset + required_bytes
+
+    def ensure_remaining_bytes(self, required_bytes: int, context: str = "") -> None:
+        """Valida que haya suficientes bytes y lanza excepción si no.
+
+        Args:
+            required_bytes: Número de bytes requeridos.
+            context: Contexto para el mensaje de error (opcional).
+
+        Raises:
+            ValueError: Si no hay suficientes bytes restantes.
+        """
+        if not self.validate_remaining_bytes(required_bytes):
+            remaining = len(self.data) - self.offset
+            msg = (
+                f"Packet truncado: se requieren {required_bytes} bytes pero solo quedan {remaining}"
+            )
+            if context:
+                msg = f"{context}: {msg}"
+            raise ValueError(msg)

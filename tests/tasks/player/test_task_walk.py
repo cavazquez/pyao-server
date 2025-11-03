@@ -327,10 +327,11 @@ class TestTaskWalk:
             session_data=session_data,
         )
 
-        # Execute
-        await task.execute()
+        # Execute - debe lanzar ValueError por packet truncado
+        with pytest.raises(ValueError, match="Packet truncado"):
+            await task.execute()
 
-        # Assert - no debe hacer nada
+        # Assert - no debe llegar a get_position
         player_repo.get_position.assert_not_called()
 
     async def test_walk_invalid_direction(self) -> None:

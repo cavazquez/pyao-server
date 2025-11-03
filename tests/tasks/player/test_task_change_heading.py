@@ -159,7 +159,10 @@ async def test_task_change_heading_invalid_packet() -> None:
     # Paquete demasiado corto
     data = bytes([ClientPacketID.CHANGE_HEADING])
     task = TaskChangeHeading(data, message_sender, player_repo, None, None, session_data)
-    await task.execute()
+
+    # Debe lanzar ValueError por packet truncado
+    with pytest.raises(ValueError, match="Packet truncado"):
+        await task.execute()
 
     # Verificar que NO se llamó a set_heading
     player_repo.set_heading.assert_not_called()

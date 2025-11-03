@@ -146,7 +146,7 @@ def test_packet_reader_read_beyond_data_raises_error() -> None:
 
     reader.read_byte()  # OK
 
-    with pytest.raises(struct.error):
+    with pytest.raises(ValueError, match="Packet truncado"):
         reader.read_byte()  # Error: no hay más datos
 
 
@@ -155,7 +155,7 @@ def test_packet_reader_read_int16_insufficient_data() -> None:
     data = bytes([1, 2])  # Solo 1 byte después del PacketID
     reader = PacketReader(data)
 
-    with pytest.raises(struct.error):
+    with pytest.raises(ValueError, match="Packet truncado"):
         reader.read_int16()  # Error: necesita 2 bytes
 
 
@@ -201,3 +201,71 @@ def test_packet_reader_complex_packet() -> None:
     assert read_quantity == quantity
     assert read_price == price
     assert not reader.has_more_data()
+
+
+def test_packet_reader_validate_remaining_bytes_success() -> None:
+    """Verifica que validate_remaining_bytes retorna True cuando hay suficientes bytes."""
+    data = bytes([1, 2, 3, 4, 5])  # 4 bytes después del PacketID
+    reader = PacketReader(data)
+
+    assert reader.validate_remaining_bytes(1) is True
+    assert reader.validate_remaining_bytes(4) is True
+
+
+def test_packet_reader_validate_remaining_bytes_failure() -> None:
+    """Verifica que validate_remaining_bytes retorna False cuando no hay suficientes bytes."""
+    data = bytes([1, 2, 3])  # Solo 2 bytes después del PacketID
+    reader = PacketReader(data)
+
+    assert reader.validate_remaining_bytes(3) is False
+    assert reader.validate_remaining_bytes(10) is False
+
+
+def test_packet_reader_ensure_remaining_bytes_success() -> None:
+    """Verifica que ensure_remaining_bytes no lanza excepción cuando hay suficientes bytes."""
+    data = bytes([1, 2, 3, 4, 5])
+    reader = PacketReader(data)
+
+    # No debe lanzar excepción
+    reader.ensure_remaining_bytes(1)
+    reader.ensure_remaining_bytes(4)
+
+
+def test_packet_reader_ensure_remaining_bytes_failure() -> None:
+    """Verifica que ensure_remaining_bytes lanza ValueError cuando no hay suficientes bytes."""
+    data = bytes([1, 2, 3])  # Solo 2 bytes después del PacketID
+    reader = PacketReader(data)
+
+    with pytest.raises(
+        ValueError, match="Packet truncado: se requieren 3 bytes pero solo quedan 2"
+    ):
+        reader.ensure_remaining_bytes(3)
+
+
+def test_packet_reader_ensure_remaining_bytes_with_context() -> None:
+    """Verifica que ensure_remaining_bytes incluye el contexto en el mensaje de error."""
+    data = bytes([1, 2])  # Solo 1 byte después del PacketID
+    reader = PacketReader(data)
+
+    with pytest.raises(ValueError, match="test_context: Packet truncado"):
+        reader.ensure_remaining_bytes(5, "test_context")
+
+
+def test_packet_reader_read_string_truncated() -> None:
+    """Verifica que read_string lanza ValueError si el string está truncado."""
+    # String con longitud 10 pero solo 5 bytes de datos
+    data = bytes([1]) + struct.pack("<H", 10) + bytes([1, 2, 3, 4, 5])
+    reader = PacketReader(data)
+
+    with pytest.raises(ValueError, match="read_string: Packet truncado"):
+        reader.read_string()
+
+
+def test_packet_reader_read_ascii_string_truncated() -> None:
+    """Verifica que read_ascii_string lanza ValueError si el string está truncado."""
+    # String con longitud 10 pero solo 5 bytes de datos
+    data = bytes([1]) + struct.pack("<H", 10) + bytes([1, 2, 3, 4, 5])
+    reader = PacketReader(data)
+
+    with pytest.raises(ValueError, match="read_ascii_string: Packet truncado"):
+        reader.read_ascii_string()
