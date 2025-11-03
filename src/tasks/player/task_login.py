@@ -316,7 +316,7 @@ class TaskLogin(Task):
                             "x": new_x,
                             "y": new_y,
                             "map": map_id,
-                            "heading": position["heading"],
+                            "heading": position.get("heading", 3),  # Default heading: South
                         }
 
         # No se encontró casilla libre (muy raro)
