@@ -38,10 +38,10 @@ class TaskPartyKick(Task):
         try:
             # Parse packet data
             reader = PacketReader(self.data)
-            reader.read_byte()  # Skip packet ID
+            # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
 
-            # Read target username (UTF-16LE string)
-            target_username = reader.read_string()
+            # Read target username (cliente Godot envía ASCII/Latin-1)
+            target_username = reader.read_ascii_string()
 
             if not target_username:
                 await self.message_sender.send_console_msg(

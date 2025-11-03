@@ -52,6 +52,31 @@ class PartyService:
                 return message_sender
         return None
 
+    def _find_player_by_username(self, username: str) -> int | None:
+        """Find player user_id by username from MapManager.
+        
+        Args:
+            username: Username to search for
+            
+        Returns:
+            user_id if found, None otherwise
+        """
+        if not self.map_manager:
+            logger.warning("MapManager not available for username search")
+            return None
+        
+        # Search for player in all maps
+        logger.debug(f"Searching for username '{username}' in {len(self.map_manager._players_by_map)} maps")  # noqa: SLF001
+        for map_id, players_dict in self.map_manager._players_by_map.items():  # noqa: SLF001
+            for user_id, (_, player_username) in players_dict.items():
+                logger.debug(f"  Checking user_id={user_id}, username='{player_username}'")
+                if player_username.lower() == username.lower():
+                    logger.info(f"Found player '{username}' with user_id={user_id}")
+                    return user_id
+        
+        logger.warning(f"Player '{username}' not found in any map")
+        return None
+
     async def can_create_party(self, user_id: int) -> tuple[bool, str]:
         """Check if user can create a party.
 
@@ -450,24 +475,24 @@ class PartyService:
             return "Solo el líder puede expulsar miembros"
 
         # Get target user ID
-        target_player = await self.player_repo.get_player_by_username(target_username)
-        if not target_player:
-            return f"Usuario '{target_username}' no encontrado"
+        target_user_id = self._find_player_by_username(target_username)
+        if not target_user_id:
+            return f"Usuario '{target_username}' no encontrado o no está online"
 
         # Check if target is in party
-        if not party.is_member(target_player.user_id):
+        if not party.is_member(target_user_id):
             return f"{target_username} no es miembro de tu party"
 
         # Cannot kick yourself
-        if target_player.user_id == leader_id:
+        if target_user_id == leader_id:
             return "No puedes expulsarte a ti mismo. Usa /SALIRPARTY"
 
         # Remove member
-        party.remove_member(target_player.user_id)
+        party.remove_member(target_user_id)
 
         # Send message to kicked member
         if self.map_manager:
-            kicked_sender = self._get_player_message_sender(target_player.user_id)
+            kicked_sender = self._get_player_message_sender(target_user_id)
             if kicked_sender:
                 await kicked_sender.send_console_msg(
                     f"Has sido expulsado de la party por {party.leader_username}.",
@@ -491,9 +516,9 @@ class PartyService:
             # Disband if empty
             await self.party_repo.delete_party(party.party_id)
 
-        await self.party_repo.remove_member_from_party(party.party_id, target_player.user_id)
+        await self.party_repo.remove_member_from_party(party.party_id, target_user_id)
         logger.info(
-            f"User {target_player.user_id} ({target_username}) kicked from party {party.party_id}"
+            f"User {target_user_id} ({target_username}) kicked from party {party.party_id}"
         )
 
         return f"Has expulsado a {target_username} de la party"
@@ -514,17 +539,17 @@ class PartyService:
             return "Solo el líder puede transferir el liderazgo"
 
         # Get target user ID
-        target_player = await self.player_repo.get_player_by_username(target_username)
-        if not target_player:
-            return f"Usuario '{target_username}' no encontrado"
+        target_user_id = self._find_player_by_username(target_username)
+        if not target_user_id:
+            return f"Usuario '{target_username}' no encontrado o no está online"
 
         # Check if target is in party
-        if not party.is_member(target_player.user_id):
+        if not party.is_member(target_user_id):
             return f"{target_username} no es miembro de tu party"
 
         # Transfer leadership
         old_leader_username = party.leader_username
-        party.transfer_leadership(target_player.user_id)
+        party.transfer_leadership(target_user_id)
 
         # Save updated party
         await self.party_repo.save_party(party)
