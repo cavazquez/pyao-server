@@ -170,6 +170,7 @@ class ServiceInitializer:
             message_sender_for_service,
             broadcast_service,  # type: ignore[arg-type]
             self.map_manager,
+            self.repositories["account_repo"],
         )
         await party_service.party_repo.initialize()  # Inicializar repositorio de parties
         logger.info("✓ Servicio de parties inicializado")

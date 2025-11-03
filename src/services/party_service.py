@@ -31,6 +31,7 @@ class PartyService:
         message_sender: MessageSender,
         broadcast_service=None,
         map_manager=None,
+        account_repo=None,
     ) -> None:
         """Initialize party service with dependencies."""
         self.party_repo = party_repository
@@ -38,6 +39,7 @@ class PartyService:
         self.message_sender = message_sender
         self.broadcast_service = broadcast_service
         self.map_manager = map_manager
+        self.account_repo = account_repo
 
     def _get_player_message_sender(self, user_id: int):
         """Get MessageSender for a specific player from MapManager."""
@@ -554,10 +556,12 @@ class PartyService:
         if not party:
             return "No eres miembro de ninguna party"
 
-        # Get sender username
-        sender_attrs = await self.player_repo.get_attributes(sender_id)
-        logger.debug(f"Sender attributes: {sender_attrs}")
-        sender_username = sender_attrs.get("username", f"Usuario#{sender_id}") if sender_attrs else f"Usuario#{sender_id}"
+        # Get sender username from account
+        sender_username = f"Usuario#{sender_id}"
+        if self.account_repo:
+            account_data = await self.account_repo.get_account_by_user_id(sender_id)
+            if account_data:
+                sender_username = account_data.get("username", sender_username)
         logger.info(f"Party message from {sender_username} (ID:{sender_id}): '{message}'")
 
         # Send message to all members
