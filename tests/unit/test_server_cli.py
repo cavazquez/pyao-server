@@ -101,23 +101,23 @@ class TestServerCLI:
         """Test de configuración de logging en modo INFO."""
         cli = ServerCLI()
 
-        with patch("logging.basicConfig") as mock_basic_config:
+        with patch("src.logging_config.configure_logging") as mock_configure:
             cli.configure_logging(debug=False)
 
-            mock_basic_config.assert_called_once()
-            call_kwargs = mock_basic_config.call_args[1]
-            assert call_kwargs["level"] == logging.INFO
+            # Verifica que configure_logging() fue llamado
+            mock_configure.assert_called_once()
 
     def test_configure_logging_debug(self) -> None:
         """Test de configuración de logging en modo DEBUG."""
         cli = ServerCLI()
 
-        with patch("logging.basicConfig") as mock_basic_config:
+        with patch("src.logging_config.configure_logging") as mock_configure, \
+             patch("src.logging_config.verbose_mode") as mock_verbose:
             cli.configure_logging(debug=True)
 
-            mock_basic_config.assert_called_once()
-            call_kwargs = mock_basic_config.call_args[1]
-            assert call_kwargs["level"] == logging.DEBUG
+            # Verifica que configure_logging() y verbose_mode() fueron llamados
+            mock_configure.assert_called_once()
+            mock_verbose.assert_called_once()
 
     def test_version_attribute(self) -> None:
         """Test que VERSION está definida."""

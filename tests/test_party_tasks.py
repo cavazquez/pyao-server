@@ -165,7 +165,7 @@ class TestTaskPartyJoin:
         # Verify error message
         mock_message_sender.send_console_msg.assert_called_once()
         args = mock_message_sender.send_console_msg.call_args[0]
-        assert "Debes especificar un nombre de usuario" in args[1]
+        assert "Debes especificar un nombre de usuario" in args[0]
 
 
 class TestTaskPartyAcceptMember:
@@ -177,6 +177,7 @@ class TestTaskPartyAcceptMember:
         # Setup
         mock_invitation = MagicMock()
         mock_invitation.party_id = 1
+        mock_invitation.inviter_username = "Leader"
 
         mock_party_service.get_user_invitations.return_value = [mock_invitation]
         mock_party_service.accept_invitation.return_value = "Te has unido a la party"
@@ -226,7 +227,7 @@ class TestTaskPartyAcceptMember:
         # Verify error message
         mock_message_sender.send_console_msg.assert_called_once()
         args = mock_message_sender.send_console_msg.call_args[0]
-        assert "no tienes una invitación pendiente" in args[1]
+        assert "no tienes una invitación pendiente" in args[0].lower()
 
 
 class TestTaskPartyLeave:
