@@ -14,7 +14,10 @@ from src.models.party import (
 )
 
 if TYPE_CHECKING:
+    from src.game.map_manager import MapManager
+    from src.messaging.broadcast_service import BroadcastService
     from src.messaging.message_sender import MessageSender
+    from src.repositories.account_repository import AccountRepository
     from src.repositories.party_repository import PartyRepository
     from src.repositories.player_repository import PlayerRepository
 
@@ -29,9 +32,9 @@ class PartyService:
         party_repository: PartyRepository,
         player_repository: PlayerRepository,
         message_sender: MessageSender,
-        broadcast_service=None,
-        map_manager=None,
-        account_repo=None,
+        broadcast_service: BroadcastService | None = None,
+        map_manager: MapManager | None = None,
+        account_repo: AccountRepository | None = None,
     ) -> None:
         """Initialize party service with dependencies."""
         self.party_repo = party_repository
@@ -41,8 +44,12 @@ class PartyService:
         self.map_manager = map_manager
         self.account_repo = account_repo
 
-    def _get_player_message_sender(self, user_id: int):
-        """Get MessageSender for a specific player from MapManager."""
+    def _get_player_message_sender(self, user_id: int) -> MessageSender | None:
+        """Get MessageSender for a specific player from MapManager.
+
+        Returns:
+            MessageSender if player found, None otherwise.
+        """
         if not self.map_manager:
             return None
         # Search for player in all maps
@@ -67,7 +74,9 @@ class PartyService:
 
         # Search for player in all maps
         logger.debug(
-            f"Searching for username '{username}' in {len(self.map_manager._players_by_map)} maps"
+            "Searching for username '%s' in %s maps",
+            username,
+            len(self.map_manager._players_by_map),
         )
         for players_dict in self.map_manager._players_by_map.values():
             for user_id, (_, player_username) in players_dict.items():
@@ -119,9 +128,8 @@ class PartyService:
         attributes.get("charisma", 18)  # Default charisma
         # TODO: Get leadership skill when skill system is implemented
 
-        # Temporarily disabled until skill system is implemented
-        # if charisma * leadership < 100:
-        #     return False, "Tu carisma y liderazgo no son suficientes para liderar una party"
+        # TODO: Implement leadership check when skill system is ready
+        # Required: charisma * leadership >= 100
 
         return True, ""
 

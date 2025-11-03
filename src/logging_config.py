@@ -141,6 +141,7 @@ def quiet_mode() -> None:
 
 def verbose_mode() -> None:
     """Modo verbose - todo en INFO."""
+    logger = logging.getLogger(__name__)
     for feature in FEATURE_LOG_LEVELS:
         set_feature_log_level(feature, "INFO")
-    logging.info("✓ Verbose mode enabled")
+    logger.info("✓ Verbose mode enabled")

@@ -4,6 +4,7 @@ import argparse
 import logging
 
 from src import __version__
+from src.logging_config import configure_logging, verbose_mode
 
 
 class ServerCLI:
@@ -80,9 +81,6 @@ Ejemplos:
         Args:
             debug: Si True, habilita logs de nivel DEBUG para todo.
         """
-        # Importar configuración de logging por features
-        from src.logging_config import configure_logging, verbose_mode
-
         # Configurar logging por features
         configure_logging()
 
