@@ -407,7 +407,8 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 - **`PlayerMapService`**: ✅ **NUEVO** - Centraliza lógica de spawn y transiciones de mapa
   - `spawn_in_map()`: Aparición inicial del jugador (login)
   - `transition_to_map()`: Cambio de mapa (transiciones, teletransporte)
-  - Elimina ~400 líneas de código duplicado en 3 archivos
+  - `teleport_in_same_map()`: Teletransporte dentro del mismo mapa (comandos GM)
+  - Elimina ~450 líneas de código duplicado en 3 archivos
   - Encapsula secuencia de 12 pasos para cambios de mapa
 - **`CombatService`**: Sistema de combate jugador vs NPC
 - **`CommerceService`**: Sistema de comercio con NPCs

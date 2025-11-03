@@ -410,3 +410,98 @@ class TestPlayerMapService:
         # Debe remover y agregar del mismo mapa
         player_map_service.map_manager.remove_player.assert_called_once_with(1, 1)
         player_map_service.map_manager.add_player.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_teleport_in_same_map_basic(self, player_map_service, mock_message_sender):
+        """Test teletransporte básico dentro del mismo mapa."""
+        await player_map_service.teleport_in_same_map(
+            user_id=1,
+            map_id=1,
+            old_x=50,
+            old_y=50,
+            new_x=80,
+            new_y=80,
+            heading=2,
+            message_sender=mock_message_sender,
+        )
+
+        # Debe actualizar posición en Redis
+        player_map_service.player_repo.set_position.assert_called_once_with(1, 80, 80, 1, 2)
+
+        # Debe actualizar índice espacial
+        player_map_service.map_manager.update_player_tile.assert_called_once_with(
+            1, 1, 50, 50, 80, 80
+        )
+
+        # Debe enviar POS_UPDATE
+        mock_message_sender.send_pos_update.assert_called_once_with(80, 80)
+
+    @pytest.mark.asyncio
+    async def test_teleport_in_same_map_broadcasts(self, player_map_service, mock_message_sender):
+        """Test que teleport_in_same_map hace broadcast correctamente."""
+        await player_map_service.teleport_in_same_map(
+            user_id=1,
+            map_id=1,
+            old_x=50,
+            old_y=50,
+            new_x=80,
+            new_y=80,
+            heading=3,
+            message_sender=mock_message_sender,
+        )
+
+        # Debe hacer broadcast de CHARACTER_REMOVE en posición anterior
+        player_map_service.broadcast_service.broadcast_character_remove.assert_called_once_with(
+            1, 1
+        )
+
+        # Debe hacer broadcast de CHARACTER_CREATE en nueva posición
+        player_map_service.broadcast_service.broadcast_character_create.assert_called_once()
+        call_args = player_map_service.broadcast_service.broadcast_character_create.call_args
+        assert call_args.kwargs["map_id"] == 1
+        assert call_args.kwargs["char_index"] == 1
+        assert call_args.kwargs["x"] == 80
+        assert call_args.kwargs["y"] == 80
+        assert call_args.kwargs["heading"] == 3
+
+    @pytest.mark.asyncio
+    async def test_teleport_in_same_map_no_change_map(
+        self, player_map_service, mock_message_sender
+    ):
+        """Test que teleport_in_same_map NO envía CHANGE_MAP (a diferencia de transition_to_map)."""
+        await player_map_service.teleport_in_same_map(
+            user_id=1,
+            map_id=1,
+            old_x=50,
+            old_y=50,
+            new_x=80,
+            new_y=80,
+            heading=3,
+            message_sender=mock_message_sender,
+        )
+
+        # NO debe enviar CHANGE_MAP (eso es solo para transition_to_map)
+        mock_message_sender.send_change_map.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_teleport_in_same_map_no_map_manager_changes(
+        self, player_map_service, mock_message_sender
+    ):
+        """Test que teleport_in_same_map NO remueve/agrega del MapManager (solo actualiza tile)."""
+        await player_map_service.teleport_in_same_map(
+            user_id=1,
+            map_id=1,
+            old_x=50,
+            old_y=50,
+            new_x=80,
+            new_y=80,
+            heading=3,
+            message_sender=mock_message_sender,
+        )
+
+        # NO debe remover/agregar del MapManager (solo actualizar tile)
+        player_map_service.map_manager.remove_player.assert_not_called()
+        player_map_service.map_manager.add_player.assert_not_called()
+
+        # Solo debe actualizar el tile
+        player_map_service.map_manager.update_player_tile.assert_called_once()

@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.map.player_map_service import PlayerMapService
     from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
@@ -46,6 +47,7 @@ class TaskCreateAccount(Task):
         spellbook_repo: SpellbookRepository | None = None,
         spell_catalog: SpellCatalog | None = None,
         equipment_repo: EquipmentRepository | None = None,
+        player_map_service: PlayerMapService | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
 
@@ -61,6 +63,7 @@ class TaskCreateAccount(Task):
             spellbook_repo: Repositorio de libro de hechizos.
             spell_catalog: Catálogo de hechizos.
             equipment_repo: Repositorio de equipamiento.
+            player_map_service: Servicio de mapas de jugador.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -72,6 +75,7 @@ class TaskCreateAccount(Task):
         self.spellbook_repo = spellbook_repo
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
+        self.player_map_service = player_map_service
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:
         """Parsea el paquete de creación de cuenta.
@@ -312,11 +316,11 @@ class TaskCreateAccount(Task):
                 account_repo=self.account_repo,
                 map_manager=self.map_manager,
                 session_data=self.session_data,
-                npc_service=self.npc_service,
                 server_repo=self.server_repo,
                 spellbook_repo=self.spellbook_repo,
                 spell_catalog=self.spell_catalog,
                 equipment_repo=self.equipment_repo,
+                player_map_service=self.player_map_service,
             )
             await login_task.execute_with_credentials(username, password)
 

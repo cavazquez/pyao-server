@@ -320,34 +320,30 @@ class TestTaskLogin:
         )
 
         position = {"x": 50, "y": 50, "map": 1, "heading": 3}
-        await task._send_map_data(1, "testuser", position)
+        await task._send_map_data(1, position)
 
         map_manager.load_ground_items.assert_called_once_with(1)
         player_map_service.spawn_in_map.assert_called_once()
 
-    async def test_send_map_data_legacy(self) -> None:
-        """Test de envío de datos del mapa con método legacy."""
+    async def test_send_map_data_without_service(self) -> None:
+        """Test de envío de datos del mapa sin PlayerMapService."""
         message_sender = MagicMock()
         map_manager = MagicMock()
         map_manager.load_ground_items = AsyncMock()
-        map_manager._ground_items = {}
-
-        npc_service = MagicMock()
-        npc_service.send_npcs_in_map = AsyncMock()
 
         task = TaskLogin(
             bytes([0x03]),
             message_sender,
             map_manager=map_manager,
             player_map_service=None,  # Sin PlayerMapService
-            npc_service=npc_service,
         )
 
         position = {"x": 50, "y": 50, "map": 1, "heading": 3}
-        await task._send_map_data(1, "testuser", position)
+
+        # Debe cargar ground items pero loggear error
+        await task._send_map_data(1, position)
 
         map_manager.load_ground_items.assert_called_once_with(1)
-        npc_service.send_npcs_in_map.assert_called_once()
 
     async def test_finalize_login(self) -> None:
         """Test de finalización del login."""

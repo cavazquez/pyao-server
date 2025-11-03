@@ -9,9 +9,6 @@ from src.messaging.message_sender import MessageSender
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
-from src.services.game.npc_map_spawner import NPCMapSpawner
-from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
-from src.services.npc.npc_service import NPCService
 from src.services.player.authentication_service import AuthenticationService
 from src.services.player.player_service import PlayerService
 from src.tasks.task import Task
@@ -26,9 +23,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
-    from src.services.game.npc_world_manager import NPCWorldManager
     from src.services.map.player_map_service import PlayerMapService
-    from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +42,11 @@ class TaskLogin(Task):
         account_repo: AccountRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
-        npc_service: NPCService | None = None,
         server_repo: ServerRepository | None = None,
         spellbook_repo: SpellbookRepository | None = None,
         spell_catalog: SpellCatalog | None = None,
         equipment_repo: EquipmentRepository | None = None,
         player_map_service: PlayerMapService | None = None,
-        npc_world_manager: NPCWorldManager | None = None,
     ) -> None:
         """Inicializa la tarea de login.
 
@@ -64,26 +57,22 @@ class TaskLogin(Task):
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión compartidos (opcional).
-            npc_service: Servicio de NPCs para enviar NPCs al jugador.
             server_repo: Repositorio del servidor para obtener el MOTD.
             spellbook_repo: Repositorio de libro de hechizos.
             spell_catalog: Catálogo de hechizos.
             equipment_repo: Repositorio de equipamiento.
             player_map_service: Servicio de mapas de jugador.
-            npc_world_manager: Gestor de NPCs del mundo para spawning.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.session_data = session_data
-        self.npc_service = npc_service
         self.server_repo = server_repo
         self.spellbook_repo = spellbook_repo
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
         self.player_map_service = player_map_service
-        self.npc_world_manager = npc_world_manager
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.
@@ -178,40 +167,10 @@ class TaskLogin(Task):
         await self._spawn_player(user_id, username, position)
 
         # Enviar datos del mapa y finalizar login
-        await self._send_map_data(user_id, username, position)
+        await self._send_map_data(user_id, position)
 
         # Enviar inventario y MOTD
         await self._finalize_login(user_id)
-
-    async def _send_ground_items_to_player(self, map_id: int) -> None:
-        """Envía OBJECT_CREATE de todos los ground items del mapa al jugador.
-
-        Método legacy, usado solo como fallback si PlayerMapService no está disponible.
-
-        Args:
-            map_id: ID del mapa.
-        """
-        if not self.map_manager:
-            return
-
-        # Obtener todos los ground items del mapa
-        items_sent = 0
-        # Acceder a través del método público en lugar de atributo privado
-        for (item_map_id, x, y), items in self.map_manager._ground_items.items():  # noqa: SLF001
-            if item_map_id != map_id:
-                continue
-
-            # Enviar OBJECT_CREATE por cada item en ese tile
-            for item in items:
-                grh_index = item.get("grh_index")
-                if grh_index and isinstance(grh_index, int):
-                    await self.message_sender.send_object_create(x, y, grh_index)
-                    items_sent += 1
-                    # Pequeño delay para no saturar
-                    await asyncio.sleep(0.01)
-
-        if items_sent > 0:
-            logger.info("Enviados %d ground items al jugador en mapa %d", items_sent, map_id)
 
     def _validate_repositories(self) -> bool:
         """Valida que los repositorios necesarios estén disponibles.
@@ -449,12 +408,11 @@ class TaskLogin(Task):
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)
 
-    async def _send_map_data(self, user_id: int, username: str, position: dict[str, int]) -> None:
+    async def _send_map_data(self, user_id: int, position: dict[str, int]) -> None:
         """Envía los datos del mapa al jugador.
 
         Args:
             user_id: ID del usuario.
-            username: Nombre de usuario.
             position: Posición del jugador.
         """
         # Cargar ground items desde Redis si no están en memoria
@@ -472,54 +430,7 @@ class TaskLogin(Task):
                 message_sender=self.message_sender,
             )
         else:
-            # Fallback al método legacy
-            await self._send_map_data_legacy(user_id, username, position)
-
-    async def _send_map_data_legacy(
-        self, user_id: int, username: str, position: dict[str, int]
-    ) -> None:
-        """Envía datos del mapa usando método legacy.
-
-        Args:
-            user_id: ID del usuario.
-            username: Nombre de usuario.
-            position: Posición del jugador.
-        """
-        logger.warning("PlayerMapService no disponible, usando método legacy")
-
-        # Enviar NPCs usando NPCWorldManager si está disponible
-        if self.npc_world_manager and self.map_manager:
-            # Spawnear NPCs para el jugador
-            result = self.npc_world_manager.update_player_npcs(
-                str(user_id), position["map"], position["x"], position["y"]
-            )
-
-            # Usar NPCMapSpawner para agregar NPCs al MapManager y enviarlos al cliente
-            spawner = NPCMapSpawner(self.map_manager)
-            await spawner.spawn_npcs_for_player(result["spawned"], self.message_sender)
-
-            logger.info(
-                "Enviados %d NPCs del mapa %d al jugador", len(result["spawned"]), position["map"]
-            )
-        elif self.npc_service:
-            # Fallback al sistema antiguo
-            await self.npc_service.send_npcs_in_map(position["map"], self.message_sender)
-
-        if self.map_manager and self.account_repo and self.player_repo:
-            broadcast_service = MultiplayerBroadcastService(
-                self.map_manager,
-                self.player_repo,
-                self.account_repo,
-            )
-            await broadcast_service.notify_player_spawn(
-                user_id,
-                username,
-                position,
-                self.message_sender,
-            )
-
-        if self.map_manager:
-            await self._send_ground_items_to_player(position["map"])
+            logger.error("PlayerMapService no disponible para spawn en mapa")
 
     async def _finalize_login(self, user_id: int) -> None:
         """Finaliza el proceso de login.

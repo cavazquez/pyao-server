@@ -142,9 +142,8 @@ class TaskGMCommands(Task):
             new_x: Nueva posición X.
             new_y: Nueva posición Y.
         """
-        from src.repositories.account_repository import AccountRepository  # noqa: PLC0415
-
-        if not self.player_repo or not self.map_manager:
+        if not self.player_repo or not self.player_map_service:
+            logger.error("Dependencias no disponibles para teletransporte")
             return
 
         # Obtener posición actual
@@ -158,61 +157,20 @@ class TaskGMCommands(Task):
         current_y = position["y"]
         current_heading = position.get("heading", 3)
 
-        # Si es el mismo mapa, solo actualizar posición
+        # Si es el mismo mapa, usar teleport_in_same_map
         if current_map == new_map:
-            # Actualizar posición en Redis
-            await self.player_repo.set_position(user_id, new_x, new_y, new_map, current_heading)
-
-            # Actualizar índice espacial
-            self.map_manager.update_player_tile(
-                user_id, current_map, current_x, current_y, new_x, new_y
+            await self.player_map_service.teleport_in_same_map(
+                user_id=user_id,
+                map_id=current_map,
+                old_x=current_x,
+                old_y=current_y,
+                new_x=new_x,
+                new_y=new_y,
+                heading=current_heading,
+                message_sender=self.message_sender,
             )
-
-            # Enviar POS_UPDATE
-            await self.message_sender.send_pos_update(new_x, new_y)
-
-            # Broadcast CHARACTER_REMOVE en posición anterior
-            if self.broadcast_service:
-                await self.broadcast_service.broadcast_character_remove(current_map, user_id)
-
-            # Broadcast CHARACTER_CREATE en nueva posición
-            if self.broadcast_service:
-                account_repo = AccountRepository(self.player_repo.redis)
-                account_data = await account_repo.get_account_by_user_id(user_id)
-
-                char_body = 1
-                char_head = 1
-                username_str = f"Player{user_id}"
-
-                if account_data:
-                    char_body = int(account_data.get("char_race", 1))
-                    char_head = int(account_data.get("char_head", 1))
-                    username_str = account_data.get("username", f"Player{user_id}")
-                    if char_body == 0:
-                        char_body = 1
-
-                await self.broadcast_service.broadcast_character_create(
-                    map_id=new_map,
-                    char_index=user_id,
-                    body=char_body,
-                    head=char_head,
-                    heading=current_heading,
-                    x=new_x,
-                    y=new_y,
-                    name=username_str,
-                )
-
-            logger.info(
-                "User %d teletransportado en mismo mapa %d: (%d,%d) -> (%d,%d)",
-                user_id,
-                current_map,
-                current_x,
-                current_y,
-                new_x,
-                new_y,
-            )
-        # Cambio de mapa - usar PlayerMapService
-        elif self.player_map_service:
+        # Cambio de mapa - usar transition_to_map
+        else:
             await self.player_map_service.transition_to_map(
                 user_id=user_id,
                 current_map=current_map,
@@ -224,5 +182,3 @@ class TaskGMCommands(Task):
                 heading=current_heading,
                 message_sender=self.message_sender,
             )
-        else:
-            logger.error("PlayerMapService no disponible para teletransporte")

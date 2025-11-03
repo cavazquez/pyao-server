@@ -362,3 +362,67 @@ class PlayerMapService:
             new_x,
             new_y,
         )
+
+    async def teleport_in_same_map(
+        self,
+        user_id: int,
+        map_id: int,
+        old_x: int,
+        old_y: int,
+        new_x: int,
+        new_y: int,
+        heading: int,
+        message_sender: MessageSender,
+    ) -> None:
+        """Teletransporta un jugador dentro del mismo mapa.
+
+        Este método maneja el teletransporte cuando el jugador se mueve
+        a una nueva posición dentro del mismo mapa (ej: comando GM /TELEP).
+
+        Args:
+            user_id: ID del jugador.
+            map_id: ID del mapa (mismo origen y destino).
+            old_x: Posición X anterior.
+            old_y: Posición Y anterior.
+            new_x: Nueva posición X.
+            new_y: Nueva posición Y.
+            heading: Dirección del jugador.
+            message_sender: MessageSender del jugador.
+        """
+        # Obtener datos visuales del jugador
+        visual_data = await self._get_player_visual_data(user_id)
+
+        # 1. Actualizar posición en Redis
+        await self.player_repo.set_position(user_id, new_x, new_y, map_id, heading)
+
+        # 2. Actualizar índice espacial en MapManager
+        self.map_manager.update_player_tile(user_id, map_id, old_x, old_y, new_x, new_y)
+
+        # 3. Enviar POS_UPDATE al cliente
+        await message_sender.send_pos_update(new_x, new_y)
+
+        # 4. Broadcast CHARACTER_REMOVE en posición anterior
+        await self.broadcast_service.broadcast_character_remove(map_id, user_id)
+
+        # 5. Broadcast CHARACTER_CREATE en nueva posición
+        await self.broadcast_service.broadcast_character_create(
+            map_id=map_id,
+            char_index=user_id,
+            body=visual_data.char_body,
+            head=visual_data.char_head,
+            heading=heading,
+            x=new_x,
+            y=new_y,
+            name=visual_data.username,
+        )
+
+        logger.info(
+            "Jugador %s (ID:%d) teletransportado en mapa %d: (%d,%d) -> (%d,%d)",
+            visual_data.username,
+            user_id,
+            map_id,
+            old_x,
+            old_y,
+            new_x,
+            new_y,
+        )

@@ -219,13 +219,11 @@ class TaskFactory:
                 self.deps.account_repo,
                 self.deps.map_manager,
                 session_data,
-                self.deps.npc_service,
                 self.deps.server_repo,
                 self.deps.spellbook_repo,
                 self.deps.spell_catalog,
                 self.deps.equipment_repo,
                 self.deps.player_map_service,
-                self.deps.npc_world_manager,
             ),
             TaskCreateAccount: lambda: TaskCreateAccount(
                 data,
@@ -239,6 +237,7 @@ class TaskFactory:
                 self.deps.spellbook_repo,
                 self.deps.spell_catalog,
                 self.deps.equipment_repo,
+                self.deps.player_map_service,
             ),
             TaskDice: lambda: TaskDice(data, message_sender, session_data, self.deps.server_repo),
             TaskRequestAttributes: lambda: TaskRequestAttributes(
