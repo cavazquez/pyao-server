@@ -41,8 +41,20 @@ class TaskPartyMessage(Task):
             reader = PacketReader(self.data)
             reader.read_byte()  # Skip packet ID
 
-            # Read message (UTF-16LE string)
-            message = reader.read_string()
+            # Log packet data for debugging
+            logger.debug(f"Party message packet data (hex): {self.data.hex()}")
+            logger.debug(f"Party message packet data (raw): {self.data}")
+
+            # Try to read message as ASCII first (Godot client sends ASCII)
+            try:
+                # Read remaining bytes as ASCII string
+                message_bytes = self.data[1:]  # Skip packet ID
+                message = message_bytes.decode('ascii').rstrip('\x00')
+                logger.debug(f"Decoded message (ASCII): '{message}'")
+            except UnicodeDecodeError:
+                # Fallback to UTF-16LE if ASCII fails
+                message = reader.read_string()
+                logger.debug(f"Decoded message (UTF-16LE): '{message}'")
 
             if not message:
                 await self.message_sender.send_console_msg(

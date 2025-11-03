@@ -39,6 +39,17 @@ class PartyService:
         self.broadcast_service = broadcast_service
         self.map_manager = map_manager
 
+    def _get_player_message_sender(self, user_id: int):
+        """Get MessageSender for a specific player from MapManager."""
+        if not self.map_manager:
+            return None
+        # Search for player in all maps
+        for players_dict in self.map_manager._players_by_map.values():  # noqa: SLF001
+            if user_id in players_dict:
+                message_sender, _ = players_dict[user_id]
+                return message_sender
+        return None
+
     async def can_create_party(self, user_id: int) -> tuple[bool, str]:
         """Check if user can create a party.
 
@@ -365,12 +376,15 @@ class PartyService:
         await self.party_repo.remove_invitation(user_id, party_id)
 
         # Send messages to all party members
-        for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
-                member_id,
-                f"¡{username} se ha unido a la party!",
-                font_color=7,  # FONTTYPE_PARTY
-            )
+        if self.map_manager:
+            for member_id in party.member_ids:
+                # Get member's MessageSender from MapManager
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"¡{username} se ha unido a la party!",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
 
         logger.info(f"User {user_id} ({username}) joined party {party_id}")
 
@@ -450,19 +464,23 @@ class PartyService:
         party.remove_member(target_player.user_id)
 
         # Send message to kicked member
-        await self.message_sender.send_console_msg(  # type: ignore[call-arg]
-            target_player.user_id,
-            f"Has sido expulsado de la party por {party.leader_username}.",
-            font_color=7,  # FONTTYPE_PARTY
-        )
+        if self.map_manager:
+            kicked_sender = self._get_player_message_sender(target_player.user_id)
+            if kicked_sender:
+                await kicked_sender.send_console_msg(
+                    f"Has sido expulsado de la party por {party.leader_username}.",
+                    font_color=7,  # FONTTYPE_PARTY
+                )
 
         # Send messages to remaining members
-        for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
-                member_id,
-                f"{target_username} ha sido expulsado de la party.",
-                font_color=7,  # FONTTYPE_PARTY
-            )
+        if self.map_manager:
+            for member_id in party.member_ids:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{target_username} ha sido expulsado de la party.",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
 
         # Save updated party
         if party.member_count > 0:
@@ -510,12 +528,14 @@ class PartyService:
         await self.party_repo.save_party(party)
 
         # Send messages to all members
-        for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
-                member_id,
-                f"¡{target_username} es el nuevo líder de la party!",
-                font_color=7,  # FONTTYPE_PARTY
-            )
+        if self.map_manager:
+            for member_id in party.member_ids:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"¡{target_username} es el nuevo líder de la party!",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
 
         logger.info(
             f"Leadership of party {party.party_id} transferred from {old_leader_username} to {target_username}"
@@ -535,16 +555,22 @@ class PartyService:
             return "No eres miembro de ninguna party"
 
         # Get sender username
-        sender_player = await self.player_repo.get_player(sender_id)  # type: ignore[attr-defined]
-        sender_username = sender_player.username if sender_player else f"Usuario#{sender_id}"
+        sender_attrs = await self.player_repo.get_attributes(sender_id)
+        logger.debug(f"Sender attributes: {sender_attrs}")
+        sender_username = sender_attrs.get("username", f"Usuario#{sender_id}") if sender_attrs else f"Usuario#{sender_id}"
+        logger.info(f"Party message from {sender_username} (ID:{sender_id}): '{message}'")
 
         # Send message to all members
-        for member_id in party.member_ids:
-            await self.message_sender.send_console_msg(  # type: ignore[call-arg]
-                member_id,
-                f"[Party] {sender_username}: {message}",
-                font_color=7,  # FONTTYPE_PARTY
-            )
+        if self.map_manager:
+            for member_id in party.member_ids:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    full_message = f"[Party] {sender_username}: {message}"
+                    logger.debug(f"Sending to member {member_id}: '{full_message}'")
+                    await member_sender.send_console_msg(
+                        full_message,
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
 
         return ""
 
@@ -581,18 +607,18 @@ class PartyService:
 
         # Helper functions to get player data
         async def get_user_level(user_id: int) -> int | None:
-            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
-            return player.level if player else None
+            stats = await self.player_repo.get_stats(user_id)
+            return stats.get("level") if stats else None
 
         async def get_user_position(user_id: int) -> dict | None:
-            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
-            if player:
-                return {"map": player.map_id, "x": player.x, "y": player.y}
-            return None
+            position = await self.player_repo.get_position(user_id)
+            return position if position else None
 
         async def is_user_alive(user_id: int) -> bool:
-            player = await self.player_repo.get_player(user_id)  # type: ignore[attr-defined]
-            return player.is_dead if player else False
+            stats = await self.player_repo.get_stats(user_id)
+            if not stats:
+                return False
+            return stats.get("min_hp", 0) > 0
 
         # Distribute experience
         distributed_exp = party.distribute_experience(

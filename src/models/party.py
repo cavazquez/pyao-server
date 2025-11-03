@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 
 # Constants from VB6 server
 MAX_PARTY_MEMBERS = 5  # PARTY_MAXMEMBERS
-MIN_LEVEL_TO_CREATE = 15  # MINPARTYLEVEL
+MIN_LEVEL_TO_CREATE = 1  # MINPARTYLEVEL (reducido de 15 para testing)
 MAX_LEVEL_DIFFERENCE = 10  # Maximum level difference between party members
 MAX_EXP_DISTANCE = 30  # Maximum distance in tiles to receive experience
 LEVEL_EXPONENT = 2.8  # Exponent for level-based experience distribution
