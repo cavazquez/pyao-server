@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
 
 from src.utils.redis_config import RedisKeys
+from src.utils.redis_decorators import require_redis
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
@@ -37,6 +38,7 @@ class SpellbookRepository:
         # Acceder al cliente Redis interno
         self.redis = redis_client.redis
 
+    @require_redis(default_return=False)
     async def add_spell(self, user_id: int, slot: int, spell_id: int) -> bool:
         """Agrega un hechizo al libro de hechizos del jugador.
 
@@ -52,10 +54,6 @@ class SpellbookRepository:
             logger.warning("Slot inválido: %d (debe estar entre 1 y 25)", slot)
             return False
 
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return False
-
         try:
             key = RedisKeys.player_spellbook(user_id)
             await cast("Any", self.redis).hset(key, str(slot), str(spell_id))
@@ -66,6 +64,7 @@ class SpellbookRepository:
         else:
             return True
 
+    @require_redis(default_return=False)
     async def remove_spell(self, user_id: int, slot: int) -> bool:
         """Elimina un hechizo del libro de hechizos del jugador.
 
@@ -76,10 +75,6 @@ class SpellbookRepository:
         Returns:
             True si se eliminó correctamente, False en caso contrario.
         """
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return False
-
         try:
             key = RedisKeys.player_spellbook(user_id)
             result = await cast("Any", self.redis).hdel(key, str(slot))
@@ -91,6 +86,7 @@ class SpellbookRepository:
             logger.exception("Error al eliminar hechizo del libro")
         return False
 
+    @require_redis(default_return=None)
     async def get_spell_in_slot(self, user_id: int, slot: int) -> int | None:
         """Obtiene el ID del hechizo en un slot específico.
 
@@ -101,10 +97,6 @@ class SpellbookRepository:
         Returns:
             ID del hechizo o None si el slot está vacío.
         """
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return None
-
         try:
             key = RedisKeys.player_spellbook(user_id)
             spell_id_str = await cast("Any", self.redis).hget(key, str(slot))
@@ -114,6 +106,7 @@ class SpellbookRepository:
             logger.exception("Error al obtener hechizo del slot %d", slot)
         return None
 
+    @require_redis(default_return=cast("dict[int, int]", {}))
     async def get_all_spells(self, user_id: int) -> dict[int, int]:
         """Obtiene todos los hechizos del libro del jugador.
 
@@ -123,10 +116,6 @@ class SpellbookRepository:
         Returns:
             Diccionario con slot -> spell_id.
         """
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return {}
-
         try:
             key = RedisKeys.player_spellbook(user_id)
             spells_data = await cast("Any", self.redis).hgetall(key)
@@ -139,6 +128,7 @@ class SpellbookRepository:
             logger.exception("Error al obtener todos los hechizos del user_id %d", user_id)
             return {}
 
+    @require_redis(default_return=None)
     async def move_spell(
         self,
         user_id: int,
@@ -157,10 +147,6 @@ class SpellbookRepository:
         Returns:
             MoveSpellResult con información del intercambio, o None si Redis no está disponible.
         """
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return None
-
         if not 1 <= slot <= max_slot:
             logger.debug("Slot inválido para mover hechizo: %d", slot)
             return MoveSpellResult(
@@ -247,6 +233,7 @@ class SpellbookRepository:
                 reason="error",
             )
 
+    @require_redis(default_return=False)
     async def clear_spellbook(self, user_id: int) -> bool:
         """Limpia todo el libro de hechizos del jugador.
 
@@ -256,10 +243,6 @@ class SpellbookRepository:
         Returns:
             True si se limpió correctamente, False en caso contrario.
         """
-        if self.redis is None:
-            logger.error("Cliente Redis no disponible")
-            return False
-
         try:
             key = RedisKeys.player_spellbook(user_id)
             await cast("Any", self.redis).delete(key)
@@ -283,7 +266,7 @@ class SpellbookRepository:
         """
         try:
             # Verificar si ya tiene hechizos
-            existing_spells = await self.get_all_spells(user_id)
+            existing_spells: dict[int, int] = await self.get_all_spells(user_id)
             if existing_spells:
                 logger.debug("user_id %d ya tiene hechizos en Redis, no se inicializa", user_id)
                 return True
@@ -312,7 +295,7 @@ class SpellbookRepository:
             Lista de diccionarios con información de cada hechizo.
         """
         try:
-            spells = await self.get_all_spells(user_id)
+            spells: dict[int, int] = await self.get_all_spells(user_id)
             result = []
             for slot, spell_id in sorted(spells.items()):
                 result.append({"slot": slot, "spell_id": spell_id})

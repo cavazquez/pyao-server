@@ -3,6 +3,8 @@
 import logging
 from dataclasses import dataclass
 
+from src.repositories.base_slot_repository import BaseSlotRepository
+from src.utils.item_slot_parser import ItemSlotParser
 from src.utils.redis_client import RedisClient  # noqa: TC001
 from src.utils.redis_config import RedisKeys
 
@@ -18,8 +20,11 @@ class MerchantItem:
     quantity: int
 
 
-class MerchantRepository:
-    """Gestiona los inventarios de mercaderes en Redis."""
+class MerchantRepository(BaseSlotRepository):
+    """Gestiona los inventarios de mercaderes en Redis.
+
+    Hereda de BaseSlotRepository para reutilizar métodos comunes.
+    """
 
     MAX_SLOTS = 20  # Número máximo de slots de inventario del mercader
 
@@ -29,6 +34,7 @@ class MerchantRepository:
         Args:
             redis_client: Cliente de Redis.
         """
+        super().__init__(redis_client)
         self.redis_client = redis_client
 
     async def get_inventory(self, npc_id: int) -> dict[str, str | int]:
@@ -66,23 +72,16 @@ class MerchantRepository:
             return None
 
         key = RedisKeys.merchant_inventory(npc_id)
-        slot_key = f"slot_{slot}"
-        value = await self.redis_client.redis.hget(key, slot_key)  # type: ignore[misc]
+        parsed = await self._get_slot_value(key, slot)
 
-        if not value:
+        if not parsed:
             return None
 
-        # Parsear "item_id:quantity"
-        try:
-            item_id_str, quantity_str = value.split(":")
-            return MerchantItem(
-                slot=slot,
-                item_id=int(item_id_str),
-                quantity=int(quantity_str),
-            )
-        except (ValueError, AttributeError):
-            logger.exception("Error parseando slot %d del mercader %d", slot, npc_id)
-            return None
+        return MerchantItem(
+            slot=slot,
+            item_id=parsed.item_id,
+            quantity=parsed.quantity,
+        )
 
     async def get_all_items(self, npc_id: int) -> list[MerchantItem]:
         """Obtiene todos los items del inventario del mercader.
@@ -101,24 +100,20 @@ class MerchantRepository:
                 continue
 
             # Extraer número de slot
-            try:
-                slot_num = int(str(slot_key).split("_")[1])
-            except (IndexError, ValueError):
+            slot_num = ItemSlotParser.parse_slot_number(slot_key)
+            if slot_num is None:
                 continue
 
-            # Parsear item
-            try:
-                item_id_str, quantity_str = str(value).split(":")
+            # Parsear item (convertir a str si es necesario)
+            parsed = ItemSlotParser.parse(str(value) if value else "")
+            if parsed:
                 items.append(
                     MerchantItem(
                         slot=slot_num,
-                        item_id=int(item_id_str),
-                        quantity=int(quantity_str),
+                        item_id=parsed.item_id,
+                        quantity=parsed.quantity,
                     )
                 )
-            except (ValueError, AttributeError):
-                logger.exception("Error parseando slot %s del mercader %d", slot_key, npc_id)
-                continue
 
         # Ordenar por slot
         items.sort(key=lambda x: x.slot)
@@ -135,37 +130,18 @@ class MerchantRepository:
         Returns:
             True si se agregó exitosamente, False si no hay espacio.
         """
-        # Buscar si ya existe el item
-        items = await self.get_all_items(npc_id)
+        key = RedisKeys.merchant_inventory(npc_id)
+        slot = await self._stack_or_add_item(key, item_id, quantity)
 
-        for item in items:
-            if item.item_id == item_id:
-                # Actualizar cantidad
-                new_quantity = item.quantity + quantity
-                await self._update_slot(npc_id, item.slot, item_id, new_quantity)
-                logger.info(
-                    "Mercader %d: Actualizado slot %d con %dx item %d",
-                    npc_id,
-                    item.slot,
-                    new_quantity,
-                    item_id,
-                )
-                return True
-
-        # Buscar slot vacío
-        for slot in range(1, self.MAX_SLOTS + 1):
-            existing_item = await self.get_item(npc_id, slot)
-            if not existing_item:
-                await self._update_slot(npc_id, slot, item_id, quantity)
-                logger.info(
-                    "Mercader %d: Agregado %dx item %d en slot %d",
-                    npc_id,
-                    quantity,
-                    item_id,
-                    slot,
-                )
-                return True
-
+        if slot:
+            logger.info(
+                "Mercader %d: Agregado/actualizado %dx item %d en slot %d",
+                npc_id,
+                quantity,
+                item_id,
+                slot,
+            )
+            return True
         logger.warning("Mercader %d: Inventario lleno, no se pudo agregar item %d", npc_id, item_id)
         return False
 
@@ -199,18 +175,23 @@ class MerchantRepository:
 
         if new_quantity == 0:
             # Vaciar slot
-            await self._clear_slot(npc_id, slot)
-            logger.info("Mercader %d: Slot %d vaciado", npc_id, slot)
+            await self._clear_slot_by_npc(npc_id, slot)
+            logger.info(
+                "Mercader %d: Slot %d vaciado (item %d removido completamente)",
+                npc_id,
+                slot,
+                item.item_id,
+            )
         else:
             # Actualizar cantidad
-            await self._update_slot(npc_id, slot, item.item_id, new_quantity)
+            await self._update_slot_by_npc(npc_id, slot, item.item_id, new_quantity)
             logger.info(
-                "Mercader %d: Slot %d actualizado a %d items",
+                "Mercader %d: Slot %d actualizado con %dx item %d",
                 npc_id,
                 slot,
                 new_quantity,
+                item.item_id,
             )
-
         return True
 
     async def initialize_inventory(
@@ -238,14 +219,14 @@ class MerchantRepository:
         await self.redis_client.redis.hset(key, mapping=inventory_data)  # type: ignore[misc]
         logger.info("Inventario inicializado para mercader %d con %d items", npc_id, len(items))
 
-    async def _update_slot(
+    async def _update_slot_by_npc(
         self,
         npc_id: int,
         slot: int,
         item_id: int,
         quantity: int,
     ) -> None:
-        """Actualiza un slot del inventario del mercader.
+        """Actualiza un slot del inventario del mercader (wrapper para compatibilidad).
 
         Args:
             npc_id: ID del NPC mercader.
@@ -254,17 +235,14 @@ class MerchantRepository:
             quantity: Cantidad.
         """
         key = RedisKeys.merchant_inventory(npc_id)
-        slot_key = f"slot_{slot}"
-        value = f"{item_id}:{quantity}"
-        await self.redis_client.redis.hset(key, slot_key, value)  # type: ignore[misc]
+        await self._update_slot(key, slot, item_id, quantity)
 
-    async def _clear_slot(self, npc_id: int, slot: int) -> None:
-        """Vacía un slot del inventario del mercader.
+    async def _clear_slot_by_npc(self, npc_id: int, slot: int) -> None:
+        """Vacía un slot del inventario del mercader (wrapper para compatibilidad).
 
         Args:
             npc_id: ID del NPC mercader.
             slot: Número de slot (1-20).
         """
         key = RedisKeys.merchant_inventory(npc_id)
-        slot_key = f"slot_{slot}"
-        await self.redis_client.redis.hset(key, slot_key, "")  # type: ignore[misc]
+        await self._clear_slot(key, slot)

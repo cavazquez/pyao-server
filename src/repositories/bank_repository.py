@@ -3,6 +3,8 @@
 import logging
 from dataclasses import dataclass
 
+from src.repositories.base_slot_repository import BaseSlotRepository
+from src.utils.item_slot_parser import ItemSlotParser
 from src.utils.redis_client import RedisClient  # noqa: TC001
 from src.utils.redis_config import RedisKeys
 
@@ -18,10 +20,11 @@ class BankItem:
     quantity: int
 
 
-class BankRepository:
+class BankRepository(BaseSlotRepository):
     """Gestiona las bóvedas bancarias de los jugadores en Redis.
 
     Cada jugador tiene una bóveda con 20 slots para guardar items.
+    Hereda de BaseSlotRepository para reutilizar métodos comunes.
     """
 
     MAX_SLOTS = 20
@@ -32,6 +35,7 @@ class BankRepository:
         Args:
             redis_client: Cliente de Redis.
         """
+        super().__init__(redis_client)
         self.redis_client = redis_client
 
     async def get_bank(self, user_id: int) -> dict[str, str]:
@@ -68,23 +72,16 @@ class BankRepository:
             return None
 
         key = RedisKeys.bank(user_id)
-        slot_key = f"slot_{slot}"
-        value = await self.redis_client.redis.hget(key, slot_key)  # type: ignore[misc]
+        parsed = await self._get_slot_value(key, slot)
 
-        if not value:
+        if not parsed:
             return None
 
-        # Parsear "item_id:quantity"
-        try:
-            item_id_str, quantity_str = value.split(":")
-            return BankItem(
-                slot=slot,
-                item_id=int(item_id_str),
-                quantity=int(quantity_str),
-            )
-        except (ValueError, AttributeError):
-            logger.exception("Error parseando slot %d del banco de user_id %d", slot, user_id)
-            return None
+        return BankItem(
+            slot=slot,
+            item_id=parsed.item_id,
+            quantity=parsed.quantity,
+        )
 
     async def get_all_items(self, user_id: int) -> list[BankItem]:
         """Obtiene todos los items de la bóveda.
@@ -103,24 +100,20 @@ class BankRepository:
                 continue
 
             # Extraer número de slot
-            try:
-                slot_num = int(str(slot_key).split("_")[1])
-            except (IndexError, ValueError):
+            slot_num = ItemSlotParser.parse_slot_number(slot_key)
+            if slot_num is None:
                 continue
 
             # Parsear item
-            try:
-                item_id_str, quantity_str = str(value).split(":")
+            parsed = ItemSlotParser.parse(value)
+            if parsed:
                 items.append(
                     BankItem(
                         slot=slot_num,
-                        item_id=int(item_id_str),
-                        quantity=int(quantity_str),
+                        item_id=parsed.item_id,
+                        quantity=parsed.quantity,
                     )
                 )
-            except (ValueError, AttributeError):
-                logger.exception("Error parseando item del banco de user_id %d", user_id)
-                continue
 
         return items
 
@@ -137,52 +130,21 @@ class BankRepository:
         Returns:
             Número de slot donde se depositó, o None si no hay espacio.
         """
-        bank = await self.get_bank(user_id)
+        key = RedisKeys.bank(user_id)
+        slot = await self._stack_or_add_item(key, item_id, quantity)
 
-        # Buscar si ya existe el item para apilar
-        for slot in range(1, self.MAX_SLOTS + 1):
-            slot_key = f"slot_{slot}"
-            value = bank.get(slot_key, "")
+        if slot:
+            logger.info(
+                "user_id %d depositó %d x item_id %d en slot %d del banco",
+                user_id,
+                quantity,
+                item_id,
+                slot,
+            )
+        else:
+            logger.warning("user_id %d no tiene espacio en el banco", user_id)
 
-            if value:
-                try:
-                    existing_id_str, existing_qty_str = value.split(":")
-                    existing_id = int(existing_id_str)
-                    existing_qty = int(existing_qty_str)
-
-                    if existing_id == item_id:
-                        # Apilar con item existente
-                        new_quantity = existing_qty + quantity
-                        await self._update_slot(user_id, slot, item_id, new_quantity)
-                        logger.info(
-                            "user_id %d depositó %d x item_id %d en slot %d del banco (apilado)",
-                            user_id,
-                            quantity,
-                            item_id,
-                            slot,
-                        )
-                        return slot
-                except (ValueError, AttributeError):
-                    continue
-
-        # Buscar slot vacío
-        for slot in range(1, self.MAX_SLOTS + 1):
-            slot_key = f"slot_{slot}"
-            value = bank.get(slot_key, "")
-
-            if not value:
-                await self._update_slot(user_id, slot, item_id, quantity)
-                logger.info(
-                    "user_id %d depositó %d x item_id %d en slot %d del banco",
-                    user_id,
-                    quantity,
-                    item_id,
-                    slot,
-                )
-                return slot
-
-        logger.warning("user_id %d no tiene espacio en el banco", user_id)
-        return None
+        return slot
 
     async def extract_item(self, user_id: int, slot: int, quantity: int) -> bool:
         """Extrae un item de la bóveda.
@@ -214,7 +176,7 @@ class BankRepository:
 
         if new_quantity == 0:
             # Vaciar slot
-            await self._clear_slot(user_id, slot)
+            await self._clear_slot_by_user(user_id, slot)
             logger.info(
                 "user_id %d extrajo %d x item_id %d del slot %d del banco (slot vaciado)",
                 user_id,
@@ -224,7 +186,7 @@ class BankRepository:
             )
         else:
             # Actualizar cantidad
-            await self._update_slot(user_id, slot, bank_item.item_id, new_quantity)
+            await self._update_slot_by_user(user_id, slot, bank_item.item_id, new_quantity)
             logger.info(
                 "user_id %d extrajo %d x item_id %d del slot %d del banco (%d restantes)",
                 user_id,
@@ -243,18 +205,17 @@ class BankRepository:
             user_id: ID del usuario.
         """
         key = RedisKeys.bank(user_id)
-        bank_data = {f"slot_{i}": "" for i in range(1, self.MAX_SLOTS + 1)}
-        await self.redis_client.redis.hset(key, mapping=bank_data)  # type: ignore[misc]
+        await self._initialize_empty_slots(key)
         logger.info("Bóveda bancaria inicializada para user_id %d", user_id)
 
-    async def _update_slot(
+    async def _update_slot_by_user(
         self,
         user_id: int,
         slot: int,
         item_id: int,
         quantity: int,
     ) -> None:
-        """Actualiza un slot de la bóveda.
+        """Actualiza un slot de la bóveda (wrapper para compatibilidad).
 
         Args:
             user_id: ID del usuario.
@@ -263,20 +224,17 @@ class BankRepository:
             quantity: Cantidad.
         """
         key = RedisKeys.bank(user_id)
-        slot_key = f"slot_{slot}"
-        value = f"{item_id}:{quantity}"
-        await self.redis_client.redis.hset(key, slot_key, value)  # type: ignore[misc]
+        await self._update_slot(key, slot, item_id, quantity)
 
-    async def _clear_slot(self, user_id: int, slot: int) -> None:
-        """Vacía un slot de la bóveda.
+    async def _clear_slot_by_user(self, user_id: int, slot: int) -> None:
+        """Vacía un slot de la bóveda (wrapper para compatibilidad).
 
         Args:
             user_id: ID del usuario.
             slot: Número de slot (1-20).
         """
         key = RedisKeys.bank(user_id)
-        slot_key = f"slot_{slot}"
-        await self.redis_client.redis.hset(key, slot_key, "")  # type: ignore[misc]
+        await self._clear_slot(key, slot)
 
     async def get_gold(self, user_id: int) -> int:
         """Obtiene la cantidad de oro almacenado en el banco.
