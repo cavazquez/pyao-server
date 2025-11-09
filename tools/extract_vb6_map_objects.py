@@ -9,10 +9,13 @@ import tomllib
 from pathlib import Path
 from collections import defaultdict
 
-def load_trees_and_mines_grh():
-    """Carga GrhIndex de árboles y minas desde TOML"""
+def load_object_grh_indices():
+    """Carga GrhIndex de todos los objetos interactuables desde TOML"""
     trees = set()
     mines = set()
+    anvils = set()
+    forges = set()
+    signs = set()
     
     # Cargar árboles
     trees_path = Path(__file__).parent.parent / "data/items/world_objects/trees.toml"
@@ -28,9 +31,29 @@ def load_trees_and_mines_grh():
             data = tomllib.load(f)
             mines = {item['GrhIndex'] for item in data['item']}
     
-    return trees, mines
+    # Cargar yunques y fraguas
+    blacksmith_path = Path(__file__).parent.parent / "data/items/tools/blacksmith.toml"
+    if blacksmith_path.exists():
+        with open(blacksmith_path, 'rb') as f:
+            data = tomllib.load(f)
+            for item in data['item']:
+                grh = item['GrhIndex']
+                obj_type = item.get('ObjType')
+                if obj_type == 27:  # Yunque
+                    anvils.add(grh)
+                elif obj_type == 28:  # Fragua
+                    forges.add(grh)
+    
+    # Cargar carteles
+    signs_path = Path(__file__).parent.parent / "data/items/world_objects/signs.toml"
+    if signs_path.exists():
+        with open(signs_path, 'rb') as f:
+            data = tomllib.load(f)
+            signs = {item['GrhIndex'] for item in data['item']}
+    
+    return trees, mines, anvils, forges, signs
 
-def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set):
+def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set):
     """Extrae objetos de un mapa VB6 (formato con flags)"""
     header_size = 273
     objects = []
@@ -77,7 +100,7 @@ def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set):
                     f.read(2)  # Skip trigger
                 
                 # Detectar objetos en layer2 y layer3
-                has_tree_or_mine = False
+                has_blocking_object = False
                 for layer_grh in [layer2, layer3]:
                     if layer_grh == 0:
                         continue
@@ -93,7 +116,7 @@ def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set):
                             "g": base_grh,
                             "t": "tree"
                         })
-                        has_tree_or_mine = True
+                        has_blocking_object = True
                     
                     # Verificar si es mina
                     elif base_grh in mine_grh_set:
@@ -104,10 +127,43 @@ def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set):
                             "g": base_grh,
                             "t": "mine"
                         })
-                        has_tree_or_mine = True
+                        has_blocking_object = True
+                    
+                    # Verificar si es yunque
+                    elif base_grh in anvil_grh_set:
+                        objects.append({
+                            "m": map_id,
+                            "x": x,
+                            "y": y,
+                            "g": base_grh,
+                            "t": "anvil"
+                        })
+                        has_blocking_object = True
+                    
+                    # Verificar si es fragua
+                    elif base_grh in forge_grh_set:
+                        objects.append({
+                            "m": map_id,
+                            "x": x,
+                            "y": y,
+                            "g": base_grh,
+                            "t": "forge"
+                        })
+                        has_blocking_object = True
+                    
+                    # Verificar si es cartel
+                    elif base_grh in sign_grh_set:
+                        objects.append({
+                            "m": map_id,
+                            "x": x,
+                            "y": y,
+                            "g": base_grh,
+                            "t": "sign"
+                        })
+                        has_blocking_object = True
                 
-                # Detectar tiles bloqueados (pero NO si ya es árbol/mina)
-                if (flags & 0x1) and not has_tree_or_mine:
+                # Detectar tiles bloqueados (pero NO si ya es árbol/mina/yunque/fragua)
+                if (flags & 0x1) and not has_blocking_object:
                     blocked_tiles.append({
                         "m": map_id,
                         "x": x,
@@ -121,9 +177,12 @@ def main():
     print("\n🔍 Extrayendo objetos desde mapas VB6...\n")
     
     # Cargar GrhIndex conocidos
-    tree_grh_set, mine_grh_set = load_trees_and_mines_grh()
+    tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set = load_object_grh_indices()
     print(f"📚 Cargados {len(tree_grh_set)} GrhIndex de árboles")
-    print(f"📚 Cargados {len(mine_grh_set)} GrhIndex de minas\n")
+    print(f"📚 Cargados {len(mine_grh_set)} GrhIndex de minas")
+    print(f"📚 Cargados {len(anvil_grh_set)} GrhIndex de yunques")
+    print(f"📚 Cargados {len(forge_grh_set)} GrhIndex de fraguas")
+    print(f"📚 Cargados {len(sign_grh_set)} GrhIndex de carteles\n")
     
     # Directorio de mapas VB6
     maps_dir = Path('/home/cristian/repos/propios/pyao-server/clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Maps')
@@ -157,7 +216,10 @@ def main():
                     str(map_file),
                     map_id,
                     tree_grh_set,
-                    mine_grh_set
+                    mine_grh_set,
+                    anvil_grh_set,
+                    forge_grh_set,
+                    sign_grh_set
                 )
                 
                 all_objects.extend(objects)
@@ -166,7 +228,24 @@ def main():
                 if objects:
                     trees = sum(1 for obj in objects if obj['t'] == 'tree')
                     mines = sum(1 for obj in objects if obj['t'] == 'mine')
-                    print(f"  Mapa {map_id:3d}: {trees:3d} árboles, {mines:2d} minas")
+                    anvils = sum(1 for obj in objects if obj['t'] == 'anvil')
+                    forges = sum(1 for obj in objects if obj['t'] == 'forge')
+                    signs = sum(1 for obj in objects if obj['t'] == 'sign')
+                    
+                    parts = []
+                    if trees > 0:
+                        parts.append(f"{trees:3d} árboles")
+                    if mines > 0:
+                        parts.append(f"{mines:2d} minas")
+                    if anvils > 0:
+                        parts.append(f"{anvils:2d} yunques")
+                    if forges > 0:
+                        parts.append(f"{forges:2d} fraguas")
+                    if signs > 0:
+                        parts.append(f"{signs:2d} carteles")
+                    
+                    if parts:
+                        print(f"  Mapa {map_id:3d}: {', '.join(parts)}")
                 
             except Exception as e:
                 print(f"  ⚠️  Error en mapa {map_id}: {e}")

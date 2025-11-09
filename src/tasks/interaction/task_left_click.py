@@ -1,6 +1,8 @@
 """Tarea para click izquierdo en personajes/NPCs."""
 
 import logging
+import tomllib
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from src.models.items_catalog import ITEMS_CATALOG
@@ -22,6 +24,59 @@ if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
+
+# Cargar catálogo de carteles
+_SIGNS_CATALOG: dict[int, dict[str, str]] = {}
+
+def _load_signs_catalog() -> dict[int, dict[str, str]]:
+    """Carga el catálogo de carteles desde signs.toml."""
+    # __file__ = .../src/tasks/interaction/task_left_click.py
+    # parent = .../src/tasks/interaction
+    # parent.parent = .../src/tasks
+    # parent.parent.parent = .../src
+    # parent.parent.parent.parent = .../ (raíz del proyecto)
+    signs_path = Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
+    
+    print(f"[SIGNS] Intentando cargar signs.toml desde: {signs_path}")
+    print(f"[SIGNS] Archivo existe: {signs_path.exists()}")
+    print(f"[SIGNS] Path absoluto: {signs_path.absolute()}")
+    
+    if not signs_path.exists():
+        print(f"[SIGNS] ERROR: No se encontró signs.toml")
+        logger.error("No se encontró signs.toml en %s", signs_path)
+        return {}
+    
+    try:
+        with open(signs_path, 'rb') as f:
+            data = tomllib.load(f)
+            catalog = {}
+            items = data.get('item', [])
+            print(f"[SIGNS] Items encontrados en signs.toml: {len(items)}")
+            
+            for item in items:
+                grh_index = item.get('GrhIndex')
+                if grh_index:
+                    # Si el GrhIndex ya existe, solo actualizar si no tiene texto
+                    if grh_index not in catalog or not catalog[grh_index]['text']:
+                        catalog[grh_index] = {
+                            'name': item.get('Name', 'Cartel'),
+                            'text': item.get('Texto', ''),
+                        }
+            
+            print(f"[SIGNS] Catálogo de carteles cargado: {len(catalog)} GrhIndex únicos")
+            print(f"[SIGNS] Primeros 10 GrhIndex: {list(catalog.keys())[:10]}")
+            print(f"[SIGNS] GrhIndex 500: {500 in catalog}")
+            print(f"[SIGNS] GrhIndex 512: {512 in catalog}")
+            print(f"[SIGNS] GrhIndex 622: {622 in catalog}")
+            logger.info("Catálogo de carteles cargado: %d GrhIndex únicos", len(catalog))
+            return catalog
+    except Exception as e:
+        print(f"[SIGNS] ERROR cargando catálogo: {e}")
+        logger.exception("Error cargando catálogo de carteles")
+        return {}
+
+# Cargar catálogo al importar el módulo
+_SIGNS_CATALOG = _load_signs_catalog()
 
 
 class TaskLeftClick(Task):
@@ -317,6 +372,14 @@ class TaskLeftClick(Task):
             x: Coordenada X del tile.
             y: Coordenada Y del tile.
         """
+        # Verificar si hay un cartel en esta posición
+        sign_text = await self._get_sign_text(map_id, x, y)
+        if sign_text:
+            # Hay un cartel, mostrar su texto
+            await self.message_sender.send_console_msg(sign_text)
+            return
+        
+        # No hay cartel, mostrar información del tile
         max_items_to_show = 5
         info_lines = [f"=== Tile ({x}, {y}) - Mapa {map_id} ==="]
 
@@ -364,3 +427,30 @@ class TaskLeftClick(Task):
         # Enviar mensaje
         message = " | ".join(info_lines)
         await self.message_sender.send_console_msg(message)
+    
+    async def _get_sign_text(self, map_id: int, x: int, y: int) -> str | None:
+        """Obtiene el texto de un cartel si existe en la posición.
+        
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+            
+        Returns:
+            Texto del cartel o None si no hay cartel.
+        """
+        if not self.map_resources:
+            return None
+        
+        # Buscar cartel en la posición
+        sign_grh = self.map_resources.get_sign_at(map_id, x, y)
+        if not sign_grh:
+            return None
+        
+        # Buscar en el catálogo
+        sign_data = _SIGNS_CATALOG.get(sign_grh)
+        if not sign_data:
+            logger.warning("Cartel con GrhIndex=%d no encontrado en catálogo", sign_grh)
+            return "[Cartel sin texto]"
+        
+        return sign_data['text']

@@ -19,6 +19,7 @@ class MapResourcesService:
         """
         self.maps_dir = Path(maps_dir) if maps_dir else Path("map_data")
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
+        self.signs: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
         self._load_all_maps()
 
     def _load_all_maps(self) -> None:
@@ -213,6 +214,9 @@ class MapResourcesService:
                 elif tile_type == "mine":
                     mines.add((x, y))
                     blocked.add((x, y))
+                elif tile_type == "sign":
+                    # Los carteles se manejan por separado (necesitamos el GrhIndex)
+                    pass
 
     def _load_map(self, map_id: int) -> None:
         """Carga un mapa específico desde sus archivos de datos disponibles.
@@ -253,6 +257,11 @@ class MapResourcesService:
                 "trees": trees,
                 "mines": mines,
             }
+            
+            # Cargar carteles desde objects file
+            signs_dict = self._load_signs_from_objects(objects_path, map_id)
+            if signs_dict:
+                self.signs[map_key] = signs_dict
 
             logger.info(
                 "  %s (%s): %d agua, %d árboles, %d minas",
@@ -343,8 +352,78 @@ class MapResourcesService:
         if map_key not in self.resources:
             return {"water": 0, "trees": 0, "mines": 0}
 
+        signs_count = len(self.signs.get(map_key, {}))
+        
         return {
             "water": len(self.resources[map_key]["water"]),
             "trees": len(self.resources[map_key]["trees"]),
             "mines": len(self.resources[map_key]["mines"]),
+            "signs": signs_count,
         }
+    
+    def get_sign_at(self, map_id: int, x: int, y: int) -> int | None:
+        """Obtiene el GrhIndex del cartel en una posición.
+        
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+            
+        Returns:
+            GrhIndex del cartel o None si no hay cartel.
+        """
+        map_key = f"map_{map_id}"
+        if map_key not in self.signs:
+            return None
+        
+        return self.signs[map_key].get((x, y))
+    
+    def _load_signs_from_objects(self, objects_path: Path | None, map_id: int) -> dict[tuple[int, int], int]:
+        """Carga carteles desde el archivo objects.
+        
+        Args:
+            objects_path: Path al archivo objects.
+            map_id: ID del mapa.
+            
+        Returns:
+            Diccionario {(x, y): grh_index} con los carteles.
+        """
+        signs_dict = {}
+        
+        if not objects_path or not objects_path.exists():
+            return signs_dict
+        
+        with objects_path.open(encoding="utf-8") as f:
+            for line_number, raw_line in enumerate(f, start=1):
+                line = raw_line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        "Entrada inválida en %s línea %d: %s",
+                        objects_path.name,
+                        line_number,
+                        line,
+                    )
+                    continue
+                
+                if not isinstance(entry, dict):
+                    continue
+                
+                # Filtrar por mapa y tipo
+                if entry.get("m") != map_id:
+                    continue
+                
+                if entry.get("t") != "sign":
+                    continue
+                
+                x = entry.get("x")
+                y = entry.get("y")
+                grh = entry.get("g")
+                
+                if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
+                    signs_dict[(x, y)] = grh
+        
+        return signs_dict
