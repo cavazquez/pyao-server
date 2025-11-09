@@ -1,5 +1,5 @@
-# Trees - 23 items
-# Generated from items.toml
+# Trees - 39 items
+# Generated from items.toml + analyze_missing_tree_grh.py
 
 [[item]]
 id = 4
@@ -159,6 +159,118 @@ Agarrable = 1
 id = 830
 Name = "Árbol"
 GrhIndex = 1534
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 831
+Name = "Árbol"
+GrhIndex = 1460
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 832
+Name = "Árbol"
+GrhIndex = 1472
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 833
+Name = "Árbol"
+GrhIndex = 1473
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 834
+Name = "Árbol"
+GrhIndex = 1477
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 835
+Name = "Árbol"
+GrhIndex = 1478
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 836
+Name = "Árbol"
+GrhIndex = 1480
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 837
+Name = "Árbol"
+GrhIndex = 1484
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 838
+Name = "Árbol"
+GrhIndex = 1485
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 839
+Name = "Árbol"
+GrhIndex = 1493
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 840
+Name = "Árbol"
+GrhIndex = 1494
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 841
+Name = "Árbol"
+GrhIndex = 1495
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 842
+Name = "Árbol"
+GrhIndex = 1496
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 843
+Name = "Árbol"
+GrhIndex = 1498
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 844
+Name = "Árbol"
+GrhIndex = 1502
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 845
+Name = "Árbol"
+GrhIndex = 5592
+ObjType = 4
+Agarrable = 1
+
+[[item]]
+id = 846
+Name = "Árbol"
+GrhIndex = 5593
 ObjType = 4
 Agarrable = 1
 

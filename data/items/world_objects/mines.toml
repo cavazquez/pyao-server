@@ -1,0 +1,80 @@
+# Mines - 11 items
+# Generated from analyze_missing_tree_grh.py
+# ObjType=22 (Yacimiento/Mine) según obj.dat del servidor VB6 original
+
+[[item]]
+id = 1000
+Name = "Yacimiento de Oro"
+GrhIndex = 8608
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1001
+Name = "Yacimiento de Oro"
+GrhIndex = 8609
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1002
+Name = "Yacimiento de Oro"
+GrhIndex = 8610
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1003
+Name = "Yacimiento de Oro"
+GrhIndex = 8611
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1004
+Name = "Yacimiento de Oro"
+GrhIndex = 8612
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1005
+Name = "Yacimiento de Oro"
+GrhIndex = 8613
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1006
+Name = "Yacimiento de Oro"
+GrhIndex = 8614
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1007
+Name = "Yacimiento de Oro"
+GrhIndex = 8616
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1008
+Name = "Yacimiento de Oro"
+GrhIndex = 8617
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1009
+Name = "Yacimiento de Oro"
+GrhIndex = 8618
+ObjType = 22
+Agarrable = 1
+
+[[item]]
+id = 1010
+Name = "Yacimiento de Oro"
+GrhIndex = 8619
+ObjType = 22
+Agarrable = 1
