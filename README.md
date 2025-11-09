@@ -684,6 +684,15 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 ### Sistemas Completados ✅
 - **[NPC Factory](docs/NPC_FACTORY_COMPLETED.md)**: Sistema de factory methods para crear NPCs con FX ✅ **COMPLETADO**
 - **[Sistema de Validación](docs/PACKET_VALIDATOR_MIGRATION.md)**: PacketValidator centralizado ✅ **COMPLETADO**
+- **Sistema de Puertas**: Puertas interactivas con estado persistente en Redis ✅ **COMPLETADO**
+  - Detecta puertas por coordenadas, alterna estados (abierta/cerrada)
+  - Bloquea/desbloquea movimiento dinámicamente
+  - Persiste estado en Redis, sincroniza ambos tiles
+  - Soporte para puertas con llave
+- **Sistema de Teleports**: Transiciones automáticas entre mapas ✅ **COMPLETADO**
+  - 263 transiciones extraídas del mapa 1 desde archivos .inf VB6
+  - Detección automática y teletransporte al caminar sobre tiles de exit
+  - Workaround para desbloquear tiles de exit en cliente
 
 ### TODOs y Mejoras Futuras
 - **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: Mejoras de arquitectura pendientes
