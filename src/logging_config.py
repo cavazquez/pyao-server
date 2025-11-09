@@ -24,7 +24,7 @@ FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
     # Services
     "services": "WARNING",
     "services.party": "INFO",  # Party service en INFO para debugging
-    "services.map": "WARNING",
+    "services.map": "INFO",  # Map service en INFO para ver carga de recursos
     "services.npc": "WARNING",
     # Messaging
     "messaging": "WARNING",

@@ -159,6 +159,7 @@ class MapResourcesService:
     @staticmethod
     def _process_objects_file(
         objects_path: Path | None,
+        map_id: int,
         trees: set[tuple[int, int]],
         mines: set[tuple[int, int]],
         blocked: set[tuple[int, int]],
@@ -167,6 +168,7 @@ class MapResourcesService:
 
         Args:
             objects_path: Path al archivo objects o None.
+            map_id: ID del mapa a procesar.
             trees: Set de árboles a actualizar.
             mines: Set de minas a actualizar.
             blocked: Set de bloqueados a actualizar.
@@ -191,6 +193,11 @@ class MapResourcesService:
                     continue
 
                 if not isinstance(entry, dict):
+                    continue
+
+                # FILTRAR POR MAP_ID
+                entry_map_id = entry.get("m")
+                if entry_map_id != map_id:
                     continue
 
                 tile_type = entry.get("t")
@@ -227,7 +234,7 @@ class MapResourcesService:
             blocked, water, trees, mines = self._process_blocked_file(blocked_path, map_id)
 
             # Cargar árboles y minas desde archivo objects
-            self._process_objects_file(objects_path, trees, mines, blocked)
+            self._process_objects_file(objects_path, map_id, trees, mines, blocked)
 
             # Determinar fuente de datos para logging
             if blocked_path and objects_path:
@@ -247,7 +254,7 @@ class MapResourcesService:
                 "mines": mines,
             }
 
-            logger.debug(
+            logger.info(
                 "  %s (%s): %d agua, %d árboles, %d minas",
                 map_key,
                 source,
