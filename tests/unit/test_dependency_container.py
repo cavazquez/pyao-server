@@ -39,6 +39,9 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     item_catalog = Mock()
     party_repo = Mock()
     party_service = Mock()
+    door_repo = Mock()
+    door_service = Mock()
+    session_manager = Mock()
 
     # Crear container
     container = DependencyContainer(
@@ -73,6 +76,9 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
         item_catalog=item_catalog,
         party_repo=party_repo,
         party_service=party_service,
+        door_repo=door_repo,
+        door_service=door_service,
+        session_manager=session_manager,
     )
 
     # Verificar que todas las dependencias están accesibles
@@ -106,3 +112,6 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     assert container.item_catalog is item_catalog
     assert container.party_repo is party_repo
     assert container.party_service is party_service
+    assert container.door_repo is door_repo
+    assert container.door_service is door_service
+    assert container.session_manager is session_manager

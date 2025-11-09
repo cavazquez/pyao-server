@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.repositories.account_repository import AccountRepository
 from src.repositories.bank_repository import BankRepository
+from src.repositories.door_repository import DoorRepository
 from src.repositories.equipment_repository import EquipmentRepository
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.repositories.inventory_repository import InventoryRepository
@@ -48,6 +49,7 @@ class RepositoryInitializer:
             "equipment_repo": EquipmentRepository(self.redis_client),
             "merchant_repo": MerchantRepository(self.redis_client),
             "bank_repo": BankRepository(self.redis_client),
+            "door_repo": DoorRepository(self.redis_client),
             "npc_repo": NPCRepository(self.redis_client),
             "party_repo": PartyRepository(self.redis_client),
             "spellbook_repo": SpellbookRepository(self.redis_client),

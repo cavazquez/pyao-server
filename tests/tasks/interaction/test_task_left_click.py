@@ -1,6 +1,6 @@
 """Tests para TaskLeftClick."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, Mock
 
 import pytest
 
@@ -60,7 +60,14 @@ class TestTaskLeftClick:
             data,
             message_sender,
             player_repo=player_repo,
+            session_manager=Mock(),
             map_manager=map_manager,
+            map_resources=Mock(),
+            bank_repo=Mock(),
+            merchant_repo=Mock(),
+            door_service=Mock(),
+            door_repo=Mock(),
+            redis_client=Mock(),
             session_data=session_data,
         )
 
@@ -86,6 +93,15 @@ class TestTaskLeftClick:
 
         map_manager = MapManager()
 
+        # Mock door_repo con métodos async
+        door_repo = Mock()
+        door_repo.get_door_state = AsyncMock(return_value=None)
+
+        # Mock map_resources para que no haya puerta ni cartel en (50, 50)
+        map_resources = MagicMock()
+        map_resources.get_door_at = Mock(return_value=None)
+        map_resources.get_sign_at = Mock(return_value=None)
+
         # Packet: LEFT_CLICK + X=50 + Y=50 (posición vacía)
         data = bytes([0x1A, 50, 50])
 
@@ -95,9 +111,15 @@ class TestTaskLeftClick:
             data,
             message_sender,
             player_repo=player_repo,
+            session_manager=Mock(),
             map_manager=map_manager,
+            map_resources=map_resources,
+            bank_repo=Mock(),
+            merchant_repo=Mock(),
+            door_service=Mock(),
+            door_repo=door_repo,
+            redis_client=Mock(),
             session_data=session_data,
-            map_resources=MagicMock(),
         )
 
         # Execute
@@ -124,9 +146,15 @@ class TestTaskLeftClick:
             data,
             message_sender,
             player_repo=player_repo,
+            session_manager=Mock(),
             map_manager=map_manager,
-            session_data=session_data,
             map_resources=MagicMock(),
+            bank_repo=Mock(),
+            merchant_repo=Mock(),
+            door_service=Mock(),
+            door_repo=Mock(),
+            redis_client=Mock(),
+            session_data=session_data,
         )
 
         # Execute
@@ -179,7 +207,14 @@ class TestTaskLeftClick:
             data,
             message_sender,
             player_repo=player_repo,
+            session_manager=Mock(),
             map_manager=map_manager,
+            map_resources=Mock(),
+            bank_repo=Mock(),
+            merchant_repo=Mock(),
+            door_service=Mock(),
+            door_repo=Mock(),
+            redis_client=Mock(),
             session_data=session_data,
         )
 
@@ -208,7 +243,14 @@ class TestTaskLeftClick:
             data,
             message_sender,
             player_repo=player_repo,
+            session_manager=Mock(),
             map_manager=map_manager,
+            map_resources=Mock(),
+            bank_repo=Mock(),
+            merchant_repo=Mock(),
+            door_service=Mock(),
+            door_repo=Mock(),
+            redis_client=Mock(),
             session_data=session_data,
         )
 

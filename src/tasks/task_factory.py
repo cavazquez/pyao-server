@@ -307,12 +307,15 @@ class TaskFactory:
                 data,
                 message_sender,
                 self.deps.player_repo,
+                self.deps.session_manager,
                 self.deps.map_manager,
-                self.deps.merchant_repo,
+                self.deps.map_resources_service,
                 self.deps.bank_repo,
+                self.deps.merchant_repo,
+                self.deps.door_service,
+                self.deps.door_repo,
                 self.deps.redis_client,
                 session_data,
-                self.deps.map_resources_service,
             ),
             # TaskInventoryClick: manejada arriba con datos validados
             TaskEquipItem: lambda: TaskEquipItem(

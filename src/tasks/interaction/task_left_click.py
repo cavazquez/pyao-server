@@ -18,62 +18,64 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.repositories.bank_repository import BankRepository
+    from src.repositories.door_repository import DoorRepository
     from src.repositories.merchant_repository import MerchantRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.door_service import DoorService
     from src.services.map.map_resources_service import MapResourcesService
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 
+# Constantes para GrhIndex de puertas de madera
+WOODEN_DOOR_OPEN_GRH = 5592
+WOODEN_DOOR_CLOSED_GRH = 5593
+WOODEN_DOOR_OPEN_ID = 7
+WOODEN_DOOR_CLOSED_ID = 8
+
 # Cargar catálogo de carteles
 _SIGNS_CATALOG: dict[int, dict[str, str]] = {}
 
+
 def _load_signs_catalog() -> dict[int, dict[str, str]]:
-    """Carga el catálogo de carteles desde signs.toml."""
-    # __file__ = .../src/tasks/interaction/task_left_click.py
-    # parent = .../src/tasks/interaction
-    # parent.parent = .../src/tasks
-    # parent.parent.parent = .../src
-    # parent.parent.parent.parent = .../ (raíz del proyecto)
+    """Carga el catálogo de carteles desde signs.toml.
+
+    Returns:
+        Diccionario con GrhIndex como key y datos del cartel como value.
+    """
     signs_path = Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
-    
+
     print(f"[SIGNS] Intentando cargar signs.toml desde: {signs_path}")
     print(f"[SIGNS] Archivo existe: {signs_path.exists()}")
     print(f"[SIGNS] Path absoluto: {signs_path.absolute()}")
-    
+
     if not signs_path.exists():
-        print(f"[SIGNS] ERROR: No se encontró signs.toml")
+        print("[SIGNS] ERROR: No se encontró signs.toml")
         logger.error("No se encontró signs.toml en %s", signs_path)
         return {}
-    
+
     try:
-        with open(signs_path, 'rb') as f:
+        with Path(signs_path).open("rb") as f:
             data = tomllib.load(f)
-            catalog = {}
-            items = data.get('item', [])
+            catalog: dict[int, dict[str, str]] = {}
+            items = data.get("item", [])
             print(f"[SIGNS] Items encontrados en signs.toml: {len(items)}")
-            
+
             for item in items:
-                grh_index = item.get('GrhIndex')
-                if grh_index:
-                    # Si el GrhIndex ya existe, solo actualizar si no tiene texto
-                    if grh_index not in catalog or not catalog[grh_index]['text']:
-                        catalog[grh_index] = {
-                            'name': item.get('Name', 'Cartel'),
-                            'text': item.get('Texto', ''),
-                        }
-            
-            print(f"[SIGNS] Catálogo de carteles cargado: {len(catalog)} GrhIndex únicos")
-            print(f"[SIGNS] Primeros 10 GrhIndex: {list(catalog.keys())[:10]}")
-            print(f"[SIGNS] GrhIndex 500: {500 in catalog}")
-            print(f"[SIGNS] GrhIndex 512: {512 in catalog}")
-            print(f"[SIGNS] GrhIndex 622: {622 in catalog}")
+                grh_index = item.get("GrhIndex")
+                if grh_index and (grh_index not in catalog or not catalog[grh_index]["text"]):
+                    catalog[grh_index] = {
+                        "name": item.get("Name", "Cartel"),
+                        "text": item.get("Texto", ""),
+                    }
+
             logger.info("Catálogo de carteles cargado: %d GrhIndex únicos", len(catalog))
             return catalog
     except Exception as e:
         print(f"[SIGNS] ERROR cargando catálogo: {e}")
         logger.exception("Error cargando catálogo de carteles")
         return {}
+
 
 # Cargar catálogo al importar el módulo
 _SIGNS_CATALOG = _load_signs_catalog()
@@ -86,13 +88,16 @@ class TaskLeftClick(Task):
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
+        player_repo: PlayerRepository,
+        session_manager: SessionManager,  # noqa: ARG002
         map_manager: MapManager | None = None,
-        merchant_repo: MerchantRepository | None = None,
+        map_resources: MapResourcesService | None = None,
         bank_repo: BankRepository | None = None,
+        merchant_repo: MerchantRepository | None = None,
+        door_service: DoorService | None = None,
+        door_repo: DoorRepository | None = None,
         redis_client: RedisClient | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
-        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Inicializa la tarea de click izquierdo.
 
@@ -100,21 +105,26 @@ class TaskLeftClick(Task):
             data: Datos del packet.
             message_sender: Enviador de mensajes.
             player_repo: Repositorio de jugadores.
+            session_manager: Gestor de sesiones.
             map_manager: Gestor de mapas para obtener NPCs.
-            merchant_repo: Repositorio de mercaderes.
+            map_resources: Servicio de recursos del mapa.
             bank_repo: Repositorio de banco.
+            merchant_repo: Repositorio de mercaderes.
+            door_service: Servicio de puertas.
+            door_repo: Repositorio de puertas.
             redis_client: Cliente Redis.
             session_data: Datos de sesión.
-            map_resources: Servicio de recursos del mapa.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.map_manager = map_manager
-        self.merchant_repo = merchant_repo
+        self.map_resources = map_resources
         self.bank_repo = bank_repo
+        self.merchant_repo = merchant_repo
+        self.door_service = door_service
+        self.door_repo = door_repo
         self.redis_client = redis_client
         self.session_data = session_data or {}
-        self.map_resources = map_resources
 
     async def execute(self) -> None:
         """Ejecuta click izquierdo en personaje/NPC."""
@@ -372,13 +382,18 @@ class TaskLeftClick(Task):
             x: Coordenada X del tile.
             y: Coordenada Y del tile.
         """
+        # Verificar si hay una puerta en esta posición
+        door_handled = await self._handle_door_click(map_id, x, y)
+        if door_handled:
+            return
+
         # Verificar si hay un cartel en esta posición
         sign_text = await self._get_sign_text(map_id, x, y)
         if sign_text:
             # Hay un cartel, mostrar su texto
             await self.message_sender.send_console_msg(sign_text)
             return
-        
+
         # No hay cartel, mostrar información del tile
         max_items_to_show = 5
         info_lines = [f"=== Tile ({x}, {y}) - Mapa {map_id} ==="]
@@ -427,30 +442,178 @@ class TaskLeftClick(Task):
         # Enviar mensaje
         message = " | ".join(info_lines)
         await self.message_sender.send_console_msg(message)
-    
+
     async def _get_sign_text(self, map_id: int, x: int, y: int) -> str | None:
         """Obtiene el texto de un cartel si existe en la posición.
-        
+
         Args:
             map_id: ID del mapa.
             x: Coordenada X.
             y: Coordenada Y.
-            
+
         Returns:
             Texto del cartel o None si no hay cartel.
         """
         if not self.map_resources:
             return None
-        
+
         # Buscar cartel en la posición
         sign_grh = self.map_resources.get_sign_at(map_id, x, y)
         if not sign_grh:
             return None
-        
+
         # Buscar en el catálogo
         sign_data = _SIGNS_CATALOG.get(sign_grh)
         if not sign_data:
             logger.warning("Cartel con GrhIndex=%d no encontrado en catálogo", sign_grh)
             return "[Cartel sin texto]"
-        
-        return sign_data['text']
+
+        return sign_data["text"]
+
+    async def _handle_door_click(self, map_id: int, x: int, y: int) -> bool:  # noqa: PLR0915
+        """Maneja el click en una puerta (abrir/cerrar).
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            True si se manejó una puerta, False si no hay puerta.
+        """
+        if not self.map_resources or not self.door_service or not self.door_repo:
+            return False
+
+        # MÉTODO ALTERNATIVO: Buscar puerta por GrhIndex en MapResourcesService
+        # (Las puertas no están en los archivos de mapa VB6)
+        # Buscar puerta en la posición
+        door_grh = self.map_resources.get_door_at(map_id, x, y)
+
+        # Si no hay puerta en MapResourcesService, no es una puerta
+        if not door_grh:
+            return False
+
+        # Verificar si hay un estado guardado en Redis
+        saved_state = await self.door_repo.get_door_state(map_id, x, y)
+
+        if saved_state:
+            # Usar el estado guardado (item_id, is_open)
+            current_item_id, _current_is_open = saved_state
+            door_info = self.door_service.get_door_by_id(current_item_id)
+        else:
+            # IMPORTANTE: No usar get_door_by_grh() porque puede haber múltiples puertas
+            # con el mismo GrhIndex. En su lugar, usar el item_id inicial de map_doors.toml
+            # Por ahora, buscar por GrhIndex pero esto debería mejorarse
+            door_info = self.door_service.get_door_by_grh(door_grh)
+
+            # Si encontramos una puerta, usar su item_id inicial correcto
+            # Para puertas de madera, forzar los IDs correctos
+            if door_info and door_grh == WOODEN_DOOR_CLOSED_GRH:
+                # Forzar item_id para puerta cerrada
+                door_info = self.door_service.get_door_by_id(WOODEN_DOOR_CLOSED_ID)
+            elif door_info and door_grh == WOODEN_DOOR_OPEN_GRH:
+                # Forzar item_id para puerta abierta
+                door_info = self.door_service.get_door_by_id(WOODEN_DOOR_OPEN_ID)
+
+        if not door_info:
+            logger.warning("Puerta con GrhIndex=%d no encontrada en catálogo", door_grh)
+            await self.message_sender.send_console_msg("No puedes interactuar con esto.")
+            return True
+
+        logger.info(
+            "Puerta detectada: item_id=%d, name=%s, is_open=%s, requires_key=%s, key_id=%s",
+            door_info.item_id,
+            door_info.name,
+            door_info.is_open,
+            door_info.requires_key,
+            door_info.key_id,
+        )
+
+        # Verificar si la puerta requiere llave
+        if door_info.requires_key:
+            await self.message_sender.send_console_msg("La puerta está cerrada con llave.")
+            return True
+
+        # Alternar estado de la puerta
+        new_item_id, new_is_open = self.door_service.toggle_door(door_info)
+
+        # Guardar nuevo estado en Redis
+        await self.door_repo.set_door_state(map_id, x, y, new_item_id, new_is_open)
+
+        # Obtener información de la nueva puerta
+        new_door_info = self.door_service.get_door_by_id(new_item_id)
+        if not new_door_info:
+            logger.error("No se encontró información para puerta ID=%d", new_item_id)
+            return True
+
+        # Actualizar bloqueo del tile en MapManager
+        # Las puertas ocupan 2 tiles adyacentes
+        if self.map_manager:
+            # Determinar ambos tiles de la puerta (x y x+1, o x-1 y x)
+            # Intentamos ambos tiles adyacentes
+            tiles_to_update = [(x, y)]
+
+            # Verificar si hay puerta en x-1 o x+1
+            if not self.map_resources or not self.door_service or not self.door_repo:
+                return False
+
+            door_left = self.map_resources.get_door_at(map_id, x - 1, y)
+            door_right = self.map_resources.get_door_at(map_id, x + 1, y)
+
+            if door_left:
+                tiles_to_update.append((x - 1, y))
+                logger.debug("Puerta adyacente encontrada en (%d, %d)", x - 1, y)
+            if door_right:
+                tiles_to_update.append((x + 1, y))
+                logger.debug("Puerta adyacente encontrada en (%d, %d)", x + 1, y)
+
+            logger.info(
+                "Actualizando %d tiles de puerta: %s", len(tiles_to_update), tiles_to_update
+            )
+
+            # Actualizar bloqueo de todos los tiles
+            for tile_x, tile_y in tiles_to_update:
+                if new_is_open:
+                    self.map_manager.unblock_tile(map_id, tile_x, tile_y)
+                    # Puerta abierta: eliminar objeto y desbloquear tile
+                    await self.message_sender.send_object_delete(tile_x, tile_y)
+                    await self.message_sender.send_block_position(tile_x, tile_y, blocked=False)
+                    logger.debug(
+                        "Tile (%d, %d) - Puerta abierta: OBJECT_DELETE + BLOCK_POSITION(false)",
+                        tile_x,
+                        tile_y,
+                    )
+                else:
+                    self.map_manager.block_tile(map_id, tile_x, tile_y)
+                    # Puerta cerrada: crear objeto y bloquear tile
+                    await self.message_sender.send_object_create(
+                        tile_x, tile_y, new_door_info.grh_index
+                    )
+                    await self.message_sender.send_block_position(tile_x, tile_y, blocked=True)
+                    logger.debug(
+                        "Tile (%d, %d) - Puerta cerrada: OBJECT_CREATE + BLOCK_POSITION(true)",
+                        tile_x,
+                        tile_y,
+                    )
+
+                # Guardar estado en Redis para cada tile
+                await self.door_repo.set_door_state(
+                    map_id, tile_x, tile_y, new_item_id, new_is_open
+                )
+
+        action = "abierta" if new_is_open else "cerrada"
+        await self.message_sender.send_console_msg(f"Puerta {action}.")
+
+        logger.info(
+            "Puerta en (%d, %d, %d) %s: %s -> %s (GrhIndex: %d -> %d)",
+            map_id,
+            x,
+            y,
+            action,
+            door_info.name,
+            new_door_info.name,
+            door_info.grh_index,
+            new_door_info.grh_index,
+        )
+
+        return True

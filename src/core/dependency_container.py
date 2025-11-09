@@ -9,8 +9,10 @@ if TYPE_CHECKING:
     from src.models.item_catalog import ItemCatalog
     from src.models.npc_catalog import NPCCatalog
     from src.models.spell_catalog import SpellCatalog
+    from src.network.session_manager import SessionManager
     from src.repositories.account_repository import AccountRepository
     from src.repositories.bank_repository import BankRepository
+    from src.repositories.door_repository import DoorRepository
     from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.ground_items_repository import GroundItemsRepository
     from src.repositories.inventory_repository import InventoryRepository
@@ -23,6 +25,7 @@ if TYPE_CHECKING:
     from src.services.combat.combat_service import CombatService
     from src.services.commerce_service import CommerceService
     from src.services.game.npc_world_manager import NPCWorldManager
+    from src.services.map.door_service import DoorService
     from src.services.map.map_resources_service import MapResourcesService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
@@ -55,6 +58,7 @@ class DependencyContainer:
     equipment_repo: EquipmentRepository
     merchant_repo: MerchantRepository
     bank_repo: BankRepository
+    door_repo: DoorRepository
     npc_repo: NPCRepository
     party_repo: PartyRepository
     spellbook_repo: SpellbookRepository
@@ -72,6 +76,7 @@ class DependencyContainer:
     npc_world_manager: NPCWorldManager
     loot_table_service: LootTableService
     map_resources_service: MapResourcesService
+    door_service: DoorService
     broadcast_service: MultiplayerBroadcastService
     stamina_service: StaminaService
     player_map_service: PlayerMapService
@@ -80,6 +85,7 @@ class DependencyContainer:
     # Managers
     map_manager: MapManager
     game_tick: GameTick
+    session_manager: SessionManager
 
     # Catálogos
     npc_catalog: NPCCatalog

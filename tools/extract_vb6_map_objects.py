@@ -16,6 +16,7 @@ def load_object_grh_indices():
     anvils = set()
     forges = set()
     signs = set()
+    doors = set()
     
     # Cargar árboles
     trees_path = Path(__file__).parent.parent / "data/items/world_objects/trees.toml"
@@ -51,9 +52,16 @@ def load_object_grh_indices():
             data = tomllib.load(f)
             signs = {item['GrhIndex'] for item in data['item']}
     
-    return trees, mines, anvils, forges, signs
+    # Cargar puertas
+    doors_path = Path(__file__).parent.parent / "data/items/world_objects/doors.toml"
+    if doors_path.exists():
+        with open(doors_path, 'rb') as f:
+            data = tomllib.load(f)
+            doors = {item['GrhIndex'] for item in data['item']}
+    
+    return trees, mines, anvils, forges, signs, doors
 
-def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set):
+def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set, door_grh_set):
     """Extrae objetos de un mapa VB6 (formato con flags)"""
     header_size = 273
     objects = []
@@ -161,6 +169,17 @@ def extract_map_objects_vb6(map_path, map_id, tree_grh_set, mine_grh_set, anvil_
                             "t": "sign"
                         })
                         has_blocking_object = True
+                    
+                    # Verificar si es puerta
+                    elif base_grh in door_grh_set:
+                        objects.append({
+                            "m": map_id,
+                            "x": x,
+                            "y": y,
+                            "g": base_grh,
+                            "t": "door"
+                        })
+                        has_blocking_object = True
                 
                 # Detectar tiles bloqueados (pero NO si ya es árbol/mina/yunque/fragua)
                 if (flags & 0x1) and not has_blocking_object:
@@ -177,12 +196,13 @@ def main():
     print("\n🔍 Extrayendo objetos desde mapas VB6...\n")
     
     # Cargar GrhIndex conocidos
-    tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set = load_object_grh_indices()
+    tree_grh_set, mine_grh_set, anvil_grh_set, forge_grh_set, sign_grh_set, door_grh_set = load_object_grh_indices()
     print(f"📚 Cargados {len(tree_grh_set)} GrhIndex de árboles")
     print(f"📚 Cargados {len(mine_grh_set)} GrhIndex de minas")
     print(f"📚 Cargados {len(anvil_grh_set)} GrhIndex de yunques")
     print(f"📚 Cargados {len(forge_grh_set)} GrhIndex de fraguas")
-    print(f"📚 Cargados {len(sign_grh_set)} GrhIndex de carteles\n")
+    print(f"📚 Cargados {len(sign_grh_set)} GrhIndex de carteles")
+    print(f"📚 Cargados {len(door_grh_set)} GrhIndex de puertas\n")
     
     # Directorio de mapas VB6
     maps_dir = Path('/home/cristian/repos/propios/pyao-server/clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Maps')
@@ -219,7 +239,8 @@ def main():
                     mine_grh_set,
                     anvil_grh_set,
                     forge_grh_set,
-                    sign_grh_set
+                    sign_grh_set,
+                    door_grh_set
                 )
                 
                 all_objects.extend(objects)
@@ -231,6 +252,7 @@ def main():
                     anvils = sum(1 for obj in objects if obj['t'] == 'anvil')
                     forges = sum(1 for obj in objects if obj['t'] == 'forge')
                     signs = sum(1 for obj in objects if obj['t'] == 'sign')
+                    doors = sum(1 for obj in objects if obj['t'] == 'door')
                     
                     parts = []
                     if trees > 0:
@@ -243,6 +265,8 @@ def main():
                         parts.append(f"{forges:2d} fraguas")
                     if signs > 0:
                         parts.append(f"{signs:2d} carteles")
+                    if doors > 0:
+                        parts.append(f"{doors:2d} puertas")
                     
                     if parts:
                         print(f"  Mapa {map_id:3d}: {', '.join(parts)}")

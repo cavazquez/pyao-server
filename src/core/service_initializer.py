@@ -11,6 +11,7 @@ from src.models.spell_catalog import SpellCatalog
 from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
 from src.services.game.npc_world_manager import NPCWorldManager
+from src.services.map.door_service import DoorService
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.pathfinding_service import PathfindingService
 from src.services.map.player_map_service import PlayerMapService
@@ -154,9 +155,13 @@ class ServiceInitializer:
         )
         logger.info("✓ Servicio de mapas de jugador inicializado")
 
-        # Servicio de recursos de mapas (agua, árboles, minas)
-        map_resources_service = MapResourcesService()
+        # Servicio de recursos de mapas (agua, árboles, minas, puertas)
+        map_resources_service = MapResourcesService(map_manager=self.map_manager)
         logger.info("✓ Servicio de recursos de mapas inicializado")
+
+        # Servicio de puertas
+        door_service = DoorService()
+        logger.info("✓ Servicio de puertas inicializado")
 
         # Servicio de parties
         # Nota: El MessageSender real se inyectará por conexión en las tasks
@@ -189,6 +194,7 @@ class ServiceInitializer:
             "stamina_service": stamina_service,
             "player_map_service": player_map_service,
             "map_resources_service": map_resources_service,
+            "door_service": door_service,
             "party_service": party_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,

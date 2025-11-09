@@ -53,7 +53,8 @@ async def test_service_initializer_creates_all_services(
             "src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service
         )
         m.setattr(
-            "src.core.service_initializer.MapResourcesService", lambda: mock_map_resources_service
+            "src.core.service_initializer.MapResourcesService",
+            lambda *_args, **_kwargs: mock_map_resources_service,
         )
         services = await initializer.initialize_all()
 
@@ -94,11 +95,12 @@ async def test_service_initializer_returns_dict(
             "src.core.service_initializer.NPCService", lambda *_args, **_kwargs: mock_npc_service
         )
         m.setattr(
-            "src.core.service_initializer.MapResourcesService", lambda: mock_map_resources_service
+            "src.core.service_initializer.MapResourcesService",
+            lambda *_args, **_kwargs: mock_map_resources_service,
         )
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)
     assert (
-        len(services) == 17
-    )  # Servicios/catálogos sin MapTransitionService (+1 npc_world_manager, +1 party_service)
+        len(services) == 18
+    )  # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 door_service)

@@ -1,0 +1,36 @@
+# Configuración manual de puertas en mapas
+# Las puertas no están en los archivos .map del servidor VB6
+# Este archivo define dónde están las puertas y su estado inicial
+# IMPORTANTE: Las puertas ocupan 2 tiles, definir ambos
+
+[[door]]
+map_id = 1
+x = 48
+y = 65
+grh_index = 5593  # Puerta de madera cerrada
+item_id = 8       # ID del item en doors.toml
+name = "Puerta de madera (izquierda)"
+is_open = false
+requires_key = false
+
+[[door]]
+map_id = 1
+x = 49
+y = 65
+grh_index = 5593  # Puerta de madera cerrada
+item_id = 8       # ID del item en doors.toml
+name = "Puerta de madera (derecha)"
+is_open = false
+requires_key = false
+
+# Agregar más puertas aquí según sea necesario
+# Formato:
+# [[door]]
+# map_id = <número de mapa>
+# x = <coordenada X>
+# y = <coordenada Y>
+# grh_index = <GrhIndex de la puerta>
+# item_id = <ID del item en doors.toml>
+# name = "Nombre descriptivo"
+# is_open = <true o false>
+# requires_key = <true o false>

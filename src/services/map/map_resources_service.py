@@ -1,9 +1,16 @@
 """Servicio para gestionar recursos del mapa (agua, árboles, minas)."""
 
+from __future__ import annotations
+
 import json
 import logging
 import time
+import tomllib
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.game.map_manager import MapManager
 
 logger = logging.getLogger(__name__)
 
@@ -11,16 +18,22 @@ logger = logging.getLogger(__name__)
 class MapResourcesService:
     """Servicio que gestiona los recursos de los mapas (agua, árboles, yacimientos)."""
 
-    def __init__(self, maps_dir: str | Path | None = None) -> None:
+    def __init__(
+        self, maps_dir: str | Path | None = None, map_manager: MapManager | None = None
+    ) -> None:
         """Inicializa el servicio de recursos.
 
         Args:
             maps_dir: Directorio con los archivos JSON de recursos (opcional).
+            map_manager: MapManager para inicializar puertas cerradas (opcional).
         """
         self.maps_dir = Path(maps_dir) if maps_dir else Path("map_data")
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
         self.signs: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
+        self.doors: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
+        self.map_manager = map_manager
         self._load_all_maps()
+        self._load_manual_doors()
 
     def _load_all_maps(self) -> None:
         """Carga todos los mapas desde el directorio."""
@@ -257,11 +270,16 @@ class MapResourcesService:
                 "trees": trees,
                 "mines": mines,
             }
-            
+
             # Cargar carteles desde objects file
             signs_dict = self._load_signs_from_objects(objects_path, map_id)
             if signs_dict:
                 self.signs[map_key] = signs_dict
+
+            # Cargar puertas desde objects file
+            doors_dict = self._load_doors_from_objects(objects_path, map_id)
+            if doors_dict:
+                self.doors[map_key] = doors_dict
 
             logger.info(
                 "  %s (%s): %d agua, %d árboles, %d minas",
@@ -353,46 +371,51 @@ class MapResourcesService:
             return {"water": 0, "trees": 0, "mines": 0}
 
         signs_count = len(self.signs.get(map_key, {}))
-        
+        doors_count = len(self.doors.get(map_key, {}))
+
         return {
             "water": len(self.resources[map_key]["water"]),
             "trees": len(self.resources[map_key]["trees"]),
             "mines": len(self.resources[map_key]["mines"]),
             "signs": signs_count,
+            "doors": doors_count,
         }
-    
+
     def get_sign_at(self, map_id: int, x: int, y: int) -> int | None:
         """Obtiene el GrhIndex del cartel en una posición.
-        
+
         Args:
             map_id: ID del mapa.
             x: Coordenada X.
             y: Coordenada Y.
-            
+
         Returns:
             GrhIndex del cartel o None si no hay cartel.
         """
         map_key = f"map_{map_id}"
         if map_key not in self.signs:
             return None
-        
+
         return self.signs[map_key].get((x, y))
-    
-    def _load_signs_from_objects(self, objects_path: Path | None, map_id: int) -> dict[tuple[int, int], int]:
+
+    @staticmethod
+    def _load_signs_from_objects(
+        objects_path: Path | None, map_id: int
+    ) -> dict[tuple[int, int], int]:
         """Carga carteles desde el archivo objects.
-        
+
         Args:
             objects_path: Path al archivo objects.
             map_id: ID del mapa.
-            
+
         Returns:
             Diccionario {(x, y): grh_index} con los carteles.
         """
-        signs_dict = {}
-        
+        signs_dict: dict[tuple[int, int], int] = {}
+
         if not objects_path or not objects_path.exists():
             return signs_dict
-        
+
         with objects_path.open(encoding="utf-8") as f:
             for line_number, raw_line in enumerate(f, start=1):
                 line = raw_line.strip()
@@ -408,22 +431,147 @@ class MapResourcesService:
                         line,
                     )
                     continue
-                
+
                 if not isinstance(entry, dict):
                     continue
-                
+
                 # Filtrar por mapa y tipo
                 if entry.get("m") != map_id:
                     continue
-                
+
                 if entry.get("t") != "sign":
                     continue
-                
+
                 x = entry.get("x")
                 y = entry.get("y")
                 grh = entry.get("g")
-                
+
                 if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
-                    signs_dict[(x, y)] = grh
-        
+                    signs_dict[x, y] = grh
+
         return signs_dict
+
+    def get_door_at(self, map_id: int, x: int, y: int) -> int | None:
+        """Obtiene el GrhIndex de la puerta en una posición.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            GrhIndex de la puerta o None si no hay puerta.
+        """
+        map_key = f"map_{map_id}"
+        if map_key not in self.doors:
+            return None
+
+        return self.doors[map_key].get((x, y))
+
+    @staticmethod
+    def _load_doors_from_objects(
+        objects_path: Path | None, map_id: int
+    ) -> dict[tuple[int, int], int]:
+        """Carga puertas desde el archivo objects.
+
+        Args:
+            objects_path: Path al archivo objects.
+            map_id: ID del mapa.
+
+        Returns:
+            Diccionario {(x, y): grh_index} con las puertas.
+        """
+        doors_dict: dict[tuple[int, int], int] = {}
+
+        if not objects_path or not objects_path.exists():
+            return doors_dict
+
+        with objects_path.open(encoding="utf-8") as f:
+            for line_number, raw_line in enumerate(f, start=1):
+                line = raw_line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                except json.JSONDecodeError:
+                    logger.debug(
+                        "Entrada inválida en %s línea %d: %s",
+                        objects_path.name,
+                        line_number,
+                        line,
+                    )
+                    continue
+
+                if not isinstance(entry, dict):
+                    continue
+
+                # Filtrar por mapa y tipo
+                if entry.get("m") != map_id:
+                    continue
+
+                if entry.get("t") != "door":
+                    continue
+
+                x = entry.get("x")
+                y = entry.get("y")
+                grh = entry.get("g")
+
+                if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
+                    doors_dict[x, y] = grh
+
+        return doors_dict
+
+    def _load_manual_doors(self) -> None:
+        """Carga puertas desde el archivo de configuración manual.
+
+        Las puertas no están en los archivos .map del servidor VB6,
+        por lo que se definen manualmente en data/map_doors.toml
+        """
+        doors_config_path = Path(__file__).parent.parent.parent.parent / "data/map_doors.toml"
+
+        if not doors_config_path.exists():
+            logger.info("No se encontró archivo de configuración de puertas: %s", doors_config_path)
+            return
+
+        try:
+            with Path(doors_config_path).open("rb") as f:
+                data = tomllib.load(f)
+
+            door_count = 0
+            for door in data.get("door", []):
+                map_id = door.get("map_id")
+                x = door.get("x")
+                y = door.get("y")
+                grh_index = door.get("grh_index")
+
+                if not all([map_id, x, y, grh_index]):
+                    logger.warning("Puerta con datos incompletos: %s", door)
+                    continue
+
+                map_key = f"map_{map_id}"
+                if map_key not in self.doors:
+                    self.doors[map_key] = {}
+
+                self.doors[map_key][x, y] = grh_index
+                door_count += 1
+
+                # Inicializar estado de la puerta como cerrada en MapManager
+                is_open = door.get("is_open", False)
+                if not is_open and self.map_manager:
+                    self.map_manager.block_tile(map_id, x, y)
+                    logger.debug("Puerta inicializada como cerrada en (%d, %d, %d)", map_id, x, y)
+
+                logger.debug(
+                    "Puerta cargada: Mapa %d (%d, %d) - GrhIndex=%d - %s - Estado: %s",
+                    map_id,
+                    x,
+                    y,
+                    grh_index,
+                    door.get("name", "Sin nombre"),
+                    "abierta" if is_open else "cerrada",
+                )
+
+            logger.info("✓ Cargadas %d puertas desde configuración manual", door_count)
+
+        except Exception:
+            logger.exception("Error cargando puertas manuales")

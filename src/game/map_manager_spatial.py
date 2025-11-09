@@ -36,6 +36,11 @@ class SpatialIndexMixin:
         if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
             return False
 
+        # Verificar puertas cerradas
+        closed_doors = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_closed_doors", {}))
+        if map_id in closed_doors and (x, y) in closed_doors[map_id]:
+            return False
+
         # Verificar si hay un jugador o NPC en esa posición
         tile_occupation = cast(
             "dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {})

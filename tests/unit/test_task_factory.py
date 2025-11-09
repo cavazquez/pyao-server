@@ -47,6 +47,9 @@ def mock_deps() -> DependencyContainer:
         spell_catalog=Mock(),
         item_catalog=Mock(),
         party_service=Mock(),
+        door_repo=Mock(),
+        door_service=Mock(),
+        session_manager=Mock(),
     )
 
 

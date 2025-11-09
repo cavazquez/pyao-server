@@ -64,8 +64,8 @@ class MapMessageSender:
             grh_index: Índice gráfico del objeto.
         """
         response = build_object_create_response(x, y, grh_index)
-        logger.debug(
-            "[%s] Enviando OBJECT_CREATE: pos=(%d,%d) grh=%d",
+        logger.info(
+            "[%s] 📦 Enviando OBJECT_CREATE: pos=(%d,%d) grh=%d",
             self.connection.address,
             x,
             y,

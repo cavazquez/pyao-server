@@ -50,6 +50,9 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
         # Tiles bloqueados por mapa (paredes, agua, etc.)
         self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
 
+        # Puertas cerradas por mapa (bloquean movimiento pero no son "bloqueados" permanentes)
+        self._closed_doors: dict[int, set[tuple[int, int]]] = {}
+
         # Tiles de exit por mapa: {(map_id, x, y): {"to_map": int, "to_x": int, "to_y": int}}
         self._exit_tiles: dict[tuple[int, int, int], dict[str, int]] = {}
 
@@ -1005,3 +1008,56 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
             Dict con {to_map, to_x, to_y} si es un exit, None si no.
         """
         return self._exit_tiles.get((map_id, x, y))
+
+    def block_tile(self, map_id: int, x: int, y: int) -> None:
+        """Marca una puerta como cerrada (bloquea movimiento pero no es un tile "bloqueado").
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+        """
+        if map_id not in self._closed_doors:
+            self._closed_doors[map_id] = set()
+
+        self._closed_doors[map_id].add((x, y))
+        logger.info(
+            "🚪 PUERTA CERRADA: Mapa %d (%d, %d) - Total puertas cerradas: %d",
+            map_id,
+            x,
+            y,
+            len(self._closed_doors.get(map_id, set())),
+        )
+
+    def unblock_tile(self, map_id: int, x: int, y: int) -> None:
+        """Marca una puerta como abierta (permite movimiento).
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+        """
+        if map_id in self._closed_doors:
+            self._closed_doors[map_id].discard((x, y))
+            logger.info(
+                "🚪 PUERTA ABIERTA: Mapa %d (%d, %d) - Total puertas cerradas: %d",
+                map_id,
+                x,
+                y,
+                len(self._closed_doors.get(map_id, set())),
+            )
+
+    def is_door_closed(self, map_id: int, x: int, y: int) -> bool:
+        """Verifica si hay una puerta cerrada en una posición.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            True si hay una puerta cerrada, False en caso contrario.
+        """
+        if map_id not in self._closed_doors:
+            return False
+        return (x, y) in self._closed_doors[map_id]

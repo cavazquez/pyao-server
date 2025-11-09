@@ -10,6 +10,7 @@ from src.core.redis_initializer import RedisInitializer
 from src.core.repository_initializer import RepositoryInitializer
 from src.core.service_initializer import ServiceInitializer
 from src.game.map_manager import MapManager
+from src.network.session_manager import SessionManager
 from src.repositories.ground_items_repository import GroundItemsRepository
 
 logger = logging.getLogger(__name__)
@@ -98,7 +99,11 @@ class ServerInitializer:
         )
         game_tick = await game_tick_init.initialize()
 
-        # 6. Crear DependencyContainer
+        # 6. Crear SessionManager
+        session_manager = SessionManager()
+        logger.info("✓ SessionManager inicializado")
+
+        # 7. Crear DependencyContainer
         container = DependencyContainer(
             # Infraestructura
             redis_client=redis_client,
@@ -109,6 +114,7 @@ class ServerInitializer:
             equipment_repo=repositories["equipment_repo"],
             merchant_repo=repositories["merchant_repo"],
             bank_repo=repositories["bank_repo"],
+            door_repo=repositories["door_repo"],
             npc_repo=repositories["npc_repo"],
             party_repo=repositories["party_repo"],
             spellbook_repo=repositories["spellbook_repo"],
@@ -125,6 +131,7 @@ class ServerInitializer:
             npc_world_manager=services["npc_world_manager"],
             loot_table_service=services["loot_table_service"],
             map_resources_service=services["map_resources_service"],
+            door_service=services["door_service"],
             broadcast_service=services["broadcast_service"],
             stamina_service=services["stamina_service"],
             player_map_service=services["player_map_service"],
@@ -132,6 +139,7 @@ class ServerInitializer:
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,
+            session_manager=session_manager,
             # Catálogos
             npc_catalog=services["npc_catalog"],
             spell_catalog=services["spell_catalog"],

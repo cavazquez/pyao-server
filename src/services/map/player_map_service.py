@@ -199,6 +199,36 @@ class PlayerMapService:
 
         return items_sent
 
+    async def _unblock_exit_tiles(self, map_id: int, message_sender: MessageSender) -> int:
+        """Envía BLOCK_POSITION(false) para tiles de exit que están bloqueados en el cliente.
+
+        Este es un workaround para mapas donde los tiles de exit están marcados como
+        bloqueados en el archivo .map del cliente, impidiendo que el jugador camine
+        sobre ellos para activar el teleport.
+
+        Args:
+            map_id: ID del mapa.
+            message_sender: MessageSender del jugador.
+
+        Returns:
+            Número de tiles desbloqueados.
+        """
+        unblocked = 0
+
+        # Obtener todos los exit tiles del mapa desde MapManager
+        exit_tiles = getattr(self.map_manager, "_exit_tiles", {})
+        for exit_map_id, x, y in exit_tiles:
+            if exit_map_id == map_id:
+                # Enviar BLOCK_POSITION(false) para desbloquear el tile
+                await message_sender.send_block_position(x, y, blocked=False)
+                unblocked += 1
+                await asyncio.sleep(0.001)  # Pequeño delay para no saturar
+
+        if unblocked > 0:
+            logger.debug("Desbloqueados %d tiles de exit en mapa %d", unblocked, map_id)
+
+        return unblocked
+
     async def spawn_in_map(
         self,
         user_id: int,
@@ -247,7 +277,10 @@ class PlayerMapService:
         # 5. Enviar todos los ground items del mapa
         await self._send_ground_items_in_map(map_id, message_sender)
 
-        # 6. Broadcast CHARACTER_CREATE a otros jugadores
+        # 6. Desbloquear tiles de exit (workaround para mapas con tiles bloqueados incorrectamente)
+        await self._unblock_exit_tiles(map_id, message_sender)
+
+        # 7. Broadcast CHARACTER_CREATE a otros jugadores
         await self.broadcast_service.broadcast_character_create(
             map_id=map_id,
             char_index=user_id,

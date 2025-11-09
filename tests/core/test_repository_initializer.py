@@ -5,6 +5,7 @@ from unittest.mock import Mock
 from src.core.repository_initializer import RepositoryInitializer
 from src.repositories.account_repository import AccountRepository
 from src.repositories.bank_repository import BankRepository
+from src.repositories.door_repository import DoorRepository
 from src.repositories.equipment_repository import EquipmentRepository
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.repositories.inventory_repository import InventoryRepository
@@ -35,6 +36,7 @@ def test_repository_initializer_creates_all_repositories() -> None:
     assert "spellbook_repo" in repositories
     assert "ground_items_repo" in repositories
     assert "party_repo" in repositories
+    assert "door_repo" in repositories
 
     # Verificar tipos
     assert isinstance(repositories["player_repo"], PlayerRepository)
@@ -48,6 +50,7 @@ def test_repository_initializer_creates_all_repositories() -> None:
     assert isinstance(repositories["spellbook_repo"], SpellbookRepository)
     assert isinstance(repositories["ground_items_repo"], GroundItemsRepository)
     assert isinstance(repositories["party_repo"], PartyRepository)
+    assert isinstance(repositories["door_repo"], DoorRepository)
 
     # Los repositorios fueron creados correctamente (no podemos verificar redis_client interno)
 
@@ -60,4 +63,4 @@ def test_repository_initializer_returns_dict() -> None:
     repositories = initializer.initialize_all()
 
     assert isinstance(repositories, dict)
-    assert len(repositories) == 11  # 11 repositorios (incluye party_repo)
+    assert len(repositories) == 12  # 12 repositorios (incluye party_repo y door_repo)
