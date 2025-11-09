@@ -1,5 +1,6 @@
-# Trees - 39 items
+# Trees - 38 items
 # Generated from items.toml + analyze_missing_tree_grh.py
+# GrhIndex 1460 removido (es Columna Egipcia, no árbol)
 
 [[item]]
 id = 4
@@ -159,13 +160,6 @@ Agarrable = 1
 id = 830
 Name = "Árbol"
 GrhIndex = 1534
-ObjType = 4
-Agarrable = 1
-
-[[item]]
-id = 831
-Name = "Árbol"
-GrhIndex = 1460
 ObjType = 4
 Agarrable = 1
 
