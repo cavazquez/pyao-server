@@ -98,6 +98,10 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Validación de longitud de packets → **0.6.3-alpha**
 - [ ] Configuration Management → **0.6.4-alpha**
 
+### 🆕 Pendientes de Stats de Login
+- [ ] Incluir agilidad y fuerza en el paquete combinado enviado al logearse.
+- [ ] Implementar paquetes individuales para enviar agilidad y fuerza cuando sea necesario.
+
 ---
 
 ---
