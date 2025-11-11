@@ -679,7 +679,8 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 ### Sistema de Juego
 - **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo
 - **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo
-- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Sistema genérico de efectos periódicos
+- **[Sistema de Ítems](docs/ITEMS_SYSTEM.md)**: Uso de ítems, comportamiento actual y roadmap
+- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Efectos periódicos (hambre, sed, oro, meditación)
 
 ### Sistemas Completados ✅
 - **[NPC Factory](docs/NPC_FACTORY_COMPLETED.md)**: Sistema de factory methods para crear NPCs con FX ✅ **COMPLETADO**
