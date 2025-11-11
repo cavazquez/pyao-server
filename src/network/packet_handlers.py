@@ -19,7 +19,7 @@ from src.tasks.interaction.task_talk import TaskTalk
 from src.tasks.inventory.task_double_click import TaskDoubleClick
 from src.tasks.inventory.task_drop import TaskDrop
 from src.tasks.inventory.task_equip_item import TaskEquipItem
-from src.tasks.inventory.task_inventory_click import TaskInventoryClick
+from src.tasks.inventory.task_use_item import TaskUseItem
 from src.tasks.player.task_account import TaskCreateAccount
 from src.tasks.player.task_attack import TaskAttack
 from src.tasks.player.task_attributes import TaskRequestAttributes
@@ -67,7 +67,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.MOVE_SPELL: TaskMoveSpell,  # Reordenar hechizo en el libro
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
-    ClientPacketID.USE_ITEM: TaskInventoryClick,  # Click en inventario - mostrar info
+    ClientPacketID.USE_ITEM: TaskUseItem,  # Usar ítem del inventario
     ClientPacketID.EQUIP_ITEM: TaskEquipItem,  # Equipar/desequipar item
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.WORK: TaskWork,  # Trabajar (talar, minar, pescar)

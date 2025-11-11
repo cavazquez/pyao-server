@@ -24,6 +24,7 @@ from src.tasks.inventory.task_double_click import TaskDoubleClick
 from src.tasks.inventory.task_drop import TaskDrop
 from src.tasks.inventory.task_equip_item import TaskEquipItem
 from src.tasks.inventory.task_inventory_click import TaskInventoryClick
+from src.tasks.inventory.task_use_item import TaskUseItem
 from src.tasks.player.task_account import TaskCreateAccount
 from src.tasks.player.task_attack import TaskAttack
 from src.tasks.player.task_attributes import TaskRequestAttributes
@@ -163,6 +164,16 @@ class TaskFactory:
                     player_repo=self.deps.player_repo,
                     session_data=session_data,
                     equipment_repo=self.deps.equipment_repo,
+                )
+
+            # TaskUseItem (packet_id 30) - recibe slot
+            if task_class == TaskUseItem and "slot" in parsed_data:
+                return TaskUseItem(
+                    data=data,
+                    message_sender=message_sender,
+                    slot=parsed_data["slot"],
+                    player_repo=self.deps.player_repo,
+                    session_data=session_data,
                 )
 
             # TaskMoveSpell (packet_id 45) - recibe slot y upwards
