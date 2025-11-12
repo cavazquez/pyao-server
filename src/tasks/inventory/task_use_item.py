@@ -26,6 +26,15 @@ class TaskUseItem(Task):
         player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
+        """Initialize a TaskUseItem instance with dependencies and context.
+
+        Args:
+            data: Packet payload associated with the USE_ITEM request.
+            message_sender: Facade used to communicate responses to the client.
+            slot: Inventory slot requested by the client.
+            player_repo: Repository for accessing player data. Optional.
+            session_data: Session context dictionary keyed by user-related data. Optional.
+        """
         super().__init__(data, message_sender)
         self.slot = slot
         self.player_repo = player_repo
