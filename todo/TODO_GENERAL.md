@@ -93,8 +93,8 @@ Este proyecto tiene varios documentos TODO especializados:
 - [x] Sistema de trabajo completo (Tala, Pesca, Minería)
 - [x] Herramientas equipables y recursos
 - [x] Transiciones de mapa por rangos (120+ transiciones)
-- [ ] Tests faltantes (work/, admin/, map services) → **0.6.1-alpha**
-- [ ] Refactorizar secuencia de cambio de mapa → **0.6.2-alpha**
+- [x] Tests faltantes (work/, admin/, map services) - COMPLETADO ✅
+- [x] Refactorizar secuencia de cambio de mapa - COMPLETADO ✅
 - [ ] Validación de longitud de packets → **0.6.3-alpha**
 - [ ] Configuration Management → **0.6.4-alpha**
 

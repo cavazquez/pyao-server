@@ -14,6 +14,11 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
+from src.services.map.map_transition_steps import (
+    MapTransitionContext,
+    MapTransitionOrchestrator,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,6 +60,16 @@ class PlayerMapService:
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
+
+        # Crear orquestador de transición con la secuencia predeterminada
+        self.transition_orchestrator = MapTransitionOrchestrator.create_default_orchestrator(
+            player_repo,
+            map_manager,
+            broadcast_service,
+            self._send_players_in_map,
+            self._send_npcs_in_map,
+            self._send_ground_items_in_map,
+        )
 
     async def _get_player_visual_data(self, user_id: int) -> PlayerVisualData:
         """Obtiene los datos visuales de un jugador (body, head, username).
@@ -315,7 +330,8 @@ class PlayerMapService:
     ) -> None:
         """Transiciona un jugador de un mapa a otro (usado en cambios de mapa).
 
-        Este método ejecuta la secuencia completa de 12 pasos para cambiar de mapa.
+        Este método ahora usa el orquestador de transición para ejecutar la secuencia
+        completa de 12 pasos de forma modular y mantenible.
 
         Args:
             user_id: ID del jugador.
@@ -331,70 +347,24 @@ class PlayerMapService:
         # Obtener datos visuales del jugador
         visual_data = await self._get_player_visual_data(user_id)
 
-        # 1. Enviar CHANGE_MAP (cliente carga nuevo mapa)
-        await message_sender.send_change_map(new_map)
-
-        # 2. Delay para que el cliente cargue el mapa (crítico)
-        await asyncio.sleep(0.1)
-
-        # 3. Actualizar posición en Redis ANTES de POS_UPDATE
-        await self.player_repo.set_position(user_id, new_x, new_y, new_map, heading)
-
-        # 4. Enviar POS_UPDATE (cliente posiciona jugador)
-        await message_sender.send_pos_update(new_x, new_y)
-
-        # 5. Remover jugador del mapa anterior en MapManager
-        self.map_manager.remove_player(current_map, user_id)
-
-        # 6. Broadcast CHARACTER_REMOVE en mapa anterior
-        await self.broadcast_service.broadcast_character_remove(current_map, user_id)
-
-        # 7. Agregar jugador al nuevo mapa en MapManager
-        self.map_manager.add_player(new_map, user_id, message_sender, visual_data.username)
-
-        # 8. Enviar CHARACTER_CREATE del propio jugador
-        await message_sender.send_character_create(
-            char_index=user_id,
-            body=visual_data.char_body,
-            head=visual_data.char_head,
+        # Crear contexto de transición
+        context = MapTransitionContext(
+            user_id=user_id,
+            username=visual_data.username,
+            char_body=visual_data.char_body,
+            char_head=visual_data.char_head,
+            current_map=current_map,
+            current_x=current_x,
+            current_y=current_y,
+            new_map=new_map,
+            new_x=new_x,
+            new_y=new_y,
             heading=heading,
-            x=new_x,
-            y=new_y,
-            name=visual_data.username,
+            message_sender=message_sender,
         )
 
-        # 9. Enviar todos los jugadores existentes en el nuevo mapa
-        await self._send_players_in_map(new_map, message_sender, exclude_user_id=user_id)
-
-        # 10. Enviar todos los NPCs del nuevo mapa
-        await self._send_npcs_in_map(new_map, message_sender)
-
-        # 11. Enviar todos los objetos del suelo en el nuevo mapa
-        await self._send_ground_items_in_map(new_map, message_sender)
-
-        # 12. Broadcast CHARACTER_CREATE del jugador a otros en el nuevo mapa
-        await self.broadcast_service.broadcast_character_create(
-            map_id=new_map,
-            char_index=user_id,
-            body=visual_data.char_body,
-            head=visual_data.char_head,
-            heading=heading,
-            x=new_x,
-            y=new_y,
-            name=visual_data.username,
-        )
-
-        logger.info(
-            "Jugador %s (ID:%d) cambió de mapa: %d -> %d, pos (%d,%d) -> (%d,%d)",
-            visual_data.username,
-            user_id,
-            current_map,
-            new_map,
-            current_x,
-            current_y,
-            new_x,
-            new_y,
-        )
+        # Ejecutar transición usando el orquestador
+        await self.transition_orchestrator.execute_transition(context)
 
     async def teleport_in_same_map(
         self,
