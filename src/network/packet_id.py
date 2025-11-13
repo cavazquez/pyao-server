@@ -9,29 +9,21 @@ from enum import IntEnum
 class ClientPacketID(IntEnum):
     """IDs de paquetes enviados por el cliente según protocolo AO."""
 
-    # Paquetes implementados
+    # ruff: noqa: ERA001
     LOGIN = 0  # LoginExistingChar
     THROW_DICES = 1  # ThrowDices
     CREATE_ACCOUNT = 2  # LoginNewChar
-    REQUEST_ATTRIBUTES = 13  # RequestAtributes
-
-    # Paquetes del protocolo AO (implementados)
     TALK = 3  # Hablar (chat normal)
-    WALK = 6  # Caminar/moverse
-    USE_ITEM = 30  # Usar item del inventario
-    EQUIP_ITEM = 36  # Equipar/desequipar item
-    CHANGE_HEADING = 37  # Cambiar dirección sin moverse
-
-    # Paquetes del protocolo AO (no implementados aún)
-    # ruff: noqa: ERA001
     # YELL = 4
     # WHISPER = 5
+    WALK = 6  # Caminar/moverse
     REQUEST_POSITION_UPDATE = 7  # Solicitar actualización de posición
     ATTACK = 8  # Atacar (cuerpo a cuerpo)
     PICK_UP = 9  # Recoger item del suelo
     # SAFE_TOGGLE = 10
     # RESUSCITATION_SAFE_TOGGLE = 11
     # REQUEST_GUILD_LEADER_INFO = 12
+    REQUEST_ATTRIBUTES = 13  # RequestAtributes
     # REQUEST_FAME = 14
     # REQUEST_SKILLS = 15
     # REQUEST_MINI_STATS = 16
@@ -48,12 +40,14 @@ class ClientPacketID(IntEnum):
     DOUBLE_CLICK = 27  # Doble click en inventario (usar item)
     WORK = 28  # Trabajar (talar, minar, pescar)
     # USE_SPELL_MACRO = 29
+    USE_ITEM = 30  # Usar item del inventario
     # CRAFT_BLACKSMITH = 31
     # CRAFT_CARPENTER = 32
     WORK_LEFT_CLICK = 33  # Click en modo trabajo (con coordenadas)
     # CREATE_NEW_GUILD = 34
     SPELL_INFO = 35
-    # EQUIP_ITEM = 36
+    EQUIP_ITEM = 36  # Equipar/desequipar item
+    CHANGE_HEADING = 37  # Cambiar dirección sin moverse
     # MODIFY_SKILLS = 38
     # TRAIN = 39
     COMMERCE_BUY = 40  # Comprar item del mercader
@@ -151,32 +145,8 @@ class ClientPacketID(IntEnum):
 class ServerPacketID(IntEnum):
     """IDs de paquetes enviados por el servidor según protocolo AO."""
 
-    # Paquetes del protocolo AO estándar (implementados)
-    LOGGED = 0  # Login exitoso
-    # CHANGE_INVENTORY_SLOT = 13  # ID usado en algunas versiones
-    UPDATE_STA = 15  # Actualizar stamina
-    UPDATE_MANA = 16  # Actualizar mana
-    UPDATE_HP = 17  # Actualizar HP
-    CHANGE_MAP = 21  # Cambiar mapa del personaje
-    POS_UPDATE = 22  # Actualizar posición del personaje
-    USER_CHAR_INDEX_IN_SERVER = 28  # Índice del personaje del jugador
-    UPDATE_USER_STATS = 45  # Actualizar estadísticas completas del usuario
-    ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
-    ERROR_MSG = 55  # Mensaje de error
-    UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
-    DICE_ROLL = 67  # Enviar resultado de tirada de dados
-
-    CONSOLE_MSG = 24  # Mensaje de consola/chat
-    CHARACTER_CREATE = 29  # Crear personaje en el mapa
-    CHARACTER_REMOVE = 30  # Remover personaje del mapa
-    CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
-    PLAY_MIDI = 38  # Reproducir música MIDI
-    PLAY_WAVE = 39  # Reproducir sonido WAV
-    CREATE_FX = 44  # Crear efecto visual en una posición
-    CHANGE_INVENTORY_SLOT = 47  # Actualizar slot de inventario
-
-    # Paquetes del protocolo AO (no implementados aún)
     # ruff: noqa: ERA001
+    LOGGED = 0  # Login exitoso
     # REMOVE_DIALOGS = 1
     # REMOVE_CHAR_DIALOG = 2
     # NAVIGATE_TOGGLE = 3
@@ -189,45 +159,59 @@ class ServerPacketID(IntEnum):
     USER_COMMERCE_END = 10  # Finalizar comercio entre usuarios
     # SHOW_BLACK_SCREEN = 11
     # SHOW_SIGN = 12
-    # CHANGE_INVENTORY_SLOT = 13
+    # CHANGE_INVENTORY_SLOT = 13  # ID usado en algunas versiones
     # CHANGE_SPELL_SLOT = 14  # ID incorrecto, el correcto es 49
-    # UPDATE_STA = 15  # Ya definido arriba
+    UPDATE_STA = 15  # Actualizar stamina
+    UPDATE_MANA = 16  # Actualizar mana
+    UPDATE_HP = 17  # Actualizar HP
     UPDATE_BANK_GOLD = 19  # Actualizar oro del banco
     UPDATE_EXP = 20  # Actualizar experiencia
+    CHANGE_MAP = 21  # Cambiar mapa del personaje
+    POS_UPDATE = 22  # Actualizar posición del personaje
+    CONSOLE_MSG = 24  # Mensaje de consola/chat
     # GUILD_CHAT = 25
     # SHOW_MESSAGE_BOX = 26
     # USER_INDEX_IN_SERVER = 27
-    # USER_CHAR_INDEX_IN_SERVER = 28
+    USER_CHAR_INDEX_IN_SERVER = 28  # Índice del personaje del jugador
+    CHARACTER_CREATE = 29  # Crear personaje en el mapa
+    CHARACTER_REMOVE = 30  # Remover personaje del mapa
     # CHARACTER_CHANGE_NICK = 31
     CHARACTER_MOVE = 32
     # FORCE_CHAR_MOVE = 33
+    CHARACTER_CHANGE = 34  # Cambiar apariencia/dirección del personaje
     OBJECT_CREATE = 35
     OBJECT_DELETE = 36
     BLOCK_POSITION = 37
+    PLAY_MIDI = 38  # Reproducir música MIDI
+    PLAY_WAVE = 39  # Reproducir sonido WAV
     # GUILD_LIST = 40
     # AREA_CHANGED = 41
     # PAUSE_TOGGLE = 42
     # RAIN_TOGGLE = 43
-    # CREATE_FX = 44
+    CREATE_FX = 44  # Crear efecto visual en una posición
+    UPDATE_USER_STATS = 45  # Actualizar estadísticas completas del usuario
     # WORK_REQUEST_TARGET = 46  # Ya no se usa, WorkRequestTarget va en MULTI_MESSAGE (104)
-    # CHANGE_INVENTORY_SLOT = 47
+    CHANGE_INVENTORY_SLOT = 47  # Actualizar slot de inventario
     CHANGE_BANK_SLOT = 48  # Actualizar slot de la bóveda bancaria
     CHANGE_SPELL_SLOT = 49  # Actualizar slot de hechizo
+    ATTRIBUTES = 50  # Enviar atributos del personaje (Atributes en el protocolo)
     # BLACKSMITH_WEAPONS = 51
     # BLACKSMITH_ARMORS = 52
     # CARPENTER_OBJECTS = 53
     # REST_OK = 54
+    ERROR_MSG = 55  # Mensaje de error
     # BLIND = 56
     # DUMB = 57
     # SHOW_SIGNAL = 58
     CHANGE_NPC_INVENTORY_SLOT = 59  # Actualizar slot del inventario del mercader
-    # UPDATE_HUNGER_AND_THIRST = 60
+    UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
     # FAME = 61
     # MINI_STATS = 62
     # LEVEL_UP = 63
     # ADD_FORUM_MSG = 64
     # SHOW_FORUM_FORM = 65
     # SET_INVISIBLE = 66
+    DICE_ROLL = 67  # Enviar resultado de tirada de dados
     MEDITATE_TOGGLE = 68  # Toggle meditación
     # BLIND_NO_MORE = 69
     # DUMB_NO_MORE = 70
