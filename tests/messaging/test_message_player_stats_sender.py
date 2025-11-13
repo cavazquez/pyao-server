@@ -60,6 +60,64 @@ async def test_send_update_mana() -> None:
 
 
 @pytest.mark.asyncio
+async def test_send_update_strength_and_dexterity() -> None:
+    """Verifica que send_update_strength_and_dexterity() construya el paquete correcto."""
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.drain = AsyncMock()
+
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
+    sender = PlayerStatsMessageSender(connection)
+
+    await sender.send_update_strength_and_dexterity(strength=18, dexterity=15)
+
+    written_data = writer.write.call_args[0][0]
+
+    assert written_data[0] == ServerPacketID.UPDATE_STRENGTH_AND_DEXTERITY
+    assert written_data[1] == 18
+    assert written_data[2] == 15
+
+
+@pytest.mark.asyncio
+async def test_send_update_strength() -> None:
+    """Verifica que send_update_strength() construya el paquete correcto."""
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.drain = AsyncMock()
+
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
+    sender = PlayerStatsMessageSender(connection)
+
+    await sender.send_update_strength(strength=22)
+
+    written_data = writer.write.call_args[0][0]
+
+    assert written_data[0] == ServerPacketID.UPDATE_STRENGTH
+    assert written_data[1] == 22
+
+
+@pytest.mark.asyncio
+async def test_send_update_dexterity() -> None:
+    """Verifica que send_update_dexterity() construya el paquete correcto."""
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.drain = AsyncMock()
+
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
+    sender = PlayerStatsMessageSender(connection)
+
+    await sender.send_update_dexterity(dexterity=19)
+
+    written_data = writer.write.call_args[0][0]
+
+    assert written_data[0] == ServerPacketID.UPDATE_DEXTERITY
+    assert written_data[1] == 19
+
+
+@pytest.mark.asyncio
 async def test_send_update_sta() -> None:
     """Verifica que send_update_sta() construya y envíe el paquete correcto."""
     writer = MagicMock()

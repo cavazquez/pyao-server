@@ -99,8 +99,8 @@ Este proyecto tiene varios documentos TODO especializados:
 - [ ] Configuration Management → **0.6.4-alpha**
 
 ### 🆕 Pendientes de Stats de Login
-- [ ] Incluir agilidad y fuerza en el paquete combinado enviado al logearse.
-- [ ] Implementar paquetes individuales para enviar agilidad y fuerza cuando sea necesario.
+- [x] Incluir agilidad y fuerza en el paquete combinado enviado al logearse.
+- [x] Implementar paquetes individuales para enviar agilidad y fuerza cuando sea necesario.
 
 ---
 
