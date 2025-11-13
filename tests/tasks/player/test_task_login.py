@@ -165,6 +165,7 @@ class TestTaskLogin:
         message_sender = MagicMock()
         message_sender.send_logged = AsyncMock()
         message_sender.send_user_char_index_in_server = AsyncMock()
+        message_sender.send_update_strength_and_dexterity = AsyncMock()
 
         player_repo = MagicMock()
         account_repo = MagicMock()
@@ -181,7 +182,9 @@ class TestTaskLogin:
             mock_service.return_value.send_position = AsyncMock(
                 return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
             )
-            mock_service.return_value.send_attributes = AsyncMock()
+            mock_service.return_value.send_attributes = AsyncMock(
+                return_value={"strength": 10, "agility": 12}
+            )
             mock_service.return_value.send_stats = AsyncMock()
 
             position = await task._send_login_packets(1, 2)
@@ -191,6 +194,9 @@ class TestTaskLogin:
         assert position["y"] == 50
         message_sender.send_logged.assert_called_once_with(2)
         message_sender.send_user_char_index_in_server.assert_called_once_with(1)
+        message_sender.send_update_strength_and_dexterity.assert_called_once_with(
+            strength=10, dexterity=12
+        )
 
     async def test_initialize_player_data(self) -> None:
         """Test de inicialización de datos del jugador."""

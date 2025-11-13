@@ -102,6 +102,53 @@ def build_update_hunger_and_thirst_response(
     return packet.to_bytes()
 
 
+def build_update_strength_and_dexterity_response(strength: int, dexterity: int) -> bytes:
+    """Construye el paquete UpdateStrengthAndDexterity (PacketID 100).
+
+    Args:
+        strength: Valor actual de fuerza (u8).
+        dexterity: Valor actual de agilidad (u8).
+
+    Returns:
+        Paquete de bytes con el formato: PacketID (100) + fuerza + agilidad.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_STRENGTH_AND_DEXTERITY)
+    packet.add_byte(strength)
+    packet.add_byte(dexterity)
+    return packet.to_bytes()
+
+
+def build_update_strength_response(strength: int) -> bytes:
+    """Construye el paquete UpdateStrength (PacketID 101).
+
+    Args:
+        strength: Valor actual de fuerza (u8).
+
+    Returns:
+        bytes: Paquete con el formato PacketID (101) + fuerza.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_STRENGTH)
+    packet.add_byte(strength)
+    return packet.to_bytes()
+
+
+def build_update_dexterity_response(dexterity: int) -> bytes:
+    """Construye el paquete UpdateDexterity (PacketID 102).
+
+    Args:
+        dexterity: Valor actual de agilidad (u8).
+
+    Returns:
+        bytes: Paquete con el formato PacketID (102) + agilidad.
+    """
+    packet = PacketBuilder()
+    packet.add_byte(ServerPacketID.UPDATE_DEXTERITY)
+    packet.add_byte(dexterity)
+    return packet.to_bytes()
+
+
 def build_update_user_stats_response(
     max_hp: int,
     min_hp: int,

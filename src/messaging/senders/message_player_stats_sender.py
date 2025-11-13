@@ -5,11 +5,14 @@ from typing import TYPE_CHECKING
 
 from src.network.msg_player_stats import (
     build_update_bank_gold_response,
+    build_update_dexterity_response,
     build_update_exp_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
     build_update_mana_response,
     build_update_sta_response,
+    build_update_strength_and_dexterity_response,
+    build_update_strength_response,
     build_update_user_stats_response,
 )
 
@@ -38,6 +41,31 @@ class PlayerStatsMessageSender:
         """
         response = build_update_hp_response(hp=hp)
         logger.info("[%s] Enviando UPDATE_HP: %d", self.connection.address, hp)
+        await self.connection.send(response)
+
+    async def send_update_strength_and_dexterity(self, strength: int, dexterity: int) -> None:
+        """Envía paquete UpdateStrengthAndDexterity del protocolo AO estándar."""
+        response = build_update_strength_and_dexterity_response(
+            strength=strength, dexterity=dexterity
+        )
+        logger.info(
+            "[%s] Enviando UPDATE_STRENGTH_AND_DEXTERITY: STR=%d DEX=%d",
+            self.connection.address,
+            strength,
+            dexterity,
+        )
+        await self.connection.send(response)
+
+    async def send_update_strength(self, strength: int) -> None:
+        """Envía paquete UpdateStrength del protocolo AO estándar."""
+        response = build_update_strength_response(strength=strength)
+        logger.info("[%s] Enviando UPDATE_STRENGTH: %d", self.connection.address, strength)
+        await self.connection.send(response)
+
+    async def send_update_dexterity(self, dexterity: int) -> None:
+        """Envía paquete UpdateDexterity del protocolo AO estándar."""
+        response = build_update_dexterity_response(dexterity=dexterity)
+        logger.info("[%s] Enviando UPDATE_DEXTERITY: %d", self.connection.address, dexterity)
         await self.connection.send(response)
 
     async def send_update_mana(self, mana: int) -> None:

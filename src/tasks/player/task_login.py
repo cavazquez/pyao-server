@@ -323,8 +323,14 @@ class TaskLogin(Task):
         # Obtener/crear y enviar posición (envía CHANGE_MAP)
         position = await player_service.send_position(user_id)
 
-        # Crear atributos por defecto si no existen
-        await player_service.send_attributes(user_id)
+        # Crear atributos por defecto si no existen y enviar update inicial
+        attributes = await player_service.send_attributes(user_id)
+
+        if attributes:
+            await self.message_sender.send_update_strength_and_dexterity(
+                strength=attributes.get("strength", 0),
+                dexterity=attributes.get("agility", 0),
+            )
 
         # Obtener/crear y enviar stats
         await player_service.send_stats(user_id)

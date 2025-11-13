@@ -149,6 +149,18 @@ class MessageSender:  # noqa: PLR0904
         """
         await self.player_stats.send_update_sta(stamina)
 
+    async def send_update_strength_and_dexterity(self, strength: int, dexterity: int) -> None:
+        """Envía paquete UpdateStrengthAndDexterity del protocolo AO estándar."""
+        await self.player_stats.send_update_strength_and_dexterity(strength, dexterity)
+
+    async def send_update_strength(self, strength: int) -> None:
+        """Envía paquete UpdateStrength del protocolo AO estándar."""
+        await self.player_stats.send_update_strength(strength)
+
+    async def send_update_dexterity(self, dexterity: int) -> None:
+        """Envía paquete UpdateDexterity del protocolo AO estándar."""
+        await self.player_stats.send_update_dexterity(dexterity)
+
     async def send_update_exp(self, experience: int) -> None:
         """Envía paquete UpdateExp del protocolo AO estándar.
 

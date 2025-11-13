@@ -276,16 +276,17 @@ Según el protocolo estándar de AO (comentados en `src/packet_id.py`), los sigu
 2. **`CHARACTER_CREATE`** (29): Crear el personaje en el mapa
 3. **`CHANGE_MAP`** (21): Cambiar al mapa inicial
 4. ~~**`POS_UPDATE`** (22): Actualizar posición del personaje~~ ✅ **Implementado**
-5. **`UPDATE_USER_STATS`** (45): Enviar estadísticas completas (HP, mana, etc.)
-6. **`UPDATE_HP`** (17): Actualizar puntos de vida
-7. **`UPDATE_MANA`** (16): Actualizar puntos de maná
-8. **`UPDATE_STA`** (15): Actualizar stamina
-9. **`UPDATE_GOLD`** (18): Actualizar oro
-10. **`UPDATE_EXP`** (20): Actualizar experiencia
-11. **`CHANGE_INVENTORY_SLOT`** (47): Enviar items del inventario
-12. **`SEND_SKILLS`** (71): Enviar habilidades del personaje
-13. **`PLAY_MIDI`** (38): Reproducir música del mapa
-14. **`CONSOLE_MSG`** (24): Mensaje de bienvenida
+5. **UPDATE_STRENGTH_AND_DEXTERITY** (100): Enviar fuerza y agilidad base
+6. **UPDATE_USER_STATS** (45): Enviar estadísticas completas (HP, mana, etc.)
+7. **UPDATE_HP** (17): Actualizar puntos de vida
+8. **UPDATE_MANA** (16): Actualizar puntos de maná
+9. **UPDATE_STA** (15): Actualizar stamina
+10. **`UPDATE_GOLD`** (18): Actualizar oro
+11. **`UPDATE_EXP`** (20): Actualizar experiencia
+12. **`CHANGE_INVENTORY_SLOT`** (47): Enviar items del inventario
+13. **`SEND_SKILLS`** (71): Enviar habilidades del personaje
+14. **`PLAY_MIDI`** (38): Reproducir música del mapa
+15. **`CONSOLE_MSG`** (24): Mensaje de bienvenida
 
 ## Referencias del Código
 

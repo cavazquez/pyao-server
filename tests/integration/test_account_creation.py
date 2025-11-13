@@ -114,8 +114,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # 1. Logged
     # 2. UserCharIndex
     # 3. ChangeMap
-    # 4. UpdateUserStats
-    # 5. UpdateHungerAndThirst
+    # 4. UpdateStrengthAndDexterity
+    # 5. UpdateUserStats
+    # 6. UpdateHungerAndThirst
     # 6. PlayWave (sonido de login)
     # 7. CharacterCreate
     # 8. CreateFX (efecto visual de spawn)
@@ -123,7 +124,7 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # Nota: Attributes no se envía automáticamente (el cliente lo solicita con /EST)
     # Nota: Inventario no se envía al login (se carga on-demand con clicks)
     # Nota: ChangeSpellSlot no se envía porque spellbook_repo es None en este test
-    assert writer.write.call_count >= 5  # Al menos 5 paquetes base (MOTD es asíncrono)
+    assert writer.write.call_count >= 6  # Al menos 6 paquetes base (MOTD es asíncrono)
 
     # Primer paquete: Logged
     first_call = writer.write.call_args_list[0][0][0]
@@ -137,13 +138,17 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     third_call = writer.write.call_args_list[2][0][0]
     assert third_call[0] == ServerPacketID.CHANGE_MAP
 
-    # Cuarto paquete: UpdateUserStats (agregado por send_stats)
+    # Cuarto paquete: UpdateStrengthAndDexterity (agregado por send_attributes)
     fourth_call = writer.write.call_args_list[3][0][0]
-    assert fourth_call[0] == ServerPacketID.UPDATE_USER_STATS
+    assert fourth_call[0] == ServerPacketID.UPDATE_STRENGTH_AND_DEXTERITY
+
+    # Quinto paquete: UpdateUserStats (agregado por send_stats)
+    fifth_call = writer.write.call_args_list[4][0][0]
+    assert fifth_call[0] == ServerPacketID.UPDATE_USER_STATS
 
     # Verificar paquetes básicos que sí se envían
     # Los paquetes de NPCs (CHARACTER_CREATE, CREATE_FX) no se envían si npc_world_manager es None
-    assert writer.write.call_count >= 4  # Logged, UserCharIndex, ChangeMap, UpdateUserStats
+    assert writer.write.call_count >= 5  # Logged, UserCharIndex, ChangeMap, StrengthDex, UserStats
 
     # MOTD se envía con delay asíncrono, no se verifica aquí
     # TODO: Agregar verificación de PLAY_MIDI cuando el cliente lo soporte
