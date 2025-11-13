@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config import config
 from src.network.packet_data import EquipItemData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -67,7 +68,7 @@ class TaskEquipItem(Task):
         # Parsear y validar packet
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        slot = validator.read_slot(min_slot=1, max_slot=20)
+        slot = validator.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
 
         if validator.has_errors() or slot is None:
             error_msg = validator.get_error_message() if validator.has_errors() else "Slot inválido"

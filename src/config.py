@@ -79,7 +79,7 @@ class GameConfig:
             GameConfig con valores de variables de entorno o defaults.
         """
         return cls(
-            max_inventory_slots=int(os.getenv("GAME_MAX_INVENTORY_SLOTS", "20")),
+            max_inventory_slots=int(os.getenv("GAME_MAX_INVENTORY_SLOTS", "25")),
             max_bank_slots=int(os.getenv("GAME_MAX_BANK_SLOTS", "40")),
             max_party_members=int(os.getenv("GAME_MAX_PARTY_MEMBERS", "6")),
             respawn_time_seconds=int(os.getenv("GAME_RESPAWN_TIME_SECONDS", "180")),

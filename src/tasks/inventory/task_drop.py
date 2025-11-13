@@ -1,8 +1,11 @@
 """Task para manejar el drop de items del inventario al suelo."""
 
+from __future__ import annotations
+
 import logging
 from typing import TYPE_CHECKING
 
+from src.config import config
 from src.network.packet_data import DropData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -66,7 +69,7 @@ class TaskDrop(Task):
         # Parsear y validar packet
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        slot = validator.read_slot(min_slot=1, max_slot=20)
+        slot = validator.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
         quantity = validator.read_quantity(min_qty=1, max_qty=10000)
 
         if validator.has_errors() or slot is None or quantity is None:

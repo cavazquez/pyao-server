@@ -97,7 +97,7 @@ class TestGameConfig:
         with patch.dict(os.environ, {}, clear=True):
             config = GameConfig.from_env()
 
-            assert config.max_inventory_slots == 20
+            assert config.max_inventory_slots == 25
             assert config.max_bank_slots == 40
             assert config.max_party_members == 6
             assert config.respawn_time_seconds == 180

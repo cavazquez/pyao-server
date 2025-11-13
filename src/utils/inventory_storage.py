@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config import config
 from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 
@@ -19,7 +20,7 @@ class InventoryStorage:
     sin lógica de negocio de inventario.
     """
 
-    MAX_SLOTS = 20
+    MAX_SLOTS = config.game.max_inventory_slots
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el storage de inventario.

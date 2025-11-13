@@ -18,7 +18,7 @@ class TestInventoryStorage:
         storage = InventoryStorage(redis_client)
 
         assert storage.redis_client == redis_client
-        assert storage.MAX_SLOTS == 20
+        assert storage.MAX_SLOTS == 25
 
     async def test_get_slot_valid(self) -> None:
         """Test de obtención de slot válido."""
@@ -44,12 +44,17 @@ class TestInventoryStorage:
 
     async def test_get_slot_invalid_number(self) -> None:
         """Test de obtención de slot con número inválido."""
+        # Create an AsyncMock for the Redis client
         redis_client = MagicMock()
+        redis_client.redis = AsyncMock()
 
         storage = InventoryStorage(redis_client)
-        slot = await storage.get_slot(1, 25)  # Fuera de rango
+        # Test with a slot number that's greater than max_inventory_slots (25)
+        slot = await storage.get_slot(1, 26)  # Fuera de rango (26 > 25)
 
         assert slot is None
+        # Verify Redis was never called since the slot is invalid
+        redis_client.redis.hget.assert_not_awaited()
 
     async def test_set_slot_with_item(self) -> None:
         """Test de configurar slot con item."""
@@ -134,7 +139,7 @@ class TestInventoryStorage:
         redis_client = MagicMock()
         # Simular inventario lleno
         full_inventory = {f"slot_{i}".encode(): b"10:5" for i in range(1, 21)}
-        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 21)}
+        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 26)}
         redis_client.redis.hgetall = AsyncMock(return_value=full_inventory)
 
         storage = InventoryStorage(redis_client)
@@ -156,7 +161,7 @@ class TestInventoryStorage:
         """Test de verificar sin espacio disponible."""
         redis_client = MagicMock()
         # Simular inventario lleno
-        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 21)}
+        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 26)}
         redis_client.redis.hgetall = AsyncMock(return_value=full_inventory)
 
         storage = InventoryStorage(redis_client)

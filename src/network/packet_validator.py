@@ -5,6 +5,8 @@ import struct
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from src.config import config
+
 if TYPE_CHECKING:
     from src.network.packet_reader import PacketReader
 
@@ -62,7 +64,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
     Example:
         >>> reader = PacketReader(data)
         >>> validator = PacketValidator(reader)
-        >>> slot = validator.read_slot(min_slot=1, max_slot=20)
+        >>> slot = validator.read_slot(min_slot=1, max_slot=config.max_slot)
         >>> if validator.has_errors():
         ...     print(validator.get_error_message())
     """
@@ -561,13 +563,13 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         Formato esperado:
         - Byte 0: PacketID (DROP = 18)
-        - Byte: Slot del inventario (1-20)
+        - Byte: Slot del inventario (1-max_inventory_slots)
         - Int16: Cantidad a tirar
 
         Returns:
             ValidationResult con {"slot": int, "quantity": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
+        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
@@ -662,12 +664,12 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         Formato esperado:
         - Byte 0: PacketID (EQUIP_ITEM = 36)
-        - Byte: Slot del inventario (1-20)
+        - Byte: Slot del inventario (1-max_inventory_slots)
 
         Returns:
             ValidationResult con {"slot": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
+        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
@@ -680,12 +682,12 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
 
         Formato esperado:
         - Byte 0: PacketID (USE_ITEM = 30)
-        - Byte: Slot del inventario (1-20)
+        - Byte: Slot del inventario (1-max_inventory_slots)
 
         Returns:
             ValidationResult con {"slot": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
+        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
