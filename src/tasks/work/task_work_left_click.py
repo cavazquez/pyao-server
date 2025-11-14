@@ -106,7 +106,24 @@ class TaskWorkLeftClick(Task):
             logger.warning("No se pudo obtener posición del jugador %d", user_id)
             return
 
+        player_x = position["x"]
+        player_y = position["y"]
         map_id = position["map"]
+
+        # Validar que el tile clickeado esté a distancia 1 del jugador (igual que el cliente VB6)
+        if max(abs(target_x - player_x), abs(target_y - player_y)) > 1:
+            await self.message_sender.console.send_console_msg(
+                "Debes estar a un tile de distancia para trabajar."
+            )
+            logger.info(
+                "Usuario %d intentó trabajar demasiado lejos: player=(%d,%d), target=(%d,%d)",
+                user_id,
+                player_x,
+                player_y,
+                target_x,
+                target_y,
+            )
+            return
 
         logger.info(
             "Usuario %d hace WORK_LEFT_CLICK en (%d, %d) con skill=%d",

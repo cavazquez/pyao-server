@@ -139,6 +139,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - ✅ **Reducción de código** del 40-70% en tasks migradas
 - ✅ **Type safety completo** con mypy
 - ✅ **Mensajes de error descriptivos** para debugging
+- ✅ **Corrección 2025-11-13:** Validación de EQUIP_ITEM exige ahora 2 bytes (PacketID + slot) para evitar falsos positivos de packets truncados
 
 Ver **[PACKET_VALIDATOR_MIGRATION.md](docs/PACKET_VALIDATOR_MIGRATION.md)** para documentación completa.
 

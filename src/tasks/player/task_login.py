@@ -393,7 +393,7 @@ class TaskLogin(Task):
             logger.info("user_id %d no tiene hechizos en su libro", user_id)
 
     async def _spawn_player(self, user_id: int, username: str, position: dict[str, int]) -> None:
-        """Realiza el spawn del jugador en el mundo.
+        """Realiza el spawn del jugador en el mundo usando PlayerMapService.
 
         Args:
             user_id: ID del usuario.
@@ -403,13 +403,31 @@ class TaskLogin(Task):
         # Reproducir sonido de login
         await self.message_sender.play_sound_login()
 
-        # Enviar CHARACTER_CREATE con delay post-spawn incluido (500ms)
-        if self.player_repo:
-            player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
-            await player_service.spawn_character(user_id, username, position)
-
-        # Enviar actualización de posición para actualizar el minimapa
-        await self.message_sender.send_pos_update(position["x"], position["y"])
+        # Usar PlayerMapService para spawn (maneja toda la secuencia de 12 pasos)
+        if self.player_map_service and self.player_repo:
+            # Para login, el jugador viene de "ningún mapa" (map 0)
+            await self.player_map_service.transition_to_map(
+                user_id=user_id,
+                current_map=0,  # No viene de ningún mapa
+                current_x=0,  # Posición inválida (no importa)
+                current_y=0,  # Posición inválida (no importa)
+                new_map=position["map"],
+                new_x=position["x"],
+                new_y=position["y"],
+                heading=position.get("heading", 3),
+                message_sender=self.message_sender,
+            )
+        else:
+            # Fallback por si acaso (no debería pasar con inyección correcta)
+            logger.error("PlayerMapService no disponible para spawn, usando fallback")
+            if self.player_repo and self.account_repo:
+                player_service = PlayerService(
+                    self.player_repo, self.message_sender, self.account_repo
+                )
+                await player_service.spawn_character(user_id, username, position)
+                await self.message_sender.send_pos_update(position["x"], position["y"])
+            else:
+                logger.error("Repositorios no disponibles para fallback de spawn")
 
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)

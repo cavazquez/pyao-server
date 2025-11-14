@@ -42,7 +42,7 @@ class PacketLengthValidator:
         # Packets con 2 bytes de datos
         2: 3,  # LOGIN (username_len + username_start)
         3: 2,  # DOUBLE_CLICK (target)
-        19: 3,  # EQUIP_ITEM (slot)
+        19: 2,  # EQUIP_ITEM (slot)
         33: 4,  # WORK_LEFT_CLICK (x + y + skill)
         40: 3,  # COMMERCE_BUY (slot)
         41: 3,  # BANK_EXTRACT_ITEM (slot)

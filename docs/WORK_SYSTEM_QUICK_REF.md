@@ -164,6 +164,8 @@ INFO - Usuario 1 obtuvo 2 Pescado (item_id=68, slot=5)
 → Verificar que envías MULTI_MESSAGE (104), no packet 46
 → Verificar índice del mensaje es 17
 → Verificar herramienta está equipada
+→ **Nuevo 2025-11-13:** `USE_ITEM` valida herramienta equipada con `EquipmentRepository` antes de enviar WorkRequestTarget
+→ **Nuevo 2025-11-13:** WORK_LEFT_CLICK requiere estar a distancia 1 del recurso (chequeo max(|Δx|,|Δy|) ≤ 1)
 
 ### Inventario No Actualiza?
 

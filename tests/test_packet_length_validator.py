@@ -64,7 +64,7 @@ class TestPacketLengthValidator:
         assert PacketLengthValidator.get_packet_min_length(1) == 1  # THROW_DICES
         assert PacketLengthValidator.get_packet_min_length(6) == 2  # WALK
         assert PacketLengthValidator.get_packet_min_length(3) == 2  # DOUBLE_CLICK
-        assert PacketLengthValidator.get_packet_min_length(19) == 3  # EQUIP_ITEM
+        assert PacketLengthValidator.get_packet_min_length(19) == 2  # EQUIP_ITEM
         assert PacketLengthValidator.get_packet_min_length(26) == 3  # LEFT_CLICK
         assert PacketLengthValidator.get_packet_min_length(39) == 7  # CAST_SPELL (corregido a 7)
 

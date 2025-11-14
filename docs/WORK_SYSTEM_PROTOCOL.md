@@ -54,8 +54,12 @@ Byte 1: Slot del inventario (1-based)
 
 **Comportamiento del servidor:**
 - Si el slot contiene una herramienta (IDs: 561, 562, 563)
-- Si la herramienta ESTÁ equipada → Envía WorkRequestTarget
-- Si NO está equipada → Mensaje de error
+- Verifica en `EquipmentRepository` que la herramienta esté equipada
+- Si **está equipada** → Envía `WorkRequestTarget` (skill 9/12/13) para cambiar el cursor
+- Si **NO está equipada** → Envía mensaje de consola: "Debes tener equipada la herramienta para trabajar"
+- Si la herramienta no tiene comportamiento (no está equipada) loguea `Item sin comportamiento definido`
+- Verifica que el tile clickeado esté a **distancia 1** del jugador; en caso contrario envía
+  "Debes estar a un tile de distancia para trabajar" y no entrega recursos
 
 ---
 
