@@ -48,6 +48,7 @@ class TaskCreateAccount(Task):
         spell_catalog: SpellCatalog | None = None,
         equipment_repo: EquipmentRepository | None = None,
         player_map_service: PlayerMapService | None = None,
+        inventory_repo: InventoryRepository | None = None,
     ) -> None:
         """Inicializa la tarea de creación de cuenta.
 
@@ -64,6 +65,7 @@ class TaskCreateAccount(Task):
             spell_catalog: Catálogo de hechizos.
             equipment_repo: Repositorio de equipamiento.
             player_map_service: Servicio de mapas de jugador.
+            inventory_repo: Repositorio de inventario.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -76,6 +78,7 @@ class TaskCreateAccount(Task):
         self.spell_catalog = spell_catalog
         self.equipment_repo = equipment_repo
         self.player_map_service = player_map_service
+        self.inventory_repo = inventory_repo
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:
         """Parsea el paquete de creación de cuenta.
@@ -126,6 +129,7 @@ class TaskCreateAccount(Task):
 
             # Leer datos del personaje (vienen antes del email)
             char_data = {}
+            # Validar que haya suficientes bytes para los datos del personaje
             if len(self.data) >= offset + 8:
                 char_data["race"] = self.data[offset]
                 offset += 1
@@ -152,15 +156,14 @@ class TaskCreateAccount(Task):
             # Leer email usando PacketValidator
             # Actualizar el reader al offset actual
             reader.offset = offset
-            email = validator.read_string(min_length=1, max_length=100, encoding="utf-8")
 
-            if validator.has_errors() or email is None:
-                logger.warning("Error validando email: %s", validator.get_error_message())
-                return None
-
+            email = validator.read_string() if not validator.has_errors() else ""
+            if email is None:
+                email = ""
             offset = reader.offset
             logger.debug("Email: %s, offset: %d", email, offset)
 
+            # Leer home (último byte) - validar que haya al menos 1 byte más
             # Leer home (último byte)
             if len(self.data) >= offset + 1:
                 char_data["home"] = self.data[offset]

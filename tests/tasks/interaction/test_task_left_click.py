@@ -230,7 +230,7 @@ class TestTaskLeftClick:
     async def test_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
         map_manager = MapManager()
 
@@ -257,5 +257,7 @@ class TestTaskLeftClick:
         # Execute
         await task.execute()
 
-        # Assert - no debe crashear
-        message_sender.send_console_msg.assert_not_called()
+        # Assert - debe enviar mensaje de error
+        message_sender.send_console_msg.assert_called_once_with(
+            "Packet truncado: se esperaban al menos 3 bytes, recibidos 2"
+        )

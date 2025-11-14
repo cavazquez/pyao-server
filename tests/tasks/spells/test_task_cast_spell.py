@@ -16,14 +16,14 @@ class TestTaskCastSpell:
     async def test_cast_spell_without_session(self) -> None:
         """Test de lanzar hechizo sin sesión."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
         spell_service = MagicMock(spec=SpellService)
         stamina_service = MagicMock()
         stamina_service.consume_stamina = AsyncMock(return_value=True)
 
         # Packet: CAST_SPELL (25) + Slot (1)
-        data = bytes([25, 1])
+        data = bytes([39, 1, 0])  # 3 bytes mínimo (sin coordenadas)
         session_data = {}  # Sin user_id
 
         task = TaskCastSpell(
@@ -39,14 +39,14 @@ class TestTaskCastSpell:
     async def test_cast_spell_invalid_packet(self) -> None:
         """Test con packet inválido."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
         spell_service = MagicMock(spec=SpellService)
         stamina_service = MagicMock()
         stamina_service.consume_stamina = AsyncMock(return_value=True)
 
         # Packet muy corto
-        data = bytes([25])  # Falta el slot
+        data = bytes([39])  # Falta el slot
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -62,7 +62,7 @@ class TestTaskCastSpell:
     async def test_cast_spell_basic(self) -> None:
         """Test básico de lanzar hechizo."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -78,8 +78,8 @@ class TestTaskCastSpell:
         spellbook_repo = MagicMock()
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)  # Dardo Mágico
 
-        # Packet: CAST_SPELL + Slot 1 + Target X=51 + Target Y=50 (little-endian)
-        data = bytes([25, 1, 51, 0, 50, 0])  # X=51, Y=50 en little-endian uint16
+        # Packet: CAST_SPELL (39) + Slot 1 + Target X=51 + Target Y=50 + padding
+        data = bytes([39, 1, 51, 0, 50, 0, 0])  # 7 bytes total
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(

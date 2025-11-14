@@ -15,8 +15,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_with_valid_target(self) -> None:
         """Test lanzar hechizo con target válido."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -30,7 +29,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Target a 5 tiles de distancia (dentro del rango)
-        data = bytes([25, 1, 55, 0, 50, 0])  # X=55, Y=50
+        data = bytes([39, 1, 55, 0, 50, 0, 0])  # X=55, Y=50 + padding
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -48,8 +47,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_out_of_range(self) -> None:
         """Test lanzar hechizo fuera de rango."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -63,7 +61,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Target a 15 tiles de distancia (fuera del rango máximo de 10)
-        data = bytes([25, 1, 65, 0, 50, 0])  # X=65, Y=50 (distancia=15)
+        data = bytes([39, 1, 65, 0, 50, 0, 0])  # X=65, Y=50 + padding (distancia=15)
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -80,8 +78,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_diagonal_target(self) -> None:
         """Test lanzar hechizo con target diagonal."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -95,7 +92,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Target diagonal a 3+3=6 tiles de distancia (Manhattan)
-        data = bytes([25, 1, 53, 0, 53, 0])  # X=53, Y=53
+        data = bytes([39, 1, 53, 0, 53, 0, 0])  # X=53, Y=53 + padding
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -113,8 +110,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_same_position(self) -> None:
         """Test lanzar hechizo en la misma posición del jugador."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -128,7 +124,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Target en la misma posición (distancia=0)
-        data = bytes([25, 1, 50, 0, 50, 0])  # X=50, Y=50
+        data = bytes([39, 1, 50, 0, 50, 0, 0])  # X=50, Y=50 + padding
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -143,8 +139,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_max_range(self) -> None:
         """Test lanzar hechizo en el límite del rango máximo."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -158,7 +153,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Target exactamente a 10 tiles de distancia (límite)
-        data = bytes([25, 1, 60, 0, 50, 0])  # X=60, Y=50 (distancia=10)
+        data = bytes([39, 1, 60, 0, 50, 0, 0])  # X=60, Y=50 + padding
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -173,8 +168,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_invalid_packet_size(self) -> None:
         """Test packet CAST_SPELL con tamaño inválido."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         spell_service = MagicMock(spec=SpellService)
@@ -182,8 +176,8 @@ class TestSpellTargeting:
 
         spellbook_repo = MagicMock()
 
-        # Packet incompleto (solo 1 byte en lugar de al menos 2)
-        data = bytes([25])
+        # Packet incompleto (solo 1 byte en lugar de al menos 3)
+        data = bytes([39])
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
@@ -198,8 +192,7 @@ class TestSpellTargeting:
     @pytest.mark.asyncio
     async def test_cast_spell_old_format(self) -> None:
         """Test lanzar hechizo con formato antiguo (sin coordenadas)."""
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(
@@ -213,7 +206,7 @@ class TestSpellTargeting:
         spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)
 
         # Packet formato antiguo (solo 2 bytes)
-        data = bytes([25, 1])
+        data = bytes([39, 1, 0])  # Formato antiguo (3 bytes mínimo)
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(

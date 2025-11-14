@@ -17,7 +17,7 @@ from src.tasks.work.task_work_left_click import (
 @pytest.fixture
 def mock_message_sender():
     """Mock de message_sender con métodos async."""
-    sender = MagicMock()
+    sender = AsyncMock()
     sender.console.send_console_msg = AsyncMock()
     sender.console.send_error_msg = AsyncMock()
     sender.send_change_inventory_slot = AsyncMock()

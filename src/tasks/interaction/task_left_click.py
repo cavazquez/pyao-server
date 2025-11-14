@@ -11,6 +11,7 @@ from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
+from src.utils.packet_length_validator import PacketLengthValidator
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -128,10 +129,8 @@ class TaskLeftClick(Task):
 
     async def execute(self) -> None:
         """Ejecuta click izquierdo en personaje/NPC."""
-        # Parsear el packet: PacketID (1 byte) + X (1 byte) + Y (1 byte)
-        min_packet_size = 3
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet LEFT_CLICK inválido: tamaño incorrecto")
+        # Validar longitud del packet usando PacketLengthValidator
+        if not await PacketLengthValidator.validate_min_length(self.data, 26, self.message_sender):
             return
 
         # Verificar que el jugador esté logueado

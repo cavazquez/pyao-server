@@ -30,8 +30,7 @@ class TestTaskDoubleClick:
     async def test_double_click_on_hostile_npc(self) -> None:
         """Test de doble click en NPC hostil."""
         # Setup
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 69, "y": 70})
@@ -83,8 +82,7 @@ class TestTaskDoubleClick:
     async def test_double_click_on_friendly_npc(self) -> None:
         """Test de doble click en NPC amigable."""
         # Setup
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 69, "y": 70})
@@ -136,7 +134,7 @@ class TestTaskDoubleClick:
     async def test_double_click_without_session(self) -> None:
         """Test de doble click sin sesión activa."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
         map_manager = MapManager()
 
@@ -154,8 +152,7 @@ class TestTaskDoubleClick:
     async def test_double_click_on_nonexistent_npc(self) -> None:
         """Test de doble click en NPC que no existe."""
         # Setup
-        message_sender = MagicMock()
-        message_sender.send_console_msg = AsyncMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock(spec=PlayerRepository)
         player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 69, "y": 70})
@@ -180,7 +177,7 @@ class TestTaskDoubleClick:
     async def test_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
         map_manager = MapManager()
 
@@ -194,5 +191,7 @@ class TestTaskDoubleClick:
         # Execute
         await task.execute()
 
-        # Assert - no debe crashear
-        message_sender.send_console_msg.assert_not_called()
+        # Assert - debe enviar mensaje de error
+        message_sender.send_console_msg.assert_called_once_with(
+            "Packet truncado: se esperaban al menos 2 bytes, recibidos 1"
+        )

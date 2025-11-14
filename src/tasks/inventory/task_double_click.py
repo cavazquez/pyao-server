@@ -10,6 +10,7 @@ from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
 from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.task import Task
+from src.utils.packet_length_validator import PacketLengthValidator
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -52,10 +53,8 @@ class TaskDoubleClick(Task):
 
     async def execute(self) -> None:
         """Ejecuta doble click (item o NPC)."""
-        # Parsear el packet: PacketID (1 byte) + Slot/CharIndex
-        min_packet_size = 2
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet DOUBLE_CLICK inválido: tamaño incorrecto")
+        # Validar longitud del packet usando PacketLengthValidator
+        if not await PacketLengthValidator.validate_min_length(self.data, 3, self.message_sender):
             return
 
         # Verificar que el jugador esté logueado

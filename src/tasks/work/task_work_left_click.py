@@ -4,8 +4,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.models.items_catalog import get_item
-from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.task import Task
+from src.utils.packet_length_validator import PacketLengthValidator
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -92,9 +92,8 @@ class TaskWorkLeftClick(Task):
         user_id = int(user_id_value)
 
         # Parsear packet: PacketID (1 byte) + X (1 byte) + Y (1 byte) + Skill (1 byte)
-        min_packet_size = 4
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet WORK_LEFT_CLICK inválido: tamaño incorrecto")
+        # Validar longitud del packet usando PacketLengthValidator
+        if not await PacketLengthValidator.validate_min_length(self.data, 33, self.message_sender):
             return
 
         target_x = self.data[1]

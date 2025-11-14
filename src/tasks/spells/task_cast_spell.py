@@ -19,8 +19,10 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# Tamaños de packet
-PACKET_SIZE_WITH_COORDS = 6  # PacketID + Slot + X + Y
+# Constantes para el packet CAST_SPELL
+CAST_SPELL_MIN_SIZE_OLD = 3  # Formato antiguo: PacketID + slot + padding
+CAST_SPELL_MIN_SIZE_NEW = 7  # Formato nuevo: PacketID + slot + x + y + padding
+PACKET_SIZE_WITH_COORDS = 7  # Tamaño del packet con coordenadas
 PACKET_SIZE_WITHOUT_COORDS = 2  # PacketID + Slot
 
 
@@ -59,10 +61,13 @@ class TaskCastSpell(Task):
         self,
     ) -> None:
         """Ejecuta el lanzamiento de hechizo."""
-        # Parsear el packet: PacketID (1 byte) + Slot (1 byte) [+ X (2 bytes) + Y (2 bytes)]
-        # Soporta formato antiguo (2 bytes) y nuevo (6 bytes)
-        if len(self.data) < PACKET_SIZE_WITHOUT_COORDS:
-            logger.warning("Packet CAST_SPELL inválido: tamaño incorrecto")
+        # Validar longitud mínima del packet (CAST_SPELL tiene formatos variables)
+        # Formato antiguo: 3 bytes (PacketID + slot + padding)
+        # Formato nuevo: 7 bytes (PacketID + slot + x + y + padding)
+        if len(self.data) < CAST_SPELL_MIN_SIZE_OLD:  # Mínimo para formato antiguo
+            await self.message_sender.send_console_msg(
+                f"Packet CAST_SPELL truncado: se esperan al menos {CAST_SPELL_MIN_SIZE_OLD} bytes"
+            )
             return
 
         # Verificar que el jugador esté logueado
@@ -99,10 +104,18 @@ class TaskCastSpell(Task):
 
         try:
             # Determinar si el packet incluye coordenadas del target
+            # Validar longitud para el formato con coordenadas
             has_target_coords = len(self.data) >= PACKET_SIZE_WITH_COORDS
 
             if has_target_coords:
                 # Formato nuevo: coordenadas del target incluidas
+                # Validar longitud completa para coordenadas
+                if len(self.data) < PACKET_SIZE_WITH_COORDS:
+                    await self.message_sender.send_console_msg(
+                        "Packet CAST_SPELL con coordenadas truncado"
+                    )
+                    return
+
                 # Leer coordenadas directamente con el reader (ya consumimos el slot)
                 target_x = reader.read_int16()
                 target_y = reader.read_int16()

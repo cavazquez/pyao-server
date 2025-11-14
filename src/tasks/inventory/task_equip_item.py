@@ -12,6 +12,7 @@ from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.equipment_service import EquipmentService
 from src.services.player.player_service import PlayerService
 from src.tasks.task import Task
+from src.utils.packet_length_validator import PacketLengthValidator
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -48,10 +49,8 @@ class TaskEquipItem(Task):
 
     async def execute(self) -> None:
         """Ejecuta equipar/desequipar item."""
-        # Parsear el packet: PacketID (1 byte) + Slot (1 byte)
-        min_packet_size = 2
-        if len(self.data) < min_packet_size:
-            logger.warning("Packet EQUIP_ITEM inválido: tamaño incorrecto")
+        # Validar longitud del packet usando PacketLengthValidator
+        if not await PacketLengthValidator.validate_min_length(self.data, 19, self.message_sender):
             return
 
         # Verificar que el jugador esté logueado

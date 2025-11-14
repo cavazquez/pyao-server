@@ -14,15 +14,15 @@ class TestTaskEquipItem:
     async def test_equip_item_success(self) -> None:
         """Test de equipar item exitoso."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock()
         player_repo.redis = MagicMock()
 
         equipment_repo = MagicMock()
 
-        # Packet: EQUIP_ITEM + slot=1
-        data = bytes([0x15, 0x01])
+        # Packet: EQUIP_ITEM (19) + slot=1 + padding
+        data = bytes([0x13, 0x01, 0x00])
 
         session_data = {"user_id": 1}
 
@@ -60,14 +60,14 @@ class TestTaskEquipItem:
     async def test_equip_item_failure(self) -> None:
         """Test cuando falla equipar el item."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
 
         player_repo = MagicMock()
         player_repo.redis = MagicMock()
 
         equipment_repo = MagicMock()
 
-        data = bytes([0x15, 0x01])
+        data = bytes([0x13, 0x01, 0x00])
         session_data = {"user_id": 1}
 
         with (
@@ -100,11 +100,11 @@ class TestTaskEquipItem:
     async def test_equip_item_without_session(self) -> None:
         """Test sin sesión activa."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock()
         equipment_repo = MagicMock()
 
-        data = bytes([0x15, 0x01])
+        data = bytes([0x13, 0x01, 0x00])
         session_data = {}  # Sin user_id
 
         task = TaskEquipItem(
@@ -123,12 +123,12 @@ class TestTaskEquipItem:
     async def test_equip_item_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
         player_repo = MagicMock()
         equipment_repo = MagicMock()
 
         # Packet muy corto
-        data = bytes([0x15])  # Falta slot
+        data = bytes([0x13])  # Falta slot
 
         session_data = {"user_id": 1}
 
@@ -148,9 +148,9 @@ class TestTaskEquipItem:
     async def test_equip_item_without_dependencies(self) -> None:
         """Test sin dependencias necesarias."""
         # Setup
-        message_sender = MagicMock()
+        message_sender = AsyncMock()
 
-        data = bytes([0x15, 0x01])
+        data = bytes([0x13, 0x01, 0x00])
         session_data = {"user_id": 1}
 
         task = TaskEquipItem(
