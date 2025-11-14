@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from src.models.items_catalog import get_item
 from src.tasks.task import Task
-from src.utils.packet_length_validator import PacketLengthValidator
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -20,6 +19,14 @@ logger = logging.getLogger(__name__)
 SKILL_TALAR = 9
 SKILL_PESCA = 12
 SKILL_MINERIA = 13
+
+# Constantes de experiencia
+EXP_LENA = 10
+EXP_MINERAL = 15
+EXP_PESCADO = 12
+
+# Constantes de packet
+MIN_PACKET_LENGTH = 4
 
 
 # IDs de herramientas
@@ -71,46 +78,80 @@ class TaskWorkLeftClick(Task):
         self.session_data = session_data
         self.map_resources = map_resources
 
-    async def execute(self) -> None:
-        """Ejecuta el trabajo en las coordenadas clickeadas."""
+    async def _validate_and_get_user_id(self) -> int | None:
+        """Valida dependencias y retorna user_id si es válido.
+
+        Returns:
+            user_id como int si es válido, None si hay error.
+        """
         # Validar dependencias
         if not self.player_repo or not self.inventory_repo or not self.map_manager:
             logger.error("Repositorios no disponibles para trabajar")
             await self.message_sender.console.send_error_msg("Servicio de trabajo no disponible")
-            return
+            return None
 
         if not self.session_data or "user_id" not in self.session_data:
             logger.warning("No hay sesión activa para trabajar")
             await self.message_sender.console.send_error_msg("Debes iniciar sesión primero")
-            return
+            return None
 
         user_id_value = self.session_data["user_id"]
         if isinstance(user_id_value, dict):
             logger.error("user_id en sesión es un dict, esperaba int")
-            return
+            return None
 
-        user_id = int(user_id_value)
+        return int(user_id_value)
 
-        # Parsear packet: PacketID (1 byte) + X (1 byte) + Y (1 byte) + Skill (1 byte)
-        # Validar longitud del packet usando PacketLengthValidator
-        if not await PacketLengthValidator.validate_min_length(self.data, 33, self.message_sender):
-            return
+    def _extract_work_data(self) -> tuple[int, int, int]:
+        """Extrae coordenadas y skill_type del packet.
+
+        Returns:
+            Tupla (target_x, target_y, skill_type).
+
+        Raises:
+            IndexError: Si el packet no tiene la longitud mínima requerida.
+        """
+        if len(self.data) < MIN_PACKET_LENGTH:
+            msg = "Packet demasiado corto para datos de trabajo"
+            raise IndexError(msg)
 
         target_x = self.data[1]
         target_y = self.data[2]
         skill_type = self.data[3]
+        return target_x, target_y, skill_type
 
-        # Obtener mapa del jugador
+    async def _get_player_map(self, user_id: int) -> int | None:
+        """Obtiene el ID del mapa del jugador.
+
+        Returns:
+            ID del mapa como int, None si hay error.
+        """
+        if not self.player_repo:
+            return None
+
         position = await self.player_repo.get_position(user_id)
         if not position:
             logger.warning("No se pudo obtener posición del jugador %d", user_id)
-            return
+            return None
+        return position["map"]
+
+    async def _check_distance(self, user_id: int, target_x: int, target_y: int) -> bool:
+        """Verifica que el target esté a distancia 1 del jugador.
+
+        Returns:
+            True si está a distancia válida, False si no.
+        """
+        if not self.player_repo:
+            return False
+
+        position = await self.player_repo.get_position(user_id)
+        if not position:
+            logger.warning("No se pudo obtener posición del jugador %d", user_id)
+            return False
 
         player_x = position["x"]
         player_y = position["y"]
-        map_id = position["map"]
 
-        # Validar que el tile clickeado esté a distancia 1 del jugador (igual que el cliente VB6)
         if max(abs(target_x - player_x), abs(target_y - player_y)) > 1:
             await self.message_sender.console.send_console_msg(
                 "Debes estar a un tile de distancia para trabajar."
@@ -123,6 +164,31 @@ class TaskWorkLeftClick(Task):
                 target_x,
                 target_y,
             )
+            return False
+
+        return True
+
+    async def execute(self) -> None:
+        """Ejecuta el trabajo en las coordenadas clickeadas."""
+        # Validar dependencias y obtener user_id
+        user_id = await self._validate_and_get_user_id()
+        if user_id is None:
+            return
+
+        # Extraer coordenadas y skill_type del packet
+        try:
+            target_x, target_y, skill_type = self._extract_work_data()
+        except IndexError:
+            logger.warning("Packet WORK_LEFT_CLICK demasiado corto")
+            return
+
+        # Obtener mapa del jugador
+        map_id = await self._get_player_map(user_id)
+        if map_id is None:
+            return
+
+        # Verificar distancia
+        if not await self._check_distance(user_id, target_x, target_y):
             return
 
         logger.info(
@@ -139,18 +205,32 @@ class TaskWorkLeftClick(Task):
         )
 
         if work_result:
-            resource_name, item_id, quantity, slot = work_result
+            resource_name, item_id, quantity, slot, skill_name, exp_gained, leveled_up = work_result
+
+            # Mensaje principal con el recurso obtenido
             await self.message_sender.console.send_console_msg(
                 f"Has obtenido {quantity} {resource_name}"
             )
+
+            # Mensaje de experiencia
+            await self.message_sender.console.send_console_msg(f"+{exp_gained} exp en {skill_name}")
+
+            # Mensaje si subió de nivel
+            if leveled_up:
+                await self.message_sender.console.send_console_msg(
+                    f"¡¡Has subido de nivel en {skill_name}!!"
+                )
+
             await self._update_inventory_ui(user_id, item_id, slot)
             logger.info(
-                "Usuario %d obtuvo %d %s (item_id=%d, slot=%d)",
+                "Usuario %d obtuvo %d %s (item_id=%d, slot=%d) + %d exp %s",
                 user_id,
                 quantity,
                 resource_name,
                 item_id,
                 slot,
+                exp_gained,
+                skill_name,
             )
         else:
             await self.message_sender.console.send_console_msg(
@@ -184,7 +264,7 @@ class TaskWorkLeftClick(Task):
 
     async def _try_work_at_position(
         self, user_id: int, map_id: int, target_x: int, target_y: int, skill_type: int
-    ) -> tuple[str, int, int, int] | None:
+    ) -> tuple[str, int, int, int, str, int, bool] | None:
         """Intenta trabajar en una posición específica.
 
         Args:
@@ -195,7 +275,8 @@ class TaskWorkLeftClick(Task):
             skill_type: Tipo de habilidad (9=Talar, 12=Pesca, 13=Minería).
 
         Returns:
-            Tupla (nombre_recurso, item_id, cantidad, slot) si se pudo trabajar, None si no.
+            Tupla (nombre_recurso, item_id, cantidad, slot, skill_nombre, exp_ganada, subio_nivel)
+            si se pudo trabajar, None si no.
         """
         # Verificar herramienta en inventario
         if not self.inventory_repo or not self.map_resources:
@@ -217,7 +298,21 @@ class TaskWorkLeftClick(Task):
                 user_id, item_id=ResourceItemID.LENA, quantity=5
             )
             if slots:
-                return ("Leña", ResourceItemID.LENA, 5, slots[0][0])
+                # Dar experiencia en talar
+                if self.player_repo:
+                    _new_exp, leveled_up = await self.player_repo.add_skill_experience(
+                        user_id, "talar", EXP_LENA
+                    )
+                    return (
+                        "Leña",
+                        ResourceItemID.LENA,
+                        5,
+                        slots[0][0],
+                        "Talar",
+                        EXP_LENA,
+                        leveled_up,
+                    )
+                return ("Leña", ResourceItemID.LENA, 5, slots[0][0], "Talar", EXP_LENA, False)
             return None
 
         if (
@@ -229,7 +324,29 @@ class TaskWorkLeftClick(Task):
                 user_id, item_id=ResourceItemID.MINERAL_HIERRO, quantity=3
             )
             if slots:
-                return ("Mineral de Hierro", ResourceItemID.MINERAL_HIERRO, 3, slots[0][0])
+                # Dar experiencia en minería
+                if self.player_repo:
+                    _new_exp, leveled_up = await self.player_repo.add_skill_experience(
+                        user_id, "mineria", EXP_MINERAL
+                    )
+                    return (
+                        "Mineral de Hierro",
+                        ResourceItemID.MINERAL_HIERRO,
+                        3,
+                        slots[0][0],
+                        "Minería",
+                        EXP_MINERAL,
+                        leveled_up,
+                    )
+                return (
+                    "Mineral de Hierro",
+                    ResourceItemID.MINERAL_HIERRO,
+                    3,
+                    slots[0][0],
+                    "Minería",
+                    EXP_MINERAL,
+                    False,
+                )
             return None
 
         if (
@@ -241,7 +358,29 @@ class TaskWorkLeftClick(Task):
                 user_id, item_id=ResourceItemID.PESCADO, quantity=2
             )
             if slots:
-                return ("Pescado", ResourceItemID.PESCADO, 2, slots[0][0])
+                # Dar experiencia en pesca
+                if self.player_repo:
+                    _new_exp, leveled_up = await self.player_repo.add_skill_experience(
+                        user_id, "pesca", EXP_PESCADO
+                    )
+                    return (
+                        "Pescado",
+                        ResourceItemID.PESCADO,
+                        2,
+                        slots[0][0],
+                        "Pesca",
+                        EXP_PESCADO,
+                        leveled_up,
+                    )
+                return (
+                    "Pescado",
+                    ResourceItemID.PESCADO,
+                    2,
+                    slots[0][0],
+                    "Pesca",
+                    EXP_PESCADO,
+                    False,
+                )
             return None
 
         # Si no tiene herramienta

@@ -34,14 +34,14 @@ def build_update_skills_response(
     return (
         PacketBuilder()
         .add_byte(ServerPacketID.SEND_SKILLS)
-        .add_int16(magic)  # Magia
-        .add_int16(robustness)  # Robustez
-        .add_int16(agility)  # Agilidad
-        .add_int16(woodcutting)  # Talar
-        .add_int16(fishing)  # Pesca
-        .add_int16(mining)  # Minería
-        .add_int16(blacksmithing)  # Herrería
-        .add_int16(carpentry)  # Carpintería
-        .add_int16(survival)  # Supervivencia
+        .add_int16(magic)  # 1. Magia
+        .add_int16(robustness)  # 2. Robustez
+        .add_int16(woodcutting)  # 3. Talar (Tácticas)
+        .add_int16(agility)  # 4. Agilidad
+        .add_int16(fishing)  # 5. Pesca
+        .add_int16(mining)  # 6. Minería
+        .add_int16(blacksmithing)  # 7. Herrería
+        .add_int16(carpentry)  # 8. Carpintería
+        .add_int16(survival)  # 9. Supervivencia
         .to_bytes()
     )

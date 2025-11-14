@@ -452,3 +452,58 @@ class PlayerRepository:
             "carpinteria": int(result.get("carpinteria", 0)),
             "supervivencia": int(result.get("supervivencia", 0)),
         }
+
+    async def set_skills(self, user_id: int, **skills: int) -> None:
+        """Guarda las habilidades del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            **skills: Habilidades a guardar (magia, robustez, etc.).
+        """
+        key = RedisKeys.player_skills(user_id)
+        if skills:
+            await self.redis.redis.hset(key, mapping={k: str(v) for k, v in skills.items()})  # type: ignore[misc]
+            logger.debug(
+                "Habilidades actualizadas para user_id %d: %s", user_id, list(skills.keys())
+            )
+
+    async def add_skill_experience(
+        self, user_id: int, skill_name: str, exp_gained: int
+    ) -> tuple[int, bool]:
+        """Añade experiencia a una habilidad específica y retorna nueva experiencia.
+
+        y si subió de nivel.
+
+        Args:
+            user_id: ID del usuario.
+            skill_name: Nombre de la habilidad (ej: 'talar', 'pesca', 'mineria').
+            exp_gained: Experiencia a añadir.
+
+        Returns:
+            Tupla (nueva_experiencia, subio_de_nivel).
+        """
+        # Obtener experiencia actual
+        skills = await self.get_skills(user_id) or {}
+        current_exp = skills.get(skill_name, 0)
+        new_exp = current_exp + exp_gained
+
+        # Calcular nivel (cada 100 exp = 1 nivel)
+        old_level = current_exp // 100
+        new_level = new_exp // 100
+        leveled_up = new_level > old_level
+
+        # Actualizar experiencia
+        await self.set_skills(user_id, **{skill_name: new_exp})
+
+        logger.info(
+            "User %d ganó %d exp en %s: %d → %d (nivel %d→%d)",
+            user_id,
+            exp_gained,
+            skill_name,
+            current_exp,
+            new_exp,
+            old_level,
+            new_level,
+        )
+
+        return new_exp, leveled_up
