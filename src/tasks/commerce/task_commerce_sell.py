@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager
 from src.models.items_catalog import ITEMS_CATALOG
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
@@ -135,7 +136,7 @@ class TaskCommerceSell(Task):
             return
 
         # Enviar todos los slots del inventario
-        for slot in range(1, self.inventory_repo.MAX_SLOTS + 1):
+        for slot in range(1, ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) + 1):
             slot_data = await self.inventory_repo.get_slot(user_id, slot)
 
             if slot_data:

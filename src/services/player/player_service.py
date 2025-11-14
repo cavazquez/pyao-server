@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager
 from src.models.items_catalog import get_item
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.equipment_service import EquipmentService
@@ -231,7 +232,7 @@ class PlayerService:
         non_empty_slots = sum(1 for v in inventory.values() if v and isinstance(v, str))
         logger.info("Enviando inventario para user_id %d (%d items)", user_id, non_empty_slots)
 
-        for i in range(1, InventoryRepository.MAX_SLOTS + 1):
+        for i in range(1, ConfigManager.as_int(InventoryRepository.MAX_SLOTS) + 1):
             slot_key = f"slot_{i}"
             slot_value = inventory.get(slot_key, "")
 

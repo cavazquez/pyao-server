@@ -4,6 +4,7 @@ import logging
 import random
 
 from src.combat.combat_critical_calculator import CriticalCalculator
+from src.config.config_manager import ConfigManager, config_manager
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +18,16 @@ class DamageCalculator:
 
     def __init__(
         self,
-        defense_per_level: float = 0.1,
+        defense_per_level: float | None = None,
     ) -> None:
         """Inicializa el calculador de daño.
 
         Args:
-            defense_per_level: Reducción de defensa por nivel (default: 10%).
+            defense_per_level: Reducción de defensa por nivel (usa config si es None).
         """
-        self.defense_per_level = defense_per_level
+        self.defense_per_level = defense_per_level or config_manager.get(
+            "game.combat.defense_per_level", 0.1
+        )
         self.critical_calculator = CriticalCalculator()
 
     def calculate_player_damage(
@@ -98,6 +101,6 @@ class DamageCalculator:
         Returns:
             Daño después de defensa.
         """
-        defense_reduction = target_level * self.defense_per_level
+        defense_reduction = target_level * ConfigManager.as_float(self.defense_per_level)
         damage_after_defense = int(damage * (1 - defense_reduction))
         return max(1, damage_after_defense)

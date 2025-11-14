@@ -6,7 +6,7 @@ los componentes más simples: InventoryStorage y InventoryStackingStrategy.
 
 import logging
 
-from src.config import config
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
 from src.utils.inventory_storage import InventoryStorage
@@ -22,7 +22,9 @@ class InventoryRepository:
     y InventoryStackingStrategy para proporcionar una API simple.
     """
 
-    MAX_SLOTS = config.game.max_inventory_slots  # Número máximo de slots de inventario
+    MAX_SLOTS = config_manager.get(
+        "game.max_inventory_slots", 25
+    )  # Número máximo de slots de inventario
 
     def __init__(self, redis_client: RedisClient, max_stack: int = 20) -> None:
         """Inicializa el repositorio de inventario.
@@ -52,7 +54,7 @@ class InventoryRepository:
 
         # Convertir a formato legacy
         legacy_inventory: dict[str, str] = {}
-        for i in range(1, self.MAX_SLOTS + 1):
+        for i in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1):
             slot_key = f"slot_{i}"
             if i in slots:
                 legacy_inventory[slot_key] = slots[i].to_string()

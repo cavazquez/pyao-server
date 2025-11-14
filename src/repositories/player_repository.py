@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -487,9 +488,10 @@ class PlayerRepository:
         current_exp = skills.get(skill_name, 0)
         new_exp = current_exp + exp_gained
 
-        # Calcular nivel (cada 100 exp = 1 nivel)
-        old_level = current_exp // 100
-        new_level = new_exp // 100
+        # Calcular nivel (configurable)
+        exp_per_level = ConfigManager.as_int(config_manager.get("game.work.exp_per_level", 100))
+        old_level = current_exp // exp_per_level
+        new_level = new_exp // exp_per_level
         leveled_up = new_level > old_level
 
         # Actualizar experiencia

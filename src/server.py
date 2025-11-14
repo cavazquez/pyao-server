@@ -6,6 +6,7 @@ import sys
 from typing import TYPE_CHECKING
 
 import redis
+from src.config.config_manager import config_manager
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
@@ -25,19 +26,19 @@ class ArgentumServer:
 
     def __init__(
         self,
-        host: str = "0.0.0.0",
-        port: int = 7666,
+        host: str | None = None,
+        port: int | None = None,
         ssl_manager: SSLManager | None = None,
     ) -> None:
         """Inicializa el servidor.
 
         Args:
-            host: Dirección IP donde escuchar (se sobrescribe con Redis).
-            port: Puerto donde escuchar (se sobrescribe con Redis).
+            host: Dirección IP donde escuchar (usa config si es None).
+            port: Puerto donde escuchar (usa config si es None).
             ssl_manager: Gestor de configuración SSL.
         """
-        self.host = host
-        self.port = port
+        self.host = host or config_manager.get("server.host", "0.0.0.0")
+        self.port = port or config_manager.get("server.port", 7666)
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias

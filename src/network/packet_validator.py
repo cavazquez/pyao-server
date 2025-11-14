@@ -5,7 +5,7 @@ import struct
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from src.config import config
+from src.config.config_manager import ConfigManager, config_manager
 
 if TYPE_CHECKING:
     from src.network.packet_reader import PacketReader
@@ -569,7 +569,10 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int, "quantity": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
+        slot = self.read_slot(
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+        )
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
@@ -669,7 +672,10 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
+        slot = self.read_slot(
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+        )
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
@@ -687,7 +693,10 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
+        slot = self.read_slot(
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+        )
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.models.items_catalog import get_item
 from src.tasks.task import Task
 
@@ -20,10 +21,10 @@ SKILL_TALAR = 9
 SKILL_PESCA = 12
 SKILL_MINERIA = 13
 
-# Constantes de experiencia
-EXP_LENA = 10
-EXP_MINERAL = 15
-EXP_PESCADO = 12
+# Constantes de experiencia (desde configuración)
+EXP_LENA = ConfigManager.as_int(config_manager.get("game.work.exp_wood", 10))
+EXP_MINERAL = ConfigManager.as_int(config_manager.get("game.work.exp_mineral", 15))
+EXP_PESCADO = ConfigManager.as_int(config_manager.get("game.work.exp_fish", 12))
 
 # Constantes de packet
 MIN_PACKET_LENGTH = 4

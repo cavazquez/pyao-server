@@ -2,34 +2,38 @@
 
 import random
 
+from src.config.config_manager import ConfigManager, config_manager
+
 
 class CriticalCalculator:
     """Calcula probabilidades de críticos y esquives en combate.
 
     Sistema de críticos:
-    - Probabilidad base: 15%
+    - Probabilidad base: configurable (default 15%)
     - Modificador por agilidad: +0.5% por cada punto de AGI sobre 10
     - Daño crítico: 2x el daño normal
 
     Sistema de esquives:
-    - Probabilidad base: 10%
+    - Probabilidad base: configurable (default 10%)
     - Modificador por agilidad: +0.7% por cada punto de AGI sobre 10
     - Esquivar anula completamente el daño
     """
 
-    # Constantes de críticos
-    BASE_CRITICAL_CHANCE = 0.15  # 15% base
-    CRITICAL_DAMAGE_MULTIPLIER = 2.0  # 2x daño
-    CRITICAL_AGI_MODIFIER = 0.005  # +0.5% por punto de AGI
+    def __init__(self) -> None:
+        """Inicializa el calculador con valores de configuración."""
+        # Constantes de críticos
+        self.BASE_CRITICAL_CHANCE = config_manager.get("game.combat.base_critical_chance", 0.15)
+        self.CRITICAL_DAMAGE_MULTIPLIER = 2.0  # 2x daño
+        self.CRITICAL_AGI_MODIFIER = 0.005  # +0.5% por punto de AGI
 
-    # Constantes de esquives
-    BASE_DODGE_CHANCE = 0.10  # 10% base
-    DODGE_AGI_MODIFIER = 0.007  # +0.7% por punto de AGI
+        # Constantes de esquives
+        self.BASE_DODGE_CHANCE = config_manager.get("game.combat.base_dodge_chance", 0.10)
+        self.DODGE_AGI_MODIFIER = 0.007  # +0.7% por punto de AGI
 
-    # Límites
-    MAX_CRITICAL_CHANCE = 0.50  # 50% máximo
-    MAX_DODGE_CHANCE = 0.40  # 40% máximo
-    BASE_AGILITY = 10  # AGI base de referencia
+        # Límites
+        self.MAX_CRITICAL_CHANCE = 0.50  # 50% máximo
+        self.MAX_DODGE_CHANCE = 0.40  # 40% máximo
+        self.BASE_AGILITY = 10  # AGI base de referencia
 
     def calculate_critical_chance(self, agility: int) -> float:
         """Calcula la probabilidad de crítico basada en agilidad.
@@ -41,13 +45,15 @@ class CriticalCalculator:
             Probabilidad de crítico (0.0 a 1.0).
         """
         # Calcular bonus por agilidad
-        agi_bonus = max(0, agility - self.BASE_AGILITY) * self.CRITICAL_AGI_MODIFIER
+        agi_bonus = max(0, agility - self.BASE_AGILITY) * ConfigManager.as_float(
+            self.CRITICAL_AGI_MODIFIER
+        )
 
         # Probabilidad total
-        chance = self.BASE_CRITICAL_CHANCE + agi_bonus
+        chance = ConfigManager.as_float(self.BASE_CRITICAL_CHANCE) + agi_bonus
 
         # Aplicar límite máximo
-        return min(chance, self.MAX_CRITICAL_CHANCE)
+        return min(chance, ConfigManager.as_float(self.MAX_CRITICAL_CHANCE))
 
     def calculate_dodge_chance(self, agility: int) -> float:
         """Calcula la probabilidad de esquivar basada en agilidad.
@@ -59,13 +65,15 @@ class CriticalCalculator:
             Probabilidad de esquivar (0.0 a 1.0).
         """
         # Calcular bonus por agilidad
-        agi_bonus = max(0, agility - self.BASE_AGILITY) * self.DODGE_AGI_MODIFIER
+        agi_bonus = max(0, agility - self.BASE_AGILITY) * ConfigManager.as_float(
+            self.DODGE_AGI_MODIFIER
+        )
 
         # Probabilidad total
-        chance = self.BASE_DODGE_CHANCE + agi_bonus
+        chance = ConfigManager.as_float(self.BASE_DODGE_CHANCE) + agi_bonus
 
         # Aplicar límite máximo
-        return min(chance, self.MAX_DODGE_CHANCE)
+        return min(chance, ConfigManager.as_float(self.MAX_DODGE_CHANCE))
 
     def is_critical_hit(self, agility: int) -> bool:
         """Determina si un ataque es crítico.

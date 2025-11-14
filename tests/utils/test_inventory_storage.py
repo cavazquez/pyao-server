@@ -18,7 +18,7 @@ class TestInventoryStorage:
         storage = InventoryStorage(redis_client)
 
         assert storage.redis_client == redis_client
-        assert storage.MAX_SLOTS == 25
+        assert storage.MAX_SLOTS == 30
 
     async def test_get_slot_valid(self) -> None:
         """Test de obtención de slot válido."""
@@ -49,8 +49,8 @@ class TestInventoryStorage:
         redis_client.redis = AsyncMock()
 
         storage = InventoryStorage(redis_client)
-        # Test with a slot number that's greater than max_inventory_slots (25)
-        slot = await storage.get_slot(1, 26)  # Fuera de rango (26 > 25)
+        # Test with a slot number that's greater than max_inventory_slots (30)
+        slot = await storage.get_slot(1, 31)  # Fuera de rango (31 > 30)
 
         assert slot is None
         # Verify Redis was never called since the slot is invalid
@@ -139,7 +139,7 @@ class TestInventoryStorage:
         redis_client = MagicMock()
         # Simular inventario lleno
         full_inventory = {f"slot_{i}".encode(): b"10:5" for i in range(1, 21)}
-        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 26)}
+        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 31)}
         redis_client.redis.hgetall = AsyncMock(return_value=full_inventory)
 
         storage = InventoryStorage(redis_client)
@@ -161,7 +161,7 @@ class TestInventoryStorage:
         """Test de verificar sin espacio disponible."""
         redis_client = MagicMock()
         # Simular inventario lleno
-        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 26)}
+        full_inventory = {f"slot_{i}": "10:5" for i in range(1, 31)}
         redis_client.redis.hgetall = AsyncMock(return_value=full_inventory)
 
         storage = InventoryStorage(redis_client)

@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.config import config
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 
@@ -20,7 +20,7 @@ class InventoryStorage:
     sin lógica de negocio de inventario.
     """
 
-    MAX_SLOTS = config.game.max_inventory_slots
+    MAX_SLOTS = config_manager.get("game.max_inventory_slots", 30)
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el storage de inventario.
@@ -103,7 +103,7 @@ class InventoryStorage:
 
         # Parsear slots
         slots: dict[int, InventorySlot] = {}
-        for slot_num in range(1, self.MAX_SLOTS + 1):
+        for slot_num in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1):
             slot_key = f"slot_{slot_num}"
             value = inventory.get(slot_key)
 
@@ -137,7 +137,7 @@ class InventoryStorage:
         """
         slots = await self.get_all_slots(user_id)
 
-        for slot_num in range(1, self.MAX_SLOTS + 1):
+        for slot_num in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1):
             if slot_num not in slots:
                 return slot_num
 
@@ -162,7 +162,9 @@ class InventoryStorage:
             user_id: ID del jugador.
         """
         key = RedisKeys.player_inventory(user_id)
-        empty_inventory = {f"slot_{i}": "" for i in range(1, self.MAX_SLOTS + 1)}
+        empty_inventory = {
+            f"slot_{i}": "" for i in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1)
+        }
 
         await self.redis_client.redis.hset(key, mapping=empty_inventory)  # type: ignore[misc]
         logger.info("Inventario vacío creado para user_id %d", user_id)
@@ -176,4 +178,4 @@ class InventoryStorage:
         Returns:
             True si el slot está entre 1 y MAX_SLOTS.
         """
-        return 1 <= slot <= self.MAX_SLOTS
+        return 1 <= slot <= ConfigManager.as_int(self.MAX_SLOTS)

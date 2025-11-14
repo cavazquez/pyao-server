@@ -2,6 +2,8 @@
 
 import logging
 
+from src.config.config_manager import ConfigManager, config_manager
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,13 +14,13 @@ class CombatValidator:
     necesarias para que un combate sea válido.
     """
 
-    def __init__(self, melee_range: int = 1) -> None:
+    def __init__(self, melee_range: int | None = None) -> None:
         """Inicializa el validador de combate.
 
         Args:
-            melee_range: Rango de ataque cuerpo a cuerpo (default: 1 tile).
+            melee_range: Rango de ataque cuerpo a cuerpo (usa config si es None).
         """
-        self.melee_range = melee_range
+        self.melee_range = melee_range or config_manager.get("game.combat.melee_range", 1)
 
     def can_attack(self, attacker_pos: dict[str, int], target_pos: dict[str, int]) -> bool:
         """Verifica si un atacante puede atacar a un objetivo.
@@ -31,7 +33,7 @@ class CombatValidator:
             True si está en rango de ataque.
         """
         distance = CombatValidator.calculate_distance(attacker_pos, target_pos)
-        return distance <= self.melee_range
+        return distance <= ConfigManager.as_int(self.melee_range)
 
     @staticmethod
     def calculate_distance(pos1: dict[str, int], pos2: dict[str, int]) -> int:

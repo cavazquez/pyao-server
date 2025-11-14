@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config import config
+from src.config.config_manager import ConfigManager
 from src.network.packet_data import DropData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -69,7 +70,9 @@ class TaskDrop(Task):
         # Parsear y validar packet
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        slot = validator.read_slot(min_slot=1, max_slot=config.game.max_inventory_slots)
+        slot = validator.read_slot(
+            min_slot=1, max_slot=ConfigManager.as_int(config.get("game.max_inventory_slots", 25))
+        )
         quantity = validator.read_quantity(min_qty=1, max_qty=10000)
 
         if validator.has_errors() or slot is None or quantity is None:

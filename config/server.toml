@@ -1,0 +1,51 @@
+# Configuración del servidor PyAO
+# Archivo principal de configuración - TOML format
+
+[server]
+# Dirección y puerto del servidor
+host = "0.0.0.0"
+port = 7666
+max_connections = 1000
+buffer_size = 4096
+
+[game]
+# Configuración del juego
+max_players_per_map = 100
+respawn_check_interval = 5.0
+npc_respawn_base_time = 30.0
+npc_respawn_random_variance = 15.0
+
+[game.combat]
+# Configuración de combate
+melee_range = 1
+base_critical_chance = 0.15
+base_dodge_chance = 0.05
+defense_per_level = 0.1
+armor_reduction = 0.1
+
+[game.work]
+# Experiencia y configuración de trabajo
+exp_wood = 10
+exp_mineral = 15
+exp_fish = 12
+exp_per_level = 100
+max_work_distance = 1
+
+[game.stamina]
+# Sistema de energía/stamina
+max_stamina = 100
+stamina_regen_rate = 1.0
+stamina_drain_rate = 2.0
+
+[logging]
+# Configuración de logs
+level = "INFO"
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+file = "logs/server.log"
+
+[redis]
+# Configuración de Redis
+host = "localhost"
+port = 6379
+db = 0
+max_connections = 20
