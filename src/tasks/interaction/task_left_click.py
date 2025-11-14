@@ -146,17 +146,22 @@ class TaskLeftClick(Task):
         # Parsear y validar packet
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        coords = validator.read_coordinates(max_x=100, max_y=100)
 
-        if validator.has_errors() or coords is None:
-            error_msg = (
-                validator.get_error_message() if validator.has_errors() else "Coordenadas inválidas"
+        # Usar nueva API consistente
+        coords_result = validator.validate_coordinates(max_x=100, max_y=100)
+
+        if not coords_result.success:
+            await self.message_sender.send_console_msg(
+                coords_result.error_message or "Coordenadas inválidas"
             )
-            await self.message_sender.send_console_msg(error_msg)
             return
 
         # Crear dataclass con datos validados
-        click_data = LeftClickData(x=coords[0], y=coords[1])
+        if coords_result.data is None:
+            await self.message_sender.send_console_msg("Coordenadas inválidas")
+            return
+        x, y = coords_result.data
+        click_data = LeftClickData(x=x, y=y)
 
         logger.info(
             "user_id %d hizo click en posición (%d, %d)", user_id, click_data.x, click_data.y

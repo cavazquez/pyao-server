@@ -1170,3 +1170,210 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
                 success=False, data=None, error_message=self.get_error_message()
             )
         return ValidationResult(success=True, data={}, error_message=None)
+
+    # Métodos de validación específicos para patrones comunes
+    # Estos métodos reemplazan a los métodos read_* para una API consistente
+
+    def validate_slot(self, min_slot: int = 1, max_slot: int = 20) -> ValidationResult[int]:
+        """Valida un slot de inventario/banco.
+
+        Args:
+            min_slot: Slot mínimo válido (default: 1).
+            max_slot: Slot máximo válido (default: 20).
+
+        Returns:
+            ValidationResult con el slot validado o error descriptivo.
+        """
+        try:
+            slot = self.reader.read_byte()
+        except (ValueError, IndexError, struct.error) as e:
+            return ValidationResult(
+                success=False, data=None, error_message=f"Error leyendo slot: {e}"
+            )
+
+        if not min_slot <= slot <= max_slot:
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=f"Slot inválido: {slot} (debe estar entre {min_slot}-{max_slot})",
+            )
+
+        return ValidationResult(success=True, data=slot, error_message=None)
+
+    def validate_quantity(self, min_qty: int = 1, max_qty: int = 10000) -> ValidationResult[int]:
+        """Valida una cantidad.
+
+        Args:
+            min_qty: Cantidad mínima válida (default: 1).
+            max_qty: Cantidad máxima válida (default: 10000).
+
+        Returns:
+            ValidationResult con la cantidad validada o error descriptivo.
+        """
+        try:
+            quantity = self.reader.read_int16()
+        except (ValueError, IndexError, struct.error) as e:
+            return ValidationResult(
+                success=False, data=None, error_message=f"Error leyendo cantidad: {e}"
+            )
+
+        if not min_qty <= quantity <= max_qty:
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=(
+                    f"Cantidad inválida: {quantity} (debe estar entre {min_qty}-{max_qty})"
+                ),
+            )
+
+        return ValidationResult(success=True, data=quantity, error_message=None)
+
+    def validate_coordinates(
+        self, max_x: int = 100, max_y: int = 100
+    ) -> ValidationResult[tuple[int, int]]:
+        """Valida coordenadas X, Y.
+
+        Args:
+            max_x: Coordenada X máxima.
+            max_y: Coordenada Y máxima.
+
+        Returns:
+            ValidationResult con la tupla (x, y) validada o error descriptivo.
+        """
+        try:
+            x = self.reader.read_byte()
+            y = self.reader.read_byte()
+        except (ValueError, IndexError, struct.error) as e:
+            return ValidationResult(
+                success=False, data=None, error_message=f"Error leyendo coordenadas: {e}"
+            )
+
+        if not (1 <= x <= max_x and 1 <= y <= max_y):
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=(
+                    f"Coordenadas inválidas: ({x}, {y}) (deben estar entre 1-{max_x}, 1-{max_y})"
+                ),
+            )
+
+        return ValidationResult(success=True, data=(x, y), error_message=None)
+
+    def validate_slot_and_quantity(
+        self, min_slot: int = 1, max_slot: int = 20, min_qty: int = 1, max_qty: int = 10000
+    ) -> ValidationResult[tuple[int, int]]:
+        """Valida un slot y una cantidad (patrón común en commerce/bank).
+
+        Args:
+            min_slot: Slot mínimo válido.
+            max_slot: Slot máximo válido.
+            min_qty: Cantidad mínima válida.
+            max_qty: Cantidad máxima válida.
+
+        Returns:
+            ValidationResult con la tupla (slot, quantity) validada o error descriptivo.
+        """
+        # Validar slot
+        slot_result = self.validate_slot(min_slot, max_slot)
+        if not slot_result.success:
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=slot_result.error_message,
+            )
+
+        # Validar cantidad
+        qty_result = self.validate_quantity(min_qty, max_qty)
+        if not qty_result.success:
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message=qty_result.error_message,
+            )
+
+        # Validar que los datos no son None (should never happen when success=True)
+        if slot_result.data is None or qty_result.data is None:
+            return ValidationResult(
+                success=False,
+                data=None,
+                error_message="Error interno: datos de validación son None",
+            )
+
+        return ValidationResult(
+            success=True,
+            data=(slot_result.data, qty_result.data),
+            error_message=None,
+        )
+
+    def validate_string(
+        self, min_length: int = 1, max_length: int = 255, encoding: str = "utf-16le"
+    ) -> ValidationResult[str]:
+        """Valida un string del packet.
+
+        Args:
+            min_length: Longitud mínima del string.
+            max_length: Longitud máxima del string.
+            encoding: Codificación del string (default: utf-16le).
+
+        Returns:
+            ValidationResult con el string validado o error descriptivo.
+        """
+        try:
+            # Guardar offset original
+
+            # Leer longitud primero
+            length_bytes_size = 2
+            length_bytes = self.reader.data[
+                self.reader.offset : self.reader.offset + length_bytes_size
+            ]
+            if len(length_bytes) < length_bytes_size:
+                return ValidationResult(
+                    success=False,
+                    data=None,
+                    error_message="Error leyendo longitud del string: packet truncado",
+                )
+
+            length = struct.unpack("<H", length_bytes)[0]
+
+            # Validar longitud
+            if length < min_length or length > max_length:
+                return ValidationResult(
+                    success=False,
+                    data=None,
+                    error_message=(
+                        f"Longitud de string inválida: {length} "
+                        f"(debe estar entre {min_length}-{max_length})"
+                    ),
+                )
+
+            # Avanzar offset después de leer longitud
+            self.reader.offset += 2
+
+            # Leer bytes del string
+            string_bytes = self.reader.data[self.reader.offset : self.reader.offset + length]
+
+            # Validar que hay suficientes bytes
+            if len(string_bytes) < length:
+                return ValidationResult(
+                    success=False,
+                    data=None,
+                    error_message=(
+                        f"String truncado: se esperaban {length} bytes, hay {len(string_bytes)}"
+                    ),
+                )
+
+            # Decodificar con la codificación especificada
+            string_value = string_bytes.decode(encoding)
+
+            # Actualizar offset del reader
+            self.reader.offset += length
+
+        except (ValueError, IndexError, struct.error, UnicodeDecodeError) as e:
+            return ValidationResult(
+                success=False, data=None, error_message=f"Error leyendo string: {e}"
+            )
+
+        if not string_value:
+            return ValidationResult(success=False, data=None, error_message="String vacío")
+
+        return ValidationResult(success=True, data=string_value, error_message=None)

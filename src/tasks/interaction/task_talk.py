@@ -60,14 +60,16 @@ class TaskTalk(Task):
         """
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        message = validator.read_string(
+
+        # Usar nueva API consistente
+        message_result = validator.validate_string(
             min_length=1, max_length=MAX_MESSAGE_LENGTH, encoding="utf-8"
         )
 
-        if validator.has_errors() or message is None:
+        if not message_result.success:
             return None
 
-        return TalkData(message=message)
+        return TalkData(message=message_result.data or "")
 
     async def execute(self) -> None:
         """Procesa el mensaje de chat."""

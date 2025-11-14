@@ -257,5 +257,144 @@ def test_validation_result_failure() -> None:
     )
 
     assert not result.success
+
+
+# Tests para los nuevos métodos validate_* (API consistente)
+
+
+def test_validate_slot_valid() -> None:
+    """Verifica que validate_slot funciona con slot válido."""
+    data = bytes([1, 5])  # PacketID + slot=5
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_slot(min_slot=1, max_slot=20)
+
+    assert result.success
+    assert result.data == 5
+    assert result.error_message is None
+
+
+def test_validate_slot_invalid() -> None:
+    """Verifica que validate_slot detecta slot inválido."""
+    data = bytes([1, 25])  # PacketID + slot=25 (fuera de rango)
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_slot(min_slot=1, max_slot=20)
+
+    assert not result.success
     assert result.data is None
-    assert result.error_message == "Error de validación"
+    assert "Slot inválido: 25" in result.error_message
+
+
+def test_validate_quantity_valid() -> None:
+    """Verifica que validate_quantity funciona con cantidad válida."""
+    data = bytes([1, 100, 0])  # PacketID + quantity=100 (little-endian)
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_quantity(min_qty=1, max_qty=1000)
+
+    assert result.success
+    assert result.data == 100
+    assert result.error_message is None
+
+
+def test_validate_quantity_invalid() -> None:
+    """Verifica que validate_quantity detecta cantidad inválida."""
+    data = bytes([1, 0, 50])  # PacketID + quantity=12800 (fuera de rango)
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_quantity(min_qty=1, max_qty=1000)
+
+    assert not result.success
+    assert result.data is None
+    assert "Cantidad inválida: 12800" in result.error_message
+
+
+def test_validate_coordinates_valid() -> None:
+    """Verifica que validate_coordinates funciona con coordenadas válidas."""
+    data = bytes([1, 50, 75])  # PacketID + x=50, y=75
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_coordinates(max_x=100, max_y=100)
+
+    assert result.success
+    assert result.data == (50, 75)
+    assert result.error_message is None
+
+
+def test_validate_coordinates_invalid() -> None:
+    """Verifica que validate_coordinates detecta coordenadas inválidas."""
+    data = bytes([1, 150, 75])  # PacketID + x=150 (fuera de rango), y=75
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_coordinates(max_x=100, max_y=100)
+
+    assert not result.success
+    assert result.data is None
+    assert "Coordenadas inválidas: (150, 75)" in result.error_message
+
+
+def test_validate_string_valid_utf8() -> None:
+    """Verifica que validate_string funciona con string UTF-8 válido."""
+    message = "Hola mundo"
+    message_bytes = message.encode("utf-8")
+    length = len(message_bytes)
+    data = bytes([1]) + length.to_bytes(2, "little") + message_bytes  # PacketID + longitud + string
+
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_string(min_length=1, max_length=255, encoding="utf-8")
+
+    assert result.success
+    assert result.data == message
+    assert result.error_message is None
+
+
+def test_validate_string_invalid_length() -> None:
+    """Verifica que validate_string detecta longitud inválida."""
+    message = "x" * 300  # String muy largo
+    message_bytes = message.encode("utf-8")
+    length = len(message_bytes)
+    data = bytes([1]) + length.to_bytes(2, "little") + message_bytes
+
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_string(min_length=1, max_length=255, encoding="utf-8")
+
+    assert not result.success
+    assert result.data is None
+    assert "Longitud de string inválida: 300" in result.error_message
+
+
+def test_validate_slot_and_quantity_valid() -> None:
+    """Verifica que validate_slot_and_quantity funciona con datos válidos."""
+    data = bytes([1, 5, 100, 0])  # PacketID + slot=5 + quantity=100
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_slot_and_quantity(min_slot=1, max_slot=20, min_qty=1, max_qty=1000)
+
+    assert result.success
+    assert result.data == (5, 100)
+    assert result.error_message is None
+
+
+def test_validate_slot_and_quantity_invalid_slot() -> None:
+    """Verifica que validate_slot_and_quantity detecta slot inválido."""
+    data = bytes([1, 25, 100, 0])  # PacketID + slot=25 (inválido) + quantity=100
+    reader = PacketReader(data)
+    validator = PacketValidator(reader)
+
+    result = validator.validate_slot_and_quantity(min_slot=1, max_slot=20, min_qty=1, max_qty=1000)
+
+    assert not result.success
+    assert result.data is None
+    assert "Slot inválido: 25" in result.error_message

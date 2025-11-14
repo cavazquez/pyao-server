@@ -56,11 +56,21 @@ class TaskSpellInfo(Task):
         if slot is None:
             reader = PacketReader(self.data)
             validator = PacketValidator(reader)
-            slot = validator.read_slot(min_slot=1, max_slot=MAX_SPELL_SLOTS)
 
-            if validator.has_errors() or slot is None:
+            # Usar nueva API consistente
+            slot_result = validator.validate_slot(min_slot=1, max_slot=MAX_SPELL_SLOTS)
+
+            if not slot_result.success:
+                await self.message_sender.send_console_msg(
+                    slot_result.error_message or "¡Primero selecciona el hechizo!"
+                )
+                return
+
+            if slot_result.data is None:
                 await self.message_sender.send_console_msg("¡Primero selecciona el hechizo!")
                 return
+
+            slot = slot_result.data
 
         spell_id = await self.spellbook_repo.get_spell_in_slot(user_id, slot)
         if not spell_id:
