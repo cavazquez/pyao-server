@@ -15,6 +15,7 @@ from src.network.msg_player_stats import (
     build_update_strength_response,
     build_update_user_stats_response,
 )
+from src.network.msg_skills import build_update_skills_response
 
 if TYPE_CHECKING:
     from src.network.client_connection import ClientConnection
@@ -193,5 +194,57 @@ class PlayerStatsMessageSender:
             level,
             elu,
             experience,
+        )
+        await self.connection.send(response)
+
+    async def send_update_skills(
+        self,
+        magic: int,
+        robustness: int,
+        agility: int,
+        woodcutting: int,
+        fishing: int,
+        mining: int,
+        blacksmithing: int,
+        carpentry: int,
+        survival: int,
+    ) -> None:
+        """Envía paquete SEND_SKILLS con todas las habilidades del jugador.
+
+        Args:
+            magic: Nivel de magia.
+            robustness: Nivel de robustez.
+            agility: Nivel de agilidad.
+            woodcutting: Nivel de tala.
+            fishing: Nivel de pesca.
+            mining: Nivel de minería.
+            blacksmithing: Nivel de herrería.
+            carpentry: Nivel de carpintería.
+            survival: Nivel de supervivencia.
+        """
+        response = build_update_skills_response(
+            magic=magic,
+            robustness=robustness,
+            agility=agility,
+            woodcutting=woodcutting,
+            fishing=fishing,
+            mining=mining,
+            blacksmithing=blacksmithing,
+            carpentry=carpentry,
+            survival=survival,
+        )
+        logger.info(
+            "[%s] Enviando SEND_SKILLS: MAG=%d ROB=%d AGI=%d TAL=%d PES=%d MIN=%d "
+            "HERR=%d CARP=%d SUP=%d",
+            self.connection.address,
+            magic,
+            robustness,
+            agility,
+            woodcutting,
+            fishing,
+            mining,
+            blacksmithing,
+            carpentry,
+            survival,
         )
         await self.connection.send(response)

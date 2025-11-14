@@ -47,6 +47,7 @@ from src.tasks.task_party_leave import TaskPartyLeave
 from src.tasks.task_party_message import TaskPartyMessage
 from src.tasks.task_party_set_leader import TaskPartySetLeader
 from src.tasks.task_quit import TaskQuit
+from src.tasks.task_request_skills import TaskRequestSkills
 from src.tasks.task_tls_handshake import TaskTLSHandshake
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
@@ -252,6 +253,9 @@ class TaskFactory:
             ),
             TaskDice: lambda: TaskDice(data, message_sender, session_data, self.deps.server_repo),
             TaskRequestAttributes: lambda: TaskRequestAttributes(
+                data, message_sender, self.deps.player_repo, session_data
+            ),
+            TaskRequestSkills: lambda: TaskRequestSkills(
                 data, message_sender, self.deps.player_repo, session_data
             ),
             TaskTalk: lambda: TaskTalk(

@@ -603,6 +603,43 @@ class MessageSender:  # noqa: PLR0904
         """
         await self.work.send_work_request_target(skill_type)
 
+    async def send_update_skills(
+        self,
+        magic: int,
+        robustness: int,
+        agility: int,
+        woodcutting: int,
+        fishing: int,
+        mining: int,
+        blacksmithing: int,
+        carpentry: int,
+        survival: int,
+    ) -> None:
+        """Envía paquete SEND_SKILLS con todas las habilidades del jugador.
+
+        Args:
+            magic: Nivel de magia.
+            robustness: Nivel de robustez.
+            agility: Nivel de agilidad.
+            woodcutting: Nivel de tala.
+            fishing: Nivel de pesca.
+            mining: Nivel de minería.
+            blacksmithing: Nivel de herrería.
+            carpentry: Nivel de carpintería.
+            survival: Nivel de supervivencia.
+        """
+        await self.player_stats.send_update_skills(
+            magic,
+            robustness,
+            agility,
+            woodcutting,
+            fishing,
+            mining,
+            blacksmithing,
+            carpentry,
+            survival,
+        )
+
     async def send_create_fx_at_position(self, _x: int, _y: int, fx: int, loops: int) -> None:
         """Envía efecto visual en una posición específica del mapa.
 

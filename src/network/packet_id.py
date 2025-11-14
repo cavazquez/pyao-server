@@ -25,7 +25,7 @@ class ClientPacketID(IntEnum):
     # REQUEST_GUILD_LEADER_INFO = 12
     REQUEST_ATTRIBUTES = 13  # RequestAtributes
     # REQUEST_FAME = 14
-    # REQUEST_SKILLS = 15
+    REQUEST_SKILLS = 15  # Solicitar habilidades del jugador
     # REQUEST_MINI_STATS = 16
     COMMERCE_END = 17  # Cerrar ventana de comercio
     # USER_COMMERCE_END = 18
@@ -215,7 +215,7 @@ class ServerPacketID(IntEnum):
     MEDITATE_TOGGLE = 68  # Toggle meditación
     # BLIND_NO_MORE = 69
     # DUMB_NO_MORE = 70
-    # SEND_SKILLS = 71
+    SEND_SKILLS = 71  # Enviar habilidades del jugador
     # TRAINER_CREATURE_LIST = 72
     # GUILD_NEWS = 73
     # OFFER_DETAILS = 74

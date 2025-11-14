@@ -425,3 +425,30 @@ class PlayerRepository:
         key = RedisKeys.player_user_stats(user_id)
         await self.redis.redis.hset(key, "min_sta", str(stamina))  # type: ignore[misc]
         logger.debug("Stamina actualizada para user_id %d: %d", user_id, stamina)
+
+    async def get_skills(self, user_id: int) -> dict[str, int] | None:
+        """Obtiene las habilidades del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con las habilidades o None si no existe.
+        """
+        key = RedisKeys.player_skills(user_id)
+        result: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
+
+        if not result:
+            return None
+
+        return {
+            "magia": int(result.get("magia", 0)),
+            "robustez": int(result.get("robustez", 0)),
+            "agilidad": int(result.get("agilidad", 0)),
+            "talar": int(result.get("talar", 0)),
+            "pesca": int(result.get("pesca", 0)),
+            "mineria": int(result.get("mineria", 0)),
+            "herreria": int(result.get("herreria", 0)),
+            "carpinteria": int(result.get("carpinteria", 0)),
+            "supervivencia": int(result.get("supervivencia", 0)),
+        }

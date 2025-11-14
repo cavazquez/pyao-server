@@ -45,6 +45,7 @@ from src.tasks.task_party_message import TaskPartyMessage
 from src.tasks.task_party_set_leader import TaskPartySetLeader
 from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
+from src.tasks.task_request_skills import TaskRequestSkills
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
 from src.tasks.work.task_work_left_click import TaskWorkLeftClick
@@ -73,6 +74,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.WORK: TaskWork,  # Trabajar (talar, minar, pescar)
     ClientPacketID.WORK_LEFT_CLICK: TaskWorkLeftClick,  # Trabajar con click en coordenadas
     ClientPacketID.REQUEST_ATTRIBUTES: TaskRequestAttributes,
+    ClientPacketID.REQUEST_SKILLS: TaskRequestSkills,  # Solicitar habilidades del jugador
     ClientPacketID.SPELL_INFO: TaskSpellInfo,  # Solicitar información de hechizo
     ClientPacketID.COMMERCE_BUY: TaskCommerceBuy,  # Comprar item del mercader
     ClientPacketID.BANK_EXTRACT_ITEM: TaskBankExtract,  # Extraer item del banco

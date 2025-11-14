@@ -144,6 +144,15 @@ class RedisKeys:
         """
         return f"player:{user_id}:equipment"
 
+    @staticmethod
+    def player_skills(user_id: int) -> str:
+        """Clave para habilidades del jugador.
+
+        Returns:
+            Clave de Redis para las habilidades.
+        """
+        return f"player:{user_id}:skills"
+
     # Cuentas de usuario
     ACCOUNTS_COUNTER = "accounts:counter"
 
