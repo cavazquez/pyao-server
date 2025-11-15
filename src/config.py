@@ -70,6 +70,10 @@ class GameConfig:
     max_party_members: int
     respawn_time_seconds: int
     max_level: int
+    hp_per_con: int
+    mana_per_int: int
+    initial_gold: int
+    initial_elu: int
 
     @classmethod
     def from_env(cls) -> GameConfig:
@@ -84,6 +88,10 @@ class GameConfig:
             max_party_members=int(os.getenv("GAME_MAX_PARTY_MEMBERS", "6")),
             respawn_time_seconds=int(os.getenv("GAME_RESPAWN_TIME_SECONDS", "180")),
             max_level=int(os.getenv("GAME_MAX_LEVEL", "50")),
+            hp_per_con=int(os.getenv("GAME_HP_PER_CON", "10")),
+            mana_per_int=int(os.getenv("GAME_MANA_PER_INT", "10")),
+            initial_gold=int(os.getenv("GAME_INITIAL_GOLD", "0")),
+            initial_elu=int(os.getenv("GAME_INITIAL_ELU", "300")),
         )
 
 

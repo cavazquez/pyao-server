@@ -3,6 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
+from src.game.character_constants import (
+    GENDER_ID_TO_NAME,
+    HOME_ID_TO_NAME,
+    JOB_ID_TO_CLASS_NAME,
+    RACE_ID_TO_NAME,
+)
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.repositories.inventory_repository import InventoryRepository
@@ -31,44 +38,23 @@ MAX_USERNAME_LENGTH = 20
 MIN_PASSWORD_LENGTH = 6
 MAX_PASSWORD_LENGTH = 32
 
-# Mapping de IDs de clase (cliente Godot / protocolo AO) a nombres de clase
-# usados en el archivo data/classes_balance.toml.
-JOB_ID_TO_CLASS_NAME: dict[int, str] = {
-    1: "Mago",
-    2: "Clerigo",
-    3: "Guerrero",
-    4: "Asesino",
-    5: "Ladron",
-    6: "Bardo",
-    7: "Druida",
-    8: "Bandido",
-    9: "Paladin",
-    10: "Cazador",
-    11: "Trabajador",
-    12: "Pirata",
-}
-
-RACE_ID_TO_NAME: dict[int, str] = {
-    1: "Humano",
-    2: "Elfo",
-    3: "Drow",
-    4: "Gnomo",
-    5: "Enano",
-}
-
-GENDER_ID_TO_NAME: dict[int, str] = {
-    1: "Hombre",
-    2: "Mujer",
-}
-
-HOME_ID_TO_NAME: dict[int, str] = {
-    1: "Ullathorpe",
-    2: "Nix",
-    3: "Banderbill",
-    4: "Lindos",
-    5: "Arghal",
-    6: "Arkhein",
-}
+# Constantes de creación de personaje desde configuración
+HP_PER_CON = ConfigManager.as_int(
+    config_manager.get("game.character.hp_per_con", 10),
+    default=10,
+)
+MANA_PER_INT = ConfigManager.as_int(
+    config_manager.get("game.character.mana_per_int", 10),
+    default=10,
+)
+INITIAL_GOLD = ConfigManager.as_int(
+    config_manager.get("game.character.initial_gold", 0),
+    default=0,
+)
+INITIAL_ELU = ConfigManager.as_int(
+    config_manager.get("game.character.initial_elu", 300),
+    default=300,
+)
 
 
 class TaskCreateAccount(Task):
@@ -366,18 +352,18 @@ class TaskCreateAccount(Task):
                 # Crear estadísticas iniciales basadas en atributos + clase
                 constitution = final_attributes.get("constitution", 10)
                 intelligence = final_attributes.get("intelligence", 10)
-                base_hp = constitution * 10
+                base_hp = constitution * HP_PER_CON
                 max_hp = balance_service.calculate_max_health(base_hp, class_name)
                 initial_stats = {
                     "max_hp": max_hp,
                     "min_hp": max_hp,
-                    "max_mana": intelligence * 10,
-                    "min_mana": intelligence * 10,
+                    "max_mana": intelligence * MANA_PER_INT,
+                    "min_mana": intelligence * MANA_PER_INT,
                     "max_sta": 100,
                     "min_sta": 100,
-                    "gold": 0,
+                    "gold": INITIAL_GOLD,
                     "level": 1,
-                    "elu": 300,
+                    "elu": INITIAL_ELU,
                     "experience": 0,
                 }
                 await self.player_repo.set_stats(user_id=user_id, **initial_stats)

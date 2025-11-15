@@ -140,6 +140,12 @@ class ConfigManager:
                 "bank": {
                     "max_slots": 40,
                 },
+                "character": {
+                    "hp_per_con": 10,
+                    "mana_per_int": 10,
+                    "initial_gold": 0,
+                    "initial_elu": 300,
+                },
             },
             "logging": {
                 "level": "INFO",
