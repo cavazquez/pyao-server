@@ -1,14 +1,14 @@
 # Roadmap de Versiones - PyAO Server
 
-**Última actualización:** 2025-01-29  
-**Versión actual:** 0.6.0-alpha (EN PROGRESO)  
+**Última actualización:** 2025-11-15  
+**Versión actual:** 0.7.0-alpha (EN PROGRESO)  
 **Estrategia:** Una feature principal por versión
 
 ---
 
 ## 📊 Estado Actual
 
-**Versión:** 0.6.0-alpha (78% completado)  
+**Versión estable:** 0.6.0-alpha (COMPLETADA)  
 **Tests:** 1123 pasando (100%)  
 **Cobertura:** 78%  
 **Calidad:** Excelente (0 errores linting/mypy)
@@ -20,15 +20,15 @@
 - ✅ Herramientas equipables y recursos
 - ✅ Transiciones de mapa por rangos (120+ transiciones)
 
-**Pendientes para completar 0.6.0:**
-- ✅ Tests faltantes (work/, admin/, map services) - COMPLETADO
-- ⏳ Refactorizar secuencia de cambio de mapa
-- ⏳ Validación de longitud de packets
-- ⏳ Configuration Management
+**Subversiones 0.6.x:**
+- ✅ 0.6.1 - Tests faltantes (work/, admin/, map services)
+- ✅ 0.6.2 - Refactorizar secuencia de cambio de mapa
+- ✅ 0.6.3 - Validación de longitud de packets
+- ✅ 0.6.4 - Configuration Management
 
 ---
 
-## 🎯 Versión 0.6.0-alpha (ACTUAL - EN PROGRESO)
+## 🎯 Línea 0.6.x-alpha (COMPLETADA)
 
 ### 0.6.1-alpha - Tests Faltantes ✅ COMPLETADO
 **Prioridad:** 🔴 Alta  
@@ -57,10 +57,10 @@
 
 ---
 
-### 0.6.2-alpha - Refactorizar Secuencia de Cambio de Mapa
+### 0.6.2-alpha - Refactorizar Secuencia de Cambio de Mapa ✅ COMPLETADO
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 1 día  
-**Estado:** Pendiente
+**Estado:** ✅ Completado
 
 **Problema:** Código duplicado en 3 lugares con la misma secuencia de 12 pasos:
 1. `task_login.py` - Login inicial del jugador
@@ -68,11 +68,11 @@
 3. `task_gm_commands.py` - Teletransporte GM
 
 **Solución:**
-- [ ] Crear método `MapTransitionService.transition_player_to_map(user_id, new_map, new_x, new_y, heading)`
-- [ ] Encapsular toda la secuencia en un solo lugar
-- [ ] Parámetros opcionales para casos especiales (skip broadcast, etc.)
-- [ ] Migrar los 3 archivos al nuevo método
-- [ ] Tests unitarios del servicio
+- [x] Crear método `MapTransitionService.transition_player_to_map(user_id, new_map, new_x, new_y, heading)`
+- [x] Encapsular toda la secuencia en un solo lugar
+- [x] Parámetros opcionales para casos especiales (skip broadcast, etc.)
+- [x] Migrar los 3 archivos al nuevo método
+- [x] Tests unitarios del servicio
 
 **Beneficios:**
 - DRY (Don't Repeat Yourself)
@@ -84,20 +84,16 @@
 
 ---
 
-### 0.6.3-alpha - Validación de Longitud de Packets
+### 0.6.3-alpha - Validación de Longitud de Packets ✅ COMPLETADO
 **Prioridad:** 🟡 Media  
 **Esfuerzo:** 4-6 horas  
-**Estado:** Pendiente
+**Estado:** ✅ Completado
 
 **Tareas:**
-- [ ] Agregar validación de longitud en `PacketReader`
-  ```python
-  def validate_length(self, expected: int) -> bool:
-      return len(self.data) >= self.offset + expected
-  ```
-- [ ] Validar antes de parsear en todas las tasks
-- [ ] Enviar error descriptivo al cliente si falla
-- [ ] Tests de packets malformados
+- [x] Agregar validación de longitud en `PacketReader`/`PacketValidator`
+- [x] Validar antes de parsear en todas las tasks relevantes
+- [x] Enviar error descriptivo al cliente si falla
+- [x] Tests de packets malformados/truncados
 
 **Beneficio:** Prevenir crashes por packets malformados, mejor seguridad
 
@@ -105,22 +101,16 @@
 
 ---
 
-### 0.6.4-alpha - Configuration Management
+### 0.6.4-alpha - Configuration Management ✅ COMPLETADO
 **Prioridad:** 🟡 Media  
 **Esfuerzo:** 2-3 horas  
-**Estado:** Pendiente
+**Estado:** ✅ Completado
 
 **Tareas:**
-- [ ] Crear `src/config.py` con Pydantic BaseSettings
-- [ ] Centralizar configuraciones hardcodeadas:
-  - Redis host/port
-  - Server host/port
-  - Timeouts
-  - Límites (max inventory, max bank slots)
-  - Constantes de gameplay
-- [ ] Cargar desde variables de entorno o `.env`
-- [ ] Documentar todas las configuraciones
-- [ ] Tests de carga de configuración
+- [x] Centralizar configuraciones hardcodeadas en ficheros de config (`config/server.toml`) y un `ConfigManager`
+- [x] Configurar Redis host/port, server host/port, timeouts y límites principales
+- [x] Documentar todas las configuraciones en `docs/CONFIGURATION.md`
+- [x] Tests básicos de carga de configuración
 
 **Beneficio:** Fácil configuración sin recompilar, mejor para deployment
 

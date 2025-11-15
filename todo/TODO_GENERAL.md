@@ -111,9 +111,15 @@ Este proyecto tiene varios documentos TODO especializados:
 > **NOTA:** Para el roadmap completo y detallado, ver **`ROADMAP_VERSIONES.md`**
 
 ### 📝 Versión 0.7.0-alpha - Sistema de Clases
-- 📅 **Fecha estimada:** 2-3 semanas
+- 📅 **Estado:** EN PROGRESO
 - 🔴 **Prioridad:** Alta
-- **Features:** Guerrero, Mago, Arquero, Clérigo con atributos y restricciones
+- **Objetivo general:** Sistema de clases jugables con restricciones y progresión básica
+
+- [ ] Definir modelo de datos de Clase (stats base, crecimiento, restricciones de equipo)
+- [ ] Integrar la clase del personaje en el flujo de creación de cuenta / personaje
+- [ ] Ajustar cálculo de daño/defensa para usar modificadores por clase
+- [ ] Restringir equipamiento según clase (armas/armaduras permitidas)
+- [ ] Actualizar documentación (docs/ y README) para reflejar el sistema de clases
 
 ### 📝 Versión 0.8.0-alpha - Sistema de Partys/Grupos
 - 📅 **Fecha estimada:** 1-2 semanas
