@@ -95,6 +95,12 @@ class ConfigManager:
                     "base_dodge_chance": 0.05,
                     "defense_per_level": 0.1,
                     "armor_reduction": 0.1,
+                    "critical_damage_multiplier": 2.0,
+                    "critical_agi_modifier": 0.005,
+                    "dodge_agi_modifier": 0.007,
+                    "max_critical_chance": 0.50,
+                    "max_dodge_chance": 0.40,
+                    "base_agility": 10,
                 },
                 "work": {
                     "exp_wood": 10,
@@ -107,6 +113,32 @@ class ConfigManager:
                     "max_stamina": 100,
                     "stamina_regen_rate": 1.0,
                     "stamina_drain_rate": 2.0,
+                    "cost_walk": 1,
+                    "cost_attack": 2,
+                    "cost_spell": 3,
+                    "cost_work": 5,
+                    "regen_tick": 2,
+                    "regen_resting": 5,
+                },
+                "effects": {
+                    "hunger_thirst": {
+                        "enabled": True,
+                        "interval_sed": 180,
+                        "interval_hambre": 180,
+                        "reduccion_agua": 10,
+                        "reduccion_hambre": 10,
+                    },
+                    "gold_decay": {
+                        "enabled": True,
+                        "percentage": 1.0,
+                        "interval_seconds": 60.0,
+                    },
+                },
+                "inventory": {
+                    "max_slots": 30,
+                },
+                "bank": {
+                    "max_slots": 40,
                 },
             },
             "logging": {

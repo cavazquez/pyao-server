@@ -23,6 +23,14 @@ base_dodge_chance = 0.05
 defense_per_level = 0.1
 armor_reduction = 0.1
 
+# Críticos y esquives
+critical_damage_multiplier = 2.0
+critical_agi_modifier = 0.005    # +0.5% por punto de AGI
+dodge_agi_modifier = 0.007       # +0.7% por punto de AGI
+max_critical_chance = 0.50       # 50% máximo
+max_dodge_chance = 0.40          # 40% máximo
+base_agility = 10                # AGI base de referencia
+
 [game.work]
 # Experiencia y configuración de trabajo
 exp_wood = 10
@@ -36,6 +44,38 @@ max_work_distance = 1
 max_stamina = 100
 stamina_regen_rate = 1.0
 stamina_drain_rate = 2.0
+
+# Costos de stamina por acción
+cost_walk = 1           # Consumo por movimiento
+cost_attack = 2         # Consumo por ataque
+cost_spell = 3          # Consumo por hechizo
+cost_work = 5           # Consumo por trabajar (talar, minar, etc.)
+
+# Regeneración de stamina
+regen_tick = 2          # Puntos regenerados por tick
+regen_resting = 5       # Puntos regenerados si está descansando
+
+[game.hunger_thirst]
+# Efecto de hambre y sed
+enabled = true
+interval_sed = 180        # segundos entre ticks de sed
+interval_hambre = 180     # segundos entre ticks de hambre
+reduccion_agua = 10       # puntos de sed por tick
+reduccion_hambre = 10     # puntos de hambre por tick
+
+[game.gold_decay]
+# Efecto de decaimiento de oro
+enabled = true
+percentage = 1.0          # porcentaje de oro a perder
+interval_seconds = 60.0   # intervalo en segundos
+
+[game.inventory]
+# Configuración de inventario de jugadores
+max_slots = 30
+
+[game.bank]
+# Configuración de bóvedas bancarias
+max_slots = 40
 
 [logging]
 # Configuración de logs

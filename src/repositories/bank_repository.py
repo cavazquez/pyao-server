@@ -3,6 +3,7 @@
 import logging
 from dataclasses import dataclass
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.repositories.base_slot_repository import BaseSlotRepository
 from src.utils.item_slot_parser import ItemSlotParser
 from src.utils.redis_client import RedisClient  # noqa: TC001
@@ -27,7 +28,7 @@ class BankRepository(BaseSlotRepository):
     Hereda de BaseSlotRepository para reutilizar métodos comunes.
     """
 
-    MAX_SLOTS = 20
+    MAX_SLOTS = ConfigManager.as_int(config_manager.get("game.bank.max_slots", 40))
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el repositorio de banco.

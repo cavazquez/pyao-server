@@ -24,9 +24,9 @@ class TestBankRepository:
         # Obtener banco (debe inicializarse automáticamente)
         bank = await repo.get_bank(user_id)
 
-        # Verificar que tiene 20 slots vacíos
-        assert len(bank) == 20
-        for i in range(1, 21):
+        # Verificar que tiene 40 slots vacíos (según configuración)
+        assert len(bank) == 40
+        for i in range(1, 41):
             slot_key = f"slot_{i}"
             assert slot_key in bank
             assert not bank[slot_key]
@@ -77,7 +77,7 @@ class TestBankRepository:
         user_id = 1
 
         # Llenar todos los slots con items diferentes
-        for i in range(1, 21):
+        for i in range(1, 41):
             slot = await repo.deposit_item(user_id, item_id=i, quantity=1)
             assert slot == i
 
@@ -161,7 +161,7 @@ class TestBankRepository:
         success = await repo.extract_item(user_id, slot=0, quantity=1)
         assert success is False
 
-        success = await repo.extract_item(user_id, slot=21, quantity=1)
+        success = await repo.extract_item(user_id, slot=41, quantity=1)
         assert success is False
 
     async def test_get_all_items(self, redis_client: RedisClient) -> None:
@@ -193,7 +193,7 @@ class TestBankRepository:
         item = await repo.get_item(user_id, slot=0)
         assert item is None
 
-        item = await repo.get_item(user_id, slot=21)
+        item = await repo.get_item(user_id, slot=41)
         assert item is None
 
     async def test_multiple_users_isolation(self, redis_client: RedisClient) -> None:

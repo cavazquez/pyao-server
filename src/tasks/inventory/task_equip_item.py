@@ -69,7 +69,8 @@ class TaskEquipItem(Task):
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
         slot = validator.read_slot(
-            min_slot=1, max_slot=ConfigManager.as_int(config.get("game.max_inventory_slots", 25))
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config.get("game.inventory.max_slots", 30)),
         )
 
         if validator.has_errors() or slot is None:

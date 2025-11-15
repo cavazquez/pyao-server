@@ -198,7 +198,7 @@ def test_validate_drop_packet_success() -> None:
 
 def test_validate_drop_packet_invalid_slot() -> None:
     """Verifica que validate_drop_packet retorna error con slot inválido."""
-    invalid_slot = config.get("game.max_inventory_slots", 25) + 1
+    invalid_slot = config.get("game.inventory.max_slots", 30) + 1
     data = bytes([18, invalid_slot]) + struct.pack("<H", 10)
     reader = PacketReader(data)
     validator = PacketValidator(reader)

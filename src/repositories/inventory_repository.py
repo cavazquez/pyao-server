@@ -23,7 +23,7 @@ class InventoryRepository:
     """
 
     MAX_SLOTS = config_manager.get(
-        "game.max_inventory_slots", 25
+        "game.inventory.max_slots", 30
     )  # Número máximo de slots de inventario
 
     def __init__(self, redis_client: RedisClient, max_stack: int = 20) -> None:

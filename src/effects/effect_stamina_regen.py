@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.effects.tick_effect import TickEffect
 
 if TYPE_CHECKING:
@@ -13,7 +14,9 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # Constantes de regeneración
-STAMINA_REGEN_RATE = 2  # Puntos regenerados por tick (cada 1 segundo)
+STAMINA_REGEN_RATE = ConfigManager.as_int(
+    config_manager.get("game.stamina.regen_tick", 2)
+)  # Puntos regenerados por tick (cada 1 segundo)
 
 
 class StaminaRegenEffect(TickEffect):

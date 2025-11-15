@@ -3,21 +3,23 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
+
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
-# Constantes de consumo de stamina
-STAMINA_COST_WALK = 1  # Consumo por movimiento
-STAMINA_COST_ATTACK = 2  # Consumo por ataque
-STAMINA_COST_SPELL = 3  # Consumo por hechizo
-STAMINA_COST_WORK = 5  # Consumo por trabajar (talar, minar, etc.)
+# Constantes de consumo de stamina desde configuración
+STAMINA_COST_WALK = ConfigManager.as_int(config_manager.get("game.stamina.cost_walk", 1))
+STAMINA_COST_ATTACK = ConfigManager.as_int(config_manager.get("game.stamina.cost_attack", 2))
+STAMINA_COST_SPELL = ConfigManager.as_int(config_manager.get("game.stamina.cost_spell", 3))
+STAMINA_COST_WORK = ConfigManager.as_int(config_manager.get("game.stamina.cost_work", 5))
 
-# Constantes de regeneración
-STAMINA_REGEN_RATE = 2  # Puntos de stamina regenerados por tick
-STAMINA_REGEN_RESTING = 5  # Puntos regenerados si está descansando (sin moverse)
+# Constantes de regeneración desde configuración
+STAMINA_REGEN_RATE = ConfigManager.as_int(config_manager.get("game.stamina.regen_tick", 2))
+STAMINA_REGEN_RESTING = ConfigManager.as_int(config_manager.get("game.stamina.regen_resting", 5))
 
 
 class StaminaService:

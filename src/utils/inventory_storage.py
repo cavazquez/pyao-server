@@ -20,7 +20,7 @@ class InventoryStorage:
     sin lógica de negocio de inventario.
     """
 
-    MAX_SLOTS = config_manager.get("game.max_inventory_slots", 30)
+    MAX_SLOTS = config_manager.get("game.inventory.max_slots", 30)
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el storage de inventario.

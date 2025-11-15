@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.effects.tick_effect import TickEffect
 from src.utils.redis_config import RedisKeys
 
@@ -39,20 +40,35 @@ class HungerThirstEffect(TickEffect):
         message_sender: MessageSender | None,
     ) -> None:
         """Aplica la reducción de hambre y sed."""
-        # Leer configuración desde Redis
+        # Leer configuración desde Redis, usando defaults desde ConfigManager
+        default_intervalo_sed = ConfigManager.as_int(
+            config_manager.get("game.effects.hunger_thirst.interval_sed", 180)
+        )
+        default_intervalo_hambre = ConfigManager.as_int(
+            config_manager.get("game.effects.hunger_thirst.interval_hambre", 180)
+        )
+        default_reduccion_agua = ConfigManager.as_int(
+            config_manager.get("game.effects.hunger_thirst.reduccion_agua", 10)
+        )
+        default_reduccion_hambre = ConfigManager.as_int(
+            config_manager.get("game.effects.hunger_thirst.reduccion_hambre", 10)
+        )
+
         intervalo_sed = await self.server_repo.get_effect_config_int(
             RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED,
-            180,  # 180 segundos = 3 minutos
+            default_intervalo_sed,
         )
         intervalo_hambre = await self.server_repo.get_effect_config_int(
             RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE,
-            180,  # 180 segundos = 3 minutos
+            default_intervalo_hambre,
         )
         reduccion_agua = await self.server_repo.get_effect_config_int(
-            RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, 10
+            RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA,
+            default_reduccion_agua,
         )
         reduccion_hambre = await self.server_repo.get_effect_config_int(
-            RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, 10
+            RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE,
+            default_reduccion_hambre,
         )
 
         # Obtener datos actuales

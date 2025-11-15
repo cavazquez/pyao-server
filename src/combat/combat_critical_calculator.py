@@ -23,17 +23,27 @@ class CriticalCalculator:
         """Inicializa el calculador con valores de configuración."""
         # Constantes de críticos
         self.BASE_CRITICAL_CHANCE = config_manager.get("game.combat.base_critical_chance", 0.15)
-        self.CRITICAL_DAMAGE_MULTIPLIER = 2.0  # 2x daño
-        self.CRITICAL_AGI_MODIFIER = 0.005  # +0.5% por punto de AGI
+        self.CRITICAL_DAMAGE_MULTIPLIER = ConfigManager.as_float(
+            config_manager.get("game.combat.critical_damage_multiplier", 2.0)
+        )
+        self.CRITICAL_AGI_MODIFIER = ConfigManager.as_float(
+            config_manager.get("game.combat.critical_agi_modifier", 0.005)
+        )
 
         # Constantes de esquives
         self.BASE_DODGE_CHANCE = config_manager.get("game.combat.base_dodge_chance", 0.10)
-        self.DODGE_AGI_MODIFIER = 0.007  # +0.7% por punto de AGI
+        self.DODGE_AGI_MODIFIER = ConfigManager.as_float(
+            config_manager.get("game.combat.dodge_agi_modifier", 0.007)
+        )
 
         # Límites
-        self.MAX_CRITICAL_CHANCE = 0.50  # 50% máximo
-        self.MAX_DODGE_CHANCE = 0.40  # 40% máximo
-        self.BASE_AGILITY = 10  # AGI base de referencia
+        self.MAX_CRITICAL_CHANCE = ConfigManager.as_float(
+            config_manager.get("game.combat.max_critical_chance", 0.50)
+        )
+        self.MAX_DODGE_CHANCE = ConfigManager.as_float(
+            config_manager.get("game.combat.max_dodge_chance", 0.40)
+        )
+        self.BASE_AGILITY = ConfigManager.as_int(config_manager.get("game.combat.base_agility", 10))
 
     def calculate_critical_chance(self, agility: int) -> float:
         """Calcula la probabilidad de crítico basada en agilidad.

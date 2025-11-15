@@ -571,7 +571,7 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         """
         slot = self.read_slot(
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
         if self.has_errors():
             return ValidationResult(
@@ -742,7 +742,10 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int, "quantity": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
+        slot = self.read_slot(
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
+        )
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
@@ -796,7 +799,10 @@ class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
         Returns:
             ValidationResult con {"slot": int, "quantity": int} si es válido.
         """
-        slot = self.read_slot(min_slot=1, max_slot=40)  # Banco tiene 40 slots
+        slot = self.read_slot(
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.bank.max_slots", 40)),
+        )
         if self.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=self.get_error_message()
