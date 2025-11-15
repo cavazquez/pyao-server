@@ -1,4 +1,4 @@
-# TODO: Sistema de NPC Factory
+# TODO (Histórico): Sistema de NPC Factory
 
 **Estado:** ✅ **COMPLETADO** - 21 de octubre, 2025  
 **Prioridad:** Media  
@@ -444,36 +444,38 @@ respawn_time = 0  # No respawnea
 
 ---
 
-## 📝 Checklist de Implementación
+## 📝 Checklist de Implementación (histórico)
 
-### Fase 1: Estructura Base
-- [ ] Crear `src/npc_factory.py` con clase `NPCFactory`
-- [ ] Implementar `_create_hostile_base()` método helper
-- [ ] Agregar campos `fx` y `fx_loop` a `src/npc.py`
+> Este checklist refleja el plan original de implementación. Hoy se conserva solo como **referencia histórica**; la implementación real y los tests están documentados en `docs/NPC_FACTORY_COMPLETED.md`.
 
-### Fase 2: Factory Methods
-- [ ] Implementar `create_goblin()`
-- [ ] Implementar `create_lobo()`
-- [ ] Implementar `create_araña()`
-- [ ] Implementar `create_orco()`
-- [ ] Implementar `create_dragon()` (opcional)
+### Fase 1: Estructura Base (completada)
+- [x] Crear `src/npc_factory.py` con clase `NPCFactory`
+- [x] Implementar `_create_hostile_base()` método helper
+- [x] Agregar campos `fx` y `fx_loop` a `src/npc.py`
 
-### Fase 3: NPCs Amigables
-- [ ] Implementar `create_comerciante()`
-- [ ] Implementar `create_banquero()`
-- [ ] Implementar `create_guardia()`
+### Fase 2: Factory Methods (completada)
+- [x] Implementar `create_goblin()`
+- [x] Implementar `create_lobo()`
+- [x] Implementar `create_araña()`
+- [x] Implementar `create_orco()`
+- [x] Implementar `create_dragon()` / variantes equivalentes
 
-### Fase 4: Integración
-- [ ] Modificar `NPCService.spawn_npc_by_name()` para usar factory
-- [ ] Actualizar spawns en `data/npcs.toml` con `npc_type`
-- [ ] Implementar envío de FX en `_handle_npc_death()`
-- [ ] Implementar envío de FX loop en `spawn_npc()`
+### Fase 3: NPCs Amigables (completada)
+- [x] Implementar `create_comerciante()`
+- [x] Implementar `create_banquero()`
+- [x] Implementar `create_guardia()`
 
-### Fase 5: Testing
-- [ ] Tests unitarios de `NPCFactory`
-- [ ] Tests de creación de cada tipo de NPC
-- [ ] Tests de FX al morir
-- [ ] Tests de FX loop al spawnear
+### Fase 4: Integración (completada)
+- [x] Modificar `NPCService.spawn_npc_by_name()` para usar factory
+- [x] Actualizar spawns en `data/npcs.toml` con `npc_type`
+- [x] Implementar envío de FX en `_handle_npc_death()`
+- [x] Implementar envío de FX loop en `spawn_npc()`
+
+### Fase 5: Testing (completada)
+- [x] Tests unitarios de `NPCFactory`
+- [x] Tests de creación de cada tipo de NPC
+- [x] Tests de FX al morir
+- [x] Tests de FX loop al spawnear
 
 ---
 
@@ -496,6 +498,6 @@ respawn_time = 0  # No respawnea
 
 ---
 
-**Última actualización:** 2025-10-18  
-**Autor:** Diseño propuesto en conversación  
-**Estado:** 📝 Pendiente implementación
+**Última actualización:** 2025-10-21  
+**Autor:** Diseño propuesto en conversación, luego implementado y documentado en `docs/NPC_FACTORY_COMPLETED.md`  
+**Estado:** ✅ Implementado (este archivo se conserva como referencia histórica)
