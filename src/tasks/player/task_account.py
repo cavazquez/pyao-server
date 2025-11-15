@@ -171,7 +171,7 @@ class TaskCreateAccount(Task):
             char_data = {}
             # Validar que haya suficientes bytes para los datos del personaje
             # Protocolo cliente (ver GameProtocol.WriteLoginNewChar):
-            # [0, 13, 0] + race (u8) + gender (u8) + job (u8) + head (u16)
+            # [0, 13, 0] + race (u8) + gender (u8) + job (u8) + head (u16) noqa: ERA001
             if len(self.data) >= offset + 9:
                 # Saltar los 3 bytes fijos (0, 13, 0)
                 offset += 3
@@ -216,7 +216,7 @@ class TaskCreateAccount(Task):
         else:
             return (username, password, email, char_data)
 
-    async def execute(self) -> None:  # noqa: PLR0915
+    async def execute(self) -> None:  # noqa: PLR0914, PLR0915
         """Ejecuta la creación de cuenta."""
         logger.info("TaskCreateAccount.execute() llamado")
 
@@ -418,8 +418,8 @@ class TaskCreateAccount(Task):
             logger.info(
                 (
                     "Personaje creado: user_id=%d, username=%s, raza=%s (%s), clase=%s (job=%s), "
-                    "gender=%s (%s), head=%s, home=%s (%s), atributos_base=%s, atributos_finales=%s, "
-                    "stats_iniciales=%s"
+                    "gender=%s (%s), head=%s, home=%s (%s), atributos_base=%s, "
+                    "atributos_finales=%s, stats_iniciales=%s"
                 ),
                 user_id,
                 username,
