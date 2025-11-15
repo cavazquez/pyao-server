@@ -27,6 +27,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.game.balance_service import BalanceService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.npc.npc_service import NPCService
 
@@ -202,7 +203,7 @@ class TaskCreateAccount(Task):
         else:
             return (username, password, email, char_data)
 
-    async def execute(self) -> None:  # noqa: PLR0914, PLR0915
+    async def execute(self) -> None:  # noqa: PLR0914
         """Ejecuta la creación de cuenta."""
         logger.info("TaskCreateAccount.execute() llamado")
 
@@ -226,39 +227,12 @@ class TaskCreateAccount(Task):
 
         username, password, email, char_data = parsed
 
-        # Validar que se haya recibido una clase (job) válida mapeable a una
-        # clase conocida por el sistema de balance.
-        job_value = char_data.get("job") if char_data is not None else None
-        if not isinstance(job_value, int) or job_value not in JOB_ID_TO_CLASS_NAME:
-            logger.warning(
-                "Clase inválida en creación de cuenta desde %s: job=%s",
-                self.message_sender.connection.address,
-                job_value,
-            )
-            await self.message_sender.send_error_msg("Clase de personaje inválida")
-            return
-
-        class_name = JOB_ID_TO_CLASS_NAME[job_value]
         balance_service = get_balance_service()
-        if not balance_service.validate_class(class_name):
-            logger.warning(
-                "Clase '%s' (job=%s) no existe en balance de clases",
-                class_name,
-                job_value,
-            )
-            await self.message_sender.send_error_msg("Clase de personaje inválida")
-            return
-
-        # Validar raza recibida
-        race_value = char_data.get("race") if char_data is not None else None
-        race_name = RACE_ID_TO_NAME.get(race_value or 0)
-        if race_name is None or not balance_service.validate_race(race_name):
-            logger.warning(
-                "Raza inválida en creación de cuenta desde %s: race=%s",
-                self.message_sender.connection.address,
-                race_value,
-            )
-            await self.message_sender.send_error_msg("Raza de personaje inválida")
+        class_name, race_name = await self._validate_character_selection(
+            char_data,
+            balance_service,
+        )
+        if class_name is None or race_name is None:
             return
 
         # Log de datos recibidos
@@ -270,23 +244,8 @@ class TaskCreateAccount(Task):
             char_data,
         )
 
-        # Validar datos
-        if not username or len(username) < MIN_USERNAME_LENGTH:
-            logger.warning("Username muy corto: %s (len=%d)", username, len(username))
-            await self.message_sender.send_error_msg(
-                f"El nombre de usuario debe tener al menos {MIN_USERNAME_LENGTH} caracteres"
-            )
-            return
-
-        if not password or len(password) < MIN_PASSWORD_LENGTH:
-            logger.warning("Password muy corto: len=%d", len(password))
-            await self.message_sender.send_error_msg(
-                f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres"
-            )
-            return
-
-        if not email or "@" not in email:
-            await self.message_sender.send_error_msg("Email inválido")
+        # Validar datos básicos de cuenta
+        if not await self._validate_account_fields(username, password, email):
             return
 
         # Verificar que los repositorios estén disponibles
@@ -299,12 +258,7 @@ class TaskCreateAccount(Task):
         password_hash = hash_password(password)
 
         # Obtener atributos de dados de la sesión
-        stats_data = None
-        if self.session_data and "dice_attributes" in self.session_data:
-            stats_data = self.session_data["dice_attributes"]
-            logger.info("Atributos de dados recuperados de sesión: %s", stats_data)
-        else:
-            logger.warning("No se encontraron atributos de dados en la sesión")
+        stats_data = self._get_dice_attributes_from_session()
 
         # Crear cuenta en Redis con datos separados
         try:
@@ -323,104 +277,29 @@ class TaskCreateAccount(Task):
                 self.message_sender.connection.address,
             )
 
-            final_attributes = None
-            base_attributes = None
-
-            # Guardar atributos de dados en Redis si existen
-            if stats_data:
-                base_attributes = {
-                    "strength": stats_data.get("strength", 10),
-                    "agility": stats_data.get("agility", 10),
-                    "intelligence": stats_data.get("intelligence", 10),
-                    "charisma": stats_data.get("charisma", 10),
-                    "constitution": stats_data.get("constitution", 10),
-                }
-
-                final_attributes = balance_service.apply_racial_modifiers(
-                    base_attributes,
-                    race_name,
-                )
-
-                await self.player_repo.set_attributes(user_id=user_id, **final_attributes)
-                logger.info(
-                    "Atributos guardados en Redis para user_id %d (base=%s, final=%s)",
-                    user_id,
-                    base_attributes,
-                    final_attributes,
-                )
-
-                # Crear estadísticas iniciales basadas en atributos + clase
-                constitution = final_attributes.get("constitution", 10)
-                intelligence = final_attributes.get("intelligence", 10)
-                base_hp = constitution * HP_PER_CON
-                max_hp = balance_service.calculate_max_health(base_hp, class_name)
-                initial_stats = {
-                    "max_hp": max_hp,
-                    "min_hp": max_hp,
-                    "max_mana": intelligence * MANA_PER_INT,
-                    "min_mana": intelligence * MANA_PER_INT,
-                    "max_sta": 100,
-                    "min_sta": 100,
-                    "gold": INITIAL_GOLD,
-                    "level": 1,
-                    "elu": INITIAL_ELU,
-                    "experience": 0,
-                }
-                await self.player_repo.set_stats(user_id=user_id, **initial_stats)
-                logger.info(
-                    "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
-                    user_id,
-                    initial_stats["max_hp"],
-                    initial_stats["max_mana"],
-                )
-
-            # Crear inventario inicial con items básicos
-            inventory_repo = InventoryRepository(self.player_repo.redis)
-            await inventory_repo.add_item(user_id, item_id=1, quantity=5)  # 5 Pociones Rojas
-            await inventory_repo.add_item(user_id, item_id=2, quantity=5)  # 5 Pociones Azules
-            await inventory_repo.add_item(user_id, item_id=3, quantity=10)  # 10 Manzanas
-            await inventory_repo.add_item(user_id, item_id=4, quantity=10)  # 10 Aguas
-            await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
-            # Armadura inicial (Newbie)
-            await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
-            # Herramientas de trabajo (Newbie)
-            await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador
-            await inventory_repo.add_item(user_id, item_id=562, quantity=1)  # Piquete de Minero
-            await inventory_repo.add_item(user_id, item_id=563, quantity=1)  # Caña de Pescar
-            logger.info(
-                "Inventario inicial creado para user_id %d (incluye Armadura de Aprendiz)", user_id
-            )
-
-            # Log resumen del personaje creado (atributos completos)
-            race_value = char_data.get("race") if char_data is not None else None
-            gender_value = char_data.get("gender") if char_data is not None else None
-            head_value = char_data.get("head") if char_data is not None else None
-            home_value = char_data.get("home") if char_data is not None else None
-
-            race_name = RACE_ID_TO_NAME.get(race_value or 0, "Desconocida")
-            gender_name = GENDER_ID_TO_NAME.get(gender_value or 0, "Desconocido")
-            home_name = HOME_ID_TO_NAME.get(home_value or 0, "Desconocido")
-
-            logger.info(
-                (
-                    "Personaje creado: user_id=%d, username=%s, raza=%s (%s), clase=%s (job=%s), "
-                    "gender=%s (%s), head=%s, home=%s (%s), atributos_base=%s, "
-                    "atributos_finales=%s, stats_iniciales=%s"
-                ),
-                user_id,
-                username,
-                race_value,
-                race_name,
-                class_name,
-                job_value,
-                gender_value,
-                gender_name,
-                head_value,
-                home_value,
-                home_name,
+            (
                 base_attributes,
                 final_attributes,
-                initial_stats if stats_data else None,
+                initial_stats,
+            ) = await self._create_attributes_and_stats(
+                user_id,
+                stats_data,
+                race_name,
+                class_name,
+                balance_service,
+            )
+
+            await self._create_initial_inventory(user_id)
+
+            await self._log_character_summary(
+                user_id,
+                username,
+                char_data,
+                class_name,
+                base_attributes,
+                final_attributes,
+                initial_stats,
+                stats_data,
             )
 
             # Ejecutar login automático después de crear la cuenta
@@ -446,3 +325,239 @@ class TaskCreateAccount(Task):
         except Exception:
             logger.exception("Error inesperado creando cuenta para %s", username)
             await self.message_sender.send_error_msg("Error interno del servidor")
+
+    async def _validate_character_selection(
+        self,
+        char_data: dict[str, int] | None,
+        balance_service: BalanceService,
+    ) -> tuple[str | None, str | None]:
+        """Valida clase (job) y raza recibidas en los datos del personaje.
+
+        Returns:
+            Tupla ``(class_name, race_name)`` cuando la selección es válida.
+            ``(None, None)`` si hay error (ya enviado al cliente).
+        """
+        if char_data is None:
+            logger.warning(
+                "CharData vacío en creación de cuenta desde %s",
+                self.message_sender.connection.address,
+            )
+            await self.message_sender.send_error_msg("Datos de personaje inválidos")
+            return (None, None)
+
+        # Validar clase
+        job_value = char_data.get("job")
+        if not isinstance(job_value, int) or job_value not in JOB_ID_TO_CLASS_NAME:
+            logger.warning(
+                "Clase inválida en creación de cuenta desde %s: job=%s",
+                self.message_sender.connection.address,
+                job_value,
+            )
+            await self.message_sender.send_error_msg("Clase de personaje inválida")
+            return (None, None)
+
+        class_name = JOB_ID_TO_CLASS_NAME[job_value]
+        if not balance_service.validate_class(class_name):
+            logger.warning(
+                "Clase '%s' (job=%s) no existe en balance de clases",
+                class_name,
+                job_value,
+            )
+            await self.message_sender.send_error_msg("Clase de personaje inválida")
+            return (None, None)
+
+        # Validar raza
+        race_value = char_data.get("race")
+        race_name = RACE_ID_TO_NAME.get(race_value or 0)
+        if race_name is None or not balance_service.validate_race(race_name):
+            logger.warning(
+                "Raza inválida en creación de cuenta desde %s: race=%s",
+                self.message_sender.connection.address,
+                race_value,
+            )
+            await self.message_sender.send_error_msg("Raza de personaje inválida")
+            return (None, None)
+
+        return (class_name, race_name)
+
+    async def _validate_account_fields(
+        self,
+        username: str,
+        password: str,
+        email: str,
+    ) -> bool:
+        """Valida username, password y email.
+
+        Returns:
+            ``True`` si todos los campos son válidos.
+            ``False`` si alguno es inválido (el error ya fue enviado al cliente).
+        """
+        if not username or len(username) < MIN_USERNAME_LENGTH:
+            logger.warning("Username muy corto: %s (len=%d)", username, len(username))
+            await self.message_sender.send_error_msg(
+                f"El nombre de usuario debe tener al menos {MIN_USERNAME_LENGTH} caracteres"
+            )
+            return False
+
+        if not password or len(password) < MIN_PASSWORD_LENGTH:
+            logger.warning("Password muy corto: len=%d", len(password))
+            await self.message_sender.send_error_msg(
+                f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres"
+            )
+            return False
+
+        if not email or "@" not in email:
+            await self.message_sender.send_error_msg("Email inválido")
+            return False
+
+        return True
+
+    def _get_dice_attributes_from_session(self) -> dict[str, int] | None:
+        """Obtiene atributos de dados desde la sesión si existen.
+
+        Returns:
+            Diccionario con atributos de dados o ``None`` si no hay datos en sesión.
+        """
+        if self.session_data and "dice_attributes" in self.session_data:
+            stats_data = self.session_data["dice_attributes"]
+            logger.info("Atributos de dados recuperados de sesión: %s", stats_data)
+            return stats_data
+
+        logger.warning("No se encontraron atributos de dados en la sesión")
+        return None
+
+    async def _create_attributes_and_stats(
+        self,
+        user_id: int,
+        stats_data: dict[str, int] | None,
+        race_name: str,
+        class_name: str,
+        balance_service: BalanceService,
+    ) -> tuple[dict[str, int] | None, dict[str, int] | None, dict[str, int] | None]:
+        """Crea atributos finales y estadísticas iniciales del personaje.
+
+        Returns:
+            Tupla ``(base_attributes, final_attributes, initial_stats)`` cuando
+            hay datos de dados. Si ``stats_data`` es ``None``, devuelve
+            ``(None, None, None)`` y no modifica atributos ni stats.
+        """
+        if stats_data is None:
+            return (None, None, None)
+
+        # En execute() ya se validó que player_repo no sea None, pero añadimos
+        # esta verificación defensiva para el type checker y para runtime.
+        if self.player_repo is None:
+            logger.error("player_repo es None al crear atributos/stats para user_id %d", user_id)
+            return (None, None, None)
+
+        player_repo = self.player_repo
+
+        base_attributes: dict[str, int] = {
+            "strength": stats_data.get("strength", 10),
+            "agility": stats_data.get("agility", 10),
+            "intelligence": stats_data.get("intelligence", 10),
+            "charisma": stats_data.get("charisma", 10),
+            "constitution": stats_data.get("constitution", 10),
+        }
+
+        final_attributes = balance_service.apply_racial_modifiers(
+            base_attributes,
+            race_name,
+        )
+
+        await player_repo.set_attributes(user_id=user_id, **final_attributes)
+        logger.info(
+            "Atributos guardados en Redis para user_id %d (base=%s, final=%s)",
+            user_id,
+            base_attributes,
+            final_attributes,
+        )
+
+        constitution = final_attributes.get("constitution", 10)
+        intelligence = final_attributes.get("intelligence", 10)
+        base_hp = constitution * HP_PER_CON
+        max_hp = balance_service.calculate_max_health(base_hp, class_name)
+        initial_stats: dict[str, int] = {
+            "max_hp": max_hp,
+            "min_hp": max_hp,
+            "max_mana": intelligence * MANA_PER_INT,
+            "min_mana": intelligence * MANA_PER_INT,
+            "max_sta": 100,
+            "min_sta": 100,
+            "gold": INITIAL_GOLD,
+            "level": 1,
+            "elu": INITIAL_ELU,
+            "experience": 0,
+        }
+        await player_repo.set_stats(user_id=user_id, **initial_stats)
+        logger.info(
+            "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
+            user_id,
+            initial_stats["max_hp"],
+            initial_stats["max_mana"],
+        )
+
+        return (base_attributes, final_attributes, initial_stats)
+
+    async def _create_initial_inventory(self, user_id: int) -> None:
+        """Crea el inventario inicial del personaje."""
+        inventory_repo = InventoryRepository(self.player_repo.redis)  # type: ignore[union-attr]
+        await inventory_repo.add_item(user_id, item_id=1, quantity=5)  # 5 Pociones Rojas
+        await inventory_repo.add_item(user_id, item_id=2, quantity=5)  # 5 Pociones Azules
+        await inventory_repo.add_item(user_id, item_id=3, quantity=10)  # 10 Manzanas
+        await inventory_repo.add_item(user_id, item_id=4, quantity=10)  # 10 Aguas
+        await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
+        # Armadura inicial (Newbie)
+        await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
+        # Herramientas de trabajo (Newbie)
+        await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador
+        await inventory_repo.add_item(user_id, item_id=562, quantity=1)  # Piquete de Minero
+        await inventory_repo.add_item(user_id, item_id=563, quantity=1)  # Caña de Pescar
+        logger.info(
+            "Inventario inicial creado para user_id %d (incluye Armadura de Aprendiz)", user_id
+        )
+
+    async def _log_character_summary(  # noqa: PLR6301
+        self,
+        user_id: int,
+        username: str,
+        char_data: dict[str, int] | None,
+        class_name: str,
+        base_attributes: dict[str, int] | None,
+        final_attributes: dict[str, int] | None,
+        initial_stats: dict[str, int] | None,
+        stats_data: dict[str, int] | None,
+    ) -> None:
+        """Loguea un resumen completo del personaje creado."""
+        race_value = char_data.get("race") if char_data is not None else None
+        gender_value = char_data.get("gender") if char_data is not None else None
+        head_value = char_data.get("head") if char_data is not None else None
+        home_value = char_data.get("home") if char_data is not None else None
+        job_value = char_data.get("job") if char_data is not None else None
+
+        race_name = RACE_ID_TO_NAME.get(race_value or 0, "Desconocida")
+        gender_name = GENDER_ID_TO_NAME.get(gender_value or 0, "Desconocido")
+        home_name = HOME_ID_TO_NAME.get(home_value or 0, "Desconocido")
+
+        logger.info(
+            (
+                "Personaje creado: user_id=%d, username=%s, raza=%s (%s), clase=%s (job=%s), "
+                "gender=%s (%s), head=%s, home=%s (%s), atributos_base=%s, "
+                "atributos_finales=%s, stats_iniciales=%s, dice_attributes=%s"
+            ),
+            user_id,
+            username,
+            race_value,
+            race_name,
+            class_name,
+            job_value,
+            gender_value,
+            gender_name,
+            head_value,
+            home_value,
+            home_name,
+            base_attributes,
+            final_attributes,
+            initial_stats,
+            stats_data,
+        )
