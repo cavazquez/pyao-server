@@ -19,7 +19,7 @@ FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
     # Tasks
     "tasks": "WARNING",
     "tasks.party": "INFO",  # Party tasks en INFO para debugging
-    "tasks.player": "WARNING",
+    "tasks.player": "INFO",
     "tasks.combat": "WARNING",
     # Services
     "services": "WARNING",
@@ -45,7 +45,7 @@ def configure_logging() -> None:
     """Configura el logging según las features definidas."""
     # Configuración base
     logging.basicConfig(
-        level=logging.DEBUG,  # Nivel más bajo para capturar todo
+        level=logging.INFO,  # Nivel por defecto: mostrar solo INFO+
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
@@ -145,8 +145,12 @@ def quiet_mode() -> None:
 
 
 def verbose_mode() -> None:
-    """Modo verbose - todo en INFO."""
+    """Modo verbose - todo en DEBUG.
+
+    Usado cuando se inicia el servidor con la opción --debug para mostrar
+    logs detallados de todos los módulos/features.
+    """
     logger = logging.getLogger(__name__)
     for feature in FEATURE_LOG_LEVELS:
-        set_feature_log_level(feature, "INFO")
-    logger.info("✓ Verbose mode enabled")
+        set_feature_log_level(feature, "DEBUG")
+    logger.info("✓ Verbose mode enabled (DEBUG for all features)")
