@@ -178,19 +178,13 @@ Mejorar la creación de tasks con dependencias usando un contenedor de servicios
 
 ### 5. Validación de Packets
 
-**Estado:** 📝 Pendiente
+**Estado:** ✅ Completado
 
-Agregar validación de longitud de packets antes de parsear para evitar errores de índice fuera de rango.
+Se agregó validación de longitud de packets antes de parsear para evitar errores de índice fuera de rango.
 
-**Implementación sugerida:**
-```python
-class PacketReader:
-    def validate_length(self, expected: int) -> bool:
-        return len(self.data) >= self.offset + expected
-```
-
-**Prioridad:** Media  
-**Esfuerzo:** 1-2 horas
+**Notas:**
+- PacketReader y/o PacketValidator verifican que el tamaño del packet sea suficiente antes de leer campos.
+- Se añadieron tests para cubrir casos de packets truncados.
 
 ---
 
@@ -213,15 +207,15 @@ Considerar usar logging estructurado (JSON) para facilitar análisis de logs en 
 
 ## 📊 Resumen de Estado
 
-### Completadas ✅ (3/3)
+### Completadas ✅ (4/4)
 1. **PacketReader + PacketValidator** - 100% completado (8/8 tasks migradas)
 2. **MessageSender Refactoring** - 100% completado (8 componentes, 75 tests)
 3. **NPC Factory Pattern** - 100% completado (16 factory methods, 17 tests)
+4. **Validación de longitud de Packets** - 100% completado (tests de packets truncados)
 
 ### Mejoras Futuras Opcionales 📝
 1. **Service Container** - Propuesta pendiente (prioridad baja)
-2. **Validación de longitud de Packets** - Mejora de robustez (prioridad baja)
-3. **Logging Estructurado** - Mejora de observabilidad (prioridad baja)
+2. **Logging Estructurado** - Mejora de observabilidad (prioridad baja)
 
 ---
 
