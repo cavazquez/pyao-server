@@ -12,6 +12,7 @@ from src.tasks.task import Task
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
+    from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.map_resources_service import MapResourcesService
 
@@ -41,6 +42,7 @@ class TaskUseItem(Task):
         player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
         map_resources: MapResourcesService | None = None,
+        account_repo: AccountRepository | None = None,
     ) -> None:
         """Initialize a TaskUseItem instance with dependencies and context.
 
@@ -51,12 +53,15 @@ class TaskUseItem(Task):
             player_repo: Repository for accessing player data. Optional.
             session_data: Session context dictionary keyed by user-related data. Optional.
             map_resources: Service for querying map resources such as water tiles.
+            account_repo: Repository for accessing account data, used for visual changes
+                when toggling navigation. Optional.
         """
         super().__init__(data, message_sender)
         self.slot = slot
         self.player_repo = player_repo
         self.session_data = session_data or {}
         self.map_resources = map_resources
+        self.account_repo = account_repo
 
     async def execute(self) -> None:
         """Ejecuta el uso de un ítem del inventario."""
@@ -134,65 +139,18 @@ class TaskUseItem(Task):
             return
 
         is_sailing = await self.player_repo.is_sailing(user_id)
-        # Si tenemos MapResourcesService, usamos el tile hacia donde mira el jugador
-        # para decidir si puede entrar o salir del modo navegación.
-        if self.map_resources:
-            position = await self.player_repo.get_position(user_id)
-            if not position:
-                logger.warning("No se pudo obtener posición del jugador %d para barca", user_id)
-            else:
-                map_id = position.get("map")
-                x = position.get("x")
-                y = position.get("y")
-                heading = position.get("heading")
 
-                if (
-                    isinstance(map_id, int)
-                    and isinstance(x, int)
-                    and isinstance(y, int)
-                    and isinstance(heading, int)
-                ):
-                    # Tile inmediatamente adelante
-                    target_x1, target_y1 = x, y
-                    if heading == HEADING_NORTH:
-                        target_y1 -= 1
-                    elif heading == HEADING_EAST:
-                        target_x1 += 1
-                    elif heading == HEADING_SOUTH:
-                        target_y1 += 1
-                    elif heading == HEADING_WEST:
-                        target_x1 -= 1
+        # Si vamos a entrar en modo navegación y tenemos MapResourcesService,
+        # exigir estar cerca del agua (en un radio de 1 tile alrededor).
+        if not is_sailing and self.map_resources and not await self._can_start_sailing(user_id):
+            return
 
-                    # Tile a distancia 2 hacia adelante
-                    target_x2, target_y2 = target_x1, target_y1
-                    if heading == HEADING_NORTH:
-                        target_y2 -= 1
-                    elif heading == HEADING_EAST:
-                        target_x2 += 1
-                    elif heading == HEADING_SOUTH:
-                        target_y2 += 1
-                    elif heading == HEADING_WEST:
-                        target_x2 -= 1
-
-                    ahead1_is_water = self.map_resources.has_water(map_id, target_x1, target_y1)
-                    ahead2_is_water = self.map_resources.has_water(map_id, target_x2, target_y2)
-
-                    # Entrar a navegación: sólo si el tile inmediato adelante es agua
-                    if not is_sailing and not ahead1_is_water:
-                        await self.message_sender.send_console_msg(
-                            "Debes apuntar hacia el agua para comenzar a navegar."
-                        )
-                        return
-
-                    # Salir de navegación: bloquear sólo si estamos realmente mar adentro
-                    # (los dos tiles hacia adelante siguen siendo agua).
-                    if is_sailing and ahead1_is_water and ahead2_is_water:
-                        await self.message_sender.send_console_msg(
-                            "No puedes dejar de navegar en medio del agua. "
-                            "Acércate más a la orilla."
-                        )
-                        return
-
+        # Si vamos a salir de navegación y tenemos MapResourcesService,
+        # exigir estar cerca de tierra:
+        # - ya sea en el radio 1 (3x3 alrededor)
+        # - o bien a distancia 1-2 en la dirección actual del jugador.
+        if is_sailing and self.map_resources and not await self._can_stop_sailing(user_id):
+            return
         await self.player_repo.set_sailing(user_id, not is_sailing)
         await self.message_sender.send_console_msg(
             "Has cambiado al modo de navegación"
@@ -201,12 +159,160 @@ class TaskUseItem(Task):
         )
         # Informar al cliente para que alterne su modo de navegación
         await self.message_sender.send_navigate_toggle()
+
+        # Cambiar visualmente el cuerpo a barco al entrar en navegación
+        # y restaurar el body original al salir.
+        if self.account_repo and "username" in self.session_data:
+            username = self.session_data["username"]
+            if isinstance(username, str):
+                account_data = await self.account_repo.get_account(username)
+            else:
+                account_data = None
+        else:
+            account_data = None
+
+        if account_data:
+            original_body = int(account_data.get("char_race", 1)) or 1
+            original_head = int(account_data.get("char_head", 1)) or 1
+
+            # Elegir un body de barco compatible con el cliente (ShipIds en Godot)
+            ship_body_id = 84
+
+            # Obtener heading actual desde Redis para no desincronizar
+            position = await self.player_repo.get_position(user_id)
+            heading = position.get("heading", 3) if position else 3
+
+            # Entrar en navegación: usar body de barco y sin cabeza (head=0).
+            # Salir de navegación: restaurar body y head originales.
+            if not is_sailing:
+                new_body = ship_body_id
+                new_head = 0
+            else:
+                new_body = original_body
+                new_head = original_head
+
+            await self.message_sender.send_character_change(
+                char_index=user_id,
+                body=new_body,
+                head=new_head,
+                heading=heading,
+            )
         logger.info(
             "user_id %d cambió al modo de navegación"
             if not is_sailing
             else "user_id %d cambió al modo de caminata",
             user_id,
         )
+
+    async def _can_start_sailing(self, user_id: int) -> bool:
+        """Valida que el jugador esté lo suficientemente cerca del agua para navegar.
+
+        Returns:
+            True si el jugador puede comenzar a navegar, False en caso contrario.
+        """
+        position = await self.player_repo.get_position(user_id) if self.player_repo else None
+        if not position:
+            logger.warning("No se pudo obtener posición del jugador %d para barca", user_id)
+            return False
+
+        map_id = position.get("map")
+        x = position.get("x")
+        y = position.get("y")
+        if not (
+            isinstance(map_id, int)
+            and isinstance(x, int)
+            and isinstance(y, int)
+            and self.map_resources
+        ):
+            return False
+
+        near_water = False
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                if self.map_resources.has_water(map_id, x + dx, y + dy):
+                    near_water = True
+                    break
+            if near_water:
+                break
+
+        if not near_water:
+            await self.message_sender.send_console_msg(
+                "Debes estar cerca del agua para comenzar a navegar."
+            )
+            return False
+
+        return True
+
+    async def _can_stop_sailing(self, user_id: int) -> bool:
+        """Valida que el jugador esté lo suficientemente cerca de tierra para dejar de navegar.
+
+        Returns:
+            True si el jugador puede dejar de navegar, False en caso contrario.
+        """
+        position = await self.player_repo.get_position(user_id) if self.player_repo else None
+        if not position:
+            logger.warning("No se pudo obtener posición del jugador %d para barca", user_id)
+            return False
+
+        map_id = position.get("map")
+        x = position.get("x")
+        y = position.get("y")
+        heading = position.get("heading")
+        if not (
+            isinstance(map_id, int)
+            and isinstance(x, int)
+            and isinstance(y, int)
+            and self.map_resources
+        ):
+            return False
+
+        near_land = False
+
+        # 1) Tierra en el radio 1 alrededor
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                if not self.map_resources.has_water(map_id, x + dx, y + dy):
+                    near_land = True
+                    break
+            if near_land:
+                break
+
+        # 2) Tierra a distancia 1-2 en la dirección actual
+        if not near_land and isinstance(heading, int):
+            # Tile 1 adelante
+            tx1, ty1 = x, y
+            if heading == HEADING_NORTH:
+                ty1 -= 1
+            elif heading == HEADING_EAST:
+                tx1 += 1
+            elif heading == HEADING_SOUTH:
+                ty1 += 1
+            elif heading == HEADING_WEST:
+                tx1 -= 1
+
+            # Tile 2 adelante
+            tx2, ty2 = tx1, ty1
+            if heading == HEADING_NORTH:
+                ty2 -= 1
+            elif heading == HEADING_EAST:
+                tx2 += 1
+            elif heading == HEADING_SOUTH:
+                ty2 += 1
+            elif heading == HEADING_WEST:
+                tx2 -= 1
+
+            if not self.map_resources.has_water(
+                map_id, tx1, ty1
+            ) or not self.map_resources.has_water(map_id, tx2, ty2):
+                near_land = True
+
+        if not near_land:
+            await self.message_sender.send_console_msg(
+                "No puedes dejar de navegar en medio del agua. Busca la costa."
+            )
+            return False
+
+        return True
 
     async def _handle_apple_consumption(
         self, user_id: int, item_id: int, quantity: int, inventory_repo: InventoryRepository

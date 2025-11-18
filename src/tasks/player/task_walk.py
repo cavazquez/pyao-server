@@ -167,6 +167,27 @@ class TaskWalk(Task):
 
         # Validar colisiones con MapManager
         if self.map_manager:
+            # Si tenemos información de recursos de mapa, evitar caminar por agua
+            # cuando el jugador no está en modo navegación.
+            if (
+                self.map_resources
+                and self.player_repo
+                and self.map_resources.has_water(current_map, new_x, new_y)
+            ):
+                is_sailing = await self.player_repo.is_sailing(user_id)
+                if not is_sailing:
+                    await self.message_sender.console.send_console_msg(
+                        "Necesitas estar navegando para avanzar por el agua."
+                    )
+                    logger.info(
+                        "Movimiento sobre agua bloqueado sin barca: user_id=%d map=%d pos=(%d,%d)",
+                        user_id,
+                        current_map,
+                        new_x,
+                        new_y,
+                    )
+                    return
+
             can_move = self.map_manager.can_move_to(current_map, new_x, new_y)
             if not can_move:
                 # Intentar navegar sobre agua si el jugador tiene una barca
