@@ -41,7 +41,11 @@ class MapResourcesService:
         self._signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self._doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self.map_manager = map_manager
-        self._load_all_maps()
+
+        # Intentar cargar desde caché en disco primero
+        if not self._try_load_from_cache():
+            self._load_all_maps()
+            self._save_cache()
         self._load_manual_doors()
 
     def _load_all_maps(self) -> None:
@@ -140,6 +144,257 @@ class MapResourcesService:
 
         except Exception:
             logger.exception("Error cargando recursos de mapas")
+
+    def _try_load_from_cache(self) -> bool:
+        """Intenta cargar recursos de mapas desde el caché en disco.
+
+        Returns:
+            True si el caché es válido y fue cargado correctamente.
+        """
+        cache_path = self.maps_dir / "map_resources_cache.json"
+        start_time = time.time()
+        if not cache_path.exists():
+            return False
+
+        try:
+            data = self._read_cache_file(cache_path)
+        except (OSError, json.JSONDecodeError):
+            logger.warning("No se pudo leer caché de mapas: %s", cache_path)
+            return False
+
+        if data.get("version") != 1:
+            return False
+
+        source = data.get("source") or {}
+        if not isinstance(source, dict):
+            return False
+
+        blocked_info = source.get("blocked") or {}
+        objects_info = source.get("objects") or {}
+        if not isinstance(blocked_info, dict) or not isinstance(objects_info, dict):
+            return False
+
+        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
+        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
+
+        if not self._is_cache_source_valid(
+            blocked_files,
+            objects_files,
+            blocked_info,
+            objects_info,
+        ):
+            return False
+
+        maps_data = data.get("maps")
+        if not isinstance(maps_data, dict):
+            return False
+
+        try:
+            self._rebuild_resources_from_cache(maps_data)
+        except Exception:
+            logger.exception("Error cargando recursos de mapas desde caché")
+            self.resources.clear()
+            self.signs.clear()
+            self.doors.clear()
+            return False
+        else:
+            elapsed_time = time.time() - start_time
+            logger.info(
+                "✓ Recursos de mapas cargados desde caché: %s en %.3f segundos",
+                cache_path,
+                elapsed_time,
+            )
+            return True
+
+    def _save_cache(self) -> None:
+        """Guarda los recursos de mapas en caché en disco."""
+        cache_path = self.maps_dir / "map_resources_cache.json"
+
+        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
+        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
+        blocked_names, blocked_mtimes = self._build_mtimes(blocked_files)
+        objects_names, objects_mtimes = self._build_mtimes(objects_files)
+
+        maps_payload = self._build_maps_payload_for_cache()
+
+        payload = {
+            "version": 1,
+            "source": {
+                "blocked": {"files": blocked_names, "mtimes": blocked_mtimes},
+                "objects": {"files": objects_names, "mtimes": objects_mtimes},
+            },
+            "maps": maps_payload,
+        }
+
+        try:
+            with cache_path.open("w", encoding="utf-8") as f:
+                json.dump(payload, f)
+            logger.info("✓ Caché de recursos de mapas guardado en %s", cache_path)
+        except OSError:
+            logger.exception("Error guardando caché de recursos de mapas en %s", cache_path)
+
+    @staticmethod
+    def _build_mtimes(files: list[Path]) -> tuple[list[str], dict[str, float]]:
+        """Construye listas de nombres y mtimes para una lista de paths.
+
+        Returns:
+            Tupla ``(names, mtimes)`` donde ``names`` es la lista de nombres de
+            archivo y ``mtimes`` un diccionario ``nombre -> mtime``.
+        """
+        names: list[str] = []
+        mtimes: dict[str, float] = {}
+        for fp in files:
+            try:
+                stat = fp.stat()
+            except OSError:
+                continue
+            name = fp.name
+            names.append(name)
+            mtimes[name] = stat.st_mtime
+        return names, mtimes
+
+    @staticmethod
+    def _read_cache_file(cache_path: Path) -> dict[str, object]:
+        """Lee y parsea el archivo de caché de mapas.
+
+        Returns:
+            Diccionario raíz del archivo de caché.
+
+        Raises:
+            JSONDecodeError: Si el contenido del archivo no es un objeto JSON
+            de nivel raíz (dict).
+        """
+        with cache_path.open(encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict):  # Defensa extra para mypy y robustez
+            msg = "Cache root is not a dict"
+            raise json.JSONDecodeError(msg, doc="", pos=0)
+        return data
+
+    @staticmethod
+    def _is_cache_source_valid(
+        blocked_files: list[Path],
+        objects_files: list[Path],
+        blocked_info: dict[str, object],
+        objects_info: dict[str, object],
+    ) -> bool:
+        """Valida que los archivos y mtimes actuales coinciden con el caché.
+
+        Returns:
+            ``True`` si los nombres y mtimes de los archivos actuales coinciden
+            exactamente con los almacenados en el caché, ``False`` en caso
+            contrario.
+        """
+        current_blocked_names, current_blocked_mtimes = MapResourcesService._build_mtimes(
+            blocked_files
+        )
+        current_objects_names, current_objects_mtimes = MapResourcesService._build_mtimes(
+            objects_files
+        )
+
+        if blocked_info.get("files") != current_blocked_names:
+            return False
+        if objects_info.get("files") != current_objects_names:
+            return False
+
+        if blocked_info.get("mtimes") != current_blocked_mtimes:
+            return False
+        return objects_info.get("mtimes") == current_objects_mtimes
+
+    def _rebuild_resources_from_cache(self, maps_data: dict[str, object]) -> None:  # noqa: PLR0914
+        """Reconstruye resources, signs y doors a partir del payload del caché."""
+        self.resources.clear()
+        self.signs.clear()
+        self.doors.clear()
+
+        for map_id_str, map_payload_obj in maps_data.items():
+            if not isinstance(map_payload_obj, dict):
+                continue
+
+            try:
+                map_id = int(map_id_str)
+            except (TypeError, ValueError):
+                continue
+
+            map_key = f"map_{map_id}"
+            blocked_list = map_payload_obj.get("blocked", [])
+            water_list = map_payload_obj.get("water", [])
+            trees_list = map_payload_obj.get("trees", [])
+            mines_list = map_payload_obj.get("mines", [])
+
+            blocked = {(int(x), int(y)) for x, y in blocked_list}
+            water = {(int(x), int(y)) for x, y in water_list}
+            trees = {(int(x), int(y)) for x, y in trees_list}
+            mines = {(int(x), int(y)) for x, y in mines_list}
+
+            self.resources[map_key] = {
+                "blocked": blocked,
+                "water": water,
+                "trees": trees,
+                "mines": mines,
+            }
+
+            signs_list = map_payload_obj.get("signs", [])
+            if signs_list:
+                signs_dict: dict[tuple[int, int], int] = {}
+                for coord, grh in signs_list:
+                    x, y = coord
+                    if isinstance(grh, int):
+                        signs_dict[int(x), int(y)] = grh
+                if signs_dict:
+                    self.signs[map_key] = signs_dict
+
+            doors_list = map_payload_obj.get("doors", [])
+            if doors_list:
+                doors_dict: dict[tuple[int, int], int] = {}
+                for coord, grh in doors_list:
+                    x, y = coord
+                    if isinstance(grh, int):
+                        doors_dict[int(x), int(y)] = grh
+                if doors_dict:
+                    self.doors[map_key] = doors_dict
+
+    def _build_maps_payload_for_cache(self) -> dict[str, dict[str, object]]:
+        """Construye el payload de mapas a guardar en el archivo de caché.
+
+        Returns:
+            Diccionario ``{map_id_str: payload}`` listo para serializar en el
+            archivo de caché.
+        """
+        maps_payload: dict[str, dict[str, object]] = {}
+        for map_key, res in self.resources.items():
+            if not map_key.startswith("map_"):
+                continue
+            try:
+                map_id = int(map_key.split("_")[1])
+            except (IndexError, ValueError):
+                continue
+
+            blocked = list(res.get("blocked", set()))
+            water = list(res.get("water", set()))
+            trees = list(res.get("trees", set()))
+            mines = list(res.get("mines", set()))
+
+            map_entry: dict[str, object] = {
+                "blocked": blocked,
+                "water": water,
+                "trees": trees,
+                "mines": mines,
+            }
+
+            signs_dict = self.signs.get(map_key)
+            if signs_dict:
+                signs_list = [((x, y), grh) for (x, y), grh in signs_dict.items()]
+                map_entry["signs"] = signs_list
+
+            doors_dict = self.doors.get(map_key)
+            if doors_dict:
+                doors_list = [((x, y), grh) for (x, y), grh in doors_dict.items()]
+                map_entry["doors"] = doors_list
+
+            maps_payload[str(map_id)] = map_entry
+
+        return maps_payload
 
     @staticmethod
     def _process_blocked_file_per_file(

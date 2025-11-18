@@ -278,10 +278,10 @@ pyao-server/
 │   ├── merchant_inventories.toml # Inventarios de mercaderes
 │   ├── items.toml               # Catálogo de items (1049 items)
 │   ├── loot_tables.toml         # Tablas de loot de NPCs
-│   ├── classes_balance.toml     # Balance de clases y razas (extraído de cliente) ✅ NUEVO
-│   ├── weapons_crafting.toml    # Recetas de armas (extraído de cliente) ✅ NUEVO
-│   ├── armor_crafting.toml      # Recetas de armaduras (extraído de cliente) ✅ NUEVO
-│   └── crafting_materials.toml  # Materiales base para crafting ✅ NUEVO
+│   ├── classes_balance.toml     # Balance de clases y razas (extraído de cliente) NUEVO
+│   ├── weapons_crafting.toml    # Recetas de armas (extraído de cliente) NUEVO
+│   ├── armor_crafting.toml      # Recetas de armaduras (extraído de cliente) NUEVO
+│   ├── crafting_materials.toml  # Materiales base para crafting NUEVO
 │
 ├── map_data/                    # Datos de mapas (generados desde clientes VB6/Godot)
 │   ├── 001_metadata.json        # Metadatos del mapa (nombre, clima, tamaño)
@@ -291,12 +291,14 @@ pyao-server/
 │   ├── 001_flags.json           # Flags originales del mapa (desde VB6)
 │   ├── 001_triggers.json        # Triggers detectados (zonas seguras, portales, etc.)
 │   ├── 001_blocked.json         # Tiles bloqueados y recursos detectados
+│   ├── map_resources_cache.json # Caché de recursos agregados por mapa (bloqueados, agua, árboles, minas, carteles, puertas)
 │   └── ...                      # Archivos XXX_*.json por cada capa del mapa
 │
 ├── tools/                       # Scripts utilitarios
 │   ├── compress_map_data.py     # Comprime map_data en archives/map_data.xz (LZMA)
 │   ├── decompress_map_data.py   # Restaura map_data desde archives/map_data.xz
 │   │
+│   └── extract_client_data/     # Extracción de datos del cliente NUEVO
 │   └── extract_client_data/     # Extracción de datos del cliente ✅ NUEVO
 │       ├── extract_balance_data.py   # Extrae Balance.dat → TOML
 │       ├── extract_crafting_data.py  # Extrae ArmasHerrero/ArmadurasHerrero → TOML
