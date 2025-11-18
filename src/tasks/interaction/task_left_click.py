@@ -405,14 +405,30 @@ class TaskLeftClick(Task):
         # Verificar recursos del mapa
         resources = []
         if self.map_resources:
-            if self.map_resources.is_blocked(map_id, x, y):
+            is_blocked = self.map_resources.is_blocked(map_id, x, y)
+            has_water = self.map_resources.has_water(map_id, x, y)
+            has_tree = self.map_resources.has_tree(map_id, x, y)
+            has_mine = self.map_resources.has_mine(map_id, x, y)
+
+            logger.info(
+                "TILE_RESOURCES map=%d (%d,%d): blocked=%s water=%s tree=%s mine=%s",
+                map_id,
+                x,
+                y,
+                is_blocked,
+                has_water,
+                has_tree,
+                has_mine,
+            )
+
+            if is_blocked:
                 info_lines.append("Estado: Bloqueado")
 
-            if self.map_resources.has_water(map_id, x, y):
+            if has_water:
                 resources.append("Agua")
-            if self.map_resources.has_tree(map_id, x, y):
+            if has_tree:
                 resources.append("Arbol")
-            if self.map_resources.has_mine(map_id, x, y):
+            if has_mine:
                 resources.append("Yacimiento")
 
         if resources:

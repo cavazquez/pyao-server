@@ -90,6 +90,7 @@ class MapResourcesService:
                     self._blocked_by_map,
                     self._signs_by_map,
                     self._doors_by_map,
+                    self._water_by_map,
                 )
 
             # Unificar todos los IDs de mapa que tienen algún recurso
@@ -130,8 +131,9 @@ class MapResourcesService:
                 doors_count = len(self._doors_by_map.get(map_id, {}))
 
                 logger.info(
-                    "  %s (multiple files): %d agua, %d árboles, %d minas, %d carteles, %d puertas",
+                    "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, %d carteles, %d puertas",
                     map_key,
+                    len(blocked),
                     len(water),
                     len(trees),
                     len(mines),
@@ -467,6 +469,7 @@ class MapResourcesService:
         blocked_by_map: dict[int, set[tuple[int, int]]],
         signs_by_map: dict[int, dict[tuple[int, int], int]],
         doors_by_map: dict[int, dict[tuple[int, int], int]],
+        water_by_map: dict[int, set[tuple[int, int]]],
     ) -> None:
         """Procesa un archivo objects completo, agrupando por map_id.
 
@@ -512,6 +515,8 @@ class MapResourcesService:
                 elif tile_type == "mine":
                     mines_by_map.setdefault(map_id, set()).add((x, y))
                     blocked_by_map.setdefault(map_id, set()).add((x, y))
+                elif tile_type == "water":
+                    water_by_map.setdefault(map_id, set()).add((x, y))
                 elif tile_type == "sign":
                     grh = entry.get("g")
                     if isinstance(grh, int):
@@ -620,6 +625,7 @@ class MapResourcesService:
         trees: set[tuple[int, int]],
         mines: set[tuple[int, int]],
         blocked: set[tuple[int, int]],
+        water: set[tuple[int, int]],
     ) -> None:
         """Procesa el archivo objects para agregar árboles y minas.
 
@@ -670,6 +676,8 @@ class MapResourcesService:
                 elif tile_type == "mine":
                     mines.add((x, y))
                     blocked.add((x, y))
+                elif tile_type == "water":
+                    water.add((x, y))
                 elif tile_type == "sign":
                     # Los carteles se manejan por separado (necesitamos el GrhIndex)
                     pass
@@ -693,8 +701,8 @@ class MapResourcesService:
         try:
             blocked, water, trees, mines = self._process_blocked_file(blocked_path, map_id)
 
-            # Cargar árboles y minas desde archivo objects
-            self._process_objects_file(objects_path, map_id, trees, mines, blocked)
+            # Cargar árboles, minas y agua adicional desde archivo objects
+            self._process_objects_file(objects_path, map_id, trees, mines, blocked, water)
 
             # Determinar fuente de datos para logging
             if blocked_path and objects_path:
@@ -725,9 +733,10 @@ class MapResourcesService:
                 self.doors[map_key] = doors_dict
 
             logger.info(
-                "  %s (%s): %d agua, %d árboles, %d minas",
+                "  %s (%s): %d bloqueados, %d agua, %d árboles, %d minas",
                 map_key,
                 source,
+                len(blocked),
                 len(water),
                 len(trees),
                 len(mines),
