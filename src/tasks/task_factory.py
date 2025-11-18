@@ -175,6 +175,7 @@ class TaskFactory:
                     slot=parsed_data["slot"],
                     player_repo=self.deps.player_repo,
                     session_data=session_data,
+                    map_resources=self.deps.map_resources_service,
                 )
 
             # TaskMoveSpell (packet_id 45) - recibe slot y upwards
@@ -275,6 +276,8 @@ class TaskFactory:
                 self.deps.stamina_service,
                 self.deps.player_map_service,
                 session_data,
+                self.deps.inventory_repo,
+                self.deps.map_resources_service,
             ),
             TaskGMCommands: lambda: TaskGMCommands(
                 data,

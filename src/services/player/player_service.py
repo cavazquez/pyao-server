@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
+from src.models.item_constants import BOAT_ITEM_ID
 from src.models.items_catalog import get_item
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.equipment_service import EquipmentService
@@ -220,6 +221,19 @@ class PlayerService:
             equipment_repo: Repositorio de equipamiento (opcional).
         """
         inventory_repo = InventoryRepository(self.player_repo.redis)
+
+        # Asegurar que el jugador tenga una barca para navegar
+        slots_dict = await inventory_repo.get_inventory_slots(user_id)
+        has_boat = any(slot.item_id == BOAT_ITEM_ID for slot in slots_dict.values())
+        if not has_boat:
+            added_slots = await inventory_repo.add_item(user_id, BOAT_ITEM_ID, quantity=1)
+            if added_slots:
+                logger.info(
+                    "Barca agregada al inventario de user_id %d en slot %d",
+                    user_id,
+                    added_slots[0][0],
+                )
+
         inventory = await inventory_repo.get_inventory(user_id)
 
         # Obtener items equipados si el repositorio está disponible

@@ -14,6 +14,7 @@ from src.messaging.senders.message_player_stats_sender import PlayerStatsMessage
 from src.messaging.senders.message_session_sender import SessionMessageSender
 from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
 from src.messaging.senders.message_work_sender import WorkMessageSender
+from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
     from src.models.body_part import BodyPart
@@ -590,6 +591,12 @@ class MessageSender:  # noqa: PLR0904
     async def send_meditate_toggle(self) -> None:
         """Envía paquete MEDITATE_TOGGLE para confirmar meditación."""
         await self.inventory.send_meditate_toggle()
+
+    async def send_navigate_toggle(self) -> None:
+        """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""
+        response = bytes([ServerPacketID.NAVIGATE_TOGGLE])
+        logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.connection.address)
+        await self.connection.send(response)
 
     async def send_pong(self) -> None:
         """Envía paquete PONG en respuesta a un PING."""

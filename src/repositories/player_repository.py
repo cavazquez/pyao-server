@@ -314,6 +314,38 @@ class PlayerRepository:
         )
         return is_med
 
+    async def set_sailing(self, user_id: int, is_sailing: bool) -> None:
+        """Establece el estado de navegación (barca) del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            is_sailing: True si está navegando, False si no.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "sailing", "1" if is_sailing else "0")  # type: ignore[misc]
+        logger.info("Estado de navegación guardado para user_id %d: %s", user_id, is_sailing)
+
+    async def is_sailing(self, user_id: int) -> bool:
+        """Verifica si el jugador está navegando en barca.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            True si está navegando, False si no.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "sailing")  # type: ignore[misc]
+        is_sailing = result in {b"1", "1", 1} if result else False
+        logger.debug(
+            "IS_SAILING: user_id=%d, result=%s (type=%s), is_sailing=%s",
+            user_id,
+            result,
+            type(result).__name__,
+            is_sailing,
+        )
+        return is_sailing
+
     async def update_hp(self, user_id: int, hp: int) -> None:
         """Actualiza el HP del jugador.
 

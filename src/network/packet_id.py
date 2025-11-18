@@ -149,7 +149,7 @@ class ServerPacketID(IntEnum):
     LOGGED = 0  # Login exitoso
     # REMOVE_DIALOGS = 1
     # REMOVE_CHAR_DIALOG = 2
-    # NAVIGATE_TOGGLE = 3
+    NAVIGATE_TOGGLE = 3  # Toggle de modo navegación (NAVEG)
     # DISCONNECT = 4
     COMMERCE_END = 5  # Cerrar ventana de comercio
     BANK_END = 6  # Cerrar ventana de banco

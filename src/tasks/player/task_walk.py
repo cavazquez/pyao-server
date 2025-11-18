@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.item_constants import BOAT_ITEM_ID
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.services.player.stamina_service import STAMINA_COST_WALK
@@ -11,7 +12,9 @@ from src.tasks.task import Task
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
+    from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.map_resources_service import MapResourcesService
     from src.services.map.player_map_service import PlayerMapService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.player.stamina_service import StaminaService
@@ -45,18 +48,24 @@ class TaskWalk(Task):
         stamina_service: StaminaService | None = None,
         player_map_service: PlayerMapService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        inventory_repo: InventoryRepository | None = None,
+        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Inicializa la tarea de movimiento.
 
         Args:
             data: Datos recibidos del cliente.
-            message_sender: Enviador de mensajes para comunicarse con el cliente.
+            message_sender: Enviador de mensajes al cliente.
             player_repo: Repositorio de jugadores.
-            map_manager: Gestor de mapas para broadcast.
-            broadcast_service: Servicio de broadcast multijugador.
-            stamina_service: Servicio de stamina.
-            player_map_service: Servicio de mapas de jugador.
-            session_data: Datos de sesión compartidos (opcional).
+            map_manager: Gestor de mapas.
+            broadcast_service: Servicio de broadcast a otros jugadores.
+            stamina_service: Servicio de stamina para validar y consumir energía.
+            player_map_service: Servicio de transición de mapas.
+            session_data: Datos de sesión compartidos.
+            inventory_repo: Repositorio de inventario del jugador, usado para
+                verificar items como la barca al mover.
+            map_resources: Servicio de recursos de mapa (agua, árboles, minas),
+                utilizado para validar movimiento sobre agua y terrenos especiales.
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
@@ -65,6 +74,8 @@ class TaskWalk(Task):
         self.stamina_service = stamina_service
         self.player_map_service = player_map_service
         self.session_data = session_data
+        self.inventory_repo = inventory_repo
+        self.map_resources = map_resources
 
     def _parse_packet(self) -> int | None:
         """Parsea el paquete de movimiento.
@@ -158,10 +169,20 @@ class TaskWalk(Task):
         if self.map_manager:
             can_move = self.map_manager.can_move_to(current_map, new_x, new_y)
             if not can_move:
-                await self._handle_blocked_movement(
-                    user_id, heading, current_map, new_x, new_y, position
-                )
-                return
+                # Intentar navegar sobre agua si el jugador tiene una barca
+                if await self._can_sail_to(user_id, current_map, new_x, new_y):
+                    logger.info(
+                        "Movimiento sobre agua permitido por barco: user_id=%d map=%d pos=(%d,%d)",
+                        user_id,
+                        current_map,
+                        new_x,
+                        new_y,
+                    )
+                else:
+                    await self._handle_blocked_movement(
+                        user_id, heading, current_map, new_x, new_y, position
+                    )
+                    return
 
             logger.debug(
                 "Movement allowed for user %d -> map=%d (%d,%d) heading=%d",
@@ -364,6 +385,42 @@ class TaskWalk(Task):
                 return False
 
         return True
+
+    async def _has_boat(self, user_id: int) -> bool:
+        """Verifica si el jugador tiene una barca en su inventario.
+
+        Returns:
+            True si el jugador posee una barca en algún slot del inventario,
+            False en caso contrario.
+        """
+        if not self.inventory_repo:
+            return False
+
+        inventory = await self.inventory_repo.get_inventory_slots(user_id)
+        return any(slot.item_id == BOAT_ITEM_ID for slot in inventory.values())
+
+    async def _can_sail_to(self, user_id: int, map_id: int, x: int, y: int) -> bool:
+        """Determina si el jugador puede moverse a un tile de agua usando una barca.
+
+        Returns:
+            True si el movimiento al tile destino es válido para navegar,
+            False si el movimiento no está permitido.
+        """
+        if not self.map_resources or not self.map_manager or not self.player_repo:
+            return False
+
+        if not self.map_resources.has_water(map_id, x, y):
+            return False
+
+        # No permitir navegar sobre tiles ocupados
+        if self.map_manager.get_tile_occupant(map_id, x, y):
+            return False
+
+        # Requiere estar en modo navegación y tener la barca en inventario
+        if not await self.player_repo.is_sailing(user_id):
+            return False
+
+        return await self._has_boat(user_id)
 
     async def _handle_blocked_movement(
         self,

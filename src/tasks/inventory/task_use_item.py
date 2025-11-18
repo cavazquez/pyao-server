@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.item_constants import BOAT_ITEM_ID
 from src.models.items_catalog import get_item
 from src.network.session_manager import SessionManager
 from src.repositories.equipment_repository import EquipmentRepository
@@ -12,6 +13,7 @@ from src.tasks.task import Task
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.map_resources_service import MapResourcesService
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +23,11 @@ WORK_TOOL_SKILLS: dict[int, int] = {
     562: 13,  # Piquete de Minero → Skill Minería
     563: 12,  # Caña de pescar → Skill Pesca
 }
+
+HEADING_NORTH = 1
+HEADING_EAST = 2
+HEADING_SOUTH = 3
+HEADING_WEST = 4
 
 
 class TaskUseItem(Task):
@@ -33,6 +40,7 @@ class TaskUseItem(Task):
         slot: int,
         player_repo: PlayerRepository | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Initialize a TaskUseItem instance with dependencies and context.
 
@@ -42,11 +50,13 @@ class TaskUseItem(Task):
             slot: Inventory slot requested by the client.
             player_repo: Repository for accessing player data. Optional.
             session_data: Session context dictionary keyed by user-related data. Optional.
+            map_resources: Service for querying map resources such as water tiles.
         """
         super().__init__(data, message_sender)
         self.slot = slot
         self.player_repo = player_repo
         self.session_data = session_data or {}
+        self.map_resources = map_resources
 
     async def execute(self) -> None:
         """Ejecuta el uso de un ítem del inventario."""
@@ -74,6 +84,11 @@ class TaskUseItem(Task):
         # Herramientas de trabajo: activar modo trabajo si están equipadas
         if item_id in WORK_TOOL_SKILLS:
             await self._handle_work_tool(user_id, item_id)
+            return
+
+        # Barca: alternar modo navegación
+        if item_id == BOAT_ITEM_ID:
+            await self._handle_boat(user_id)
             return
 
         # Caso especial para manzanas (ID 1)
@@ -111,6 +126,86 @@ class TaskUseItem(Task):
             skill_type,
             item_id,
             self.slot,
+        )
+
+    async def _handle_boat(self, user_id: int) -> None:
+        """Maneja el uso de la barca."""
+        if not self.player_repo:
+            return
+
+        is_sailing = await self.player_repo.is_sailing(user_id)
+        # Si tenemos MapResourcesService, usamos el tile hacia donde mira el jugador
+        # para decidir si puede entrar o salir del modo navegación.
+        if self.map_resources:
+            position = await self.player_repo.get_position(user_id)
+            if not position:
+                logger.warning("No se pudo obtener posición del jugador %d para barca", user_id)
+            else:
+                map_id = position.get("map")
+                x = position.get("x")
+                y = position.get("y")
+                heading = position.get("heading")
+
+                if (
+                    isinstance(map_id, int)
+                    and isinstance(x, int)
+                    and isinstance(y, int)
+                    and isinstance(heading, int)
+                ):
+                    # Tile inmediatamente adelante
+                    target_x1, target_y1 = x, y
+                    if heading == HEADING_NORTH:
+                        target_y1 -= 1
+                    elif heading == HEADING_EAST:
+                        target_x1 += 1
+                    elif heading == HEADING_SOUTH:
+                        target_y1 += 1
+                    elif heading == HEADING_WEST:
+                        target_x1 -= 1
+
+                    # Tile a distancia 2 hacia adelante
+                    target_x2, target_y2 = target_x1, target_y1
+                    if heading == HEADING_NORTH:
+                        target_y2 -= 1
+                    elif heading == HEADING_EAST:
+                        target_x2 += 1
+                    elif heading == HEADING_SOUTH:
+                        target_y2 += 1
+                    elif heading == HEADING_WEST:
+                        target_x2 -= 1
+
+                    ahead1_is_water = self.map_resources.has_water(map_id, target_x1, target_y1)
+                    ahead2_is_water = self.map_resources.has_water(map_id, target_x2, target_y2)
+
+                    # Entrar a navegación: sólo si el tile inmediato adelante es agua
+                    if not is_sailing and not ahead1_is_water:
+                        await self.message_sender.send_console_msg(
+                            "Debes apuntar hacia el agua para comenzar a navegar."
+                        )
+                        return
+
+                    # Salir de navegación: bloquear sólo si estamos realmente mar adentro
+                    # (los dos tiles hacia adelante siguen siendo agua).
+                    if is_sailing and ahead1_is_water and ahead2_is_water:
+                        await self.message_sender.send_console_msg(
+                            "No puedes dejar de navegar en medio del agua. "
+                            "Acércate más a la orilla."
+                        )
+                        return
+
+        await self.player_repo.set_sailing(user_id, not is_sailing)
+        await self.message_sender.send_console_msg(
+            "Has cambiado al modo de navegación"
+            if not is_sailing
+            else "Has cambiado al modo de caminata"
+        )
+        # Informar al cliente para que alterne su modo de navegación
+        await self.message_sender.send_navigate_toggle()
+        logger.info(
+            "user_id %d cambió al modo de navegación"
+            if not is_sailing
+            else "user_id %d cambió al modo de caminata",
+            user_id,
         )
 
     async def _handle_apple_consumption(
