@@ -293,6 +293,10 @@ pyao-server/
 │   ├── 001_blocked.json         # Tiles bloqueados y recursos detectados
 │   ├── map_resources_cache.json # Caché de recursos agregados por mapa (bloqueados, agua, árboles, minas, carteles, puertas)
 │   └── ...                      # Archivos XXX_*.json por cada capa del mapa
+
+> TODO: separar en el futuro los mapas que usa el juego (descomprimidos desde el
+> archivo comprimido) a un directorio editable, y luego recomprimirlos para
+> aplicar cambios en producción.
 │
 ├── tools/                       # Scripts utilitarios
 │   ├── compress_map_data.py     # Comprime map_data en archives/map_data.xz (LZMA)
