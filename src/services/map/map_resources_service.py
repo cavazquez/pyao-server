@@ -126,12 +126,17 @@ class MapResourcesService:
                 if map_id in self._doors_by_map:
                     self.doors[map_key] = self._doors_by_map[map_id]
 
+                signs_count = len(self._signs_by_map.get(map_id, {}))
+                doors_count = len(self._doors_by_map.get(map_id, {}))
+
                 logger.info(
-                    "  %s (multiple files): %d agua, %d árboles, %d minas",
+                    "  %s (multiple files): %d agua, %d árboles, %d minas, %d carteles, %d puertas",
                     map_key,
                     len(water),
                     len(trees),
                     len(mines),
+                    signs_count,
+                    doors_count,
                 )
 
             elapsed_time = time.time() - start_time
