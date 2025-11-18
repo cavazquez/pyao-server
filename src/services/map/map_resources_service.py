@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+MAP_RESOURCES_CACHE_VERSION = 2
+
 
 class MapResourcesService:
     """Servicio que gestiona los recursos de los mapas (agua, árboles, yacimientos)."""
@@ -38,6 +40,8 @@ class MapResourcesService:
         self._water_by_map: dict[int, set[tuple[int, int]]] = {}
         self._trees_by_map: dict[int, set[tuple[int, int]]] = {}
         self._mines_by_map: dict[int, set[tuple[int, int]]] = {}
+        self._anvils_by_map: dict[int, set[tuple[int, int]]] = {}
+        self._forges_by_map: dict[int, set[tuple[int, int]]] = {}
         self._signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self._doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self.map_manager = map_manager
@@ -62,6 +66,8 @@ class MapResourcesService:
             self._water_by_map = defaultdict(set)
             self._trees_by_map = defaultdict(set)
             self._mines_by_map = defaultdict(set)
+            self._anvils_by_map = defaultdict(set)
+            self._forges_by_map = defaultdict(set)
             self._signs_by_map = {}
             self._doors_by_map = {}
 
@@ -91,6 +97,8 @@ class MapResourcesService:
                     self._signs_by_map,
                     self._doors_by_map,
                     self._water_by_map,
+                    self._anvils_by_map,
+                    self._forges_by_map,
                 )
 
             # Unificar todos los IDs de mapa que tienen algún recurso
@@ -98,6 +106,8 @@ class MapResourcesService:
             map_ids.update(self._water_by_map.keys())
             map_ids.update(self._trees_by_map.keys())
             map_ids.update(self._mines_by_map.keys())
+            map_ids.update(self._anvils_by_map.keys())
+            map_ids.update(self._forges_by_map.keys())
             map_ids.update(self._signs_by_map.keys())
             map_ids.update(self._doors_by_map.keys())
 
@@ -113,12 +123,16 @@ class MapResourcesService:
                 water = self._water_by_map.get(map_id, set())
                 trees = self._trees_by_map.get(map_id, set())
                 mines = self._mines_by_map.get(map_id, set())
+                anvils = self._anvils_by_map.get(map_id, set())
+                forges = self._forges_by_map.get(map_id, set())
 
                 self.resources[map_key] = {
                     "blocked": blocked,
                     "water": water,
                     "trees": trees,
                     "mines": mines,
+                    "anvils": anvils,
+                    "forges": forges,
                 }
 
                 if map_id in self._signs_by_map:
@@ -131,12 +145,15 @@ class MapResourcesService:
                 doors_count = len(self._doors_by_map.get(map_id, {}))
 
                 logger.info(
-                    "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, %d carteles, %d puertas",
+                    "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, "
+                    "%d yunques, %d fraguas, %d carteles, %d puertas",
                     map_key,
                     len(blocked),
                     len(water),
                     len(trees),
                     len(mines),
+                    len(anvils),
+                    len(forges),
                     signs_count,
                     doors_count,
                 )
@@ -169,7 +186,7 @@ class MapResourcesService:
             logger.warning("No se pudo leer caché de mapas: %s", cache_path)
             return False
 
-        if data.get("version") != 1:
+        if data.get("version") != MAP_RESOURCES_CACHE_VERSION:
             return False
 
         source = data.get("source") or {}
@@ -225,7 +242,7 @@ class MapResourcesService:
         maps_payload = self._build_maps_payload_for_cache()
 
         payload = {
-            "version": 1,
+            "version": MAP_RESOURCES_CACHE_VERSION,
             "source": {
                 "blocked": {"files": blocked_names, "mtimes": blocked_mtimes},
                 "objects": {"files": objects_names, "mtimes": objects_mtimes},
@@ -328,17 +345,23 @@ class MapResourcesService:
             water_list = map_payload_obj.get("water", [])
             trees_list = map_payload_obj.get("trees", [])
             mines_list = map_payload_obj.get("mines", [])
+            anvils_list = map_payload_obj.get("anvils", [])
+            forges_list = map_payload_obj.get("forges", [])
 
             blocked = {(int(x), int(y)) for x, y in blocked_list}
             water = {(int(x), int(y)) for x, y in water_list}
             trees = {(int(x), int(y)) for x, y in trees_list}
             mines = {(int(x), int(y)) for x, y in mines_list}
+            anvils = {(int(x), int(y)) for x, y in anvils_list}
+            forges = {(int(x), int(y)) for x, y in forges_list}
 
             self.resources[map_key] = {
                 "blocked": blocked,
                 "water": water,
                 "trees": trees,
                 "mines": mines,
+                "anvils": anvils,
+                "forges": forges,
             }
 
             signs_list = map_payload_obj.get("signs", [])
@@ -381,12 +404,16 @@ class MapResourcesService:
             water = list(res.get("water", set()))
             trees = list(res.get("trees", set()))
             mines = list(res.get("mines", set()))
+            anvils = list(res.get("anvils", set()))
+            forges = list(res.get("forges", set()))
 
             map_entry: dict[str, object] = {
                 "blocked": blocked,
                 "water": water,
                 "trees": trees,
                 "mines": mines,
+                "anvils": anvils,
+                "forges": forges,
             }
 
             signs_dict = self.signs.get(map_key)
@@ -470,6 +497,8 @@ class MapResourcesService:
         signs_by_map: dict[int, dict[tuple[int, int], int]],
         doors_by_map: dict[int, dict[tuple[int, int], int]],
         water_by_map: dict[int, set[tuple[int, int]]],
+        anvils_by_map: dict[int, set[tuple[int, int]]],
+        forges_by_map: dict[int, set[tuple[int, int]]],
     ) -> None:
         """Procesa un archivo objects completo, agrupando por map_id.
 
@@ -514,6 +543,12 @@ class MapResourcesService:
                     blocked_by_map.setdefault(map_id, set()).add((x, y))
                 elif tile_type == "mine":
                     mines_by_map.setdefault(map_id, set()).add((x, y))
+                    blocked_by_map.setdefault(map_id, set()).add((x, y))
+                elif tile_type == "anvil":
+                    anvils_by_map.setdefault(map_id, set()).add((x, y))
+                    blocked_by_map.setdefault(map_id, set()).add((x, y))
+                elif tile_type == "forge":
+                    forges_by_map.setdefault(map_id, set()).add((x, y))
                     blocked_by_map.setdefault(map_id, set()).add((x, y))
                 elif tile_type == "water":
                     water_by_map.setdefault(map_id, set()).add((x, y))
@@ -626,15 +661,20 @@ class MapResourcesService:
         mines: set[tuple[int, int]],
         blocked: set[tuple[int, int]],
         water: set[tuple[int, int]],
+        anvils: set[tuple[int, int]],
+        forges: set[tuple[int, int]],
     ) -> None:
-        """Procesa el archivo objects para agregar árboles y minas.
+        """Procesa el archivo objects para agregar recursos a un mapa.
 
         Args:
             objects_path: Path al archivo objects o None.
             map_id: ID del mapa a procesar.
             trees: Set de árboles a actualizar.
             mines: Set de minas a actualizar.
-            blocked: Set de bloqueados a actualizar.
+            blocked: Set de tiles bloqueados a actualizar.
+            water: Set de tiles con agua a actualizar.
+            anvils: Set de tiles con yunques a actualizar.
+            forges: Set de tiles con fraguas a actualizar.
         """
         if not objects_path or not objects_path.exists():
             return
@@ -676,6 +716,12 @@ class MapResourcesService:
                 elif tile_type == "mine":
                     mines.add((x, y))
                     blocked.add((x, y))
+                elif tile_type == "anvil":
+                    anvils.add((x, y))
+                    blocked.add((x, y))
+                elif tile_type == "forge":
+                    forges.add((x, y))
+                    blocked.add((x, y))
                 elif tile_type == "water":
                     water.add((x, y))
                 elif tile_type == "sign":
@@ -701,8 +747,20 @@ class MapResourcesService:
         try:
             blocked, water, trees, mines = self._process_blocked_file(blocked_path, map_id)
 
-            # Cargar árboles, minas y agua adicional desde archivo objects
-            self._process_objects_file(objects_path, map_id, trees, mines, blocked, water)
+            anvils: set[tuple[int, int]] = set()
+            forges: set[tuple[int, int]] = set()
+
+            # Cargar árboles, minas, yunques, fraguas y agua adicional desde archivo objects
+            self._process_objects_file(
+                objects_path,
+                map_id,
+                trees,
+                mines,
+                blocked,
+                water,
+                anvils,
+                forges,
+            )
 
             # Determinar fuente de datos para logging
             if blocked_path and objects_path:
@@ -733,13 +791,15 @@ class MapResourcesService:
                 self.doors[map_key] = doors_dict
 
             logger.info(
-                "  %s (%s): %d bloqueados, %d agua, %d árboles, %d minas",
+                "  %s (%s): %d bloqueados, %d agua, %d árboles, %d minas, %d yunques, %d fraguas",
                 map_key,
                 source,
                 len(blocked),
                 len(water),
                 len(trees),
                 len(mines),
+                len(anvils),
+                len(forges),
             )
 
         except Exception:
@@ -809,6 +869,28 @@ class MapResourcesService:
             return False
         return (x, y) in self.resources[map_key]["mines"]
 
+    def has_anvil(self, map_id: int, x: int, y: int) -> bool:
+        """Verifica si una posición tiene un yunque.
+
+        Returns:
+            True si hay un yunque, False si no.
+        """
+        map_key = f"map_{map_id}"
+        if map_key not in self.resources:
+            return False
+        return (x, y) in self.resources[map_key].get("anvils", set())
+
+    def has_forge(self, map_id: int, x: int, y: int) -> bool:
+        """Verifica si una posición tiene una fragua.
+
+        Returns:
+            True si hay una fragua, False si no.
+        """
+        map_key = f"map_{map_id}"
+        if map_key not in self.resources:
+            return False
+        return (x, y) in self.resources[map_key].get("forges", set())
+
     def get_resource_counts(self, map_id: int) -> dict[str, int]:
         """Obtiene el conteo de recursos en un mapa.
 
@@ -824,11 +906,15 @@ class MapResourcesService:
 
         signs_count = len(self.signs.get(map_key, {}))
         doors_count = len(self.doors.get(map_key, {}))
+        anvils_count = len(self.resources[map_key].get("anvils", set()))
+        forges_count = len(self.resources[map_key].get("forges", set()))
 
         return {
             "water": len(self.resources[map_key]["water"]),
             "trees": len(self.resources[map_key]["trees"]),
             "mines": len(self.resources[map_key]["mines"]),
+            "anvils": anvils_count,
+            "forges": forges_count,
             "signs": signs_count,
             "doors": doors_count,
         }

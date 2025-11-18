@@ -403,33 +403,36 @@ class TaskLeftClick(Task):
         info_lines = [f"=== Tile ({x}, {y}) - Mapa {map_id} ==="]
 
         # Verificar recursos del mapa
-        resources = []
+        resources: list[str] = []
         if self.map_resources:
             is_blocked = self.map_resources.is_blocked(map_id, x, y)
-            has_water = self.map_resources.has_water(map_id, x, y)
-            has_tree = self.map_resources.has_tree(map_id, x, y)
-            has_mine = self.map_resources.has_mine(map_id, x, y)
+            resource_flags = {
+                "Agua": self.map_resources.has_water(map_id, x, y),
+                "Arbol": self.map_resources.has_tree(map_id, x, y),
+                "Yacimiento": self.map_resources.has_mine(map_id, x, y),
+                "Yunque": self.map_resources.has_anvil(map_id, x, y),
+                "Fragua": self.map_resources.has_forge(map_id, x, y),
+            }
 
             logger.info(
-                "TILE_RESOURCES map=%d (%d,%d): blocked=%s water=%s tree=%s mine=%s",
+                "TILE_RESOURCES map=%d (%d,%d): blocked=%s water=%s tree=%s "
+                "mine=%s anvil=%s forge=%s",
                 map_id,
                 x,
                 y,
                 is_blocked,
-                has_water,
-                has_tree,
-                has_mine,
+                resource_flags["Agua"],
+                resource_flags["Arbol"],
+                resource_flags["Yacimiento"],
+                resource_flags["Yunque"],
+                resource_flags["Fragua"],
             )
 
             if is_blocked:
                 info_lines.append("Estado: Bloqueado")
 
-            if has_water:
-                resources.append("Agua")
-            if has_tree:
-                resources.append("Arbol")
-            if has_mine:
-                resources.append("Yacimiento")
+            labels = ("Agua", "Arbol", "Yacimiento", "Yunque", "Fragua")
+            resources.extend(label for label in labels if resource_flags[label])
 
         if resources:
             info_lines.append(f"Recursos: {', '.join(resources)}")
@@ -460,8 +463,7 @@ class TaskLeftClick(Task):
             info_lines.append("Tile vacio")
 
         # Enviar mensaje
-        message = " | ".join(info_lines)
-        await self.message_sender.send_console_msg(message)
+        await self.message_sender.send_console_msg(" | ".join(info_lines))
 
     async def _get_sign_text(self, map_id: int, x: int, y: int) -> str | None:
         """Obtiene el texto de un cartel si existe en la posición.
