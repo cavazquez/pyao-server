@@ -773,6 +773,10 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
 
         Esto evita releer y reparsear blocked_XXX-XXX.json para cada mapa y
         reduce el procesamiento a los tiles del mapa solicitado.
+
+        Returns:
+            Lista de diccionarios de tiles bloqueados para el mapa dado, o ``None``
+            si no hay datos disponibles para ese mapa o archivo.
         """
         if blocked_path in self._missing_blocked_files:
             return None
@@ -796,7 +800,7 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
 
         return file_cache.get(map_id, [])
 
-    def _load_map_transitions(self, map_id: int, transitions_path: Path) -> None:
+    def _load_map_transitions(self, map_id: int, transitions_path: Path) -> None:  # noqa: PLR0915
         """Carga transiciones de mapa desde un archivo JSON.
 
         Args:

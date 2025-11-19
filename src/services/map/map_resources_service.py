@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 import time
 import tomllib
 from collections import defaultdict
@@ -70,7 +71,7 @@ class MapResourcesService:
                 if self._fatal_on_missing_resources:
                     # Cortar la inicialización del servidor cuando no hay datos de mapas
                     # y se está usando la configuración por defecto.
-                    raise SystemExit(msg % self.maps_dir)
+                    sys.exit(msg % self.maps_dir)
         self._load_manual_doors()
 
     def _load_all_maps(self) -> None:
