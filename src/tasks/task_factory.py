@@ -176,6 +176,7 @@ class TaskFactory:
                     player_repo=self.deps.player_repo,
                     session_data=session_data,
                     map_resources=self.deps.map_resources_service,
+                    account_repo=self.deps.account_repo,
                 )
 
             # TaskMoveSpell (packet_id 45) - recibe slot y upwards

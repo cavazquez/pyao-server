@@ -21,6 +21,9 @@ HEADING_EAST = 2
 HEADING_SOUTH = 3
 HEADING_WEST = 4
 
+# Body que representa una barca en el cliente Godot (incluido en Consts.ShipIds)
+SHIP_BODY_ID = 84
+
 # Constantes para validación de paquetes
 MIN_CHANGE_HEADING_PACKET_SIZE = 2
 
@@ -106,17 +109,18 @@ class TaskChangeHeading(Task):
         # Guardar la dirección en Redis
         await self.player_repo.set_heading(user_id, heading)
 
-        logger.info(
-            "User %d cambió dirección a %d",
-            user_id,
-            heading,
-        )
+        logger.info("User %d cambió dirección a %d", user_id, heading)
 
-        # Obtener datos visuales del personaje de Redis
+        # Determinar apariencia visual según si está navegando o no
         char_body = 1  # Valor por defecto
         char_head = 15  # Valor por defecto
 
-        if self.account_repo and "username" in self.session_data:
+        # Si el jugador está navegando, usar siempre el body de barco y sin cabeza
+        is_sailing = await self.player_repo.is_sailing(user_id)
+        if is_sailing:
+            char_body = SHIP_BODY_ID
+            char_head = 0
+        elif self.account_repo and "username" in self.session_data:
             username = self.session_data["username"]
             if isinstance(username, str):
                 account_data = await self.account_repo.get_account(username)
