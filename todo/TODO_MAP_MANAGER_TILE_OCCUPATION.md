@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-11-18  
 **Prioridad:** MEDIA  
-**Estado:** Planificado  
+**Estado:** Completado ✅  
 
 ## Opción 2 – Consistencia de índice espacial para jugadores
 

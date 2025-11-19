@@ -133,6 +133,35 @@ class AddToNewMapStep(MapTransitionStep):
         )
 
 
+class UpdateTileInNewMapStep(MapTransitionStep):
+    """Paso 7b: Marcar tile ocupado en el nuevo mapa en el índice espacial."""
+
+    def __init__(self, map_manager: MapManager) -> None:
+        """Inicializa el paso con el gestor de mapas."""
+        self.map_manager = map_manager
+
+    async def execute(self, context: MapTransitionContext) -> None:
+        """Actualiza la ocupación de tile del jugador en el nuevo mapa.
+
+        Usa old_x/old_y iguales a new_x/new_y para centralizar la lógica
+        en update_player_tile incluso en el caso de primer registro.
+        """
+        logger.debug(
+            "Paso 7b: Actualizando tile ocupado en mapa %d pos (%d,%d)",
+            context.new_map,
+            context.new_x,
+            context.new_y,
+        )
+        self.map_manager.update_player_tile(
+            context.user_id,
+            context.new_map,
+            context.new_x,
+            context.new_y,
+            context.new_x,
+            context.new_y,
+        )
+
+
 class SendSelfCharacterCreateStep(MapTransitionStep):
     """Paso 8: Enviar CHARACTER_CREATE del propio jugador."""
 
@@ -282,6 +311,7 @@ class MapTransitionOrchestrator:
             RemoveFromOldMapStep(map_manager),
             BroadcastRemoveFromOldMapStep(broadcast_service),
             AddToNewMapStep(map_manager),
+            UpdateTileInNewMapStep(map_manager),
             SendSelfCharacterCreateStep(),
             SendExistingPlayersStep(send_players_in_map),
             SendNPCsStep(send_npcs_in_map),

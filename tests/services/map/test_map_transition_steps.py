@@ -274,8 +274,8 @@ class TestMapTransitionOrchestrator:
             send_ground_items,
         )
 
-        # Verificar que tiene 12 pasos
-        assert len(orchestrator.steps) == 12
+        # Verificar que tiene 13 pasos (incluyendo actualización de tile en nuevo mapa)
+        assert len(orchestrator.steps) == 13
 
         # Verificar tipos de pasos
         step_types = [type(step).__name__ for step in orchestrator.steps]
@@ -287,6 +287,7 @@ class TestMapTransitionOrchestrator:
             "RemoveFromOldMapStep",
             "BroadcastRemoveFromOldMapStep",
             "AddToNewMapStep",
+            "UpdateTileInNewMapStep",
             "SendSelfCharacterCreateStep",
             "SendExistingPlayersStep",
             "SendNPCsStep",

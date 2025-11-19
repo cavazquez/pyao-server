@@ -272,6 +272,10 @@ class PlayerMapService:
         # 1. Agregar jugador al mapa en MapManager
         self.map_manager.add_player(map_id, user_id, message_sender, visual_data.username)
 
+        # 1b. Marcar ocupación de tile para el jugador en el índice espacial
+        # Usamos old_x/old_y iguales a la posición inicial para centralizar la lógica
+        self.map_manager.update_player_tile(user_id, map_id, x, y, x, y)
+
         # 2. Enviar CHARACTER_CREATE del propio jugador
         await message_sender.send_character_create(
             char_index=user_id,

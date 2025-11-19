@@ -38,6 +38,7 @@ def mock_map_manager():
     manager._ground_items = {}
     manager.add_player = MagicMock()
     manager.remove_player = MagicMock()
+    manager.update_player_tile = MagicMock()
     return manager
 
 
@@ -262,6 +263,11 @@ class TestPlayerMapService:
         # Debe agregar jugador al mapa
         player_map_service.map_manager.add_player.assert_called_once()
 
+        # Debe marcar el tile ocupado en el índice espacial
+        player_map_service.map_manager.update_player_tile.assert_called_once_with(
+            1, 1, 50, 50, 50, 50
+        )
+
         # Debe enviar CHARACTER_CREATE del propio jugador
         assert mock_message_sender.send_character_create.call_count >= 1
 
@@ -302,6 +308,11 @@ class TestPlayerMapService:
 
         # 7. Debe agregar al nuevo mapa
         player_map_service.map_manager.add_player.assert_called_once()
+
+        # 7b. Debe marcar el tile ocupado en el nuevo mapa
+        player_map_service.map_manager.update_player_tile.assert_called_once_with(
+            1, 2, 60, 60, 60, 60
+        )
 
         # 8. Debe enviar CHARACTER_CREATE del propio jugador
         assert mock_message_sender.send_character_create.call_count >= 1

@@ -255,8 +255,8 @@ pyao-server/
 │   ├── msg.py                   # Construcción de mensajes (642 líneas → refactorizar)
 │   │
 │   ├── # Sistema de Juego
-│   ├── map_manager.py           # Gestor de mapas/jugadores/NPCs
-│   ├── map_manager_spatial.py   # Índices espaciales
+│   ├── map_manager.py           # Gestor de mapas/jugadores/NPCs (incluye limpieza de tiles)
+│   ├── map_manager_spatial.py   # Índices espaciales (_tile_occupation actualizado en spawn, teleports y transiciones de mapa)
 │   ├── game_tick.py             # Sistema de tick (efectos periódicos)
 │   ├── effect_hunger_thirst.py  # Efecto de hambre y sed
 │   ├── effect_gold_decay.py     # Efecto de decaimiento de oro
