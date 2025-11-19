@@ -1,6 +1,7 @@
 """Tarea para click izquierdo en personajes/NPCs."""
 
 import logging
+import os
 import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -27,6 +28,10 @@ if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
+
+# Mapa para el que se quieren ver logs detallados de recursos. Si es 0 (por
+# defecto), se muestran para todos los mapas.
+DEBUG_MAP_ID = int(os.getenv("AO_DEBUG_MAP_ID", "0"))
 
 # Constantes para GrhIndex de puertas de madera
 WOODEN_DOOR_OPEN_GRH = 5592
@@ -414,25 +419,32 @@ class TaskLeftClick(Task):
                 "Fragua": self.map_resources.has_forge(map_id, x, y),
             }
 
-            logger.info(
-                "TILE_RESOURCES map=%d (%d,%d): blocked=%s water=%s tree=%s "
-                "mine=%s anvil=%s forge=%s",
-                map_id,
-                x,
-                y,
-                is_blocked,
-                resource_flags["Agua"],
-                resource_flags["Arbol"],
-                resource_flags["Yacimiento"],
-                resource_flags["Yunque"],
-                resource_flags["Fragua"],
-            )
+            if DEBUG_MAP_ID in {0, map_id}:
+                logger.info(
+                    "TILE_RESOURCES map=%d (%d,%d): blocked=%s water=%s tree=%s "
+                    "mine=%s anvil=%s forge=%s",
+                    map_id,
+                    x,
+                    y,
+                    is_blocked,
+                    resource_flags["Agua"],
+                    resource_flags["Arbol"],
+                    resource_flags["Yacimiento"],
+                    resource_flags["Yunque"],
+                    resource_flags["Fragua"],
+                )
 
             if is_blocked:
                 info_lines.append("Estado: Bloqueado")
 
             labels = ("Agua", "Arbol", "Yacimiento", "Yunque", "Fragua")
             resources.extend(label for label in labels if resource_flags[label])
+
+        # Información de bloqueo de movimiento desde MapManager
+        if self.map_manager:
+            block_reason = self.map_manager.get_tile_block_reason(map_id, x, y)
+            if block_reason:
+                info_lines.append(f"Movimiento: Bloqueado ({block_reason})")
 
         if resources:
             info_lines.append(f"Recursos: {', '.join(resources)}")
