@@ -15,7 +15,12 @@ MAP_RANGE_2 = 100
 MAP_RANGE_3 = 150
 MAP_RANGE_4 = 200
 MAP_RANGE_5 = 250
-INT32_SIZE = 4
+
+# En los archivos .inf del servidor VB6, los datos se almacenan usando
+# "Integer" (16 bits, little-endian). Cada archivo tiene un header
+# de 8 bytes (Double) + 2 bytes (Integer) y luego, para cada tile, un
+# byte de flags seguido de enteros opcionales para exits, NPCs y objetos.
+INT16_SIZE = 2
 
 
 def read_inf_file(filepath: Path) -> list[tuple[int, int, int, int, int]]:
@@ -27,56 +32,54 @@ def read_inf_file(filepath: Path) -> list[tuple[int, int, int, int, int]]:
     Returns:
         Lista de tuplas: (x, y, to_map, to_x, to_y)
     """
-    transitions = []
+    transitions: list[tuple[int, int, int, int, int]] = []
 
     try:
         with Path(filepath).open("rb") as f:
-            # Saltar el header del archivo .inf
-            f.seek(16)  # Header de 16 bytes
+            # Header .inf: Double (8 bytes) + Integer (2 bytes)
+            f.seek(8 + INT16_SIZE)
 
-            # Leer el mapa de 100x100 tiles
+            # Leer el mapa de 100x100 tiles en el mismo orden que el VB6
+            # (YMinMapSize..YMaxMapSize, XMinMapSize..XMaxMapSize)
             for y in range(1, 101):
                 for x in range(1, 101):
-                    # Leer flags byte
-                    flags_byte = f.read(1)
-                    if not flags_byte:
+                    # Leer flags (1 byte)
+                    flags_raw = f.read(1)
+                    if not flags_raw:
                         break
 
-                    flags = struct.unpack("B", flags_byte)[0]
+                    flags = struct.unpack("B", flags_raw)[0]
 
-                    # Si el bit 1 está activo, hay una transición
+                    # Bit 1: TileExit presente
                     if flags & 1:
-                        # Leer to_map (4 bytes int32)
-                        to_map_bytes = f.read(INT32_SIZE)
-                        if len(to_map_bytes) < INT32_SIZE:
-                            break
-                        to_map = struct.unpack("<i", to_map_bytes)[0]
+                        # VB6 Integer = 16 bits little-endian
+                        to_map_bytes = f.read(INT16_SIZE)
+                        to_x_bytes = f.read(INT16_SIZE)
+                        to_y_bytes = f.read(INT16_SIZE)
 
-                        # Leer to_x (4 bytes int32)
-                        to_x_bytes = f.read(INT32_SIZE)
-                        if len(to_x_bytes) < INT32_SIZE:
+                        if (
+                            len(to_map_bytes) < INT16_SIZE
+                            or len(to_x_bytes) < INT16_SIZE
+                            or len(to_y_bytes) < INT16_SIZE
+                        ):
                             break
-                        to_x = struct.unpack("<i", to_x_bytes)[0]
 
-                        # Leer to_y (4 bytes int32)
-                        to_y_bytes = f.read(INT32_SIZE)
-                        if len(to_y_bytes) < INT32_SIZE:
-                            break
-                        to_y = struct.unpack("<i", to_y_bytes)[0]
+                        to_map = struct.unpack("<H", to_map_bytes)[0]
+                        to_x = struct.unpack("<H", to_x_bytes)[0]
+                        to_y = struct.unpack("<H", to_y_bytes)[0]
 
-                        # Solo agregar si to_map > 0 (transición válida)
                         if to_map > 0:
                             transitions.append((x, y, to_map, to_x, to_y))
 
-                    # Si el bit 2 está activo, hay NPC (4 bytes)
+                    # Bit 2: NPC en el tile → un Integer (NPC número)
                     if flags & 2:
-                        f.read(INT32_SIZE)
+                        _ = f.read(INT16_SIZE)
 
-                    # Si el bit 4 está activo, hay objeto (8 bytes)
+                    # Bit 4: Objeto en el tile → dos Integer (ObjIndex, Amount)
                     if flags & 4:
-                        f.read(INT32_SIZE * 2)
+                        _ = f.read(INT16_SIZE * 2)
 
-                if not flags_byte:
+                if not flags_raw:
                     break
 
     except (OSError, struct.error) as e:

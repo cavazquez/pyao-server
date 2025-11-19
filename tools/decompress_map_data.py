@@ -149,7 +149,7 @@ def main() -> None:
         "--target",
         type=Path,
         default=Path("map_data"),
-        help="Directorio destino para los archivos extraídos",
+        help="Directorio destino para los archivos extraídos (por defecto map_data)",
     )
     parser.add_argument(
         "--overwrite",

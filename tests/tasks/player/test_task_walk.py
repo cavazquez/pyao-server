@@ -225,6 +225,57 @@ class TestTaskWalk:
         player_repo.set_position.assert_not_called()
         player_repo.set_heading.assert_called_once_with(1, 1)
 
+    async def test_walk_triggers_exit_transition(self) -> None:
+        """Test que caminar hacia un exit tile dispara transition_to_map."""
+        # Setup
+        message_sender = MagicMock()
+        message_sender.connection.address = "127.0.0.1:1234"
+
+        player_repo = MagicMock(spec=PlayerRepository)
+        player_repo.is_meditating = AsyncMock(return_value=False)
+        player_repo.get_position = AsyncMock(
+            return_value={"x": 49, "y": 90, "map": 1, "heading": 3}
+        )
+        player_repo.set_position = AsyncMock()
+
+        map_manager = MagicMock(spec=MapManager)
+        map_manager.get_map_size = MagicMock(return_value=(100, 100))
+        # Simular exit tile al moverse al SUR desde (49,90) -> (49,91)
+        map_manager.get_exit_tile = MagicMock(return_value={"to_map": 2, "to_x": 50, "to_y": 99})
+        map_manager.update_player_tile = MagicMock()
+        map_manager.can_move_to = MagicMock(return_value=True)
+
+        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
+        broadcast_service.broadcast_character_move = AsyncMock()
+
+        # PlayerMapService mock para verificar transición de mapa
+        player_map_service = MagicMock()
+        player_map_service.transition_to_map = AsyncMock()
+
+        # Packet: WALK + SOUTH (3)
+        data = bytes([0x06, 0x03])
+        session_data = {"user_id": 1}
+
+        task = TaskWalk(
+            data,
+            message_sender,
+            player_repo=player_repo,
+            map_manager=map_manager,
+            broadcast_service=broadcast_service,
+            player_map_service=player_map_service,
+            session_data=session_data,
+        )
+
+        # Execute
+        await task.execute()
+
+        # Assert - debe llamar a transition_to_map y no hacer movimiento normal
+        player_map_service.transition_to_map.assert_awaited_once()
+        player_repo.set_position.assert_not_called()
+        map_manager.update_player_tile.assert_not_called()
+        map_manager.can_move_to.assert_not_called()
+        broadcast_service.broadcast_character_move.assert_not_called()
+
     async def test_walk_at_map_edge_north(self) -> None:
         """Test de movimiento en el borde norte del mapa."""
         # Setup

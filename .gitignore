@@ -208,5 +208,6 @@ __marimo__/
 
 clientes/
 map_data/
+map_cache/
 
 certs/

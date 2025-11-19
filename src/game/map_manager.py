@@ -62,6 +62,15 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
         # Ground items: {(map_id, x, y): [Item, Item, ...]}
         self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
 
+        # Cache de archivos de transiciones por ruta
+        # El valor puede ser un dict con clave "transitions" o una lista de grupos
+        self._transitions_cache: dict[Path, object] = {}
+        self._missing_transitions_files: set[Path] = set()
+
+        # Cache de tiles bloqueados por archivo y mapa
+        self._blocked_cache: dict[Path, dict[int, list[dict[str, object]]]] = {}
+        self._missing_blocked_files: set[Path] = set()
+
         # Repositorio para persistencia
         self.ground_items_repo = ground_items_repo
 
@@ -757,6 +766,36 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
 
         return []
 
+    def _get_blocked_tiles_for_map(
+        self, map_id: int, blocked_path: Path
+    ) -> list[dict[str, object]] | None:
+        """Obtiene los tiles bloqueados para un mapa concreto usando caché por archivo.
+
+        Esto evita releer y reparsear blocked_XXX-XXX.json para cada mapa y
+        reduce el procesamiento a los tiles del mapa solicitado.
+        """
+        if blocked_path in self._missing_blocked_files:
+            return None
+
+        file_cache = self._blocked_cache.get(blocked_path)
+
+        if file_cache is None:
+            raw_blocked = self._load_blocked_file(blocked_path)
+            if raw_blocked is None:
+                self._missing_blocked_files.add(blocked_path)
+                return None
+
+            file_cache = {}
+            for tile in raw_blocked:
+                tile_map_id = self._coerce_int(tile.get("m"))
+                if tile_map_id is None:
+                    continue
+                file_cache.setdefault(tile_map_id, []).append(tile)
+
+            self._blocked_cache[blocked_path] = file_cache
+
+        return file_cache.get(map_id, [])
+
     def _load_map_transitions(self, map_id: int, transitions_path: Path) -> None:
         """Carga transiciones de mapa desde un archivo JSON.
 
@@ -764,73 +803,121 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
             map_id: ID del mapa actual.
             transitions_path: Ruta al archivo de transiciones.
         """
-        if not transitions_path.exists():
-            logger.debug("Archivo de transiciones no encontrado: %s", transitions_path)
+        # Evitar releer múltiples veces el mismo archivo de transiciones
+        if transitions_path in self._missing_transitions_files:
             return
 
-        try:
-            with transitions_path.open("r", encoding="utf-8") as f:
-                data = json.load(f)
+        data = self._transitions_cache.get(transitions_path)
 
-            logger.debug("Cargando transiciones para mapa %d desde %s", map_id, transitions_path)
+        if data is None:
+            if not transitions_path.exists():
+                logger.debug("Archivo de transiciones no encontrado: %s", transitions_path)
+                self._missing_transitions_files.add(transitions_path)
+                return
 
-            transitions_loaded = 0
-            for transition_group in data.get("transitions", []):
-                if transition_group.get("from_map") != map_id:
-                    continue
+            try:
+                raw_text = transitions_path.read_text(encoding="utf-8")
+            except OSError:
+                logger.warning("No se pudieron cargar transiciones desde %s", transitions_path)
+                self._missing_transitions_files.add(transitions_path)
+                return
 
-                logger.debug("Encontrado grupo de transiciones para mapa %d", map_id)
+            # Intentar primero como JSON tradicional
+            try:
+                data = json.loads(raw_text)
+            except json.JSONDecodeError:
+                # NDJSON: cada línea es un grupo de transiciones
+                groups: list[dict[str, object]] = []
+                for line in raw_text.splitlines():
+                    stripped = line.strip()
+                    if not stripped:
+                        continue
+                    try:
+                        obj = json.loads(stripped)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(obj, dict):
+                        groups.append(obj)
 
-                for exit_data in transition_group.get("exits", []):
-                    x = self._coerce_int(exit_data.get("x"))
-                    y = self._coerce_int(exit_data.get("y"))
-                    to_map = self._coerce_int(exit_data.get("to_map"))
-                    to_x = self._coerce_int(exit_data.get("to_x"))
-                    to_y = self._coerce_int(exit_data.get("to_y"))
+                if not groups:
+                    logger.warning("No se encontraron transiciones válidas en %s", transitions_path)
+                    self._missing_transitions_files.add(transitions_path)
+                    return
 
+                data = groups
+
+            self._transitions_cache[transitions_path] = data
+        else:
+            logger.debug("Reutilizando transiciones en caché desde %s", transitions_path)
+
+        logger.debug("Cargando transiciones para mapa %d desde %s", map_id, transitions_path)
+
+        # Unificar acceso a los grupos de transiciones
+        if isinstance(data, dict):
+            raw_groups = data.get("transitions", [])
+            if isinstance(raw_groups, list):
+                transition_groups = [g for g in raw_groups if isinstance(g, dict)]
+            else:
+                transition_groups = []
+        elif isinstance(data, list):
+            transition_groups = [g for g in data if isinstance(g, dict)]
+        else:
+            transition_groups = []
+
+        transitions_loaded = 0
+        for transition_group in transition_groups:
+            if transition_group.get("from_map") != map_id:
+                continue
+
+            logger.debug("Encontrado grupo de transiciones para mapa %d", map_id)
+
+            for exit_data in transition_group.get("exits", []):
+                x = self._coerce_int(exit_data.get("x"))
+                y = self._coerce_int(exit_data.get("y"))
+                to_map = self._coerce_int(exit_data.get("to_map"))
+                to_x = self._coerce_int(exit_data.get("to_x"))
+                to_y = self._coerce_int(exit_data.get("to_y"))
+
+                if (
+                    x is not None
+                    and y is not None
+                    and to_map
+                    and to_x is not None
+                    and to_y is not None
+                ):
+                    # Filtrar solo transiciones válidas (mapas entre 1-290)
                     if (
-                        x is not None
-                        and y is not None
-                        and to_map
-                        and to_x is not None
-                        and to_y is not None
+                        1 <= to_map <= MAX_MAP_ID
+                        and 1 <= to_x <= MAX_COORDINATE
+                        and 1 <= to_y <= MAX_COORDINATE
                     ):
-                        # Filtrar solo transiciones válidas (mapas entre 1-290)
-                        if (
-                            1 <= to_map <= MAX_MAP_ID
-                            and 1 <= to_x <= MAX_COORDINATE
-                            and 1 <= to_y <= MAX_COORDINATE
-                        ):
-                            self._exit_tiles[map_id, x, y] = {
-                                "to_map": to_map,
-                                "to_x": to_x,
-                                "to_y": to_y,
-                            }
-                            transitions_loaded += 1
-                            logger.debug(
-                                "Transición cargada: Mapa %d (%d,%d) -> Mapa %d (%d,%d)",
-                                map_id,
-                                x,
-                                y,
-                                to_map,
-                                to_x,
-                                to_y,
-                            )
-                        else:
-                            logger.debug(
-                                "Transición inválida ignorada: Mapa %d (%d,%d) -> Mapa %d (%d,%d)",
-                                map_id,
-                                x,
-                                y,
-                                to_map,
-                                to_x,
-                                to_y,
-                            )
+                        self._exit_tiles[map_id, x, y] = {
+                            "to_map": to_map,
+                            "to_x": to_x,
+                            "to_y": to_y,
+                        }
+                        transitions_loaded += 1
+                        logger.debug(
+                            "Transición cargada: Mapa %d (%d,%d) -> Mapa %d (%d,%d)",
+                            map_id,
+                            x,
+                            y,
+                            to_map,
+                            to_x,
+                            to_y,
+                        )
+                    else:
+                        logger.debug(
+                            "Transición inválida ignorada: Mapa %d (%d,%d) -> Mapa %d (%d,%d)",
+                            map_id,
+                            x,
+                            y,
+                            to_map,
+                            to_x,
+                            to_y,
+                        )
 
-            logger.info("Transiciones cargadas para mapa %d: %d", map_id, transitions_loaded)
-
-        except (OSError, json.JSONDecodeError):
-            logger.warning("No se pudieron cargar transiciones desde %s", transitions_path)
+        logger.info("Transiciones cargadas para mapa %d: %d", map_id, transitions_loaded)
 
     @staticmethod
     def _build_blocked_data(
@@ -902,18 +989,22 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
         # Extraer el rango para buscar "blocked_001-050.json" (los rangos no coinciden)
         stem = metadata_path.stem
         if "_" in stem:
-            _, range_part = stem.split("_", 1)
+            _, _range_part = stem.split("_", 1)
             # Para el mapa 1, el rango en metadata es 001-064 pero en blocked es 001-050
             if map_id <= MAP_RANGE_1:
-                blocked_path = metadata_path.with_name("blocked_001-050.json")
+                blocked_name = "blocked_001-050.json"
             elif map_id <= MAP_RANGE_2:
-                blocked_path = metadata_path.with_name("blocked_051-100.json")
+                blocked_name = "blocked_051-100.json"
             elif map_id <= MAP_RANGE_3:
-                blocked_path = metadata_path.with_name("blocked_101-150.json")
+                blocked_name = "blocked_101-150.json"
             elif map_id <= MAP_RANGE_4:
-                blocked_path = metadata_path.with_name("blocked_151-200.json")
+                blocked_name = "blocked_151-200.json"
+            elif map_id <= MAP_RANGE_5:
+                blocked_name = "blocked_201-250.json"
             else:
-                blocked_path = metadata_path.with_name(f"blocked_{range_part}.json")
+                blocked_name = "blocked_251-290.json"
+
+            blocked_path = metadata_path.with_name(blocked_name)
         else:
             # Fallback para formato sin rango
             blocked_path = metadata_path.with_name("blocked.json")
@@ -923,7 +1014,7 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
             self._map_sizes[map_id] = (width, height)
 
             if blocked_tiles is None:
-                blocked_tiles = self._load_blocked_file(blocked_path)
+                blocked_tiles = self._get_blocked_tiles_for_map(map_id, blocked_path)
                 if blocked_tiles is None:
                     self._blocked_tiles[map_id] = set()
                     return

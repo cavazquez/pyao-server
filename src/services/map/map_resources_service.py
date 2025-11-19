@@ -30,7 +30,17 @@ class MapResourcesService:
             maps_dir: Directorio con los archivos JSON de recursos (opcional).
             map_manager: MapManager para inicializar puertas cerradas (opcional).
         """
-        self.maps_dir = Path(maps_dir) if maps_dir else Path("map_data")
+        # Directorio de origen de datos de mapas (blocked_*.json, objects_*.json, etc.)
+        self.maps_dir = Path(maps_dir) if maps_dir is not None else Path("map_data")
+        # Solo consideramos "fatal" la falta de recursos cuando se usa el valor por
+        # defecto (map_data/) y no se especificó maps_dir explícitamente (por ejemplo,
+        # en tests o herramientas de consola).
+        self._fatal_on_missing_resources = maps_dir is None and self.maps_dir == Path("map_data")
+
+        # Directorio para cachés derivados (map_resources_cache.json)
+        self.cache_dir = Path("map_cache")
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
         self.signs: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
         self.doors: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
@@ -49,7 +59,18 @@ class MapResourcesService:
         # Intentar cargar desde caché en disco primero
         if not self._try_load_from_cache():
             self._load_all_maps()
-            self._save_cache()
+            if self.resources:
+                self._save_cache()
+            else:
+                msg = (
+                    "MapResourcesService: no se encontraron recursos en %s; "
+                    "ejecuta 'uv run tools/decompress_map_data.py' para generar map_data/"
+                )
+                logger.warning(msg, self.maps_dir)
+                if self._fatal_on_missing_resources:
+                    # Cortar la inicialización del servidor cuando no hay datos de mapas
+                    # y se está usando la configuración por defecto.
+                    raise SystemExit(msg % self.maps_dir)
         self._load_manual_doors()
 
     def _load_all_maps(self) -> None:
@@ -175,7 +196,7 @@ class MapResourcesService:
         Returns:
             True si el caché es válido y fue cargado correctamente.
         """
-        cache_path = self.maps_dir / "map_resources_cache.json"
+        cache_path = self.cache_dir / "map_resources_cache.json"
         start_time = time.time()
         if not cache_path.exists():
             return False
@@ -232,7 +253,7 @@ class MapResourcesService:
 
     def _save_cache(self) -> None:
         """Guarda los recursos de mapas en caché en disco."""
-        cache_path = self.maps_dir / "map_resources_cache.json"
+        cache_path = self.cache_dir / "map_resources_cache.json"
 
         blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
         objects_files = sorted(self.maps_dir.glob("objects_*.json"))

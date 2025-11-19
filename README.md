@@ -283,7 +283,7 @@ pyao-server/
 │   ├── armor_crafting.toml      # Recetas de armaduras (extraído de cliente) NUEVO
 │   ├── crafting_materials.toml  # Materiales base para crafting NUEVO
 │
-├── map_data/                    # Datos de mapas (generados desde clientes VB6/Godot)
+├── map_data/                    # Datos de mapas "fuente" y de runtime (generados desde clientes VB6/Godot)
 │   ├── 001_metadata.json        # Metadatos del mapa (nombre, clima, tamaño)
 │   ├── 001_ground.json          # Tiles de capa base (100x100)
 │   ├── 001_upper.json           # Sprites de la capa superior
@@ -291,9 +291,11 @@ pyao-server/
 │   ├── 001_flags.json           # Flags originales del mapa (desde VB6)
 │   ├── 001_triggers.json        # Triggers detectados (zonas seguras, portales, etc.)
 │   ├── 001_blocked.json         # Tiles bloqueados y recursos detectados
-│   ├── map_resources_cache.json # Caché de recursos agregados por mapa (bloqueados, agua, árboles, minas, carteles, puertas)
 │   ├── transitions_001-050.json # Transiciones de mapas (incluye exits de prueba 1->2 desde Ullathorpe)
-│   └── ...                      # Archivos XXX_*.json por cada capa del mapa
+│   └── ...                      # Archivos XXX_*.json por cada camada del mapa (se comprimen en archives/map_data.xz)
+│
+├── map_cache/                   # Cachés derivados de mapas para runtime (no se commitea)
+│   └── map_resources_cache.json # Caché de recursos por mapa usado por MapResourcesService
 
 > TODO: separar en el futuro los mapas que usa el juego (descomprimidos desde el
 > archivo comprimido) a un directorio editable, y luego recomprimirlos para
@@ -301,7 +303,12 @@ pyao-server/
 │
 ├── tools/                       # Scripts utilitarios
 │   ├── compress_map_data.py     # Comprime map_data en archives/map_data.xz (LZMA)
-│   ├── decompress_map_data.py   # Restaura map_data desde archives/map_data.xz
+│   ├── decompress_map_data.py   # Restaura datos de mapas desde archives/map_data.xz a map_data/
+│   ├── normalize_transitions.py # Normaliza transitions_*.json en map_data/ (filtra y ordena exits válidos)
+│   │   # Ejemplo de uso:
+│   │   # python tools/normalize_transitions.py
+│   │   # Normaliza transiciones de mapas en map_data/transitions_*.json
+│   │   # Elimina transiciones inválidas y ordena las válidas por ID de mapa
 │   │
 │   └── extract_client_data/     # Extracción de datos del cliente NUEVO
 │   └── extract_client_data/     # Extracción de datos del cliente ✅ NUEVO
