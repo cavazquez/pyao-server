@@ -59,6 +59,7 @@ def mock_message_sender():
     sender.send_change_map = AsyncMock()
     sender.send_pos_update = AsyncMock()
     sender.send_object_create = AsyncMock()
+    sender.send_block_position = AsyncMock()
     return sender
 
 
@@ -247,6 +248,32 @@ class TestPlayerMapService:
 
         assert count == 2
         assert mock_message_sender.send_object_create.call_count == 2
+
+    @pytest.mark.asyncio
+    async def test_unblock_exit_tiles_without_exits(self, player_map_service, mock_message_sender):
+        """No debe desbloquear tiles ni enviar BLOCK_POSITION si no hay exit tiles."""
+        # El mock_map_manager por defecto no tiene _exit_tiles definido
+        result = await player_map_service._unblock_exit_tiles(1, mock_message_sender)
+
+        assert result == 0
+        mock_message_sender.send_block_position.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_unblock_exit_tiles_with_exits_filters_by_map(
+        self, player_map_service, mock_message_sender
+    ):
+        """Debe enviar BLOCK_POSITION(false) solo para exit tiles del mapa indicado."""
+        # Simular dos exit tiles, uno en el mapa 1 y otro en el mapa 2
+        player_map_service.map_manager._exit_tiles = {
+            (1, 10, 20): {"to_map": 2, "to_x": 50, "to_y": 99},
+            (2, 30, 40): {"to_map": 3, "to_x": 99, "to_y": 50},
+        }
+
+        result = await player_map_service._unblock_exit_tiles(1, mock_message_sender)
+
+        # Solo debe desbloquear el exit del mapa 1
+        assert result == 1
+        mock_message_sender.send_block_position.assert_awaited_once_with(10, 20, blocked=False)
 
     @pytest.mark.asyncio
     async def test_spawn_in_map(self, player_map_service, mock_message_sender):
