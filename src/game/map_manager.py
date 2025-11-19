@@ -847,25 +847,27 @@ class MapManager(SpatialIndexMixin):  # noqa: PLR0904
         exit_count = 0
 
         for tile in blocked_tiles:
-            raw_x = tile.get("x")
-            raw_y = tile.get("y")
+            # Algunos formatos NDJSON incluyen el ID de mapa en el campo "m".
+            # En ese caso solo debemos considerar los tiles que correspondan al
+            # mapa actual, ignorando el resto de mapas del mismo archivo
+            # blocked_XXX-YYY.json.
+            tile_map_id = MapManager._coerce_int(tile.get("m"))
+            if tile_map_id is not None and tile_map_id != map_id:
+                continue
+
             tile_type = tile.get(
                 "t", tile.get("type")
             )  # "t" para formato JSON, "type" como fallback
 
-            x = MapManager._coerce_int(raw_x)
-            y = MapManager._coerce_int(raw_y)
+            x = MapManager._coerce_int(tile.get("x"))
+            y = MapManager._coerce_int(tile.get("y"))
             if x is None or y is None:
                 continue
 
             if tile_type == "exit":
-                to_map_raw = tile.get("to_map")
-                to_x_raw = tile.get("to_x")
-                to_y_raw = tile.get("to_y")
-
-                to_map = MapManager._coerce_int(to_map_raw)
-                to_x = MapManager._coerce_int(to_x_raw)
-                to_y = MapManager._coerce_int(to_y_raw)
+                to_map = MapManager._coerce_int(tile.get("to_map"))
+                to_x = MapManager._coerce_int(tile.get("to_x"))
+                to_y = MapManager._coerce_int(tile.get("to_y"))
 
                 if to_map and to_x is not None and to_y is not None and to_map > 0:
                     exit_tiles[map_id, x, y] = {

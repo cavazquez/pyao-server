@@ -292,6 +292,7 @@ pyao-server/
 │   ├── 001_triggers.json        # Triggers detectados (zonas seguras, portales, etc.)
 │   ├── 001_blocked.json         # Tiles bloqueados y recursos detectados
 │   ├── map_resources_cache.json # Caché de recursos agregados por mapa (bloqueados, agua, árboles, minas, carteles, puertas)
+│   ├── transitions_001-050.json # Transiciones de mapas (incluye exits de prueba 1->2 desde Ullathorpe)
 │   └── ...                      # Archivos XXX_*.json por cada capa del mapa
 
 > TODO: separar en el futuro los mapas que usa el juego (descomprimidos desde el

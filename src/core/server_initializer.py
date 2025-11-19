@@ -31,19 +31,30 @@ class ServerInitializer:
 
         map_data_dir = Path("map_data")
         if map_data_dir.exists():
-            map_files = list(map_data_dir.glob("*_metadata.json"))
-            for map_file in sorted(map_files):
-                try:
-                    # Parsear formato: 001_map.json -> 1
-                    map_id = int(map_file.stem.split("_")[0])
-                    map_manager.load_map_data(map_id, map_file)
-                except ValueError:
-                    logger.warning("Error parseando ID de mapa: %s", map_file)
+            loaded_maps = 0
+            # Parsear formato: 001_map.json -> 1
+            ranges = [
+                (1, 51, "metadata_001-051.json"),
+                (52, 101, "metadata_052-101.json"),
+                (102, 151, "metadata_102-151.json"),
+                (152, 201, "metadata_152-201.json"),
+                (202, 251, "metadata_202-251.json"),
+                (252, 290, "metadata_252-290.json"),
+            ]
+
+            for start_id, end_id, filename in ranges:
+                metadata_path = map_data_dir / filename
+                if not metadata_path.exists():
+                    continue
+
+                for map_id in range(start_id, end_id + 1):
+                    map_manager.load_map_data(map_id, metadata_path)
+                    loaded_maps += 1
 
             elapsed_time = time.perf_counter() - start_time
             logger.info(
                 "✓ %d mapas cargados con tiles bloqueados en %.3f segundos",
-                len(map_files),
+                loaded_maps,
                 elapsed_time,
             )
         else:
