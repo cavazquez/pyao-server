@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-10-19  
 **Prioridad:** ALTA  
-**Estado:** Planificado  
+**Estado:** Completado ✅  
 **Compatibilidad:** ✅ Cliente Godot, ✅ Cliente VB6, ✅ Servidor VB6
 
 ## 📡 Protocolo Argentum Online Estándar
@@ -470,19 +470,19 @@ En el servidor VB6, las transiciones se manejan en:
 
 ## 📝 Checklist de Implementación
 
-- [ ] Crear `data/map_transitions.toml` con transiciones básicas
-- [ ] Crear `src/map_transition_service.py`
-- [ ] Modificar `src/task_walk.py`:
-  - [ ] Agregar parámetro `map_transition_service`
-  - [ ] Crear método `_calculate_new_position()`
-  - [ ] Detectar bordes de mapa
-  - [ ] Aplicar transiciones cuando existan
-  - [ ] Enviar `CHANGE_MAP` cuando cambie de mapa
-  - [ ] Actualizar broadcast de personajes
-- [ ] Integrar en `src/service_initializer.py`
-- [ ] Integrar en `src/server_initializer.py` (TaskWalk)
-- [ ] Crear `tests/test_map_transition_service.py`
-- [ ] Actualizar documentación
+- [x] Crear `data/map_transitions.toml` con transiciones básicas
+- [x] Crear `src/map_transition_service.py`
+- [x] Modificar `src/task_walk.py`:
+  - [x] Agregar parámetro `map_transition_service`
+  - [x] Crear método `_calculate_new_position()`
+  - [x] Detectar bordes de mapa
+  - [x] Aplicar transiciones cuando existan
+  - [x] Enviar `CHANGE_MAP` cuando cambie de mapa
+  - [x] Actualizar broadcast de personajes
+- [x] Integrar en `src/service_initializer.py`
+- [x] Integrar en `src/server_initializer.py` (TaskWalk)
+- [x] Crear `tests/test_map_transition_service.py`
+- [x] Actualizar documentación
 
 ## 🎯 Beneficios
 
