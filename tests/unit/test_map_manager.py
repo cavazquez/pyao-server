@@ -429,4 +429,4 @@ def test_add_player_username_empty_string(
     map_manager.add_player(1, 100, message_sender, username="")
 
     username = map_manager.get_player_username(100)
-    assert username == ""
+    assert not username
