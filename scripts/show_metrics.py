@@ -19,7 +19,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.core.server_initializer import ServerInitializer
-from src.utils.redis_client import RedisClient
 
 
 async def show_metrics() -> None:
@@ -29,15 +28,9 @@ async def show_metrics() -> None:
     print("=" * 60)
 
     try:
-        # Inicializar Redis
-        redis_client = await RedisClient.connect()
-        if not redis_client:
-            print("❌ Error: No se pudo conectar a Redis")
-            print("   Asegúrate de que Redis esté corriendo")
-            return
-
         # Inicializar el servidor completo para acceder a game_tick
         print("\n📊 Inicializando servidor para acceder a métricas...")
+        print("   (Esto puede tardar unos segundos...)")
         container, _, _ = await ServerInitializer.initialize_all()
 
         if not container.game_tick:
@@ -106,16 +99,17 @@ async def show_metrics() -> None:
         print("\n💡 Tip: Las métricas también se muestran automáticamente en los logs:")
         print("   - NPCMovementEffect: cada 10 ticks")
         print("   - GameTick: cada 50 ticks")
+        print("\n💡 Tip: También puedes usar el comando /METRICS en el juego")
 
     except Exception as e:
         print(f"\n❌ Error obteniendo métricas: {e}")
         import traceback
 
         traceback.print_exc()
-    finally:
-        # Cerrar conexiones
-        if "container" in locals() and container.redis_client:
-            await container.redis_client.close()
+        print("\n💡 Asegúrate de que:")
+        print("   - Redis esté corriendo")
+        print("   - El servidor no esté corriendo (o usa /METRICS en el juego)")
+        print("   - Tienes permisos para acceder a Redis")
 
 
 if __name__ == "__main__":
