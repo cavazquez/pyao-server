@@ -145,6 +145,7 @@ class ConfigManager:
                     "mana_per_int": 10,
                     "initial_gold": 0,
                     "initial_elu": 300,
+                    "elu_exponent": 1.8,  # Exponente para cálculo de ELU por nivel
                 },
             },
             "logging": {

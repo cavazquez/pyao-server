@@ -368,6 +368,20 @@ class PlayerRepository:
         await self.redis.redis.hset(key, "experience", str(exp))  # type: ignore[misc]
         logger.debug("Experiencia actualizada para user_id %d: %d", user_id, exp)
 
+    async def update_level_and_elu(self, user_id: int, level: int, elu: int) -> None:
+        """Actualiza el nivel y ELU del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            level: Nuevo nivel.
+            elu: Nuevo ELU (experiencia para siguiente nivel).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(  # type: ignore[misc]
+            key, mapping={"level": str(level), "elu": str(elu)}
+        )
+        logger.debug("Nivel y ELU actualizados para user_id %d: nivel=%d, elu=%d", user_id, level, elu)
+
     async def get_gold(self, user_id: int) -> int:
         """Obtiene el oro del jugador.
 
