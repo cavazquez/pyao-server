@@ -10,6 +10,7 @@ from src.network.msg_session import (
     build_pong_response,
     build_user_char_index_in_server_response,
 )
+from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
     from src.network.client_connection import ClientConnection
@@ -116,4 +117,14 @@ class SessionMessageSender:
         """Envía paquete PONG en respuesta a un PING del cliente."""
         response = build_pong_response()
         logger.debug("[%s] Enviando PONG", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_show_party_form(self) -> None:
+        """Envía paquete SHOW_PARTY_FORM para habilitar el botón de party en el cliente.
+
+        Este packet habilita la funcionalidad de parties en la UI del cliente.
+        Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
+        """
+        response = bytes([ServerPacketID.SHOW_PARTY_FORM])
+        logger.info("[%s] Enviando SHOW_PARTY_FORM (packet 99)", self.connection.address)
         await self.connection.send(response)

@@ -166,6 +166,7 @@ class TestTaskLogin:
         message_sender.send_logged = AsyncMock()
         message_sender.send_user_char_index_in_server = AsyncMock()
         message_sender.send_update_strength_and_dexterity = AsyncMock()
+        message_sender.send_show_party_form = AsyncMock()
 
         player_repo = MagicMock()
         account_repo = MagicMock()

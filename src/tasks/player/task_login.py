@@ -335,6 +335,11 @@ class TaskLogin(Task):
         # Obtener/crear y enviar stats
         await player_service.send_stats(user_id)
 
+        # Habilitar botón de party en el cliente
+        logger.info("Enviando SHOW_PARTY_FORM para habilitar botón GRUPO (user_id: %d)", user_id)
+        await self.message_sender.send_show_party_form()
+        logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
+
         return position
 
     async def _initialize_player_data(self, user_id: int) -> None:

@@ -30,7 +30,9 @@ async def test_task_ping_sends_pong() -> None:
 
     # Verificar que se envió PONG
     connection.send.assert_called_once()
-    sent_data = connection.send.call_args[0][0]
+    call_args = connection.send.call_args
+    assert call_args is not None
+    sent_data = call_args[0][0]
 
     # Verificar que el paquete enviado es PONG
     assert len(sent_data) == 1
@@ -78,7 +80,10 @@ async def test_task_ping_packet_format() -> None:
     await task.execute()
 
     # Obtener el paquete enviado
-    sent_data = connection.send.call_args[0][0]
+    assert connection.send.called
+    call_args = connection.send.call_args
+    assert call_args is not None
+    sent_data = call_args[0][0]
 
     # Verificar formato: solo debe ser el PacketID PONG
     assert isinstance(sent_data, bytes)

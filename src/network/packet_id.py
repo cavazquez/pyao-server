@@ -243,7 +243,7 @@ class ServerPacketID(IntEnum):
     # RECORD_LIST = 96
     # RECORD_DETAILS = 97
     # SHOW_GUILD_ALIGN = 98
-    # SHOW_PARTY_FORM = 99
+    SHOW_PARTY_FORM = 99  # Habilitar botón de party en el cliente
     UPDATE_STRENGTH_AND_DEXTERITY = 100
     UPDATE_STRENGTH = 101
     UPDATE_DEXTERITY = 102

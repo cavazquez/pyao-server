@@ -602,6 +602,14 @@ class MessageSender:  # noqa: PLR0904
         """Envía paquete PONG en respuesta a un PING."""
         await self.session.send_pong()
 
+    async def send_show_party_form(self) -> None:
+        """Envía paquete SHOW_PARTY_FORM para habilitar el botón de party en el cliente.
+
+        Este packet habilita la funcionalidad de parties en la UI del cliente.
+        Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
+        """
+        await self.session.send_show_party_form()
+
     async def send_work_request_target(self, skill_type: int) -> None:
         """Envía paquete WORK_REQUEST_TARGET para cambiar cursor al modo de trabajo.
 
