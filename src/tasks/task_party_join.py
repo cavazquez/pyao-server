@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -46,11 +47,20 @@ class TaskPartyJoin(Task):
             # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
 
             logger.info("Party invite packet data (hex): %s", self.data.hex())
-            logger.info("Party invite packet data (raw): %s", self.data)
+            logger.info("Party invite packet data length: %d bytes", len(self.data))
 
-            # Read target username (cliente Godot envía ASCII/Latin-1)
-            target_username = reader.read_ascii_string()
-            logger.info("Decoded username (ASCII): '%s'", target_username)
+            # Verificar si hay datos suficientes (al menos 4 bytes para int32 de longitud)
+            if not reader.validate_remaining_bytes(4):
+                await self.message_sender.send_console_msg(
+                    "Debes especificar un nombre de usuario. Uso: /PARTY <nombre>", font_color=7
+                )
+                return
+
+            # Read target username (cliente Godot usa put_string() que es int32 length + UTF-8)
+            # NOTA: WritePartyJoin usa put_string() que escribe int32 (length) + UTF-8 bytes
+            # mientras que otros como WritePartyKick usan PutUnicodeString (int16 length + Latin-1)
+            target_username = reader.read_godot_put_string(encoding="utf-8")
+            logger.info("Decoded username: '%s' (length: %d)", target_username, len(target_username))
 
             if not target_username:
                 await self.message_sender.send_console_msg(

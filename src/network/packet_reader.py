@@ -122,19 +122,80 @@ class PacketReader:
         logger = logging.getLogger(__name__)
 
         length = self.read_int16()
+        logger.debug(
+            "read_ascii_string: length from packet=%d, offset=%d, remaining=%d",
+            length,
+            self.offset,
+            len(self.data) - self.offset,
+        )
         self.ensure_remaining_bytes(length, "read_ascii_string")
         string_bytes = self.data[self.offset : self.offset + length]
 
         logger.debug(
-            "read_ascii_string: length=%d, bytes=%s",
+            "read_ascii_string: length=%d, bytes=%s, hex=%s",
             length,
+            string_bytes,
             string_bytes.hex() if string_bytes else "empty",
         )
 
         value = string_bytes.decode("latin-1")  # Latin-1 soporta caracteres especiales
         self.offset += length
 
-        logger.debug("read_ascii_string: decoded='%s'", value)
+        logger.debug("read_ascii_string: decoded='%s' (len=%d)", value, len(value))
+
+        return value
+
+    def read_godot_put_string(self, encoding: str = "utf-8") -> str:
+        """Lee un string del packet usando formato de Godot put_string().
+
+        En Godot, StreamPeerBuffer.put_string() escribe:
+        - 4 bytes: longitud del string (int32, little-endian)
+        - N bytes: string codificado en UTF-8
+
+        Args:
+            encoding: Codificación del string (default: utf-8).
+
+        Returns:
+            String decodificado.
+        """
+        import logging  # noqa: PLC0415
+        import struct
+
+        logger = logging.getLogger(__name__)
+
+        # Leer longitud (int32, little-endian)
+        self.ensure_remaining_bytes(4, "read_godot_put_string (length)")
+        length = struct.unpack("<i", self.data[self.offset : self.offset + 4])[0]
+        self.offset += 4
+
+        logger.debug(
+            "read_godot_put_string: length=%d, offset=%d, remaining=%d",
+            length,
+            self.offset,
+            len(self.data) - self.offset,
+        )
+
+        if length < 0:
+            logger.warning("Longitud negativa en put_string: %d", length)
+            return ""
+
+        if length == 0:
+            logger.debug("String vacío en put_string")
+            return ""
+
+        # Leer el string
+        self.ensure_remaining_bytes(length, "read_godot_put_string (string)")
+        string_bytes = self.data[self.offset : self.offset + length]
+        self.offset += length
+
+        logger.debug(
+            "read_godot_put_string: bytes=%s, hex=%s",
+            string_bytes,
+            string_bytes.hex() if string_bytes else "empty",
+        )
+
+        value = string_bytes.decode(encoding)
+        logger.debug("read_godot_put_string: decoded='%s' (len=%d)", value, len(value))
 
         return value
 

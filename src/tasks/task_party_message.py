@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -43,18 +44,19 @@ class TaskPartyMessage(Task):
 
             # Log packet data for debugging
             logger.debug("Party message packet data (hex): %s", self.data.hex())
-            logger.debug("Party message packet data (raw): %s", self.data)
 
-            # Read message using PacketReader (cliente Godot envía ASCII)
-            message = reader.read_ascii_string()
-            logger.debug("Decoded message: '%s'", message)
+            # Read message using PacketValidator (UTF-8, same as login)
+            validator = PacketValidator(reader)
+            message = validator.read_string(min_length=1, max_length=255, encoding="utf-8")
 
-            if not message:
+            if validator.has_errors() or message is None:
                 await self.message_sender.send_console_msg(
                     "Debes especificar un mensaje. Uso: /PMSG <mensaje>",
                     font_color=7,  # FONTTYPE_PARTY
                 )
                 return
+
+            logger.debug("Decoded message: '%s'", message)
 
             # Send party message
             result = await self.party_service.send_party_message(user_id, message)

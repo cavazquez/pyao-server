@@ -46,6 +46,21 @@ def build_ascii_string_packet(packet_id: int, text: str) -> bytes:
     return bytes([packet_id]) + length + encoded
 
 
+def build_godot_put_string_packet(packet_id: int, text: str) -> bytes:
+    """Build a packet with Godot put_string format (int32 length + UTF-8).
+
+    Args:
+        packet_id: Packet ID byte
+        text: Text to encode
+
+    Returns:
+        Packet bytes: packet_id + length (int32 LE) + text (utf-8)
+    """
+    encoded = text.encode("utf-8")
+    length = len(encoded).to_bytes(4, "little", signed=True)  # int32 signed
+    return bytes([packet_id]) + length + encoded
+
+
 class TestTaskPartyCreate:
     """Test PARTY_CREATE task handler."""
 
@@ -125,8 +140,9 @@ class TestTaskPartyJoin:
         mock_party_service.invite_to_party.return_value = "Player2 invitado a tu party"
         session_data = {"user_id": 1}
 
-        # Mock packet data with username (ASCII/Latin-1 format)
-        data = build_ascii_string_packet(0x5D, "Player2")  # PARTY_JOIN + "Player2"
+        # Mock packet data with username (Godot put_string format: int32 length + UTF-8)
+        # WritePartyJoin usa put_string() que escribe int32 (length) + UTF-8 bytes
+        data = build_godot_put_string_packet(0x5D, "Player2")  # PARTY_JOIN + length + "Player2"
 
         task = TaskPartyJoin(
             data=data,

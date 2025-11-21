@@ -363,6 +363,7 @@ class TaskFactory:
                 self.deps.map_manager,
                 self.deps.broadcast_service,
                 self.deps.item_catalog,
+                self.deps.party_service,
                 session_data,
             ),
             TaskDrop: lambda: TaskDrop(

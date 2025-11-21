@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,7 @@ class TaskPickup(Task):
         map_manager: MapManager | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
         item_catalog: ItemCatalog | None = None,
+        party_service: PartyService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -43,6 +45,7 @@ class TaskPickup(Task):
             map_manager: Gestor de mapas.
             broadcast_service: Servicio de broadcast.
             item_catalog: Catálogo de items.
+            party_service: Servicio de parties (para loot compartido).
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
@@ -51,6 +54,7 @@ class TaskPickup(Task):
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
         self.item_catalog = item_catalog
+        self.party_service = party_service
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
@@ -100,6 +104,9 @@ class TaskPickup(Task):
         if not isinstance(item_id, int) and item_id is not None:
             logger.warning("item_id inválido: %s", item_id)
             return
+
+        # El loot siempre es público - cualquiera puede recogerlo
+        # (owner_id se mantiene para compatibilidad futura, pero no se verifica)
 
         # Manejar oro especialmente
         if item_id == GOLD_ITEM_ID:
@@ -226,3 +233,17 @@ class TaskPickup(Task):
             x,
             y,
         )
+
+    @staticmethod
+    def _can_pickup_item(_user_id: int, _owner_id: int | None) -> bool:
+        """Verifica si el jugador puede recoger un item del suelo.
+
+        Args:
+            _user_id: ID del jugador que intenta recoger (no usado).
+            _owner_id: ID del dueño del item (no usado).
+
+        Returns:
+            True siempre - el loot es público.
+        """
+        # El loot siempre es público - cualquiera puede recogerlo
+        return True

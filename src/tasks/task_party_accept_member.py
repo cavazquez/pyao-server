@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -45,16 +46,18 @@ class TaskPartyAcceptMember(Task):
 
             logger.info("Party accept packet data (hex): %s", self.data.hex())
 
-            # Read leader username (cliente Godot envía ASCII/Latin-1)
-            leader_username = reader.read_ascii_string()
-            logger.info("User %s trying to accept party from '%s'", user_id, leader_username)
+            # Read leader username using PacketValidator (UTF-8, same as login)
+            validator = PacketValidator(reader)
+            leader_username = validator.read_string(min_length=1, max_length=20, encoding="utf-8")
 
-            if not leader_username:
+            if validator.has_errors() or leader_username is None:
                 await self.message_sender.send_console_msg(
                     "Debes especificar el nombre del líder de la party. Uso: /ACCEPTPARTY <nombre>",
                     font_color=7,
                 )
                 return
+
+            logger.info("User %s trying to accept party from '%s'", user_id, leader_username)
 
             # Get user's pending invitations to find the right party
             invitations = await self.party_service.get_user_invitations(user_id)

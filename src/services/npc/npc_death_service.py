@@ -8,11 +8,13 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.models.item_catalog import ItemCatalog
     from src.models.npc import NPC
+    from src.models.party import Party
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.loot_table_service import LootTableService
     from src.services.npc.npc_respawn_service import NPCRespawnService
+    from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,7 @@ class NPCDeathService:
         loot_table_service: LootTableService | None = None,
         item_catalog: ItemCatalog | None = None,
         npc_respawn_service: NPCRespawnService | None = None,
+        party_service: PartyService | None = None,
     ) -> None:
         """Inicializa el servicio de muerte de NPCs.
 
@@ -40,6 +43,7 @@ class NPCDeathService:
             loot_table_service: Servicio de loot tables (opcional).
             item_catalog: Catálogo de items (opcional).
             npc_respawn_service: Servicio de respawn (opcional).
+            party_service: Servicio de parties (opcional).
         """
         self.map_manager = map_manager
         self.npc_repo = npc_repo
@@ -48,6 +52,7 @@ class NPCDeathService:
         self.loot_table_service = loot_table_service
         self.item_catalog = item_catalog
         self.npc_respawn_service = npc_respawn_service
+        self.party_service = party_service
 
     async def handle_npc_death(
         self,
@@ -66,13 +71,15 @@ class NPCDeathService:
             message_sender: MessageSender del jugador.
             death_reason: Razón de la muerte ("combate", "hechizo", etc).
         """
-        # Mensaje de muerte
-        await message_sender.send_console_msg(
-            f"¡Has matado a {npc.name}! Ganaste {experience} EXP."
-        )
+        # Mensaje de muerte (solo si no está en party,
+        # el mensaje de party se envía en _give_experience)
+        if not self.party_service or not await self.party_service.get_party_info(killer_user_id):
+            await message_sender.send_console_msg(
+                f"¡Has matado a {npc.name}! Ganaste {experience} EXP."
+            )
 
-        # Dar experiencia al jugador
-        await self._give_experience(killer_user_id, experience, message_sender)
+        # Dar experiencia al jugador o distribuir a party
+        await self._give_experience(killer_user_id, experience, message_sender, npc)
 
         # Remover NPC de escena antes de dropear (libera el tile ocupado)
         await self._remove_npc_from_game(npc)
@@ -101,9 +108,132 @@ class NPCDeathService:
         )
 
     async def _give_experience(
+        self, user_id: int, experience: int, message_sender: MessageSender, npc: NPC
+    ) -> None:
+        """Otorga experiencia al jugador o distribuye a party si está en una.
+
+        Args:
+            user_id: ID del jugador que mató al NPC.
+            experience: Cantidad de experiencia total.
+            message_sender: MessageSender del jugador.
+            npc: NPC que fue matado (para obtener posición).
+        """
+        # Verificar si el jugador está en party
+        if self.party_service:
+            party = await self.party_service.get_party_info(user_id)
+            if party:
+                await self._distribute_party_experience(user_id, experience, npc, party)
+                return
+
+        # Si no está en party, dar experiencia directamente
+        await self._give_solo_experience(user_id, experience, message_sender)
+
+    async def _distribute_party_experience(
+        self, user_id: int, experience: int, npc: NPC, party: Party
+    ) -> None:
+        """Distribuye experiencia a todos los miembros de la party.
+
+        Args:
+            user_id: ID del jugador que mató al NPC.
+            experience: Cantidad de experiencia total.
+            npc: NPC que fue matado.
+            party: Objeto Party con los miembros.
+        """
+        # Distribuir experiencia a party
+        if not self.party_service:
+            return
+        distributed_exp = await self.party_service.distribute_experience(
+            earner_id=user_id,
+            exp_amount=experience,
+            map_id=npc.map_id,
+            x=npc.x,
+            y=npc.y,
+        )
+
+        # Actualizar experiencia de cada miembro que recibió exp
+        for member_id, exp_amount in distributed_exp.items():
+            await self._update_member_experience(member_id, exp_amount, user_id, npc, experience)
+
+        # Notificar a todos los miembros de party sobre el kill
+        await self._notify_party_kill(party, user_id, npc)
+
+        logger.info(
+            "Experiencia distribuida en party: %d EXP total, %d miembros recibieron",
+            experience,
+            len(distributed_exp),
+        )
+
+    async def _update_member_experience(
+        self, member_id: int, exp_amount: float, killer_id: int, npc: NPC, total_exp: int
+    ) -> None:
+        """Actualiza la experiencia de un miembro de party.
+
+        Args:
+            member_id: ID del miembro.
+            exp_amount: Cantidad de experiencia recibida.
+            killer_id: ID del jugador que mató al NPC.
+            npc: NPC que fue matado.
+            total_exp: Experiencia total ganada.
+        """
+        stats = await self.player_repo.get_stats(member_id)
+        if not stats:
+            return
+
+        current_exp = stats.get("experience", 0)
+        new_exp = current_exp + int(exp_amount)
+
+        await self.player_repo.update_experience(member_id, new_exp)
+
+        # Enviar actualización al miembro
+        member_sender = self.map_manager.get_player_message_sender(member_id)
+        if member_sender:
+            await member_sender.send_update_exp(new_exp)
+            if member_id == killer_id:
+                # Mensaje especial para el killer
+                msg = (
+                    f"¡Has matado a {npc.name}! "
+                    f"Tu party ganó {total_exp} EXP "
+                    f"(tú recibiste {int(exp_amount)})."
+                )
+                await member_sender.send_console_msg(msg)
+            else:
+                # Mensaje para otros miembros
+                await member_sender.send_console_msg(
+                    f"Tu party mató a {npc.name}. Ganaste {int(exp_amount)} EXP."
+                )
+
+        logger.info(
+            "Miembro de party %d ganó %d de experiencia (total: %d)",
+            member_id,
+            int(exp_amount),
+            new_exp,
+        )
+
+    async def _notify_party_kill(self, party: Party, killer_id: int, npc: NPC) -> None:
+        """Notifica a todos los miembros de party sobre un kill.
+
+        Args:
+            party: Objeto Party con los miembros.
+            killer_id: ID del jugador que mató al NPC.
+            npc: NPC que fue matado.
+        """
+        if not self.map_manager:
+            return
+
+        for member_id in party.member_ids:
+            if member_id != killer_id:  # El killer ya recibió su mensaje
+                member_sender = self.map_manager.get_player_message_sender(member_id)
+                if member_sender:
+                    # Notificar que la party mató al NPC
+                    await member_sender.send_console_msg(
+                        f"Tu party mató a {npc.name}.",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+
+    async def _give_solo_experience(
         self, user_id: int, experience: int, message_sender: MessageSender
     ) -> None:
-        """Otorga experiencia al jugador.
+        """Otorga experiencia a un jugador que no está en party.
 
         Args:
             user_id: ID del jugador.
@@ -146,12 +276,13 @@ class NPCDeathService:
 
         drop_x, drop_y = drop_pos
 
+        # El loot siempre es público - cualquiera puede recogerlo
         # Crear ground item de oro
         gold_item: dict[str, int | str | None] = {
             "item_id": 12,  # ID del oro
             "quantity": gold_amount,
             "grh_index": 511,  # GrhIndex del oro
-            "owner_id": None,
+            "owner_id": None,  # None = cualquiera puede recoger
             "spawn_time": None,
         }
 
@@ -181,6 +312,7 @@ class NPCDeathService:
 
         loot = self.loot_table_service.get_loot_for_npc(npc.npc_id)
 
+        # El loot siempre es público - cualquiera puede recogerlo
         for item_id, quantity in loot:
             # Obtener GrhIndex del catálogo
             grh_index = self.item_catalog.get_grh_index(item_id)
@@ -206,7 +338,7 @@ class NPCDeathService:
                 "item_id": item_id,
                 "grh_index": grh_index,
                 "quantity": quantity,
-                "owner_id": None,
+                "owner_id": None,  # None = cualquiera puede recoger
                 "spawn_time": None,
             }
 

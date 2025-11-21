@@ -257,12 +257,17 @@ class PartyService:
         logger.info("Online players: %s", ", ".join(all_players) if all_players else "NONE")
 
         if not target_id:
+            available_list = ", ".join(all_players) if all_players else "Ninguno"
+            error_msg = (
+                f"Jugador '{target_username}' no encontrado o no está online. "
+                f"Jugadores disponibles: {available_list}"
+            )
             logger.warning(
                 "Player '%s' not found. Available: %s",
                 target_username,
-                ", ".join(all_players) if all_players else "NONE",
+                available_list,
             )
-            return f"Jugador '{target_username}' no encontrado o no está online"
+            return error_msg
 
         # Check if can invite
         can_invite, error_msg, party = await self.can_invite_to_party(inviter_id, target_id)

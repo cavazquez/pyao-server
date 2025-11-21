@@ -87,7 +87,22 @@ class ServiceInitializer:
         loot_table_service = LootTableService()
         logger.info("✓ Sistema de loot tables inicializado")
 
-        # Servicio de muerte de NPCs (centralizado)
+        # Servicio de parties (necesario para NPCDeathService)
+        # Nota: El MessageSender real se inyectará por conexión en las tasks
+        message_sender_for_service = MessageSender(None)  # type: ignore[arg-type]
+
+        party_service = PartyService(
+            self.repositories["party_repo"],
+            self.repositories["player_repo"],
+            message_sender_for_service,
+            broadcast_service,  # type: ignore[arg-type]
+            self.map_manager,
+            self.repositories["account_repo"],
+        )
+        await party_service.party_repo.initialize()  # Inicializar repositorio de parties
+        logger.info("✓ Servicio de parties inicializado")
+
+        # Servicio de muerte de NPCs (centralizado, con party_service para exp compartida)
         npc_death_service = NPCDeathService(
             self.map_manager,
             self.repositories["npc_repo"],
@@ -96,8 +111,9 @@ class ServiceInitializer:
             loot_table_service,
             item_catalog,
             npc_respawn_service,
+            party_service,  # Agregar party_service para distribución de experiencia
         )
-        logger.info("✓ Sistema de muerte de NPCs inicializado")
+        logger.info("✓ Sistema de muerte de NPCs inicializado (con distribución de exp a party)")
 
         # Servicio de magia
         spell_service = SpellService(
@@ -162,23 +178,6 @@ class ServiceInitializer:
         # Servicio de puertas
         door_service = DoorService()
         logger.info("✓ Servicio de puertas inicializado")
-
-        # Servicio de parties
-        # Nota: El MessageSender real se inyectará por conexión en las tasks
-        # Aquí creamos uno solo para inicialización del servicio
-        # Creamos un MessageSender básico para el servicio (solo para inicialización)
-        message_sender_for_service = MessageSender(None)  # type: ignore[arg-type]  # Sin conexión para inicialización
-
-        party_service = PartyService(
-            self.repositories["party_repo"],
-            self.repositories["player_repo"],
-            message_sender_for_service,
-            broadcast_service,  # type: ignore[arg-type]
-            self.map_manager,
-            self.repositories["account_repo"],
-        )
-        await party_service.party_repo.initialize()  # Inicializar repositorio de parties
-        logger.info("✓ Servicio de parties inicializado")
 
         services = {
             "broadcast_service": broadcast_service,

@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -38,12 +39,17 @@ class TaskPartyKick(Task):
         try:
             # Parse packet data
             reader = PacketReader(self.data)
-            # NO llamar read_byte() - PacketReader ya salta el packet ID en __init__
+            validator = PacketValidator(reader)
 
-            # Read target username (cliente Godot envía ASCII/Latin-1)
-            target_username = reader.read_ascii_string()
+            # Read target username using PacketValidator (UTF-8, same as login)
+            target_username = validator.read_string(min_length=1, max_length=20, encoding="utf-8")
 
-            if not target_username:
+            if validator.has_errors() or target_username is None:
+                await self.message_sender.send_console_msg(
+                    "Debes especificar un nombre de usuario. Uso: /KICK <nombre>",
+                    font_color=7,  # FONTTYPE_PARTY
+                )
+                return
                 await self.message_sender.send_console_msg(
                     "Debes especificar un nombre de usuario. Uso: /KICK <nombre>",
                     font_color=7,  # FONTTYPE_PARTY

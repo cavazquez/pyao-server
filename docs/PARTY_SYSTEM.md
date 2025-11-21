@@ -15,10 +15,10 @@ El sistema de parties permite a los jugadores agruparse para compartir experienc
 - **Validaciones**: Nivel mínimo, diferencia de niveles, estado (vivo/muerto)
 - **Persistencia**: Todos los datos guardados en Redis
 
-### 🚧 Pendientes
-- Experiencia compartida (distribución basada en niveles y distancia)
-- Loot compartido (sistema de reparto automático)
-- Integración con combate (exp distribuida automáticamente)
+### ✅ Completadas (2025-01-30)
+- **Experiencia compartida**: Distribución automática basada en niveles y distancia
+- **Loot compartido**: Items y oro dropeados pueden ser recogidos por todos los miembros
+- **Integración con combate**: Exp distribuida automáticamente al matar NPCs
 
 ## Arquitectura
 
