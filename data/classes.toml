@@ -1,0 +1,64 @@
+# Sistema de Clases de Personaje
+# Define atributos base y skills iniciales por clase
+# NOTA: allowed_weapon_types y allowed_armor_types están definidos pero NO se usan
+# Siguiendo comportamiento VB6 original: cualquier clase puede equipar cualquier item
+# Los modificadores de clase en classes_balance.toml ya balancean el uso inadecuado
+
+[classes]
+
+# Mago - Maestro de las artes arcanas
+[[classes.character_class]]
+id = 1
+name = "Mago"
+base_strength = 8
+base_agility = 8
+base_intelligence = 15
+base_charisma = 10
+base_constitution = 9
+allowed_weapon_types = ["varita", "baston"]
+allowed_armor_types = ["tunica", "capucha"]
+initial_skills = { magia = 10, robustez = 5, agilidad = 3 }
+description = "Maestro de las artes arcanas. Especializado en magia ofensiva y defensiva."
+
+# Clérigo - Sanador y protector
+[[classes.character_class]]
+id = 2
+name = "Clerigo"
+base_strength = 10
+base_agility = 9
+base_intelligence = 12
+base_charisma = 12
+base_constitution = 12
+allowed_weapon_types = ["maza", "baston"]
+allowed_armor_types = ["media", "tunica"]
+initial_skills = { magia = 8, robustez = 7, agilidad = 5 }
+description = "Sanador y protector. Especializado en magia curativa y protección."
+
+# Guerrero - Luchador cuerpo a cuerpo
+[[classes.character_class]]
+id = 3
+name = "Guerrero"
+base_strength = 15
+base_agility = 10
+base_intelligence = 8
+base_charisma = 10
+base_constitution = 12
+allowed_weapon_types = ["espada", "hacha", "maza"]
+allowed_armor_types = ["pesada", "media"]
+initial_skills = { robustez = 10, agilidad = 7, magia = 2 }
+description = "Luchador cuerpo a cuerpo. Especializado en combate directo y resistencia."
+
+# Cazador/Arquero - Combatiente a distancia
+[[classes.character_class]]
+id = 10
+name = "Cazador"
+base_strength = 10
+base_agility = 15
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = ["arco", "ballesta"]
+allowed_armor_types = ["ligera", "cuero"]
+initial_skills = { agilidad = 10, robustez = 7, supervivencia = 5, magia = 2 }
+description = "Combatiente a distancia. Especializado en arquería y supervivencia."
+

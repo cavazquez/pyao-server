@@ -123,19 +123,28 @@
 ### 0.7.0-alpha - Sistema de Clases
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 2-3 semanas  
-**Estado:** Planificado
+**Estado:** ✅ Completado (2025-01-30)
 
 **Features:**
-- [ ] Clases: Guerrero, Mago, Arquero, Clérigo
-- [ ] Atributos base por clase
-- [ ] Restricciones de equipo por clase
-- [ ] Skills específicas por clase
-- [ ] Balanceo de stats iniciales
-- [ ] Selección de clase en creación de personaje
+- [x] Clases: Guerrero, Mago, Arquero, Clérigo
+- [x] Atributos base por clase
+- [x] ~~Restricciones de equipo por clase~~ (NO - siguiendo VB6, modificadores ya balancean)
+- [x] Skills específicas por clase
+- [x] Balanceo de stats iniciales
+- [x] Selección de clase en creación de personaje
+- [x] Tests completos (26 tests)
 
-**Dependencias:** Ninguna (puede empezar tras completar 0.6.0)
+**Dependencias:** Ninguna (puede empezar tras completar 0.6.0) ✅
 
-**Referencia:** `todo/TODO_GENERAL.md#107-113`
+**Referencia:** `todo/TODO_CLASS_SYSTEM.md`
+
+**Archivos creados:**
+- `src/models/character_class.py`
+- `src/services/game/class_service.py`
+- `data/classes.toml`
+- `tests/models/test_character_class.py`
+- `tests/services/game/test_class_service.py`
+- `tests/integration/test_class_system_integration.py`
 
 ---
 

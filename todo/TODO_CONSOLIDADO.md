@@ -20,23 +20,30 @@
 
 ## 🎯 Features Pendientes
 
-### Sistema de Clases (v0.7.0-alpha) 🔴 Alta Prioridad
-**Estado:** 🚧 Planificado  
-**Esfuerzo:** 2-3 semanas  
-**Referencia:** `ROADMAP_VERSIONES.md#123-139`
+### Sistema de Clases (v0.7.0-alpha) ✅ COMPLETADO
+**Estado:** ✅ Sistema completo y funcional  
+**Progreso:** 100%  
+**Referencia:** `TODO_CLASS_SYSTEM.md`
 
-**Features:**
-- [ ] Clases: Guerrero, Mago, Arquero, Clérigo
-- [ ] Atributos base por clase
-- [ ] Restricciones de equipo por clase
-- [ ] Skills específicas por clase
-- [ ] Balanceo de stats iniciales
-- [ ] Selección de clase en creación de personaje
+**Features implementadas:**
+- ✅ Clases: Guerrero, Mago, Arquero, Clérigo (4 clases básicas)
+- ✅ Atributos base por clase
+- ✅ Skills específicas por clase
+- ✅ Balanceo de stats iniciales
+- ✅ Selección de clase en creación de personaje
+- ✅ Tests completos (26 tests, todos pasando)
 
-**Archivos a crear:**
-- `src/models/character_class.py`
-- `src/services/game/class_service.py`
-- `data/classes.toml`
+**Decisiones:**
+- ❌ Restricciones de equipo NO implementadas (siguiendo comportamiento VB6 original)
+- ✅ Modificadores de clase en `classes_balance.toml` ya balancean el uso de items
+
+**Archivos creados:**
+- ✅ `src/models/character_class.py`
+- ✅ `src/services/game/class_service.py`
+- ✅ `data/classes.toml`
+- ✅ `tests/models/test_character_class.py`
+- ✅ `tests/services/game/test_class_service.py`
+- ✅ `tests/integration/test_class_system_integration.py`
 
 ---
 

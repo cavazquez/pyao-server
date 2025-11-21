@@ -14,6 +14,7 @@ from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.game.balance_service import get_balance_service
+from src.services.game.class_service import get_class_service
 from src.tasks.player.task_login import TaskLogin
 from src.tasks.task import Task
 from src.utils.password_utils import hash_password
@@ -228,12 +229,14 @@ class TaskCreateAccount(Task):
         username, password, email, char_data = parsed
 
         balance_service = get_balance_service()
-        class_name, race_name = await self._validate_character_selection(
+        validation_result = await self._validate_character_selection(
             char_data,
             balance_service,
         )
-        if class_name is None or race_name is None:
+        if validation_result is None:
             return
+
+        class_name, race_name, class_id = validation_result
 
         # Log de datos recibidos
         logger.info(
@@ -286,6 +289,7 @@ class TaskCreateAccount(Task):
                 stats_data,
                 race_name,
                 class_name,
+                class_id,
                 balance_service,
             )
 
@@ -330,12 +334,12 @@ class TaskCreateAccount(Task):
         self,
         char_data: dict[str, int] | None,
         balance_service: BalanceService,
-    ) -> tuple[str | None, str | None]:
+    ) -> tuple[str, str, int] | None:
         """Valida clase (job) y raza recibidas en los datos del personaje.
 
         Returns:
-            Tupla ``(class_name, race_name)`` cuando la selección es válida.
-            ``(None, None)`` si hay error (ya enviado al cliente).
+            Tupla ``(class_name, race_name, class_id)`` cuando la selección es válida.
+            ``None`` si hay error (ya enviado al cliente).
         """
         if char_data is None:
             logger.warning(
@@ -354,7 +358,7 @@ class TaskCreateAccount(Task):
                 job_value,
             )
             await self.message_sender.send_error_msg("Clase de personaje inválida")
-            return (None, None)
+            return None
 
         class_name = JOB_ID_TO_CLASS_NAME[job_value]
         if not balance_service.validate_class(class_name):
@@ -364,7 +368,18 @@ class TaskCreateAccount(Task):
                 job_value,
             )
             await self.message_sender.send_error_msg("Clase de personaje inválida")
-            return (None, None)
+            return None
+
+        # Validar que la clase existe en ClassService
+        class_service = get_class_service()
+        if not class_service.validate_class(job_value):
+            logger.warning(
+                "Clase ID %d ('%s') no existe en ClassService",
+                job_value,
+                class_name,
+            )
+            await self.message_sender.send_error_msg("Clase de personaje inválida")
+            return None
 
         # Validar raza
         race_value = char_data.get("race")
@@ -376,9 +391,9 @@ class TaskCreateAccount(Task):
                 race_value,
             )
             await self.message_sender.send_error_msg("Raza de personaje inválida")
-            return (None, None)
+            return None
 
-        return (class_name, race_name)
+        return (class_name, race_name, job_value)
 
     async def _validate_account_fields(
         self,
@@ -432,9 +447,18 @@ class TaskCreateAccount(Task):
         stats_data: dict[str, int] | None,
         race_name: str,
         class_name: str,
+        class_id: int,
         balance_service: BalanceService,
     ) -> tuple[dict[str, int] | None, dict[str, int] | None, dict[str, int] | None]:
         """Crea atributos finales y estadísticas iniciales del personaje.
+
+        Args:
+            user_id: ID del usuario.
+            stats_data: Atributos de dados.
+            race_name: Nombre de la raza.
+            class_name: Nombre de la clase.
+            class_id: ID de la clase.
+            balance_service: Servicio de balance.
 
         Returns:
             Tupla ``(base_attributes, final_attributes, initial_stats)`` cuando
@@ -452,7 +476,8 @@ class TaskCreateAccount(Task):
 
         player_repo = self.player_repo
 
-        base_attributes: dict[str, int] = {
+        # Obtener atributos base de dados
+        dice_attributes: dict[str, int] = {
             "strength": stats_data.get("strength", 10),
             "agility": stats_data.get("agility", 10),
             "intelligence": stats_data.get("intelligence", 10),
@@ -460,6 +485,11 @@ class TaskCreateAccount(Task):
             "constitution": stats_data.get("constitution", 10),
         }
 
+        # Aplicar atributos base de clase
+        class_service = get_class_service()
+        base_attributes = class_service.apply_class_base_attributes(dice_attributes, class_id)
+
+        # Aplicar modificadores raciales
         final_attributes = balance_service.apply_racial_modifiers(
             base_attributes,
             race_name,
@@ -496,6 +526,17 @@ class TaskCreateAccount(Task):
             initial_stats["max_hp"],
             initial_stats["max_mana"],
         )
+
+        # Aplicar skills iniciales por clase
+        initial_skills = class_service.get_initial_skills(class_id)
+        if initial_skills:
+            await player_repo.set_skills(user_id=user_id, **initial_skills)
+            logger.info(
+                "Skills iniciales asignadas para user_id %d (clase %s): %s",
+                user_id,
+                class_name,
+                initial_skills,
+            )
 
         return (base_attributes, final_attributes, initial_stats)
 
