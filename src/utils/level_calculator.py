@@ -3,7 +3,6 @@
 Basado en la fórmula de Argentum Online VB6.
 """
 
-import math
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -12,7 +11,7 @@ if TYPE_CHECKING:
 logger = None  # Se inicializará si es necesario
 
 
-def calculate_elu_for_level(level: int, config_manager: "ConfigManager") -> int:
+def calculate_elu_for_level(level: int, config_manager: ConfigManager) -> int:
     """Calcula el ELU (experiencia necesaria) para alcanzar un nivel.
 
     Fórmula basada en Argentum Online VB6:
@@ -36,7 +35,7 @@ def calculate_elu_for_level(level: int, config_manager: "ConfigManager") -> int:
     return max(elu, base_elu)  # Mínimo el ELU base
 
 
-def calculate_total_exp_for_level(level: int, config_manager: "ConfigManager") -> int:
+def calculate_total_exp_for_level(level: int, config_manager: ConfigManager) -> int:
     """Calcula la experiencia total acumulada necesaria para alcanzar un nivel.
 
     Suma todos los ELU de los niveles anteriores.
@@ -58,9 +57,7 @@ def calculate_total_exp_for_level(level: int, config_manager: "ConfigManager") -
     return total_exp
 
 
-def calculate_level_from_experience(
-    total_experience: int, config_manager: "ConfigManager"
-) -> int:
+def calculate_level_from_experience(total_experience: int, config_manager: ConfigManager) -> int:
     """Calcula el nivel actual basado en la experiencia total acumulada.
 
     Args:
@@ -85,14 +82,15 @@ def calculate_level_from_experience(
         level += 1
 
         # Límite de seguridad (nivel máximo 255)
-        if level >= 255:
+        max_level = 255
+        if level >= max_level:
             break
 
     return level
 
 
 def calculate_remaining_elu(
-    total_experience: int, current_level: int, config_manager: "ConfigManager"
+    total_experience: int, current_level: int, config_manager: ConfigManager
 ) -> int:
     """Calcula el ELU restante para el siguiente nivel.
 
@@ -105,15 +103,12 @@ def calculate_remaining_elu(
         ELU restante para alcanzar el siguiente nivel.
     """
     # Calcular experiencia total necesaria para el nivel actual
-    exp_for_current_level = calculate_total_exp_for_level(current_level, config_manager)
+    calculate_total_exp_for_level(current_level, config_manager)
 
     # Calcular experiencia necesaria para el siguiente nivel
-    exp_for_next_level = calculate_total_exp_for_level(
-        current_level + 1, config_manager
-    )
+    exp_for_next_level = calculate_total_exp_for_level(current_level + 1, config_manager)
 
     # ELU restante = experiencia necesaria para siguiente nivel - experiencia actual
     remaining = exp_for_next_level - total_experience
 
     return max(remaining, 0)
-

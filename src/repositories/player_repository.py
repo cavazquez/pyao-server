@@ -380,7 +380,9 @@ class PlayerRepository:
         await self.redis.redis.hset(  # type: ignore[misc]
             key, mapping={"level": str(level), "elu": str(elu)}
         )
-        logger.debug("Nivel y ELU actualizados para user_id %d: nivel=%d, elu=%d", user_id, level, elu)
+        logger.debug(
+            "Nivel y ELU actualizados para user_id %d: nivel=%d, elu=%d", user_id, level, elu
+        )
 
     async def get_gold(self, user_id: int) -> int:
         """Obtiene el oro del jugador.

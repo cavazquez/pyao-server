@@ -182,4 +182,3 @@ class TestClassCatalog:
         assert catalog.has_class(3) is True
         assert catalog.has_class(10) is True
         assert catalog.has_class(999) is False
-

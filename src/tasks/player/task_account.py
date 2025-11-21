@@ -347,7 +347,7 @@ class TaskCreateAccount(Task):
                 self.message_sender.connection.address,
             )
             await self.message_sender.send_error_msg("Datos de personaje inválidos")
-            return (None, None)
+            return None
 
         # Validar clase
         job_value = char_data.get("job")

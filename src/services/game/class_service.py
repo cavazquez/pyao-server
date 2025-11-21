@@ -2,12 +2,8 @@
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from src.models.character_class import CharacterClass, ClassCatalog
-
-if TYPE_CHECKING:
-    pass
 
 logger = logging.getLogger(__name__)
 
@@ -181,8 +177,7 @@ def get_class_service(data_dir: Path | None = None) -> ClassService:
     Returns:
         Instancia del servicio de clases.
     """
-    global _class_service
+    global _class_service  # noqa: PLW0603
     if _class_service is None:
         _class_service = ClassService(data_dir)
     return _class_service
-

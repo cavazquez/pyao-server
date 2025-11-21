@@ -119,4 +119,3 @@ class TestClassService:
         assert class_service.validate_class(3) is True
         assert class_service.validate_class(10) is True
         assert class_service.validate_class(999) is False
-

@@ -1,10 +1,9 @@
 """Modelos para el sistema de clases de personaje."""
 
+import logging
+import tomllib
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from pathlib import Path
 
 
 @dataclass
@@ -12,7 +11,7 @@ class CharacterClass:
     """Representa una clase de personaje.
 
     Define atributos base y skills iniciales.
-    
+
     NOTA: allowed_weapon_types y allowed_armor_types están definidos pero NO se validan.
     Siguiendo comportamiento VB6 original: cualquier clase puede equipar cualquier item.
     Los modificadores de clase en classes_balance.toml ya balancean el uso inadecuado.
@@ -79,15 +78,13 @@ class CharacterClass:
 class ClassCatalog:
     """Catálogo de todas las clases disponibles."""
 
-    def __init__(self, data_dir: "Path | None" = None) -> None:
+    def __init__(self, data_dir: Path | None = None) -> None:
         """Inicializa el catálogo de clases.
 
         Args:
             data_dir: Directorio donde se encuentran los datos.
                      Si es None, usa "data" por defecto.
         """
-        from pathlib import Path
-
         self.data_dir = data_dir or Path("data")
         self._classes: dict[int, CharacterClass] = {}
         self._classes_by_name: dict[str, CharacterClass] = {}
@@ -95,9 +92,6 @@ class ClassCatalog:
 
     def _load_classes(self) -> None:
         """Carga las clases desde el archivo TOML."""
-        import logging
-        import tomllib
-
         logger = logging.getLogger(__name__)
 
         try:
@@ -179,4 +173,3 @@ class ClassCatalog:
             True si existe, False en caso contrario.
         """
         return class_id in self._classes
-

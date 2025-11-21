@@ -219,9 +219,7 @@ class NPCDeathService:
 
         # Verificar y manejar level up
         if member_sender:
-            await self._check_and_handle_level_up(
-                member_id, current_level, new_exp, member_sender
-            )
+            await self._check_and_handle_level_up(member_id, current_level, new_exp, member_sender)
 
     async def _notify_party_kill(self, party: Party, killer_id: int, npc: NPC) -> None:
         """Notifica a todos los miembros de party sobre un kill.
@@ -268,9 +266,7 @@ class NPCDeathService:
         logger.info("Jugador %d ganó %d de experiencia (total: %d)", user_id, experience, new_exp)
 
         # Verificar y manejar level up
-        await self._check_and_handle_level_up(
-            user_id, current_level, new_exp, message_sender
-        )
+        await self._check_and_handle_level_up(user_id, current_level, new_exp, message_sender)
 
     async def _drop_gold(self, npc: NPC) -> None:
         """Dropea oro del NPC en el suelo.
@@ -413,7 +409,7 @@ class NPCDeathService:
             char_index=npc.char_index,
         )
 
-    async def _check_and_handle_level_up(
+    async def _check_and_handle_level_up(  # noqa: PLR0914
         self,
         user_id: int,
         current_level: int,
@@ -434,9 +430,7 @@ class NPCDeathService:
         # Si no subió de nivel, solo actualizar ELU
         if new_level <= current_level:
             # Actualizar ELU restante
-            remaining_elu = calculate_remaining_elu(
-                new_experience, current_level, config_manager
-            )
+            remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
             await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
 
             # Obtener stats actuales y enviar actualización

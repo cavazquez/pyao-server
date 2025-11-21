@@ -225,11 +225,9 @@ class CombatService:
 
         # Verificar y manejar level up
         if message_sender:
-            await self._check_and_handle_level_up(
-                user_id, current_level, new_exp, message_sender
-            )
+            await self._check_and_handle_level_up(user_id, current_level, new_exp, message_sender)
 
-    async def _check_and_handle_level_up(
+    async def _check_and_handle_level_up(  # noqa: PLR0914
         self,
         user_id: int,
         current_level: int,
@@ -250,9 +248,7 @@ class CombatService:
         # Si no subió de nivel, solo actualizar ELU
         if new_level <= current_level:
             # Actualizar ELU restante
-            remaining_elu = calculate_remaining_elu(
-                new_experience, current_level, config_manager
-            )
+            remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
             await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
 
             # Obtener stats actuales y enviar actualización

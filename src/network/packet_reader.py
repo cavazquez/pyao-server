@@ -1,5 +1,6 @@
 """PacketReader para leer datos de packets de forma estructurada."""
 
+import logging
 import struct
 
 
@@ -158,9 +159,6 @@ class PacketReader:
         Returns:
             String decodificado.
         """
-        import logging  # noqa: PLC0415
-        import struct
-
         logger = logging.getLogger(__name__)
 
         # Leer longitud (int32, little-endian)

@@ -6,8 +6,8 @@ import pytest
 
 from src.repositories.account_repository import AccountRepository
 from src.repositories.player_repository import PlayerRepository
+from src.services.game.balance_service import get_balance_service
 from src.services.game.class_service import get_class_service
-from src.tasks.player.task_account import TaskCreateAccount
 
 
 @pytest.mark.asyncio
@@ -91,8 +91,6 @@ async def test_class_initial_skills_applied_on_character_creation():
 @pytest.mark.asyncio
 async def test_class_service_integration_with_balance_service():
     """Test que ClassService y BalanceService trabajan juntos correctamente."""
-    from src.services.game.balance_service import get_balance_service
-
     class_service = get_class_service()
     balance_service = get_balance_service()
 
@@ -147,4 +145,3 @@ async def test_all_classes_have_valid_data():
 
         # Verificar que tiene descripción
         assert len(character_class.description) > 0
-

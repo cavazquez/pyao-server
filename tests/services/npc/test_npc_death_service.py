@@ -24,6 +24,10 @@ class TestNPCDeathService:
         player_repo = MagicMock()
         player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.update_max_hp = AsyncMock()
+        player_repo.update_max_mana = AsyncMock()
+        player_repo.update_max_stamina = AsyncMock()
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_character_remove = AsyncMock()
@@ -31,6 +35,7 @@ class TestNPCDeathService:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -88,6 +93,10 @@ class TestNPCDeathService:
         player_repo = MagicMock()
         player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.update_max_hp = AsyncMock()
+        player_repo.update_max_mana = AsyncMock()
+        player_repo.update_max_stamina = AsyncMock()
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_character_remove = AsyncMock()
@@ -95,6 +104,7 @@ class TestNPCDeathService:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -161,6 +171,10 @@ class TestNPCDeathService:
         player_repo = MagicMock()
         player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.update_max_hp = AsyncMock()
+        player_repo.update_max_mana = AsyncMock()
+        player_repo.update_max_stamina = AsyncMock()
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_character_remove = AsyncMock()
@@ -169,6 +183,7 @@ class TestNPCDeathService:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -229,6 +244,10 @@ class TestNPCDeathService:
         player_repo = MagicMock()
         player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.update_max_hp = AsyncMock()
+        player_repo.update_max_mana = AsyncMock()
+        player_repo.update_max_stamina = AsyncMock()
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_character_remove = AsyncMock()
@@ -237,6 +256,7 @@ class TestNPCDeathService:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -298,6 +318,10 @@ class TestNPCDeathService:
         player_repo = MagicMock()
         player_repo.get_stats = AsyncMock(return_value={"experience": 100})
         player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.update_max_hp = AsyncMock()
+        player_repo.update_max_mana = AsyncMock()
+        player_repo.update_max_stamina = AsyncMock()
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_character_remove = AsyncMock()
@@ -315,6 +339,7 @@ class TestNPCDeathService:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
