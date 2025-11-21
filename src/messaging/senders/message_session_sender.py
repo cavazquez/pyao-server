@@ -124,6 +124,10 @@ class SessionMessageSender:
 
         Este packet habilita la funcionalidad de parties en la UI del cliente.
         Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
+
+        NOTA: El cliente Godot actualmente NO procesa este packet (ID 99).
+        El servidor lo envía correctamente, pero el cliente necesita implementar
+        el manejo de este packet para habilitar el botón "GRUPO" en la UI.
         """
         response = bytes([ServerPacketID.SHOW_PARTY_FORM])
         logger.info("[%s] Enviando SHOW_PARTY_FORM (packet 99)", self.connection.address)

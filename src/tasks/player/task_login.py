@@ -335,11 +335,6 @@ class TaskLogin(Task):
         # Obtener/crear y enviar stats
         await player_service.send_stats(user_id)
 
-        # Habilitar botón de party en el cliente
-        logger.info("Enviando SHOW_PARTY_FORM para habilitar botón GRUPO (user_id: %d)", user_id)
-        await self.message_sender.send_show_party_form()
-        logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
-
         return position
 
     async def _initialize_player_data(self, user_id: int) -> None:
@@ -471,6 +466,11 @@ class TaskLogin(Task):
         if self.player_repo:
             player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
             await player_service.send_inventory(user_id, self.equipment_repo)
+
+        # Habilitar botón de party en el cliente (después del spawn completo)
+        logger.info("Enviando SHOW_PARTY_FORM para habilitar botón GRUPO (user_id: %d)", user_id)
+        await self.message_sender.send_show_party_form()
+        logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
 
         # Enviar MOTD (Mensaje del Día)
         motd_task = TaskMotd(self.data, self.message_sender, self.server_repo)

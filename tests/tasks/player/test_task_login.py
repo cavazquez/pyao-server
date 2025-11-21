@@ -355,6 +355,7 @@ class TestTaskLogin:
     async def test_finalize_login(self) -> None:
         """Test de finalización del login."""
         message_sender = MagicMock()
+        message_sender.send_show_party_form = AsyncMock()
         player_repo = MagicMock()
         account_repo = MagicMock()
         server_repo = MagicMock()

@@ -4,6 +4,16 @@
 
 El sistema de parties permite a los jugadores agruparse para compartir experiencia, chat y loot. Está basado en el sistema del servidor VB6 original de Argentum Online, pero implementado con arquitectura moderna en Python con Redis.
 
+## ⚠️ Limitación del Cliente
+
+**El servidor envía correctamente el packet `SHOW_PARTY_FORM` (ID 99) durante el login para habilitar el botón "GRUPO" en el cliente, pero el cliente Godot actualmente NO procesa este packet.**
+
+- ✅ El servidor envía el packet correctamente (ver logs: `Enviando SHOW_PARTY_FORM (packet 99)`)
+- ❌ El cliente Godot no tiene implementado el manejo del packet 99
+- 📝 **Solución**: El cliente necesita implementar el handler para el packet 99 que habilite el botón "GRUPO" en la UI
+
+**Nota**: Los comandos de party (`/CREARPARTY`, `/PARTY`, `/PMSG`, etc.) funcionan correctamente desde la consola, pero el botón visual en la UI no se habilita porque el cliente no procesa el packet 99.
+
 ## Características
 
 ### ✅ Implementadas
