@@ -33,11 +33,15 @@ def mock_player_repo():
         "max_hp": 100,
     }
 
-    # Mock get_attributes to return a dict with charisma and leadership
+    # Mock get_attributes to return a dict with charisma
     repo.get_attributes.return_value = {
         "charisma": 18,
-        "leadership": 10,
         "username": "TestPlayer",
+    }
+
+    # Mock get_skills to return leadership skill
+    repo.get_skills.return_value = {
+        "liderazgo": 10,  # 18 * 10 = 180 >= 100
     }
 
     return repo
@@ -55,6 +59,14 @@ def mock_message_sender():
 def mock_broadcast_service():
     """Create a mock broadcast service."""
     return AsyncMock()
+
+
+@pytest.fixture
+def mock_account_repo():
+    """Create a mock account repository."""
+    repo = AsyncMock()
+    repo.get_account_by_user_id.return_value = {"username": "TestUser"}
+    return repo
 
 
 @pytest.fixture
@@ -78,7 +90,12 @@ def mock_map_manager():
 
 @pytest.fixture
 def party_service(
-    mock_party_repo, mock_player_repo, mock_message_sender, mock_broadcast_service, mock_map_manager
+    mock_party_repo,
+    mock_player_repo,
+    mock_message_sender,
+    mock_broadcast_service,
+    mock_map_manager,
+    mock_account_repo,
 ):
     """Create a party service with mocked dependencies."""
     return PartyService(
@@ -87,6 +104,7 @@ def party_service(
         mock_message_sender,
         mock_broadcast_service,
         mock_map_manager,
+        mock_account_repo,
     )
 
 
@@ -101,11 +119,10 @@ class TestPartyCreation:
         assert can_create is True
         assert not error_msg
 
-    @pytest.mark.skip(reason="MIN_LEVEL_TO_CREATE es 1, no hay nivel bajo válido para testear")
     @pytest.mark.asyncio
     async def test_cannot_create_party_low_level(self, party_service, mock_player_repo):
         """Test party creation fails with low level."""
-        # Configure mocks for low level player
+        # Configure mocks for low level player (level 0, below MIN_LEVEL_TO_CREATE which is 1)
         mock_player_repo.get_stats.return_value = {
             "level": 0,  # Below MIN_LEVEL_TO_CREATE (1)
             "min_hp": 100,
@@ -113,14 +130,16 @@ class TestPartyCreation:
         }
         mock_player_repo.get_attributes.return_value = {
             "charisma": 18,
-            "leadership": 10,
             "username": "TestPlayer",
+        }
+        mock_player_repo.get_skills.return_value = {
+            "liderazgo": 10,
         }
 
         can_create, error_msg = await party_service.can_create_party(1)
 
         assert can_create is False
-        assert "Debes ser nivel 15" in error_msg
+        assert "Debes ser nivel 1" in error_msg or "nivel 1" in error_msg
 
     @pytest.mark.asyncio
     async def test_cannot_create_party_dead(self, party_service, mock_player_repo):
@@ -142,7 +161,6 @@ class TestPartyCreation:
         assert can_create is False
         assert "muerto" in error_msg
 
-    @pytest.mark.skip(reason="Leadership check deshabilitado hasta implementar sistema de skills")
     @pytest.mark.asyncio
     async def test_cannot_create_party_insufficient_leadership(
         self, party_service, mock_player_repo
@@ -155,15 +173,18 @@ class TestPartyCreation:
             "max_hp": 100,
         }
         mock_player_repo.get_attributes.return_value = {
-            "charisma": 5,  # 5 * 10 = 50 < MIN_CHARISMA_LEADERSHIP (100)
-            "leadership": 10,
+            "charisma": 5,  # 5 * 10 = 50 < 100
             "username": "TestPlayer",
+        }
+        mock_player_repo.get_skills.return_value = {
+            "liderazgo": 10,  # 5 * 10 = 50 < 100
         }
 
         can_create, error_msg = await party_service.can_create_party(1)
 
         assert can_create is False
-        assert "carisma y liderazgo" in error_msg
+        assert "Carisma * Liderazgo" in error_msg or "carisma" in error_msg.lower()
+        assert "50" in error_msg  # 5 * 10 = 50
 
     @pytest.mark.asyncio
     async def test_create_party_success(self, party_service, mock_party_repo):
@@ -342,20 +363,35 @@ class TestPartyManagement:
         assert "transferido" in message.lower()
         mock_party_repo.save_party.assert_called_once()
 
-    @pytest.mark.skip(reason="Test necesita actualizar para mockear MapManager y AccountRepository")
     @pytest.mark.asyncio
-    async def test_send_party_message_success(self, party_service, mock_party_repo):
+    async def test_send_party_message_success(
+        self, party_service, mock_party_repo, mock_map_manager, mock_account_repo
+    ):
         """Test successful party message sending."""
         mock_party = MagicMock()
         mock_party.member_ids = {1, 2, 3}
 
         mock_party_repo.get_user_party.return_value = mock_party
 
+        # Mock message senders for each member
+        mock_sender_1 = AsyncMock()
+        mock_sender_2 = AsyncMock()
+        mock_sender_3 = AsyncMock()
+        mock_map_manager.get_player_message_sender.side_effect = [
+            mock_sender_1,
+            mock_sender_2,
+            mock_sender_3,
+        ]
+
+        mock_account_repo.get_account_by_user_id.return_value = {"username": "TestUser"}
+
         result = await party_service.send_party_message(1, "Hello party!")
 
         assert not result  # No error message
-        # TODO: Actualizar test para mockear MapManager._get_player_message_sender()
-        # y AccountRepository.get_account_by_user_id()
+        # Verify message was sent to all members
+        assert mock_sender_1.send_console_msg.called
+        assert mock_sender_2.send_console_msg.called
+        assert mock_sender_3.send_console_msg.called
 
     @pytest.mark.asyncio
     async def test_send_party_message_no_party(self, party_service, mock_party_repo):

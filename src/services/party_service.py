@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.models.party import (
     MAX_LEVEL_DIFFERENCE,
+    MIN_LEADERSHIP_SCORE,
     MIN_LEVEL_TO_CREATE,
     Party,
     PartyInvitation,
@@ -110,10 +111,20 @@ class PartyService:
 
         # Check leadership skill (carisma * liderazgo >= 100)
         # This is from VB6: Carisma * Liderazgo >= 100
-        # For now, we'll use a simplified check since we don't have skills implemented yet
-        attributes.get("charisma", 18)  # Default charisma
-        # TODO: Get leadership skill when skill system is implemented
-        # TODO: Implement leadership check: charisma * leadership >= 100
+        charisma = attributes.get("charisma", 18)
+
+        # Get leadership skill
+        skills = await self.player_repo.get_skills(user_id)
+        leadership = skills.get("liderazgo", 0) if skills else 0
+
+        # Verify leadership requirement (charisma * leadership >= MIN_LEADERSHIP_SCORE)
+        leadership_score = charisma * leadership
+        if leadership_score < MIN_LEADERSHIP_SCORE:
+            return (
+                False,
+                f"Necesitas Carisma * Liderazgo >= {MIN_LEADERSHIP_SCORE} "
+                f"(tienes {charisma} * {leadership} = {leadership_score})",
+            )
 
         return True, ""
 

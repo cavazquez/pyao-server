@@ -500,6 +500,7 @@ class PlayerRepository:
             "herreria": int(result.get("herreria", 0)),
             "carpinteria": int(result.get("carpinteria", 0)),
             "supervivencia": int(result.get("supervivencia", 0)),
+            "liderazgo": int(result.get("liderazgo", 0)),
         }
 
     async def set_skills(self, user_id: int, **skills: int) -> None:
