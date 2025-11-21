@@ -165,6 +165,33 @@
 
 ---
 
+### 0.8.5-alpha - Party Finder (Opcional)
+**Prioridad:** 🟢 Baja (funcionalidad opcional)  
+**Esfuerzo:** 1 semana  
+**Estado:** Planificado
+
+**Features:**
+- [ ] Sistema de búsqueda de parties disponibles
+- [ ] Anunciar party al finder con filtros (nivel, actividad)
+- [ ] Anunciar disponibilidad para unirse a party
+- [ ] Filtrar parties por criterios
+- [ ] Unirse a party directamente desde finder
+- [ ] Expiración automática de anuncios
+
+**Archivos a crear:**
+- `src/models/party_finder.py`
+- `src/services/party_finder_service.py`
+- `src/repositories/party_finder_repository.py`
+- `src/tasks/task_party_finder_*.py` (6 archivos)
+
+**Dependencias:** Requiere sistema de Parties funcionando (0.8.0) ✅
+
+**Referencia:** `todo/TODO_PARTY_FINDER.md`
+
+**Nota:** Funcionalidad opcional, no crítica. Útil para servidores con muchos jugadores.
+
+---
+
 ### 0.9.0-alpha - Sistema de Clanes/Guilds
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 2-3 semanas  
