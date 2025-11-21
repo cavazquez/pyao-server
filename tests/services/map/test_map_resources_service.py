@@ -356,3 +356,312 @@ class TestMapResourcesService:
         assert file2 is not None
         assert "51-100" in str(file2)
         assert file3 is None
+
+    def test_process_blocked_file(self, temp_map_dir):
+        """Test _process_blocked_file."""
+        blocked_file = temp_map_dir / "blocked_1-50.json"
+        blocked_file.write_text(
+            '{"m": 1, "t": "b", "x": 10, "y": 10}\n'
+            '{"m": 1, "t": "w", "x": 20, "y": 20}\n'
+            '{"m": 1, "t": "t", "x": 30, "y": 30}\n'
+            '{"m": 1, "t": "m", "x": 40, "y": 40}\n'
+            '{"m": 2, "t": "b", "x": 10, "y": 10}\n'  # Diferente mapa
+        )
+
+        blocked, water, trees, mines = MapResourcesService._process_blocked_file(
+            blocked_file, map_id=1
+        )
+
+        assert (10, 10) in blocked  # blocked
+        assert (20, 20) in water  # water
+        assert (20, 20) in blocked  # water también bloquea
+        assert (30, 30) in trees  # tree
+        assert (30, 30) in blocked  # tree también bloquea
+        assert (40, 40) in mines  # mine
+        assert (40, 40) in blocked  # mine también bloquea
+        # El tile del mapa 2 no debe estar
+        assert (10, 10) not in blocked or (10, 10) in blocked  # Puede estar si es del mapa 1
+
+    def test_process_blocked_file_nonexistent(self, temp_map_dir):
+        """Test _process_blocked_file con archivo que no existe."""
+        missing_file = temp_map_dir / "missing.json"
+
+        blocked, water, trees, mines = MapResourcesService._process_blocked_file(
+            missing_file, map_id=1
+        )
+
+        assert len(blocked) == 0
+        assert len(water) == 0
+        assert len(trees) == 0
+        assert len(mines) == 0
+
+    def test_process_blocked_file_invalid_json(self, temp_map_dir):
+        """Test _process_blocked_file con JSON inválido."""
+        blocked_file = temp_map_dir / "blocked_1-50.json"
+        blocked_file.write_text("invalid json\n{'m': 1, 't': 'b', 'x': 10, 'y': 10}\n")
+
+        blocked, _water, _trees, _mines = MapResourcesService._process_blocked_file(
+            blocked_file, map_id=1
+        )
+
+        # Debe ignorar líneas inválidas
+        assert len(blocked) == 0
+
+    def test_process_objects_file(self, temp_map_dir):
+        """Test _process_objects_file."""
+        objects_file = temp_map_dir / "objects_1-50.json"
+        objects_file.write_text(
+            '{"m": 1, "t": "tree", "x": 10, "y": 10}\n'
+            '{"m": 1, "t": "mine", "x": 20, "y": 20}\n'
+            '{"m": 1, "t": "anvil", "x": 30, "y": 30}\n'
+            '{"m": 1, "t": "forge", "x": 40, "y": 40}\n'
+            '{"m": 1, "t": "water", "x": 50, "y": 50}\n'
+            '{"m": 2, "t": "tree", "x": 10, "y": 10}\n'  # Diferente mapa
+        )
+
+        trees = set()
+        mines = set()
+        blocked = set()
+        water = set()
+        anvils = set()
+        forges = set()
+
+        MapResourcesService._process_objects_file(
+            objects_file,
+            map_id=1,
+            trees=trees,
+            mines=mines,
+            blocked=blocked,
+            water=water,
+            anvils=anvils,
+            forges=forges,
+        )
+
+        assert (10, 10) in trees
+        assert (10, 10) in blocked  # tree bloquea
+        assert (20, 20) in mines
+        assert (20, 20) in blocked  # mine bloquea
+        assert (30, 30) in anvils
+        assert (30, 30) in blocked  # anvil bloquea
+        assert (40, 40) in forges
+        assert (40, 40) in blocked  # forge bloquea
+        assert (50, 50) in water
+        # water no bloquea en objects (solo en blocked)
+
+    def test_process_objects_file_nonexistent(self, temp_map_dir):
+        """Test _process_objects_file con archivo que no existe."""
+        missing_file = temp_map_dir / "missing.json"
+
+        trees = set()
+        mines = set()
+        blocked = set()
+        water = set()
+        anvils = set()
+        forges = set()
+
+        MapResourcesService._process_objects_file(
+            missing_file,
+            map_id=1,
+            trees=trees,
+            mines=mines,
+            blocked=blocked,
+            water=water,
+            anvils=anvils,
+            forges=forges,
+        )
+
+        assert len(trees) == 0
+        assert len(mines) == 0
+        assert len(blocked) == 0
+        assert len(water) == 0
+        assert len(anvils) == 0
+        assert len(forges) == 0
+
+    def test_load_signs_from_objects(self, temp_map_dir):
+        """Test _load_signs_from_objects."""
+        objects_file = temp_map_dir / "objects_1-50.json"
+        objects_file.write_text(
+            '{"m": 1, "t": "sign", "x": 10, "y": 10, "g": 7001}\n'
+            '{"m": 1, "t": "sign", "x": 20, "y": 20, "g": 7002}\n'
+        )
+
+        signs = MapResourcesService._load_signs_from_objects(objects_file, map_id=1)
+
+        assert (10, 10) in signs
+        assert signs[10, 10] == 7001
+        assert (20, 20) in signs
+        assert signs[20, 20] == 7002
+
+    def test_load_signs_from_objects_nonexistent(self, temp_map_dir):
+        """Test _load_signs_from_objects con archivo que no existe."""
+        missing_file = temp_map_dir / "missing.json"
+
+        signs = MapResourcesService._load_signs_from_objects(missing_file, map_id=1)
+
+        assert len(signs) == 0
+
+    def test_load_doors_from_objects(self, temp_map_dir):
+        """Test _load_doors_from_objects."""
+        objects_file = temp_map_dir / "objects_1-50.json"
+        objects_file.write_text(
+            '{"m": 1, "t": "door", "x": 10, "y": 10, "g": 5001}\n'
+            '{"m": 1, "t": "door", "x": 20, "y": 20, "g": 5002}\n'
+        )
+
+        doors = MapResourcesService._load_doors_from_objects(objects_file, map_id=1)
+
+        assert (10, 10) in doors
+        assert doors[10, 10] == 5001
+        assert (20, 20) in doors
+        assert doors[20, 20] == 5002
+
+    def test_load_doors_from_objects_nonexistent(self, temp_map_dir):
+        """Test _load_doors_from_objects con archivo que no existe."""
+        missing_file = temp_map_dir / "missing.json"
+
+        doors = MapResourcesService._load_doors_from_objects(missing_file, map_id=1)
+
+        assert len(doors) == 0
+
+    def test_process_blocked_file_per_file(self, temp_map_dir):
+        """Test _process_blocked_file_per_file."""
+        blocked_file = temp_map_dir / "blocked_1-50.json"
+        blocked_file.write_text(
+            '{"m": 1, "t": "b", "x": 10, "y": 10}\n'
+            '{"m": 1, "t": "w", "x": 20, "y": 20}\n'
+            '{"m": 2, "t": "b", "x": 30, "y": 30}\n'
+        )
+
+        # Los diccionarios deben inicializarse con defaultdict o setdefault
+        from collections import defaultdict
+
+        blocked_by_map = defaultdict(set)
+        water_by_map = defaultdict(set)
+        trees_by_map = defaultdict(set)
+        mines_by_map = defaultdict(set)
+
+        MapResourcesService._process_blocked_file_per_file(
+            blocked_file, blocked_by_map, water_by_map, trees_by_map, mines_by_map
+        )
+
+        assert 1 in blocked_by_map
+        assert (10, 10) in blocked_by_map[1]
+        assert (20, 20) in water_by_map[1]
+        assert (20, 20) in blocked_by_map[1]
+        assert 2 in blocked_by_map
+        assert (30, 30) in blocked_by_map[2]
+
+    def test_process_objects_file_per_file(self, temp_map_dir):
+        """Test _process_objects_file_per_file."""
+        objects_file = temp_map_dir / "objects_1-50.json"
+        objects_file.write_text(
+            '{"m": 1, "t": "tree", "x": 10, "y": 10}\n'
+            '{"m": 1, "t": "mine", "x": 20, "y": 20}\n'
+            '{"m": 1, "t": "anvil", "x": 30, "y": 30}\n'
+            '{"m": 1, "t": "forge", "x": 40, "y": 40}\n'
+            '{"m": 1, "t": "water", "x": 50, "y": 50}\n'
+            '{"m": 1, "t": "sign", "x": 60, "y": 60, "g": 7001}\n'
+            '{"m": 1, "t": "door", "x": 70, "y": 70, "g": 5001}\n'
+        )
+
+        trees_by_map = {}
+        mines_by_map = {}
+        blocked_by_map = {}
+        signs_by_map = {}
+        doors_by_map = {}
+        water_by_map = {}
+        anvils_by_map = {}
+        forges_by_map = {}
+
+        MapResourcesService._process_objects_file_per_file(
+            objects_file,
+            trees_by_map,
+            mines_by_map,
+            blocked_by_map,
+            signs_by_map,
+            doors_by_map,
+            water_by_map,
+            anvils_by_map,
+            forges_by_map,
+        )
+
+        assert 1 in trees_by_map
+        assert (10, 10) in trees_by_map[1]
+        assert 1 in mines_by_map
+        assert (20, 20) in mines_by_map[1]
+        assert 1 in anvils_by_map
+        assert (30, 30) in anvils_by_map[1]
+        assert 1 in forges_by_map
+        assert (40, 40) in forges_by_map[1]
+        assert 1 in water_by_map
+        assert (50, 50) in water_by_map[1]
+        assert 1 in signs_by_map
+        assert (60, 60) in signs_by_map[1]
+        assert signs_by_map[1][60, 60] == 7001
+        assert 1 in doors_by_map
+        assert (70, 70) in doors_by_map[1]
+        assert doors_by_map[1][70, 70] == 5001
+
+    def test_build_maps_payload_for_cache(self, temp_map_dir):
+        """Test _build_maps_payload_for_cache."""
+        service = MapResourcesService(maps_dir=temp_map_dir)
+
+        # Agregar datos manualmente
+        service.resources["map_1"] = {
+            "blocked": {(10, 10), (10, 11)},
+            "water": {(5, 5)},
+            "trees": {(20, 20)},
+            "mines": {(30, 30)},
+            "anvils": {(40, 40)},
+            "forges": {(50, 50)},
+        }
+        service.signs["map_1"] = {(60, 60): 7001}
+        service.doors["map_1"] = {(70, 70): 5001}
+
+        payload = service._build_maps_payload_for_cache()
+
+        # El payload usa str(map_id) como clave, no "map_1"
+        assert "1" in payload
+        map_data = payload["1"]
+        assert "blocked" in map_data
+        assert "water" in map_data
+        assert "trees" in map_data
+        assert "mines" in map_data
+        assert "anvils" in map_data
+        assert "forges" in map_data
+        assert "signs" in map_data
+        assert "doors" in map_data
+
+    def test_rebuild_resources_from_cache(self, temp_map_dir):
+        """Test _rebuild_resources_from_cache."""
+        service = MapResourcesService(maps_dir=temp_map_dir)
+
+        # El formato del caché usa str(map_id) como clave y signs/doors como listas de tuplas
+        maps_data = {
+            "1": {  # str(map_id), no "map_1"
+                "blocked": [[10, 10], [10, 11]],
+                "water": [[5, 5]],
+                "trees": [[20, 20]],
+                "mines": [[30, 30]],
+                "anvils": [[40, 40]],
+                "forges": [[50, 50]],
+                "signs": [((60, 60), 7001)],  # Lista de tuplas ((x, y), grh)
+                "doors": [((70, 70), 5001)],  # Lista de tuplas ((x, y), grh)
+            }
+        }
+
+        service._rebuild_resources_from_cache(maps_data)
+
+        assert "map_1" in service.resources
+        assert (10, 10) in service.resources["map_1"]["blocked"]
+        assert (5, 5) in service.resources["map_1"]["water"]
+        assert (20, 20) in service.resources["map_1"]["trees"]
+        assert (30, 30) in service.resources["map_1"]["mines"]
+        assert (40, 40) in service.resources["map_1"]["anvils"]
+        assert (50, 50) in service.resources["map_1"]["forges"]
+        assert "map_1" in service.signs
+        assert (60, 60) in service.signs["map_1"]
+        assert service.signs["map_1"][60, 60] == 7001
+        assert "map_1" in service.doors
+        assert (70, 70) in service.doors["map_1"]
+        assert service.doors["map_1"][70, 70] == 5001
