@@ -40,6 +40,7 @@ class TaskAyuda(Task):
             "/MOTD - Mensaje del dia del servidor\n"
             "/UPTIME - Tiempo de actividad del servidor\n"
             "/INFO - Informacion del servidor\n"
+            "/METRICS - Metricas de rendimiento del servidor\n"
             "/SALIR - Desconectarse del servidor\n"
             "--- Comandos de Party ---\n"
             "/CREARPARTY - Crear una nueva party (nivel 15+)\n"

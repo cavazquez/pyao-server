@@ -10,6 +10,7 @@ from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.game.game_tick import GameTick
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
@@ -33,6 +34,7 @@ class TaskTalk(Task):
         account_repo: AccountRepository | None = None,
         map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
+        game_tick: GameTick | None = None,
     ) -> None:
         """Inicializa la tarea Talk.
 
@@ -43,12 +45,14 @@ class TaskTalk(Task):
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas para broadcast.
             session_data: Datos de sesión del cliente.
+            game_tick: Sistema de GameTick para comandos de métricas (opcional).
         """
         super().__init__(data, message_sender)
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.session_data = session_data
+        self.game_tick = game_tick
 
     def _parse_packet(self) -> TalkData | None:
         """Parsea el paquete Talk.
@@ -98,6 +102,17 @@ class TaskTalk(Task):
             talk_data.message,
         )
 
+        # Convertir user_id a int
+        if isinstance(user_id, dict):
+            return
+
+        user_id_int = int(user_id)
+
+        # Comando /METRICS - mostrar métricas de rendimiento
+        if talk_data.message.upper().startswith("/METRICS"):
+            await self._handle_metrics_command(user_id_int)
+            return
+
         # Broadcast multijugador: enviar mensaje a todos los jugadores en el mapa
         if self.map_manager and self.player_repo and self.account_repo and self.session_data:
             # Obtener el nombre del usuario
@@ -106,12 +121,6 @@ class TaskTalk(Task):
                 username_value = self.session_data["username"]
                 if isinstance(username_value, str):
                     username = username_value
-
-            # Convertir user_id a int
-            if isinstance(user_id, dict):
-                return
-
-            user_id_int = int(user_id)
 
             # Obtener el mapa del jugador
             position = await self.player_repo.get_position(user_id_int)
@@ -132,3 +141,59 @@ class TaskTalk(Task):
                     len(all_senders),
                     map_id,
                 )
+
+    async def _handle_metrics_command(self, user_id: int) -> None:
+        """Maneja el comando /METRICS para mostrar métricas de rendimiento.
+
+        Args:
+            user_id: ID del usuario que solicita las métricas.
+        """
+        if not self.game_tick:
+            await self.message_sender.send_console_msg(
+                "Métricas no disponibles (GameTick no inicializado)",
+                font_color=1,  # FONTTYPE_FIGHT (rojo para errores)
+            )
+            return
+
+        # Obtener métricas generales
+        metrics = self.game_tick.get_metrics()
+
+        # Construir mensaje de métricas
+        lines = [
+            "=== MÉTRICAS DE RENDIMIENTO ===",
+            f"Total ticks: {metrics['total_ticks']}",
+            f"Tiempo promedio: {metrics['avg_tick_time_ms']:.2f}ms",
+            f"Tiempo máximo: {metrics['max_tick_time_ms']:.2f}ms",
+        ]
+
+        # Métricas por efecto
+        if metrics.get("effects"):
+            lines.append("\n--- Por Efecto ---")
+            for effect_name, effect_metrics in metrics["effects"].items():
+                lines.append(
+                    f"{effect_name}: {effect_metrics['count']} calls, "
+                    f"avg={effect_metrics['avg_time_ms']:.2f}ms, "
+                    f"max={effect_metrics['max_time_ms']:.2f}ms"
+                )
+
+        # Métricas específicas de NPCMovementEffect
+        for effect in self.game_tick.effects:
+            if effect.get_name() == "NPCMovement" and hasattr(effect, "get_metrics"):
+                npc_metrics = effect.get_metrics()
+                lines.extend(
+                    (
+                        "\n--- NPC Movement ---",
+                        f"NPCs procesados: {npc_metrics['total_npcs_processed']}",
+                        f"Ticks: {npc_metrics['total_ticks']}",
+                        f"Avg tiempo: {npc_metrics['avg_time_ms']:.2f}ms",
+                        f"Max tiempo: {npc_metrics['max_time_ms']:.2f}ms",
+                        f"NPCs/tick: {npc_metrics['avg_npcs_per_tick']:.2f}",
+                    )
+                )
+                break
+
+        # Enviar métricas línea por línea
+        message = "\n".join(lines)
+        await self.message_sender.send_multiline_console_msg(message)
+
+        logger.info("Métricas solicitadas por user_id %d", user_id)

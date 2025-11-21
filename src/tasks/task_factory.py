@@ -267,6 +267,7 @@ class TaskFactory:
                 self.deps.account_repo,
                 self.deps.map_manager,
                 session_data,
+                self.deps.game_tick,
             ),
             TaskWalk: lambda: TaskWalk(
                 data,
