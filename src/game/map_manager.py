@@ -26,7 +26,7 @@ MAP_RANGE_4 = 200
 MAP_RANGE_5 = 250
 
 
-class MapManager(SpatialIndexMixin):  # noqa: PLR0904
+class MapManager(SpatialIndexMixin):
     """Gestiona qué jugadores y NPCs están en qué mapa para broadcast de eventos."""
 
     MAX_ITEMS_PER_TILE = 10  # Límite de items por tile

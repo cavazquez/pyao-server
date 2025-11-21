@@ -55,7 +55,7 @@ class ValidationResult[T]:
             )
 
 
-class PacketValidator:  # noqa: PLR0904 - Muchos métodos validate_* es esperado
+class PacketValidator:
     """Valida y parsea packets usando PacketReader.
 
     Centraliza la lógica de parsing y validación para evitar duplicación

@@ -53,10 +53,12 @@ ignore = [
     "FIX002",  # line-contains-todo (permitido)
     "TD002",   # missing author in TODO (no requerido)
     "TD003",   # missing issue link in TODO (no requerido)
+    "PLR0904", # Too many public methods
     "PLR0913", # too many arguments (necesario para protocolos)
     "PLR0917", # too many positional arguments (necesario para protocolos)
     "PLR0911", # too many return statements (lógica de negocio compleja)
     "PLR0912", # too many branches (lógica de negocio compleja con validaciones)
+    "PLR0904", # too many public methods (permitido en todo el proyecto)
     "FBT001",  # boolean positional argument (necesario para protocolos)
     "FBT002",  # boolean default positional argument (necesario para NPCs)
     "C901",    # function is too complex (lógica de negocio compleja)

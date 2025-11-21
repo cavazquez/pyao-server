@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class MessageSender:  # noqa: PLR0904
+class MessageSender:
     """Encapsula la lógica de envío de mensajes específicos del juego."""
 
     def __init__(self, connection: ClientConnection) -> None:
