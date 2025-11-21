@@ -2,6 +2,7 @@
 
 import json
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 
 import pytest
@@ -533,7 +534,6 @@ class TestMapResourcesService:
         )
 
         # Los diccionarios deben inicializarse con defaultdict o setdefault
-        from collections import defaultdict
 
         blocked_by_map = defaultdict(set)
         water_by_map = defaultdict(set)
