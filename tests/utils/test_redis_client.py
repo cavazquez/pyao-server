@@ -9,7 +9,12 @@ from fakeredis import aioredis
 
 import redis
 from src.utils.redis_client import RedisClient
-from src.utils.redis_config import RedisConfig, RedisKeys
+from src.utils.redis_config import (
+    DEFAULT_EFFECTS_CONFIG,
+    DEFAULT_SERVER_CONFIG,
+    RedisConfig,
+    RedisKeys,
+)
 
 
 @pytest_asyncio.fixture
@@ -151,6 +156,204 @@ class TestRedisClient:
 
             # Verificar que _redis se limpió
             assert client._redis is None
+
+        # Limpiar singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_connect_already_connected(self) -> None:
+        """Verifica que connect no reconecta si ya está conectado."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        client._redis = await aioredis.FakeRedis(decode_responses=True)
+
+        # Intentar conectar de nuevo
+        config = RedisConfig()
+        await client.connect(config)
+
+        # Verificar que no se creó una nueva conexión
+        # (el warning se loguea pero no se lanza excepción)
+
+        # Limpiar
+        await client.disconnect()
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_connect_with_none_config(self) -> None:
+        """Verifica que connect usa valores por defecto cuando config es None."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+
+        # Mock Redis para simular conexión exitosa
+        mock_instance = MagicMock()
+        mock_instance.ping = AsyncMock(return_value=True)
+        mock_instance.exists = AsyncMock(return_value=False)
+        mock_instance.set = AsyncMock()
+        mock_instance.aclose = AsyncMock()
+
+        with patch("redis.asyncio.Redis", return_value=mock_instance):
+            await client.connect(None)  # Sin config
+
+            # Verificar que se creó la conexión
+            assert client._redis is not None
+
+        # Limpiar
+        await client.disconnect()
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_connect_ping_returns_false(self) -> None:
+        """Verifica que connect lanza error cuando ping retorna False."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        config = RedisConfig()
+
+        # Mock Redis para simular ping que retorna False
+        mock_instance = MagicMock()
+        mock_instance.ping = MagicMock(return_value=False)  # Retorna bool False
+        mock_instance.aclose = AsyncMock()
+
+        with patch("redis.asyncio.Redis", return_value=mock_instance):
+            with pytest.raises(redis.ConnectionError, match="Redis ping failed"):
+                await client.connect(config)
+
+            # Verificar que _redis se limpió
+            assert client._redis is None
+
+        # Limpiar singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_connect_ping_returns_awaitable_false(self) -> None:
+        """Verifica que connect lanza error cuando ping retorna awaitable False."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        config = RedisConfig()
+
+        # Mock Redis para simular ping que retorna awaitable False
+        mock_instance = MagicMock()
+        mock_instance.ping = AsyncMock(return_value=False)  # Retorna awaitable False
+        mock_instance.aclose = AsyncMock()
+
+        with patch("redis.asyncio.Redis", return_value=mock_instance):
+            with pytest.raises(redis.ConnectionError, match="Redis ping failed"):
+                await client.connect(config)
+
+            # Verificar que _redis se limpió
+            assert client._redis is None
+
+        # Limpiar singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_connect_redis_error(self) -> None:
+        """Verifica que RedisError se captura correctamente."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        config = RedisConfig()
+
+        # Mock Redis para simular RedisError (no ConnectionError)
+        mock_instance = MagicMock()
+        mock_instance.ping = AsyncMock(side_effect=redis.RedisError("Redis error"))
+        mock_instance.aclose = AsyncMock()
+
+        with patch("redis.asyncio.Redis", return_value=mock_instance):
+            with pytest.raises(redis.RedisError):
+                await client.connect(config)
+
+            # Verificar que _redis se limpió
+            assert client._redis is None
+
+        # Limpiar singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_initialize_default_config(self, redis_client: RedisClient) -> None:
+        """Verifica que _initialize_default_config inicializa valores por defecto."""
+        # Limpiar configuración existente
+
+        for key in DEFAULT_SERVER_CONFIG:
+            await redis_client.redis.delete(key)
+        for key in DEFAULT_EFFECTS_CONFIG:
+            await redis_client.redis.delete(key)
+
+        # Llamar a _initialize_default_config
+        await redis_client._initialize_default_config()
+
+        # Verificar que se inicializaron los valores
+        for key, expected_value in DEFAULT_SERVER_CONFIG.items():
+            value = await redis_client.redis.get(key)
+            assert value == expected_value
+
+        for key, expected_value in DEFAULT_EFFECTS_CONFIG.items():
+            value = await redis_client.redis.get(key)
+            assert value == expected_value
+
+    @pytest.mark.asyncio
+    async def test_initialize_default_config_no_redis(self) -> None:
+        """Verifica que _initialize_default_config no falla si _redis es None."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        client._redis = None  # Sin conexión
+
+        # No debe lanzar excepción
+        await client._initialize_default_config()
+
+        # Limpiar singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+    @pytest.mark.asyncio
+    async def test_initialize_default_config_existing_values(
+        self, redis_client: RedisClient
+    ) -> None:
+        """Verifica que _initialize_default_config no sobrescribe valores existentes."""
+        # Establecer un valor existente
+        await redis_client.redis.set(RedisKeys.CONFIG_SERVER_HOST, "custom-host")
+
+        # Llamar a _initialize_default_config
+        await redis_client._initialize_default_config()
+
+        # Verificar que el valor personalizado se mantiene
+        value = await redis_client.redis.get(RedisKeys.CONFIG_SERVER_HOST)
+        assert value == "custom-host"
+
+    @pytest.mark.asyncio
+    async def test_redis_property_not_connected(self) -> None:
+        """Verifica que redis property lanza error si no está conectado."""
+        # Resetear singleton
+        RedisClient._instance = None
+        RedisClient._redis = None
+
+        client = RedisClient()
+        client._redis = None  # Sin conexión
+
+        with pytest.raises(RuntimeError, match="Redis no está conectado"):
+            _ = client.redis
 
         # Limpiar singleton
         RedisClient._instance = None
