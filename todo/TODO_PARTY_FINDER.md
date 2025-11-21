@@ -1,6 +1,6 @@
 # Party Finder - Sistema de Búsqueda de Parties
 
-**Versión objetivo:** v0.8.5-alpha  
+**Estado:** Documentado, sin versión asignada (se implementará más adelante según necesidad)  
 **Prioridad:** 🟢 Baja (funcionalidad opcional)  
 **Esfuerzo estimado:** 1 semana  
 **Estado:** 📋 Planificado  

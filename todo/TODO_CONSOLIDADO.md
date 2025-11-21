@@ -75,7 +75,7 @@
 
 **Opcional (futuro):**
 - Tests de integración end-to-end (funcionalidad ya implementada)
-- Party finder (búsqueda de parties) - Ver `TODO_PARTY_FINDER.md` (v0.8.5)
+- Party finder (búsqueda de parties) - Ver `TODO_PARTY_FINDER.md` (sin versión asignada, más adelante)
 - Sistema de roles (tank, healer, dps)
 
 ---

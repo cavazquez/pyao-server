@@ -18,7 +18,7 @@ Esta carpeta contiene documentos de tareas pendientes, ideas y refactorizaciones
 - **TODO_SPELL_CLICK_TARGETING.md** - Sistema de targeting de hechizos
 - **TODO_CLIENTE.md** - Tareas relacionadas con el cliente Godot
 - **ITEMS_SYSTEM_TODO.md** - Tareas del sistema de items
-- **TODO_PARTY_FINDER.md** - Sistema de búsqueda de parties (v0.8.5)
+- **TODO_PARTY_FINDER.md** - Sistema de búsqueda de parties (documentado, sin versión asignada - más adelante)
 
 ## 🎯 Cómo Usar
 
