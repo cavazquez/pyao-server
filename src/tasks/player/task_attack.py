@@ -104,6 +104,10 @@ class TaskAttack(Task):
             offset_x = random.randint(-radius, radius)
             offset_y = random.randint(-radius, radius)
 
+            # Saltar la posición central (ya la verificamos antes)
+            if offset_x == 0 and offset_y == 0:
+                continue
+
             x = center_x + offset_x
             y = center_y + offset_y
 

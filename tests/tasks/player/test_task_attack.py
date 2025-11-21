@@ -639,10 +639,16 @@ class TestTaskAttackFindFreePosition:
     async def test_find_free_position_center_occupied(self) -> None:
         """Test cuando la posición central está ocupada."""
         map_manager = MagicMock()
-        # Primera llamada: ocupada, segunda: libre
-        map_manager.get_ground_items = MagicMock(
-            side_effect=[[{"item_id": 1}], []]  # Primera ocupada, segunda libre
-        )
+        # Primera llamada: ocupada, todas las demás: libres
+        call_count = {"count": 0}
+
+        def side_effect(*args):  # noqa: ANN002, ARG001
+            call_count["count"] += 1
+            if call_count["count"] == 1:
+                return [{"item_id": 1}]  # Primera llamada (central): ocupada
+            return []  # Todas las demás: libres
+
+        map_manager.get_ground_items = MagicMock(side_effect=side_effect)
 
         task = TaskAttack(bytes([0x08]), MagicMock(), map_manager=map_manager)
 

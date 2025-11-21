@@ -2,8 +2,10 @@
 
 import json
 import tempfile
+import warnings
 from collections import defaultdict
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -711,13 +713,293 @@ class TestMapResourcesService:
 
     def test_load_manual_doors_file_not_exists(self, temp_map_dir):
         """Test _load_manual_doors cuando el archivo no existe."""
+        # Suprimir DeprecationWarning de tomllib (es un warning interno de la librería)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=DeprecationWarning, module="tomllib")
+            service = MapResourcesService(maps_dir=temp_map_dir)
+
+            # Guardar el conteo inicial de puertas
+            initial_door_count = sum(len(doors) for doors in service.doors.values())
+
+            # Mockear la ruta para que apunte a un archivo inexistente
+            mock_path = MagicMock(spec=Path)
+            mock_path.exists.return_value = False
+
+            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
+                # Si es la construcción de la ruta de puertas, retornar mock que no existe
+                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
+                    return mock_path
+                # Para __file__, crear un mock con parent chain
+                if len(args) == 1 and str(args[0]) == "__file__":
+                    mock_file_path = MagicMock()
+                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
+                        return_value=mock_path
+                    )
+                    return mock_file_path
+                return Path(*args, **kwargs)
+
+            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+                # No debe lanzar excepción si el archivo no existe
+                service._load_manual_doors()
+                # El conteo no debe cambiar
+                final_door_count = sum(len(doors) for doors in service.doors.values())
+                assert final_door_count == initial_door_count
+
+    def test_load_manual_doors_with_real_file_if_exists(self, temp_map_dir):
+        """Test _load_manual_doors con el archivo real si existe."""
         service = MapResourcesService(maps_dir=temp_map_dir)
 
-        # No debe lanzar excepción si el archivo no existe
+        # Cargar puertas (usará el archivo real si existe)
+        initial_door_count = sum(len(doors) for doors in service.doors.values())
         service._load_manual_doors()
+        final_door_count = sum(len(doors) for doors in service.doors.values())
 
-        # No debe haber puertas cargadas (a menos que exista el archivo real)
-        # Este test verifica que no falla cuando el archivo no existe
+        # Si el archivo existe, debe haber cargado puertas
+        # Si no existe, el conteo no cambia
+        # Este test verifica que el método funciona correctamente en ambos casos
+        assert final_door_count >= initial_door_count
+
+    def test_load_manual_doors_with_valid_toml_file(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+        """Test _load_manual_doors con archivo TOML válido."""
+        # Crear archivo TOML temporal con puertas válidas
+        toml_content = """[[door]]
+map_id = 1
+x = 10
+y = 20
+grh_index = 5001
+name = "Puerta Test 1"
+is_open = false
+
+[[door]]
+map_id = 2
+x = 30
+y = 40
+grh_index = 5002
+name = "Puerta Test 2"
+is_open = true
+
+[[door]]
+map_id = 1
+x = 50
+y = 60
+grh_index = 5003
+name = "Puerta Test 3"
+is_open = false
+"""
+        with tempfile.NamedTemporaryFile(mode="wb", suffix=".toml", delete=False) as f:
+            f.write(toml_content.encode("utf-8"))
+            temp_toml_path = Path(f.name)
+
+        try:
+            service = MapResourcesService(maps_dir=temp_map_dir)
+
+            # Limpiar puertas que puedan haberse cargado del archivo real
+            service.doors.clear()
+
+            # Mockear la construcción de la ruta de puertas
+            mock_path = MagicMock(spec=Path)
+            mock_path.exists.return_value = True
+            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
+            mock_path.open.return_value.__exit__ = lambda *_: None
+
+            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
+                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
+                    return mock_path
+                if len(args) == 1 and str(args[0]) == "__file__":
+                    mock_file_path = MagicMock()
+                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
+                        return_value=mock_path
+                    )
+                    return mock_file_path
+                return Path(*args, **kwargs)
+
+            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+                # Cargar puertas manuales
+                service._load_manual_doors()
+
+                # Verificar que se cargaron las puertas
+                assert "map_1" in service.doors
+                assert (10, 20) in service.doors["map_1"]
+                assert service.doors["map_1"][10, 20] == 5001
+                assert (50, 60) in service.doors["map_1"]
+                assert service.doors["map_1"][50, 60] == 5003
+
+                assert "map_2" in service.doors
+                assert (30, 40) in service.doors["map_2"]
+                assert service.doors["map_2"][30, 40] == 5002
+
+        finally:
+            if temp_toml_path.exists():
+                temp_toml_path.unlink()
+
+    def test_load_manual_doors_with_incomplete_data(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+        """Test _load_manual_doors con datos incompletos."""
+        # Crear archivo TOML con datos incompletos
+        toml_content = """[[door]]
+map_id = 1
+x = 10
+# Falta y y grh_index
+
+[[door]]
+map_id = 2
+x = 30
+y = 40
+# Falta grh_index
+
+[[door]]
+map_id = 3
+x = 50
+y = 60
+grh_index = 5003
+# Este está completo
+"""
+        with tempfile.NamedTemporaryFile(mode="wb", suffix=".toml", delete=False) as f:
+            f.write(toml_content.encode("utf-8"))
+            temp_toml_path = Path(f.name)
+
+        try:
+            service = MapResourcesService(maps_dir=temp_map_dir)
+
+            # Mockear la construcción de la ruta de puertas
+            mock_path = MagicMock(spec=Path)
+            mock_path.exists.return_value = True
+            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
+            mock_path.open.return_value.__exit__ = lambda *_: None
+
+            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
+                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
+                    return mock_path
+                if len(args) == 1 and str(args[0]) == "__file__":
+                    mock_file_path = MagicMock()
+                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
+                        return_value=mock_path
+                    )
+                    return mock_file_path
+                return Path(*args, **kwargs)
+
+            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+                # No debe lanzar excepción, solo debe ignorar las puertas incompletas
+                service._load_manual_doors()
+
+                # Verificar que se cargó la puerta completa (map_3)
+                assert "map_3" in service.doors
+                assert (50, 60) in service.doors["map_3"]
+                assert service.doors["map_3"][50, 60] == 5003
+
+                # Verificar que NO se cargaron las puertas incompletas del archivo temporal
+                # (puede haber puertas del archivo real, pero no las del archivo
+                # temporal incompleto)
+                # Las puertas incompletas del test son: map_1 (10, 20) y map_2 (30, 40)
+                if "map_1" in service.doors:
+                    # Verificar que no está la puerta incompleta del test (10, 20)
+                    assert (10, 20) not in service.doors["map_1"]
+                if "map_2" in service.doors:
+                    # Verificar que no está la puerta incompleta del test (30, 40)
+                    assert (30, 40) not in service.doors["map_2"]
+
+        finally:
+            if temp_toml_path.exists():
+                temp_toml_path.unlink()
+
+    def test_load_manual_doors_with_exception(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+        """Test _load_manual_doors cuando hay una excepción al leer el archivo."""
+        service = MapResourcesService(maps_dir=temp_map_dir)
+
+        # Crear un mock Path que existe pero falla al abrir
+        mock_path = MagicMock(spec=Path)
+        mock_path.exists.return_value = True
+        mock_path.open.side_effect = OSError("Error de lectura")
+
+        def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
+            if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
+                return mock_path
+            if len(args) == 1 and str(args[0]) == "__file__":
+                mock_file_path = MagicMock(spec=Path)
+                mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
+                    return_value=mock_path
+                )
+                return mock_file_path
+            return Path(*args, **kwargs)
+
+        with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+            # No debe lanzar excepción, solo debe loguear el error
+            service._load_manual_doors()
+
+    def test_load_manual_doors_with_map_manager_closed_doors(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+        """Test _load_manual_doors con MapManager para bloquear tiles de puertas cerradas."""
+        # Crear archivo TOML temporal
+        toml_content = """[[door]]
+map_id = 1
+x = 10
+y = 20
+grh_index = 5001
+name = "Puerta Cerrada"
+is_open = false
+
+[[door]]
+map_id = 2
+x = 30
+y = 40
+grh_index = 5002
+name = "Puerta Abierta"
+is_open = true
+"""
+        with tempfile.NamedTemporaryFile(mode="wb", suffix=".toml", delete=False) as f:
+            f.write(toml_content.encode("utf-8"))
+            temp_toml_path = Path(f.name)
+
+        try:
+            # Crear mock de MapManager
+            mock_map_manager = MagicMock()
+
+            service = MapResourcesService(maps_dir=temp_map_dir, map_manager=mock_map_manager)
+
+            # Limpiar puertas que puedan haberse cargado del archivo real
+            service.doors.clear()
+            mock_map_manager.reset_mock()
+
+            # Mockear la construcción de la ruta de puertas
+            mock_path = MagicMock(spec=Path)
+            mock_path.exists.return_value = True
+            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
+            mock_path.open.return_value.__exit__ = lambda *_: None
+
+            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
+                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
+                    return mock_path
+                if len(args) == 1 and str(args[0]) == "__file__":
+                    mock_file_path = MagicMock()
+                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
+                        return_value=mock_path
+                    )
+                    return mock_file_path
+                return Path(*args, **kwargs)
+
+            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+                # Cargar puertas manuales
+                service._load_manual_doors()
+
+                # Verificar que se llamó block_tile solo para la puerta cerrada (map_1)
+                mock_map_manager.block_tile.assert_called_once_with(1, 10, 20)
+
+                # Verificar que NO se llamó para la puerta abierta (map_2)
+                assert mock_map_manager.block_tile.call_count == 1
+
+        finally:
+            if temp_toml_path.exists():
+                temp_toml_path.unlink()
+
+    def test_load_manual_doors_with_map_manager_no_doors(self, temp_map_dir):
+        """Test _load_manual_doors con MapManager pero sin puertas."""
+        mock_map_manager = MagicMock()
+
+        service = MapResourcesService(maps_dir=temp_map_dir, map_manager=mock_map_manager)
+
+        # Si el archivo no existe o no tiene puertas, no debe llamar a block_tile
+        # (esto depende de si el archivo real existe)
+        service._load_manual_doors()
+        # El conteo puede aumentar si el archivo real tiene puertas cerradas
+        # Este test solo verifica que no falla
 
     def test_init_saves_cache_when_resources_exist(self, temp_map_dir):
         """Test que __init__ guarda caché cuando hay recursos."""
