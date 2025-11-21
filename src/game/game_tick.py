@@ -7,7 +7,8 @@ a los jugadores conectados (hambre, sed, reducción de oro, etc.).
 import asyncio
 import contextlib
 import logging
-from typing import TYPE_CHECKING
+import time
+from typing import TYPE_CHECKING, Any, cast
 
 from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
@@ -45,6 +46,13 @@ class GameTick:
         self.tick_interval = tick_interval
         self._task: asyncio.Task[None] | None = None
         self._running = False
+        # Métricas de rendimiento
+        self._metrics: dict[str, Any] = {
+            "total_ticks": 0,
+            "total_time_ms": 0.0,
+            "max_tick_time_ms": 0.0,
+            "effect_metrics": {},  # {effect_name: {total_time_ms, count, max_time_ms}}
+        }
 
     def add_effect(self, effect: TickEffect) -> None:
         """Agrega un efecto al sistema de tick.
@@ -65,6 +73,9 @@ class GameTick:
 
         while self._running:
             try:
+                # Iniciar profiling del tick completo
+                tick_start_time = time.perf_counter()
+
                 # Obtener todos los user_ids conectados
                 connected_user_ids = self.map_manager.get_all_connected_user_ids()
 
@@ -80,14 +91,28 @@ class GameTick:
                 for effect in self.effects:
                     for user_id in connected_user_ids:
                         message_sender = self.map_manager.get_message_sender(user_id)
-                        # Crear tarea con manejo de excepciones incluido
-                        task = self._apply_effect_safe(effect, user_id, message_sender)
+                        # Crear tarea con manejo de excepciones incluido y profiling
+                        task = self._apply_effect_safe_with_metrics(effect, user_id, message_sender)
                         tasks.append(task)
 
                 # Ejecutar todas las tareas en paralelo
                 # return_exceptions=True para que un error no detenga todo el tick
                 if tasks:
                     await asyncio.gather(*tasks, return_exceptions=True)
+
+                # Calcular tiempo del tick completo
+                tick_elapsed_ms = (time.perf_counter() - tick_start_time) * 1000
+                self._metrics["total_ticks"] = cast("int", self._metrics["total_ticks"]) + 1
+                self._metrics["total_time_ms"] = (
+                    cast("float", self._metrics["total_time_ms"]) + tick_elapsed_ms
+                )
+                self._metrics["max_tick_time_ms"] = max(
+                    cast("float", self._metrics["max_tick_time_ms"]), tick_elapsed_ms
+                )
+
+                # Log de métricas cada 50 ticks
+                if cast("int", self._metrics["total_ticks"]) % 50 == 0:
+                    self._log_metrics()
 
                 # Esperar hasta el próximo tick
                 await asyncio.sleep(self.tick_interval)
@@ -120,6 +145,119 @@ class GameTick:
                 effect.get_name(),
                 user_id,
             )
+
+    async def _apply_effect_safe_with_metrics(
+        self,
+        effect: TickEffect,
+        user_id: int,
+        message_sender: MessageSender | None,
+    ) -> None:
+        """Aplica un efecto a un jugador con métricas de rendimiento.
+
+        Args:
+            effect: Efecto a aplicar.
+            user_id: ID del jugador.
+            message_sender: MessageSender del jugador.
+        """
+        effect_name = effect.get_name()
+        start_time = time.perf_counter()
+
+        try:
+            await effect.apply(user_id, self.player_repo, message_sender)
+        except Exception:
+            logger.exception(
+                "Error aplicando efecto %s a user_id %d",
+                effect_name,
+                user_id,
+            )
+        finally:
+            # Actualizar métricas del efecto
+            elapsed_ms = (time.perf_counter() - start_time) * 1000
+            effect_metrics_dict = cast(
+                "dict[str, dict[str, float | int]]", self._metrics["effect_metrics"]
+            )
+            if effect_name not in effect_metrics_dict:
+                effect_metrics_dict[effect_name] = {
+                    "total_time_ms": 0.0,
+                    "count": 0,
+                    "max_time_ms": 0.0,
+                }
+            effect_metrics = effect_metrics_dict[effect_name]
+            effect_metrics["total_time_ms"] = (
+                cast("float", effect_metrics["total_time_ms"]) + elapsed_ms
+            )
+            effect_metrics["count"] = cast("int", effect_metrics["count"]) + 1
+            effect_metrics["max_time_ms"] = max(
+                cast("float", effect_metrics["max_time_ms"]), elapsed_ms
+            )
+
+    def _log_metrics(self) -> None:
+        """Registra las métricas de rendimiento."""
+        total_ticks = cast("int", self._metrics["total_ticks"])
+        total_time_ms = cast("float", self._metrics["total_time_ms"])
+        max_tick_time_ms = cast("float", self._metrics["max_tick_time_ms"])
+
+        avg_tick_time_ms = total_time_ms / total_ticks if total_ticks > 0 else 0.0
+
+        logger.info(
+            "GameTick metrics: %d ticks, avg=%.2fms, max=%.2fms",
+            total_ticks,
+            avg_tick_time_ms,
+            max_tick_time_ms,
+        )
+
+        # Log de métricas por efecto
+        effect_metrics_dict = cast(
+            "dict[str, dict[str, float | int]]", self._metrics["effect_metrics"]
+        )
+        for effect_name, metrics in effect_metrics_dict.items():
+            count = cast("int", metrics["count"])
+            if count > 0:
+                total_effect_time_ms = cast("float", metrics["total_time_ms"])
+                avg_effect_time_ms = total_effect_time_ms / count
+                max_effect_time_ms = cast("float", metrics["max_time_ms"])
+                logger.info(
+                    "  Effect '%s': %d calls, avg=%.2fms, max=%.2fms",
+                    effect_name,
+                    count,
+                    avg_effect_time_ms,
+                    max_effect_time_ms,
+                )
+
+    def get_metrics(self) -> dict[str, Any]:
+        """Obtiene las métricas de rendimiento del GameTick.
+
+        Returns:
+            Diccionario con métricas de rendimiento.
+        """
+        total_ticks = cast("int", self._metrics["total_ticks"])
+        total_time_ms = cast("float", self._metrics["total_time_ms"])
+        max_tick_time_ms = cast("float", self._metrics["max_tick_time_ms"])
+
+        avg_tick_time_ms = total_time_ms / total_ticks if total_ticks > 0 else 0.0
+
+        effect_metrics_summary: dict[str, dict[str, float | int]] = {}
+        effect_metrics_dict = cast(
+            "dict[str, dict[str, float | int]]", self._metrics["effect_metrics"]
+        )
+        for effect_name, metrics in effect_metrics_dict.items():
+            count = cast("int", metrics["count"])
+            if count > 0:
+                total_effect_time_ms = cast("float", metrics["total_time_ms"])
+                avg_effect_time_ms = total_effect_time_ms / count
+                max_effect_time_ms = cast("float", metrics["max_time_ms"])
+                effect_metrics_summary[effect_name] = {
+                    "count": count,
+                    "avg_time_ms": avg_effect_time_ms,
+                    "max_time_ms": max_effect_time_ms,
+                }
+
+        return {
+            "total_ticks": total_ticks,
+            "avg_tick_time_ms": avg_tick_time_ms,
+            "max_tick_time_ms": max_tick_time_ms,
+            "effects": effect_metrics_summary,
+        }
 
     def start(self) -> None:
         """Inicia el sistema de tick."""

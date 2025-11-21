@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import random
+import time
 from typing import TYPE_CHECKING
 
 from src.effects.tick_effect import TickEffect
@@ -15,21 +16,42 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# Configuración de optimización
+DEFAULT_MAX_NPCS_PER_TICK = 10  # Máximo de NPCs procesados por tick
+DEFAULT_CHUNK_SIZE = 5  # Tamaño de chunk para procesamiento paralelo
+
 
 class NPCMovementEffect(TickEffect):
     """Efecto que hace que los NPCs se muevan aleatoriamente."""
 
-    def __init__(self, npc_service: NPCService, interval_seconds: float = 5.0) -> None:
+    def __init__(
+        self,
+        npc_service: NPCService,
+        interval_seconds: float = 5.0,
+        max_npcs_per_tick: int = DEFAULT_MAX_NPCS_PER_TICK,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+    ) -> None:
         """Inicializa el efecto de movimiento de NPCs.
 
         Args:
             npc_service: Servicio de NPCs.
             interval_seconds: Intervalo entre movimientos en segundos.
+            max_npcs_per_tick: Máximo de NPCs procesados por tick (optimización).
+            chunk_size: Tamaño de chunk para procesamiento paralelo.
         """
         self.npc_service = npc_service
         self.interval_seconds = interval_seconds
+        self.max_npcs_per_tick = max_npcs_per_tick
+        self.chunk_size = chunk_size
         self._already_executed_this_tick = False
         self._player_repo: PlayerRepository | None = None
+        # Métricas
+        self._metrics = {
+            "total_npcs_processed": 0,
+            "total_ticks": 0,
+            "total_time_ms": 0.0,
+            "max_time_ms": 0.0,
+        }
 
     def get_interval_seconds(self) -> float:
         """Retorna el intervalo en segundos entre aplicaciones del efecto.
@@ -75,6 +97,10 @@ class NPCMovementEffect(TickEffect):
 
         # Resetear el flag después de un breve delay para el próximo tick
         self._reset_task = asyncio.create_task(self._reset_execution_flag())
+
+        # Iniciar profiling
+        start_time = time.perf_counter()
+
         # Obtener todos los NPCs del mundo
         all_npcs = self.npc_service.map_manager.get_all_npcs()
 
@@ -82,16 +108,63 @@ class NPCMovementEffect(TickEffect):
             logger.debug("No hay NPCs en el mundo para mover")
             return
 
-        logger.debug("Moviendo NPCs: %d NPCs totales en el mundo", len(all_npcs))
+        # Filtrar solo NPCs hostiles
+        hostile_npcs = [npc for npc in all_npcs if npc.is_hostile]
 
-        # Mover algunos NPCs aleatoriamente (no todos a la vez)
-        npcs_to_move = random.sample(all_npcs, min(len(all_npcs), max(1, len(all_npcs) // 3)))
+        if not hostile_npcs:
+            logger.debug("No hay NPCs hostiles para mover")
+            return
 
-        for npc in npcs_to_move:
-            # Solo mover NPCs hostiles (lobos, goblins, arañas, etc.)
-            # Los NPCs amigables (comerciantes, banqueros) no se mueven
-            if npc.is_hostile:
-                await self._move_npc_with_ai(npc, self._player_repo)
+        # OPTIMIZACIÓN: Limitar NPCs procesados por tick (chunks)
+        # Seleccionar máximo max_npcs_per_tick NPCs aleatoriamente
+        npcs_to_move = random.sample(hostile_npcs, min(len(hostile_npcs), self.max_npcs_per_tick))
+
+        logger.debug(
+            "Moviendo NPCs: %d/%d hostiles seleccionados (máx: %d por tick)",
+            len(npcs_to_move),
+            len(hostile_npcs),
+            self.max_npcs_per_tick,
+        )
+
+        # OPTIMIZACIÓN: Procesamiento paralelo por chunks
+        # Dividir NPCs en chunks y procesar cada chunk en paralelo
+        chunks = [
+            npcs_to_move[i : i + self.chunk_size]
+            for i in range(0, len(npcs_to_move), self.chunk_size)
+        ]
+
+        # Crear tareas para procesar cada chunk en paralelo
+        tasks = []
+        for chunk in chunks:
+            # Procesar chunk en paralelo
+            chunk_tasks = [self._move_npc_with_ai(npc, self._player_repo) for npc in chunk]
+            tasks.extend(chunk_tasks)
+
+        # Ejecutar todas las tareas en paralelo
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Calcular métricas
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        self._metrics["total_npcs_processed"] += len(npcs_to_move)
+        self._metrics["total_ticks"] += 1
+        self._metrics["total_time_ms"] += elapsed_ms
+        self._metrics["max_time_ms"] = max(self._metrics["max_time_ms"], elapsed_ms)
+
+        # Log de métricas cada 10 ticks
+        if self._metrics["total_ticks"] % 10 == 0:
+            avg_time_ms = (
+                self._metrics["total_time_ms"] / self._metrics["total_ticks"]
+                if self._metrics["total_ticks"] > 0
+                else 0
+            )
+            logger.info(
+                "NPCMovement metrics: %d NPCs procesados en %d ticks, avg=%.2fms, max=%.2fms",
+                self._metrics["total_npcs_processed"],
+                self._metrics["total_ticks"],
+                avg_time_ms,
+                self._metrics["max_time_ms"],
+            )
 
     async def _move_npc_with_ai(self, npc: NPC, player_repo: PlayerRepository | None) -> None:
         """Mueve un NPC con IA: persigue jugadores cercanos o se mueve aleatoriamente.
@@ -263,3 +336,26 @@ class NPCMovementEffect(TickEffect):
         # Breve delay para asegurar que todos los jugadores fueron procesados
         await asyncio.sleep(0.1)
         self._already_executed_this_tick = False
+
+    def get_metrics(self) -> dict[str, float | int]:
+        """Obtiene las métricas de rendimiento del efecto.
+
+        Returns:
+            Diccionario con métricas de rendimiento.
+        """
+        avg_time_ms = (
+            self._metrics["total_time_ms"] / self._metrics["total_ticks"]
+            if self._metrics["total_ticks"] > 0
+            else 0.0
+        )
+        return {
+            "total_npcs_processed": self._metrics["total_npcs_processed"],
+            "total_ticks": self._metrics["total_ticks"],
+            "avg_time_ms": avg_time_ms,
+            "max_time_ms": self._metrics["max_time_ms"],
+            "avg_npcs_per_tick": (
+                self._metrics["total_npcs_processed"] / self._metrics["total_ticks"]
+                if self._metrics["total_ticks"] > 0
+                else 0.0
+            ),
+        }

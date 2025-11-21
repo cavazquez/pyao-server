@@ -470,7 +470,6 @@ ground_items:map:{map_id}:*
    - Quests (media prioridad)
 
 3. **Optimizaciones**
-   - Carga diferida de mapas (TODO)
    - Caché de datos frecuentes
    - Optimizaciones de queries Redis
 
