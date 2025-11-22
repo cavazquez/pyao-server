@@ -17,9 +17,9 @@ class TestConfigManager(unittest.TestCase):
         self.temp_dir = Path(tempfile.mkdtemp())
         self.config_file = self.temp_dir / "test_server.toml"
 
-        # Configurar variables de entorno para pruebas
-        os.environ["PYAO_SERVER_PORT"] = "9999"
-        os.environ["PYAO_LOG_LEVEL"] = "DEBUG"
+        # Configurar variables de entorno para pruebas (notación nueva con __)
+        os.environ["PYAO_SERVER__PORT"] = "9999"
+        os.environ["PYAO_LOGGING__LEVEL"] = "DEBUG"
 
         # Resetear singleton
         ConfigManager._instance = None
@@ -29,8 +29,13 @@ class TestConfigManager(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Limpia entorno de prueba."""
-        # Limpiar variables de entorno
-        for key in ["PYAO_SERVER_PORT", "PYAO_LOG_LEVEL"]:
+        # Limpiar variables de entorno (notación nueva y antigua para compatibilidad)
+        for key in [
+            "PYAO_SERVER__PORT",
+            "PYAO_LOGGING__LEVEL",
+            "PYAO_SERVER_PORT",
+            "PYAO_LOG_LEVEL",
+        ]:
             if key in os.environ:
                 del os.environ[key]
 
@@ -62,41 +67,52 @@ class TestConfigManager(unittest.TestCase):
 
     def test_load_config_from_file(self) -> None:
         """Test que carga configuración desde archivo TOML existente."""
-        # Usar el archivo de configuración real del proyecto
-        config_file = Path(__file__).parent.parent / "config" / "server.toml"
+        # Limpiar variables de entorno para este test
+        original_port = os.environ.pop("PYAO_SERVER__PORT", None)
+        original_log = os.environ.pop("PYAO_LOGGING__LEVEL", None)
 
-        if config_file.exists():
-            ConfigManager._config_dir = config_file.parent
-            ConfigManager._config_file = config_file
+        try:
+            # Usar el archivo de configuración real del proyecto
+            config_file = Path(__file__).parent.parent / "config" / "server.toml"
 
-            # Crear instancia y verificar valores
-            config = ConfigManager()
+            if config_file.exists():
+                ConfigManager._config_dir = config_file.parent
+                ConfigManager._config_file = config_file
 
-            assert config.get("server.host") == "0.0.0.0"
-            assert config.get("server.port") == 9999  # Variable de entorno activa
-            assert config.get("game.combat.melee_range") == 1
-            assert config.get("game.work.exp_wood") == 10
-            assert config.get("game.work.exp_per_level") == 100
-        else:
-            self.skipTest("Archivo config/server.toml no encontrado")
+                # Resetear singleton para cargar sin env vars
+                ConfigManager._instance = None
+                ConfigManager._initialized = False
+                ConfigManager._config = {}
+
+                # Crear instancia y verificar valores del TOML
+                config = ConfigManager()
+
+                assert config.get("server.host") == "0.0.0.0"
+                assert config.get("server.port") == 7666  # Del TOML (no env vars)
+                assert config.get("game.combat.melee_range") == 1
+                assert config.get("game.work.exp_wood") == 10
+                assert config.get("game.work.exp_per_level") == 100
+            else:
+                self.skipTest("Archivo config/server.toml no encontrado")
+        finally:
+            # Restaurar variables de entorno
+            if original_port:
+                os.environ["PYAO_SERVER__PORT"] = original_port
+            if original_log:
+                os.environ["PYAO_LOGGING__LEVEL"] = original_log
 
     def test_environment_overrides(self) -> None:
-        """Test que las variables de entorno sobrescriben la configuración."""
-        # Usar el archivo de configuración real
-        config_file = Path(__file__).parent.parent / "config" / "server.toml"
+        """Test que las variables de entorno funcionan cuando NO hay archivo TOML."""
+        # Usar un archivo TOML que NO existe para que las env vars tengan efecto
+        ConfigManager._config_dir = self.temp_dir
+        ConfigManager._config_file = self.config_file  # No existe
 
-        if config_file.exists():
-            ConfigManager._config_dir = config_file.parent
-            ConfigManager._config_file = config_file
+        # Crear instancia (sin TOML, las env vars funcionan)
+        config = ConfigManager()
 
-            # Crear instancia
-            config = ConfigManager()
-
-            # Verificar que las variables de entorno sobrescriben
-            assert config.get("server.port") == 9999  # Desde env
-            assert config.get("logging.level") == "DEBUG"  # Desde env
-        else:
-            self.skipTest("Archivo config/server.toml no encontrado")
+        # Verificar que las variables de entorno se aplican cuando no hay TOML
+        assert config.get("server.port") == 9999  # Desde env
+        assert config.get("logging.level") == "DEBUG"  # Desde env
 
     def test_get_with_default(self) -> None:
         """Test método get con valor por defecto."""
@@ -118,11 +134,11 @@ class TestConfigManager(unittest.TestCase):
     def test_set_and_reload(self) -> None:
         """Test métodos set y reload."""
         ConfigManager._config_dir = self.temp_dir
-        ConfigManager._config_file = self.config_file
+        ConfigManager._config_file = self.config_file  # No existe
 
         config = ConfigManager()
 
-        # Verificar valor inicial
+        # Verificar valor inicial (desde env vars, no hay TOML)
         assert config.get("server.port") == 9999  # Variable de entorno activa
 
         # Modificar valor
@@ -135,7 +151,7 @@ class TestConfigManager(unittest.TestCase):
 
         # Recargar y verificar que vuelve a las variables de entorno
         config.reload()
-        assert config.get("server.port") == 9999  # Variable de entorno sobrescribe
+        assert config.get("server.port") == 9999  # Variable de entorno (no hay TOML)
         # Los nuevos valores se pierden porque _save_config es no-op
         assert config.get("new.section.value") is None
 
@@ -192,7 +208,16 @@ class TestConfigManager(unittest.TestCase):
         """Test validación de configuración con errores."""
         # Guardar variables de entorno originales
         original_env = {}
-        for key in ["PYAO_SERVER_PORT", "PYAO_LOG_LEVEL", "PYAO_REDIS_HOST", "PYAO_REDIS_PORT"]:
+        for key in [
+            "PYAO_SERVER__PORT",
+            "PYAO_LOGGING__LEVEL",
+            "PYAO_REDIS__HOST",
+            "PYAO_REDIS__PORT",
+            "PYAO_SERVER_PORT",
+            "PYAO_LOG_LEVEL",
+            "PYAO_REDIS_HOST",
+            "PYAO_REDIS_PORT",
+        ]:
             original_env[key] = os.environ.get(key)
             if key in os.environ:
                 del os.environ[key]

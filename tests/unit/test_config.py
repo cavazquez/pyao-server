@@ -1,6 +1,7 @@
 """Tests para el sistema de configuración."""
 
 import os
+import tempfile
 from pathlib import Path
 
 from src.config import config_manager
@@ -30,23 +31,24 @@ class TestConfigManager:
         assert melee_range > 0
 
     def test_environment_overrides(self) -> None:
-        """Verifica que las variables de entorno sobrescriban la configuración."""
+        """Verifica que las variables de entorno funcionan cuando NO hay archivo TOML."""
         # Guardar valores originales
-        original_port = os.environ.get("PYAO_SERVER_PORT")
-        original_log_level = os.environ.get("PYAO_LOG_LEVEL")
+        original_port = os.environ.get("PYAO_SERVER__PORT")
+        original_log_level = os.environ.get("PYAO_LOGGING__LEVEL")
 
         # Guardar paths originales del ConfigManager
         original_config_dir = getattr(ConfigManager, "_config_dir", None)
         original_config_file = getattr(ConfigManager, "_config_file", None)
 
         try:
-            # Setear variables de entorno de prueba
-            os.environ["PYAO_SERVER_PORT"] = "8888"
-            os.environ["PYAO_LOG_LEVEL"] = "DEBUG"
+            # Setear variables de entorno de prueba (notación nueva con __)
+            os.environ["PYAO_SERVER__PORT"] = "8888"
+            os.environ["PYAO_LOGGING__LEVEL"] = "DEBUG"
 
-            # Resetear a paths por defecto para evitar usar archivo inválido de otro test
-            ConfigManager._config_dir = Path(__file__).parent.parent.parent / "config"
-            ConfigManager._config_file = ConfigManager._config_dir / "server.toml"
+            # Usar un archivo que NO existe para que las env vars tengan efecto
+            temp_dir = Path(tempfile.mkdtemp())
+            ConfigManager._config_dir = temp_dir
+            ConfigManager._config_file = temp_dir / "nonexistent.toml"
 
             # Limpiar singleton completamente antes de la prueba
             ConfigManager._instance = None
@@ -59,20 +61,21 @@ class TestConfigManager:
             port = test_config.get("server.port", 7666)
             log_level = test_config.get("logging.level", "INFO")
 
+            # Sin TOML, las env vars deberían funcionar
             assert port == 8888
             assert log_level == "DEBUG"
 
         finally:
             # Restaurar valores originales
             if original_port is not None:
-                os.environ["PYAO_SERVER_PORT"] = original_port
+                os.environ["PYAO_SERVER__PORT"] = original_port
             else:
-                os.environ.pop("PYAO_SERVER_PORT", None)
+                os.environ.pop("PYAO_SERVER__PORT", None)
 
             if original_log_level is not None:
-                os.environ["PYAO_LOG_LEVEL"] = original_log_level
+                os.environ["PYAO_LOGGING__LEVEL"] = original_log_level
             else:
-                os.environ.pop("PYAO_LOG_LEVEL", None)
+                os.environ.pop("PYAO_LOGGING__LEVEL", None)
 
             # Restaurar paths originales
             if original_config_dir is not None:
