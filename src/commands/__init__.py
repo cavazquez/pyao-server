@@ -13,6 +13,7 @@ from src.commands.double_click_command import DoubleClickCommand
 from src.commands.drop_command import DropCommand
 from src.commands.equip_item_command import EquipItemCommand
 from src.commands.inventory_click_command import InventoryClickCommand
+from src.commands.left_click_command import LeftClickCommand
 from src.commands.move_spell_command import MoveSpellCommand
 from src.commands.pickup_command import PickupCommand
 from src.commands.use_item_command import UseItemCommand
@@ -36,6 +37,7 @@ __all__ = [
     "DropCommand",
     "EquipItemCommand",
     "InventoryClickCommand",
+    "LeftClickCommand",
     "MoveSpellCommand",
     "PickupCommand",
     "UseItemCommand",

@@ -16,6 +16,7 @@ from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
+from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -117,6 +118,7 @@ class TaskFactory:
         self._double_click_handler: DoubleClickCommandHandler | None = None
         self._move_spell_handler: MoveSpellCommandHandler | None = None
         self._inventory_click_handler: InventoryClickCommandHandler | None = None
+        self._left_click_handler: LeftClickCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -474,6 +476,32 @@ class TaskFactory:
             self._inventory_click_handler.message_sender = message_sender
         return self._inventory_click_handler
 
+    def _get_left_click_handler(self, message_sender: MessageSender) -> LeftClickCommandHandler:
+        """Obtiene o crea el handler de click izquierdo.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de click izquierdo.
+        """
+        if self._left_click_handler is None:
+            self._left_click_handler = LeftClickCommandHandler(
+                player_repo=self.deps.player_repo,
+                map_manager=self.deps.map_manager,
+                map_resources=self.deps.map_resources_service,
+                bank_repo=self.deps.bank_repo,
+                merchant_repo=self.deps.merchant_repo,
+                door_service=self.deps.door_service,
+                door_repo=self.deps.door_repo,
+                redis_client=self.deps.redis_client,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._left_click_handler.message_sender = message_sender
+        return self._left_click_handler
+
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
     ) -> BankDepositGoldCommandHandler:
@@ -744,16 +772,9 @@ class TaskFactory:
             TaskLeftClick: lambda: TaskLeftClick(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.session_manager,
-                self.deps.map_manager,
-                self.deps.map_resources_service,
-                self.deps.bank_repo,
-                self.deps.merchant_repo,
-                self.deps.door_service,
-                self.deps.door_repo,
-                self.deps.redis_client,
-                session_data,
+                left_click_handler=self._get_left_click_handler(message_sender),
+                player_repo=self.deps.player_repo,
+                session_data=session_data,
             ),
             # TaskInventoryClick: manejada arriba con datos validados
             TaskEquipItem: lambda: TaskEquipItem(

@@ -1,13 +1,27 @@
 """Tests para TaskLeftClick."""
 
-from unittest.mock import AsyncMock, MagicMock, Mock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.left_click_command import LeftClickCommand
 from src.game.map_manager import MapManager
 from src.models.npc import NPC
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.interaction.task_left_click import TaskLeftClick
+
+
+def create_mock_left_click_handler(
+    map_manager: MapManager | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de LeftClickCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.map_manager = map_manager or MapManager()
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -56,31 +70,32 @@ class TestTaskLeftClick:
 
         session_data = {"user_id": 1}
 
+        left_click_handler = create_mock_left_click_handler(
+            map_manager=map_manager, message_sender=message_sender
+        )
+        left_click_handler.handle.return_value = CommandResult.ok(
+            data={"npc_name": "Lobo", "npc_id": 7, "type": "info"}
+        )
+
         task = TaskLeftClick(
             data,
             message_sender,
+            left_click_handler=left_click_handler,
             player_repo=player_repo,
-            session_manager=Mock(),
-            map_manager=map_manager,
-            map_resources=Mock(),
-            bank_repo=Mock(),
-            merchant_repo=Mock(),
-            door_service=Mock(),
-            door_repo=Mock(),
-            redis_client=Mock(),
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "Lobo" in call_args
-        assert "Nivel 3" in call_args
-        assert "Hostil" in call_args
-        assert "HP: 80/80" in call_args
+        # Assert - debe llamar al handler con el comando correcto
+        left_click_handler.handle.assert_called_once()
+        call_args = left_click_handler.handle.call_args[0][0]
+        assert isinstance(call_args, LeftClickCommand)
+        assert call_args.user_id == 1
+        assert call_args.map_id == 1
+        assert call_args.x == 72
+        assert call_args.y == 70
 
     async def test_click_on_empty_position(self) -> None:
         """Test de click en posición vacía."""
@@ -93,14 +108,18 @@ class TestTaskLeftClick:
 
         map_manager = MapManager()
 
-        # Mock door_repo con métodos async
-        door_repo = Mock()
-        door_repo.get_door_state = AsyncMock(return_value=None)
-
-        # Mock map_resources para que no haya puerta ni cartel en (50, 50)
-        map_resources = MagicMock()
-        map_resources.get_door_at = Mock(return_value=None)
-        map_resources.get_sign_at = Mock(return_value=None)
+        left_click_handler = create_mock_left_click_handler(
+            map_manager=map_manager, message_sender=message_sender
+        )
+        left_click_handler.handle.return_value = CommandResult.ok(
+            data={
+                "type": "tile_info",
+                "map_id": 1,
+                "x": 50,
+                "y": 50,
+                "info_lines": ["=== Tile (50, 50) - Mapa 1 ===", "Tile vacio"],
+            }
+        )
 
         # Packet: LEFT_CLICK + X=50 + Y=50 (posición vacía)
         data = bytes([0x1A, 50, 50])
@@ -110,58 +129,42 @@ class TestTaskLeftClick:
         task = TaskLeftClick(
             data,
             message_sender,
+            left_click_handler=left_click_handler,
             player_repo=player_repo,
-            session_manager=Mock(),
-            map_manager=map_manager,
-            map_resources=map_resources,
-            bank_repo=Mock(),
-            merchant_repo=Mock(),
-            door_service=Mock(),
-            door_repo=door_repo,
-            redis_client=Mock(),
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - ahora debería mostrar información del tile
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        # Verificar que muestra información del tile
-        assert "Tile" in call_args
-        assert "(50, 50)" in call_args or "50" in call_args
+        # Assert - debe llamar al handler
+        left_click_handler.handle.assert_called_once()
 
     async def test_click_without_session(self) -> None:
         """Test de click sin sesión activa."""
         # Setup
         message_sender = MagicMock()
         player_repo = MagicMock(spec=PlayerRepository)
-        map_manager = MapManager()
+        MapManager()
 
         data = bytes([0x1A, 50, 50])
         session_data = {}  # Sin user_id
 
+        left_click_handler = create_mock_left_click_handler()
+
         task = TaskLeftClick(
             data,
             message_sender,
+            left_click_handler=left_click_handler,
             player_repo=player_repo,
-            session_manager=Mock(),
-            map_manager=map_manager,
-            map_resources=MagicMock(),
-            bank_repo=Mock(),
-            merchant_repo=Mock(),
-            door_service=Mock(),
-            door_repo=Mock(),
-            redis_client=Mock(),
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe enviar mensajes
-        message_sender.send_console_msg.assert_not_called()
+        # Assert - no debe llamar al handler sin sesión
+        left_click_handler.handle.assert_not_called()
 
     async def test_click_on_friendly_npc(self) -> None:
         """Test de click en NPC amigable."""
@@ -174,31 +177,12 @@ class TestTaskLeftClick:
 
         map_manager = MapManager()
 
-        # Crear NPC amigable
-        npc = NPC(
-            npc_id=2,
-            char_index=10002,
-            instance_id="test-comerciante",
-            map_id=1,
-            x=69,
-            y=67,
-            heading=3,
-            name="Comerciante",
-            description="Vende items",
-            body_id=501,
-            head_id=1,
-            hp=0,
-            max_hp=0,
-            level=0,
-            is_hostile=False,
-            is_attackable=False,
-            movement_type="static",
-            respawn_time=0,
-            respawn_time_max=0,
-            gold_min=0,
-            gold_max=0,
+        left_click_handler = create_mock_left_click_handler(
+            map_manager=map_manager, message_sender=message_sender
         )
-        map_manager.add_npc(1, npc)
+        left_click_handler.handle.return_value = CommandResult.ok(
+            data={"npc_name": "Comerciante", "npc_id": 2, "type": "info"}
+        )
 
         data = bytes([0x1A, 69, 67])
         session_data = {"user_id": 1}
@@ -206,58 +190,43 @@ class TestTaskLeftClick:
         task = TaskLeftClick(
             data,
             message_sender,
+            left_click_handler=left_click_handler,
             player_repo=player_repo,
-            session_manager=Mock(),
-            map_manager=map_manager,
-            map_resources=Mock(),
-            bank_repo=Mock(),
-            merchant_repo=Mock(),
-            door_service=Mock(),
-            door_repo=Mock(),
-            redis_client=Mock(),
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "Comerciante" in call_args
-        assert "Amigable" in call_args
+        # Assert - debe llamar al handler
+        left_click_handler.handle.assert_called_once()
 
     async def test_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
         message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
-        map_manager = MapManager()
+        MapManager()
 
         # Packet muy corto
         data = bytes([0x1A, 50])  # Falta Y
 
         session_data = {"user_id": 1}
 
+        left_click_handler = create_mock_left_click_handler()
+
         task = TaskLeftClick(
             data,
             message_sender,
+            left_click_handler=left_click_handler,
             player_repo=player_repo,
-            session_manager=Mock(),
-            map_manager=map_manager,
-            map_resources=Mock(),
-            bank_repo=Mock(),
-            merchant_repo=Mock(),
-            door_service=Mock(),
-            door_repo=Mock(),
-            redis_client=Mock(),
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - debe enviar mensaje de error
-        message_sender.send_console_msg.assert_called_once_with(
-            "Packet truncado: se esperaban al menos 3 bytes, recibidos 2"
-        )
+        # Assert - no debe llamar al handler con packet inválido
+        left_click_handler.handle.assert_not_called()
+        # Debe enviar mensaje de error
+        message_sender.send_console_msg.assert_called_once()

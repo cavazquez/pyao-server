@@ -12,6 +12,7 @@ from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
+from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -32,6 +33,7 @@ __all__ = [
     "DropCommandHandler",
     "EquipItemCommandHandler",
     "InventoryClickCommandHandler",
+    "LeftClickCommandHandler",
     "MoveSpellCommandHandler",
     "PickupCommandHandler",
     "UseItemCommandHandler",
