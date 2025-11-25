@@ -68,7 +68,14 @@ class LoginCommandHandler(CommandHandler):
         self.equipment_repo = equipment_repo
         self.player_map_service = player_map_service
         self.message_sender = message_sender
-        self.session_data = session_data or {}
+        # IMPORTANTE: Mantener la misma referencia al diccionario mutable
+        # No crear un nuevo diccionario vacío si session_data es None
+        if session_data is None:
+            # Solo crear un nuevo diccionario si realmente es None
+            # Esto no debería pasar en producción, pero es un fallback seguro
+            self.session_data = {}
+        else:
+            self.session_data = session_data
         self._motd_handler: MotdCommandHandler | None = None
 
     async def handle(self, command: Command) -> CommandResult:

@@ -164,14 +164,6 @@ class AccountRepository:
         for key in keys:
             account_data: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
             account_user_id_str = account_data.get("user_id")
-            logger.debug(
-                "Comparando: key=%s, account_user_id='%s' (type=%s), buscado='%s' (type=%s)",
-                key,
-                account_user_id_str,
-                type(account_user_id_str).__name__,
-                str(user_id),
-                type(str(user_id)).__name__,
-            )
             if account_user_id_str == str(user_id):
                 logger.debug("Cuenta encontrada para user_id=%d en key=%s", user_id, key)
                 return account_data
@@ -195,13 +187,14 @@ class AccountRepository:
             logger.warning("No se encontró cuenta para user_id=%d al verificar GM", user_id)
             return False
 
-        is_gm_str = account_data.get("is_gm", "0")
+        is_gm_str_raw = account_data.get("is_gm", "0")
+        # Limpiar espacios y saltos de línea (por si Redis tiene caracteres extra)
+        is_gm_str = is_gm_str_raw.strip() if is_gm_str_raw else "0"
+        result = is_gm_str == "1"
         logger.debug(
-            "Verificación GM para user_id=%d: is_gm_str='%s', account_data keys=%s",
+            "Verificación GM para user_id=%d: is_gm_str='%s' (después de strip), resultado=%s",
             user_id,
             is_gm_str,
-            list(account_data.keys()),
+            result,
         )
-        result = is_gm_str == "1"
-        logger.debug("Resultado verificación GM para user_id=%d: %s", user_id, result)
         return result

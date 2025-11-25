@@ -918,8 +918,11 @@ class TaskFactory:
             )
         else:
             # Actualizar message_sender y session_data por si cambiaron
+            # IMPORTANTE: No crear un nuevo diccionario, usar la misma referencia
             self._login_handler.message_sender = message_sender
-            self._login_handler.session_data = session_data or {}
+            if session_data is not None:
+                self._login_handler.session_data = session_data
+            # Si session_data es None, no actualizar (mantener la referencia existente)
         return self._login_handler
 
     def _get_create_account_handler(

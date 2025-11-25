@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.commands.gm_command import GMCommand
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
+from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -90,20 +91,18 @@ class TaskGMCommands(Task):
             y,
         )
 
-        # Obtener user_id de la sesión
-        if self.session_data is None or "user_id" not in self.session_data:
+        # Obtener user_id de la sesión usando SessionManager (más robusto)
+        user_id = SessionManager.get_user_id(self.session_data)
+        if user_id is None:
             logger.warning(
                 "Intento de comando GM sin user_id en sesión desde %s",
                 self.message_sender.connection.address,
             )
+            await self.message_sender.send_console_msg(
+                "Error: Debes estar logueado para usar comandos GM.",
+                font_color=1,  # FONTTYPE_FIGHT (rojo para errores)
+            )
             return
-
-        user_id_value = self.session_data["user_id"]
-        if isinstance(user_id_value, dict):
-            logger.error("user_id en sesión es un dict, esperaba int")
-            return
-
-        user_id = int(user_id_value)
 
         # Validar que tenemos el handler
         if not self.gm_command_handler:
