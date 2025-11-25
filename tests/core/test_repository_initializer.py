@@ -63,4 +63,6 @@ def test_repository_initializer_returns_dict() -> None:
     repositories = initializer.initialize_all()
 
     assert isinstance(repositories, dict)
-    assert len(repositories) == 12  # 12 repositorios (incluye party_repo y door_repo)
+    assert (
+        len(repositories) == 13
+    )  # +1 clan_repo  # 12 repositorios (incluye party_repo y door_repo)
