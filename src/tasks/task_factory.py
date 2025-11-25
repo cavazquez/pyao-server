@@ -4,6 +4,7 @@ import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
+from src.command_handlers.attack_handler import AttackCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -78,6 +79,37 @@ class TaskFactory:
         """
         self.deps = deps
         self.enable_prevalidation = enable_prevalidation
+
+        # Crear command handlers (reutilizables, lazy initialization)
+        self._attack_handler: AttackCommandHandler | None = None
+
+    def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
+        """Obtiene o crea el handler de ataque.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de ataque.
+        """
+        if self._attack_handler is None:
+            self._attack_handler = AttackCommandHandler(
+                player_repo=self.deps.player_repo,
+                combat_service=self.deps.combat_service,
+                map_manager=self.deps.map_manager,
+                npc_service=self.deps.npc_service,
+                broadcast_service=self.deps.broadcast_service,
+                npc_death_service=self.deps.npc_death_service,
+                npc_respawn_service=self.deps.npc_respawn_service,
+                loot_table_service=self.deps.loot_table_service,
+                item_catalog=self.deps.item_catalog,
+                stamina_service=self.deps.stamina_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._attack_handler.message_sender = message_sender
+        return self._attack_handler
 
     def create_task(
         self,
@@ -344,17 +376,8 @@ class TaskFactory:
             TaskAttack: lambda: TaskAttack(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.combat_service,
-                self.deps.map_manager,
-                self.deps.npc_service,
-                self.deps.broadcast_service,
-                self.deps.npc_death_service,  # Agregar NPCDeathService
-                self.deps.npc_respawn_service,
-                self.deps.loot_table_service,
-                self.deps.item_catalog,
-                self.deps.stamina_service,
-                session_data,
+                attack_handler=self._get_attack_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPickup: lambda: TaskPickup(
                 data,

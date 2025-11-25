@@ -300,7 +300,8 @@ class TaskAttack(Task):
 
 **Prioridad:** Media  
 **Esfuerzo:** 8-10 horas  
-**Complejidad:** Alta
+**Complejidad:** Alta  
+**Estado:** ✅ **IMPLEMENTADO** - Ver `src/commands/` y `src/command_handlers/`
 
 ---
 
@@ -449,8 +450,8 @@ aggro_range = config.npc_aggro_range
 *Ninguna actualmente - enfocarse en completar features existentes*
 
 ### Media Prioridad
-1. **Configuration Management** (2-3h) - Fácil y útil
-2. **Command Pattern** (8-10h) - Mejora significativa de arquitectura
+1. **Configuration Management** (2-3h) - ✅ **IMPLEMENTADO**
+2. **Command Pattern** (8-10h) - ✅ **IMPLEMENTADO**
 
 ### Baja Prioridad
 1. **Service Container** (4-6h) - Útil pero no urgente
@@ -472,7 +473,7 @@ aggro_range = config.npc_aggro_range
 
 ### Versión 0.7.0 (Futuro)
 - 📝 Service Container
-- 📝 Command Pattern
+- ✅ Command Pattern - **COMPLETADO**
 - 📝 Event System
 
 ### Versión 1.0.0 (Largo plazo)

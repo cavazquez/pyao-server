@@ -419,7 +419,7 @@ await command_queue.process()
 **Prioridad:** 🟡 Media  
 **Esfuerzo:** 8-10 horas  
 **Complejidad:** Alta  
-**Cuándo:** Antes de v0.11.0 (hechizos avanzados) para mejor arquitectura
+**Estado:** ✅ **IMPLEMENTADO** - Ver `src/commands/` y `src/command_handlers/`
 
 ---
 
@@ -837,8 +837,8 @@ class Server:
 2. **Inicialización sin None** (6-8h) - Mejora calidad del código
 
 ### 🟡 Media Prioridad
-1. **Configuration Management** (2-3h) - Fácil y útil
-2. **Command Pattern** (8-10h) - Mejora arquitectura significativamente
+1. **Configuration Management** (2-3h) - ✅ **IMPLEMENTADO**
+2. **Command Pattern** (8-10h) - ✅ **IMPLEMENTADO**
 
 ### 🟢 Baja Prioridad (Opcional)
 1. **Service Container** (4-6h) - Útil pero no urgente
@@ -858,7 +858,7 @@ class Server:
 4. Service Container (4-6h)
 
 ### Fase 3: Mejoras Arquitectónicas (3-4 semanas)
-5. Command Pattern (8-10h)
+5. Command Pattern (8-10h) - ✅ **COMPLETADO**
 6. Event System (6-8h)
 
 ### Fase 4: Refactoring Grande (Opcional)
