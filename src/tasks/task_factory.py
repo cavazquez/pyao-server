@@ -11,6 +11,7 @@ from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
+from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -101,6 +102,7 @@ class TaskFactory:
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
         self._bank_deposit_handler: BankDepositCommandHandler | None = None
         self._bank_extract_handler: BankExtractCommandHandler | None = None
+        self._equip_item_handler: EquipItemCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -331,6 +333,26 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._bank_extract_handler.message_sender = message_sender
         return self._bank_extract_handler
+
+    def _get_equip_item_handler(self, message_sender: MessageSender) -> EquipItemCommandHandler:
+        """Obtiene o crea el handler de equipar/desequipar item.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de equipar/desequipar item.
+        """
+        if self._equip_item_handler is None:
+            self._equip_item_handler = EquipItemCommandHandler(
+                player_repo=self.deps.player_repo,
+                equipment_repo=self.deps.equipment_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._equip_item_handler.message_sender = message_sender
+        return self._equip_item_handler
 
     def create_task(
         self,
@@ -578,7 +600,10 @@ class TaskFactory:
             ),
             # TaskInventoryClick: manejada arriba con datos validados
             TaskEquipItem: lambda: TaskEquipItem(
-                data, message_sender, self.deps.player_repo, session_data, self.deps.equipment_repo
+                data,
+                message_sender,
+                equip_item_handler=self._get_equip_item_handler(message_sender),
+                session_data=session_data,
             ),
             TaskAttack: lambda: TaskAttack(
                 data,

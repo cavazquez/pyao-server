@@ -1,10 +1,26 @@
 """Tests para TaskEquipItem."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.equip_item_command import EquipItemCommand
 from src.tasks.inventory.task_equip_item import TaskEquipItem
+
+
+def create_mock_equip_item_handler(
+    player_repo: MagicMock | None = None,
+    equipment_repo: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de EquipItemCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.equipment_repo = equipment_repo or MagicMock()
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -16,93 +32,61 @@ class TestTaskEquipItem:
         # Setup
         message_sender = AsyncMock()
 
-        player_repo = MagicMock()
-        player_repo.redis = MagicMock()
-
-        equipment_repo = MagicMock()
+        equip_item_handler = create_mock_equip_item_handler(message_sender=message_sender)
+        equip_item_handler.handle.return_value = CommandResult.ok(data={"slot": 1, "success": True})
 
         # Packet: EQUIP_ITEM (19) + slot=1 + padding
         data = bytes([0x13, 0x01, 0x00])
-
         session_data = {"user_id": 1}
 
-        # Mock de los servicios
-        with (
-            patch("src.tasks.inventory.task_equip_item.InventoryRepository"),
-            patch("src.tasks.inventory.task_equip_item.EquipmentService") as mock_equip_service,
-            patch("src.tasks.inventory.task_equip_item.PlayerService") as mock_player_service,
-        ):
-            mock_equip_service_instance = MagicMock()
-            mock_equip_service_instance.toggle_equip_item = AsyncMock(return_value=True)
-            mock_equip_service.return_value = mock_equip_service_instance
+        task = TaskEquipItem(
+            data,
+            message_sender,
+            equip_item_handler=equip_item_handler,
+            session_data=session_data,
+        )
 
-            mock_player_service_instance = MagicMock()
-            mock_player_service_instance.send_inventory = AsyncMock()
-            mock_player_service.return_value = mock_player_service_instance
+        # Execute
+        await task.execute()
 
-            task = TaskEquipItem(
-                data,
-                message_sender,
-                player_repo=player_repo,
-                session_data=session_data,
-                equipment_repo=equipment_repo,
-            )
-
-            # Execute
-            await task.execute()
-
-            # Assert
-            mock_equip_service_instance.toggle_equip_item.assert_called_once_with(
-                1, 1, message_sender
-            )
-            mock_player_service_instance.send_inventory.assert_called_once_with(1, equipment_repo)
+        # Assert
+        equip_item_handler.handle.assert_called_once()
+        call_args = equip_item_handler.handle.call_args[0][0]
+        assert isinstance(call_args, EquipItemCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
 
     async def test_equip_item_failure(self) -> None:
         """Test cuando falla equipar el item."""
         # Setup
         message_sender = AsyncMock()
 
-        player_repo = MagicMock()
-        player_repo.redis = MagicMock()
-
-        equipment_repo = MagicMock()
+        equip_item_handler = create_mock_equip_item_handler(message_sender=message_sender)
+        equip_item_handler.handle.return_value = CommandResult.error(
+            "No se pudo equipar/desequipar el item"
+        )
 
         data = bytes([0x13, 0x01, 0x00])
         session_data = {"user_id": 1}
 
-        with (
-            patch("src.tasks.inventory.task_equip_item.InventoryRepository"),
-            patch("src.tasks.inventory.task_equip_item.EquipmentService") as mock_equip_service,
-            patch("src.tasks.inventory.task_equip_item.PlayerService") as mock_player_service,
-        ):
-            mock_equip_service_instance = MagicMock()
-            mock_equip_service_instance.toggle_equip_item = AsyncMock(return_value=False)
-            mock_equip_service.return_value = mock_equip_service_instance
+        task = TaskEquipItem(
+            data,
+            message_sender,
+            equip_item_handler=equip_item_handler,
+            session_data=session_data,
+        )
 
-            mock_player_service_instance = MagicMock()
-            mock_player_service_instance.send_inventory = AsyncMock()
-            mock_player_service.return_value = mock_player_service_instance
+        # Execute
+        await task.execute()
 
-            task = TaskEquipItem(
-                data,
-                message_sender,
-                player_repo=player_repo,
-                session_data=session_data,
-                equipment_repo=equipment_repo,
-            )
-
-            # Execute
-            await task.execute()
-
-            # Assert - no debe enviar inventario si falla
-            mock_player_service_instance.send_inventory.assert_not_called()
+        # Assert
+        equip_item_handler.handle.assert_called_once()
 
     async def test_equip_item_without_session(self) -> None:
         """Test sin sesión activa."""
         # Setup
         message_sender = AsyncMock()
-        player_repo = MagicMock()
-        equipment_repo = MagicMock()
+        equip_item_handler = create_mock_equip_item_handler(message_sender=message_sender)
 
         data = bytes([0x13, 0x01, 0x00])
         session_data = {}  # Sin user_id
@@ -110,43 +94,42 @@ class TestTaskEquipItem:
         task = TaskEquipItem(
             data,
             message_sender,
-            player_repo=player_repo,
+            equip_item_handler=equip_item_handler,
             session_data=session_data,
-            equipment_repo=equipment_repo,
         )
 
         # Execute
         await task.execute()
 
         # Assert - no debe hacer nada
+        equip_item_handler.handle.assert_not_called()
 
     async def test_equip_item_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
         message_sender = AsyncMock()
-        player_repo = MagicMock()
-        equipment_repo = MagicMock()
+        message_sender.send_console_msg = AsyncMock()
+        equip_item_handler = create_mock_equip_item_handler(message_sender=message_sender)
 
         # Packet muy corto
         data = bytes([0x13])  # Falta slot
-
         session_data = {"user_id": 1}
 
         task = TaskEquipItem(
             data,
             message_sender,
-            player_repo=player_repo,
+            equip_item_handler=equip_item_handler,
             session_data=session_data,
-            equipment_repo=equipment_repo,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe crashear
+        # Assert - no debe crashear, debe enviar mensaje de error
+        equip_item_handler.handle.assert_not_called()
 
-    async def test_equip_item_without_dependencies(self) -> None:
-        """Test sin dependencias necesarias."""
+    async def test_equip_item_without_handler(self) -> None:
+        """Test sin handler."""
         # Setup
         message_sender = AsyncMock()
 
@@ -156,9 +139,8 @@ class TestTaskEquipItem:
         task = TaskEquipItem(
             data,
             message_sender,
-            player_repo=None,  # Sin dependencias
+            equip_item_handler=None,
             session_data=session_data,
-            equipment_repo=None,
         )
 
         # Execute
