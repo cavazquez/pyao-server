@@ -63,6 +63,7 @@ class AccountRepository:
             "username": username,
             "password_hash": password_hash,
             "email": email,
+            "is_gm": "0",  # Por defecto no es GM
         }
 
         # Agregar datos del personaje si existen
@@ -117,6 +118,33 @@ class AccountRepository:
         stored_hash = account_data.get("password_hash", "")
         return verify_password_hash(password, stored_hash)
 
+    async def is_gm(self, username: str) -> bool:
+        """Verifica si un usuario es Game Master.
+
+        Args:
+            username: Nombre de usuario.
+
+        Returns:
+            True si el usuario es GM, False en caso contrario.
+        """
+        account_data = await self.get_account(username)
+        if not account_data:
+            return False
+
+        is_gm_str = account_data.get("is_gm", "0")
+        return is_gm_str == "1"
+
+    async def set_gm_status(self, username: str, is_gm: bool) -> None:
+        """Establece el estado de GM de un usuario.
+
+        Args:
+            username: Nombre de usuario.
+            is_gm: True para hacer GM, False para quitar GM.
+        """
+        account_key = RedisKeys.account_data(username)
+        await self.redis.redis.hset(account_key, "is_gm", "1" if is_gm else "0")  # type: ignore[misc]
+        logger.info("Estado GM actualizado para %s: %s", username, "GM" if is_gm else "No GM")
+
     async def get_account_by_user_id(self, user_id: int) -> dict[str, str] | None:
         """Obtiene los datos de una cuenta por user_id.
 
@@ -138,3 +166,19 @@ class AccountRepository:
                 return account_data
 
         return None
+
+    async def is_gm_by_user_id(self, user_id: int) -> bool:
+        """Verifica si un usuario es Game Master por user_id.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            True si el usuario es GM, False en caso contrario.
+        """
+        account_data = await self.get_account_by_user_id(user_id)
+        if not account_data:
+            return False
+
+        is_gm_str = account_data.get("is_gm", "0")
+        return is_gm_str == "1"

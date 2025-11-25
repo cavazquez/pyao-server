@@ -1131,6 +1131,7 @@ class TaskFactory:
         if self._gm_command_handler is None:
             self._gm_command_handler = GMCommandHandler(
                 player_repo=self.deps.player_repo,
+                account_repo=self.deps.account_repo,
                 player_map_service=self.deps.player_map_service,
                 message_sender=message_sender,
             )

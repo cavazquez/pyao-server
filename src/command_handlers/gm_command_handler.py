@@ -8,6 +8,7 @@ from src.commands.gm_command import GMCommand
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
+    from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.player_map_service import PlayerMapService
 
@@ -20,6 +21,7 @@ class GMCommandHandler(CommandHandler):
     def __init__(
         self,
         player_repo: PlayerRepository,
+        account_repo: AccountRepository,
         player_map_service: PlayerMapService,
         message_sender: MessageSender,
     ) -> None:
@@ -27,10 +29,12 @@ class GMCommandHandler(CommandHandler):
 
         Args:
             player_repo: Repositorio de jugadores.
+            account_repo: Repositorio de cuentas (para verificar GM).
             player_map_service: Servicio de mapas de jugador.
             message_sender: Enviador de mensajes.
         """
         self.player_repo = player_repo
+        self.account_repo = account_repo
         self.player_map_service = player_map_service
         self.message_sender = message_sender
 
@@ -47,6 +51,17 @@ class GMCommandHandler(CommandHandler):
             return CommandResult.error("Comando inválido: se esperaba GMCommand")
 
         user_id = command.user_id
+
+        # Verificar permisos de GM
+        is_gm = await self.account_repo.is_gm_by_user_id(user_id)
+        if not is_gm:
+            logger.warning("Intento de comando GM por usuario no autorizado: user_id=%d", user_id)
+            await self.message_sender.send_console_msg(
+                "No tienes permisos de Game Master.",
+                font_color=1,  # FONTTYPE_FIGHT (rojo para errores)
+            )
+            return CommandResult.error("No tienes permisos de Game Master")
+
         subcommand = command.subcommand
         username = command.username
         map_id = command.map_id
@@ -54,7 +69,7 @@ class GMCommandHandler(CommandHandler):
         y = command.y
 
         logger.info(
-            "GMCommandHandler: user_id=%d, subcommand=%d, username='%s', map=%d, pos=(%d,%d)",
+            "GMCommandHandler: user_id=%d (GM), subcommand=%d, username='%s', map=%d, pos=(%d,%d)",
             user_id,
             subcommand,
             username,
