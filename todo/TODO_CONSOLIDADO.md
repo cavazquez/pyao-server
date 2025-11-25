@@ -261,6 +261,35 @@
 
 ## 📈 Mejoras de Calidad
 
+### Detectar y Eliminar Antipatrón de Acceso a Stats 🟡 Media Prioridad
+**Estado:** 📋 Pendiente  
+**Esfuerzo:** Bajo-Medio  
+**Prioridad:** Media
+
+**Problema detectado:**
+- Múltiples módulos acceden directamente a stats usando `stats.get("min_hp", 0)`, `stats.get("level", 1)`, etc.
+- Esto es un antipatrón que duplica código y conocimiento del formato de datos
+
+**Tareas:**
+- [ ] Buscar todos los usos de `stats.get("min_hp"`, `stats.get("level"`, `stats.get("hp"`, etc.
+- [ ] Reemplazar con métodos helper de `PlayerRepository`:
+  - `get_current_hp()` → `stats.get("min_hp", 0)`
+  - `get_level()` → `stats.get("level", 1)`
+  - `is_alive()` → `stats.get("min_hp", 0) > 0`
+  - `get_gold()` → `stats.get("gold", 0)`
+- [ ] Buscar usos de `attributes.get("charisma"`, `attributes.get("strength"`, etc.
+- [ ] Considerar agregar métodos helper similares para attributes si hay mucha duplicación
+- [ ] Actualizar tests si es necesario
+
+**Archivos a revisar:**
+- `src/command_handlers/` (drop_handler, pickup_handler, etc.)
+- `src/services/` (todos los servicios que usen stats)
+- `src/tasks/` (tasks que accedan a stats)
+
+**Referencia:** Refactorización completada en `ClanService` y `PartyService` (2025-01-30)
+
+---
+
 ### Ampliar Cobertura de Tests 🔴 Alta Prioridad
 **Estado:** 🚧 En progreso  
 **Cobertura actual:** 72%  
