@@ -12,6 +12,7 @@ from src.commands.equip_item_command import EquipItemCommand
 from src.commands.pickup_command import PickupCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
+from src.commands.work_command import WorkCommand
 
 __all__ = [
     "AttackCommand",
@@ -28,4 +29,5 @@ __all__ = [
     "PickupCommand",
     "UseItemCommand",
     "WalkCommand",
+    "WorkCommand",
 ]

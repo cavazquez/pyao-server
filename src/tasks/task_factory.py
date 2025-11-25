@@ -15,6 +15,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
+from src.command_handlers.work_handler import WorkCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -103,6 +104,7 @@ class TaskFactory:
         self._bank_deposit_handler: BankDepositCommandHandler | None = None
         self._bank_extract_handler: BankExtractCommandHandler | None = None
         self._equip_item_handler: EquipItemCommandHandler | None = None
+        self._work_handler: WorkCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -353,6 +355,27 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._equip_item_handler.message_sender = message_sender
         return self._equip_item_handler
+
+    def _get_work_handler(self, message_sender: MessageSender) -> WorkCommandHandler:
+        """Obtiene o crea el handler de trabajo.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de trabajo.
+        """
+        if self._work_handler is None:
+            self._work_handler = WorkCommandHandler(
+                player_repo=self.deps.player_repo,
+                inventory_repo=self.deps.inventory_repo,
+                map_resources=self.deps.map_resources_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._work_handler.message_sender = message_sender
+        return self._work_handler
 
     def create_task(
         self,
@@ -684,11 +707,9 @@ class TaskFactory:
             TaskWork: lambda: TaskWork(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.inventory_repo,
-                self.deps.map_manager,
-                session_data,
-                self.deps.map_resources_service,
+                work_handler=self._get_work_handler(message_sender),
+                player_repo=self.deps.player_repo,
+                session_data=session_data,
             ),
             TaskWorkLeftClick: lambda: TaskWorkLeftClick(
                 data,

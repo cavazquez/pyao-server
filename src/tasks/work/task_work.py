@@ -3,19 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.constants.items import ResourceItemID, ToolID
-from src.game.map_manager import MapManager
-from src.messaging.message_sender import MessageSender
-from src.repositories.inventory_repository import InventoryRepository
-from src.repositories.player_repository import PlayerRepository
+from src.commands.work_command import WorkCommand
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.work_handler import WorkCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
-    from src.services.map.map_resources_service import MapResourcesService
 
 logger = logging.getLogger(__name__)
 
@@ -27,41 +21,41 @@ HEADING_WEST = 4
 
 
 class TaskWork(Task):
-    """Tarea que maneja el trabajo de los jugadores."""
+    """Tarea que maneja el trabajo de los jugadores (solo parsing y delegación).
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
+        work_handler: WorkCommandHandler | None = None,
         player_repo: PlayerRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
-        map_manager: MapManager | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
-        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Inicializa la tarea de trabajo.
 
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventarios.
-            map_manager: Gestor de mapas.
+            work_handler: Handler para el comando de trabajo.
+            player_repo: Repositorio de jugadores (necesario para obtener posición).
             session_data: Datos de sesión compartidos.
-            map_resources: Servicio de recursos del mapa.
         """
         super().__init__(data, message_sender)
+        self.work_handler = work_handler
         self.player_repo = player_repo
-        self.inventory_repo = inventory_repo
-        self.map_manager = map_manager
         self.session_data = session_data
-        self.map_resources = map_resources
 
     async def execute(self) -> None:
-        """Ejecuta la lógica de trabajo."""
-        # Validar dependencias
-        if not self.player_repo or not self.inventory_repo or not self.map_manager:
-            logger.error("Repositorios no disponibles para trabajar")
+        """Ejecuta la lógica de trabajo (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
+        # Validar dependencias básicas
+        if not self.player_repo:
+            logger.error("player_repo no disponible para trabajar")
             await self.message_sender.console.send_error_msg("Servicio de trabajo no disponible")
             return
 
@@ -101,25 +95,21 @@ class TaskWork(Task):
             target_y,
         )
 
-        # Verificar si hay un recurso trabajable en la posición objetivo
-        work_result = await self._try_work_at_position(user_id, map_id, target_x, target_y)
+        # Validar que tenemos el handler
+        if not self.work_handler:
+            logger.error("WorkCommandHandler no disponible")
+            await self.message_sender.console.send_error_msg("Servicio de trabajo no disponible")
+            return
 
-        if work_result:
-            resource_name, item_id, quantity = work_result
-            await self.message_sender.console.send_console_msg(
-                f"Has obtenido {quantity} {resource_name}"
-            )
-            logger.info(
-                "Usuario %d obtuvo %d %s (item_id=%d)",
-                user_id,
-                quantity,
-                resource_name,
-                item_id,
-            )
-        else:
-            await self.message_sender.console.send_console_msg(
-                "No hay nada para trabajar en esa dirección"
-            )
+        # Crear comando (solo datos)
+        command = WorkCommand(user_id=user_id, map_id=map_id, target_x=target_x, target_y=target_y)
+
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.work_handler.handle(command)
+
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Trabajar falló: %s", result.error_message or "Error desconocido")
 
     @staticmethod
     def _get_target_position(x: int, y: int, heading: int) -> tuple[int, int]:
@@ -142,53 +132,3 @@ class TaskWork(Task):
         if heading == HEADING_WEST:
             return (x - 1, y)
         return (x, y)  # Fallback
-
-    async def _try_work_at_position(
-        self, user_id: int, map_id: int, target_x: int, target_y: int
-    ) -> tuple[str, int, int] | None:
-        """Intenta trabajar en una posición específica.
-
-        Args:
-            user_id: ID del usuario.
-            map_id: ID del mapa.
-            target_x: Coordenada X objetivo.
-            target_y: Coordenada Y objetivo.
-
-        Returns:
-            Tupla (nombre_recurso, item_id, cantidad) si se pudo trabajar, None si no.
-        """
-        # Verificar herramienta equipada o en inventario
-        if not self.inventory_repo:
-            return None
-
-        inventory = await self.inventory_repo.get_inventory_slots(user_id)
-
-        has_hacha = any(slot.item_id == ToolID.HACHA_LENADOR for slot in inventory.values())
-        has_pico = any(slot.item_id == ToolID.PIQUETE_MINERO for slot in inventory.values())
-        has_cana = any(slot.item_id == ToolID.CANA_PESCAR for slot in inventory.values())
-
-        # Verificar recursos usando MapResourcesService
-        if self.map_resources:
-            if has_hacha and self.map_resources.has_tree(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(user_id, item_id=ResourceItemID.LENA, quantity=5)
-                return ("Leña", ResourceItemID.LENA, 5)
-
-            if has_pico and self.map_resources.has_mine(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(
-                    user_id, item_id=ResourceItemID.MINERAL_HIERRO, quantity=3
-                )
-                return ("Mineral de Hierro", ResourceItemID.MINERAL_HIERRO, 3)
-
-            if has_cana and self.map_resources.has_water(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(
-                    user_id, item_id=ResourceItemID.PESCADO, quantity=2
-                )
-                return ("Pescado", ResourceItemID.PESCADO, 2)
-
-        # Si no tiene herramienta
-        if not (has_hacha or has_pico or has_cana):
-            await self.message_sender.console.send_console_msg(
-                "Necesitas una herramienta (hacha, pico o caña de pescar)"
-            )
-
-        return None

@@ -11,6 +11,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
+from src.command_handlers.work_handler import WorkCommandHandler
 
 __all__ = [
     "AttackCommandHandler",
@@ -24,4 +25,5 @@ __all__ = [
     "PickupCommandHandler",
     "UseItemCommandHandler",
     "WalkCommandHandler",
+    "WorkCommandHandler",
 ]
