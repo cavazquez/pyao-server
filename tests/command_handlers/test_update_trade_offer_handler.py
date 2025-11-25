@@ -36,4 +36,3 @@ async def test_handle_without_trade_service() -> None:
 
     assert result.success is False
     message_sender.send_console_msg.assert_awaited()
-
