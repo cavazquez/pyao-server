@@ -154,6 +154,38 @@ class InventoryRepository:
         """
         return await self.stacking.remove_item(user_id, slot, quantity)
 
+    async def remove_item_by_item_id(self, user_id: int, item_id: int, quantity: int) -> bool:
+        """Remueve cantidad de un item buscando por item_id.
+
+        Args:
+            user_id: ID del jugador.
+            item_id: ID del item a remover.
+            quantity: Cantidad total a remover.
+
+        Returns:
+            True si se removió la cantidad solicitada.
+        """
+        if quantity <= 0:
+            return True
+
+        slots = await self.get_inventory_slots(user_id)
+        remaining = quantity
+
+        for slot_number, slot in slots.items():
+            if slot.item_id != item_id or remaining <= 0:
+                continue
+
+            removable = min(slot.quantity, remaining)
+            success = await self.remove_item(user_id, slot_number, removable)
+            if not success:
+                return False
+            remaining -= removable
+
+            if remaining == 0:
+                return True
+
+        return remaining == 0
+
     async def has_space(self, user_id: int) -> bool:
         """Verifica si hay espacio en el inventario.
 

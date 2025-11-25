@@ -39,6 +39,7 @@ if TYPE_CHECKING:
     from src.services.party_service import PartyService
     from src.services.player.spell_service import SpellService
     from src.services.player.stamina_service import StaminaService
+    from src.services.trade_service import TradeService
     from src.utils.redis_client import RedisClient
 
 
@@ -85,6 +86,7 @@ class DependencyContainer:
     player_map_service: PlayerMapService
     party_service: PartyService
     clan_service: ClanService
+    trade_service: TradeService
 
     # Managers
     map_manager: MapManager

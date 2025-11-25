@@ -69,3 +69,28 @@ class TalkCommand(Command):
         args = parts[1:] if len(parts) > 1 else []
 
         return (command, args)
+
+    def is_trade_command(self) -> bool:
+        """Determina si el mensaje es un comando de comercio (/COMERCIAR).
+
+        Returns:
+            bool: True si el mensaje inicia con /COMERCIAR.
+        """
+        return self.message.upper().strip().startswith("/COMERCIAR")
+
+    def parse_trade_command(self) -> tuple[str, list[str]] | None:
+        """Parsea el comando /COMERCIAR.
+
+        Returns:
+            Tupla (comando, argumentos) si es válido, None en caso contrario.
+        """
+        if not self.is_trade_command():
+            return None
+
+        parts = self.message.strip().split()
+        if not parts:
+            return None
+
+        command = parts[0].upper().replace("/", "")
+        args = parts[1:] if len(parts) > 1 else []
+        return (command, args)

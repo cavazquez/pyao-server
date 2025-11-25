@@ -9,6 +9,7 @@ from src.command_handlers.invite_clan_handler import InviteClanCommandHandler
 from src.command_handlers.kick_clan_member_handler import KickClanMemberCommandHandler
 from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
 from src.command_handlers.reject_clan_handler import RejectClanCommandHandler
+from src.command_handlers.start_player_trade_handler import StartPlayerTradeCommandHandler
 from src.commands.accept_clan_command import AcceptClanCommand
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_clan_command import CreateClanCommand
@@ -16,6 +17,7 @@ from src.commands.invite_clan_command import InviteClanCommand
 from src.commands.kick_clan_member_command import KickClanMemberCommand
 from src.commands.leave_clan_command import LeaveClanCommand
 from src.commands.reject_clan_command import RejectClanCommand
+from src.commands.start_player_trade_command import StartPlayerTradeCommand
 from src.commands.talk_command import TalkCommand
 
 if TYPE_CHECKING:
@@ -25,6 +27,7 @@ if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.clan_service import ClanService
+    from src.services.trade_service import TradeService
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +43,7 @@ class TalkCommandHandler(CommandHandler):
         game_tick: GameTick | None,
         message_sender: MessageSender,
         clan_service: ClanService | None = None,
+        trade_service: TradeService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el handler.
@@ -51,6 +55,7 @@ class TalkCommandHandler(CommandHandler):
             game_tick: Sistema de GameTick para comandos de métricas.
             message_sender: Enviador de mensajes.
             clan_service: Servicio de clanes (opcional).
+            trade_service: Servicio de comercio entre jugadores (opcional).
             session_data: Datos de sesión compartidos.
         """
         self.player_repo = player_repo
@@ -59,6 +64,7 @@ class TalkCommandHandler(CommandHandler):
         self.game_tick = game_tick
         self.message_sender = message_sender
         self.clan_service = clan_service
+        self.trade_service = trade_service
         self.session_data = session_data or {}
 
     async def handle(self, command: Command) -> CommandResult:
@@ -82,6 +88,11 @@ class TalkCommandHandler(CommandHandler):
         if command.is_metrics_command():
             await self._handle_metrics_command(user_id)
             return CommandResult.ok(data={"command": "metrics"})
+
+        # Comando /COMERCIAR
+        if command.is_trade_command():
+            await self._handle_trade_command(user_id, command)
+            return CommandResult.ok(data={"command": "trade"})
 
         # Comandos de clan - procesar antes del broadcast
         if command.is_clan_command():
@@ -384,3 +395,39 @@ class TalkCommandHandler(CommandHandler):
                 "Error interno al procesar comando de clan",
                 font_color=1,
             )
+
+    async def _handle_trade_command(self, user_id: int, command: TalkCommand) -> None:
+        """Maneja el comando /COMERCIAR."""
+        if not self.trade_service:
+            await self.message_sender.send_console_msg(
+                "El sistema de comercio entre jugadores no está disponible.",
+                font_color=1,
+            )
+            return
+
+        parsed = command.parse_trade_command()
+        if not parsed:
+            await self.message_sender.send_console_msg(
+                "Uso: /COMERCIAR <usuario>",
+                font_color=1,
+            )
+            return
+
+        _, args = parsed
+        if not args:
+            await self.message_sender.send_console_msg(
+                "Uso: /COMERCIAR <usuario>",
+                font_color=1,
+            )
+            return
+
+        target_username = args[0]
+        trade_handler = StartPlayerTradeCommandHandler(
+            trade_service=self.trade_service,
+            message_sender=self.message_sender,
+        )
+        trade_command = StartPlayerTradeCommand(
+            initiator_id=user_id,
+            target_username=target_username,
+        )
+        await trade_handler.handle(trade_command)

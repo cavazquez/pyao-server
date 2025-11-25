@@ -149,6 +149,7 @@ class ServerInitializer:
             player_map_service=services["player_map_service"],
             party_service=services["party_service"],
             clan_service=services["clan_service"],
+            trade_service=services["trade_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,

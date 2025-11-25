@@ -88,6 +88,10 @@ class ClanRepository:
         # Save clan name index
         pipe.set(self.CLAN_NAME_INDEX_KEY.format(name=clan.name.lower()), clan.clan_id)
 
+        # Reset members hash before storing current snapshot
+        members_key = self.CLAN_MEMBERS_KEY.format(clan_id=clan.clan_id)
+        pipe.delete(members_key)
+
         # Save each member
         for member in clan.members.values():
             member_data = {
@@ -100,11 +104,7 @@ class ClanRepository:
                 "last_seen": member.last_seen,
                 "contribution": member.contribution,
             }
-            pipe.hset(
-                self.CLAN_MEMBERS_KEY.format(clan_id=clan.clan_id),
-                str(member.user_id),
-                json.dumps(member_data),
-            )
+            pipe.hset(members_key, str(member.user_id), json.dumps(member_data))
 
             # Update user's current clan
             pipe.set(self.USER_CLAN_KEY.format(user_id=member.user_id), clan.clan_id)
@@ -113,6 +113,14 @@ class ClanRepository:
         pipe.sadd(self.CLAN_INDEX_KEY, clan.clan_id)
 
         await pipe.execute()
+
+    async def clear_user_clan(self, user_id: int) -> None:
+        """Remove the clan reference for a user.
+
+        Args:
+            user_id: ID of the user to clear.
+        """
+        await self.redis.redis.delete(self.USER_CLAN_KEY.format(user_id=user_id))
 
     async def get_clan(self, clan_id: int) -> Clan | None:
         """Get clan by ID.

@@ -28,12 +28,12 @@ class ClientPacketID(IntEnum):
     REQUEST_SKILLS = 15  # Solicitar habilidades del jugador
     # REQUEST_MINI_STATS = 16
     COMMERCE_END = 17  # Cerrar ventana de comercio
-    # USER_COMMERCE_END = 18
-    # USER_COMMERCE_CONFIRM = 19
+    USER_COMMERCE_END = 18  # Cancelar comercio entre jugadores
+    USER_COMMERCE_CONFIRM = 19  # Confirmar invitación de comercio
     # COMMERCE_CHAT = 20
     BANK_END = 21  # Cerrar ventana de banco
-    # USER_COMMERCE_OK = 22
-    # USER_COMMERCE_REJECT = 23
+    USER_COMMERCE_OK = 22  # Confirmar intercambio
+    USER_COMMERCE_REJECT = 23  # Rechazar comercio entre jugadores
     DROP = 24  # Tirar item al suelo
     CAST_SPELL = 25  # Lanzar hechizo
     LEFT_CLICK = 26  # Click en personaje/NPC
@@ -58,7 +58,7 @@ class ClientPacketID(IntEnum):
     MOVE_SPELL = 45  # Reordenar hechizo en el libro
     # MOVE_BANK = 46
     # CLAN_CODEX_UPDATE = 47
-    # USER_COMMERCE_OFFER = 48
+    USER_COMMERCE_OFFER = 48  # Ofrecer item en comercio entre jugadores
     # GUILD_ACCEPT_PEACE = 49
     # GUILD_REJECT_ALLIANCE = 50
     # GUILD_REJECT_PEACE = 51
@@ -79,10 +79,10 @@ class ClientPacketID(IntEnum):
     # GUILD_MEMBER_INFO = 66
     # GUILD_OPEN_ELECTIONS = 67
     # GUILD_REQUEST_MEMBERSHIP = 68
-    # GUILD_REQUEST_DETAILS = 69
+    CLAN_REQUEST_DETAILS = 69  # Solicitar detalles del clan (abrir menú)
     ONLINE = 70
     QUIT = 71
-    # GUILD_LEAVE = 72
+    CLAN_LEAVE = 72  # Salir del clan (desde interfaz gráfica)
     # REQUEST_ACCOUNT_STATE = 73
     # PET_STAND = 74
     # PET_FOLLOW = 75
@@ -94,7 +94,7 @@ class ClientPacketID(IntEnum):
     # HEAL = 81
     AYUDA = 82
     REQUEST_STATS = 83
-    # COMMERCE_START = 84
+    COMMERCE_START = 84  # Iniciar sesión de comercio (cliente -> servidor)
     BANK_START = 85  # Abrir ventana de banco
     # ENLIST = 86
     INFORMATION = 87
@@ -224,7 +224,7 @@ class ServerPacketID(IntEnum):
     # CHARACTER_INFO = 77
     # GUILD_LEADER_INFO = 78
     # GUILD_MEMBER_INFO = 79
-    # GUILD_DETAILS = 80
+    CLAN_DETAILS = 80  # Enviar detalles del clan al cliente
     # SHOW_GUILD_FUNDATION_FORM = 81
     # PARALIZE_OK = 82
     # SHOW_USER_REQUEST = 83

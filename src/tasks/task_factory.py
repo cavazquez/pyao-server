@@ -24,6 +24,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.gm_command_handler import GMCommandHandler
 from src.command_handlers.information_handler import InformationCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
+from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.meditate_handler import MeditateCommandHandler
@@ -41,6 +42,7 @@ from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.ping_handler import PingCommandHandler
 from src.command_handlers.quit_handler import QuitCommandHandler
 from src.command_handlers.request_attributes_handler import RequestAttributesCommandHandler
+from src.command_handlers.request_clan_details_handler import RequestClanDetailsCommandHandler
 from src.command_handlers.request_position_update_handler import (
     RequestPositionUpdateCommandHandler,
 )
@@ -48,6 +50,8 @@ from src.command_handlers.request_skills_handler import RequestSkillsCommandHand
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
+from src.command_handlers.update_player_trade_handler import UpdatePlayerTradeCommandHandler
+from src.command_handlers.update_trade_offer_handler import UpdateTradeOfferCommandHandler
 from src.command_handlers.uptime_handler import UptimeCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -62,9 +66,17 @@ from src.tasks.banking.task_bank_deposit_gold import TaskBankDepositGold
 from src.tasks.banking.task_bank_end import TaskBankEnd
 from src.tasks.banking.task_bank_extract import TaskBankExtract
 from src.tasks.banking.task_bank_extract_gold import TaskBankExtractGold
+from src.tasks.clan.task_leave_clan import TaskLeaveClan
+from src.tasks.clan.task_request_clan_details import TaskRequestClanDetails
 from src.tasks.commerce.task_commerce_buy import TaskCommerceBuy
 from src.tasks.commerce.task_commerce_end import TaskCommerceEnd
 from src.tasks.commerce.task_commerce_sell import TaskCommerceSell
+from src.tasks.commerce.task_commerce_start import TaskCommerceStart
+from src.tasks.commerce.task_user_commerce_confirm import TaskUserCommerceConfirm
+from src.tasks.commerce.task_user_commerce_end import TaskUserCommerceEnd
+from src.tasks.commerce.task_user_commerce_offer import TaskUserCommerceOffer
+from src.tasks.commerce.task_user_commerce_ok import TaskUserCommerceOk
+from src.tasks.commerce.task_user_commerce_reject import TaskUserCommerceReject
 from src.tasks.interaction.task_information import TaskInformation
 from src.tasks.interaction.task_left_click import TaskLeftClick
 from src.tasks.interaction.task_pickup import TaskPickup
@@ -122,7 +134,7 @@ TLS_CLIENT_HELLO_MINOR_VERSIONS = {0x00, 0x01, 0x02, 0x03, 0x04}
 class TaskFactory:
     """Factory para crear instancias de Tasks con sus dependencias inyectadas."""
 
-    def __init__(self, deps: DependencyContainer, enable_prevalidation: bool = True) -> None:
+    def __init__(self, deps: DependencyContainer, enable_prevalidation: bool = True) -> None:  # noqa: PLR0915
         """Inicializa el factory con el contenedor de dependencias.
 
         Args:
@@ -178,6 +190,10 @@ class TaskFactory:
         self._party_message_handler: PartyMessageCommandHandler | None = None
         self._party_kick_handler: PartyKickCommandHandler | None = None
         self._party_set_leader_handler: PartySetLeaderCommandHandler | None = None
+        self._leave_clan_handler: LeaveClanCommandHandler | None = None
+        self._request_clan_details_handler: RequestClanDetailsCommandHandler | None = None
+        self._trade_update_handler: UpdatePlayerTradeCommandHandler | None = None
+        self._trade_offer_handler: UpdateTradeOfferCommandHandler | None = None
         self._talk_handler: TalkCommandHandler | None = None
         self._gm_command_handler: GMCommandHandler | None = None
 
@@ -1033,6 +1049,79 @@ class TaskFactory:
             self._party_leave_handler.message_sender = message_sender
         return self._party_leave_handler
 
+    def _get_leave_clan_handler(self, message_sender: MessageSender) -> LeaveClanCommandHandler:  # noqa: ARG002
+        """Obtiene o crea el handler de salir del clan.
+
+        Args:
+            message_sender: Enviador de mensajes (no usado, pero necesario para consistencia).
+
+        Returns:
+            Handler de salir del clan.
+        """
+        if self._leave_clan_handler is None:
+            self._leave_clan_handler = LeaveClanCommandHandler(
+                clan_service=self.deps.clan_service,
+                user_id=0,  # Se actualizará con el user_id de la sesión
+            )
+        # No hay message_sender en LeaveClanCommandHandler, solo user_id se actualiza en la task
+        return self._leave_clan_handler
+
+    def _get_request_clan_details_handler(
+        self, message_sender: MessageSender
+    ) -> RequestClanDetailsCommandHandler:
+        """Obtiene o crea el handler de solicitar detalles del clan.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de solicitar detalles del clan.
+        """
+        if self._request_clan_details_handler is None:
+            self._request_clan_details_handler = RequestClanDetailsCommandHandler(
+                clan_service=self.deps.clan_service,
+                message_sender=message_sender,
+                user_id=0,  # Se actualizará con el user_id de la sesión
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._request_clan_details_handler.message_sender = message_sender
+        return self._request_clan_details_handler
+
+    def _get_trade_update_handler(
+        self, message_sender: MessageSender
+    ) -> UpdatePlayerTradeCommandHandler:
+        """Obtiene o crea el handler para acciones de comercio entre jugadores.
+
+        Returns:
+            Instancia lista para ejecutar comandos de comercio.
+        """
+        if self._trade_update_handler is None:
+            self._trade_update_handler = UpdatePlayerTradeCommandHandler(
+                trade_service=getattr(self.deps, "trade_service", None),
+                message_sender=message_sender,
+            )
+        else:
+            self._trade_update_handler.message_sender = message_sender
+        return self._trade_update_handler
+
+    def _get_trade_offer_handler(
+        self, message_sender: MessageSender
+    ) -> UpdateTradeOfferCommandHandler:
+        """Obtiene o crea el handler para modificar ofertas.
+
+        Returns:
+            Handler configurado para actualizar ofertas de comercio.
+        """
+        if self._trade_offer_handler is None:
+            self._trade_offer_handler = UpdateTradeOfferCommandHandler(
+                trade_service=getattr(self.deps, "trade_service", None),
+                message_sender=message_sender,
+            )
+        else:
+            self._trade_offer_handler.message_sender = message_sender
+        return self._trade_offer_handler
+
     def _get_party_message_handler(
         self, message_sender: MessageSender
     ) -> PartyMessageCommandHandler:
@@ -1114,12 +1203,14 @@ class TaskFactory:
                 game_tick=self.deps.game_tick,
                 message_sender=message_sender,
                 clan_service=self.deps.clan_service,
+                trade_service=getattr(self.deps, "trade_service", None),
                 session_data=session_data,
             )
         else:
             # Actualizar message_sender y session_data por si cambiaron
             self._talk_handler.message_sender = message_sender
             self._talk_handler.session_data = session_data or {}
+            self._talk_handler.trade_service = getattr(self.deps, "trade_service", None)
         return self._talk_handler
 
     def _get_gm_command_handler(self, message_sender: MessageSender) -> GMCommandHandler:
@@ -1489,6 +1580,10 @@ class TaskFactory:
                 message_sender,
                 commerce_end_handler=self._get_commerce_end_handler(message_sender),
             ),
+            TaskCommerceStart: lambda: TaskCommerceStart(
+                data,
+                message_sender,
+            ),
             TaskAyuda: lambda: TaskAyuda(
                 data,
                 message_sender,
@@ -1521,6 +1616,48 @@ class TaskFactory:
                 data,
                 message_sender,
                 party_leave_handler=self._get_party_leave_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskLeaveClan: lambda: TaskLeaveClan(
+                data,
+                message_sender,
+                leave_clan_handler=self._get_leave_clan_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskRequestClanDetails: lambda: TaskRequestClanDetails(
+                data,
+                message_sender,
+                request_clan_details_handler=self._get_request_clan_details_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskUserCommerceEnd: lambda: TaskUserCommerceEnd(
+                data,
+                message_sender,
+                trade_update_handler=self._get_trade_update_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskUserCommerceConfirm: lambda: TaskUserCommerceConfirm(
+                data,
+                message_sender,
+                trade_update_handler=self._get_trade_update_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskUserCommerceOffer: lambda: TaskUserCommerceOffer(
+                data,
+                message_sender,
+                trade_offer_handler=self._get_trade_offer_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskUserCommerceOk: lambda: TaskUserCommerceOk(
+                data,
+                message_sender,
+                trade_update_handler=self._get_trade_update_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskUserCommerceReject: lambda: TaskUserCommerceReject(
+                data,
+                message_sender,
+                trade_update_handler=self._get_trade_update_handler(message_sender),
                 session_data=session_data,
             ),
             TaskPartyMessage: lambda: TaskPartyMessage(

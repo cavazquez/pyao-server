@@ -9,9 +9,17 @@ from src.tasks.banking.task_bank_deposit_gold import TaskBankDepositGold
 from src.tasks.banking.task_bank_end import TaskBankEnd
 from src.tasks.banking.task_bank_extract import TaskBankExtract
 from src.tasks.banking.task_bank_extract_gold import TaskBankExtractGold
+from src.tasks.clan.task_leave_clan import TaskLeaveClan
+from src.tasks.clan.task_request_clan_details import TaskRequestClanDetails
 from src.tasks.commerce.task_commerce_buy import TaskCommerceBuy
 from src.tasks.commerce.task_commerce_end import TaskCommerceEnd
 from src.tasks.commerce.task_commerce_sell import TaskCommerceSell
+from src.tasks.commerce.task_commerce_start import TaskCommerceStart
+from src.tasks.commerce.task_user_commerce_confirm import TaskUserCommerceConfirm
+from src.tasks.commerce.task_user_commerce_end import TaskUserCommerceEnd
+from src.tasks.commerce.task_user_commerce_offer import TaskUserCommerceOffer
+from src.tasks.commerce.task_user_commerce_ok import TaskUserCommerceOk
+from src.tasks.commerce.task_user_commerce_reject import TaskUserCommerceReject
 from src.tasks.interaction.task_information import TaskInformation
 from src.tasks.interaction.task_left_click import TaskLeftClick
 from src.tasks.interaction.task_pickup import TaskPickup
@@ -80,6 +88,12 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.BANK_EXTRACT_ITEM: TaskBankExtract,  # Extraer item del banco
     ClientPacketID.COMMERCE_SELL: TaskCommerceSell,  # Vender item al mercader
     ClientPacketID.BANK_DEPOSIT: TaskBankDeposit,  # Depositar item en el banco
+    ClientPacketID.USER_COMMERCE_END: TaskUserCommerceEnd,
+    ClientPacketID.USER_COMMERCE_CONFIRM: TaskUserCommerceConfirm,
+    ClientPacketID.USER_COMMERCE_OFFER: TaskUserCommerceOffer,
+    ClientPacketID.USER_COMMERCE_OK: TaskUserCommerceOk,
+    ClientPacketID.USER_COMMERCE_REJECT: TaskUserCommerceReject,
+    ClientPacketID.COMMERCE_START: TaskCommerceStart,  # /COMERCIAR (no implementado)
     ClientPacketID.COMMERCE_END: TaskCommerceEnd,  # Cerrar ventana de comercio
     ClientPacketID.BANK_END: TaskBankEnd,  # Cerrar ventana de banco
     ClientPacketID.AYUDA: TaskAyuda,
@@ -101,4 +115,6 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.PARTY_KICK: TaskPartyKick,  # Expulsar miembro de party
     ClientPacketID.PARTY_SET_LEADER: TaskPartySetLeader,  # Transferir liderazgo de party
     ClientPacketID.PARTY_ACCEPT_MEMBER: TaskPartyAcceptMember,  # /ACCEPTPARTY - Aceptar invitación
+    ClientPacketID.CLAN_LEAVE: TaskLeaveClan,  # Salir del clan (desde interfaz gráfica)
+    ClientPacketID.CLAN_REQUEST_DETAILS: TaskRequestClanDetails,  # Solicitar detalles del clan
 }

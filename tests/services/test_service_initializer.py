@@ -75,6 +75,7 @@ async def test_service_initializer_creates_all_services(
     assert "spell_catalog" in services
     assert "item_catalog" in services
     assert "clan_service" in services
+    assert "trade_service" in services
 
     # Verificar tipos de catálogos
     assert isinstance(services["npc_catalog"], NPCCatalog)
@@ -105,5 +106,6 @@ async def test_service_initializer_returns_dict(
         services = await initializer.initialize_all()
 
     assert isinstance(services, dict)
-    # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service, +1 door_service)
-    assert len(services) == 19
+    # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service,
+    # +1 door_service, +1 trade_service)
+    assert len(services) == 20

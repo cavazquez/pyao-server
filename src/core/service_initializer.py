@@ -25,6 +25,7 @@ from src.services.npc.npc_service import NPCService
 from src.services.party_service import PartyService
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
+from src.services.trade_service import TradeService
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -113,6 +114,14 @@ class ServiceInitializer:
         )
         await clan_service.clan_repo.initialize()  # Inicializar repositorio de clanes
         logger.info("✓ Servicio de clanes inicializado")
+
+        # Servicio de comercio entre jugadores
+        trade_service = TradeService(
+            self.repositories["player_repo"],
+            self.repositories["inventory_repo"],
+            self.map_manager,
+        )
+        logger.info("✓ Servicio de comercio jugador-jugador inicializado (estado en memoria)")
 
         # Servicio de muerte de NPCs (centralizado, con party_service para exp compartida)
         npc_death_service = NPCDeathService(
@@ -208,6 +217,7 @@ class ServiceInitializer:
             "door_service": door_service,
             "party_service": party_service,
             "clan_service": clan_service,
+            "trade_service": trade_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,
             "item_catalog": item_catalog,

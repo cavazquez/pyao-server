@@ -381,12 +381,44 @@ class ClanService:
                 "No puedes abandonar el clan siendo el líder. Transfiere el liderazgo primero.",
             )
 
+        # Get member info before removal
+        member_username = member.username
+
         # Remove member
         if not clan.remove_member(user_id):
             return False, "Error al remover miembro del clan"
 
         # Save clan
         await self.clan_repo.save_clan(clan)
+
+        # Notify the player who left
+        leaving_sender = self._get_player_message_sender(user_id)
+        if leaving_sender:
+            await leaving_sender.send_console_msg(
+                f"Has abandonado el clan '{clan.name}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (abandonó clan)", user_id)
+        else:
+            logger.warning("No se pudo enviar notificación a user_id %s (no conectado)", user_id)
+
+        # Notify remaining clan members
+        for member_id in clan.members:
+            if member_id != user_id:  # Don't notify the one who left
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{member_username} ha abandonado el clan '{clan.name}'",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro restante)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
+
+        # Clear membership reference in Redis
+        await self.clan_repo.clear_user_clan(user_id)
 
         logger.info("User %s left clan %s", user_id, clan.name)
 
@@ -432,12 +464,55 @@ class ClanService:
         if target_id == kicker_id:
             return False, "No puedes expulsarte a ti mismo"
 
+        # Get target member info before removal
+        target_member_username = target_member.username
+
         # Remove member
         if not clan.remove_member(target_id):
             return False, "Error al expulsar miembro"
 
         # Save clan
         await self.clan_repo.save_clan(clan)
+
+        # Notify the kicked player
+        kicked_sender = self._get_player_message_sender(target_id)
+        if kicked_sender:
+            await kicked_sender.send_console_msg(
+                f"Has sido expulsado del clan '{clan.name}'",
+                font_color=1,  # FONTTYPE_FIGHT (rojo para errores)
+            )
+            logger.debug("Notificación enviada a user_id %s (expulsado)", target_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", target_id)
+
+        # Notify the kicker
+        kicker_sender = self._get_player_message_sender(kicker_id)
+        if kicker_sender:
+            await kicker_sender.send_console_msg(
+                f"Has expulsado a '{target_username}' del clan '{clan.name}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (expulsador)", kicker_id)
+        else:
+            logger.warning("No se pudo enviar notificación a user_id %s (no conectado)", kicker_id)
+
+        # Notify remaining clan members
+        for member_id in clan.members:
+            if member_id not in {kicker_id, target_id}:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{target_member_username} ha sido expulsado del clan '{clan.name}'",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro restante)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
+
+        # Clear membership reference in Redis
+        await self.clan_repo.clear_user_clan(target_id)
 
         logger.info("User %s kicked %s from clan %s", kicker_id, target_username, clan.name)
 

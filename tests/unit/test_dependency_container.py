@@ -44,6 +44,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     door_repo = Mock()
     door_service = Mock()
     session_manager = Mock()
+    trade_service = Mock()
 
     # Crear container
     container = DependencyContainer(
@@ -80,6 +81,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
         party_repo=party_repo,
         party_service=party_service,
         clan_service=clan_service,
+        trade_service=trade_service,
         door_repo=door_repo,
         door_service=door_service,
         session_manager=session_manager,
@@ -118,6 +120,7 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     assert container.party_repo is party_repo
     assert container.party_service is party_service
     assert container.clan_service is clan_service
+    assert container.trade_service is trade_service
     assert container.door_repo is door_repo
     assert container.door_service is door_service
     assert container.session_manager is session_manager

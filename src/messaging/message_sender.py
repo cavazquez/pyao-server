@@ -14,6 +14,10 @@ from src.messaging.senders.message_player_stats_sender import PlayerStatsMessage
 from src.messaging.senders.message_session_sender import SessionMessageSender
 from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
 from src.messaging.senders.message_work_sender import WorkMessageSender
+from src.network.msg_user_commerce import (
+    build_user_commerce_end_response,
+    build_user_commerce_init_response,
+)
 from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
@@ -609,6 +613,22 @@ class MessageSender:
         Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
         """
         await self.session.send_show_party_form()
+
+    async def send_user_commerce_init(self, partner_username: str) -> None:
+        """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
+        response = build_user_commerce_init_response(partner_username)
+        logger.info(
+            "[%s] Enviando USER_COMMERCE_INIT (partner=%s)",
+            self.connection.address,
+            partner_username,
+        )
+        await self.connection.send(response)
+
+    async def send_user_commerce_end(self) -> None:
+        """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
+        response = build_user_commerce_end_response()
+        logger.info("[%s] Enviando USER_COMMERCE_END", self.connection.address)
+        await self.connection.send(response)
 
     async def send_work_request_target(self, skill_type: int) -> None:
         """Envía paquete WORK_REQUEST_TARGET para cambiar cursor al modo de trabajo.
