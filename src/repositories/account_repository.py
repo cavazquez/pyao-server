@@ -159,12 +159,26 @@ class AccountRepository:
         # Por ahora, iteramos sobre las claves de cuentas
         pattern = "account:*:data"
         keys = await self.redis.redis.keys(pattern)
+        logger.debug("Buscando cuenta para user_id=%d, encontradas %d claves", user_id, len(keys))
 
         for key in keys:
             account_data: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
-            if account_data.get("user_id") == str(user_id):
+            account_user_id_str = account_data.get("user_id")
+            logger.debug(
+                "Comparando: key=%s, account_user_id='%s' (type=%s), buscado='%s' (type=%s)",
+                key,
+                account_user_id_str,
+                type(account_user_id_str).__name__,
+                str(user_id),
+                type(str(user_id)).__name__,
+            )
+            if account_user_id_str == str(user_id):
+                logger.debug("Cuenta encontrada para user_id=%d en key=%s", user_id, key)
                 return account_data
 
+        logger.warning(
+            "No se encontró cuenta para user_id=%d después de revisar %d claves", user_id, len(keys)
+        )
         return None
 
     async def is_gm_by_user_id(self, user_id: int) -> bool:
@@ -178,7 +192,16 @@ class AccountRepository:
         """
         account_data = await self.get_account_by_user_id(user_id)
         if not account_data:
+            logger.warning("No se encontró cuenta para user_id=%d al verificar GM", user_id)
             return False
 
         is_gm_str = account_data.get("is_gm", "0")
-        return is_gm_str == "1"
+        logger.debug(
+            "Verificación GM para user_id=%d: is_gm_str='%s', account_data keys=%s",
+            user_id,
+            is_gm_str,
+            list(account_data.keys()),
+        )
+        result = is_gm_str == "1"
+        logger.debug("Resultado verificación GM para user_id=%d: %s", user_id, result)
+        return result

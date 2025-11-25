@@ -53,7 +53,9 @@ class GMCommandHandler(CommandHandler):
         user_id = command.user_id
 
         # Verificar permisos de GM
+        logger.debug("Verificando permisos GM para user_id=%d", user_id)
         is_gm = await self.account_repo.is_gm_by_user_id(user_id)
+        logger.debug("Resultado verificación GM para user_id=%d: is_gm=%s", user_id, is_gm)
         if not is_gm:
             logger.warning("Intento de comando GM por usuario no autorizado: user_id=%d", user_id)
             await self.message_sender.send_console_msg(
