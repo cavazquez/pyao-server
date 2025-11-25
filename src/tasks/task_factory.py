@@ -18,6 +18,13 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
+from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
+from src.command_handlers.party_create_handler import PartyCreateCommandHandler
+from src.command_handlers.party_join_handler import PartyJoinCommandHandler
+from src.command_handlers.party_kick_handler import PartyKickCommandHandler
+from src.command_handlers.party_leave_handler import PartyLeaveCommandHandler
+from src.command_handlers.party_message_handler import PartyMessageCommandHandler
+from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -119,6 +126,13 @@ class TaskFactory:
         self._move_spell_handler: MoveSpellCommandHandler | None = None
         self._inventory_click_handler: InventoryClickCommandHandler | None = None
         self._left_click_handler: LeftClickCommandHandler | None = None
+        self._party_create_handler: PartyCreateCommandHandler | None = None
+        self._party_join_handler: PartyJoinCommandHandler | None = None
+        self._party_accept_handler: PartyAcceptCommandHandler | None = None
+        self._party_leave_handler: PartyLeaveCommandHandler | None = None
+        self._party_message_handler: PartyMessageCommandHandler | None = None
+        self._party_kick_handler: PartyKickCommandHandler | None = None
+        self._party_set_leader_handler: PartySetLeaderCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -502,6 +516,143 @@ class TaskFactory:
             self._left_click_handler.message_sender = message_sender
         return self._left_click_handler
 
+    def _get_party_create_handler(self, message_sender: MessageSender) -> PartyCreateCommandHandler:
+        """Obtiene o crea el handler de crear party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de crear party.
+        """
+        if self._party_create_handler is None:
+            self._party_create_handler = PartyCreateCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_create_handler.message_sender = message_sender
+        return self._party_create_handler
+
+    def _get_party_join_handler(self, message_sender: MessageSender) -> PartyJoinCommandHandler:
+        """Obtiene o crea el handler de invitar a party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de invitar a party.
+        """
+        if self._party_join_handler is None:
+            self._party_join_handler = PartyJoinCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_join_handler.message_sender = message_sender
+        return self._party_join_handler
+
+    def _get_party_accept_handler(self, message_sender: MessageSender) -> PartyAcceptCommandHandler:
+        """Obtiene o crea el handler de aceptar invitación a party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de aceptar invitación.
+        """
+        if self._party_accept_handler is None:
+            self._party_accept_handler = PartyAcceptCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_accept_handler.message_sender = message_sender
+        return self._party_accept_handler
+
+    def _get_party_leave_handler(self, message_sender: MessageSender) -> PartyLeaveCommandHandler:
+        """Obtiene o crea el handler de abandonar party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de abandonar party.
+        """
+        if self._party_leave_handler is None:
+            self._party_leave_handler = PartyLeaveCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_leave_handler.message_sender = message_sender
+        return self._party_leave_handler
+
+    def _get_party_message_handler(
+        self, message_sender: MessageSender
+    ) -> PartyMessageCommandHandler:
+        """Obtiene o crea el handler de enviar mensaje a party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de enviar mensaje a party.
+        """
+        if self._party_message_handler is None:
+            self._party_message_handler = PartyMessageCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_message_handler.message_sender = message_sender
+        return self._party_message_handler
+
+    def _get_party_kick_handler(self, message_sender: MessageSender) -> PartyKickCommandHandler:
+        """Obtiene o crea el handler de expulsar miembro de party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de expulsar miembro.
+        """
+        if self._party_kick_handler is None:
+            self._party_kick_handler = PartyKickCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_kick_handler.message_sender = message_sender
+        return self._party_kick_handler
+
+    def _get_party_set_leader_handler(
+        self, message_sender: MessageSender
+    ) -> PartySetLeaderCommandHandler:
+        """Obtiene o crea el handler de transferir liderazgo de party.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de transferir liderazgo.
+        """
+        if self._party_set_leader_handler is None:
+            self._party_set_leader_handler = PartySetLeaderCommandHandler(
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._party_set_leader_handler.message_sender = message_sender
+        return self._party_set_leader_handler
+
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
     ) -> BankDepositGoldCommandHandler:
@@ -820,44 +971,44 @@ class TaskFactory:
             TaskPartyCreate: lambda: TaskPartyCreate(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_create_handler=self._get_party_create_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartyJoin: lambda: TaskPartyJoin(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_join_handler=self._get_party_join_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartyAcceptMember: lambda: TaskPartyAcceptMember(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_accept_handler=self._get_party_accept_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartyLeave: lambda: TaskPartyLeave(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_leave_handler=self._get_party_leave_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartyMessage: lambda: TaskPartyMessage(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_message_handler=self._get_party_message_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartyKick: lambda: TaskPartyKick(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_kick_handler=self._get_party_kick_handler(message_sender),
+                session_data=session_data,
             ),
             TaskPartySetLeader: lambda: TaskPartySetLeader(
                 data,
                 message_sender,
-                self.deps.party_service,
-                session_data,
+                party_set_leader_handler=self._get_party_set_leader_handler(message_sender),
+                session_data=session_data,
             ),
             TaskWork: lambda: TaskWork(
                 data,

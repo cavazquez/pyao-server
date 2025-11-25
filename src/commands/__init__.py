@@ -15,6 +15,13 @@ from src.commands.equip_item_command import EquipItemCommand
 from src.commands.inventory_click_command import InventoryClickCommand
 from src.commands.left_click_command import LeftClickCommand
 from src.commands.move_spell_command import MoveSpellCommand
+from src.commands.party_accept_command import PartyAcceptCommand
+from src.commands.party_create_command import PartyCreateCommand
+from src.commands.party_join_command import PartyJoinCommand
+from src.commands.party_kick_command import PartyKickCommand
+from src.commands.party_leave_command import PartyLeaveCommand
+from src.commands.party_message_command import PartyMessageCommand
+from src.commands.party_set_leader_command import PartySetLeaderCommand
 from src.commands.pickup_command import PickupCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
@@ -39,6 +46,13 @@ __all__ = [
     "InventoryClickCommand",
     "LeftClickCommand",
     "MoveSpellCommand",
+    "PartyAcceptCommand",
+    "PartyCreateCommand",
+    "PartyJoinCommand",
+    "PartyKickCommand",
+    "PartyLeaveCommand",
+    "PartyMessageCommand",
+    "PartySetLeaderCommand",
     "PickupCommand",
     "UseItemCommand",
     "WalkCommand",
