@@ -27,6 +27,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.gm_command_handler import GMCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
+from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
 from src.command_handlers.party_create_handler import PartyCreateCommandHandler
@@ -56,6 +57,7 @@ __all__ = [
     "GMCommandHandler",
     "InventoryClickCommandHandler",
     "LeftClickCommandHandler",
+    "LoginCommandHandler",
     "MoveSpellCommandHandler",
     "PartyAcceptCommandHandler",
     "PartyCreateCommandHandler",

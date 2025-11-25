@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.login_handler import LoginCommandHandler
 from src.config.config_manager import ConfigManager, config_manager
 from src.game.character_constants import (
     GENDER_ID_TO_NAME,
@@ -307,18 +308,25 @@ class TaskCreateAccount(Task):
             )
 
             # Ejecutar login automático después de crear la cuenta
-            login_task = TaskLogin(
-                data=self.data,
-                message_sender=self.message_sender,
+            # Crear handler temporal con las dependencias disponibles
+            login_handler = LoginCommandHandler(
                 player_repo=self.player_repo,
                 account_repo=self.account_repo,
                 map_manager=self.map_manager,
-                session_data=self.session_data,
                 server_repo=self.server_repo,
                 spellbook_repo=self.spellbook_repo,
                 spell_catalog=self.spell_catalog,
                 equipment_repo=self.equipment_repo,
                 player_map_service=self.player_map_service,
+                message_sender=self.message_sender,
+                session_data=self.session_data,
+            )
+
+            login_task = TaskLogin(
+                data=self.data,
+                message_sender=self.message_sender,
+                login_handler=login_handler,
+                session_data=self.session_data,
             )
             await login_task.execute_with_credentials(username, password)
 

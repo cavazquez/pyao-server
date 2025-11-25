@@ -29,6 +29,7 @@ from src.commands.equip_item_command import EquipItemCommand
 from src.commands.gm_command import GMCommand
 from src.commands.inventory_click_command import InventoryClickCommand
 from src.commands.left_click_command import LeftClickCommand
+from src.commands.login_command import LoginCommand
 from src.commands.move_spell_command import MoveSpellCommand
 from src.commands.party_accept_command import PartyAcceptCommand
 from src.commands.party_create_command import PartyCreateCommand
@@ -61,6 +62,7 @@ __all__ = [
     "GMCommand",
     "InventoryClickCommand",
     "LeftClickCommand",
+    "LoginCommand",
     "MoveSpellCommand",
     "PartyAcceptCommand",
     "PartyCreateCommand",

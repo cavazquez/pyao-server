@@ -18,6 +18,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.gm_command_handler import GMCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
+from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
 from src.command_handlers.party_create_handler import PartyCreateCommandHandler
@@ -127,6 +128,7 @@ class TaskFactory:
         self._move_spell_handler: MoveSpellCommandHandler | None = None
         self._inventory_click_handler: InventoryClickCommandHandler | None = None
         self._left_click_handler: LeftClickCommandHandler | None = None
+        self._login_handler: LoginCommandHandler | None = None
         self._party_create_handler: PartyCreateCommandHandler | None = None
         self._party_join_handler: PartyJoinCommandHandler | None = None
         self._party_accept_handler: PartyAcceptCommandHandler | None = None
@@ -518,6 +520,37 @@ class TaskFactory:
             self._left_click_handler.message_sender = message_sender
         return self._left_click_handler
 
+    def _get_login_handler(
+        self, message_sender: MessageSender, session_data: dict[str, dict[str, int]] | None
+    ) -> LoginCommandHandler:
+        """Obtiene o crea el handler de login.
+
+        Args:
+            message_sender: Enviador de mensajes.
+            session_data: Datos de sesión compartidos.
+
+        Returns:
+            Handler de login.
+        """
+        if self._login_handler is None:
+            self._login_handler = LoginCommandHandler(
+                player_repo=self.deps.player_repo,
+                account_repo=self.deps.account_repo,
+                map_manager=self.deps.map_manager,
+                server_repo=self.deps.server_repo,
+                spellbook_repo=self.deps.spellbook_repo,
+                spell_catalog=self.deps.spell_catalog,
+                equipment_repo=self.deps.equipment_repo,
+                player_map_service=self.deps.player_map_service,
+                message_sender=message_sender,
+                session_data=session_data,
+            )
+        else:
+            # Actualizar message_sender y session_data por si cambiaron
+            self._login_handler.message_sender = message_sender
+            self._login_handler.session_data = session_data or {}
+        return self._login_handler
+
     def _get_party_create_handler(self, message_sender: MessageSender) -> PartyCreateCommandHandler:
         """Obtiene o crea el handler de crear party.
 
@@ -855,15 +888,8 @@ class TaskFactory:
             TaskLogin: lambda: TaskLogin(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.account_repo,
-                self.deps.map_manager,
-                session_data,
-                self.deps.server_repo,
-                self.deps.spellbook_repo,
-                self.deps.spell_catalog,
-                self.deps.equipment_repo,
-                self.deps.player_map_service,
+                login_handler=self._get_login_handler(message_sender, session_data),
+                session_data=session_data,
             ),
             TaskCreateAccount: lambda: TaskCreateAccount(
                 data,
