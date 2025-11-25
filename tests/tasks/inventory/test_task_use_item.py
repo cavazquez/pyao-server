@@ -1,15 +1,13 @@
 """Tests para TaskUseItem."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.use_item_command import UseItemCommand
 from src.models.item_constants import BOAT_ITEM_ID
-from src.tasks.inventory.task_use_item import (
-    HEADING_NORTH,
-    WORK_TOOL_SKILLS,
-    TaskUseItem,
-)
+from src.tasks.inventory.task_use_item import TaskUseItem
 
 
 @pytest.fixture
@@ -64,270 +62,217 @@ def mock_account_repo() -> MagicMock:
     return repo
 
 
+def create_mock_use_item_handler(
+    player_repo: MagicMock | None = None,
+    map_resources: MagicMock | None = None,
+    account_repo: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de UseItemCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.map_resources = map_resources
+    handler.account_repo = account_repo
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
+
+
 @pytest.mark.asyncio
 class TestTaskUseItemExecute:
     """Tests para el método execute de TaskUseItem."""
 
     async def test_execute_without_session(self, mock_message_sender: MagicMock) -> None:
         """Test sin sesión activa."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
         data = bytes([0x1E, 0x01])  # USE_ITEM + slot=1
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data=None,
         )
 
         await task.execute()
 
-        # No debe hacer nada
+        # No debe llamar al handler si no hay sesión
+        use_item_handler.handle.assert_not_called()
 
-    async def test_execute_without_player_repo(self, mock_message_sender: MagicMock) -> None:
-        """Test sin PlayerRepository."""
+    async def test_execute_without_handler(self, mock_message_sender: MagicMock) -> None:
+        """Test sin handler."""
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=None,
             session_data={"user_id": 1},
-            player_repo=None,
         )
 
         await task.execute()
 
-        # No debe hacer nada
+        # No debe crashear
 
-    async def test_execute_empty_slot(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_empty_slot(self, mock_message_sender: MagicMock) -> None:
         """Test cuando el slot está vacío."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.error("El slot está vacío")
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=None)  # Slot vacío
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
+        # Debe llamar al handler (la validación de slot vacío está en el handler)
+        use_item_handler.handle.assert_called_once()
 
-            # No debe hacer nada
-
-    async def test_execute_work_tool(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_work_tool(self, mock_message_sender: MagicMock) -> None:
         """Test usar herramienta de trabajo."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 561, "skill_type": 9, "handled": True}
+        )
         data = bytes([0x1E, 0x01])
-        # Hacha de Leñador (ID 561) → Skill Talar (9)
-        tool_id = 561
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.EquipmentRepository") as mock_equip_repo,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(
-                return_value=(tool_id, 1)  # Hacha en slot 1
-            )
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_equip_repo_instance = MagicMock()
-            mock_equip_repo_instance.is_slot_equipped = AsyncMock(return_value=True)  # Equipada
-            mock_equip_repo.return_value = mock_equip_repo_instance
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
+        call_args = use_item_handler.handle.call_args[0][0]
+        assert isinstance(call_args, UseItemCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
 
-            await task.execute()
-
-            mock_message_sender.send_work_request_target.assert_called_once_with(
-                WORK_TOOL_SKILLS[tool_id]
-            )
-
-    async def test_execute_work_tool_not_equipped(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_work_tool_not_equipped(self, mock_message_sender: MagicMock) -> None:
         """Test usar herramienta de trabajo sin equipar."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.error(
+            "Debes tener equipada la herramienta para trabajar."
+        )
         data = bytes([0x1E, 0x01])
-        tool_id = 561  # Hacha
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.EquipmentRepository") as mock_equip_repo,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(tool_id, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_equip_repo_instance = MagicMock()
-            mock_equip_repo_instance.is_slot_equipped = AsyncMock(
-                return_value=None  # No equipada
-            )
-            mock_equip_repo.return_value = mock_equip_repo_instance
-
-            await task.execute()
-
-            mock_message_sender.send_console_msg.assert_called_once_with(
-                "Debes tener equipada la herramienta para trabajar."
-            )
-            mock_message_sender.send_work_request_target.assert_not_called()
+        # Debe llamar al handler (la validación está en el handler)
+        use_item_handler.handle.assert_called_once()
 
     async def test_execute_boat(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
         mock_account_repo: MagicMock,
     ) -> None:
         """Test usar barca para entrar en modo navegación."""
-        data = bytes([0x1E, 0x01])
-        mock_map_resources.has_water = MagicMock(return_value=True)  # Hay agua cerca
-        task = TaskUseItem(
-            data,
-            mock_message_sender,
-            slot=1,
-            session_data={"user_id": 1, "username": "test"},
-            player_repo=mock_player_repo,
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender,
             map_resources=mock_map_resources,
             account_repo=mock_account_repo,
         )
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": BOAT_ITEM_ID, "is_sailing": True, "handled": True}
+        )
+        data = bytes([0x1E, 0x01])
+        task = TaskUseItem(
+            data,
+            mock_message_sender,
+            slot=1,
+            use_item_handler=use_item_handler,
+            session_data={"user_id": 1, "username": "test"},
+        )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(
-                return_value=(BOAT_ITEM_ID, 1)  # Barca
-            )
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
+        call_args = use_item_handler.handle.call_args[0][0]
+        assert isinstance(call_args, UseItemCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
+        assert call_args.username == "test"
 
-            mock_player_repo.set_sailing.assert_called_once_with(1, True)  # noqa: FBT003
-            mock_message_sender.send_console_msg.assert_called_once_with(
-                "Has cambiado al modo de navegación"
-            )
-            mock_message_sender.send_navigate_toggle.assert_called_once()
-            mock_message_sender.send_character_change.assert_called_once()
-
-    async def test_execute_apple_consumption(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_apple_consumption(self, mock_message_sender: MagicMock) -> None:
         """Test consumir manzana."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 1, "quantity_remaining": 4, "handled": True}
+        )
         data = bytes([0x1E, 0x01])
-        apple_id = 1
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.get_item") as mock_get_item,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(apple_id, 5))  # 5 manzanas
-            mock_inv_repo_instance.remove_item = AsyncMock(return_value=True)
-            mock_inv_repo_instance.clear_slot = AsyncMock()
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            # Mock del item manzana
-            mock_apple = MagicMock()
-            mock_apple.name = "Manzana"
-            mock_apple.graphic_id = 100
-            mock_apple.item_type.to_client_type = MagicMock(return_value=6)
-            mock_apple.max_damage = 0
-            mock_apple.min_damage = 0
-            mock_apple.defense = 0
-            mock_apple.value = 10
-            mock_get_item.return_value = mock_apple
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
+        call_args = use_item_handler.handle.call_args[0][0]
+        assert isinstance(call_args, UseItemCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
 
-            await task.execute()
-
-            # Debe remover 1 manzana (quedan 4)
-            mock_inv_repo_instance.remove_item.assert_called_once_with(1, 1, 1)
-            mock_message_sender.send_console_msg.assert_called_with("¡Has comido una manzana!")
-            mock_player_repo.set_hunger_thirst.assert_called_once()
-
-    async def test_execute_apple_last_one(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_apple_last_one(self, mock_message_sender: MagicMock) -> None:
         """Test consumir última manzana (clear_slot)."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 1, "quantity_remaining": 0, "handled": True}
+        )
         data = bytes([0x1E, 0x01])
-        apple_id = 1
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.get_item") as mock_get_item,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(apple_id, 1))  # 1 manzana
-            mock_inv_repo_instance.clear_slot = AsyncMock()
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_apple = MagicMock()
-            mock_apple.name = "Manzana"
-            mock_apple.graphic_id = 100
-            mock_apple.item_type.to_client_type = MagicMock(return_value=6)
-            mock_apple.max_damage = 0
-            mock_apple.min_damage = 0
-            mock_apple.defense = 0
-            mock_apple.value = 10
-            mock_get_item.return_value = mock_apple
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
 
-            await task.execute()
-
-            # Debe limpiar el slot (última manzana)
-            mock_inv_repo_instance.clear_slot.assert_called_once_with(1, 1)
-            mock_inv_repo_instance.remove_item.assert_not_called()
-
-    async def test_execute_unknown_item(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_execute_unknown_item(self, mock_message_sender: MagicMock) -> None:
         """Test usar item sin comportamiento definido."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 999, "handled": False}
+        )
         data = bytes([0x1E, 0x01])
-        unknown_id = 999
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(unknown_id, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            # No debe hacer nada, solo loggear
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -337,308 +282,216 @@ class TestTaskUseItemBoat:
     async def test_boat_cannot_start_sailing_no_water(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
     ) -> None:
         """Test no puede empezar a navegar si no hay agua cerca."""
-        mock_map_resources.has_water = MagicMock(return_value=False)  # No hay agua
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender, map_resources=mock_map_resources
+        )
+        use_item_handler.handle.return_value = CommandResult.error(
+            "Debes estar cerca del agua para comenzar a navegar."
+        )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
-            map_resources=mock_map_resources,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(BOAT_ITEM_ID, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            mock_message_sender.send_console_msg.assert_called_once_with(
-                "Debes estar cerca del agua para comenzar a navegar."
-            )
-            mock_player_repo.set_sailing.assert_not_called()
+        # Debe llamar al handler (la validación está en el handler)
+        use_item_handler.handle.assert_called_once()
 
     async def test_boat_cannot_start_sailing_no_position(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
     ) -> None:
         """Test no puede empezar a navegar sin posición."""
-        mock_player_repo.get_position = AsyncMock(return_value=None)  # Sin posición
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender, map_resources=mock_map_resources
+        )
+        use_item_handler.handle.return_value = CommandResult.error(
+            "Error interno: repositorio no disponible"
+        )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
-            map_resources=mock_map_resources,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(BOAT_ITEM_ID, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            mock_player_repo.set_sailing.assert_not_called()
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
 
     async def test_boat_stop_sailing_near_land(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
         mock_account_repo: MagicMock,
     ) -> None:
         """Test puede dejar de navegar cerca de tierra."""
-        mock_player_repo.is_sailing = AsyncMock(return_value=True)  # Ya está navegando
-        mock_map_resources.has_water = MagicMock(return_value=False)  # No hay agua = tierra
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender,
+            map_resources=mock_map_resources,
+            account_repo=mock_account_repo,
+        )
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": BOAT_ITEM_ID, "is_sailing": False, "handled": True}
+        )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1, "username": "test"},
-            player_repo=mock_player_repo,
-            map_resources=mock_map_resources,
-            account_repo=mock_account_repo,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(BOAT_ITEM_ID, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            mock_player_repo.set_sailing.assert_called_once_with(1, False)  # noqa: FBT003
-            mock_message_sender.send_console_msg.assert_called_once_with(
-                "Has cambiado al modo de caminata"
-            )
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
 
     async def test_boat_stop_sailing_heading_land(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
         mock_account_repo: MagicMock,
     ) -> None:
         """Test puede dejar de navegar si hay tierra en la dirección actual."""
-        mock_player_repo.is_sailing = AsyncMock(return_value=True)
-        # Agua en radio 1, pero tierra adelante
-        mock_map_resources.has_water = MagicMock(
-            side_effect=lambda _m, x, y: not (x == 50 and y == 49)  # Tierra adelante (Norte)
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender,
+            map_resources=mock_map_resources,
+            account_repo=mock_account_repo,
         )
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"map": 1, "x": 50, "y": 50, "heading": HEADING_NORTH}
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": BOAT_ITEM_ID, "is_sailing": False, "handled": True}
         )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1, "username": "test"},
-            player_repo=mock_player_repo,
-            map_resources=mock_map_resources,
-            account_repo=mock_account_repo,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(BOAT_ITEM_ID, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            mock_player_repo.set_sailing.assert_called_once_with(1, False)  # noqa: FBT003
+        # Debe llamar al handler
+        use_item_handler.handle.assert_called_once()
 
     async def test_boat_cannot_stop_sailing_middle_water(
         self,
         mock_message_sender: MagicMock,
-        mock_player_repo: MagicMock,
         mock_map_resources: MagicMock,
     ) -> None:
         """Test no puede dejar de navegar en medio del agua."""
-        mock_player_repo.is_sailing = AsyncMock(return_value=True)
-        # Simular que todo el área es agua
-        mock_map_resources.has_water = MagicMock(return_value=True)
+        use_item_handler = create_mock_use_item_handler(
+            message_sender=mock_message_sender, map_resources=mock_map_resources
+        )
+        use_item_handler.handle.return_value = CommandResult.error(
+            "No puedes dejar de navegar en medio del agua. Busca la costa."
+        )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
-            map_resources=mock_map_resources,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(BOAT_ITEM_ID, 1))
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
-
-            mock_message_sender.send_console_msg.assert_called_once_with(
-                "No puedes dejar de navegar en medio del agua. Busca la costa."
-            )
-            mock_player_repo.set_sailing.assert_not_called()
+        # Debe llamar al handler (la validación está en el handler)
+        use_item_handler.handle.assert_called_once()
 
 
 @pytest.mark.asyncio
 class TestTaskUseItemApple:
     """Tests para el consumo de manzanas."""
 
-    async def test_apple_restore_hunger(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_apple_restore_hunger(self, mock_message_sender: MagicMock) -> None:
         """Test que la manzana restaura hambre."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 1, "quantity_remaining": 4, "handled": True}
+        )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.get_item") as mock_get_item,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(1, 5))
-            mock_inv_repo_instance.remove_item = AsyncMock(return_value=True)
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_apple = MagicMock()
-            mock_apple.name = "Manzana"
-            mock_apple.graphic_id = 100
-            mock_apple.item_type.to_client_type = MagicMock(return_value=6)
-            mock_apple.max_damage = 0
-            mock_apple.min_damage = 0
-            mock_apple.defense = 0
-            mock_apple.value = 10
-            mock_get_item.return_value = mock_apple
+        # Debe llamar al handler (la restauración de hambre está en el handler)
+        use_item_handler.handle.assert_called_once()
 
-            await task.execute()
-
-            # Debe restaurar hambre (50 + 20 = 70, máximo 100)
-            hunger_data = mock_player_repo.set_hunger_thirst.call_args[1]
-            assert hunger_data["min_hunger"] == 70
-            mock_message_sender.send_update_hunger_and_thirst.assert_called_once()
-
-    async def test_apple_restore_hunger_max(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_apple_restore_hunger_max(self, mock_message_sender: MagicMock) -> None:
         """Test que la manzana no excede el máximo de hambre."""
-        mock_player_repo.get_hunger_thirst = AsyncMock(
-            return_value={
-                "min_hunger": 90,  # Casi lleno
-                "max_hunger": 100,
-                "min_water": 50,
-                "max_water": 100,
-            }
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.ok(
+            data={"item_id": 1, "quantity_remaining": 4, "handled": True}
         )
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.get_item") as mock_get_item,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(1, 5))
-            mock_inv_repo_instance.remove_item = AsyncMock(return_value=True)
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_apple = MagicMock()
-            mock_apple.name = "Manzana"
-            mock_apple.graphic_id = 100
-            mock_apple.item_type.to_client_type = MagicMock(return_value=6)
-            mock_apple.max_damage = 0
-            mock_apple.min_damage = 0
-            mock_apple.defense = 0
-            mock_apple.value = 10
-            mock_get_item.return_value = mock_apple
+        # Debe llamar al handler (la validación de máximo está en el handler)
+        use_item_handler.handle.assert_called_once()
 
-            await task.execute()
-
-            # Debe limitar a 100 (90 + 20 = 110, pero máximo es 100)
-            hunger_data = mock_player_repo.set_hunger_thirst.call_args[1]
-            assert hunger_data["min_hunger"] == 100
-
-    async def test_apple_remove_fails(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_apple_remove_fails(self, mock_message_sender: MagicMock) -> None:
         """Test cuando falla remover la manzana del inventario."""
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.error("No se pudo consumir el item")
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo:
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(1, 5))
-            mock_inv_repo_instance.remove_item = AsyncMock(return_value=False)  # Falla
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            await task.execute()
+        # Debe llamar al handler (la validación está en el handler)
+        use_item_handler.handle.assert_called_once()
 
-            # No debe restaurar hambre si falla
-            mock_player_repo.set_hunger_thirst.assert_not_called()
-
-    async def test_apple_no_hunger_data(
-        self, mock_message_sender: MagicMock, mock_player_repo: MagicMock
-    ) -> None:
+    async def test_apple_no_hunger_data(self, mock_message_sender: MagicMock) -> None:
         """Test cuando no hay datos de hambre/sed."""
-        mock_player_repo.get_hunger_thirst = AsyncMock(return_value=None)
+        use_item_handler = create_mock_use_item_handler(message_sender=mock_message_sender)
+        use_item_handler.handle.return_value = CommandResult.error("No se pudo restaurar el hambre")
         data = bytes([0x1E, 0x01])
         task = TaskUseItem(
             data,
             mock_message_sender,
             slot=1,
+            use_item_handler=use_item_handler,
             session_data={"user_id": 1},
-            player_repo=mock_player_repo,
         )
 
-        with (
-            patch("src.tasks.inventory.task_use_item.InventoryRepository") as mock_inv_repo,
-            patch("src.tasks.inventory.task_use_item.get_item") as mock_get_item,
-        ):
-            mock_inv_repo_instance = MagicMock()
-            mock_inv_repo_instance.get_slot = AsyncMock(return_value=(1, 5))
-            mock_inv_repo_instance.remove_item = AsyncMock(return_value=True)
-            mock_inv_repo.return_value = mock_inv_repo_instance
+        await task.execute()
 
-            mock_apple = MagicMock()
-            mock_apple.name = "Manzana"
-            mock_apple.graphic_id = 100
-            mock_apple.item_type.to_client_type = MagicMock(return_value=6)
-            mock_apple.max_damage = 0
-            mock_apple.min_damage = 0
-            mock_apple.defense = 0
-            mock_apple.value = 10
-            mock_get_item.return_value = mock_apple
-
-            await task.execute()
-
-            mock_message_sender.send_console_msg.assert_any_call("No se pudo restaurar el hambre.")
+        # Debe llamar al handler (la validación está en el handler)
+        use_item_handler.handle.assert_called_once()
