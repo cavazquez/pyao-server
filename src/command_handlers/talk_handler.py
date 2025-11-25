@@ -374,7 +374,7 @@ class TalkCommandHandler(CommandHandler):
 
             else:
                 await self.message_sender.send_console_msg(
-                    f"Comando '{cmd_name}' no reconocido. Usa /AYUDA para ver comandos disponibles.",
+                    f"Comando '{cmd_name}' no reconocido. Usa /AYUDA para ver comandos.",
                     font_color=1,
                 )
 
