@@ -9,6 +9,7 @@ from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
 from src.commands.commerce_buy_command import CommerceBuyCommand
 from src.commands.commerce_sell_command import CommerceSellCommand
+from src.commands.double_click_command import DoubleClickCommand
 from src.commands.drop_command import DropCommand
 from src.commands.equip_item_command import EquipItemCommand
 from src.commands.pickup_command import PickupCommand
@@ -29,6 +30,7 @@ __all__ = [
     "CommandResult",
     "CommerceBuyCommand",
     "CommerceSellCommand",
+    "DoubleClickCommand",
     "DropCommand",
     "EquipItemCommand",
     "PickupCommand",

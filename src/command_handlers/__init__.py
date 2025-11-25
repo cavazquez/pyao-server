@@ -8,6 +8,7 @@ from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
+from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
@@ -25,6 +26,7 @@ __all__ = [
     "CastSpellCommandHandler",
     "CommerceBuyCommandHandler",
     "CommerceSellCommandHandler",
+    "DoubleClickCommandHandler",
     "DropCommandHandler",
     "EquipItemCommandHandler",
     "PickupCommandHandler",

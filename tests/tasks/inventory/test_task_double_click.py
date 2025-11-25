@@ -5,10 +5,27 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.double_click_command import DoubleClickCommand
 from src.game.map_manager import MapManager
 from src.models.npc import NPC
+from src.network.packet_id import ClientPacketID
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.inventory.task_double_click import TaskDoubleClick
+
+
+def create_mock_double_click_handler(
+    player_repo: MagicMock | None = None,
+    map_manager: MapManager | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de DoubleClickCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.map_manager = map_manager or MagicMock()
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -18,12 +35,12 @@ class TestTaskDoubleClick:
     async def test_double_click_detects_item_vs_npc(self) -> None:
         """Test de que detecta correctamente item vs NPC por el valor del target."""
         # Test 1: Target < 100 debe intentar usar item
-        data_item = bytes([0x1B, 5])  # slot=5 < 100
+        data_item = bytes([ClientPacketID.DOUBLE_CLICK, 5])  # slot=5 < 100
         target = struct.unpack("B", data_item[1:2])[0]
         assert target < 100  # Es un item
 
         # Test 2: Target > 100 debe buscar NPC
-        data_npc = bytes([0x1B, 150])  # CharIndex=150 > 100
+        data_npc = bytes([ClientPacketID.DOUBLE_CLICK, 150])  # CharIndex=150 > 100
         target_npc = struct.unpack("B", data_npc[1:2])[0]
         assert target_npc > 100  # Es un NPC
 
@@ -64,20 +81,35 @@ class TestTaskDoubleClick:
         map_manager.add_npc(1, npc)
 
         # Packet: DOUBLE_CLICK + CharIndex=150 (> 100, es NPC)
-        data = bytes([0x1B, 150])
+        data = bytes([ClientPacketID.DOUBLE_CLICK, 150])
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
+        double_click_handler = create_mock_double_click_handler(
+            player_repo=player_repo, map_manager=map_manager, message_sender=message_sender
+        )
+        double_click_handler.handle.return_value = CommandResult.ok(
+            data={"npc_name": "Lobo", "char_index": 150, "is_hostile": True}
+        )
+
+        task = TaskDoubleClick(
+            data,
+            message_sender,
+            double_click_handler=double_click_handler,
+            player_repo=player_repo,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "Lobo" in call_args
-        assert "hostilidad" in call_args or "combate" in call_args
+        # Assert - debe llamar al handler con el comando correcto
+        double_click_handler.handle.assert_called_once()
+        call_args = double_click_handler.handle.call_args[0][0]
+        assert isinstance(call_args, DoubleClickCommand)
+        assert call_args.user_id == 1
+        assert call_args.target == 150
+        assert call_args.map_id == 1
 
     async def test_double_click_on_friendly_npc(self) -> None:
         """Test de doble click en NPC amigable."""
@@ -116,38 +148,59 @@ class TestTaskDoubleClick:
         map_manager.add_npc(1, npc)
 
         # Packet: DOUBLE_CLICK + CharIndex=120
-        data = bytes([0x1B, 120])
+        data = bytes([ClientPacketID.DOUBLE_CLICK, 120])
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
+        double_click_handler = create_mock_double_click_handler(
+            player_repo=player_repo, map_manager=map_manager, message_sender=message_sender
+        )
+        double_click_handler.handle.return_value = CommandResult.ok(
+            data={"npc_name": "Comerciante", "char_index": 120, "is_hostile": False}
+        )
+
+        task = TaskDoubleClick(
+            data,
+            message_sender,
+            double_click_handler=double_click_handler,
+            player_repo=player_repo,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "Comerciante" in call_args
-        assert "tienda" in call_args or "aventurero" in call_args
+        # Assert - debe llamar al handler
+        double_click_handler.handle.assert_called_once()
+        call_args = double_click_handler.handle.call_args[0][0]
+        assert isinstance(call_args, DoubleClickCommand)
+        assert call_args.target == 120
 
     async def test_double_click_without_session(self) -> None:
         """Test de doble click sin sesión activa."""
         # Setup
         message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
-        map_manager = MapManager()
+        MapManager()
 
-        data = bytes([0x1B, 5])
+        data = bytes([ClientPacketID.DOUBLE_CLICK, 5])
         session_data = {}  # Sin user_id
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
+        double_click_handler = create_mock_double_click_handler()
+
+        task = TaskDoubleClick(
+            data,
+            message_sender,
+            double_click_handler=double_click_handler,
+            player_repo=player_repo,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe enviar mensajes
-        message_sender.send_console_msg.assert_not_called()
+        # Assert - no debe llamar al handler
+        double_click_handler.handle.assert_not_called()
 
     async def test_double_click_on_nonexistent_npc(self) -> None:
         """Test de doble click en NPC que no existe."""
@@ -160,38 +213,54 @@ class TestTaskDoubleClick:
         map_manager = MapManager()  # Sin NPCs
 
         # Packet: DOUBLE_CLICK + CharIndex=150 (NPC inexistente)
-        data = bytes([0x1B, 150])
+        data = bytes([ClientPacketID.DOUBLE_CLICK, 150])
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
+        double_click_handler = create_mock_double_click_handler(
+            player_repo=player_repo, map_manager=map_manager, message_sender=message_sender
+        )
+        double_click_handler.handle.return_value = CommandResult.error("No hay nadie ahí")
+
+        task = TaskDoubleClick(
+            data,
+            message_sender,
+            double_click_handler=double_click_handler,
+            player_repo=player_repo,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
 
-        # Assert
-        message_sender.send_console_msg.assert_called_once()
-        call_args = message_sender.send_console_msg.call_args[0][0]
-        assert "No hay nadie" in call_args or "nadie ahí" in call_args
+        # Assert - debe llamar al handler
+        double_click_handler.handle.assert_called_once()
 
     async def test_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
         # Setup
         message_sender = AsyncMock()
         player_repo = MagicMock(spec=PlayerRepository)
-        map_manager = MapManager()
+        MapManager()
 
         # Packet muy corto
-        data = bytes([0x1B])  # Falta el target
+        data = bytes([ClientPacketID.DOUBLE_CLICK])  # Falta el target
 
         session_data = {"user_id": 1}
 
-        task = TaskDoubleClick(data, message_sender, player_repo, map_manager, None, session_data)
+        double_click_handler = create_mock_double_click_handler()
+
+        task = TaskDoubleClick(
+            data,
+            message_sender,
+            double_click_handler=double_click_handler,
+            player_repo=player_repo,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
 
-        # Assert - debe enviar mensaje de error
-        message_sender.send_console_msg.assert_called_once_with(
-            "Packet truncado: se esperaban al menos 2 bytes, recibidos 1"
-        )
+        # Assert - debe enviar mensaje de error y no llamar al handler
+        message_sender.send_console_msg.assert_called_once()
+        double_click_handler.handle.assert_not_called()

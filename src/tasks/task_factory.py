@@ -12,6 +12,7 @@ from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
+from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
@@ -111,6 +112,7 @@ class TaskFactory:
         self._equip_item_handler: EquipItemCommandHandler | None = None
         self._work_handler: WorkCommandHandler | None = None
         self._work_left_click_handler: WorkLeftClickCommandHandler | None = None
+        self._double_click_handler: DoubleClickCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -406,6 +408,26 @@ class TaskFactory:
             self._work_left_click_handler.message_sender = message_sender
         return self._work_left_click_handler
 
+    def _get_double_click_handler(self, message_sender: MessageSender) -> DoubleClickCommandHandler:
+        """Obtiene o crea el handler de doble click.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de doble click.
+        """
+        if self._double_click_handler is None:
+            self._double_click_handler = DoubleClickCommandHandler(
+                player_repo=self.deps.player_repo,
+                map_manager=self.deps.map_manager,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._double_click_handler.message_sender = message_sender
+        return self._double_click_handler
+
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
     ) -> BankDepositGoldCommandHandler:
@@ -673,10 +695,9 @@ class TaskFactory:
             TaskDoubleClick: lambda: TaskDoubleClick(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.map_manager,
-                self.deps.inventory_repo,
-                session_data,
+                double_click_handler=self._get_double_click_handler(message_sender),
+                player_repo=self.deps.player_repo,
+                session_data=session_data,
             ),
             TaskLeftClick: lambda: TaskLeftClick(
                 data,
