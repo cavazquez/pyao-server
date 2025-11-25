@@ -286,7 +286,7 @@ class TestLevelUp:
     """Tests para manejo de level up."""
 
     @pytest.mark.asyncio
-    async def test_check_and_handle_level_up_no_level_up(self, sample_npc: NPC) -> None:
+    async def test_check_and_handle_level_up_no_level_up(self) -> None:
         """Test cuando no hay level up."""
         # Setup
         player_repo = MagicMock()
@@ -332,7 +332,7 @@ class TestLevelUp:
 class TestDropPosition:
     """Tests para búsqueda de posición para drops."""
 
-    def test_find_free_position_for_drop_center_valid(self, sample_npc: NPC) -> None:
+    def test_find_free_position_for_drop_center_valid(self) -> None:
         """Test encontrar posición libre en el centro."""
         # Setup
         map_manager = MagicMock()
@@ -352,7 +352,7 @@ class TestDropPosition:
         # Assert
         assert pos == (50, 50)  # Debe usar la posición central
 
-    def test_find_free_position_for_drop_center_blocked(self, sample_npc: NPC) -> None:
+    def test_find_free_position_for_drop_center_blocked(self) -> None:
         """Test cuando el centro está bloqueado."""
         # Setup
         map_manager = MagicMock()
@@ -374,7 +374,7 @@ class TestDropPosition:
         assert pos is not None
         assert pos != (50, 50)  # No es la central
 
-    def test_find_free_position_for_drop_no_position(self, sample_npc: NPC) -> None:
+    def test_find_free_position_for_drop_no_position(self) -> None:
         """Test cuando no se encuentra posición libre."""
         # Setup
         map_manager = MagicMock()
