@@ -174,3 +174,221 @@ class TalkCommandHandler(CommandHandler):
         await self.message_sender.send_multiline_console_msg(message)
 
         logger.info("Métricas solicitadas por user_id %d", user_id)
+
+    async def _handle_clan_command(self, user_id: int, command: TalkCommand) -> None:
+        """Maneja comandos de clan desde el chat.
+
+        Args:
+            user_id: ID del usuario que ejecuta el comando.
+            command: Comando de chat que contiene el comando de clan.
+        """
+        if not self.clan_service:
+            await self.message_sender.send_console_msg(
+                "Sistema de clanes no disponible",
+                font_color=1,  # FONTTYPE_FIGHT (rojo para errores)
+            )
+            return
+
+        parsed = command.parse_clan_command()
+        if not parsed:
+            await self.message_sender.send_console_msg(
+                "Comando de clan inválido. Usa /AYUDA para ver comandos disponibles.",
+                font_color=1,
+            )
+            return
+
+        cmd_name, args = parsed
+
+        # Obtener username de la sesión
+        username = "Desconocido"
+        if "username" in self.session_data:
+            username_value = self.session_data["username"]
+            if isinstance(username_value, str):
+                username = username_value
+
+        try:
+            if cmd_name == "CREARCLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /CREARCLAN <nombre> [descripción]",
+                        font_color=1,
+                    )
+                    return
+
+                clan_name = args[0]
+                description = " ".join(args[1:]) if len(args) > 1 else ""
+
+                from src.command_handlers.create_clan_handler import CreateClanCommandHandler
+                from src.commands.create_clan_command import CreateClanCommand
+
+                handler = CreateClanCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                    username=username,
+                )
+                clan_command = CreateClanCommand(clan_name=clan_name, description=description)
+                result = await handler.handle(clan_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        f"Clan '{clan_name}' creado exitosamente",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al crear el clan",
+                        font_color=1,
+                    )
+
+            elif cmd_name == "INVITARCLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /INVITARCLAN <usuario>",
+                        font_color=1,
+                    )
+                    return
+
+                target_username = args[0]
+
+                from src.command_handlers.invite_clan_handler import InviteClanCommandHandler
+                from src.commands.invite_clan_command import InviteClanCommand
+
+                handler = InviteClanCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                invite_command = InviteClanCommand(target_username=target_username)
+                result = await handler.handle(invite_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Invitación enviada")
+                        if result.data
+                        else "Invitación enviada",
+                        font_color=7,
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al invitar",
+                        font_color=1,
+                    )
+
+            elif cmd_name == "ACEPTARCLAN":
+                from src.command_handlers.accept_clan_handler import AcceptClanCommandHandler
+                from src.commands.accept_clan_command import AcceptClanCommand
+
+                handler = AcceptClanCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                accept_command = AcceptClanCommand()
+                result = await handler.handle(accept_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        f"Te uniste al clan '{result.data.get('clan_name', '')}'"
+                        if result.data
+                        else "Te uniste al clan",
+                        font_color=7,
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al aceptar invitación",
+                        font_color=1,
+                    )
+
+            elif cmd_name == "RECHAZARCLAN":
+                from src.command_handlers.reject_clan_handler import RejectClanCommandHandler
+                from src.commands.reject_clan_command import RejectClanCommand
+
+                handler = RejectClanCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                reject_command = RejectClanCommand()
+                result = await handler.handle(reject_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Invitación rechazada")
+                        if result.data
+                        else "Invitación rechazada",
+                        font_color=7,
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al rechazar invitación",
+                        font_color=1,
+                    )
+
+            elif cmd_name == "SALIRCLAN":
+                from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
+                from src.commands.leave_clan_command import LeaveClanCommand
+
+                handler = LeaveClanCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                leave_command = LeaveClanCommand()
+                result = await handler.handle(leave_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Abandonaste el clan")
+                        if result.data
+                        else "Abandonaste el clan",
+                        font_color=7,
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al abandonar clan",
+                        font_color=1,
+                    )
+
+            elif cmd_name == "EXPULSARCLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /EXPULSARCLAN <usuario>",
+                        font_color=1,
+                    )
+                    return
+
+                target_username = args[0]
+
+                from src.command_handlers.kick_clan_member_handler import (
+                    KickClanMemberCommandHandler,
+                )
+                from src.commands.kick_clan_member_command import KickClanMemberCommand
+
+                handler = KickClanMemberCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                kick_command = KickClanMemberCommand(target_username=target_username)
+                result = await handler.handle(kick_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Miembro expulsado")
+                        if result.data
+                        else "Miembro expulsado",
+                        font_color=7,
+                    )
+                else:
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al expulsar miembro",
+                        font_color=1,
+                    )
+
+            else:
+                await self.message_sender.send_console_msg(
+                    f"Comando '{cmd_name}' no reconocido. Usa /AYUDA para ver comandos disponibles.",
+                    font_color=1,
+                )
+
+        except Exception:
+            logger.exception("Error al procesar comando de clan")
+            await self.message_sender.send_console_msg(
+                "Error interno al procesar comando de clan",
+                font_color=1,
+            )
