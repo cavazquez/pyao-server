@@ -5,7 +5,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.bank_deposit_gold_handler import BankDepositGoldCommandHandler
 from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
+from src.command_handlers.bank_extract_gold_handler import BankExtractGoldCommandHandler
 from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
@@ -103,6 +105,8 @@ class TaskFactory:
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
         self._bank_deposit_handler: BankDepositCommandHandler | None = None
         self._bank_extract_handler: BankExtractCommandHandler | None = None
+        self._bank_deposit_gold_handler: BankDepositGoldCommandHandler | None = None
+        self._bank_extract_gold_handler: BankExtractGoldCommandHandler | None = None
         self._equip_item_handler: EquipItemCommandHandler | None = None
         self._work_handler: WorkCommandHandler | None = None
 
@@ -377,6 +381,50 @@ class TaskFactory:
             self._work_handler.message_sender = message_sender
         return self._work_handler
 
+    def _get_bank_deposit_gold_handler(
+        self, message_sender: MessageSender
+    ) -> BankDepositGoldCommandHandler:
+        """Obtiene o crea el handler de depositar oro en el banco.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de depositar oro en el banco.
+        """
+        if self._bank_deposit_gold_handler is None:
+            self._bank_deposit_gold_handler = BankDepositGoldCommandHandler(
+                bank_repo=self.deps.bank_repo,
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._bank_deposit_gold_handler.message_sender = message_sender
+        return self._bank_deposit_gold_handler
+
+    def _get_bank_extract_gold_handler(
+        self, message_sender: MessageSender
+    ) -> BankExtractGoldCommandHandler:
+        """Obtiene o crea el handler de extraer oro del banco.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de extraer oro del banco.
+        """
+        if self._bank_extract_gold_handler is None:
+            self._bank_extract_gold_handler = BankExtractGoldCommandHandler(
+                bank_repo=self.deps.bank_repo,
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._bank_extract_gold_handler.message_sender = message_sender
+        return self._bank_extract_gold_handler
+
     def create_task(
         self,
         data: bytes,
@@ -498,8 +546,7 @@ class TaskFactory:
                     data=data,
                     message_sender=message_sender,
                     amount=parsed_data["amount"],
-                    bank_repo=self.deps.bank_repo,
-                    player_repo=self.deps.player_repo,
+                    bank_extract_gold_handler=self._get_bank_extract_gold_handler(message_sender),
                     session_data=session_data,
                 )
 
@@ -509,8 +556,7 @@ class TaskFactory:
                     data=data,
                     message_sender=message_sender,
                     amount=parsed_data["amount"],
-                    bank_repo=self.deps.bank_repo,
-                    player_repo=self.deps.player_repo,
+                    bank_deposit_gold_handler=self._get_bank_deposit_gold_handler(message_sender),
                     session_data=session_data,
                 )
 

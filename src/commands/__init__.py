@@ -2,7 +2,9 @@
 
 from src.commands.attack_command import AttackCommand
 from src.commands.bank_deposit_command import BankDepositCommand
+from src.commands.bank_deposit_gold_command import BankDepositGoldCommand
 from src.commands.bank_extract_command import BankExtractCommand
+from src.commands.bank_extract_gold_command import BankExtractGoldCommand
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
 from src.commands.commerce_buy_command import CommerceBuyCommand
@@ -17,7 +19,9 @@ from src.commands.work_command import WorkCommand
 __all__ = [
     "AttackCommand",
     "BankDepositCommand",
+    "BankDepositGoldCommand",
     "BankExtractCommand",
+    "BankExtractGoldCommand",
     "CastSpellCommand",
     "Command",
     "CommandHandler",
