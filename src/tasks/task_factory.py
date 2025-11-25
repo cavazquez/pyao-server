@@ -15,6 +15,8 @@ from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandle
 from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
+from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
+from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -113,6 +115,8 @@ class TaskFactory:
         self._work_handler: WorkCommandHandler | None = None
         self._work_left_click_handler: WorkLeftClickCommandHandler | None = None
         self._double_click_handler: DoubleClickCommandHandler | None = None
+        self._move_spell_handler: MoveSpellCommandHandler | None = None
+        self._inventory_click_handler: InventoryClickCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -428,6 +432,48 @@ class TaskFactory:
             self._double_click_handler.message_sender = message_sender
         return self._double_click_handler
 
+    def _get_move_spell_handler(self, message_sender: MessageSender) -> MoveSpellCommandHandler:
+        """Obtiene o crea el handler de mover hechizo.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de mover hechizo.
+        """
+        if self._move_spell_handler is None:
+            self._move_spell_handler = MoveSpellCommandHandler(
+                spellbook_repo=self.deps.spellbook_repo,
+                spell_catalog=self.deps.spell_catalog,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._move_spell_handler.message_sender = message_sender
+        return self._move_spell_handler
+
+    def _get_inventory_click_handler(
+        self, message_sender: MessageSender
+    ) -> InventoryClickCommandHandler:
+        """Obtiene o crea el handler de click en inventario.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de click en inventario.
+        """
+        if self._inventory_click_handler is None:
+            self._inventory_click_handler = InventoryClickCommandHandler(
+                player_repo=self.deps.player_repo,
+                equipment_repo=self.deps.equipment_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._inventory_click_handler.message_sender = message_sender
+        return self._inventory_click_handler
+
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
     ) -> BankDepositGoldCommandHandler:
@@ -546,12 +592,11 @@ class TaskFactory:
             # TaskInventoryClick (packet_id 23) - recibe slot
             if task_class == TaskInventoryClick and "slot" in parsed_data:
                 return TaskInventoryClick(
-                    data=data,
-                    message_sender=message_sender,
+                    data,
+                    message_sender,
                     slot=parsed_data["slot"],
-                    player_repo=self.deps.player_repo,
+                    inventory_click_handler=self._get_inventory_click_handler(message_sender),
                     session_data=session_data,
-                    equipment_repo=self.deps.equipment_repo,
                 )
 
             # TaskUseItem (packet_id 30) - recibe slot
@@ -569,11 +614,8 @@ class TaskFactory:
                 return TaskMoveSpell(
                     data=data,
                     message_sender=message_sender,
-                    slot=parsed_data["slot"],
-                    upwards=parsed_data["upwards"],
+                    move_spell_handler=self._get_move_spell_handler(message_sender),
                     session_data=session_data,
-                    spellbook_repo=self.deps.spellbook_repo,
-                    spell_catalog=self.deps.spell_catalog,
                 )
 
             # TaskSpellInfo (packet_id 35) - recibe slot
@@ -813,9 +855,8 @@ class TaskFactory:
             TaskMoveSpell: lambda: TaskMoveSpell(
                 data,
                 message_sender,
+                move_spell_handler=self._get_move_spell_handler(message_sender),
                 session_data=session_data,
-                spellbook_repo=self.deps.spellbook_repo,
-                spell_catalog=self.deps.spell_catalog,
             ),
             TaskSpellInfo: lambda: TaskSpellInfo(
                 data,

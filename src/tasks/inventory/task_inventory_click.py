@@ -3,30 +3,30 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.models.items_catalog import get_item
+from src.commands.inventory_click_command import InventoryClickCommand
 from src.network.session_manager import SessionManager
-from src.repositories.inventory_repository import InventoryRepository
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.equipment_repository import EquipmentRepository
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskInventoryClick(Task):
-    """Maneja el click en un slot del inventario para mostrar información."""
+    """Maneja el click en un slot del inventario para mostrar información.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
         slot: int,
-        player_repo: PlayerRepository | None = None,
+        inventory_click_handler: InventoryClickCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
-        equipment_repo: EquipmentRepository | None = None,
     ) -> None:
         """Inicializa la tarea de click en inventario.
 
@@ -34,20 +34,19 @@ class TaskInventoryClick(Task):
             data: Datos del packet.
             message_sender: Enviador de mensajes.
             slot: Slot del inventario (ya validado).
-            player_repo: Repositorio de jugadores.
+            inventory_click_handler: Handler para el comando de click en inventario.
             session_data: Datos de sesión.
-            equipment_repo: Repositorio de equipamiento.
         """
         super().__init__(data, message_sender)
         self.slot = slot
-        self.player_repo = player_repo
+        self.inventory_click_handler = inventory_click_handler
         self.session_data = session_data or {}
-        self.equipment_repo = equipment_repo
 
     async def execute(self) -> None:
-        """Ejecuta el click en un slot del inventario.
+        """Ejecuta el click en un slot del inventario (solo parsing y delegación).
 
         El slot ya fue validado por TaskFactory.
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
         """
         # Verificar que el jugador esté logueado
         if not self.session_data:
@@ -59,96 +58,22 @@ class TaskInventoryClick(Task):
             logger.warning("Intento de click en inventario sin estar logueado")
             return
 
-        # Verificar que tengamos player_repo
-        if not self.player_repo:
-            logger.error("player_repo no disponible")
+        # Validar que tenemos el handler
+        if not self.inventory_click_handler:
+            logger.error("InventoryClickCommandHandler no disponible")
             return
 
-        logger.info("user_id %d hace click en slot %d", user_id, self.slot)
+        # Crear comando (solo datos)
+        command = InventoryClickCommand(
+            user_id=user_id,
+            slot=self.slot,
+        )
 
-        try:
-            # Obtener el inventario
-            inventory_repo = InventoryRepository(self.player_repo.redis)
-            slot_data = await inventory_repo.get_slot(user_id, self.slot)
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.inventory_click_handler.handle(command)
 
-            if not slot_data:
-                # Slot vacío - enviar actualización con slot vacío
-                await self.message_sender.send_change_inventory_slot(
-                    slot=self.slot,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    equipped=False,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                    sale_price=0.0,
-                )
-                return
-
-            item_id, quantity = slot_data
-
-            # Obtener el item del catálogo
-            item = get_item(item_id)
-            if not item:
-                logger.error("Item %d no encontrado en catálogo", item_id)
-                await self.message_sender.send_console_msg("Item no válido.")
-                return
-
-            # Verificar si el item está equipado
-            is_equipped = False
-            if self.equipment_repo:
-                equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, self.slot)
-                is_equipped = equipped_slot is not None
-
-            # Enviar información del slot actualizada
-            await self.message_sender.send_change_inventory_slot(
-                slot=self.slot,
-                item_id=item.item_id,
-                name=item.name,
-                amount=quantity,
-                equipped=is_equipped,
-                grh_id=item.graphic_id,
-                item_type=item.item_type.to_client_type(),
-                max_hit=item.max_damage or 0,
-                min_hit=item.min_damage or 0,
-                max_def=item.defense or 0,
-                min_def=item.defense or 0,
-                sale_price=float(item.value),
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Click en inventario falló: %s", result.error_message or "Error desconocido"
             )
-
-            logger.info(
-                "user_id %d - Slot %d: %s x%d (GrhIndex: %d)",
-                user_id,
-                self.slot,
-                item.name,
-                quantity,
-                item.graphic_id,
-            )
-
-            # Detectar herramientas y cambiar cursor al modo de trabajo
-            # Solo si presionas U en el slot de la herramienta Y está equipada
-            # Skills: Talar=9, Pesca=12, Minería=13 (ver enums.gd)
-            work_tools = {
-                561: 9,  # Hacha de Leñador → Talar (Skill.Talar)
-                562: 13,  # Piquete de Minero → Minería (Skill.Mineria)
-                563: 12,  # Caña de pescar → Pesca (Skill.Pesca)
-            }
-
-            # Verificar si el item del slot clickeado es una herramienta
-            if item_id in work_tools:
-                # Verificar si está equipado
-                if is_equipped:
-                    skill_type = work_tools[item_id]
-                    await self.message_sender.send_work_request_target(skill_type)
-                    logger.info("Cursor cambiado a modo trabajo: skill_type=%d", skill_type)
-                else:
-                    await self.message_sender.send_console_msg(
-                        "Debes tener equipada la herramienta para trabajar."
-                    )
-
-        except Exception:
-            logger.exception("Error procesando INVENTORY_CLICK")

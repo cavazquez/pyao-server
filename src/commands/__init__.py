@@ -12,6 +12,8 @@ from src.commands.commerce_sell_command import CommerceSellCommand
 from src.commands.double_click_command import DoubleClickCommand
 from src.commands.drop_command import DropCommand
 from src.commands.equip_item_command import EquipItemCommand
+from src.commands.inventory_click_command import InventoryClickCommand
+from src.commands.move_spell_command import MoveSpellCommand
 from src.commands.pickup_command import PickupCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
@@ -33,6 +35,8 @@ __all__ = [
     "DoubleClickCommand",
     "DropCommand",
     "EquipItemCommand",
+    "InventoryClickCommand",
+    "MoveSpellCommand",
     "PickupCommand",
     "UseItemCommand",
     "WalkCommand",
