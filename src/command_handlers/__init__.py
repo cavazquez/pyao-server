@@ -23,15 +23,18 @@ from src.command_handlers.change_heading_handler import ChangeHeadingCommandHand
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.create_account_handler import CreateAccountCommandHandler
+from src.command_handlers.dice_handler import DiceCommandHandler
 from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.gm_command_handler import GMCommandHandler
+from src.command_handlers.information_handler import InformationCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.meditate_handler import MeditateCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
+from src.command_handlers.online_handler import OnlineCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
 from src.command_handlers.party_create_handler import PartyCreateCommandHandler
 from src.command_handlers.party_join_handler import PartyJoinCommandHandler
@@ -46,6 +49,7 @@ from src.command_handlers.request_position_update_handler import (
 )
 from src.command_handlers.request_skills_handler import RequestSkillsCommandHandler
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
+from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -63,15 +67,18 @@ __all__ = [
     "CommerceBuyCommandHandler",
     "CommerceSellCommandHandler",
     "CreateAccountCommandHandler",
+    "DiceCommandHandler",
     "DoubleClickCommandHandler",
     "DropCommandHandler",
     "EquipItemCommandHandler",
     "GMCommandHandler",
+    "InformationCommandHandler",
     "InventoryClickCommandHandler",
     "LeftClickCommandHandler",
     "LoginCommandHandler",
     "MeditateCommandHandler",
     "MoveSpellCommandHandler",
+    "OnlineCommandHandler",
     "PartyAcceptCommandHandler",
     "PartyCreateCommandHandler",
     "PartyJoinCommandHandler",
@@ -84,6 +91,7 @@ __all__ = [
     "RequestPositionUpdateCommandHandler",
     "RequestSkillsCommandHandler",
     "RequestStatsCommandHandler",
+    "SpellInfoCommandHandler",
     "TalkCommandHandler",
     "UseItemCommandHandler",
     "WalkCommandHandler",

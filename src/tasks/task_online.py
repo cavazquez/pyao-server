@@ -3,24 +3,28 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.online_command import OnlineCommand
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.online_handler import OnlineCommandHandler
     from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 
 
 class TaskOnline(Task):
-    """Tarea que maneja la solicitud de jugadores conectados."""
+    """Tarea que maneja la solicitud de jugadores conectados.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        map_manager: MapManager | None = None,
+        online_handler: OnlineCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea Online.
@@ -28,15 +32,18 @@ class TaskOnline(Task):
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
-            map_manager: Gestor de mapas.
+            online_handler: Handler para el comando de lista de jugadores online.
             session_data: Datos de sesión del cliente.
         """
         super().__init__(data, message_sender)
-        self.map_manager = map_manager
+        self.online_handler = online_handler
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Procesa la solicitud de jugadores online."""
+        """Procesa la solicitud de jugadores online (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)
 
@@ -47,24 +54,21 @@ class TaskOnline(Task):
             )
             return
 
-        logger.info("Solicitud de jugadores online de user_id %d", user_id)
-
-        if not self.map_manager:
+        # Validar que tenemos el handler
+        if not self.online_handler:
+            logger.error("OnlineCommandHandler no disponible")
             await self.message_sender.send_console_msg("Error: Servidor no disponible")
             return
 
-        # Obtener todos los jugadores conectados
-        all_players = self.map_manager.get_all_connected_players()
+        # Crear comando (solo datos)
+        command = OnlineCommand(user_id=user_id)
 
-        if not all_players:
-            await self.message_sender.send_console_msg("No hay jugadores conectados")
-            return
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.online_handler.handle(command)
 
-        # Formatear mensaje con la lista de jugadores
-        online_message = f"--- Jugadores Online ({len(all_players)}) ---\n"
-        for username in sorted(all_players):
-            online_message += f"{username}\n"
-
-        # Enviar lista línea por línea
-        await self.message_sender.send_multiline_console_msg(online_message.rstrip())
-        logger.info("Lista de jugadores online enviada a user_id %d", user_id)
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Solicitud de jugadores online falló: %s",
+                result.error_message or "Error desconocido",
+            )

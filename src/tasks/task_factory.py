@@ -14,15 +14,18 @@ from src.command_handlers.change_heading_handler import ChangeHeadingCommandHand
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.create_account_handler import CreateAccountCommandHandler
+from src.command_handlers.dice_handler import DiceCommandHandler
 from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.command_handlers.gm_command_handler import GMCommandHandler
+from src.command_handlers.information_handler import InformationCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.meditate_handler import MeditateCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
+from src.command_handlers.online_handler import OnlineCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
 from src.command_handlers.party_create_handler import PartyCreateCommandHandler
 from src.command_handlers.party_join_handler import PartyJoinCommandHandler
@@ -37,6 +40,7 @@ from src.command_handlers.request_position_update_handler import (
 )
 from src.command_handlers.request_skills_handler import RequestSkillsCommandHandler
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
+from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -131,6 +135,10 @@ class TaskFactory:
         self._request_position_update_handler: RequestPositionUpdateCommandHandler | None = None
         self._request_skills_handler: RequestSkillsCommandHandler | None = None
         self._request_stats_handler: RequestStatsCommandHandler | None = None
+        self._spell_info_handler: SpellInfoCommandHandler | None = None
+        self._dice_handler: DiceCommandHandler | None = None
+        self._online_handler: OnlineCommandHandler | None = None
+        self._information_handler: InformationCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
         self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
@@ -407,6 +415,81 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._request_skills_handler.message_sender = message_sender
         return self._request_skills_handler
+
+    def _get_spell_info_handler(self, message_sender: MessageSender) -> SpellInfoCommandHandler:
+        """Obtiene o crea el handler de información de hechizos.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de información de hechizos.
+        """
+        if self._spell_info_handler is None:
+            self._spell_info_handler = SpellInfoCommandHandler(
+                spellbook_repo=self.deps.spellbook_repo,
+                spell_catalog=self.deps.spell_catalog,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._spell_info_handler.message_sender = message_sender
+        return self._spell_info_handler
+
+    def _get_dice_handler(self, message_sender: MessageSender) -> DiceCommandHandler:
+        """Obtiene o crea el handler de tirada de dados.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de tirada de dados.
+        """
+        if self._dice_handler is None:
+            self._dice_handler = DiceCommandHandler(message_sender=message_sender)
+        else:
+            # Actualizar message_sender por si cambió
+            self._dice_handler.message_sender = message_sender
+        return self._dice_handler
+
+    def _get_online_handler(self, message_sender: MessageSender) -> OnlineCommandHandler:
+        """Obtiene o crea el handler de lista de jugadores online.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de lista de jugadores online.
+        """
+        if self._online_handler is None:
+            self._online_handler = OnlineCommandHandler(
+                map_manager=self.deps.map_manager,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._online_handler.message_sender = message_sender
+        return self._online_handler
+
+    def _get_information_handler(self, message_sender: MessageSender) -> InformationCommandHandler:
+        """Obtiene o crea el handler de información del servidor.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de información del servidor.
+        """
+        if self._information_handler is None:
+            self._information_handler = InformationCommandHandler(
+                server_repo=self.deps.server_repo,
+                map_manager=self.deps.map_manager,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._information_handler.message_sender = message_sender
+        return self._information_handler
 
     def _get_drop_handler(self, message_sender: MessageSender) -> DropCommandHandler:
         """Obtiene o crea el handler de soltar item.
@@ -1066,8 +1149,7 @@ class TaskFactory:
                 return TaskSpellInfo(
                     data=data,
                     message_sender=message_sender,
-                    spellbook_repo=self.deps.spellbook_repo,
-                    spell_catalog=self.deps.spell_catalog,
+                    spell_info_handler=self._get_spell_info_handler(message_sender),
                     session_data=session_data,
                     slot=parsed_data["slot"],
                 )
@@ -1108,7 +1190,13 @@ class TaskFactory:
                 ),
                 session_data=session_data,
             ),
-            TaskDice: lambda: TaskDice(data, message_sender, session_data, self.deps.server_repo),
+            TaskDice: lambda: TaskDice(
+                data,
+                message_sender,
+                dice_handler=self._get_dice_handler(message_sender),
+                session_data=session_data,
+                server_repo=self.deps.server_repo,
+            ),
             TaskRequestAttributes: lambda: TaskRequestAttributes(
                 data,
                 message_sender,
@@ -1168,11 +1256,16 @@ class TaskFactory:
                 session_data=session_data,
             ),
             TaskOnline: lambda: TaskOnline(
-                data, message_sender, self.deps.map_manager, session_data
+                data,
+                message_sender,
+                online_handler=self._get_online_handler(message_sender),
+                session_data=session_data,
             ),
             TaskMotd: lambda: TaskMotd(data, message_sender, self.deps.server_repo),
             TaskInformation: lambda: TaskInformation(
-                data, message_sender, self.deps.server_repo, self.deps.map_manager
+                data,
+                message_sender,
+                information_handler=self._get_information_handler(message_sender),
             ),
             TaskUptime: lambda: TaskUptime(data, message_sender, self.deps.server_repo),
             TaskQuit: lambda: TaskQuit(
@@ -1298,9 +1391,8 @@ class TaskFactory:
             TaskSpellInfo: lambda: TaskSpellInfo(
                 data,
                 message_sender,
-                self.deps.spellbook_repo,
-                self.deps.spell_catalog,
-                session_data,
+                spell_info_handler=self._get_spell_info_handler(message_sender),
+                session_data=session_data,
             ),
             TaskCastSpell: lambda: TaskCastSpell(
                 data,
