@@ -3,58 +3,56 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.ayuda_command import AyudaCommand
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.ayuda_handler import AyudaCommandHandler
     from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
 
 
 class TaskAyuda(Task):
-    """Tarea que muestra la lista de comandos disponibles."""
+    """Tarea que muestra la lista de comandos disponibles.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
+        ayuda_handler: AyudaCommandHandler | None = None,
     ) -> None:
         """Inicializa la tarea Ayuda.
 
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
+            ayuda_handler: Handler para el comando de ayuda.
         """
         super().__init__(data, message_sender)
+        self.ayuda_handler = ayuda_handler
 
     async def execute(self) -> None:
-        """Muestra la ayuda de comandos disponibles."""
-        logger.debug("Solicitud de ayuda desde %s", self.message_sender.connection.address)
+        """Muestra la ayuda de comandos disponibles (solo parsing y delegación).
 
-        # Mensaje de ayuda con comandos disponibles
-        help_message = (
-            "--- Comandos Disponibles ---\n"
-            "/AYUDA - Muestra esta ayuda\n"
-            "/EST - Muestra tus estadisticas\n"
-            "/ONLINE - Lista de jugadores conectados\n"
-            "/MOTD - Mensaje del dia del servidor\n"
-            "/UPTIME - Tiempo de actividad del servidor\n"
-            "/INFO - Informacion del servidor\n"
-            "/METRICS - Metricas de rendimiento del servidor\n"
-            "/SALIR - Desconectarse del servidor\n"
-            "--- Comandos de Party ---\n"
-            "/CREARPARTY - Crear una nueva party (nivel 15+)\n"
-            "/PARTY <nombre> - Invitar jugador a tu party\n"
-            "/ACCEPTPARTY <lider> - Aceptar invitacion de party\n"
-            "/SALIRPARTY - Abandonar la party actual\n"
-            "/PMSG <mensaje> - Enviar mensaje a tu party\n"
-            "/KICK <nombre> - Expulsar miembro (solo lider)\n"
-            "/PARTYLIDER <nombre> - Transferir liderazgo (solo lider)\n"
-            "--- Informacion ---\n"
-            "Usa las teclas de direccion para moverte\n"
-            "Escribe en el chat para hablar con otros jugadores"
-        )
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
+        # Validar que tenemos el handler
+        if not self.ayuda_handler:
+            logger.error("AyudaCommandHandler no disponible")
+            return
 
-        # Enviar ayuda línea por línea
-        await self.message_sender.send_multiline_console_msg(help_message)
-        logger.debug("Ayuda enviada a %s", self.message_sender.connection.address)
+        # Crear comando (solo datos)
+        command = AyudaCommand()
+
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.ayuda_handler.handle(command)
+
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Solicitud de ayuda falló: %s", result.error_message or "Error desconocido"
+            )

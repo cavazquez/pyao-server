@@ -3,27 +3,29 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.quit_command import QuitCommand
 from src.network.packet_reader import PacketReader
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.quit_handler import QuitCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskQuit(Task):
-    """Tarea que maneja la desconexión ordenada del jugador."""
+    """Tarea que maneja la desconexión ordenada del jugador.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
-        map_manager: MapManager | None = None,
+        quit_handler: QuitCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea Quit.
@@ -31,17 +33,18 @@ class TaskQuit(Task):
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
-            map_manager: Gestor de mapas.
+            quit_handler: Handler para el comando de desconexión.
             session_data: Datos de sesión del cliente.
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
-        self.map_manager = map_manager
+        self.quit_handler = quit_handler
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Procesa la desconexión ordenada del jugador."""
+        """Procesa la desconexión ordenada del jugador (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Validar packet (no tiene datos, solo PacketID)
         _ = PacketReader(self.data)  # Valida que el packet sea válido
 
@@ -68,43 +71,22 @@ class TaskQuit(Task):
             if isinstance(username_value, str):
                 username = username_value
 
-        logger.info(
-            "Jugador %d (%s) solicitó desconexión desde %s",
-            user_id_int,
-            username,
-            self.message_sender.connection.address,
-        )
+        # Validar que tenemos el handler
+        if not self.quit_handler:
+            logger.error("QuitCommandHandler no disponible")
+            return
 
-        # Obtener posición del jugador antes de removerlo
-        if self.player_repo and self.map_manager:
-            position = await self.player_repo.get_position(user_id_int)
-            if position:
-                map_id = position["map"]
+        # Crear comando (solo datos)
+        command = QuitCommand(user_id=user_id_int, username=username)
 
-                # Notificar a otros jugadores en el mapa que el personaje se fue
-                other_senders = self.map_manager.get_all_message_senders_in_map(
-                    map_id, exclude_user_id=user_id_int
-                )
-                for sender in other_senders:
-                    await sender.send_character_remove(user_id_int)
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.quit_handler.handle(command)
 
-                logger.debug(
-                    "CHARACTER_REMOVE enviado a %d jugadores en mapa %d",
-                    len(other_senders),
-                    map_id,
-                )
-
-        # Remover jugador del MapManager
-        if self.map_manager:
-            self.map_manager.remove_player_from_all_maps(user_id_int)
-            logger.debug("Jugador %d removido del MapManager", user_id_int)
-
-        # Limpiar sesión
+        # Limpiar sesión después de la desconexión
         if self.session_data:
             self.session_data.clear()
             logger.debug("Sesión limpiada para user_id %d", user_id_int)
 
-        # Cerrar la conexión
-        self.message_sender.connection.close()
-        await self.message_sender.connection.wait_closed()
-        logger.info("Jugador %d (%s) desconectado correctamente", user_id_int, username)
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Desconexión falló: %s", result.error_message or "Error desconocido")

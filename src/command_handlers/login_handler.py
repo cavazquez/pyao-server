@@ -4,12 +4,13 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.motd_handler import MotdCommandHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.login_command import LoginCommand
+from src.commands.motd_command import MotdCommand
 from src.network.session_manager import SessionManager
 from src.services.player.authentication_service import AuthenticationService
 from src.services.player.player_service import PlayerService
-from src.tasks.task_motd import TaskMotd
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -68,6 +69,7 @@ class LoginCommandHandler(CommandHandler):
         self.player_map_service = player_map_service
         self.message_sender = message_sender
         self.session_data = session_data or {}
+        self._motd_handler: MotdCommandHandler | None = None
 
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de login (solo lógica de negocio).
@@ -431,7 +433,11 @@ class LoginCommandHandler(CommandHandler):
         logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
 
         # Enviar MOTD (Mensaje del Día)
-        # Necesitamos pasar data dummy para TaskMotd (no usa el packet realmente)
-        dummy_data = b"\x00"
-        motd_task = TaskMotd(dummy_data, self.message_sender, self.server_repo)
-        await motd_task.execute()
+        if self._motd_handler is None:
+            self._motd_handler = MotdCommandHandler(
+                server_repo=self.server_repo,
+                message_sender=self.message_sender,
+            )
+
+        motd_command = MotdCommand()
+        await self._motd_handler.handle(motd_command)

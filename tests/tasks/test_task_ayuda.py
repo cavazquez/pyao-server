@@ -4,6 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.ayuda_command import AyudaCommand
+from src.commands.base import CommandResult
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID
@@ -22,22 +24,32 @@ async def test_task_ayuda_shows_commands() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_multiline_console_msg = AsyncMock()
 
+    # Mock del handler
+    ayuda_handler = MagicMock()
+    ayuda_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(
+            data={
+                "help_message": (
+                    "--- Comandos Disponibles ---\n"
+                    "/AYUDA - Muestra esta ayuda\n"
+                    "/EST - Muestra tus estadisticas\n"
+                    "/ONLINE - Lista de jugadores conectados\n"
+                    "/SALIR - Desconectarse del servidor"
+                )
+            }
+        )
+    )
+
     # Construir paquete AYUDA (solo PacketID)
     data = bytes([ClientPacketID.AYUDA])
 
-    task = TaskAyuda(data, message_sender)
+    task = TaskAyuda(data, message_sender, ayuda_handler=ayuda_handler)
     await task.execute()
 
-    # Verificar que se envió el mensaje de ayuda
-    message_sender.send_multiline_console_msg.assert_called_once()
-    sent_message = message_sender.send_multiline_console_msg.call_args[0][0]
-
-    # Verificar que el mensaje contiene información de comandos
-    assert "Comandos Disponibles" in sent_message
-    assert "/AYUDA" in sent_message
-    assert "/EST" in sent_message
-    assert "/ONLINE" in sent_message
-    assert "/SALIR" in sent_message
+    # Verificar que se llamó al handler
+    ayuda_handler.handle.assert_called_once()
+    call_args = ayuda_handler.handle.call_args[0][0]
+    assert isinstance(call_args, AyudaCommand)
 
 
 @pytest.mark.asyncio
@@ -52,19 +64,21 @@ async def test_task_ayuda_message_format() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_multiline_console_msg = AsyncMock()
 
+    # Mock del handler
+    ayuda_handler = MagicMock()
+    ayuda_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(
+            data={"help_message": "--- Comandos Disponibles ---\n/AYUDA - Muestra esta ayuda"}
+        )
+    )
+
     data = bytes([ClientPacketID.AYUDA])
 
-    task = TaskAyuda(data, message_sender)
+    task = TaskAyuda(data, message_sender, ayuda_handler=ayuda_handler)
     await task.execute()
 
-    sent_message = message_sender.send_multiline_console_msg.call_args[0][0]
-
-    # Verificar que tiene saltos de línea (es multilínea)
-    assert "\n" in sent_message
-
-    # Verificar que tiene secciones
-    lines = sent_message.split("\n")
-    assert len(lines) > 5  # Debe tener varias líneas
+    # Verificar que se llamó al handler
+    ayuda_handler.handle.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -79,15 +93,21 @@ async def test_task_ayuda_multiple_requests() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_multiline_console_msg = AsyncMock()
 
+    # Mock del handler
+    ayuda_handler = MagicMock()
+    ayuda_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(data={"help_message": "Test help"})
+    )
+
     data = bytes([ClientPacketID.AYUDA])
 
     # Solicitar ayuda 3 veces
     for _ in range(3):
-        task = TaskAyuda(data, message_sender)
+        task = TaskAyuda(data, message_sender, ayuda_handler=ayuda_handler)
         await task.execute()
 
-    # Verificar que se envió 3 veces
-    assert message_sender.send_multiline_console_msg.call_count == 3
+    # Verificar que se llamó 3 veces
+    assert ayuda_handler.handle.call_count == 3
 
 
 @pytest.mark.asyncio
@@ -102,15 +122,24 @@ async def test_task_ayuda_contains_basic_info() -> None:
     message_sender = MessageSender(connection)
     message_sender.send_multiline_console_msg = AsyncMock()
 
+    # Mock del handler
+    ayuda_handler = MagicMock()
+    ayuda_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(
+            data={
+                "help_message": (
+                    "--- Comandos Disponibles ---\n"
+                    "Usa las teclas de direccion para moverte\n"
+                    "Escribe en el chat para hablar con otros jugadores"
+                )
+            }
+        )
+    )
+
     data = bytes([ClientPacketID.AYUDA])
 
-    task = TaskAyuda(data, message_sender)
+    task = TaskAyuda(data, message_sender, ayuda_handler=ayuda_handler)
     await task.execute()
 
-    sent_message = message_sender.send_multiline_console_msg.call_args[0][0]
-
-    # Verificar que contiene información útil
-    assert "---" in sent_message  # Tiene separadores
-    # Debe mencionar algo sobre movimiento o chat
-    message_lower = sent_message.lower()
-    assert "mover" in message_lower or "chat" in message_lower or "hablar" in message_lower
+    # Verificar que se llamó al handler
+    ayuda_handler.handle.assert_called_once()

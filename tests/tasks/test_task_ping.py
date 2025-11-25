@@ -4,9 +4,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.ping_command import PingCommand
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
-from src.network.packet_id import ClientPacketID, ServerPacketID
+from src.network.packet_id import ClientPacketID
 from src.tasks.task_ping import TaskPing
 
 
@@ -21,22 +23,22 @@ async def test_task_ping_sends_pong() -> None:
     connection = ClientConnection(reader, writer)
     connection.send = AsyncMock()
     message_sender = MessageSender(connection)
+    message_sender.send_pong = AsyncMock()
+
+    # Mock del handler
+    ping_handler = MagicMock()
+    ping_handler.handle = AsyncMock(return_value=CommandResult.ok())
 
     # Construir paquete PING (solo PacketID)
     data = bytes([ClientPacketID.PING])
 
-    task = TaskPing(data, message_sender)
+    task = TaskPing(data, message_sender, ping_handler=ping_handler)
     await task.execute()
 
-    # Verificar que se envió PONG
-    connection.send.assert_called_once()
-    call_args = connection.send.call_args
-    assert call_args is not None
-    sent_data = call_args[0][0]
-
-    # Verificar que el paquete enviado es PONG
-    assert len(sent_data) == 1
-    assert sent_data[0] == ServerPacketID.PONG
+    # Verificar que se llamó al handler
+    ping_handler.handle.assert_called_once()
+    call_args = ping_handler.handle.call_args[0][0]
+    assert isinstance(call_args, PingCommand)
 
 
 @pytest.mark.asyncio
@@ -50,16 +52,21 @@ async def test_task_ping_multiple_pings() -> None:
     connection = ClientConnection(reader, writer)
     connection.send = AsyncMock()
     message_sender = MessageSender(connection)
+    message_sender.send_pong = AsyncMock()
+
+    # Mock del handler
+    ping_handler = MagicMock()
+    ping_handler.handle = AsyncMock(return_value=CommandResult.ok())
 
     data = bytes([ClientPacketID.PING])
 
     # Enviar 3 pings
     for _ in range(3):
-        task = TaskPing(data, message_sender)
+        task = TaskPing(data, message_sender, ping_handler=ping_handler)
         await task.execute()
 
-    # Verificar que se enviaron 3 pongs
-    assert connection.send.call_count == 3
+    # Verificar que se llamó 3 veces
+    assert ping_handler.handle.call_count == 3
 
 
 @pytest.mark.asyncio
@@ -73,19 +80,22 @@ async def test_task_ping_packet_format() -> None:
     connection = ClientConnection(reader, writer)
     connection.send = AsyncMock()
     message_sender = MessageSender(connection)
+    message_sender.send_pong = AsyncMock()
+
+    # Mock del handler que realmente llama a send_pong
+    async def handle_side_effect(_command):
+        await message_sender.send_pong()
+        return CommandResult.ok()
+
+    ping_handler = MagicMock()
+    ping_handler.handle = AsyncMock(side_effect=handle_side_effect)
 
     data = bytes([ClientPacketID.PING])
 
-    task = TaskPing(data, message_sender)
+    task = TaskPing(data, message_sender, ping_handler=ping_handler)
     await task.execute()
 
-    # Obtener el paquete enviado
-    assert connection.send.called
-    call_args = connection.send.call_args
-    assert call_args is not None
-    sent_data = call_args[0][0]
-
-    # Verificar formato: solo debe ser el PacketID PONG
-    assert isinstance(sent_data, bytes)
-    assert len(sent_data) == 1
-    assert sent_data == bytes([ServerPacketID.PONG])
+    # Verificar que se llamó al handler
+    ping_handler.handle.assert_called_once()
+    # Verificar que se llamó send_pong
+    message_sender.send_pong.assert_called_once()

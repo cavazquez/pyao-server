@@ -5,13 +5,16 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.ayuda_handler import AyudaCommandHandler
 from src.command_handlers.bank_deposit_gold_handler import BankDepositGoldCommandHandler
 from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
+from src.command_handlers.bank_end_handler import BankEndCommandHandler
 from src.command_handlers.bank_extract_gold_handler import BankExtractGoldCommandHandler
 from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.change_heading_handler import ChangeHeadingCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
+from src.command_handlers.commerce_end_handler import CommerceEndCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.create_account_handler import CreateAccountCommandHandler
 from src.command_handlers.dice_handler import DiceCommandHandler
@@ -24,6 +27,7 @@ from src.command_handlers.inventory_click_handler import InventoryClickCommandHa
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.meditate_handler import MeditateCommandHandler
+from src.command_handlers.motd_handler import MotdCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.online_handler import OnlineCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
@@ -34,6 +38,8 @@ from src.command_handlers.party_leave_handler import PartyLeaveCommandHandler
 from src.command_handlers.party_message_handler import PartyMessageCommandHandler
 from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
+from src.command_handlers.ping_handler import PingCommandHandler
+from src.command_handlers.quit_handler import QuitCommandHandler
 from src.command_handlers.request_attributes_handler import RequestAttributesCommandHandler
 from src.command_handlers.request_position_update_handler import (
     RequestPositionUpdateCommandHandler,
@@ -42,6 +48,7 @@ from src.command_handlers.request_skills_handler import RequestSkillsCommandHand
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
+from src.command_handlers.uptime_handler import UptimeCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
@@ -79,6 +86,7 @@ from src.tasks.player.task_walk import TaskWalk
 from src.tasks.spells.task_cast_spell import TaskCastSpell
 from src.tasks.spells.task_move_spell import TaskMoveSpell
 from src.tasks.spells.task_spell_info import TaskSpellInfo
+from src.tasks.task_ayuda import TaskAyuda
 from src.tasks.task_dice import TaskDice
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_null import TaskNull
@@ -90,6 +98,7 @@ from src.tasks.task_party_kick import TaskPartyKick
 from src.tasks.task_party_leave import TaskPartyLeave
 from src.tasks.task_party_message import TaskPartyMessage
 from src.tasks.task_party_set_leader import TaskPartySetLeader
+from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_request_skills import TaskRequestSkills
 from src.tasks.task_tls_handshake import TaskTLSHandshake
@@ -139,6 +148,13 @@ class TaskFactory:
         self._dice_handler: DiceCommandHandler | None = None
         self._online_handler: OnlineCommandHandler | None = None
         self._information_handler: InformationCommandHandler | None = None
+        self._quit_handler: QuitCommandHandler | None = None
+        self._uptime_handler: UptimeCommandHandler | None = None
+        self._motd_handler: MotdCommandHandler | None = None
+        self._ping_handler: PingCommandHandler | None = None
+        self._ayuda_handler: AyudaCommandHandler | None = None
+        self._commerce_end_handler: CommerceEndCommandHandler | None = None
+        self._bank_end_handler: BankEndCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
         self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
@@ -490,6 +506,128 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._information_handler.message_sender = message_sender
         return self._information_handler
+
+    def _get_quit_handler(self, message_sender: MessageSender) -> QuitCommandHandler:
+        """Obtiene o crea el handler de desconexión.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de desconexión.
+        """
+        if self._quit_handler is None:
+            self._quit_handler = QuitCommandHandler(
+                player_repo=self.deps.player_repo,
+                map_manager=self.deps.map_manager,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._quit_handler.message_sender = message_sender
+        return self._quit_handler
+
+    def _get_uptime_handler(self, message_sender: MessageSender) -> UptimeCommandHandler:
+        """Obtiene o crea el handler de uptime.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de uptime.
+        """
+        if self._uptime_handler is None:
+            self._uptime_handler = UptimeCommandHandler(
+                server_repo=self.deps.server_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._uptime_handler.message_sender = message_sender
+        return self._uptime_handler
+
+    def _get_motd_handler(self, message_sender: MessageSender) -> MotdCommandHandler:
+        """Obtiene o crea el handler de MOTD.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de MOTD.
+        """
+        if self._motd_handler is None:
+            self._motd_handler = MotdCommandHandler(
+                server_repo=self.deps.server_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._motd_handler.message_sender = message_sender
+        return self._motd_handler
+
+    def _get_ping_handler(self, message_sender: MessageSender) -> PingCommandHandler:
+        """Obtiene o crea el handler de ping.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de ping.
+        """
+        if self._ping_handler is None:
+            self._ping_handler = PingCommandHandler(message_sender=message_sender)
+        else:
+            # Actualizar message_sender por si cambió
+            self._ping_handler.message_sender = message_sender
+        return self._ping_handler
+
+    def _get_ayuda_handler(self, message_sender: MessageSender) -> AyudaCommandHandler:
+        """Obtiene o crea el handler de ayuda.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de ayuda.
+        """
+        if self._ayuda_handler is None:
+            self._ayuda_handler = AyudaCommandHandler(message_sender=message_sender)
+        else:
+            # Actualizar message_sender por si cambió
+            self._ayuda_handler.message_sender = message_sender
+        return self._ayuda_handler
+
+    def _get_commerce_end_handler(self, message_sender: MessageSender) -> CommerceEndCommandHandler:
+        """Obtiene o crea el handler de cerrar comercio.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de cerrar comercio.
+        """
+        if self._commerce_end_handler is None:
+            self._commerce_end_handler = CommerceEndCommandHandler(message_sender=message_sender)
+        else:
+            # Actualizar message_sender por si cambió
+            self._commerce_end_handler.message_sender = message_sender
+        return self._commerce_end_handler
+
+    def _get_bank_end_handler(self, message_sender: MessageSender) -> BankEndCommandHandler:
+        """Obtiene o crea el handler de cerrar banco.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de cerrar banco.
+        """
+        if self._bank_end_handler is None:
+            self._bank_end_handler = BankEndCommandHandler(message_sender=message_sender)
+        else:
+            # Actualizar message_sender por si cambió
+            self._bank_end_handler.message_sender = message_sender
+        return self._bank_end_handler
 
     def _get_drop_handler(self, message_sender: MessageSender) -> DropCommandHandler:
         """Obtiene o crea el handler de soltar item.
@@ -1261,15 +1399,26 @@ class TaskFactory:
                 online_handler=self._get_online_handler(message_sender),
                 session_data=session_data,
             ),
-            TaskMotd: lambda: TaskMotd(data, message_sender, self.deps.server_repo),
+            TaskMotd: lambda: TaskMotd(
+                data,
+                message_sender,
+                motd_handler=self._get_motd_handler(message_sender),
+            ),
             TaskInformation: lambda: TaskInformation(
                 data,
                 message_sender,
                 information_handler=self._get_information_handler(message_sender),
             ),
-            TaskUptime: lambda: TaskUptime(data, message_sender, self.deps.server_repo),
+            TaskUptime: lambda: TaskUptime(
+                data,
+                message_sender,
+                uptime_handler=self._get_uptime_handler(message_sender),
+            ),
             TaskQuit: lambda: TaskQuit(
-                data, message_sender, self.deps.player_repo, self.deps.map_manager, session_data
+                data,
+                message_sender,
+                quit_handler=self._get_quit_handler(message_sender),
+                session_data=session_data,
             ),
             TaskDoubleClick: lambda: TaskDoubleClick(
                 data,
@@ -1324,8 +1473,27 @@ class TaskFactory:
                 bank_extract_handler=self._get_bank_extract_handler(message_sender),
                 session_data=session_data,
             ),
-            TaskBankEnd: lambda: TaskBankEnd(data, message_sender, session_data),
-            TaskCommerceEnd: lambda: TaskCommerceEnd(data, message_sender),
+            TaskBankEnd: lambda: TaskBankEnd(
+                data,
+                message_sender,
+                bank_end_handler=self._get_bank_end_handler(message_sender),
+                session_data=session_data,
+            ),
+            TaskCommerceEnd: lambda: TaskCommerceEnd(
+                data,
+                message_sender,
+                commerce_end_handler=self._get_commerce_end_handler(message_sender),
+            ),
+            TaskAyuda: lambda: TaskAyuda(
+                data,
+                message_sender,
+                ayuda_handler=self._get_ayuda_handler(message_sender),
+            ),
+            TaskPing: lambda: TaskPing(
+                data,
+                message_sender,
+                ping_handler=self._get_ping_handler(message_sender),
+            ),
             TaskPartyCreate: lambda: TaskPartyCreate(
                 data,
                 message_sender,

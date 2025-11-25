@@ -3,45 +3,54 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.motd_command import MotdCommand
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.motd_handler import MotdCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.server_repository import ServerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskMotd(Task):
-    """Tarea que muestra el Mensaje del Día."""
+    """Tarea que muestra el Mensaje del Día.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        server_repo: ServerRepository | None = None,
+        motd_handler: MotdCommandHandler | None = None,
     ) -> None:
         """Inicializa la tarea Motd.
 
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
-            server_repo: Repositorio del servidor para obtener el MOTD.
+            motd_handler: Handler para el comando de MOTD.
         """
         super().__init__(data, message_sender)
-        self.server_repo = server_repo
+        self.motd_handler = motd_handler
 
     async def execute(self) -> None:
-        """Muestra el Mensaje del Día."""
-        logger.debug("Solicitud de MOTD desde %s", self.message_sender.connection.address)
+        """Muestra el Mensaje del Día (solo parsing y delegación).
 
-        # Obtener MOTD desde el repositorio
-        if self.server_repo:
-            motd = await self.server_repo.get_motd()
-        else:
-            # Mensaje por defecto si no hay repositorio
-            motd = "» Bienvenido a Argentum Online! «\n• Servidor en desarrollo."
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
+        # Validar que tenemos el handler
+        if not self.motd_handler:
+            logger.error("MotdCommandHandler no disponible")
+            return
 
-        # Enviar MOTD línea por línea
-        await self.message_sender.send_multiline_console_msg(motd)
-        logger.info("MOTD enviado a %s", self.message_sender.connection.address)
+        # Crear comando (solo datos)
+        command = MotdCommand()
+
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.motd_handler.handle(command)
+
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Solicitud de MOTD falló: %s", result.error_message or "Error desconocido")
