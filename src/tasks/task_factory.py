@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
+from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
+from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -93,6 +95,8 @@ class TaskFactory:
         self._use_item_handler: UseItemCommandHandler | None = None
         self._pickup_handler: PickupCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
+        self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
+        self._commerce_sell_handler: CommerceSellCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -236,6 +240,52 @@ class TaskFactory:
             self._drop_handler.message_sender = message_sender
         return self._drop_handler
 
+    def _get_commerce_buy_handler(self, message_sender: MessageSender) -> CommerceBuyCommandHandler:
+        """Obtiene o crea el handler de comprar item.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de comprar item.
+        """
+        if self._commerce_buy_handler is None:
+            self._commerce_buy_handler = CommerceBuyCommandHandler(
+                commerce_service=self.deps.commerce_service,
+                player_repo=self.deps.player_repo,
+                inventory_repo=self.deps.inventory_repo,
+                redis_client=self.deps.redis_client,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._commerce_buy_handler.message_sender = message_sender
+        return self._commerce_buy_handler
+
+    def _get_commerce_sell_handler(
+        self, message_sender: MessageSender
+    ) -> CommerceSellCommandHandler:
+        """Obtiene o crea el handler de vender item.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de vender item.
+        """
+        if self._commerce_sell_handler is None:
+            self._commerce_sell_handler = CommerceSellCommandHandler(
+                commerce_service=self.deps.commerce_service,
+                player_repo=self.deps.player_repo,
+                inventory_repo=self.deps.inventory_repo,
+                redis_client=self.deps.redis_client,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._commerce_sell_handler.message_sender = message_sender
+        return self._commerce_sell_handler
+
     def create_task(
         self,
         data: bytes,
@@ -288,10 +338,7 @@ class TaskFactory:
                     message_sender=message_sender,
                     slot=parsed_data["slot"],
                     quantity=parsed_data["quantity"],
-                    commerce_service=self.deps.commerce_service,
-                    player_repo=self.deps.player_repo,
-                    inventory_repo=self.deps.inventory_repo,
-                    redis_client=self.deps.redis_client,
+                    commerce_sell_handler=self._get_commerce_sell_handler(message_sender),
                     session_data=session_data,
                 )
 
@@ -306,10 +353,7 @@ class TaskFactory:
                     message_sender=message_sender,
                     slot=parsed_data["slot"],
                     quantity=parsed_data["quantity"],
-                    commerce_service=self.deps.commerce_service,
-                    player_repo=self.deps.player_repo,
-                    inventory_repo=self.deps.inventory_repo,
-                    redis_client=self.deps.redis_client,
+                    commerce_buy_handler=self._get_commerce_buy_handler(message_sender),
                     session_data=session_data,
                 )
 

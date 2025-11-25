@@ -3,24 +3,22 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.config.config_manager import ConfigManager
-from src.models.items_catalog import ITEMS_CATALOG
+from src.commands.commerce_sell_command import CommerceSellCommand
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
-from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
+    from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.inventory_repository import InventoryRepository
-    from src.repositories.player_repository import PlayerRepository
-    from src.services.commerce_service import CommerceService
-    from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
 
 
 class TaskCommerceSell(Task):
-    """Tarea que maneja la venta de items a un mercader."""
+    """Tarea que maneja la venta de items a un mercader (solo parsing y delegación).
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
@@ -28,10 +26,7 @@ class TaskCommerceSell(Task):
         message_sender: MessageSender,
         slot: int,
         quantity: int,
-        commerce_service: CommerceService | None = None,
-        player_repo: PlayerRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
-        redis_client: RedisClient | None = None,
+        commerce_sell_handler: CommerceSellCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de venta.
@@ -41,24 +36,19 @@ class TaskCommerceSell(Task):
             message_sender: Enviador de mensajes.
             slot: Slot del inventario a vender (ya validado).
             quantity: Cantidad a vender (ya validada).
-            commerce_service: Servicio de comercio.
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventario.
-            redis_client: Cliente Redis.
+            commerce_sell_handler: Handler para el comando de vender item.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
         self.slot = slot
         self.quantity = quantity
-        self.commerce_service = commerce_service
-        self.player_repo = player_repo
-        self.inventory_repo = inventory_repo
-        self.redis_client = redis_client
+        self.commerce_sell_handler = commerce_sell_handler
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
-        """Procesa la venta de un item al mercader.
+        """Procesa la venta de un item al mercader (solo parsing y delegación).
 
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
         Los datos (slot, quantity) ya fueron validados por TaskFactory.
         """
         logger.debug(
@@ -74,103 +64,17 @@ class TaskCommerceSell(Task):
             await self.message_sender.send_console_msg("Error: Sesión no válida")
             return
 
-        # Validar servicios necesarios
-        if not self.commerce_service or not self.player_repo or not self.inventory_repo:
-            logger.error("TaskCommerceSell: Faltan servicios necesarios")
+        # Validar que tenemos el handler
+        if not self.commerce_sell_handler:
+            logger.error("CommerceSellCommandHandler no disponible")
             return
 
-        # Obtener NPC mercader activo de la sesión
-        npc_id = await self._get_active_merchant(user_id)
-        if not npc_id:
-            await self.message_sender.send_console_msg("No tienes una ventana de comercio abierta")
-            return
+        # Crear comando (solo datos)
+        command = CommerceSellCommand(user_id=user_id, slot=self.slot, quantity=self.quantity)
 
-        # Ejecutar venta
-        success, message = await self.commerce_service.sell_item(
-            user_id, npc_id, self.slot, self.quantity
-        )
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.commerce_sell_handler.handle(command)
 
-        # Enviar mensaje de resultado
-        await self.message_sender.send_console_msg(message)
-
-        if success:
-            # Actualizar oro del jugador
-            await self._update_player_gold(user_id)
-
-            # Actualizar inventario del jugador
-            await self._update_player_inventory(user_id)
-
-    async def _get_active_merchant(self, user_id: int) -> int | None:
-        """Obtiene el ID del mercader activo para el jugador.
-
-        Args:
-            user_id: ID del jugador.
-
-        Returns:
-            ID del mercader activo o None si no hay comercio activo.
-        """
-        if not self.redis_client:
-            return None
-        key = RedisKeys.session_active_merchant(user_id)
-        result = await self.redis_client.redis.get(key)
-        return int(result) if result else None
-
-    async def _update_player_gold(self, user_id: int) -> None:
-        """Envía actualización de oro al cliente.
-
-        Args:
-            user_id: ID del jugador.
-        """
-        if not self.player_repo:
-            return
-        gold = await self.player_repo.get_gold(user_id)
-        await self.message_sender.send_update_gold(gold)
-
-    async def _update_player_inventory(self, user_id: int) -> None:
-        """Envía actualizaciones del inventario del jugador.
-
-        Args:
-            user_id: ID del jugador.
-        """
-        if not self.inventory_repo:
-            return
-
-        # Enviar todos los slots del inventario
-        for slot in range(1, ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) + 1):
-            slot_data = await self.inventory_repo.get_slot(user_id, slot)
-
-            if slot_data:
-                item_id, amount = slot_data
-                item = ITEMS_CATALOG.get(item_id)
-
-                if item:
-                    await self.message_sender.send_change_inventory_slot(
-                        slot=slot,
-                        item_id=item_id,
-                        name=item.name,
-                        amount=amount,
-                        equipped=False,
-                        grh_id=item.graphic_id,
-                        item_type=item.item_type.to_client_type(),
-                        max_hit=item.max_damage or 0,
-                        min_hit=item.min_damage or 0,
-                        max_def=item.defense or 0,
-                        min_def=item.defense or 0,
-                        sale_price=float(item.value),
-                    )
-            else:
-                # Slot vacío
-                await self.message_sender.send_change_inventory_slot(
-                    slot=slot,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    equipped=False,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                    sale_price=0.0,
-                )
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Vender item falló: %s", result.error_message or "Error desconocido")

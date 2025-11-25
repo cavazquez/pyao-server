@@ -2,6 +2,8 @@
 
 from src.command_handlers.attack_handler import AttackCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
+from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
+from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -10,6 +12,8 @@ from src.command_handlers.walk_handler import WalkCommandHandler
 __all__ = [
     "AttackCommandHandler",
     "CastSpellCommandHandler",
+    "CommerceBuyCommandHandler",
+    "CommerceSellCommandHandler",
     "DropCommandHandler",
     "PickupCommandHandler",
     "UseItemCommandHandler",

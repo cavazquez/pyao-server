@@ -4,11 +4,27 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.repositories.inventory_repository import InventoryRepository
-from src.repositories.player_repository import PlayerRepository
-from src.services.commerce_service import CommerceService
+from src.commands.base import CommandResult
+from src.commands.commerce_buy_command import CommerceBuyCommand
 from src.tasks.commerce.task_commerce_buy import TaskCommerceBuy
-from src.utils.redis_client import RedisClient
+
+
+def create_mock_commerce_buy_handler(
+    commerce_service: MagicMock | None = None,
+    player_repo: MagicMock | None = None,
+    inventory_repo: MagicMock | None = None,
+    redis_client: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de CommerceBuyCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.commerce_service = commerce_service or MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.inventory_repo = inventory_repo or MagicMock()
+    handler.redis_client = redis_client or MagicMock()
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -23,20 +39,13 @@ class TestTaskCommerceBuy:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_gold = AsyncMock()
 
-        commerce_service = MagicMock(spec=CommerceService)
-        commerce_service.buy_item = AsyncMock(return_value=(True, "Compraste 5x Poción"))
-
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.get_gold = AsyncMock(return_value=500)
-
-        inventory_repo = MagicMock(spec=InventoryRepository)
-
-        redis_client = MagicMock(spec=RedisClient)
-        redis_client.redis.get = AsyncMock(return_value=b"2")  # NPC ID 2
+        commerce_buy_handler = create_mock_commerce_buy_handler(message_sender=message_sender)
+        commerce_buy_handler.handle.return_value = CommandResult.ok(
+            data={"npc_id": 2, "slot": 1, "quantity": 5, "success": True}
+        )
 
         # Packet: COMMERCE_BUY + slot=1 + quantity=5
         data = bytes([0x28, 0x01, 0x05, 0x00])  # 5 en little-endian
-
         session_data = {"user_id": 1}
 
         task = TaskCommerceBuy(
@@ -44,10 +53,7 @@ class TestTaskCommerceBuy:
             message_sender,
             slot=1,
             quantity=5,
-            commerce_service=commerce_service,
-            player_repo=player_repo,
-            inventory_repo=inventory_repo,
-            redis_client=redis_client,
+            commerce_buy_handler=commerce_buy_handler,
             session_data=session_data,
         )
 
@@ -55,9 +61,12 @@ class TestTaskCommerceBuy:
         await task.execute()
 
         # Assert
-        commerce_service.buy_item.assert_called_once_with(1, 2, 1, 5)
-        message_sender.send_console_msg.assert_called_with("Compraste 5x Poción")
-        message_sender.send_update_gold.assert_called_once_with(500)
+        commerce_buy_handler.handle.assert_called_once()
+        call_args = commerce_buy_handler.handle.call_args[0][0]
+        assert isinstance(call_args, CommerceBuyCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
+        assert call_args.quantity == 5
 
     async def test_buy_item_failure(self) -> None:
         """Test de compra fallida."""
@@ -67,14 +76,8 @@ class TestTaskCommerceBuy:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_gold = AsyncMock()
 
-        commerce_service = MagicMock(spec=CommerceService)
-        commerce_service.buy_item = AsyncMock(return_value=(False, "No tienes suficiente oro"))
-
-        player_repo = MagicMock(spec=PlayerRepository)
-        inventory_repo = MagicMock(spec=InventoryRepository)
-
-        redis_client = MagicMock(spec=RedisClient)
-        redis_client.redis.get = AsyncMock(return_value=b"2")
+        commerce_buy_handler = create_mock_commerce_buy_handler(message_sender=message_sender)
+        commerce_buy_handler.handle.return_value = CommandResult.error("No tienes suficiente oro")
 
         data = bytes([0x28, 0x01, 0x05, 0x00])
         session_data = {"user_id": 1}
@@ -84,10 +87,7 @@ class TestTaskCommerceBuy:
             message_sender,
             slot=1,
             quantity=5,
-            commerce_service=commerce_service,
-            player_repo=player_repo,
-            inventory_repo=inventory_repo,
-            redis_client=redis_client,
+            commerce_buy_handler=commerce_buy_handler,
             session_data=session_data,
         )
 
@@ -95,8 +95,7 @@ class TestTaskCommerceBuy:
         await task.execute()
 
         # Assert
-        message_sender.send_console_msg.assert_called_with("No tienes suficiente oro")
-        message_sender.send_update_gold.assert_not_called()
+        commerce_buy_handler.handle.assert_called_once()
 
     async def test_buy_without_session(self) -> None:
         """Test sin sesión activa."""
@@ -104,7 +103,7 @@ class TestTaskCommerceBuy:
         message_sender = MagicMock()
         message_sender.send_console_msg = AsyncMock()
 
-        commerce_service = MagicMock(spec=CommerceService)
+        commerce_buy_handler = create_mock_commerce_buy_handler(message_sender=message_sender)
 
         data = bytes([0x28, 0x01, 0x05, 0x00])
         session_data = {}  # Sin user_id
@@ -114,7 +113,7 @@ class TestTaskCommerceBuy:
             message_sender,
             slot=1,
             quantity=5,
-            commerce_service=commerce_service,
+            commerce_buy_handler=commerce_buy_handler,
             session_data=session_data,
         )
 
@@ -123,9 +122,10 @@ class TestTaskCommerceBuy:
 
         # Assert
         message_sender.send_console_msg.assert_called_with("Error: Sesión no válida")
+        commerce_buy_handler.handle.assert_not_called()
 
-    async def test_buy_without_dependencies(self) -> None:
-        """Test sin dependencias necesarias."""
+    async def test_buy_without_handler(self) -> None:
+        """Test sin handler."""
         # Setup
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
@@ -138,9 +138,7 @@ class TestTaskCommerceBuy:
             message_sender,
             slot=1,
             quantity=5,
-            commerce_service=None,  # Sin dependencias
-            player_repo=None,
-            inventory_repo=None,
+            commerce_buy_handler=None,
             session_data=session_data,
         )
 
@@ -156,12 +154,10 @@ class TestTaskCommerceBuy:
         message_sender.connection.address = "127.0.0.1:1234"
         message_sender.send_console_msg = AsyncMock()
 
-        commerce_service = MagicMock(spec=CommerceService)
-        player_repo = MagicMock(spec=PlayerRepository)
-        inventory_repo = MagicMock(spec=InventoryRepository)
-
-        redis_client = MagicMock(spec=RedisClient)
-        redis_client.redis.get = AsyncMock(return_value=None)  # Sin mercader activo
+        commerce_buy_handler = create_mock_commerce_buy_handler(message_sender=message_sender)
+        commerce_buy_handler.handle.return_value = CommandResult.error(
+            "No tienes una ventana de comercio abierta"
+        )
 
         data = bytes([0x28, 0x01, 0x05, 0x00])
         session_data = {"user_id": 1}
@@ -171,10 +167,7 @@ class TestTaskCommerceBuy:
             message_sender,
             slot=1,
             quantity=5,
-            commerce_service=commerce_service,
-            player_repo=player_repo,
-            inventory_repo=inventory_repo,
-            redis_client=redis_client,
+            commerce_buy_handler=commerce_buy_handler,
             session_data=session_data,
         )
 
@@ -182,7 +175,4 @@ class TestTaskCommerceBuy:
         await task.execute()
 
         # Assert
-        message_sender.send_console_msg.assert_called_with(
-            "No tienes una ventana de comercio abierta"
-        )
-        commerce_service.buy_item.assert_not_called()
+        commerce_buy_handler.handle.assert_called_once()
