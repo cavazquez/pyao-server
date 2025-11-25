@@ -33,20 +33,20 @@ Esta guía te ayudará a probar el sistema de clanes en el juego, primero con un
 
 ### 2. Verificar Nivel Mínimo
 
-El nivel mínimo para crear un clan es **20**. Si tu personaje es nivel menor:
+El nivel mínimo para crear un clan es **13**. Si tu personaje es nivel menor:
 
 ```
 /CREARCLAN MiClan
 ```
 
 **Resultado esperado:** 
-- Mensaje de error: "Debes ser nivel 20 o superior para crear un clan"
+- Mensaje de error: "Debes ser nivel 13 o superior para crear un clan"
 
 **Solución:** 
 - Sube de nivel matando NPCs
-- O modifica temporalmente `MIN_LEVEL_TO_CREATE` en `src/services/clan_service.py` para testing
+- O modifica temporalmente `MIN_LEVEL_TO_CREATE` en `src/models/clan.py` para testing
 
-### 3. Crear un Clan (Nivel 20+)
+### 3. Crear un Clan (Nivel 13+)
 
 ```
 /CREARCLAN MiClan
@@ -129,11 +129,11 @@ El nivel mínimo para crear un clan es **20**. Si tu personaje es nivel menor:
 ### Preparación
 
 1. **Jugador 1 (Líder):**
-   - Nivel 20+
+   - Nivel 13+ (mínimo para crear clan)
    - Crea un clan: `/CREARCLAN MiClan`
 
 2. **Jugador 2 (Invitado):**
-   - Nivel 10+ (mínimo para unirse)
+   - Nivel 1+ (mínimo para unirse)
    - Conectado al mismo servidor
 
 ### 1. Invitar al Jugador 2
@@ -289,8 +289,8 @@ KEYS invitation:*
 
 ### Con un Jugador:
 - [ ] Ver comandos en /AYUDA
-- [ ] Error al crear clan con nivel bajo
-- [ ] Crear clan exitosamente
+- [ ] Error al crear clan con nivel bajo (< 13)
+- [ ] Crear clan exitosamente (nivel 13+)
 - [ ] Error al crear segundo clan
 - [ ] Error al invitarse a sí mismo
 - [ ] Abandonar clan
