@@ -18,6 +18,7 @@ from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
+from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -109,6 +110,7 @@ class TaskFactory:
         self._bank_extract_gold_handler: BankExtractGoldCommandHandler | None = None
         self._equip_item_handler: EquipItemCommandHandler | None = None
         self._work_handler: WorkCommandHandler | None = None
+        self._work_left_click_handler: WorkLeftClickCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -380,6 +382,29 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._work_handler.message_sender = message_sender
         return self._work_handler
+
+    def _get_work_left_click_handler(
+        self, message_sender: MessageSender
+    ) -> WorkLeftClickCommandHandler:
+        """Obtiene o crea el handler de trabajo con click.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de trabajo con click.
+        """
+        if self._work_left_click_handler is None:
+            self._work_left_click_handler = WorkLeftClickCommandHandler(
+                player_repo=self.deps.player_repo,
+                inventory_repo=self.deps.inventory_repo,
+                map_resources=self.deps.map_resources_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._work_left_click_handler.message_sender = message_sender
+        return self._work_left_click_handler
 
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
@@ -760,11 +785,9 @@ class TaskFactory:
             TaskWorkLeftClick: lambda: TaskWorkLeftClick(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.inventory_repo,
-                self.deps.map_manager,
-                session_data,
-                self.deps.map_resources_service,
+                work_left_click_handler=self._get_work_left_click_handler(message_sender),
+                player_repo=self.deps.player_repo,
+                session_data=session_data,
             ),
             TaskMoveSpell: lambda: TaskMoveSpell(
                 data,

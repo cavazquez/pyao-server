@@ -14,6 +14,7 @@ from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
+from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
 
 __all__ = [
     "AttackCommandHandler",
@@ -30,4 +31,5 @@ __all__ = [
     "UseItemCommandHandler",
     "WalkCommandHandler",
     "WorkCommandHandler",
+    "WorkLeftClickCommandHandler",
 ]

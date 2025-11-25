@@ -15,6 +15,7 @@ from src.commands.pickup_command import PickupCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
 from src.commands.work_command import WorkCommand
+from src.commands.work_left_click_command import WorkLeftClickCommand
 
 __all__ = [
     "AttackCommand",
@@ -34,4 +35,5 @@ __all__ = [
     "UseItemCommand",
     "WalkCommand",
     "WorkCommand",
+    "WorkLeftClickCommand",
 ]
