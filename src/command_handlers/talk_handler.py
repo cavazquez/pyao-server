@@ -3,7 +3,19 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.accept_clan_handler import AcceptClanCommandHandler
+from src.command_handlers.create_clan_handler import CreateClanCommandHandler
+from src.command_handlers.invite_clan_handler import InviteClanCommandHandler
+from src.command_handlers.kick_clan_member_handler import KickClanMemberCommandHandler
+from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
+from src.command_handlers.reject_clan_handler import RejectClanCommandHandler
+from src.commands.accept_clan_command import AcceptClanCommand
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.commands.create_clan_command import CreateClanCommand
+from src.commands.invite_clan_command import InviteClanCommand
+from src.commands.kick_clan_member_command import KickClanMemberCommand
+from src.commands.leave_clan_command import LeaveClanCommand
+from src.commands.reject_clan_command import RejectClanCommand
 from src.commands.talk_command import TalkCommand
 
 if TYPE_CHECKING:
@@ -218,9 +230,6 @@ class TalkCommandHandler(CommandHandler):
                 clan_name = args[0]
                 description = " ".join(args[1:]) if len(args) > 1 else ""
 
-                from src.command_handlers.create_clan_handler import CreateClanCommandHandler
-                from src.commands.create_clan_command import CreateClanCommand
-
                 handler = CreateClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
@@ -250,9 +259,6 @@ class TalkCommandHandler(CommandHandler):
 
                 target_username = args[0]
 
-                from src.command_handlers.invite_clan_handler import InviteClanCommandHandler
-                from src.commands.invite_clan_command import InviteClanCommand
-
                 handler = InviteClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
@@ -274,9 +280,6 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "ACEPTARCLAN":
-                from src.command_handlers.accept_clan_handler import AcceptClanCommandHandler
-                from src.commands.accept_clan_command import AcceptClanCommand
-
                 handler = AcceptClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
@@ -298,9 +301,6 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "RECHAZARCLAN":
-                from src.command_handlers.reject_clan_handler import RejectClanCommandHandler
-                from src.commands.reject_clan_command import RejectClanCommand
-
                 handler = RejectClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
@@ -322,9 +322,6 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "SALIRCLAN":
-                from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
-                from src.commands.leave_clan_command import LeaveClanCommand
-
                 handler = LeaveClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
@@ -354,11 +351,6 @@ class TalkCommandHandler(CommandHandler):
                     return
 
                 target_username = args[0]
-
-                from src.command_handlers.kick_clan_member_handler import (
-                    KickClanMemberCommandHandler,
-                )
-                from src.commands.kick_clan_member_command import KickClanMemberCommand
 
                 handler = KickClanMemberCommandHandler(
                     clan_service=self.clan_service,
