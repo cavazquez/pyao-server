@@ -175,7 +175,7 @@ class TalkCommandHandler(CommandHandler):
 
         logger.info("Métricas solicitadas por user_id %d", user_id)
 
-    async def _handle_clan_command(self, user_id: int, command: TalkCommand) -> None:
+    async def _handle_clan_command(self, user_id: int, command: TalkCommand) -> None:  # noqa: PLR0915, PLR0914
         """Maneja comandos de clan desde el chat.
 
         Args:
