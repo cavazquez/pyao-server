@@ -12,6 +12,7 @@ from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
+from src.command_handlers.create_account_handler import CreateAccountCommandHandler
 from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
@@ -129,6 +130,7 @@ class TaskFactory:
         self._inventory_click_handler: InventoryClickCommandHandler | None = None
         self._left_click_handler: LeftClickCommandHandler | None = None
         self._login_handler: LoginCommandHandler | None = None
+        self._create_account_handler: CreateAccountCommandHandler | None = None
         self._party_create_handler: PartyCreateCommandHandler | None = None
         self._party_join_handler: PartyJoinCommandHandler | None = None
         self._party_accept_handler: PartyAcceptCommandHandler | None = None
@@ -551,6 +553,38 @@ class TaskFactory:
             self._login_handler.session_data = session_data or {}
         return self._login_handler
 
+    def _get_create_account_handler(
+        self, message_sender: MessageSender, session_data: dict[str, dict[str, int]] | None
+    ) -> CreateAccountCommandHandler:
+        """Obtiene o crea el handler de creación de cuenta.
+
+        Args:
+            message_sender: Enviador de mensajes.
+            session_data: Datos de sesión compartidos.
+
+        Returns:
+            Handler de creación de cuenta.
+        """
+        if self._create_account_handler is None:
+            self._create_account_handler = CreateAccountCommandHandler(
+                player_repo=self.deps.player_repo,
+                account_repo=self.deps.account_repo,
+                map_manager=self.deps.map_manager,
+                npc_service=self.deps.npc_service,
+                server_repo=self.deps.server_repo,
+                spellbook_repo=self.deps.spellbook_repo,
+                spell_catalog=self.deps.spell_catalog,
+                equipment_repo=self.deps.equipment_repo,
+                player_map_service=self.deps.player_map_service,
+                message_sender=message_sender,
+                session_data=session_data,
+            )
+        else:
+            # Actualizar message_sender y session_data por si cambiaron
+            self._create_account_handler.message_sender = message_sender
+            self._create_account_handler.session_data = session_data or {}
+        return self._create_account_handler
+
     def _get_party_create_handler(self, message_sender: MessageSender) -> PartyCreateCommandHandler:
         """Obtiene o crea el handler de crear party.
 
@@ -894,16 +928,10 @@ class TaskFactory:
             TaskCreateAccount: lambda: TaskCreateAccount(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.account_repo,
-                self.deps.map_manager,
-                session_data,
-                self.deps.npc_service,
-                self.deps.server_repo,
-                self.deps.spellbook_repo,
-                self.deps.spell_catalog,
-                self.deps.equipment_repo,
-                self.deps.player_map_service,
+                create_account_handler=self._get_create_account_handler(
+                    message_sender, session_data
+                ),
+                session_data=session_data,
             ),
             TaskDice: lambda: TaskDice(data, message_sender, session_data, self.deps.server_repo),
             TaskRequestAttributes: lambda: TaskRequestAttributes(

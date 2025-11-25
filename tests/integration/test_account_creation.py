@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.command_handlers.create_account_handler import CreateAccountCommandHandler
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID, ServerPacketID
@@ -85,18 +86,27 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # Home
     data.append(1)  # home
 
-    # Crear y ejecutar tarea (sin spellbook_repo ni spell_catalog para simplificar el test)
-    task = TaskCreateAccount(
-        bytes(data),
-        message_sender,
-        player_repo,
-        account_repo,
+    # Crear handler con todas las dependencias necesarias
+    create_account_handler = CreateAccountCommandHandler(
+        player_repo=player_repo,
+        account_repo=account_repo,
         map_manager=None,
-        session_data=None,
         npc_service=None,
         server_repo=None,
         spellbook_repo=None,
         spell_catalog=None,
+        equipment_repo=None,
+        player_map_service=None,
+        message_sender=message_sender,
+        session_data=None,
+    )
+
+    # Crear y ejecutar tarea
+    task = TaskCreateAccount(
+        bytes(data),
+        message_sender,
+        create_account_handler=create_account_handler,
+        session_data=None,
     )
     await task.execute()
 
@@ -185,8 +195,25 @@ async def test_task_create_account_duplicate_username() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
+    # Crear handler
+    create_account_handler = CreateAccountCommandHandler(
+        player_repo=player_repo,
+        account_repo=account_repo,
+        map_manager=None,
+        npc_service=None,
+        server_repo=None,
+        spellbook_repo=None,
+        spell_catalog=None,
+        equipment_repo=None,
+        player_map_service=None,
+        message_sender=message_sender,
+        session_data=None,
+    )
+
     # Ejecutar tarea
-    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
+    task = TaskCreateAccount(
+        bytes(data), message_sender, create_account_handler=create_account_handler
+    )
     await task.execute()
 
     # Verificar que se envió mensaje de error
@@ -293,7 +320,24 @@ async def test_task_create_account_invalid_email() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
-    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
+    # Crear handler
+    create_account_handler = CreateAccountCommandHandler(
+        player_repo=player_repo,
+        account_repo=account_repo,
+        map_manager=None,
+        npc_service=None,
+        server_repo=None,
+        spellbook_repo=None,
+        spell_catalog=None,
+        equipment_repo=None,
+        player_map_service=None,
+        message_sender=message_sender,
+        session_data=None,
+    )
+
+    task = TaskCreateAccount(
+        bytes(data), message_sender, create_account_handler=create_account_handler
+    )
     await task.execute()
 
     # Verificar que se envió error
@@ -327,8 +371,8 @@ async def test_task_create_account_no_redis() -> None:
     data.extend(len(email).to_bytes(2, byteorder="little"))
     data.extend(email.encode("utf-8"))
 
-    # Crear tarea sin redis_client (None)
-    task = TaskCreateAccount(bytes(data), message_sender, None)
+    # Crear tarea sin handler (None)
+    task = TaskCreateAccount(bytes(data), message_sender, create_account_handler=None)
     await task.execute()
 
     # Verificar que se envió error
@@ -413,7 +457,24 @@ async def test_task_create_account_unicode_username() -> None:
     # Home
     data.append(1)  # home
 
-    task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
+    # Crear handler
+    create_account_handler = CreateAccountCommandHandler(
+        player_repo=player_repo,
+        account_repo=account_repo,
+        map_manager=None,
+        npc_service=None,
+        server_repo=None,
+        spellbook_repo=None,
+        spell_catalog=None,
+        equipment_repo=None,
+        player_map_service=None,
+        message_sender=message_sender,
+        session_data=None,
+    )
+
+    task = TaskCreateAccount(
+        bytes(data), message_sender, create_account_handler=create_account_handler
+    )
     await task.execute()
 
     # Verificar que se creó la cuenta
