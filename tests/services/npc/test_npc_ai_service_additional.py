@@ -448,7 +448,6 @@ class TestTryMoveTowards:
         ai_service: NPCAIService,
         sample_npc: NPC,
         mock_map_manager: MagicMock,
-        mock_broadcast_service: MagicMock,
     ) -> None:
         """Test movimiento simple sin pathfinding."""
         ai_service.pathfinding_service = None  # Sin pathfinding
@@ -565,7 +564,6 @@ class TestProcessHostileNPC:
         sample_npc: NPC,
         mock_map_manager: MagicMock,
         mock_player_repo: MagicMock,
-        mock_broadcast_service: MagicMock,
     ) -> None:
         """Test procesar NPC hostil que se mueve hacia jugador."""
         mock_map_manager.get_players_in_map.return_value = [1]
