@@ -16,6 +16,8 @@ def mock_repositories() -> dict:
     """Crea un diccionario con mocks de repositorios."""
     party_repo = Mock()
     party_repo.initialize = AsyncMock()
+    clan_repo = Mock()
+    clan_repo.initialize = AsyncMock()
     return {
         "player_repo": Mock(),
         "account_repo": Mock(),
@@ -23,6 +25,7 @@ def mock_repositories() -> dict:
         "inventory_repo": Mock(),
         "merchant_repo": Mock(),
         "equipment_repo": Mock(),
+        "clan_repo": clan_repo,
         "party_repo": party_repo,
     }
 
@@ -71,6 +74,7 @@ async def test_service_initializer_creates_all_services(
     assert "npc_catalog" in services
     assert "spell_catalog" in services
     assert "item_catalog" in services
+    assert "clan_service" in services
 
     # Verificar tipos de catálogos
     assert isinstance(services["npc_catalog"], NPCCatalog)
@@ -102,5 +106,5 @@ async def test_service_initializer_returns_dict(
 
     assert isinstance(services, dict)
     assert (
-        len(services) == 18
-    )  # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 door_service)
+        len(services) == 19
+    )  # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service, +1 door_service)

@@ -1110,6 +1110,7 @@ class TaskFactory:
                 map_manager=self.deps.map_manager,
                 game_tick=self.deps.game_tick,
                 message_sender=message_sender,
+                clan_service=self.deps.clan_service,
                 session_data=session_data,
             )
         else:

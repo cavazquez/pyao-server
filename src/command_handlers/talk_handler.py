@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.clan_service import ClanService
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ class TalkCommandHandler(CommandHandler):
         map_manager: MapManager | None,
         game_tick: GameTick | None,
         message_sender: MessageSender,
+        clan_service: ClanService | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el handler.
@@ -36,6 +38,7 @@ class TalkCommandHandler(CommandHandler):
             map_manager: Gestor de mapas para broadcast.
             game_tick: Sistema de GameTick para comandos de métricas.
             message_sender: Enviador de mensajes.
+            clan_service: Servicio de clanes (opcional).
             session_data: Datos de sesión compartidos.
         """
         self.player_repo = player_repo
@@ -43,6 +46,7 @@ class TalkCommandHandler(CommandHandler):
         self.map_manager = map_manager
         self.game_tick = game_tick
         self.message_sender = message_sender
+        self.clan_service = clan_service
         self.session_data = session_data or {}
 
     async def handle(self, command: Command) -> CommandResult:
@@ -66,6 +70,11 @@ class TalkCommandHandler(CommandHandler):
         if command.is_metrics_command():
             await self._handle_metrics_command(user_id)
             return CommandResult.ok(data={"command": "metrics"})
+
+        # Comandos de clan - procesar antes del broadcast
+        if command.is_clan_command():
+            await self._handle_clan_command(user_id, command)
+            return CommandResult.ok(data={"command": "clan"})
 
         # Broadcast multijugador: enviar mensaje a todos los jugadores en el mapa
         if not self.map_manager:

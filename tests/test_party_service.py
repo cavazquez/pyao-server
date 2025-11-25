@@ -33,6 +33,11 @@ def mock_player_repo():
         "max_hp": 100,
     }
 
+    # Mock helper methods
+    repo.get_level.return_value = 20
+    repo.get_current_hp.return_value = 100
+    repo.is_alive.return_value = True
+
     # Mock get_attributes to return a dict with charisma
     repo.get_attributes.return_value = {
         "charisma": 18,
@@ -128,6 +133,7 @@ class TestPartyCreation:
             "min_hp": 100,
             "max_hp": 100,
         }
+        mock_player_repo.get_level.return_value = 0  # Use helper method
         mock_player_repo.get_attributes.return_value = {
             "charisma": 18,
             "username": "TestPlayer",
@@ -150,6 +156,9 @@ class TestPartyCreation:
             "min_hp": 0,  # Dead
             "max_hp": 100,
         }
+        mock_player_repo.get_level.return_value = 20
+        mock_player_repo.get_current_hp.return_value = 0
+        mock_player_repo.is_alive.return_value = False  # Use helper method
         mock_player_repo.get_attributes.return_value = {
             "charisma": 18,
             "leadership": 10,

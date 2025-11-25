@@ -37,8 +37,10 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     npc_catalog = Mock()
     spell_catalog = Mock()
     item_catalog = Mock()
+    clan_repo = Mock()
     party_repo = Mock()
     party_service = Mock()
+    clan_service = Mock()
     door_repo = Mock()
     door_service = Mock()
     session_manager = Mock()
@@ -74,8 +76,10 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
         npc_catalog=npc_catalog,
         spell_catalog=spell_catalog,
         item_catalog=item_catalog,
+        clan_repo=clan_repo,
         party_repo=party_repo,
         party_service=party_service,
+        clan_service=clan_service,
         door_repo=door_repo,
         door_service=door_service,
         session_manager=session_manager,
@@ -110,8 +114,10 @@ def test_dependency_container_creation() -> None:  # noqa: PLR0914, PLR0915
     assert container.npc_catalog is npc_catalog
     assert container.spell_catalog is spell_catalog
     assert container.item_catalog is item_catalog
+    assert container.clan_repo is clan_repo
     assert container.party_repo is party_repo
     assert container.party_service is party_service
+    assert container.clan_service is clan_service
     assert container.door_repo is door_repo
     assert container.door_service is door_service
     assert container.session_manager is session_manager
