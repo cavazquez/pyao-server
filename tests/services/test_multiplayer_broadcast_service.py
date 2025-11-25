@@ -612,11 +612,11 @@ class TestBroadcastBlockPosition:
         mock_map_manager.get_all_message_senders_in_map.return_value = [sender]
 
         # Execute
-        notified = await broadcast_service.broadcast_block_position(1, 10, 20, True)
+        notified = await broadcast_service.broadcast_block_position(1, 10, 20, blocked=True)
 
         # Assert
         assert notified == 1
-        sender.send_block_position.assert_called_once_with(10, 20, True)
+        sender.send_block_position.assert_called_once_with(10, 20, blocked=True)
 
     @pytest.mark.asyncio
     async def test_broadcast_block_position_unblocked(
@@ -630,11 +630,11 @@ class TestBroadcastBlockPosition:
         mock_map_manager.get_all_message_senders_in_map.return_value = [sender]
 
         # Execute
-        notified = await broadcast_service.broadcast_block_position(1, 10, 20, False)
+        notified = await broadcast_service.broadcast_block_position(1, 10, 20, blocked=False)
 
         # Assert
         assert notified == 1
-        sender.send_block_position.assert_called_once_with(10, 20, False)
+        sender.send_block_position.assert_called_once_with(10, 20, blocked=False)
 
 
 class TestBroadcastObjectCreate:
