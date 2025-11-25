@@ -10,6 +10,7 @@ from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
 from src.command_handlers.bank_extract_gold_handler import BankExtractGoldCommandHandler
 from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
+from src.command_handlers.change_heading_handler import ChangeHeadingCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.create_account_handler import CreateAccountCommandHandler
@@ -114,6 +115,7 @@ class TaskFactory:
         self._attack_handler: AttackCommandHandler | None = None
         self._walk_handler: WalkCommandHandler | None = None
         self._cast_spell_handler: CastSpellCommandHandler | None = None
+        self._change_heading_handler: ChangeHeadingCommandHandler | None = None
         self._use_item_handler: UseItemCommandHandler | None = None
         self._pickup_handler: PickupCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
@@ -216,6 +218,34 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._cast_spell_handler.message_sender = message_sender
         return self._cast_spell_handler
+
+    def _get_change_heading_handler(
+        self,
+        message_sender: MessageSender,
+        session_data: dict[str, dict[str, int] | int | str] | None,
+    ) -> ChangeHeadingCommandHandler:
+        """Obtiene o crea el handler de cambio de dirección.
+
+        Args:
+            message_sender: Enviador de mensajes.
+            session_data: Datos de sesión compartidos.
+
+        Returns:
+            Handler de cambio de dirección.
+        """
+        if self._change_heading_handler is None:
+            self._change_heading_handler = ChangeHeadingCommandHandler(
+                player_repo=self.deps.player_repo,
+                account_repo=self.deps.account_repo,
+                map_manager=self.deps.map_manager,
+                message_sender=message_sender,
+                session_data=session_data,
+            )
+        else:
+            # Actualizar message_sender y session_data por si cambiaron
+            self._change_heading_handler.message_sender = message_sender
+            self._change_heading_handler.session_data = session_data or {}
+        return self._change_heading_handler
 
     def _get_use_item_handler(self, message_sender: MessageSender) -> UseItemCommandHandler:
         """Obtiene o crea el handler de usar item.
@@ -990,10 +1020,10 @@ class TaskFactory:
             TaskChangeHeading: lambda: TaskChangeHeading(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.account_repo,
-                self.deps.map_manager,
-                session_data,
+                change_heading_handler=self._get_change_heading_handler(
+                    message_sender, session_data
+                ),
+                session_data=session_data,
             ),
             TaskRequestStats: lambda: TaskRequestStats(
                 data, message_sender, self.deps.player_repo, session_data

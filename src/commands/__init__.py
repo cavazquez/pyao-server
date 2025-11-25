@@ -21,6 +21,7 @@ from src.commands.bank_extract_command import BankExtractCommand
 from src.commands.bank_extract_gold_command import BankExtractGoldCommand
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
+from src.commands.change_heading_command import ChangeHeadingCommand
 from src.commands.commerce_buy_command import CommerceBuyCommand
 from src.commands.commerce_sell_command import CommerceSellCommand
 from src.commands.create_account_command import CreateAccountCommand
@@ -53,6 +54,7 @@ __all__ = [
     "BankExtractCommand",
     "BankExtractGoldCommand",
     "CastSpellCommand",
+    "ChangeHeadingCommand",
     "Command",
     "CommandHandler",
     "CommandResult",

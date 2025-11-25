@@ -3,58 +3,45 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.change_heading_command import ChangeHeadingCommand
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.change_heading_handler import ChangeHeadingCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.account_repository import AccountRepository
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
-
-# Constantes para direcciones
-HEADING_NORTH = 1
-HEADING_EAST = 2
-HEADING_SOUTH = 3
-HEADING_WEST = 4
-
-# Body que representa una barca en el cliente Godot (incluido en Consts.ShipIds)
-SHIP_BODY_ID = 84
 
 # Constantes para validación de paquetes
 MIN_CHANGE_HEADING_PACKET_SIZE = 2
 
 
 class TaskChangeHeading(Task):
-    """Tarea que maneja el cambio de dirección del personaje sin moverse."""
+    """Tarea que maneja el cambio de dirección del personaje sin moverse.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
-        account_repo: AccountRepository | None = None,
-        map_manager: MapManager | None = None,
-        session_data: dict[str, dict[str, int]] | None = None,
+        change_heading_handler: ChangeHeadingCommandHandler | None = None,
+        session_data: dict[str, dict[str, int] | int | str] | None = None,
     ) -> None:
         """Inicializa la tarea de cambio de dirección.
 
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            player_repo: Repositorio de jugadores.
-            account_repo: Repositorio de cuentas.
-            map_manager: Gestor de mapas para broadcast.
+            change_heading_handler: Handler para el comando de cambio de dirección.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
-        self.account_repo = account_repo
-        self.map_manager = map_manager
-        self.session_data = session_data
+        self.change_heading_handler = change_heading_handler
+        self.session_data = session_data or {}
 
     def _parse_packet(self) -> int | None:
         """Parsea el paquete de cambio de dirección.
@@ -76,7 +63,10 @@ class TaskChangeHeading(Task):
         return heading
 
     async def execute(self) -> None:
-        """Ejecuta el cambio de dirección del personaje."""
+        """Ejecuta el cambio de dirección del personaje (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Parsear dirección
         heading = self._parse_packet()
         if heading is None:
@@ -86,13 +76,8 @@ class TaskChangeHeading(Task):
             )
             return
 
-        # Verificar que el player_repo esté disponible
-        if self.player_repo is None:
-            logger.error("PlayerRepository no está disponible para cambio de dirección")
-            return
-
         # Obtener user_id de la sesión
-        if self.session_data is None or "user_id" not in self.session_data:
+        if "user_id" not in self.session_data:
             logger.warning(
                 "Intento de cambio de dirección sin user_id en sesión desde %s",
                 self.message_sender.connection.address,
@@ -106,61 +91,19 @@ class TaskChangeHeading(Task):
 
         user_id = int(user_id_value)
 
-        # Guardar la dirección en Redis
-        await self.player_repo.set_heading(user_id, heading)
+        # Validar que tenemos el handler
+        if not self.change_heading_handler:
+            logger.error("ChangeHeadingCommandHandler no disponible")
+            return
 
-        logger.info("User %d cambió dirección a %d", user_id, heading)
+        # Crear comando (solo datos)
+        command = ChangeHeadingCommand(user_id=user_id, heading=heading)
 
-        # Determinar apariencia visual según si está navegando o no
-        char_body = 1  # Valor por defecto
-        char_head = 15  # Valor por defecto
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.change_heading_handler.handle(command)
 
-        # Si el jugador está navegando, usar siempre el body de barco y sin cabeza
-        is_sailing = await self.player_repo.is_sailing(user_id)
-        if is_sailing:
-            char_body = SHIP_BODY_ID
-            char_head = 0
-        elif self.account_repo and "username" in self.session_data:
-            username = self.session_data["username"]
-            if isinstance(username, str):
-                account_data = await self.account_repo.get_account(username)
-                if account_data:
-                    char_body = int(account_data.get("char_race", 1))
-                    char_head = int(account_data.get("char_head", 15))
-                    # Si body es 0, usar valor por defecto
-                    if char_body == 0:
-                        char_body = 1
-
-        # Enviar CHARACTER_CHANGE de vuelta al cliente para confirmar
-        await self.message_sender.send_character_change(
-            char_index=user_id,
-            body=char_body,
-            head=char_head,
-            heading=heading,
-        )
-
-        # Broadcast multijugador: enviar CHARACTER_CHANGE a otros jugadores en el mapa
-        if self.map_manager and self.player_repo:
-            # Obtener el mapa actual del jugador
-            position = await self.player_repo.get_position(user_id)
-            if position:
-                map_id = position["map"]
-
-                # Enviar CHARACTER_CHANGE a todos los demás jugadores en el mapa
-                other_senders = self.map_manager.get_all_message_senders_in_map(
-                    map_id, exclude_user_id=user_id
-                )
-                for sender in other_senders:
-                    await sender.send_character_change(
-                        char_index=user_id,
-                        body=char_body,
-                        head=char_head,
-                        heading=heading,
-                    )
-
-                logger.debug(
-                    "Cambio de dirección de user %d notificado a %d jugadores en mapa %d",
-                    user_id,
-                    len(other_senders),
-                    map_id,
-                )
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Cambio de dirección falló: %s", result.error_message or "Error desconocido"
+            )

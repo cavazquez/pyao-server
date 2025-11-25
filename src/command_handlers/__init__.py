@@ -19,6 +19,7 @@ from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
 from src.command_handlers.bank_extract_gold_handler import BankExtractGoldCommandHandler
 from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
+from src.command_handlers.change_heading_handler import ChangeHeadingCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
 from src.command_handlers.create_account_handler import CreateAccountCommandHandler
@@ -51,6 +52,7 @@ __all__ = [
     "BankExtractCommandHandler",
     "BankExtractGoldCommandHandler",
     "CastSpellCommandHandler",
+    "ChangeHeadingCommandHandler",
     "CommerceBuyCommandHandler",
     "CommerceSellCommandHandler",
     "CreateAccountCommandHandler",
