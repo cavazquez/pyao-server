@@ -5,6 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
@@ -35,6 +36,7 @@ from src.tasks.player.task_login import TaskLogin
 from src.tasks.player.task_request_position_update import TaskRequestPositionUpdate
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
+from src.tasks.spells.task_cast_spell import TaskCastSpell
 from src.tasks.spells.task_move_spell import TaskMoveSpell
 from src.tasks.spells.task_spell_info import TaskSpellInfo
 from src.tasks.task_dice import TaskDice
@@ -84,6 +86,7 @@ class TaskFactory:
         # Crear command handlers (reutilizables, lazy initialization)
         self._attack_handler: AttackCommandHandler | None = None
         self._walk_handler: WalkCommandHandler | None = None
+        self._cast_spell_handler: CastSpellCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -137,6 +140,28 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._walk_handler.message_sender = message_sender
         return self._walk_handler
+
+    def _get_cast_spell_handler(self, message_sender: MessageSender) -> CastSpellCommandHandler:
+        """Obtiene o crea el handler de lanzar hechizo.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de lanzar hechizo.
+        """
+        if self._cast_spell_handler is None:
+            self._cast_spell_handler = CastSpellCommandHandler(
+                player_repo=self.deps.player_repo,
+                spell_service=self.deps.spell_service,
+                spellbook_repo=self.deps.spellbook_repo,
+                stamina_service=self.deps.stamina_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._cast_spell_handler.message_sender = message_sender
+        return self._cast_spell_handler
 
     def create_task(
         self,
@@ -512,6 +537,12 @@ class TaskFactory:
                 message_sender,
                 self.deps.spellbook_repo,
                 self.deps.spell_catalog,
+                session_data,
+            ),
+            TaskCastSpell: lambda: TaskCastSpell(
+                data,
+                message_sender,
+                self._get_cast_spell_handler(message_sender),
                 session_data,
             ),
         }

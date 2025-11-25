@@ -4,9 +4,27 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.repositories.player_repository import PlayerRepository
-from src.services.player.spell_service import SpellService
+from src.commands.base import CommandResult
+from src.commands.cast_spell_command import CastSpellCommand
 from src.tasks.spells.task_cast_spell import TaskCastSpell
+
+
+def create_mock_cast_spell_handler(
+    player_repo: MagicMock | None = None,
+    spell_service: MagicMock | None = None,
+    spellbook_repo: MagicMock | None = None,
+    stamina_service: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de CastSpellCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.spell_service = spell_service or MagicMock()
+    handler.spellbook_repo = spellbook_repo or MagicMock()
+    handler.stamina_service = stamina_service
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -17,88 +35,67 @@ class TestTaskCastSpell:
         """Test de lanzar hechizo sin sesión."""
         # Setup
         message_sender = AsyncMock()
-        player_repo = MagicMock(spec=PlayerRepository)
-        spell_service = MagicMock(spec=SpellService)
-        stamina_service = MagicMock()
-        stamina_service.consume_stamina = AsyncMock(return_value=True)
+        cast_spell_handler = create_mock_cast_spell_handler(message_sender=message_sender)
 
-        # Packet: CAST_SPELL (25) + Slot (1)
+        # Packet: CAST_SPELL (39) + Slot (1)
         data = bytes([39, 1, 0])  # 3 bytes mínimo (sin coordenadas)
         session_data = {}  # Sin user_id
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, stamina_service, session_data
+            data, message_sender, cast_spell_handler=cast_spell_handler, session_data=session_data
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe hacer nada
-        spell_service.cast_spell.assert_not_called()
+        # Assert - no debe llamar al handler si no hay sesión
+        cast_spell_handler.handle.assert_not_called()
 
     async def test_cast_spell_invalid_packet(self) -> None:
         """Test con packet inválido."""
         # Setup
         message_sender = AsyncMock()
-        player_repo = MagicMock(spec=PlayerRepository)
-        spell_service = MagicMock(spec=SpellService)
-        stamina_service = MagicMock()
-        stamina_service.consume_stamina = AsyncMock(return_value=True)
+        cast_spell_handler = create_mock_cast_spell_handler(message_sender=message_sender)
 
         # Packet muy corto
         data = bytes([39])  # Falta el slot
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data, message_sender, player_repo, spell_service, stamina_service, session_data
+            data, message_sender, cast_spell_handler=cast_spell_handler, session_data=session_data
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe crashear
-        spell_service.cast_spell.assert_not_called()
+        # Assert - no debe crashear ni llamar al handler
+        cast_spell_handler.handle.assert_not_called()
 
     async def test_cast_spell_basic(self) -> None:
         """Test básico de lanzar hechizo."""
         # Setup
         message_sender = AsyncMock()
-
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.get_position = AsyncMock(
-            return_value={"map": 1, "x": 50, "y": 50, "heading": 3}
+        cast_spell_handler = create_mock_cast_spell_handler(message_sender=message_sender)
+        cast_spell_handler.handle.return_value = CommandResult.ok(
+            data={"spell_id": 1, "target_x": 51, "target_y": 50, "slot": 1}
         )
-
-        spell_service = MagicMock(spec=SpellService)
-        spell_service.cast_spell = AsyncMock(return_value=True)
-
-        stamina_service = MagicMock()
-        stamina_service.consume_stamina = AsyncMock(return_value=True)
-
-        spellbook_repo = MagicMock()
-        spellbook_repo.get_spell_in_slot = AsyncMock(return_value=1)  # Dardo Mágico
 
         # Packet: CAST_SPELL (39) + Slot 1 + Target X=51 + Target Y=50 + padding
         data = bytes([39, 1, 51, 0, 50, 0, 0])  # 7 bytes total
         session_data = {"user_id": 1}
 
         task = TaskCastSpell(
-            data,
-            message_sender,
-            player_repo,
-            spell_service,
-            stamina_service,
-            session_data,
-            spellbook_repo,
+            data, message_sender, cast_spell_handler=cast_spell_handler, session_data=session_data
         )
 
         # Execute
         await task.execute()
 
-        # Assert - debe intentar lanzar hechizo
-        spell_service.cast_spell.assert_called_once()
-        call_args = spell_service.cast_spell.call_args[0]
-        assert call_args[0] == 1  # user_id
-        assert call_args[1] == 1  # spell_id (Dardo Mágico)
-        assert call_args[2] == 51  # target_x
-        assert call_args[3] == 50  # target_y
+        # Assert - debe llamar al handler con el comando correcto
+        cast_spell_handler.handle.assert_called_once()
+        call_args = cast_spell_handler.handle.call_args[0][0]
+        assert isinstance(call_args, CastSpellCommand)
+        assert call_args.user_id == 1
+        assert call_args.slot == 1
+        assert call_args.target_x == 51
+        assert call_args.target_y == 50

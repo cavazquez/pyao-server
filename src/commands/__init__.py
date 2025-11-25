@@ -2,6 +2,14 @@
 
 from src.commands.attack_command import AttackCommand
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.commands.cast_spell_command import CastSpellCommand
 from src.commands.walk_command import WalkCommand
 
-__all__ = ["AttackCommand", "Command", "CommandHandler", "CommandResult", "WalkCommand"]
+__all__ = [
+    "AttackCommand",
+    "CastSpellCommand",
+    "Command",
+    "CommandHandler",
+    "CommandResult",
+    "WalkCommand",
+]
