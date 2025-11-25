@@ -113,6 +113,74 @@ class PlayerRepository:
             "experience": int(result.get("experience", 0)),
         }
 
+    async def get_current_hp(self, user_id: int) -> int:
+        """Obtiene el HP actual del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            HP actual (min_hp), 0 si el jugador no existe o está muerto.
+        """
+        stats = await self.get_stats(user_id)
+        if not stats:
+            return 0
+        return stats.get("min_hp", 0)
+
+    async def get_max_hp(self, user_id: int) -> int:
+        """Obtiene el HP máximo del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            HP máximo, 100 por defecto si no existe.
+        """
+        stats = await self.get_stats(user_id)
+        if not stats:
+            return 100
+        return stats.get("max_hp", 100)
+
+    async def get_level(self, user_id: int) -> int:
+        """Obtiene el nivel del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Nivel del jugador, 1 por defecto si no existe.
+        """
+        stats = await self.get_stats(user_id)
+        if not stats:
+            return 1
+        return stats.get("level", 1)
+
+    async def is_alive(self, user_id: int) -> bool:
+        """Verifica si el jugador está vivo.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            True si el jugador existe y tiene HP > 0, False en caso contrario.
+        """
+        hp = await self.get_current_hp(user_id)
+        return hp > 0
+
+    async def get_gold(self, user_id: int) -> int:
+        """Obtiene el oro del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Oro del jugador, 0 por defecto si no existe.
+        """
+        stats = await self.get_stats(user_id)
+        if not stats:
+            return 0
+        return stats.get("gold", 0)
+
     async def set_stats(
         self,
         user_id: int,
@@ -383,19 +451,6 @@ class PlayerRepository:
         logger.debug(
             "Nivel y ELU actualizados para user_id %d: nivel=%d, elu=%d", user_id, level, elu
         )
-
-    async def get_gold(self, user_id: int) -> int:
-        """Obtiene el oro del jugador.
-
-        Args:
-            user_id: ID del usuario.
-
-        Returns:
-            Cantidad de oro del jugador.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "gold")  # type: ignore[misc]
-        return int(result) if result else 0
 
     async def update_gold(self, user_id: int, gold: int) -> None:
         """Actualiza el oro del jugador.

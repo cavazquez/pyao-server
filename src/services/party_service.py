@@ -93,14 +93,12 @@ class PartyService:
         if existing_party:
             return False, "Ya perteneces a una party. Escribe /SALIRPARTY para abandonarla"
 
-        # Check if user is dead
-        hp = stats.get("min_hp", 0)  # min_hp is the current HP
-        logger.debug("Party creation check - user %s HP: %s", user_id, hp)
-        if hp <= 0:
+        # Check if user is alive
+        if not await self.player_repo.is_alive(user_id):
             return False, "¡¡Estás muerto!!"
 
         # Check minimum level requirement
-        level = stats.get("level", 1)
+        level = await self.player_repo.get_level(user_id)
         if level < MIN_LEVEL_TO_CREATE:
             return False, f"Debes ser nivel {MIN_LEVEL_TO_CREATE} o superior para crear una party"
 
@@ -194,24 +192,18 @@ class PartyService:
         if target_party:
             return False, "El usuario ya pertenece a una party", party
 
-        # Get target player stats
-        target_stats = await self.player_repo.get_stats(target_id)
-        if not target_stats:
-            return False, "Usuario objetivo no encontrado", party
+        # Check if target exists and is alive
+        if not await self.player_repo.is_alive(target_id):
+            return False, "Usuario objetivo no encontrado o está muerto", party
 
         # Check if target meets level requirements
-        target_level = target_stats.get("level", 1)
+        target_level = await self.player_repo.get_level(target_id)
         if not party.can_join_by_level(target_level):
             return (
                 False,
                 f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)",
                 party,
             )
-
-        # Check if target is dead
-        target_hp = target_stats.get("min_hp", 0)
-        if target_hp <= 0:
-            return False, "No puedes invitar a usuarios muertos", party
 
         # Check distance (leaders must be close to invite)
         # This would require position data - for now we'll skip distance check
