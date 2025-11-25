@@ -5,6 +5,8 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
+from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
 from src.command_handlers.commerce_buy_handler import CommerceBuyCommandHandler
 from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandler
@@ -97,6 +99,8 @@ class TaskFactory:
         self._drop_handler: DropCommandHandler | None = None
         self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
+        self._bank_deposit_handler: BankDepositCommandHandler | None = None
+        self._bank_extract_handler: BankExtractCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -285,6 +289,48 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._commerce_sell_handler.message_sender = message_sender
         return self._commerce_sell_handler
+
+    def _get_bank_deposit_handler(self, message_sender: MessageSender) -> BankDepositCommandHandler:
+        """Obtiene o crea el handler de depositar item en el banco.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de depositar item en el banco.
+        """
+        if self._bank_deposit_handler is None:
+            self._bank_deposit_handler = BankDepositCommandHandler(
+                bank_repo=self.deps.bank_repo,
+                inventory_repo=self.deps.inventory_repo,
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._bank_deposit_handler.message_sender = message_sender
+        return self._bank_deposit_handler
+
+    def _get_bank_extract_handler(self, message_sender: MessageSender) -> BankExtractCommandHandler:
+        """Obtiene o crea el handler de extraer item del banco.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de extraer item del banco.
+        """
+        if self._bank_extract_handler is None:
+            self._bank_extract_handler = BankExtractCommandHandler(
+                bank_repo=self.deps.bank_repo,
+                inventory_repo=self.deps.inventory_repo,
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._bank_extract_handler.message_sender = message_sender
+        return self._bank_extract_handler
 
     def create_task(
         self,
@@ -557,18 +603,14 @@ class TaskFactory:
             TaskBankDeposit: lambda: TaskBankDeposit(
                 data,
                 message_sender,
-                self.deps.bank_repo,
-                self.deps.inventory_repo,
-                self.deps.player_repo,
-                session_data,
+                bank_deposit_handler=self._get_bank_deposit_handler(message_sender),
+                session_data=session_data,
             ),
             TaskBankExtract: lambda: TaskBankExtract(
                 data,
                 message_sender,
-                self.deps.bank_repo,
-                self.deps.inventory_repo,
-                self.deps.player_repo,
-                session_data,
+                bank_extract_handler=self._get_bank_extract_handler(message_sender),
+                session_data=session_data,
             ),
             TaskBankEnd: lambda: TaskBankEnd(data, message_sender, session_data),
             TaskCommerceEnd: lambda: TaskCommerceEnd(data, message_sender),

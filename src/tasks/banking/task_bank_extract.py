@@ -3,33 +3,31 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.bank_extract_command import BankExtractCommand
 from src.config.config_manager import ConfigManager, config_manager
-from src.models.items_catalog import ITEMS_CATALOG
-from src.network.packet_data import BankExtractData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.bank_repository import BankRepository
-    from src.repositories.inventory_repository import InventoryRepository
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskBankExtract(Task):
-    """Maneja la extracción de items del banco."""
+    """Maneja la extracción de items del banco (solo parsing y delegación).
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        bank_repo: BankRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
-        player_repo: PlayerRepository | None = None,
+        bank_extract_handler: BankExtractCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de extracción bancaria.
@@ -37,28 +35,22 @@ class TaskBankExtract(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
-            bank_repo: Repositorio de banco.
-            inventory_repo: Repositorio de inventario.
-            player_repo: Repositorio de jugadores.
+            bank_extract_handler: Handler para el comando de extraer item.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
-        self.bank_repo = bank_repo
-        self.inventory_repo = inventory_repo
-        self.player_repo = player_repo
+        self.bank_extract_handler = bank_extract_handler
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
-        """Ejecuta la extracción de un item del banco."""
+        """Ejecuta la extracción de un item del banco (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Verificar que el jugador esté logueado
         user_id = SessionManager.get_user_id(self.session_data)
         if user_id is None:
             logger.warning("Intento de extracción bancaria sin estar logueado")
-            return
-
-        if not self.bank_repo or not self.inventory_repo or not self.player_repo:
-            logger.error("Dependencias no disponibles para extracción bancaria")
-            await self.message_sender.send_console_msg("Error al extraer del banco")
             return
 
         # Parsear y validar packet
@@ -77,129 +69,18 @@ class TaskBankExtract(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        # Crear dataclass con datos validados
-        extract_data = BankExtractData(slot=slot, quantity=quantity)
+        # Validar que tenemos el handler
+        if not self.bank_extract_handler:
+            logger.error("BankExtractCommandHandler no disponible")
+            await self.message_sender.send_console_msg("Error al extraer del banco")
+            return
 
-        logger.info(
-            "user_id %d extrayendo %d items del slot %d del banco",
-            user_id,
-            extract_data.quantity,
-            extract_data.slot,
-        )
+        # Crear comando (solo datos)
+        command = BankExtractCommand(user_id=user_id, slot=slot, quantity=quantity)
 
-        try:
-            # Obtener item del banco
-            bank_item = await self.bank_repo.get_item(user_id, extract_data.slot)
-            if not bank_item:
-                await self.message_sender.send_console_msg(
-                    "No hay ningún item en ese slot del banco"
-                )
-                return
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.bank_extract_handler.handle(command)
 
-            if bank_item.quantity < extract_data.quantity:
-                await self.message_sender.send_console_msg(
-                    f"Solo tienes {bank_item.quantity} items en ese slot del banco"
-                )
-                return
-
-            # Extraer del banco
-            success = await self.bank_repo.extract_item(
-                user_id, extract_data.slot, extract_data.quantity
-            )
-
-            if not success:
-                await self.message_sender.send_console_msg("Error al extraer del banco")
-                return
-
-            # Agregar al inventario
-            modified_slots = await self.inventory_repo.add_item(
-                user_id, bank_item.item_id, extract_data.quantity
-            )
-
-            if not modified_slots:
-                logger.error("Error al agregar item al inventario después de extraer")
-                # Revertir extracción
-                await self.bank_repo.deposit_item(user_id, bank_item.item_id, extract_data.quantity)
-                await self.message_sender.send_console_msg("No tienes espacio en el inventario")
-                return
-
-            # Obtener datos del item para enviar al cliente
-            item = ITEMS_CATALOG.get(bank_item.item_id)
-            if not item:
-                logger.error("Item %d no encontrado en catálogo", bank_item.item_id)
-                return
-
-            # PRIMERO: Actualizar slots del inventario en el cliente (igual que deposit)
-            for inv_slot, inv_quantity in modified_slots:
-                logger.info(
-                    "Enviando ChangeInventorySlot: slot=%d, item_id=%d, cantidad=%d",
-                    inv_slot,
-                    bank_item.item_id,
-                    inv_quantity,
-                )
-                await self.message_sender.send_change_inventory_slot(
-                    slot=inv_slot,
-                    item_id=bank_item.item_id,
-                    name=item.name,
-                    amount=inv_quantity,
-                    equipped=False,
-                    grh_id=item.graphic_id,
-                    item_type=item.item_type.to_client_type(),
-                    max_hit=item.max_damage or 0,
-                    min_hit=item.min_damage or 0,
-                    max_def=item.defense or 0,
-                    min_def=item.defense or 0,
-                    sale_price=float(item.value),
-                )
-
-            # DESPUÉS: Actualizar slot del banco en el cliente
-            remaining_bank = bank_item.quantity - quantity
-            if remaining_bank > 0:
-                logger.info(
-                    "Enviando ChangeBankSlot: slot=%d, item_id=%d, cantidad=%d",
-                    slot,
-                    bank_item.item_id,
-                    remaining_bank,
-                )
-                await self.message_sender.send_change_bank_slot(
-                    slot=slot,
-                    item_id=bank_item.item_id,
-                    name=item.name,
-                    amount=remaining_bank,
-                    grh_id=item.graphic_id,
-                    item_type=item.item_type.to_client_type(),
-                    max_hit=item.max_damage or 0,
-                    min_hit=item.min_damage or 0,
-                    max_def=item.defense or 0,
-                    min_def=item.defense or 0,
-                )
-            else:
-                # Slot vacío
-                logger.info("Enviando ChangeBankSlot: slot=%d vaciado", slot)
-                await self.message_sender.send_change_bank_slot(
-                    slot=slot,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                )
-
-            await self.message_sender.send_console_msg(
-                f"Extrajiste {quantity}x {item.name} del banco"
-            )
-
-            logger.info(
-                "user_id %d extrajo %d x item_id %d del banco (slot %d)",
-                user_id,
-                quantity,
-                bank_item.item_id,
-                slot,
-            )
-
-        except Exception:
-            logger.exception("Error al parsear packet BANK_EXTRACT_ITEM")
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Extraer item falló: %s", result.error_message or "Error desconocido")

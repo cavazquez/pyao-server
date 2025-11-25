@@ -1,6 +1,8 @@
 """Sistema de comandos usando Command Pattern."""
 
 from src.commands.attack_command import AttackCommand
+from src.commands.bank_deposit_command import BankDepositCommand
+from src.commands.bank_extract_command import BankExtractCommand
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
 from src.commands.commerce_buy_command import CommerceBuyCommand
@@ -12,6 +14,8 @@ from src.commands.walk_command import WalkCommand
 
 __all__ = [
     "AttackCommand",
+    "BankDepositCommand",
+    "BankExtractCommand",
     "CastSpellCommand",
     "Command",
     "CommandHandler",

@@ -3,33 +3,31 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.bank_deposit_command import BankDepositCommand
 from src.config.config_manager import ConfigManager, config_manager
-from src.models.items_catalog import ITEMS_CATALOG
-from src.network.packet_data import BankDepositData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.bank_repository import BankRepository
-    from src.repositories.inventory_repository import InventoryRepository
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskBankDeposit(Task):
-    """Maneja el depósito de items en el banco."""
+    """Maneja el depósito de items en el banco (solo parsing y delegación).
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        bank_repo: BankRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
-        player_repo: PlayerRepository | None = None,
+        bank_deposit_handler: BankDepositCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de depósito bancario.
@@ -37,28 +35,22 @@ class TaskBankDeposit(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
-            bank_repo: Repositorio de banco.
-            inventory_repo: Repositorio de inventario.
-            player_repo: Repositorio de jugadores.
+            bank_deposit_handler: Handler para el comando de depositar item.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
-        self.bank_repo = bank_repo
-        self.inventory_repo = inventory_repo
-        self.player_repo = player_repo
+        self.bank_deposit_handler = bank_deposit_handler
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
-        """Ejecuta el depósito de un item en el banco."""
+        """Ejecuta el depósito de un item en el banco (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Verificar que el jugador esté logueado
         user_id = SessionManager.get_user_id(self.session_data)
         if user_id is None:
             logger.warning("Intento de depósito bancario sin estar logueado")
-            return
-
-        if not self.bank_repo or not self.inventory_repo or not self.player_repo:
-            logger.error("Dependencias no disponibles para depósito bancario")
-            await self.message_sender.send_console_msg("Error al depositar en el banco")
             return
 
         # Parsear y validar packet
@@ -77,120 +69,18 @@ class TaskBankDeposit(Task):
             await self.message_sender.send_console_msg(error_msg)
             return
 
-        # Crear dataclass con datos validados
-        deposit_data = BankDepositData(slot=slot, quantity=quantity)
+        # Validar que tenemos el handler
+        if not self.bank_deposit_handler:
+            logger.error("BankDepositCommandHandler no disponible")
+            await self.message_sender.send_console_msg("Error al depositar en el banco")
+            return
 
-        logger.info(
-            "user_id %d depositando %d items del slot %d",
-            user_id,
-            deposit_data.quantity,
-            deposit_data.slot,
-        )
+        # Crear comando (solo datos)
+        command = BankDepositCommand(user_id=user_id, slot=slot, quantity=quantity)
 
-        try:
-            # Obtener item del inventario
-            inv_slot_data = await self.inventory_repo.get_slot(user_id, deposit_data.slot)
-            if not inv_slot_data:
-                await self.message_sender.send_console_msg("No tienes ningún item en ese slot")
-                return
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.bank_deposit_handler.handle(command)
 
-            item_id, amount = inv_slot_data
-            if amount < deposit_data.quantity:
-                await self.message_sender.send_console_msg(
-                    f"Solo tienes {amount} items en ese slot"
-                )
-                return
-
-            # Depositar en el banco
-            bank_slot = await self.bank_repo.deposit_item(user_id, item_id, deposit_data.quantity)
-
-            if bank_slot is None:
-                await self.message_sender.send_console_msg("No tienes espacio en el banco")
-                return
-
-            # Remover del inventario
-            removed = await self.inventory_repo.remove_item(
-                user_id, deposit_data.slot, deposit_data.quantity
-            )
-
-            # Verificar que la remoción fue exitosa
-            if not removed:
-                # Rollback: devolver items al banco
-                await self.bank_repo.extract_item(user_id, bank_slot, deposit_data.quantity)
-                await self.message_sender.send_console_msg("Error al depositar")
-                logger.error(
-                    "Fallo al remover items del inventario después de depositar. "
-                    "Rollback ejecutado."
-                )
-                return
-
-            # Obtener datos del item para enviar al cliente
-            item = ITEMS_CATALOG.get(item_id)
-            if not item:
-                logger.error("Item %d no encontrado en catálogo", item_id)
-                return
-
-            # Actualizar slot del inventario en el cliente
-            remaining = amount - deposit_data.quantity
-            if remaining > 0:
-                await self.message_sender.send_change_inventory_slot(
-                    slot=deposit_data.slot,
-                    item_id=item_id,
-                    name=item.name,
-                    amount=remaining,
-                    equipped=False,
-                    grh_id=item.graphic_id,
-                    item_type=item.item_type.to_client_type(),
-                    max_hit=item.max_damage or 0,
-                    min_hit=item.min_damage or 0,
-                    max_def=item.defense or 0,
-                    min_def=item.defense or 0,
-                    sale_price=float(item.value),
-                )
-            else:
-                # Slot vacío
-                await self.message_sender.send_change_inventory_slot(
-                    slot=deposit_data.slot,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    equipped=False,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                    sale_price=0.0,
-                )
-
-            # Actualizar slot del banco en el cliente
-            bank_item = await self.bank_repo.get_item(user_id, bank_slot)
-            if bank_item:
-                await self.message_sender.send_change_bank_slot(
-                    slot=bank_slot,
-                    item_id=bank_item.item_id,
-                    name=item.name,
-                    amount=bank_item.quantity,
-                    grh_id=item.graphic_id,
-                    item_type=item.item_type.to_client_type(),
-                    max_hit=item.max_damage or 0,
-                    min_hit=item.min_damage or 0,
-                    max_def=item.defense or 0,
-                    min_def=item.defense or 0,
-                )
-
-            await self.message_sender.send_console_msg(
-                f"Depositaste {quantity}x {item.name} en el banco"
-            )
-
-            logger.info(
-                "user_id %d depositó %d x item_id %d en el banco (slot %d)",
-                user_id,
-                quantity,
-                item_id,
-                bank_slot,
-            )
-
-        except Exception:
-            logger.exception("Error al parsear packet BANK_DEPOSIT")
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Depositar item falló: %s", result.error_message or "Error desconocido")
