@@ -3,23 +3,28 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.request_attributes_command import RequestAttributesCommand
+from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.request_attributes_handler import RequestAttributesCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskRequestAttributes(Task):
-    """Tarea que maneja la solicitud de atributos del personaje."""
+    """Tarea que maneja la solicitud de atributos del personaje.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
+        request_attributes_handler: RequestAttributesCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de solicitud de atributos.
@@ -27,80 +32,61 @@ class TaskRequestAttributes(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            player_repo: Repositorio de jugadores para obtener atributos.
-            session_data: Datos de sesión compartidos (para obtener user_id).
+            request_attributes_handler: Handler para el comando de solicitud de atributos.
+            session_data: Datos de sesión compartidos (para obtener user_id o dice_attributes).
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
+        self.request_attributes_handler = request_attributes_handler
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Obtiene atributos desde Redis y los envía al cliente usando PacketID 50."""
+        """Obtiene atributos y los envía al cliente (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
+        # Validar que tenemos el handler
+        if not self.request_attributes_handler:
+            logger.error("RequestAttributesCommandHandler no disponible")
+            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+            return
+
         # Primero verificar si hay atributos en sesión (creación de personaje)
+        dice_attributes = None
+        user_id = None
+
         if self.session_data and "dice_attributes" in self.session_data:
-            attributes = self.session_data["dice_attributes"]
+            dice_attributes = self.session_data["dice_attributes"]
             logger.info(
-                "Enviando atributos desde sesión a %s: %s",
+                "Atributos desde sesión encontrados para %s",
                 self.message_sender.connection.address,
-                attributes,
-            )
-
-            # Intentar con send_attributes (PacketID 50)
-            await self.message_sender.send_attributes(
-                strength=attributes["strength"],
-                agility=attributes["agility"],
-                intelligence=attributes["intelligence"],
-                charisma=attributes["charisma"],
-                constitution=attributes["constitution"],
-            )
-            return
-
-        # Si no hay en sesión, obtener desde repositorio usando user_id
-        if not self.player_repo:
-            logger.error("PlayerRepository no disponible para obtener atributos")
-            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
-            return
-
-        if not self.session_data or "user_id" not in self.session_data:
-            logger.warning(
-                "Cliente %s solicitó atributos pero no hay user_id en sesión",
-                self.message_sender.connection.address,
-            )
-            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
-            return
-
-        # Obtener atributos desde el repositorio
-        user_id_value = self.session_data["user_id"]
-        if isinstance(user_id_value, dict):
-            logger.error("user_id en sesión es un dict, esperaba int")
-            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
-            return
-
-        user_id = int(user_id_value)
-        attributes = await self.player_repo.get_attributes(user_id)
-
-        if attributes is not None:
-            logger.info(
-                "Enviando atributos desde repositorio para user_id %d: "
-                "STR=%d AGI=%d INT=%d CHA=%d CON=%d",
-                user_id,
-                attributes["strength"],
-                attributes["agility"],
-                attributes["intelligence"],
-                attributes["charisma"],
-                attributes["constitution"],
-            )
-
-            await self.message_sender.send_attributes(
-                strength=attributes["strength"],
-                agility=attributes["agility"],
-                intelligence=attributes["intelligence"],
-                charisma=attributes["charisma"],
-                constitution=attributes["constitution"],
             )
         else:
-            logger.warning(
-                "No se encontraron atributos en repositorio para user_id %d",
-                user_id,
+            # Si no hay en sesión, obtener user_id para buscar en repositorio
+            user_id = SessionManager.get_user_id(self.session_data)
+            if user_id is None:
+                logger.warning(
+                    "Cliente %s solicitó atributos pero no hay user_id en sesión",
+                    self.message_sender.connection.address,
+                )
+                await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+                return
+
+            # Convertir user_id a int
+            if isinstance(user_id, dict):
+                logger.error("user_id en sesión es un dict, esperaba int")
+                await self.message_sender.send_attributes(0, 0, 0, 0, 0)
+                return
+
+            user_id = int(user_id)
+
+        # Crear comando (solo datos)
+        command = RequestAttributesCommand(user_id=user_id, dice_attributes=dice_attributes)
+
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.request_attributes_handler.handle(command)
+
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Solicitud de atributos falló: %s", result.error_message or "Error desconocido"
             )
-            await self.message_sender.send_attributes(0, 0, 0, 0, 0)
