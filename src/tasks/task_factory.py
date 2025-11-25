@@ -15,6 +15,7 @@ from src.command_handlers.commerce_sell_handler import CommerceSellCommandHandle
 from src.command_handlers.double_click_handler import DoubleClickCommandHandler
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.command_handlers.equip_item_handler import EquipItemCommandHandler
+from src.command_handlers.gm_command_handler import GMCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
@@ -133,6 +134,7 @@ class TaskFactory:
         self._party_message_handler: PartyMessageCommandHandler | None = None
         self._party_kick_handler: PartyKickCommandHandler | None = None
         self._party_set_leader_handler: PartySetLeaderCommandHandler | None = None
+        self._gm_command_handler: GMCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -653,6 +655,26 @@ class TaskFactory:
             self._party_set_leader_handler.message_sender = message_sender
         return self._party_set_leader_handler
 
+    def _get_gm_command_handler(self, message_sender: MessageSender) -> GMCommandHandler:
+        """Obtiene o crea el handler de comandos de Game Master.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de comandos de Game Master.
+        """
+        if self._gm_command_handler is None:
+            self._gm_command_handler = GMCommandHandler(
+                player_repo=self.deps.player_repo,
+                player_map_service=self.deps.player_map_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._gm_command_handler.message_sender = message_sender
+        return self._gm_command_handler
+
     def _get_bank_deposit_gold_handler(
         self, message_sender: MessageSender
     ) -> BankDepositGoldCommandHandler:
@@ -882,11 +904,8 @@ class TaskFactory:
             TaskGMCommands: lambda: TaskGMCommands(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.map_manager,
-                self.deps.broadcast_service,
-                self.deps.player_map_service,
-                session_data,
+                gm_command_handler=self._get_gm_command_handler(message_sender),
+                session_data=session_data,
             ),
             TaskChangeHeading: lambda: TaskChangeHeading(
                 data,

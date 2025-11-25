@@ -5,6 +5,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.gm_command import GMCommand
 from src.network.packet_id import ClientPacketID
 from src.tasks.admin.task_gm_commands import TaskGMCommands
 
@@ -13,13 +15,27 @@ from src.tasks.admin.task_gm_commands import TaskGMCommands
 def mock_message_sender():
     """Mock de message_sender con métodos async."""
     sender = MagicMock()
-    sender.console.send_console_msg = AsyncMock()
-    sender.console.send_error_msg = AsyncMock()
+    sender.connection = MagicMock()
+    sender.connection.address = ("127.0.0.1", 12345)
+    sender.send_console_msg = AsyncMock()
     sender.send_change_map = AsyncMock()
     sender.send_pos_update = AsyncMock()
     sender.send_character_create = AsyncMock()
-    sender.send_console_msg = AsyncMock()  # Agregar mock directo para send_console_msg
     return sender
+
+
+def create_mock_gm_command_handler(
+    player_repo: MagicMock | None = None,
+    player_map_service: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de GMCommandHandler."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.player_map_service = player_map_service or MagicMock()
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 class TestTaskGMCommands:
@@ -49,34 +65,48 @@ class TestTaskGMCommands:
         packet = self._create_gm_packet(map_id=1, x=80, y=80)
 
         # Mock de dependencias
-        player_repo = AsyncMock()
-        player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        player_repo = MagicMock()
+        player_repo.get_position = AsyncMock(
+            return_value={"map": 1, "x": 50, "y": 50, "heading": 3}
+        )
 
-        player_map_service = AsyncMock()
+        player_map_service = MagicMock()
+        player_map_service.teleport_in_same_map = AsyncMock()
+
+        gm_command_handler = create_mock_gm_command_handler(
+            player_repo=player_repo,
+            player_map_service=player_map_service,
+            message_sender=mock_message_sender,
+        )
+        gm_command_handler.handle.return_value = CommandResult.ok(
+            data={
+                "user_id": 1,
+                "from_map": 1,
+                "from_x": 50,
+                "from_y": 50,
+                "to_map": 1,
+                "to_x": 80,
+                "to_y": 80,
+            }
+        )
 
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=player_repo,
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=player_map_service,
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # Verificar que se llamó a teleport_in_same_map
-        player_map_service.teleport_in_same_map.assert_awaited_once_with(
-            user_id=1,
-            map_id=1,
-            old_x=50,
-            old_y=50,
-            new_x=80,
-            new_y=80,
-            heading=3,
-            message_sender=mock_message_sender,
-        )
+        # Debe llamar al handler
+        gm_command_handler.handle.assert_called_once()
+        call_args = gm_command_handler.handle.call_args[0][0]
+        assert isinstance(call_args, GMCommand)
+        assert call_args.user_id == 1
+        assert call_args.map_id == 1
+        assert call_args.x == 80
+        assert call_args.y == 80
 
     @pytest.mark.asyncio
     async def test_teleport_command_different_map(self, mock_message_sender):
@@ -84,35 +114,48 @@ class TestTaskGMCommands:
         packet = self._create_gm_packet(map_id=2, x=30, y=40)
 
         # Mock de dependencias
-        player_repo = AsyncMock()
-        player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        player_repo = MagicMock()
+        player_repo.get_position = AsyncMock(
+            return_value={"map": 1, "x": 50, "y": 50, "heading": 3}
+        )
 
-        player_map_service = AsyncMock()
+        player_map_service = MagicMock()
+        player_map_service.transition_to_map = AsyncMock()
+
+        gm_command_handler = create_mock_gm_command_handler(
+            player_repo=player_repo,
+            player_map_service=player_map_service,
+            message_sender=mock_message_sender,
+        )
+        gm_command_handler.handle.return_value = CommandResult.ok(
+            data={
+                "user_id": 1,
+                "from_map": 1,
+                "from_x": 50,
+                "from_y": 50,
+                "to_map": 2,
+                "to_x": 30,
+                "to_y": 40,
+            }
+        )
 
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=player_repo,
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=player_map_service,
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # Verificar que se llamó a transition_to_map
-        player_map_service.transition_to_map.assert_awaited_once_with(
-            user_id=1,
-            current_map=1,
-            current_x=50,
-            current_y=50,
-            new_map=2,
-            new_x=30,
-            new_y=40,
-            heading=3,
-            message_sender=mock_message_sender,
-        )
+        # Debe llamar al handler
+        gm_command_handler.handle.assert_called_once()
+        call_args = gm_command_handler.handle.call_args[0][0]
+        assert isinstance(call_args, GMCommand)
+        assert call_args.user_id == 1
+        assert call_args.map_id == 2
+        assert call_args.x == 30
+        assert call_args.y == 40
 
     @pytest.mark.asyncio
     async def test_invalid_gm_command(self, mock_message_sender):
@@ -120,21 +163,19 @@ class TestTaskGMCommands:
         # Crear packet con posición inválida (231, 3)
         packet = self._create_gm_packet(x=231, y=3)
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # No debe llamar a ningún método de teletransporte
-        # El error se loguea pero no se envía mensaje al cliente
-        # (comportamiento actual según el código)
+        # Si el parsing falla, no debe llamar al handler
+        # (el comportamiento depende de validate_gm_teleport)
 
     @pytest.mark.asyncio
     async def test_teleport_with_missing_parameters(self, mock_message_sender):
@@ -142,20 +183,19 @@ class TestTaskGMCommands:
         # Packet truncado (solo PacketID y subcomando)
         packet = struct.pack("<BB", ClientPacketID.GM_COMMANDS, 11)
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # No debe llamar a ningún método de teletransporte
-        # El error se loguea pero no se envía mensaje al cliente
+        # No debe llamar al handler con packet inválido
+        gm_command_handler.handle.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_teleport_with_invalid_map(self, mock_message_sender):
@@ -163,20 +203,19 @@ class TestTaskGMCommands:
         # Map ID fuera de rango (2000 > 1000)
         packet = self._create_gm_packet(map_id=2000)
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # No debe llamar a ningún método de teletransporte
-        # El error se loguea pero no se envía mensaje al cliente
+        # Si el parsing falla, no debe llamar al handler
+        # (el comportamiento depende de validate_gm_teleport)
 
     @pytest.mark.asyncio
     async def test_teleport_with_invalid_username(self, mock_message_sender):
@@ -185,73 +224,74 @@ class TestTaskGMCommands:
         long_username = "A" * 25
         packet = self._create_gm_packet(username=long_username)
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # No debe llamar a ningún método de teletransporte
-        # El error se loguea pero no se envía mensaje al cliente
+        # Si el parsing falla, no debe llamar al handler
+        # (el comportamiento depende de validate_gm_teleport)
 
     @pytest.mark.asyncio
     async def test_teleport_other_player_not_implemented(self, mock_message_sender):
         """Test teletransporte de otro jugador (no implementado)."""
         packet = self._create_gm_packet(username="OTROJUGADOR")
 
+        gm_command_handler = create_mock_gm_command_handler(message_sender=mock_message_sender)
+        gm_command_handler.handle.return_value = CommandResult.error(
+            "Teletransporte de otros jugadores no implementado"
+        )
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # Debe enviar mensaje de no implementado
-        mock_message_sender.send_console_msg.assert_awaited_once_with(
-            "Teletransporte de otros jugadores no implementado aún."
-        )
+        # Debe llamar al handler
+        gm_command_handler.handle.assert_called_once()
+        # El handler envía el mensaje, así que verificamos que fue llamado
+        # (el handler mock no ejecuta el código real, así que no envía el mensaje)
+        call_args = gm_command_handler.handle.call_args[0][0]
+        assert isinstance(call_args, GMCommand)
+        assert call_args.username == "OTROJUGADOR"
 
     @pytest.mark.asyncio
     async def test_gm_command_without_session(self, mock_message_sender):
         """Test sin sesión activa retorna sin ejecutar."""
         packet = self._create_gm_packet()
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={},  # Sin user_id
         )
         await task.execute()
 
-        # No debe crashear, solo retornar early
+        # No debe llamar al handler sin sesión
+        gm_command_handler.handle.assert_not_called()
 
     @pytest.mark.asyncio
-    async def test_gm_command_without_repositories(self, mock_message_sender):
-        """Test sin repositorios retorna sin ejecutar."""
+    async def test_gm_command_without_handler(self, mock_message_sender):
+        """Test sin handler retorna sin ejecutar."""
         packet = self._create_gm_packet()
 
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=None,  # Sin repo
-            map_manager=None,
-            broadcast_service=None,
-            player_map_service=None,
+            gm_command_handler=None,
             session_data={"user_id": 1},
         )
         await task.execute()
@@ -264,42 +304,46 @@ class TestTaskGMCommands:
         packet = self._create_gm_packet()
 
         # Mock que retorna None (no encontró posición)
-        player_repo = AsyncMock()
-        player_repo.get_position.return_value = None
+        player_repo = MagicMock()
+        player_repo.get_position = AsyncMock(return_value=None)
+
+        gm_command_handler = create_mock_gm_command_handler(
+            player_repo=player_repo, message_sender=mock_message_sender
+        )
+        gm_command_handler.handle.return_value = CommandResult.error(
+            "No se encontró posición del jugador"
+        )
 
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=player_repo,
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
         await task.execute()
 
-        # No debe llamar a teletransporte
-        # Solo debe loggear warning
+        # Debe llamar al handler (el handler maneja el error)
+        gm_command_handler.handle.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_gm_command_with_invalid_session_data(self, mock_message_sender):
         """Test con user_id inválido en sesión."""
         packet = self._create_gm_packet()
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": {"invalid": "dict"}},  # user_id es dict en vez de int
         )
 
         await task.execute()
 
-        # No debe crashear, solo retornar early
+        # No debe llamar al handler con user_id inválido
+        gm_command_handler.handle.assert_not_called()
 
     def test_gm_command_packet_structure(self):
         """Test que el packet GM tiene la estructura esperada."""
@@ -323,13 +367,12 @@ class TestTaskGMCommands:
         """Test que la task se puede crear con todas las dependencias."""
         packet = self._create_gm_packet()
 
+        gm_command_handler = create_mock_gm_command_handler()
+
         task = TaskGMCommands(
             packet,
             mock_message_sender,
-            player_repo=AsyncMock(),
-            map_manager=MagicMock(),
-            broadcast_service=AsyncMock(),
-            player_map_service=AsyncMock(),
+            gm_command_handler=gm_command_handler,
             session_data={"user_id": 1},
         )
 
@@ -337,5 +380,3 @@ class TestTaskGMCommands:
         assert task is not None
         assert task.data == packet
         assert task.message_sender == mock_message_sender
-        assert task.player_repo is not None
-        assert task.map_manager is not None

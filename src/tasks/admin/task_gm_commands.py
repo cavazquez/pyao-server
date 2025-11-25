@@ -3,31 +3,29 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.gm_command import GMCommand
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.gm_command_handler import GMCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
-    from src.services.map.player_map_service import PlayerMapService
-    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
 
 
 class TaskGMCommands(Task):
-    """Tarea que maneja comandos de Game Master."""
+    """Tarea que maneja comandos de Game Master.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
-        map_manager: MapManager | None = None,
-        broadcast_service: MultiplayerBroadcastService | None = None,
-        player_map_service: PlayerMapService | None = None,
+        gm_command_handler: GMCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de comandos GM.
@@ -35,17 +33,11 @@ class TaskGMCommands(Task):
         Args:
             data: Datos recibidos del cliente.
             message_sender: Enviador de mensajes para comunicarse con el cliente.
-            player_repo: Repositorio de jugadores.
-            map_manager: Gestor de mapas.
-            broadcast_service: Servicio de broadcast multijugador.
-            player_map_service: Servicio de mapas de jugador.
+            gm_command_handler: Handler para el comando de Game Master.
             session_data: Datos de sesión compartidos (opcional).
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
-        self.map_manager = map_manager
-        self.broadcast_service = broadcast_service
-        self.player_map_service = player_map_service
+        self.gm_command_handler = gm_command_handler
         self.session_data = session_data
 
     def _parse_packet(self) -> tuple[int, str, int, int, int] | None:
@@ -74,7 +66,10 @@ class TaskGMCommands(Task):
         return result
 
     async def execute(self) -> None:
-        """Ejecuta el comando GM de teletransporte."""
+        """Ejecuta el comando GM de teletransporte (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Parsear parámetros
         parsed = self._parse_packet()
         if parsed is None:
@@ -95,11 +90,6 @@ class TaskGMCommands(Task):
             y,
         )
 
-        # Verificar que el player_repo esté disponible
-        if self.player_repo is None:
-            logger.error("PlayerRepository no está disponible para comando GM")
-            return
-
         # Obtener user_id de la sesión
         if self.session_data is None or "user_id" not in self.session_data:
             logger.warning(
@@ -115,70 +105,25 @@ class TaskGMCommands(Task):
 
         user_id = int(user_id_value)
 
-        # Debug: mostrar bytes del username
-        logger.debug(
-            "Username recibido: '%s' (bytes: %s)",
-            username,
-            username.encode("utf-8").hex() if username else "empty",
+        # Validar que tenemos el handler
+        if not self.gm_command_handler:
+            logger.error("GMCommandHandler no disponible")
+            await self.message_sender.send_console_msg("Error: Servicio no disponible.")
+            return
+
+        # Crear comando (solo datos)
+        command = GMCommand(
+            user_id=user_id,
+            subcommand=subcommand,
+            username=username,
+            map_id=map_id,
+            x=x,
+            y=y,
         )
 
-        # Si el username es "YO" o está vacío, teletransportar al propio jugador
-        # El cliente Godot envía "YO" pero puede llegar con encoding diferente
-        if not username or username.upper() == "YO" or username == "余":
-            await self._teleport_player(user_id, map_id, x, y)
-        else:
-            # TODO: Implementar teletransporte de otros jugadores (requiere buscar por username)
-            await self.message_sender.send_console_msg(
-                "Teletransporte de otros jugadores no implementado aún."
-            )
-            logger.info("Teletransporte de otros jugadores no implementado: %s", username)
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.gm_command_handler.handle(command)
 
-    async def _teleport_player(self, user_id: int, new_map: int, new_x: int, new_y: int) -> None:
-        """Teletransporta un jugador a una nueva posición.
-
-        Args:
-            user_id: ID del jugador.
-            new_map: ID del nuevo mapa.
-            new_x: Nueva posición X.
-            new_y: Nueva posición Y.
-        """
-        if not self.player_repo or not self.player_map_service:
-            logger.error("Dependencias no disponibles para teletransporte")
-            return
-
-        # Obtener posición actual
-        position = await self.player_repo.get_position(user_id)
-        if position is None:
-            logger.warning("No se encontró posición para user_id %d", user_id)
-            return
-
-        current_map = position["map"]
-        current_x = position["x"]
-        current_y = position["y"]
-        current_heading = position.get("heading", 3)
-
-        # Si es el mismo mapa, usar teleport_in_same_map
-        if current_map == new_map:
-            await self.player_map_service.teleport_in_same_map(
-                user_id=user_id,
-                map_id=current_map,
-                old_x=current_x,
-                old_y=current_y,
-                new_x=new_x,
-                new_y=new_y,
-                heading=current_heading,
-                message_sender=self.message_sender,
-            )
-        # Cambio de mapa - usar transition_to_map
-        else:
-            await self.player_map_service.transition_to_map(
-                user_id=user_id,
-                current_map=current_map,
-                current_x=current_x,
-                current_y=current_y,
-                new_map=new_map,
-                new_x=new_x,
-                new_y=new_y,
-                heading=current_heading,
-                message_sender=self.message_sender,
-            )
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Comando GM falló: %s", result.error_message or "Error desconocido")
