@@ -44,6 +44,7 @@ from src.command_handlers.request_attributes_handler import RequestAttributesCom
 from src.command_handlers.request_position_update_handler import (
     RequestPositionUpdateCommandHandler,
 )
+from src.command_handlers.request_skills_handler import RequestSkillsCommandHandler
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -81,6 +82,7 @@ __all__ = [
     "PickupCommandHandler",
     "RequestAttributesCommandHandler",
     "RequestPositionUpdateCommandHandler",
+    "RequestSkillsCommandHandler",
     "RequestStatsCommandHandler",
     "TalkCommandHandler",
     "UseItemCommandHandler",
