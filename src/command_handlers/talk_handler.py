@@ -230,13 +230,13 @@ class TalkCommandHandler(CommandHandler):
                 clan_name = args[0]
                 description = " ".join(args[1:]) if len(args) > 1 else ""
 
-                handler = CreateClanCommandHandler(
+                create_handler = CreateClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                     username=username,
                 )
                 clan_command = CreateClanCommand(clan_name=clan_name, description=description)
-                result = await handler.handle(clan_command)
+                result = await create_handler.handle(clan_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
@@ -259,12 +259,12 @@ class TalkCommandHandler(CommandHandler):
 
                 target_username = args[0]
 
-                handler = InviteClanCommandHandler(
+                invite_handler = InviteClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                 )
                 invite_command = InviteClanCommand(target_username=target_username)
-                result = await handler.handle(invite_command)
+                result = await invite_handler.handle(invite_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
@@ -280,12 +280,12 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "ACEPTARCLAN":
-                handler = AcceptClanCommandHandler(
+                accept_handler = AcceptClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                 )
                 accept_command = AcceptClanCommand()
-                result = await handler.handle(accept_command)
+                result = await accept_handler.handle(accept_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
@@ -301,12 +301,12 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "RECHAZARCLAN":
-                handler = RejectClanCommandHandler(
+                reject_handler = RejectClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                 )
                 reject_command = RejectClanCommand()
-                result = await handler.handle(reject_command)
+                result = await reject_handler.handle(reject_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
@@ -322,12 +322,12 @@ class TalkCommandHandler(CommandHandler):
                     )
 
             elif cmd_name == "SALIRCLAN":
-                handler = LeaveClanCommandHandler(
+                leave_handler = LeaveClanCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                 )
                 leave_command = LeaveClanCommand()
-                result = await handler.handle(leave_command)
+                result = await leave_handler.handle(leave_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
@@ -352,12 +352,12 @@ class TalkCommandHandler(CommandHandler):
 
                 target_username = args[0]
 
-                handler = KickClanMemberCommandHandler(
+                kick_handler = KickClanMemberCommandHandler(
                     clan_service=self.clan_service,
                     user_id=user_id,
                 )
                 kick_command = KickClanMemberCommand(target_username=target_username)
-                result = await handler.handle(kick_command)
+                result = await kick_handler.handle(kick_command)
 
                 if result.success:
                     await self.message_sender.send_console_msg(
