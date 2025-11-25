@@ -4,6 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.talk_command import TalkCommand
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID
@@ -32,12 +34,20 @@ async def test_task_talk_success() -> None:
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    # Crear y ejecutar tarea (sin repos para test simple)
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock(return_value=CommandResult.ok())
+
+    # Crear y ejecutar tarea
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones
-    # En un test completo verificaríamos que se envió el mensaje a otros jugadores
+    # Verificar que se llamó al handler con el comando correcto
+    talk_handler.handle.assert_called_once()
+    call_args = talk_handler.handle.call_args[0][0]
+    assert isinstance(call_args, TalkCommand)
+    assert call_args.user_id == 123
+    assert call_args.message == message
 
 
 @pytest.mark.asyncio
@@ -47,22 +57,6 @@ async def test_task_talk_with_broadcast() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-
-    # Mock del player_repo
-    player_repo = MagicMock()
-    player_repo.get_position = AsyncMock(return_value={"x": 50, "y": 50, "map": 1})
-
-    # Mock del account_repo
-    account_repo = MagicMock()
-
-    # Mock del map_manager
-    map_manager = MagicMock()
-    # Simular que hay 2 jugadores en el mapa
-    other_sender1 = MagicMock()
-    other_sender1.send_console_msg = AsyncMock()
-    other_sender2 = MagicMock()
-    other_sender2.send_console_msg = AsyncMock()
-    map_manager.get_all_message_senders_in_map.return_value = [other_sender1, other_sender2]
 
     # Crear conexión y message sender
     reader = MagicMock()
@@ -81,26 +75,24 @@ async def test_task_talk_with_broadcast() -> None:
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    # Crear y ejecutar tarea
-    task = TaskTalk(
-        data,
-        message_sender,
-        player_repo,
-        account_repo,
-        map_manager,
-        session_data,
+    # Mock del handler
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(
+            data={"user_id": 123, "username": "TestUser", "message": message, "map_id": 1}
+        )
     )
+
+    # Crear y ejecutar tarea
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # Verificar que se llamó a get_position
-    player_repo.get_position.assert_called_once_with(123)
-
-    # Verificar que se llamó a get_all_message_senders_in_map
-    map_manager.get_all_message_senders_in_map.assert_called_once_with(1)
-
-    # Verificar que se envió el mensaje a ambos jugadores
-    other_sender1.send_console_msg.assert_called_once_with("TestUser: Hola mundo")
-    other_sender2.send_console_msg.assert_called_once_with("TestUser: Hola mundo")
+    # Verificar que se llamó al handler con el comando correcto
+    talk_handler.handle.assert_called_once()
+    call_args = talk_handler.handle.call_args[0][0]
+    assert isinstance(call_args, TalkCommand)
+    assert call_args.user_id == 123
+    assert call_args.message == message
 
 
 @pytest.mark.asyncio
@@ -116,16 +108,21 @@ async def test_task_talk_empty_message() -> None:
 
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
-    # Construir paquete TALK con mensaje vacío
+    # Construir paquete TALK con mensaje vacío (debería fallar validación)
     message = ""
     message_bytes = message.encode("utf-8")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler (no debería llamarse si el parsing falla)
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock()
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones
+    # El handler no debería llamarse si el parsing falla
+    talk_handler.handle.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -141,16 +138,24 @@ async def test_task_talk_long_message() -> None:
 
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
-    # Construir paquete TALK con mensaje largo
-    message = "Este es un mensaje muy largo " * 10
+    # Construir paquete TALK con mensaje largo (pero dentro del límite de 255)
+    message = "Este es un mensaje largo " * 8  # ~200 caracteres, dentro del límite
     message_bytes = message.encode("utf-8")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock(return_value=CommandResult.ok())
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones
+    # Verificar que se llamó al handler
+    talk_handler.handle.assert_called_once()
+    call_args = talk_handler.handle.call_args[0][0]
+    assert isinstance(call_args, TalkCommand)
+    assert call_args.message == message
 
 
 @pytest.mark.asyncio
@@ -172,10 +177,18 @@ async def test_task_talk_unicode_message() -> None:
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock(return_value=CommandResult.ok())
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones
+    # Verificar que se llamó al handler
+    talk_handler.handle.assert_called_once()
+    call_args = talk_handler.handle.call_args[0][0]
+    assert isinstance(call_args, TalkCommand)
+    assert call_args.message == message
 
 
 @pytest.mark.asyncio
@@ -194,10 +207,15 @@ async def test_task_talk_invalid_packet_too_short() -> None:
     # Paquete demasiado corto (solo PacketID)
     data = bytes([ClientPacketID.TALK])
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler (no debería llamarse si el parsing falla)
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock()
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones (solo se loguea warning)
+    # El handler no debería llamarse si el parsing falla
+    talk_handler.handle.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -216,10 +234,15 @@ async def test_task_talk_invalid_packet_wrong_length() -> None:
     # Paquete con longitud que no coincide con el contenido
     data = bytes([ClientPacketID.TALK]) + (100).to_bytes(2, byteorder="little") + b"Hola"
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler (no debería llamarse si el parsing falla)
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock()
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones (solo se loguea warning)
+    # El handler no debería llamarse si el parsing falla
+    talk_handler.handle.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -242,10 +265,15 @@ async def test_task_talk_no_session() -> None:
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    task = TaskTalk(data, message_sender, None, None, None, session_data)
+    # Mock del handler (no debería llamarse si no hay user_id)
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock()
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # El test pasa si no hay excepciones (solo se loguea warning)
+    # El handler no debería llamarse si no hay user_id
+    talk_handler.handle.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -254,19 +282,6 @@ async def test_task_talk_without_username() -> None:
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
-
-    # Mock del player_repo
-    player_repo = MagicMock()
-    player_repo.get_position = AsyncMock(return_value={"x": 50, "y": 50, "map": 1})
-
-    # Mock del account_repo
-    account_repo = MagicMock()
-
-    # Mock del map_manager
-    map_manager = MagicMock()
-    other_sender = MagicMock()
-    other_sender.send_console_msg = AsyncMock()
-    map_manager.get_all_message_senders_in_map.return_value = [other_sender]
 
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
@@ -281,8 +296,42 @@ async def test_task_talk_without_username() -> None:
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
-    task = TaskTalk(data, message_sender, player_repo, account_repo, map_manager, session_data)
+    # Mock del handler
+    talk_handler = MagicMock()
+    talk_handler.handle = AsyncMock(return_value=CommandResult.ok())
+
+    task = TaskTalk(data, message_sender, talk_handler=talk_handler, session_data=session_data)
     await task.execute()
 
-    # Verificar que se usó "Desconocido" como nombre
-    other_sender.send_console_msg.assert_called_once_with("Desconocido: Hola")
+    # Verificar que se llamó al handler
+    talk_handler.handle.assert_called_once()
+    call_args = talk_handler.handle.call_args[0][0]
+    assert isinstance(call_args, TalkCommand)
+    assert call_args.user_id == 123
+    assert call_args.message == message
+
+
+@pytest.mark.asyncio
+async def test_task_talk_handler_not_available() -> None:
+    """Verifica que TaskTalk maneje cuando el handler no está disponible."""
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.drain = AsyncMock()
+
+    reader = MagicMock()
+    connection = ClientConnection(reader, writer)
+    message_sender = MessageSender(connection)
+
+    session_data: dict[str, dict[str, int]] = {"user_id": 123}
+
+    # Construir paquete TALK válido
+    message = "Hola"
+    message_bytes = message.encode("utf-8")
+    msg_length = len(message_bytes)
+    data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
+
+    # Crear tarea sin handler
+    task = TaskTalk(data, message_sender, talk_handler=None, session_data=session_data)
+    await task.execute()
+
+    # El test pasa si no hay excepciones (solo se loguea error)

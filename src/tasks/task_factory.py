@@ -29,6 +29,7 @@ from src.command_handlers.party_leave_handler import PartyLeaveCommandHandler
 from src.command_handlers.party_message_handler import PartyMessageCommandHandler
 from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
+from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
@@ -138,6 +139,7 @@ class TaskFactory:
         self._party_message_handler: PartyMessageCommandHandler | None = None
         self._party_kick_handler: PartyKickCommandHandler | None = None
         self._party_set_leader_handler: PartySetLeaderCommandHandler | None = None
+        self._talk_handler: TalkCommandHandler | None = None
         self._gm_command_handler: GMCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
@@ -722,6 +724,33 @@ class TaskFactory:
             self._party_set_leader_handler.message_sender = message_sender
         return self._party_set_leader_handler
 
+    def _get_talk_handler(
+        self, message_sender: MessageSender, session_data: dict[str, dict[str, int]] | None
+    ) -> TalkCommandHandler:
+        """Obtiene o crea el handler de mensaje de chat.
+
+        Args:
+            message_sender: Enviador de mensajes.
+            session_data: Datos de sesión compartidos.
+
+        Returns:
+            Handler de mensaje de chat.
+        """
+        if self._talk_handler is None:
+            self._talk_handler = TalkCommandHandler(
+                player_repo=self.deps.player_repo,
+                account_repo=self.deps.account_repo,
+                map_manager=self.deps.map_manager,
+                game_tick=self.deps.game_tick,
+                message_sender=message_sender,
+                session_data=session_data,
+            )
+        else:
+            # Actualizar message_sender y session_data por si cambiaron
+            self._talk_handler.message_sender = message_sender
+            self._talk_handler.session_data = session_data or {}
+        return self._talk_handler
+
     def _get_gm_command_handler(self, message_sender: MessageSender) -> GMCommandHandler:
         """Obtiene o crea el handler de comandos de Game Master.
 
@@ -943,11 +972,8 @@ class TaskFactory:
             TaskTalk: lambda: TaskTalk(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.account_repo,
-                self.deps.map_manager,
-                session_data,
-                self.deps.game_tick,
+                talk_handler=self._get_talk_handler(message_sender, session_data),
+                session_data=session_data,
             ),
             TaskWalk: lambda: TaskWalk(
                 data,

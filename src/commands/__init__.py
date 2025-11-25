@@ -40,6 +40,7 @@ from src.commands.party_leave_command import PartyLeaveCommand
 from src.commands.party_message_command import PartyMessageCommand
 from src.commands.party_set_leader_command import PartySetLeaderCommand
 from src.commands.pickup_command import PickupCommand
+from src.commands.talk_command import TalkCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
 from src.commands.work_command import WorkCommand
@@ -74,6 +75,7 @@ __all__ = [
     "PartyMessageCommand",
     "PartySetLeaderCommand",
     "PickupCommand",
+    "TalkCommand",
     "UseItemCommand",
     "WalkCommand",
     "WorkCommand",
