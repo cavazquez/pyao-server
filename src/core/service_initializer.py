@@ -8,6 +8,7 @@ from src.models.item_catalog import ItemCatalog
 from src.models.items_catalog import ITEMS_CATALOG
 from src.models.npc_catalog import NPCCatalog
 from src.models.spell_catalog import SpellCatalog
+from src.services.clan_service import ClanService
 from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
 from src.services.game.npc_world_manager import NPCWorldManager
@@ -102,6 +103,17 @@ class ServiceInitializer:
         await party_service.party_repo.initialize()  # Inicializar repositorio de parties
         logger.info("✓ Servicio de parties inicializado")
 
+        # Servicio de clanes
+        clan_service = ClanService(
+            self.repositories["clan_repo"],
+            self.repositories["player_repo"],
+            message_sender_for_service,
+            broadcast_service,  # type: ignore[arg-type]
+            self.map_manager,
+        )
+        await clan_service.clan_repo.initialize()  # Inicializar repositorio de clanes
+        logger.info("✓ Servicio de clanes inicializado")
+
         # Servicio de muerte de NPCs (centralizado, con party_service para exp compartida)
         npc_death_service = NPCDeathService(
             self.map_manager,
@@ -195,6 +207,7 @@ class ServiceInitializer:
             "map_resources_service": map_resources_service,
             "door_service": door_service,
             "party_service": party_service,
+            "clan_service": clan_service,
             "npc_catalog": npc_catalog,
             "spell_catalog": spell_catalog,
             "item_catalog": item_catalog,

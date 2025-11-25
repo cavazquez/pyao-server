@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from src.network.session_manager import SessionManager
     from src.repositories.account_repository import AccountRepository
     from src.repositories.bank_repository import BankRepository
+    from src.repositories.clan_repository import ClanRepository
     from src.repositories.door_repository import DoorRepository
     from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.ground_items_repository import GroundItemsRepository
@@ -22,6 +23,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.repositories.spellbook_repository import SpellbookRepository
+    from src.services.clan_service import ClanService
     from src.services.combat.combat_service import CombatService
     from src.services.commerce_service import CommerceService
     from src.services.game.npc_world_manager import NPCWorldManager
@@ -60,6 +62,7 @@ class DependencyContainer:
     bank_repo: BankRepository
     door_repo: DoorRepository
     npc_repo: NPCRepository
+    clan_repo: ClanRepository
     party_repo: PartyRepository
     spellbook_repo: SpellbookRepository
     ground_items_repo: GroundItemsRepository
@@ -81,6 +84,7 @@ class DependencyContainer:
     stamina_service: StaminaService
     player_map_service: PlayerMapService
     party_service: PartyService
+    clan_service: ClanService
 
     # Managers
     map_manager: MapManager

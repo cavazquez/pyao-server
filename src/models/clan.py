@@ -42,19 +42,35 @@ class ClanMember:
     contribution: int = 0  # Contribution points to the clan
 
     def can_invite_members(self) -> bool:
-        """Check if member can invite other members."""
+        """Check if member can invite other members.
+
+        Returns:
+            True if member has OFFICER rank or higher, False otherwise.
+        """
         return self.rank >= ClanRank.OFFICER
 
     def can_kick_members(self) -> bool:
-        """Check if member can kick other members."""
+        """Check if member can kick other members.
+
+        Returns:
+            True if member has OFFICER rank or higher, False otherwise.
+        """
         return self.rank >= ClanRank.OFFICER
 
     def can_promote_demote(self) -> bool:
-        """Check if member can promote/demote other members."""
+        """Check if member can promote/demote other members.
+
+        Returns:
+            True if member has VICE_LEADER rank or higher, False otherwise.
+        """
         return self.rank >= ClanRank.VICE_LEADER
 
     def can_manage_clan(self) -> bool:
-        """Check if member can manage clan settings."""
+        """Check if member can manage clan settings.
+
+        Returns:
+            True if member is LEADER, False otherwise.
+        """
         return self.rank >= ClanRank.LEADER
 
 
@@ -75,7 +91,11 @@ class ClanInvitation:
     expires_at: float = field(default_factory=lambda: time.time() + INVITATION_TIMEOUT_SECONDS)
 
     def is_expired(self) -> bool:
-        """Check if invitation has expired."""
+        """Check if invitation has expired.
+
+        Returns:
+            True if current time is past expiration time, False otherwise.
+        """
         return time.time() > self.expires_at
 
 

@@ -37,6 +37,8 @@ class AcceptClanCommandHandler(CommandHandler):
 
         Returns:
             CommandResult con el resultado de la operación.
+            Si es exitoso, contiene clan_id y clan_name en data.
+            Si falla, contiene error_message.
         """
         if not isinstance(command, AcceptClanCommand):
             return CommandResult.error("Comando inválido")

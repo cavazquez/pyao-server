@@ -50,6 +50,8 @@ class TaskCreateClan(Task):
 
         Returns:
             Tupla (clan_name, description) o None si el paquete es inválido.
+            clan_name: Nombre del clan a crear.
+            description: Descripción opcional del clan.
         """
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.repositories.account_repository import AccountRepository
 from src.repositories.bank_repository import BankRepository
+from src.repositories.clan_repository import ClanRepository
 from src.repositories.door_repository import DoorRepository
 from src.repositories.equipment_repository import EquipmentRepository
 from src.repositories.ground_items_repository import GroundItemsRepository
@@ -51,6 +52,7 @@ class RepositoryInitializer:
             "bank_repo": BankRepository(self.redis_client),
             "door_repo": DoorRepository(self.redis_client),
             "npc_repo": NPCRepository(self.redis_client),
+            "clan_repo": ClanRepository(self.redis_client),
             "party_repo": PartyRepository(self.redis_client),
             "spellbook_repo": SpellbookRepository(self.redis_client),
             "ground_items_repo": GroundItemsRepository(self.redis_client),

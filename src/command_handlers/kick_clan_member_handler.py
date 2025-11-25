@@ -37,6 +37,8 @@ class KickClanMemberCommandHandler(CommandHandler):
 
         Returns:
             CommandResult con el resultado de la operación.
+            Si es exitoso, contiene message en data.
+            Si falla, contiene error_message.
         """
         if not isinstance(command, KickClanMemberCommand):
             return CommandResult.error("Comando inválido")

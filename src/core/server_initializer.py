@@ -127,6 +127,7 @@ class ServerInitializer:
             bank_repo=repositories["bank_repo"],
             door_repo=repositories["door_repo"],
             npc_repo=repositories["npc_repo"],
+            clan_repo=repositories["clan_repo"],
             party_repo=repositories["party_repo"],
             spellbook_repo=repositories["spellbook_repo"],
             ground_items_repo=ground_items_repo,
@@ -147,6 +148,7 @@ class ServerInitializer:
             stamina_service=services["stamina_service"],
             player_map_service=services["player_map_service"],
             party_service=services["party_service"],
+            clan_service=services["clan_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,
