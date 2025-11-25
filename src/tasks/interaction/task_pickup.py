@@ -1,38 +1,31 @@
 """Task para manejar recogida de items del suelo."""
 
 import logging
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
-from src.models.item_constants import GOLD_ITEM_ID
+from src.commands.pickup_command import PickupCommand
 from src.network.packet_reader import PacketReader
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
-    from src.game.map_manager import MapManager
+    from src.command_handlers.pickup_handler import PickupCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.models.item_catalog import ItemCatalog
-    from src.repositories.inventory_repository import InventoryRepository
-    from src.repositories.player_repository import PlayerRepository
-    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
-    from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
 
 
 class TaskPickup(Task):
-    """Maneja el packet PICKUP del cliente."""
+    """Maneja el packet PICKUP del cliente (solo parsing y delegación).
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
-        inventory_repo: InventoryRepository | None = None,
-        map_manager: MapManager | None = None,
-        broadcast_service: MultiplayerBroadcastService | None = None,
-        item_catalog: ItemCatalog | None = None,
-        party_service: PartyService | None = None,
+        pickup_handler: PickupCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa el task.
@@ -40,25 +33,18 @@ class TaskPickup(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventario.
-            map_manager: Gestor de mapas.
-            broadcast_service: Servicio de broadcast.
-            item_catalog: Catálogo de items.
-            party_service: Servicio de parties (para loot compartido).
+            pickup_handler: Handler para el comando de recoger item.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
-        self.inventory_repo = inventory_repo
-        self.map_manager = map_manager
-        self.broadcast_service = broadcast_service
-        self.item_catalog = item_catalog
-        self.party_service = party_service
+        self.pickup_handler = pickup_handler
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
-        """Procesa la recogida de un item del suelo."""
+        """Procesa la recogida de un item del suelo (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Validar packet (no tiene datos, solo PacketID)
         _ = PacketReader(self.data)  # Valida que el packet sea válido
 
@@ -68,182 +54,17 @@ class TaskPickup(Task):
             logger.warning("Intento de recoger item sin estar logueado")
             return
 
-        logger.info("TaskPickup: user_id=%d intentando recoger item", user_id)
-
-        # Validar que tenemos los servicios necesarios
-        if not self.player_repo or not self.map_manager:
-            logger.error("TaskPickup: Faltan servicios necesarios")
+        # Validar que tenemos el handler
+        if not self.pickup_handler:
+            logger.error("PickupCommandHandler no disponible")
             return
 
-        # Obtener posición del jugador
-        position = await self.player_repo.get_position(user_id)
-        if not position:
-            logger.error("No se pudo obtener posición del jugador %d", user_id)
-            return
+        # Crear comando (solo datos)
+        command = PickupCommand(user_id=user_id)
 
-        map_id = position["map"]
-        x = position["x"]
-        y = position["y"]
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.pickup_handler.handle(command)
 
-        # Buscar items en ese tile
-        items = self.map_manager.get_ground_items(map_id, x, y)
-
-        if not items:
-            await self.message_sender.send_console_msg("No hay nada aquí.")
-            logger.info("Jugador %d intentó recoger pero no hay items en (%d,%d)", user_id, x, y)
-            return
-
-        # Recoger primer item
-        item = items[0]
-        item_id = item.get("item_id")
-        quantity = item.get("quantity", 1)
-
-        # Validar tipos
-        if not isinstance(quantity, int):
-            quantity = 1
-        if not isinstance(item_id, int) and item_id is not None:
-            logger.warning("item_id inválido: %s", item_id)
-            return
-
-        # El loot siempre es público - cualquiera puede recogerlo
-        # (owner_id se mantiene para compatibilidad futura, pero no se verifica)
-
-        # Manejar oro especialmente
-        if item_id == GOLD_ITEM_ID:
-            await self._pickup_gold(user_id, quantity, map_id, x, y)
-        else:
-            await self._pickup_item(user_id, item_id, quantity, map_id, x, y)
-
-    async def _pickup_gold(self, user_id: int, gold: int, map_id: int, x: int, y: int) -> None:
-        """Recoge oro del suelo.
-
-        Args:
-            user_id: ID del jugador.
-            gold: Cantidad de oro.
-            map_id: ID del mapa.
-            x: Posición X.
-            y: Posición Y.
-        """
-        if not self.player_repo:
-            return
-
-        # Obtener oro actual
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return
-
-        current_gold = stats.get("gold", 0)
-        new_gold = current_gold + gold
-
-        # Actualizar oro
-        await self.player_repo.update_gold(user_id, new_gold)
-
-        # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
-        # TODO: Optimizar para enviar solo el oro en lugar de todos los stats
-        stats = await self.player_repo.get_stats(user_id)
-        if stats:
-            await self.message_sender.send_update_user_stats(
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 100),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=new_gold,
-                level=stats.get("level", 1),
-                elu=stats.get("elu", 300),
-                experience=stats.get("experience", 0),
-            )
-
-        # Remover del suelo
-        if self.map_manager:
-            self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-
-        # Broadcast OBJECT_DELETE
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_delete(map_id, x, y)
-
-        # Notificar al jugador
-        await self.message_sender.send_console_msg(f"Recogiste {gold} monedas de oro.")
-        logger.info("Jugador %d recogió %d de oro en (%d,%d)", user_id, gold, x, y)
-
-    async def _pickup_item(
-        self, user_id: int, item_id: int | None, quantity: int, map_id: int, x: int, y: int
-    ) -> None:
-        """Recoge un item del suelo.
-
-        Args:
-            user_id: ID del jugador.
-            item_id: ID del item.
-            quantity: Cantidad.
-            map_id: ID del mapa.
-            x: Posición X.
-            y: Posición Y.
-        """
-        if not self.inventory_repo or not item_id or not self.item_catalog:
-            return
-
-        # Obtener datos del item del catálogo
-        item_data = self.item_catalog.get_item_data(item_id)
-        if not item_data:
-            logger.warning("Item %d no encontrado en el catálogo", item_id)
-            return
-
-        # Agregar item al inventario
-        modified_slots = await self.inventory_repo.add_item(user_id, item_id, quantity)
-
-        if not modified_slots:
-            await self.message_sender.send_console_msg("Tu inventario está lleno.")
-            return
-
-        # Enviar CHANGE_INVENTORY_SLOT para todos los slots modificados
-        for slot, slot_quantity in modified_slots:
-            await self.message_sender.send_change_inventory_slot(
-                slot=slot,
-                item_id=item_id,
-                name=str(item_data.get("Name", "Item")),
-                amount=slot_quantity,
-                equipped=False,
-                grh_id=cast("int", item_data.get("GrhIndex", 0)),
-                item_type=cast("int", item_data.get("ObjType", 0)),
-                max_hit=cast("int", item_data.get("MaxHit", 0)),
-                min_hit=cast("int", item_data.get("MinHit", 0)),
-                max_def=cast("int", item_data.get("MaxDef", 0)),
-                min_def=cast("int", item_data.get("MinDef", 0)),
-                sale_price=cast("float", item_data.get("Valor", 0)),
-            )
-
-        # Notificar al jugador
-        item_name = item_data.get("Name", f"Item {item_id}")
-        await self.message_sender.send_console_msg(f"Recogiste {quantity}x {item_name}.")
-
-        # Remover del suelo
-        if self.map_manager:
-            self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-
-        # Broadcast OBJECT_DELETE
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_delete(map_id, x, y)
-
-        logger.info(
-            "Jugador %d recogió item %d (cantidad: %d) en (%d,%d)",
-            user_id,
-            item_id,
-            quantity,
-            x,
-            y,
-        )
-
-    @staticmethod
-    def _can_pickup_item(_user_id: int, _owner_id: int | None) -> bool:
-        """Verifica si el jugador puede recoger un item del suelo.
-
-        Args:
-            _user_id: ID del jugador que intenta recoger (no usado).
-            _owner_id: ID del dueño del item (no usado).
-
-        Returns:
-            True siempre - el loot es público.
-        """
-        # El loot siempre es público - cualquiera puede recogerlo
-        return True
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Recoger item falló: %s", result.error_message or "Error desconocido")

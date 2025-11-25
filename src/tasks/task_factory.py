@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
 from src.command_handlers.cast_spell_handler import CastSpellCommandHandler
+from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
@@ -89,6 +90,7 @@ class TaskFactory:
         self._walk_handler: WalkCommandHandler | None = None
         self._cast_spell_handler: CastSpellCommandHandler | None = None
         self._use_item_handler: UseItemCommandHandler | None = None
+        self._pickup_handler: PickupCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -185,6 +187,30 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._use_item_handler.message_sender = message_sender
         return self._use_item_handler
+
+    def _get_pickup_handler(self, message_sender: MessageSender) -> PickupCommandHandler:
+        """Obtiene o crea el handler de recoger item.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de recoger item.
+        """
+        if self._pickup_handler is None:
+            self._pickup_handler = PickupCommandHandler(
+                player_repo=self.deps.player_repo,
+                inventory_repo=self.deps.inventory_repo,
+                map_manager=self.deps.map_manager,
+                broadcast_service=self.deps.broadcast_service,
+                item_catalog=self.deps.item_catalog,
+                party_service=self.deps.party_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._pickup_handler.message_sender = message_sender
+        return self._pickup_handler
 
     def create_task(
         self,
@@ -449,13 +475,8 @@ class TaskFactory:
             TaskPickup: lambda: TaskPickup(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.inventory_repo,
-                self.deps.map_manager,
-                self.deps.broadcast_service,
-                self.deps.item_catalog,
-                self.deps.party_service,
-                session_data,
+                pickup_handler=self._get_pickup_handler(message_sender),
+                session_data=session_data,
             ),
             TaskDrop: lambda: TaskDrop(
                 data,
