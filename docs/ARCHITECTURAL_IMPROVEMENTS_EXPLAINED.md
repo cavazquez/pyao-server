@@ -419,7 +419,28 @@ await command_queue.process()
 **Prioridad:** 🟡 Media  
 **Esfuerzo:** 8-10 horas  
 **Complejidad:** Alta  
-**Estado:** ✅ **IMPLEMENTADO** - Ver `src/commands/` y `src/command_handlers/`
+**Estado:** 🟡 **EN PROGRESO** - Ver `src/commands/` y `src/command_handlers/`
+
+### 📊 Estado Actual (2025-01-XX)
+
+**✅ Implementado:**
+- Estructura base: `Command`, `CommandResult`, `CommandHandler`
+- `AttackCommand` y `AttackCommandHandler` (TaskAttack refactorizado)
+- Tests actualizados y pasando (23/23)
+
+**⏳ Pendiente (7 tasks complejas):**
+1. **TaskWalk** - Movimiento complejo (stamina, validaciones, broadcast, transiciones de mapa)
+2. **TaskCastSpell** - Lógica de hechizos con validaciones múltiples
+3. **TaskUseItem** - Múltiples casos especiales (herramientas, barca, manzanas)
+4. **TaskPickup** - Recoger items con validaciones y party loot
+5. **TaskDrop** - Soltar items con validaciones
+6. **TaskCommerceBuy/Sell** - Lógica de comercio
+7. **TaskBankDeposit/Extract** - Lógica bancaria
+
+**📝 Notas:**
+- Las tasks simples (TaskPing, TaskQuit, etc.) no requieren Command Pattern
+- Priorizar por complejidad y frecuencia de uso
+- Cada refactorización debe incluir tests actualizados
 
 ---
 
@@ -838,7 +859,7 @@ class Server:
 
 ### 🟡 Media Prioridad
 1. **Configuration Management** (2-3h) - ✅ **IMPLEMENTADO**
-2. **Command Pattern** (8-10h) - ✅ **IMPLEMENTADO**
+2. **Command Pattern** (8-10h) - 🟡 **EN PROGRESO** (TaskAttack ✅, faltan 7 tasks complejas)
 
 ### 🟢 Baja Prioridad (Opcional)
 1. **Service Container** (4-6h) - Útil pero no urgente
@@ -858,7 +879,9 @@ class Server:
 4. Service Container (4-6h)
 
 ### Fase 3: Mejoras Arquitectónicas (3-4 semanas)
-5. Command Pattern (8-10h) - ✅ **COMPLETADO**
+5. Command Pattern (8-10h) - 🟡 **EN PROGRESO**
+   - ✅ TaskAttack implementado
+   - ⏳ Pendientes: TaskWalk, TaskCastSpell, TaskUseItem, TaskPickup, TaskDrop, TaskCommerceBuy/Sell, TaskBankDeposit/Extract
 6. Event System (6-8h)
 
 ### Fase 4: Refactoring Grande (Opcional)

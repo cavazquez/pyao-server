@@ -5,6 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.walk_handler import WalkCommandHandler
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -82,6 +83,7 @@ class TaskFactory:
 
         # Crear command handlers (reutilizables, lazy initialization)
         self._attack_handler: AttackCommandHandler | None = None
+        self._walk_handler: WalkCommandHandler | None = None
 
     def _get_attack_handler(self, message_sender: MessageSender) -> AttackCommandHandler:
         """Obtiene o crea el handler de ataque.
@@ -110,6 +112,31 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._attack_handler.message_sender = message_sender
         return self._attack_handler
+
+    def _get_walk_handler(self, message_sender: MessageSender) -> WalkCommandHandler:
+        """Obtiene o crea el handler de movimiento.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de movimiento.
+        """
+        if self._walk_handler is None:
+            self._walk_handler = WalkCommandHandler(
+                player_repo=self.deps.player_repo,
+                map_manager=self.deps.map_manager,
+                broadcast_service=self.deps.broadcast_service,
+                stamina_service=self.deps.stamina_service,
+                player_map_service=self.deps.player_map_service,
+                inventory_repo=self.deps.inventory_repo,
+                map_resources=self.deps.map_resources_service,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._walk_handler.message_sender = message_sender
+        return self._walk_handler
 
     def create_task(
         self,
@@ -304,14 +331,8 @@ class TaskFactory:
             TaskWalk: lambda: TaskWalk(
                 data,
                 message_sender,
-                self.deps.player_repo,
-                self.deps.map_manager,
-                self.deps.broadcast_service,
-                self.deps.stamina_service,
-                self.deps.player_map_service,
+                self._get_walk_handler(message_sender),
                 session_data,
-                self.deps.inventory_repo,
-                self.deps.map_resources_service,
             ),
             TaskGMCommands: lambda: TaskGMCommands(
                 data,

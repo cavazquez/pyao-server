@@ -1,5 +1,6 @@
 """Handlers de comandos usando Command Pattern."""
 
 from src.command_handlers.attack_handler import AttackCommandHandler
+from src.command_handlers.walk_handler import WalkCommandHandler
 
-__all__ = ["AttackCommandHandler"]
+__all__ = ["AttackCommandHandler", "WalkCommandHandler"]

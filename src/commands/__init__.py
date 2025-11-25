@@ -1,5 +1,7 @@
 """Sistema de comandos usando Command Pattern."""
 
+from src.commands.attack_command import AttackCommand
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.commands.walk_command import WalkCommand
 
-__all__ = ["Command", "CommandHandler", "CommandResult"]
+__all__ = ["AttackCommand", "Command", "CommandHandler", "CommandResult", "WalkCommand"]

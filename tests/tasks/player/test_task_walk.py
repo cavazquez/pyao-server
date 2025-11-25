@@ -4,10 +4,33 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from src.game.map_manager import MapManager
-from src.repositories.player_repository import PlayerRepository
-from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.commands.base import CommandResult
+from src.commands.walk_command import WalkCommand
 from src.tasks.player.task_walk import TaskWalk
+
+
+def create_mock_walk_handler(
+    player_repo: MagicMock | None = None,
+    map_manager: MagicMock | None = None,
+    broadcast_service: MagicMock | None = None,
+    stamina_service: MagicMock | None = None,
+    player_map_service: MagicMock | None = None,
+    inventory_repo: MagicMock | None = None,
+    map_resources: MagicMock | None = None,
+    message_sender: MagicMock | None = None,
+) -> MagicMock:
+    """Crea un mock de WalkCommandHandler con las dependencias especificadas."""
+    handler = MagicMock()
+    handler.player_repo = player_repo or MagicMock()
+    handler.map_manager = map_manager or MagicMock()
+    handler.broadcast_service = broadcast_service
+    handler.stamina_service = stamina_service
+    handler.player_map_service = player_map_service
+    handler.inventory_repo = inventory_repo
+    handler.map_resources = map_resources
+    handler.message_sender = message_sender or MagicMock()
+    handler.handle = AsyncMock()
+    return handler
 
 
 @pytest.mark.asyncio
@@ -20,33 +43,19 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 50, "new_y": 49, "map": 1, "heading": 1}
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         # Packet: WALK + NORTH (1)
         data = bytes([0x06, 0x01])
-
         session_data = {"user_id": 1}
 
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -54,9 +63,11 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.set_position.assert_called_once_with(1, 50, 49, 1, 1)  # y-1
-        map_manager.update_player_tile.assert_called_once_with(1, 1, 50, 50, 50, 49)
-        broadcast_service.broadcast_character_move.assert_called_once()
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.user_id == 1
+        assert call_args.heading == 1
 
     async def test_walk_south_success(self) -> None:
         """Test de movimiento exitoso hacia el sur."""
@@ -64,33 +75,19 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 1}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 50, "new_y": 51, "map": 1, "heading": 3}
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)  # No hay exit tile
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         # Packet: WALK + SOUTH (3)
         data = bytes([0x06, 0x03])
-
         session_data = {"user_id": 1}
 
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -98,7 +95,11 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.set_position.assert_called_once_with(1, 50, 51, 1, 3)  # y+1
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.user_id == 1
+        assert call_args.heading == 3
 
     async def test_walk_east_success(self) -> None:
         """Test de movimiento exitoso hacia el este."""
@@ -106,33 +107,19 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 4}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 51, "new_y": 50, "map": 1, "heading": 2}
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         # Packet: WALK + EAST (2)
         data = bytes([0x06, 0x02])
-
         session_data = {"user_id": 1}
 
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -140,7 +127,11 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.set_position.assert_called_once_with(1, 51, 50, 1, 2)  # x+1
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.user_id == 1
+        assert call_args.heading == 2
 
     async def test_walk_west_success(self) -> None:
         """Test de movimiento exitoso hacia el oeste."""
@@ -148,33 +139,19 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 2}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 49, "new_y": 50, "map": 1, "heading": 4}
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         # Packet: WALK + WEST (4)
         data = bytes([0x06, 0x04])
-
         session_data = {"user_id": 1}
 
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -182,7 +159,11 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.set_position.assert_called_once_with(1, 49, 50, 1, 4)  # x-1
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.user_id == 1
+        assert call_args.heading == 4
 
     async def test_walk_blocked_by_wall(self) -> None:
         """Test de movimiento bloqueado por pared."""
@@ -190,21 +171,8 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
-        )
-        player_repo.set_position = AsyncMock()
-        player_repo.set_heading = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=False)  # Bloqueado
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {1: {(50, 49)}}
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(data={"moved": False, "blocked": True})
 
         data = bytes([0x06, 0x01])  # NORTH
         session_data = {"user_id": 1}
@@ -212,18 +180,18 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe moverse, solo cambiar dirección
-        player_repo.set_position.assert_not_called()
-        player_repo.set_heading.assert_called_once_with(1, 1)
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 1
 
     async def test_walk_triggers_exit_transition(self) -> None:
         """Test que caminar hacia un exit tile dispara transition_to_map."""
@@ -231,26 +199,16 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 49, "y": 90, "map": 1, "heading": 3}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={
+                "moved": True,
+                "changed_map": True,
+                "new_map": 2,
+                "new_x": 50,
+                "new_y": 99,
+            }
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        # Simular exit tile al moverse al SUR desde (49,90) -> (49,91)
-        map_manager.get_exit_tile = MagicMock(return_value={"to_map": 2, "to_x": 50, "to_y": 99})
-        map_manager.update_player_tile = MagicMock()
-        map_manager.can_move_to = MagicMock(return_value=True)
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
-
-        # PlayerMapService mock para verificar transición de mapa
-        player_map_service = MagicMock()
-        player_map_service.transition_to_map = AsyncMock()
 
         # Packet: WALK + SOUTH (3)
         data = bytes([0x06, 0x03])
@@ -259,22 +217,18 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            player_map_service=player_map_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - debe llamar a transition_to_map y no hacer movimiento normal
-        player_map_service.transition_to_map.assert_awaited_once()
-        player_repo.set_position.assert_not_called()
-        map_manager.update_player_tile.assert_not_called()
-        map_manager.can_move_to.assert_not_called()
-        broadcast_service.broadcast_character_move.assert_not_called()
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 3
 
     async def test_walk_at_map_edge_north(self) -> None:
         """Test de movimiento en el borde norte del mapa."""
@@ -282,18 +236,10 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 1, "map": 1, "heading": 3}  # En el borde
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": False, "heading_changed": True}
         )
-        player_repo.set_position = AsyncMock()
-        player_repo.set_heading = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
 
         data = bytes([0x06, 0x01])  # NORTH
         session_data = {"user_id": 1}
@@ -301,18 +247,18 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert - no debe moverse (ya está en y=1)
-        player_repo.set_position.assert_not_called()
-        player_repo.set_heading.assert_called_once_with(1, 1)
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 1
 
     async def test_walk_cancels_meditation(self) -> None:
         """Test que el movimiento cancela la meditación."""
@@ -322,21 +268,10 @@ class TestTaskWalk:
         message_sender.send_meditate_toggle = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=True)  # Está meditando
-        player_repo.set_meditating = AsyncMock()
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 50, "new_y": 49, "map": 1, "heading": 1}
         )
-        player_repo.set_position = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         data = bytes([0x06, 0x01])
         session_data = {"user_id": 1}
@@ -344,19 +279,15 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         # Execute
         await task.execute()
 
-        # Assert
-        player_repo.set_meditating.assert_called_once_with(1, is_meditating=False)
-        message_sender.send_meditate_toggle.assert_called_once()
-        message_sender.send_console_msg.assert_called_once_with("Dejas de meditar al moverte.")
+        # Assert - el handler debe ser llamado (la cancelación de meditación está en el handler)
+        walk_handler.handle.assert_called_once()
 
     async def test_walk_invalid_packet_size(self) -> None:
         """Test con packet de tamaño inválido."""
@@ -364,7 +295,7 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
 
         # Packet muy corto
         data = bytes([0x06])  # Falta dirección
@@ -374,16 +305,15 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
-        # Execute - debe lanzar ValueError por packet truncado
-        with pytest.raises(ValueError, match="Packet truncado"):
-            await task.execute()
+        # Execute - debe manejar la excepción sin crashear
+        await task.execute()
 
-        # Assert - no debe llegar a get_position
-        player_repo.get_position.assert_not_called()
+        # Assert - no debe llamar al handler si el packet es inválido
+        walk_handler.handle.assert_not_called()
 
     async def test_walk_invalid_direction(self) -> None:
         """Test con dirección inválida."""
@@ -391,7 +321,7 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
 
         # Packet con dirección inválida (5)
         data = bytes([0x06, 0x05])
@@ -401,7 +331,7 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -409,10 +339,10 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert - no debe hacer nada
-        player_repo.get_position.assert_not_called()
+        walk_handler.handle.assert_not_called()
 
-    async def test_walk_without_player_repo(self) -> None:
-        """Test sin repositorio de jugadores."""
+    async def test_walk_without_walk_handler(self) -> None:
+        """Test sin handler de movimiento."""
         # Setup
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
@@ -420,7 +350,12 @@ class TestTaskWalk:
         data = bytes([0x06, 0x01])
         session_data = {"user_id": 1}
 
-        task = TaskWalk(data, message_sender, player_repo=None, session_data=session_data)
+        task = TaskWalk(
+            data,
+            message_sender,
+            walk_handler=None,
+            session_data=session_data,
+        )
 
         # Execute
         await task.execute()
@@ -433,7 +368,7 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
 
         data = bytes([0x06, 0x01])
         session_data = {}  # Sin user_id
@@ -441,7 +376,7 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -449,7 +384,7 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.get_position.assert_not_called()
+        walk_handler.handle.assert_not_called()
 
     async def test_walk_with_dict_user_id(self) -> None:
         """Test con user_id como dict (inválido)."""
@@ -457,7 +392,7 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
 
         data = bytes([0x06, 0x01])
         session_data = {"user_id": {"invalid": "data"}}
@@ -465,7 +400,7 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -473,7 +408,7 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.get_position.assert_not_called()
+        walk_handler.handle.assert_not_called()
 
     async def test_walk_position_not_found(self) -> None:
         """Test cuando no se encuentra la posición del jugador."""
@@ -481,9 +416,8 @@ class TestTaskWalk:
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(return_value=None)  # No encontrado
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.error("Posición no encontrada")
 
         data = bytes([0x06, 0x01])
         session_data = {"user_id": 1}
@@ -491,7 +425,7 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
@@ -499,31 +433,17 @@ class TestTaskWalk:
         await task.execute()
 
         # Assert
-        player_repo.set_position.assert_not_called()
+        walk_handler.handle.assert_called_once()
 
     async def test_walk_with_stamina_service(self) -> None:
         """Test de movimiento con servicio de stamina."""
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": True, "new_x": 50, "new_y": 49, "map": 1, "heading": 1}
         )
-        player_repo.set_position = AsyncMock()
-
-        stamina_service = MagicMock()
-        stamina_service.consume_stamina = AsyncMock(return_value=True)
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.update_player_tile = MagicMock()
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-
-        broadcast_service = MagicMock(spec=MultiplayerBroadcastService)
-        broadcast_service.broadcast_character_move = AsyncMock()
 
         data = bytes([0x06, 0x01])
         session_data = {"user_id": 1}
@@ -531,29 +451,24 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            stamina_service=stamina_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         await task.execute()
 
-        # Verificar que se consumió stamina
-        stamina_service.consume_stamina.assert_called_once()
-        player_repo.set_position.assert_called_once()
+        # Verificar que se llamó al handler (el consumo de stamina está en el handler)
+        walk_handler.handle.assert_called_once()
 
     async def test_walk_insufficient_stamina(self) -> None:
         """Test cuando no hay suficiente stamina."""
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-
-        stamina_service = MagicMock()
-        stamina_service.consume_stamina = AsyncMock(return_value=False)  # Sin stamina
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.error(
+            "No tienes suficiente stamina para moverte."
+        )
 
         data = bytes([0x06, 0x01])
         session_data = {"user_id": 1}
@@ -561,31 +476,24 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            stamina_service=stamina_service,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         await task.execute()
 
-        # No debe intentar obtener posición
-        player_repo.get_position.assert_not_called()
+        # El handler debe ser llamado (la validación de stamina está en el handler)
+        walk_handler.handle.assert_called_once()
 
     async def test_walk_at_map_edge_south(self) -> None:
         """Test de movimiento en el borde sur del mapa."""
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 100, "map": 1, "heading": 1}  # En el borde sur
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(
+            data={"moved": False, "heading_changed": True}
         )
-        player_repo.set_heading = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
 
         data = bytes([0x06, 0x03])  # SOUTH
         session_data = {"user_id": 1}
@@ -593,35 +501,25 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         await task.execute()
 
-        # No debe moverse (ya está en y=100)
-        player_repo.set_position.assert_not_called()
-        player_repo.set_heading.assert_called_once_with(1, 3)
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 3
 
     async def test_walk_blocked_by_player(self) -> None:
         """Test de movimiento bloqueado por otro jugador."""
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
-        )
-        player_repo.set_heading = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=False)
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {}
-        map_manager.get_tile_occupant = MagicMock(return_value="player:2")
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(data={"moved": False, "blocked": True})
 
         data = bytes([0x06, 0x01])  # NORTH
         session_data = {"user_id": 1}
@@ -629,35 +527,25 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         await task.execute()
 
-        # No debe moverse, solo cambiar dirección
-        player_repo.set_position.assert_not_called()
-        player_repo.set_heading.assert_called_once_with(1, 1)
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 1
 
     async def test_walk_blocked_by_npc(self) -> None:
         """Test de movimiento bloqueado por NPC."""
         message_sender = MagicMock()
         message_sender.connection.address = "127.0.0.1:1234"
 
-        player_repo = MagicMock(spec=PlayerRepository)
-        player_repo.is_meditating = AsyncMock(return_value=False)
-        player_repo.get_position = AsyncMock(
-            return_value={"x": 50, "y": 50, "map": 1, "heading": 3}
-        )
-        player_repo.set_heading = AsyncMock()
-
-        map_manager = MagicMock(spec=MapManager)
-        map_manager.can_move_to = MagicMock(return_value=False)
-        map_manager.get_map_size = MagicMock(return_value=(100, 100))
-        map_manager.get_exit_tile = MagicMock(return_value=None)
-        map_manager._blocked_tiles = {}
-        map_manager.get_tile_occupant = MagicMock(return_value="npc:100")
+        walk_handler = create_mock_walk_handler(message_sender=message_sender)
+        walk_handler.handle.return_value = CommandResult.ok(data={"moved": False, "blocked": True})
 
         data = bytes([0x06, 0x02])  # EAST
         session_data = {"user_id": 1}
@@ -665,13 +553,14 @@ class TestTaskWalk:
         task = TaskWalk(
             data,
             message_sender,
-            player_repo=player_repo,
-            map_manager=map_manager,
+            walk_handler=walk_handler,
             session_data=session_data,
         )
 
         await task.execute()
 
-        # No debe moverse
-        player_repo.set_position.assert_not_called()
-        player_repo.set_heading.assert_called_once_with(1, 2)
+        # Assert
+        walk_handler.handle.assert_called_once()
+        call_args = walk_handler.handle.call_args[0][0]
+        assert isinstance(call_args, WalkCommand)
+        assert call_args.heading == 2
