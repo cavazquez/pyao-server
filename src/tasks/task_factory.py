@@ -31,6 +31,7 @@ from src.command_handlers.party_leave_handler import PartyLeaveCommandHandler
 from src.command_handlers.party_message_handler import PartyMessageCommandHandler
 from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
+from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -121,6 +122,7 @@ class TaskFactory:
         self._meditate_handler: MeditateCommandHandler | None = None
         self._use_item_handler: UseItemCommandHandler | None = None
         self._pickup_handler: PickupCommandHandler | None = None
+        self._request_stats_handler: RequestStatsCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
         self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
         self._commerce_sell_handler: CommerceSellCommandHandler | None = None
@@ -313,6 +315,27 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._pickup_handler.message_sender = message_sender
         return self._pickup_handler
+
+    def _get_request_stats_handler(
+        self, message_sender: MessageSender
+    ) -> RequestStatsCommandHandler:
+        """Obtiene o crea el handler de solicitud de estadísticas.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de solicitud de estadísticas.
+        """
+        if self._request_stats_handler is None:
+            self._request_stats_handler = RequestStatsCommandHandler(
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._request_stats_handler.message_sender = message_sender
+        return self._request_stats_handler
 
     def _get_drop_handler(self, message_sender: MessageSender) -> DropCommandHandler:
         """Obtiene o crea el handler de soltar item.
@@ -1054,7 +1077,10 @@ class TaskFactory:
                 session_data=session_data,
             ),
             TaskRequestStats: lambda: TaskRequestStats(
-                data, message_sender, self.deps.player_repo, session_data
+                data,
+                message_sender,
+                request_stats_handler=self._get_request_stats_handler(message_sender),
+                session_data=session_data,
             ),
             TaskRequestPositionUpdate: lambda: TaskRequestPositionUpdate(
                 data, message_sender, self.deps.player_repo, session_data

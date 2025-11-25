@@ -3,24 +3,28 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.request_stats_command import RequestStatsCommand
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskRequestStats(Task):
-    """Tarea que maneja la solicitud de estadísticas del personaje."""
+    """Tarea que maneja la solicitud de estadísticas del personaje.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
+        request_stats_handler: RequestStatsCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea RequestStats.
@@ -28,15 +32,18 @@ class TaskRequestStats(Task):
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
+            request_stats_handler: Handler para el comando de solicitud de estadísticas.
             session_data: Datos de sesión del cliente.
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
+        self.request_stats_handler = request_stats_handler
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Procesa la solicitud de estadísticas del jugador."""
+        """Procesa la solicitud de estadísticas del jugador (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Obtener user_id de la sesión
         user_id = SessionManager.get_user_id(self.session_data)
 
@@ -53,53 +60,20 @@ class TaskRequestStats(Task):
 
         user_id_int = int(user_id)
 
-        logger.info("Solicitud de estadísticas de user_id %d", user_id_int)
-
-        if not self.player_repo:
+        # Validar que tenemos el handler
+        if not self.request_stats_handler:
+            logger.error("RequestStatsCommandHandler no disponible")
             await self.message_sender.send_console_msg("Error: Repositorio no disponible")
             return
 
-        # Obtener estadísticas del jugador
-        stats = await self.player_repo.get_stats(user_id_int)
-        if not stats:
-            await self.message_sender.send_console_msg(
-                "Error: No se pudieron obtener las estadisticas"
+        # Crear comando (solo datos)
+        command = RequestStatsCommand(user_id=user_id_int)
+
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.request_stats_handler.handle(command)
+
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Solicitud de estadísticas falló: %s", result.error_message or "Error desconocido"
             )
-            return
-
-        # Obtener atributos del jugador
-        attributes = await self.player_repo.get_attributes(user_id_int)
-        if not attributes:
-            await self.message_sender.send_console_msg(
-                "Error: No se pudieron obtener los atributos"
-            )
-            return
-
-        # Obtener hambre y sed
-        hunger_thirst = await self.player_repo.get_hunger_thirst(user_id_int)
-        if not hunger_thirst:
-            await self.message_sender.send_console_msg("Error: No se pudieron obtener hambre y sed")
-            return
-
-        # Formatear mensaje de estadísticas
-        stats_message = (
-            f"--- Estadisticas ---\n"
-            f"Nivel: {stats['level']}\n"
-            f"Experiencia: {stats['experience']}/{stats['elu']}\n"
-            f"Vida: {stats['min_hp']}/{stats['max_hp']}\n"
-            f"Mana: {stats['min_mana']}/{stats['max_mana']}\n"
-            f"Energia: {stats['min_sta']}/{stats['max_sta']}\n"
-            f"Oro: {stats['gold']}\n"
-            f"Hambre: {hunger_thirst['min_hunger']}/{hunger_thirst['max_hunger']}\n"
-            f"Sed: {hunger_thirst['min_water']}/{hunger_thirst['max_water']}\n"
-            f"--- Atributos ---\n"
-            f"Fuerza: {attributes['strength']}\n"
-            f"Agilidad: {attributes['agility']}\n"
-            f"Inteligencia: {attributes['intelligence']}\n"
-            f"Carisma: {attributes['charisma']}\n"
-            f"Constitucion: {attributes['constitution']}"
-        )
-
-        # Enviar estadísticas línea por línea
-        await self.message_sender.send_multiline_console_msg(stats_message)
-        logger.info("Estadísticas enviadas para user_id %d", user_id_int)

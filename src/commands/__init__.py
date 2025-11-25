@@ -42,6 +42,7 @@ from src.commands.party_leave_command import PartyLeaveCommand
 from src.commands.party_message_command import PartyMessageCommand
 from src.commands.party_set_leader_command import PartySetLeaderCommand
 from src.commands.pickup_command import PickupCommand
+from src.commands.request_stats_command import RequestStatsCommand
 from src.commands.talk_command import TalkCommand
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
@@ -79,6 +80,7 @@ __all__ = [
     "PartyMessageCommand",
     "PartySetLeaderCommand",
     "PickupCommand",
+    "RequestStatsCommand",
     "TalkCommand",
     "UseItemCommand",
     "WalkCommand",
