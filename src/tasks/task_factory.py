@@ -21,6 +21,7 @@ from src.command_handlers.gm_command_handler import GMCommandHandler
 from src.command_handlers.inventory_click_handler import InventoryClickCommandHandler
 from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
+from src.command_handlers.meditate_handler import MeditateCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
 from src.command_handlers.party_create_handler import PartyCreateCommandHandler
@@ -61,6 +62,7 @@ from src.tasks.player.task_attack import TaskAttack
 from src.tasks.player.task_attributes import TaskRequestAttributes
 from src.tasks.player.task_change_heading import TaskChangeHeading
 from src.tasks.player.task_login import TaskLogin
+from src.tasks.player.task_meditate import TaskMeditate
 from src.tasks.player.task_request_position_update import TaskRequestPositionUpdate
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
@@ -116,6 +118,7 @@ class TaskFactory:
         self._walk_handler: WalkCommandHandler | None = None
         self._cast_spell_handler: CastSpellCommandHandler | None = None
         self._change_heading_handler: ChangeHeadingCommandHandler | None = None
+        self._meditate_handler: MeditateCommandHandler | None = None
         self._use_item_handler: UseItemCommandHandler | None = None
         self._pickup_handler: PickupCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
@@ -246,6 +249,25 @@ class TaskFactory:
             self._change_heading_handler.message_sender = message_sender
             self._change_heading_handler.session_data = session_data or {}
         return self._change_heading_handler
+
+    def _get_meditate_handler(self, message_sender: MessageSender) -> MeditateCommandHandler:
+        """Obtiene o crea el handler de meditación.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de meditación.
+        """
+        if self._meditate_handler is None:
+            self._meditate_handler = MeditateCommandHandler(
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._meditate_handler.message_sender = message_sender
+        return self._meditate_handler
 
     def _get_use_item_handler(self, message_sender: MessageSender) -> UseItemCommandHandler:
         """Obtiene o crea el handler de usar item.
@@ -1023,6 +1045,12 @@ class TaskFactory:
                 change_heading_handler=self._get_change_heading_handler(
                     message_sender, session_data
                 ),
+                session_data=session_data,
+            ),
+            TaskMeditate: lambda: TaskMeditate(
+                data,
+                message_sender,
+                meditate_handler=self._get_meditate_handler(message_sender),
                 session_data=session_data,
             ),
             TaskRequestStats: lambda: TaskRequestStats(

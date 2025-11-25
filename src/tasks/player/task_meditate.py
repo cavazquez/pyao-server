@@ -3,25 +3,29 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.meditate_command import MeditateCommand
 from src.network.packet_reader import PacketReader
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.meditate_handler import MeditateCommandHandler
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskMeditate(Task):
-    """Maneja la meditación para recuperar mana."""
+    """Maneja la meditación para recuperar mana.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
+        meditate_handler: MeditateCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea de meditar.
@@ -29,15 +33,18 @@ class TaskMeditate(Task):
         Args:
             data: Datos del packet.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
+            meditate_handler: Handler para el comando de meditación.
             session_data: Datos de sesión.
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
+        self.meditate_handler = meditate_handler
         self.session_data = session_data or {}
 
     async def execute(self) -> None:
-        """Ejecuta el toggle de meditación."""
+        """Ejecuta el toggle de meditación (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Validar packet (no tiene datos, solo PacketID)
         _ = PacketReader(self.data)  # Valida que el packet sea válido
 
@@ -47,45 +54,17 @@ class TaskMeditate(Task):
             logger.warning("Intento de meditar sin estar logueado")
             return
 
-        if not self.player_repo:
-            logger.error("player_repo no disponible")
+        # Validar que tenemos el handler
+        if not self.meditate_handler:
+            logger.error("MeditateCommandHandler no disponible")
             return
 
-        try:
-            # Obtener estado actual de meditación
-            is_currently_meditating = await self.player_repo.is_meditating(user_id)
+        # Crear comando (solo datos)
+        command = MeditateCommand(user_id=user_id)
 
-            # Toggle: cambiar estado
-            new_state = not is_currently_meditating
-            await self.player_repo.set_meditating(user_id, new_state)
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.meditate_handler.handle(command)
 
-            # Enviar toggle de meditación al cliente
-            await self.message_sender.send_meditate_toggle()
-
-            # Mensaje al jugador y efectos visuales
-            if new_state:
-                await self.message_sender.send_console_msg(
-                    "Comienzas a meditar. Recuperaras mana automaticamente."
-                )
-                # Enviar FX de meditación con loop infinito (loops=-1)
-                # FX 16 es el efecto de meditación en Argentum Online
-                # Para jugadores, char_index = user_id (NPCs usan char_index >= 10001)
-                await self.message_sender.send_create_fx(
-                    char_index=user_id,
-                    fx=16,
-                    loops=-1,  # loops=-1 = infinito
-                )
-                logger.info("user_id %d comenzó a meditar", user_id)
-            else:
-                await self.message_sender.send_console_msg("Dejas de meditar.")
-                # Cancelar FX de meditación enviando el mismo FX con loops=0
-                # Esto detiene el efecto visual inmediatamente
-                await self.message_sender.send_create_fx(
-                    char_index=user_id,
-                    fx=16,
-                    loops=0,  # loops=0 = cancela el FX
-                )
-                logger.info("user_id %d dejó de meditar", user_id)
-
-        except Exception:
-            logger.exception("Error al procesar toggle de meditación")
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug("Meditación falló: %s", result.error_message or "Error desconocido")
