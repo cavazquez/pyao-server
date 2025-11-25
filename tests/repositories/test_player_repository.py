@@ -21,7 +21,9 @@ class TestPlayerRepository:
     async def test_get_gold(self) -> None:
         """Test de obtención de oro."""
         redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=b"1000")
+        redis_client.redis.hgetall = AsyncMock(
+            return_value={"gold": "1000", "level": "1", "min_hp": "100", "max_hp": "100"}
+        )
 
         repo = PlayerRepository(redis_client)
         gold = await repo.get_gold(1)
@@ -31,7 +33,7 @@ class TestPlayerRepository:
     async def test_get_gold_not_found(self) -> None:
         """Test de obtención de oro cuando no existe."""
         redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=None)
+        redis_client.redis.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         gold = await repo.get_gold(1)
