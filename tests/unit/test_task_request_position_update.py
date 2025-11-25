@@ -4,10 +4,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.commands.base import CommandResult
+from src.commands.request_position_update_command import RequestPositionUpdateCommand
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
-from src.network.packet_id import ClientPacketID, ServerPacketID
-from src.repositories.player_repository import PlayerRepository
+from src.network.packet_id import ClientPacketID
 from src.tasks.player.task_request_position_update import TaskRequestPositionUpdate
 
 
@@ -19,14 +20,17 @@ async def test_request_position_update_success() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    # Mock de PlayerRepository
-    player_repo = MagicMock(spec=PlayerRepository)
-    player_repo.get_position = AsyncMock(return_value={"x": 75, "y": 80, "map": 1})
+    # Mock del handler
+    request_position_update_handler = MagicMock()
+    request_position_update_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(data={"user_id": 123, "x": 75, "y": 80, "map": 1})
+    )
 
     # Crear conexión y message sender
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
+    message_sender.send_pos_update = AsyncMock()
 
     # Session data con user_id
     session_data = {"user_id": 123, "username": "testuser"}
@@ -35,18 +39,22 @@ async def test_request_position_update_success() -> None:
     data = bytes([ClientPacketID.REQUEST_POSITION_UPDATE])
 
     # Crear y ejecutar tarea
-    task = TaskRequestPositionUpdate(data, message_sender, player_repo, session_data)
+    task = TaskRequestPositionUpdate(
+        data,
+        message_sender,
+        request_position_update_handler=request_position_update_handler,
+        session_data=session_data,
+    )
     await task.execute()
 
-    # Verificar que se llamó a get_position
-    player_repo.get_position.assert_called_once_with(123)
+    # Verificar que se llamó al handler
+    request_position_update_handler.handle.assert_called_once()
+    call_args = request_position_update_handler.handle.call_args[0][0]
+    assert isinstance(call_args, RequestPositionUpdateCommand)
+    assert call_args.user_id == 123
 
-    # Verificar que se envió POS_UPDATE
-    assert writer.write.call_count == 1
-    sent_packet = writer.write.call_args[0][0]
-    assert sent_packet[0] == ServerPacketID.POS_UPDATE
-    assert sent_packet[1] == 75  # x
-    assert sent_packet[2] == 80  # y
+    # El handler internamente llama a send_pos_update, pero como estamos mockeando el handler,
+    # no se ejecuta realmente. El test verifica que el handler fue llamado con el comando correcto.
 
 
 @pytest.mark.asyncio
@@ -57,8 +65,9 @@ async def test_request_position_update_not_logged_in() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    # Mock de PlayerRepository
-    player_repo = MagicMock(spec=PlayerRepository)
+    # Mock del handler (no debería llamarse)
+    request_position_update_handler = MagicMock()
+    request_position_update_handler.handle = AsyncMock()
 
     # Crear conexión y message sender
     reader = MagicMock()
@@ -72,8 +81,16 @@ async def test_request_position_update_not_logged_in() -> None:
     data = bytes([ClientPacketID.REQUEST_POSITION_UPDATE])
 
     # Crear y ejecutar tarea
-    task = TaskRequestPositionUpdate(data, message_sender, player_repo, session_data)
+    task = TaskRequestPositionUpdate(
+        data,
+        message_sender,
+        request_position_update_handler=request_position_update_handler,
+        session_data=session_data,
+    )
     await task.execute()
+
+    # Verificar que NO se llamó al handler
+    request_position_update_handler.handle.assert_not_called()
 
     # Verificar que NO se envió ningún paquete
     assert writer.write.call_count == 0
@@ -87,14 +104,17 @@ async def test_request_position_update_no_position_found() -> None:
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
-    # Mock de PlayerRepository que devuelve None (no hay posición)
-    player_repo = MagicMock(spec=PlayerRepository)
-    player_repo.get_position = AsyncMock(return_value=None)
+    # Mock del handler que retorna posición por defecto
+    request_position_update_handler = MagicMock()
+    request_position_update_handler.handle = AsyncMock(
+        return_value=CommandResult.ok(data={"user_id": 123, "x": 50, "y": 50, "default": True})
+    )
 
     # Crear conexión y message sender
     reader = MagicMock()
     connection = ClientConnection(reader, writer)
     message_sender = MessageSender(connection)
+    message_sender.send_pos_update = AsyncMock()
 
     # Session data con user_id
     session_data = {"user_id": 123, "username": "testuser"}
@@ -103,20 +123,27 @@ async def test_request_position_update_no_position_found() -> None:
     data = bytes([ClientPacketID.REQUEST_POSITION_UPDATE])
 
     # Crear y ejecutar tarea
-    task = TaskRequestPositionUpdate(data, message_sender, player_repo, session_data)
+    task = TaskRequestPositionUpdate(
+        data,
+        message_sender,
+        request_position_update_handler=request_position_update_handler,
+        session_data=session_data,
+    )
     await task.execute()
 
-    # Verificar que se envió POS_UPDATE con posición por defecto (50, 50)
-    assert writer.write.call_count == 1
-    sent_packet = writer.write.call_args[0][0]
-    assert sent_packet[0] == ServerPacketID.POS_UPDATE
-    assert sent_packet[1] == 50  # x por defecto
-    assert sent_packet[2] == 50  # y por defecto
+    # Verificar que se llamó al handler
+    request_position_update_handler.handle.assert_called_once()
+    call_args = request_position_update_handler.handle.call_args[0][0]
+    assert isinstance(call_args, RequestPositionUpdateCommand)
+    assert call_args.user_id == 123
+
+    # El handler internamente llama a send_pos_update, pero como estamos mockeando el handler,
+    # no se ejecuta realmente. El test verifica que el handler fue llamado con el comando correcto.
 
 
 @pytest.mark.asyncio
-async def test_request_position_update_no_player_repo() -> None:
-    """Verifica que no se envíe nada si no hay PlayerRepository."""
+async def test_request_position_update_no_handler() -> None:
+    """Verifica que no se envíe nada si no hay handler."""
     # Mock de writer
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
@@ -133,8 +160,10 @@ async def test_request_position_update_no_player_repo() -> None:
     # Construir paquete REQUEST_POSITION_UPDATE
     data = bytes([ClientPacketID.REQUEST_POSITION_UPDATE])
 
-    # Crear y ejecutar tarea sin PlayerRepository
-    task = TaskRequestPositionUpdate(data, message_sender, None, session_data)
+    # Crear y ejecutar tarea sin handler
+    task = TaskRequestPositionUpdate(
+        data, message_sender, request_position_update_handler=None, session_data=session_data
+    )
     await task.execute()
 
     # Verificar que NO se envió ningún paquete

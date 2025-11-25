@@ -32,6 +32,9 @@ from src.command_handlers.party_message_handler import PartyMessageCommandHandle
 from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.request_attributes_handler import RequestAttributesCommandHandler
+from src.command_handlers.request_position_update_handler import (
+    RequestPositionUpdateCommandHandler,
+)
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -124,6 +127,7 @@ class TaskFactory:
         self._use_item_handler: UseItemCommandHandler | None = None
         self._pickup_handler: PickupCommandHandler | None = None
         self._request_attributes_handler: RequestAttributesCommandHandler | None = None
+        self._request_position_update_handler: RequestPositionUpdateCommandHandler | None = None
         self._request_stats_handler: RequestStatsCommandHandler | None = None
         self._drop_handler: DropCommandHandler | None = None
         self._commerce_buy_handler: CommerceBuyCommandHandler | None = None
@@ -359,6 +363,27 @@ class TaskFactory:
             # Actualizar message_sender por si cambió
             self._request_attributes_handler.message_sender = message_sender
         return self._request_attributes_handler
+
+    def _get_request_position_update_handler(
+        self, message_sender: MessageSender
+    ) -> RequestPositionUpdateCommandHandler:
+        """Obtiene o crea el handler de solicitud de actualización de posición.
+
+        Args:
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            Handler de solicitud de actualización de posición.
+        """
+        if self._request_position_update_handler is None:
+            self._request_position_update_handler = RequestPositionUpdateCommandHandler(
+                player_repo=self.deps.player_repo,
+                message_sender=message_sender,
+            )
+        else:
+            # Actualizar message_sender por si cambió
+            self._request_position_update_handler.message_sender = message_sender
+        return self._request_position_update_handler
 
     def _get_drop_handler(self, message_sender: MessageSender) -> DropCommandHandler:
         """Obtiene o crea el handler de soltar item.
@@ -1109,7 +1134,12 @@ class TaskFactory:
                 session_data=session_data,
             ),
             TaskRequestPositionUpdate: lambda: TaskRequestPositionUpdate(
-                data, message_sender, self.deps.player_repo, session_data
+                data,
+                message_sender,
+                request_position_update_handler=self._get_request_position_update_handler(
+                    message_sender
+                ),
+                session_data=session_data,
             ),
             TaskOnline: lambda: TaskOnline(
                 data, message_sender, self.deps.map_manager, session_data

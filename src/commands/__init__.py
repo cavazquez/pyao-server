@@ -43,6 +43,7 @@ from src.commands.party_message_command import PartyMessageCommand
 from src.commands.party_set_leader_command import PartySetLeaderCommand
 from src.commands.pickup_command import PickupCommand
 from src.commands.request_attributes_command import RequestAttributesCommand
+from src.commands.request_position_update_command import RequestPositionUpdateCommand
 from src.commands.request_stats_command import RequestStatsCommand
 from src.commands.talk_command import TalkCommand
 from src.commands.use_item_command import UseItemCommand
@@ -82,6 +83,7 @@ __all__ = [
     "PartySetLeaderCommand",
     "PickupCommand",
     "RequestAttributesCommand",
+    "RequestPositionUpdateCommand",
     "RequestStatsCommand",
     "TalkCommand",
     "UseItemCommand",

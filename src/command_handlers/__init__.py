@@ -41,6 +41,9 @@ from src.command_handlers.party_message_handler import PartyMessageCommandHandle
 from src.command_handlers.party_set_leader_handler import PartySetLeaderCommandHandler
 from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.command_handlers.request_attributes_handler import RequestAttributesCommandHandler
+from src.command_handlers.request_position_update_handler import (
+    RequestPositionUpdateCommandHandler,
+)
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
@@ -77,6 +80,7 @@ __all__ = [
     "PartySetLeaderCommandHandler",
     "PickupCommandHandler",
     "RequestAttributesCommandHandler",
+    "RequestPositionUpdateCommandHandler",
     "RequestStatsCommandHandler",
     "TalkCommandHandler",
     "UseItemCommandHandler",

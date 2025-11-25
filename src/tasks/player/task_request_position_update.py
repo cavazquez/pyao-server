@@ -3,25 +3,31 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.commands.request_position_update_command import RequestPositionUpdateCommand
 from src.network.packet_reader import PacketReader
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
+    from src.command_handlers.request_position_update_handler import (
+        RequestPositionUpdateCommandHandler,
+    )
     from src.messaging.message_sender import MessageSender
-    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
 
 class TaskRequestPositionUpdate(Task):
-    """Tarea que maneja la solicitud de actualización de posición del cliente."""
+    """Tarea que maneja la solicitud de actualización de posición del cliente.
+
+    Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+    """
 
     def __init__(
         self,
         data: bytes,
         message_sender: MessageSender,
-        player_repo: PlayerRepository | None = None,
+        request_position_update_handler: RequestPositionUpdateCommandHandler | None = None,
         session_data: dict[str, dict[str, int]] | None = None,
     ) -> None:
         """Inicializa la tarea RequestPositionUpdate.
@@ -29,15 +35,18 @@ class TaskRequestPositionUpdate(Task):
         Args:
             data: Datos del paquete recibido.
             message_sender: Enviador de mensajes.
-            player_repo: Repositorio de jugadores.
+            request_position_update_handler: Handler para el comando de solicitud de posición.
             session_data: Datos de sesión del cliente.
         """
         super().__init__(data, message_sender)
-        self.player_repo = player_repo
+        self.request_position_update_handler = request_position_update_handler
         self.session_data = session_data
 
     async def execute(self) -> None:
-        """Procesa la solicitud de actualización de posición."""
+        """Procesa la solicitud de actualización de posición (solo parsing y delegación).
+
+        Usa Command Pattern: parsea el packet, crea el comando y delega al handler.
+        """
         # Validar packet (no tiene datos, solo PacketID)
         _ = PacketReader(self.data)  # Valida que el packet sea válido
 
@@ -51,24 +60,20 @@ class TaskRequestPositionUpdate(Task):
             )
             return
 
-        if self.player_repo is None:
-            logger.error("PlayerRepository no disponible para RequestPositionUpdate")
+        # Validar que tenemos el handler
+        if not self.request_position_update_handler:
+            logger.error("RequestPositionUpdateCommandHandler no disponible")
             return
 
-        # Obtener posición actual del jugador desde Redis
-        position = await self.player_repo.get_position(user_id)
+        # Crear comando (solo datos)
+        command = RequestPositionUpdateCommand(user_id=user_id)
 
-        if position is None:
-            logger.warning("No se encontró posición para user_id %d", user_id)
-            # Enviar posición por defecto
-            await self.message_sender.send_pos_update(50, 50)
-            return
+        # Delegar al handler (separación de responsabilidades)
+        result = await self.request_position_update_handler.handle(command)
 
-        # Enviar actualización de posición al cliente
-        await self.message_sender.send_pos_update(position["x"], position["y"])
-        logger.debug(
-            "Posición enviada a user_id %d: (%d, %d)",
-            user_id,
-            position["x"],
-            position["y"],
-        )
+        # Manejar resultado si es necesario
+        if not result.success:
+            logger.debug(
+                "Solicitud de actualización de posición falló: %s",
+                result.error_message or "Error desconocido",
+            )
