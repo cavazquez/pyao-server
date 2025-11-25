@@ -1,4 +1,17 @@
-"""Handlers de comandos usando Command Pattern."""
+"""Handlers de comandos usando Command Pattern.
+
+Este módulo exporta todos los handlers de comandos usando Command Pattern.
+
+Las importaciones aquí permiten importar handlers directamente desde el paquete:
+
+    from src.command_handlers import AttackCommandHandler
+
+Aunque actualmente el código usa importaciones directas desde módulos:
+
+    from src.command_handlers.attack_handler import AttackCommandHandler
+
+Ambas formas funcionan. Las importaciones aquí facilitan el uso futuro del paquete.
+"""
 
 from src.command_handlers.attack_handler import AttackCommandHandler
 from src.command_handlers.bank_deposit_gold_handler import BankDepositGoldCommandHandler

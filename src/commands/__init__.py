@@ -1,4 +1,18 @@
-"""Sistema de comandos usando Command Pattern."""
+"""Sistema de comandos usando Command Pattern.
+
+Este módulo exporta todos los comandos y clases base del Command Pattern.
+
+Las importaciones aquí permiten importar comandos directamente desde el paquete:
+
+    from src.commands import AttackCommand, Command, CommandHandler, CommandResult
+
+Aunque actualmente el código usa importaciones directas desde módulos:
+
+    from src.commands.attack_command import AttackCommand
+    from src.commands.base import Command, CommandHandler, CommandResult
+
+Ambas formas funcionan. Las importaciones aquí facilitan el uso futuro del paquete.
+"""
 
 from src.commands.attack_command import AttackCommand
 from src.commands.bank_deposit_command import BankDepositCommand
