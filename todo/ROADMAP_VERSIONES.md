@@ -1,16 +1,17 @@
 # Roadmap de Versiones - PyAO Server
 
-**Última actualización:** 2025-11-15  
-**Versión actual:** 0.7.0-alpha (EN PROGRESO)  
+**Última actualización:** 2025-01-30  
+**Versión actual:** 0.8.0-alpha (COMPLETADA)  
+**Próxima versión:** 0.9.0-alpha - Sistema de Clanes  
 **Estrategia:** Una feature principal por versión
 
 ---
 
 ## 📊 Estado Actual
 
-**Versión estable:** 0.6.0-alpha (COMPLETADA)  
-**Tests:** 1123 pasando (100%)  
-**Cobertura:** 78%  
+**Versión estable:** 0.8.0-alpha (COMPLETADA)  
+**Tests:** 1756 pasando (100%)  
+**Cobertura:** ~72% (objetivo: 80%+)  
 **Calidad:** Excelente (0 errores linting/mypy)
 
 **Sistemas Completados en 0.6.0:**
@@ -148,29 +149,30 @@
 
 ---
 
-### 0.8.0-alpha - Sistema de Partys/Grupos
+### 0.8.0-alpha - Sistema de Partys/Grupos ✅ COMPLETADO
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 1-2 semanas  
-**Estado:** Planificado
+**Estado:** ✅ Completado (2025-01-30)
 
 **Features:**
-- [ ] Creación de parties (2-6 miembros)
-- [ ] Sistema de líder de party
-- [ ] Exp compartida entre miembros
-- [ ] Chat de party
-- [ ] Invitar/Expulsar miembros
-- [ ] Disolver party automática si líder se desconecta
-- [ ] Sistema de loot compartido
+- [x] Creación de parties (2-6 miembros)
+- [x] Sistema de líder de party
+- [x] Exp compartida entre miembros
+- [x] Chat de party
+- [x] Invitar/Expulsar miembros
+- [x] Disolver party automática si líder se desconecta
+- [x] Sistema de loot compartido
+- [x] Sincronización de level up en party
 
-**Archivos a crear:**
-- `src/models/party.py`
-- `src/services/party_service.py`
-- `src/repositories/party_repository.py`
-- `src/tasks/party/`
+**Archivos creados:**
+- ✅ `src/models/party.py`
+- ✅ `src/services/party_service.py`
+- ✅ `src/repositories/party_repository.py`
+- ✅ `src/tasks/party/` (7 archivos)
 
-**Dependencias:** Ninguna (independiente de clases)
+**Tests:** 60 tests pasando (100%)
 
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#33-52`
+**Referencia:** `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md`
 
 ---
 
@@ -181,7 +183,7 @@
 ### 0.9.0-alpha - Sistema de Clanes/Guilds
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 2-3 semanas  
-**Estado:** Planificado
+**Estado:** 🚧 En progreso
 
 **Features:**
 - [ ] Creación de clanes
@@ -676,6 +678,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 
 ---
 
-**Última actualización:** 2025-01-29  
+**Última actualización:** 2025-01-30  
 **Autor:** Roadmap consolidado de todos los TODOs  
-**Estado:** 📋 Documento maestro de planificación
+**Estado:** 📋 Documento maestro de planificación  
+**Versiones completadas:** 0.6.0-0.8.0 ✅

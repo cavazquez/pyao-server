@@ -1,6 +1,6 @@
 [project]
 name = "pyao-server"
-version = "0.6.4-alpha"
+version = "0.8.0-alpha"
 description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"
