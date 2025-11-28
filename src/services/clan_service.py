@@ -709,7 +709,13 @@ class ClanService:
             return "Error: no se encontró tu información en el clan"
 
         sender_username = sender_member.username
-        logger.info("Clan message from %s (ID:%s) in clan '%s': '%s'", sender_username, sender_id, clan.name, message)
+        logger.info(
+            "Clan message from %s (ID:%s) in clan '%s': '%s'",
+            sender_username,
+            sender_id,
+            clan.name,
+            message,
+        )
 
         # Send message to all clan members
         if self.map_manager:
