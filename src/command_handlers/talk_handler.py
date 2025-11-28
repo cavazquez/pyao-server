@@ -437,6 +437,21 @@ class TalkCommandHandler(CommandHandler):
                 else:
                     await self.message_sender.send_console_msg(message, font_color=1)
 
+            elif cmd_name == "CLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /CLAN <mensaje>",
+                        font_color=1,
+                    )
+                    return
+
+                clan_message = " ".join(args)
+                error_msg = await self.clan_service.send_clan_message(user_id, clan_message)
+
+                if error_msg:
+                    await self.message_sender.send_console_msg(error_msg, font_color=1)
+                # Si no hay error, el mensaje ya se envió a todos los miembros
+
             else:
                 await self.message_sender.send_console_msg(
                     f"Comando '{cmd_name}' no reconocido. Usa /AYUDA para ver comandos.",

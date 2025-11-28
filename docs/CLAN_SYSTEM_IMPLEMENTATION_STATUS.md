@@ -105,10 +105,10 @@ Los siguientes comandos no están implementados pero el servicio sí los soporta
 
 ### Funcionalidades Faltantes
 
-#### Chat de Clan
-- ⚠️ `/CLAN <mensaje>` - Reconocido en `is_clan_command()` pero no procesado
-- ❌ Implementar lógica de broadcast a miembros del clan
-- ❌ Filtrar mensajes de clan del chat público
+#### Chat de Clan ✅ COMPLETADO
+- ✅ `/CLAN <mensaje>` - Implementado en `ClanService.send_clan_message()`
+- ✅ Broadcast a todos los miembros del clan
+- ✅ Formato: `[Clan] <username>: <mensaje>`
 
 #### Almacén del Clan
 - ❌ Sistema de depósito del clan
