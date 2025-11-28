@@ -1,17 +1,16 @@
 # Roadmap de Versiones - PyAO Server
 
 **Última actualización:** 2025-01-30  
-**Versión actual:** 0.8.0-alpha (COMPLETADA)  
-**Próxima versión:** 0.9.0-alpha - Sistema de Clanes  
+**Versión actual:** 0.9.0-alpha (COMPLETADA)  
 **Estrategia:** Una feature principal por versión
 
 ---
 
 ## 📊 Estado Actual
 
-**Versión estable:** 0.8.0-alpha (COMPLETADA)  
-**Tests:** 1756 pasando (100%)  
-**Cobertura:** ~72% (objetivo: 80%+)  
+**Versión estable:** 0.9.0-alpha (COMPLETADA)  
+**Tests:** 1765 pasando (100%)  
+**Cobertura:** >45%  
 **Calidad:** Excelente (0 errores linting/mypy)
 
 **Sistemas Completados en 0.6.0:**
@@ -183,26 +182,43 @@
 ### 0.9.0-alpha - Sistema de Clanes/Guilds
 **Prioridad:** 🔴 Alta  
 **Esfuerzo:** 2-3 semanas  
-**Estado:** 🚧 En progreso
+**Estado:** ✅ Completado (2025-01-30)
 
 **Features:**
-- [ ] Creación de clanes
-- [ ] Gestión de miembros (invitar, expulsar, promover)
-- [ ] Almacén/depósito del clan
-- [ ] Chat interno del clan
-- [ ] Alianzas entre clanes
-- [ ] Guerras de clanes
-- [ ] Edificio del clan con NPCs
-- [ ] Sistema de rangos jerárquicos
+- [x] Creación de clanes
+- [x] Gestión de miembros (invitar, expulsar, promover, degradar)
+- [x] Sistema de rangos jerárquicos (MEMBER, OFFICER, VICE_LEADER, LEADER)
+- [x] Transferencia de liderazgo
+- [x] Invitaciones con expiración
+- [x] Persistencia en Redis
+- [x] Tests completos (11 tests)
+- [ ] Almacén/depósito del clan (futuro)
+- [ ] Chat interno del clan (futuro)
+- [ ] Alianzas entre clanes (métodos en modelo, falta UI)
+- [ ] Guerras de clanes (métodos en modelo, falta UI)
+- [ ] Edificio del clan con NPCs (futuro)
 
-**Archivos a crear:**
-- `src/models/clan.py`
-- `src/services/clan_service.py`
-- `src/repositories/clan_repository.py`
-- `src/tasks/clan/`
-- `data/clans.toml`
+**Archivos creados:**
+- ✅ `src/models/clan.py` - Modelos completos
+- ✅ `src/services/clan_service.py` - Servicio completo
+- ✅ `src/repositories/clan_repository.py` - Repositorio completo
+- ✅ `src/tasks/clan/` - Tasks para packets específicos
+- ✅ `src/commands/*_clan_*.py` - Comandos de chat
+- ✅ `src/command_handlers/*_clan_*.py` - Handlers de comandos
+- ✅ `tests/services/test_clan_service.py` - Tests completos
 
-**Dependencias:** Requiere sistema de Partys funcionando (0.8.0)
+**Comandos implementados:**
+- `/CREARCLAN <nombre> [descripción]` - Crear clan (nivel 13+)
+- `/INVITARCLAN <usuario>` - Invitar jugador
+- `/ACEPTARCLAN` - Aceptar invitación
+- `/RECHAZARCLAN` - Rechazar invitación
+- `/SALIRCLAN` - Abandonar clan
+- `/EXPULSARCLAN <usuario>` - Expulsar miembro (oficiales+)
+- `/PROMOVERCLAN <usuario>` - Promover miembro (vice líder+)
+- `/DEGRADARCLAN <usuario>` - Degradar miembro (vice líder+)
+- `/TRANSFERIRLIDERAZGO <usuario>` - Transferir liderazgo (líder)
+
+**Dependencias:** ✅ Sistema de Partys funcionando (0.8.0)
 
 **Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)  
 **Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#9-30`

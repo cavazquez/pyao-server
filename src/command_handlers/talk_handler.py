@@ -5,20 +5,28 @@ from typing import TYPE_CHECKING
 
 from src.command_handlers.accept_clan_handler import AcceptClanCommandHandler
 from src.command_handlers.create_clan_handler import CreateClanCommandHandler
+from src.command_handlers.demote_clan_member_handler import DemoteClanMemberCommandHandler
 from src.command_handlers.invite_clan_handler import InviteClanCommandHandler
 from src.command_handlers.kick_clan_member_handler import KickClanMemberCommandHandler
 from src.command_handlers.leave_clan_handler import LeaveClanCommandHandler
+from src.command_handlers.promote_clan_member_handler import PromoteClanMemberCommandHandler
 from src.command_handlers.reject_clan_handler import RejectClanCommandHandler
 from src.command_handlers.start_player_trade_handler import StartPlayerTradeCommandHandler
+from src.command_handlers.transfer_clan_leadership_handler import (
+    TransferClanLeadershipCommandHandler,
+)
 from src.commands.accept_clan_command import AcceptClanCommand
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_clan_command import CreateClanCommand
+from src.commands.demote_clan_member_command import DemoteClanMemberCommand
 from src.commands.invite_clan_command import InviteClanCommand
 from src.commands.kick_clan_member_command import KickClanMemberCommand
 from src.commands.leave_clan_command import LeaveClanCommand
+from src.commands.promote_clan_member_command import PromoteClanMemberCommand
 from src.commands.reject_clan_command import RejectClanCommand
 from src.commands.start_player_trade_command import StartPlayerTradeCommand
 from src.commands.talk_command import TalkCommand
+from src.commands.transfer_clan_leadership_command import TransferClanLeadershipCommand
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -392,14 +400,26 @@ class TalkCommandHandler(CommandHandler):
                     return
 
                 target_username = args[0]
-                success, message = await self.clan_service.promote_member(
-                    promoter_id=user_id, target_username=target_username
-                )
 
-                if success:
-                    await self.message_sender.send_console_msg(message, font_color=7)
+                promote_handler = PromoteClanMemberCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                promote_command = PromoteClanMemberCommand(target_username=target_username)
+                result = await promote_handler.handle(promote_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Miembro promovido")
+                        if result.data
+                        else "Miembro promovido",
+                        font_color=7,
+                    )
                 else:
-                    await self.message_sender.send_console_msg(message, font_color=1)
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al promover miembro",
+                        font_color=1,
+                    )
 
             elif cmd_name == "DEGRADARCLAN":
                 if not args:
@@ -410,14 +430,26 @@ class TalkCommandHandler(CommandHandler):
                     return
 
                 target_username = args[0]
-                success, message = await self.clan_service.demote_member(
-                    demoter_id=user_id, target_username=target_username
-                )
 
-                if success:
-                    await self.message_sender.send_console_msg(message, font_color=7)
+                demote_handler = DemoteClanMemberCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                demote_command = DemoteClanMemberCommand(target_username=target_username)
+                result = await demote_handler.handle(demote_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Miembro degradado")
+                        if result.data
+                        else "Miembro degradado",
+                        font_color=7,
+                    )
                 else:
-                    await self.message_sender.send_console_msg(message, font_color=1)
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al degradar miembro",
+                        font_color=1,
+                    )
 
             elif cmd_name == "TRANSFERIRLIDERAZGO":
                 if not args:
@@ -428,14 +460,28 @@ class TalkCommandHandler(CommandHandler):
                     return
 
                 new_leader_username = args[0]
-                success, message = await self.clan_service.transfer_leadership(
-                    leader_id=user_id, new_leader_username=new_leader_username
-                )
 
-                if success:
-                    await self.message_sender.send_console_msg(message, font_color=7)
+                transfer_handler = TransferClanLeadershipCommandHandler(
+                    clan_service=self.clan_service,
+                    user_id=user_id,
+                )
+                transfer_command = TransferClanLeadershipCommand(
+                    new_leader_username=new_leader_username
+                )
+                result = await transfer_handler.handle(transfer_command)
+
+                if result.success:
+                    await self.message_sender.send_console_msg(
+                        result.data.get("message", "Liderazgo transferido")
+                        if result.data
+                        else "Liderazgo transferido",
+                        font_color=7,
+                    )
                 else:
-                    await self.message_sender.send_console_msg(message, font_color=1)
+                    await self.message_sender.send_console_msg(
+                        result.error_message or "Error al transferir liderazgo",
+                        font_color=1,
+                    )
 
             elif cmd_name == "CLAN":
                 if not args:
