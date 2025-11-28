@@ -64,10 +64,18 @@
 - ✅ `kick_clan_member_command.py` + `kick_clan_member_handler.py`
 - ✅ `request_clan_details_command.py` + `request_clan_details_handler.py`
 
-### 5. Tasks ✅ Parcial
-- ✅ `task_create_clan.py` - Crear clan
-- ✅ `task_leave_clan.py` - Salir del clan
-- ✅ `task_request_clan_details.py` - Solicitar detalles
+### 5. Tasks ✅ Completas
+- ✅ `task_leave_clan.py` - Salir del clan (packet CLAN_LEAVE=72)
+- ✅ `task_request_clan_details.py` - Solicitar detalles (packet CLAN_REQUEST_DETAILS=69)
+- ⚠️ `task_create_clan.py` - Existe pero NO se usa (comandos vía chat)
+
+**Nota**: La mayoría de comandos de clan se procesan vía comandos de texto en el chat (TaskTalk):
+- `/CREARCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
+- `/INVITARCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
+- `/ACEPTARCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
+- `/RECHAZARCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
+- `/SALIRCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
+- `/EXPULSARCLAN` - Procesado en `TalkCommandHandler._handle_clan_command()`
 
 ### 6. Integración con Sistema ✅
 - ✅ Packet IDs definidos en `packet_id.py`
@@ -86,34 +94,21 @@
 
 ## 🚧 Pendiente
 
-### Tasks Faltantes
-- ❌ `task_invite_clan.py` - Invitar a clan
-- ❌ `task_accept_clan.py` - Aceptar invitación
-- ❌ `task_reject_clan.py` - Rechazar invitación
-- ❌ `task_kick_clan_member.py` - Expulsar miembro
-- ❌ `task_promote_clan_member.py` - Promover miembro
-- ❌ `task_demote_clan_member.py` - Degradar miembro
-- ❌ `task_transfer_clan_leadership.py` - Transferir liderazgo
+### Comandos Faltantes (vía chat)
+Los siguientes comandos no están implementados pero el servicio sí los soporta:
+- ❌ `/PROMOVERCLAN <usuario>` - Promover miembro a un rango superior
+- ❌ `/DEGRADARCLAN <usuario>` - Degradar miembro a un rango inferior
+- ❌ `/TRANSFERIRLIDERAZGO <usuario>` - Transferir liderazgo del clan
+- ❌ `/CLAN <mensaje>` - Chat interno del clan (parcialmente implementado en lista de comandos)
 
-### Packet IDs Faltantes
-Necesario revisar qué packet IDs del protocolo original VB6 faltan:
-- ❌ Packet para crear clan (desde comando `/CREARCLAN`)
-- ❌ Packet para invitar a clan
-- ❌ Packet para aceptar invitación
-- ❌ Packet para rechazar invitación
-- ❌ Packet para expulsar miembro
-- ❌ Packet para promover/degradar miembro
-- ❌ Packet para transferir liderazgo
-
-**Nota**: Algunos comandos pueden usar el sistema de comandos de texto (como parties), otros pueden usar la interfaz gráfica.
+**Nota**: El servicio `ClanService` ya tiene métodos `promote_member()`, `demote_member()` y `transfer_leadership()`, solo falta agregarlos al handler de comandos de chat.
 
 ### Funcionalidades Faltantes
 
 #### Chat de Clan
-- ❌ Chat interno del clan (`/CLAN <mensaje>` o `/CLANMSG <mensaje>`)
-- ❌ Packet ID para mensajes de clan
-- ❌ Task para mensaje de clan
-- ❌ Handler para mensaje de clan
+- ⚠️ `/CLAN <mensaje>` - Reconocido en `is_clan_command()` pero no procesado
+- ❌ Implementar lógica de broadcast a miembros del clan
+- ❌ Filtrar mensajes de clan del chat público
 
 #### Almacén del Clan
 - ❌ Sistema de depósito del clan

@@ -47,6 +47,9 @@ class TalkCommand(Command):
             "/RECHAZARCLAN",
             "/SALIRCLAN",
             "/EXPULSARCLAN",
+            "/PROMOVERCLAN",
+            "/DEGRADARCLAN",
+            "/TRANSFERIRLIDERAZGO",
             "/CLAN",
         ]
         return any(message_upper.startswith(cmd) for cmd in clan_commands)

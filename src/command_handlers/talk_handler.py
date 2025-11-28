@@ -383,6 +383,60 @@ class TalkCommandHandler(CommandHandler):
                         font_color=1,
                     )
 
+            elif cmd_name == "PROMOVERCLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /PROMOVERCLAN <usuario>",
+                        font_color=1,
+                    )
+                    return
+
+                target_username = args[0]
+                success, message = await self.clan_service.promote_member(
+                    promoter_id=user_id, target_username=target_username
+                )
+
+                if success:
+                    await self.message_sender.send_console_msg(message, font_color=7)
+                else:
+                    await self.message_sender.send_console_msg(message, font_color=1)
+
+            elif cmd_name == "DEGRADARCLAN":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /DEGRADARCLAN <usuario>",
+                        font_color=1,
+                    )
+                    return
+
+                target_username = args[0]
+                success, message = await self.clan_service.demote_member(
+                    demoter_id=user_id, target_username=target_username
+                )
+
+                if success:
+                    await self.message_sender.send_console_msg(message, font_color=7)
+                else:
+                    await self.message_sender.send_console_msg(message, font_color=1)
+
+            elif cmd_name == "TRANSFERIRLIDERAZGO":
+                if not args:
+                    await self.message_sender.send_console_msg(
+                        "Uso: /TRANSFERIRLIDERAZGO <usuario>",
+                        font_color=1,
+                    )
+                    return
+
+                new_leader_username = args[0]
+                success, message = await self.clan_service.transfer_leadership(
+                    leader_id=user_id, new_leader_username=new_leader_username
+                )
+
+                if success:
+                    await self.message_sender.send_console_msg(message, font_color=7)
+                else:
+                    await self.message_sender.send_console_msg(message, font_color=1)
+
             else:
                 await self.message_sender.send_console_msg(
                     f"Comando '{cmd_name}' no reconocido. Usa /AYUDA para ver comandos.",
