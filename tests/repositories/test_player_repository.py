@@ -252,6 +252,8 @@ class TestPlayerRepository:
                 "constitution": "18",
             }
         )
+        # Mock para modificadores (no hay modificadores activos)
+        redis_client.redis.hget = AsyncMock(return_value=None)
 
         repo = PlayerRepository(redis_client)
         attributes = await repo.get_attributes(1)

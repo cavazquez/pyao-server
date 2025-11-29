@@ -1,6 +1,7 @@
 """Repositorio para operaciones de jugadores usando Redis."""
 
 import logging
+import time
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager, config_manager
@@ -292,7 +293,7 @@ class PlayerRepository:
         logger.debug("Hambre y sed guardadas para user_id %d", user_id)
 
     async def get_attributes(self, user_id: int) -> dict[str, int] | None:
-        """Obtiene los atributos del jugador (STR, AGI, INT, CHA, CON).
+        """Obtiene atributos del jugador con modificadores temporales aplicados.
 
         Args:
             user_id: ID del usuario.
@@ -306,9 +307,36 @@ class PlayerRepository:
         if not result:
             return None
 
+        # Atributos base (sin modificadores)
+        base_strength_value = int(result.get("strength", 10))
+        base_agility_value = int(result.get("agility", 10))
+
+        # Aplicar modificadores temporales si están activos
+        current_time = time.time()
+
+        # Modificador de fuerza
+        strength_until, strength_modifier = await self.get_strength_modifier(user_id)
+        final_strength = base_strength_value
+        if strength_until > current_time and strength_modifier != 0:
+            final_strength = base_strength_value + strength_modifier
+            # Limitar al doble del valor base o máximo permitido (como en VB6)
+            max_strength = min(50, base_strength_value * 2)
+            min_strength = 1
+            final_strength = max(min_strength, min(final_strength, max_strength))
+
+        # Modificador de agilidad
+        agility_until, agility_modifier = await self.get_agility_modifier(user_id)
+        final_agility = base_agility_value
+        if agility_until > current_time and agility_modifier != 0:
+            final_agility = base_agility_value + agility_modifier
+            # Limitar al doble del valor base o máximo permitido (como en VB6)
+            max_agility = min(50, base_agility_value * 2)
+            min_agility = 1
+            final_agility = max(min_agility, min(final_agility, max_agility))
+
         return {
-            "strength": int(result.get("strength", 10)),
-            "agility": int(result.get("agility", 10)),
+            "strength": final_strength,
+            "agility": final_agility,
             "intelligence": int(result.get("intelligence", 10)),
             "charisma": int(result.get("charisma", 10)),
             "constitution": int(result.get("constitution", 10)),
@@ -574,6 +602,113 @@ class PlayerRepository:
             "Estado de invisibilidad actualizado para user_id %d: hasta %.2f",
             user_id,
             invisible_until,
+        )
+
+    # Métodos para modificadores temporales de atributos (buffs/debuffs)
+    async def get_strength_modifier(self, user_id: int) -> tuple[float, int]:
+        """Obtiene el modificador temporal de fuerza.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Tupla (expires_at, modifier_value). Si no hay modificador, retorna (0.0, 0).
+        """
+        key = RedisKeys.player_stats(user_id)
+        until_str = await self.redis.redis.hget(key, "strength_modifier_until")  # type: ignore[misc]
+        value_str = await self.redis.redis.hget(key, "strength_modifier_value")  # type: ignore[misc]
+
+        until = 0.0
+        value = 0
+
+        if until_str:
+            try:
+                until = float(until_str)
+            except (ValueError, TypeError):
+                until = 0.0
+
+        if value_str:
+            try:
+                value = int(value_str)
+            except (ValueError, TypeError):
+                value = 0
+
+        return (until, value)
+
+    async def set_strength_modifier(
+        self, user_id: int, expires_at: float, modifier_value: int
+    ) -> None:
+        """Establece el modificador temporal de fuerza.
+
+        Args:
+            user_id: ID del usuario.
+            expires_at: Timestamp de expiración (0.0 = remover modificador).
+            modifier_value: Valor del modificador (positivo = buff, negativo = debuff).
+        """
+        key = RedisKeys.player_stats(user_id)
+        mapping = {
+            "strength_modifier_until": str(expires_at),
+            "strength_modifier_value": str(modifier_value),
+        }
+        await self.redis.redis.hset(key, mapping=mapping)  # type: ignore[misc]
+        logger.debug(
+            "Modificador de fuerza establecido para user_id %d: valor=%d, expira en %.2f",
+            user_id,
+            modifier_value,
+            expires_at,
+        )
+
+    async def get_agility_modifier(self, user_id: int) -> tuple[float, int]:
+        """Obtiene el modificador temporal de agilidad.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Tupla (expires_at, modifier_value). Si no hay modificador, retorna (0.0, 0).
+        """
+        key = RedisKeys.player_stats(user_id)
+        until_str = await self.redis.redis.hget(key, "agility_modifier_until")  # type: ignore[misc]
+        value_str = await self.redis.redis.hget(key, "agility_modifier_value")  # type: ignore[misc]
+
+        until = 0.0
+        value = 0
+
+        if until_str:
+            try:
+                until = float(until_str)
+            except (ValueError, TypeError):
+                until = 0.0
+
+        if value_str:
+            try:
+                value = int(value_str)
+            except (ValueError, TypeError):
+                value = 0
+
+        return (until, value)
+
+    async def set_agility_modifier(
+        self, user_id: int, expires_at: float, modifier_value: int
+    ) -> None:
+        """Establece el modificador temporal de agilidad.
+
+        Args:
+            user_id: ID del usuario.
+            expires_at: Timestamp de expiración (0.0 = remover modificador).
+            modifier_value: Valor del modificador (positivo = buff, negativo = debuff).
+        """
+        key = RedisKeys.player_stats(user_id)
+        mapping = {
+            "agility_modifier_until": str(expires_at),
+            "agility_modifier_value": str(modifier_value),
+        }
+        await self.redis.redis.hset(key, mapping=mapping)  # type: ignore[misc]
+        logger.debug(
+            "Modificador de agilidad establecido para user_id %d: valor=%d, expira en %.2f",
+            user_id,
+            modifier_value,
+            expires_at,
         )
 
     async def update_hp(self, user_id: int, hp: int) -> None:

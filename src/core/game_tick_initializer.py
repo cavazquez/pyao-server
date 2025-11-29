@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.effects.effect_attribute_modifiers import AttributeModifiersEffect
 from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
@@ -119,3 +120,7 @@ class GameTickInitializer:
         # Efecto de envenenamiento para NPCs (siempre habilitado)
         game_tick.add_effect(NPCPoisonEffect(self.npc_service, interval_seconds=2.0))
         logger.info("✓ Efecto de envenenamiento (NPCs) habilitado")
+
+        # Efecto de limpieza de modificadores de atributos (siempre habilitado)
+        game_tick.add_effect(AttributeModifiersEffect(interval_seconds=10.0))
+        logger.info("✓ Efecto de limpieza de modificadores de atributos habilitado")

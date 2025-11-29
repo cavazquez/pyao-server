@@ -361,6 +361,7 @@ loops = 0
 caster_msg = "Has aumentado la agilidad de"
 self_msg = "Has aumentado tu agilidad."
 target_msg = "ha aumentado tu agilidad."
+increases_agility = true
 
 [[spell]]
 id = 19
@@ -380,6 +381,7 @@ loops = 0
 caster_msg = "Has lanzado torpeza sobre"
 self_msg = "Has lanzado torpeza sobre ti."
 target_msg = "ha lanzado torpeza sobre ti."
+decreases_agility = true
 
 [[spell]]
 id = 20
@@ -399,6 +401,7 @@ loops = 0
 caster_msg = "Has lanzado fuerza sobre"
 self_msg = "Has lanzado fuerza sobre ti."
 target_msg = "ha lanzado fuerza sobre ti."
+increases_strength = true
 
 [[spell]]
 id = 21
@@ -418,6 +421,7 @@ loops = 0
 caster_msg = "Has lanzado Debilidad sobre"
 self_msg = "Has lanzado Debilidad sobre ti."
 target_msg = "ha lanzado Debilidad sobre ti."
+decreases_strength = true
 
 [[spell]]
 id = 22

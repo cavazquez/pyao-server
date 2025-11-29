@@ -43,8 +43,23 @@ DUMBNESS_DURATION_SECONDS = 30.0
 # Duración de invisibilidad por defecto (segundos)
 INVISIBILITY_DURATION_SECONDS = 60.0
 
+# Porcentaje de HP al revivir (50%)
+REVIVE_HP_PERCENTAGE = 0.5
+
 # ID del hechizo Aturdir
 SPELL_ID_STUN = 31
+
+# Duración de buffs/debuffs de atributos (segundos)
+# En VB6: buffs duran 1200 ticks, debuffs duran 700 ticks
+# Convertimos a segundos (asumiendo 1 tick = 1 segundo aproximadamente)
+STRENGTH_BUFF_DURATION_SECONDS = 1200.0  # 20 minutos
+AGILITY_BUFF_DURATION_SECONDS = 1200.0
+STRENGTH_DEBUFF_DURATION_SECONDS = 700.0  # ~11.6 minutos
+AGILITY_DEBUFF_DURATION_SECONDS = 700.0
+
+# Rango de modificadores (basado en Hechizos.dat: MinAG/MaxAG = 2-5)
+MIN_ATTRIBUTE_MODIFIER = 2
+MAX_ATTRIBUTE_MODIFIER = 5
 
 
 class SpellService:
@@ -200,6 +215,66 @@ class SpellService:
         stats["min_mana"] -= mana_cost
         await self.player_repo.set_stats(user_id=user_id, **stats)
         await message_sender.send_update_user_stats(**stats)
+
+        # Verificar si es un hechizo de resucitación (debe procesarse antes de otros efectos)
+        if spell_data.get("revives", False):
+            # Solo puede resucitar a otros jugadores, no a uno mismo
+            if target_player_id and target_player_id != user_id:
+                target_player_stats = await self.player_repo.get_stats(target_player_id)
+                if not target_player_stats:
+                    await message_sender.send_console_msg("Objetivo inválido.")
+                    return False
+
+                current_hp = target_player_stats.get("min_hp", 0)
+                max_hp = target_player_stats.get("max_hp", 100)
+
+                # Obtener nombre del jugador objetivo
+                target_player_name = (
+                    self.map_manager.get_player_username(target_player_id)
+                    or f"Jugador {target_player_id}"
+                )
+
+                # Verificar si el jugador está muerto (HP = 0)
+                if current_hp <= 0:
+                    # Revivir con HP parcial (50% por defecto)
+                    revive_hp = int(max_hp * REVIVE_HP_PERCENTAGE)
+                    target_player_stats["min_hp"] = revive_hp
+                    await self.player_repo.set_stats(
+                        user_id=target_player_id, **target_player_stats
+                    )
+
+                    # Enviar mensaje al caster
+                    await message_sender.send_console_msg(f"Has resucitado a {target_player_name}.")
+
+                    # Enviar mensaje al jugador revivido
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_user_stats(**target_player_stats)
+                        await target_message_sender.send_console_msg(
+                            f"{spell_name} te ha resucitado. Tienes {revive_hp}/{max_hp} HP."
+                        )
+
+                    logger.info(
+                        "user_id %d resucitado por user_id %d con %s (HP: %d/%d)",
+                        target_player_id,
+                        user_id,
+                        spell_name,
+                        revive_hp,
+                        max_hp,
+                    )
+                    return True
+                # Si el jugador no está muerto, no se puede resucitar
+                await message_sender.send_console_msg(f"{target_player_name} no está muerto.")
+                return False
+            if target_player_id == user_id:
+                # No puede resucitarse a sí mismo
+                await message_sender.send_console_msg("No puedes resucitarte a ti mismo.")
+                return False
+            # No hay target válido para resucitar
+            await message_sender.send_console_msg("No hay objetivo válido para resucitar.")
+            return False
 
         # Obtener tipo del hechizo para usar en efectos
         spell_type = spell_data.get("type", SPELL_TYPE_DAMAGE)
@@ -608,6 +683,123 @@ class SpellService:
                     )
                     if target_message_sender:
                         await target_message_sender.send_console_msg("Te has vuelto invisible.")
+
+            # Aplicar buffs/debuffs de atributos
+            # Aumentar fuerza
+            if spell_data.get("increases_strength", False):
+                modifier_value = random.randint(MIN_ATTRIBUTE_MODIFIER, MAX_ATTRIBUTE_MODIFIER)
+                expires_at = time.time() + STRENGTH_BUFF_DURATION_SECONDS
+                await self.player_repo.set_strength_modifier(
+                    target_player_id, expires_at, modifier_value
+                )
+                logger.info(
+                    "user_id %d recibió buff fuerza (+%d) hasta %.2f (%.1fs) - %s",
+                    target_player_id,
+                    modifier_value,
+                    expires_at,
+                    STRENGTH_BUFF_DURATION_SECONDS,
+                    spell_name,
+                )
+                # Obtener atributos actualizados y enviar UPDATE
+                attributes = await self.player_repo.get_attributes(target_player_id)
+                if attributes:
+                    target_message_sender = (
+                        message_sender
+                        if target_player_id == user_id
+                        else self.map_manager.get_player_message_sender(target_player_id)
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_strength_and_dexterity(
+                            strength=attributes.get("strength", 0),
+                            dexterity=attributes.get("agility", 0),
+                        )
+
+            # Reducir fuerza (debuff)
+            if spell_data.get("decreases_strength", False):
+                modifier_value = -random.randint(MIN_ATTRIBUTE_MODIFIER, MAX_ATTRIBUTE_MODIFIER)
+                expires_at = time.time() + STRENGTH_DEBUFF_DURATION_SECONDS
+                await self.player_repo.set_strength_modifier(
+                    target_player_id, expires_at, modifier_value
+                )
+                logger.info(
+                    "user_id %d recibió debuff fuerza (%d) hasta %.2f (%.1fs) - %s",
+                    target_player_id,
+                    modifier_value,
+                    expires_at,
+                    STRENGTH_DEBUFF_DURATION_SECONDS,
+                    spell_name,
+                )
+                # Obtener atributos actualizados y enviar UPDATE
+                attributes = await self.player_repo.get_attributes(target_player_id)
+                if attributes:
+                    target_message_sender = (
+                        message_sender
+                        if target_player_id == user_id
+                        else self.map_manager.get_player_message_sender(target_player_id)
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_strength_and_dexterity(
+                            strength=attributes.get("strength", 0),
+                            dexterity=attributes.get("agility", 0),
+                        )
+
+            # Aumentar agilidad
+            if spell_data.get("increases_agility", False):
+                modifier_value = random.randint(MIN_ATTRIBUTE_MODIFIER, MAX_ATTRIBUTE_MODIFIER)
+                expires_at = time.time() + AGILITY_BUFF_DURATION_SECONDS
+                await self.player_repo.set_agility_modifier(
+                    target_player_id, expires_at, modifier_value
+                )
+                logger.info(
+                    "user_id %d recibió buff agilidad (+%d) hasta %.2f (%.1fs) - %s",
+                    target_player_id,
+                    modifier_value,
+                    expires_at,
+                    AGILITY_BUFF_DURATION_SECONDS,
+                    spell_name,
+                )
+                # Obtener atributos actualizados y enviar UPDATE
+                attributes = await self.player_repo.get_attributes(target_player_id)
+                if attributes:
+                    target_message_sender = (
+                        message_sender
+                        if target_player_id == user_id
+                        else self.map_manager.get_player_message_sender(target_player_id)
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_strength_and_dexterity(
+                            strength=attributes.get("strength", 0),
+                            dexterity=attributes.get("agility", 0),
+                        )
+
+            # Reducir agilidad (debuff)
+            if spell_data.get("decreases_agility", False):
+                modifier_value = -random.randint(MIN_ATTRIBUTE_MODIFIER, MAX_ATTRIBUTE_MODIFIER)
+                expires_at = time.time() + AGILITY_DEBUFF_DURATION_SECONDS
+                await self.player_repo.set_agility_modifier(
+                    target_player_id, expires_at, modifier_value
+                )
+                logger.info(
+                    "user_id %d recibió debuff agilidad (%d) hasta %.2f (%.1fs) - %s",
+                    target_player_id,
+                    modifier_value,
+                    expires_at,
+                    AGILITY_DEBUFF_DURATION_SECONDS,
+                    spell_name,
+                )
+                # Obtener atributos actualizados y enviar UPDATE
+                attributes = await self.player_repo.get_attributes(target_player_id)
+                if attributes:
+                    target_message_sender = (
+                        message_sender
+                        if target_player_id == user_id
+                        else self.map_manager.get_player_message_sender(target_player_id)
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_strength_and_dexterity(
+                            strength=attributes.get("strength", 0),
+                            dexterity=attributes.get("agility", 0),
+                        )
 
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")
