@@ -623,6 +623,7 @@ loops = 0
 caster_msg = "Has aturdido a"
 self_msg = "Te has aturdido."
 target_msg = "te ha aturdido."
+dumbs = true
 
 [[spell]]
 id = 32

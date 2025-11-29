@@ -23,6 +23,8 @@ def mock_player_repo() -> MagicMock:
     repo.get_stats = AsyncMock()
     repo.get_position = AsyncMock()
     repo.set_stats = AsyncMock()
+    repo.get_dumb_until = AsyncMock(return_value=0.0)  # No estúpido por defecto
+    repo.update_dumb_until = AsyncMock()
     return repo
 
 

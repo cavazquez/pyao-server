@@ -34,6 +34,13 @@ IMMOBILIZATION_DURATION_SECONDS = 30.0
 # En VB6 es IntervaloParalizado / 3 (aproximadamente 3-4 segundos)
 BLINDNESS_DURATION_SECONDS = 10.0
 
+# Duración de estupidez por defecto (segundos)
+# Previene lanzar hechizos durante este tiempo
+DUMBNESS_DURATION_SECONDS = 30.0
+
+# ID del hechizo Aturdir
+SPELL_ID_STUN = 31
+
 
 class SpellService:
     """Servicio para gestionar la lógica de hechizos."""
@@ -89,6 +96,22 @@ class SpellService:
 
         # Obtener nombre del hechizo para usar en mensajes
         spell_name = spell_data.get("name", "hechizo")
+
+        # Verificar si el jugador está estúpido (no puede lanzar hechizos)
+        dumb_until = await self.player_repo.get_dumb_until(user_id)
+        current_time = time.time()
+        if dumb_until > current_time:
+            remaining_time = dumb_until - current_time
+            logger.info(
+                "user_id %d intentó lanzar hechizo pero está estúpido. "
+                "Tiempo restante: %.1f segundos",
+                user_id,
+                remaining_time,
+            )
+            await message_sender.send_console_msg(
+                f"No puedes lanzar hechizos. Estás aturdido (restantes: {int(remaining_time)}s)."
+            )
+            return False
 
         # Obtener stats del jugador
         stats = await self.player_repo.get_stats(user_id)
@@ -336,6 +359,26 @@ class SpellService:
                     )
                     if target_message_sender:
                         await target_message_sender.send_console_msg("Has sido cegado.")
+
+            # Aplicar estupidez si el hechizo aturde
+            if spell_data.get("dumbs", False):
+                dumb_until = time.time() + DUMBNESS_DURATION_SECONDS
+                await self.player_repo.update_dumb_until(target_player_id, dumb_until)
+                logger.info(
+                    "Jugador user_id %d aturdido hasta %.2f (duración: %.1fs) por hechizo %s",
+                    target_player_id,
+                    dumb_until,
+                    DUMBNESS_DURATION_SECONDS,
+                    spell_name,
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has aturdido.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg("Has sido aturdido.")
 
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")
