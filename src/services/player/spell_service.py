@@ -11,8 +11,10 @@ if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.models.spell_catalog import SpellCatalog
+    from src.repositories.account_repository import AccountRepository
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.npc_death_service import NPCDeathService
 
 logger = logging.getLogger(__name__)
@@ -38,6 +40,9 @@ BLINDNESS_DURATION_SECONDS = 10.0
 # Previene lanzar hechizos durante este tiempo
 DUMBNESS_DURATION_SECONDS = 30.0
 
+# Duración de invisibilidad por defecto (segundos)
+INVISIBILITY_DURATION_SECONDS = 60.0
+
 # ID del hechizo Aturdir
 SPELL_ID_STUN = 31
 
@@ -52,6 +57,8 @@ class SpellService:
         npc_repo: NPCRepository,
         map_manager: MapManager,
         npc_death_service: NPCDeathService | None = None,
+        account_repo: AccountRepository | None = None,
+        broadcast_service: MultiplayerBroadcastService | None = None,
     ) -> None:
         """Inicializa el servicio de hechizos.
 
@@ -61,12 +68,16 @@ class SpellService:
             npc_repo: Repositorio de NPCs.
             map_manager: Gestor de mapas.
             npc_death_service: Servicio de muerte de NPCs (opcional).
+            account_repo: Repositorio de cuentas (opcional, necesario para invisibilidad).
+            broadcast_service: Servicio de broadcast (opcional, necesario para invisibilidad).
         """
         self.spell_catalog = spell_catalog
         self.player_repo = player_repo
         self.npc_repo = npc_repo
         self.map_manager = map_manager
         self.npc_death_service = npc_death_service
+        self.account_repo = account_repo
+        self.broadcast_service = broadcast_service
 
     async def cast_spell(  # noqa: PLR0914, PLR0915
         self,
@@ -77,6 +88,10 @@ class SpellService:
         message_sender: MessageSender,
     ) -> bool:
         """Lanza un hechizo.
+
+        Nota: Este método tiene alta complejidad ciclomática y múltiples bloques
+        anidados por diseño, ya que debe manejar diferentes tipos de hechizos,
+        objetivos (NPCs/jugadores), y efectos (daño/curación/estados).
 
         Args:
             user_id: ID del jugador que lanza el hechizo.
@@ -193,7 +208,7 @@ class SpellService:
         npc_died = False
         target_name = "objetivo"
 
-        if target_npc:
+        if target_npc:  # noqa: PLR1702
             # Target es un NPC
             target_name = target_npc.name
 
@@ -426,6 +441,59 @@ class SpellService:
                             "Te han quitado el aturdimiento."
                         )
 
+            # Remover invisibilidad ANTES de aplicar nueva invisibilidad
+            if spell_data.get("removes_invisibility", False):
+                old_invisible_until = await self.player_repo.get_invisible_until(target_player_id)
+                if old_invisible_until > time.time():
+                    # El jugador está invisible, hacerlo visible
+                    await self.player_repo.update_invisible_until(target_player_id, 0.0)
+                    logger.info(
+                        "Invisibilidad removida de user_id %d por hechizo %s",
+                        target_player_id,
+                        spell_name,
+                    )
+                    # Enviar CHARACTER_CREATE a otros jugadores
+                    target_position = await self.player_repo.get_position(target_player_id)
+                    if target_position and self.account_repo and self.broadcast_service:
+                        map_id = target_position["map"]
+                        account_data = await self.account_repo.get_account_by_user_id(
+                            target_player_id
+                        )
+                        if account_data:
+                            char_body = int(account_data.get("char_race", 1))
+                            char_head = int(account_data.get("char_head", 1))
+                            username = account_data.get("username", f"Player{target_player_id}")
+                            if char_body == 0:
+                                char_body = 1
+
+                            # Broadcast CHARACTER_CREATE excluyendo al propio jugador
+                            other_senders = self.map_manager.get_all_message_senders_in_map(
+                                map_id, exclude_user_id=target_player_id
+                            )
+                            for other_sender in other_senders:
+                                await other_sender.send_character_create(
+                                    char_index=target_player_id,
+                                    body=char_body,
+                                    head=char_head,
+                                    heading=target_position.get("heading", 3),
+                                    x=target_position["x"],
+                                    y=target_position["y"],
+                                    name=username,
+                                )
+                            logger.info(
+                                "user_id %d vuelto visible - CHARACTER_CREATE a %d jugadores",
+                                target_player_id,
+                                len(other_senders),
+                            )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Ya no eres invisible.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg("Ya no eres invisible.")
+
             # Aplicar envenenamiento si el hechizo envenena
             if spell_data.get("poisons", False):
                 poisoned_until = time.time() + POISON_DURATION_SECONDS
@@ -505,6 +573,41 @@ class SpellService:
                     )
                     if target_message_sender:
                         await target_message_sender.send_console_msg("Has sido aturdido.")
+
+            # Aplicar invisibilidad si el hechizo hace invisible
+            if spell_data.get("makes_invisible", False):
+                invisible_until = time.time() + INVISIBILITY_DURATION_SECONDS
+                await self.player_repo.update_invisible_until(target_player_id, invisible_until)
+                logger.info(
+                    "Jugador user_id %d invisible hasta %.2f (duración: %.1fs) por hechizo %s",
+                    target_player_id,
+                    invisible_until,
+                    INVISIBILITY_DURATION_SECONDS,
+                    spell_name,
+                )
+                # Enviar CHARACTER_REMOVE a otros jugadores
+                target_position = await self.player_repo.get_position(target_player_id)
+                if target_position:
+                    map_id = target_position["map"]
+                    # Broadcast CHARACTER_REMOVE excluyendo al propio jugador
+                    other_senders = self.map_manager.get_all_message_senders_in_map(
+                        map_id, exclude_user_id=target_player_id
+                    )
+                    for other_sender in other_senders:
+                        await other_sender.send_character_remove(target_player_id)
+                    logger.info(
+                        "user_id %d invisible - CHARACTER_REMOVE a %d jugadores",
+                        target_player_id,
+                        len(other_senders),
+                    )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has vuelto invisible.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg("Te has vuelto invisible.")
 
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")

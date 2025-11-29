@@ -143,8 +143,10 @@ class ServiceInitializer:
             self.repositories["npc_repo"],
             self.map_manager,
             npc_death_service,  # Usar NPCDeathService centralizado
+            account_repo=self.repositories["account_repo"],  # Para invisibilidad
+            broadcast_service=broadcast_service,  # Para invisibilidad
         )
-        logger.info("✓ Sistema de magia inicializado (con NPCDeathService)")
+        logger.info("✓ Sistema de magia inicializado (con NPCDeathService e invisibilidad)")
 
         # Servicio de comercio
         commerce_service = CommerceService(

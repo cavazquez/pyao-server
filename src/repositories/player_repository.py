@@ -543,6 +543,39 @@ class PlayerRepository:
             "Estado de estupidez actualizado para user_id %d: hasta %.2f", user_id, dumb_until
         )
 
+    async def get_invisible_until(self, user_id: int) -> float:
+        """Obtiene el timestamp hasta cuando el jugador está invisible.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Timestamp hasta cuando está invisible (0.0 = no invisible).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "invisible_until")  # type: ignore[misc]
+        if not result:
+            return 0.0
+        try:
+            return float(result)
+        except (ValueError, TypeError):
+            return 0.0
+
+    async def update_invisible_until(self, user_id: int, invisible_until: float) -> None:
+        """Actualiza el estado de invisibilidad del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            invisible_until: Timestamp hasta cuando está invisible (0.0 = no invisible).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "invisible_until", str(invisible_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de invisibilidad actualizado para user_id %d: hasta %.2f",
+            user_id,
+            invisible_until,
+        )
+
     async def update_hp(self, user_id: int, hp: int) -> None:
         """Actualiza el HP del jugador.
 
