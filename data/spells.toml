@@ -1,209 +1,890 @@
 # Catálogo de Hechizos de Argentum Online
-# Basado en Hechizos.dat del servidor original
-#
-# Nota: Este archivo contiene los hechizos básicos esenciales para empezar a jugar.
-# Los hechizos restantes se pueden agregar en el futuro.
+# Extraído de Hechizos.dat del servidor VB6 original
+# Total: 45 hechizos (ID 34 eliminado por contenido inapropiado)
 
 [[spell]]
 id = 1
 name = "Antídoto Mágico"
-description = "Con este conjuro podrás mutar los fluidos tóxicos de tu cuerpo para detener su vil accionar, contrarrestando los efectos nocivos de todo tipo de ponzoñas y venenos."
+description = "Con este conjuro podrás mutar los fluidos tóxicos de tu cuerpo para detener su vil accionar, contrarrestando los efectos nocivos de todo tipo de ponzoñas y venenos. Se trata de un conjuro tan simple como necesario, puesto que, además de los magos que provocan envenenamiento, son varias las criaturas que lanzan veneno en estas tierras."
 magic_words = "NIHIL VED"
-type = 2  # Tipo 2: Estados
-target = 1  # Target 1: Usuario
+type = 2
+target = 1
 mana_cost = 12
 stamina_cost = 1
 min_skill = 10
 min_damage = 0
 max_damage = 0
-wav = 16  # ID del sonido
-fx_grh = 2  # ID del gráfico de efecto
+wav = 16
+fx_grh = 2
 loops = 2
-caster_msg = "Le has detenido el envenenamiento a "
+caster_msg = "Le has detenido el envenenamiento a"
 self_msg = "Te has detenido el envenenamiento."
 target_msg = "te ha detenido el envenenamiento."
+cures_poison = true
 
 [[spell]]
 id = 2
 name = "Dardo Mágico"
 description = "Éste es uno de los más elementales y sencillos hechizos de ataque que podrás aprender. No causa un gran daño a la víctima, pero al consumir muy pocos recursos, resulta una herramienta muy útil para el entrenamiento de los jóvenes hechiceros."
 magic_words = "OHL VOR PEK"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 10
 stamina_cost = 1
 min_skill = 6
 min_damage = 2
 max_damage = 5
-wav = 114  # ID del sonido
-fx_grh = 15  # ID del gráfico de efecto
+wav = 114
+fx_grh = 15
 loops = 2
 caster_msg = "Has lanzado un dardo mágico sobre"
 target_msg = "ha lanzado un dardo mágico sobre ti."
+resis = 1
 
 [[spell]]
 id = 3
 name = "Curar Heridas Leves"
-description = "Con este sencillo conjuro podrás efectuar la sanación inmediata de pequeñas heridas y devolver lentamente la salud a quien se lo lances. Suele ser de gran utilidad para los jóvenes aprendices de magia."
+description = "Con este sencillo conjuro podrás efectuar la sanación inmediata de pequeñas heridas y devolver lentamente la salud a quien se lo lances. Suele ser de gran utilidad para los jóvenes aprendices de magia, para poder entrenar al resguardo del ataque de las fieras salvajes."
 magic_words = "CORP SANC"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 10
 stamina_cost = 1
 min_skill = 15
 min_damage = 1
 max_damage = 5
-wav = 17  # ID del sonido
-fx_grh = 0  # ID del gráfico de efecto
+wav = 17
+fx_grh = 0
 loops = 0
-caster_msg = "Le has curado algunas pequeñas heridas a "
-target_msg = "te ha curado algunas pequeñas heridas."
+caster_msg = "Le has curado algunas pequeñas heridas a"
 self_msg = "Te has curado algunas pequeñas heridas."
+target_msg = "te ha curado algunas pequeñas heridas."
+heals_hp = true
 
 [[spell]]
 id = 4
 name = "Toxina"
-description = "Con este hechizo de aprendizaje simple y veloz, podrás inundar el cuerpo de la víctima de un mortal veneno, con el que lentamente irá perdiendo la vida hasta sucumbir."
+description = "Con este hechizo de aprendizaje simple y veloz, podrás inundar el cuerpo de la víctima de un mortal veneno, con el que lentamente irá perdiendo la vida hasta sucumbir. Por ser un hechizo que requiere poco conocimiento, resulta de gran utilidad en las primeras etapas, fundamentalmente como modo de defensa personal e incluso para el entrenamiento."
 magic_words = "SERP XON IN"
-type = 2  # Tipo 2: Estados
-target = 3  # Target 3: Usuario Y NPC
+type = 2
+target = 3
 mana_cost = 24
 stamina_cost = 3
 min_skill = 20
 min_damage = 0
 max_damage = 0
-wav = 16  # ID del sonido
-fx_grh = 3  # ID del gráfico de efecto
+wav = 16
+fx_grh = 3
 loops = 2
 caster_msg = "Has envenenado a"
-target_msg = "te ha envenenado."
 self_msg = "Te has envenenado."
+target_msg = "te ha envenenado."
+poisons = true
+resis = 1
 
 [[spell]]
 id = 5
 name = "Curar Heridas Graves"
-description = "Con esta milagrosa sanación para las heridas más profundas y dolorosas, podrás rápidamente devolver la salud a quienes agonizan. Se trata de un conjuro de una complejidad intermedia."
+description = "Con esta milagrosa sanación para las heridas más profundas y dolorosas, podrás rápidamente devolver la salud a quienes agonizan. Se trata de un conjuro de una complejidad intermedia, pero que suele resultar fundamental para los jóvenes aventureros que desean recorrer el mundo y enfrentarse con sus peligros."
 magic_words = "EN CORP SANCTIS"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 40
 stamina_cost = 5
 min_skill = 38
 min_damage = 12
 max_damage = 35
-wav = 18  # ID del sonido
-fx_grh = 9  # ID del gráfico de efecto
+wav = 18
+fx_grh = 9
 loops = 0
-caster_msg = "Le has sanado graves heridas a "
-target_msg = "te ha sanado graves heridas."
+caster_msg = "Le has sanado graves heridas a"
 self_msg = "Te has sanado graves heridas."
+target_msg = "te ha sanado graves heridas."
+heals_hp = true
 
 [[spell]]
 id = 6
 name = "Flecha Mágica"
-description = "Con este sortilegio lograrás que una inmaterial flecha impacte en la víctima produciéndole heridas de mediana gravedad. Su aprendizaje es medianamente fácil."
+description = "Con este sortilegio lograrás que una inmaterial flecha impacte en la víctima produciéndole heridas de mediana gravedad. Su aprendizaje es medianamente fácil, y puede resultar de mucha utilidad para combatir contra las criaturas menores que suelen habitar los suburbios de las ciudades."
 magic_words = "VAX PER"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 20
 stamina_cost = 2
 min_skill = 12
 min_damage = 6
 max_damage = 12
-wav = 19  # ID del sonido
-fx_grh = 33  # ID del gráfico de efecto
+wav = 19
+fx_grh = 33
 loops = 0
-caster_msg = "Has lanzado una flecha mágica sobre "
+caster_msg = "Has lanzado una flecha mágica sobre"
 target_msg = "ha lanzado una flecha mágica sobre ti."
+resis = 1
 
 [[spell]]
 id = 7
 name = "Flecha Eléctrica"
-description = "Éste es un interesante hechizo que te permitirá canalizar las energías eléctricas del mundo en ataques direccionados a un determinado objetivo."
+description = "Éste es un interesante hechizo que te permitirá canalizar las elergías eléctricas del mundo en ataques direccionados a un determinado objetivo. Si bien el daño que causa no es muy grande, es seguramente la mejor herramienta para el entrenamiento y la defensa de los hechiceros menos experimentados."
 magic_words = "SUN VAP"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 40
 stamina_cost = 5
 min_skill = 22
 min_damage = 12
 max_damage = 20
-wav = 19  # ID del sonido
-fx_grh = 32  # ID del gráfico de efecto
+wav = 19
+fx_grh = 32
 loops = 0
-caster_msg = "Has lanzado una flecha eléctrica sobre "
+caster_msg = "Has lanzado una flecha eléctrica sobre"
 target_msg = "ha lanzado una flecha eléctrica sobre ti."
+resis = 1
 
 [[spell]]
 id = 8
 name = "Proyectil Mágico"
-description = "Este rentable hechizo de ataque resulta el ideal para los niveles intermedios, pues les permitirá un gran poder de ataque que facilitará entrenar velozmente."
+description = "Este rentable hechizo de ataque resulta el ideal para los niveles intermedios, pues les permitirá un gran poder de ataque que no sólo facilitará entrenar velozmente, si no que además, puede ser utilizado como una respetable arma en los combates contra tus adversarios."
 magic_words = "VAX IN TAR"
-type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
-target = 3  # Target 3: Usuario Y NPC
+type = 1
+target = 3
 mana_cost = 45
 stamina_cost = 6
 min_skill = 38
 min_damage = 30
 max_damage = 35
-wav = 111  # ID del sonido
-fx_grh = 10  # ID del gráfico de efecto
+wav = 111
+fx_grh = 10
 loops = 0
-caster_msg = "Has lanzado un proyectil mágico sobre "
+caster_msg = "Has lanzado un proyectil mágico sobre"
 target_msg = "ha lanzado un proyectil mágico sobre ti."
+resis = 1
 
 [[spell]]
 id = 9
 name = "Paralizar"
-description = "Con este arcano encantamiento podrás dejar completamente petrificado a la víctima durante un determinado lapso de tiempo. Se trata de uno de los hechizos más utilizado en estas tierras."
+description = "Con este arcano encantamiento podrás dejar completamente petrificado a la víctima durante un determinado lapso de tiempo. Se trata de uno de los hechizos más utilizado en estas tierras por su gran utilidad tanto en el combate como en el entrenamiento."
 magic_words = "HOAX VORP"
-type = 2  # Tipo 2: Estados
-target = 3  # Target 3: Usuario Y NPC
+type = 2
+target = 3
 mana_cost = 450
 stamina_cost = 65
 min_skill = 60
 min_damage = 0
 max_damage = 0
-wav = 16  # ID del sonido
-fx_grh = 8  # ID del gráfico de efecto
+wav = 16
+fx_grh = 8
 loops = 0
-caster_msg = "Has paralizado a "
-target_msg = "te ha paralizado."
+caster_msg = "Has paralizado a"
 self_msg = "Te has paralizado."
+target_msg = "te ha paralizado."
+paralyzes = true
 
 [[spell]]
 id = 10
 name = "Devolver Movilidad"
-description = "Conjuro con el cual podrás contrarrestar los efectos tanto de la parálisis como de la inmovilización. Este conjuro se vuelve prácticamente vital para cualquier valiente que está dispuesto a combatir."
+description = "Conjuro con el cual podrás contrarrestar los efectos tanto de la parálisis como de la inmovilización. En virtud de que los hechizos de estatismo son usados con mucha frecuencia por todos las clases mágicas que habitan estas tierras, éste conjuro se vuelve prácticamente vital para cualquier valiente que esté dispuesto a combatir."
 magic_words = "AN HOAX VORP"
-type = 2  # Tipo 2: Estados
-target = 3  # Target 3: Usuario Y NPC
+type = 2
+target = 3
 mana_cost = 300
 stamina_cost = 44
 min_skill = 45
 min_damage = 0
 max_damage = 0
-wav = 110  # ID del sonido
-fx_grh = 0  # ID del gráfico de efecto
+wav = 110
+fx_grh = 0
 loops = 0
-caster_msg = "Le has devuelto la movilidad a "
-target_msg = "te ha devuelto la movilidad."
+caster_msg = "Le has devuelto la movilidad a"
 self_msg = "Te has devuelto la movilidad."
+target_msg = "te ha devuelto la movilidad."
+removes_paralysis = true
 
 [[spell]]
 id = 11
 name = "Resucitar"
-description = "Encanto sagrado que te permitirá devolver la vida a los difuntos. Esta increíble habilidad fue enseñada personalmente por el mismo Gulfas Morgolock. Su aprendizaje no es fácil y su utilización resulta muy desgastante."
+description = "Encanto sagrado que te permitirá devolver la vida a los difuntos. Esta increíble habilidad fue enseñada personalmente por el mismo Gulfas Morgolock al otrora Rey de los hombres en las remotas épocas del Árbol Blanco. Su aprendizaje no es fácil y su utilización resulta muy desgastante, pero sin dudas es una de las piezas más importantes de la magia de las tierras del Argentum."
 magic_words = "AHIL KNÄ XÄR"
-type = 2  # Tipo 2: Estados
-target = 1  # Target 1: Usuario
+type = 2
+target = 1
 mana_cost = 550
 stamina_cost = 400
 min_skill = 75
 min_damage = 0
 max_damage = 0
-wav = 20  # ID del sonido
-fx_grh = 0  # ID del gráfico de efecto
+wav = 20
+fx_grh = 0
 loops = 0
-caster_msg = "Has resucitado a "
+caster_msg = "Has resucitado a"
 target_msg = "te ha resucitado."
+revives = true
+need_staff = true
+resis = 1
+
+[[spell]]
+id = 12
+name = "Ataque de Hambre"
+description = "Embrujo que tiene por objeto provocar un considerable desbalance nutricional en el destinatario, lo que conlleva a la pérdida de energía y de concentración. Ideal para lograr la debilitación del adversario durante los combates."
+magic_words = "ÔL AEX"
+type = 1
+target = 1
+mana_cost = 20
+stamina_cost = 2
+min_skill = 5
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 0
+loops = 0
+caster_msg = "Le has generado un fuerte hambre a"
+self_msg = "Te has generado un fuerte hambre."
+target_msg = "te ha generado un fuerte hambre."
+resis = 1
+
+[[spell]]
+id = 13
+name = "Terrible hambre de Igôr"
+description = "Abominable hechizo que provoca en la víctima un estado de desnutrición absoluto. Este encantamiento fue creado por el mago Nimbul mientras estudiaba la conducta de los gigantes de las montañas, la primer víctima de este hechizo fue un gigante llamado Igôr, de ahí el nombre del mismo."
+magic_words = "ÛX'ÔL AEX"
+type = 1
+target = 1
+mana_cost = 55
+stamina_cost = 7
+min_skill = 35
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 0
+loops = 0
+caster_msg = "Le has lanzado terrible hambre de Igôr a"
+self_msg = "Te has lanzado terrible hambre de Igôr."
+target_msg = "te ha lanzado terrible hambre de Igôr."
+resis = 1
+
+[[spell]]
+id = 14
+name = "Invisibilidad"
+description = "Se trata de uno de los recursos mágicos más importante de estas tierras. Con él podrás volverte (tú o a quien se lo lances) completamente invisible a la vista de los demás. Esto lo convierte en una de las herramientas más importantes utilizadas por los combatientes guerreros."
+magic_words = ""
+type = 2
+target = 1
+mana_cost = 500
+stamina_cost = 72
+min_skill = 87
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 0
+loops = 0
+caster_msg = "Has vuelto invisible a"
+self_msg = "Te has vuelto invisible."
+target_msg = "te ha vuelto invisible."
+makes_invisible = true
+
+[[spell]]
+id = 15
+name = "Tormenta de Fuego"
+description = "Poderoso hechizo de ataque. Su costo en relación al daño que provoca lo convierte en un arma más propia para el combate que para el entrenamiento. Es ideal para aquellos aprendices de magia que todavía no alcanzaron a conocer el secreto de los hechizos mayores y necesitan estar bien equipados para la guerra."
+magic_words = "EN VAX ON TAR"
+type = 1
+target = 3
+mana_cost = 250
+stamina_cost = 29
+min_skill = 60
+min_damage = 45
+max_damage = 55
+wav = 27
+fx_grh = 7
+loops = 0
+caster_msg = "Has lanzado una tormenta de fuego sobre"
+target_msg = "lanzó una tormenta de fuego sobre ti."
+staff_affected = true
+resis = 1
+
+[[spell]]
+id = 16
+name = "Llamado a la Naturaleza"
+description = "El secreto druídico de la invocación se concentra en este embrujo, que te permitirá implorar por ayuda a la madre naturaleza. Al hacerlo, dos temibles lobos acudirán en tu auxilio, para socorrerte de cualquier peligro que pudieses estar padeciendo."
+magic_words = "Nature et worg"
+type = 4
+target = 4
+mana_cost = 120
+stamina_cost = 16
+min_skill = 40
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has Llamado a la naturaleza contra"
+target_msg = "ha llamado a la naturaleza sobre ti."
+invokes = true
+invoke_npc_id = 512
+invoke_count = 2
+
+[[spell]]
+id = 17
+name = "Llamado Nigromante"
+description = "Con este espantoso ritual de magia negra podrás lograr que los restos mortales de quienes descansan en paz, se alcen en tu ayuda. Al hacerlo, dos tenebrosos zombies emergerán de la tierra para colaborar contigo."
+magic_words = "MoÎ cámus"
+type = 4
+target = 4
+mana_cost = 400
+stamina_cost = 31
+min_skill = 51
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has invocado la ayuda de los muertos contra"
+target_msg = "ha utilizado la Nigromancia sobre ti."
+invokes = true
+invoke_npc_id = 546
+invoke_count = 2
+need_staff = true
+
+[[spell]]
+id = 18
+name = "Celeridad"
+description = "Podrás aumentar la agilidad del destinatario a través de este muy útil sortilegio. Con él devolverás al cuerpo toda la ligereza y velocidad que necesita para adquirir una verdadera destreza guerrera. Su facilidad y los pocos recursos que insume su práctica, lo convierten en una herramienta sumamente útil que no puede faltarle a ningún buen combatiente."
+magic_words = "YUP A'INC"
+type = 1
+target = 1
+mana_cost = 40
+stamina_cost = 5
+min_skill = 20
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 20
+loops = 0
+caster_msg = "Has aumentado la agilidad de"
+self_msg = "Has aumentado tu agilidad."
+target_msg = "ha aumentado tu agilidad."
+
+[[spell]]
+id = 19
+name = "Torpeza"
+description = "Este conjuro tiene por finalidad contrarrestar o anular los efectos del hechizo de celeridad, reduciendo la agilidad y destreza que hayan adquirido quienes fueron hechizados con aquél."
+magic_words = "ASYNC YUP A'INC"
+type = 1
+target = 1
+mana_cost = 20
+stamina_cost = 2
+min_skill = 20
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has lanzado torpeza sobre"
+self_msg = "Has lanzado torpeza sobre ti."
+target_msg = "ha lanzado torpeza sobre ti."
+
+[[spell]]
+id = 20
+name = "Fuerza"
+description = "El poder mágico que encierra este hechizo te permitirá aumentar notoriamente la fuerza y el poderío de la persona sobre quien lo invoques. Al igual que el hechizo de celeridad, su facilidad y los pocos recursos que insume su práctica, lo convierten en una herramienta sumamente útil que no puede faltarle a ningún buen combatiente."
+magic_words = "Ar A'kron"
+type = 1
+target = 1
+mana_cost = 50
+stamina_cost = 6
+min_skill = 35
+min_damage = 0
+max_damage = 0
+wav = 112
+fx_grh = 17
+loops = 0
+caster_msg = "Has lanzado fuerza sobre"
+self_msg = "Has lanzado fuerza sobre ti."
+target_msg = "ha lanzado fuerza sobre ti."
+
+[[spell]]
+id = 21
+name = "Debilidad"
+description = "Este conjuro tiene por finalidad contrarrestar o anular los efectos del hechizo de Fuerza, reduciendo la fuerza y el poderío que hayan adquirido quienes fueron hechizados con aquél."
+magic_words = "Xoom varp"
+type = 1
+target = 1
+mana_cost = 45
+stamina_cost = 6
+min_skill = 35
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has lanzado Debilidad sobre"
+self_msg = "Has lanzado Debilidad sobre ti."
+target_msg = "ha lanzado Debilidad sobre ti."
+
+[[spell]]
+id = 22
+name = "Llamado a Uhkrul"
+description = "Invoca un Dragón Rojo."
+magic_words = "Arg Zagañarak"
+type = 4
+target = 4
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Llamado a Uhkrul."
+invokes = true
+invoke_npc_id = 547
+invoke_count = 1
+
+[[spell]]
+id = 23
+name = "Descarga Eléctrica"
+description = "Éste es uno de los hechizos de daño más poderoso de todo el Argentum. Al controlarlo podrás manipular las fuerzas de la naturaleza de modo tal que del cielo mismo caiga una fuerte descarga de electricidad sobre el objetivo. El daño que provoca en sus vícitimas puede ser mortal frente a principiantes o aprendices."
+magic_words = "T'HY KOOOL"
+type = 1
+target = 3
+mana_cost = 460
+stamina_cost = 67
+min_skill = 85
+min_damage = 55
+max_damage = 85
+wav = 113
+fx_grh = 11
+loops = 0
+caster_msg = "Has lanzado una descarga eléctrica sobre"
+target_msg = "ha lanzado una descarga eléctrica sobre ti."
+staff_affected = true
+resis = 1
+
+[[spell]]
+id = 24
+name = "Inmovilizar"
+description = "Este valioso sortilegio te permitirá dejar a la víctima sin la capacidad de desplazarse, tendrá la sensación de que una poderosa fuerza lo atrae hacia el piso, y si bien podrá mover sus miembros, no podrá dejar el lugar en el que se encuentra."
+magic_words = "Är Prop s'uo"
+type = 2
+target = 3
+mana_cost = 300
+stamina_cost = 44
+min_skill = 60
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 12
+loops = 0
+caster_msg = "Has inmovilizado a"
+self_msg = "Te has inmovilizado."
+target_msg = "te ha inmovilizado."
+immobilizes = true
+
+[[spell]]
+id = 25
+name = "Apocalipsis"
+description = "El ataque mágico más letal de estas tierras. Sólo aquellos avezados en el arte de la magia pueden aprender este temible hechizo. Su poder es fulminante y suele ser mortal para quien es víctima de él."
+magic_words = "Rahma Nañarak O'al"
+type = 1
+target = 3
+mana_cost = 1000
+stamina_cost = 131
+min_skill = 100
+min_damage = 85
+max_damage = 100
+wav = 27
+fx_grh = 13
+loops = 0
+caster_msg = "Has lanzado Apocalipsis sobre"
+target_msg = "lanzó Apocalipsis sobre ti."
+staff_affected = true
+resis = 1
+
+[[spell]]
+id = 26
+name = "Invocar Elemental de Fuego"
+description = "Encontrarás la colaboración de uno de los elementos vitales del universo, el corazón mismo del ardoroso fuego vendrá en tu auxilio."
+magic_words = "Fir Yur'rax"
+type = 4
+target = 4
+mana_cost = 1100
+stamina_cost = 145
+min_skill = 100
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 0
+caster_msg = "Has invocado un elemental de fuego contra"
+target_msg = "ha invocado un elemental de fuego sobre ti."
+invokes = true
+invoke_npc_id = 93
+invoke_count = 1
+need_staff = true
+
+[[spell]]
+id = 27
+name = "Invocar Elemental de Agua"
+description = "Encontrarás la colaboración de uno de los elementos que conforman el universo, el agua vital vendrá en tu auxilio."
+magic_words = "Wata Mantra'rax"
+type = 4
+target = 4
+mana_cost = 980
+stamina_cost = 131
+min_skill = 100
+min_damage = 30
+max_damage = 55
+wav = 17
+fx_grh = 7
+loops = 0
+caster_msg = "Has invocado un elemental de agua contra"
+target_msg = "ha invocado un elemental de agua sobre ti."
+invokes = true
+invoke_npc_id = 92
+invoke_count = 1
+need_staff = true
+
+[[spell]]
+id = 28
+name = "Invocar Elemental de Tierra"
+description = "Encontrarás la colaboración de uno de los elementos vitales del universo, la sagrada tierra vendrá en tu auxilio."
+magic_words = "Mu Mantra'rax"
+type = 4
+target = 4
+mana_cost = 980
+stamina_cost = 131
+min_skill = 90
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 0
+caster_msg = "Has invocado un elemental de tierra contra"
+target_msg = "ha invocado un elemental de tierra sobre ti."
+invokes = true
+invoke_npc_id = 94
+invoke_count = 1
+need_staff = true
+
+[[spell]]
+id = 29
+name = "Implorar Ayuda"
+description = "Implora la ayuda divina de los dioses"
+magic_words = "Ar'Cos Mantra'rax"
+type = 4
+target = 4
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 0
+caster_msg = "Has implorado ayuda a los dioses!"
+invokes = true
+invoke_npc_id = 89
+invoke_count = 2
+
+[[spell]]
+id = 30
+name = "Ceguera"
+description = "Este embrujo le quitará el sentido de la vista a vuestro oponente."
+magic_words = "CAE' XitA"
+type = 2
+target = 1
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has lanzado ceguera sobre"
+self_msg = "Has lanzado ceguera sobre ti."
+target_msg = "lanzó ceguera vos."
+blinds = true
+
+[[spell]]
+id = 31
+name = "Aturdir"
+description = "Este sortilegio provocará que la víctima pierda momentáneamente todo tipo de sentido de la orientación."
+magic_words = "ASYNC GAM ALÛ"
+type = 2
+target = 1
+mana_cost = 800
+stamina_cost = 76
+min_skill = 30
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has aturdido a"
+self_msg = "Te has aturdido."
+target_msg = "te ha aturdido."
+
+[[spell]]
+id = 32
+name = "Ira de Dios"
+description = "Sólo el encono de los Dioses puede provocar tanto daño."
+magic_words = "La IRA de Dios"
+type = 1
+target = 3
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 9999
+max_damage = 9999
+wav = 27
+fx_grh = 26
+loops = 0
+caster_msg = "Has lanzado la IRA de Dios sobre"
+target_msg = "te lanzó la IRA de Dios."
+
+[[spell]]
+id = 33
+name = "Invocación de Ultratumba"
+description = "Utilizando el obscuro y controvertido arte de la nigromancia eres capaz de reanimar los restos de un guerrero y ligarlos a tu voluntad."
+magic_words = "Cörpse Dûm Ex"
+type = 4
+target = 4
+mana_cost = 650
+stamina_cost = 60
+min_skill = 62
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 0
+loops = 0
+caster_msg = "Has invocado al guerrero de ultratumba contra"
+target_msg = "ha invocado al guerrero de ultratumba sobre ti."
+invokes = true
+invoke_npc_id = 520
+invoke_count = 1
+need_staff = true
+
+[[spell]]
+id = 35
+name = "Flecha"
+description = "Flecha"
+magic_words = ""
+type = 1
+target = 1
+mana_cost = 3000
+stamina_cost = 0
+min_skill = 101
+min_damage = 40
+max_damage = 60
+wav = 10
+fx_grh = 0
+loops = 0
+target_msg = "te ha atacado con su arco y flecha."
+
+[[spell]]
+id = 36
+name = "Tormenta Pretoriana"
+description = "Tormenta Pretoriana"
+magic_words = "EN VAX ON TAR"
+type = 1
+target = 3
+mana_cost = 520
+stamina_cost = 0
+min_skill = 80
+min_damage = 65
+max_damage = 95
+wav = 27
+fx_grh = 7
+loops = 0
+caster_msg = "Has lanzado tormenta sobre"
+self_msg = "Has lanzado tormenta sobre ti."
+target_msg = "lanzó tormenta de fuego sobre vos."
+
+[[spell]]
+id = 37
+name = "Flecha Cazador Pretoriano"
+description = "Flecha Cazador Pretoriano"
+magic_words = ""
+type = 1
+target = 3
+mana_cost = 3000
+stamina_cost = 0
+min_skill = 101
+min_damage = 130
+max_damage = 160
+wav = 10
+fx_grh = 14
+loops = 0
+caster_msg = "Has lanzado una flecha sobre"
+self_msg = "Has lanzado un flechazo sobre ti."
+target_msg = "lanzó un flechazo sobre vos."
+
+[[spell]]
+id = 38
+name = "Remover Invisibilidad"
+description = "Hechizo invocado por el mago pretoriano unicamente"
+magic_words = "AN ROHL ÙX MAÏO"
+type = 1
+target = 1
+mana_cost = 0
+stamina_cost = 0
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 2
+loops = 2
+removes_invisibility = true
+
+[[spell]]
+id = 39
+name = "Paralizar NPCs"
+description = "Hechizo invocado por el sacerdote pretoriano unicamente"
+magic_words = "HOAX MANTRA"
+type = 1
+target = 1
+mana_cost = 0
+stamina_cost = 0
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 8
+loops = 0
+
+[[spell]]
+id = 40
+name = "Bendición de Sortilego"
+description = "Provoca una profunda curación de las heridas más terribles. Restaura entre 12 y 35 puntos de salud."
+magic_words = "In Nomine Patris et Fili et Spiritus Sancti, Amén."
+type = 1
+target = 3
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 9999
+max_damage = 9999
+wav = 18
+fx_grh = 9
+loops = 9
+caster_msg = "Has lanzado tu bendición de Sortilego sobre"
+self_msg = "Te has lanzado la bendición de Sortilego."
+target_msg = "te ha lanzado su bendición de Sortilego."
+heals_hp = true
+
+[[spell]]
+id = 41
+name = "Desaturdir"
+description = "Con este conjuro podrás contrarrestar los nefastos efectos del hechizo aturdir."
+magic_words = "AN ASYNC GAM ALÛ"
+type = 2
+target = 1
+mana_cost = 350
+stamina_cost = 44
+min_skill = 45
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 0
+loops = 0
+caster_msg = "Le has quitado su aturdimiento a"
+self_msg = "Te has quitado el aturdimiento."
+target_msg = "te ha quitado el aturdimiento."
+dumbs = true
+removes_stupidity = true
+
+[[spell]]
+id = 42
+name = "Mimetismo"
+description = "Con este encantamiento adquirirás temporalmente la apariencia física de otra persona."
+magic_words = "Cimim Ux Maïo"
+type = 2
+target = 3
+mana_cost = 800
+stamina_cost = 44
+min_skill = 75
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 0
+loops = 0
+caster_msg = "Haz adquirido la apariencia de"
+self_msg = "Generas una ilusión en tu apariencia actual."
+target_msg = "ha adquirido magicamente tu apariencia."
+morphs = true
+
+[[spell]]
+id = 43
+name = "El Ojo del Demiurgo"
+description = "Un haz de luz divina te permitirá momentaneamente ver aquello que resulta invisible a los ojos mortales."
+magic_words = "An MaÏo naq vïká"
+type = 2
+target = 4
+mana_cost = 1
+stamina_cost = 1
+min_skill = 101
+min_damage = 0
+max_damage = 0
+wav = 16
+fx_grh = 3
+loops = 6
+caster_msg = "Has invocado el Ojo del Demiurgo para ver lo invisible."
+self_msg = "Has invocado el Ojo del Demiurgo para ver lo invisible."
+target_msg = "te ha invocado el Ojo del Demiurgo para ver lo invisible."
+removes_invisibility = true
+
+[[spell]]
+id = 44
+name = "Flecha Elfica"
+description = "Una flecha finamente tallada por los antiguos elfos, un suave resplandor la rodea."
+magic_words = ""
+type = 1
+target = 1
+mana_cost = 10
+stamina_cost = 1
+min_skill = 10
+min_damage = 30
+max_damage = 35
+wav = 65
+fx_grh = 0
+loops = 2
+caster_msg = "Has lanzado una flecha elfica sobre"
+target_msg = "ha lanzado una flecha elfica sobre ti."
+
+[[spell]]
+id = 45
+name = "Drenar"
+description = "Un hechizo maligno que drena del espíritu del enemigo su salud, y se la entrega al conjurador."
+magic_words = ""
+type = 1
+target = 1
+mana_cost = 10
+stamina_cost = 1
+min_skill = 10
+min_damage = 35
+max_damage = 40
+wav = 165
+fx_grh = 35
+loops = 2
+caster_msg = "Has drenado vida de"
+target_msg = "te ha drenado vida."
+resis = 1
+
+[[spell]]
+id = 46
+name = "Invocar Mascota"
+description = "Podrás lograr que tu más lejana mascota regrese a tí."
+magic_words = "Tsälo Kai'Tor"
+type = 4
+target = 4
+mana_cost = 0
+stamina_cost = 131
+min_skill = 0
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 0
+caster_msg = "Has invocado una mascota contra"
+target_msg = "ha invocado una mascota sobre ti."
+warps_pet = true
