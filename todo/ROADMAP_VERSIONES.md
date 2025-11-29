@@ -191,9 +191,9 @@
 - [x] Transferencia de liderazgo
 - [x] Invitaciones con expiración
 - [x] Persistencia en Redis
-- [x] Tests completos (11 tests)
+- [x] Tests completos (11 tests → 24 tests en 0.9.1)
+- [x] Chat interno del clan (`/CLAN mensaje`) - Completado en 0.9.1
 - [ ] Almacén/depósito del clan (futuro)
-- [ ] Chat interno del clan (futuro)
 - [ ] Alianzas entre clanes (métodos en modelo, falta UI)
 - [ ] Guerras de clanes (métodos en modelo, falta UI)
 - [ ] Edificio del clan con NPCs (futuro)
@@ -222,6 +222,33 @@
 
 **Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)  
 **Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#9-30`
+
+---
+
+### 0.9.1-alpha - Mejoras del Sistema de Clanes
+**Prioridad:** 🟡 Media  
+**Esfuerzo:** 1-2 días  
+**Estado:** ✅ Completado (2025-01-31)
+
+**Features:**
+- [x] Notificaciones completas para todos los eventos del clan
+  - Notificaciones cuando alguien se une al clan
+  - Notificaciones cuando se promueve/degradan miembros
+  - Notificaciones cuando se transfiere liderazgo
+  - Broadcast automático a todos los miembros
+- [x] Tests ampliados (11 → 24 tests, 100% pasando)
+  - Tests de validaciones y casos de error
+  - Tests de notificaciones
+  - Tests de chat de clan
+  - Tests de casos límite
+- [x] Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
+
+**Mejoras implementadas:**
+- Sistema de notificaciones robusto y completo
+- Cobertura de tests mejorada significativamente
+- Documentación exhaustiva para desarrolladores
+
+**Referencia:** `docs/CLAN_SYSTEM.md`
 
 ---
 

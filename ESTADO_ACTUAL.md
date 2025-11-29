@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
 **Fecha:** 2025-01-31  
-**Versión en pyproject.toml:** 0.9.0-alpha  
-**Versión real completada:** 0.9.0-alpha (Sistema de Clanes completado)
+**Versión en pyproject.toml:** 0.9.1-alpha  
+**Versión real completada:** 0.9.1-alpha (Mejoras del Sistema de Clanes completado)
 
 ---
 
@@ -44,6 +44,15 @@
 - ✅ Gestión completa de miembros (invitar, expulsar, promover, degradar)
 - ✅ Transferencia de liderazgo
 - ✅ Tests básicos del servicio
+
+### Versión 0.9.1-alpha - Mejoras del Sistema de Clanes ✅ COMPLETADO
+**Estado:** Completado según `docs/CLAN_SYSTEM.md`
+- ✅ Notificaciones completas para todos los eventos (unirse, abandonar, promover, degradar, transferir liderazgo)
+- ✅ Broadcast automático a todos los miembros del clan
+- ✅ Tests ampliados (11 → 24 tests, 100% pasando)
+- ✅ Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
+- ✅ Casos de error y validaciones cubiertos
+- ✅ Tests de notificaciones implementados
 
 ---
 
