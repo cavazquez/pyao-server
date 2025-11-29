@@ -414,6 +414,135 @@ class PlayerRepository:
         )
         return is_sailing
 
+    # Métodos para estados temporales (status effects)
+    async def get_poisoned_until(self, user_id: int) -> float:
+        """Obtiene el timestamp hasta cuando el jugador está envenenado.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Timestamp hasta cuando está envenenado (0.0 = no envenenado).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "poisoned_until")  # type: ignore[misc]
+        if not result:
+            return 0.0
+        try:
+            return float(result)
+        except (ValueError, TypeError):
+            return 0.0
+
+    async def update_poisoned_until(self, user_id: int, poisoned_until: float) -> None:
+        """Actualiza el estado de envenenamiento del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            poisoned_until: Timestamp hasta cuando está envenenado (0.0 = no envenenado).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "poisoned_until", str(poisoned_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de envenenamiento actualizado para user_id %d: hasta %.2f",
+            user_id,
+            poisoned_until,
+        )
+
+    async def get_immobilized_until(self, user_id: int) -> float:
+        """Obtiene el timestamp hasta cuando el jugador está inmovilizado.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Timestamp hasta cuando está inmovilizado (0.0 = no inmovilizado).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "immobilized_until")  # type: ignore[misc]
+        if not result:
+            return 0.0
+        try:
+            return float(result)
+        except (ValueError, TypeError):
+            return 0.0
+
+    async def update_immobilized_until(self, user_id: int, immobilized_until: float) -> None:
+        """Actualiza el estado de inmovilización del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            immobilized_until: Timestamp hasta cuando está inmovilizado (0.0 = no inmovilizado).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "immobilized_until", str(immobilized_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de inmovilización actualizado para user_id %d: hasta %.2f",
+            user_id,
+            immobilized_until,
+        )
+
+    async def get_blinded_until(self, user_id: int) -> float:
+        """Obtiene el timestamp hasta cuando el jugador está ciego.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Timestamp hasta cuando está ciego (0.0 = no ciego).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "blinded_until")  # type: ignore[misc]
+        if not result:
+            return 0.0
+        try:
+            return float(result)
+        except (ValueError, TypeError):
+            return 0.0
+
+    async def update_blinded_until(self, user_id: int, blinded_until: float) -> None:
+        """Actualiza el estado de ceguera del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            blinded_until: Timestamp hasta cuando está ciego (0.0 = no ciego).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "blinded_until", str(blinded_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de ceguera actualizado para user_id %d: hasta %.2f", user_id, blinded_until
+        )
+
+    async def get_dumb_until(self, user_id: int) -> float:
+        """Obtiene el timestamp hasta cuando el jugador está estúpido.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Timestamp hasta cuando está estúpido (0.0 = no estúpido).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hget(key, "dumb_until")  # type: ignore[misc]
+        if not result:
+            return 0.0
+        try:
+            return float(result)
+        except (ValueError, TypeError):
+            return 0.0
+
+    async def update_dumb_until(self, user_id: int, dumb_until: float) -> None:
+        """Actualiza el estado de estupidez del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            dumb_until: Timestamp hasta cuando está estúpido (0.0 = no estúpido).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "dumb_until", str(dumb_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de estupidez actualizado para user_id %d: hasta %.2f", user_id, dumb_until
+        )
+
     async def update_hp(self, user_id: int, hp: int) -> None:
         """Actualiza el HP del jugador.
 

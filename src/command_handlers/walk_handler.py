@@ -1,6 +1,7 @@
 """Handler para comando de movimiento."""
 
 import logging
+import time
 from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
@@ -66,7 +67,7 @@ class WalkCommandHandler(CommandHandler):
         self.map_resources = map_resources
         self.message_sender = message_sender
 
-    async def handle(self, command: Command) -> CommandResult:
+    async def handle(self, command: Command) -> CommandResult:  # noqa: PLR0914
         """Ejecuta el comando de movimiento (solo lógica de negocio).
 
         Args:
@@ -89,6 +90,21 @@ class WalkCommandHandler(CommandHandler):
         if not self.player_repo:
             logger.error("PlayerRepository no está disponible para movimiento")
             return CommandResult.error("Error interno: repositorio no disponible")
+
+        # Verificar si el jugador está inmovilizado
+        immobilized_until = await self.player_repo.get_immobilized_until(user_id)
+        if immobilized_until > 0.0:
+            current_time = time.time()
+            if current_time < immobilized_until:
+                await self.message_sender.send_console_msg(
+                    "¡Estás inmovilizado! No puedes moverte."
+                )
+                logger.debug(
+                    "Jugador user_id %d intentó moverse pero está inmovilizado hasta %.2f",
+                    user_id,
+                    immobilized_until,
+                )
+                return CommandResult.error("Estás inmovilizado. No puedes moverte.")
 
         # Cancelar meditación y consumir stamina
         await self._cancel_meditation_if_active(user_id)

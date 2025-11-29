@@ -27,6 +27,18 @@ x = 52
 y = 50
 direction = 2
 
+[[map_npcs.1.spawn_points]]
+npc_id = 625  # Víbora (para probar envenenamiento - más HP)
+x = 51
+y = 50
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504  # Serpiente (para probar envenenamiento - poco HP)
+x = 49
+y = 50
+direction = 3
+
 # Áreas de spawns aleatorios (hostiles)
 [[map_npcs.1.random_spawns]]
 npc_type = "hostile"

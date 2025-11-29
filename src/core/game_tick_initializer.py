@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
+from src.effects.effect_npc_poison import NPCPoisonEffect
+from src.effects.effect_poison import PoisonEffect
 from src.effects.effect_stamina_regen import StaminaRegenEffect
 from src.effects.meditation_effect import MeditationEffect
 from src.effects.npc_ai_effect import NPCAIEffect
@@ -109,3 +111,11 @@ class GameTickInitializer:
         # Efecto de regeneración de stamina (siempre habilitado)
         game_tick.add_effect(StaminaRegenEffect(self.stamina_service))
         logger.info("✓ Efecto de regeneración de stamina habilitado")
+
+        # Efecto de envenenamiento para jugadores (siempre habilitado)
+        game_tick.add_effect(PoisonEffect(interval_seconds=2.0))
+        logger.info("✓ Efecto de envenenamiento (jugadores) habilitado")
+
+        # Efecto de envenenamiento para NPCs (siempre habilitado)
+        game_tick.add_effect(NPCPoisonEffect(self.npc_service, interval_seconds=2.0))
+        logger.info("✓ Efecto de envenenamiento (NPCs) habilitado")

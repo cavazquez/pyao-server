@@ -45,14 +45,14 @@ class SpellbookRepository:
 
         Args:
             user_id: ID del usuario.
-            slot: Slot donde se guardará el hechizo (1-25).
+            slot: Slot donde se guardará el hechizo (1-35).
             spell_id: ID del hechizo.
 
         Returns:
             True si se agregó correctamente, False en caso contrario.
         """
-        if not 1 <= slot <= 25:  # noqa: PLR2004
-            logger.warning("Slot inválido: %d (debe estar entre 1 y 25)", slot)
+        if not 1 <= slot <= 35:  # noqa: PLR2004
+            logger.warning("Slot inválido: %d (debe estar entre 1 y 35)", slot)
             return False
 
         try:
@@ -254,7 +254,7 @@ class SpellbookRepository:
         else:
             return True
 
-    async def initialize_default_spells(
+    async def initialize_default_spells(  # noqa: PLR0915
         self, user_id: int, spell_catalog: SpellCatalog | None = None
     ) -> bool:
         """Inicializa el libro de hechizos con hechizos por defecto.
@@ -270,45 +270,104 @@ class SpellbookRepository:
         Returns:
             True si se inicializó correctamente, False en caso contrario.
         """
-        try:
+        try:  # noqa: PLR1702
             # Verificar si ya tiene hechizos
             existing_spells: dict[int, int] = await self.get_all_spells(user_id)
-            if existing_spells:
-                logger.debug("user_id %d ya tiene hechizos en Redis, no se inicializa", user_id)
-                return True
+            has_existing = bool(existing_spells)
 
-            logger.info("Inicializando libro de hechizos por defecto para user_id %d", user_id)
+            if has_existing:
+                logger.info(
+                    "user_id %d ya tiene %d hechizo(s), agregando hechizos faltantes",
+                    user_id,
+                    len(existing_spells),
+                )
+            else:
+                logger.info("Inicializando libro de hechizos por defecto para user_id %d", user_id)
 
-            # Si se proporciona el catálogo, agregar TODOS los hechizos
+            # Si se proporciona el catálogo, agregar hechizos faltantes
             if spell_catalog:
                 all_spell_ids = spell_catalog.get_all_spell_ids()
                 if all_spell_ids:
                     spells_added = 0
-                    # Hay 25 slots disponibles (1-25)
-                    max_slots = 25
+                    # Hay 35 slots disponibles (1-35) para incluir más hechizos importantes
+                    max_slots = 35
                     if len(all_spell_ids) > max_slots:
                         logger.warning(
-                            "Solo se pueden agregar 25 hechizos. "
+                            "Solo se pueden agregar %d hechizos. "
                             "%d hechizos disponibles en catálogo",
+                            max_slots,
                             len(all_spell_ids),
                         )
-                    for slot, spell_id in enumerate(sorted(all_spell_ids)[:max_slots], start=1):
-                        success = await self.add_spell(user_id, slot=slot, spell_id=spell_id)
-                        if success:
-                            spells_added += 1
-                            spell_data = spell_catalog.get_spell_data(spell_id)
-                            spell_name = (
-                                spell_data.get("name", f"Spell {spell_id}")
-                                if spell_data
-                                else f"Spell {spell_id}"
-                            )
-                            logger.debug(
-                                "✓ Hechizo agregado: user_id %d recibió '%s' (ID:%d) en slot %d",
-                                user_id,
-                                spell_name,
-                                spell_id,
-                                slot,
-                            )
+
+                    # Si ya tiene hechizos, solo agregar los que faltan
+                    existing_spell_ids = set(existing_spells.values()) if has_existing else set()
+                    sorted_spell_ids = sorted(all_spell_ids)[:max_slots]
+
+                    # Encontrar slots disponibles
+                    occupied_slots = set(existing_spells.keys()) if has_existing else set()
+                    available_slots = [
+                        s for s in range(1, max_slots + 1) if s not in occupied_slots
+                    ]
+
+                    # Si no hay hechizos existentes, agregar todos desde el slot 1
+                    if not has_existing:
+                        for slot, spell_id in enumerate(sorted_spell_ids, start=1):
+                            success = await self.add_spell(user_id, slot=slot, spell_id=spell_id)
+                            if success:
+                                spells_added += 1
+                                spell_data = spell_catalog.get_spell_data(spell_id)
+                                spell_name = (
+                                    spell_data.get("name", f"Spell {spell_id}")
+                                    if spell_data
+                                    else f"Spell {spell_id}"
+                                )
+                                logger.debug(
+                                    "✓ Hechizo agregado: user_id %d recibió '%s' "
+                                    "(ID:%d) en slot %d",
+                                    user_id,
+                                    spell_name,
+                                    spell_id,
+                                    slot,
+                                )
+                    else:
+                        # Agregar solo hechizos faltantes en slots disponibles
+                        slot_index = 0
+                        for spell_id in sorted_spell_ids:
+                            if spell_id not in existing_spell_ids:
+                                if slot_index < len(available_slots):
+                                    slot = available_slots[slot_index]
+                                    spell_data = spell_catalog.get_spell_data(spell_id)
+                                    spell_name = (
+                                        spell_data.get("name", f"Spell {spell_id}")
+                                        if spell_data
+                                        else f"Spell {spell_id}"
+                                    )
+                                    success = await self.add_spell(
+                                        user_id, slot=slot, spell_id=spell_id
+                                    )
+                                    if success:
+                                        spells_added += 1
+                                        logger.info(
+                                            "✓ Hechizo faltante agregado: user_id %d recibió '%s' "
+                                            "(ID:%d) en slot %d",
+                                            user_id,
+                                            spell_name,
+                                            spell_id,
+                                            slot,
+                                        )
+                                        slot_index += 1
+                                    else:
+                                        logger.warning(
+                                            "No se pudo agregar hechizo '%s' (ID:%d) al slot %d",
+                                            spell_name,
+                                            spell_id,
+                                            slot,
+                                        )
+                                else:
+                                    logger.warning(
+                                        "No hay más slots disponibles para agregar hechizo %d",
+                                        spell_id,
+                                    )
 
                     logger.info(
                         "✓ Libro de hechizos inicializado: user_id %d recibió %d hechizo(s) "
@@ -329,15 +388,18 @@ class SpellbookRepository:
                         user_id,
                     )
                 return success
-            # Comportamiento anterior: solo agregar Antídoto Mágico (ID: 1)
-            success = await self.add_spell(user_id, slot=1, spell_id=1)
-            if success:
-                logger.info(
-                    "✓ Libro de hechizos inicializado: user_id %d recibió "
-                    "'Antídoto Mágico' en slot 1",
-                    user_id,
-                )
-            return success  # noqa: TRY300
+            # Comportamiento anterior: solo agregar Antídoto Mágico (ID: 1) si no hay hechizos
+            if not has_existing:
+                success = await self.add_spell(user_id, slot=1, spell_id=1)
+                if success:
+                    logger.info(
+                        "✓ Libro de hechizos inicializado: user_id %d recibió "
+                        "'Antídoto Mágico' en slot 1",
+                        user_id,
+                    )
+                return success
+            # Si ya hay hechizos y no hay catálogo, no hacer nada
+            return True  # noqa: TRY300
         except Exception:
             logger.exception("Error al inicializar libro de hechizos")
             return False

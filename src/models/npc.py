@@ -59,3 +59,5 @@ class NPC:
 
     # Estados/efectos
     paralyzed_until: float = 0.0  # Timestamp hasta cuando está paralizado (0 = no paralizado)
+    poisoned_until: float = 0.0  # Timestamp hasta cuando está envenenado (0 = no envenenado)
+    poisoned_by_user_id: int = 0  # ID del jugador que envenenó al NPC (0 = sistema/desconocido)

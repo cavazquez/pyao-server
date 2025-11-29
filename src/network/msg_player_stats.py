@@ -179,15 +179,19 @@ def build_update_user_stats_response(
         Paquete de bytes con el formato: PacketID (45) + stats.
         Orden: min/max (actual/máximo) para cada stat.
     """
+    # Clamp valores a int16 para evitar overflow (-32768 a 32767)
+    max_int16 = 32767
+    min_int16 = -32768
+
     packet = PacketBuilder()
     packet.add_byte(ServerPacketID.UPDATE_USER_STATS)
     # Orden según cliente Godot: max/min (máximo/actual)
-    packet.add_int16(max_hp)
-    packet.add_int16(min_hp)
-    packet.add_int16(max_mana)
-    packet.add_int16(min_mana)
-    packet.add_int16(max_sta)
-    packet.add_int16(min_sta)
+    packet.add_int16(max(min(max_hp, max_int16), min_int16))
+    packet.add_int16(max(min(min_hp, max_int16), min_int16))
+    packet.add_int16(max(min(max_mana, max_int16), min_int16))
+    packet.add_int16(max(min(min_mana, max_int16), min_int16))
+    packet.add_int16(max(min(max_sta, max_int16), min_int16))
+    packet.add_int16(max(min(min_sta, max_int16), min_int16))
     packet.add_int32(gold)
     packet.add_byte(level)
     packet.add_int32(elu)

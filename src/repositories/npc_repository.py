@@ -147,6 +147,8 @@ class NPCRepository:
             "attack_cooldown": str(attack_cooldown),
             "aggro_range": str(aggro_range),
             "paralyzed_until": "0.0",
+            "poisoned_until": "0.0",
+            "poisoned_by_user_id": "0",
         }
 
         await self.redis.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
@@ -210,6 +212,8 @@ class NPCRepository:
             attack_cooldown=float(result.get("attack_cooldown", "3.0")),
             aggro_range=int(result.get("aggro_range", "8")),
             paralyzed_until=float(result.get("paralyzed_until", "0.0")),
+            poisoned_until=float(result.get("poisoned_until", "0.0")),
+            poisoned_by_user_id=int(result.get("poisoned_by_user_id", "0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
@@ -292,6 +296,32 @@ class NPCRepository:
         await self.redis.redis.hset(key, "paralyzed_until", str(paralyzed_until))  # type: ignore[misc]
         logger.debug(
             "Estado de parálisis actualizado para NPC %s: hasta %.2f", instance_id, paralyzed_until
+        )
+
+    async def update_npc_poisoned_until(
+        self, instance_id: str, poisoned_until: float, poisoned_by_user_id: int = 0
+    ) -> None:
+        """Actualiza el estado de envenenamiento de un NPC.
+
+        Args:
+            instance_id: ID único de la instancia del NPC.
+            poisoned_until: Timestamp hasta cuando está envenenado (0.0 = no envenenado).
+            poisoned_by_user_id: ID del jugador que envenenó al NPC (0 = sistema/desconocido).
+        """
+        key = RedisKeys.npc_instance(instance_id)
+        await self.redis.redis.hset(  # type: ignore[misc]
+            key,
+            mapping={
+                "poisoned_until": str(poisoned_until),
+                "poisoned_by_user_id": str(poisoned_by_user_id),
+            },
+        )
+        logger.debug(
+            "Estado de envenenamiento actualizado para NPC %s: hasta %.2f "
+            "(envenenado por user_id %d)",
+            instance_id,
+            poisoned_until,
+            poisoned_by_user_id,
         )
 
     async def remove_npc(self, instance_id: str) -> None:

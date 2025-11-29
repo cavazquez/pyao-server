@@ -261,12 +261,13 @@ class TestCastSpell:
         mock_message_sender: MagicMock,
     ) -> None:
         """Test lanzar hechizo sin objetivo en la posición."""
-        # Setup
-        spell_data = {"mana_cost": 10}
+        # Setup - hechizo que requiere NPC (target=2) para que no permita auto-cast
+        spell_data = {"mana_cost": 10, "target": 2, "name": "Test Spell"}
         mock_spell_catalog.get_spell_data.return_value = spell_data
         mock_player_repo.get_stats.return_value = {"min_mana": 50}
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = []  # Sin NPCs
+        mock_map_manager.get_players_in_map.return_value = []  # Sin jugadores
 
         # Execute
         result = await spell_service.cast_spell(
