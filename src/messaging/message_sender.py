@@ -22,6 +22,7 @@ from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
     from src.models.body_part import BodyPart
+    from src.models.clan import Clan
     from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
@@ -614,7 +615,7 @@ class MessageSender:
         """
         await self.session.send_show_party_form()
 
-    async def send_clan_details(self, clan: "Clan") -> None:
+    async def send_clan_details(self, clan: Clan) -> None:
         """Envía paquete CLAN_DETAILS para habilitar el botón de clan en el cliente.
 
         Este packet habilita la funcionalidad de clanes en la UI del cliente

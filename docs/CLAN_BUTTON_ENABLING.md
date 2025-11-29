@@ -96,8 +96,9 @@ Campos incluidos:
 4. El formato del packet es correcto según el protocolo VB6
 
 **Para habilitar cuando el cliente lo implemente:**
-- Descomentar el código en `src/command_handlers/login_handler.py` (líneas ~446-458)
-- Agregar `clan_service` de vuelta al constructor si se necesita
+- Ver `docs/CLAN_BUTTON_ENABLING.md` para instrucciones
+- Agregar el código necesario en `login_handler.py` usando `message_sender.send_clan_details(clan)`
+- Agregar `clan_service` al constructor de `LoginCommandHandler` si se necesita
 
 ---
 
@@ -105,7 +106,7 @@ Campos incluidos:
 
 - **Protocolo VB6**: `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/Protocol.bas` (línea 17378)
 - **Implementación Servidor**: `src/network/msg_clan.py`
-- **Integración Login**: `src/command_handlers/login_handler.py` (línea 446-457)
+- **Integración Login**: `src/command_handlers/login_handler.py` (comentario explicativo en línea ~442)
 - **Estado Cliente**: `clientes/ArgentumOnlineGodot/common/enums/enums.gd` (línea 273 - enum existe, handler no)
 
 ---

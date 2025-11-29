@@ -135,7 +135,7 @@ class SessionMessageSender:
         logger.info("[%s] Enviando SHOW_PARTY_FORM (packet 99)", self.connection.address)
         await self.connection.send(response)
 
-    async def send_clan_details(self, clan: "Clan") -> None:
+    async def send_clan_details(self, clan: Clan) -> None:
         """Envía paquete CLAN_DETAILS para habilitar el botón de clan en el cliente.
 
         Este packet habilita la funcionalidad de clanes en la UI del cliente
