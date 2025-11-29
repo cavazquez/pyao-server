@@ -51,7 +51,7 @@ class SpellService:
         self.map_manager = map_manager
         self.npc_death_service = npc_death_service
 
-    async def cast_spell(  # noqa: PLR0914
+    async def cast_spell(  # noqa: PLR0914, PLR0915
         self,
         user_id: int,
         spell_id: int,

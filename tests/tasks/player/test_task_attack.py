@@ -614,6 +614,8 @@ class TestTaskAttackFindFreePosition:
         """Test cuando la posición central está libre."""
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])  # Libre
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
+        map_manager.can_move_to = MagicMock(return_value=True)
 
         # Crear handler real (no mock) para probar el método real
         attack_handler = AttackCommandHandler(
@@ -648,6 +650,8 @@ class TestTaskAttackFindFreePosition:
             return []  # Todas las demás: libres
 
         map_manager.get_ground_items = MagicMock(side_effect=side_effect)
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
+        map_manager.can_move_to = MagicMock(return_value=True)
 
         # Crear handler real (no mock) para probar el método real
         attack_handler = AttackCommandHandler(

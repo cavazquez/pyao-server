@@ -616,5 +616,9 @@ class NPCDeathService:
         if items:
             return False
 
-        # Verificar que la casilla no esté bloqueada
+        # Verificar que no haya un jugador o NPC ocupando el tile
+        if self.map_manager.is_tile_occupied(map_id, x, y):
+            return False
+
+        # Verificar que la casilla no esté bloqueada (paredes, agua, etc.)
         return self.map_manager.can_move_to(map_id, x, y)

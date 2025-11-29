@@ -337,6 +337,7 @@ class TestDropPosition:
         # Setup
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(return_value=True)
 
         service = NPCDeathService(
@@ -358,6 +359,7 @@ class TestDropPosition:
         map_manager = MagicMock()
         # Primera llamada (centro): bloqueado, segunda: libre
         map_manager.get_ground_items = MagicMock(return_value=[])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(side_effect=[False, True])
 
         service = NPCDeathService(
@@ -379,6 +381,7 @@ class TestDropPosition:
         # Setup
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(return_value=False)  # Todas bloqueadas
 
         service = NPCDeathService(
@@ -399,6 +402,7 @@ class TestDropPosition:
         # Setup
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(return_value=True)
 
         service = NPCDeathService(
@@ -622,6 +626,7 @@ class TestDropLoot:
         # Setup
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.add_ground_item = MagicMock()
 

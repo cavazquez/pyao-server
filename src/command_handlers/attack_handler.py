@@ -257,9 +257,8 @@ class AttackCommandHandler(CommandHandler):
         if not self.map_manager:
             return None
 
-        # Intentar primero la posición central (puede haber jugadores/NPCs)
-        items = self.map_manager.get_ground_items(map_id, center_x, center_y)
-        if not items:
+        # Intentar primero la posición central
+        if self._is_valid_drop_position(map_id, center_x, center_y):
             return (center_x, center_y)
 
         # Buscar en posiciones cercanas
@@ -274,16 +273,41 @@ class AttackCommandHandler(CommandHandler):
             x = center_x + offset_x
             y = center_y + offset_y
 
-            # Verificar límites del mapa
-            if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
-                continue
-
-            # Verificar que no haya otro item en esa posición
-            items = self.map_manager.get_ground_items(map_id, x, y)
-            if not items:
+            # Verificar que sea posición válida
+            if self._is_valid_drop_position(map_id, x, y):
                 return (x, y)
 
         return None
+
+    def _is_valid_drop_position(self, map_id: int, x: int, y: int) -> bool:
+        """Verifica si una posición es válida para dropear items.
+
+        Args:
+            map_id: ID del mapa.
+            x: Coordenada X.
+            y: Coordenada Y.
+
+        Returns:
+            True si la posición es válida para dropear.
+        """
+        if not self.map_manager:
+            return False
+
+        # Verificar límites del mapa
+        if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+            return False
+
+        # Verificar que no haya items en esa posición
+        items = self.map_manager.get_ground_items(map_id, x, y)
+        if items:
+            return False
+
+        # Verificar que no haya un jugador o NPC ocupando el tile
+        if self.map_manager.is_tile_occupied(map_id, x, y):
+            return False
+
+        # Verificar que la casilla no esté bloqueada (paredes, agua, etc.)
+        return self.map_manager.can_move_to(map_id, x, y)
 
     async def _handle_loot_drop(self, npc: NPC) -> None:
         """Maneja el drop de loot cuando un NPC muere.

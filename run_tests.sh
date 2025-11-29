@@ -15,7 +15,7 @@ uv run ruff check --unsafe-fixes --fix .
 
 echo ""
 echo "🧪 Running unit tests..."
-uv run pytest tests/
+uv run pytest tests/ -n 4
 
 echo ""
 echo "🔍 Running ruff linter..."

@@ -163,6 +163,7 @@ class TestNPCDeathService:
         map_manager.remove_npc = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=True)
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.add_ground_item = MagicMock()
 
         npc_repo = MagicMock()
@@ -236,6 +237,7 @@ class TestNPCDeathService:
         map_manager.get_ground_items = MagicMock(return_value=[])
         # Primera posición bloqueada, segunda libre
         map_manager.can_move_to = MagicMock(side_effect=[False, True])
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.add_ground_item = MagicMock()
 
         npc_repo = MagicMock()
@@ -310,6 +312,7 @@ class TestNPCDeathService:
         map_manager.remove_npc = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=True)
+        map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.add_ground_item = MagicMock()
 
         npc_repo = MagicMock()

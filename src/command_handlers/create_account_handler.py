@@ -455,7 +455,7 @@ class CreateAccountCommandHandler(CommandHandler):
 
         logger.info(
             "Inventario inicial creado para user_id %d (30 pociones de cada tipo + equipamiento)",
-            user_id
+            user_id,
         )
 
     async def _log_character_summary(  # noqa: PLR6301
