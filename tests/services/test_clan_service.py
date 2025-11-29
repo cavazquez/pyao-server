@@ -12,8 +12,13 @@ from src.services.clan_service import ClanService
 class _DummyMapManager:
     """Dummy MapManager for testing."""
 
-    def get_player_message_sender(self, _user_id: int):
-        return None
+    def __init__(self, mock_senders: dict[int, MagicMock] | None = None):
+        """Initialize with optional mock message senders."""
+        self.mock_senders = mock_senders or {}
+
+    def get_player_message_sender(self, user_id: int):
+        """Return mock message sender for user_id if available."""
+        return self.mock_senders.get(user_id)
 
     def find_player_by_username(self, username: str) -> int | None:
         """Find player by username for testing."""
@@ -298,3 +303,361 @@ async def test_transfer_leadership_success(clan_service: ClanService):
     assert updated_clan.leader_id == 2
     assert updated_clan.get_member(2).rank == ClanRank.LEADER
     assert updated_clan.get_member(1).rank == ClanRank.VICE_LEADER
+
+
+# ========== Tests de Error y Validaciones ==========
+
+
+@pytest.mark.asyncio
+async def test_create_clan_empty_name(clan_service: ClanService):
+    """Test that empty clan names are rejected."""
+    await clan_service.clan_repo.initialize()
+
+    can_create, error_msg = await clan_service.can_create_clan(user_id=1, clan_name="")
+
+    assert not can_create
+    assert "vacío" in error_msg.lower()
+
+
+@pytest.mark.asyncio
+async def test_create_clan_already_in_clan(clan_service: ClanService):
+    """Test that users already in a clan cannot create another."""
+    await clan_service.clan_repo.initialize()
+
+    # Create first clan
+    await clan_service.create_clan(user_id=1, clan_name="FirstClan", username="Leader")
+
+    # Try to create another clan while still in first
+    can_create, error_msg = await clan_service.can_create_clan(user_id=1, clan_name="SecondClan")
+
+    assert not can_create
+    assert "ya perteneces" in error_msg.lower()
+
+
+@pytest.mark.asyncio
+async def test_accept_invitation_no_pending(clan_service: ClanService):
+    """Test accepting invitation when none exists."""
+    await clan_service.clan_repo.initialize()
+
+    clan, message = await clan_service.accept_invitation(user_id=2)
+
+    assert clan is None
+    assert "invitaciones" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_leave_clan_as_leader(clan_service: ClanService):
+    """Test that leaders cannot leave without transferring leadership."""
+    await clan_service.clan_repo.initialize()
+
+    # Create clan
+    await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+
+    # Try to leave as leader
+    success, message = await clan_service.leave_clan(user_id=1)
+
+    assert not success
+    assert "líder" in message.lower()
+    assert "transfiere" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_kick_member_no_permission(clan_service: ClanService):
+    """Test that members without permission cannot kick."""
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(ClanMember(user_id=2, username="Member1", level=15, rank=ClanRank.MEMBER))
+    clan.add_member(ClanMember(user_id=3, username="Member2", level=15, rank=ClanRank.MEMBER))
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Try to kick as regular member
+    success, message = await clan_service.kick_member(kicker_id=2, target_username="Member2")
+
+    assert not success
+    assert "permiso" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_kick_leader(clan_service: ClanService):
+    """Test that leader cannot be kicked."""
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with vice leader
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(
+        ClanMember(user_id=2, username="ViceLeader", level=20, rank=ClanRank.VICE_LEADER)
+    )
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Try to kick leader
+    success, message = await clan_service.kick_member(kicker_id=2, target_username="Leader")
+
+    assert not success
+    assert "líder" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_promote_member_no_permission(clan_service: ClanService):
+    """Test that members without permission cannot promote."""
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(ClanMember(user_id=2, username="Member1", level=15, rank=ClanRank.MEMBER))
+    clan.add_member(ClanMember(user_id=3, username="Member2", level=15, rank=ClanRank.MEMBER))
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Try to promote as regular member
+    success, message = await clan_service.promote_member(promoter_id=2, target_username="Member2")
+
+    assert not success
+    assert "permiso" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_transfer_leadership_not_leader(clan_service: ClanService):
+    """Test that only leader can transfer leadership."""
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(
+        ClanMember(user_id=2, username="ViceLeader", level=20, rank=ClanRank.VICE_LEADER)
+    )
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Try to transfer as vice leader
+    success, message = await clan_service.transfer_leadership(
+        leader_id=2, new_leader_username="Leader"
+    )
+
+    assert not success
+    assert "líder" in message.lower()
+
+
+# ========== Tests de Notificaciones ==========
+
+
+@pytest.mark.asyncio
+async def test_accept_invitation_notifies_members(redis_client, mock_player_repo):
+    """Test that accepting invitation notifies all clan members."""
+
+    # Create mock message senders
+    leader_sender = MagicMock()
+    leader_sender.send_console_msg = AsyncMock()
+    new_member_sender = MagicMock()
+    new_member_sender.send_console_msg = AsyncMock()
+
+    mock_map_manager = _DummyMapManager(
+        mock_senders={1: leader_sender, 2: new_member_sender}
+    )
+
+    clan_service = ClanService(
+        clan_repository=ClanRepository(redis_client),
+        player_repository=mock_player_repo,
+        message_sender=MagicMock(),
+        broadcast_service=None,
+        map_manager=mock_map_manager,
+    )
+
+    await clan_service.clan_repo.initialize()
+
+    # Create clan and invite
+    await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    await clan_service.invite_to_clan(inviter_id=1, target_username="Member")
+
+    # Accept invitation
+    accepted_clan, _ = await clan_service.accept_invitation(user_id=2)
+
+    assert accepted_clan is not None
+
+    # Verify new member was notified (may receive multiple calls - invitation and acceptance)
+    assert new_member_sender.send_console_msg.call_count >= 1
+    # Find the "unido" message
+    calls = new_member_sender.send_console_msg.call_args_list
+    unido_call = next((c for c in calls if "unido" in c[0][0].lower()), None)
+    assert unido_call is not None
+    assert unido_call[1]["font_color"] == 7
+
+    # Verify leader was notified
+    leader_sender.send_console_msg.assert_called_once()
+    call_args = leader_sender.send_console_msg.call_args
+    assert "se ha unido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+
+@pytest.mark.asyncio
+async def test_promote_member_notifies_all(redis_client, mock_player_repo):
+    """Test that promoting a member notifies all clan members."""
+
+    # Create mock message senders
+    promoter_sender = MagicMock()
+    promoter_sender.send_console_msg = AsyncMock()
+    promoted_sender = MagicMock()
+    promoted_sender.send_console_msg = AsyncMock()
+    other_member_sender = MagicMock()
+    other_member_sender.send_console_msg = AsyncMock()
+
+    mock_map_manager = _DummyMapManager(
+        mock_senders={1: promoter_sender, 2: promoted_sender, 3: other_member_sender}
+    )
+
+    clan_service = ClanService(
+        clan_repository=ClanRepository(redis_client),
+        player_repository=mock_player_repo,
+        message_sender=MagicMock(),
+        broadcast_service=None,
+        map_manager=mock_map_manager,
+    )
+
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(ClanMember(user_id=2, username="Member", level=15, rank=ClanRank.MEMBER))
+    clan.add_member(ClanMember(user_id=3, username="Other", level=15, rank=ClanRank.MEMBER))
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Promote member
+    success, _ = await clan_service.promote_member(promoter_id=1, target_username="Member")
+
+    assert success
+
+    # Verify promoted member was notified
+    promoted_sender.send_console_msg.assert_called_once()
+    call_args = promoted_sender.send_console_msg.call_args
+    assert "promovido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+    # Verify promoter was notified
+    promoter_sender.send_console_msg.assert_called_once()
+    call_args = promoter_sender.send_console_msg.call_args
+    assert "promovido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+    # Verify other member was notified
+    other_member_sender.send_console_msg.assert_called_once()
+    call_args = other_member_sender.send_console_msg.call_args
+    assert "promovido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+
+@pytest.mark.asyncio
+async def test_transfer_leadership_notifies_all(redis_client, mock_player_repo):
+    """Test that transferring leadership notifies all clan members."""
+
+    # Create mock message senders
+    old_leader_sender = MagicMock()
+    old_leader_sender.send_console_msg = AsyncMock()
+    new_leader_sender = MagicMock()
+    new_leader_sender.send_console_msg = AsyncMock()
+    other_member_sender = MagicMock()
+    other_member_sender.send_console_msg = AsyncMock()
+
+    mock_map_manager = _DummyMapManager(
+        mock_senders={1: old_leader_sender, 2: new_leader_sender, 3: other_member_sender}
+    )
+
+    clan_service = ClanService(
+        clan_repository=ClanRepository(redis_client),
+        player_repository=mock_player_repo,
+        message_sender=MagicMock(),
+        broadcast_service=None,
+        map_manager=mock_map_manager,
+    )
+
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Leader")
+    clan.add_member(ClanMember(user_id=2, username="Member", level=15, rank=ClanRank.MEMBER))
+    clan.add_member(ClanMember(user_id=3, username="Other", level=15, rank=ClanRank.MEMBER))
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Transfer leadership
+    success, _ = await clan_service.transfer_leadership(
+        leader_id=1, new_leader_username="Member"
+    )
+
+    assert success
+
+    # Verify old leader was notified
+    old_leader_sender.send_console_msg.assert_called_once()
+    call_args = old_leader_sender.send_console_msg.call_args
+    assert "transferido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+    # Verify new leader was notified
+    new_leader_sender.send_console_msg.assert_called_once()
+    call_args = new_leader_sender.send_console_msg.call_args
+    assert "nombrado líder" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+    # Verify other member was notified
+    other_member_sender.send_console_msg.assert_called_once()
+    call_args = other_member_sender.send_console_msg.call_args
+    assert "transferido" in call_args[0][0].lower()
+    assert call_args[1]["font_color"] == 7
+
+
+@pytest.mark.asyncio
+async def test_send_clan_message(redis_client, mock_player_repo):
+    """Test sending a message to all clan members."""
+
+    # Create mock message senders
+    sender_sender = MagicMock()
+    sender_sender.send_console_msg = AsyncMock()
+    member1_sender = MagicMock()
+    member1_sender.send_console_msg = AsyncMock()
+    member2_sender = MagicMock()
+    member2_sender.send_console_msg = AsyncMock()
+
+    mock_map_manager = _DummyMapManager(
+        mock_senders={1: sender_sender, 2: member1_sender, 3: member2_sender}
+    )
+
+    clan_service = ClanService(
+        clan_repository=ClanRepository(redis_client),
+        player_repository=mock_player_repo,
+        message_sender=MagicMock(),
+        broadcast_service=None,
+        map_manager=mock_map_manager,
+    )
+
+    await clan_service.clan_repo.initialize()
+
+    # Create clan with members
+    clan, _ = await clan_service.create_clan(user_id=1, clan_name="TestClan", username="Sender")
+    clan.add_member(ClanMember(user_id=2, username="Member1", level=15, rank=ClanRank.MEMBER))
+    clan.add_member(ClanMember(user_id=3, username="Member2", level=15, rank=ClanRank.MEMBER))
+    await clan_service.clan_repo.save_clan(clan)
+
+    # Send message
+    error_msg = await clan_service.send_clan_message(sender_id=1, message="Hello clan!")
+
+    assert error_msg == ""
+
+    # Verify all members received the message (including sender)
+    assert sender_sender.send_console_msg.call_count == 1
+    assert member1_sender.send_console_msg.call_count == 1
+    assert member2_sender.send_console_msg.call_count == 1
+
+    # Verify message format
+    call_args = member1_sender.send_console_msg.call_args
+    assert "[Clan]" in call_args[0][0]
+    assert "Sender" in call_args[0][0]
+    assert "Hello clan!" in call_args[0][0]
+    assert call_args[1]["font_color"] == 7
+
+
+@pytest.mark.asyncio
+async def test_send_clan_message_not_in_clan(clan_service: ClanService):
+    """Test sending clan message when not in a clan."""
+    await clan_service.clan_repo.initialize()
+
+    error_msg = await clan_service.send_clan_message(sender_id=1, message="Hello!")
+
+    assert error_msg != ""
+    assert "perteneces" in error_msg.lower()

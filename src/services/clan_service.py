@@ -337,6 +337,33 @@ class ClanService:
         # Delete invitation
         await self.clan_repo.delete_invitation(user_id)
 
+        # Notify the new member
+        new_member_sender = self._get_player_message_sender(user_id)
+        if new_member_sender:
+            await new_member_sender.send_console_msg(
+                f"Te has unido al clan '{clan.name}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (se unió al clan)", user_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", user_id)
+
+        # Notify all clan members about the new member
+        new_member_username = invitation.target_username
+        for member_id in clan.members:
+            if member_id != user_id:  # Don't notify the new member again
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{new_member_username} se ha unido al clan '{clan.name}'",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro del clan)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
+
         logger.info("User %s joined clan %s", user_id, clan.name)
 
         return clan, f"Te has unido al clan '{clan.name}'"
@@ -572,6 +599,43 @@ class ClanService:
             ClanRank.LEADER: "Líder",
         }
 
+        # Notify the promoted member
+        promoted_sender = self._get_player_message_sender(target_id)
+        if promoted_sender:
+            await promoted_sender.send_console_msg(
+                f"Has sido promovido a {rank_names[new_rank]} en el clan '{clan.name}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (promovido)", target_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", target_id)
+
+        # Notify the promoter
+        promoter_sender = self._get_player_message_sender(promoter_id)
+        if promoter_sender:
+            await promoter_sender.send_console_msg(
+                f"Has promovido a '{target_username}' a {rank_names[new_rank]}",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (promotor)", promoter_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", promoter_id)
+
+        # Notify all other clan members
+        for member_id in clan.members:
+            if member_id not in {promoter_id, target_id}:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{target_username} ha sido promovido a {rank_names[new_rank]} en el clan '{clan.name}'",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro del clan)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
+
         logger.info(
             "User %s promoted %s to %s in clan %s",
             promoter_id,
@@ -636,6 +700,43 @@ class ClanService:
             ClanRank.LEADER: "Líder",
         }
 
+        # Notify the demoted member
+        demoted_sender = self._get_player_message_sender(target_id)
+        if demoted_sender:
+            await demoted_sender.send_console_msg(
+                f"Has sido degradado a {rank_names[new_rank]} en el clan '{clan.name}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (degradado)", target_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", target_id)
+
+        # Notify the demoter
+        demoter_sender = self._get_player_message_sender(demoter_id)
+        if demoter_sender:
+            await demoter_sender.send_console_msg(
+                f"Has degradado a '{target_username}' a {rank_names[new_rank]}",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (degradador)", demoter_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", demoter_id)
+
+        # Notify all other clan members
+        for member_id in clan.members:
+            if member_id not in {demoter_id, target_id}:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{target_username} ha sido degradado a {rank_names[new_rank]} en el clan '{clan.name}'",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro del clan)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
+
         logger.info(
             "User %s demoted %s to %s in clan %s", demoter_id, target_username, new_rank, clan.name
         )
@@ -675,12 +776,54 @@ class ClanService:
         if new_leader_id == leader_id:
             return False, "Ya eres el líder del clan"
 
+        # Get old and new leader usernames before transfer
+        old_leader_username = leader_member.username
+        new_leader_member = clan.get_member(new_leader_id)
+        new_leader_username = new_leader_member.username if new_leader_member else new_leader_username
+
         # Transfer leadership
         if not clan.transfer_leadership(new_leader_id):
             return False, "Error al transferir el liderazgo"
 
         # Save clan
         await self.clan_repo.save_clan(clan)
+
+        # Notify the old leader
+        old_leader_sender = self._get_player_message_sender(leader_id)
+        if old_leader_sender:
+            await old_leader_sender.send_console_msg(
+                f"Has transferido el liderazgo del clan '{clan.name}' a '{new_leader_username}'",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (líder anterior)", leader_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", leader_id)
+
+        # Notify the new leader
+        new_leader_sender = self._get_player_message_sender(new_leader_id)
+        if new_leader_sender:
+            await new_leader_sender.send_console_msg(
+                f"¡Has sido nombrado líder del clan '{clan.name}'!",
+                font_color=7,  # FONTTYPE_PARTY
+            )
+            logger.debug("Notificación enviada a user_id %s (nuevo líder)", new_leader_id)
+        else:
+            logger.debug("No se pudo enviar notificación a user_id %s (no conectado)", new_leader_id)
+
+        # Notify all other clan members
+        for member_id in clan.members:
+            if member_id not in {leader_id, new_leader_id}:
+                member_sender = self._get_player_message_sender(member_id)
+                if member_sender:
+                    await member_sender.send_console_msg(
+                        f"{old_leader_username} ha transferido el liderazgo del clan '{clan.name}' a {new_leader_username}",
+                        font_color=7,  # FONTTYPE_PARTY
+                    )
+                    logger.debug("Notificación enviada a user_id %s (miembro del clan)", member_id)
+                else:
+                    logger.debug(
+                        "No se pudo enviar notificación a user_id %s (no conectado)", member_id
+                    )
 
         logger.info(
             "Leadership of clan %s transferred from %s to %s", clan.name, leader_id, new_leader_id
