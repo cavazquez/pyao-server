@@ -10,6 +10,7 @@ from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_npc_poison import NPCPoisonEffect
 from src.effects.effect_poison import PoisonEffect
 from src.effects.effect_stamina_regen import StaminaRegenEffect
+from src.effects.effect_summon_expiry import SummonExpiryEffect
 from src.effects.meditation_effect import MeditationEffect
 from src.effects.npc_ai_effect import NPCAIEffect
 from src.game.game_tick import GameTick
@@ -124,3 +125,7 @@ class GameTickInitializer:
         # Efecto de limpieza de modificadores de atributos (siempre habilitado)
         game_tick.add_effect(AttributeModifiersEffect(interval_seconds=10.0))
         logger.info("✓ Efecto de limpieza de modificadores de atributos habilitado")
+
+        # Efecto de expiración de invocaciones (siempre habilitado)
+        game_tick.add_effect(SummonExpiryEffect(self.npc_service, interval_seconds=5.0))
+        logger.info("✓ Efecto de expiración de invocaciones habilitado")

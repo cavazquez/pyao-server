@@ -5,7 +5,10 @@ from __future__ import annotations
 import logging
 import random
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from src.game.map_manager import MAX_COORDINATE
+from src.services.npc.summon_service import MAX_MASCOTAS
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -16,6 +19,8 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.npc_death_service import NPCDeathService
+    from src.services.npc.npc_service import NPCService
+    from src.services.npc.summon_service import SummonService
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +66,11 @@ AGILITY_DEBUFF_DURATION_SECONDS = 700.0
 MIN_ATTRIBUTE_MODIFIER = 2
 MAX_ATTRIBUTE_MODIFIER = 5
 
+# Duración de invocación (en segundos)
+# En VB6 es configurable desde Server.ini (IntervaloInvocacion)
+# Valor por defecto: 5 minutos (300 segundos)
+SUMMON_DURATION_SECONDS = 300.0
+
 
 class SpellService:
     """Servicio para gestionar la lógica de hechizos."""
@@ -74,6 +84,8 @@ class SpellService:
         npc_death_service: NPCDeathService | None = None,
         account_repo: AccountRepository | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
+        npc_service: NPCService | None = None,
+        summon_service: SummonService | None = None,
     ) -> None:
         """Inicializa el servicio de hechizos.
 
@@ -85,6 +97,8 @@ class SpellService:
             npc_death_service: Servicio de muerte de NPCs (opcional).
             account_repo: Repositorio de cuentas (opcional, necesario para invisibilidad).
             broadcast_service: Servicio de broadcast (opcional, necesario para invisibilidad).
+            npc_service: Servicio de NPCs (opcional, necesario para invocación).
+            summon_service: Servicio de invocación (opcional, necesario para invocación).
         """
         self.spell_catalog = spell_catalog
         self.player_repo = player_repo
@@ -93,6 +107,8 @@ class SpellService:
         self.npc_death_service = npc_death_service
         self.account_repo = account_repo
         self.broadcast_service = broadcast_service
+        self.npc_service = npc_service
+        self.summon_service = summon_service
 
     async def cast_spell(  # noqa: PLR0914, PLR0915
         self,
@@ -275,6 +291,12 @@ class SpellService:
             # No hay target válido para resucitar
             await message_sender.send_console_msg("No hay objetivo válido para resucitar.")
             return False
+
+        # Procesar hechizos de invocación (debe hacerse antes de otros efectos)
+        if spell_data.get("invokes", False):
+            return await self._handle_summon_spell(
+                user_id, spell_id, spell_data, target_x, target_y, message_sender
+            )
 
         # Obtener tipo del hechizo para usar en efectos
         spell_type = spell_data.get("type", SPELL_TYPE_DAMAGE)
@@ -882,3 +904,194 @@ class SpellService:
             )
 
         return True
+
+    async def _handle_summon_spell(
+        self,
+        user_id: int,
+        spell_id: int,
+        spell_data: dict[str, Any],
+        target_x: int,
+        target_y: int,
+        message_sender: MessageSender,
+    ) -> bool:
+        """Maneja la lógica de invocación de hechizos.
+
+        Args:
+            user_id: ID del usuario que lanza el hechizo.
+            spell_id: ID del hechizo.
+            spell_data: Datos del hechizo.
+            target_x: Coordenada X objetivo.
+            target_y: Coordenada Y objetivo.
+            message_sender: Enviador de mensajes.
+
+        Returns:
+            True si la invocación fue exitosa, False en caso contrario.
+        """
+        if not self.npc_service or not self.summon_service:
+            await message_sender.send_console_msg("El sistema de invocación no está disponible.")
+            return False
+
+        # Obtener posición del jugador para invocar cerca
+        player_position = await self.player_repo.get_position(user_id)
+        if not player_position:
+            await message_sender.send_console_msg("No se pudo obtener tu posición.")
+            return False
+
+        map_id = player_position["map"]
+        invoke_npc_id = spell_data.get("invoke_npc_id", 0)
+        invoke_count = spell_data.get("invoke_count", 1)
+
+        if invoke_npc_id <= 0:
+            await message_sender.send_console_msg("Hechizo de invocación inválido.")
+            logger.warning("Hechizo de invocación sin invoke_npc_id: spell_id=%d", spell_id)
+            return False
+
+        # Validar límite de mascotas
+        can_summon, error_msg = await self.summon_service.can_summon(user_id, invoke_count)
+        if not can_summon:
+            await message_sender.send_console_msg(error_msg)
+            return False
+
+        # Encontrar posiciones libres para invocar
+        spawn_positions = self._find_spawn_positions(map_id, target_x, target_y, invoke_count)
+        if len(spawn_positions) < invoke_count:
+            await message_sender.send_console_msg(
+                f"No hay suficiente espacio libre para invocar {invoke_count} criatura(s)."
+            )
+            return False
+
+        # Invocar cada NPC
+        summoned_count = await self._spawn_summoned_npcs(
+            user_id, map_id, invoke_npc_id, spawn_positions[:invoke_count]
+        )
+
+        if summoned_count > 0:
+            caster_msg = spell_data.get("caster_msg", "Has invocado")
+            await message_sender.send_console_msg(f"{caster_msg} {summoned_count} criatura(s).")
+            return True
+
+        await message_sender.send_console_msg("No se pudo invocar ninguna criatura.")
+        return False
+
+    def _find_spawn_positions(
+        self, map_id: int, center_x: int, center_y: int, count: int
+    ) -> list[tuple[int, int]]:
+        """Encuentra posiciones libres para invocar NPCs en espiral.
+
+        Args:
+            map_id: ID del mapa.
+            center_x: Coordenada X central.
+            center_y: Coordenada Y central.
+            count: Número de posiciones necesarias.
+
+        Returns:
+            Lista de tuplas (x, y) con posiciones libres.
+        """
+        spawn_positions: list[tuple[int, int]] = []
+
+        # Buscar posiciones libres en espiral (radio 1-3)
+        for radius in range(1, 4):
+            for dx in range(-radius, radius + 1):
+                for dy in range(-radius, radius + 1):
+                    # Solo verificar el borde del radio actual
+                    if radius > 1 and abs(dx) != radius and abs(dy) != radius:
+                        continue
+
+                    test_x = center_x + dx
+                    test_y = center_y + dy
+
+                    # Verificar límites del mapa
+                    if (
+                        test_x < 1
+                        or test_x > MAX_COORDINATE
+                        or test_y < 1
+                        or test_y > MAX_COORDINATE
+                    ):
+                        continue
+
+                    # Verificar que esté libre
+                    if self.map_manager.can_move_to(map_id, test_x, test_y):
+                        spawn_positions.append((test_x, test_y))
+                        if len(spawn_positions) >= count:
+                            return spawn_positions
+        return spawn_positions
+
+    async def _spawn_summoned_npcs(
+        self,
+        user_id: int,
+        map_id: int,
+        invoke_npc_id: int,
+        spawn_positions: list[tuple[int, int]],
+    ) -> int:
+        """Spawnea NPCs invocados en las posiciones dadas.
+
+        Args:
+            user_id: ID del jugador que invoca.
+            map_id: ID del mapa.
+            invoke_npc_id: ID del NPC a invocar.
+            spawn_positions: Lista de posiciones (x, y) para spawnear.
+
+        Returns:
+            Número de NPCs invocados exitosamente.
+        """
+        if not self.npc_service or not self.summon_service:
+            return 0
+
+        summoned_count = 0
+        for spawn_x, spawn_y in spawn_positions:
+            # Verificar límite antes de cada invocación
+            current_pets = await self.summon_service.get_player_pets_count(user_id)
+            if current_pets >= MAX_MASCOTAS:
+                break
+
+            # Spawnear NPC
+            summoned_npc = await self.npc_service.spawn_npc(
+                npc_id=invoke_npc_id,
+                map_id=map_id,
+                x=spawn_x,
+                y=spawn_y,
+                heading=3,  # Sur por defecto
+            )
+
+            if not summoned_npc:
+                logger.error(
+                    "Error al spawnear NPC invocado: npc_id=%d para user_id %d",
+                    invoke_npc_id,
+                    user_id,
+                )
+                continue
+
+            # Configurar campos de invocación
+            summoned_until = time.time() + SUMMON_DURATION_SECONDS
+            await self.npc_repo.update_npc_summoned(
+                summoned_npc.instance_id, user_id, summoned_until
+            )
+            # Actualizar el modelo NPC (ya está en memoria)
+            summoned_npc.summoned_by_user_id = user_id
+            summoned_npc.summoned_until = summoned_until
+
+            # Registrar como mascota
+            registered = await self.summon_service.register_pet(user_id, summoned_npc.instance_id)
+            if not registered:
+                logger.warning(
+                    "No se pudo registrar mascota para user_id %d: instance_id=%s",
+                    user_id,
+                    summoned_npc.instance_id,
+                )
+                # Si no se pudo registrar, eliminar el NPC
+                await self.npc_service.remove_npc(summoned_npc)
+                continue
+
+            summoned_count += 1
+            logger.info(
+                "NPC invocado: %s (npc_id=%d) para user_id %d en (%d,%d) mapa %d (expira en %.1fs)",
+                summoned_npc.name,
+                invoke_npc_id,
+                user_id,
+                spawn_x,
+                spawn_y,
+                map_id,
+                SUMMON_DURATION_SECONDS,
+            )
+
+        return summoned_count

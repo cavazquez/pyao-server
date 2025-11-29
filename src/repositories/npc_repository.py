@@ -53,6 +53,8 @@ class NPCRepository:
         attack_damage: int = 10,
         attack_cooldown: float = 3.0,
         aggro_range: int = 8,
+        summoned_by_user_id: int = 0,
+        summoned_until: float = 0.0,
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -82,6 +84,8 @@ class NPCRepository:
             attack_damage: Daño base del NPC.
             attack_cooldown: Segundos entre ataques.
             aggro_range: Rango de detección/agresión en tiles.
+            summoned_by_user_id: ID del jugador que invocó al NPC (0 = no invocado).
+            summoned_until: Timestamp hasta cuando existe (0 = permanente/no invocado).
 
         Returns:
             Instancia de NPC creada.
@@ -115,6 +119,8 @@ class NPCRepository:
             attack_damage=attack_damage,
             attack_cooldown=attack_cooldown,
             aggro_range=aggro_range,
+            summoned_by_user_id=summoned_by_user_id,
+            summoned_until=summoned_until,
         )
 
         # Guardar en Redis
@@ -149,6 +155,8 @@ class NPCRepository:
             "paralyzed_until": "0.0",
             "poisoned_until": "0.0",
             "poisoned_by_user_id": "0",
+            "summoned_by_user_id": str(summoned_by_user_id),
+            "summoned_until": str(summoned_until),
         }
 
         await self.redis.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
@@ -214,6 +222,8 @@ class NPCRepository:
             paralyzed_until=float(result.get("paralyzed_until", "0.0")),
             poisoned_until=float(result.get("poisoned_until", "0.0")),
             poisoned_by_user_id=int(result.get("poisoned_by_user_id", "0")),
+            summoned_by_user_id=int(result.get("summoned_by_user_id", "0")),
+            summoned_until=float(result.get("summoned_until", "0.0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
@@ -322,6 +332,31 @@ class NPCRepository:
             instance_id,
             poisoned_until,
             poisoned_by_user_id,
+        )
+
+    async def update_npc_summoned(
+        self, instance_id: str, summoned_by_user_id: int, summoned_until: float
+    ) -> None:
+        """Actualiza los campos de invocación de un NPC.
+
+        Args:
+            instance_id: ID único de la instancia del NPC.
+            summoned_by_user_id: ID del jugador que invocó al NPC (0 = no invocado).
+            summoned_until: Timestamp hasta cuando existe (0.0 = permanente/no invocado).
+        """
+        key = RedisKeys.npc_instance(instance_id)
+        await self.redis.redis.hset(  # type: ignore[misc]
+            key,
+            mapping={
+                "summoned_by_user_id": str(summoned_by_user_id),
+                "summoned_until": str(summoned_until),
+            },
+        )
+        logger.debug(
+            "Campos de invocación actualizados para NPC %s: owner=%d, hasta %.2f",
+            instance_id,
+            summoned_by_user_id,
+            summoned_until,
         )
 
     async def remove_npc(self, instance_id: str) -> None:

@@ -61,3 +61,7 @@ class NPC:
     paralyzed_until: float = 0.0  # Timestamp hasta cuando está paralizado (0 = no paralizado)
     poisoned_until: float = 0.0  # Timestamp hasta cuando está envenenado (0 = no envenenado)
     poisoned_by_user_id: int = 0  # ID del jugador que envenenó al NPC (0 = sistema/desconocido)
+
+    # Campos para invocación de mascotas
+    summoned_by_user_id: int = 0  # ID del jugador que invocó al NPC (0 = no invocado)
+    summoned_until: float = 0.0  # Timestamp hasta cuando existe (0 = permanente/no invocado)

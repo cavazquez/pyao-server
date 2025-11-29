@@ -22,6 +22,7 @@ from src.services.npc.npc_ai_service import NPCAIService
 from src.services.npc.npc_death_service import NPCDeathService
 from src.services.npc.npc_respawn_service import NPCRespawnService
 from src.services.npc.npc_service import NPCService
+from src.services.npc.summon_service import SummonService
 from src.services.party_service import PartyService
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
@@ -136,6 +137,13 @@ class ServiceInitializer:
         )
         logger.info("✓ Sistema de muerte de NPCs inicializado (con distribución de exp a party)")
 
+        # Servicio de invocación (mascotas)
+        summon_service = SummonService(
+            self.repositories["npc_repo"],
+            self.repositories["player_repo"],
+        )
+        logger.info("✓ Servicio de invocación (mascotas) inicializado")
+
         # Servicio de magia
         spell_service = SpellService(
             spell_catalog,
@@ -145,8 +153,12 @@ class ServiceInitializer:
             npc_death_service,  # Usar NPCDeathService centralizado
             account_repo=self.repositories["account_repo"],  # Para invisibilidad
             broadcast_service=broadcast_service,  # Para invisibilidad
+            npc_service=npc_service,  # Para invocación
+            summon_service=summon_service,  # Para invocación
         )
-        logger.info("✓ Sistema de magia inicializado (con NPCDeathService e invisibilidad)")
+        logger.info(
+            "✓ Sistema de magia inicializado (con NPCDeathService, invisibilidad e invocación)"
+        )
 
         # Servicio de comercio
         commerce_service = CommerceService(
@@ -209,6 +221,7 @@ class ServiceInitializer:
             "npc_world_manager": npc_world_manager,
             "npc_death_service": npc_death_service,
             "loot_table_service": loot_table_service,
+            "summon_service": summon_service,
             "spell_service": spell_service,
             "commerce_service": commerce_service,
             "combat_service": combat_service,
