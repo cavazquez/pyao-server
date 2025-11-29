@@ -337,7 +337,10 @@ class LoginCommandHandler(CommandHandler):
             return
 
         # Inicializar libro de hechizos con hechizos por defecto si es necesario
-        await self.spellbook_repo.initialize_default_spells(user_id)
+        # Pasar spell_catalog para agregar TODOS los hechizos disponibles
+        await self.spellbook_repo.initialize_default_spells(
+            user_id, spell_catalog=self.spell_catalog
+        )
 
         # Cargar y enviar todos los hechizos del jugador
         logger.info("Cargando libro de hechizos para user_id %d desde Redis", user_id)

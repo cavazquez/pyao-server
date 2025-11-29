@@ -8,6 +8,7 @@ from src.utils.redis_config import RedisKeys
 from src.utils.redis_decorators import require_redis
 
 if TYPE_CHECKING:
+    from src.models.spell_catalog import SpellCatalog
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
@@ -253,13 +254,18 @@ class SpellbookRepository:
         else:
             return True
 
-    async def initialize_default_spells(self, user_id: int) -> bool:
+    async def initialize_default_spells(
+        self, user_id: int, spell_catalog: SpellCatalog | None = None
+    ) -> bool:
         """Inicializa el libro de hechizos con hechizos por defecto.
 
-        Por ahora, solo agrega el Dardo Mágico (spell_id=1) en el slot 1.
+        Si se proporciona spell_catalog, agrega TODOS los hechizos disponibles del catálogo.
+        Si no se proporciona, agrega solo el Dardo Mágico (spell_id=1) en el slot 1.
 
         Args:
             user_id: ID del usuario.
+            spell_catalog: Catálogo de hechizos (opcional).
+                Si se proporciona, agrega todos los hechizos.
 
         Returns:
             True si se inicializó correctamente, False en caso contrario.
@@ -271,19 +277,70 @@ class SpellbookRepository:
                 logger.debug("user_id %d ya tiene hechizos en Redis, no se inicializa", user_id)
                 return True
 
-            # Agregar Dardo Mágico en slot 1
             logger.info("Inicializando libro de hechizos por defecto para user_id %d", user_id)
+
+            # Si se proporciona el catálogo, agregar TODOS los hechizos
+            if spell_catalog:
+                all_spell_ids = spell_catalog.get_all_spell_ids()
+                if all_spell_ids:
+                    spells_added = 0
+                    # Hay 25 slots disponibles (1-25)
+                    max_slots = 25
+                    if len(all_spell_ids) > max_slots:
+                        logger.warning(
+                            "Solo se pueden agregar 25 hechizos. "
+                            "%d hechizos disponibles en catálogo",
+                            len(all_spell_ids),
+                        )
+                    for slot, spell_id in enumerate(sorted(all_spell_ids)[:max_slots], start=1):
+                        success = await self.add_spell(user_id, slot=slot, spell_id=spell_id)
+                        if success:
+                            spells_added += 1
+                            spell_data = spell_catalog.get_spell_data(spell_id)
+                            spell_name = (
+                                spell_data.get("name", f"Spell {spell_id}")
+                                if spell_data
+                                else f"Spell {spell_id}"
+                            )
+                            logger.debug(
+                                "✓ Hechizo agregado: user_id %d recibió '%s' (ID:%d) en slot %d",
+                                user_id,
+                                spell_name,
+                                spell_id,
+                                slot,
+                            )
+
+                    logger.info(
+                        "✓ Libro de hechizos inicializado: user_id %d recibió %d hechizo(s) "
+                        "del catálogo",
+                        user_id,
+                        spells_added,
+                    )
+                    return spells_added > 0
+                logger.warning(
+                    "Catálogo de hechizos está vacío, agregando Dardo Mágico por defecto"
+                )
+                # Fallback: agregar Antídoto Mágico si el catálogo está vacío
+                success = await self.add_spell(user_id, slot=1, spell_id=1)
+                if success:
+                    logger.info(
+                        "✓ Libro de hechizos inicializado: user_id %d recibió "
+                        "'Antídoto Mágico' en slot 1",
+                        user_id,
+                    )
+                return success
+            # Comportamiento anterior: solo agregar Antídoto Mágico (ID: 1)
             success = await self.add_spell(user_id, slot=1, spell_id=1)
             if success:
                 logger.info(
-                    "✓ Libro de hechizos inicializado: user_id %d recibió 'Dardo Mágico' en slot 1",
+                    "✓ Libro de hechizos inicializado: user_id %d recibió "
+                    "'Antídoto Mágico' en slot 1",
                     user_id,
                 )
+            return success  # noqa: TRY300
         except Exception:
             logger.exception("Error al inicializar libro de hechizos")
             return False
-        else:
-            return success
 
     async def get_spellbook_for_client(self, user_id: int) -> list[dict[str, Any]]:
         """Obtiene el libro de hechizos formateado para enviar al cliente.

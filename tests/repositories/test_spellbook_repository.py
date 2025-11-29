@@ -210,7 +210,7 @@ class TestSpellbookRepository:
 
         assert result is True
 
-        # Verificar que tiene Dardo Mágico en slot 1
+        # Verificar que tiene Antídoto Mágico (ID: 1) en slot 1 (fallback cuando no hay catálogo)
         spell_id = await repo.get_spell_in_slot(1, 1)
         assert spell_id == 1
 
@@ -233,6 +233,54 @@ class TestSpellbookRepository:
         # Verificar que el hechizo original sigue ahí
         spell_id = await repo.get_spell_in_slot(1, 2)
         assert spell_id == 99
+
+    async def test_initialize_default_spells_with_catalog(self, redis_client: RedisClient) -> None:
+        """Test de inicializar hechizos con catálogo completo."""
+        repo = SpellbookRepository(redis_client)
+
+        # Crear mock de SpellCatalog con múltiples hechizos
+        mock_catalog = MagicMock()
+        mock_catalog.get_all_spell_ids.return_value = [1, 2, 3, 4, 5]
+        mock_catalog.get_spell_data.side_effect = lambda spell_id: {
+            "name": f"Spell {spell_id}",
+            "mana_cost": 10,
+        }
+
+        # Inicializar con catálogo
+        result = await repo.initialize_default_spells(1, spell_catalog=mock_catalog)
+
+        assert result is True
+
+        # Verificar que se agregaron todos los hechizos
+        all_spells = await repo.get_all_spells(1)
+        assert len(all_spells) == 5
+
+        # Verificar que están en los slots correctos
+        assert all_spells[1] == 1  # Slot 1
+        assert all_spells[2] == 2  # Slot 2
+        assert all_spells[3] == 3  # Slot 3
+        assert all_spells[4] == 4  # Slot 4
+        assert all_spells[5] == 5  # Slot 5
+
+    async def test_initialize_default_spells_with_empty_catalog(
+        self, redis_client: RedisClient
+    ) -> None:
+        """Test de inicializar hechizos con catálogo vacío (fallback a Antídoto Mágico/ID 1)."""
+        repo = SpellbookRepository(redis_client)
+
+        # Crear mock de SpellCatalog vacío
+        mock_catalog = MagicMock()
+        mock_catalog.get_all_spell_ids.return_value = []
+
+        # Inicializar con catálogo vacío
+        result = await repo.initialize_default_spells(1, spell_catalog=mock_catalog)
+
+        assert result is True
+
+        # Verificar que se agregó Dardo Mágico como fallback
+        all_spells = await repo.get_all_spells(1)
+        assert len(all_spells) == 1
+        assert all_spells[1] == 1  # Dardo Mágico en slot 1
 
     async def test_get_spellbook_for_client_empty(self, redis_client: RedisClient) -> None:
         """Test de obtener libro para cliente cuando está vacío."""

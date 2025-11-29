@@ -12,7 +12,7 @@ from src.services.clan_service import ClanService
 class _DummyMapManager:
     """Dummy MapManager for testing."""
 
-    def __init__(self, mock_senders: dict[int, MagicMock] | None = None):
+    def __init__(self, mock_senders: dict[int, MagicMock] | None = None) -> None:
         """Initialize with optional mock message senders."""
         self.mock_senders = mock_senders or {}
 
@@ -443,16 +443,13 @@ async def test_transfer_leadership_not_leader(clan_service: ClanService):
 @pytest.mark.asyncio
 async def test_accept_invitation_notifies_members(redis_client, mock_player_repo):
     """Test that accepting invitation notifies all clan members."""
-
     # Create mock message senders
     leader_sender = MagicMock()
     leader_sender.send_console_msg = AsyncMock()
     new_member_sender = MagicMock()
     new_member_sender.send_console_msg = AsyncMock()
 
-    mock_map_manager = _DummyMapManager(
-        mock_senders={1: leader_sender, 2: new_member_sender}
-    )
+    mock_map_manager = _DummyMapManager(mock_senders={1: leader_sender, 2: new_member_sender})
 
     clan_service = ClanService(
         clan_repository=ClanRepository(redis_client),
@@ -491,7 +488,6 @@ async def test_accept_invitation_notifies_members(redis_client, mock_player_repo
 @pytest.mark.asyncio
 async def test_promote_member_notifies_all(redis_client, mock_player_repo):
     """Test that promoting a member notifies all clan members."""
-
     # Create mock message senders
     promoter_sender = MagicMock()
     promoter_sender.send_console_msg = AsyncMock()
@@ -547,7 +543,6 @@ async def test_promote_member_notifies_all(redis_client, mock_player_repo):
 @pytest.mark.asyncio
 async def test_transfer_leadership_notifies_all(redis_client, mock_player_repo):
     """Test that transferring leadership notifies all clan members."""
-
     # Create mock message senders
     old_leader_sender = MagicMock()
     old_leader_sender.send_console_msg = AsyncMock()
@@ -577,9 +572,7 @@ async def test_transfer_leadership_notifies_all(redis_client, mock_player_repo):
     await clan_service.clan_repo.save_clan(clan)
 
     # Transfer leadership
-    success, _ = await clan_service.transfer_leadership(
-        leader_id=1, new_leader_username="Member"
-    )
+    success, _ = await clan_service.transfer_leadership(leader_id=1, new_leader_username="Member")
 
     assert success
 
@@ -605,7 +598,6 @@ async def test_transfer_leadership_notifies_all(redis_client, mock_player_repo):
 @pytest.mark.asyncio
 async def test_send_clan_message(redis_client, mock_player_repo):
     """Test sending a message to all clan members."""
-
     # Create mock message senders
     sender_sender = MagicMock()
     sender_sender.send_console_msg = AsyncMock()
@@ -637,7 +629,7 @@ async def test_send_clan_message(redis_client, mock_player_repo):
     # Send message
     error_msg = await clan_service.send_clan_message(sender_id=1, message="Hello clan!")
 
-    assert error_msg == ""
+    assert not error_msg
 
     # Verify all members received the message (including sender)
     assert sender_sender.send_console_msg.call_count == 1
@@ -659,5 +651,5 @@ async def test_send_clan_message_not_in_clan(clan_service: ClanService):
 
     error_msg = await clan_service.send_clan_message(sender_id=1, message="Hello!")
 
-    assert error_msg != ""
+    assert error_msg
     assert "perteneces" in error_msg.lower()

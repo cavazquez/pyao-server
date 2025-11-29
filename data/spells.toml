@@ -1,21 +1,209 @@
 # Catálogo de Hechizos de Argentum Online
 # Basado en Hechizos.dat del servidor original
+#
+# Nota: Este archivo contiene los hechizos básicos esenciales para empezar a jugar.
+# Los hechizos restantes se pueden agregar en el futuro.
 
 [[spell]]
 id = 1
+name = "Antídoto Mágico"
+description = "Con este conjuro podrás mutar los fluidos tóxicos de tu cuerpo para detener su vil accionar, contrarrestando los efectos nocivos de todo tipo de ponzoñas y venenos."
+magic_words = "NIHIL VED"
+type = 2  # Tipo 2: Estados
+target = 1  # Target 1: Usuario
+mana_cost = 12
+stamina_cost = 1
+min_skill = 10
+min_damage = 0
+max_damage = 0
+wav = 16  # ID del sonido
+fx_grh = 2  # ID del gráfico de efecto
+loops = 2
+caster_msg = "Le has detenido el envenenamiento a "
+self_msg = "Te has detenido el envenenamiento."
+target_msg = "te ha detenido el envenenamiento."
+
+[[spell]]
+id = 2
 name = "Dardo Mágico"
-description = "Lanza un proyectil mágico que causa daño al objetivo"
-magic_words = "SAGITTA"
-type = 1  # Tipo 1: Actúa sobre HP, MANA, STA
+description = "Éste es uno de los más elementales y sencillos hechizos de ataque que podrás aprender. No causa un gran daño a la víctima, pero al consumir muy pocos recursos, resulta una herramienta muy útil para el entrenamiento de los jóvenes hechiceros."
+magic_words = "OHL VOR PEK"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
 target = 3  # Target 3: Usuario Y NPC
-mana_cost = 5
-stamina_cost = 0
-min_skill = 1
-min_damage = 5
-max_damage = 15
-wav = 10  # ID del sonido
-fx_grh = 5  # ID del gráfico de efecto
-loops = 1
-caster_msg = "Has lanzado Dardo Mágico sobre "
-self_msg = "Te has lanzado Dardo Mágico."
-target_msg = " te ha lanzado Dardo Mágico."
+mana_cost = 10
+stamina_cost = 1
+min_skill = 6
+min_damage = 2
+max_damage = 5
+wav = 114  # ID del sonido
+fx_grh = 15  # ID del gráfico de efecto
+loops = 2
+caster_msg = "Has lanzado un dardo mágico sobre"
+target_msg = "ha lanzado un dardo mágico sobre ti."
+
+[[spell]]
+id = 3
+name = "Curar Heridas Leves"
+description = "Con este sencillo conjuro podrás efectuar la sanación inmediata de pequeñas heridas y devolver lentamente la salud a quien se lo lances. Suele ser de gran utilidad para los jóvenes aprendices de magia."
+magic_words = "CORP SANC"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 10
+stamina_cost = 1
+min_skill = 15
+min_damage = 1
+max_damage = 5
+wav = 17  # ID del sonido
+fx_grh = 0  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Le has curado algunas pequeñas heridas a "
+target_msg = "te ha curado algunas pequeñas heridas."
+self_msg = "Te has curado algunas pequeñas heridas."
+
+[[spell]]
+id = 4
+name = "Toxina"
+description = "Con este hechizo de aprendizaje simple y veloz, podrás inundar el cuerpo de la víctima de un mortal veneno, con el que lentamente irá perdiendo la vida hasta sucumbir."
+magic_words = "SERP XON IN"
+type = 2  # Tipo 2: Estados
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 24
+stamina_cost = 3
+min_skill = 20
+min_damage = 0
+max_damage = 0
+wav = 16  # ID del sonido
+fx_grh = 3  # ID del gráfico de efecto
+loops = 2
+caster_msg = "Has envenenado a"
+target_msg = "te ha envenenado."
+self_msg = "Te has envenenado."
+
+[[spell]]
+id = 5
+name = "Curar Heridas Graves"
+description = "Con esta milagrosa sanación para las heridas más profundas y dolorosas, podrás rápidamente devolver la salud a quienes agonizan. Se trata de un conjuro de una complejidad intermedia."
+magic_words = "EN CORP SANCTIS"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 40
+stamina_cost = 5
+min_skill = 38
+min_damage = 12
+max_damage = 35
+wav = 18  # ID del sonido
+fx_grh = 9  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Le has sanado graves heridas a "
+target_msg = "te ha sanado graves heridas."
+self_msg = "Te has sanado graves heridas."
+
+[[spell]]
+id = 6
+name = "Flecha Mágica"
+description = "Con este sortilegio lograrás que una inmaterial flecha impacte en la víctima produciéndole heridas de mediana gravedad. Su aprendizaje es medianamente fácil."
+magic_words = "VAX PER"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 20
+stamina_cost = 2
+min_skill = 12
+min_damage = 6
+max_damage = 12
+wav = 19  # ID del sonido
+fx_grh = 33  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Has lanzado una flecha mágica sobre "
+target_msg = "ha lanzado una flecha mágica sobre ti."
+
+[[spell]]
+id = 7
+name = "Flecha Eléctrica"
+description = "Éste es un interesante hechizo que te permitirá canalizar las energías eléctricas del mundo en ataques direccionados a un determinado objetivo."
+magic_words = "SUN VAP"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 40
+stamina_cost = 5
+min_skill = 22
+min_damage = 12
+max_damage = 20
+wav = 19  # ID del sonido
+fx_grh = 32  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Has lanzado una flecha eléctrica sobre "
+target_msg = "ha lanzado una flecha eléctrica sobre ti."
+
+[[spell]]
+id = 8
+name = "Proyectil Mágico"
+description = "Este rentable hechizo de ataque resulta el ideal para los niveles intermedios, pues les permitirá un gran poder de ataque que facilitará entrenar velozmente."
+magic_words = "VAX IN TAR"
+type = 1  # Tipo 1: Actúa sobre HP/MANA/STA
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 45
+stamina_cost = 6
+min_skill = 38
+min_damage = 30
+max_damage = 35
+wav = 111  # ID del sonido
+fx_grh = 10  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Has lanzado un proyectil mágico sobre "
+target_msg = "ha lanzado un proyectil mágico sobre ti."
+
+[[spell]]
+id = 9
+name = "Paralizar"
+description = "Con este arcano encantamiento podrás dejar completamente petrificado a la víctima durante un determinado lapso de tiempo. Se trata de uno de los hechizos más utilizado en estas tierras."
+magic_words = "HOAX VORP"
+type = 2  # Tipo 2: Estados
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 450
+stamina_cost = 65
+min_skill = 60
+min_damage = 0
+max_damage = 0
+wav = 16  # ID del sonido
+fx_grh = 8  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Has paralizado a "
+target_msg = "te ha paralizado."
+self_msg = "Te has paralizado."
+
+[[spell]]
+id = 10
+name = "Devolver Movilidad"
+description = "Conjuro con el cual podrás contrarrestar los efectos tanto de la parálisis como de la inmovilización. Este conjuro se vuelve prácticamente vital para cualquier valiente que está dispuesto a combatir."
+magic_words = "AN HOAX VORP"
+type = 2  # Tipo 2: Estados
+target = 3  # Target 3: Usuario Y NPC
+mana_cost = 300
+stamina_cost = 44
+min_skill = 45
+min_damage = 0
+max_damage = 0
+wav = 110  # ID del sonido
+fx_grh = 0  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Le has devuelto la movilidad a "
+target_msg = "te ha devuelto la movilidad."
+self_msg = "Te has devuelto la movilidad."
+
+[[spell]]
+id = 11
+name = "Resucitar"
+description = "Encanto sagrado que te permitirá devolver la vida a los difuntos. Esta increíble habilidad fue enseñada personalmente por el mismo Gulfas Morgolock. Su aprendizaje no es fácil y su utilización resulta muy desgastante."
+magic_words = "AHIL KNÄ XÄR"
+type = 2  # Tipo 2: Estados
+target = 1  # Target 1: Usuario
+mana_cost = 550
+stamina_cost = 400
+min_skill = 75
+min_damage = 0
+max_damage = 0
+wav = 20  # ID del sonido
+fx_grh = 0  # ID del gráfico de efecto
+loops = 0
+caster_msg = "Has resucitado a "
+target_msg = "te ha resucitado."
