@@ -197,22 +197,42 @@ class SpellService:
             # Target es un NPC
             target_name = target_npc.name
 
-            # Calcular daño
+            # Calcular daño o curación
             min_damage = spell_data.get("min_damage", 0)
             max_damage = spell_data.get("max_damage", 0)
-            base_damage = random.randint(min_damage, max_damage)
+            base_amount = random.randint(min_damage, max_damage) if max_damage > 0 else 0
 
             # Bonus por inteligencia (10% por cada 10 puntos)
-            intelligence_bonus = int(base_damage * (stats.get("attr_int", 0) / 100))
-            total_damage = base_damage + intelligence_bonus
+            intelligence_bonus = int(base_amount * (stats.get("attr_int", 0) / 100))
+            total_amount = base_amount + intelligence_bonus
 
-            # Aplicar daño al NPC
-            target_npc.hp = max(0, target_npc.hp - total_damage)
-            npc_died = target_npc.hp <= 0
+            # Si el hechizo cura, aplicar curación
+            if spell_data.get("heals_hp", False):
+                # Curación: aumentar HP sin exceder max_hp
+                old_hp = target_npc.hp
+                target_npc.hp = min(target_npc.hp + total_amount, target_npc.max_hp)
+                healing_amount = target_npc.hp - old_hp
+                npc_died = False
 
-            # Actualizar HP en Redis (si no murió)
-            if not npc_died:
+                # Actualizar HP en Redis
                 await self.npc_repo.update_npc_hp(target_npc.instance_id, target_npc.hp)
+
+                logger.info(
+                    "NPC %s curado por %d HP (HP: %d/%d) con hechizo %s",
+                    target_npc.name,
+                    healing_amount,
+                    target_npc.hp,
+                    target_npc.max_hp,
+                    spell_name,
+                )
+            else:
+                # Daño: reducir HP
+                target_npc.hp = max(0, target_npc.hp - total_amount)
+                npc_died = target_npc.hp <= 0
+
+                # Actualizar HP en Redis (si no murió)
+                if not npc_died:
+                    await self.npc_repo.update_npc_hp(target_npc.instance_id, target_npc.hp)
 
             # Remover estados del NPC ANTES de aplicar nuevos (prioridad a la curación)
             if not npc_died:
@@ -280,17 +300,55 @@ class SpellService:
             # Verificar si es auto-cast
             target_name = "tí mismo" if target_player_id == user_id else target_player_name
 
-            # Calcular daño (si el hechizo hace daño)
+            # Calcular daño o curación
             min_damage = spell_data.get("min_damage", 0)
             max_damage = spell_data.get("max_damage", 0)
-            if min_damage > 0 or max_damage > 0:
-                base_damage = random.randint(min_damage, max_damage)
-                intelligence_bonus = int(base_damage * (stats.get("attr_int", 0) / 100))
-                total_damage = base_damage + intelligence_bonus
+            base_amount = random.randint(min_damage, max_damage) if max_damage > 0 else 0
 
+            # Bonus por inteligencia (10% por cada 10 puntos)
+            intelligence_bonus = int(base_amount * (stats.get("attr_int", 0) / 100))
+            total_amount = base_amount + intelligence_bonus
+
+            # Si el hechizo cura, aplicar curación
+            if spell_data.get("heals_hp", False):
+                current_hp = target_player_stats.get("min_hp", 0)
+                max_hp = target_player_stats.get("max_hp", 100)
+                old_hp = current_hp
+                new_hp = min(current_hp + total_amount, max_hp)
+                healing_amount = new_hp - old_hp
+                target_player_stats["min_hp"] = new_hp
+                await self.player_repo.set_stats(user_id=target_player_id, **target_player_stats)
+
+                # Notificar al jugador objetivo
+                target_message_sender = (
+                    message_sender
+                    if target_player_id == user_id
+                    else self.map_manager.get_player_message_sender(target_player_id)
+                )
+                if target_message_sender:
+                    await target_message_sender.send_update_user_stats(**target_player_stats)
+                    if healing_amount > 0:
+                        if target_player_id == user_id:
+                            await target_message_sender.send_console_msg(
+                                f"Te has curado {healing_amount} HP."
+                            )
+                        else:
+                            await target_message_sender.send_console_msg(
+                                f"Te han curado {healing_amount} HP."
+                            )
+
+                logger.info(
+                    "Jugador user_id %d curado por %d HP (HP: %d/%d) con hechizo %s",
+                    target_player_id,
+                    healing_amount,
+                    new_hp,
+                    max_hp,
+                    spell_name,
+                )
+            elif min_damage > 0 or max_damage > 0:
                 # Aplicar daño al jugador
                 current_hp = target_player_stats.get("min_hp", 0)
-                new_hp = max(0, current_hp - total_damage)
+                new_hp = max(0, current_hp - total_amount)
                 target_player_stats["min_hp"] = new_hp
                 await self.player_repo.set_stats(user_id=target_player_id, **target_player_stats)
 
@@ -302,7 +360,7 @@ class SpellService:
                     if target_message_sender:
                         await target_message_sender.send_update_user_stats(**target_player_stats)
                         await target_message_sender.send_console_msg(
-                            f"{spell_name} te ha causado {total_damage} de daño."
+                            f"{spell_name} te ha causado {total_amount} de daño."
                         )
 
                 # Si el jugador murió
@@ -311,10 +369,8 @@ class SpellService:
                         "Jugador user_id %d murió por hechizo %s (daño: %d)",
                         target_player_id,
                         spell_name,
-                        total_damage,
+                        total_amount,
                     )
-            else:
-                total_damage = 0
 
             # Remover estados ANTES de aplicar nuevos (prioridad a la curación)
             # Curar veneno
@@ -453,10 +509,15 @@ class SpellService:
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")
         if target_npc:
-            total_damage = base_damage + intelligence_bonus
-            await message_sender.send_console_msg(
-                f"{caster_msg}{target_npc.name}. Daño: {total_damage}"
-            )
+            # Determinar si fue curación o daño
+            if spell_data.get("heals_hp", False):
+                # Ya se aplicó la curación, no hay total_damage
+                await message_sender.send_console_msg(f"{caster_msg}{target_npc.name}.")
+            else:
+                # Daño aplicado - usar total_amount que está en scope
+                await message_sender.send_console_msg(
+                    f"{caster_msg}{target_npc.name}. Daño: {total_amount}"
+                )
 
             # Enviar efecto visual (solo al caster por ahora, broadcast lo maneja el death service)
             fx_grh = spell_data.get("fx_grh", 0)
@@ -465,15 +526,25 @@ class SpellService:
                 await message_sender.send_create_fx_at_position(target_x, target_y, fx_grh, loops)
 
             # Log
-            logger.info(
-                "user_id %d lanzó %s sobre NPC %s. Daño: %d (HP restante: %d/%d)",
-                user_id,
-                spell_name,
-                target_npc.name,
-                total_damage,
-                target_npc.hp,
-                target_npc.max_hp,
-            )
+            if spell_data.get("heals_hp", False):
+                logger.info(
+                    "user_id %d lanzó %s sobre NPC %s (HP: %d/%d)",
+                    user_id,
+                    spell_name,
+                    target_npc.name,
+                    target_npc.hp,
+                    target_npc.max_hp,
+                )
+            else:
+                logger.info(
+                    "user_id %d lanzó %s sobre NPC %s. Daño: %d (HP restante: %d/%d)",
+                    user_id,
+                    spell_name,
+                    target_npc.name,
+                    total_amount,
+                    target_npc.hp,
+                    target_npc.max_hp,
+                )
 
             # Si el NPC murió, usar servicio centralizado
             if npc_died and self.npc_death_service:
