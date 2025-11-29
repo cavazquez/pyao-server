@@ -791,7 +791,6 @@ loops = 0
 caster_msg = "Le has quitado su aturdimiento a"
 self_msg = "Te has quitado el aturdimiento."
 target_msg = "te ha quitado el aturdimiento."
-dumbs = true
 removes_stupidity = true
 
 [[spell]]

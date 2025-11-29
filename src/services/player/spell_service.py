@@ -214,6 +214,22 @@ class SpellService:
             if not npc_died:
                 await self.npc_repo.update_npc_hp(target_npc.instance_id, target_npc.hp)
 
+            # Remover estados del NPC ANTES de aplicar nuevos (prioridad a la curación)
+            if not npc_died:
+                # Curar veneno del NPC
+                if spell_data.get("cures_poison", False):
+                    await self.npc_repo.update_npc_poisoned_until(target_npc.instance_id, 0.0)
+                    logger.info(
+                        "Veneno removido de NPC %s por hechizo %s", target_npc.name, spell_name
+                    )
+
+                # Remover parálisis del NPC
+                if spell_data.get("removes_paralysis", False):
+                    await self.npc_repo.update_npc_paralyzed_until(target_npc.instance_id, 0.0)
+                    logger.info(
+                        "Parálisis removida de NPC %s por hechizo %s", target_npc.name, spell_name
+                    )
+
             # Aplicar efectos de estado si el hechizo es tipo 2 (Estados)
             if spell_type == SPELL_TYPE_STATUS and not npc_died:
                 spell_name_lower = spell_name.lower()
@@ -300,6 +316,60 @@ class SpellService:
             else:
                 total_damage = 0
 
+            # Remover estados ANTES de aplicar nuevos (prioridad a la curación)
+            # Curar veneno
+            if spell_data.get("cures_poison", False):
+                await self.player_repo.update_poisoned_until(target_player_id, 0.0)
+                logger.info(
+                    "Veneno removido de user_id %d por hechizo %s", target_player_id, spell_name
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has curado del envenenamiento.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han curado del envenenamiento."
+                        )
+
+            # Remover parálisis/inmovilización (para jugadores es inmovilización)
+            if spell_data.get("removes_paralysis", False):
+                await self.player_repo.update_immobilized_until(target_player_id, 0.0)
+                logger.info(
+                    "Inmovilización removida de user_id %d por hechizo %s",
+                    target_player_id,
+                    spell_name,
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has devuelto la movilidad.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han devuelto la movilidad."
+                        )
+
+            # Remover estupidez
+            if spell_data.get("removes_stupidity", False):
+                await self.player_repo.update_dumb_until(target_player_id, 0.0)
+                logger.info(
+                    "Estupidez removida de user_id %d por hechizo %s", target_player_id, spell_name
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has quitado el aturdimiento.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han quitado el aturdimiento."
+                        )
+
             # Aplicar envenenamiento si el hechizo envenena
             if spell_data.get("poisons", False):
                 poisoned_until = time.time() + POISON_DURATION_SECONDS
@@ -379,6 +449,74 @@ class SpellService:
                     )
                     if target_message_sender:
                         await target_message_sender.send_console_msg("Has sido aturdido.")
+
+            # Remover estados si el hechizo los cura
+            # Curar veneno
+            if spell_data.get("cures_poison", False):
+                await self.player_repo.update_poisoned_until(target_player_id, 0.0)
+                logger.info(
+                    "Veneno removido de user_id %d por hechizo %s", target_player_id, spell_name
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has curado del envenenamiento.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han curado del envenenamiento."
+                        )
+
+            # Remover parálisis/inmovilización (para jugadores es inmovilización)
+            if spell_data.get("removes_paralysis", False):
+                await self.player_repo.update_immobilized_until(target_player_id, 0.0)
+                logger.info(
+                    "Inmovilización removida de user_id %d por hechizo %s",
+                    target_player_id,
+                    spell_name,
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has devuelto la movilidad.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han devuelto la movilidad."
+                        )
+
+            # Remover estupidez
+            if spell_data.get("removes_stupidity", False):
+                await self.player_repo.update_dumb_until(target_player_id, 0.0)
+                logger.info(
+                    "Estupidez removida de user_id %d por hechizo %s", target_player_id, spell_name
+                )
+                if target_player_id == user_id:
+                    await message_sender.send_console_msg("Te has quitado el aturdimiento.")
+                else:
+                    target_message_sender = self.map_manager.get_player_message_sender(
+                        target_player_id
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_console_msg(
+                            "Te han quitado el aturdimiento."
+                        )
+
+        # Remover estados de NPCs si el hechizo los cura
+        if target_npc:
+            # Curar veneno del NPC
+            if spell_data.get("cures_poison", False):
+                await self.npc_repo.update_npc_poisoned_until(target_npc.instance_id, 0.0)
+                logger.info("Veneno removido de NPC %s por hechizo %s", target_npc.name, spell_name)
+
+            # Remover parálisis del NPC
+            if spell_data.get("removes_paralysis", False):
+                await self.npc_repo.update_npc_paralyzed_until(target_npc.instance_id, 0.0)
+                logger.info(
+                    "Parálisis removida de NPC %s por hechizo %s", target_npc.name, spell_name
+                )
 
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")
