@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
-**Fecha:** 2025-01-30  
-**Versión en pyproject.toml:** 0.6.4-alpha  
-**Versión real completada:** 0.8.0-alpha (según código y documentación)
+**Fecha:** 2025-01-31  
+**Versión en pyproject.toml:** 0.9.0-alpha  
+**Versión real completada:** 0.9.0-alpha (Sistema de Clanes completado)
 
 ---
 
@@ -21,7 +21,6 @@
 - ✅ ClassService con métodos de consulta
 - ✅ Integración en creación de personaje
 - ✅ 26 tests pasando
-- ⚠️ **Acción requerida:** Actualizar versión en `pyproject.toml` a 0.7.0-alpha
 
 ### Versión 0.8.0-alpha - Sistema de Parties ✅ COMPLETADO
 **Estado:** Completado según `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md`
@@ -33,54 +32,24 @@
 - ✅ Loot compartido
 - ✅ Sincronización de level up
 - ✅ 60 tests pasando
-- ⚠️ **Acción requerida:** Actualizar versión en `pyproject.toml` a 0.8.0-alpha
+
+### Versión 0.9.0-alpha - Sistema de Clanes/Guilds ✅ COMPLETADO
+**Estado:** Completado según `docs/CLAN_SYSTEM_IMPLEMENTATION_STATUS.md`
+- ✅ Modelos de datos (Clan, ClanMember, ClanInvitation)
+- ✅ Persistencia en Redis
+- ✅ Lógica de negocio completa
+- ✅ 10 comandos implementados vía chat
+- ✅ Sistema de rangos jerárquicos (MEMBER, OFFICER, VICE_LEADER, LEADER)
+- ✅ Chat interno del clan (`/CLAN mensaje`)
+- ✅ Gestión completa de miembros (invitar, expulsar, promover, degradar)
+- ✅ Transferencia de liderazgo
+- ✅ Tests básicos del servicio
 
 ---
 
 ## 📋 Próximos Pasos (Según Prioridad)
 
-### 🔴 ALTA PRIORIDAD - Inmediato
-
-#### 1. Actualizar Versión del Proyecto
-**Acción:** Actualizar `pyproject.toml` de `0.6.4-alpha` a `0.8.0-alpha`
-**Razón:** Las versiones 0.7.0 y 0.8.0 están completadas pero la versión no refleja el estado real
-
-#### 2. Actualizar Documentación del Roadmap
-**Acción:** Actualizar `todo/ROADMAP_VERSIONES.md` para reflejar que:
-- 0.7.0-alpha está COMPLETADA
-- 0.8.0-alpha está COMPLETADA
-- Próxima versión: 0.9.0-alpha (Sistema de Clanes)
-
----
-
-### 🔴 ALTA PRIORIDAD - Próxima Versión (0.9.0-alpha)
-
-#### Sistema de Clanes/Guilds
-**Esfuerzo:** 2-3 semanas  
-**Dependencias:** Sistema de Parties (✅ completado)
-
-**Features a implementar:**
-- [ ] Creación de clanes
-- [ ] Gestión de miembros (invitar, expulsar, promover)
-- [ ] Almacén/depósito del clan
-- [ ] Chat interno del clan
-- [ ] Alianzas entre clanes
-- [ ] Guerras de clanes
-- [ ] Edificio del clan con NPCs
-- [ ] Sistema de rangos jerárquicos
-
-**Archivos a crear:**
-- `src/models/clan.py`
-- `src/services/clan_service.py`
-- `src/repositories/clan_repository.py`
-- `src/tasks/clan/` (múltiples archivos)
-- `data/clans.toml`
-
-**Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)
-
----
-
-### 🟡 MEDIA PRIORIDAD - Versión 0.10.0-alpha
+### 🔴 ALTA PRIORIDAD - Próxima Versión (0.10.0-alpha)
 
 #### Targeting por Click para Hechizos
 **Esfuerzo:** 1 semana  
@@ -97,6 +66,19 @@
 - `ui/hub/spell_list_panel.gd`
 - `screens/game_screen.gd`
 - `engine/autoload/game_protocol.gd`
+
+---
+
+### 🟡 MEDIA PRIORIDAD - Sistema de Clanes - Features Avanzadas
+
+#### Funcionalidades Futuras de Clanes
+**Estado:** Funcionalidades core completadas, features avanzadas pendientes
+
+**Features pendientes:**
+- [ ] Almacén/depósito del clan
+- [ ] Alianzas entre clanes (métodos en modelo, falta UI/comandos)
+- [ ] Guerras de clanes (métodos en modelo, falta UI/comandos)
+- [ ] Edificio del clan con NPCs
 
 ---
 
@@ -176,14 +158,14 @@
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual en código:** 0.8.0-alpha (completada)
-- **Versión en pyproject.toml:** 0.6.4-alpha ⚠️ **DESACTUALIZADA**
-- **Próxima versión:** 0.9.0-alpha (Sistema de Clanes)
+- **Versión actual:** 0.9.0-alpha (completada) ✅
+- **Versión en pyproject.toml:** 0.9.0-alpha ✅
+- **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
-- **Total:** 1756 tests
-- **Pasando:** 1756 (100%) ✅
-- **Cobertura:** ~72% (objetivo: 80%+)
+- **Total:** 1765+ tests
+- **Pasando:** 1765+ (100%) ✅
+- **Cobertura:** >45% (objetivo: 80%+)
 
 ### Calidad
 - **Linting:** 0 errores ✅
@@ -194,12 +176,12 @@
 
 ## 🎯 Recomendación Inmediata
 
-1. **Actualizar versión a 0.8.0-alpha** en `pyproject.toml`
-2. **Actualizar roadmap** para reflejar versiones completadas
-3. **Comenzar v0.9.0-alpha** (Sistema de Clanes) - siguiente feature de alta prioridad
+1. **Comenzar v0.10.0-alpha** (Targeting por Click para Hechizos) - siguiente feature de alta prioridad
+2. **Ampliar tests del sistema de clanes** - aumentar cobertura
+3. **Features avanzadas de clanes** - Almacén, alianzas, guerras (opcional, v0.9.1+)
 
 ---
 
-**Última actualización:** 2025-01-30  
-**Siguiente revisión:** Después de actualizar versión a 0.8.0-alpha
+**Última actualización:** 2025-01-31  
+**Estado:** ✅ Versión 0.9.0-alpha completada y actualizada
 
