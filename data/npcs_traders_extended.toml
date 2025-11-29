@@ -1,0 +1,2955 @@
+# Datos completos de NPCs - npcs_traders
+[npcs_traders]
+
+[[npcs_traders.npcs]]
+id = 34
+name = "Cullighan"
+category = "NPCS VENDECASAS"
+comment = "Propiedades Ulla  Name=Cullighan NpcType=0 Desc=Usted sabe que no hay persona noble o respetable en estas tierras que no tenga su propia vivienda. ¡acérquese y sea dueño de una de las exclusivas casas de Ullathorpe. ¡Será admirado por toda la población! Head=33 Heading=3 Body=240 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=9 NROITEMS=4 Obj1=54-1 Obj2=65-1 Obj3=69-1 Obj4=73-1 InvReSpawn=1 BackUp=1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Usted sabe que no hay persona noble o respetable en estas tierras que no tenga su propia vivienda. ¡acérquese y sea dueño de una de las exclusivas casas de Ullathorpe. ¡Será admirado por toda la población!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 33
+heading = 3
+body = 240
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 9
+[inventory]
+items = [
+    {slot = 1, item_id = 54, quantity = 1},
+    {slot = 2, item_id = 65, quantity = 1},
+    {slot = 3, item_id = 69, quantity = 1},
+    {slot = 4, item_id = 73, quantity = 1}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 35
+name = "Moraday"
+category = "NPCS VENDECASAS"
+comment = "Propiedades Nix Name=Moraday NpcType=0 Desc=¿Ha descubierto que la ciudad de Nix es la más hermosa de todo Argentum, verdad? ¡Pues qué mejor que ser un terrateniente de este paraíso! ¡Acércate que haremos negocios! Head=35 Heading=3 Body=239 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=9 NROITEMS=10 Obj1=87-1 Obj2=91-1 Obj3=95-1 Obj4=99-1 Obj5=103-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¿Ha descubierto que la ciudad de Nix es la más hermosa de todo Argentum, verdad? ¡Pues qué mejor que ser un terrateniente de este paraíso! ¡Acércate que haremos negocios!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 35
+heading = 3
+body = 239
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 9
+[inventory]
+items = [
+    {slot = 1, item_id = 87, quantity = 1},
+    {slot = 2, item_id = 91, quantity = 1},
+    {slot = 3, item_id = 95, quantity = 1},
+    {slot = 4, item_id = 99, quantity = 1},
+    {slot = 5, item_id = 103, quantity = 1, description = "Llave Nix Casa Nro 5"},
+    {slot = 6, item_id = 107, quantity = 1, description = "Llave Nix Casa Nro 6"},
+    {slot = 7, item_id = 111, quantity = 1},
+    {slot = 8, item_id = 115, quantity = 1},
+    {slot = 9, item_id = 119, quantity = 1},
+    {slot = 10, item_id = 140, quantity = 1}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 52
+name = "Rantarisk"
+category = "NPCS VENDECASAS"
+comment = "Propiedades Bander Name=Rantarisk NpcType=0 Desc=De lejos pude ver vuestro blazón, seguro busca una de las moradas más lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza ¡Venga y hagamos negocios! Head=32 Heading=3 Body=241 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=9 NROITEMS=18 Obj1=266-1 Obj2=270-1 Obj3=274-1 Obj4=278-1 Obj5=282-1 Obj6=286-1 Obj7=290-1 Obj8=294-1 Obj9=298-1 Obj10=323-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """De lejos pude ver vuestro blazón, seguro busca una de las moradas más lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza ¡Venga y hagamos negocios!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 32
+heading = 3
+body = 241
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 9
+[inventory]
+items = [
+    {slot = 1, item_id = 266, quantity = 1},
+    {slot = 2, item_id = 270, quantity = 1},
+    {slot = 3, item_id = 274, quantity = 1},
+    {slot = 4, item_id = 278, quantity = 1},
+    {slot = 5, item_id = 282, quantity = 1},
+    {slot = 6, item_id = 286, quantity = 1},
+    {slot = 7, item_id = 290, quantity = 1},
+    {slot = 8, item_id = 294, quantity = 1},
+    {slot = 9, item_id = 298, quantity = 1},
+    {slot = 10, item_id = 323, quantity = 1, description = "Llave Banderbill Casa Nro 10"},
+    {slot = 11, item_id = 327, quantity = 1, description = "Llave Banderbill Casa Nro 11"},
+    {slot = 12, item_id = 331, quantity = 1, description = "Llave Banderbill Casa Nro 12"},
+    {slot = 13, item_id = 335, quantity = 1},
+    {slot = 14, item_id = 339, quantity = 1},
+    {slot = 15, item_id = 343, quantity = 1},
+    {slot = 16, item_id = 347, quantity = 1},
+    {slot = 17, item_id = 351, quantity = 1},
+    {slot = 18, item_id = 355, quantity = 1}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 62
+name = "Guldorf"
+category = "NPCS VENDECASAS"
+comment = "Propiedades Lindos Name=Guldorf Desc=Si está buscando la paz y la tranquilidad en estas tierras ha llegado al lugar indicado... adquiera una de nuestras exclusivas residencias, y cambie su vida para siempre. Head=36 Body=234 Heading=3 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=9 NROITEMS=6 Obj1=420-1 Obj2=424-1 Obj3=428-1 Obj4=432-1 Obj5=436-1 Obj6=440-1 InvReSpawn=1 BackUp=1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Si está buscando la paz y la tranquilidad en estas tierras ha llegado al lugar indicado... adquiera una de nuestras exclusivas residencias, y cambie su vida para siempre."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 36
+heading = 3
+body = 234
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 9
+[inventory]
+items = [
+    {slot = 1, item_id = 420, quantity = 1},
+    {slot = 2, item_id = 424, quantity = 1},
+    {slot = 3, item_id = 428, quantity = 1},
+    {slot = 4, item_id = 432, quantity = 1},
+    {slot = 5, item_id = 436, quantity = 1},
+    {slot = 6, item_id = 440, quantity = 1}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 101
+name = "Vendedor de propiedades."
+category = "NPCS VENDECASAS"
+comment = "Propiedades Arkhein Name=Vendedor de propiedades. Desc=En estas tierras demoníacas están las mejores residencias para los miembros de la Legión Oscura... Si no eres legionario puedes también vivir acá, ¡pero os aseguro que los augura un infierno! jajaja! Head=34 Body=170 Heading=3 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=9 NROITEMS=8 Obj1=583-1 Obj2=587-1 Obj3=591-1 Obj4=595-1 Obj5=599-1 Obj6=603-1 Obj7=607-1 Obj8=611-1 InvReSpawn=1 BackUp=1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """En estas tierras demoníacas están las mejores residencias para los miembros de la Legión Oscura... Si no eres legionario puedes también vivir acá, ¡pero os aseguro que los augura un infierno! jajaja!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 34
+heading = 3
+body = 170
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 9
+[inventory]
+items = [
+    {slot = 1, item_id = 583, quantity = 1},
+    {slot = 2, item_id = 587, quantity = 1},
+    {slot = 3, item_id = 591, quantity = 1},
+    {slot = 4, item_id = 595, quantity = 1},
+    {slot = 5, item_id = 599, quantity = 1},
+    {slot = 6, item_id = 603, quantity = 1},
+    {slot = 7, item_id = 607, quantity = 1},
+    {slot = 8, item_id = 611, quantity = 1}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 14
+name = "Lilith"
+category = "NPCS COMERCIANTES"
+comment = "Vende Pociones Name=Lilith NpcType=0 Desc=Hola, tengo las mejores Pociones de la Alquimia. Head=77 Heading=3 Body=200 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=11 NROITEMS=6 Obj1=36-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Hola, tengo las mejores Pociones de la Alquimia."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 77
+heading = 3
+body = 200
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 11
+[inventory]
+items = [
+    {slot = 1, item_id = 36, quantity = 1000, description = "Poción Amarilla"},
+    {slot = 2, item_id = 37, quantity = 1000, description = "Poción Azul"},
+    {slot = 3, item_id = 38, quantity = 1000, description = "Poción Roja"},
+    {slot = 4, item_id = 39, quantity = 1000, description = "Poción Verde"},
+    {slot = 5, item_id = 166, quantity = 1000, description = "Poción Violeta"},
+    {slot = 6, item_id = 645, quantity = 1000, description = "Poción Negra"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 33
+name = "Leñador"
+category = "NPCS COMERCIANTES"
+comment = "Leñador Name=Leñador NpcType=0 Desc=¡Hola muchacho!, si deseas vender o comprar madera escribe /COMERCIAR. Head=4 Heading=3 Body=1 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=14 NROITEMS=2 Obj1=127-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola muchacho!, si deseas vender o comprar madera escribe /COMERCIAR."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 4
+heading = 3
+body = 1
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 14
+[inventory]
+items = [
+    {slot = 1, item_id = 127, quantity = 1000, description = "Hacha de Leñador"},
+    {slot = 2, item_id = 1005, quantity = 1000, description = "Hacha de leña Elfica"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 44
+name = "Carpintero"
+category = "NPCS COMERCIANTES"
+comment = "Carpintero Name=Carpintero NpcType=0 Desc=¡Hola muchacho!, bienvenido a mi humilde Carpintería. Head=2 Heading=3 Body=1 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=20 NROITEMS=5 Obj1=163-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola muchacho!, bienvenido a mi humilde Carpintería."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 2
+heading = 3
+body = 1
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 20
+[inventory]
+items = [
+    {slot = 1, item_id = 163, quantity = 1000, description = "Cuchara"},
+    {slot = 2, item_id = 167, quantity = 1000, description = "Mueble Rústico"},
+    {slot = 3, item_id = 168, quantity = 1000, description = "Silla"},
+    {slot = 4, item_id = 198, quantity = 1000, description = "Serrucho"},
+    {slot = 5, item_id = 480, quantity = 10000, description = "Flecha"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 41
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+comment = "Pescador Quieto Name=Pescador NpcType=0 Desc=¡Bienvenido al gremio de pescadores!  Head=2 Heading=3 Body=3 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=2 Obj1=138-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenido al gremio de pescadores!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 2
+heading = 3
+body = 3
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 138, quantity = 1000, description = "Caña de Pescar"},
+    {slot = 2, item_id = 139, quantity = 1000, description = "Pescado"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 58
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+comment = "Pescador Movil Name=Pescador NpcType=0 Desc=¡Bienvenido al gremio de pescadores! Head=101 Heading=3 Body=3 Movement=2 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=2 Obj1=138-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenido al gremio de pescadores!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 101
+heading = 3
+body = 3
+[behavior]
+movement = 2
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 138, quantity = 1000, description = "Caña de Pescar"},
+    {slot = 2, item_id = 139, quantity = 1000, description = "Pescado"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 48
+name = "Minero"
+category = "NPCS COMERCIANTES"
+comment = "Minero Name=Minero NpcType=0 Desc=Tengo los mejores utensillos para mineros de todo Argentum. Head=2 Heading=3 Body=1 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=23 NROITEMS=1 Obj1=187-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Tengo los mejores utensillos para mineros de todo Argentum."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 2
+heading = 3
+body = 1
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 23
+[inventory]
+items = [
+    {slot = 1, item_id = 187, quantity = 1000, description = "Piquete de Minero"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 80
+name = "Mercader"
+category = "NPCS COMERCIANTES"
+comment = "Mercader Name=Mercader NpcType=0 Desc=¡¡Hola buen amigo, compro y vendo todo tipo de mercancías!! Head=2 Heading=3 Body=3 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1000 NROITEMS=1 Obj1=534-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡¡Hola buen amigo, compro y vendo todo tipo de mercancías!!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 2
+heading = 3
+body = 3
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1000
+[inventory]
+items = [
+    {slot = 1, item_id = 534, quantity = 1000, description = "Odre Vacía"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 9
+name = "Ralph"
+category = "NPCS COMERCIANTES"
+comment = "Provisiones Newbie Dungeon Name=Ralph NpcType=0 Desc=¡Hola, pequeño aventurero, tengo aquí unas mercaderías para saciar tu hambre y sed!. Head=504 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=3 Obj1=1-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola, pequeño aventurero, tengo aquí unas mercaderías para saciar tu hambre y sed!."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 504
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 1, quantity = 1000, description = "Manzana Roja"},
+    {slot = 2, item_id = 158, quantity = 1000, description = "Banana"},
+    {slot = 3, item_id = 43, quantity = 1000, description = "Botella de Agua"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 42
+name = "Antogne"
+category = "NPCS COMERCIANTES"
+comment = "Provisiones camino Ulla-Bander Name=Antogne NpcType=0 Desc=¡Hola aventurero! Si estais hambriento habeis venido al lugar apropiador, tengo todo tipo de frutas. Head=505 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=6 Obj1=1-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola aventurero! Si estais hambriento habeis venido al lugar apropiador, tengo todo tipo de frutas."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 1, quantity = 1000, description = "Manzana Roja"},
+    {slot = 2, item_id = 158, quantity = 1000, description = "Banana"},
+    {slot = 3, item_id = 22, quantity = 1000, description = "Frutas del Bosque"},
+    {slot = 4, item_id = 754, quantity = 1000, description = "Rábano"},
+    {slot = 5, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 6, item_id = 43, quantity = 1000, description = "Botella de Agua"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 114
+name = "SR"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Armada Real. NO CAMBIAR EL NAME=SR Name=SR NpcType=0 Desc=Bienvenido a la Sastrería Real. Head=171 Heading=3 Body=174 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=13 Obj1=675-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a la Sastrería Real."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 171
+heading = 3
+body = 174
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 675, quantity = 1000, description = "Vestimenta Imperial"},
+    {slot = 2, item_id = 516, quantity = 1000, description = "Túnica de Maga del Imperio (H/E/EO-M)"},
+    {slot = 3, item_id = 517, quantity = 1000, description = "Túnica de Mago del Imperio"},
+    {slot = 4, item_id = 372, quantity = 1000, description = "Manto de Sacerdote del Imperio"},
+    {slot = 5, item_id = 521, quantity = 1000, description = "Armadura Real"},
+    {slot = 6, item_id = 679, quantity = 1000, description = "Túnica Conspicua de Mago Imperial"},
+    {slot = 7, item_id = 520, quantity = 1000, description = "Armadura de Gran Sacerdotisa Imperial (H/E/EO-M)"},
+    {slot = 8, item_id = 680, quantity = 1000, description = "Armadura de Gran Sacerdote Imperial"},
+    {slot = 9, item_id = 629, quantity = 1000, description = "Armadura Nobilísima"},
+    {slot = 10, item_id = 687, quantity = 1000, description = "Túnica Palatina"},
+    {slot = 11, item_id = 691, quantity = 1000, description = "Armadura de Ilustre Caballero"},
+    {slot = 12, item_id = 693, quantity = 1000, description = "Armadura Magna (H/E/EO-M)"},
+    {slot = 13, item_id = 1038, quantity = 1000, description = "Escudo Real"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 159
+name = "SR"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Armada Real Bajos. NO CAMBIAR EL NAME=SR Name=SR NpcType=0 Desc=Bienvenido a la Sastrería Real. Head=309 Heading=3 Body=175 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=10 Obj1=676-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a la Sastrería Real."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 309
+heading = 3
+body = 175
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 676, quantity = 1000, description = "Vestimenta Imperial (E/G)"},
+    {slot = 2, item_id = 549, quantity = 1000, description = "Túnica de Mago del Imperio (E/G)"},
+    {slot = 3, item_id = 1039, quantity = 1000, description = "Manto de Sacerdote del Imperio (E/G)"},
+    {slot = 4, item_id = 492, quantity = 1000, description = "Armadura Real (E/G)"},
+    {slot = 5, item_id = 682, quantity = 1000, description = "Túnica Conspicua de Mago Imperial (E/G)"},
+    {slot = 6, item_id = 1040, quantity = 1000, description = "Armadura de Gran Sacerdote Imperial (E/G)"},
+    {slot = 7, item_id = 681, quantity = 1000, description = "Armadura Nobilísima (E/G)"},
+    {slot = 8, item_id = 688, quantity = 1000, description = "Pequeña Túnica Palatina (E/G)"},
+    {slot = 9, item_id = 694, quantity = 1000, description = "Armadura de Ilustre Caballero (E/G)"},
+    {slot = 10, item_id = 1038, quantity = 1000, description = "Escudo Real"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 115
+name = "SC"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Legión Oscura. NO CAMBIAR EL NAME=SC Name=SC NpcType=0 Desc=¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA! Head=0 Heading=3 Body=69 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=12 Obj1=677-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+heading = 3
+body = 69
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 677, quantity = 1000, description = "Vestimenta Legionaria"},
+    {slot = 2, item_id = 509, quantity = 1000, description = "Túnica de Maga Oscura (H/E/EO-M)"},
+    {slot = 3, item_id = 518, quantity = 1000, description = "Túnica de Mago Oscuro"},
+    {slot = 4, item_id = 523, quantity = 1000, description = "Manto de Sacerdote Demoníaco"},
+    {slot = 5, item_id = 369, quantity = 1000, description = "Armadura Legionaria"},
+    {slot = 6, item_id = 634, quantity = 1000, description = "Túnica Egregia de Mago Oscuro"},
+    {slot = 7, item_id = 684, quantity = 1000, description = "Armadura de Gran Sacerdote Demoníaco"},
+    {slot = 8, item_id = 635, quantity = 1000, description = "Armadura Lóbrega (H/E/EO-M)"},
+    {slot = 9, item_id = 683, quantity = 1000, description = "Armadura Lóbrega"},
+    {slot = 10, item_id = 689, quantity = 1000, description = "Túnica Avernal"},
+    {slot = 11, item_id = 701, quantity = 1000, description = "Armadura Infame"},
+    {slot = 12, item_id = 1037, quantity = 1000, description = "Escudo Legionario"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 160
+name = "SC"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Legión Oscura. NO CAMBIAR EL NAME=SC Name=SC NpcType=0 Desc=¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA! Head=318 Heading=3 Body=177 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=10 Obj1=678-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 318
+heading = 3
+body = 177
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 678, quantity = 1000, description = "Vestimenta Legionaria (E/G)"},
+    {slot = 2, item_id = 558, quantity = 1000, description = "Túnica de Mago Oscuro (E/G)"},
+    {slot = 3, item_id = 1041, quantity = 1000, description = "Manto de Sacerdote Demoníaco (E/G)"},
+    {slot = 4, item_id = 379, quantity = 1000, description = "Armadura Legionaria (E/G)"},
+    {slot = 5, item_id = 686, quantity = 1000, description = "Túnica Egregia de Mago Oscuro (E/G)"},
+    {slot = 6, item_id = 1042, quantity = 1000, description = "Armadura de Gran Sacerdote Demoníaco (E/G)"},
+    {slot = 7, item_id = 685, quantity = 1000, description = "Armadura Lóbrega (E/G)"},
+    {slot = 8, item_id = 690, quantity = 1000, description = "Pequeña Túnica Avernal (E/G)"},
+    {slot = 9, item_id = 695, quantity = 1000, description = "Armadura de Pequeño Pandemonium (E/G)"},
+    {slot = 10, item_id = 1037, quantity = 1000, description = "Escudo Legionario"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 120
+name = "Ireth"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (humanos mujer) Name=Ireth Desc=Bienvenido amigo, vendo ropajes para MUJERES HUMANAS. Head=71 Heading=3 Body=254 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=15 Obj1=879-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido amigo, vendo ropajes para MUJERES HUMANAS."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 71
+heading = 3
+body = 254
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 879, quantity = 1000, description = "Vestido Bordado de Gala (H/E/EO-M)"},
+    {slot = 2, item_id = 880, quantity = 1000, description = "Túnica del Oráculo (H/E/EO-M)"},
+    {slot = 3, item_id = 884, quantity = 1000, description = "Cota de Anillas Compuesta (H/E/EO-M)"},
+    {slot = 4, item_id = 885, quantity = 1000, description = "Armadura Liviana de Hierro (H/E/EO-M)"},
+    {slot = 5, item_id = 886, quantity = 1000, description = "Vestido de Arquera (H/E/EO-M)"},
+    {slot = 6, item_id = 891, quantity = 1000, description = "Armadura de Cuero de Oso Pardo (H/E/EO-M)"},
+    {slot = 7, item_id = 892, quantity = 1000, description = "Coraza Compuesta Roja (H/E/EO-M)"},
+    {slot = 8, item_id = 893, quantity = 1000, description = "Anillas Con Manto Verde (H/E/EO-M)"},
+    {slot = 9, item_id = 894, quantity = 1000, description = "Armadura de Cruzado (H/E/EO-M)"},
+    {slot = 10, item_id = 896, quantity = 1000, description = "Túnica de Morgana (H/E/EO-M)"},
+    {slot = 11, item_id = 899, quantity = 1000, description = "Cota de Peto Liso (H/E/EO-M)"},
+    {slot = 12, item_id = 900, quantity = 1000, description = "Anillas Con Manto Desgastado (H/E/EO-M)"},
+    {slot = 13, item_id = 901, quantity = 1000, description = "Coraza Compuesta de Mujer (H/E/EO-M)"},
+    {slot = 14, item_id = 902, quantity = 1000, description = "Cota de Mallas Enteriza (H/E/EO-M)"},
+    {slot = 15, item_id = 904, quantity = 1000, description = "Placas Combinadas (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 121
+name = "Isaac"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (humanos hombres) Name=Isaac Desc=¿Buscas ropas para HOMBRES HUMANOS? Entonces has hecho bien en acudir a mí. Head=7 Heading=3 Body=240 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=7 Obj1=882-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¿Buscas ropas para HOMBRES HUMANOS? Entonces has hecho bien en acudir a mí."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 240
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 882, quantity = 1000, description = "Anillas Livianas de Aventurero (H/E/EO)"},
+    {slot = 2, item_id = 887, quantity = 1000, description = "Cotas de Manto Marrón (H/E/EO)"},
+    {slot = 3, item_id = 888, quantity = 1000, description = "Brial del Bosque (H/E/EO)"},
+    {slot = 4, item_id = 889, quantity = 1000, description = "Anillas Con Manto Verde (H/E/EO)"},
+    {slot = 5, item_id = 890, quantity = 1000, description = "Armadura de Cuero de Oso Pardo (H/E/EO)"},
+    {slot = 6, item_id = 897, quantity = 1000, description = "Cota de Piquero (H/E/EO)"},
+    {slot = 7, item_id = 903, quantity = 1000, description = "Armadura de Campeón (H/E/EO)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 122
+name = "Nelvi"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (gnomos varón) Name=Nelvi Desc=Poseo una gran cantidad de ropajes para los astutos GNOMOS, ¿Deseas algo en particular? Head=403 Heading=3 Body=294 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=20 Obj1=908-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Poseo una gran cantidad de ropajes para los astutos GNOMOS, ¿Deseas algo en particular?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 403
+heading = 3
+body = 294
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 908, quantity = 1000, description = "Vestimentas de Pescador (E/G)"},
+    {slot = 2, item_id = 910, quantity = 1000, description = "Atuendo de Gnomo (E/G)"},
+    {slot = 3, item_id = 911, quantity = 1000, description = "Vestimenta Bordo de Poblador (E/G)"},
+    {slot = 4, item_id = 912, quantity = 1000, description = "Vestimenta Verde de Poblador (E/G)"},
+    {slot = 5, item_id = 913, quantity = 1000, description = "Ropaje de Ermitaño (E/G)"},
+    {slot = 6, item_id = 915, quantity = 1000, description = "Ropaje de Aldeano (E/G)"},
+    {slot = 7, item_id = 916, quantity = 1000, description = "Vestimenta Elegante (E/G)"},
+    {slot = 8, item_id = 917, quantity = 1000, description = "Vestimenta de Minero (E/G)"},
+    {slot = 9, item_id = 918, quantity = 1000, description = "Gabán de Cuero Pequeño (E/G)"},
+    {slot = 10, item_id = 919, quantity = 1000, description = "Alifafe de Serpiente (E/G)"},
+    {slot = 11, item_id = 920, quantity = 1000, description = "Ropaje de Herrero (E/G)"},
+    {slot = 12, item_id = 921, quantity = 1000, description = "Túnica Sírica Elegante (E/G)"},
+    {slot = 13, item_id = 922, quantity = 1000, description = "Traje de Capitán Pirata (E/G)"},
+    {slot = 14, item_id = 923, quantity = 1000, description = "Traje de Noble (E/G)"},
+    {slot = 15, item_id = 924, quantity = 1000, description = "Vestimenta de Explorador (E/G)"},
+    {slot = 16, item_id = 927, quantity = 1000, description = "Alifafe de Lobo (E/G)"},
+    {slot = 17, item_id = 928, quantity = 1000, description = "Barragán de Cazador (E/G)"},
+    {slot = 18, item_id = 929, quantity = 1000, description = "Barragán Compuesto (E/G)"},
+    {slot = 19, item_id = 930, quantity = 1000, description = "Toga de Aprendiz (E/G)"},
+    {slot = 20, item_id = 932, quantity = 1000, description = "Sotana de Gran Hechicero (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 123
+name = "Aile"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (gnomos mujer y varón) Name=Aile Desc=Bienvenido, vendo ropas para los hermosos GNOMOS de estas tierras. Head=473 Heading=3 Body=288 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=15 Obj1=909-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido, vendo ropas para los hermosos GNOMOS de estas tierras."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 473
+heading = 3
+body = 288
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 909, quantity = 1000, description = "Vestido de Novia (E/G-M)"},
+    {slot = 2, item_id = 914, quantity = 1000, description = "Ropaje de Aldeana (E/G-M)"},
+    {slot = 3, item_id = 925, quantity = 1000, description = "Peto de Gladiadora (E/G-M)"},
+    {slot = 4, item_id = 926, quantity = 1000, description = "Hombreras de Amazona (E/G-M)"},
+    {slot = 5, item_id = 931, quantity = 1000, description = "Vestido Elegante Púrpura (E/G)"},
+    {slot = 6, item_id = 933, quantity = 1000, description = "Cota Liviana Verde (E/G-M)"},
+    {slot = 7, item_id = 935, quantity = 1000, description = "Cotas con Peto Compuesto (E/G-M)"},
+    {slot = 8, item_id = 936, quantity = 1000, description = "Túnica de Gran Hechicera (E/G-M)"},
+    {slot = 9, item_id = 938, quantity = 1000, description = "Traje de Bruja (E/G-M)"},
+    {slot = 10, item_id = 941, quantity = 1000, description = "Traje Seductor de Pitonisa (E/G-M)"},
+    {slot = 11, item_id = 942, quantity = 1000, description = "Vestido de Gala Turquesa (E/G-M)"},
+    {slot = 12, item_id = 934, quantity = 1000, description = "Cotas Livianas (E/G)"},
+    {slot = 13, item_id = 937, quantity = 1000, description = "Cota de Peto Púrpura (E/G)"},
+    {slot = 14, item_id = 939, quantity = 1000, description = "Túnica de Gala Roja (E/G)"},
+    {slot = 15, item_id = 940, quantity = 1000, description = "Cota de Mallas Enteriza (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 124
+name = "Varinya"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (elfos) Name=Varinya Desc=Tengo para ofrecerte los mejores ropajes para ELFOS. Head=172 Heading=3 Body=234 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=14 Obj1=943-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Tengo para ofrecerte los mejores ropajes para ELFOS."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 172
+heading = 3
+body = 234
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 943, quantity = 1000, description = "Sobrevesta Élfica (H/E/EO)"},
+    {slot = 2, item_id = 944, quantity = 1000, description = "Vestido Aurë (H/E/EO-M)"},
+    {slot = 3, item_id = 945, quantity = 1000, description = "Vestido de Gala Alcarinqua (H/E/EO-M)"},
+    {slot = 4, item_id = 946, quantity = 1000, description = "Vestimentas de Poblador Élfico (H/E/EO)"},
+    {slot = 5, item_id = 947, quantity = 1000, description = "Hábito Liviano de Ritual (H/E/EO)"},
+    {slot = 6, item_id = 948, quantity = 1000, description = "Vestido Bordado de Elite (H/E/EO-M)"},
+    {slot = 7, item_id = 949, quantity = 1000, description = "Hábito Liviano de Ritual (H/E/EO-M)"},
+    {slot = 8, item_id = 950, quantity = 1000, description = "Sírica Élfica Rojiza (H/E/EO-M)"},
+    {slot = 9, item_id = 951, quantity = 1000, description = "Prenda de la Naturaleza (H/E/EO-M)"},
+    {slot = 10, item_id = 952, quantity = 1000, description = "Ropa de Explorador Élfico (H/E/EO)"},
+    {slot = 11, item_id = 953, quantity = 1000, description = "Manto Élfico Púrpura (H/E/EO-M)"},
+    {slot = 12, item_id = 954, quantity = 1000, description = "Hábito de Ritual de Hombre (H/E/EO)"},
+    {slot = 13, item_id = 955, quantity = 1000, description = "Hábito de Ritual Femenino (H/E/EO-M)"},
+    {slot = 14, item_id = 956, quantity = 1000, description = "Valya Silmeanar (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 125
+name = "Torke"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (enanos) Name=Torke Desc=Solo tengo ropajes para ENANOS, si no las puedes usar, ¡vete de aqui! Head=371 Heading=3 Body=306 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=18 Obj1=957-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Solo tengo ropajes para ENANOS, si no las puedes usar, ¡vete de aqui!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 371
+heading = 3
+body = 306
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 957, quantity = 1000, description = "Vestido de Enana (E/G-M)"},
+    {slot = 2, item_id = 958, quantity = 1000, description = "Vestimenta Común (E/G)"},
+    {slot = 3, item_id = 959, quantity = 1000, description = "Ropa de Carpintero Enano (E/G)"},
+    {slot = 4, item_id = 960, quantity = 1000, description = "Ropa de Leñador (E/G)"},
+    {slot = 5, item_id = 961, quantity = 1000, description = "Ropa de Minero (E/G)"},
+    {slot = 6, item_id = 962, quantity = 1000, description = "Túnica Elegante (E/G)"},
+    {slot = 7, item_id = 963, quantity = 1000, description = "Ropaje de Luchador de Las Minas (E/G)"},
+    {slot = 8, item_id = 964, quantity = 1000, description = "Ropa de Viajero (E/G)"},
+    {slot = 9, item_id = 965, quantity = 1000, description = "Antigua Armadura Dorada (E/G)"},
+    {slot = 10, item_id = 966, quantity = 1000, description = "Alifafe de Pirata (E/G)"},
+    {slot = 11, item_id = 967, quantity = 1000, description = "Ropas de Buscador (E/G)"},
+    {slot = 12, item_id = 968, quantity = 1000, description = "Armadura Grabada Completa (E/G)"},
+    {slot = 13, item_id = 969, quantity = 1000, description = "Túnica Dorada de Gala (E/G)"},
+    {slot = 14, item_id = 970, quantity = 1000, description = "Armadura de Placas Livianas Thor (E/G)"},
+    {slot = 15, item_id = 971, quantity = 1000, description = "Armadura Metal Oscuro (E/G)"},
+    {slot = 16, item_id = 972, quantity = 1000, description = "Túnica de Mahal (E/G)"},
+    {slot = 17, item_id = 973, quantity = 1000, description = "Armadura de Placas Livianas Thor (E/G-M)"},
+    {slot = 18, item_id = 974, quantity = 1000, description = "Capa de Monje Cocida con Mithril (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 126
+name = "Gourk"
+category = "NPCS COMERCIANTES"
+comment = "Sastre Razas (drows) Name=Gourk Desc=Vendo ropas para DROWS, de hermosas telas y refinados detalles. Head=203 Heading=3 Body=264 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=9 Obj1=977-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Vendo ropas para DROWS, de hermosas telas y refinados detalles."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 203
+heading = 3
+body = 264
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 977, quantity = 1000, description = "Vestimenta Esclava (H/E/EO)"},
+    {slot = 2, item_id = 978, quantity = 1000, description = "Harapos de la Cueva (H/E/EO)"},
+    {slot = 3, item_id = 979, quantity = 1000, description = "Armadura Maghtere Roja (H/E/EO)"},
+    {slot = 4, item_id = 980, quantity = 1000, description = "Armadura de Combate Liviana (H/E/EO)"},
+    {slot = 5, item_id = 981, quantity = 1000, description = "Piwafwi de Fuego (H/E/EO)"},
+    {slot = 6, item_id = 982, quantity = 1000, description = "Armadura Melee de Explorador (H/E/EO)"},
+    {slot = 7, item_id = 983, quantity = 1000, description = "Piwafwi Purpura del Silencio (H/E/EO)"},
+    {slot = 8, item_id = 984, quantity = 1000, description = "Piwafwi Alto Narbondel (H/E/EO)"},
+    {slot = 9, item_id = 985, quantity = 1000, description = "Piwafwi Socere de Lloth (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 146
+name = "Unurbar Gorog"
+category = "NPCS DECORATIVOS"
+comment = "VendeBebidas Fiesta de la Cerveza Name=Unurbar Gorog NpcType=0 Desc=¡Hola! Poseo las mejores y más extrañas bebidas de estas tierras, ¿Qué desea que le sirva? Head=304 Heading=3 Body=372 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=8 Obj1=498-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola! Poseo las mejores y más extrañas bebidas de estas tierras, ¿Qué desea que le sirva?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 304
+heading = 3
+body = 372
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 498, quantity = 1000, description = "Sidra"},
+    {slot = 2, item_id = 522, quantity = 1000, description = "Hipocrás"},
+    {slot = 3, item_id = 550, quantity = 1000, description = "Porrón de cerveza"},
+    {slot = 4, item_id = 160, quantity = 1000, description = "Cerveza"},
+    {slot = 5, item_id = 557, quantity = 1000, description = "Vino de canela"},
+    {slot = 6, item_id = 612, quantity = 1000, description = "Cerveza de los enanos"},
+    {slot = 7, item_id = 42, quantity = 1000, description = "Vino"},
+    {slot = 8, item_id = 622, quantity = 1000, description = "Barrilito de cerveza"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 8
+name = "Thorkis"
+category = "NPCS ULLATHORPE"
+comment = "Provisiones Ulla Name=Thorkis NpcType=0 Desc=Hooooola jovencito, tengo las mejores provisiones de Ullathorpe!! Head=504 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=5 Obj1=1-10000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Hooooola jovencito, tengo las mejores provisiones de Ullathorpe!!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 504
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 1, quantity = 10000, description = "Manzana Roja"},
+    {slot = 2, item_id = 158, quantity = 1000, description = "Banana"},
+    {slot = 3, item_id = 22, quantity = 1000, description = "Frutas del Bosque"},
+    {slot = 4, item_id = 43, quantity = 1000, description = "Botella de Agua"},
+    {slot = 5, item_id = 160, quantity = 1000, description = "Cerveza"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 7
+name = "Herrero"
+category = "NPCS ULLATHORPE"
+comment = "Herrero Ulla Name=Herrero NpcType=0 Desc=Bienvenido, rata de alcantarilla, soy el Herrero de Ullathorpe...tengo algunas armas que pueden ayudarte en tus viajes. Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=9 Obj1=15-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido, rata de alcantarilla, soy el Herrero de Ullathorpe...tengo algunas armas que pueden ayudarte en tus viajes."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 15, quantity = 1000, description = "Daga"},
+    {slot = 2, item_id = 619, quantity = 1000, description = "Daga Envenenada"},
+    {slot = 3, item_id = 165, quantity = 1000, description = "Daga +1"},
+    {slot = 4, item_id = 9, quantity = 1000, description = "Horquilla"},
+    {slot = 5, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 6, item_id = 125, quantity = 1000, description = "Sable"},
+    {slot = 7, item_id = 123, quantity = 1000, description = "Vikinga"},
+    {slot = 8, item_id = 389, quantity = 1000, description = "Martillo de Herrero"},
+    {slot = 9, item_id = 124, quantity = 1000, description = "Katana"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 46
+name = "Mago"
+category = "NPCS ULLATHORPE"
+comment = "VendeMagia Ulla Name=Mago NpcType=0 Desc=Bienvenido a mi pequeña tienda de Ullathorpe... Tengo algunos hechizos que podrían interesarte. Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=6 Obj1=363-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a mi pequeña tienda de Ullathorpe... Tengo algunos hechizos que podrían interesarte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 363, quantity = 1000, description = "Ataque de Hambre"},
+    {slot = 2, item_id = 199, quantity = 1000, description = "Dardo Mágico"},
+    {slot = 3, item_id = 200, quantity = 1000, description = "Antídoto Mágico"},
+    {slot = 4, item_id = 197, quantity = 1000, description = "Flecha Mágica"},
+    {slot = 5, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 6, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 12
+name = "Sastre"
+category = "NPCS ULLATHORPE"
+comment = "Sastre Ulla (hombres) Name=Sastre NpcType=0 Desc=¡Hola forastero! Soy el Sastre de Ullathorpe, Bienvenido! Head=9 Heading=3 Body=50 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=9 Obj1=31-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola forastero! Soy el Sastre de Ullathorpe, Bienvenido!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 9
+heading = 3
+body = 50
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 31, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 2, item_id = 32, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 3, item_id = 35, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 4, item_id = 641, quantity = 1000, description = "Ropa de Pordiosero"},
+    {slot = 5, item_id = 501, quantity = 1000, description = "Ropa de Campesino"},
+    {slot = 6, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 7, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 8, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 9, item_id = 873, quantity = 1000, description = "Guantes de hurto"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 19
+name = "Sastre"
+category = "NPCS ULLATHORPE"
+comment = "Sastre Ulla (mujeres) Name=Sastre NpcType=0 Desc=¡Bienvenida Viajera! Tengo hermosas vestimentas para ofrecerte... Head=70 Heading=3 Body=80 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=170-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenida Viajera! Tengo hermosas vestimentas para ofrecerte..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 70
+heading = 3
+body = 80
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 170, quantity = 1000, description = "Vestimenta de Mujer (H/E/EO-M)"},
+    {slot = 2, item_id = 504, quantity = 1000, description = "Atuendo Combinado (H/E/EO-M)"},
+    {slot = 3, item_id = 505, quantity = 1000, description = "Atuendo Azul (H/E/EO-M)"},
+    {slot = 4, item_id = 506, quantity = 1000, description = "Atuendo Rosa (H/E/EO-M)"},
+    {slot = 5, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 20
+name = "Sastre"
+category = "NPCS ULLATHORPE"
+comment = "Sastre Ulla (enanos) Name=Sastre NpcType=0 Desc=¡Acérquese! Tengo pequeñas prendas que serán de su agrado... Head=303 Heading=3 Body=180 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=240-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 303
+heading = 3
+body = 180
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 240, quantity = 1000, description = "Ropa de Enano (E/G)"},
+    {slot = 2, item_id = 527, quantity = 1000, description = "Ropa de Enana (E/G-M)"},
+    {slot = 3, item_id = 486, quantity = 1000, description = "Ropa de Estilo (E/G)"},
+    {slot = 4, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 5, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 6, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 54
+name = "Armaduras"
+category = "NPCS ULLATHORPE"
+comment = "Armaduras Ulla Name=Armaduras Desc=Acércate, tengo algunas armaduras que podrían protegerte. Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=30-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Acércate, tengo algunas armaduras que podrían protegerte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 30, quantity = 1000, description = "Armadura de Cuero"},
+    {slot = 2, item_id = 529, quantity = 1000, description = "Armadura de Cuero (H/E/EO-M)"},
+    {slot = 3, item_id = 668, quantity = 1000, description = "Armadura de Cuero (E/G)"},
+    {slot = 4, item_id = 1001, quantity = 1000, description = "Casco de Águila"},
+    {slot = 5, item_id = 1002, quantity = 1000, description = "Casco de Lobo"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 15
+name = "Thorkis"
+category = "NPCS NIX"
+comment = "Provisiones Nix Name=Thorkis NpcType=0 Desc=¡Qué tal amigo! Entra, pues tengo las mejores provisiones de Nix! Head=504 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=4 Obj1=139-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Qué tal amigo! Entra, pues tengo las mejores provisiones de Nix!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 504
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 139, quantity = 1000, description = "Pescado"},
+    {slot = 2, item_id = 26, quantity = 1000, description = "Pollo"},
+    {slot = 3, item_id = 43, quantity = 1000, description = "Botella de Agua"},
+    {slot = 4, item_id = 160, quantity = 1000, description = "Cerveza"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 37
+name = "Herrero"
+category = "NPCS NIX"
+comment = "Herrero Nix Name=Herrero NpcType=0 Desc=Bienvenido, rata de alcantarilla, soy el Herrero de Nix, tengo algunas armas que pueden ayudarte en tus viajes. Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=9 Obj1=15-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido, rata de alcantarilla, soy el Herrero de Nix, tengo algunas armas que pueden ayudarte en tus viajes."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 15, quantity = 1000, description = "Daga"},
+    {slot = 2, item_id = 619, quantity = 1000, description = "Daga Envenenada"},
+    {slot = 3, item_id = 165, quantity = 1000, description = "Daga +1"},
+    {slot = 4, item_id = 389, quantity = 1000, description = "Martillo de Herrero"},
+    {slot = 5, item_id = 3, quantity = 1000, description = "Hacha"},
+    {slot = 6, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 7, item_id = 398, quantity = 1000, description = "Garrote"},
+    {slot = 8, item_id = 990, quantity = 1000, description = "Mazo del Juicio"},
+    {slot = 9, item_id = 1009, quantity = 1000, description = "Cuchillas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 47
+name = "Mago"
+category = "NPCS NIX"
+comment = "VendeMagia NIX Name=Mago NpcType=0 Desc=Bienvenido a mi pequeña tienda de Nix... Tengo algunos hechizos que podrían interesarte. Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=9 Obj1=201-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a mi pequeña tienda de Nix... Tengo algunos hechizos que podrían interesarte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 201, quantity = 1000, description = "Aura Sanadora"},
+    {slot = 2, item_id = 204, quantity = 1000, description = "Flecha Eléctrica"},
+    {slot = 3, item_id = 364, quantity = 1000, description = "Terrible Hambre de Igôr"},
+    {slot = 4, item_id = 205, quantity = 1000, description = "Proyectil Etéreo"},
+    {slot = 5, item_id = 380, quantity = 1000, description = "Invocación de Ultratumba"},
+    {slot = 6, item_id = 661, quantity = 1000, description = "Sombrero de Aprendiz"},
+    {slot = 7, item_id = 383, quantity = 1000, description = "Sombrero de Aprendiz Avanzado"},
+    {slot = 8, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 9, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 21
+name = "Sastre"
+category = "NPCS NIX"
+comment = "Sastre Nix (hombres) Name=Sastre NpcType=0 Desc=¡Hola forastero! Soy el Sastre de Nix, Bienvenido! Head=7 Heading=3 Body=50 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=10 Obj1=31-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola forastero! Soy el Sastre de Nix, Bienvenido!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 50
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 31, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 2, item_id = 32, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 3, item_id = 35, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 4, item_id = 45, quantity = 1000, description = "Ropa de Clan"},
+    {slot = 5, item_id = 80, quantity = 1000, description = "Ropa de Clan"},
+    {slot = 6, item_id = 501, quantity = 1000, description = "Ropa de Campesino"},
+    {slot = 7, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 8, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 9, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 10, item_id = 1036, quantity = 1000, description = "Guantes de lucha"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 22
+name = "Sastre"
+category = "NPCS NIX"
+comment = "Sastre Nix (mujeres) Name=Sastre NpcType=0 Desc=¡Bienvenida Viajera! Entra a mi tienda, ¡Tengo las mejores prendas de Nix! Head=71 Heading=3 Body=80 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=170-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenida Viajera! Entra a mi tienda, ¡Tengo las mejores prendas de Nix!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 71
+heading = 3
+body = 80
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 170, quantity = 1000, description = "Vestimenta de Mujer (H/E/EO-M)"},
+    {slot = 2, item_id = 504, quantity = 1000, description = "Atuendo Combinado (H/E/EO-M)"},
+    {slot = 3, item_id = 505, quantity = 1000, description = "Atuendo Azul (H/E/EO-M)"},
+    {slot = 4, item_id = 506, quantity = 1000, description = "Atuendo Rosa (H/E/EO-M)"},
+    {slot = 5, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 23
+name = "Sastre"
+category = "NPCS NIX"
+comment = "Sastre Nix (enanos) Name=Sastre NpcType=0 Desc=¡Acérquese! Tengo pequeñas prendas que serán de su agrado... Head=404 Heading=3 Body=180 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=240-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 404
+heading = 3
+body = 180
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 240, quantity = 1000, description = "Ropa de Enano (E/G)"},
+    {slot = 2, item_id = 527, quantity = 1000, description = "Ropa de Enana (E/G-M)"},
+    {slot = 3, item_id = 486, quantity = 1000, description = "Ropa de Estilo (E/G)"},
+    {slot = 4, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 5, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 6, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 70
+name = "Armaduras"
+category = "NPCS NIX"
+comment = "Armaduras Nix Name=Armaduras Desc=Acércate, tengo algunas armaduras que podrían protegerte. Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=8 Obj1=30-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Acércate, tengo algunas armaduras que podrían protegerte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 30, quantity = 1000, description = "Armadura de Cuero"},
+    {slot = 2, item_id = 529, quantity = 1000, description = "Armadura de Cuero (H/E/EO-M)"},
+    {slot = 3, item_id = 668, quantity = 1000, description = "Armadura de Cuero (E/G)"},
+    {slot = 4, item_id = 359, quantity = 1000, description = "Cota de Mallas"},
+    {slot = 5, item_id = 499, quantity = 1000, description = "Cota de Mallas (H/E/EO-M)"},
+    {slot = 6, item_id = 667, quantity = 1000, description = "Cota de Mallas (E/G)"},
+    {slot = 7, item_id = 1001, quantity = 1000, description = "Casco de Águila"},
+    {slot = 8, item_id = 1002, quantity = 1000, description = "Casco de Lobo"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 50
+name = "Tellez"
+category = "NPCS BANDERBILL"
+comment = "Provisiones Bander Name=Tellez NpcType=0 Desc=¡Hola! Bienvenido al "Mesón Hostigado", ¿Qué desea que le sirva? Head=505 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=10 Obj1=21-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola! Bienvenido al \"Mesón Hostigado\", ¿Qué desea que le sirva?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 21, quantity = 1000, description = "Porción de Tarta"},
+    {slot = 2, item_id = 23, quantity = 1000, description = "Pan de Trigo"},
+    {slot = 3, item_id = 24, quantity = 1000, description = "Pan de Maíz"},
+    {slot = 4, item_id = 28, quantity = 1000, description = "Queso de Cabra"},
+    {slot = 5, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 6, item_id = 26, quantity = 1000, description = "Pollo"},
+    {slot = 7, item_id = 25, quantity = 1000, description = "Pastel"},
+    {slot = 8, item_id = 160, quantity = 1000, description = "Cerveza"},
+    {slot = 9, item_id = 42, quantity = 1000, description = "Vino"},
+    {slot = 10, item_id = 161, quantity = 1000, description = "Jugo de Frutas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 38
+name = "Herrero"
+category = "NPCS BANDERBILL"
+comment = "Herrero Bander Name=Herrero NpcType=0 Desc=¡Ven, pasa, que he fabricado las más poderosas armas de Banderbill para tí! Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=9 Obj1=164-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven, pasa, que he fabricado las más poderosas armas de Banderbill para tí!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 164, quantity = 1000, description = "Espada Corta"},
+    {slot = 2, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 3, item_id = 19, quantity = 1000, description = "Espada Dos Manos"},
+    {slot = 4, item_id = 123, quantity = 1000, description = "Espada Vikinga"},
+    {slot = 5, item_id = 389, quantity = 1000, description = "Martillo de Herrero"},
+    {slot = 6, item_id = 401, quantity = 1000, description = "Martillo de Guerra"},
+    {slot = 7, item_id = 478, quantity = 1000, description = "Arco Simple"},
+    {slot = 8, item_id = 990, quantity = 1000, description = "Mazo del Juicio"},
+    {slot = 9, item_id = 1009, quantity = 1000, description = "Cuchillas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 51
+name = "Mago"
+category = "NPCS BANDERBILL"
+comment = "VendeMagia Bander Name=Mago NpcType=0 Desc=Bienvenido a mi pequeña Tienda de Banderbill... Tengo algunos hechizos que podrían interesarte. Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=13 Obj1=394-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a mi pequeña Tienda de Banderbill... Tengo algunos hechizos que podrían interesarte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 394, quantity = 1000, description = "Llamado a la Naturaleza"},
+    {slot = 2, item_id = 203, quantity = 1000, description = "Aura Sanadora Avanzada"},
+    {slot = 3, item_id = 207, quantity = 1000, description = "Devolver Movilidad"},
+    {slot = 4, item_id = 657, quantity = 1000, description = "Quitar la turbación"},
+    {slot = 5, item_id = 206, quantity = 1000, description = "Paralizar"},
+    {slot = 6, item_id = 361, quantity = 1000, description = "Tormenta de Fuego"},
+    {slot = 7, item_id = 319, quantity = 1000, description = "Resucitar"},
+    {slot = 8, item_id = 531, quantity = 1000, description = "Descarga Eléctrica"},
+    {slot = 9, item_id = 318, quantity = 1000, description = "Invisibilidad"},
+    {slot = 10, item_id = 537, quantity = 1000, description = "Invocar Elemental de Agua"},
+    {slot = 11, item_id = 662, quantity = 1000, description = "Sombrero de Mago"},
+    {slot = 12, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 13, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 25
+name = "Sastre"
+category = "NPCS BANDERBILL"
+comment = "Sastre Bander (hombres) Name=Sastre NpcType=0 Desc=¡Bienvenido a la Sastrería de Banderbill! ¿En qué lo puedo ayudar? Head=7 Heading=3 Body=56 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=11 Obj1=501-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenido a la Sastrería de Banderbill! ¿En qué lo puedo ayudar?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 56
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 501, quantity = 1000, description = "Ropa de Campesino"},
+    {slot = 2, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 3, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 4, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 5, item_id = 381, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 6, item_id = 196, quantity = 1000, description = "Túnica de Mago"},
+    {slot = 7, item_id = 357, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 8, item_id = 986, quantity = 1000, description = "Túnica de Druida"},
+    {slot = 9, item_id = 873, quantity = 1000, description = "Guantes de Hurto"},
+    {slot = 10, item_id = 1036, quantity = 1000, description = "Guantes de Lucha"},
+    {slot = 11, item_id = 1010, quantity = 1000, description = "Sombrero de Pirata"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 26
+name = "Sastre"
+category = "NPCS BANDERBILL"
+comment = "Sastre Bander (mujeres) Name=Sastre NpcType=0 Desc=¡Adelante hermosa niña! En mi tienda encontrarás vestidos hechos para tí! Head=173 Heading=3 Body=121 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=504-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Adelante hermosa niña! En mi tienda encontrarás vestidos hechos para tí!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 173
+heading = 3
+body = 121
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 504, quantity = 1000, description = "Atuendo Combinado (H/E/EO-M)"},
+    {slot = 2, item_id = 505, quantity = 1000, description = "Atuendo Azul (H/E/EO-M)"},
+    {slot = 3, item_id = 506, quantity = 1000, description = "Atuendo Rosa (H/E/EO-M)"},
+    {slot = 4, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"},
+    {slot = 5, item_id = 511, quantity = 1000, description = "Vestido de Novia Sensual (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 27
+name = "Sastre"
+category = "NPCS BANDERBILL"
+comment = "Sastre Bander (enanos) Name=Sastre NpcType=0 Desc=¡Ven y mira estas prendas que he confeccionado para nuestra raza! Head=305 Heading=3 Body=159 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=486-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven y mira estas prendas que he confeccionado para nuestra raza!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 305
+heading = 3
+body = 159
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 486, quantity = 1000, description = "Ropa de Estilo (E/G)"},
+    {slot = 2, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 3, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 4, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"},
+    {slot = 5, item_id = 671, quantity = 1000, description = "Túnica de Monje (E/G)"},
+    {slot = 6, item_id = 670, quantity = 1000, description = "Túnica de Mago (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 74
+name = "Armaduras"
+category = "NPCS BANDERBILL"
+comment = "Armaduras Bander Name=Armaduras Desc=Ven, tengo resistentes armaduras para ofrecerte. Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=359-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Ven, tengo resistentes armaduras para ofrecerte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 359, quantity = 1000, description = "Cota de Mallas"},
+    {slot = 2, item_id = 499, quantity = 1000, description = "Cota de Mallas (H/E/EO-M)"},
+    {slot = 3, item_id = 667, quantity = 1000, description = "Cota de Mallas (E/G)"},
+    {slot = 4, item_id = 360, quantity = 1000, description = "Armadura de Cazador"},
+    {slot = 5, item_id = 648, quantity = 1000, description = "Armadura de Cazador (E/G)"},
+    {slot = 6, item_id = 1003, quantity = 1000, description = "Casco de Oso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 43
+name = "Sorks"
+category = "NPCS LINDOS"
+comment = "Provisiones Lindos Name=Sorks NpcType=0 Desc=¿¡Estáis sediento y hambriento!? Head=505 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=4 Obj1=139-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¿¡Estáis sediento y hambriento!?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 139, quantity = 1000, description = "Pescado"},
+    {slot = 2, item_id = 754, quantity = 1000, description = "Rábano"},
+    {slot = 3, item_id = 43, quantity = 1000, description = "Botella de Agua"},
+    {slot = 4, item_id = 160, quantity = 1000, description = "Cerveza"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 56
+name = "Herrero"
+category = "NPCS LINDOS"
+comment = "Herrero Lindos Name=Herrero NpcType=0 Desc=¡Ven, pasa, que he fabricado, aquí en Lindos, poderosas armas para tí! Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=8 Obj1=2-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven, pasa, que he fabricado, aquí en Lindos, poderosas armas para tí!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 2, item_id = 19, quantity = 1000, description = "Espada Dos Manos"},
+    {slot = 3, item_id = 123, quantity = 1000, description = "Espada Vikinga"},
+    {slot = 4, item_id = 401, quantity = 1000, description = "Martillo de Guerra"},
+    {slot = 5, item_id = 125, quantity = 1000, description = "Sable"},
+    {slot = 6, item_id = 753, quantity = 1000, description = "Mayal Triple"},
+    {slot = 7, item_id = 404, quantity = 1000, description = "Escudo de Tortuga"},
+    {slot = 8, item_id = 990, quantity = 1000, description = "Mazo del Juicio"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 69
+name = "Mago"
+category = "NPCS LINDOS"
+comment = "VendeMagia Lindos Name=Mago NpcType=0 Desc=Ven por aquí joven, las artes mágicas superiores te están llamando... Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=15 Obj1=530-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Ven por aquí joven, las artes mágicas superiores te están llamando..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 530, quantity = 1000, description = "Inmovilizar"},
+    {slot = 2, item_id = 396, quantity = 1000, description = "Celeridad"},
+    {slot = 3, item_id = 397, quantity = 1000, description = "Torpeza"},
+    {slot = 4, item_id = 470, quantity = 1000, description = "Fuerza"},
+    {slot = 5, item_id = 471, quantity = 1000, description = "Debilidad"},
+    {slot = 6, item_id = 319, quantity = 1000, description = "Resucitar"},
+    {slot = 7, item_id = 673, quantity = 1000, description = "Mimetismo"},
+    {slot = 8, item_id = 394, quantity = 1000, description = "LLamado a la Naturaleza"},
+    {slot = 9, item_id = 395, quantity = 1000, description = "Llamado Nigromante"},
+    {slot = 10, item_id = 538, quantity = 1000, description = "Invocar Elemental de Tierra"},
+    {slot = 11, item_id = 536, quantity = 1000, description = "Invocar Elemental de Fuego"},
+    {slot = 12, item_id = 532, quantity = 1000, description = "Apocalipsis"},
+    {slot = 13, item_id = 542, quantity = 1000, description = "Turbación"},
+    {slot = 14, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 15, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 31
+name = "Sastre"
+category = "NPCS LINDOS"
+comment = "Sastre Lindos (hombres) Name=Sastre NpcType=0 Desc=¡Ven aquí! Te puedo ofrecer las mejores ropas de la isla... Head=7 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=11 Obj1=31-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven aquí! Te puedo ofrecer las mejores ropas de la isla..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 31, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 2, item_id = 32, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 3, item_id = 35, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 4, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 5, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 6, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 7, item_id = 381, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 8, item_id = 196, quantity = 1000, description = "Túnica de Mago"},
+    {slot = 9, item_id = 986, quantity = 1000, description = "Túnica de Druida"},
+    {slot = 10, item_id = 873, quantity = 1000, description = "Guantes de Hurto"},
+    {slot = 11, item_id = 1010, quantity = 1000, description = "Sombrero de Pirata"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 32
+name = "Sastre"
+category = "NPCS LINDOS"
+comment = "Sastre Lindos (mujeres) Name=Sastre NpcType=0 Desc=¡Ven y mira estas vestimentas, seguro te encantarán! Head=75 Heading=3 Body=118 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=170-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven y mira estas vestimentas, seguro te encantarán!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 75
+heading = 3
+body = 118
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 170, quantity = 1000, description = "Vestimenta de Mujer (H/E/EO-M)"},
+    {slot = 2, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"},
+    {slot = 3, item_id = 511, quantity = 1000, description = "Vestido de Novia Sensual (H/E/EO-M)"},
+    {slot = 4, item_id = 488, quantity = 1000, description = "White Lady (H/E/EO-M)"},
+    {slot = 5, item_id = 508, quantity = 1000, description = "Ropa Estuaria (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 39
+name = "Sastre"
+category = "NPCS LINDOS"
+comment = "Sastre Lindos (enanos) Name=Sastre NpcType=0 Desc=¡Hola forastero! confeccionamos las mejores ropas de la zona. Head=304 Heading=3 Body=135 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=7 Obj1=507-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola forastero! confeccionamos las mejores ropas de la zona."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 304
+heading = 3
+body = 135
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 2, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 3, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"},
+    {slot = 4, item_id = 671, quantity = 1000, description = "Túnica de Monje (E/G)"},
+    {slot = 5, item_id = 670, quantity = 1000, description = "Túnica de Mago (E/G)"},
+    {slot = 6, item_id = 524, quantity = 1000, description = "Túnica Roja Especial (E/G)"},
+    {slot = 7, item_id = 370, quantity = 1000, description = "Capucha de Cazador"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 113
+name = "Armaduras"
+category = "NPCS LINDOS"
+comment = "Armaduras Lindos Name=Armaduras Desc=¡Tengo a la venta las mejores armaduras de la isla! Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=7 Obj1=359-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Tengo a la venta las mejores armaduras de la isla!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 359, quantity = 1000, description = "Cota de Mallas"},
+    {slot = 2, item_id = 499, quantity = 1000, description = "Cota de Mallas (H/E/EO-M)"},
+    {slot = 3, item_id = 667, quantity = 1000, description = "Cota de Mallas (E/G)"},
+    {slot = 4, item_id = 360, quantity = 1000, description = "Armadura de Cazador"},
+    {slot = 5, item_id = 648, quantity = 1000, description = "Armadura de Cazador (E/G)"},
+    {slot = 6, item_id = 484, quantity = 1000, description = "Manto de Noble"},
+    {slot = 7, item_id = 1004, quantity = 1000, description = "Casco de Tigre"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 103
+name = "Carahuel"
+category = "NPCS ARGHAL"
+comment = "Provisiones Arghal Name=Carahuel NpcType=0 Desc=¡Hola, pequeño amigo! ¿Estás buscando algo para llenar tu estómago? Creo que puedo ayudarte... Head=474 Heading=3 Body=309 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=4 Obj1=1-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola, pequeño amigo! ¿Estás buscando algo para llenar tu estómago? Creo que puedo ayudarte..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 474
+heading = 3
+body = 309
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 1, quantity = 1000, description = "Manzana Roja"},
+    {slot = 2, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 3, item_id = 158, quantity = 1000, description = "Banana"},
+    {slot = 4, item_id = 754, quantity = 1000, description = "Rábano"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 57
+name = "Bhoemond"
+category = "NPCS ARGHAL"
+comment = "Provisiones Arghal (Taberna) Name=Bhoemond NpcType=0 Desc= ¡Sea bienvenido a la famosa Taberna de Arghal!, Aquí podrá saciarse con la mejor comida y la mejor bebida de toda la zona. Head=17 Heading=3 Body=100 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=10 Obj1=21-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Sea bienvenido a la famosa Taberna de Arghal!, Aquí podrá saciarse con la mejor comida y la mejor bebida de toda la zona."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 17
+heading = 3
+body = 100
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 21, quantity = 1000, description = "Porción de Tarta"},
+    {slot = 2, item_id = 23, quantity = 1000, description = "Pan de Trigo"},
+    {slot = 3, item_id = 24, quantity = 1000, description = "Pan de Maíz"},
+    {slot = 4, item_id = 28, quantity = 1000, description = "Queso de Cabra"},
+    {slot = 5, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 6, item_id = 26, quantity = 1000, description = "Pollo"},
+    {slot = 7, item_id = 25, quantity = 1000, description = "Pastel"},
+    {slot = 8, item_id = 160, quantity = 1000, description = "Cerveza"},
+    {slot = 9, item_id = 42, quantity = 1000, description = "Vino"},
+    {slot = 10, item_id = 161, quantity = 1000, description = "Jugo de Frutas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 112
+name = "Herrero"
+category = "NPCS ARGHAL"
+comment = "Herrero Arghal Name=Herrero NpcType=0 Desc=Con estas manos he construído algunas armas que te podrán servir en tus aventuras... ¡paga por ellas y serán tuyas! Head=16 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=8 Obj1=15-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Con estas manos he construído algunas armas que te podrán servir en tus aventuras... ¡paga por ellas y serán tuyas!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 16
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 15, quantity = 1000, description = "Daga"},
+    {slot = 2, item_id = 619, quantity = 1000, description = "Daga Envenenada"},
+    {slot = 3, item_id = 165, quantity = 1000, description = "Daga +1"},
+    {slot = 4, item_id = 389, quantity = 1000, description = "Martillo de Herrero"},
+    {slot = 5, item_id = 9, quantity = 1000, description = "Horquilla"},
+    {slot = 6, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 7, item_id = 125, quantity = 1000, description = "Sable"},
+    {slot = 8, item_id = 123, quantity = 1000, description = "Espada Vikinga"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 59
+name = "Mago"
+category = "NPCS ARGHAL"
+comment = "VendeMagia Arghal Name=Mago Desc=Bienvenido, neófito a ésta, a mi pequeña escuela de Magia, ubicada en el corazón mismo de la ciudad de Arghal. Head=20 Heading=3 Body=34 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=7 Obj1=199-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido, neófito a ésta, a mi pequeña escuela de Magia, ubicada en el corazón mismo de la ciudad de Arghal."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 20
+heading = 3
+body = 34
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 199, quantity = 1000, description = "Dardo Mágico"},
+    {slot = 2, item_id = 200, quantity = 1000, description = "Antídoto Mágico"},
+    {slot = 3, item_id = 201, quantity = 1000, description = "Aura Sanadora"},
+    {slot = 4, item_id = 202, quantity = 1000, description = "Toxina"},
+    {slot = 5, item_id = 204, quantity = 1000, description = "Flecha Eléctrica"},
+    {slot = 6, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 7, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 63
+name = "Steve"
+category = "NPCS ARGHAL"
+comment = "Sastre Arghal (hombres) Name=Steve NpcType=0 Desc=Ven, acércate, que tengo para ofrecerte las mejores prendas masculinas de todo Arghal... Head=22 Heading=3 Body=342 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=10 Obj1=31-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Ven, acércate, que tengo para ofrecerte las mejores prendas masculinas de todo Arghal..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 22
+heading = 3
+body = 342
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 31, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 2, item_id = 32, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 3, item_id = 35, quantity = 1000, description = "Vestimentas Comunes"},
+    {slot = 4, item_id = 641, quantity = 1000, description = "Ropa de Pordiosero"},
+    {slot = 5, item_id = 501, quantity = 1000, description = "Ropa de Campesino"},
+    {slot = 6, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 7, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 8, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 9, item_id = 873, quantity = 1000, description = "Guantes de Hurto"},
+    {slot = 10, item_id = 1036, quantity = 1000, description = "Guantes de Lucha"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 64
+name = "Virgin"
+category = "NPCS ARGHAL"
+comment = "Sastre Arghal (mujeres) Name=Virgin NpcType=0 Desc=¡Bienvenida jovencita! Soy quien hace los mejores atuendos femeninos de todo Arghal, ven y prueba mi mercadería. Head=70 Heading=3 Body=80 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=5 Obj1=170-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenida jovencita! Soy quien hace los mejores atuendos femeninos de todo Arghal, ven y prueba mi mercadería."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 70
+heading = 3
+body = 80
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 170, quantity = 1000, description = "Vestimenta de Mujer (H/E/EO-M)"},
+    {slot = 2, item_id = 504, quantity = 1000, description = "Atuendo Combinado (H/E/EO-M)"},
+    {slot = 3, item_id = 505, quantity = 1000, description = "Atuendo Azul (H/E/EO-M)"},
+    {slot = 4, item_id = 506, quantity = 1000, description = "Atuendo Rosa (H/E/EO-M)"},
+    {slot = 5, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 68
+name = "Odkon"
+category = "NPCS ARGHAL"
+comment = "Sastre Arghal (enanos) Name=Odkon NpcType=0 Desc=¡Acérquese pequeño vistante de Arghal... Tengo prendas a su medida. Head=404 Heading=3 Body=371 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=240-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Acérquese pequeño vistante de Arghal... Tengo prendas a su medida."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 404
+heading = 3
+body = 371
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 240, quantity = 1000, description = "Ropa de Enano (E/G)"},
+    {slot = 2, item_id = 527, quantity = 1000, description = "Ropa de Enana (E/G-M)"},
+    {slot = 3, item_id = 486, quantity = 1000, description = "Ropa de Estilo (E/G)"},
+    {slot = 4, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 5, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 6, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 73
+name = "Armaduras"
+category = "NPCS ARGHAL"
+comment = "Armaduras Arghal Name=Armaduras Desc=Si tienes agallas como para abandonar la ciudad y enfrentar el peligro de los bosques, deberás comprar una de las armaduras que he fabricado. Head=39 Body=93 Heading=3 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=3 Obj1=30-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Si tienes agallas como para abandonar la ciudad y enfrentar el peligro de los bosques, deberás comprar una de las armaduras que he fabricado."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 39
+heading = 3
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 30, quantity = 1000, description = "Armadura de Cuero"},
+    {slot = 2, item_id = 529, quantity = 1000, description = "Armadura de Cuero (H/E/EO-M)"},
+    {slot = 3, item_id = 668, quantity = 1000, description = "Armadura de Cuero (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 40
+name = "Tolloz"
+category = "NPCS ARKHEIN"
+comment = "Provisiones Arkhein Name=Tolloz NpcType=0 Desc=¡Hola! Bienvenido a la Taberna de Arkhein, ¿Qué desea que le sirva? Head=505 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=13 NROITEMS=10 Obj1=21-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola! Bienvenido a la Taberna de Arkhein, ¿Qué desea que le sirva?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 13
+[inventory]
+items = [
+    {slot = 1, item_id = 21, quantity = 1000, description = "Porción de Tarta"},
+    {slot = 2, item_id = 23, quantity = 1000, description = "Pan de Trigo"},
+    {slot = 3, item_id = 24, quantity = 1000, description = "Pan de Maíz"},
+    {slot = 4, item_id = 28, quantity = 1000, description = "Queso de Cabra"},
+    {slot = 5, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 6, item_id = 26, quantity = 1000, description = "Pollo"},
+    {slot = 7, item_id = 25, quantity = 1000, description = "Pastel"},
+    {slot = 8, item_id = 160, quantity = 1000, description = "Cerveza"},
+    {slot = 9, item_id = 42, quantity = 1000, description = "Vino"},
+    {slot = 10, item_id = 161, quantity = 1000, description = "Jugo de Frutas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 55
+name = "Herrero"
+category = "NPCS ARKHEIN"
+comment = "Herrero Arkhein Name=Herrero NpcType=0 Desc=¡Ven, pasa, que he fabricado las más poderosas armas de Arkhein para tí! Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=9 Obj1=164-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven, pasa, que he fabricado las más poderosas armas de Arkhein para tí!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 164, quantity = 1000, description = "Espada Corta"},
+    {slot = 2, item_id = 2, quantity = 1000, description = "Espada Larga"},
+    {slot = 3, item_id = 19, quantity = 1000, description = "Espada Dos Manos"},
+    {slot = 4, item_id = 123, quantity = 1000, description = "Espada Vikinga"},
+    {slot = 5, item_id = 389, quantity = 1000, description = "Martillo de Herrero"},
+    {slot = 6, item_id = 401, quantity = 1000, description = "Martillo de Guerra"},
+    {slot = 7, item_id = 478, quantity = 1000, description = "Arco Simple"},
+    {slot = 8, item_id = 990, quantity = 1000, description = "Mazo del Juicio"},
+    {slot = 9, item_id = 1009, quantity = 1000, description = "Cuchillas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 61
+name = "Mago"
+category = "NPCS ARKHEIN"
+comment = "VendeMagia Arkhein Name=Mago Desc=Bienvenido a mi pequeña tienda de Arkhein... Tengo algunos hechizos que podrían interesarte. Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=14 Obj1=395-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a mi pequeña tienda de Arkhein... Tengo algunos hechizos que podrían interesarte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 395, quantity = 1000, description = "Llamado Nigromante"},
+    {slot = 2, item_id = 203, quantity = 1000, description = "Aura Sanadora Avanzada"},
+    {slot = 3, item_id = 207, quantity = 1000, description = "Devolver Movilidad"},
+    {slot = 4, item_id = 657, quantity = 1000, description = "Quitar la turbación"},
+    {slot = 5, item_id = 206, quantity = 1000, description = "Paralizar"},
+    {slot = 6, item_id = 361, quantity = 1000, description = "Tormenta de Fuego"},
+    {slot = 7, item_id = 673, quantity = 1000, description = "Mimetismo"},
+    {slot = 8, item_id = 202, quantity = 1000, description = "Toxina"},
+    {slot = 9, item_id = 531, quantity = 1000, description = "Descarga Eléctrica"},
+    {slot = 10, item_id = 318, quantity = 1000, description = "Invisibilidad"},
+    {slot = 11, item_id = 537, quantity = 1000, description = "Invocar Elemental de Agua"},
+    {slot = 12, item_id = 662, quantity = 1000, description = "Sombrero de Mago"},
+    {slot = 13, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 14, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 28
+name = "Sastre"
+category = "NPCS ARKHEIN"
+comment = "Sastre Arkhein (hombres) Name=Sastre NpcType=0 Desc=¡Entrad Valiente Viajero! En la Sastrería de Arkhein están las mejores ropas del continente. Head=15 Heading=3 Body=56 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=14 Obj1=45-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Entrad Valiente Viajero! En la Sastrería de Arkhein están las mejores ropas del continente."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 15
+heading = 3
+body = 56
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 45, quantity = 1000, description = "Ropa de Clan"},
+    {slot = 2, item_id = 80, quantity = 1000, description = "Ropa de Clan"},
+    {slot = 3, item_id = 641, quantity = 1000, description = "Ropa de Pordiosero"},
+    {slot = 4, item_id = 501, quantity = 1000, description = "Ropa de Campesino"},
+    {slot = 5, item_id = 135, quantity = 1000, description = "Túnica Roja Burda"},
+    {slot = 6, item_id = 238, quantity = 1000, description = "Túnica Azul"},
+    {slot = 7, item_id = 239, quantity = 1000, description = "Túnica Roja"},
+    {slot = 8, item_id = 381, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 9, item_id = 196, quantity = 1000, description = "Túnica de Mago"},
+    {slot = 10, item_id = 357, quantity = 1000, description = "Túnica de Druida"},
+    {slot = 11, item_id = 986, quantity = 1000, description = "Túnica de Druida"},
+    {slot = 12, item_id = 873, quantity = 1000, description = "Guantes de Hurto"},
+    {slot = 13, item_id = 1036, quantity = 1000, description = "Guantes de Lucha"},
+    {slot = 14, item_id = 1010, quantity = 1000, description = "Sombrero de Pirata"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 29
+name = "Sastre"
+category = "NPCS ARKHEIN"
+comment = "Sastre Arkhein (mujeres) Name=Sastre NpcType=0 Desc=¡Ven y mira estas vestimentas, seguro te encantarán! Head=173 Heading=3 Body=80 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=4 Obj1=504-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Ven y mira estas vestimentas, seguro te encantarán!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 173
+heading = 3
+body = 80
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 504, quantity = 1000, description = "Atuendo Combinado (H/E/EO-M)"},
+    {slot = 2, item_id = 505, quantity = 1000, description = "Atuendo Azul (H/E/EO-M)"},
+    {slot = 3, item_id = 506, quantity = 1000, description = "Atuendo Rosa (H/E/EO-M)"},
+    {slot = 4, item_id = 382, quantity = 1000, description = "Vestido Azul (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 30
+name = "Sastre"
+category = "NPCS ARKHEIN"
+comment = "Sastre Arkhein (enanos) Name=Sastre NpcType=0 Desc=Aquí encontrarás las mejores prendas para enanos ¡Y a muy buen precio! Head=404 Heading=3 Body=159 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=486-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Aquí encontrarás las mejores prendas para enanos ¡Y a muy buen precio!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 404
+heading = 3
+body = 159
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 486, quantity = 1000, description = "Ropa de Estilo (E/G)"},
+    {slot = 2, item_id = 507, quantity = 1000, description = "Ropa Violeta (E/G)"},
+    {slot = 3, item_id = 502, quantity = 1000, description = "Ropa de Campesino (E/G)"},
+    {slot = 4, item_id = 707, quantity = 1000, description = "Vestimenta de Noble (E/G)"},
+    {slot = 5, item_id = 671, quantity = 1000, description = "Túnica de Monje (E/G)"},
+    {slot = 6, item_id = 670, quantity = 1000, description = "Túnica de Mago (E/G)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 111
+name = "Armaduras"
+category = "NPCS ARKHEIN"
+comment = "Armaduras Arkhein Name=Armaduras Desc=Ven, tengo resistentes armaduras para ofrecerte. Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=359-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Ven, tengo resistentes armaduras para ofrecerte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 359, quantity = 1000, description = "Cota de Mallas"},
+    {slot = 2, item_id = 499, quantity = 1000, description = "Cota de Mallas (H/E/EO-M)"},
+    {slot = 3, item_id = 667, quantity = 1000, description = "Cota de Mallas (E/G)"},
+    {slot = 4, item_id = 360, quantity = 1000, description = "Armadura de Cazador"},
+    {slot = 5, item_id = 648, quantity = 1000, description = "Armadura de Cazador (E/G)"},
+    {slot = 6, item_id = 1003, quantity = 1000, description = "Casco de Oso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 53
+name = "Roksar"
+category = "NPCS ESPERANZA"
+comment = "Provisiones Esperanza Name=Roksar NpcType=0 Desc=¡Hola, buen viajero! Dispongo de todo tipo de provisiones... ¿Qué deseas? Head=505 Heading=3 Body=202 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=1 NROITEMS=8 Obj1=28-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Hola, buen viajero! Dispongo de todo tipo de provisiones... ¿Qué deseas?"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 202
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 1
+[inventory]
+items = [
+    {slot = 1, item_id = 28, quantity = 1000, description = "Queso de Cabra"},
+    {slot = 2, item_id = 29, quantity = 1000, description = "Sandía"},
+    {slot = 3, item_id = 26, quantity = 1000, description = "Pollo"},
+    {slot = 4, item_id = 25, quantity = 1000, description = "Pastel"},
+    {slot = 5, item_id = 27, quantity = 1000, description = "Chuleta"},
+    {slot = 6, item_id = 42, quantity = 1000, description = "Vino"},
+    {slot = 7, item_id = 161, quantity = 1000, description = "Jugo de Frutas"},
+    {slot = 8, item_id = 533, quantity = 1000, description = "Odre"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 71
+name = "Herrero"
+category = "NPCS CIUDAD PERDIDA"
+comment = "Herrero Ciudad Perdida Name=Herrero NpcType=0 Desc=Tened aquí las armas más poderosas de estas tierras... ¡Pasad y ved! Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=2 NROITEMS=9 Obj1=164-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Tened aquí las armas más poderosas de estas tierras... ¡Pasad y ved!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 164, quantity = 1000, description = "Espada Corta"},
+    {slot = 2, item_id = 19, quantity = 1000, description = "Espada Dos Manos"},
+    {slot = 3, item_id = 123, quantity = 1000, description = "Espada Vikinga"},
+    {slot = 4, item_id = 124, quantity = 1000, description = "Katana"},
+    {slot = 5, item_id = 401, quantity = 1000, description = "Martillo de Guerra"},
+    {slot = 6, item_id = 125, quantity = 1000, description = "Sable"},
+    {slot = 7, item_id = 753, quantity = 1000, description = "Mayal Triple"},
+    {slot = 8, item_id = 990, quantity = 1000, description = "Mazo del Juicio"},
+    {slot = 9, item_id = 1009, quantity = 1000, description = "Cuchillas"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 99
+name = "Mago"
+category = "NPCS CIUDAD PERDIDA"
+comment = "VendeMagia Ciudad Perdida Name=Mago NpcType=0 Desc=¿Estás buscando los hechizos más poderosos? A buen puerto has llegado... Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=24 NROITEMS=4 Obj1=542-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¿Estás buscando los hechizos más poderosos? A buen puerto has llegado..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 542, quantity = 1000, description = "Turbación"},
+    {slot = 2, item_id = 532, quantity = 1000, description = "Apocalipsis"},
+    {slot = 3, item_id = 658, quantity = 1000, description = "Vara de Fresno"},
+    {slot = 4, item_id = 659, quantity = 1000, description = "Bastón nudoso"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 109
+name = "Sastre"
+category = "NPCS CIUDAD PERDIDA"
+comment = "Sastre Ciudad Perdida (hombres) Name=Sastre NpcType=0 Desc=¡Bienvenidos a la Gran Sastrería de la Ciudad Perdida! Aquí encontrarán las ropas más exóticas del mundo... Head=406 Heading=3 Body=130 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=10 Obj1=515-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Bienvenidos a la Gran Sastrería de la Ciudad Perdida! Aquí encontrarán las ropas más exóticas del mundo..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 406
+heading = 3
+body = 130
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 515, quantity = 1000, description = "Ropa Legendaria"},
+    {slot = 2, item_id = 490, quantity = 1000, description = "Ropa de Minero"},
+    {slot = 3, item_id = 381, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 4, item_id = 196, quantity = 1000, description = "Túnica de Mago"},
+    {slot = 5, item_id = 357, quantity = 1000, description = "Túnica de Monje"},
+    {slot = 6, item_id = 519, quantity = 1000, description = "Túnica Legendaria"},
+    {slot = 7, item_id = 986, quantity = 1000, description = "Túnica de Druida"},
+    {slot = 8, item_id = 873, quantity = 1000, description = "Guantes de Hurto"},
+    {slot = 9, item_id = 1036, quantity = 1000, description = "Guantes de Lucha"},
+    {slot = 10, item_id = 1010, quantity = 1000, description = "Sombrero de pirata"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 110
+name = "Sastre"
+category = "NPCS CIUDAD PERDIDA"
+comment = "Sastre Ciudad Perdida (mujeres) Name=Sastre NpcType=0 Desc=¡Entra! Jamás verás prendas más bellas que las que tengo para ofrecerte... Head=474 Heading=3 Body=124 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=511-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Entra! Jamás verás prendas más bellas que las que tengo para ofrecerte..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 474
+heading = 3
+body = 124
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 511, quantity = 1000, description = "Vestido de Novia Sensual (H/E/EO-M)"},
+    {slot = 2, item_id = 488, quantity = 1000, description = "White Lady (H/E/EO-M)"},
+    {slot = 3, item_id = 508, quantity = 1000, description = "Ropa Estuaria (H/E/EO-M)"},
+    {slot = 4, item_id = 510, quantity = 1000, description = "Vestido Indulgente (H/E/EO-M)"},
+    {slot = 5, item_id = 513, quantity = 1000, description = "Vestido de Bruja (H/E/EO-M)"},
+    {slot = 6, item_id = 514, quantity = 1000, description = "Vestido de Bruja Especial (H/E/EO-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 117
+name = "Sastre"
+category = "NPCS CIUDAD PERDIDA"
+comment = "Sastre Ciudad Perdida (enanos) Name=Sastre NpcType=0 Desc=¡Aquí en la Ciudad Perdida encontrarán las mejores ropas pequeñas de todo el mundo! Head=402 Heading=3 Body=136 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=6 Obj1=671-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Aquí en la Ciudad Perdida encontrarán las mejores ropas pequeñas de todo el mundo!"""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 402
+heading = 3
+body = 136
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 671, quantity = 1000, description = "Túnica de Monje (E/G)"},
+    {slot = 2, item_id = 670, quantity = 1000, description = "Túnica de Mago (E/G)"},
+    {slot = 3, item_id = 512, quantity = 1000, description = "Vestido Calipso (E/G-M)"},
+    {slot = 4, item_id = 672, quantity = 1000, description = "Armadura de Elite (E/G)"},
+    {slot = 5, item_id = 525, quantity = 1000, description = "Túnica Combinada (E/G)"},
+    {slot = 6, item_id = 526, quantity = 1000, description = "Túnica Combinada de Mujer (E/G-M)"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 116
+name = "Armaduras"
+category = "NPCS CIUDAD PERDIDA"
+comment = "Armaduras Ciudad Perdida Name=Armaduras Desc=Si estás buscando las mejores armaduras de estas tierras, has llegado al lugar correcto... Head=6 Body=93 Heading=4 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Alineacion=0 Comercia=1 TipoItems=3 NROITEMS=11 Obj1=672-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Si estás buscando las mejores armaduras de estas tierras, has llegado al lugar correcto..."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 4
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 672, quantity = 1000, description = "Armadura de Elite (E/G)"},
+    {slot = 2, item_id = 359, quantity = 1000, description = "Cota de Mallas"},
+    {slot = 3, item_id = 499, quantity = 1000, description = "Cota de Mallas (H/E/EO-M)"},
+    {slot = 4, item_id = 667, quantity = 1000, description = "Cota de Mallas (E/G)"},
+    {slot = 5, item_id = 360, quantity = 1000, description = "Armadura de Cazador"},
+    {slot = 6, item_id = 648, quantity = 1000, description = "Armadura de Cazador (E/G)"},
+    {slot = 7, item_id = 356, quantity = 1000, description = "Armadura de las Sombras"},
+    {slot = 8, item_id = 854, quantity = 1000, description = "Armadura de las Sombras (E/G)"},
+    {slot = 9, item_id = 195, quantity = 1000, description = "Armadura de Placas Completa"},
+    {slot = 10, item_id = 243, quantity = 1000, description = "Armadura de Placas Completa (E/G)"},
+    {slot = 11, item_id = 1004, quantity = 1000, description = "Casco de Tigre"}
+]
+[flags]
+attackable = 0
+domable = 0
+alignment = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 154
+name = "Lilith"
+category = "NPCS GUARDIAS LEGIÓN"
+comment = "Vende Pociones newbie Name=Lilith NpcType=0 Desc=Hola, tengo las mejores Pociones de la Alquimia para principiantes. Head=77 Heading=3 Body=200 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=11 NROITEMS=5 Obj1=855-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Hola, tengo las mejores Pociones de la Alquimia para principiantes."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 77
+heading = 3
+body = 200
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 11
+[inventory]
+items = [
+    {slot = 1, item_id = 855, quantity = 1000, description = "Poción Amarilla (newbie)"},
+    {slot = 2, item_id = 856, quantity = 1000, description = "Poción Azul (newbie)"},
+    {slot = 3, item_id = 857, quantity = 1000, description = "Poción Roja (newbie)"},
+    {slot = 4, item_id = 858, quantity = 1000, description = "Poción Verde (newbie)"},
+    {slot = 5, item_id = 166, quantity = 1000, description = "Poción Violeta"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 155
+name = "Armaduras Newbie"
+category = "NPCS GUARDIAS LEGIÓN"
+comment = "Vende Armaduras newbie Name=Armaduras Newbie NpcType=0 Desc=Si estás buscando túnicas y armaduras para principiantes, has llegado al lugar indicado. Head=6 Heading=3 Body=93 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=3 NROITEMS=7 Obj1=1044-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Si estás buscando túnicas y armaduras para principiantes, has llegado al lugar indicado."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 6
+heading = 3
+body = 93
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 3
+[inventory]
+items = [
+    {slot = 1, item_id = 1044, quantity = 1000, description = "Túnica (Newbie) (H/E/EO)"},
+    {slot = 2, item_id = 1045, quantity = 1000, description = "Túnica (Newbie) (E/G)"},
+    {slot = 3, item_id = 1046, quantity = 1000, description = "Armadura de Cuero (Newbie) (H/E/EO)"},
+    {slot = 4, item_id = 1047, quantity = 1000, description = "Armadura de Cuero (Newbie) (E/G)"},
+    {slot = 5, item_id = 1048, quantity = 1000, description = "Escudo (Newbie)"},
+    {slot = 6, item_id = 1051, quantity = 1000, description = "Casco Simple (Newbie)"},
+    {slot = 7, item_id = 1052, quantity = 1000, description = "Capucha de Cazador (Newbie)"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 156
+name = "Armas Newbie"
+category = "NPCS GUARDIAS LEGIÓN"
+comment = "Vende Armas newbie Name=Armas Newbie NpcType=0 Desc=Hola novato, tengo algunas armas que pueden ayudarte en tus aventuras. Head=505 Heading=3 Body=199 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=2 NROITEMS=8 Obj1=861-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Hola novato, tengo algunas armas que pueden ayudarte en tus aventuras."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 505
+heading = 3
+body = 199
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 2
+[inventory]
+items = [
+    {slot = 1, item_id = 861, quantity = 1000, description = "Espada (Newbie)"},
+    {slot = 2, item_id = 859, quantity = 1000, description = "Arco (Newbie)"},
+    {slot = 3, item_id = 860, quantity = 1000, description = "Flecha (Newbie)"},
+    {slot = 4, item_id = 564, quantity = 1000, description = "Serrucho (Newbie)"},
+    {slot = 5, item_id = 565, quantity = 1000, description = "Martillo de Herrero (Newbie)"},
+    {slot = 6, item_id = 562, quantity = 1000, description = "Piquete de minero (Newbie)"},
+    {slot = 7, item_id = 561, quantity = 1000, description = "Hacha de Leñador (Newbie)"},
+    {slot = 8, item_id = 563, quantity = 1000, description = "Caña de PEscar (Newbie)"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1
+
+[[npcs_traders.npcs]]
+id = 157
+name = "Magia Newbie"
+category = "NPCS GUARDIAS LEGIÓN"
+comment = "Vende Magia newbie Name=Magia Newbie NpcType=0 Desc=Bienvenido a mi pequeña tienda. Tengo algunos hechizos que podrían interesarte. Head=110 Heading=3 Body=46 Movement=1 Attackable=0 ReSpawn=0 Hostile=0 Domable=0 Comercia=1 TipoItems=24 NROITEMS=12 Obj1=199-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Bienvenido a mi pequeña tienda. Tengo algunos hechizos que podrían interesarte."""
+tags = ["pacifico", "comerciante", "con_items"]
+[appearance]
+head = 110
+heading = 3
+body = 46
+[behavior]
+movement = 1
+respawn = 0
+hostile = 0
+[economics]
+trades = 1
+item_type = 24
+[inventory]
+items = [
+    {slot = 1, item_id = 199, quantity = 1000, description = "Dardo Magico"},
+    {slot = 2, item_id = 197, quantity = 1000, description = "Flecha Magica"},
+    {slot = 3, item_id = 204, quantity = 1000, description = "Flecha Electrica"},
+    {slot = 4, item_id = 205, quantity = 1000, description = "Proyectil magico"},
+    {slot = 5, item_id = 202, quantity = 1000, description = "Toxina"},
+    {slot = 6, item_id = 200, quantity = 1000, description = "Antidoto magico"},
+    {slot = 7, item_id = 201, quantity = 1000, description = "Curar heridas leves"},
+    {slot = 8, item_id = 363, quantity = 1000, description = "Ataque de hambre"},
+    {slot = 9, item_id = 364, quantity = 1000, description = "Terrible Hambre de Igor"},
+    {slot = 10, item_id = 862, quantity = 1000, description = "Baston de mago (Newbie)"},
+    {slot = 11, item_id = 863, quantity = 1000, description = "Flauta Magica (Newbie)"},
+    {slot = 12, item_id = 864, quantity = 1000, description = "Laud magico (Newbie)"}
+]
+[flags]
+attackable = 0
+domable = 0
+backup = 1

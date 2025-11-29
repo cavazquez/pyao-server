@@ -1,0 +1,5534 @@
+# Datos completos de NPCs - npcs_hostiles
+[npcs_hostiles]
+
+[[npcs_hostiles.npcs]]
+id = 500
+name = "Murciélago"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-2"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 9
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10
+min_hp = 15
+max_hp = 15
+max_hit = 4
+min_hit = 1
+defense = 0
+magic_defense = 3
+attack_power = 30
+evasion_power = 10
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 2, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 15, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 70, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 400
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 501
+name = "Lobo"
+category = "NPCS HOSTILES"
+comment = "Piel de Lobo Drop2=27-3"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 10
+sounds = [35, 9]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 75
+max_hp = 75
+max_hit = 18
+min_hit = 1
+defense = 8
+attack_power = 80
+evasion_power = 25
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 414, quantity = 1, description = "Piel de Lobo"},
+    {slot = 2, item_id = 27, quantity = 3, description = "Chuleta"},
+    {slot = 3, item_id = 1002, quantity = 1, description = "Casco de Lobo"},
+    {slot = 4, item_id = 394, quantity = 1, description = "Llamado a la Naturaleza."}
+]
+[flags]
+attackable = 1
+domable = 1250
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 502
+name = "Zombie"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=45-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 507
+heading = 3
+body = 196
+sounds = [33, 164]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 175
+min_hp = 250
+max_hp = 250
+max_hit = 12
+min_hit = 4
+defense = 20
+attack_power = 100
+evasion_power = 20
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 21, description = "Oro"},
+    {slot = 2, item_id = 45, quantity = 1, description = "Ropa de Clan"},
+    {slot = 3, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 4, item_id = 38, quantity = 30, description = "Pociones Rojas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 503
+name = "Esqueleto"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-8"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 12
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 47
+min_hp = 50
+max_hp = 50
+max_hit = 8
+min_hit = 1
+defense = 10
+attack_power = 30
+evasion_power = 30
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 8, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 8, description = "Oro"},
+    {slot = 3, item_id = 363, quantity = 1, description = "Ataque de Hambre"},
+    {slot = 4, item_id = 2, quantity = 2, description = "Espada larga"},
+    {slot = 5, item_id = 197, quantity = 1, description = "Flecha magica"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 504
+name = "Serpiente"
+category = "NPCS HOSTILES"
+comment = "Pociones Rojas Drop4=200-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 13
+sounds = [103]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 15
+min_hp = 22
+max_hp = 22
+max_hit = 1
+min_hit = 1
+defense = 0
+attack_power = 10
+evasion_power = 0
+[inventory.drops]
+drops = [
+    {slot = 3, item_id = 38, quantity = 10, description = "Pociones Rojas"},
+    {slot = 4, item_id = 200, quantity = 1, description = "Antídoto Mágico"},
+    {slot = 5, item_id = 202, quantity = 1, description = "Toxina"}
+]
+[flags]
+attackable = 1
+domable = 400
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 505
+name = "Goblin"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-22"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 14
+sounds = [142]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 95
+min_hp = 110
+max_hp = 110
+max_hit = 12
+min_hit = 4
+defense = 15
+attack_power = 60
+evasion_power = 40
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 15, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 22, description = "Oro"},
+    {slot = 3, item_id = 15, quantity = 1, description = "Daga"},
+    {slot = 4, item_id = 132, quantity = 1, description = "Casco de Hierro"},
+    {slot = 5, item_id = 39, quantity = 10, description = "Pociones Verdes"}
+]
+[flags]
+attackable = 1
+domable = 1500
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 506
+name = "Gallo Salvaje"
+category = "NPCS HOSTILES"
+comment = "Pollo Drop2=12-5"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 5
+sounds = [67]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10
+min_hp = 15
+max_hp = 15
+max_hit = 1
+min_hit = 1
+defense = 0
+attack_power = 5
+evasion_power = 5
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 26, quantity = 1, description = "Pollo"},
+    {slot = 2, item_id = 12, quantity = 5, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 50, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 450
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 507
+name = "Lord Zombie"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-7"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 508
+heading = 3
+body = 197
+sounds = [33, 164]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 355
+min_hp = 350
+max_hp = 350
+max_hit = 25
+min_hit = 10
+defense = 34
+attack_power = 150
+evasion_power = 35
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 7, description = "Pociones Rojas"},
+    {slot = 3, item_id = 37, quantity = 5, description = "Pociones Azules"},
+    {slot = 5, item_id = 395, quantity = 1, description = "Llamado Nigromante"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 508
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=132-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 393
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 155
+min_hp = 150
+max_hp = 150
+max_hit = 18
+min_hit = 8
+defense = 19
+attack_power = 60
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 25, description = "Oro"},
+    {slot = 3, item_id = 132, quantity = 1, description = "Casco de Hierro"},
+    {slot = 4, item_id = 126, quantity = 1, description = "Hacha Larga de Guerra"},
+    {slot = 5, item_id = 380, quantity = 1, description = "Invocación de Ultratumba"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 509
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=239-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 41
+sounds = [160]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 8500
+min_hp = 5000
+max_hp = 5000
+max_hit = 300
+min_hit = 250
+defense = 50
+attack_power = 380
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1000, description = "Oro"},
+    {slot = 2, item_id = 239, quantity = 1, description = "Túnica Roja"},
+    {slot = 3, item_id = 12, quantity = 4700, description = "Oro"},
+    {slot = 4, item_id = 981, quantity = 2, description = "Piwafwi de Fuego"},
+    {slot = 5, item_id = 481, quantity = 1, description = "Armadura de Dragón"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 510
+name = "Araña Gigante"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-30"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 42
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1450
+min_hp = 1000
+max_hp = 1000
+max_hit = 100
+min_hit = 75
+defense = 0
+attack_power = 150
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 175, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 30, description = "Pociones Rojas"},
+    {slot = 3, item_id = 164, quantity = 1, description = "Espada Corta"},
+    {slot = 4, item_id = 480, quantity = 110, description = "Flechas"},
+    {slot = 5, item_id = 206, quantity = 1, description = "Paralizar"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 511
+name = "Ogro Esclavo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=37-55"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 205
+sounds = [78]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 4110
+min_hp = 2750
+max_hp = 2750
+max_hit = 190
+min_hit = 70
+defense = 10
+magic_defense = 15
+attack_power = 200
+evasion_power = 210
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 350, description = "Oro"},
+    {slot = 2, item_id = 37, quantity = 55, description = "Pociones Azul"},
+    {slot = 3, item_id = 401, quantity = 1, description = "Martillo de Guerra"},
+    {slot = 5, item_id = 697, quantity = 1, description = "Anillo Mágico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 512
+name = "Lobo"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (para el hechizo Invocar Lobos) Name=Lobo NpcType=0 Head=0 Heading=3 Body=10 Movement=3 AguaValida=0 Attackable=1 Respawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=0 GiveGLD=0 MinHP=75 MaxHP=75 MaxHIT=20 MinHIT=10 DEF=8 PoderAtaque=80 PoderEvasion=25 Snd1=35 Snd2=9 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "atacable"]
+[appearance]
+heading = 3
+body = 10
+sounds = [35, 9]
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 0
+min_hp = 75
+max_hp = 75
+max_hit = 20
+min_hit = 10
+defense = 8
+attack_power = 80
+evasion_power = 25
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 513
+name = "Cíclope Guardián"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=37-145"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 206
+sounds = [78]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 7288
+min_hp = 4500
+max_hp = 4500
+max_hit = 250
+min_hit = 100
+defense = 30
+magic_defense = 10
+attack_power = 260
+evasion_power = 245
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 900, description = "Oro"},
+    {slot = 2, item_id = 37, quantity = 145, description = "Poción Azul"},
+    {slot = 3, item_id = 990, quantity = 1, description = "Mazo de Juicio"},
+    {slot = 4, item_id = 698, quantity = 1, description = "Anillo de Resitencia Mágica"},
+    {slot = 5, item_id = 359, quantity = 3, description = "Cotas de Mallas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 514
+name = "Serpiente de Anthares"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=697-3"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 207
+sounds = [103]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3410
+min_hp = 5000
+max_hp = 5000
+max_hit = 45
+min_hit = 10
+defense = 0
+magic_defense = 50
+attack_power = 300
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 3000, description = "Oro"},
+    {slot = 2, item_id = 697, quantity = 3, description = "Anillo Mágico"},
+    {slot = 3, item_id = 698, quantity = 2, description = "Anillo de Resistencia Mágica"},
+    {slot = 4, item_id = 699, quantity = 1, description = "Anillo de Disolución Mágica"},
+    {slot = 5, item_id = 503, quantity = 2, description = "Trampa Visual"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 515
+name = "Gorila Salvaje"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-30"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 213
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1880
+min_hp = 1300
+max_hp = 1300
+max_hit = 130
+min_hit = 90
+defense = 10
+magic_defense = 10
+attack_power = 160
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 175, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 30, description = "Poción Roja"},
+    {slot = 3, item_id = 37, quantity = 50, description = "Poción Azul"},
+    {slot = 4, item_id = 480, quantity = 310, description = "Flechas"},
+    {slot = 5, item_id = 697, quantity = 2, description = "Anillo Mágico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 516
+name = "Goblin"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (npc para entrenador) Name=Goblin NpcType=0 Head=0 Heading=3 Body=14 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=45 GiveGLD=0 MinHP=90 MaxHP=90 MaxHIT=12 MinHIT=4 DEF=15 PoderAtaque=50 PoderEvasion=40 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+heading = 3
+body = 14
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 45
+min_hp = 90
+max_hp = 90
+max_hit = 12
+min_hit = 4
+defense = 15
+attack_power = 50
+evasion_power = 40
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 517
+name = "Djinn de Viento"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-1550"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 215
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 7000
+min_hp = 4200
+max_hp = 4200
+max_hit = 140
+min_hit = 75
+defense = 45
+attack_power = 200
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1200, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 1550, description = "Oro"},
+    {slot = 3, item_id = 37, quantity = 175, description = "Pociones Azules"},
+    {slot = 4, item_id = 206, quantity = 1, description = "Paralizar"},
+    {slot = 5, item_id = 531, quantity = 1, description = "Descarga Eléctrica"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 518
+name = "Dragón de las Profundidades"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=37-120"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 218
+sounds = [89]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2100
+min_hp = 2000
+max_hp = 2000
+max_hit = 150
+min_hit = 90
+defense = 50
+attack_power = 300
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 3, item_id = 37, quantity = 120, description = "Pociones Azules"},
+    {slot = 4, item_id = 361, quantity = 1, description = "Tormenta de Fuego"},
+    {slot = 5, item_id = 206, quantity = 1, description = "Paralizar"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 519
+name = "Gusano de Arena"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-30"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 216
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1450
+min_hp = 1000
+max_hp = 1000
+max_hit = 100
+min_hit = 75
+defense = 0
+attack_power = 150
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 175, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 30, description = "Poción Roja"},
+    {slot = 3, item_id = 36, quantity = 10, description = "Poción Amarilla"},
+    {slot = 4, item_id = 480, quantity = 365, description = "Flechas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 520
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (para el hechizo Invocación de Ultratumba) Name=Esqueleto Guerrero NpcType=0 Head=0 Heading=3 Body=393 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=0 GiveGLD=0 MinHP=320 MaxHP=320 MaxHIT=94 MinHIT=55 DEF=25 PoderAtaque=130 PoderEvasion=100 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "atacable"]
+[appearance]
+heading = 3
+body = 393
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 0
+min_hp = 320
+max_hp = 320
+max_hit = 94
+min_hit = 55
+defense = 25
+attack_power = 130
+evasion_power = 100
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 521
+name = "Tigre Salvaje"
+category = "NPCS HOSTILES"
+comment = "Piel de Tigre (le pongo de lobo mientras, cambiar!!) Drop3=27-23"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 147
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 600
+min_hp = 800
+max_hp = 800
+max_hit = 70
+min_hit = 30
+defense = 0
+attack_power = 700
+evasion_power = 45
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 414, quantity = 20, description = "Piel de Tigre (le pongo de lobo mientras, cambiar!!)"},
+    {slot = 3, item_id = 27, quantity = 23, description = "Chuleta"},
+    {slot = 4, item_id = 30, quantity = 1, description = "Armadura de Cuero"},
+    {slot = 5, item_id = 1004, quantity = 1, description = "Casco de Tigre"}
+]
+[flags]
+attackable = 1
+domable = 2010
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 522
+name = "Orco"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN Name=Orco NpcType=0 Head=0 Heading=3 Body=185 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=395 MinHP=350 MaxHP=350 MaxHIT=35 MinHIT=5 DEF=30 PoderAtaque=100 PoderEvasion=75 BackUp=0 NROITEMS=5 Drop1=12-114"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 185
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 395
+min_hp = 350
+max_hp = 350
+max_hit = 35
+min_hit = 5
+defense = 30
+attack_power = 100
+evasion_power = 75
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 114, description = "Oro"},
+    {slot = 2, item_id = 3, quantity = 1, description = "Hacha"},
+    {slot = 3, item_id = 39, quantity = 10, description = "Poción Verde"},
+    {slot = 4, item_id = 990, quantity = 2, description = "Mazos de Juicio"},
+    {slot = 5, item_id = 359, quantity = 2, description = "Cotas de Malla"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 523
+name = "Orco"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=3-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 185
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 395
+min_hp = 350
+max_hp = 350
+max_hit = 35
+min_hit = 5
+defense = 30
+attack_power = 100
+evasion_power = 75
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 114, description = "Oro"},
+    {slot = 2, item_id = 3, quantity = 1, description = "Hacha"},
+    {slot = 3, item_id = 39, quantity = 10, description = "Poción Verde"},
+    {slot = 4, item_id = 990, quantity = 2, description = "Mazos de Juicio"},
+    {slot = 5, item_id = 359, quantity = 2, description = "Cotas de Malla"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 524
+name = "Jefe Orco"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (tira llave fuerte orco) Name=Jefe Orco NpcType=0 Head=0 Heading=3 Body=43 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=2000 MinHP=1000 MaxHP=1000 MaxHIT=400 MinHIT=75 DEF=30 PoderAtaque=250 PoderEvasion=200 Nroitems=1 BackUp=0 NROITEMS=5 Drop1=183-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 43
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 2000
+min_hp = 1000
+max_hp = 1000
+max_hit = 400
+min_hit = 75
+defense = 30
+attack_power = 250
+evasion_power = 200
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 183, quantity = 1, description = "Llave Fuerte"},
+    {slot = 2, item_id = 183, quantity = 1, description = "Llave Fuerte"},
+    {slot = 3, item_id = 183, quantity = 1, description = "Llave Fuerte"},
+    {slot = 4, item_id = 183, quantity = 1, description = "Llave Fuerte"},
+    {slot = 5, item_id = 183, quantity = 1, description = "Llave Fuerte"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 525
+name = "Águila"
+category = "NPCS HOSTILES"
+comment = "Pescado Drop3=544-5"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 59
+sounds = [62]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10
+min_hp = 40
+max_hp = 40
+max_hit = 15
+min_hit = 4
+defense = 0
+attack_power = 25
+evasion_power = 160
+[inventory.drops]
+drops = [
+    {slot = 2, item_id = 139, quantity = 1, description = "Pescado"},
+    {slot = 3, item_id = 544, quantity = 5, description = "Pez Dorado"}
+]
+[flags]
+attackable = 1
+domable = 1200
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 526
+name = "Araña Malaheing"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (tira llave dungeon malaheing) Name=Araña Malaheing NpcType=0 Head=0 Heading=3 Body=42 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=1450 MinHP=3000 MaxHP=3000 MaxHIT=100 MinHIT=75 DEF=10 PoderAtaque=200 PoderEvasion=150 Nroitems=1 Veneno=1 BackUp=0 NROITEMS=5 Drop1=174-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 42
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 1450
+min_hp = 3000
+max_hp = 3000
+max_hit = 100
+min_hit = 75
+defense = 10
+attack_power = 200
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 174, quantity = 1, description = "Llave Catacumbas de Ulla"},
+    {slot = 2, item_id = 174, quantity = 1, description = "Llave Catacumbas de Ulla"},
+    {slot = 3, item_id = 174, quantity = 1, description = "Llave Catacumbas de Ulla"},
+    {slot = 4, item_id = 174, quantity = 1, description = "Llave Catacumbas de Ulla"},
+    {slot = 5, item_id = 174, quantity = 1, description = "Llave Catacumbas de Ulla"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 527
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (tira llave dungeon malaheing) Name=Dragón Rojo NpcType=0 Head=0 Heading=3 Body=41 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=8500 MinHP=5000 MaxHP=5000 MaxHIT=300 MinHIT=250 DEF=20 PoderAtaque=300 PoderEvasion=250 Nroitems=1 BackUp=0 NROITEMS=5 Drop1=178-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 41
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 8500
+min_hp = 5000
+max_hp = 5000
+max_hit = 300
+min_hit = 250
+defense = 20
+attack_power = 300
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 178, quantity = 1, description = "Llave Dungeon Malaheing"},
+    {slot = 2, item_id = 178, quantity = 1, description = "Llave Dungeon Malaheing"},
+    {slot = 3, item_id = 178, quantity = 1, description = "Llave Dungeon Malaheing"},
+    {slot = 4, item_id = 178, quantity = 1, description = "Llave Dungeon Malaheing"},
+    {slot = 5, item_id = 178, quantity = 1, description = "Llave Dungeon Malaheing"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 528
+name = "Anfisbena"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 203
+sounds = [103]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 51
+min_hp = 75
+max_hp = 75
+max_hit = 5
+min_hit = 5
+defense = 0
+attack_power = 30
+evasion_power = 0
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 5, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 10, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 50, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 529
+name = "Escorpión"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=12-30"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 51
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 32
+min_hp = 32
+max_hp = 32
+max_hit = 3
+min_hit = 1
+defense = 0
+magic_defense = 3
+attack_power = 30
+evasion_power = 10
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 2, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 30, description = "Oro"},
+    {slot = 4, item_id = 2, quantity = 1, description = "Espada larga"},
+    {slot = 5, item_id = 164, quantity = 1, description = "Espada corta"}
+]
+[flags]
+attackable = 1
+domable = 600
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 530
+name = "Bandido"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=641-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 2
+heading = 3
+body = 47
+sounds = [157]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 266
+min_hp = 200
+max_hp = 200
+max_hit = 39
+min_hit = 15
+defense = 0
+attack_power = 70
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 641, quantity = 1, description = "Ropa Pordiosero"},
+    {slot = 3, item_id = 38, quantity = 10, description = "Pociones Rojas"},
+    {slot = 4, item_id = 873, quantity = 1, description = "Guantes de Hurto"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 531
+name = "Asesino"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 201
+heading = 3
+body = 48
+sounds = [155]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1500
+min_hp = 850
+max_hp = 850
+max_hit = 139
+min_hit = 15
+defense = 0
+attack_power = 200
+evasion_power = 200
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 200, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 10, description = "Pociones Rojas"},
+    {slot = 3, item_id = 366, quantity = 1, description = "Daga +3"},
+    {slot = 4, item_id = 367, quantity = 1, description = "Daga +4"},
+    {slot = 5, item_id = 356, quantity = 1, description = "Armadura de las Sombras"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 532
+name = "Osezno"
+category = "NPCS HOSTILES"
+comment = "Piel de Oso Pardo Drop3=38-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 236
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 550
+min_hp = 400
+max_hp = 400
+max_hit = 70
+min_hit = 55
+defense = 0
+attack_power = 230
+evasion_power = 60
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 415, quantity = 1, description = "Piel de Oso Pardo"},
+    {slot = 3, item_id = 38, quantity = 10, description = "Pociones Rojas"},
+    {slot = 4, item_id = 480, quantity = 50, description = "Flechas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 533
+name = "Cuervo Salvaje"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=12-53"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 68
+sounds = [63]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 41
+min_hp = 50
+max_hp = 50
+max_hit = 6
+min_hit = 1
+defense = 2
+magic_defense = 3
+attack_power = 20
+evasion_power = 25
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 4, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 53, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 250, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 1000, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 1100
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 534
+name = "Hormiga Gigante"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=478-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 69
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 400
+max_hp = 400
+max_hit = 100
+min_hit = 50
+defense = 5
+attack_power = 150
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 478, quantity = 1, description = "Arco Simple"},
+    {slot = 3, item_id = 479, quantity = 1, description = "Arco Compuesto"},
+    {slot = 4, item_id = 38, quantity = 15, description = "Pociones Rojas"},
+    {slot = 5, item_id = 480, quantity = 500, description = "Flechas"}
+]
+[flags]
+attackable = 1
+domable = 2010
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 535
+name = "Hormiga Marabunta"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=12-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 70
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 5
+min_hp = 5
+max_hp = 5
+max_hit = 1
+min_hit = 1
+defense = 0
+attack_power = 5
+evasion_power = 3
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 10, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 200, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 425
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 536
+name = "Rata Salvaje"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=28-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 71
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 16
+min_hp = 15
+max_hp = 15
+max_hit = 4
+min_hit = 2
+defense = 0
+attack_power = 10
+evasion_power = 20
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 2, description = "Oro"},
+    {slot = 3, item_id = 28, quantity = 10, description = "Queso de Cabra"},
+    {slot = 4, item_id = 534, quantity = 10, description = "Odre Vacía"},
+    {slot = 5, item_id = 12, quantity = 100, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 700
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 537
+name = "Beholder"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-500"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 72
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2500
+min_hp = 1400
+max_hp = 1400
+max_hit = 300
+min_hit = 45
+defense = 0
+attack_power = 350
+evasion_power = 200
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 360, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 3, item_id = 37, quantity = 100, description = "Pociones Azules"},
+    {slot = 4, item_id = 205, quantity = 1, description = "Proyectil Etereo"},
+    {slot = 5, item_id = 12, quantity = 10000, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 538
+name = "Oso Pardo"
+category = "NPCS HOSTILES"
+comment = "Piel Oso Pardo Drop2=12-26"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 73
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 850
+min_hp = 600
+max_hp = 600
+max_hit = 100
+min_hit = 65
+defense = 0
+attack_power = 250
+evasion_power = 65
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 415, quantity = 1, description = "Piel Oso Pardo"},
+    {slot = 2, item_id = 12, quantity = 26, description = "Oro"},
+    {slot = 3, item_id = 480, quantity = 50, description = "Flechas"},
+    {slot = 4, item_id = 479, quantity = 1, description = "Arco Compuesto"},
+    {slot = 5, item_id = 38, quantity = 100, description = "Pociones Rojas"}
+]
+[flags]
+attackable = 1
+domable = 2010
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 539
+name = "Tortuga Gigante"
+category = "NPCS HOSTILES"
+comment = "Escudo de Tortuga Drop2=12-175"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 74
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 550
+max_hp = 550
+max_hit = 50
+min_hit = 35
+defense = 0
+attack_power = 100
+evasion_power = 45
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 404, quantity = 1, description = "Escudo de Tortuga"},
+    {slot = 2, item_id = 12, quantity = 175, description = "Oro"},
+    {slot = 3, item_id = 38, quantity = 20, description = "Pociones Rojas"},
+    {slot = 4, item_id = 203, quantity = 1, description = "Aura Sanadora Avanzada"}
+]
+[flags]
+attackable = 1
+domable = 2010
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 540
+name = "Duende"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=12-150"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 75
+sounds = [161]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 245
+min_hp = 210
+max_hp = 210
+max_hit = 32
+min_hit = 8
+defense = 0
+attack_power = 80
+evasion_power = 60
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 23, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 4, item_id = 197, quantity = 1, description = "Flecha Mágica"},
+    {slot = 5, item_id = 204, quantity = 1, description = "Flecha Eléctrica"}
+]
+[flags]
+attackable = 1
+domable = 1700
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 541
+name = "Ogro"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=398-20"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 76
+sounds = [78]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3500
+min_hp = 2250
+max_hp = 2250
+max_hit = 232
+min_hit = 88
+defense = 10
+attack_power = 260
+evasion_power = 230
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 512, description = "Oro"},
+    {slot = 2, item_id = 398, quantity = 20, description = "Garrote"},
+    {slot = 3, item_id = 38, quantity = 120, description = "Pociones Rojas"},
+    {slot = 4, item_id = 37, quantity = 150, description = "Pociones Azules"},
+    {slot = 5, item_id = 698, quantity = 1}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 542
+name = "Gran Dragón Rojo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2= 194-5000"
+npc_type = 6
+type_description = "DRAGONES"
+tags = ["hostil", "combate", "dragon", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 82
+sounds = [30, 31, 32]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 265000
+min_hp = 200000
+max_hp = 200000
+max_hit = 5000
+min_hit = 1000
+defense = 0
+attack_power = 400
+evasion_power = 320
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 65000, description = "Oro"},
+    {slot = 2, item_id = 194, quantity = 5000, description = "Minerales de Oro"},
+    {slot = 3, item_id = 402, quantity = 1, description = "Espada Mata Dragones"},
+    {slot = 4, item_id = 532, quantity = 1, description = "Apocalipsis"},
+    {slot = 5, item_id = 481, quantity = 3, description = "Armaduras de Dragón"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 543
+name = "Demonio"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-10000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 83
+sounds = [159]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 14200
+min_hp = 15000
+max_hp = 15000
+max_hit = 350
+min_hit = 75
+defense = 0
+attack_power = 230
+evasion_power = 220
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 6000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 3, item_id = 126, quantity = 1, description = "Hacha Larga de Guerra"},
+    {slot = 4, item_id = 129, quantity = 3, description = "Hacha Doble Filo"},
+    {slot = 5, item_id = 495, quantity = 1, description = "Armadura Escarlata."}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 544
+name = "Unicornio"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-80"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 183
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 200
+min_hp = 500
+max_hp = 500
+max_hit = 7
+min_hit = 5
+defense = 0
+attack_power = 10
+evasion_power = 10
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 80, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 4, item_id = 37, quantity = 50, description = "Poción Azul"},
+    {slot = 5, item_id = 12, quantity = 5000, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 545
+name = "Licántropo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 212
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 850
+min_hp = 600
+max_hp = 600
+max_hit = 100
+min_hit = 65
+defense = 0
+attack_power = 250
+evasion_power = 65
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 10, description = "Poción Roja"},
+    {slot = 3, item_id = 414, quantity = 30, description = "Piel de Lobo"},
+    {slot = 4, item_id = 1002, quantity = 1, description = "Casco de Lobo"},
+    {slot = 5, item_id = 394, quantity = 1, description = "Llamado a la Naturaleza."}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 546
+name = "Zombie"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (para el hechizo Invocar Zombies) Name=Zombie NpcType=0 Head=507 Heading=3 Body=196 Movement=3 AguaValida=0 Attackable=1 Respawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=0 GiveGLD=0 MinHP=250 MaxHP=250 MaxHIT=50 MinHIT=23 DEF=20 PoderAtaque=100 PoderEvasion=20 SND2=33 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "atacable"]
+[appearance]
+head = 507
+heading = 3
+body = 196
+sounds = [33]
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 0
+min_hp = 250
+max_hp = 250
+max_hit = 50
+min_hit = 23
+defense = 20
+attack_power = 100
+evasion_power = 20
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 547
+name = "Tarántula"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-25"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 36
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1450
+min_hp = 1000
+max_hp = 1000
+max_hit = 100
+min_hit = 75
+defense = 0
+attack_power = 150
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 175, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 25, description = "Pociones Rojas"},
+    {slot = 3, item_id = 36, quantity = 15, description = "Poción Amarilla"},
+    {slot = 4, item_id = 39, quantity = 20, description = "Poción Verde"},
+    {slot = 5, item_id = 159, quantity = 5, description = "Hachas de Bárbaro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 548
+name = "Leviathan"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=36-30"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 99
+sounds = [59]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 8500
+min_hp = 6000
+max_hp = 6000
+max_hit = 250
+min_hit = 60
+defense = 0
+attack_power = 220
+evasion_power = 180
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 2100, description = "Oro"},
+    {slot = 2, item_id = 36, quantity = 30, description = "Poción Amarilla"},
+    {slot = 3, item_id = 39, quantity = 30, description = "Poción Verde"},
+    {slot = 4, item_id = 537, quantity = 1, description = "Invocar Elemental de Agua"},
+    {slot = 5, item_id = 496, quantity = 1, description = "Armadura de las Ciénagas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 549
+name = "Orco Brujo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-650"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 186
+sounds = [171]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2810
+min_hp = 1900
+max_hp = 1900
+max_hit = 120
+min_hit = 75
+defense = 30
+attack_power = 150
+evasion_power = 180
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 650, description = "Oro"},
+    {slot = 3, item_id = 205, quantity = 1, description = "Proyectil Etéreo"},
+    {slot = 4, item_id = 38, quantity = 300, description = "Poción Roja"},
+    {slot = 5, item_id = 37, quantity = 500, description = "Poción Azul"}
+]
+[flags]
+attackable = 1
+domable = 2250
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 550
+name = "Bruja"
+category = "NPCS HOSTILES"
+comment = "Baston Nudoso Drop3=514-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 271
+heading = 3
+body = 125
+sounds = [118, 158]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 6100
+min_hp = 4200
+max_hp = 4200
+max_hit = 140
+min_hit = 75
+defense = 30
+attack_power = 200
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1000},
+    {slot = 2, item_id = 659, quantity = 1, description = "Baston Nudoso"},
+    {slot = 3, item_id = 514, quantity = 1, description = "Vestido de Bruja Especial"},
+    {slot = 4, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 15000, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 551
+name = "Mago Malvado"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-2000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 401
+heading = 3
+body = 135
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 4000
+min_hp = 3000
+max_hp = 3000
+max_hit = 126
+min_hit = 75
+defense = 30
+attack_power = 200
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1500, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 2000, description = "Oro"},
+    {slot = 3, item_id = 524, quantity = 2, description = "Túnica Roja Especial (E/G)"},
+    {slot = 4, item_id = 206, quantity = 1, description = "Paralizar"},
+    {slot = 5, item_id = 660, quantity = 5, description = "Báculos Engarzados"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 552
+name = "Golem"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-2750"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 141
+sounds = [79, 89]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 41800
+min_hp = 35000
+max_hp = 35000
+max_hit = 600
+min_hit = 300
+defense = 30
+attack_power = 300
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 2000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 2750, description = "Oro"},
+    {slot = 3, item_id = 21, quantity = 10000, description = "Oro"},
+    {slot = 4, item_id = 403, quantity = 2, description = "Espadas de Plata"},
+    {slot = 5, item_id = 485, quantity = 1, description = "Armadura Legendaria"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 553
+name = "Medusa"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-100"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 151
+sounds = [169]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 12250
+min_hp = 6500
+max_hp = 6500
+max_hit = 185
+min_hit = 125
+defense = 20
+attack_power = 220
+evasion_power = 160
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1200, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 100, description = "Pociones Rojas"},
+    {slot = 3, item_id = 12, quantity = 7500, description = "Oro"},
+    {slot = 4, item_id = 206, quantity = 1, description = "Paralizar"},
+    {slot = 5, item_id = 531, quantity = 1, description = "Descarga Eléctrica"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 554
+name = "Liche"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-2000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 149
+sounds = [168]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3000
+min_hp = 2000
+max_hp = 2000
+max_hit = 250
+min_hit = 120
+defense = 30
+attack_power = 220
+evasion_power = 190
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 2000, description = "Oro"},
+    {slot = 3, item_id = 196, quantity = 5, description = "Túnica de Mago"},
+    {slot = 4, item_id = 380, quantity = 1, description = "Invocación de Ultratumba"},
+    {slot = 5, item_id = 660, quantity = 5, description = "Báculos Engarzados"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 555
+name = "Lord Orco"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-100"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 187
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2500
+min_hp = 1750
+max_hp = 1750
+max_hit = 200
+min_hit = 200
+defense = 30
+attack_power = 170
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 800, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 100, description = "Pociones Rojas"},
+    {slot = 3, item_id = 132, quantity = 2, description = "Casco de Hierro"},
+    {slot = 4, item_id = 126, quantity = 5, description = "Hacha Larga de Guerra"},
+    {slot = 5, item_id = 130, quantity = 3, description = "Escudo de Plata"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 556
+name = "Quark"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-20"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 146
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 25
+min_hp = 50
+max_hp = 50
+max_hit = 10
+min_hit = 5
+defense = 5
+attack_power = 45
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 15, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 20, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 250, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 750, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 800
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 557
+name = "Jabalí Salvaje"
+category = "NPCS HOSTILES"
+comment = "Chuleta Drop2=12-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 150
+sounds = [98]
+[behavior]
+movement = 2
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 340
+min_hp = 515
+max_hp = 515
+max_hit = 100
+min_hit = 65
+defense = 0
+attack_power = 130
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 27, quantity = 10, description = "Chuleta"},
+    {slot = 2, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 3, item_id = 38, quantity = 20, description = "Pociones Rojas"}
+]
+[flags]
+attackable = 1
+domable = 2010
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 558
+name = "Dark mOrGoLoCk"
+category = "NPCS HOSTILES"
+comment = "NPC 558"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+head = 101
+heading = 3
+body = 56
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 45000
+min_hp = 45000
+max_hp = 45000
+max_hit = 400
+min_hit = 50
+defense = 10
+attack_power = 350
+evasion_power = 300
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 559
+name = "Dark NuKeR"
+category = "NPCS HOSTILES"
+comment = "NPC 559"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+head = 102
+heading = 3
+body = 93
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 45000
+min_hp = 45000
+max_hp = 45000
+max_hit = 400
+min_hit = 50
+defense = 10
+attack_power = 350
+evasion_power = 300
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 560
+name = "Dark Valkira"
+category = "NPCS HOSTILES"
+comment = "NPC 560"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+head = 72
+heading = 3
+body = 104
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 45000
+min_hp = 45000
+max_hp = 45000
+max_hit = 400
+min_hit = 50
+defense = 10
+attack_power = 350
+evasion_power = 300
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 561
+name = "Dark Chatillon"
+category = "NPCS HOSTILES"
+comment = "NPC 561"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+head = 9
+heading = 3
+body = 140
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 45000
+min_hp = 45000
+max_hp = 45000
+max_hit = 400
+min_hit = 50
+defense = 10
+attack_power = 350
+evasion_power = 300
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 562
+name = "Dark Jennifer"
+category = "NPCS HOSTILES"
+comment = "NPC 562"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+head = 72
+heading = 3
+body = 64
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 45000
+min_hp = 45000
+max_hp = 45000
+max_hit = 400
+min_hit = 50
+defense = 10
+attack_power = 350
+evasion_power = 300
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 564
+name = "Escorpión"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (npc para entrenador) Name=Escorpión NpcType=0 Head=0 Heading=3 Body=51 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=32 GiveGLD=0 MinHP=32 MaxHP=32 MaxHIT=3 MinHIT=1 DEF=0 PoderAtaque=30 PoderEvasion=10 Veneno=1 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+heading = 3
+body = 51
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 32
+min_hp = 32
+max_hp = 32
+max_hit = 3
+min_hit = 1
+defense = 0
+attack_power = 30
+evasion_power = 10
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 565
+name = "Serpiente"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (npc para entrenador) Name=Serpiente NpcType=0 Head=0 Heading=3 Body=13 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=15 GiveGLD=0 MinHP=22 MaxHP=22 MaxHIT=1 MinHIT=1 DEF=0 PoderAtaque=10 PoderEvasion=0 SND2=103 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+heading = 3
+body = 13
+sounds = [103]
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 15
+min_hp = 22
+max_hp = 22
+max_hit = 1
+min_hit = 1
+defense = 0
+attack_power = 10
+evasion_power = 0
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 566
+name = "Murciélago"
+category = "NPCS HOSTILES"
+comment = "NO RESPAWN (npc para entrenador) Name=Murciélago NpcType=0 Head=0 Heading=3 Body=9 Movement=3 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=12 GiveGLD=0 MinHP=10 MaxHP=10 MaxHIT=1 MinHIT=1 DEF=0 PoderAtaque=15 PoderEvasion=10 BackUp=0"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable"]
+[appearance]
+heading = 3
+body = 9
+[behavior]
+movement = 3
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 12
+min_hp = 10
+max_hp = 10
+max_hit = 1
+min_hit = 1
+defense = 0
+attack_power = 15
+evasion_power = 10
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 567
+name = "Duende Mágico"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-75"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 75
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 0
+min_hp = 310
+max_hp = 310
+max_hit = 10
+min_hit = 2
+defense = 0
+attack_power = 80
+evasion_power = 60
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 75, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 4, item_id = 199, quantity = 5, description = "Dardo Mágico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 568
+name = "Galeón Pirata"
+category = "NPCS HOSTILES"
+comment = "Oro (Poner alforja despues) Drop3=474-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 86
+sounds = [172]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 6000
+min_hp = 4000
+max_hp = 4000
+max_hit = 250
+min_hit = 200
+defense = 0
+attack_power = 200
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 2, item_id = 12, quantity = 5000, description = "Oro (Poner alforja despues)"},
+    {slot = 3, item_id = 474, quantity = 1, description = "Barca"},
+    {slot = 4, item_id = 475, quantity = 1, description = "Galera"},
+    {slot = 5, item_id = 476, quantity = 1, description = "Galeón"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 569
+name = "Galeón Fantasmal"
+category = "NPCS HOSTILES"
+comment = "Oro (Poner Mochila de Viajero despues) Drop3=474-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 487
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 7000
+max_hp = 7000
+max_hit = 350
+min_hit = 150
+defense = 50
+attack_power = 300
+evasion_power = 450
+[inventory.drops]
+drops = [
+    {slot = 2, item_id = 12, quantity = 3500, description = "Oro (Poner Mochila de Viajero despues)"},
+    {slot = 3, item_id = 474, quantity = 1, description = "Barca"},
+    {slot = 4, item_id = 475, quantity = 1, description = "Galera"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 573
+name = "Árbol Encantado"
+category = "NPCS HOSTILES"
+comment = "Leña"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """¡Odio los leñadores!"""
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 4
+body = 25
+[behavior]
+movement = 2
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 10
+max_hp = 10
+max_hit = 2
+min_hit = 1
+defense = 0
+attack_power = 500
+evasion_power = 10
+[inventory.drops]
+drops = [
+    {slot = 2, item_id = 58, quantity = 15, description = "Leña"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 574
+name = "Ucorno"
+category = "NPCS HOSTILES"
+comment = "Ent Movimiento normal Name=Ucorno NpcType=0 Head=0 Heading=3 Body=25 Movement=3 AguaValida=0 Attackable=1 ReSpawn=0 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=900 MinHP=1500 MaxHP=1500 MaxHIT=90 MinHIT=85 DEF=0 PoderAtaque=100 PoderEvasion=100 Snd1=13 Snd2=13 Veneno=1 BackUp=0 NROITEMS=5 Drop1=58-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 25
+sounds = [13, 13]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 900
+min_hp = 1500
+max_hp = 1500
+max_hit = 90
+min_hit = 85
+defense = 0
+attack_power = 100
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 58, quantity = 50, description = "Leña"},
+    {slot = 2, item_id = 58, quantity = 100, description = "Leña"},
+    {slot = 3, item_id = 58, quantity = 500, description = "Leña"},
+    {slot = 4, item_id = 58, quantity = 3000, description = "Leña"},
+    {slot = 5, item_id = 58, quantity = 10000, description = "Leña"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 575
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+comment = "Ent de movimiento camuflado Name=Árbol de Jungla NpcType=0 Head=0 Heading=3 Body=25 Movement=2 AguaValida=0 Attackable=1 ReSpawn=0 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=100 MinHP=1500 MaxHP=1500 MaxHIT=250 MinHIT=150 DEF=0 PoderAtaque=100 PoderEvasion=100 Snd1=13 Snd2=13 Veneno=1 BackUp=0 NROITEMS=5 Drop1=58-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 25
+sounds = [13, 13]
+[behavior]
+movement = 2
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 1500
+max_hp = 1500
+max_hit = 250
+min_hit = 150
+defense = 0
+attack_power = 100
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 58, quantity = 10, description = "Leña"},
+    {slot = 2, item_id = 208, quantity = 1, description = "Flauta Mágica"},
+    {slot = 3, item_id = 696, quantity = 5, description = "Laúd Mágico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 576
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+comment = "Leña"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 4
+body = 25
+[behavior]
+movement = 1
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 10
+max_hp = 10
+max_hit = 2
+min_hit = 1
+defense = 0
+attack_power = 500
+evasion_power = 10
+[inventory.drops]
+drops = [
+    {slot = 2, item_id = 58, quantity = 15, description = "Leña"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 577
+name = "Alma Putrefacta"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-100"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Soy un esclavo del mi señor del mal"""
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 514
+heading = 3
+body = 145
+sounds = [30, 31, 32]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 700
+max_hp = 700
+max_hit = 100
+min_hit = 90
+defense = 0
+attack_power = 200
+evasion_power = 140
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 3, item_id = 645, quantity = 1, description = "Poción Negra"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 578
+name = "Cerdo Salvaje"
+category = "NPCS HOSTILES"
+comment = "Chuleta Drop2=12-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Oink Oink"""
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 6
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 15
+min_hp = 35
+max_hp = 35
+max_hit = 2
+min_hit = 1
+defense = 0
+attack_power = 10
+evasion_power = 15
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 27, quantity = 1, description = "Chuleta"},
+    {slot = 2, item_id = 12, quantity = 10, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 500
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 579
+name = "Vaca Salvaje"
+category = "NPCS HOSTILES"
+comment = "Chuleta Drop2=12-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+description = """Muuuuu"""
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 7
+sounds = [8]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 25
+min_hp = 65
+max_hp = 65
+max_hit = 5
+min_hit = 2
+defense = 2
+attack_power = 25
+evasion_power = 15
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 27, quantity = 5, description = "Chuleta"},
+    {slot = 2, item_id = 12, quantity = 50, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 810
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 582
+name = "Enano de las Profundidades"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 304
+heading = 3
+body = 54
+[behavior]
+movement = 10
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 3000
+max_hp = 3000
+max_hit = 165
+min_hit = 93
+defense = 30
+attack_power = 200
+evasion_power = 140
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 50, description = "Pociones Rojas"},
+    {slot = 3, item_id = 159, quantity = 1, description = "Hacha de Bárbaro"},
+    {slot = 4, item_id = 243, quantity = 2, description = "Armadura de Placas Completas (E/G)"},
+    {slot = 5, item_id = 393, quantity = 3, description = "Armadura de Placas Completas + 2 (E/G)"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 583
+name = "Liche Infernal"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-15000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 149
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 10000
+max_hp = 10000
+max_hit = 250
+min_hit = 120
+defense = 30
+attack_power = 220
+evasion_power = 190
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 15000, description = "Oro"},
+    {slot = 3, item_id = 361, quantity = 2, description = "Tormentas de Fuego"},
+    {slot = 4, item_id = 206, quantity = 3, description = "Paralizar"},
+    {slot = 5, item_id = 400, quantity = 3, description = "Varas de Mago"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 584
+name = "Demonio Infernal"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-16000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 83
+sounds = [100]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 15000
+max_hp = 15000
+max_hit = 350
+min_hit = 75
+defense = 0
+attack_power = 230
+evasion_power = 220
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 8000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 16000, description = "Oro"},
+    {slot = 3, item_id = 126, quantity = 3, description = "Hacha Larga de Guerra"},
+    {slot = 4, item_id = 129, quantity = 5, description = "Hachas Doble Filo"},
+    {slot = 5, item_id = 495, quantity = 2, description = "Armaduras Escarlata"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 585
+name = "Dragón Rojo Infernal"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-6000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 41
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2500
+min_hp = 5000
+max_hp = 5000
+max_hit = 300
+min_hit = 250
+defense = 50
+attack_power = 380
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 4000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 6000, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 50000, description = "Oro"},
+    {slot = 5, item_id = 402, quantity = 1, description = "Espada Mata Dragones"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 586
+name = "Golem Infernal"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-1000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 181
+sounds = [79, 89]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 35000
+min_hp = 49000
+max_hp = 49000
+max_hit = 600
+min_hit = 300
+defense = 40
+attack_power = 300
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 15000, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 1000, description = "Pociones Rojas"},
+    {slot = 3, item_id = 37, quantity = 2000, description = "Pociones Azules"},
+    {slot = 4, item_id = 12, quantity = 100000, description = "Oro"},
+    {slot = 5, item_id = 485, quantity = 2, description = "Armaduras Legendarias"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 587
+name = "Astaroth"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=37-200"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 204
+sounds = [156]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2000
+min_hp = 3500
+max_hp = 3500
+max_hit = 126
+min_hit = 75
+defense = 30
+attack_power = 200
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 2500, description = "Oro"},
+    {slot = 2, item_id = 37, quantity = 200, description = "Pociones Azules"},
+    {slot = 3, item_id = 361, quantity = 1, description = "Tormentas de Fuego"},
+    {slot = 4, item_id = 530, quantity = 2, description = "Inmovilizar"},
+    {slot = 5, item_id = 699, quantity = 3, description = "Anillo de Disolución Mágica"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 588
+name = "Elemental de Fuego"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-100"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 153
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 600
+max_hp = 600
+max_hit = 250
+min_hit = 75
+defense = 30
+attack_power = 200
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 100, description = "Pociones Rojas"},
+    {slot = 3, item_id = 239, quantity = 1, description = "Túnica Roja"},
+    {slot = 4, item_id = 205, quantity = 1, description = "Proyectil Etéreo"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 589
+name = "Elemental de Fuego Anciano"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-15000"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 394
+sounds = [118, 1]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1000
+min_hp = 7000
+max_hp = 7000
+max_hit = 140
+min_hit = 75
+defense = 30
+attack_power = 250
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 15000, description = "Oro"},
+    {slot = 3, item_id = 361, quantity = 2, description = "Tormentas de Fuego"},
+    {slot = 4, item_id = 536, quantity = 1, description = "Invocar Elemental de Fuego"},
+    {slot = 5, item_id = 532, quantity = 1, description = "Apocalipsis"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 590
+name = "Blattodea"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-150"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 231
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 455
+min_hp = 435
+max_hp = 435
+max_hit = 90
+min_hit = 50
+defense = 10
+attack_power = 150
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 300, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 600, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 1200, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 591
+name = "Artopleura"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-200"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 229
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1100
+min_hp = 700
+max_hp = 700
+max_hit = 100
+min_hit = 65
+defense = 10
+attack_power = 200
+evasion_power = 80
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 125, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 200, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 300, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 1500, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 592
+name = "Araña de los Rincones"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=619-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 230
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 700
+min_hp = 650
+max_hp = 650
+max_hit = 75
+min_hit = 35
+defense = 0
+attack_power = 110
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 75, description = "Oro"},
+    {slot = 2, item_id = 619, quantity = 1, description = "Daga Envenenada"},
+    {slot = 4, item_id = 202, quantity = 1, description = "Toxina"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 593
+name = "Pirata"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=19-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 509
+heading = 3
+body = 386
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 850
+min_hp = 700
+max_hp = 700
+max_hit = 100
+min_hit = 65
+defense = 0
+attack_power = 250
+evasion_power = 85
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 3, item_id = 19, quantity = 1, description = "Espada Dos manos"},
+    {slot = 4, item_id = 125, quantity = 1, description = "Sable"},
+    {slot = 5, item_id = 873, quantity = 1, description = "Guantes de Hurto"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 594
+name = "Escarabajo Gigante"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-200"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 391
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 550
+max_hp = 550
+max_hit = 80
+min_hit = 35
+defense = 0
+attack_power = 100
+evasion_power = 45
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 200, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 600, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 595
+name = "Tentáculo Putrefacto"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-140"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 392
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 900
+min_hp = 600
+max_hp = 600
+max_hit = 80
+min_hit = 35
+defense = 0
+attack_power = 80
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 70, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 140, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 200, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 596
+name = "Espíritu chocarrero"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 219
+sounds = [163]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 400
+max_hp = 400
+max_hit = 130
+min_hit = 50
+defense = 5
+attack_power = 150
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 10, description = "Pociones Rojas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 597
+name = "Protector de los muertos"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-65"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 426
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 455
+min_hp = 435
+max_hp = 435
+max_hit = 90
+min_hit = 50
+defense = 10
+attack_power = 150
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 65, description = "Oro"},
+    {slot = 5, item_id = 380, quantity = 1}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 598
+name = "Hada Oscura"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=978-2"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 511
+heading = 3
+body = 427
+sounds = [166]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 700
+min_hp = 650
+max_hp = 650
+max_hit = 75
+min_hit = 35
+defense = 0
+attack_power = 110
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 75, description = "Oro"},
+    {slot = 2, item_id = 978, quantity = 2, description = "Harapos de la Cueva"},
+    {slot = 4, item_id = 697, quantity = 2, description = "Anillos Mágicos"},
+    {slot = 5, item_id = 513, quantity = 1, description = "Vestido de Bruja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 599
+name = "Engendro de las profundidades"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-12"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 387
+sounds = [162]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 550
+max_hp = 550
+max_hit = 80
+min_hit = 35
+defense = 0
+attack_power = 100
+evasion_power = 45
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 75, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 12, description = "Pociones Rojas"},
+    {slot = 3, item_id = 398, quantity = 4, description = "Garrotes"},
+    {slot = 4, item_id = 30, quantity = 1, description = "Armaduras de Cuero"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 600
+name = "Ave de las profundidades"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=551-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 425
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 900
+min_hp = 700
+max_hp = 700
+max_hit = 100
+min_hit = 65
+defense = 10
+attack_power = 200
+evasion_power = 80
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 125, description = "Oro"},
+    {slot = 2, item_id = 551, quantity = 50, description = "Flechas +1"},
+    {slot = 3, item_id = 552, quantity = 50, description = "Flechas +2"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 601
+name = "Licántropo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=414-20"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 212
+sounds = [167]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 850
+min_hp = 600
+max_hp = 600
+max_hit = 100
+min_hit = 65
+defense = 10
+attack_power = 250
+evasion_power = 65
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 414, quantity = 20, description = "Pieles de Lobo"},
+    {slot = 5, item_id = 1002, quantity = 5, description = "Cascos de Lobo"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 602
+name = "Piraña"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-275"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 433
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1150
+min_hp = 800
+max_hp = 800
+max_hit = 75
+min_hit = 110
+defense = 15
+attack_power = 200
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 275, description = "Oro"},
+    {slot = 3, item_id = 36, quantity = 10, description = "Pociones Amarillas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 603
+name = "Sirena"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=208-2"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 434
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1825
+min_hp = 1300
+max_hp = 1300
+max_hit = 110
+min_hit = 85
+defense = 25
+magic_defense = 15
+attack_power = 150
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 230, description = "Oro"},
+    {slot = 3, item_id = 208, quantity = 2, description = "Flauta Mágica"},
+    {slot = 5, item_id = 542, quantity = 1, description = "Turbación"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 604
+name = "Manta raya"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-20"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 407
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 550
+min_hp = 600
+max_hp = 600
+max_hit = 55
+min_hit = 45
+defense = 15
+attack_power = 120
+evasion_power = 45
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 20, description = "Pociones Rojas"},
+    {slot = 3, item_id = 36, quantity = 4, description = "Pociones Amarillas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 605
+name = "Lutra"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=36-15"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 435
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2730
+min_hp = 2100
+max_hp = 2100
+max_hit = 115
+min_hit = 60
+defense = 20
+magic_defense = 10
+attack_power = 150
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 550, description = "Oro"},
+    {slot = 2, item_id = 36, quantity = 15, description = "Pociones Amarillas"},
+    {slot = 3, item_id = 39, quantity = 15, description = "Pociones Verdes"},
+    {slot = 4, item_id = 12, quantity = 13500, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 606
+name = "Tiburón"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-25"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 436
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3500
+min_hp = 2500
+max_hp = 2500
+max_hit = 175
+min_hit = 100
+defense = 15
+magic_defense = 5
+attack_power = 220
+evasion_power = 180
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 25, description = "Pociones Rojas"},
+    {slot = 3, item_id = 39, quantity = 5, description = "Pociones Verdes"},
+    {slot = 4, item_id = 12, quantity = 2100, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 607
+name = "Capitán Pirata"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-1640"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 512
+heading = 3
+body = 428
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2700
+min_hp = 2700
+max_hp = 2700
+max_hit = 250
+min_hit = 130
+defense = 35
+magic_defense = 10
+attack_power = 220
+evasion_power = 190
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 1640, description = "Oro"},
+    {slot = 3, item_id = 125, quantity = 2, description = "Sables"},
+    {slot = 4, item_id = 474, quantity = 1, description = "Barca"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 608
+name = "Guardián de las Profundidades"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=37-50"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 218
+sounds = [210]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3500
+min_hp = 2000
+max_hp = 2000
+max_hit = 300
+min_hit = 100
+defense = 15
+attack_power = 350
+evasion_power = 210
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 400, description = "Oro"},
+    {slot = 2, item_id = 37, quantity = 50, description = "Pociones Azules"},
+    {slot = 3, item_id = 38, quantity = 130, description = "Pociones Rojas"},
+    {slot = 4, item_id = 361, quantity = 1, description = "Tormenta de Fuego"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 609
+name = "Elemental de Agua Anciano"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-19050"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 542
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2000
+min_hp = 7000
+max_hp = 7000
+max_hit = 250
+min_hit = 150
+defense = 30
+magic_defense = 10
+attack_power = 250
+evasion_power = 250
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 19050, description = "Oro"},
+    {slot = 3, item_id = 657, quantity = 1, description = "Quitar la Turbación"},
+    {slot = 4, item_id = 542, quantity = 1, description = "Turbación"},
+    {slot = 5, item_id = 537, quantity = 1, description = "Invocar Elemental de Agua"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 610
+name = "Kraken"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-110"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 408
+sounds = [174, 175]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 10500
+min_hp = 6250
+max_hp = 6250
+max_hit = 220
+min_hit = 95
+defense = 15
+attack_power = 220
+evasion_power = 170
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1200, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 110, description = "Pociones Rojas"},
+    {slot = 3, item_id = 405, quantity = 1, description = "Casco de Plata"},
+    {slot = 4, item_id = 206, quantity = 1, description = "Paralizar"},
+    {slot = 5, item_id = 475, quantity = 1, description = "Galera"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 611
+name = "Fango"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=38-18"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 403
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 800
+min_hp = 750
+max_hp = 750
+max_hit = 110
+min_hit = 50
+defense = 0
+attack_power = 200
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 100, description = "Oro"},
+    {slot = 2, item_id = 38, quantity = 18, description = "Pociones Rojas"},
+    {slot = 3, item_id = 37, quantity = 30, description = "Pociones Azules"},
+    {slot = 4, item_id = 36, quantity = 10, description = "Pociones Amarillas"},
+    {slot = 5, item_id = 39, quantity = 10, description = "Pociones Verdes"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 612
+name = "Cocodrilo"
+category = "NPCS HOSTILES"
+comment = "Daga Envenenada Drop5=365-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 208
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1000
+min_hp = 550
+max_hp = 550
+max_hit = 100
+min_hit = 75
+defense = 10
+magic_defense = 5
+attack_power = 220
+evasion_power = 60
+[inventory.drops]
+drops = [
+    {slot = 4, item_id = 619, quantity = 1, description = "Daga Envenenada"},
+    {slot = 5, item_id = 365, quantity = 1, description = "Daga +2"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 613
+name = "Unicornio"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=37-23"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 183
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 1900
+min_hp = 1350
+max_hp = 1350
+max_hit = 115
+min_hit = 60
+defense = 5
+magic_defense = 10
+attack_power = 150
+evasion_power = 70
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 150, description = "Oro"},
+    {slot = 2, item_id = 37, quantity = 23, description = "Pociones Azules"},
+    {slot = 3, item_id = 658, quantity = 1, description = "Vara de Frezno"},
+    {slot = 4, item_id = 697, quantity = 1, description = "Anillo Mágico"},
+    {slot = 5, item_id = 698, quantity = 1, description = "Anillo de Resistencia Mágica"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 614
+name = "Elfo Guardián"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=480-115"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 402
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 2300
+min_hp = 1500
+max_hp = 1500
+max_hit = 115
+min_hit = 60
+defense = 15
+magic_defense = 0
+attack_power = 135
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 2, item_id = 480, quantity = 115, description = "Flechas"},
+    {slot = 3, item_id = 479, quantity = 3, description = "Arcos Compuestos"},
+    {slot = 4, item_id = 551, quantity = 200, description = "Flechas +1"},
+    {slot = 5, item_id = 665, quantity = 6, description = "Arcos de Cazador"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 615
+name = "Árbol capturador de Almas"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=1005-2"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 401
+sounds = [173]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 3100
+min_hp = 2500
+max_hp = 2500
+max_hit = 150
+min_hit = 100
+defense = 15
+magic_defense = 0
+attack_power = 150
+evasion_power = 60
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 1000, description = "Oro"},
+    {slot = 2, item_id = 1005, quantity = 2, description = "Hachas de Madera Élfia"},
+    {slot = 3, item_id = 38, quantity = 300, description = "Pociones Rojas"},
+    {slot = 4, item_id = 203, quantity = 1, description = "Aura Sanadora Avanzada"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 616
+name = "Sapo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop4=12-500"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 432
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 60
+min_hp = 35
+max_hp = 35
+max_hit = 7
+min_hit = 2
+defense = 0
+magic_defense = 0
+attack_power = 40
+evasion_power = 35
+[inventory.drops]
+drops = [
+    {slot = 3, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 4, item_id = 12, quantity = 500, description = "Oro"},
+    {slot = 5, item_id = 12, quantity = 5000, description = "Oro"}
+]
+[flags]
+attackable = 1
+domable = 900
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 617
+name = "Pequeño Escarabajo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=855-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 533
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 175
+min_hp = 200
+max_hp = 200
+max_hit = 14
+min_hit = 1
+defense = 5
+magic_defense = 5
+attack_power = 75
+evasion_power = 25
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 10, description = "Oro"},
+    {slot = 2, item_id = 855, quantity = 10, description = "Poción amarilla (newbie)"},
+    {slot = 3, item_id = 858, quantity = 20, description = "Poción verde(newbie)"},
+    {slot = 5, item_id = 126, quantity = 1, description = "Hacha larga de guerra"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 618
+name = "Pequeño Duende"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=856-24"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 75
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 80
+min_hp = 100
+max_hp = 100
+max_hit = 17
+min_hit = 10
+defense = 8
+attack_power = 90
+evasion_power = 100
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 65, description = "Oro"},
+    {slot = 2, item_id = 856, quantity = 24, description = "Poción Azul (newbie)"},
+    {slot = 4, item_id = 208, quantity = 1, description = "Flauta Magica"},
+    {slot = 5, item_id = 696, quantity = 1, description = "Laud Magico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 619
+name = "Hada del Bosque"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-85"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 532
+sounds = [166]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 417
+min_hp = 278
+max_hp = 278
+max_hit = 23
+min_hit = 15
+defense = 5
+attack_power = 150
+evasion_power = 150
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 40, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 85, description = "Oro"},
+    {slot = 3, item_id = 857, quantity = 20, description = "Poción roja (newbie)"},
+    {slot = 4, item_id = 658, quantity = 1, description = "Vara de fresno"},
+    {slot = 5, item_id = 205, quantity = 1, description = "Misil Magico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 620
+name = "Pequeña Araña"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=12-110"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 534
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 75
+min_hp = 125
+max_hp = 125
+max_hit = 8
+min_hit = 3
+defense = 4
+magic_defense = 5
+attack_power = 50
+evasion_power = 20
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 12, description = "Oro"},
+    {slot = 3, item_id = 12, quantity = 110, description = "Oro"},
+    {slot = 4, item_id = 366, quantity = 1, description = "Daga +3"},
+    {slot = 5, item_id = 30, quantity = 1, description = "Armadura de cuero"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 621
+name = "Piraña"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=480-15"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 433
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 135
+min_hp = 150
+max_hp = 150
+max_hit = 16
+min_hit = 10
+defense = 4
+magic_defense = 5
+attack_power = 75
+evasion_power = 25
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 20, description = "Oro"},
+    {slot = 2, item_id = 480, quantity = 15, description = "Flechas"},
+    {slot = 3, item_id = 855, quantity = 30, description = "Poción amarilla (newbie)"},
+    {slot = 4, item_id = 1009, quantity = 20, description = "cuchillas"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 622
+name = "Pequeño Dragón Mágico"
+category = "NPCS HOSTILES"
+comment = "Oro  Drop2=480-25"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 537
+sounds = [89]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 160
+min_hp = 200
+max_hp = 200
+max_hit = 17
+min_hit = 5
+defense = 5
+magic_defense = 10
+attack_power = 84
+evasion_power = 27
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 40, description = "Oro"},
+    {slot = 2, item_id = 480, quantity = 25, description = "Flechas"},
+    {slot = 3, item_id = 480, quantity = 150, description = "Flechas"},
+    {slot = 4, item_id = 664, quantity = 1, description = "Arco compuesto reforzado"},
+    {slot = 5, item_id = 665, quantity = 1, description = "Arco de Cazador"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 623
+name = "Mini Elemental de Fuego"
+category = "NPCS HOSTILES"
+comment = "Oro  Drop2=12-75"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 535
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 120
+min_hp = 210
+max_hp = 210
+max_hit = 13
+min_hit = 5
+defense = 3
+magic_defense = 2
+attack_power = 45
+evasion_power = 30
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 50, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 75, description = "Oro"},
+    {slot = 4, item_id = 205, quantity = 1, description = "Proyectil Mágico"},
+    {slot = 5, item_id = 123, quantity = 3, description = "Espada Vikinga"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 624
+name = "Pequeño Dragón Rojo"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-25"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 536
+sounds = [160]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 500
+min_hp = 300
+max_hp = 300
+max_hit = 13
+min_hit = 2
+defense = 7
+attack_power = 40
+evasion_power = 50
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 25, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 25, description = "Oro"},
+    {slot = 4, item_id = 204, quantity = 1, description = "Flecha Eléctrica"},
+    {slot = 5, item_id = 990, quantity = 3, description = "Mazo del juicio"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 625
+name = "Víbora"
+category = "NPCS HOSTILES"
+comment = "Pocion roja Drop4=200-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 13
+sounds = [103]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 30
+min_hp = 22
+max_hp = 22
+max_hit = 6
+min_hit = 2
+defense = 3
+attack_power = 35
+evasion_power = 20
+[inventory.drops]
+drops = [
+    {slot = 3, item_id = 38, quantity = 10, description = "Pocion roja"},
+    {slot = 4, item_id = 200, quantity = 1, description = "Antidoto magico"},
+    {slot = 5, item_id = 202, quantity = 1, description = "Toxina"}
+]
+[flags]
+attackable = 1
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 626
+name = "Goblin Travieso"
+category = "NPCS HOSTILES"
+comment = "Oro Drop3=480-10"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 14
+sounds = [142]
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 70
+min_hp = 75
+max_hp = 75
+max_hit = 9
+min_hit = 2
+defense = 2
+magic_defense = 4
+attack_power = 58
+evasion_power = 15
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 6, description = "Oro"},
+    {slot = 3, item_id = 480, quantity = 10, description = "Flechas"},
+    {slot = 4, item_id = 479, quantity = 1, description = "Arco compuesto"}
+]
+[flags]
+attackable = 1
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 627
+name = "Protector de almas"
+category = "NPCS HOSTILES"
+comment = "Oro Drop2=12-41"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 426
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 100
+min_hp = 130
+max_hp = 130
+max_hit = 23
+min_hit = 15
+defense = 10
+magic_defense = 5
+attack_power = 69
+evasion_power = 55
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 12, quantity = 41, description = "Oro"},
+    {slot = 2, item_id = 12, quantity = 41, description = "Oro"},
+    {slot = 3, item_id = 364, quantity = 1, description = "Terrible hambre de Igôr"},
+    {slot = 4, item_id = 19, quantity = 2, description = "Espada dos manos"},
+    {slot = 5, item_id = 470, quantity = 1, description = "Fuerza"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 628
+name = "Tarántula venenosa"
+category = "NPCS HOSTILES"
+comment = "Pocion violeta Drop3=201-1"
+npc_type = 0
+type_description = "NPCS COMUNES"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+heading = 3
+body = 538
+[behavior]
+movement = 3
+respawn = 0
+hostile = 1
+[combat]
+exp_given = 95
+min_hp = 95
+max_hp = 95
+max_hit = 15
+defense = 2
+attack_power = 63
+evasion_power = 32
+[inventory.drops]
+drops = [
+    {slot = 1, item_id = 166, quantity = 5, description = "Pocion violeta"},
+    {slot = 3, item_id = 201, quantity = 1, description = "Curar heridas leves"},
+    {slot = 4, item_id = 396, quantity = 1, description = "Celeridad"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 900
+name = "Rey Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Alto Name=Rey Pretoriano NpcType=10 Head=14 Heading=3 Body=63 Movement=24 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=35000 GiveGLD=30000 MinHP=12000 MaxHP=12000 MaxHIT=50 MinHIT=30 DEF=30 PoderAtaque=1000 PoderEvasion=270 LanzaSpells=5 Sp1=3 Sp2=10 Sp3=30 Sp4=31 Sp5=1 NROITEMS=2 Obj1=646-1 Obj2=403-1 AfectaParalisis=1 BackUp=0"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 14
+heading = 3
+body = 63
+[behavior]
+movement = 24
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 35000
+min_hp = 12000
+max_hp = 12000
+max_hit = 50
+min_hit = 30
+defense = 30
+attack_power = 1000
+evasion_power = 270
+[inventory]
+items = [
+    {slot = 1, item_id = 646, quantity = 1},
+    {slot = 2, item_id = 403, quantity = 1}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 901
+name = "Rey Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Rey Pretoriano NpcType=10 Head=14 Heading=3 Body=180 Movement=24 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=35000 GiveGLD=30000 MinHP=12000 MaxHP=12000 MaxHIT=50 MinHIT=30 DEF=30 PoderAtaque=1000 PoderEvasion=270 LanzaSpells=5 Sp1=3 Sp2=10 Sp3=30 Sp4=31 Sp5=1 NROITEMS=2 Obj1=907-1 Obj2=403-1 AfectaParalisis=1 BackUp=0"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 14
+heading = 3
+body = 180
+[behavior]
+movement = 24
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 35000
+min_hp = 12000
+max_hp = 12000
+max_hit = 50
+min_hit = 30
+defense = 30
+attack_power = 1000
+evasion_power = 270
+[inventory]
+items = [
+    {slot = 1, item_id = 907, quantity = 1},
+    {slot = 2, item_id = 403, quantity = 1}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 902
+name = "Clerigo Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=519-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 74
+heading = 3
+body = 130
+[behavior]
+movement = 20
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 8000
+max_hp = 8000
+max_hit = 140
+min_hit = 70
+defense = 10
+attack_power = 100
+evasion_power = 120
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 519, quantity = 1, description = "Tunica legendaria"},
+    {slot = 3, item_id = 37, quantity = 300, description = "Pocion Azul"},
+    {slot = 4, item_id = 38, quantity = 300, description = "Pocion Roja"},
+    {slot = 5, item_id = 361, quantity = 1, description = "Tormenta de Fuego"},
+    {slot = 6, item_id = 697, quantity = 1, description = "Anillo Magico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 903
+name = "Clerigo Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Clerigo Pretoriano NpcType=10 Head=74 Heading=3 Body=136 Movement=20 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=10000 MinHP=8000 MaxHP=8000 MaxHIT=140 MinHIT=70 DEF=10 PoderAtaque=100 PoderEvasion=120 LanzaSpells=5 Sp1=9 Sp2=10 Sp3=39 Sp4=5 Sp5=36 NROITEMS=6 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 74
+heading = 3
+body = 136
+[behavior]
+movement = 20
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 8000
+max_hp = 8000
+max_hit = 140
+min_hit = 70
+defense = 10
+attack_power = 100
+evasion_power = 120
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 525, quantity = 1, description = "Tunica Combinada"},
+    {slot = 3, item_id = 37, quantity = 300, description = "Pocion Azul"},
+    {slot = 4, item_id = 38, quantity = 300, description = "Pocion Roja"},
+    {slot = 5, item_id = 361, quantity = 1, description = "Tormenta de Fuego"},
+    {slot = 6, item_id = 697, quantity = 1, description = "Anillo Magico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 904
+name = "Bardo Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=519-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 74
+heading = 3
+body = 130
+[behavior]
+movement = 20
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 8000
+max_hp = 8000
+max_hit = 140
+min_hit = 70
+defense = 10
+attack_power = 100
+evasion_power = 120
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 519, quantity = 1, description = "Tunica legendaria"},
+    {slot = 3, item_id = 37, quantity = 300, description = "Pocion Azul"},
+    {slot = 4, item_id = 38, quantity = 300, description = "Pocion Roja"},
+    {slot = 5, item_id = 132, quantity = 1, description = "Casco de Hierro"},
+    {slot = 6, item_id = 1049, quantity = 1, description = "Laud Élfico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 905
+name = "Bardo Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Bardo Pretoriano NpcType=10 Head=74 Heading=3 Body=136 Movement=20 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=10000 MinHP=8000 MaxHP=8000 MaxHIT=140 MinHIT=70 DEF=10 PoderAtaque=100 PoderEvasion=120 LanzaSpells=5 Sp1=9 Sp2=10 Sp3=39 Sp4=5 Sp5=36 NROITEMS=6 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 74
+heading = 3
+body = 136
+[behavior]
+movement = 20
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 8000
+max_hp = 8000
+max_hit = 140
+min_hit = 70
+defense = 10
+attack_power = 100
+evasion_power = 120
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 525, quantity = 1, description = "Tunica Combinada"},
+    {slot = 3, item_id = 37, quantity = 300, description = "Pocion Azul"},
+    {slot = 4, item_id = 38, quantity = 300, description = "Pocion Roja"},
+    {slot = 5, item_id = 132, quantity = 1, description = "Casco de Hierro"},
+    {slot = 6, item_id = 1049, quantity = 1, description = "Laud Élfico"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 906
+name = "Mago Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=238-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 104
+heading = 3
+body = 49
+[behavior]
+movement = 22
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 5000
+max_hp = 5000
+max_hit = 60
+min_hit = 30
+defense = 10
+attack_power = 100
+evasion_power = 80
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 238, quantity = 1, description = "Tunica Azul"},
+    {slot = 3, item_id = 37, quantity = 400, description = "Pocion Azul"},
+    {slot = 4, item_id = 660, quantity = 1, description = "Baculo Engarzado"},
+    {slot = 5, item_id = 662, quantity = 1, description = "Sombrero de Mago"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 907
+name = "Mago Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Mago Pretoriano NpcType=10 Head=104 Heading=3 Body=159 Movement=22 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=10000 MinHP=5000 MaxHP=5000 MaxHIT=60 MinHIT=30 DEF=10 PoderAtaque=100 PoderEvasion=80 LanzaSpells=2 Sp1=25 Sp2=38 NROITEMS=5 Obj1=12-10000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 104
+heading = 3
+body = 159
+[behavior]
+movement = 22
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 5000
+max_hp = 5000
+max_hit = 60
+min_hit = 30
+defense = 10
+attack_power = 100
+evasion_power = 80
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 670, quantity = 1, description = "Túnica de mago"},
+    {slot = 3, item_id = 37, quantity = 400, description = "Pocion Azul"},
+    {slot = 4, item_id = 660, quantity = 1, description = "Baculo Engarzado"},
+    {slot = 5, item_id = 662, quantity = 1, description = "Sombrero de Mago"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 908
+name = "Druida Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=986-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 104
+heading = 3
+body = 56
+[behavior]
+movement = 22
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 5000
+max_hp = 5000
+max_hit = 60
+min_hit = 30
+defense = 10
+attack_power = 100
+evasion_power = 80
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 986, quantity = 1, description = "Tunica de Druida"},
+    {slot = 3, item_id = 37, quantity = 400, description = "Pocion Azul"},
+    {slot = 4, item_id = 1050, quantity = 1, description = "Flauta Élfica"},
+    {slot = 5, item_id = 1004, quantity = 1, description = "Casco de Tigre"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 909
+name = "Druida Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Druida Pretoriano NpcType=10 Head=104 Heading=3 Body=135 Movement=22 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=10000 MinHP=5000 MaxHP=5000 MaxHIT=60 MinHIT=30 DEF=10 PoderAtaque=100 PoderEvasion=80 LanzaSpells=2 Sp1=25 Sp2=38 NROITEMS=5 Obj1=12-10000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 104
+heading = 3
+body = 135
+[behavior]
+movement = 22
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 10000
+min_hp = 5000
+max_hp = 5000
+max_hit = 60
+min_hit = 30
+defense = 10
+attack_power = 100
+evasion_power = 80
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 524, quantity = 1, description = "Túnica roja especial"},
+    {slot = 3, item_id = 37, quantity = 400, description = "Pocion Azul"},
+    {slot = 4, item_id = 1050, quantity = 1, description = "Flauta Élfica"},
+    {slot = 5, item_id = 1004, quantity = 1, description = "Casco de Tigre"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 910
+name = "Cazador Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=665-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 301
+heading = 3
+body = 58
+[behavior]
+movement = 23
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 10000
+max_hp = 10000
+max_hit = 150
+min_hit = 100
+defense = 10
+attack_power = 350
+evasion_power = 220
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 665, quantity = 1, description = "Arco de Cazador"},
+    {slot = 3, item_id = 553, quantity = 125, description = "Flecha +3"},
+    {slot = 4, item_id = 360, quantity = 1, description = "Armadura de Cazador"},
+    {slot = 5, item_id = 370, quantity = 1, description = "Capucha de Cazador"},
+    {slot = 6, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 7, item_id = 36, quantity = 20, description = "Poción Amarilla"},
+    {slot = 8, item_id = 39, quantity = 20, description = "Poción Verde"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 911
+name = "Cazador Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Cazador Pretoriano NpcType=10 Head=301 Heading=3 Body=155 Movement=23 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=10000 MaxHP=10000 MaxHIT=150 MinHIT=100 DEF=10 PoderAtaque=350 PoderEvasion=220 LanzaSpells=1 Sp1=37 NROITEMS=8 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 301
+heading = 3
+body = 155
+[behavior]
+movement = 23
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 10000
+max_hp = 10000
+max_hit = 150
+min_hit = 100
+defense = 10
+attack_power = 350
+evasion_power = 220
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 665, quantity = 1, description = "Arco de Cazador(E/G)"},
+    {slot = 3, item_id = 553, quantity = 125, description = "Flecha +3"},
+    {slot = 4, item_id = 648, quantity = 1, description = "Armadura de Cazador (E/G)"},
+    {slot = 5, item_id = 370, quantity = 1, description = "Capucha de Cazador"},
+    {slot = 6, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 7, item_id = 36, quantity = 20, description = "Poción Amarilla"},
+    {slot = 8, item_id = 39, quantity = 20, description = "Poción Verde"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 912
+name = "Pirata Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=1009-125"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 301
+heading = 3
+body = 130
+[behavior]
+movement = 23
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 10000
+max_hp = 10000
+max_hit = 150
+min_hit = 100
+defense = 10
+attack_power = 350
+evasion_power = 220
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 8000, description = "Oro"},
+    {slot = 2, item_id = 1009, quantity = 125, description = "Cuchillas"},
+    {slot = 3, item_id = 519, quantity = 1, description = "Tunica Legendaria"},
+    {slot = 4, item_id = 1010, quantity = 1, description = "Sombrero Pirata"},
+    {slot = 5, item_id = 36, quantity = 20, description = "Poción Amarilla"},
+    {slot = 6, item_id = 39, quantity = 20, description = "Poción Verde"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 913
+name = "Pirata Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Pirata Pretoriano NpcType=10 Head=301 Heading=3 Body=136 Movement=23 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=10000 MaxHP=10000 MaxHIT=150 MinHIT=100 DEF=10 PoderAtaque=350 PoderEvasion=220 LanzaSpells=1 Sp1=37 NROITEMS=6 Obj1=12-8000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 301
+heading = 3
+body = 136
+[behavior]
+movement = 23
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 10000
+max_hp = 10000
+max_hit = 150
+min_hit = 100
+defense = 10
+attack_power = 350
+evasion_power = 220
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 8000, description = "Oro"},
+    {slot = 2, item_id = 1009, quantity = 125, description = "Cuchillas"},
+    {slot = 3, item_id = 525, quantity = 1, description = "Túnica Combinada (E/G)"},
+    {slot = 4, item_id = 1010, quantity = 1, description = "Sombrero Pirata"},
+    {slot = 5, item_id = 36, quantity = 20, description = "Poción Amarilla"},
+    {slot = 6, item_id = 39, quantity = 20, description = "Poción Verde"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 914
+name = "Guerrero Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=129-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 45
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 129, quantity = 1, description = "Hacha de Guerra Dos Filos"},
+    {slot = 3, item_id = 195, quantity = 1, description = "Armadura de Placas Completa"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 36, quantity = 30, description = "Poción Amarilla"},
+    {slot = 7, item_id = 39, quantity = 30, description = "Poción Verde"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 915
+name = "Guerrero Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Guerrero Pretoriano NpcType=10 Head=7 Heading=3 Body=54 Movement=21 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=15000 MaxHP=15000 MaxHIT=200 MinHIT=180 DEF=20 PoderAtaque=600 PoderEvasion=250 LanzaSpells=0 NROITEMS=8 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 54
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 129, quantity = 1, description = "Hacha de Guerra Dos Filos"},
+    {slot = 3, item_id = 243, quantity = 1, description = "Armadura de Placas Completa (E/G)"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 36, quantity = 30, description = "Poción Amarilla"},
+    {slot = 7, item_id = 39, quantity = 30, description = "Poción Verde"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 916
+name = "Paladin Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=129-1"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 45
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 129, quantity = 1, description = "Hacha de Guerra Dos Filos"},
+    {slot = 3, item_id = 195, quantity = 1, description = "Armadura de Placas Completa"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 7, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 917
+name = "Paladin Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Paladin Pretoriano NpcType=10 Head=7 Heading=3 Body=54 Movement=21 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=15000 MaxHP=15000 MaxHIT=200 MinHIT=180 DEF=20 PoderAtaque=600 PoderEvasion=250 LanzaSpells=0 NROITEMS=7 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 54
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 129, quantity = 1, description = "Hacha de Guerra Dos Filos"},
+    {slot = 3, item_id = 243, quantity = 1, description = "Armadura de Placas Completa (E/G)"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 7, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 918
+name = "Asesino Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=367-2"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 48
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 367, quantity = 2, description = "Daga +4"},
+    {slot = 3, item_id = 356, quantity = 1, description = "Armadura de las sombras"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 404, quantity = 1, description = "Escudo de Tortuga"},
+    {slot = 6, item_id = 697, quantity = 1, description = "Anillo mágico"},
+    {slot = 7, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 919
+name = "Asesino Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Asesino Pretoriano NpcType=10 Head=7 Heading=3 Body=539 Movement=21 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=15000 MaxHP=15000 MaxHIT=200 MinHIT=180 DEF=20 PoderAtaque=600 PoderEvasion=250 LanzaSpells=0 NROITEMS=8 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 539
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 367, quantity = 2, description = "Daga +4"},
+    {slot = 3, item_id = 854, quantity = 1, description = "Armadura de las sombras (E/G)"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 404, quantity = 1, description = "Escudo de Tortuga"},
+    {slot = 6, item_id = 697, quantity = 1, description = "Anillo mágico"},
+    {slot = 7, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 920
+name = "Bandido Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Oro Obj2=123-2"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 45
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 123, quantity = 2, description = "Espada Vikinga"},
+    {slot = 3, item_id = 195, quantity = 1, description = "Armadura de Placas Completa"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 873, quantity = 1, description = "Guantes de hurto"},
+    {slot = 7, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 921
+name = "Bandido Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Bandido Pretoriano NpcType=10 Head=7 Heading=3 Body=54 Movement=21 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=15000 MaxHP=15000 MaxHIT=200 MinHIT=180 DEF=20 PoderAtaque=600 PoderEvasion=250 LanzaSpells=0 NROITEMS=8 Obj1=12-5000"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 54
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 15000
+max_hp = 15000
+max_hit = 200
+min_hit = 180
+defense = 20
+attack_power = 600
+evasion_power = 250
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 5000, description = "Oro"},
+    {slot = 2, item_id = 123, quantity = 2, description = "Espada Vikinga"},
+    {slot = 3, item_id = 243, quantity = 1, description = "Armadura de Placas Completa (E/G)"},
+    {slot = 4, item_id = 131, quantity = 1, description = "Casco de Hierro Completo"},
+    {slot = 5, item_id = 128, quantity = 1, description = "Escudo de Hierro"},
+    {slot = 6, item_id = 873, quantity = 1, description = "Guantes de hurto"},
+    {slot = 7, item_id = 37, quantity = 450, description = "Poción Azul"},
+    {slot = 8, item_id = 38, quantity = 300, description = "Poción Roja"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 922
+name = "Ladrón Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Flecha Sp2=39"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 47
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 3000
+max_hp = 3000
+max_hit = 50
+min_hit = 65
+defense = 10
+attack_power = 150
+evasion_power = 300
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 873, quantity = 1, description = "Guantes de hurto"},
+    {slot = 3, item_id = 132, quantity = 1, description = "Casco de Hierro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0
+
+[[npcs_hostiles.npcs]]
+id = 923
+name = "Ladrón Pretoriano"
+category = "NPCS PRETORIANOS"
+comment = "Bajo (Asignar cabeza default) Name=Ladrón Pretoriano NpcType=10 Head=7 Heading=3 Body=374 Movement=21 AguaValida=0 Attackable=1 ReSpawn=1 Hostile=1 Domable=0 Alineacion=2 Comercia=0 GiveEXP=5000 MinHP=3000 MaxHP=3000 MaxHIT=50 MinHIT=65 DEF=10 PoderAtaque=150 PoderEvasion=300 AfectaParalisis=1 LanzaSpells=2 Sp1=47"
+npc_type = 10
+type_description = "DESCONOCIDO"
+tags = ["hostil", "combate", "atacable", "con_items"]
+[appearance]
+head = 7
+heading = 3
+body = 374
+[behavior]
+movement = 21
+respawn = 1
+hostile = 1
+[combat]
+exp_given = 5000
+min_hp = 3000
+max_hp = 3000
+max_hit = 50
+min_hit = 65
+defense = 10
+attack_power = 150
+evasion_power = 300
+[inventory]
+items = [
+    {slot = 1, item_id = 12, quantity = 10000, description = "Oro"},
+    {slot = 2, item_id = 873, quantity = 1, description = "Guantes de hurto"},
+    {slot = 3, item_id = 132, quantity = 1, description = "Casco de Hierro"}
+]
+[flags]
+attackable = 1
+domable = 0
+alignment = 2
+backup = 0

@@ -357,10 +357,14 @@ class TestDropPosition:
         """Test cuando el centro está bloqueado."""
         # Setup
         map_manager = MagicMock()
-        # Primera llamada (centro): bloqueado, segunda: libre
+
+        def can_move_to_side_effect(_map_id: int, x: int, y: int) -> bool:
+            """Retorna False para el centro, True para otras posiciones."""
+            return not (x == 50 and y == 50)  # Centro bloqueado, otras posiciones libres
+
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.can_move_to = MagicMock(side_effect=[False, True])
+        map_manager.can_move_to = MagicMock(side_effect=can_move_to_side_effect)
 
         service = NPCDeathService(
             map_manager=map_manager,

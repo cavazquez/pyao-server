@@ -200,8 +200,12 @@ class NPCService:
         # Índice por ID
         self.npcs_by_id = {npc["id"]: npc for npc in self.all_npcs}
 
-        # Índice por nombre (case insensitive)
-        self.npcs_by_name = {npc["name"].lower(): npc for npc in self.all_npcs if npc.get("name")}
+        # Índice por nombre (case insensitive) - soporta tanto "name" como "nombre"
+        self.npcs_by_name = {}
+        for npc in self.all_npcs:
+            name = npc.get("nombre") or npc.get("name")
+            if name:
+                self.npcs_by_name[name.lower()] = npc
 
         # Índice por categoría
         self.npcs_by_category = {}
