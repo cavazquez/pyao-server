@@ -439,6 +439,15 @@ class LoginCommandHandler(CommandHandler):
         await self.message_sender.send_show_party_form()
         logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
 
+        # NOTA: El envío de CLAN_DETAILS está deshabilitado hasta que el cliente Godot
+        # implemente el handler para procesar el packet 80 (GuildDetails).
+        # Ver: docs/CLAN_BUTTON_ENABLING.md
+        # TODO: Habilitar cuando el cliente tenga el handler implementado
+        # if self.clan_service:
+        #     clan = await self.clan_service.clan_repo.get_user_clan(user_id)
+        #     if clan:
+        #         await self.message_sender.send_clan_details(clan)
+
         # Enviar MOTD (Mensaje del Día)
         if self._motd_handler is None:
             self._motd_handler = MotdCommandHandler(

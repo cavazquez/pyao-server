@@ -614,6 +614,17 @@ class MessageSender:
         """
         await self.session.send_show_party_form()
 
+    async def send_clan_details(self, clan: "Clan") -> None:
+        """Envía paquete CLAN_DETAILS para habilitar el botón de clan en el cliente.
+
+        Este packet habilita la funcionalidad de clanes en la UI del cliente
+        y debe enviarse durante el login si el jugador pertenece a un clan.
+
+        Args:
+            clan: Objeto Clan con los datos del clan.
+        """
+        await self.session.send_clan_details(clan)
+
     async def send_user_commerce_init(self, partner_username: str) -> None:
         """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
         response = build_user_commerce_init_response(partner_username)

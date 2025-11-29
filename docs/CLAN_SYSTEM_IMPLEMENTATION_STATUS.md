@@ -110,6 +110,12 @@ Los siguientes comandos no están implementados pero el servicio sí los soporta
 - ✅ Broadcast a todos los miembros del clan
 - ✅ Formato: `[Clan] <username>: <mensaje>`
 
+#### Habilitación del Botón de Clan en Cliente ⚠️ LISTO PERO DESHABILITADO
+- ✅ Packet `CLAN_DETAILS` (packet 80) construido según protocolo VB6 (`build_clan_details_response`)
+- ✅ Métodos implementados: `send_clan_details()` en `MessageSender` y `SessionMessageSender`
+- ⚠️ **DESHABILITADO**: El envío del packet está comentado en `login_handler.py` hasta que el cliente implemente el handler
+- 📝 **NOTA**: Ver `docs/CLAN_BUTTON_ENABLING.md` para más detalles. El código está listo para habilitar cuando el cliente tenga el handler
+
 #### Almacén del Clan
 - ❌ Sistema de depósito del clan
 - ❌ Gestión de items y oro del clan

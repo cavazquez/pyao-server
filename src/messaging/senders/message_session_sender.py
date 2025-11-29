@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.network.msg_clan import build_clan_details_response
 from src.network.msg_session import (
     build_attributes_response,
     build_dice_roll_response,
@@ -13,6 +14,7 @@ from src.network.msg_session import (
 from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
+    from src.models.clan import Clan
     from src.network.client_connection import ClientConnection
 
 logger = logging.getLogger(__name__)
@@ -131,4 +133,21 @@ class SessionMessageSender:
         """
         response = bytes([ServerPacketID.SHOW_PARTY_FORM])
         logger.info("[%s] Enviando SHOW_PARTY_FORM (packet 99)", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_clan_details(self, clan: "Clan") -> None:
+        """Envía paquete CLAN_DETAILS para habilitar el botón de clan en el cliente.
+
+        Este packet habilita la funcionalidad de clanes en la UI del cliente
+        y debe enviarse durante el login si el jugador pertenece a un clan.
+
+        Args:
+            clan: Objeto Clan con los datos del clan.
+        """
+        response = build_clan_details_response(clan)
+        logger.info(
+            "[%s] Enviando CLAN_DETAILS (packet 80) para clan '%s'",
+            self.connection.address,
+            clan.name,
+        )
         await self.connection.send(response)
