@@ -56,3 +56,6 @@ class NPC:
     # Efectos visuales
     fx: int = 0  # FX ID al morir (one-shot)
     fx_loop: int = 0  # FX ID continuo (aura, loop infinito)
+
+    # Estados/efectos
+    paralyzed_until: float = 0.0  # Timestamp hasta cuando está paralizado (0 = no paralizado)

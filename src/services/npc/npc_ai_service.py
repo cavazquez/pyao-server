@@ -125,6 +125,16 @@ class NPCAIService:
         Returns:
             True si atacó exitosamente.
         """
+        # Verificar si el NPC está paralizado
+        current_time = time.time()
+        if npc.paralyzed_until > 0.0 and current_time < npc.paralyzed_until:
+            logger.debug(
+                "NPC %s no puede atacar: está paralizado (queda %.1fs)",
+                npc.name,
+                npc.paralyzed_until - current_time,
+            )
+            return False
+
         # Verificar que el jugador esté vivo
         stats = await self.player_repo.get_stats(target_user_id)
         if not stats or stats.get("min_hp", 0) <= 0:
@@ -253,6 +263,16 @@ class NPCAIService:
         Returns:
             True si se movió exitosamente.
         """
+        # Verificar si el NPC está paralizado
+        current_time = time.time()
+        if npc.paralyzed_until > 0.0 and current_time < npc.paralyzed_until:
+            logger.debug(
+                "NPC %s no puede moverse: está paralizado (queda %.1fs)",
+                npc.name,
+                npc.paralyzed_until - current_time,
+            )
+            return False
+
         new_x, new_y, direction = None, None, None
 
         # Intentar usar pathfinding si está disponible
@@ -354,6 +374,21 @@ class NPCAIService:
         """
         if not npc.is_hostile:
             return
+
+        # Verificar si el NPC está paralizado
+        if npc.paralyzed_until > 0.0:
+            current_time = time.time()
+            if current_time < npc.paralyzed_until:
+                # NPC todavía está paralizado
+                logger.debug(
+                    "NPC %s está paralizado (queda %.1fs)",
+                    npc.name,
+                    npc.paralyzed_until - current_time,
+                )
+                return
+            # Parálisis expiró, limpiar estado
+            npc.paralyzed_until = 0.0
+            logger.debug("NPC %s ya no está paralizado", npc.name)
 
         # Desincronización: 30% probabilidad de skip para evitar spam
         # Esto distribuye los ataques en el tiempo en lugar de todos a la vez

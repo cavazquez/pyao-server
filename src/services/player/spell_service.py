@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import random
+import time
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -15,6 +16,13 @@ if TYPE_CHECKING:
     from src.services.npc.npc_death_service import NPCDeathService
 
 logger = logging.getLogger(__name__)
+
+# Constantes para tipos de hechizos
+SPELL_TYPE_DAMAGE = 1  # Tipo 1: Daño
+SPELL_TYPE_STATUS = 2  # Tipo 2: Estados
+
+# ID del hechizo Paralizar
+SPELL_ID_PARALYZE = 9
 
 
 class SpellService:
@@ -77,7 +85,16 @@ class SpellService:
 
         # Verificar mana suficiente
         mana_cost = spell_data.get("mana_cost", 0)
-        if stats["min_mana"] < mana_cost:
+        current_mana = stats.get("min_mana", 0)
+        if current_mana < mana_cost:
+            spell_name = spell_data.get("name", f"hechizo {spell_id}")
+            logger.info(
+                "user_id %d no tiene suficiente mana para lanzar %s: %d/%d requeridos",
+                user_id,
+                spell_name,
+                current_mana,
+                mana_cost,
+            )
             await message_sender.send_console_msg("No tienes suficiente mana.")
             return False
 
@@ -122,8 +139,29 @@ class SpellService:
         if not npc_died:
             await self.npc_repo.update_npc_hp(target_npc.instance_id, target_npc.hp)
 
-        # Enviar mensajes
+        # Obtener nombre del hechizo para usar en mensajes y estados
         spell_name = spell_data.get("name", "hechizo")
+
+        # Aplicar efectos de estado si el hechizo es tipo 2 (Estados)
+        spell_type = spell_data.get("type", SPELL_TYPE_DAMAGE)
+        if spell_type == SPELL_TYPE_STATUS and not npc_died:
+            spell_name_lower = spell_name.lower()
+            if "paralizar" in spell_name_lower or spell_id == SPELL_ID_PARALYZE:
+                # Aplicar parálisis (duración: 10 segundos por defecto)
+                paralysis_duration = 10.0  # Segundos
+                paralyzed_until = time.time() + paralysis_duration
+                target_npc.paralyzed_until = paralyzed_until
+                await self.npc_repo.update_npc_paralyzed_until(
+                    target_npc.instance_id, paralyzed_until
+                )
+                logger.info(
+                    "NPC %s paralizado hasta %.2f (duración: %.1fs)",
+                    target_npc.name,
+                    paralyzed_until,
+                    paralysis_duration,
+                )
+
+        # Enviar mensajes
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")
         await message_sender.send_console_msg(
             f"{caster_msg}{target_npc.name}. Daño: {total_damage}"

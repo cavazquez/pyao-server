@@ -424,19 +424,38 @@ class CreateAccountCommandHandler(CommandHandler):
     async def _create_initial_inventory(self, user_id: int) -> None:
         """Crea el inventario inicial del personaje."""
         inventory_repo = InventoryRepository(self.player_repo.redis)
-        await inventory_repo.add_item(user_id, item_id=1, quantity=5)  # 5 Pociones Rojas
-        await inventory_repo.add_item(user_id, item_id=2, quantity=5)  # 5 Pociones Azules
+
+        # Pociones - 30 de cada tipo (6 tipos principales)
+        # Poción Amarilla (Agilidad)
+        await inventory_repo.add_item(user_id, item_id=36, quantity=30)
+        # Poción Azul (Mana)
+        await inventory_repo.add_item(user_id, item_id=37, quantity=30)
+        # Poción Roja (HP/Vida)
+        await inventory_repo.add_item(user_id, item_id=38, quantity=30)
+        # Poción Verde (Fuerza)
+        await inventory_repo.add_item(user_id, item_id=39, quantity=30)
+        # Poción Violeta (Cura Veneno)
+        await inventory_repo.add_item(user_id, item_id=166, quantity=30)
+        # Poción Negra (Invisible)
+        await inventory_repo.add_item(user_id, item_id=645, quantity=30)
+
+        # Comida y bebida
         await inventory_repo.add_item(user_id, item_id=3, quantity=10)  # 10 Manzanas
         await inventory_repo.add_item(user_id, item_id=4, quantity=10)  # 10 Aguas
+
+        # Equipamiento inicial
         await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
         # Armadura inicial (Newbie)
         await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
+
         # Herramientas de trabajo (Newbie)
         await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador
         await inventory_repo.add_item(user_id, item_id=562, quantity=1)  # Piquete de Minero
         await inventory_repo.add_item(user_id, item_id=563, quantity=1)  # Caña de Pescar
+
         logger.info(
-            "Inventario inicial creado para user_id %d (incluye Armadura de Aprendiz)", user_id
+            "Inventario inicial creado para user_id %d (30 pociones de cada tipo + equipamiento)",
+            user_id
         )
 
     async def _log_character_summary(  # noqa: PLR6301

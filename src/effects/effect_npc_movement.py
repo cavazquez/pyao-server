@@ -173,6 +173,16 @@ class NPCMovementEffect(TickEffect):
             npc: Instancia del NPC a mover.
             player_repo: Repositorio de jugadores para obtener posiciones.
         """
+        # Verificar si el NPC está paralizado
+        current_time = time.time()
+        if npc.paralyzed_until > 0.0 and current_time < npc.paralyzed_until:
+            logger.debug(
+                "NPC %s no puede moverse (IA): está paralizado (queda %.1fs)",
+                npc.name,
+                npc.paralyzed_until - current_time,
+            )
+            return
+
         # Si no tenemos player_repo, solo moverse aleatoriamente
         if player_repo is None:
             logger.debug("NPC %s - No hay player_repo disponible, movimiento aleatorio", npc.name)
@@ -255,6 +265,16 @@ class NPCMovementEffect(TickEffect):
             target_x: Coordenada X del objetivo.
             target_y: Coordenada Y del objetivo.
         """
+        # Verificar si el NPC está paralizado
+        current_time = time.time()
+        if npc.paralyzed_until > 0.0 and current_time < npc.paralyzed_until:
+            logger.debug(
+                "NPC %s no puede moverse: está paralizado (queda %.1fs)",
+                npc.name,
+                npc.paralyzed_until - current_time,
+            )
+            return
+
         # Calcular diferencias
         dx = target_x - npc.x
         dy = target_y - npc.y
@@ -296,6 +316,16 @@ class NPCMovementEffect(TickEffect):
         Args:
             npc: Instancia del NPC a mover.
         """
+        # Verificar si el NPC está paralizado
+        current_time = time.time()
+        if npc.paralyzed_until > 0.0 and current_time < npc.paralyzed_until:
+            logger.debug(
+                "NPC %s no puede moverse aleatoriamente: está paralizado (queda %.1fs)",
+                npc.name,
+                npc.paralyzed_until - current_time,
+            )
+            return
+
         # Elegir dirección aleatoria (1=Norte, 2=Este, 3=Sur, 4=Oeste)
         direction = random.randint(1, 4)
 

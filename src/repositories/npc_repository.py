@@ -146,6 +146,7 @@ class NPCRepository:
             "attack_damage": str(attack_damage),
             "attack_cooldown": str(attack_cooldown),
             "aggro_range": str(aggro_range),
+            "paralyzed_until": "0.0",
         }
 
         await self.redis.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
@@ -208,6 +209,7 @@ class NPCRepository:
             attack_damage=int(result.get("attack_damage", "10")),
             attack_cooldown=float(result.get("attack_cooldown", "3.0")),
             aggro_range=int(result.get("aggro_range", "8")),
+            paralyzed_until=float(result.get("paralyzed_until", "0.0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
@@ -278,6 +280,19 @@ class NPCRepository:
         key = RedisKeys.npc_instance(instance_id)
         await self.redis.redis.hset(key, "hp", str(hp))  # type: ignore[misc]
         logger.debug("HP actualizado para NPC %s: %d", instance_id, hp)
+
+    async def update_npc_paralyzed_until(self, instance_id: str, paralyzed_until: float) -> None:
+        """Actualiza el estado de parálisis de un NPC.
+
+        Args:
+            instance_id: ID único de la instancia del NPC.
+            paralyzed_until: Timestamp hasta cuando está paralizado (0.0 = no paralizado).
+        """
+        key = RedisKeys.npc_instance(instance_id)
+        await self.redis.redis.hset(key, "paralyzed_until", str(paralyzed_until))  # type: ignore[misc]
+        logger.debug(
+            "Estado de parálisis actualizado para NPC %s: hasta %.2f", instance_id, paralyzed_until
+        )
 
     async def remove_npc(self, instance_id: str) -> None:
         """Elimina un NPC del mundo.
