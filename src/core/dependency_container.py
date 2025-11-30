@@ -36,6 +36,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_death_service import NPCDeathService
     from src.services.npc.npc_respawn_service import NPCRespawnService
     from src.services.npc.npc_service import NPCService
+    from src.services.npc.summon_service import SummonService
     from src.services.party_service import PartyService
     from src.services.player.spell_service import SpellService
     from src.services.player.stamina_service import StaminaService
@@ -78,6 +79,7 @@ class DependencyContainer:
     npc_death_service: NPCDeathService
     npc_respawn_service: NPCRespawnService
     npc_world_manager: NPCWorldManager
+    summon_service: SummonService
     loot_table_service: LootTableService
     map_resources_service: MapResourcesService
     door_service: DoorService

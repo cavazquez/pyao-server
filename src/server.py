@@ -66,7 +66,7 @@ class ArgentumServer:
 
         return self.task_factory.create_task(data, message_sender, session_data)
 
-    async def handle_client(
+    async def handle_client(  # noqa: PLR0915
         self,
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
@@ -90,7 +90,7 @@ class ArgentumServer:
         # Datos de sesión compartidos entre tareas (mutable)
         session_data: dict[str, dict[str, int]] = {}
 
-        try:
+        try:  # noqa: PLR1702
             while True:
                 data = await connection.receive()
                 if not data:
@@ -132,6 +132,31 @@ class ArgentumServer:
                             len(other_senders),
                             map_id,
                         )
+
+                    # Limpiar mascotas del jugador
+                    if self.deps and self.deps.summon_service and self.deps.npc_service:
+                        try:
+                            pet_instance_ids = (
+                                await self.deps.summon_service.remove_all_player_pets(user_id)
+                            )
+                            # Remover cada mascota del mundo
+                            all_npcs = await self.deps.npc_service.npc_repository.get_all_npcs()
+                            for pet_instance_id in pet_instance_ids:
+                                pet_npc = next(
+                                    (npc for npc in all_npcs if npc.instance_id == pet_instance_id),
+                                    None,
+                                )
+                                if pet_npc:
+                                    await self.deps.npc_service.remove_npc(pet_npc)
+                                    logger.info(
+                                        "Mascota removida al desconectar: user_id=%d, mascota=%s",
+                                        user_id,
+                                        pet_npc.name,
+                                    )
+                        except Exception:
+                            logger.exception(
+                                "Error al limpiar mascotas del jugador %d al desconectar", user_id
+                            )
 
                     # Remover jugador de todos los mapas
                     self.deps.map_manager.remove_player_from_all_maps(user_id)

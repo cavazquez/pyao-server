@@ -97,3 +97,32 @@ class TalkCommand(Command):
         command = parts[0].upper().replace("/", "")
         args = parts[1:] if len(parts) > 1 else []
         return (command, args)
+
+    def is_pet_command(self) -> bool:
+        """Determina si el mensaje es un comando de mascotas (/PET).
+
+        Returns:
+            bool: True si el mensaje inicia con /PET.
+        """
+        return self.message.upper().strip().startswith("/PET")
+
+    def parse_pet_command(self) -> tuple[str, list[str]] | None:
+        """Parsea el comando /PET.
+
+        Returns:
+            Tupla (comando, argumentos) si es válido, None en caso contrario.
+            Ejemplos:
+            - ("PET", []) -> /PET (listar mascotas)
+            - ("PET", ["LIBERAR"]) -> /PET LIBERAR (liberar todas las mascotas)
+            - ("PET", ["INFO"]) -> /PET INFO (información de mascotas)
+        """
+        if not self.is_pet_command():
+            return None
+
+        parts = self.message.strip().split()
+        if not parts:
+            return None
+
+        command = parts[0].upper().replace("/", "")
+        args = parts[1:] if len(parts) > 1 else []
+        return (command, args)

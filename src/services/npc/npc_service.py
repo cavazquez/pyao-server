@@ -112,19 +112,31 @@ class NPCService:
                 logger.warning("Spawn incompleto, ignorando: %s", spawn_data)
                 continue
 
-            # Spawnear el NPC
-            npc = await self.spawn_npc(int(npc_id), int(map_id), int(x), int(y), int(heading))
-            if npc:
-                spawned_count += 1
+            # Spawnear el NPC (ignorar si la posición ya está ocupada)
+            try:
+                npc = await self.spawn_npc(int(npc_id), int(map_id), int(x), int(y), int(heading))
+                if npc:
+                    spawned_count += 1
+                    logger.debug(
+                        "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
+                        npc.name,
+                        int(npc_id),
+                        int(map_id),
+                        int(x),
+                        int(y),
+                        npc.char_index,
+                    )
+            except ValueError as e:
+                # Tile ya ocupado - ignorar este spawn
                 logger.debug(
-                    "NPC spawneado: %s (ID:%d) en mapa %d posición (%d,%d) CharIndex:%d",
-                    npc.name,
+                    "Spawn ignorado (tile ocupado): NPC ID %d en mapa %d (%d,%d): %s",
                     int(npc_id),
                     int(map_id),
                     int(x),
                     int(y),
-                    npc.char_index,
+                    e,
                 )
+                continue
 
         logger.info("✅ NPCs inicializados: %d spawns creados exitosamente", spawned_count)
 
@@ -179,17 +191,12 @@ class NPCService:
         # spawn_entries es un dict con mapas como claves
         for map_id, map_data in spawn_entries.items():
             if isinstance(map_data, dict):
-                # Agregar spawns fijos
+                # Agregar solo spawns fijos (spawn_points)
+                # Los random_spawns se manejan dinámicamente cuando un jugador entra al mapa
                 for spawn_point in map_data.get("spawn_points", []):
                     if isinstance(spawn_point, dict):
                         spawn_point["map_id"] = int(map_id)
                         validated_entries.append(spawn_point)
-
-                # Agregar spawns aleatorios
-                for random_spawn in map_data.get("random_spawns", []):
-                    if isinstance(random_spawn, dict):
-                        random_spawn["map_id"] = int(map_id)
-                        validated_entries.append(random_spawn)
 
         if not validated_entries:
             logger.warning("No se encontraron spawns de NPC en %s", spawns_path)

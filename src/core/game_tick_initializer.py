@@ -8,6 +8,7 @@ from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_npc_poison import NPCPoisonEffect
+from src.effects.effect_pet_follow import PetFollowEffect
 from src.effects.effect_poison import PoisonEffect
 from src.effects.effect_stamina_regen import StaminaRegenEffect
 from src.effects.effect_summon_expiry import SummonExpiryEffect
@@ -129,3 +130,7 @@ class GameTickInitializer:
         # Efecto de expiración de invocaciones (siempre habilitado)
         game_tick.add_effect(SummonExpiryEffect(self.npc_service, interval_seconds=5.0))
         logger.info("✓ Efecto de expiración de invocaciones habilitado")
+
+        # Efecto de seguimiento de mascotas (siempre habilitado)
+        game_tick.add_effect(PetFollowEffect(self.npc_service, interval_seconds=2.0))
+        logger.info("✓ Efecto de seguimiento de mascotas habilitado")

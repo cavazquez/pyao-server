@@ -150,6 +150,7 @@ class ServerInitializer:
             party_service=services["party_service"],
             clan_service=services["clan_service"],
             trade_service=services["trade_service"],
+            summon_service=services["summon_service"],
             # Managers
             map_manager=map_manager,
             game_tick=game_tick,

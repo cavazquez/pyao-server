@@ -10,36 +10,245 @@ description = "Ciudad principal del juego"
 
 # Spawn points fijos
 [[map_npcs.1.spawn_points]]
-npc_id = 1  # NPC Test 1 (pacífico)
+npc_id = 1
 x = 50
 y = 50
 direction = 3
 
 [[map_npcs.1.spawn_points]]
-npc_id = 3  # Guardia Real
+npc_id = 3
 x = 55
 y = 48
 direction = 1
 
 [[map_npcs.1.spawn_points]]
-npc_id = 2  # Comerciante
+npc_id = 2
 x = 52
 y = 50
 direction = 2
 
 [[map_npcs.1.spawn_points]]
-npc_id = 625  # Víbora (para probar envenenamiento - más HP)
+npc_id = 625
 x = 51
 y = 50
 direction = 3
 
 [[map_npcs.1.spawn_points]]
-npc_id = 504  # Serpiente (para probar envenenamiento - poco HP)
+npc_id = 504
 x = 49
 y = 50
 direction = 3
 
-# Áreas de spawns aleatorios (hostiles)
+[[map_npcs.1.spawn_points]]
+npc_id = 536
+x = 74
+y = 18
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 17
+y = 19
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 29
+y = 19
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 90
+y = 19
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 65
+y = 20
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 12
+x = 71
+y = 33
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 19
+x = 72
+y = 33
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 20
+x = 73
+y = 33
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 8
+x = 27
+y = 34
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 14
+x = 78
+y = 34
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 13
+x = 59
+y = 38
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 137
+x = 55
+y = 44
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 24
+x = 65
+y = 46
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 536
+x = 16
+y = 48
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 24
+x = 77
+y = 49
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 128
+x = 65
+y = 50
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 143
+x = 41
+y = 52
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 8
+x = 47
+y = 62
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 7
+x = 33
+y = 63
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 54
+x = 35
+y = 63
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 46
+x = 62
+y = 63
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 5
+x = 77
+y = 63
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 28
+y = 71
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 536
+x = 88
+y = 72
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 104
+x = 51
+y = 75
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 33
+x = 58
+y = 75
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 34
+x = 44
+y = 76
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 44
+x = 65
+y = 76
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 82
+y = 79
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 536
+x = 13
+y = 89
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 536
+x = 39
+y = 90
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 76
+y = 91
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 76
+y = 92
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 34
+y = 94
+direction = 3
+
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 35
+y = 94
+direction = 3
+
 [[map_npcs.1.random_spawns]]
 npc_type = "hostile"
 count = 5
@@ -50,69 +259,9444 @@ npc_type = "hostile"
 count = 3
 area = {x1 = 10, y1 = 10, x2 = 30, y2 = 30}
 
+
+# Mapa 2 - Mapa 2
+[map_npcs.2]
+name = "Mapa 2"
+description = "NPCs extraídos del mapa 2"
+
+# Spawn points fijos
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 22
+y = 13
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 17
+y = 14
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 536
+x = 39
+y = 14
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 536
+x = 80
+y = 15
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 536
+x = 20
+y = 16
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 10
+y = 23
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 20
+y = 23
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 86
+y = 27
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 92
+y = 30
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 79
+y = 31
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 84
+y = 31
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 500
+x = 59
+y = 53
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 500
+x = 56
+y = 55
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 500
+x = 59
+y = 55
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 500
+x = 62
+y = 55
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 500
+x = 59
+y = 57
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 33
+y = 58
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 24
+y = 60
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 78
+y = 74
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 76
+y = 76
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 78
+y = 77
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 84
+y = 78
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 504
+x = 76
+y = 79
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 501
+x = 19
+y = 87
+direction = 3
+
+[[map_npcs.2.spawn_points]]
+npc_id = 501
+x = 24
+y = 87
+direction = 3
+
+
+# Mapa 3 - Mapa 3
+[map_npcs.3]
+name = "Mapa 3"
+description = "NPCs extraídos del mapa 3"
+
+# Spawn points fijos
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 26
+y = 20
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 49
+y = 20
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 68
+y = 20
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 88
+y = 20
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 505
+x = 54
+y = 29
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 505
+x = 56
+y = 29
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 505
+x = 58
+y = 29
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 30
+y = 34
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 28
+y = 37
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 30
+y = 37
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 32
+y = 37
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 30
+y = 39
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 77
+y = 41
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 57
+y = 42
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 15
+y = 47
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 43
+y = 47
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 30
+y = 48
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 530
+x = 54
+y = 52
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 71
+y = 53
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 82
+y = 53
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 46
+y = 58
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 30
+y = 60
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 60
+y = 63
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 20
+y = 66
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 62
+y = 66
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 24
+y = 70
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 46
+y = 72
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 34
+y = 73
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 81
+y = 73
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 530
+x = 73
+y = 80
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 504
+x = 63
+y = 82
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 49
+y = 84
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 76
+y = 85
+direction = 3
+
+[[map_npcs.3.spawn_points]]
+npc_id = 501
+x = 32
+y = 89
+direction = 3
+
+
+# Mapa 4 - Mapa 4
+[map_npcs.4]
+name = "Mapa 4"
+description = "NPCs extraídos del mapa 4"
+
+# Spawn points fijos
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 55
+y = 20
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 86
+y = 22
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 78
+y = 23
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 39
+y = 27
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 79
+y = 27
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 27
+y = 28
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 51
+y = 28
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 59
+y = 29
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 78
+y = 31
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 88
+y = 31
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 32
+y = 35
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 40
+y = 38
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 59
+y = 48
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 58
+y = 51
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 62
+y = 51
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 42
+y = 52
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 37
+y = 59
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 75
+y = 60
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 31
+y = 62
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 71
+y = 63
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 18
+y = 65
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 23
+y = 67
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 44
+y = 67
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 60
+y = 69
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 76
+y = 69
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 68
+y = 70
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 20
+y = 72
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 26
+y = 72
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 42
+y = 79
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 73
+y = 81
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 503
+x = 41
+y = 83
+direction = 3
+
+[[map_npcs.4.spawn_points]]
+npc_id = 502
+x = 68
+y = 86
+direction = 3
+
+
+# Mapa 5 - Mapa 5
+[map_npcs.5]
+name = "Mapa 5"
+description = "NPCs extraídos del mapa 5"
+
+# Spawn points fijos
+[[map_npcs.5.spawn_points]]
+npc_id = 536
+x = 65
+y = 34
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 536
+x = 32
+y = 46
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 504
+x = 73
+y = 48
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 504
+x = 68
+y = 51
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 504
+x = 73
+y = 51
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 504
+x = 78
+y = 51
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 500
+x = 31
+y = 58
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 504
+x = 73
+y = 58
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 500
+x = 28
+y = 60
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 500
+x = 34
+y = 60
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 500
+x = 31
+y = 61
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 500
+x = 31
+y = 64
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 536
+x = 16
+y = 81
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 536
+x = 80
+y = 84
+direction = 3
+
+[[map_npcs.5.spawn_points]]
+npc_id = 536
+x = 49
+y = 87
+direction = 3
+
+
+# Mapa 6 - Mapa 6
+[map_npcs.6]
+name = "Mapa 6"
+description = "NPCs extraídos del mapa 6"
+
+# Spawn points fijos
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 69
+y = 52
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 60
+y = 55
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 65
+y = 55
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 72
+y = 55
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 78
+y = 55
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 69
+y = 57
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 65
+y = 59
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 73
+y = 59
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 69
+y = 60
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 505
+x = 69
+y = 63
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 535
+x = 27
+y = 71
+direction = 3
+
+[[map_npcs.6.spawn_points]]
+npc_id = 535
+x = 27
+y = 74
+direction = 3
+
+
+# Mapa 7 - Mapa 7
+[map_npcs.7]
+name = "Mapa 7"
+description = "NPCs extraídos del mapa 7"
+
+# Spawn points fijos
+[[map_npcs.7.spawn_points]]
+npc_id = 501
+x = 24
+y = 12
+direction = 3
+
+[[map_npcs.7.spawn_points]]
+npc_id = 501
+x = 28
+y = 12
+direction = 3
+
+[[map_npcs.7.spawn_points]]
+npc_id = 501
+x = 26
+y = 16
+direction = 3
+
+[[map_npcs.7.spawn_points]]
+npc_id = 535
+x = 26
+y = 20
+direction = 3
+
+[[map_npcs.7.spawn_points]]
+npc_id = 42
+x = 41
+y = 69
+direction = 3
+
+
+# Mapa 10 - Mapa 10
+[map_npcs.10]
+name = "Mapa 10"
+description = "NPCs extraídos del mapa 10"
+
+# Spawn points fijos
+[[map_npcs.10.spawn_points]]
+npc_id = 501
+x = 47
+y = 45
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 501
+x = 57
+y = 45
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 501
+x = 52
+y = 51
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 535
+x = 77
+y = 75
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 535
+x = 80
+y = 75
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 535
+x = 79
+y = 77
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 534
+x = 24
+y = 78
+direction = 3
+
+[[map_npcs.10.spawn_points]]
+npc_id = 534
+x = 30
+y = 78
+direction = 3
+
+
+# Mapa 11 - Mapa 11
+[map_npcs.11]
+name = "Mapa 11"
+description = "NPCs extraídos del mapa 11"
+
+# Spawn points fijos
+[[map_npcs.11.spawn_points]]
+npc_id = 536
+x = 17
+y = 25
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 41
+y = 25
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 69
+y = 26
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 27
+y = 32
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 55
+y = 32
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 81
+y = 36
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 47
+y = 38
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 67
+y = 43
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 19
+y = 47
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 36
+y = 50
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 54
+y = 55
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 81
+y = 61
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 536
+x = 18
+y = 62
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 20
+y = 63
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 41
+y = 63
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 65
+y = 64
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 52
+y = 71
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 504
+x = 35
+y = 73
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 81
+y = 79
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 40
+y = 83
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 63
+y = 83
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 536
+x = 18
+y = 89
+direction = 3
+
+[[map_npcs.11.spawn_points]]
+npc_id = 500
+x = 21
+y = 89
+direction = 3
+
+
+# Mapa 12 - Mapa 12
+[map_npcs.12]
+name = "Mapa 12"
+description = "NPCs extraídos del mapa 12"
+
+# Spawn points fijos
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 33
+y = 18
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 69
+y = 18
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 55
+y = 23
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 40
+y = 25
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 18
+y = 26
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 37
+y = 35
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 68
+y = 35
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 80
+y = 36
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 27
+y = 38
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 52
+y = 38
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 17
+y = 44
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 34
+y = 45
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 65
+y = 48
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 23
+y = 50
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 57
+y = 51
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 80
+y = 52
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 38
+y = 58
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 27
+y = 60
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 80
+y = 60
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 61
+y = 63
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 17
+y = 64
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 45
+y = 68
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 33
+y = 74
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 65
+y = 74
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 503
+x = 80
+y = 76
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 54
+y = 78
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 20
+y = 80
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 505
+x = 37
+y = 80
+direction = 3
+
+[[map_npcs.12.spawn_points]]
+npc_id = 504
+x = 73
+y = 80
+direction = 3
+
+
+# Mapa 14 - Mapa 14
+[map_npcs.14]
+name = "Mapa 14"
+description = "NPCs extraídos del mapa 14"
+
+# Spawn points fijos
+[[map_npcs.14.spawn_points]]
+npc_id = 536
+x = 33
+y = 11
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 536
+x = 17
+y = 18
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 75
+y = 20
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 51
+y = 29
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 25
+y = 41
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 75
+y = 44
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 502
+x = 52
+y = 52
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 502
+x = 51
+y = 53
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 502
+x = 52
+y = 54
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 50
+y = 55
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 63
+y = 57
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 38
+y = 72
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 74
+y = 84
+direction = 3
+
+[[map_npcs.14.spawn_points]]
+npc_id = 501
+x = 35
+y = 89
+direction = 3
+
+
+# Mapa 19 - Mapa 19
+[map_npcs.19]
+name = "Mapa 19"
+description = "NPCs extraídos del mapa 19"
+
+# Spawn points fijos
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 66
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 67
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 68
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 69
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 70
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 71
+y = 49
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 66
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 67
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 68
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 69
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 70
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 71
+y = 52
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 66
+y = 55
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 67
+y = 55
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 68
+y = 55
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 69
+y = 55
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 501
+x = 70
+y = 55
+direction = 3
+
+[[map_npcs.19.spawn_points]]
+npc_id = 502
+x = 71
+y = 55
+direction = 3
+
+
+# Mapa 24 - Mapa 24
+[map_npcs.24]
+name = "Mapa 24"
+description = "NPCs extraídos del mapa 24"
+
+# Spawn points fijos
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 88
+y = 11
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 33
+y = 13
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 53
+y = 21
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 59
+y = 23
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 82
+y = 25
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 89
+y = 26
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 85
+y = 27
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 83
+y = 28
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 89
+y = 28
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 67
+y = 31
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 27
+y = 32
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 57
+y = 38
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 54
+y = 39
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 33
+y = 40
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 39
+y = 44
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 17
+y = 45
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 31
+y = 45
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 35
+y = 47
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 73
+y = 47
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 57
+y = 48
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 83
+y = 52
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 72
+y = 58
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 30
+y = 61
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 17
+y = 65
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 44
+y = 65
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 57
+y = 66
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 80
+y = 74
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 50
+y = 83
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 69
+y = 83
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 29
+y = 90
+direction = 3
+
+[[map_npcs.24.spawn_points]]
+npc_id = 501
+x = 45
+y = 90
+direction = 3
+
+
+# Mapa 25 - Mapa 25
+[map_npcs.25]
+name = "Mapa 25"
+description = "NPCs extraídos del mapa 25"
+
+# Spawn points fijos
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 22
+y = 19
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 501
+x = 45
+y = 20
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 83
+y = 20
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 501
+x = 60
+y = 27
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 22
+y = 32
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 84
+y = 37
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 502
+x = 53
+y = 43
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 501
+x = 28
+y = 44
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 39
+y = 49
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 71
+y = 50
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 504
+x = 21
+y = 55
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 80
+y = 56
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 504
+x = 36
+y = 60
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 501
+x = 53
+y = 61
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 80
+y = 71
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 73
+y = 77
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 504
+x = 22
+y = 79
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 504
+x = 46
+y = 79
+direction = 3
+
+[[map_npcs.25.spawn_points]]
+npc_id = 500
+x = 58
+y = 80
+direction = 3
+
+
+# Mapa 26 - Mapa 26
+[map_npcs.26]
+name = "Mapa 26"
+description = "NPCs extraídos del mapa 26"
+
+# Spawn points fijos
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 57
+y = 16
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 34
+y = 17
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 48
+y = 21
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 72
+y = 25
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 41
+y = 27
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 22
+y = 31
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 69
+y = 37
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 23
+y = 41
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 36
+y = 41
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 502
+x = 50
+y = 42
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 87
+y = 44
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 504
+x = 75
+y = 46
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 533
+x = 17
+y = 51
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 66
+y = 51
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 42
+y = 52
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 78
+y = 58
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 530
+x = 23
+y = 62
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 52
+y = 66
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 36
+y = 67
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 36
+y = 71
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 501
+x = 70
+y = 71
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 514
+x = 73
+y = 73
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 504
+x = 14
+y = 75
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 79
+y = 77
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 49
+y = 78
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 500
+x = 68
+y = 79
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 504
+x = 25
+y = 84
+direction = 3
+
+[[map_npcs.26.spawn_points]]
+npc_id = 504
+x = 41
+y = 84
+direction = 3
+
+
+# Mapa 27 - Mapa 27
+[map_npcs.27]
+name = "Mapa 27"
+description = "NPCs extraídos del mapa 27"
+
+# Spawn points fijos
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 33
+y = 18
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 53
+y = 18
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 84
+y = 18
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 23
+y = 28
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 39
+y = 28
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 61
+y = 28
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 21
+y = 35
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 78
+y = 37
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 29
+y = 43
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 45
+y = 43
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 59
+y = 50
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 85
+y = 50
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 34
+y = 54
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 21
+y = 55
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 79
+y = 61
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 59
+y = 64
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 39
+y = 66
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 27
+y = 72
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 69
+y = 73
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 91
+y = 73
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 15
+y = 79
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 501
+x = 39
+y = 83
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 79
+y = 84
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 25
+y = 87
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 45
+y = 87
+direction = 3
+
+[[map_npcs.27.spawn_points]]
+npc_id = 504
+x = 67
+y = 87
+direction = 3
+
+
+# Mapa 29 - Mapa 29
+[map_npcs.29]
+name = "Mapa 29"
+description = "NPCs extraídos del mapa 29"
+
+# Spawn points fijos
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 30
+y = 21
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 25
+y = 24
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 46
+y = 24
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 62
+y = 25
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 63
+y = 29
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 87
+y = 32
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 63
+y = 33
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 539
+x = 85
+y = 35
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 18
+y = 38
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 539
+x = 62
+y = 38
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 82
+y = 39
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 37
+y = 42
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 53
+y = 44
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 501
+x = 46
+y = 46
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 60
+y = 49
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 78
+y = 52
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 16
+y = 58
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 37
+y = 60
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 83
+y = 60
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 65
+y = 64
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 22
+y = 71
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 46
+y = 74
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 59
+y = 75
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 82
+y = 80
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 20
+y = 84
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 505
+x = 39
+y = 85
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 22
+y = 90
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 52
+y = 90
+direction = 3
+
+[[map_npcs.29.spawn_points]]
+npc_id = 506
+x = 68
+y = 91
+direction = 3
+
+
+# Mapa 32 - Mapa 32
+[map_npcs.32]
+name = "Mapa 32"
+description = "NPCs extraídos del mapa 32"
+
+# Spawn points fijos
+[[map_npcs.32.spawn_points]]
+npc_id = 566
+x = 74
+y = 20
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 566
+x = 79
+y = 20
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 566
+x = 74
+y = 24
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 566
+x = 79
+y = 24
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 504
+x = 27
+y = 25
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 504
+x = 24
+y = 29
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 504
+x = 27
+y = 29
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 504
+x = 30
+y = 29
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 504
+x = 27
+y = 33
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 17
+x = 22
+y = 37
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 539
+x = 42
+y = 62
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 539
+x = 51
+y = 62
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 539
+x = 46
+y = 66
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 17
+x = 79
+y = 67
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 539
+x = 48
+y = 73
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 506
+x = 71
+y = 79
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 506
+x = 71
+y = 84
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 17
+x = 43
+y = 85
+direction = 3
+
+[[map_npcs.32.spawn_points]]
+npc_id = 506
+x = 71
+y = 89
+direction = 3
+
+
 # Mapa 34 - Nix
 [map_npcs.34]
 name = "Nix"
 description = "Ciudad de Nix"
 
+# Spawn points fijos
 [[map_npcs.34.spawn_points]]
-npc_id = 1  # NPC Test 1
+npc_id = 1
 x = 30
 y = 30
 direction = 2
 
 [[map_npcs.34.spawn_points]]
-npc_id = 2  # Hostile NPC
+npc_id = 2
 x = 40
 y = 35
 direction = 4
+
+[[map_npcs.34.spawn_points]]
+npc_id = 4
+x = 69
+y = 21
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 2
+x = 23
+y = 25
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 91
+x = 10
+y = 27
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 37
+x = 41
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 15
+x = 53
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 21
+x = 64
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 22
+x = 65
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 23
+x = 66
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 70
+x = 75
+y = 30
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 2
+x = 86
+y = 31
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 91
+x = 10
+y = 41
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 15
+x = 40
+y = 42
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 14
+x = 50
+y = 42
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 48
+x = 60
+y = 42
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 24
+x = 22
+y = 44
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 24
+x = 39
+y = 53
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 3
+x = 39
+y = 56
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 33
+x = 16
+y = 57
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 2
+x = 13
+y = 58
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 44
+x = 21
+y = 58
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 5
+x = 27
+y = 58
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 2
+x = 42
+y = 58
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 47
+x = 18
+y = 63
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 4
+x = 39
+y = 63
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 4
+x = 44
+y = 63
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 80
+x = 85
+y = 68
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 144
+x = 32
+y = 72
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 41
+x = 41
+y = 73
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 91
+x = 21
+y = 74
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 3
+x = 71
+y = 79
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 91
+x = 22
+y = 83
+direction = 3
+
+[[map_npcs.34.spawn_points]]
+npc_id = 3
+x = 16
+y = 88
+direction = 3
+
+
+# Mapa 36 - Mapa 36
+[map_npcs.36]
+name = "Mapa 36"
+description = "NPCs extraídos del mapa 36"
+
+# Spawn points fijos
+[[map_npcs.36.spawn_points]]
+npc_id = 91
+x = 65
+y = 13
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 501
+x = 76
+y = 36
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 501
+x = 26
+y = 39
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 501
+x = 74
+y = 40
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 501
+x = 80
+y = 40
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 91
+x = 53
+y = 48
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 69
+y = 69
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 75
+y = 72
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 70
+y = 75
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 73
+y = 75
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 69
+y = 80
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 506
+x = 74
+y = 80
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 91
+x = 55
+y = 81
+direction = 3
+
+[[map_npcs.36.spawn_points]]
+npc_id = 91
+x = 41
+y = 84
+direction = 3
+
+
+# Mapa 38 - Mapa 38
+[map_npcs.38]
+name = "Mapa 38"
+description = "NPCs extraídos del mapa 38"
+
+# Spawn points fijos
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 23
+y = 12
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 67
+y = 15
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 540
+x = 16
+y = 16
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 23
+y = 16
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 58
+y = 16
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 540
+x = 25
+y = 20
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 32
+y = 20
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 65
+y = 23
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 71
+y = 24
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 69
+y = 27
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 66
+y = 30
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 46
+y = 32
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 22
+y = 34
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 88
+y = 36
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 87
+y = 37
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 91
+y = 37
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 36
+y = 40
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 45
+y = 42
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 82
+y = 42
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 24
+y = 45
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 47
+y = 45
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 58
+y = 45
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 83
+y = 47
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 33
+y = 48
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 26
+y = 49
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 29
+y = 49
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 33
+y = 50
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 69
+y = 56
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 34
+y = 58
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 75
+y = 61
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 515
+x = 67
+y = 62
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 36
+y = 64
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 23
+y = 67
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 523
+x = 21
+y = 70
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 510
+x = 55
+y = 70
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 515
+x = 91
+y = 74
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 41
+y = 75
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 28
+y = 76
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 500
+x = 61
+y = 77
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 31
+y = 78
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 47
+y = 82
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 515
+x = 53
+y = 82
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 510
+x = 65
+y = 82
+direction = 3
+
+[[map_npcs.38.spawn_points]]
+npc_id = 506
+x = 42
+y = 88
+direction = 3
+
+
+# Mapa 39 - Mapa 39
+[map_npcs.39]
+name = "Mapa 39"
+description = "NPCs extraídos del mapa 39"
+
+# Spawn points fijos
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 50
+y = 12
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 536
+x = 88
+y = 14
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 49
+y = 17
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 40
+y = 18
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 55
+y = 18
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 41
+y = 19
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 49
+y = 20
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 49
+y = 22
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 506
+x = 72
+y = 28
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 501
+x = 29
+y = 35
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 501
+x = 77
+y = 36
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 501
+x = 21
+y = 40
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 501
+x = 35
+y = 40
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 565
+x = 56
+y = 41
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 14
+y = 43
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 565
+x = 59
+y = 43
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 21
+y = 47
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 565
+x = 59
+y = 49
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 515
+x = 67
+y = 49
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 501
+x = 18
+y = 50
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 565
+x = 56
+y = 51
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 20
+y = 58
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 27
+y = 60
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 510
+x = 48
+y = 67
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 54
+y = 68
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 510
+x = 74
+y = 69
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 20
+y = 70
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 523
+x = 29
+y = 72
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 515
+x = 77
+y = 79
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 535
+x = 30
+y = 83
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 515
+x = 70
+y = 83
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 515
+x = 91
+y = 83
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 515
+x = 78
+y = 87
+direction = 3
+
+[[map_npcs.39.spawn_points]]
+npc_id = 535
+x = 41
+y = 89
+direction = 3
+
+
+# Mapa 40 - Mapa 40
+[map_npcs.40]
+name = "Mapa 40"
+description = "NPCs extraídos del mapa 40"
+
+# Spawn points fijos
+[[map_npcs.40.spawn_points]]
+npc_id = 500
+x = 46
+y = 18
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 510
+x = 69
+y = 21
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 523
+x = 71
+y = 21
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 535
+x = 69
+y = 27
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 510
+x = 29
+y = 32
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 500
+x = 73
+y = 32
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 523
+x = 48
+y = 34
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 510
+x = 69
+y = 34
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 523
+x = 71
+y = 34
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 500
+x = 26
+y = 36
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 535
+x = 30
+y = 39
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 500
+x = 43
+y = 54
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 535
+x = 25
+y = 55
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 535
+x = 47
+y = 55
+direction = 3
+
+[[map_npcs.40.spawn_points]]
+npc_id = 535
+x = 25
+y = 77
+direction = 3
+
 
 # Mapa 46 - Banderbill
 [map_npcs.46]
 name = "Banderbill"
 description = "Ciudad de Banderbill"
 
+# Spawn points fijos
 [[map_npcs.46.spawn_points]]
-npc_id = 3  # Trader NPC
+npc_id = 3
 x = 25
 y = 25
 direction = 1
 
 [[map_npcs.46.spawn_points]]
-npc_id = 1  # NPC Test 1
+npc_id = 1
 x = 35
 y = 30
 direction = 3
 
-# Área de spawns aleatorios
 [[map_npcs.46.random_spawns]]
 npc_type = "hostile"
 count = 2
 area = {x1 = 60, y1 = 60, x2 = 80, y2 = 80}
+
+
+# Mapa 47 - Mapa 47
+[map_npcs.47]
+name = "Mapa 47"
+description = "NPCs extraídos del mapa 47"
+
+# Spawn points fijos
+[[map_npcs.47.spawn_points]]
+npc_id = 569
+x = 45
+y = 24
+direction = 3
+
+[[map_npcs.47.spawn_points]]
+npc_id = 518
+x = 80
+y = 36
+direction = 3
+
+[[map_npcs.47.spawn_points]]
+npc_id = 569
+x = 16
+y = 37
+direction = 3
+
+[[map_npcs.47.spawn_points]]
+npc_id = 518
+x = 60
+y = 49
+direction = 3
+
+[[map_npcs.47.spawn_points]]
+npc_id = 603
+x = 83
+y = 65
+direction = 3
+
+[[map_npcs.47.spawn_points]]
+npc_id = 569
+x = 41
+y = 73
+direction = 3
+
+
+# Mapa 48 - Mapa 48
+[map_npcs.48]
+name = "Mapa 48"
+description = "NPCs extraídos del mapa 48"
+
+# Spawn points fijos
+[[map_npcs.48.spawn_points]]
+npc_id = 553
+x = 39
+y = 50
+direction = 3
+
+[[map_npcs.48.spawn_points]]
+npc_id = 553
+x = 39
+y = 59
+direction = 3
+
+
+# Mapa 52 - Mapa 52
+[map_npcs.52]
+name = "Mapa 52"
+description = "NPCs extraídos del mapa 52"
+
+# Spawn points fijos
+[[map_npcs.52.spawn_points]]
+npc_id = 500
+x = 47
+y = 56
+direction = 3
+
+[[map_npcs.52.spawn_points]]
+npc_id = 500
+x = 44
+y = 75
+direction = 3
+
+[[map_npcs.52.spawn_points]]
+npc_id = 500
+x = 38
+y = 79
+direction = 3
+
+[[map_npcs.52.spawn_points]]
+npc_id = 500
+x = 23
+y = 80
+direction = 3
+
+[[map_npcs.52.spawn_points]]
+npc_id = 500
+x = 44
+y = 83
+direction = 3
+
+
+# Mapa 53 - Mapa 53
+[map_npcs.53]
+name = "Mapa 53"
+description = "NPCs extraídos del mapa 53"
+
+# Spawn points fijos
+[[map_npcs.53.spawn_points]]
+npc_id = 506
+x = 24
+y = 22
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 504
+x = 85
+y = 26
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 535
+x = 51
+y = 53
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 504
+x = 88
+y = 66
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 504
+x = 20
+y = 67
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 506
+x = 23
+y = 85
+direction = 3
+
+[[map_npcs.53.spawn_points]]
+npc_id = 506
+x = 77
+y = 86
+direction = 3
+
+
+# Mapa 54 - Mapa 54
+[map_npcs.54]
+name = "Mapa 54"
+description = "NPCs extraídos del mapa 54"
+
+# Spawn points fijos
+[[map_npcs.54.spawn_points]]
+npc_id = 531
+x = 47
+y = 27
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 506
+x = 28
+y = 36
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 506
+x = 68
+y = 38
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 504
+x = 43
+y = 43
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 506
+x = 67
+y = 50
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 506
+x = 27
+y = 62
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 531
+x = 47
+y = 62
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 535
+x = 67
+y = 74
+direction = 3
+
+[[map_npcs.54.spawn_points]]
+npc_id = 535
+x = 24
+y = 84
+direction = 3
+
+
+# Mapa 55 - Mapa 55
+[map_npcs.55]
+name = "Mapa 55"
+description = "NPCs extraídos del mapa 55"
+
+# Spawn points fijos
+[[map_npcs.55.spawn_points]]
+npc_id = 530
+x = 25
+y = 14
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 74
+y = 17
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 29
+y = 24
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 510
+x = 50
+y = 28
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 42
+y = 34
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 530
+x = 55
+y = 36
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 75
+y = 37
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 28
+y = 47
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 21
+y = 52
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 52
+y = 52
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 505
+x = 68
+y = 54
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 504
+x = 69
+y = 54
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 505
+x = 70
+y = 54
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 505
+x = 69
+y = 55
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 530
+x = 49
+y = 57
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 80
+y = 58
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 510
+x = 67
+y = 71
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 42
+y = 73
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 23
+y = 81
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 50
+y = 82
+direction = 3
+
+[[map_npcs.55.spawn_points]]
+npc_id = 501
+x = 75
+y = 85
+direction = 3
+
+
+# Mapa 56 - Mapa 56
+[map_npcs.56]
+name = "Mapa 56"
+description = "NPCs extraídos del mapa 56"
+
+# Spawn points fijos
+[[map_npcs.56.spawn_points]]
+npc_id = 530
+x = 55
+y = 13
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 504
+x = 82
+y = 19
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 504
+x = 69
+y = 24
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 500
+x = 25
+y = 28
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 48
+y = 33
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 500
+x = 63
+y = 33
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 26
+y = 34
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 85
+y = 34
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 506
+x = 69
+y = 45
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 34
+y = 48
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 83
+y = 51
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 505
+x = 51
+y = 55
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 505
+x = 57
+y = 55
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 505
+x = 79
+y = 56
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 530
+x = 56
+y = 59
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 58
+y = 62
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 22
+y = 63
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 53
+y = 64
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 506
+x = 33
+y = 67
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 79
+y = 67
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 500
+x = 18
+y = 75
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 73
+y = 77
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 505
+x = 54
+y = 79
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 34
+y = 80
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 505
+x = 85
+y = 81
+direction = 3
+
+[[map_npcs.56.spawn_points]]
+npc_id = 501
+x = 58
+y = 82
+direction = 3
+
+
+# Mapa 57 - Mapa 57
+[map_npcs.57]
+name = "Mapa 57"
+description = "NPCs extraídos del mapa 57"
+
+# Spawn points fijos
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 26
+y = 18
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 530
+x = 49
+y = 19
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 78
+y = 19
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 48
+y = 26
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 69
+y = 27
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 84
+y = 36
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 24
+y = 39
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 36
+y = 39
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 57
+y = 41
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 77
+y = 45
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 26
+y = 50
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 44
+y = 60
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 71
+y = 61
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 507
+x = 84
+y = 62
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 530
+x = 54
+y = 63
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 23
+y = 65
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 36
+y = 69
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 506
+x = 72
+y = 76
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 65
+y = 83
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 501
+x = 25
+y = 84
+direction = 3
+
+[[map_npcs.57.spawn_points]]
+npc_id = 505
+x = 43
+y = 86
+direction = 3
+
 
 # Mapa 58 - Lindos
 [map_npcs.58]
 name = "Lindos"
 description = "Ciudad de Lindos"
 
+# Spawn points fijos
 [[map_npcs.58.spawn_points]]
-npc_id = 2  # Hostile NPC (guardia)
+npc_id = 2
 x = 45
 y = 45
 direction = 2
 
 [[map_npcs.58.spawn_points]]
-npc_id = 3  # Trader NPC
+npc_id = 3
 x = 50
 y = 40
 direction = 3
 
-# Mapa 259 - Dungeon de ejemplo
+[[map_npcs.58.spawn_points]]
+npc_id = 501
+x = 43
+y = 17
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 50
+y = 18
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 49
+y = 19
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 44
+y = 20
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 67
+x = 55
+y = 23
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 67
+x = 52
+y = 27
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 67
+x = 54
+y = 28
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 36
+y = 29
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 37
+y = 29
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 501
+x = 21
+y = 34
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 32
+y = 42
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 66
+x = 83
+y = 43
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 66
+x = 73
+y = 46
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 66
+x = 73
+y = 48
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 45
+y = 49
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 66
+x = 81
+y = 50
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 64
+y = 51
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 49
+x = 72
+y = 53
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 65
+x = 58
+y = 56
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 501
+x = 60
+y = 56
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 65
+x = 65
+y = 56
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 65
+x = 55
+y = 57
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 65
+x = 68
+y = 57
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 65
+x = 60
+y = 58
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 504
+x = 47
+y = 63
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 501
+x = 22
+y = 65
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 504
+x = 84
+y = 65
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 504
+x = 72
+y = 77
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 504
+x = 30
+y = 84
+direction = 3
+
+[[map_npcs.58.spawn_points]]
+npc_id = 504
+x = 52
+y = 89
+direction = 3
+
+
+# Mapa 59 - Mapa 59
+[map_npcs.59]
+name = "Mapa 59"
+description = "NPCs extraídos del mapa 59"
+
+# Spawn points fijos
+[[map_npcs.59.spawn_points]]
+npc_id = 5
+x = 21
+y = 16
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 50
+x = 14
+y = 21
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 140
+x = 75
+y = 43
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 80
+x = 50
+y = 45
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 52
+x = 88
+y = 45
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 142
+x = 68
+y = 53
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 38
+x = 55
+y = 60
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 141
+x = 79
+y = 60
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 51
+x = 88
+y = 61
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 50
+x = 74
+y = 62
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 25
+x = 48
+y = 79
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 26
+x = 49
+y = 79
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 27
+x = 50
+y = 79
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 44
+x = 58
+y = 79
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 14
+x = 28
+y = 80
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 74
+x = 73
+y = 80
+direction = 3
+
+[[map_npcs.59.spawn_points]]
+npc_id = 48
+x = 36
+y = 81
+direction = 3
+
+
+# Mapa 60 - Mapa 60
+[map_npcs.60]
+name = "Mapa 60"
+description = "NPCs extraídos del mapa 60"
+
+# Spawn points fijos
+[[map_npcs.60.spawn_points]]
+npc_id = 114
+x = 72
+y = 15
+direction = 3
+
+[[map_npcs.60.spawn_points]]
+npc_id = 72
+x = 77
+y = 15
+direction = 3
+
+[[map_npcs.60.spawn_points]]
+npc_id = 60
+x = 64
+y = 51
+direction = 3
+
+[[map_npcs.60.spawn_points]]
+npc_id = 60
+x = 73
+y = 51
+direction = 3
+
+[[map_npcs.60.spawn_points]]
+npc_id = 24
+x = 38
+y = 80
+direction = 3
+
+
+# Mapa 61 - Mapa 61
+[map_npcs.61]
+name = "Mapa 61"
+description = "NPCs extraídos del mapa 61"
+
+# Spawn points fijos
+[[map_npcs.61.spawn_points]]
+npc_id = 91
+x = 45
+y = 48
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 91
+x = 62
+y = 59
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 91
+x = 52
+y = 60
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 91
+x = 43
+y = 66
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 91
+x = 67
+y = 66
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 44
+x = 19
+y = 82
+direction = 3
+
+[[map_npcs.61.spawn_points]]
+npc_id = 41
+x = 78
+y = 84
+direction = 3
+
+
+# Mapa 62 - Mapa 62
+[map_npcs.62]
+name = "Mapa 62"
+description = "NPCs extraídos del mapa 62"
+
+# Spawn points fijos
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 55
+y = 26
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 95
+x = 58
+y = 29
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 78
+y = 32
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 79
+x = 52
+y = 38
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 31
+x = 62
+y = 38
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 32
+x = 63
+y = 38
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 39
+x = 64
+y = 38
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 67
+x = 70
+y = 44
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 152
+x = 74
+y = 44
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 42
+y = 45
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 43
+x = 71
+y = 50
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 65
+x = 64
+y = 55
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 79
+x = 31
+y = 56
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 56
+x = 45
+y = 58
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 27
+y = 63
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 69
+x = 49
+y = 79
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 43
+x = 61
+y = 80
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 62
+x = 69
+y = 80
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 27
+y = 81
+direction = 3
+
+[[map_npcs.62.spawn_points]]
+npc_id = 91
+x = 77
+y = 91
+direction = 3
+
+
+# Mapa 63 - Mapa 63
+[map_npcs.63]
+name = "Mapa 63"
+description = "NPCs extraídos del mapa 63"
+
+# Spawn points fijos
+[[map_npcs.63.spawn_points]]
+npc_id = 91
+x = 67
+y = 15
+direction = 3
+
+[[map_npcs.63.spawn_points]]
+npc_id = 91
+x = 43
+y = 22
+direction = 3
+
+[[map_npcs.63.spawn_points]]
+npc_id = 91
+x = 79
+y = 53
+direction = 3
+
+[[map_npcs.63.spawn_points]]
+npc_id = 533
+x = 55
+y = 64
+direction = 3
+
+[[map_npcs.63.spawn_points]]
+npc_id = 91
+x = 42
+y = 66
+direction = 3
+
+[[map_npcs.63.spawn_points]]
+npc_id = 91
+x = 45
+y = 86
+direction = 3
+
+
+# Mapa 64 - Mapa 64
+[map_npcs.64]
+name = "Mapa 64"
+description = "NPCs extraídos del mapa 64"
+
+# Spawn points fijos
+[[map_npcs.64.spawn_points]]
+npc_id = 91
+x = 32
+y = 37
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 14
+x = 50
+y = 40
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 91
+x = 60
+y = 41
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 5
+x = 47
+y = 45
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 533
+x = 43
+y = 61
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 539
+x = 29
+y = 64
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 24
+x = 19
+y = 77
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 91
+x = 41
+y = 77
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 539
+x = 29
+y = 82
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 539
+x = 70
+y = 87
+direction = 3
+
+[[map_npcs.64.spawn_points]]
+npc_id = 91
+x = 41
+y = 92
+direction = 3
+
+
+# Mapa 74 - Mapa 74
+[map_npcs.74]
+name = "Mapa 74"
+description = "NPCs extraídos del mapa 74"
+
+# Spawn points fijos
+[[map_npcs.74.spawn_points]]
+npc_id = 501
+x = 51
+y = 38
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 501
+x = 53
+y = 38
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 501
+x = 52
+y = 40
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 539
+x = 78
+y = 49
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 536
+x = 27
+y = 50
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 539
+x = 75
+y = 51
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 539
+x = 78
+y = 54
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 505
+x = 82
+y = 62
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 505
+x = 87
+y = 62
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 505
+x = 91
+y = 62
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 505
+x = 87
+y = 66
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 538
+x = 53
+y = 69
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 536
+x = 77
+y = 88
+direction = 3
+
+[[map_npcs.74.spawn_points]]
+npc_id = 536
+x = 60
+y = 90
+direction = 3
+
+
+# Mapa 77 - Mapa 77
+[map_npcs.77]
+name = "Mapa 77"
+description = "NPCs extraídos del mapa 77"
+
+# Spawn points fijos
+[[map_npcs.77.spawn_points]]
+npc_id = 505
+x = 80
+y = 23
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 539
+x = 62
+y = 26
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 501
+x = 33
+y = 34
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 538
+x = 66
+y = 43
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 539
+x = 53
+y = 47
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 539
+x = 80
+y = 56
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 505
+x = 49
+y = 60
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 501
+x = 77
+y = 63
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 501
+x = 14
+y = 64
+direction = 3
+
+[[map_npcs.77.spawn_points]]
+npc_id = 501
+x = 44
+y = 87
+direction = 3
+
+
+# Mapa 82 - Mapa 82
+[map_npcs.82]
+name = "Mapa 82"
+description = "NPCs extraídos del mapa 82"
+
+# Spawn points fijos
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 46
+y = 15
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 56
+y = 17
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 79
+y = 20
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 31
+y = 26
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 43
+y = 26
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 25
+y = 29
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 54
+y = 29
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 71
+y = 39
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 11
+y = 40
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 56
+y = 42
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 74
+y = 42
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 36
+y = 45
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 31
+y = 47
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 33
+y = 49
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 30
+y = 52
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 540
+x = 42
+y = 53
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 540
+x = 37
+y = 57
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 49
+y = 57
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 77
+y = 60
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 540
+x = 43
+y = 61
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 71
+y = 66
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 28
+y = 69
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 16
+y = 71
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 557
+x = 20
+y = 73
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 42
+y = 76
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 38
+y = 79
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 82
+y = 81
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 506
+x = 60
+y = 82
+direction = 3
+
+[[map_npcs.82.spawn_points]]
+npc_id = 504
+x = 77
+y = 82
+direction = 3
+
+
+# Mapa 83 - Mapa 83
+[map_npcs.83]
+name = "Mapa 83"
+description = "NPCs extraídos del mapa 83"
+
+# Spawn points fijos
+[[map_npcs.83.spawn_points]]
+npc_id = 535
+x = 48
+y = 15
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 72
+y = 24
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 36
+y = 28
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 79
+y = 33
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 48
+y = 43
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 535
+x = 63
+y = 44
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 27
+y = 46
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 44
+y = 56
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 15
+y = 65
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 69
+y = 69
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 53
+y = 78
+direction = 3
+
+[[map_npcs.83.spawn_points]]
+npc_id = 505
+x = 34
+y = 81
+direction = 3
+
+
+# Mapa 84 - Mapa 84
+[map_npcs.84]
+name = "Mapa 84"
+description = "NPCs extraídos del mapa 84"
+
+# Spawn points fijos
+[[map_npcs.84.spawn_points]]
+npc_id = 500
+x = 54
+y = 39
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 500
+x = 46
+y = 42
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 500
+x = 57
+y = 43
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 500
+x = 49
+y = 44
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 500
+x = 56
+y = 50
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 510
+x = 12
+y = 65
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 508
+x = 58
+y = 79
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 508
+x = 56
+y = 83
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 508
+x = 50
+y = 85
+direction = 3
+
+[[map_npcs.84.spawn_points]]
+npc_id = 510
+x = 28
+y = 87
+direction = 3
+
+
+# Mapa 85 - Mapa 85
+[map_npcs.85]
+name = "Mapa 85"
+description = "NPCs extraídos del mapa 85"
+
+# Spawn points fijos
+[[map_npcs.85.spawn_points]]
+npc_id = 506
+x = 66
+y = 26
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 539
+x = 32
+y = 28
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 506
+x = 42
+y = 34
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 539
+x = 48
+y = 49
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 539
+x = 73
+y = 49
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 506
+x = 18
+y = 53
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 539
+x = 36
+y = 61
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 506
+x = 48
+y = 71
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 539
+x = 30
+y = 79
+direction = 3
+
+[[map_npcs.85.spawn_points]]
+npc_id = 506
+x = 67
+y = 83
+direction = 3
+
+
+# Mapa 86 - Mapa 86
+[map_npcs.86]
+name = "Mapa 86"
+description = "NPCs extraídos del mapa 86"
+
+# Spawn points fijos
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 57
+y = 13
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 86
+y = 15
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 55
+y = 24
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 37
+y = 26
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 18
+y = 31
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 45
+y = 32
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 71
+y = 32
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 37
+y = 34
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 81
+y = 35
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 52
+y = 44
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 53
+y = 46
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 73
+y = 48
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 26
+y = 53
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 38
+y = 54
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 68
+y = 56
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 62
+y = 61
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 53
+y = 62
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 41
+y = 65
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 46
+y = 65
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 504
+x = 78
+y = 65
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 19
+y = 69
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 69
+y = 71
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 506
+x = 58
+y = 77
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 46
+y = 78
+direction = 3
+
+[[map_npcs.86.spawn_points]]
+npc_id = 501
+x = 28
+y = 80
+direction = 3
+
+
+# Mapa 94 - Mapa 94
+[map_npcs.94]
+name = "Mapa 94"
+description = "NPCs extraídos del mapa 94"
+
+# Spawn points fijos
+[[map_npcs.94.spawn_points]]
+npc_id = 534
+x = 84
+y = 12
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 45
+y = 22
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 79
+y = 28
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 534
+x = 25
+y = 30
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 500
+x = 61
+y = 30
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 21
+y = 36
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 504
+x = 33
+y = 37
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 504
+x = 48
+y = 39
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 504
+x = 81
+y = 46
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 61
+y = 48
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 500
+x = 30
+y = 58
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 46
+y = 61
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 504
+x = 22
+y = 65
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 500
+x = 82
+y = 66
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 500
+x = 60
+y = 67
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 42
+y = 72
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 32
+y = 76
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 501
+x = 38
+y = 80
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 500
+x = 70
+y = 82
+direction = 3
+
+[[map_npcs.94.spawn_points]]
+npc_id = 504
+x = 50
+y = 86
+direction = 3
+
+
+# Mapa 111 - Mapa 111
+[map_npcs.111]
+name = "Mapa 111"
+description = "NPCs extraídos del mapa 111"
+
+# Spawn points fijos
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 57
+y = 12
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 36
+y = 16
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 87
+y = 16
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 551
+x = 71
+y = 19
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 551
+x = 76
+y = 19
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 550
+x = 53
+y = 28
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 551
+x = 33
+y = 37
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 550
+x = 48
+y = 38
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 78
+y = 40
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 13
+y = 52
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 551
+x = 68
+y = 52
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 517
+x = 42
+y = 56
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 550
+x = 68
+y = 58
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 549
+x = 46
+y = 62
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 26
+y = 65
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 549
+x = 35
+y = 66
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 550
+x = 53
+y = 72
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 27
+y = 74
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 549
+x = 77
+y = 79
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 549
+x = 45
+y = 82
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 89
+x = 12
+y = 88
+direction = 3
+
+[[map_npcs.111.spawn_points]]
+npc_id = 549
+x = 74
+y = 88
+direction = 3
+
+
+# Mapa 112 - Mapa 112
+[map_npcs.112]
+name = "Mapa 112"
+description = "NPCs extraídos del mapa 112"
+
+# Spawn points fijos
+[[map_npcs.112.spawn_points]]
+npc_id = 530
+x = 61
+y = 8
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 89
+x = 76
+y = 10
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 530
+x = 53
+y = 14
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 530
+x = 35
+y = 15
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 97
+x = 62
+y = 15
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 590
+x = 19
+y = 17
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 593
+x = 78
+y = 18
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 593
+x = 42
+y = 20
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 593
+x = 53
+y = 22
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 590
+x = 23
+y = 24
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 593
+x = 52
+y = 28
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 90
+y = 29
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 96
+x = 64
+y = 30
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 88
+x = 19
+y = 31
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 530
+x = 65
+y = 32
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 590
+x = 23
+y = 34
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 25
+y = 34
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 96
+x = 76
+y = 36
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 14
+y = 37
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 590
+x = 40
+y = 38
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 530
+x = 50
+y = 38
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 89
+x = 71
+y = 39
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 92
+x = 59
+y = 40
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 18
+x = 25
+y = 46
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 16
+y = 58
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 94
+x = 86
+y = 59
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 83
+y = 64
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 531
+x = 22
+y = 68
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 18
+x = 25
+y = 82
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 531
+x = 58
+y = 83
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 43
+y = 87
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 18
+x = 51
+y = 88
+direction = 3
+
+[[map_npcs.112.spawn_points]]
+npc_id = 91
+x = 84
+y = 88
+direction = 3
+
+
+# Mapa 113 - Mapa 113
+[map_npcs.113]
+name = "Mapa 113"
+description = "NPCs extraídos del mapa 113"
+
+# Spawn points fijos
+[[map_npcs.113.spawn_points]]
+npc_id = 549
+x = 58
+y = 13
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 551
+x = 71
+y = 16
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 541
+x = 84
+y = 18
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 91
+x = 87
+y = 21
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 26
+y = 23
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 541
+x = 31
+y = 25
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 551
+x = 72
+y = 28
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 91
+x = 32
+y = 29
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 47
+y = 30
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 549
+x = 18
+y = 34
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 80
+y = 41
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 44
+y = 42
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 54
+y = 42
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 551
+x = 29
+y = 43
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 18
+x = 51
+y = 43
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 18
+x = 67
+y = 43
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 18
+x = 17
+y = 44
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 67
+y = 47
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 511
+x = 18
+y = 54
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 551
+x = 25
+y = 56
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 555
+x = 26
+y = 59
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 555
+x = 55
+y = 60
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 555
+x = 27
+y = 64
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 554
+x = 32
+y = 65
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 91
+x = 88
+y = 65
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 91
+x = 72
+y = 66
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 511
+x = 64
+y = 68
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 18
+x = 58
+y = 73
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 513
+x = 42
+y = 79
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 548
+x = 74
+y = 85
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 549
+x = 50
+y = 86
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 555
+x = 54
+y = 88
+direction = 3
+
+[[map_npcs.113.spawn_points]]
+npc_id = 549
+x = 83
+y = 89
+direction = 3
+
+
+# Mapa 114 - Mapa 114
+[map_npcs.114]
+name = "Mapa 114"
+description = "NPCs extraídos del mapa 114"
+
+# Spawn points fijos
+[[map_npcs.114.spawn_points]]
+npc_id = 503
+x = 68
+y = 17
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 503
+x = 76
+y = 17
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 503
+x = 72
+y = 20
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 503
+x = 68
+y = 24
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 503
+x = 76
+y = 24
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 18
+x = 76
+y = 31
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 555
+x = 30
+y = 34
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 555
+x = 33
+y = 34
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 555
+x = 30
+y = 37
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 555
+x = 33
+y = 37
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 18
+x = 50
+y = 44
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 91
+x = 17
+y = 46
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 541
+x = 38
+y = 60
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 541
+x = 42
+y = 60
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 549
+x = 69
+y = 63
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 549
+x = 74
+y = 63
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 91
+x = 89
+y = 66
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 549
+x = 69
+y = 67
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 549
+x = 74
+y = 67
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 91
+x = 13
+y = 68
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 18
+x = 62
+y = 69
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 18
+x = 26
+y = 79
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 511
+x = 79
+y = 80
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 551
+x = 22
+y = 86
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 551
+x = 30
+y = 86
+direction = 3
+
+[[map_npcs.114.spawn_points]]
+npc_id = 511
+x = 79
+y = 86
+direction = 3
+
+
+# Mapa 115 - Mapa 115
+[map_npcs.115]
+name = "Mapa 115"
+description = "NPCs extraídos del mapa 115"
+
+# Spawn points fijos
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 74
+y = 14
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 79
+y = 14
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 83
+y = 14
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 12
+y = 18
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 20
+y = 18
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 12
+y = 23
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 20
+y = 24
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 12
+y = 29
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 21
+y = 29
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 509
+x = 88
+y = 30
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 12
+y = 33
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 540
+x = 21
+y = 33
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 507
+x = 64
+y = 38
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 507
+x = 67
+y = 38
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 507
+x = 70
+y = 38
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 507
+x = 73
+y = 38
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 23
+y = 49
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 510
+x = 46
+y = 50
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 510
+x = 49
+y = 50
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 510
+x = 51
+y = 50
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 510
+x = 54
+y = 50
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 536
+x = 57
+y = 62
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 536
+x = 54
+y = 66
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 536
+x = 60
+y = 66
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 19
+y = 82
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 17
+y = 85
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 21
+y = 85
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 78
+y = 88
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 83
+y = 88
+direction = 3
+
+[[map_npcs.115.spawn_points]]
+npc_id = 554
+x = 88
+y = 88
+direction = 3
+
+
+# Mapa 116 - Mapa 116
+[map_npcs.116]
+name = "Mapa 116"
+description = "NPCs extraídos del mapa 116"
+
+# Spawn points fijos
+[[map_npcs.116.spawn_points]]
+npc_id = 549
+x = 75
+y = 15
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 554
+x = 21
+y = 48
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 543
+x = 57
+y = 48
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 555
+x = 21
+y = 53
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 507
+x = 81
+y = 54
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 507
+x = 85
+y = 54
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 507
+x = 89
+y = 54
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 507
+x = 84
+y = 58
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 507
+x = 87
+y = 58
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 536
+x = 59
+y = 80
+direction = 3
+
+[[map_npcs.116.spawn_points]]
+npc_id = 536
+x = 62
+y = 80
+direction = 3
+
+
+# Mapa 140 - Mapa 140
+[map_npcs.140]
+name = "Mapa 140"
+description = "NPCs extraídos del mapa 140"
+
+# Spawn points fijos
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 49
+y = 13
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 49
+y = 14
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 550
+x = 55
+y = 15
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 550
+x = 49
+y = 18
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 55
+y = 18
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 55
+y = 19
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 48
+y = 34
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 56
+y = 34
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 48
+y = 54
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 540
+x = 56
+y = 54
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 554
+x = 49
+y = 57
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 554
+x = 55
+y = 57
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 554
+x = 49
+y = 62
+direction = 3
+
+[[map_npcs.140.spawn_points]]
+npc_id = 554
+x = 55
+y = 62
+direction = 3
+
+
+# Mapa 141 - Mapa 141
+[map_npcs.141]
+name = "Mapa 141"
+description = "NPCs extraídos del mapa 141"
+
+# Spawn points fijos
+[[map_npcs.141.spawn_points]]
+npc_id = 549
+x = 49
+y = 14
+direction = 3
+
+[[map_npcs.141.spawn_points]]
+npc_id = 552
+x = 64
+y = 39
+direction = 3
+
+[[map_npcs.141.spawn_points]]
+npc_id = 549
+x = 44
+y = 49
+direction = 3
+
+[[map_npcs.141.spawn_points]]
+npc_id = 547
+x = 70
+y = 76
+direction = 3
+
+[[map_npcs.141.spawn_points]]
+npc_id = 547
+x = 40
+y = 78
+direction = 3
+
+[[map_npcs.141.spawn_points]]
+npc_id = 549
+x = 69
+y = 79
+direction = 3
+
+
+# Mapa 142 - Mapa 142
+[map_npcs.142]
+name = "Mapa 142"
+description = "NPCs extraídos del mapa 142"
+
+# Spawn points fijos
+[[map_npcs.142.spawn_points]]
+npc_id = 549
+x = 64
+y = 36
+direction = 3
+
+[[map_npcs.142.spawn_points]]
+npc_id = 554
+x = 78
+y = 40
+direction = 3
+
+[[map_npcs.142.spawn_points]]
+npc_id = 554
+x = 84
+y = 40
+direction = 3
+
+[[map_npcs.142.spawn_points]]
+npc_id = 553
+x = 81
+y = 43
+direction = 3
+
+[[map_npcs.142.spawn_points]]
+npc_id = 549
+x = 49
+y = 74
+direction = 3
+
+[[map_npcs.142.spawn_points]]
+npc_id = 549
+x = 70
+y = 75
+direction = 3
+
+
+# Mapa 144 - Mapa 144
+[map_npcs.144]
+name = "Mapa 144"
+description = "NPCs extraídos del mapa 144"
+
+# Spawn points fijos
+[[map_npcs.144.spawn_points]]
+npc_id = 550
+x = 60
+y = 12
+direction = 3
+
+[[map_npcs.144.spawn_points]]
+npc_id = 553
+x = 63
+y = 39
+direction = 3
+
+[[map_npcs.144.spawn_points]]
+npc_id = 553
+x = 21
+y = 61
+direction = 3
+
+[[map_npcs.144.spawn_points]]
+npc_id = 550
+x = 49
+y = 62
+direction = 3
+
+
+# Mapa 145 - Mapa 145
+[map_npcs.145]
+name = "Mapa 145"
+description = "NPCs extraídos del mapa 145"
+
+# Spawn points fijos
+[[map_npcs.145.spawn_points]]
+npc_id = 550
+x = 70
+y = 30
+direction = 3
+
+[[map_npcs.145.spawn_points]]
+npc_id = 553
+x = 75
+y = 30
+direction = 3
+
+[[map_npcs.145.spawn_points]]
+npc_id = 550
+x = 29
+y = 49
+direction = 3
+
+[[map_npcs.145.spawn_points]]
+npc_id = 517
+x = 48
+y = 55
+direction = 3
+
+[[map_npcs.145.spawn_points]]
+npc_id = 517
+x = 30
+y = 67
+direction = 3
+
+
+# Mapa 146 - Mapa 146
+[map_npcs.146]
+name = "Mapa 146"
+description = "NPCs extraídos del mapa 146"
+
+# Spawn points fijos
+[[map_npcs.146.spawn_points]]
+npc_id = 551
+x = 68
+y = 69
+direction = 3
+
+[[map_npcs.146.spawn_points]]
+npc_id = 551
+x = 77
+y = 69
+direction = 3
+
+[[map_npcs.146.spawn_points]]
+npc_id = 553
+x = 56
+y = 71
+direction = 3
+
+[[map_npcs.146.spawn_points]]
+npc_id = 555
+x = 73
+y = 72
+direction = 3
+
+[[map_npcs.146.spawn_points]]
+npc_id = 550
+x = 51
+y = 74
+direction = 3
+
+[[map_npcs.146.spawn_points]]
+npc_id = 517
+x = 59
+y = 75
+direction = 3
+
+
+# Mapa 150 - Mapa 150
+[map_npcs.150]
+name = "Mapa 150"
+description = "NPCs extraídos del mapa 150"
+
+# Spawn points fijos
+[[map_npcs.150.spawn_points]]
+npc_id = 91
+x = 18
+y = 17
+direction = 3
+
+[[map_npcs.150.spawn_points]]
+npc_id = 91
+x = 26
+y = 20
+direction = 3
+
+
+# Mapa 151 - Mapa 151
+[map_npcs.151]
+name = "Mapa 151"
+description = "NPCs extraídos del mapa 151"
+
+# Spawn points fijos
+[[map_npcs.151.spawn_points]]
+npc_id = 14
+x = 57
+y = 21
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 111
+x = 64
+y = 22
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 69
+y = 23
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 107
+x = 72
+y = 23
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 40
+x = 39
+y = 28
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 112
+x = 44
+y = 28
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 61
+x = 48
+y = 28
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 24
+x = 18
+y = 29
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 5
+x = 30
+y = 29
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 28
+x = 54
+y = 40
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 29
+x = 55
+y = 40
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 30
+x = 56
+y = 40
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 41
+x = 65
+y = 40
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 44
+x = 74
+y = 41
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 33
+y = 43
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 35
+y = 43
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 34
+y = 45
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 107
+x = 46
+y = 46
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 101
+x = 20
+y = 47
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 33
+y = 47
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 35
+y = 47
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 46
+y = 48
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 70
+y = 51
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 98
+x = 16
+y = 68
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 115
+x = 19
+y = 68
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 36
+y = 70
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 44
+y = 70
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 35
+y = 72
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 24
+y = 73
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 107
+x = 39
+y = 73
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 41
+y = 83
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 107
+x = 71
+y = 83
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 45
+y = 84
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 127
+x = 28
+y = 88
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 26
+y = 89
+direction = 3
+
+[[map_npcs.151.spawn_points]]
+npc_id = 105
+x = 31
+y = 89
+direction = 3
+
+
+# Mapa 162 - Mapa 162
+[map_npcs.162]
+name = "Mapa 162"
+description = "NPCs extraídos del mapa 162"
+
+# Spawn points fijos
+[[map_npcs.162.spawn_points]]
+npc_id = 510
+x = 56
+y = 22
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 507
+x = 42
+y = 26
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 510
+x = 38
+y = 32
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 510
+x = 42
+y = 32
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 549
+x = 57
+y = 32
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 549
+x = 57
+y = 34
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 510
+x = 55
+y = 37
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 537
+x = 27
+y = 46
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 537
+x = 42
+y = 50
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 537
+x = 52
+y = 63
+direction = 3
+
+[[map_npcs.162.spawn_points]]
+npc_id = 510
+x = 28
+y = 85
+direction = 3
+
+
+# Mapa 163 - Mapa 163
+[map_npcs.163]
+name = "Mapa 163"
+description = "NPCs extraídos del mapa 163"
+
+# Spawn points fijos
+[[map_npcs.163.spawn_points]]
+npc_id = 551
+x = 68
+y = 59
+direction = 3
+
+[[map_npcs.163.spawn_points]]
+npc_id = 551
+x = 19
+y = 81
+direction = 3
+
+[[map_npcs.163.spawn_points]]
+npc_id = 551
+x = 51
+y = 86
+direction = 3
+
+
+# Mapa 165 - Mapa 165
+[map_npcs.165]
+name = "Mapa 165"
+description = "NPCs extraídos del mapa 165"
+
+# Spawn points fijos
+[[map_npcs.165.spawn_points]]
+npc_id = 551
+x = 40
+y = 9
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 551
+x = 15
+y = 14
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 537
+x = 46
+y = 17
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 530
+x = 86
+y = 21
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 551
+x = 39
+y = 23
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 551
+x = 33
+y = 28
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 530
+x = 91
+y = 35
+direction = 3
+
+[[map_npcs.165.spawn_points]]
+npc_id = 530
+x = 80
+y = 44
+direction = 3
+
+
+# Mapa 166 - Mapa 166
+[map_npcs.166]
+name = "Mapa 166"
+description = "NPCs extraídos del mapa 166"
+
+# Spawn points fijos
+[[map_npcs.166.spawn_points]]
+npc_id = 541
+x = 23
+y = 8
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 541
+x = 55
+y = 12
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 517
+x = 85
+y = 16
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 537
+x = 37
+y = 45
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 537
+x = 67
+y = 55
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 541
+x = 20
+y = 65
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 537
+x = 29
+y = 70
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 542
+x = 41
+y = 75
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 541
+x = 55
+y = 84
+direction = 3
+
+[[map_npcs.166.spawn_points]]
+npc_id = 537
+x = 90
+y = 84
+direction = 3
+
+
+# Mapa 167 - Mapa 167
+[map_npcs.167]
+name = "Mapa 167"
+description = "NPCs extraídos del mapa 167"
+
+# Spawn points fijos
+[[map_npcs.167.spawn_points]]
+npc_id = 504
+x = 60
+y = 26
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 504
+x = 63
+y = 26
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 504
+x = 60
+y = 28
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 504
+x = 63
+y = 28
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 21
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 22
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 23
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 24
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 25
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 26
+y = 30
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 20
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 21
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 22
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 23
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 24
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 500
+x = 25
+y = 49
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 63
+y = 58
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 65
+y = 58
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 67
+y = 58
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 63
+y = 60
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 65
+y = 60
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 67
+y = 60
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 501
+x = 65
+y = 62
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 529
+x = 17
+y = 78
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 529
+x = 22
+y = 78
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 529
+x = 17
+y = 82
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 529
+x = 22
+y = 82
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 506
+x = 85
+y = 87
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 506
+x = 89
+y = 87
+direction = 3
+
+[[map_npcs.167.spawn_points]]
+npc_id = 506
+x = 87
+y = 90
+direction = 3
+
+
+# Mapa 168 - Mapa 168
+[map_npcs.168]
+name = "Mapa 168"
+description = "NPCs extraídos del mapa 168"
+
+# Spawn points fijos
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 14
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 16
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 18
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 20
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 47
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 49
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 51
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 53
+y = 15
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 14
+y = 17
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 16
+y = 17
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 18
+y = 17
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 529
+x = 20
+y = 17
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 78
+y = 18
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 80
+y = 18
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 82
+y = 18
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 84
+y = 18
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 78
+y = 20
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 80
+y = 20
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 82
+y = 20
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 84
+y = 20
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 78
+y = 22
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 80
+y = 22
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 82
+y = 22
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 500
+x = 84
+y = 22
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 119
+x = 41
+y = 42
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 80
+x = 61
+y = 42
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 80
+y = 58
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 82
+y = 58
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 84
+y = 58
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 86
+y = 58
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 119
+x = 40
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 9
+x = 60
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 80
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 82
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 84
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 504
+x = 86
+y = 61
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 501
+x = 48
+y = 70
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 501
+x = 53
+y = 70
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 501
+x = 48
+y = 74
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 501
+x = 53
+y = 74
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 79
+y = 81
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 82
+y = 81
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 85
+y = 81
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 79
+y = 84
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 82
+y = 84
+direction = 3
+
+[[map_npcs.168.spawn_points]]
+npc_id = 506
+x = 85
+y = 84
+direction = 3
+
+
+# Mapa 171 - Mapa 171
+[map_npcs.171]
+name = "Mapa 171"
+description = "NPCs extraídos del mapa 171"
+
+# Spawn points fijos
+[[map_npcs.171.spawn_points]]
+npc_id = 99
+x = 37
+y = 18
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 24
+x = 48
+y = 19
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 116
+x = 61
+y = 19
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 71
+x = 69
+y = 19
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 122
+x = 67
+y = 32
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 123
+x = 68
+y = 32
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 124
+x = 69
+y = 32
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 120
+x = 65
+y = 33
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 121
+x = 66
+y = 33
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 125
+x = 70
+y = 33
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 126
+x = 71
+y = 33
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 117
+x = 26
+y = 59
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 109
+x = 29
+y = 59
+direction = 3
+
+[[map_npcs.171.spawn_points]]
+npc_id = 110
+x = 27
+y = 61
+direction = 3
+
+
+# Mapa 172 - Mapa 172
+[map_npcs.172]
+name = "Mapa 172"
+description = "NPCs extraídos del mapa 172"
+
+# Spawn points fijos
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 15
+y = 66
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 18
+y = 66
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 21
+y = 66
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 24
+y = 66
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 27
+y = 66
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 15
+y = 69
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 18
+y = 69
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 21
+y = 69
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 24
+y = 69
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 500
+x = 27
+y = 69
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 67
+y = 73
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 69
+y = 73
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 71
+y = 73
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 73
+y = 73
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 75
+y = 73
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 67
+y = 76
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 69
+y = 76
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 71
+y = 76
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 73
+y = 76
+direction = 3
+
+[[map_npcs.172.spawn_points]]
+npc_id = 504
+x = 75
+y = 76
+direction = 3
+
+
+# Mapa 173 - Mapa 173
+[map_npcs.173]
+name = "Mapa 173"
+description = "NPCs extraídos del mapa 173"
+
+# Spawn points fijos
+[[map_npcs.173.spawn_points]]
+npc_id = 504
+x = 61
+y = 23
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 504
+x = 64
+y = 23
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 504
+x = 67
+y = 23
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 504
+x = 69
+y = 23
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 500
+x = 61
+y = 27
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 500
+x = 64
+y = 27
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 500
+x = 67
+y = 27
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 500
+x = 69
+y = 27
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 22
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 24
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 26
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 28
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 30
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 31
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 529
+x = 33
+y = 46
+direction = 3
+
+[[map_npcs.173.spawn_points]]
+npc_id = 595
+x = 60
+y = 63
+direction = 3
+
+
+# Mapa 174 - Mapa 174
+[map_npcs.174]
+name = "Mapa 174"
+description = "NPCs extraídos del mapa 174"
+
+# Spawn points fijos
+[[map_npcs.174.spawn_points]]
+npc_id = 590
+x = 27
+y = 23
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 534
+x = 40
+y = 23
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 508
+x = 20
+y = 24
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 508
+x = 30
+y = 24
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 508
+x = 71
+y = 46
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 590
+x = 55
+y = 51
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 508
+x = 27
+y = 66
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 500
+x = 44
+y = 80
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 500
+x = 46
+y = 80
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 500
+x = 48
+y = 80
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 500
+x = 45
+y = 82
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 500
+x = 47
+y = 82
+direction = 3
+
+[[map_npcs.174.spawn_points]]
+npc_id = 508
+x = 59
+y = 83
+direction = 3
+
+
+# Mapa 175 - Mapa 175
+[map_npcs.175]
+name = "Mapa 175"
+description = "NPCs extraídos del mapa 175"
+
+# Spawn points fijos
+[[map_npcs.175.spawn_points]]
+npc_id = 594
+x = 52
+y = 35
+direction = 3
+
+[[map_npcs.175.spawn_points]]
+npc_id = 594
+x = 52
+y = 84
+direction = 3
+
+
+# Mapa 176 - Mapa 176
+[map_npcs.176]
+name = "Mapa 176"
+description = "NPCs extraídos del mapa 176"
+
+# Spawn points fijos
+[[map_npcs.176.spawn_points]]
+npc_id = 590
+x = 51
+y = 27
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 502
+x = 31
+y = 28
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 76
+y = 29
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 80
+y = 40
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 29
+y = 44
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 78
+y = 44
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 40
+y = 45
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 502
+x = 79
+y = 47
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 590
+x = 38
+y = 51
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 502
+x = 35
+y = 55
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 508
+x = 31
+y = 56
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 502
+x = 39
+y = 59
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 595
+x = 35
+y = 63
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 592
+x = 38
+y = 66
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 592
+x = 48
+y = 67
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 592
+x = 68
+y = 67
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 592
+x = 74
+y = 67
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 503
+x = 86
+y = 68
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 592
+x = 63
+y = 69
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 590
+x = 27
+y = 86
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 500
+x = 77
+y = 86
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 500
+x = 80
+y = 86
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 503
+x = 63
+y = 87
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 500
+x = 77
+y = 89
+direction = 3
+
+[[map_npcs.176.spawn_points]]
+npc_id = 500
+x = 80
+y = 89
+direction = 3
+
+
+# Mapa 177 - Mapa 177
+[map_npcs.177]
+name = "Mapa 177"
+description = "NPCs extraídos del mapa 177"
+
+# Spawn points fijos
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 52
+y = 19
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 69
+y = 19
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 62
+y = 27
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 590
+x = 53
+y = 38
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 14
+y = 41
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 27
+y = 42
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 536
+x = 38
+y = 51
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 534
+x = 69
+y = 55
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 40
+y = 63
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 51
+y = 65
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 595
+x = 46
+y = 66
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 36
+y = 68
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 536
+x = 39
+y = 69
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 45
+y = 70
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 590
+x = 52
+y = 70
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 591
+x = 78
+y = 70
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 595
+x = 47
+y = 72
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 500
+x = 37
+y = 73
+direction = 3
+
+[[map_npcs.177.spawn_points]]
+npc_id = 590
+x = 81
+y = 73
+direction = 3
+
+
+# Mapa 178 - Mapa 178
+[map_npcs.178]
+name = "Mapa 178"
+description = "NPCs extraídos del mapa 178"
+
+# Spawn points fijos
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 84
+y = 17
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 83
+y = 20
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 86
+y = 22
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 592
+x = 32
+y = 24
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 85
+y = 25
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 591
+x = 51
+y = 26
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 591
+x = 63
+y = 26
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 87
+y = 28
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 83
+y = 29
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 592
+x = 58
+y = 33
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 534
+x = 84
+y = 43
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 590
+x = 53
+y = 44
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 590
+x = 32
+y = 54
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 590
+x = 84
+y = 55
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 590
+x = 65
+y = 56
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 504
+x = 40
+y = 75
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 592
+x = 20
+y = 76
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 595
+x = 57
+y = 78
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 534
+x = 75
+y = 79
+direction = 3
+
+[[map_npcs.178.spawn_points]]
+npc_id = 595
+x = 46
+y = 80
+direction = 3
+
+
+# Mapa 179 - Mapa 179
+[map_npcs.179]
+name = "Mapa 179"
+description = "NPCs extraídos del mapa 179"
+
+# Spawn points fijos
+[[map_npcs.179.spawn_points]]
+npc_id = 500
+x = 54
+y = 15
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 500
+x = 83
+y = 16
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 500
+x = 25
+y = 20
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 535
+x = 80
+y = 21
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 535
+x = 53
+y = 32
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 535
+x = 47
+y = 47
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 500
+x = 79
+y = 47
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 500
+x = 47
+y = 74
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 535
+x = 14
+y = 78
+direction = 3
+
+[[map_npcs.179.spawn_points]]
+npc_id = 535
+x = 48
+y = 88
+direction = 3
+
+
+# Mapa 184 - Mapa 184
+[map_npcs.184]
+name = "Mapa 184"
+description = "NPCs extraídos del mapa 184"
+
+# Spawn points fijos
+[[map_npcs.184.spawn_points]]
+npc_id = 589
+x = 36
+y = 14
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 589
+x = 76
+y = 14
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 586
+x = 44
+y = 15
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 86
+y = 24
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 585
+x = 54
+y = 31
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 16
+y = 32
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 585
+x = 76
+y = 36
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 586
+x = 44
+y = 42
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 586
+x = 31
+y = 44
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 86
+y = 46
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 588
+x = 19
+y = 51
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 585
+x = 40
+y = 56
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 584
+x = 69
+y = 57
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 27
+y = 62
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 585
+x = 52
+y = 65
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 584
+x = 19
+y = 67
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 584
+x = 70
+y = 73
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 81
+y = 74
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 587
+x = 53
+y = 75
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 588
+x = 19
+y = 86
+direction = 3
+
+[[map_npcs.184.spawn_points]]
+npc_id = 586
+x = 82
+y = 89
+direction = 3
+
+
+# Mapa 186 - Mapa 186
+[map_npcs.186]
+name = "Mapa 186"
+description = "NPCs extraídos del mapa 186"
+
+# Spawn points fijos
+[[map_npcs.186.spawn_points]]
+npc_id = 538
+x = 18
+y = 19
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 574
+x = 33
+y = 20
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 573
+x = 57
+y = 28
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 573
+x = 44
+y = 41
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 538
+x = 62
+y = 48
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 573
+x = 25
+y = 50
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 573
+x = 66
+y = 50
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 615
+x = 44
+y = 55
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 538
+x = 57
+y = 66
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 574
+x = 80
+y = 66
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 532
+x = 32
+y = 67
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 573
+x = 64
+y = 75
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 615
+x = 26
+y = 79
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 538
+x = 77
+y = 87
+direction = 3
+
+[[map_npcs.186.spawn_points]]
+npc_id = 574
+x = 41
+y = 88
+direction = 3
+
+
+# Mapa 187 - Mapa 187
+[map_npcs.187]
+name = "Mapa 187"
+description = "NPCs extraídos del mapa 187"
+
+# Spawn points fijos
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 45
+y = 28
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 67
+y = 47
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 86
+y = 52
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 613
+x = 64
+y = 58
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 51
+y = 59
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 84
+y = 70
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 56
+y = 73
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 24
+y = 75
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 39
+y = 79
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 68
+y = 84
+direction = 3
+
+[[map_npcs.187.spawn_points]]
+npc_id = 504
+x = 17
+y = 86
+direction = 3
+
+
+# Mapa 188 - Mapa 188
+[map_npcs.188]
+name = "Mapa 188"
+description = "NPCs extraídos del mapa 188"
+
+# Spawn points fijos
+[[map_npcs.188.spawn_points]]
+npc_id = 578
+x = 53
+y = 10
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 17
+x = 23
+y = 13
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 17
+x = 82
+y = 15
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 544
+x = 15
+y = 18
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 557
+x = 36
+y = 19
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 557
+x = 78
+y = 26
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 579
+x = 51
+y = 33
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 579
+x = 23
+y = 36
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 578
+x = 67
+y = 39
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 578
+x = 30
+y = 47
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 544
+x = 49
+y = 47
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 579
+x = 54
+y = 52
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 557
+x = 78
+y = 52
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 17
+x = 47
+y = 56
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 557
+x = 21
+y = 59
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 538
+x = 45
+y = 65
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 574
+x = 38
+y = 71
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 579
+x = 72
+y = 72
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 578
+x = 86
+y = 73
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 579
+x = 24
+y = 75
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 544
+x = 49
+y = 75
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 557
+x = 49
+y = 76
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 544
+x = 84
+y = 78
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 17
+x = 76
+y = 81
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 578
+x = 54
+y = 89
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 17
+x = 20
+y = 90
+direction = 3
+
+[[map_npcs.188.spawn_points]]
+npc_id = 544
+x = 72
+y = 90
+direction = 3
+
+
+# Mapa 189 - Mapa 189
+[map_npcs.189]
+name = "Mapa 189"
+description = "NPCs extraídos del mapa 189"
+
+# Spawn points fijos
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 51
+y = 11
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 613
+x = 67
+y = 11
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 27
+y = 14
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 613
+x = 37
+y = 23
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 39
+y = 29
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 613
+x = 79
+y = 31
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 63
+y = 36
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 28
+y = 50
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 53
+y = 51
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 614
+x = 27
+y = 58
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 614
+x = 50
+y = 59
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 61
+y = 67
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 31
+y = 69
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 614
+x = 62
+y = 77
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 39
+y = 79
+direction = 3
+
+[[map_npcs.189.spawn_points]]
+npc_id = 504
+x = 47
+y = 88
+direction = 3
+
+
+# Mapa 190 - Mapa 190
+[map_npcs.190]
+name = "Mapa 190"
+description = "NPCs extraídos del mapa 190"
+
+# Spawn points fijos
+[[map_npcs.190.spawn_points]]
+npc_id = 616
+x = 31
+y = 10
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 616
+x = 86
+y = 18
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 49
+y = 21
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 616
+x = 12
+y = 28
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 612
+x = 65
+y = 29
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 29
+y = 36
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 33
+y = 36
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 595
+x = 54
+y = 36
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 611
+x = 49
+y = 49
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 72
+y = 49
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 612
+x = 23
+y = 51
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 616
+x = 52
+y = 63
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 611
+x = 81
+y = 65
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 595
+x = 68
+y = 66
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 34
+y = 69
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 611
+x = 45
+y = 72
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 612
+x = 43
+y = 79
+direction = 3
+
+[[map_npcs.190.spawn_points]]
+npc_id = 536
+x = 61
+y = 81
+direction = 3
+
+
+# Mapa 195 - Mapa 195
+[map_npcs.195]
+name = "Mapa 195"
+description = "NPCs extraídos del mapa 195"
+
+# Spawn points fijos
+[[map_npcs.195.spawn_points]]
+npc_id = 48
+x = 39
+y = 15
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 44
+x = 66
+y = 16
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 103
+x = 83
+y = 25
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 2
+x = 78
+y = 26
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 4
+x = 77
+y = 30
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 3
+x = 83
+y = 32
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 4
+x = 87
+y = 35
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 4
+x = 82
+y = 36
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 3
+x = 80
+y = 38
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 2
+x = 86
+y = 38
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 4
+x = 80
+y = 42
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 3
+x = 85
+y = 42
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 2
+x = 78
+y = 43
+direction = 3
+
+[[map_npcs.195.spawn_points]]
+npc_id = 57
+x = 60
+y = 58
+direction = 3
+
+
+# Mapa 196 - Mapa 196
+[map_npcs.196]
+name = "Mapa 196"
+description = "NPCs extraídos del mapa 196"
+
+# Spawn points fijos
+[[map_npcs.196.spawn_points]]
+npc_id = 63
+x = 68
+y = 21
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 64
+x = 69
+y = 21
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 68
+x = 70
+y = 21
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 73
+x = 29
+y = 24
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 14
+x = 45
+y = 25
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 5
+x = 52
+y = 47
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 59
+x = 76
+y = 47
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 24
+x = 29
+y = 52
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 4
+x = 34
+y = 74
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 3
+x = 22
+y = 75
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 103
+x = 28
+y = 76
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 4
+x = 22
+y = 78
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 3
+x = 33
+y = 79
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 3
+x = 26
+y = 82
+direction = 3
+
+[[map_npcs.196.spawn_points]]
+npc_id = 4
+x = 33
+y = 83
+direction = 3
+
+
+# Mapa 197 - Mapa 197
+[map_npcs.197]
+name = "Mapa 197"
+description = "NPCs extraídos del mapa 197"
+
+# Spawn points fijos
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 86
+y = 10
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 69
+y = 20
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 47
+y = 22
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 58
+y = 47
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 31
+y = 57
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 91
+x = 49
+y = 59
+direction = 3
+
+[[map_npcs.197.spawn_points]]
+npc_id = 41
+x = 57
+y = 78
+direction = 3
+
+
+# Mapa 201 - Mapa 201
+[map_npcs.201]
+name = "Mapa 201"
+description = "NPCs extraídos del mapa 201"
+
+# Spawn points fijos
+[[map_npcs.201.spawn_points]]
+npc_id = 568
+x = 79
+y = 20
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 568
+x = 36
+y = 29
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 517
+x = 73
+y = 35
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 593
+x = 47
+y = 51
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 569
+x = 20
+y = 54
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 593
+x = 61
+y = 56
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 569
+x = 71
+y = 59
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 593
+x = 51
+y = 60
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 593
+x = 58
+y = 67
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 593
+x = 46
+y = 72
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 568
+x = 19
+y = 81
+direction = 3
+
+[[map_npcs.201.spawn_points]]
+npc_id = 569
+x = 55
+y = 88
+direction = 3
+
+
+# Mapa 259 - Dungeon Oscuro
 [map_npcs.259]
 name = "Dungeon Oscuro"
 description = "Mazmorra con muchos monstruos"
 
-# Solo spawns aleatorios hostiles
 [[map_npcs.259.random_spawns]]
 npc_type = "hostile"
 count = 8
@@ -122,3 +9706,635 @@ area = {x1 = 20, y1 = 20, x2 = 80, y2 = 80}
 npc_type = "hostile"
 count = 3
 area = {x1 = 40, y1 = 40, x2 = 60, y2 = 60}
+
+
+# Mapa 264 - Mapa 264
+[map_npcs.264]
+name = "Mapa 264"
+description = "NPCs extraídos del mapa 264"
+
+# Spawn points fijos
+[[map_npcs.264.spawn_points]]
+npc_id = 500
+x = 29
+y = 24
+direction = 3
+
+[[map_npcs.264.spawn_points]]
+npc_id = 582
+x = 67
+y = 27
+direction = 3
+
+[[map_npcs.264.spawn_points]]
+npc_id = 582
+x = 33
+y = 31
+direction = 3
+
+[[map_npcs.264.spawn_points]]
+npc_id = 500
+x = 67
+y = 40
+direction = 3
+
+[[map_npcs.264.spawn_points]]
+npc_id = 500
+x = 48
+y = 61
+direction = 3
+
+[[map_npcs.264.spawn_points]]
+npc_id = 500
+x = 18
+y = 75
+direction = 3
+
+
+# Mapa 265 - Mapa 265
+[map_npcs.265]
+name = "Mapa 265"
+description = "NPCs extraídos del mapa 265"
+
+# Spawn points fijos
+[[map_npcs.265.spawn_points]]
+npc_id = 500
+x = 24
+y = 21
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 582
+x = 53
+y = 23
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 500
+x = 42
+y = 29
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 500
+x = 85
+y = 47
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 500
+x = 58
+y = 48
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 500
+x = 20
+y = 57
+direction = 3
+
+[[map_npcs.265.spawn_points]]
+npc_id = 582
+x = 82
+y = 79
+direction = 3
+
+
+# Mapa 266 - Mapa 266
+[map_npcs.266]
+name = "Mapa 266"
+description = "NPCs extraídos del mapa 266"
+
+# Spawn points fijos
+[[map_npcs.266.spawn_points]]
+npc_id = 500
+x = 62
+y = 38
+direction = 3
+
+[[map_npcs.266.spawn_points]]
+npc_id = 582
+x = 63
+y = 42
+direction = 3
+
+[[map_npcs.266.spawn_points]]
+npc_id = 500
+x = 40
+y = 45
+direction = 3
+
+[[map_npcs.266.spawn_points]]
+npc_id = 500
+x = 41
+y = 58
+direction = 3
+
+[[map_npcs.266.spawn_points]]
+npc_id = 582
+x = 52
+y = 70
+direction = 3
+
+[[map_npcs.266.spawn_points]]
+npc_id = 500
+x = 70
+y = 72
+direction = 3
+
+
+# Mapa 267 - Mapa 267
+[map_npcs.267]
+name = "Mapa 267"
+description = "NPCs extraídos del mapa 267"
+
+# Spawn points fijos
+[[map_npcs.267.spawn_points]]
+npc_id = 500
+x = 47
+y = 26
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 582
+x = 47
+y = 30
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 500
+x = 24
+y = 36
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 592
+x = 25
+y = 37
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 500
+x = 37
+y = 61
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 592
+x = 62
+y = 67
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 500
+x = 61
+y = 68
+direction = 3
+
+[[map_npcs.267.spawn_points]]
+npc_id = 582
+x = 24
+y = 74
+direction = 3
+
+
+# Mapa 268 - Mapa 268
+[map_npcs.268]
+name = "Mapa 268"
+description = "NPCs extraídos del mapa 268"
+
+# Spawn points fijos
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 40
+y = 39
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 32
+y = 43
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 502
+x = 44
+y = 45
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 49
+y = 45
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 38
+y = 51
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 52
+y = 51
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 24
+y = 53
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 29
+y = 57
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 47
+y = 58
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 507
+x = 33
+y = 63
+direction = 3
+
+[[map_npcs.268.spawn_points]]
+npc_id = 502
+x = 36
+y = 69
+direction = 3
+
+
+# Mapa 269 - Mapa 269
+[map_npcs.269]
+name = "Mapa 269"
+description = "NPCs extraídos del mapa 269"
+
+# Spawn points fijos
+[[map_npcs.269.spawn_points]]
+npc_id = 501
+x = 55
+y = 67
+direction = 3
+
+
+# Mapa 270 - Mapa 270
+[map_npcs.270]
+name = "Mapa 270"
+description = "NPCs extraídos del mapa 270"
+
+# Spawn points fijos
+[[map_npcs.270.spawn_points]]
+npc_id = 510
+x = 17
+y = 69
+direction = 3
+
+[[map_npcs.270.spawn_points]]
+npc_id = 500
+x = 27
+y = 71
+direction = 3
+
+
+# Mapa 271 - Mapa 271
+[map_npcs.271]
+name = "Mapa 271"
+description = "NPCs extraídos del mapa 271"
+
+# Spawn points fijos
+[[map_npcs.271.spawn_points]]
+npc_id = 533
+x = 59
+y = 80
+direction = 3
+
+[[map_npcs.271.spawn_points]]
+npc_id = 500
+x = 75
+y = 80
+direction = 3
+
+[[map_npcs.271.spawn_points]]
+npc_id = 533
+x = 68
+y = 81
+direction = 3
+
+[[map_npcs.271.spawn_points]]
+npc_id = 500
+x = 55
+y = 84
+direction = 3
+
+[[map_npcs.271.spawn_points]]
+npc_id = 500
+x = 60
+y = 84
+direction = 3
+
+
+# Mapa 281 - Mapa 281
+[map_npcs.281]
+name = "Mapa 281"
+description = "NPCs extraídos del mapa 281"
+
+# Spawn points fijos
+[[map_npcs.281.spawn_points]]
+npc_id = 599
+x = 67
+y = 16
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 600
+x = 26
+y = 23
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 599
+x = 43
+y = 27
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 545
+x = 63
+y = 34
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 599
+x = 30
+y = 39
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 598
+x = 60
+y = 49
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 545
+x = 27
+y = 57
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 598
+x = 17
+y = 78
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 598
+x = 47
+y = 78
+direction = 3
+
+[[map_npcs.281.spawn_points]]
+npc_id = 599
+x = 76
+y = 79
+direction = 3
+
+
+# Mapa 282 - Mapa 282
+[map_npcs.282]
+name = "Mapa 282"
+description = "NPCs extraídos del mapa 282"
+
+# Spawn points fijos
+[[map_npcs.282.spawn_points]]
+npc_id = 91
+x = 42
+y = 39
+direction = 3
+
+[[map_npcs.282.spawn_points]]
+npc_id = 91
+x = 34
+y = 54
+direction = 3
+
+[[map_npcs.282.spawn_points]]
+npc_id = 91
+x = 56
+y = 58
+direction = 3
+
+[[map_npcs.282.spawn_points]]
+npc_id = 91
+x = 20
+y = 65
+direction = 3
+
+[[map_npcs.282.spawn_points]]
+npc_id = 91
+x = 61
+y = 79
+direction = 3
+
+
+# Mapa 283 - Mapa 283
+[map_npcs.283]
+name = "Mapa 283"
+description = "NPCs extraídos del mapa 283"
+
+# Spawn points fijos
+[[map_npcs.283.spawn_points]]
+npc_id = 602
+x = 56
+y = 18
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 604
+x = 51
+y = 19
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 604
+x = 80
+y = 38
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 602
+x = 45
+y = 40
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 602
+x = 60
+y = 41
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 604
+x = 27
+y = 45
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 604
+x = 53
+y = 56
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 603
+x = 55
+y = 69
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 603
+x = 42
+y = 76
+direction = 3
+
+[[map_npcs.283.spawn_points]]
+npc_id = 603
+x = 72
+y = 77
+direction = 3
+
+
+# Mapa 284 - Mapa 284
+[map_npcs.284]
+name = "Mapa 284"
+description = "NPCs extraídos del mapa 284"
+
+# Spawn points fijos
+[[map_npcs.284.spawn_points]]
+npc_id = 605
+x = 83
+y = 11
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 593
+x = 38
+y = 33
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 593
+x = 70
+y = 33
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 606
+x = 13
+y = 52
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 606
+x = 89
+y = 52
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 607
+x = 52
+y = 53
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 605
+x = 90
+y = 64
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 593
+x = 51
+y = 85
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 568
+x = 33
+y = 87
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 568
+x = 64
+y = 87
+direction = 3
+
+[[map_npcs.284.spawn_points]]
+npc_id = 605
+x = 81
+y = 89
+direction = 3
+
+
+# Mapa 285 - Mapa 285
+[map_npcs.285]
+name = "Mapa 285"
+description = "NPCs extraídos del mapa 285"
+
+# Spawn points fijos
+[[map_npcs.285.spawn_points]]
+npc_id = 608
+x = 27
+y = 32
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 548
+x = 41
+y = 36
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 609
+x = 70
+y = 38
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 610
+x = 52
+y = 57
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 609
+x = 27
+y = 60
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 610
+x = 18
+y = 63
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 608
+x = 70
+y = 75
+direction = 3
+
+[[map_npcs.285.spawn_points]]
+npc_id = 608
+x = 43
+y = 80
+direction = 3
+

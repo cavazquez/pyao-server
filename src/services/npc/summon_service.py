@@ -107,3 +107,67 @@ class SummonService:
 
         logger.debug("Mascota registrada para user_id %d: instance_id=%s", user_id, npc_instance_id)
         return True
+
+    async def remove_pet(self, user_id: int, npc_instance_id: str) -> bool:
+        """Remueve una mascota específica del registro del jugador.
+
+        Nota: Esto NO elimina el NPC del mundo, solo lo desregistra.
+        Para eliminar el NPC completamente, usar NPCService.remove_npc().
+
+        Args:
+            user_id: ID del jugador.
+            npc_instance_id: ID de la instancia del NPC.
+
+        Returns:
+            True si se removió correctamente, False si no era mascota del jugador.
+        """
+        # Verificar que el NPC es mascota del jugador
+        all_npcs = await self.npc_repository.get_all_npcs()
+        pet_npc = next(
+            (
+                npc
+                for npc in all_npcs
+                if npc.instance_id == npc_instance_id and npc.summoned_by_user_id == user_id
+            ),
+            None,
+        )
+
+        if not pet_npc:
+            logger.warning(
+                "Intento de remover mascota que no pertenece al jugador: "
+                "user_id=%d, instance_id=%s",
+                user_id,
+                npc_instance_id,
+            )
+            return False
+
+        logger.debug(
+            "Mascota removida del registro: user_id=%d, instance_id=%s", user_id, npc_instance_id
+        )
+        return True
+
+    async def remove_all_player_pets(self, user_id: int) -> list[str]:
+        """Remueve todas las mascotas de un jugador.
+
+        Retorna la lista de instance_ids de las mascotas removidas.
+
+        Args:
+            user_id: ID del jugador.
+
+        Returns:
+            Lista de instance_ids de las mascotas que fueron removidas.
+        """
+        all_npcs = await self.npc_repository.get_all_npcs()
+        player_pets = [
+            npc for npc in all_npcs if npc.summoned_by_user_id == user_id and npc.summoned_until > 0
+        ]
+
+        pet_instance_ids = [pet.instance_id for pet in player_pets]
+        logger.info(
+            "Removiendo %d mascota(s) de user_id %d: %s",
+            len(pet_instance_ids),
+            user_id,
+            pet_instance_ids,
+        )
+
+        return pet_instance_ids

@@ -53,6 +53,7 @@ def mock_deps() -> DependencyContainer:
         door_repo=Mock(),
         door_service=Mock(),
         session_manager=Mock(),
+        summon_service=Mock(),
     )
 
 

@@ -334,6 +334,9 @@ class TaskFactory:
                 map_resources=self.deps.map_resources_service,
                 account_repo=self.deps.account_repo,
                 message_sender=message_sender,
+                item_catalog=self.deps.item_catalog,
+                broadcast_service=self.deps.broadcast_service,
+                map_manager=self.deps.map_manager,
             )
         else:
             # Actualizar message_sender por si cambió
@@ -537,6 +540,8 @@ class TaskFactory:
                 player_repo=self.deps.player_repo,
                 map_manager=self.deps.map_manager,
                 message_sender=message_sender,
+                npc_service=self.deps.npc_service,
+                summon_service=self.deps.summon_service,
             )
         else:
             # Actualizar message_sender por si cambió
@@ -1204,6 +1209,8 @@ class TaskFactory:
                 message_sender=message_sender,
                 clan_service=self.deps.clan_service,
                 trade_service=getattr(self.deps, "trade_service", None),
+                npc_service=getattr(self.deps, "npc_service", None),
+                summon_service=getattr(self.deps, "summon_service", None),
                 session_data=session_data,
             )
         else:
@@ -1211,6 +1218,8 @@ class TaskFactory:
             self._talk_handler.message_sender = message_sender
             self._talk_handler.session_data = session_data or {}
             self._talk_handler.trade_service = getattr(self.deps, "trade_service", None)
+            self._talk_handler.npc_service = getattr(self.deps, "npc_service", None)
+            self._talk_handler.summon_service = getattr(self.deps, "summon_service", None)
         return self._talk_handler
 
     def _get_gm_command_handler(self, message_sender: MessageSender) -> GMCommandHandler:

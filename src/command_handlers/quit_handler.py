@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
+    from src.services.npc.npc_service import NPCService
+    from src.services.npc.summon_service import SummonService
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +24,8 @@ class QuitCommandHandler(CommandHandler):
         player_repo: PlayerRepository | None,
         map_manager: MapManager | None,
         message_sender: MessageSender,
+        npc_service: NPCService | None = None,
+        summon_service: SummonService | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -29,10 +33,14 @@ class QuitCommandHandler(CommandHandler):
             player_repo: Repositorio de jugadores.
             map_manager: Gestor de mapas.
             message_sender: Enviador de mensajes.
+            npc_service: Servicio de NPCs (opcional, para limpiar mascotas).
+            summon_service: Servicio de invocación (opcional, para limpiar mascotas).
         """
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.message_sender = message_sender
+        self.npc_service = npc_service
+        self.summon_service = summon_service
 
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de desconexión (solo lógica de negocio).
@@ -74,6 +82,28 @@ class QuitCommandHandler(CommandHandler):
                         "CHARACTER_REMOVE enviado a %d jugadores en mapa %d",
                         len(other_senders),
                         map_id,
+                    )
+
+            # Limpiar mascotas del jugador
+            if self.summon_service and self.npc_service:
+                try:
+                    pet_instance_ids = await self.summon_service.remove_all_player_pets(user_id)
+                    # Remover cada mascota del mundo
+                    for pet_instance_id in pet_instance_ids:
+                        all_npcs = await self.npc_service.npc_repository.get_all_npcs()
+                        pet_npc = next(
+                            (npc for npc in all_npcs if npc.instance_id == pet_instance_id), None
+                        )
+                        if pet_npc:
+                            await self.npc_service.remove_npc(pet_npc)
+                            logger.info(
+                                "Mascota removida al desconectar: user_id=%d, mascota=%s",
+                                user_id,
+                                pet_npc.name,
+                            )
+                except Exception:
+                    logger.exception(
+                        "Error al limpiar mascotas del jugador %d al desconectar", user_id
                     )
 
             # Remover jugador del MapManager

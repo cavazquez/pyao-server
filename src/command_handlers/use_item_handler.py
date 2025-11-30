@@ -1,20 +1,28 @@
 """Handler para comando de usar item."""
 
 import logging
+import random
+import time
 from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.use_item_command import UseItemCommand
 from src.models.item_constants import BOAT_ITEM_ID
+from src.models.item_types import ObjType, TipoPocion
 from src.models.items_catalog import get_item
 from src.repositories.equipment_repository import EquipmentRepository
 from src.repositories.inventory_repository import InventoryRepository
 
 if TYPE_CHECKING:
+    from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
+    from src.models.item_catalog import ItemCatalog
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.map_resources_service import MapResourcesService
+    from src.services.multiplayer_broadcast_service import (
+        MultiplayerBroadcastService,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +47,9 @@ class UseItemCommandHandler(CommandHandler):
         map_resources: MapResourcesService | None,
         account_repo: AccountRepository | None,
         message_sender: MessageSender,
+        item_catalog: ItemCatalog | None = None,
+        broadcast_service: MultiplayerBroadcastService | None = None,
+        map_manager: MapManager | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -47,11 +58,17 @@ class UseItemCommandHandler(CommandHandler):
             map_resources: Servicio de recursos de mapa.
             account_repo: Repositorio de cuentas.
             message_sender: Enviador de mensajes.
+            item_catalog: Catálogo de items (para datos completos de pociones).
+            broadcast_service: Servicio de broadcast multijugador (para invisibilidad).
+            map_manager: Gestor de mapas (para obtener message senders).
         """
         self.player_repo = player_repo
         self.map_resources = map_resources
         self.account_repo = account_repo
         self.message_sender = message_sender
+        self.item_catalog = item_catalog
+        self.broadcast_service = broadcast_service
+        self.map_manager = map_manager
 
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de usar item (solo lógica de negocio).
@@ -100,6 +117,24 @@ class UseItemCommandHandler(CommandHandler):
             return await self._handle_apple_consumption(
                 user_id, item_id, quantity, slot, inventory_repo
             )
+
+        # Detectar si es una poción
+        if self.item_catalog:
+            item_data = self.item_catalog.get_item_data(item_id)
+            if item_data:
+                obj_type = item_data.get("ObjType")
+                if isinstance(obj_type, int) and obj_type == ObjType.POCIONES:
+                    potion_type = item_data.get("TipoPocion")
+                    if isinstance(potion_type, int):
+                        return await self._handle_potion_consumption(
+                            user_id,
+                            item_id,
+                            quantity,
+                            slot,
+                            inventory_repo,
+                            item_data,
+                            potion_type,
+                        )
 
         # Si llegamos aquí, el ítem no tiene un comportamiento definido
         logger.info("El ítem %d no tiene un comportamiento de uso definido", item_id)
@@ -458,3 +493,249 @@ class UseItemCommandHandler(CommandHandler):
                 min_def=catalog_item.defense if catalog_item and catalog_item.defense else 0,
                 sale_price=float(catalog_item.value) if catalog_item else 0.0,
             )
+
+    async def _handle_potion_consumption(
+        self,
+        user_id: int,
+        item_id: int,
+        quantity: int,
+        slot: int,
+        inventory_repo: InventoryRepository,
+        item_data: dict[str, object],
+        potion_type: int,
+    ) -> CommandResult:
+        """Maneja el consumo de una poción.
+
+        Args:
+            user_id: ID del jugador.
+            item_id: ID del item (poción).
+            quantity: Cantidad actual del item.
+            slot: Slot del inventario.
+            inventory_repo: Repositorio de inventario.
+            item_data: Datos completos del item desde TOML.
+            potion_type: Tipo de poción (TipoPocion enum value).
+
+        Returns:
+            Resultado de la ejecución.
+        """
+        # Consumir la poción
+        if quantity <= 1:
+            await inventory_repo.clear_slot(user_id, slot)
+        else:
+            removed = await inventory_repo.remove_item(user_id, slot, 1)
+            if not removed:
+                logger.warning(
+                    "No se pudo consumir poción user_id=%d item_id=%d slot=%d",
+                    user_id,
+                    item_id,
+                    slot,
+                )
+                return CommandResult.error("No se pudo consumir la poción")
+
+        # Aplicar efectos según el tipo de poción
+        if potion_type == TipoPocion.HP:  # Tipo 3: Restaura HP
+            await self._handle_hp_potion(user_id, item_data)
+
+        elif potion_type == TipoPocion.MANA:  # Tipo 4: Restaura Mana
+            await self._handle_mana_potion(user_id, item_data)
+
+        elif potion_type == TipoPocion.AGILIDAD:  # Tipo 1: Modifica Agilidad
+            await self._handle_agility_potion(user_id, item_data)
+
+        elif potion_type == TipoPocion.FUERZA:  # Tipo 2: Modifica Fuerza
+            await self._handle_strength_potion(user_id, item_data)
+
+        elif potion_type == TipoPocion.CURA_VENENO:  # Tipo 5: Cura Veneno
+            await self._handle_cure_poison_potion(user_id)
+
+        elif potion_type == TipoPocion.INVISIBLE:  # Tipo 6: Invisibilidad
+            await self._handle_invisibility_potion(user_id)
+
+        else:
+            logger.warning("Tipo de poción desconocido: %d para item_id %d", potion_type, item_id)
+            await self.message_sender.send_console_msg("Esta poción no tiene efecto.")
+            return CommandResult.error(f"Tipo de poción desconocido: {potion_type}")
+
+        # Actualizar el slot en el cliente
+        await self._update_inventory_slot_after_consumption(user_id, item_id, slot, inventory_repo)
+
+        potion_name = item_data.get("Name", "Poción")
+        await self.message_sender.send_console_msg(f"¡Has usado {potion_name}!")
+
+        logger.info(
+            "Poción consumida: user_id=%d item_id=%d tipo=%d slot=%d",
+            user_id,
+            item_id,
+            potion_type,
+            slot,
+        )
+
+        return CommandResult.ok(
+            data={"item_id": item_id, "quantity_remaining": quantity - 1, "handled": True}
+        )
+
+    async def _handle_hp_potion(self, user_id: int, item_data: dict[str, object]) -> None:
+        """Maneja poción de HP (Tipo 3)."""
+        if not self.player_repo:
+            return
+
+        # Restaurar HP (usar MaxModificador como valor)
+        max_mod = item_data.get("MaxModificador", 30)
+        restore_amount = int(max_mod) if isinstance(max_mod, (int, str)) else 30
+
+        stats = await self.player_repo.get_stats(user_id)
+        if stats:
+            new_hp = min(stats["min_hp"] + restore_amount, stats["max_hp"])
+            stats["min_hp"] = new_hp
+            await self.player_repo.set_stats(user_id=user_id, **stats)
+            await self.message_sender.send_update_user_stats(**stats)
+            logger.debug(
+                "HP restaurado: user_id=%d +%d HP (actual: %d/%d)",
+                user_id,
+                restore_amount,
+                new_hp,
+                stats["max_hp"],
+            )
+
+    async def _handle_mana_potion(self, user_id: int, item_data: dict[str, object]) -> None:
+        """Maneja poción de Mana (Tipo 4)."""
+        if not self.player_repo:
+            return
+
+        # Restaurar Mana (usar valor aleatorio entre MinModificador y MaxModificador)
+        min_mod_val = item_data.get("MinModificador", 12)
+        max_mod_val = item_data.get("MaxModificador", 20)
+        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else 12
+        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 20
+        restore_amount = random.randint(min_mod, max_mod)
+
+        stats = await self.player_repo.get_stats(user_id)
+        if stats:
+            new_mana = min(stats["min_mana"] + restore_amount, stats["max_mana"])
+            stats["min_mana"] = new_mana
+            await self.player_repo.set_stats(user_id=user_id, **stats)
+            await self.message_sender.send_update_user_stats(**stats)
+            logger.debug(
+                "Mana restaurado: user_id=%d +%d Mana (actual: %d/%d)",
+                user_id,
+                restore_amount,
+                new_mana,
+                stats["max_mana"],
+            )
+
+    async def _handle_agility_potion(self, user_id: int, item_data: dict[str, object]) -> None:
+        """Maneja poción de Agilidad (Tipo 1)."""
+        if not self.player_repo:
+            return
+
+        # Calcular modificador aleatorio
+        min_mod_val = item_data.get("MinModificador", 3)
+        max_mod_val = item_data.get("MaxModificador", 5)
+        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else 3
+        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 5
+        modifier_value = random.randint(min_mod, max_mod)
+
+        # Duración en segundos (DuracionEfecto está en milisegundos)
+        duration_ms_val = item_data.get("DuracionEfecto", 1000)
+        duration_ms = int(duration_ms_val) if isinstance(duration_ms_val, (int, str)) else 1000
+        duration_seconds = duration_ms / 1000.0
+        expires_at = time.time() + duration_seconds
+
+        await self.player_repo.set_agility_modifier(user_id, expires_at, modifier_value)
+
+        # Obtener atributos actualizados y enviar UPDATE
+        attributes = await self.player_repo.get_attributes(user_id)
+        if attributes:
+            await self.message_sender.send_update_strength_and_dexterity(
+                strength=attributes.get("strength", 0),
+                dexterity=attributes.get("agility", 0),
+            )
+
+        logger.info(
+            "Agilidad modificada: user_id=%d +%d hasta %.2f (%.1fs)",
+            user_id,
+            modifier_value,
+            expires_at,
+            duration_seconds,
+        )
+
+    async def _handle_strength_potion(self, user_id: int, item_data: dict[str, object]) -> None:
+        """Maneja poción de Fuerza (Tipo 2)."""
+        if not self.player_repo:
+            return
+
+        # Calcular modificador aleatorio
+        min_mod_val = item_data.get("MinModificador", 2)
+        max_mod_val = item_data.get("MaxModificador", 6)
+        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else 2
+        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 6
+        modifier_value = random.randint(min_mod, max_mod)
+
+        # Duración en segundos (DuracionEfecto está en milisegundos)
+        duration_ms_val = item_data.get("DuracionEfecto", 1000)
+        duration_ms = int(duration_ms_val) if isinstance(duration_ms_val, (int, str)) else 1000
+        duration_seconds = duration_ms / 1000.0
+        expires_at = time.time() + duration_seconds
+
+        await self.player_repo.set_strength_modifier(user_id, expires_at, modifier_value)
+
+        # Obtener atributos actualizados y enviar UPDATE
+        attributes = await self.player_repo.get_attributes(user_id)
+        if attributes:
+            await self.message_sender.send_update_strength_and_dexterity(
+                strength=attributes.get("strength", 0),
+                dexterity=attributes.get("agility", 0),
+            )
+
+        logger.info(
+            "Fuerza modificada: user_id=%d +%d hasta %.2f (%.1fs)",
+            user_id,
+            modifier_value,
+            expires_at,
+            duration_seconds,
+        )
+
+    async def _handle_cure_poison_potion(self, user_id: int) -> None:
+        """Maneja poción de Cura Veneno (Tipo 5)."""
+        if not self.player_repo:
+            return
+
+        # Remover envenenamiento
+        await self.player_repo.update_poisoned_until(user_id, 0.0)
+        await self.message_sender.send_console_msg("Te has curado del envenenamiento.")
+        logger.info("Veneno curado: user_id=%d", user_id)
+
+    async def _handle_invisibility_potion(self, user_id: int) -> None:
+        """Maneja poción de Invisibilidad (Tipo 6)."""
+        if not self.player_repo or not self.map_manager or not self.account_repo:
+            return
+
+        # Duración por defecto (5 minutos como en el hechizo)
+        invisibility_duration_seconds = 300.0
+        invisible_until = time.time() + invisibility_duration_seconds
+
+        await self.player_repo.update_invisible_until(user_id, invisible_until)
+        logger.info(
+            "Invisibilidad aplicada: user_id=%d hasta %.2f (%.1fs)",
+            user_id,
+            invisible_until,
+            invisibility_duration_seconds,
+        )
+
+        # Enviar CHARACTER_REMOVE a otros jugadores
+        position = await self.player_repo.get_position(user_id)
+        if position:
+            map_id = position["map"]
+            # Broadcast CHARACTER_REMOVE excluyendo al propio jugador
+            other_senders = self.map_manager.get_all_message_senders_in_map(
+                map_id, exclude_user_id=user_id
+            )
+            for other_sender in other_senders:
+                await other_sender.send_character_remove(user_id)
+            logger.info(
+                "user_id %d invisible por poción - CHARACTER_REMOVE a %d jugadores",
+                user_id,
+                len(other_senders),
+            )
+
+        await self.message_sender.send_console_msg("Te has vuelto invisible.")
