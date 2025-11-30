@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.npc.random_spawn_service import RandomSpawnService
 
 from src.services.map.map_transition_steps import (
     MapTransitionContext,
@@ -48,6 +49,7 @@ class PlayerMapService:
         account_repo: AccountRepository,
         map_manager: MapManager,
         broadcast_service: MultiplayerBroadcastService,
+        random_spawn_service: RandomSpawnService | None = None,
     ) -> None:
         """Inicializa el servicio de mapas de jugador.
 
@@ -56,11 +58,13 @@ class PlayerMapService:
             account_repo: Repositorio de cuentas.
             map_manager: Gestor de mapas.
             broadcast_service: Servicio de broadcast multijugador.
+            random_spawn_service: Servicio de spawns aleatorios (opcional).
         """
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
+        self.random_spawn_service = random_spawn_service
 
         # Crear orquestador de transición con la secuencia predeterminada
         self.transition_orchestrator = MapTransitionOrchestrator.create_default_orchestrator(
@@ -303,6 +307,9 @@ class PlayerMapService:
         # 4. Enviar todos los NPCs del mapa
         await self._send_npcs_in_map(map_id, message_sender)
 
+        # 4b. Spawneear NPCs aleatorios si hay áreas configuradas
+        await self._spawn_random_npcs_for_player(map_id, x, y, message_sender)
+
         # 5. Enviar todos los ground items del mapa
         await self._send_ground_items_in_map(map_id, message_sender)
 
@@ -380,6 +387,9 @@ class PlayerMapService:
         # Ejecutar transición usando el orquestador
         await self.transition_orchestrator.execute_transition(context)
 
+        # Spawneear NPCs aleatorios después de la transición (si hay áreas configuradas)
+        await self._spawn_random_npcs_for_player(new_map, new_x, new_y, message_sender)
+
     async def teleport_in_same_map(
         self,
         user_id: int,
@@ -443,3 +453,54 @@ class PlayerMapService:
             new_x,
             new_y,
         )
+
+    async def _spawn_random_npcs_for_player(
+        self, map_id: int, player_x: int, player_y: int, message_sender: MessageSender
+    ) -> int:
+        """Spawnea NPCs aleatorios para un jugador cuando entra en áreas designadas.
+
+        Args:
+            map_id: ID del mapa.
+            player_x: Posición X del jugador.
+            player_y: Posición Y del jugador.
+            message_sender: MessageSender del jugador.
+
+        Returns:
+            Número de NPCs spawneados.
+        """
+        if not self.random_spawn_service:
+            return 0
+
+        # Spawneear NPCs aleatorios
+        spawned_npcs = await self.random_spawn_service.spawn_random_npcs_for_player(
+            map_id, player_x, player_y
+        )
+
+        # Enviar CHARACTER_CREATE de los NPCs spawneados al jugador
+        for npc in spawned_npcs:
+            await message_sender.send_character_create(
+                char_index=npc.char_index,
+                body=npc.body_id,
+                head=npc.head_id,
+                heading=npc.heading,
+                x=npc.x,
+                y=npc.y,
+                weapon=0,
+                shield=0,
+                helmet=0,
+                fx=npc.fx_loop if hasattr(npc, "fx_loop") else 0,
+                loops=-1 if hasattr(npc, "fx_loop") and npc.fx_loop > 0 else 0,
+                name=npc.name,
+            )
+            await asyncio.sleep(0.01)
+
+        if spawned_npcs:
+            logger.debug(
+                "Spawneados %d NPCs aleatorios para jugador en mapa %d pos (%d,%d)",
+                len(spawned_npcs),
+                map_id,
+                player_x,
+                player_y,
+            )
+
+        return len(spawned_npcs)

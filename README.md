@@ -126,8 +126,10 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - **server.py:** 685 → 194 líneas (-72% reducción) ✅
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
-- **NPCFactory:** 16 factory methods (14 NPCs) ✅ **NUEVO**
-- **Tests:** 990 tests pasando (100%) ✅
+- **NPCFactory:** 16 factory methods (14 NPCs) ✅
+- **Random Spawns Dinámicos:** Sistema de spawns aleatorios con límites por área ✅ **NUEVO**
+- **Sonidos de NPCs:** Sistema completo de sonidos para ataque, daño y muerte ✅ **NUEVO**
+- **Tests:** 1780 tests pasando (100%) ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ### Sistema de Validación de Packets
@@ -183,9 +185,11 @@ pyao-server/
 │   ├── player_service.py        # Gestión de jugadores
 │   ├── player_map_service.py    # Spawn y transiciones de mapa ✅ NUEVO
 │   ├── npc_service.py           # Gestión de NPCs
-│   ├── npc_factory.py           # Factory methods para crear NPCs ✅ NUEVO
+│   ├── npc_factory.py           # Factory methods para crear NPCs
 │   ├── npc_ai_service.py        # IA de NPCs hostiles
 │   ├── npc_respawn_service.py   # Respawn de NPCs
+│   ├── random_spawn_service.py  # Spawns aleatorios dinámicos ✅ NUEVO
+│   ├── npc_death_service.py     # Gestión de muerte de NPCs
 │   ├── combat_service.py        # Sistema de combate
 │   ├── commerce_service.py      # Sistema de comercio
 │   ├── spell_service.py         # Sistema de hechizos
@@ -693,8 +697,12 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ### Sistema de Juego
 - **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo
+  - ✅ **Random Spawns Dinámicos**: Spawns aleatorios con límites por área (multijugador-safe)
+  - ✅ **Sonidos de NPCs**: Sistema completo de sonidos (ataque, daño, muerte)
 - **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo
 - **[Sistema de Ítems](docs/ITEMS_SYSTEM.md)**: Uso de ítems, comportamiento actual y roadmap
+- **[Sistema de Magia](docs/MAGIC_SYSTEM.md)**: Hechizos y sistema de magia
+  - ✅ **Mimetismo**: Hechizo de transformación (cambiar apariencia temporalmente)
 - **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Efectos periódicos (hambre, sed, oro, meditación)
 
 ### Sistemas Completados ✅
@@ -709,6 +717,21 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
   - 263 transiciones extraídas del mapa 1 desde archivos .inf VB6
   - Detección automática y teletransporte al caminar sobre tiles de exit
   - Workaround para desbloquear tiles de exit en cliente
+- **Random Spawns Dinámicos**: Sistema de spawns aleatorios con límites por área ✅ **COMPLETADO**
+  - Spawnea NPCs cuando jugadores entran en áreas designadas
+  - Límite global por área (multijugador-safe)
+  - NPCs persisten hasta que mueren (sin despawn automático)
+  - Cooldowns de respawn configurables
+  - Verificación de tiles libres antes de spawn
+- **Sonidos de NPCs**: Sistema completo de sonidos ✅ **COMPLETADO**
+  - Sonidos de ataque (snd1) cuando NPC ataca
+  - Sonidos de daño (snd2) cuando NPC recibe daño
+  - Sonidos de muerte (snd3) cuando NPC muere
+  - Integrado con sistema de broadcast multijugador
+- **Hechizo Mimetismo**: Transformación temporal de apariencia ✅ **COMPLETADO**
+  - Cambia temporalmente el body_id y head_id del jugador
+  - Duración configurable (default: 5 minutos)
+  - Efecto visible para todos los jugadores en el mapa
 
 ### TODOs y Mejoras Futuras
 - **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: Mejoras de arquitectura pendientes

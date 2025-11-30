@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.loot_table_service import LootTableService
     from src.services.npc.npc_respawn_service import NPCRespawnService
+    from src.services.npc.random_spawn_service import RandomSpawnService
     from src.services.party_service import PartyService
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ class NPCDeathService:
         item_catalog: ItemCatalog | None = None,
         npc_respawn_service: NPCRespawnService | None = None,
         party_service: PartyService | None = None,
+        random_spawn_service: RandomSpawnService | None = None,
     ) -> None:
         """Inicializa el servicio de muerte de NPCs.
 
@@ -51,6 +53,7 @@ class NPCDeathService:
             item_catalog: Catálogo de items (opcional).
             npc_respawn_service: Servicio de respawn (opcional).
             party_service: Servicio de parties (opcional).
+            random_spawn_service: Servicio de spawns aleatorios (opcional).
         """
         self.map_manager = map_manager
         self.npc_repo = npc_repo
@@ -60,6 +63,7 @@ class NPCDeathService:
         self.item_catalog = item_catalog
         self.npc_respawn_service = npc_respawn_service
         self.party_service = party_service
+        self.random_spawn_service = random_spawn_service
 
     async def handle_npc_death(
         self,
@@ -107,6 +111,10 @@ class NPCDeathService:
 
         # Eliminar datos del NPC en Redis
         await self.npc_repo.remove_npc(npc.instance_id)
+
+        # Notificar a random_spawn_service si es un NPC random
+        if self.random_spawn_service:
+            await self.random_spawn_service.on_random_npc_death(npc.instance_id)
 
         # Programar respawn
         if self.npc_respawn_service:

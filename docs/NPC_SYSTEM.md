@@ -455,6 +455,8 @@ class LootService:
 6. **Extracción de NPCs desde Mapas** - 1,604 NPCs en 99 mapas desde archivos VB6
 7. **Sistema de Spawns** - Spawns fijos (spawn_points) y aleatorios (random_spawns)
 8. **Sistema de Mascotas** - Comando `/PET`, seguimiento automático, limpieza al desconectar
+9. **Random Spawns Dinámicos** - Sistema completo de spawns aleatorios con límites por área ✅ **NUEVO**
+10. **Sonidos de NPCs** - Sistema completo de sonidos (ataque, daño, muerte) ✅ **NUEVO**
 
 ### 🔄 En Progreso
 - **Tests** - 11 tests de movimiento y broadcast de NPCs
@@ -586,6 +588,58 @@ await message_sender.send_character_create(
 ```
 
 **Recomendación**: Empezar con **Opción 2** (más simple) y luego optimizar con **Opción 1** si es necesario.
+
+## 🔊 Sistema de Sonidos de NPCs ✅ COMPLETADO
+
+Los NPCs pueden reproducir sonidos en diferentes situaciones:
+
+### Sonidos Implementados
+
+| Campo | Descripción | Cuándo se Reproduce |
+|-------|-------------|---------------------|
+| `snd1` | Sonido de ataque | Cuando el NPC ataca a un jugador |
+| `snd2` | Sonido de daño | Cuando el NPC recibe daño |
+| `snd3` | Sonido de muerte | Cuando el NPC muere |
+
+### Configuración
+
+Los sonidos se configuran en el catálogo de NPCs (`data/npcs_complete.toml`):
+
+```toml
+[[npc]]
+id = 1
+nombre = "Goblin"
+# ...
+[appearance]
+sounds = [10, 11, 12]  # [snd1, snd2, snd3]
+```
+
+### Implementación
+
+1. **Ataque (snd1)**: Reproducido por `NPCService` cuando el NPC ataca
+2. **Daño (snd2)**: Reproducido por `AttackCommandHandler` cuando el NPC recibe daño
+3. **Muerte (snd3)**: Reproducido por `NPCDeathService` cuando el NPC muere
+
+**Protocolo:** Todos los sonidos usan el paquete `PLAY_WAVE` (Packet ID: 51)
+
+**Ejemplo:**
+```python
+# Cuando un NPC ataca
+if npc.snd1 > 0:
+    await broadcast_service.broadcast_play_wave(
+        map_id=npc.map_id, wave_id=npc.snd1, x=npc.x, y=npc.y
+    )
+```
+
+### NPCs con Sonidos
+
+Muchos NPCs del catálogo tienen sonidos configurados:
+- Goblin: Sonidos de gruñido y muerte
+- Lobo: Aullidos y sonidos de ataque
+- Araña: Sonidos de veneno y muerte
+- Y más...
+
+Ver `data/npcs_complete.toml` para la lista completa de NPCs con sonidos.
 
 ## 📚 Referencias
 

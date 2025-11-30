@@ -107,5 +107,5 @@ async def test_service_initializer_returns_dict(
 
         assert isinstance(services, dict)
         # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service,
-        # +1 door_service, +1 trade_service, +1 summon_service)
-        assert len(services) == 21
+        # +1 door_service, +1 trade_service, +1 summon_service, +1 random_spawn_service)
+        assert len(services) == 22

@@ -22,6 +22,7 @@ from src.services.npc.npc_ai_service import NPCAIService
 from src.services.npc.npc_death_service import NPCDeathService
 from src.services.npc.npc_respawn_service import NPCRespawnService
 from src.services.npc.npc_service import NPCService
+from src.services.npc.random_spawn_service import RandomSpawnService
 from src.services.npc.summon_service import SummonService
 from src.services.party_service import PartyService
 from src.services.player.spell_service import SpellService
@@ -47,7 +48,7 @@ class ServiceInitializer:
         self.repositories = repositories
         self.map_manager = map_manager
 
-    async def initialize_all(self) -> dict[str, Any]:  # noqa: PLR0914
+    async def initialize_all(self) -> dict[str, Any]:  # noqa: PLR0914, PLR0915
         """Crea e inicializa todos los servicios.
 
         Returns:
@@ -81,6 +82,11 @@ class ServiceInitializer:
         # Servicio de respawn de NPCs
         npc_respawn_service = NPCRespawnService(npc_service)
         logger.info("✓ Sistema de respawn de NPCs inicializado")
+
+        # Servicio de spawns aleatorios dinámicos
+        random_spawn_service = RandomSpawnService(npc_service, self.map_manager)
+        random_spawn_service.load_random_spawn_configs("data/map_npcs.toml")
+        logger.info("✓ Sistema de spawns aleatorios dinámicos inicializado")
 
         # Servicio de NPCs del mundo
         npc_world_manager = NPCWorldManager()
@@ -134,6 +140,7 @@ class ServiceInitializer:
             item_catalog,
             npc_respawn_service,
             party_service,  # Agregar party_service para distribución de experiencia
+            random_spawn_service,  # Para notificar muerte de NPCs random
         )
         logger.info("✓ Sistema de muerte de NPCs inicializado (con distribución de exp a party)")
 
@@ -203,6 +210,7 @@ class ServiceInitializer:
             self.repositories["account_repo"],
             self.map_manager,
             broadcast_service,
+            random_spawn_service,
         )
         logger.info("✓ Servicio de mapas de jugador inicializado")
 
@@ -218,6 +226,7 @@ class ServiceInitializer:
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
             "npc_respawn_service": npc_respawn_service,
+            "random_spawn_service": random_spawn_service,
             "npc_world_manager": npc_world_manager,
             "npc_death_service": npc_death_service,
             "loot_table_service": loot_table_service,

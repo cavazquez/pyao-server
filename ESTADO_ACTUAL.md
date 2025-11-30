@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-11-29  
 **Versión en pyproject.toml:** 0.9.1-alpha  
-**Versión real completada:** 0.9.1-alpha (Mejoras del Sistema de Clanes + Sistema de Pociones)
+**Versión real completada:** 0.9.2-alpha (Random Spawns Dinámicos + Sonidos de NPCs + Mimetismo)
 
 ---
 
@@ -80,6 +80,27 @@
   - Seguimiento automático de mascotas
   - Limpieza automática al desconectar jugador
 - ✅ Mejora en manejo de spawns ocupados
+
+### Versión 0.9.2-alpha - Random Spawns Dinámicos y Sonidos de NPCs ✅ COMPLETADO
+**Estado:** Sistema completo de spawns aleatorios y sonidos implementado
+- ✅ **Random Spawns Dinámicos**:
+  - Servicio `RandomSpawnService` para gestionar spawns aleatorios
+  - Spawnea NPCs cuando jugadores entran en áreas designadas
+  - Límite global por área (multijugador-safe)
+  - NPCs persisten hasta que mueren (sin despawn automático)
+  - Cooldowns de respawn configurables (default: 60 segundos)
+  - Verificación de tiles libres antes de spawn
+- ✅ **Sonidos de NPCs**:
+  - Sonidos de ataque (snd1) cuando NPC ataca
+  - Sonidos de daño (snd2) cuando NPC recibe daño
+  - Sonidos de muerte (snd3) cuando NPC muere
+  - Integrado con sistema de broadcast multijugador
+  - Soporte para múltiples NPCs con sonidos configurados
+- ✅ **Hechizo Mimetismo**:
+  - Transformación temporal de apariencia del jugador
+  - Cambia body_id y head_id temporalmente
+  - Duración configurable (default: 5 minutos)
+  - Efecto visible para todos los jugadores en el mapa
 
 ---
 
@@ -194,8 +215,8 @@
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual:** 0.9.1-alpha (completada) ✅
-- **Versión en pyproject.toml:** 0.9.1-alpha ✅
+- **Versión actual:** 0.9.2-alpha (completada) ✅
+- **Versión en pyproject.toml:** 0.9.1-alpha (pendiente actualizar)
 - **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
@@ -219,5 +240,5 @@
 ---
 
 **Última actualización:** 2025-11-29  
-**Estado:** ✅ Versión 0.9.1-alpha completada (Clanes + Pociones + NPCs)
+**Estado:** ✅ Versión 0.9.2-alpha completada (Random Spawns + Sonidos de NPCs + Mimetismo)
 
