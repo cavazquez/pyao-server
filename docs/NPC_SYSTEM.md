@@ -267,6 +267,64 @@ map_manager.spawn_npc(
 )
 ```
 
+### Sistema de Spawns ✅ IMPLEMENTADO
+
+Los NPCs se configuran en `data/map_npcs.toml` con dos tipos de spawns:
+
+#### 1. Spawn Points Fijos
+NPCs que aparecen en posiciones exactas cuando se carga el mapa:
+
+```toml
+[[map_npcs.1.spawn_points]]
+npc_id = 504
+x = 49
+y = 50
+direction = 3
+```
+
+- Se procesan durante la inicialización del servidor
+- Siempre aparecen en la misma posición
+- Se crean al iniciar el servidor
+
+#### 2. Random Spawns (Spawns Aleatorios)
+NPCs que aparecen dinámicamente en áreas definidas:
+
+```toml
+[[map_npcs.1.random_spawns]]
+npc_type = "hostile"
+count = 5
+area = {x1 = 70, y1 = 70, x2 = 90, y2 = 90}
+```
+
+- Se manejan dinámicamente cuando un jugador entra al mapa
+- No se procesan durante la inicialización
+- Se usan para generar NPCs aleatorios en zonas específicas
+- El servicio `NPCSpawnService` maneja estos spawns
+
+### Extracción de NPCs desde Mapas VB6 ✅ IMPLEMENTADO
+
+Se creó un sistema para extraer todos los NPCs desde los archivos de mapas originales del VB6:
+
+#### Herramientas de Extracción
+
+1. **`tools/extraction/extract_npcs_from_maps.py`**
+   - Extrae NPCs desde archivos `.Inf` del servidor VB6
+   - Lee todos los mapas (`Mapa*.Inf`) y detecta NPCs en tiles
+   - Genera `data/map_npcs.toml` con spawn_points
+   - Preserva spawns aleatorios existentes
+   - **Resultado**: 1,604 NPCs en 99 mapas
+
+2. **`tools/extraction/clean_duplicate_npc_spawns.py`**
+   - Limpia spawns duplicados en la misma posición
+   - Mantiene solo el primer NPC definido por tile
+   - Evita errores de tiles ocupados
+
+#### Estadísticas Actuales
+
+- **Total de NPCs spawneados**: 1,604 NPCs
+- **Mapas con NPCs**: 99 mapas
+- **NPCs únicos en catálogo**: 336 NPCs (147 hostiles, 189 amigables)
+
 ### Cuando un Jugador Entra al Mapa
 
 ```python
@@ -391,9 +449,12 @@ class LootService:
 ### ✅ Completado
 1. **NPCRepository** - Almacenar NPCs en Redis
 2. **NPCService** - Gestión de NPCs (spawn, despawn, move)
-3. **NPCCatalog** - Catálogo de NPCs desde `data/npcs.toml`
+3. **NPCCatalog** - Catálogo de NPCs desde `data/npcs.toml` (336 NPCs)
 4. **NPCMovementEffect** - IA básica de movimiento y persecución
 5. **MultiplayerBroadcastService** - Broadcast de movimiento a jugadores
+6. **Extracción de NPCs desde Mapas** - 1,604 NPCs en 99 mapas desde archivos VB6
+7. **Sistema de Spawns** - Spawns fijos (spawn_points) y aleatorios (random_spawns)
+8. **Sistema de Mascotas** - Comando `/PET`, seguimiento automático, limpieza al desconectar
 
 ### 🔄 En Progreso
 - **Tests** - 11 tests de movimiento y broadcast de NPCs

@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
-**Fecha:** 2025-01-31  
+**Fecha:** 2025-11-29  
 **Versión en pyproject.toml:** 0.9.1-alpha  
-**Versión real completada:** 0.9.1-alpha (Mejoras del Sistema de Clanes completado)
+**Versión real completada:** 0.9.1-alpha (Mejoras del Sistema de Clanes + Sistema de Pociones)
 
 ---
 
@@ -53,6 +53,33 @@
 - ✅ Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
 - ✅ Casos de error y validaciones cubiertos
 - ✅ Tests de notificaciones implementados
+
+### Versión 0.9.1-alpha - Sistema de Pociones ✅ COMPLETADO
+**Estado:** Sistema completo de pociones implementado
+- ✅ 6 tipos de pociones funcionando completamente:
+  - Poción Azul (ID 37): Restaura Mana (12-20 puntos)
+  - Poción Roja (ID 38): Restaura HP (30 puntos)
+  - Poción Verde (ID 39): Modifica Fuerza temporalmente
+  - Poción Amarilla (ID 36): Modifica Agilidad temporalmente
+  - Poción Violeta (ID 166): Cura envenenamiento
+  - Poción Negra (ID 645): Invisibilidad por 5 minutos
+- ✅ Modificadores temporales (Agilidad/Fuerza) con duración configurable
+- ✅ Restauración inmediata (HP/Mana) con valores aleatorios
+- ✅ Curación de estados (veneno)
+- ✅ Invisibilidad con broadcast multijugador (CHARACTER_REMOVE)
+- ✅ Integración completa con sistema de inventario
+- ✅ Consumo correcto de items (decremento de cantidad)
+
+### Versión 0.9.1-alpha - Mejoras de NPCs ✅ COMPLETADO
+**Estado:** Mejoras significativas en sistema de NPCs
+- ✅ Extracción de todos los NPCs desde mapas VB6 (1,604 NPCs en 99 mapas)
+- ✅ Scripts de extracción y limpieza de spawns duplicados
+- ✅ Corrección de procesamiento de random_spawns (se manejan dinámicamente)
+- ✅ Sistema de mascotas/invocación mejorado:
+  - Comando `/PET` completo (INFO, LIBERAR)
+  - Seguimiento automático de mascotas
+  - Limpieza automática al desconectar jugador
+- ✅ Mejora en manejo de spawns ocupados
 
 ---
 
@@ -167,13 +194,13 @@
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual:** 0.9.0-alpha (completada) ✅
-- **Versión en pyproject.toml:** 0.9.0-alpha ✅
+- **Versión actual:** 0.9.1-alpha (completada) ✅
+- **Versión en pyproject.toml:** 0.9.1-alpha ✅
 - **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
-- **Total:** 1765+ tests
-- **Pasando:** 1765+ (100%) ✅
+- **Total:** 1780+ tests
+- **Pasando:** 1780+ (100%) ✅
 - **Cobertura:** >45% (objetivo: 80%+)
 
 ### Calidad
@@ -191,6 +218,6 @@
 
 ---
 
-**Última actualización:** 2025-01-31  
-**Estado:** ✅ Versión 0.9.0-alpha completada y actualizada
+**Última actualización:** 2025-11-29  
+**Estado:** ✅ Versión 0.9.1-alpha completada (Clanes + Pociones + NPCs)
 
