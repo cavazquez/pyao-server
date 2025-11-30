@@ -164,8 +164,18 @@ class AttackCommandHandler(CommandHandler):
             )
             return CommandResult.ok({"dodged": True})
 
-        # Reproducir sonido de golpe
+        # Reproducir sonido de golpe (sonido del atacante)
         await self.message_sender.send_play_wave(SoundID.SWORD_HIT, target_x, target_y)
+
+        # Reproducir sonido de daño recibido del NPC (Snd2) si está disponible
+        if target_npc.snd2 > 0 and self.broadcast_service:
+            # Broadcast sonido a todos los jugadores en el mapa
+            await self.broadcast_service.broadcast_play_wave(
+                map_id=target_npc.map_id,
+                wave_id=target_npc.snd2,
+                x=target_npc.x,
+                y=target_npc.y,
+            )
 
         # Mostrar efecto visual
         if is_critical:

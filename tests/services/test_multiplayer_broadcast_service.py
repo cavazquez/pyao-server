@@ -16,7 +16,9 @@ def mock_map_manager() -> MagicMock:
 @pytest.fixture
 def mock_player_repo() -> MagicMock:
     """Crea un mock de PlayerRepository."""
-    return MagicMock()
+    repo = MagicMock()
+    repo.get_morphed_appearance = AsyncMock(return_value=None)
+    return repo
 
 
 @pytest.fixture

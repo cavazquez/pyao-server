@@ -57,6 +57,11 @@ class NPC:
     fx: int = 0  # FX ID al morir (one-shot)
     fx_loop: int = 0  # FX ID continuo (aura, loop infinito)
 
+    # Sonidos
+    snd1: int = 0  # Sonido de ataque (cuando el NPC ataca)
+    snd2: int = 0  # Sonido de daño recibido (cuando el NPC recibe daño)
+    snd3: int = 0  # Sonido de muerte (cuando el NPC muere)
+
     # Estados/efectos
     paralyzed_until: float = 0.0  # Timestamp hasta cuando está paralizado (0 = no paralizado)
     poisoned_until: float = 0.0  # Timestamp hasta cuando está envenenado (0 = no envenenado)

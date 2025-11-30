@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -95,6 +96,15 @@ class PlayerMapService:
             # Validar body (no puede ser 0)
             if char_body == 0:
                 char_body = 1
+
+        # Verificar si el jugador tiene apariencia morfeada activa
+        morphed = await self.player_repo.get_morphed_appearance(user_id)
+        if morphed:
+            morphed_until = morphed.get("morphed_until", 0.0)
+            if time.time() < morphed_until:
+                # Usar apariencia morfeada
+                char_body = int(morphed.get("morphed_body", char_body))
+                char_head = int(morphed.get("morphed_head", char_head))
 
         return PlayerVisualData(
             user_id=user_id,

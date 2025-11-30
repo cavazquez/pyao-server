@@ -107,6 +107,7 @@ class ServerInitializer:
             services["npc_service"],
             services["npc_ai_service"],
             services["stamina_service"],
+            repositories["account_repo"],
         )
         game_tick = await game_tick_init.initialize()
 

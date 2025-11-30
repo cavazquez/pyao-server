@@ -14,6 +14,7 @@ def mock_player_repo():
     repo = AsyncMock()
     repo.get_position.return_value = {"x": 50, "y": 50, "map": 1, "heading": 3}
     repo.set_position = AsyncMock()
+    repo.get_morphed_appearance = AsyncMock(return_value=None)
     return repo
 
 

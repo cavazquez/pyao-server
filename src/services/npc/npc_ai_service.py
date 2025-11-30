@@ -176,8 +176,16 @@ class NPCAIService:
             if message_sender:
                 await message_sender.send_npc_hit_user(damage)
 
-                # Enviar sonido de golpe
-                await message_sender.send_play_wave(SoundID.SWORD_HIT, npc.x, npc.y)
+                # Enviar sonido de ataque del NPC (Snd1) si está disponible
+                if npc.snd1 > 0:
+                    # Broadcast sonido a todos los jugadores cercanos
+                    if self.broadcast_service:
+                        await self.broadcast_service.broadcast_play_wave(
+                            map_id=npc.map_id, wave_id=npc.snd1, x=npc.x, y=npc.y
+                        )
+                else:
+                    # Fallback: sonido genérico
+                    await message_sender.send_play_wave(SoundID.SWORD_HIT, npc.x, npc.y)
 
                 # Enviar efecto visual de sangre sobre el jugador
                 # El efecto se muestra en el char_index del jugador

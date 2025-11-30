@@ -88,6 +88,12 @@ class NPCDeathService:
         # Dar experiencia al jugador o distribuir a party
         await self._give_experience(killer_user_id, experience, message_sender, npc)
 
+        # Reproducir sonido de muerte del NPC (Snd3) si está disponible
+        if npc.snd3 > 0:
+            await self.broadcast_service.broadcast_play_wave(
+                map_id=npc.map_id, wave_id=npc.snd3, x=npc.x, y=npc.y
+            )
+
         # Remover NPC de escena antes de dropear (libera el tile ocupado)
         await self._remove_npc_from_game(npc)
 

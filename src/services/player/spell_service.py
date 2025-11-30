@@ -48,11 +48,30 @@ DUMBNESS_DURATION_SECONDS = 30.0
 # Duración de invisibilidad por defecto (segundos)
 INVISIBILITY_DURATION_SECONDS = 60.0
 
+# Duración de mimetismo por defecto (segundos)
+# En VB6 el mimetismo dura aproximadamente 5 minutos
+MORPH_DURATION_SECONDS = 300.0
+
+# ID del hechizo Mimetismo
+SPELL_ID_MIMICRY = 42
+
 # Porcentaje de HP al revivir (50%)
 REVIVE_HP_PERCENTAGE = 0.5
 
 # ID del hechizo Aturdir
 SPELL_ID_STUN = 31
+
+# IDs de hechizos de hambre
+SPELL_ID_HUNGER_ATTACK = 12
+SPELL_ID_IGOR_HUNGER = 13
+
+# IDs de hechizos especiales
+SPELL_ID_DRAIN = 45
+SPELL_ID_WARP_PET = 46
+
+# Reducción de hambre para hechizos (en puntos)
+HUNGER_ATTACK_REDUCTION = 50  # Ataque de Hambre: reduce 50 puntos
+IGOR_HUNGER_REDUCTION = 100  # Terrible hambre de Igôr: reduce 100 puntos
 
 # Duración de buffs/debuffs de atributos (segundos)
 # En VB6: buffs duran 1200 ticks, debuffs duran 700 ticks
@@ -396,6 +415,37 @@ class SpellService:
                     user_id,
                     spell_name,
                 )
+
+            # Manejar hechizo Drenar para NPCs (transfiere HP del target al caster)
+            if spell_id == SPELL_ID_DRAIN and not npc_died and total_amount > 0:
+                # Obtener stats del caster
+                caster_stats = await self.player_repo.get_stats(user_id)
+                if caster_stats:
+                    current_caster_hp = caster_stats.get("min_hp", 0)
+                    max_caster_hp = caster_stats.get("max_hp", 100)
+
+                    # Transferir HP drenado al caster (no exceder max_hp)
+                    new_caster_hp = min(max_caster_hp, current_caster_hp + total_amount)
+                    caster_stats["min_hp"] = new_caster_hp
+
+                    # Guardar stats del caster
+                    await self.player_repo.set_stats(user_id=user_id, **caster_stats)
+                    await message_sender.send_update_user_stats(**caster_stats)
+
+                    logger.info(
+                        "user_id %d drenó %d HP de NPC %s (HP caster: %d/%d)",
+                        user_id,
+                        total_amount,
+                        target_npc.name,
+                        new_caster_hp,
+                        max_caster_hp,
+                    )
+
+                    if new_caster_hp > current_caster_hp:
+                        hp_gained = new_caster_hp - current_caster_hp
+                        await message_sender.send_console_msg(
+                            f"Has drenado {hp_gained} HP del objetivo."
+                        )
 
         elif target_player_id:
             # Target es un jugador
@@ -822,6 +872,269 @@ class SpellService:
                             strength=attributes.get("strength", 0),
                             dexterity=attributes.get("agility", 0),
                         )
+
+            # Aplicar efectos de hambre si el hechizo causa hambre
+            if spell_id in {SPELL_ID_HUNGER_ATTACK, SPELL_ID_IGOR_HUNGER}:
+                # Obtener hambre actual del target
+                hunger_thirst = await self.player_repo.get_hunger_thirst(target_player_id)
+                if hunger_thirst:
+                    current_hunger = hunger_thirst["min_hunger"]
+                    max_hunger = hunger_thirst["max_hunger"]
+
+                    # Determinar reducción según el hechizo
+                    if spell_id == SPELL_ID_HUNGER_ATTACK:
+                        hunger_reduction = HUNGER_ATTACK_REDUCTION
+                    else:  # SPELL_ID_IGOR_HUNGER
+                        hunger_reduction = IGOR_HUNGER_REDUCTION
+
+                    # Reducir hambre
+                    new_hunger = max(0, current_hunger - hunger_reduction)
+                    hunger_flag = 1 if new_hunger <= 0 else hunger_thirst.get("hunger_flag", 0)
+
+                    # Actualizar hambre
+                    await self.player_repo.set_hunger_thirst(
+                        user_id=target_player_id,
+                        max_water=hunger_thirst["max_water"],
+                        min_water=hunger_thirst["min_water"],
+                        max_hunger=max_hunger,
+                        min_hunger=new_hunger,
+                        thirst_flag=hunger_thirst.get("thirst_flag", 0),
+                        hunger_flag=hunger_flag,
+                        water_counter=hunger_thirst.get("water_counter", 0),
+                        hunger_counter=hunger_thirst.get("hunger_counter", 0),
+                    )
+
+                    # Enviar actualización al target
+                    target_message_sender = (
+                        message_sender
+                        if target_player_id == user_id
+                        else self.map_manager.get_player_message_sender(target_player_id)
+                    )
+                    if target_message_sender:
+                        await target_message_sender.send_update_hunger_and_thirst(
+                            max_water=hunger_thirst["max_water"],
+                            min_water=hunger_thirst["min_water"],
+                            max_hunger=max_hunger,
+                            min_hunger=new_hunger,
+                        )
+
+                    logger.info(
+                        "Jugador user_id %d hambre reducida en %d (de %d a %d) por hechizo %s",
+                        target_player_id,
+                        hunger_reduction,
+                        current_hunger,
+                        new_hunger,
+                        spell_name,
+                    )
+
+            # Manejar hechizo Drenar (transfiere HP del target al caster)
+            if (
+                spell_id == SPELL_ID_DRAIN
+                and min_damage > 0
+                and max_damage > 0
+                and total_amount > 0
+            ):
+                # El daño ya fue aplicado arriba, ahora transferimos HP al caster
+                # Obtener stats del caster
+                caster_stats = await self.player_repo.get_stats(user_id)
+                if caster_stats:
+                    current_caster_hp = caster_stats.get("min_hp", 0)
+                    max_caster_hp = caster_stats.get("max_hp", 100)
+
+                    # Transferir HP drenado al caster (no exceder max_hp)
+                    new_caster_hp = min(max_caster_hp, current_caster_hp + total_amount)
+                    caster_stats["min_hp"] = new_caster_hp
+
+                    # Guardar stats del caster
+                    await self.player_repo.set_stats(user_id=user_id, **caster_stats)
+                    await message_sender.send_update_user_stats(**caster_stats)
+
+                    logger.info(
+                        "user_id %d drenó %d HP de user_id %d (HP caster: %d/%d)",
+                        user_id,
+                        total_amount,
+                        target_player_id,
+                        new_caster_hp,
+                        max_caster_hp,
+                    )
+
+                    if new_caster_hp > current_caster_hp:
+                        hp_gained = new_caster_hp - current_caster_hp
+                        await message_sender.send_console_msg(
+                            f"Has drenado {hp_gained} HP del objetivo."
+                        )
+
+            # Manejar hechizo Invocar Mascota (teletransporta mascota al caster)
+            if spell_data.get("warps_pet", False):
+                if self.npc_service and self.summon_service:
+                    # Obtener posición del caster
+                    caster_position = await self.player_repo.get_position(user_id)
+                    if caster_position:
+                        map_id = caster_position["map"]
+                        caster_x = caster_position["x"]
+                        caster_y = caster_position["y"]
+
+                        # Obtener mascotas del jugador (lista de instance_ids)
+                        player_pets = await self.summon_service.get_player_pets(user_id)
+
+                        if player_pets and self.npc_repo:
+                            # Obtener el NPC desde el instance_id
+                            pet_instance_id = player_pets[0]
+                            pet_npc = await self.npc_repo.get_npc(pet_instance_id)
+
+                            if pet_npc:
+                                # Guardar posición anterior
+                                old_map_id = pet_npc.map_id
+                                old_x = pet_npc.x
+                                old_y = pet_npc.y
+
+                                # Si está en el mismo mapa, usar move_npc
+                                if old_map_id == map_id:
+                                    # Mover NPC en el mismo mapa
+                                    await self.npc_service.move_npc(
+                                        pet_npc, caster_x, caster_y, pet_npc.heading
+                                    )
+                                else:
+                                    # Cambio de mapa: remover del mapa anterior y agregar al nuevo
+                                    self.map_manager.remove_npc(old_map_id, pet_npc.instance_id)
+
+                                    # Actualizar posición en Redis
+                                    await self.npc_repo.update_npc_position(
+                                        pet_npc.instance_id, caster_x, caster_y, pet_npc.heading
+                                    )
+
+                                    # Actualizar posición en memoria
+                                    pet_npc.map_id = map_id
+                                    pet_npc.x = caster_x
+                                    pet_npc.y = caster_y
+
+                                    # Agregar al nuevo mapa
+                                    self.map_manager.add_npc(map_id, pet_npc)
+
+                                    # Broadcast CHARACTER_CREATE en nuevo mapa
+                                    if self.broadcast_service:
+                                        await self.broadcast_service.broadcast_character_create(
+                                            map_id=map_id,
+                                            char_index=pet_npc.char_index,
+                                            body=pet_npc.body_id,
+                                            head=pet_npc.head_id,
+                                            heading=pet_npc.heading,
+                                            x=caster_x,
+                                            y=caster_y,
+                                            name=pet_npc.name,
+                                        )
+
+                                logger.info(
+                                    (
+                                        "Mascota %s (%s) teletransportada de mapa %d (%d,%d) "
+                                        "a mapa %d (%d,%d) para user_id %d"
+                                    ),
+                                    pet_npc.name,
+                                    pet_npc.instance_id,
+                                    old_map_id,
+                                    old_x,
+                                    old_y,
+                                    map_id,
+                                    caster_x,
+                                    caster_y,
+                                    user_id,
+                                )
+
+                                await message_sender.send_console_msg(
+                                    f"Has invocado a {pet_npc.name}."
+                                )
+                            else:
+                                await message_sender.send_console_msg(
+                                    "No se pudo encontrar la mascota."
+                                )
+                        else:
+                            await message_sender.send_console_msg("No tienes mascotas invocadas.")
+                else:
+                    await message_sender.send_console_msg(
+                        "El sistema de invocación no está disponible."
+                    )
+
+            # Manejar hechizo Mimetismo (cambiar apariencia del caster a la del target)
+            if spell_data.get("morphs", False) or spell_id == SPELL_ID_MIMICRY:
+                # Solo funciona sobre jugadores (no NPCs)
+                if target_player_id and self.account_repo:
+                    # Obtener apariencia del target
+                    target_account_data = await self.account_repo.get_account_by_user_id(
+                        target_player_id
+                    )
+                    if target_account_data:
+                        target_body = int(target_account_data.get("char_race", 1))
+                        target_head = int(target_account_data.get("char_head", 1))
+
+                        # Validar body (no puede ser 0)
+                        if target_body == 0:
+                            target_body = 1
+
+                        # Establecer apariencia morfeada
+                        morphed_until = time.time() + MORPH_DURATION_SECONDS
+                        await self.player_repo.set_morphed_appearance(
+                            user_id, target_body, target_head, morphed_until
+                        )
+
+                        # Obtener posición y heading del caster
+                        caster_position = await self.player_repo.get_position(user_id)
+                        if caster_position:
+                            map_id = caster_position["map"]
+                            caster_x = caster_position["x"]
+                            caster_y = caster_position["y"]
+                            caster_heading = caster_position.get("heading", 3)
+
+                            # Obtener username del caster
+                            (self.map_manager.get_player_username(user_id) or f"Player{user_id}")
+
+                            # Enviar CHARACTER_CHANGE al caster
+                            await message_sender.send_character_change(
+                                char_index=user_id,
+                                body=target_body,
+                                head=target_head,
+                                heading=caster_heading,
+                            )
+
+                            # Broadcast CHARACTER_CHANGE a otros jugadores en el mapa
+                            other_senders = self.map_manager.get_all_message_senders_in_map(
+                                map_id, exclude_user_id=user_id
+                            )
+                            for sender in other_senders:
+                                await sender.send_character_change(
+                                    char_index=user_id,
+                                    body=target_body,
+                                    head=target_head,
+                                    heading=caster_heading,
+                                )
+
+                            logger.debug(
+                                "Mimetismo de user_id %d notificado a %d jugadores en mapa %d",
+                                user_id,
+                                len(other_senders),
+                                map_id,
+                            )
+
+                            logger.info(
+                                (
+                                    "user_id %d morfeado a apariencia de user_id %d "
+                                    "(body=%d head=%d) hasta %.2f"
+                                ),
+                                user_id,
+                                target_player_id,
+                                target_body,
+                                target_head,
+                                morphed_until,
+                            )
+                        else:
+                            await message_sender.send_console_msg("No se pudo obtener tu posición.")
+                    else:
+                        await message_sender.send_console_msg(
+                            "No se pudo obtener la apariencia del objetivo."
+                        )
+                else:
+                    await message_sender.send_console_msg(
+                        "El mimetismo solo funciona sobre otros jugadores."
+                    )
 
         # Enviar mensajes según el tipo de target
         caster_msg = spell_data.get("caster_msg", "Has lanzado ")

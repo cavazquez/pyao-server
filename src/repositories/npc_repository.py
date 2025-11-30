@@ -55,6 +55,9 @@ class NPCRepository:
         aggro_range: int = 8,
         summoned_by_user_id: int = 0,
         summoned_until: float = 0.0,
+        snd1: int = 0,
+        snd2: int = 0,
+        snd3: int = 0,
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -86,6 +89,9 @@ class NPCRepository:
             aggro_range: Rango de detección/agresión en tiles.
             summoned_by_user_id: ID del jugador que invocó al NPC (0 = no invocado).
             summoned_until: Timestamp hasta cuando existe (0 = permanente/no invocado).
+            snd1: Sonido de ataque (cuando el NPC ataca).
+            snd2: Sonido de daño recibido (cuando el NPC recibe daño).
+            snd3: Sonido de muerte (cuando el NPC muere).
 
         Returns:
             Instancia de NPC creada.
@@ -121,6 +127,9 @@ class NPCRepository:
             aggro_range=aggro_range,
             summoned_by_user_id=summoned_by_user_id,
             summoned_until=summoned_until,
+            snd1=snd1,
+            snd2=snd2,
+            snd3=snd3,
         )
 
         # Guardar en Redis
@@ -157,6 +166,9 @@ class NPCRepository:
             "poisoned_by_user_id": "0",
             "summoned_by_user_id": str(summoned_by_user_id),
             "summoned_until": str(summoned_until),
+            "snd1": str(snd1),
+            "snd2": str(snd2),
+            "snd3": str(snd3),
         }
 
         await self.redis.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
@@ -224,6 +236,9 @@ class NPCRepository:
             poisoned_by_user_id=int(result.get("poisoned_by_user_id", "0")),
             summoned_by_user_id=int(result.get("summoned_by_user_id", "0")),
             summoned_until=float(result.get("summoned_until", "0.0")),
+            snd1=int(result.get("snd1", "0")),
+            snd2=int(result.get("snd2", "0")),
+            snd3=int(result.get("snd3", "0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:

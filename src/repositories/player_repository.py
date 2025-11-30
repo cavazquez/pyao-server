@@ -571,6 +571,70 @@ class PlayerRepository:
             "Estado de estupidez actualizado para user_id %d: hasta %.2f", user_id, dumb_until
         )
 
+    async def get_morphed_appearance(self, user_id: int) -> dict[str, int | float] | None:
+        """Obtiene la apariencia morfeada del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Diccionario con morphed_body, morphed_head, morphed_until o None si no está morfeado.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        result = await self.redis.redis.hmget(  # type: ignore[misc]
+            key, ["morphed_body", "morphed_head", "morphed_until"]
+        )
+        if not result or not result[0] or not result[1] or not result[2]:
+            return None
+        try:
+            return {
+                "morphed_body": int(result[0]),
+                "morphed_head": int(result[1]),
+                "morphed_until": float(result[2]),
+            }
+        except (ValueError, TypeError):
+            return None
+
+    async def set_morphed_appearance(
+        self, user_id: int, morphed_body: int, morphed_head: int, morphed_until: float
+    ) -> None:
+        """Establece la apariencia morfeada del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            morphed_body: Body ID del target.
+            morphed_head: Head ID del target.
+            morphed_until: Timestamp hasta cuando está morfeado (0.0 = no morfeado).
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(  # type: ignore[misc]
+            key,
+            mapping={
+                "morphed_body": str(morphed_body),
+                "morphed_head": str(morphed_head),
+                "morphed_until": str(morphed_until),
+            },
+        )
+        logger.debug(
+            "Apariencia morfeada establecida para user_id %d: body=%d head=%d hasta %.2f",
+            user_id,
+            morphed_body,
+            morphed_head,
+            morphed_until,
+        )
+
+    async def clear_morphed_appearance(self, user_id: int) -> None:
+        """Elimina la apariencia morfeada del jugador.
+
+        Args:
+            user_id: ID del usuario.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hdel(  # type: ignore[misc]
+            key, "morphed_body", "morphed_head", "morphed_until"
+        )
+        logger.debug("Apariencia morfeada eliminada para user_id %d", user_id)
+
     async def get_invisible_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está invisible.
 

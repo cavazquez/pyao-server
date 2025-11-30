@@ -1,6 +1,7 @@
 """Servicio para broadcast de mensajes a múltiples jugadores."""
 
 import logging
+import time
 from typing import TYPE_CHECKING
 
 # Constante para identificar NPCs
@@ -295,6 +296,15 @@ class MultiplayerBroadcastService:
                 if char_body == 0:
                     char_body = 1
 
+        # Verificar si el jugador tiene apariencia morfeada activa
+        morphed = await self.player_repo.get_morphed_appearance(char_index)
+        if morphed:
+            morphed_until = morphed.get("morphed_until", 0.0)
+            if time.time() < morphed_until:
+                # Usar apariencia morfeada
+                char_body = int(morphed.get("morphed_body", char_body))
+                char_head = int(morphed.get("morphed_head", char_head))
+
         return (char_body, char_head)
 
     async def broadcast_character_create(
@@ -440,6 +450,38 @@ class MultiplayerBroadcastService:
                 x,
                 y,
                 grh_index,
+                map_id,
+            )
+
+        return notified
+
+    async def broadcast_play_wave(self, map_id: int, wave_id: int, x: int = 0, y: int = 0) -> int:
+        """Broadcast de PLAY_WAVE a todos los jugadores en un mapa.
+
+        Args:
+            map_id: ID del mapa.
+            wave_id: ID del sonido a reproducir.
+            x: Posición X del sonido (0 para sonido global).
+            y: Posición Y del sonido (0 para sonido global).
+
+        Returns:
+            Número de jugadores notificados.
+        """
+        # Obtener todos los jugadores en el mapa
+        all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+
+        notified = 0
+        for sender in all_senders:
+            await sender.send_play_wave(wave_id, x, y)
+            notified += 1
+
+        if notified > 0:
+            logger.debug(
+                "Broadcast PLAY_WAVE: wave=%d pos=(%d,%d) - %d jugadores notificados en mapa %d",
+                wave_id,
+                x,
+                y,
+                notified,
                 map_id,
             )
 

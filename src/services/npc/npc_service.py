@@ -228,6 +228,23 @@ class NPCService:
         char_index = self._next_char_index
         self._next_char_index += 1
 
+        # Extraer sonidos desde appearance.sounds (si está disponible)
+        snd1, snd2, snd3 = 0, 0, 0
+        appearance = npc_data.get("appearance")
+        if isinstance(appearance, dict):
+            sounds = appearance.get("sounds")
+            if isinstance(sounds, list) and len(sounds) > 0:
+                # sounds = [Snd1, Snd2, Snd3] según convención
+                snd1 = cast("int", sounds[0]) if len(sounds) > 0 and sounds[0] else 0
+                snd2 = cast("int", sounds[1]) if len(sounds) > 1 and sounds[1] else 0
+                # Snd3 es el tercer elemento (índice 2)
+                snd3_index = 2
+                snd3 = (
+                    cast("int", sounds[snd3_index])
+                    if len(sounds) > snd3_index and sounds[snd3_index]
+                    else 0
+                )
+
         # Crear instancia en Redis
         npc = await self.npc_repository.create_npc_instance(
             npc_id=npc_id,
@@ -255,6 +272,9 @@ class NPCService:
             attack_damage=cast("int", npc_data.get("ataque", 10)),
             attack_cooldown=cast("float", npc_data.get("cooldown_ataque", 3.0)),
             aggro_range=cast("int", npc_data.get("rango_agresion", 8)),
+            snd1=snd1,
+            snd2=snd2,
+            snd3=snd3,
         )
 
         # Agregar al MapManager

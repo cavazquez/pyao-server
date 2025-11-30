@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.effects.effect_attribute_modifiers import AttributeModifiersEffect
 from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
+from src.effects.effect_morph_expiry import MorphExpiryEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_npc_poison import NPCPoisonEffect
 from src.effects.effect_pet_follow import PetFollowEffect
@@ -19,6 +20,7 @@ from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
+    from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.repositories.server_repository import ServerRepository
     from src.services.npc.npc_ai_service import NPCAIService
@@ -39,6 +41,7 @@ class GameTickInitializer:
         npc_service: NPCService,
         npc_ai_service: NPCAIService,
         stamina_service: StaminaService,
+        account_repo: AccountRepository | None = None,
     ) -> None:
         """Inicializa el inicializador de Game Tick.
 
@@ -49,6 +52,7 @@ class GameTickInitializer:
             npc_service: Servicio de NPCs.
             npc_ai_service: Servicio de IA de NPCs.
             stamina_service: Servicio de stamina.
+            account_repo: Repositorio de cuentas (opcional, necesario para mimetismo).
         """
         self.player_repo = player_repo
         self.server_repo = server_repo
@@ -56,6 +60,7 @@ class GameTickInitializer:
         self.npc_service = npc_service
         self.npc_ai_service = npc_ai_service
         self.stamina_service = stamina_service
+        self.account_repo = account_repo
 
     async def initialize(self) -> GameTick:
         """Crea e inicializa el sistema de Game Tick con sus efectos.
@@ -134,3 +139,11 @@ class GameTickInitializer:
         # Efecto de seguimiento de mascotas (siempre habilitado)
         game_tick.add_effect(PetFollowEffect(self.npc_service, interval_seconds=2.0))
         logger.info("✓ Efecto de seguimiento de mascotas habilitado")
+
+        # Efecto de expiración de mimetismo (siempre habilitado)
+        game_tick.add_effect(
+            MorphExpiryEffect(
+                self.player_repo, self.map_manager, self.account_repo, interval_seconds=5.0
+            )
+        )
+        logger.info("✓ Efecto de expiración de mimetismo habilitado")
