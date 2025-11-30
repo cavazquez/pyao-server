@@ -1,11 +1,16 @@
 """Tests para SpellService."""
 
+import time
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from src.models.npc import NPC
-from src.services.player.spell_service import SpellService
+from src.services.player.spell_service import (
+    SPELL_ID_PARALYZE,
+    SPELL_TYPE_STATUS,
+    SpellService,
+)
 
 
 @pytest.fixture
@@ -504,3 +509,427 @@ class TestCastSpell:
         assert result is True
         # No debe enviar FX si fx_grh es 0
         mock_message_sender.send_create_fx_at_position.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_dumb_until(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test lanzar hechizo cuando el jugador está aturdido."""
+        # Setup
+        spell_data = {"mana_cost": 10, "name": "Test Spell"}
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        future_time = time.time() + 10.0
+        mock_player_repo.get_dumb_until.return_value = future_time
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=50,
+            target_y=50,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is False
+        mock_message_sender.send_console_msg.assert_called_once()
+        assert "aturdido" in mock_message_sender.send_console_msg.call_args[0][0].lower()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_heal_npc(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_npc_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+        sample_npc: NPC,
+    ) -> None:
+        """Test lanzar hechizo de curación sobre NPC."""
+        # Setup
+        sample_npc.hp = 50  # HP bajo
+        spell_data = {
+            "name": "Curación",
+            "mana_cost": 10,
+            "min_damage": 20,
+            "max_damage": 30,
+            "heals_hp": True,
+            "caster_msg": "Has curado ",
+            "fx_grh": 0,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats.return_value = {
+            "min_mana": 50,
+            "attr_int": 20,
+        }
+        mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=50,
+            target_y=50,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        assert sample_npc.hp > 50  # Debe curar
+        mock_npc_repo.update_npc_hp.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_auto_cast(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test lanzar hechizo con auto-cast (target = Usuario)."""
+        # Setup - hechizo que permite auto-cast (target=1)
+        spell_data = {
+            "name": "Curación Propia",
+            "mana_cost": 10,
+            "min_damage": 20,
+            "max_damage": 30,
+            "target": 1,  # Usuario
+            "heals_hp": True,
+            "self_msg": "Te has curado",
+            "fx_grh": 0,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats.return_value = {
+            "min_mana": 50,
+            "min_hp": 50,
+            "max_hp": 100,
+            "attr_int": 20,
+        }
+        mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        mock_map_manager.get_npcs_in_map.return_value = []  # Sin NPCs
+        mock_map_manager.get_players_in_map.return_value = []  # Sin otros jugadores
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=50,
+            target_y=50,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_message_sender.send_console_msg.assert_called()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_on_player(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test lanzar hechizo sobre otro jugador."""
+        # Setup
+        spell_data = {
+            "name": "Bola de Fuego",
+            "mana_cost": 10,
+            "min_damage": 10,
+            "max_damage": 20,
+            "caster_msg": "Has lanzado ",
+            "fx_grh": 100,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats.return_value = {
+            "min_mana": 50,
+            "attr_int": 20,
+        }
+        mock_player_repo.get_position = AsyncMock(
+            side_effect=[
+                {"map": 1, "x": 50, "y": 50, "heading": 3},  # Caster position
+                {"map": 1, "x": 51, "y": 51, "heading": 3},  # Target position
+            ]
+        )
+        mock_map_manager.get_npcs_in_map.return_value = []  # Sin NPCs
+        mock_map_manager.get_players_in_map.return_value = [1, 2]  # Jugadores en el mapa
+        mock_map_manager.get_player_username = MagicMock(return_value="TargetPlayer")
+
+        # Target player stats
+        async def get_stats_side_effect(user_id: int) -> dict[str, int] | None:
+            if user_id == 1:
+                return {"min_mana": 50, "attr_int": 20}
+            return {"min_hp": 80, "max_hp": 100}
+
+        mock_player_repo.get_stats = AsyncMock(side_effect=get_stats_side_effect)
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=51,
+            target_y=51,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_player_repo.set_stats.assert_called()  # Debe actualizar stats del target
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_revive(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test lanzar hechizo de resurrección."""
+        # Setup
+        spell_data = {
+            "name": "Resurrección",
+            "mana_cost": 10,
+            "revives": True,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats = AsyncMock(
+            side_effect=lambda uid: {
+                "min_mana": 50,
+                "attr_int": 20,
+                "min_hp": 0 if uid == 2 else 50,
+                "max_hp": 100,
+            }
+        )
+
+        async def get_position_side_effect(user_id: int) -> dict[str, int] | None:
+            if user_id == 1:
+                return {"map": 1, "x": 50, "y": 50, "heading": 3}
+            if user_id == 2:
+                return {"map": 1, "x": 51, "y": 51, "heading": 3}
+            return None
+
+        mock_player_repo.get_position = AsyncMock(side_effect=get_position_side_effect)
+        mock_map_manager.get_npcs_in_map.return_value = []
+        mock_map_manager.get_players_in_map.return_value = [1, 2]
+        mock_map_manager.get_player_username = MagicMock(return_value="Muerto")
+        mock_map_manager.get_player_message_sender = MagicMock(return_value=mock_message_sender)
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=51,
+            target_y=51,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_message_sender.send_console_msg.assert_any_call("Has resucitado a Muerto.")
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_revive_not_dead(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test intentar resucitar a un jugador que no está muerto."""
+        # Setup
+        spell_data = {
+            "name": "Resurrección",
+            "mana_cost": 10,
+            "revives": True,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats = AsyncMock(
+            return_value={
+                "min_mana": 50,
+                "attr_int": 20,
+                "min_hp": 50,  # Target tiene HP
+                "max_hp": 100,
+            }
+        )
+
+        async def get_position_side_effect(user_id: int) -> dict[str, int] | None:
+            if user_id == 1:
+                return {"map": 1, "x": 50, "y": 50, "heading": 3}
+            if user_id == 2:
+                return {"map": 1, "x": 51, "y": 51, "heading": 3}
+            return None
+
+        mock_player_repo.get_position = AsyncMock(side_effect=get_position_side_effect)
+        mock_map_manager.get_npcs_in_map.return_value = []
+        mock_map_manager.get_players_in_map.return_value = [1, 2]
+        mock_map_manager.get_player_username = MagicMock(return_value="Vivo")
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=51,
+            target_y=51,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is False
+        mock_message_sender.send_console_msg.assert_any_call("Vivo no está muerto.")
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_poison_npc(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_npc_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+        sample_npc: NPC,
+    ) -> None:
+        """Test lanzar hechizo que envenena a un NPC."""
+        # Setup
+        spell_data = {
+            "name": "Veneno",
+            "mana_cost": 10,
+            "min_damage": 5,
+            "max_damage": 10,
+            "poisons": True,
+            "caster_msg": "Has envenenado ",
+            "fx_grh": 0,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats.return_value = {
+            "min_mana": 50,
+            "attr_int": 20,
+        }
+        mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
+        mock_npc_repo.update_npc_poisoned_until = AsyncMock()
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=50,
+            target_y=50,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_npc_repo.update_npc_poisoned_until.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_paralyze_npc(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_npc_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+        sample_npc: NPC,
+    ) -> None:
+        """Test lanzar hechizo que paraliza a un NPC."""
+        # Setup
+        spell_data = {
+            "name": "Paralizar",
+            "mana_cost": 10,
+            "min_damage": 0,
+            "max_damage": 0,
+            "type": SPELL_TYPE_STATUS,
+            "caster_msg": "Has paralizado ",
+            "fx_grh": 0,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats.return_value = {
+            "min_mana": 50,
+            "attr_int": 20,
+        }
+        mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
+        mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
+        mock_npc_repo.update_npc_paralyzed_until = AsyncMock()
+
+        # Execute - usar spell_id de paralizar
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=SPELL_ID_PARALYZE,
+            target_x=50,
+            target_y=50,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_npc_repo.update_npc_paralyzed_until.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_cast_spell_heal_player(
+        self,
+        spell_service: SpellService,
+        mock_spell_catalog: MagicMock,
+        mock_player_repo: MagicMock,
+        mock_map_manager: MagicMock,
+        mock_message_sender: MagicMock,
+    ) -> None:
+        """Test lanzar hechizo de curación sobre jugador."""
+        # Setup
+        spell_data = {
+            "name": "Curación",
+            "mana_cost": 10,
+            "min_damage": 20,
+            "max_damage": 30,
+            "heals_hp": True,
+            "caster_msg": "Has curado ",
+            "fx_grh": 0,
+            "loops": 1,
+        }
+        mock_spell_catalog.get_spell_data.return_value = spell_data
+        mock_player_repo.get_stats = AsyncMock(
+            side_effect=lambda uid: {
+                "min_mana": 50,
+                "attr_int": 20,
+                "min_hp": 50 if uid == 1 else 30,
+                "max_hp": 100,
+            }
+        )
+        mock_player_repo.get_position = AsyncMock(
+            side_effect=[
+                {"map": 1, "x": 50, "y": 50, "heading": 3},
+                {"map": 1, "x": 51, "y": 51, "heading": 3},
+            ]
+        )
+        mock_map_manager.get_npcs_in_map.return_value = []
+        mock_map_manager.get_players_in_map.return_value = [1, 2]
+        mock_map_manager.get_player_username = MagicMock(return_value="TargetPlayer")
+        mock_map_manager.get_player_message_sender = MagicMock(return_value=mock_message_sender)
+
+        # Execute
+        result = await spell_service.cast_spell(
+            user_id=1,
+            spell_id=1,
+            target_x=51,
+            target_y=51,
+            message_sender=mock_message_sender,
+        )
+
+        # Assert
+        assert result is True
+        mock_player_repo.set_stats.assert_called()  # Debe actualizar HP del target
