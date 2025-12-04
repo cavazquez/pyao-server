@@ -211,3 +211,6 @@ map_data/
 map_cache/
 
 certs/
+
+# Mapas binarios (generados desde map_data)
+map_binary/

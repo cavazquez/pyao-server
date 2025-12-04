@@ -11,12 +11,20 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+try:
+    import msgpack
+    MSGPACK_AVAILABLE = True
+except ImportError:
+    msgpack = None  # type: ignore[assignment]
+    MSGPACK_AVAILABLE = False
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
 logger = logging.getLogger(__name__)
 
 MAP_RESOURCES_CACHE_VERSION = 2
+MAP_BINARY_DIR = Path("map_binary")
 
 
 class MapResourcesService:
@@ -57,8 +65,19 @@ class MapResourcesService:
         self._doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self.map_manager = map_manager
 
-        # Intentar cargar desde caché en disco primero
-        if not self._try_load_from_cache():
+        # Orden de carga: binario > caché JSON > archivos JSON raw
+        loaded = False
+
+        # 1. Intentar cargar desde formato binario (más rápido)
+        if MSGPACK_AVAILABLE and not loaded:
+            loaded = self._try_load_from_binary()
+
+        # 2. Intentar cargar desde caché JSON
+        if not loaded:
+            loaded = self._try_load_from_cache()
+
+        # 3. Cargar desde archivos JSON raw
+        if not loaded:
             self._load_all_maps()
             if self.resources:
                 self._save_cache()
@@ -190,6 +209,114 @@ class MapResourcesService:
 
         except Exception:
             logger.exception("Error cargando recursos de mapas")
+
+    def _try_load_from_binary(self) -> bool:  # noqa: PLR0914
+        """Intenta cargar recursos de mapas desde caché binario (MessagePack).
+
+        Returns:
+            True si el caché binario existe y fue cargado correctamente.
+        """
+        if not MSGPACK_AVAILABLE:
+            return False
+
+        binary_file = MAP_BINARY_DIR / "maps.msgpack"
+        metadata_file = MAP_BINARY_DIR / "metadata.json"
+
+        if not binary_file.exists() or not metadata_file.exists():
+            return False
+
+        start_time = time.time()
+
+        try:
+            # Verificar que metadata existe
+            with metadata_file.open() as f:
+                _ = json.load(f)  # Solo verificamos que sea JSON válido
+
+            # Verificar que el binario no esté desactualizado
+            source_mtime = self._get_source_mtime()
+            binary_mtime = binary_file.stat().st_mtime
+
+            if source_mtime > binary_mtime:
+                logger.info("Caché binario desactualizado, regenerando...")
+                return False
+
+            # Cargar datos binarios
+            with binary_file.open("rb") as f:
+                data = msgpack.unpack(f)
+
+            # Procesar cada mapa
+            blocked_data = data.get("blocked", {})
+            water_data = data.get("water", {})
+            trees_data = data.get("trees", {})
+            mines_data = data.get("mines", {})
+            anvils_data = data.get("anvils", {})
+            forges_data = data.get("forges", {})
+            signs_data = data.get("signs", {})
+            doors_data = data.get("doors", {})
+
+            # Obtener todos los map_ids
+            all_map_ids: set[str] = set()
+            for d in [blocked_data, water_data, trees_data, mines_data,
+                      anvils_data, forges_data, signs_data, doors_data]:
+                all_map_ids.update(d.keys())
+
+            for map_id_str in all_map_ids:
+                map_key = f"map_{map_id_str}"
+
+                # Convertir listas a sets de tuplas
+                blocked = {tuple(coord) for coord in blocked_data.get(map_id_str, [])}
+                water = {tuple(coord) for coord in water_data.get(map_id_str, [])}
+                trees = {tuple(coord) for coord in trees_data.get(map_id_str, [])}
+                mines = {tuple(coord) for coord in mines_data.get(map_id_str, [])}
+                anvils = {tuple(coord) for coord in anvils_data.get(map_id_str, [])}
+                forges = {tuple(coord) for coord in forges_data.get(map_id_str, [])}
+
+                self.resources[map_key] = {
+                    "blocked": blocked,
+                    "water": water,
+                    "trees": trees,
+                    "mines": mines,
+                    "anvils": anvils,
+                    "forges": forges,
+                }
+
+                # Cargar signs (formato: [[x, y, grh], ...])
+                signs_list = signs_data.get(map_id_str, [])
+                if signs_list:
+                    self.signs[map_key] = {(s[0], s[1]): s[2] for s in signs_list}
+
+                # Cargar doors (formato: [[x, y, grh], ...])
+                doors_list = doors_data.get(map_id_str, [])
+                if doors_list:
+                    self.doors[map_key] = {(d[0], d[1]): d[2] for d in doors_list}
+
+            elapsed_time = time.time() - start_time
+            logger.info(
+                "✓ Recursos de mapas cargados desde binario: %d mapas en %.3f segundos",
+                len(self.resources),
+                elapsed_time,
+            )
+            return True  # noqa: TRY300
+
+        except (OSError, msgpack.UnpackException, KeyError, TypeError):
+            logger.warning("Error cargando desde binario, usando fallback")
+            return False
+
+    def _get_source_mtime(self) -> float:
+        """Obtiene el mtime más reciente de los archivos fuente JSON.
+
+        Returns:
+            El mtime más reciente de los archivos fuente, o 0 si no hay archivos.
+        """
+        newest_mtime: float = 0
+        for pattern in ["blocked_*.json", "objects_*.json"]:
+            for f in self.maps_dir.glob(pattern):
+                try:
+                    mtime = f.stat().st_mtime
+                    newest_mtime = max(newest_mtime, mtime)
+                except OSError:
+                    continue
+        return newest_mtime
 
     def _try_load_from_cache(self) -> bool:
         """Intenta cargar recursos de mapas desde el caché en disco.
