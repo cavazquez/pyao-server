@@ -39,16 +39,19 @@ Este mapa tiene 172 salidas pero 0 entradas. Esto sugiere:
 2. Las transiciones de entrada fueron eliminadas accidentalmente
 3. Es una zona de desarrollo/pruebas
 
+### Uso Potencial
+
+Estos mapas huérfanos son ideales para **eventos y batallas PvP**:
+- Arenas de combate
+- Eventos especiales de GMs
+- Torneos
+- Zonas de guerra entre clanes
+
+Al no tener transiciones de entrada, los jugadores solo pueden acceder mediante teleport de GM, lo que permite control total sobre quién participa.
+
 ### Recomendaciones
 
-1. **No eliminar aún** - Mantener por compatibilidad
-2. **Agregar marcador** en metadatos: `orphan = true`
-3. **Investigar mapa 280** - Podría ser importante
-
-## Acciones Tomadas
-
-- [x] Documentación generada
-- [ ] Marcar como huérfanos en metadatos
-- [ ] Investigar mapa 280 en el VB6 original
+1. **No eliminar** - Útiles para eventos y batallas
+2. **Mapa 280** - Candidato ideal como arena principal (172 salidas para dispersar jugadores post-batalla)
 
 
