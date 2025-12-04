@@ -242,12 +242,12 @@ class ServerPacketID(IntEnum):
     # SHOW_DENOUNCES = 95
     # RECORD_LIST = 96
     # RECORD_DETAILS = 97
-    # SHOW_GUILD_ALIGN = 98
+    SHOW_GUILD_ALIGN = 98  # Habilitar botón de clanes
     SHOW_PARTY_FORM = 99  # Habilitar botón de party en el cliente
     UPDATE_STRENGTH_AND_DEXTERITY = 100
     UPDATE_STRENGTH = 101
     UPDATE_DEXTERITY = 102
-    # ADD_SLOTS = 103
+    ADD_SLOTS = 103
     MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
     # STOP_WORKING = 105
     # CANCEL_OFFER_ITEM = 106

@@ -105,6 +105,13 @@ class LoginCommandHandler(CommandHandler):
             return CommandResult.error("Autenticación fallida")
 
         user_id, user_class = auth_result
+
+        # Verificar si el usuario ya está conectado
+        if self._is_user_already_connected(username):
+            logger.warning("Usuario %s (ID: %d) ya está conectado", username, user_id)
+            await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
+            return CommandResult.error("Usuario ya conectado")
+
         logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Configurar sesión
@@ -167,6 +174,22 @@ class LoginCommandHandler(CommandHandler):
             task.add_done_callback(lambda _: None)  # Evitar warning de task no awaited
             return False
         return True
+
+    def _is_user_already_connected(self, username: str) -> bool:
+        """Verifica si el usuario ya tiene una sesión activa.
+
+        Args:
+            username: Nombre de usuario.
+
+        Returns:
+            True si el usuario ya está conectado, False en caso contrario.
+        """
+        if not self.map_manager:
+            return False
+
+        # Verificar si el username ya está en algún mapa
+        existing_user_id = self.map_manager.find_player_by_username(username)
+        return existing_user_id is not None
 
     async def _authenticate_user(self, username: str, password: str) -> tuple[int, int] | None:
         """Autentica al usuario.
@@ -275,9 +298,8 @@ class LoginCommandHandler(CommandHandler):
         1. LOGGED (ID: 0)
         2. USER_CHAR_INDEX_IN_SERVER (ID: 28)
         3. CHANGE_MAP (ID: 21)
-        4. ATTRIBUTES (ID: 50)
+        4. UPDATE_STRENGTH_AND_DEXTERITY (ID: 102)
         5. UPDATE_USER_STATS (ID: 45)
-        6. UPDATE_HUNGER_AND_THIRST (ID: 60)
 
         Args:
             user_id: ID del usuario.
@@ -286,30 +308,57 @@ class LoginCommandHandler(CommandHandler):
         Returns:
             Diccionario con la posición del jugador.
         """
+        logger.info("[LOGIN-PACKETS] user_id=%d Iniciando envío de paquetes de login", user_id)
+
         # Enviar paquete Logged con la clase del personaje
+        logger.info(
+            "[LOGIN-PACKETS] user_id=%d Enviando LOGGED (ID=0) class=%d", user_id, user_class
+        )
         await self.message_sender.send_logged(user_class)
 
         # Enviar índice del personaje en el servidor
+        logger.info(
+            "[LOGIN-PACKETS] user_id=%d Enviando USER_CHAR_INDEX_IN_SERVER (ID=28)", user_id
+        )
         await self.message_sender.send_user_char_index_in_server(user_id)
 
         # Crear servicio de jugador
         player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
 
         # Obtener/crear y enviar posición (envía CHANGE_MAP)
+        logger.info("[LOGIN-PACKETS] user_id=%d Enviando CHANGE_MAP (ID=21)", user_id)
         position = await player_service.send_position(user_id)
+        logger.info(
+            "[LOGIN-PACKETS] user_id=%d Posición: map=%d x=%d y=%d",
+            user_id,
+            position["map"],
+            position["x"],
+            position["y"],
+        )
 
-        # Crear atributos por defecto si no existen y enviar update inicial
+        # Crear atributos por defecto si no existen
         attributes = await player_service.send_attributes(user_id)
+        logger.info("[LOGIN-PACKETS] user_id=%d Atributos obtenidos: %s", user_id, attributes)
 
         if attributes:
+            str_val = attributes.get("strength", 0)
+            agi_val = attributes.get("agility", 0)
+            logger.info(
+                "[LOGIN-PACKETS] user_id=%d Enviando UPDATE_STR_DEX (ID=100) str=%d agi=%d",
+                user_id,
+                str_val,
+                agi_val,
+            )
             await self.message_sender.send_update_strength_and_dexterity(
-                strength=attributes.get("strength", 0),
-                dexterity=attributes.get("agility", 0),
+                strength=str_val,
+                dexterity=agi_val,
             )
 
         # Obtener/crear y enviar stats
+        logger.info("[LOGIN-PACKETS] user_id=%d Enviando UPDATE_USER_STATS (ID=45)", user_id)
         await player_service.send_stats(user_id)
 
+        logger.info("[LOGIN-PACKETS] user_id=%d Paquetes de login enviados correctamente", user_id)
         return position
 
     async def _initialize_player_data(self, user_id: int) -> None:
@@ -322,9 +371,8 @@ class LoginCommandHandler(CommandHandler):
         await self.player_repo.set_meditating(user_id, is_meditating=False)
         logger.debug("Estado de meditación reseteado para user_id %d al hacer login", user_id)
 
-        # Enviar stats iniciales (incluyendo experiencia)
+        # Enviar hambre/sed (stats ya se enviaron en _send_login_packets)
         player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
-        await player_service.send_stats(user_id)
         await player_service.send_hunger_thirst(user_id)
 
     async def _send_spellbook(self, user_id: int) -> None:
@@ -433,20 +481,22 @@ class LoginCommandHandler(CommandHandler):
         Args:
             user_id: ID del usuario.
         """
+        logger.info("[LOGIN-FINALIZE] user_id=%d Iniciando finalización de login", user_id)
+
         # Enviar inventario
+        logger.info("[LOGIN-FINALIZE] user_id=%d Enviando inventario", user_id)
         player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
         await player_service.send_inventory(user_id, self.equipment_repo)
 
         # Habilitar botón de party en el cliente (después del spawn completo)
-        logger.info("Enviando SHOW_PARTY_FORM para habilitar botón GRUPO (user_id: %d)", user_id)
-        await self.message_sender.send_show_party_form()
-        logger.info("SHOW_PARTY_FORM enviado exitosamente (user_id: %d)", user_id)
+        # DESHABILITADO: El cliente Godot no tiene handler para este paquete
 
         # NOTA: El envío de CLAN_DETAILS (packet 80) está deshabilitado hasta que el cliente
         # Godot implemente el handler para procesar GuildDetails.
         # Ver: docs/CLAN_BUTTON_ENABLING.md para instrucciones de cómo habilitarlo.
 
         # Enviar MOTD (Mensaje del Día)
+        logger.info("[LOGIN-FINALIZE] user_id=%d Enviando MOTD", user_id)
         if self._motd_handler is None:
             self._motd_handler = MotdCommandHandler(
                 server_repo=self.server_repo,
@@ -455,3 +505,5 @@ class LoginCommandHandler(CommandHandler):
 
         motd_command = MotdCommand()
         await self._motd_handler.handle(motd_command)
+
+        logger.info("[LOGIN-FINALIZE] user_id=%d Login finalizado correctamente", user_id)

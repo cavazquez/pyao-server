@@ -132,7 +132,12 @@ class SessionMessageSender:
         el manejo de este packet para habilitar el botón "GRUPO" en la UI.
         """
         response = bytes([ServerPacketID.SHOW_PARTY_FORM])
-        logger.info("[%s] Enviando SHOW_PARTY_FORM (packet 99)", self.connection.address)
+        logger.info(
+            "[%s] Enviando SHOW_PARTY_FORM (packet_id=%d, bytes=%s)",
+            self.connection.address,
+            ServerPacketID.SHOW_PARTY_FORM,
+            response.hex(),
+        )
         await self.connection.send(response)
 
     async def send_clan_details(self, clan: Clan) -> None:
