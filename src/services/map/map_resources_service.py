@@ -76,11 +76,14 @@ class MapResourcesService:
         if not loaded:
             loaded = self._try_load_from_cache()
 
-        # 3. Cargar desde archivos JSON raw
+        # 3. Cargar desde archivos JSON raw y generar binario para próxima vez
         if not loaded:
             self._load_all_maps()
             if self.resources:
                 self._save_cache()
+                # Generar binario automáticamente para acelerar próximas cargas
+                if MSGPACK_AVAILABLE:
+                    self._generate_binary_cache()
             else:
                 msg = (
                     "MapResourcesService: no se encontraron recursos en %s; "
@@ -317,6 +320,33 @@ class MapResourcesService:
                 except OSError:
                     continue
         return newest_mtime
+
+    def _generate_binary_cache(self) -> None:
+        """Genera el caché binario de mapas para acelerar cargas futuras."""
+        try:
+            from tools.compression.map_binary import convert_json_to_binary  # noqa: PLC0415
+
+            logger.info("Generando caché binario de mapas (esto solo ocurre una vez)...")
+            start_time = time.time()
+
+            success = convert_json_to_binary(
+                map_data_dir=self.maps_dir,
+                map_binary_dir=MAP_BINARY_DIR,
+            )
+
+            if success:
+                elapsed = time.time() - start_time
+                logger.info(
+                    "✓ Caché binario generado en %.2f segundos. "
+                    "Próximas cargas serán ~6x más rápidas.",
+                    elapsed,
+                )
+            else:
+                logger.warning("No se pudo generar caché binario")
+        except ImportError:
+            logger.debug("tools.compression.map_binary no disponible")
+        except OSError:
+            logger.warning("Error generando caché binario", exc_info=True)
 
     def _try_load_from_cache(self) -> bool:
         """Intenta cargar recursos de mapas desde el caché en disco.
