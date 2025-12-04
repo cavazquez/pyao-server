@@ -25,6 +25,7 @@ from src.services.npc.npc_service import NPCService
 from src.services.npc.random_spawn_service import RandomSpawnService
 from src.services.npc.summon_service import SummonService
 from src.services.party_service import PartyService
+from src.services.player.player_death_service import PlayerDeathService
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
 from src.services.trade_service import TradeService
@@ -85,7 +86,7 @@ class ServiceInitializer:
 
         # Servicio de spawns aleatorios dinámicos
         random_spawn_service = RandomSpawnService(npc_service, self.map_manager)
-        random_spawn_service.load_random_spawn_configs("data/map_npcs.toml")
+        random_spawn_service.load_random_spawn_configs("data/world/map_npcs.toml")
         logger.info("✓ Sistema de spawns aleatorios dinámicos inicializado")
 
         # Servicio de NPCs del mundo
@@ -182,12 +183,24 @@ class ServiceInitializer:
             self.repositories["npc_repo"],
             self.repositories["equipment_repo"],
             self.repositories["inventory_repo"],
+            item_catalog,  # ItemCatalog para stats de armas/armaduras
         )
         logger.info("✓ Sistema de combate inicializado")
 
         # Servicio de pathfinding
         pathfinding_service = PathfindingService(self.map_manager)
         logger.info("✓ Servicio de pathfinding inicializado")
+
+        # Servicio de muerte de jugadores
+        player_death_service = PlayerDeathService(
+            map_manager=self.map_manager,
+            player_repo=self.repositories["player_repo"],
+            broadcast_service=broadcast_service,
+            inventory_repo=self.repositories["inventory_repo"],
+            item_catalog=item_catalog,
+            account_repo=self.repositories["account_repo"],
+        )
+        logger.info("✓ Servicio de muerte de jugadores inicializado")
 
         # Servicio de IA de NPCs
         npc_ai_service = NPCAIService(
@@ -196,7 +209,8 @@ class ServiceInitializer:
             self.repositories["player_repo"],
             combat_service,
             broadcast_service,
-            pathfinding_service,  # Agregar pathfinding
+            pathfinding_service,
+            player_death_service,
         )
         logger.info("✓ Servicio de IA de NPCs inicializado (con pathfinding A*)")
 
@@ -229,6 +243,7 @@ class ServiceInitializer:
             "random_spawn_service": random_spawn_service,
             "npc_world_manager": npc_world_manager,
             "npc_death_service": npc_death_service,
+            "player_death_service": player_death_service,
             "loot_table_service": loot_table_service,
             "summon_service": summon_service,
             "spell_service": spell_service,

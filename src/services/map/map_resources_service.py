@@ -1085,9 +1085,9 @@ class MapResourcesService:
         """Carga puertas desde el archivo de configuración manual.
 
         Las puertas no están en los archivos .map del servidor VB6,
-        por lo que se definen manualmente en data/map_doors.toml
+        por lo que se definen manualmente en data/world/map_doors.toml
         """
-        doors_config_path = Path(__file__).parent.parent.parent.parent / "data/map_doors.toml"
+        doors_config_path = Path(__file__).parent.parent.parent.parent / "data/world/map_doors.toml"
 
         if not doors_config_path.exists():
             logger.info("No se encontró archivo de configuración de puertas: %s", doors_config_path)

@@ -1,0 +1,3880 @@
+# NPCs de Argentum Online - npcs_complete
+# Generado automáticamente desde NPCs.dat
+# Total: 336 NPCs
+
+[npcs_complete]
+
+[[npcs_complete.npcs]]
+id = 34
+name = "Cullighan"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Usted sabe que no hay persona noble o respetable en estas tierras que no tenga su propia vivienda. ¡acérquese y sea dueño de una de las exclusivas casas de Ullathorpe. ¡Será admirado por toda la población!"
+appearance = { head = 33, body = 240, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 54, quantity = 1 }, { slot = 2, item_id = 65, quantity = 1 }, { slot = 3, item_id = 69, quantity = 1 }, { slot = 4, item_id = 73, quantity = 1 }] }
+
+[[npcs_complete.npcs]]
+id = 35
+name = "Moraday"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Ha descubierto que la ciudad de Nix es la más hermosa de todo Argentum, verdad? ¡Pues qué mejor que ser un terrateniente de este paraíso! ¡Acércate que haremos negocios!"
+appearance = { head = 35, body = 239, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 87, quantity = 1 }, { slot = 2, item_id = 91, quantity = 1 }, { slot = 3, item_id = 95, quantity = 1 }, { slot = 4, item_id = 99, quantity = 1 }, { slot = 5, item_id = 103, quantity = 1 }, { slot = 6, item_id = 107, quantity = 1 }, { slot = 7, item_id = 111, quantity = 1 }, { slot = 8, item_id = 115, quantity = 1 }, { slot = 9, item_id = 119, quantity = 1 }] }
+
+[[npcs_complete.npcs]]
+id = 52
+name = "Rantarisk"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "De lejos pude ver vuestro blazón, seguro busca una de las moradas más lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza ¡Venga y hagamos negocios!"
+appearance = { head = 32, body = 241, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 266, quantity = 1 }, { slot = 2, item_id = 270, quantity = 1 }, { slot = 3, item_id = 274, quantity = 1 }, { slot = 4, item_id = 278, quantity = 1 }, { slot = 5, item_id = 282, quantity = 1 }, { slot = 6, item_id = 286, quantity = 1 }, { slot = 7, item_id = 290, quantity = 1 }, { slot = 8, item_id = 294, quantity = 1 }, { slot = 9, item_id = 298, quantity = 1 }, { slot = 10, item_id = 323, quantity = 1 }, { slot = 11, item_id = 327, quantity = 1 }, { slot = 12, item_id = 331, quantity = 1 }, { slot = 13, item_id = 335, quantity = 1 }, { slot = 14, item_id = 339, quantity = 1 }, { slot = 15, item_id = 343, quantity = 1 }, { slot = 16, item_id = 347, quantity = 1 }, { slot = 17, item_id = 351, quantity = 1 }, { slot = 18, item_id = 355, quantity = 1 }] }
+
+[[npcs_complete.npcs]]
+id = 62
+name = "Guldorf"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si está buscando la paz y la tranquilidad en estas tierras ha llegado al lugar indicado... adquiera una de nuestras exclusivas residencias, y cambie su vida para siempre."
+appearance = { head = 36, body = 234, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 420, quantity = 1 }, { slot = 2, item_id = 424, quantity = 1 }, { slot = 3, item_id = 428, quantity = 1 }, { slot = 4, item_id = 432, quantity = 1 }, { slot = 5, item_id = 436, quantity = 1 }, { slot = 6, item_id = 440, quantity = 1 }] }
+
+[[npcs_complete.npcs]]
+id = 101
+name = "Vendedor de propiedades."
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "En estas tierras demoníacas están las mejores residencias para los miembros de la Legión Oscura... Si no eres legionario puedes también vivir acá, ¡pero os aseguro que los augura un infierno! jajaja!"
+appearance = { head = 34, body = 170, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 583, quantity = 1 }, { slot = 2, item_id = 587, quantity = 1 }, { slot = 3, item_id = 591, quantity = 1 }, { slot = 4, item_id = 595, quantity = 1 }, { slot = 5, item_id = 599, quantity = 1 }, { slot = 6, item_id = 603, quantity = 1 }, { slot = 7, item_id = 607, quantity = 1 }, { slot = 8, item_id = 611, quantity = 1 }] }
+
+[[npcs_complete.npcs]]
+id = 5
+name = "Sacerdote"
+category = "NPCS RESUCITADORES"
+npc_type = 1
+tags = ["pacifico"]
+description = "¡Hola, hijo mío! Soy el Sacerdote de estas tierras. Si quieres que te resucite escribe /RESUCITAR, o haz doble click sobre mí."
+appearance = { head = 3, body = 49, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 119
+name = "Sacerdote"
+category = "NPCS VARIOS"
+npc_type = 9
+tags = ["pacifico"]
+description = "¡Hola, hijo mío! Soy el sacerdote de estas tierras. Si eres newbie te podré resucitar, sólo necesitas tipear /RESUCITAR o hacer doble click sobre mi cabeza."
+appearance = { head = 3, body = 49, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 72
+name = "Tancredo de Hauteville, soberano de Banderbill"
+category = "NPCS VARIOS"
+npc_type = 5
+tags = ["pacifico"]
+description = "Saludos ciudadano, soy Tancredo de Hauteville, nuevo soberano de Banderbill. Mi deber es mantener el nuevo orden del Imperio. Si deseas unirte a mis filas y ayudarme di /ENLISTAR."
+appearance = { head = 510, body = 409, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 98
+name = "Demonio Legionario"
+category = "NPCS VARIOS"
+npc_type = 5
+tags = ["pacifico"]
+description = "Si deseas unirte a la Legión Oscura escribe /ENLISTAR"
+appearance = { head = 0, body = 405, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 60
+name = "O"
+category = "NPCS ENTRENADORES"
+npc_type = 3
+tags = ["pacifico"]
+description = "¡Hola amigo! Soy el Maestro de armas de la Milicia de Banderbill, si deseas que traiga una criatura sólo debes pedirmelo. (Escribe /ENTRENAR)"
+appearance = { head = 6, body = 57, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 108
+name = "O"
+category = "NPCS ENTRENADORES"
+npc_type = 3
+tags = ["pacifico"]
+description = "¡Hola amigo! Escribe /ENTRENAR para divertirte con estas almas malvadas que hemos domado para tu diversión en estos festejos."
+appearance = { head = 6, body = 57, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 16
+name = "Centinela"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 540, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 24
+name = "Banquero"
+category = "NPCS BANQUEROS"
+npc_type = 4
+tags = ["pacifico"]
+description = "Hola, bienvenido a la cadena de finanzas Goliath. Somos la cadena más grande en Argentum, contamos con bancos en las ciudades más importantes."
+appearance = { head = 503, body = 201, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 104
+name = "Timbero"
+category = "NPCS VARIOS"
+npc_type = 7
+tags = ["pacifico"]
+description = "Hola joven! Si deseas apostar escribe /APOSTAR X"
+appearance = { head = 9, body = 47, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 14
+name = "Lilith"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola, tengo las mejores Pociones de la Alquimia."
+appearance = { head = 77, body = 200, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 11 }
+inventory = { items = [{ slot = 1, item_id = 36, quantity = 1000 }, { slot = 2, item_id = 37, quantity = 1000 }, { slot = 3, item_id = 38, quantity = 1000 }, { slot = 4, item_id = 39, quantity = 1000 }, { slot = 5, item_id = 166, quantity = 1000 }, { slot = 6, item_id = 645, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 33
+name = "Leñador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola muchacho!, si deseas vender o comprar madera escribe /COMERCIAR."
+appearance = { head = 4, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 14 }
+inventory = { items = [{ slot = 1, item_id = 127, quantity = 1000 }, { slot = 2, item_id = 1005, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 44
+name = "Carpintero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola muchacho!, bienvenido a mi humilde Carpintería."
+appearance = { head = 2, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 20 }
+inventory = { items = [{ slot = 1, item_id = 163, quantity = 1000 }, { slot = 2, item_id = 167, quantity = 1000 }, { slot = 3, item_id = 168, quantity = 1000 }, { slot = 4, item_id = 198, quantity = 1000 }, { slot = 5, item_id = 480, quantity = 10000 }] }
+
+[[npcs_complete.npcs]]
+id = 41
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido al gremio de pescadores!"
+appearance = { head = 2, body = 3, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 138, quantity = 1000 }, { slot = 2, item_id = 139, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 58
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido al gremio de pescadores!"
+appearance = { head = 101, body = 3, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 138, quantity = 1000 }, { slot = 2, item_id = 139, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 48
+name = "Minero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tengo los mejores utensillos para mineros de todo Argentum."
+appearance = { head = 2, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 23 }
+inventory = { items = [{ slot = 1, item_id = 187, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 80
+name = "Mercader"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡¡Hola buen amigo, compro y vendo todo tipo de mercancías!!"
+appearance = { head = 2, body = 3, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1000 }
+inventory = { items = [{ slot = 1, item_id = 534, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 9
+name = "Ralph"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, pequeño aventurero, tengo aquí unas mercaderías para saciar tu hambre y sed!."
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 42
+name = "Antogne"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola aventurero! Si estais hambriento habeis venido al lugar apropiador, tengo todo tipo de frutas."
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 22, quantity = 1000 }, { slot = 4, item_id = 754, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 43, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 114
+name = "SR"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a la Sastrería Real."
+appearance = { head = 171, body = 174, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 675, quantity = 1000 }, { slot = 2, item_id = 516, quantity = 1000 }, { slot = 3, item_id = 517, quantity = 1000 }, { slot = 4, item_id = 372, quantity = 1000 }, { slot = 5, item_id = 521, quantity = 1000 }, { slot = 6, item_id = 679, quantity = 1000 }, { slot = 7, item_id = 520, quantity = 1000 }, { slot = 8, item_id = 680, quantity = 1000 }, { slot = 9, item_id = 629, quantity = 1000 }, { slot = 10, item_id = 687, quantity = 1000 }, { slot = 11, item_id = 691, quantity = 1000 }, { slot = 12, item_id = 693, quantity = 1000 }, { slot = 13, item_id = 1038, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 159
+name = "SR"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a la Sastrería Real."
+appearance = { head = 309, body = 175, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 676, quantity = 1000 }, { slot = 2, item_id = 549, quantity = 1000 }, { slot = 3, item_id = 1039, quantity = 1000 }, { slot = 4, item_id = 492, quantity = 1000 }, { slot = 5, item_id = 682, quantity = 1000 }, { slot = 6, item_id = 1040, quantity = 1000 }, { slot = 7, item_id = 681, quantity = 1000 }, { slot = 8, item_id = 688, quantity = 1000 }, { slot = 9, item_id = 694, quantity = 1000 }, { slot = 10, item_id = 1038, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 115
+name = "SC"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
+appearance = { head = 0, body = 69, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 677, quantity = 1000 }, { slot = 2, item_id = 509, quantity = 1000 }, { slot = 3, item_id = 518, quantity = 1000 }, { slot = 4, item_id = 523, quantity = 1000 }, { slot = 5, item_id = 369, quantity = 1000 }, { slot = 6, item_id = 634, quantity = 1000 }, { slot = 7, item_id = 684, quantity = 1000 }, { slot = 8, item_id = 635, quantity = 1000 }, { slot = 9, item_id = 683, quantity = 1000 }, { slot = 10, item_id = 689, quantity = 1000 }, { slot = 11, item_id = 701, quantity = 1000 }, { slot = 12, item_id = 1037, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 160
+name = "SC"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
+appearance = { head = 318, body = 177, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 678, quantity = 1000 }, { slot = 2, item_id = 558, quantity = 1000 }, { slot = 3, item_id = 1041, quantity = 1000 }, { slot = 4, item_id = 379, quantity = 1000 }, { slot = 5, item_id = 686, quantity = 1000 }, { slot = 6, item_id = 1042, quantity = 1000 }, { slot = 7, item_id = 685, quantity = 1000 }, { slot = 8, item_id = 690, quantity = 1000 }, { slot = 9, item_id = 695, quantity = 1000 }, { slot = 10, item_id = 1037, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 120
+name = "Ireth"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido amigo, vendo ropajes para MUJERES HUMANAS."
+appearance = { head = 71, body = 254, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 879, quantity = 1000 }, { slot = 2, item_id = 880, quantity = 1000 }, { slot = 3, item_id = 884, quantity = 1000 }, { slot = 4, item_id = 885, quantity = 1000 }, { slot = 5, item_id = 886, quantity = 1000 }, { slot = 6, item_id = 891, quantity = 1000 }, { slot = 7, item_id = 892, quantity = 1000 }, { slot = 8, item_id = 893, quantity = 1000 }, { slot = 9, item_id = 894, quantity = 1000 }, { slot = 10, item_id = 896, quantity = 1000 }, { slot = 11, item_id = 899, quantity = 1000 }, { slot = 12, item_id = 900, quantity = 1000 }, { slot = 13, item_id = 901, quantity = 1000 }, { slot = 14, item_id = 902, quantity = 1000 }, { slot = 15, item_id = 904, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 121
+name = "Isaac"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Buscas ropas para HOMBRES HUMANOS? Entonces has hecho bien en acudir a mí."
+appearance = { head = 7, body = 240, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 882, quantity = 1000 }, { slot = 2, item_id = 887, quantity = 1000 }, { slot = 3, item_id = 888, quantity = 1000 }, { slot = 4, item_id = 889, quantity = 1000 }, { slot = 5, item_id = 890, quantity = 1000 }, { slot = 6, item_id = 897, quantity = 1000 }, { slot = 7, item_id = 903, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 122
+name = "Nelvi"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Poseo una gran cantidad de ropajes para los astutos GNOMOS, ¿Deseas algo en particular?"
+appearance = { head = 403, body = 294, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 908, quantity = 1000 }, { slot = 2, item_id = 910, quantity = 1000 }, { slot = 3, item_id = 911, quantity = 1000 }, { slot = 4, item_id = 912, quantity = 1000 }, { slot = 5, item_id = 913, quantity = 1000 }, { slot = 6, item_id = 915, quantity = 1000 }, { slot = 7, item_id = 916, quantity = 1000 }, { slot = 8, item_id = 917, quantity = 1000 }, { slot = 9, item_id = 918, quantity = 1000 }, { slot = 10, item_id = 919, quantity = 1000 }, { slot = 11, item_id = 920, quantity = 1000 }, { slot = 12, item_id = 921, quantity = 1000 }, { slot = 13, item_id = 922, quantity = 1000 }, { slot = 14, item_id = 923, quantity = 1000 }, { slot = 15, item_id = 924, quantity = 1000 }, { slot = 16, item_id = 927, quantity = 1000 }, { slot = 17, item_id = 928, quantity = 1000 }, { slot = 18, item_id = 929, quantity = 1000 }, { slot = 19, item_id = 930, quantity = 1000 }, { slot = 20, item_id = 932, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 123
+name = "Aile"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, vendo ropas para los hermosos GNOMOS de estas tierras."
+appearance = { head = 473, body = 288, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 909, quantity = 1000 }, { slot = 2, item_id = 914, quantity = 1000 }, { slot = 3, item_id = 925, quantity = 1000 }, { slot = 4, item_id = 926, quantity = 1000 }, { slot = 5, item_id = 931, quantity = 1000 }, { slot = 6, item_id = 933, quantity = 1000 }, { slot = 7, item_id = 935, quantity = 1000 }, { slot = 8, item_id = 936, quantity = 1000 }, { slot = 9, item_id = 938, quantity = 1000 }, { slot = 10, item_id = 941, quantity = 1000 }, { slot = 11, item_id = 942, quantity = 1000 }, { slot = 12, item_id = 934, quantity = 1000 }, { slot = 13, item_id = 937, quantity = 1000 }, { slot = 14, item_id = 939, quantity = 1000 }, { slot = 15, item_id = 940, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 124
+name = "Varinya"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tengo para ofrecerte los mejores ropajes para ELFOS."
+appearance = { head = 172, body = 234, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 943, quantity = 1000 }, { slot = 2, item_id = 944, quantity = 1000 }, { slot = 3, item_id = 945, quantity = 1000 }, { slot = 4, item_id = 946, quantity = 1000 }, { slot = 5, item_id = 947, quantity = 1000 }, { slot = 6, item_id = 948, quantity = 1000 }, { slot = 7, item_id = 949, quantity = 1000 }, { slot = 8, item_id = 950, quantity = 1000 }, { slot = 9, item_id = 951, quantity = 1000 }, { slot = 10, item_id = 952, quantity = 1000 }, { slot = 11, item_id = 953, quantity = 1000 }, { slot = 12, item_id = 954, quantity = 1000 }, { slot = 13, item_id = 955, quantity = 1000 }, { slot = 14, item_id = 956, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 125
+name = "Torke"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Solo tengo ropajes para ENANOS, si no las puedes usar, ¡vete de aqui!"
+appearance = { head = 371, body = 306, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 957, quantity = 1000 }, { slot = 2, item_id = 958, quantity = 1000 }, { slot = 3, item_id = 959, quantity = 1000 }, { slot = 4, item_id = 960, quantity = 1000 }, { slot = 5, item_id = 961, quantity = 1000 }, { slot = 6, item_id = 962, quantity = 1000 }, { slot = 7, item_id = 963, quantity = 1000 }, { slot = 8, item_id = 964, quantity = 1000 }, { slot = 9, item_id = 965, quantity = 1000 }, { slot = 10, item_id = 966, quantity = 1000 }, { slot = 11, item_id = 967, quantity = 1000 }, { slot = 12, item_id = 968, quantity = 1000 }, { slot = 13, item_id = 969, quantity = 1000 }, { slot = 14, item_id = 970, quantity = 1000 }, { slot = 15, item_id = 971, quantity = 1000 }, { slot = 16, item_id = 972, quantity = 1000 }, { slot = 17, item_id = 973, quantity = 1000 }, { slot = 18, item_id = 974, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 126
+name = "Gourk"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Vendo ropas para DROWS, de hermosas telas y refinados detalles."
+appearance = { head = 203, body = 264, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 977, quantity = 1000 }, { slot = 2, item_id = 978, quantity = 1000 }, { slot = 3, item_id = 979, quantity = 1000 }, { slot = 4, item_id = 980, quantity = 1000 }, { slot = 5, item_id = 981, quantity = 1000 }, { slot = 6, item_id = 982, quantity = 1000 }, { slot = 7, item_id = 983, quantity = 1000 }, { slot = 8, item_id = 984, quantity = 1000 }, { slot = 9, item_id = 985, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 36
+name = "Astor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "orcoszhh zson todsh orcshhh..hip.."
+appearance = { head = 2140, body = 285, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 1
+name = "Aldeano"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Hola forastero! Bienvenido a nuestra humilde aldea."
+appearance = { head = 0, body = 18, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 10
+name = "Bardo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡¿Hola, os gustaria oír una hermosa melodía?!."
+appearance = { head = 0, body = 17, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 11
+name = "Aldeana"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Hola forastero! Bienvenido a nuestra humilde aldea."
+appearance = { head = 0, body = 19, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 13
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Ullathorpe ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 118
+name = "Alarnick, antiguo soberano de Banderbill"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Esto no es digno de un soberano! ¡Exijo me devuelvan mi trono y me saquen de esta pocilga!...¡Maldito Tancredo, me las pagarás!"
+appearance = { head = 101, body = 348, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 128
+name = "Nelmasil"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "El pueblo de Ullathorpe en contra del alcalde... ¡Todos aquellos que estén en contra se presenten en el castillo del rey en Banderbill!"
+appearance = { head = 0, body = 410, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 129
+name = "Gael Azrraed"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Todos arderán! arderán en el infierno y luciernagas saldrán de sus ojos!"
+appearance = { head = 2070, body = 75, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 130
+name = "Altair de Oteren"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Aprovechad que la pesca es buena a estas horas... Si deseas pescar, puedes comprarle una caña al comerciante que se encuentra al oeste del muelle."
+appearance = { head = 60, body = 75, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 131
+name = "Linderoth"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Hey tú, ¿qué me andas mirando? He matado Medusas en peligrosos Dungeons desde que era un niño..."
+appearance = { head = 2280, body = 285, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 132
+name = "Sebastien"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡¡¿EH, EH?!! ¡no! ¡Yo no he hecho nada! ¡Vete si no quieres problemas!"
+appearance = { head = 2154, body = 31, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 133
+name = "Anthares"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Shhh, ten cuidado, planeo raptar al Demonio. Buscaré refuerzos y la ciudad será asediada."
+appearance = { head = 2050, body = 378, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 134
+name = "Vuragon"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Estoy hasta la coronilla de que se escape mi vaca! ya recibirá su merecido cuando la encuentre."
+appearance = { head = 60, body = 501, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 135
+name = "Belial"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Maldito seas Tancredo de Hauteville! Me obligan limpiar esta mugrosa ciudad por haber hecho algo que ¡¡¡no hice!!!"
+appearance = { head = 63, body = 641, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 136
+name = "Efral"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¿Qué miras tú? ¿Acaso quieres sufrir?"
+appearance = { head = 69, body = 442, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 137
+name = "Manrique"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "El Rey es avaro y sus terratenientes también, dame algo por favor, no seas como él..."
+appearance = { head = 0, body = 411, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 138
+name = "Abel, el monje pensador"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Cuando hayas caido en combate, puedes acercarte al sacerdote de la ciudad para que te devuelva a la vida."
+appearance = { head = 2050, body = 381, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 139
+name = "Clipsa"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Que la Diosa naturaleza te guíe."
+appearance = { head = 67, body = 357, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 140
+name = "Astor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "orcoszhh zson todsh orcshhh..hip.."
+appearance = { head = 0, body = 412, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 141
+name = "Zairot"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Podrash caminar de norte a shur, *hip* podrash encontrar sherveza de la mejor *hip* pero ninguna como la del meshon *hip*"
+appearance = { head = 0, body = 416, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 142
+name = "Onkin"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Déjenme tarnquilo... hip hip... descargaré lo que he... hip hip... bebido"
+appearance = { head = 0, body = 424, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 143
+name = "Fethresor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "En las batallas más escalofriantes, más sangrientas... Un bardo siempre está presente."
+appearance = { head = 0, body = 418, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 144
+name = "Whyx"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Mis melodías podrían hacer que hasta el más hábil guerrero, caiga a mis pies..."
+appearance = { head = 0, body = 419, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 145
+name = "Iklot"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Cuando te encuentres solo, perdido, sin saber para dónde correr... Respira profundo y susurra mi melodía."
+appearance = { head = 0, body = 420, heading = 3 }
+behavior = { movement = 0, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 146
+name = "Unurbar Gorog"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Poseo las mejores y más extrañas bebidas de estas tierras, ¿Qué desea que le sirva?"
+appearance = { head = 304, body = 372, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 498, quantity = 1000 }, { slot = 2, item_id = 522, quantity = 1000 }, { slot = 3, item_id = 550, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }, { slot = 5, item_id = 557, quantity = 1000 }, { slot = 6, item_id = 612, quantity = 1000 }, { slot = 7, item_id = 42, quantity = 1000 }, { slot = 8, item_id = 622, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 147
+name = "Dugh Dhail"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Hola forastero! Pronto se celebrará un nuevo aniversario de la creación de la Cerveza. ¿Acudirás a los festejos?"
+appearance = { head = 0, body = 410, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+
+[[npcs_complete.npcs]]
+id = 8
+name = "Thorkis"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hooooola jovencito, tengo las mejores provisiones de Ullathorpe!!"
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 10000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 22, quantity = 1000 }, { slot = 4, item_id = 43, quantity = 1000 }, { slot = 5, item_id = 160, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 7
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, rata de alcantarilla, soy el Herrero de Ullathorpe...tengo algunas armas que pueden ayudarte en tus viajes."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 9, quantity = 1000 }, { slot = 5, item_id = 2, quantity = 1000 }, { slot = 6, item_id = 125, quantity = 1000 }, { slot = 7, item_id = 123, quantity = 1000 }, { slot = 8, item_id = 389, quantity = 1000 }, { slot = 9, item_id = 124, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 46
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Ullathorpe... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 363, quantity = 1000 }, { slot = 2, item_id = 199, quantity = 1000 }, { slot = 3, item_id = 200, quantity = 1000 }, { slot = 4, item_id = 197, quantity = 1000 }, { slot = 5, item_id = 658, quantity = 1000 }, { slot = 6, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 12
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! Soy el Sastre de Ullathorpe, Bienvenido!"
+appearance = { head = 9, body = 50, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 641, quantity = 1000 }, { slot = 5, item_id = 501, quantity = 1000 }, { slot = 6, item_id = 135, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 19
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida Viajera! Tengo hermosas vestimentas para ofrecerte..."
+appearance = { head = 70, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 20
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
+appearance = { head = 303, body = 180, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 54
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Acércate, tengo algunas armaduras que podrían protegerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }, { slot = 4, item_id = 1001, quantity = 1000 }, { slot = 5, item_id = 1002, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 15
+name = "Thorkis"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Qué tal amigo! Entra, pues tengo las mejores provisiones de Nix!"
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 139, quantity = 1000 }, { slot = 2, item_id = 26, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 37
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, rata de alcantarilla, soy el Herrero de Nix, tengo algunas armas que pueden ayudarte en tus viajes."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 389, quantity = 1000 }, { slot = 5, item_id = 3, quantity = 1000 }, { slot = 6, item_id = 2, quantity = 1000 }, { slot = 7, item_id = 398, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 47
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Nix... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 201, quantity = 1000 }, { slot = 2, item_id = 204, quantity = 1000 }, { slot = 3, item_id = 364, quantity = 1000 }, { slot = 4, item_id = 205, quantity = 1000 }, { slot = 5, item_id = 380, quantity = 1000 }, { slot = 6, item_id = 661, quantity = 1000 }, { slot = 7, item_id = 383, quantity = 1000 }, { slot = 8, item_id = 658, quantity = 1000 }, { slot = 9, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 21
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! Soy el Sastre de Nix, Bienvenido!"
+appearance = { head = 7, body = 50, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 45, quantity = 1000 }, { slot = 5, item_id = 80, quantity = 1000 }, { slot = 6, item_id = 501, quantity = 1000 }, { slot = 7, item_id = 135, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 22
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida Viajera! Entra a mi tienda, ¡Tengo las mejores prendas de Nix!"
+appearance = { head = 71, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 23
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
+appearance = { head = 404, body = 180, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 70
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Acércate, tengo algunas armaduras que podrían protegerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }, { slot = 4, item_id = 359, quantity = 1000 }, { slot = 5, item_id = 499, quantity = 1000 }, { slot = 6, item_id = 667, quantity = 1000 }, { slot = 7, item_id = 1001, quantity = 1000 }, { slot = 8, item_id = 1002, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 50
+name = "Tellez"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Bienvenido al \"Mesón Hostigado\", ¿Qué desea que le sirva?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 38
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado las más poderosas armas de Banderbill para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 2, quantity = 1000 }, { slot = 3, item_id = 19, quantity = 1000 }, { slot = 4, item_id = 123, quantity = 1000 }, { slot = 5, item_id = 389, quantity = 1000 }, { slot = 6, item_id = 401, quantity = 1000 }, { slot = 7, item_id = 478, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 51
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña Tienda de Banderbill... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 394, quantity = 1000 }, { slot = 2, item_id = 203, quantity = 1000 }, { slot = 3, item_id = 207, quantity = 1000 }, { slot = 4, item_id = 657, quantity = 1000 }, { slot = 5, item_id = 206, quantity = 1000 }, { slot = 6, item_id = 361, quantity = 1000 }, { slot = 7, item_id = 319, quantity = 1000 }, { slot = 8, item_id = 531, quantity = 1000 }, { slot = 9, item_id = 318, quantity = 1000 }, { slot = 10, item_id = 537, quantity = 1000 }, { slot = 11, item_id = 662, quantity = 1000 }, { slot = 12, item_id = 658, quantity = 1000 }, { slot = 13, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 25
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido a la Sastrería de Banderbill! ¿En qué lo puedo ayudar?"
+appearance = { head = 7, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 501, quantity = 1000 }, { slot = 2, item_id = 135, quantity = 1000 }, { slot = 3, item_id = 238, quantity = 1000 }, { slot = 4, item_id = 239, quantity = 1000 }, { slot = 5, item_id = 381, quantity = 1000 }, { slot = 6, item_id = 196, quantity = 1000 }, { slot = 7, item_id = 357, quantity = 1000 }, { slot = 8, item_id = 986, quantity = 1000 }, { slot = 9, item_id = 873, quantity = 1000 }, { slot = 10, item_id = 1036, quantity = 1000 }, { slot = 11, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 26
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Adelante hermosa niña! En mi tienda encontrarás vestidos hechos para tí!"
+appearance = { head = 173, body = 121, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 504, quantity = 1000 }, { slot = 2, item_id = 505, quantity = 1000 }, { slot = 3, item_id = 506, quantity = 1000 }, { slot = 4, item_id = 382, quantity = 1000 }, { slot = 5, item_id = 511, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 27
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas prendas que he confeccionado para nuestra raza!"
+appearance = { head = 305, body = 159, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 486, quantity = 1000 }, { slot = 2, item_id = 507, quantity = 1000 }, { slot = 3, item_id = 502, quantity = 1000 }, { slot = 4, item_id = 707, quantity = 1000 }, { slot = 5, item_id = 671, quantity = 1000 }, { slot = 6, item_id = 670, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 74
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, tengo resistentes armaduras para ofrecerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 1003, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 43
+name = "Sorks"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿¡Estáis sediento y hambriento!?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 139, quantity = 1000 }, { slot = 2, item_id = 754, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 56
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado, aquí en Lindos, poderosas armas para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 2, quantity = 1000 }, { slot = 2, item_id = 19, quantity = 1000 }, { slot = 3, item_id = 123, quantity = 1000 }, { slot = 4, item_id = 401, quantity = 1000 }, { slot = 5, item_id = 125, quantity = 1000 }, { slot = 6, item_id = 753, quantity = 1000 }, { slot = 7, item_id = 404, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 69
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven por aquí joven, las artes mágicas superiores te están llamando..."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 530, quantity = 1000 }, { slot = 2, item_id = 396, quantity = 1000 }, { slot = 3, item_id = 397, quantity = 1000 }, { slot = 4, item_id = 470, quantity = 1000 }, { slot = 5, item_id = 471, quantity = 1000 }, { slot = 6, item_id = 319, quantity = 1000 }, { slot = 7, item_id = 673, quantity = 1000 }, { slot = 8, item_id = 394, quantity = 1000 }, { slot = 9, item_id = 395, quantity = 1000 }, { slot = 10, item_id = 538, quantity = 1000 }, { slot = 11, item_id = 536, quantity = 1000 }, { slot = 12, item_id = 532, quantity = 1000 }, { slot = 13, item_id = 542, quantity = 1000 }, { slot = 14, item_id = 658, quantity = 1000 }, { slot = 15, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 31
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven aquí! Te puedo ofrecer las mejores ropas de la isla..."
+appearance = { head = 7, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 135, quantity = 1000 }, { slot = 5, item_id = 238, quantity = 1000 }, { slot = 6, item_id = 239, quantity = 1000 }, { slot = 7, item_id = 381, quantity = 1000 }, { slot = 8, item_id = 196, quantity = 1000 }, { slot = 9, item_id = 986, quantity = 1000 }, { slot = 10, item_id = 873, quantity = 1000 }, { slot = 11, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 32
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas vestimentas, seguro te encantarán!"
+appearance = { head = 75, body = 118, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 382, quantity = 1000 }, { slot = 3, item_id = 511, quantity = 1000 }, { slot = 4, item_id = 488, quantity = 1000 }, { slot = 5, item_id = 508, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 39
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! confeccionamos las mejores ropas de la zona."
+appearance = { head = 304, body = 135, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 507, quantity = 1000 }, { slot = 2, item_id = 502, quantity = 1000 }, { slot = 3, item_id = 707, quantity = 1000 }, { slot = 4, item_id = 671, quantity = 1000 }, { slot = 5, item_id = 670, quantity = 1000 }, { slot = 6, item_id = 524, quantity = 1000 }, { slot = 7, item_id = 370, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 113
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Tengo a la venta las mejores armaduras de la isla!"
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 484, quantity = 1000 }, { slot = 7, item_id = 1004, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 103
+name = "Carahuel"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, pequeño amigo! ¿Estás buscando algo para llenar tu estómago? Creo que puedo ayudarte..."
+appearance = { head = 474, body = 309, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 29, quantity = 1000 }, { slot = 3, item_id = 158, quantity = 1000 }, { slot = 4, item_id = 754, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 57
+name = "Bhoemond"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Sea bienvenido a la famosa Taberna de Arghal!, Aquí podrá saciarse con la mejor comida y la mejor bebida de toda la zona."
+appearance = { head = 17, body = 100, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 112
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Con estas manos he construído algunas armas que te podrán servir en tus aventuras... ¡paga por ellas y serán tuyas!"
+appearance = { head = 16, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 389, quantity = 1000 }, { slot = 5, item_id = 9, quantity = 1000 }, { slot = 6, item_id = 2, quantity = 1000 }, { slot = 7, item_id = 125, quantity = 1000 }, { slot = 8, item_id = 123, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 59
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, neófito a ésta, a mi pequeña escuela de Magia, ubicada en el corazón mismo de la ciudad de Arghal."
+appearance = { head = 20, body = 34, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 199, quantity = 1000 }, { slot = 2, item_id = 200, quantity = 1000 }, { slot = 3, item_id = 201, quantity = 1000 }, { slot = 4, item_id = 202, quantity = 1000 }, { slot = 5, item_id = 204, quantity = 1000 }, { slot = 6, item_id = 658, quantity = 1000 }, { slot = 7, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 63
+name = "Steve"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, acércate, que tengo para ofrecerte las mejores prendas masculinas de todo Arghal..."
+appearance = { head = 22, body = 342, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 641, quantity = 1000 }, { slot = 5, item_id = 501, quantity = 1000 }, { slot = 6, item_id = 135, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 64
+name = "Virgin"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida jovencita! Soy quien hace los mejores atuendos femeninos de todo Arghal, ven y prueba mi mercadería."
+appearance = { head = 70, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 68
+name = "Odkon"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese pequeño vistante de Arghal... Tengo prendas a su medida."
+appearance = { head = 404, body = 371, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 73
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si tienes agallas como para abandonar la ciudad y enfrentar el peligro de los bosques, deberás comprar una de las armaduras que he fabricado."
+appearance = { head = 39, body = 93, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 40
+name = "Tolloz"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Bienvenido a la Taberna de Arkhein, ¿Qué desea que le sirva?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 55
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado las más poderosas armas de Arkhein para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 2, quantity = 1000 }, { slot = 3, item_id = 19, quantity = 1000 }, { slot = 4, item_id = 123, quantity = 1000 }, { slot = 5, item_id = 389, quantity = 1000 }, { slot = 6, item_id = 401, quantity = 1000 }, { slot = 7, item_id = 478, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 61
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Arkhein... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 395, quantity = 1000 }, { slot = 2, item_id = 203, quantity = 1000 }, { slot = 9, item_id = 531, quantity = 1000 }, { slot = 10, item_id = 318, quantity = 1000 }, { slot = 11, item_id = 537, quantity = 1000 }, { slot = 12, item_id = 662, quantity = 1000 }, { slot = 13, item_id = 658, quantity = 1000 }, { slot = 14, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 28
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Entrad Valiente Viajero! En la Sastrería de Arkhein están las mejores ropas del continente."
+appearance = { head = 15, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 45, quantity = 1000 }, { slot = 2, item_id = 80, quantity = 1000 }, { slot = 3, item_id = 641, quantity = 1000 }, { slot = 4, item_id = 501, quantity = 1000 }, { slot = 5, item_id = 135, quantity = 1000 }, { slot = 6, item_id = 238, quantity = 1000 }, { slot = 7, item_id = 239, quantity = 1000 }, { slot = 8, item_id = 381, quantity = 1000 }, { slot = 9, item_id = 196, quantity = 1000 }, { slot = 10, item_id = 357, quantity = 1000 }, { slot = 11, item_id = 986, quantity = 1000 }, { slot = 12, item_id = 873, quantity = 1000 }, { slot = 13, item_id = 1036, quantity = 1000 }, { slot = 14, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 29
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas vestimentas, seguro te encantarán!"
+appearance = { head = 173, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 504, quantity = 1000 }, { slot = 2, item_id = 505, quantity = 1000 }, { slot = 3, item_id = 506, quantity = 1000 }, { slot = 4, item_id = 382, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 30
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Aquí encontrarás las mejores prendas para enanos ¡Y a muy buen precio!"
+appearance = { head = 404, body = 159, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 486, quantity = 1000 }, { slot = 2, item_id = 507, quantity = 1000 }, { slot = 3, item_id = 502, quantity = 1000 }, { slot = 4, item_id = 707, quantity = 1000 }, { slot = 5, item_id = 671, quantity = 1000 }, { slot = 6, item_id = 670, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 111
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, tengo resistentes armaduras para ofrecerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 1003, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 53
+name = "Roksar"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, buen viajero! Dispongo de todo tipo de provisiones... ¿Qué deseas?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 28, quantity = 1000 }, { slot = 2, item_id = 29, quantity = 1000 }, { slot = 3, item_id = 26, quantity = 1000 }, { slot = 4, item_id = 25, quantity = 1000 }, { slot = 5, item_id = 27, quantity = 1000 }, { slot = 6, item_id = 42, quantity = 1000 }, { slot = 7, item_id = 161, quantity = 1000 }, { slot = 8, item_id = 533, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 71
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tened aquí las armas más poderosas de estas tierras... ¡Pasad y ved!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 19, quantity = 1000 }, { slot = 3, item_id = 123, quantity = 1000 }, { slot = 4, item_id = 124, quantity = 1000 }, { slot = 5, item_id = 401, quantity = 1000 }, { slot = 6, item_id = 125, quantity = 1000 }, { slot = 7, item_id = 753, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 99
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Estás buscando los hechizos más poderosos? A buen puerto has llegado..."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 542, quantity = 1000 }, { slot = 2, item_id = 532, quantity = 1000 }, { slot = 3, item_id = 658, quantity = 1000 }, { slot = 4, item_id = 659, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 109
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenidos a la Gran Sastrería de la Ciudad Perdida! Aquí encontrarán las ropas más exóticas del mundo..."
+appearance = { head = 406, body = 130, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 515, quantity = 1000 }, { slot = 2, item_id = 490, quantity = 1000 }, { slot = 3, item_id = 381, quantity = 1000 }, { slot = 4, item_id = 196, quantity = 1000 }, { slot = 5, item_id = 357, quantity = 1000 }, { slot = 6, item_id = 519, quantity = 1000 }, { slot = 7, item_id = 986, quantity = 1000 }, { slot = 8, item_id = 873, quantity = 1000 }, { slot = 9, item_id = 1036, quantity = 1000 }, { slot = 10, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 110
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Entra! Jamás verás prendas más bellas que las que tengo para ofrecerte..."
+appearance = { head = 474, body = 124, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 511, quantity = 1000 }, { slot = 2, item_id = 488, quantity = 1000 }, { slot = 3, item_id = 508, quantity = 1000 }, { slot = 4, item_id = 510, quantity = 1000 }, { slot = 5, item_id = 513, quantity = 1000 }, { slot = 6, item_id = 514, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 117
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Aquí en la Ciudad Perdida encontrarán las mejores ropas pequeñas de todo el mundo!"
+appearance = { head = 402, body = 136, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 671, quantity = 1000 }, { slot = 2, item_id = 670, quantity = 1000 }, { slot = 3, item_id = 512, quantity = 1000 }, { slot = 4, item_id = 672, quantity = 1000 }, { slot = 5, item_id = 525, quantity = 1000 }, { slot = 6, item_id = 526, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 116
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si estás buscando las mejores armaduras de estas tierras, has llegado al lugar correcto..."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 672, quantity = 1000 }, { slot = 2, item_id = 359, quantity = 1000 }, { slot = 3, item_id = 499, quantity = 1000 }, { slot = 4, item_id = 667, quantity = 1000 }, { slot = 5, item_id = 360, quantity = 1000 }, { slot = 6, item_id = 648, quantity = 1000 }, { slot = 7, item_id = 356, quantity = 1000 }, { slot = 8, item_id = 854, quantity = 1000 }, { slot = 9, item_id = 195, quantity = 1000 }, { slot = 10, item_id = 243, quantity = 1000 }, { slot = 11, item_id = 1004, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 6
+name = "Guardia Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "¡Daré cárcel a todos los criminales!"
+appearance = { head = 0, body = 15, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 100
+name = "Guardia Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "¡Daré cárcel a todos los criminales y los perseguiré hasta el fin!"
+appearance = { head = 0, body = 15, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 49
+name = "Guardia Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "¡Daré cárcel a todos los criminales!"
+appearance = { head = 0, body = 15, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 102
+name = "Guardia Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "¡Daré cárcel a todos los criminales!"
+appearance = { head = 0, body = 15, heading = 3 }
+behavior = { movement = 11, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 106
+name = "Arquera Real"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ningún criminal escapará de mi puntería."
+appearance = { head = 172, body = 131, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 3500, min_hp = 3500, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 81
+name = "Sacerdote Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 4, body = 101, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 82
+name = "Sacerdote Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 5, body = 101, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 83
+name = "Druida Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 101, body = 56, heading = 3 }
+behavior = { movement = 5, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 84
+name = "Druida Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 102, body = 56, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 85
+name = "Druida Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 103, body = 56, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 86
+name = "Mago Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 6, body = 130, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 87
+name = "Mago Imperial"
+category = "NPCS GUARDIAS"
+npc_type = 2
+tags = ["pacifico"]
+description = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
+appearance = { head = 6, body = 128, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 148
+name = "Guardia Imperial"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Atención! Si eres criminal e ingresas aquí seras atacado por los guardias reales."
+appearance = { head = 0, body = 15, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 150
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Nix ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 151
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Banderbill ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 152
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Lindos ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 153
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Arghal ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 158
+name = "Gobernador"
+category = "NPCS VARIOS"
+npc_type = 11
+tags = ["pacifico"]
+description = "Hola, soy el gobernador de Arkhein ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
+appearance = { head = 0, body = 4, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 127
+name = "Guardia Infernal"
+category = "NPCS VARIOS"
+npc_type = 8
+tags = ["pacifico"]
+description = "¡Por el Señor Oscuro, aniquilaré a quienes lo deshonran!"
+appearance = { head = 201, body = 170, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 105
+name = "Mago del Caos"
+category = "NPCS VARIOS"
+npc_type = 8
+tags = ["pacifico"]
+description = "¡El mal prevalecerá sobre estas tierras!"
+appearance = { head = 202, body = 129, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 9550, min_hp = 9550, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 107
+name = "Golem Oscuro"
+category = "NPCS VARIOS"
+npc_type = 8
+tags = ["pacifico"]
+appearance = { head = 0, body = 141, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 49000, min_hp = 49000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 149
+name = "Guardia Infernal"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Atención! Si eres ciudadano e ingresas aquí seras atacado por los guardias de la Legión."
+appearance = { head = 201, body = 170, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 154
+name = "Lilith"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola, tengo las mejores Pociones de la Alquimia para principiantes."
+appearance = { head = 77, body = 200, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 11 }
+inventory = { items = [{ slot = 1, item_id = 855, quantity = 1000 }, { slot = 2, item_id = 856, quantity = 1000 }, { slot = 3, item_id = 857, quantity = 1000 }, { slot = 4, item_id = 858, quantity = 1000 }, { slot = 5, item_id = 166, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 155
+name = "Armaduras Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si estás buscando túnicas y armaduras para principiantes, has llegado al lugar indicado."
+appearance = { head = 6, body = 93, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 1044, quantity = 1000 }, { slot = 2, item_id = 1045, quantity = 1000 }, { slot = 3, item_id = 1046, quantity = 1000 }, { slot = 4, item_id = 1047, quantity = 1000 }, { slot = 5, item_id = 1048, quantity = 1000 }, { slot = 6, item_id = 1051, quantity = 1000 }, { slot = 7, item_id = 1052, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 156
+name = "Armas Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola novato, tengo algunas armas que pueden ayudarte en tus aventuras."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 861, quantity = 1000 }, { slot = 2, item_id = 859, quantity = 1000 }, { slot = 3, item_id = 860, quantity = 1000 }, { slot = 4, item_id = 564, quantity = 1000 }, { slot = 5, item_id = 565, quantity = 1000 }, { slot = 6, item_id = 562, quantity = 1000 }, { slot = 7, item_id = 561, quantity = 1000 }, { slot = 8, item_id = 563, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 157
+name = "Magia Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda. Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 199, quantity = 1000 }, { slot = 2, item_id = 197, quantity = 1000 }, { slot = 3, item_id = 204, quantity = 1000 }, { slot = 4, item_id = 205, quantity = 1000 }, { slot = 5, item_id = 202, quantity = 1000 }, { slot = 6, item_id = 200, quantity = 1000 }, { slot = 7, item_id = 201, quantity = 1000 }, { slot = 8, item_id = 363, quantity = 1000 }, { slot = 9, item_id = 364, quantity = 1000 }, { slot = 10, item_id = 862, quantity = 1000 }, { slot = 11, item_id = 863, quantity = 1000 }, { slot = 12, item_id = 864, quantity = 1000 }] }
+
+[[npcs_complete.npcs]]
+id = 2
+name = "Gallo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 5, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 450, alignment = 0, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 3
+name = "Cerdo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 6, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 500, alignment = 0, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 4
+name = "Vaca"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 7, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 810, alignment = 0, backup = 0 }
+combat = { max_hp = 65, min_hp = 65, defense = 2, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 17
+name = "Conejo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 11, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 450, alignment = 0, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 18
+name = "Pavo Real"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 20, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 450, alignment = 0, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 45
+name = "Espíritu"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "¡Huye de aquí mientras puedas!"
+appearance = { head = 514, body = 8, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 65
+name = "Gallo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 5, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 66
+name = "Cerdo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 6, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 67
+name = "Vaca"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 7, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 45, min_hp = 45, defense = 2, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 75
+name = "Cuervo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 68, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 1100, alignment = 0, backup = 0 }
+combat = { max_hp = 30, min_hp = 30, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 76
+name = "Hormiga"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 70, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 425, alignment = 0, backup = 0 }
+combat = { max_hp = 5, min_hp = 5, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 77
+name = "Rata"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 71, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 700, alignment = 0, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 78
+name = "Oso Pardo Domesticado"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 73, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 0, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 79
+name = "Tortuga de Mar"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 74, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 0, backup = 0 }
+combat = { max_hp = 315, min_hp = 315, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 88
+name = "Ely"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 143, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 0, min_hp = 0, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 89
+name = "Fuego Fatuo"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 144, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 90
+name = "Morgolock"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 144, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 29550, min_hp = 29550, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 91
+name = "Gran Águila"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 59, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 1200, alignment = 0, backup = 0 }
+combat = { max_hp = 40, min_hp = 40, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 92
+name = "Elemental de Agua"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 541, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 93
+name = "Elemental de Fuego"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 153, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 94
+name = "Elemental de Tierra"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 543, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 0, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 95
+name = "Jabalí"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 150, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 0, backup = 0 }
+combat = { max_hp = 515, min_hp = 515, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 96
+name = "Tigre de Bengala"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 147, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 0, backup = 0 }
+combat = { max_hp = 800, min_hp = 800, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 97
+name = "Pato"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+appearance = { head = 0, body = 88, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 1, domable = 660, alignment = 0, backup = 0 }
+combat = { max_hp = 30, min_hp = 30, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 500
+name = "Murciélago"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 9, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 400, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 501
+name = "Lobo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 10, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1250, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 8 }
+
+[[npcs_complete.npcs]]
+id = 502
+name = "Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 507, body = 196, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 250, min_hp = 250, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 503
+name = "Esqueleto"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 12, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 504
+name = "Serpiente"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 400, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 505
+name = "Goblin"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1500, alignment = 2, backup = 0 }
+combat = { max_hp = 110, min_hp = 110, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 506
+name = "Gallo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 5, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 450, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 507
+name = "Lord Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 508, body = 197, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 34 }
+
+[[npcs_complete.npcs]]
+id = 508
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 393, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 150, min_hp = 150, defense = 19 }
+
+[[npcs_complete.npcs]]
+id = 509
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
+
+[[npcs_complete.npcs]]
+id = 510
+name = "Araña Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 42, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 511
+name = "Ogro Esclavo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 205, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2750, min_hp = 2750, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 512
+name = "Lobo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 10, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 8, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 513
+name = "Cíclope Guardián"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 206, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4500, min_hp = 4500, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 514
+name = "Serpiente de Anthares"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 207, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 515
+name = "Gorila Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 213, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1300, min_hp = 1300, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 516
+name = "Goblin"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 90, min_hp = 90, defense = 15, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 517
+name = "Djinn de Viento"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 215, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4200, min_hp = 4200, defense = 45 }
+
+[[npcs_complete.npcs]]
+id = 518
+name = "Dragón de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 218, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 50 }
+
+[[npcs_complete.npcs]]
+id = 519
+name = "Gusano de Arena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 216, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 520
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 393, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 320, min_hp = 320, defense = 25, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 521
+name = "Tigre Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 147, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 800, min_hp = 800, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 522
+name = "Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 185, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 523
+name = "Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 185, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 524
+name = "Jefe Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 43, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 525
+name = "Águila"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 59, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1200, alignment = 2, backup = 0 }
+combat = { max_hp = 40, min_hp = 40, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 526
+name = "Araña Malaheing"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 42, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 527
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 528
+name = "Anfisbena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 203, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 529
+name = "Escorpión"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 51, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 600, alignment = 2, backup = 0 }
+combat = { max_hp = 32, min_hp = 32, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 530
+name = "Bandido"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 2, body = 47, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 531
+name = "Asesino"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 201, body = 48, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 850, min_hp = 850, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 532
+name = "Osezno"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 236, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 533
+name = "Cuervo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 68, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1100, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 2, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 534
+name = "Hormiga Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 69, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 535
+name = "Hormiga Marabunta"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 70, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 425, alignment = 2, backup = 0 }
+combat = { max_hp = 5, min_hp = 5, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 536
+name = "Rata Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 71, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 700, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 537
+name = "Beholder"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 72, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1400, min_hp = 1400, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 538
+name = "Oso Pardo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 73, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 539
+name = "Tortuga Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 74, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 540
+name = "Duende"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1700, alignment = 2, backup = 0 }
+combat = { max_hp = 210, min_hp = 210, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 541
+name = "Ogro"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 76, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2250, min_hp = 2250, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 542
+name = "Gran Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 6
+tags = ["hostil"]
+appearance = { head = 0, body = 82, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200000, min_hp = 200000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 543
+name = "Demonio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 83, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 544
+name = "Unicornio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 183, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 500, min_hp = 500, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 545
+name = "Licántropo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 212, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 546
+name = "Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 507, body = 196, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 250, min_hp = 250, defense = 20, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 547
+name = "Tarántula"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 36, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 548
+name = "Leviathan"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 99, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6000, min_hp = 6000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 549
+name = "Orco Brujo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 186, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2250, alignment = 2, backup = 0 }
+combat = { max_hp = 1900, min_hp = 1900, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 550
+name = "Bruja"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 271, body = 125, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4200, min_hp = 4200, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 551
+name = "Mago Malvado"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 401, body = 135, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 552
+name = "Golem"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 141, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 35000, min_hp = 35000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 553
+name = "Medusa"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 151, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6500, min_hp = 6500, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 554
+name = "Liche"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 149, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 555
+name = "Lord Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 187, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1750, min_hp = 1750, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 556
+name = "Quark"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 146, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 800, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 557
+name = "Jabalí Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 150, heading = 3 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 515, min_hp = 515, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 558
+name = "Dark mOrGoLoCk"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 101, body = 56, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 559
+name = "Dark NuKeR"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 102, body = 93, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 560
+name = "Dark Valkira"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 72, body = 104, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 561
+name = "Dark Chatillon"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 9, body = 140, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 562
+name = "Dark Jennifer"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 72, body = 64, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 564
+name = "Escorpión"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 51, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 32, min_hp = 32, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 565
+name = "Serpiente"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 566
+name = "Murciélago"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 9, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 567
+name = "Duende Mágico"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 310, min_hp = 310, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 568
+name = "Galeón Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 86, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4000, min_hp = 4000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 569
+name = "Galeón Fantasmal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 487, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 50 }
+
+[[npcs_complete.npcs]]
+id = 573
+name = "Árbol Encantado"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "¡Odio los leñadores!"
+appearance = { head = 0, body = 25, heading = 4 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 574
+name = "Ucorno"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 575
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 3 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 576
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 4 }
+behavior = { movement = 1, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 577
+name = "Alma Putrefacta"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Soy un esclavo del mi señor del mal"
+appearance = { head = 514, body = 145, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 578
+name = "Cerdo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Oink Oink"
+appearance = { head = 0, body = 6, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 500, alignment = 2, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 579
+name = "Vaca Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Muuuuu"
+appearance = { head = 0, body = 7, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 810, alignment = 2, backup = 0 }
+combat = { max_hp = 65, min_hp = 65, defense = 2 }
+
+[[npcs_complete.npcs]]
+id = 582
+name = "Enano de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 304, body = 54, heading = 3 }
+behavior = { movement = 10, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 583
+name = "Liche Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 149, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 584
+name = "Demonio Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 83, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 585
+name = "Dragón Rojo Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
+
+[[npcs_complete.npcs]]
+id = 586
+name = "Golem Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 181, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 49000, min_hp = 49000, defense = 40 }
+
+[[npcs_complete.npcs]]
+id = 587
+name = "Astaroth"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 204, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3500, min_hp = 3500, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 588
+name = "Elemental de Fuego"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 153, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 589
+name = "Elemental de Fuego Anciano"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 394, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 590
+name = "Blattodea"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 231, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 435, min_hp = 435, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 591
+name = "Artopleura"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 229, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 592
+name = "Araña de los Rincones"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 230, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 650, min_hp = 650, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 593
+name = "Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 509, body = 386, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 594
+name = "Escarabajo Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 391, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 595
+name = "Tentáculo Putrefacto"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 392, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 596
+name = "Espíritu chocarrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 219, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 597
+name = "Protector de los muertos"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 426, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 435, min_hp = 435, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 598
+name = "Hada Oscura"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 511, body = 427, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 650, min_hp = 650, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 599
+name = "Engendro de las profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 387, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 600
+name = "Ave de las profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 425, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 601
+name = "Licántropo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 212, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 602
+name = "Piraña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 433, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 800, min_hp = 800, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 603
+name = "Sirena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 434, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1300, min_hp = 1300, defense = 25 }
+
+[[npcs_complete.npcs]]
+id = 604
+name = "Manta raya"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 407, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 605
+name = "Lutra"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 435, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2100, min_hp = 2100, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 606
+name = "Tiburón"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 436, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 607
+name = "Capitán Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 512, body = 428, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2700, min_hp = 2700, defense = 35 }
+
+[[npcs_complete.npcs]]
+id = 608
+name = "Guardián de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 218, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 609
+name = "Elemental de Agua Anciano"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 542, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
+
+[[npcs_complete.npcs]]
+id = 610
+name = "Kraken"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 408, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6250, min_hp = 6250, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 611
+name = "Fango"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 403, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 750, min_hp = 750, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 612
+name = "Cocodrilo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 208, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 613
+name = "Unicornio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 183, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1350, min_hp = 1350, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 614
+name = "Elfo Guardián"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 402, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 615
+name = "Árbol capturador de Almas"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 401, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
+
+[[npcs_complete.npcs]]
+id = 616
+name = "Sapo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 432, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 900, alignment = 2, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0 }
+
+[[npcs_complete.npcs]]
+id = 617
+name = "Pequeño Escarabajo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 533, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 618
+name = "Pequeño Duende"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 100, min_hp = 100, defense = 8 }
+
+[[npcs_complete.npcs]]
+id = 619
+name = "Hada del Bosque"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 532, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 278, min_hp = 278, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 620
+name = "Pequeña Araña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 534, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 125, min_hp = 125, defense = 4 }
+
+[[npcs_complete.npcs]]
+id = 621
+name = "Piraña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 433, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 150, min_hp = 150, defense = 4 }
+
+[[npcs_complete.npcs]]
+id = 622
+name = "Pequeño Dragón Mágico"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 537, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 5 }
+
+[[npcs_complete.npcs]]
+id = 623
+name = "Mini Elemental de Fuego"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 535, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 210, min_hp = 210, defense = 3 }
+
+[[npcs_complete.npcs]]
+id = 624
+name = "Pequeño Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 536, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 300, min_hp = 300, defense = 7 }
+
+[[npcs_complete.npcs]]
+id = 625
+name = "Víbora"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 3 }
+
+[[npcs_complete.npcs]]
+id = 626
+name = "Goblin Travieso"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 2 }
+
+[[npcs_complete.npcs]]
+id = 627
+name = "Protector de almas"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 426, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 130, min_hp = 130, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 628
+name = "Tarántula venenosa"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 538, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 95, min_hp = 95, defense = 2 }
+
+[[npcs_complete.npcs]]
+id = 629
+name = "Guerrero tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los guerreros se especializan en el combate cuerpo a cuerpo por lo que las criaturas más adecuadas para ellos son aquellas que no poseen demasiada evasión y poder de ataque."
+appearance = { head = 301, body = 54, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 630
+name = "Guerrero tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los guerreros prefieren entrenar en el desierto al este de la ciudad."
+appearance = { head = 370, body = 54, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 631
+name = "Cazador tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los cazadores se especializan en el combate a distancia, por lo que las criaturas más indicadas para ellos, son las que no tengan un gran poder de evasión."
+appearance = { head = 303, body = 155, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 632
+name = "Cazador tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los cazadores, prefieren entrenar en el bosque, al oeste de la ciudad"
+appearance = { head = 4, body = 58, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 633
+name = "Pirata tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los piratas pueden combatir tanto cuerpo a cuerpo como a distancia, por lo tanto, las criaturas más adecuadas para ellos, son aquellas que no posean gran poder de evasión ni de ataque."
+appearance = { head = 380, body = 161, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 634
+name = "Pirata tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Por sus características, dentro de esta isla, los piratas, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (a distancia), al este u oeste de la ciudad."
+appearance = { head = 305, body = 161, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 635
+name = "Bandido tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los bandidos se especializan en el combate cuerpo a cuerpo, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
+appearance = { head = 9, body = 321, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 636
+name = "Bandido tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los bandidos, prefieren entrenar en el desierto, al este de la ciudad."
+appearance = { head = 72, body = 321, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 637
+name = "Ladron tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los ladrones se destacan en el arte de ocultarse y el combate a distancia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean gran poder de evasión."
+appearance = { head = 75, body = 337, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 638
+name = "Ladron tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los ladrones, prefieren entrenar en el bosque, al oeste de la ciudad"
+appearance = { head = 37, body = 337, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 639
+name = "Mago tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los magos se especializan en ataques mágicos, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean defensa mágica."
+appearance = { head = 407, body = 159, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 640
+name = "Mago tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los magos, prefieren entrenar en el bosque, al norte de la ciudad"
+appearance = { head = 109, body = 353, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 641
+name = "Bardo Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los bardos se especializan en conjurar hechizos y evadir golpes, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean defensa mágica."
+appearance = { head = 220, body = 130, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 642
+name = "Bardo Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los bardos, prefieren entrenar en el bosque, al norte de la ciudad"
+appearance = { head = 179, body = 319, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 643
+name = "Clérigo Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los clérigos combinan la magia con el combate cuerpo a cuerpo, por lo tanto, las criaturas más adecuadas para ellos, son las que no posean defensa mágica o posean bajo ataque y evasión."
+appearance = { head = 22, body = 314, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 644
+name = "Clérigo Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Por sus características, dentro de esta isla, los clérigos, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (magia), al este o norte de la ciudad."
+appearance = { head = 112, body = 314, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 645
+name = "Druida Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los druidas se especializan en ataques mágicos, por lo tanto, las criaturas más adecuadas para esta clase, son las que no posean defensa mágica. También pueden entrenar con mascotas al domar"
+appearance = { head = 284, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 646
+name = "Druida Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla, los druidas, prefieren entrenar en el bosque, al norte de la ciudad"
+appearance = { head = 115, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 647
+name = "Paladín Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los paladines combinan el golpe cuerpo a cuerpo con la magia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
+appearance = { head = 30, body = 45, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 648
+name = "Paladín Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla los paladines prefieren entrenar en el desierto al este de la ciudad."
+appearance = { head = 382, body = 54, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 649
+name = "Asesino Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los asesinos combinan el golpe cuerpo a cuerpo con la magia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
+appearance = { head = 288, body = 48, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 650
+name = "Asesino Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Debido a sus características, dentro de esta isla los asesinos prefieren entrenar en el desierto al este de la ciudad."
+appearance = { head = 309, body = 539, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 651
+name = "Herrero Tutor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Se considera Herrero al trabajador que tenga 100 skills en la habilidad Herrería. Los mismos se encargan de construir armas y armaduras para los aventureros de estas tierras."
+appearance = { head = 7, body = 93, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 652
+name = "Minero Tutor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Se considera Minero al trabajador que tenga 100 skills en la habilidad Minería. Los mismos se encargan de extraer minerales y transformarlos en lingotes para el uso de los herreros."
+appearance = { head = 109, body = 100, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 653
+name = "Carpintero Tutor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Se considera Carpintero al trabajador que tenga 100 skills en la habilidad Carpintería. Los mismos se encargan de construir todo tipo de objetos que requieran madera."
+appearance = { head = 308, body = 373, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 654
+name = "Leñador Tutor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Se considera Leñador al trabajador que tenga 100 skills en la habilidad Tala. Los mismos se encargan de extraer leña común y leña élfica para el uso de los carpinteros."
+appearance = { head = 216, body = 382, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 655
+name = "Pescador Tutor"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Se considera Pescador al trabajador que tenga 100 skills en la habilidad Pesca. Los mismos se encargan de extraer peces de los ríos y mares para el venderselos al mejor postor."
+appearance = { head = 410, body = 301, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 656
+name = "Trabajador Tutor I"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Los trabajadores pueden combatir tanto cuerpo a cuerpo como a distancia, por lo tanto, las criaturas más adecuadas para ellos, son aquellas que no posean gran poder de evasión ni de ataque."
+appearance = { head = 172, body = 348, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 657
+name = "Trabajador Tutor II"
+category = "NPCS VARIOS"
+npc_type = 0
+tags = ["pacifico"]
+description = "Por sus características, dentro de esta isla, los trabajadores, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (a distancia), al este u oeste de la ciudad."
+appearance = { head = 372, body = 376, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 0 }
+
+[[npcs_complete.npcs]]
+id = 900
+name = "Rey Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 14, body = 63, heading = 3 }
+behavior = { movement = 24, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 901
+name = "Rey Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 14, body = 180, heading = 3 }
+behavior = { movement = 24, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_complete.npcs]]
+id = 902
+name = "Clerigo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 130, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 903
+name = "Clerigo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 136, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 904
+name = "Bardo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 130, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 905
+name = "Bardo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 136, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 906
+name = "Mago Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 49, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 907
+name = "Mago Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 159, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 908
+name = "Druida Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 56, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 909
+name = "Druida Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 135, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 910
+name = "Cazador Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 58, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 911
+name = "Cazador Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 155, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 912
+name = "Pirata Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 130, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 913
+name = "Pirata Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 136, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 914
+name = "Guerrero Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 915
+name = "Guerrero Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 916
+name = "Paladin Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 917
+name = "Paladin Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 918
+name = "Asesino Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 48, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 919
+name = "Asesino Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 539, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 920
+name = "Bandido Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 921
+name = "Bandido Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_complete.npcs]]
+id = 922
+name = "Ladrón Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 47, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
+
+[[npcs_complete.npcs]]
+id = 923
+name = "Ladrón Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 374, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }

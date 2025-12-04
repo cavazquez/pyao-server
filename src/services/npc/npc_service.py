@@ -73,7 +73,7 @@ class NPCService:
         NPCService._initialized = True
         NPCService._instance = self
 
-    async def initialize_world_npcs(self, spawns_path: str = "data/map_npcs.toml") -> None:
+    async def initialize_world_npcs(self, spawns_path: str = "data/world/map_npcs.toml") -> None:
         """Inicializa todos los NPCs del mundo al iniciar el servidor.
 
         TODO: Apenas se inicia Redis se cargan los recursos desde los archivos TOML y maps,

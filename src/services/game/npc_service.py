@@ -52,20 +52,16 @@ class NPCService:
     def load_npc_data(self) -> None:
         """Carga datos de NPCs desde archivos TOML."""
         try:
-            # Cargar NPCs completos (usar test data si existe)
-            npcs_file = self.data_dir / "test_npcs.toml"
-            if not npcs_file.exists():
-                npcs_file = self.data_dir / "npcs_complete.toml"
+            # Cargar NPCs completos desde data/npcs/complete.toml
+            npcs_file = self.data_dir / "npcs" / "complete.toml"
 
             if npcs_file.exists():
                 with npcs_file.open("rb") as f:
                     npcs_data = tomllib_load(f)
                     self.all_npcs = npcs_data.get("npcs_complete", {}).get("npcs", [])
 
-            # Cargar NPCs hostiles (usar test data si existe)
-            hostiles_file = self.data_dir / "test_npcs.toml"
-            if not hostiles_file.exists():
-                hostiles_file = self.data_dir / "npcs_hostiles_extended.toml"
+            # Cargar NPCs hostiles desde data/npcs/hostiles.toml
+            hostiles_file = self.data_dir / "npcs" / "hostiles.toml"
 
             if hostiles_file.exists():
                 with hostiles_file.open("rb") as f:
@@ -80,10 +76,8 @@ class NPCService:
                             if npc.get("behavior", {}).get("hostile", 0) == 1
                         ]
 
-            # Cargar NPCs comerciantes (usar test data si existe)
-            traders_file = self.data_dir / "test_npcs.toml"
-            if not traders_file.exists():
-                traders_file = self.data_dir / "npcs_traders_extended.toml"
+            # Cargar NPCs comerciantes desde data/npcs/traders.toml
+            traders_file = self.data_dir / "npcs" / "traders.toml"
 
             if traders_file.exists():
                 with traders_file.open("rb") as f:
@@ -98,8 +92,8 @@ class NPCService:
                             if npc.get("economics", {}).get("trades", 0) == 1
                         ]
 
-            # Cargar NPCs amigables
-            amigables_file = self.data_dir / "npcs_amigables.toml"
+            # Cargar NPCs amigables desde data/npcs/friendly.toml
+            amigables_file = self.data_dir / "npcs" / "friendly.toml"
             if amigables_file.exists():
                 with amigables_file.open("rb") as f:
                     amigables_data = tomllib_load(f)

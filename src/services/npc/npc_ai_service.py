@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from src.services.map.pathfinding_service import PathfindingService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.npc_service import NPCService
+    from src.services.player.player_death_service import PlayerDeathService
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,7 @@ class NPCAIService:
         combat_service: CombatService,
         broadcast_service: MultiplayerBroadcastService,
         pathfinding_service: PathfindingService | None = None,
+        player_death_service: PlayerDeathService | None = None,
     ) -> None:
         """Inicializa el servicio de IA.
 
@@ -41,6 +43,7 @@ class NPCAIService:
             combat_service: Servicio de combate.
             broadcast_service: Servicio de broadcast.
             pathfinding_service: Servicio de pathfinding (opcional).
+            player_death_service: Servicio de muerte de jugadores (opcional).
         """
         self.npc_service = npc_service
         self.map_manager = map_manager
@@ -48,6 +51,7 @@ class NPCAIService:
         self.combat_service = combat_service
         self.broadcast_service = broadcast_service
         self.pathfinding_service = pathfinding_service
+        self.player_death_service = player_death_service
 
     async def find_nearest_player(self, npc: NPC) -> tuple[int, int, int] | None:
         """Encuentra el jugador más cercano al NPC.
@@ -212,41 +216,44 @@ class NPCAIService:
                         experience=stats.get("experience", 0),
                     )
 
-                    # Si el jugador murió, revivirlo temporalmente (para testing)
+                    # Si el jugador murió, procesar muerte completa
                     if result.get("player_died", False):
-                        await message_sender.send_console_msg(
-                            f"¡Has sido asesinado por {npc.name}! (Reviviendo...)"
-                        )
-                        logger.info(
-                            "Jugador %d fue asesinado por NPC %s - Reviviendo automáticamente",
-                            target_user_id,
-                            npc.name,
-                        )
+                        if self.player_death_service:
+                            # Usar servicio de muerte para procesar completamente
+                            await self.player_death_service.handle_player_death(
+                                user_id=target_user_id,
+                                killer_name=npc.name,
+                                message_sender=message_sender,
+                                death_reason="combate con NPC",
+                            )
+                        else:
+                            # Fallback: revivir automáticamente (para testing sin el servicio)
+                            await message_sender.send_console_msg(
+                                f"¡Has sido asesinado por {npc.name}! (Reviviendo...)"
+                            )
+                            logger.info(
+                                "Jugador %d fue asesinado por NPC %s - Reviviendo",
+                                target_user_id,
+                                npc.name,
+                            )
 
-                        # Revivir con HP completo (temporal para testing)
-                        max_hp = stats.get("max_hp", 100)
-                        await self.player_repo.update_hp(target_user_id, max_hp)
+                            # Revivir con HP completo
+                            max_hp = stats.get("max_hp", 100)
+                            await self.player_repo.update_hp(target_user_id, max_hp)
 
-                        # Enviar UPDATE_USER_STATS con HP restaurado
-                        await message_sender.send_update_user_stats(
-                            max_hp=max_hp,
-                            min_hp=max_hp,
-                            max_mana=stats.get("max_mana", 100),
-                            min_mana=stats.get("min_mana", 100),
-                            max_sta=stats.get("max_sta", 100),
-                            min_sta=stats.get("min_sta", 100),
-                            gold=stats.get("gold", 0),
-                            level=stats.get("level", 1),
-                            elu=stats.get("elu", 300),
-                            experience=stats.get("experience", 0),
-                        )
-
-                        # TODO: Implementar lógica de muerte completa
-                        # - Convertir en fantasma (cambiar body)
-                        # - Dropear items/oro
-                        # - Teletransportar a punto de respawn
-                        # - Penalización de experiencia
-                        # - etc.
+                            # Enviar UPDATE_USER_STATS con HP restaurado
+                            await message_sender.send_update_user_stats(
+                                max_hp=max_hp,
+                                min_hp=max_hp,
+                                max_mana=stats.get("max_mana", 100),
+                                min_mana=stats.get("min_mana", 100),
+                                max_sta=stats.get("max_sta", 100),
+                                min_sta=stats.get("min_sta", 100),
+                                gold=stats.get("gold", 0),
+                                level=stats.get("level", 1),
+                                elu=stats.get("elu", 300),
+                                experience=stats.get("experience", 0),
+                            )
 
             logger.info(
                 "NPC %s atacó a jugador %d por %d de daño",

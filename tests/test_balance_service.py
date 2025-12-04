@@ -20,9 +20,11 @@ class TestBalanceService:
 
     def setup_method(self):
         """Configuración para cada test."""
-        # Crear directorio temporal con datos de balance
+        # Crear directorio temporal con estructura classes/
         self.temp_dir = Path(tempfile.mkdtemp())
-        self.balance_file = self.temp_dir / "classes_balance.toml"
+        classes_dir = self.temp_dir / "classes"
+        classes_dir.mkdir(parents=True, exist_ok=True)
+        self.balance_file = classes_dir / "balance.toml"
 
         # Datos de prueba
         test_balance_data = """# Modificadores de atributos por raza
@@ -183,7 +185,7 @@ vida = 0.8
     def test_integration_with_real_data(self):
         """Test de integración con datos reales del cliente."""
         # Usar los datos reales si existen
-        real_balance_file = Path("data/classes_balance.toml")
+        real_balance_file = Path("data/classes/balance.toml")
         if real_balance_file.exists():
             real_service = BalanceService(Path("data"))
 

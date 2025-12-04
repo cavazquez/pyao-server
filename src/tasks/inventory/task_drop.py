@@ -57,16 +57,25 @@ class TaskDrop(Task):
             return
 
         # Parsear datos: slot (u8) + quantity (u16)
-        # Parsear y validar packet
+        # slot=0 significa oro, slot=1-30 significa item del inventario
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
-        slot = validator.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config.get("game.inventory.max_slots", 30)),
-        )
+
+        # Leer slot manualmente para permitir slot=0 (oro)
+        slot = reader.read_byte()
+        if slot is None:
+            await self.message_sender.send_console_msg("Datos inválidos: slot no recibido")
+            return
+
+        # Validar rango: 0 para oro, 1-max para items
+        max_slots = ConfigManager.as_int(config.get("game.inventory.max_slots", 30))
+        if slot > max_slots:
+            await self.message_sender.send_console_msg(f"Slot inválido: {slot}")
+            return
+
         quantity = validator.read_quantity(min_qty=1, max_qty=10000)
 
-        if validator.has_errors() or slot is None or quantity is None:
+        if validator.has_errors() or quantity is None:
             error_msg = (
                 validator.get_error_message() if validator.has_errors() else "Datos inválidos"
             )

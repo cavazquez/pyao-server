@@ -9,7 +9,7 @@ class NPCFactory:
     """Factory para crear instancias de NPCs.
 
     Este factory crea NPCs basándose en parámetros configurables.
-    Los parámetros típicamente provienen de archivos TOML (npcs_hostiles.toml, etc.)
+    Los parámetros típicamente provienen de archivos TOML (npcs/hostiles.toml, etc.)
     y son procesados por NPCService.
     """
 

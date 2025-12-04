@@ -666,6 +666,7 @@ class TaskFactory:
                 map_manager=self.deps.map_manager,
                 broadcast_service=self.deps.broadcast_service,
                 message_sender=message_sender,
+                item_catalog=self.deps.item_catalog,
             )
         else:
             # Actualizar message_sender por si cambió

@@ -1,0 +1,91 @@
+# Lista de NPCs invocables
+# Migrado desde Invokar.dat del servidor VB6 original
+# Estos NPCs pueden ser invocados por GMs o hechizos de invocación
+
+[summon_list]
+description = "NPCs que pueden ser invocados mediante hechizos o comandos de GM"
+
+# Lista de NPCs invocables
+# id = ID del NPC en npcs_complete.toml
+# name = Nombre para referencia rápida
+
+[[summon_list.npcs]]
+id = 500
+name = "Murciélago"
+
+[[summon_list.npcs]]
+id = 501
+name = "Lobo"
+
+[[summon_list.npcs]]
+id = 502
+name = "Zombie"
+
+[[summon_list.npcs]]
+id = 503
+name = "Esqueleto"
+
+[[summon_list.npcs]]
+id = 504
+name = "Serpiente"
+
+[[summon_list.npcs]]
+id = 505
+name = "Goblin"
+
+[[summon_list.npcs]]
+id = 506
+name = "Gallo Salvaje"
+
+[[summon_list.npcs]]
+id = 507
+name = "Lord Zombie"
+
+[[summon_list.npcs]]
+id = 508
+name = "Esqueleto Guerrero"
+
+[[summon_list.npcs]]
+id = 509
+name = "Dragón Rojo"
+
+[[summon_list.npcs]]
+id = 510
+name = "Araña Gigante"
+
+[[summon_list.npcs]]
+id = 523
+name = "Orco"
+
+[[summon_list.npcs]]
+id = 529
+name = "Escorpión"
+
+[[summon_list.npcs]]
+id = 530
+name = "Bandido"
+
+[[summon_list.npcs]]
+id = 531
+name = "Asesino"
+
+[[summon_list.npcs]]
+id = 541
+name = "Ogro"
+
+[[summon_list.npcs]]
+id = 540
+name = "Duende"
+
+[[summon_list.npcs]]
+id = 537
+name = "Beholder"
+
+[[summon_list.npcs]]
+id = 538
+name = "Oso Pardo"
+
+[[summon_list.npcs]]
+id = 534
+name = "Hormiga Gigante"
+

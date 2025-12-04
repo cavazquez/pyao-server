@@ -67,7 +67,7 @@ async def test_handle_drop_gold_success(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=500)
+    command = DropCommand(user_id=1, slot=0, quantity=500)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is True
@@ -94,7 +94,7 @@ async def test_handle_drop_gold_insufficient(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=5000)  # Más de lo que tiene
+    command = DropCommand(user_id=1, slot=0, quantity=5000)  # slot=0 for gold, more than player has
     result = await handler.handle(command)
 
     # Debe ajustar a lo que tiene (1000)
@@ -120,7 +120,7 @@ async def test_handle_drop_zero_gold(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=0)
+    command = DropCommand(user_id=1, slot=0, quantity=0)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is False
@@ -146,7 +146,7 @@ async def test_handle_drop_no_gold(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=100)
+    command = DropCommand(user_id=1, slot=0, quantity=100)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is False
@@ -197,7 +197,7 @@ async def test_handle_without_position(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=100)
+    command = DropCommand(user_id=1, slot=0, quantity=100)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is False
@@ -220,7 +220,7 @@ async def test_handle_without_broadcast_service(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=100)
+    command = DropCommand(user_id=1, slot=0, quantity=100)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is True
@@ -244,10 +244,39 @@ async def test_result_data_contains_gold_info(
         message_sender=mock_message_sender,
     )
 
-    command = DropCommand(user_id=1, slot=1, quantity=250)
+    command = DropCommand(user_id=1, slot=0, quantity=250)  # slot=0 for gold
     result = await handler.handle(command)
 
     assert result.success is True
     assert result.data["item_id"] == 12  # GOLD_ITEM_ID
     assert result.data["quantity"] == 250
     assert result.data["type"] == "gold"
+
+
+@pytest.mark.asyncio
+async def test_handle_drop_gold_godot_flagoro(
+    mock_player_repo: MagicMock,
+    mock_inventory_repo: MagicMock,
+    mock_map_manager: MagicMock,
+    mock_broadcast_service: MagicMock,
+    mock_message_sender: MagicMock,
+) -> None:
+    """Test drop de oro usando slot=31 (Flagoro del cliente Godot)."""
+    handler = DropCommandHandler(
+        player_repo=mock_player_repo,
+        inventory_repo=mock_inventory_repo,
+        map_manager=mock_map_manager,
+        broadcast_service=mock_broadcast_service,
+        message_sender=mock_message_sender,
+    )
+
+    # Cliente Godot usa slot=31 para oro (Consts.Flagoro)
+    command = DropCommand(user_id=1, slot=31, quantity=500)
+    result = await handler.handle(command)
+
+    assert result.success is True
+    assert result.data["type"] == "gold"
+    assert result.data["quantity"] == 500
+    mock_player_repo.update_gold.assert_called_once_with(1, 500)
+    mock_map_manager.add_ground_item.assert_called_once()
+    mock_broadcast_service.broadcast_object_create.assert_called_once()

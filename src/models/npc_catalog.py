@@ -14,14 +14,14 @@ class NPCCatalog:
     en el mundo. Cada NPC tiene un ID único y propiedades base.
 
     Carga NPCs desde múltiples archivos:
-    - npcs_hostiles.toml: Criaturas agresivas
-    - npcs_amigables.toml: NPCs de servicios
+    - npcs/hostiles.toml: Criaturas agresivas
+    - npcs/friendly.toml: NPCs de servicios
     """
 
     def __init__(
         self,
-        hostile_path: str = "data/npcs_hostiles.toml",
-        friendly_path: str = "data/npcs_amigables.toml",
+        hostile_path: str = "data/npcs/hostiles.toml",
+        friendly_path: str = "data/npcs/friendly.toml",
     ) -> None:
         """Inicializa el catálogo de NPCs.
 
@@ -50,19 +50,37 @@ class NPCCatalog:
             with path.open("rb") as f:
                 data = tomllib.load(f)
 
-            if "npc" not in data:
-                logger.warning("No se encontró la sección [npc] en %s", file_path)
+            # Soportar múltiples formatos:
+            # 1. [[npc]] - formato legacy/friendly
+            # 2. [[npcs_hostiles.npcs]] - formato hostiles regenerado
+            # 3. [[npcs_complete.npcs]] - formato complete regenerado
+            npcs_list = None
+            if "npc" in data:
+                npcs_list = data["npc"]
+            elif "npcs_hostiles" in data and "npcs" in data["npcs_hostiles"]:
+                npcs_list = data["npcs_hostiles"]["npcs"]
+            elif "npcs_complete" in data and "npcs" in data["npcs_complete"]:
+                npcs_list = data["npcs_complete"]["npcs"]
+            elif "npcs_traders" in data and "npcs" in data["npcs_traders"]:
+                npcs_list = data["npcs_traders"]["npcs"]
+
+            if npcs_list is None:
+                logger.warning("No se encontró sección de NPCs válida en %s", file_path)
                 return
 
             count = 0
-            for npc_data in data["npc"]:
+            for npc_data in npcs_list:
                 npc_id = npc_data.get("id")
                 if npc_id is None:
                     logger.warning("NPC sin ID encontrado, ignorando: %s", npc_data)
                     continue
 
                 self._npcs[npc_id] = npc_data
-                logger.debug("NPC cargado: %d - %s", npc_id, npc_data.get("nombre", "Sin nombre"))
+                logger.debug(
+                    "NPC cargado: %d - %s",
+                    npc_id,
+                    npc_data.get("name", npc_data.get("nombre", "Sin nombre")),
+                )
                 count += 1
 
             logger.info("NPCs %s cargados: %d NPCs desde %s", file_type, count, file_path)

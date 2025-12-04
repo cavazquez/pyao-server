@@ -31,7 +31,7 @@ class BalanceService:
     def _load_balance_data(self) -> None:
         """Carga los datos de balance desde archivos TOML."""
         try:
-            balance_file = self.data_dir / "classes_balance.toml"
+            balance_file = self.data_dir / "classes" / "balance.toml"
 
             if not balance_file.exists():
                 logger.warning("No se encontró archivo de balance: %s", balance_file)

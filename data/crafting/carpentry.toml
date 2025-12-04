@@ -1,0 +1,320 @@
+# Recetas de Carpintería
+# Migrado desde ObjCarpintero.dat del servidor VB6 original
+# Define los objetos que un carpintero puede fabricar
+
+[carpentry]
+description = "Objetos que pueden ser fabricados mediante carpintería"
+skill_required = "carpentry"
+
+# Flechas
+[[carpentry.recipe]]
+item_id = 480
+name = "Flecha"
+category = "arrows"
+skill_level = 1
+materials = [
+    { item_id = 58, quantity = 1, name = "Leña" }  # Madera
+]
+
+[[carpentry.recipe]]
+item_id = 551
+name = "Flecha +1"
+category = "arrows"
+skill_level = 30
+materials = [
+    { item_id = 58, quantity = 2, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 552
+name = "Flecha +2"
+category = "arrows"
+skill_level = 60
+materials = [
+    { item_id = 58, quantity = 3, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 553
+name = "Flecha +3"
+category = "arrows"
+skill_level = 90
+materials = [
+    { item_id = 58, quantity = 4, name = "Leña" }
+]
+
+# Instrumentos Musicales
+[[carpentry.recipe]]
+item_id = 696
+name = "Laúd Mágico"
+category = "instruments"
+skill_level = 80
+materials = [
+    { item_id = 58, quantity = 20, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 1049
+name = "Laúd Élfico"
+category = "instruments"
+skill_level = 95
+materials = [
+    { item_id = 58, quantity = 30, name = "Leña Élfica" }
+]
+
+[[carpentry.recipe]]
+item_id = 208
+name = "Flauta Mágica"
+category = "instruments"
+skill_level = 70
+materials = [
+    { item_id = 58, quantity = 15, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 1050
+name = "Flauta Élfica"
+category = "instruments"
+skill_level = 90
+materials = [
+    { item_id = 58, quantity = 25, name = "Leña Élfica" }
+]
+
+[[carpentry.recipe]]
+item_id = 362
+name = "Tambor"
+category = "instruments"
+skill_level = 20
+materials = [
+    { item_id = 58, quantity = 5, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 469
+name = "Laúd"
+category = "instruments"
+skill_level = 40
+materials = [
+    { item_id = 58, quantity = 10, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 540
+name = "Flauta"
+category = "instruments"
+skill_level = 30
+materials = [
+    { item_id = 58, quantity = 8, name = "Leña" }
+]
+
+# Bastones y Arcos
+[[carpentry.recipe]]
+item_id = 660
+name = "Báculo Engarzado"
+category = "weapons"
+skill_level = 85
+materials = [
+    { item_id = 58, quantity = 20, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 665
+name = "Arco de Cazador"
+category = "weapons"
+skill_level = 75
+materials = [
+    { item_id = 58, quantity = 18, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 664
+name = "Arco Compuesto Reforzado"
+category = "weapons"
+skill_level = 65
+materials = [
+    { item_id = 58, quantity = 15, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 479
+name = "Arco Compuesto"
+category = "weapons"
+skill_level = 50
+materials = [
+    { item_id = 58, quantity = 12, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 663
+name = "Arco Simple Reforzado"
+category = "weapons"
+skill_level = 40
+materials = [
+    { item_id = 58, quantity = 10, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 478
+name = "Arco Simple"
+category = "weapons"
+skill_level = 25
+materials = [
+    { item_id = 58, quantity = 8, name = "Leña" }
+]
+
+# Barcos
+[[carpentry.recipe]]
+item_id = 474
+name = "Barca"
+category = "boats"
+skill_level = 50
+materials = [
+    { item_id = 58, quantity = 50, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 475
+name = "Galera"
+category = "boats"
+skill_level = 75
+materials = [
+    { item_id = 58, quantity = 100, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 476
+name = "Galeón"
+category = "boats"
+skill_level = 95
+materials = [
+    { item_id = 58, quantity = 200, name = "Leña" }
+]
+
+# Muebles
+[[carpentry.recipe]]
+item_id = 163
+name = "Cuchara"
+category = "furniture"
+skill_level = 5
+materials = [
+    { item_id = 58, quantity = 1, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 168
+name = "Silla"
+category = "furniture"
+skill_level = 15
+materials = [
+    { item_id = 58, quantity = 5, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 162
+name = "Silla Rústica"
+category = "furniture"
+skill_level = 10
+materials = [
+    { item_id = 58, quantity = 4, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 733
+name = "Butaca"
+category = "furniture"
+skill_level = 35
+materials = [
+    { item_id = 58, quantity = 10, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 799
+name = "Banqueta"
+category = "furniture"
+skill_level = 20
+materials = [
+    { item_id = 58, quantity = 6, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 167
+name = "Mueble Rústico"
+category = "furniture"
+skill_level = 25
+materials = [
+    { item_id = 58, quantity = 8, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 756
+name = "Mueble Rústico Grande"
+category = "furniture"
+skill_level = 30
+materials = [
+    { item_id = 58, quantity = 12, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 748
+name = "Sillón"
+category = "furniture"
+skill_level = 40
+materials = [
+    { item_id = 58, quantity = 15, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 788
+name = "Sillón Decorado"
+category = "furniture"
+skill_level = 45
+materials = [
+    { item_id = 58, quantity = 18, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 789
+name = "Sillón Elegante"
+category = "furniture"
+skill_level = 50
+materials = [
+    { item_id = 58, quantity = 20, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 790
+name = "Sillón Azul"
+category = "furniture"
+skill_level = 55
+materials = [
+    { item_id = 58, quantity = 22, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 791
+name = "Sillón Azul Doble"
+category = "furniture"
+skill_level = 60
+materials = [
+    { item_id = 58, quantity = 25, name = "Leña" }
+]
+
+[[carpentry.recipe]]
+item_id = 800
+name = "Armario"
+category = "furniture"
+skill_level = 65
+materials = [
+    { item_id = 58, quantity = 30, name = "Leña" }
+]
+
+# Herramientas
+[[carpentry.recipe]]
+item_id = 138
+name = "Caña de Pescar"
+category = "tools"
+skill_level = 10
+materials = [
+    { item_id = 58, quantity = 3, name = "Leña" }
+]
+

@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class MerchantDataLoader(BaseDataLoader):
     """Carga inventarios de mercaderes desde merchant_inventories.toml a Redis."""
 
-    TOML_FILE = "data/merchant_inventories.toml"
+    TOML_FILE = "data/npcs/merchants.toml"
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el loader de mercaderes.

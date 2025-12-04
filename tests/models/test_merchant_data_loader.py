@@ -32,7 +32,7 @@ async def test_merchant_loader_initialization(redis_client: RedisClient) -> None
     """Verifica que el loader se inicializa correctamente."""
     loader = MerchantDataLoader(redis_client)
     assert loader.redis_client is redis_client
-    assert loader.TOML_FILE == "data/merchant_inventories.toml"
+    assert loader.TOML_FILE == "data/npcs/merchants.toml"
 
 
 @pytest.mark.asyncio
@@ -54,8 +54,8 @@ async def test_merchant_loader_load_creates_correct_keys(redis_client: RedisClie
 
     await loader.load()
 
-    # Verificar que se creó la key del Comerciante (npc_id=2)
-    expected_key = RedisKeys.merchant_inventory(2)
+    # Verificar que se creó la key del Herrero (npc_id=7) - primer merchant en el archivo
+    expected_key = RedisKeys.merchant_inventory(7)
     calls = redis_client.redis.hset.await_args_list
 
     keys_used = {call.args[0] for call in calls}
@@ -99,8 +99,8 @@ async def test_merchant_loader_clear_deletes_correct_keys(redis_client: RedisCli
 
     await loader.clear()
 
-    # Verificar que se eliminó la key del Comerciante (npc_id=2)
-    expected_key = RedisKeys.merchant_inventory(2)
+    # Verificar que se eliminó la key del Herrero (npc_id=7) - primer merchant en el archivo
+    expected_key = RedisKeys.merchant_inventory(7)
     calls = redis_client.redis.delete.await_args_list
 
     keys_deleted = {call.args[0] for call in calls}

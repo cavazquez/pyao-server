@@ -6,6 +6,10 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+# ObjType constants from Argentum Online
+OBJTYPE_WEAPON = 2
+OBJTYPE_ARMOR = 4
+
 
 class ItemCatalog:
     """Gestiona el catálogo de items desde el archivo data/items.toml."""
@@ -136,3 +140,55 @@ class ItemCatalog:
             True si existe, False si no.
         """
         return item_id in self._items
+
+    def get_weapon_damage(self, item_id: int) -> tuple[int, int] | None:
+        """Obtiene el daño mínimo y máximo de un arma.
+
+        Args:
+            item_id: ID del item (debe ser un arma, ObjType=OBJTYPE_WEAPON).
+
+        Returns:
+            Tupla (min_hit, max_hit) o None si no es un arma o no existe.
+        """
+        item = self._items.get(item_id)
+        if not item:
+            return None
+
+        if item.get("ObjType") != OBJTYPE_WEAPON:
+            return None
+
+        min_hit = item.get("MinHit", 1)
+        max_hit = item.get("MaxHit", 1)
+
+        # Asegurar que son enteros
+        if isinstance(min_hit, int) and isinstance(max_hit, int):
+            return (min_hit, max_hit)
+
+        # Cast a int para valores no-int (float, str, etc.)
+        return (int(str(min_hit)), int(str(max_hit)))
+
+    def get_armor_defense(self, item_id: int) -> tuple[int, int] | None:
+        """Obtiene la defensa mínima y máxima de una armadura.
+
+        Args:
+            item_id: ID del item (debe ser una armadura, ObjType=OBJTYPE_ARMOR).
+
+        Returns:
+            Tupla (min_def, max_def) o None si no es armadura o no existe.
+        """
+        item = self._items.get(item_id)
+        if not item:
+            return None
+
+        if item.get("ObjType") != OBJTYPE_ARMOR:
+            return None
+
+        min_def = item.get("MinDef", 0)
+        max_def = item.get("MaxDef", 0)
+
+        # Asegurar que son enteros
+        if isinstance(min_def, int) and isinstance(max_def, int):
+            return (min_def, max_def)
+
+        # Cast a int para valores no-int (float, str, etc.)
+        return (int(str(min_def)), int(str(max_def)))

@@ -31,7 +31,7 @@ class LootTable:
 class LootTableService:
     """Servicio que maneja las loot tables de NPCs."""
 
-    def __init__(self, loot_tables_path: str = "data/loot_tables.toml") -> None:
+    def __init__(self, loot_tables_path: str = "data/npcs/loot_tables.toml") -> None:
         """Inicializa el servicio de loot tables.
 
         Args:

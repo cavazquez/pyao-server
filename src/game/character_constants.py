@@ -12,7 +12,7 @@ NOTA: Este módulo no tiene lógica, solo constantes reutilizables.
 """
 
 # Mapping de IDs de clase (cliente Godot / protocolo AO) a nombres de clase
-# usados en el archivo data/classes_balance.toml.
+# usados en el archivo data/classes/balance.toml.
 JOB_ID_TO_CLASS_NAME: dict[int, str] = {
     1: "Mago",
     2: "Clerigo",
@@ -28,7 +28,7 @@ JOB_ID_TO_CLASS_NAME: dict[int, str] = {
     12: "Pirata",
 }
 
-# Mapping de IDs de raza a nombres legibles (coinciden con classes_balance.toml)
+# Mapping de IDs de raza a nombres legibles (coinciden con classes/balance.toml)
 RACE_ID_TO_NAME: dict[int, str] = {
     1: "Humano",
     2: "Elfo",

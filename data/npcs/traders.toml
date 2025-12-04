@@ -1,0 +1,1045 @@
+# NPCs de Argentum Online - npcs_traders
+# Generado automáticamente desde NPCs.dat
+# Total: 80 NPCs
+
+[npcs_traders]
+
+[[npcs_traders.npcs]]
+id = 34
+name = "Cullighan"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Usted sabe que no hay persona noble o respetable en estas tierras que no tenga su propia vivienda. ¡acérquese y sea dueño de una de las exclusivas casas de Ullathorpe. ¡Será admirado por toda la población!"
+appearance = { head = 33, body = 240, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 54, quantity = 1 }, { slot = 2, item_id = 65, quantity = 1 }, { slot = 3, item_id = 69, quantity = 1 }, { slot = 4, item_id = 73, quantity = 1 }] }
+
+[[npcs_traders.npcs]]
+id = 35
+name = "Moraday"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Ha descubierto que la ciudad de Nix es la más hermosa de todo Argentum, verdad? ¡Pues qué mejor que ser un terrateniente de este paraíso! ¡Acércate que haremos negocios!"
+appearance = { head = 35, body = 239, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 87, quantity = 1 }, { slot = 2, item_id = 91, quantity = 1 }, { slot = 3, item_id = 95, quantity = 1 }, { slot = 4, item_id = 99, quantity = 1 }, { slot = 5, item_id = 103, quantity = 1 }, { slot = 6, item_id = 107, quantity = 1 }, { slot = 7, item_id = 111, quantity = 1 }, { slot = 8, item_id = 115, quantity = 1 }, { slot = 9, item_id = 119, quantity = 1 }] }
+
+[[npcs_traders.npcs]]
+id = 52
+name = "Rantarisk"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "De lejos pude ver vuestro blazón, seguro busca una de las moradas más lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza ¡Venga y hagamos negocios!"
+appearance = { head = 32, body = 241, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 266, quantity = 1 }, { slot = 2, item_id = 270, quantity = 1 }, { slot = 3, item_id = 274, quantity = 1 }, { slot = 4, item_id = 278, quantity = 1 }, { slot = 5, item_id = 282, quantity = 1 }, { slot = 6, item_id = 286, quantity = 1 }, { slot = 7, item_id = 290, quantity = 1 }, { slot = 8, item_id = 294, quantity = 1 }, { slot = 9, item_id = 298, quantity = 1 }, { slot = 10, item_id = 323, quantity = 1 }, { slot = 11, item_id = 327, quantity = 1 }, { slot = 12, item_id = 331, quantity = 1 }, { slot = 13, item_id = 335, quantity = 1 }, { slot = 14, item_id = 339, quantity = 1 }, { slot = 15, item_id = 343, quantity = 1 }, { slot = 16, item_id = 347, quantity = 1 }, { slot = 17, item_id = 351, quantity = 1 }, { slot = 18, item_id = 355, quantity = 1 }] }
+
+[[npcs_traders.npcs]]
+id = 62
+name = "Guldorf"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si está buscando la paz y la tranquilidad en estas tierras ha llegado al lugar indicado... adquiera una de nuestras exclusivas residencias, y cambie su vida para siempre."
+appearance = { head = 36, body = 234, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 420, quantity = 1 }, { slot = 2, item_id = 424, quantity = 1 }, { slot = 3, item_id = 428, quantity = 1 }, { slot = 4, item_id = 432, quantity = 1 }, { slot = 5, item_id = 436, quantity = 1 }, { slot = 6, item_id = 440, quantity = 1 }] }
+
+[[npcs_traders.npcs]]
+id = 101
+name = "Vendedor de propiedades."
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "En estas tierras demoníacas están las mejores residencias para los miembros de la Legión Oscura... Si no eres legionario puedes también vivir acá, ¡pero os aseguro que los augura un infierno! jajaja!"
+appearance = { head = 34, body = 170, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 9 }
+inventory = { items = [{ slot = 1, item_id = 583, quantity = 1 }, { slot = 2, item_id = 587, quantity = 1 }, { slot = 3, item_id = 591, quantity = 1 }, { slot = 4, item_id = 595, quantity = 1 }, { slot = 5, item_id = 599, quantity = 1 }, { slot = 6, item_id = 603, quantity = 1 }, { slot = 7, item_id = 607, quantity = 1 }, { slot = 8, item_id = 611, quantity = 1 }] }
+
+[[npcs_traders.npcs]]
+id = 14
+name = "Lilith"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola, tengo las mejores Pociones de la Alquimia."
+appearance = { head = 77, body = 200, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 11 }
+inventory = { items = [{ slot = 1, item_id = 36, quantity = 1000 }, { slot = 2, item_id = 37, quantity = 1000 }, { slot = 3, item_id = 38, quantity = 1000 }, { slot = 4, item_id = 39, quantity = 1000 }, { slot = 5, item_id = 166, quantity = 1000 }, { slot = 6, item_id = 645, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 33
+name = "Leñador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola muchacho!, si deseas vender o comprar madera escribe /COMERCIAR."
+appearance = { head = 4, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 14 }
+inventory = { items = [{ slot = 1, item_id = 127, quantity = 1000 }, { slot = 2, item_id = 1005, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 44
+name = "Carpintero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola muchacho!, bienvenido a mi humilde Carpintería."
+appearance = { head = 2, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 20 }
+inventory = { items = [{ slot = 1, item_id = 163, quantity = 1000 }, { slot = 2, item_id = 167, quantity = 1000 }, { slot = 3, item_id = 168, quantity = 1000 }, { slot = 4, item_id = 198, quantity = 1000 }, { slot = 5, item_id = 480, quantity = 10000 }] }
+
+[[npcs_traders.npcs]]
+id = 41
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido al gremio de pescadores!"
+appearance = { head = 2, body = 3, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 138, quantity = 1000 }, { slot = 2, item_id = 139, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 58
+name = "Pescador"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido al gremio de pescadores!"
+appearance = { head = 101, body = 3, heading = 3 }
+behavior = { movement = 2, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 138, quantity = 1000 }, { slot = 2, item_id = 139, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 48
+name = "Minero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tengo los mejores utensillos para mineros de todo Argentum."
+appearance = { head = 2, body = 1, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 23 }
+inventory = { items = [{ slot = 1, item_id = 187, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 80
+name = "Mercader"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡¡Hola buen amigo, compro y vendo todo tipo de mercancías!!"
+appearance = { head = 2, body = 3, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1000 }
+inventory = { items = [{ slot = 1, item_id = 534, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 9
+name = "Ralph"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, pequeño aventurero, tengo aquí unas mercaderías para saciar tu hambre y sed!."
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 42
+name = "Antogne"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola aventurero! Si estais hambriento habeis venido al lugar apropiador, tengo todo tipo de frutas."
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 22, quantity = 1000 }, { slot = 4, item_id = 754, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 43, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 114
+name = "SR"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a la Sastrería Real."
+appearance = { head = 171, body = 174, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 675, quantity = 1000 }, { slot = 2, item_id = 516, quantity = 1000 }, { slot = 3, item_id = 517, quantity = 1000 }, { slot = 4, item_id = 372, quantity = 1000 }, { slot = 5, item_id = 521, quantity = 1000 }, { slot = 6, item_id = 679, quantity = 1000 }, { slot = 7, item_id = 520, quantity = 1000 }, { slot = 8, item_id = 680, quantity = 1000 }, { slot = 9, item_id = 629, quantity = 1000 }, { slot = 10, item_id = 687, quantity = 1000 }, { slot = 11, item_id = 691, quantity = 1000 }, { slot = 12, item_id = 693, quantity = 1000 }, { slot = 13, item_id = 1038, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 159
+name = "SR"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a la Sastrería Real."
+appearance = { head = 309, body = 175, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 676, quantity = 1000 }, { slot = 2, item_id = 549, quantity = 1000 }, { slot = 3, item_id = 1039, quantity = 1000 }, { slot = 4, item_id = 492, quantity = 1000 }, { slot = 5, item_id = 682, quantity = 1000 }, { slot = 6, item_id = 1040, quantity = 1000 }, { slot = 7, item_id = 681, quantity = 1000 }, { slot = 8, item_id = 688, quantity = 1000 }, { slot = 9, item_id = 694, quantity = 1000 }, { slot = 10, item_id = 1038, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 115
+name = "SC"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
+appearance = { head = 0, body = 69, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 677, quantity = 1000 }, { slot = 2, item_id = 509, quantity = 1000 }, { slot = 3, item_id = 518, quantity = 1000 }, { slot = 4, item_id = 523, quantity = 1000 }, { slot = 5, item_id = 369, quantity = 1000 }, { slot = 6, item_id = 634, quantity = 1000 }, { slot = 7, item_id = 684, quantity = 1000 }, { slot = 8, item_id = 635, quantity = 1000 }, { slot = 9, item_id = 683, quantity = 1000 }, { slot = 10, item_id = 689, quantity = 1000 }, { slot = 11, item_id = 701, quantity = 1000 }, { slot = 12, item_id = 1037, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 160
+name = "SC"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
+appearance = { head = 318, body = 177, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 678, quantity = 1000 }, { slot = 2, item_id = 558, quantity = 1000 }, { slot = 3, item_id = 1041, quantity = 1000 }, { slot = 4, item_id = 379, quantity = 1000 }, { slot = 5, item_id = 686, quantity = 1000 }, { slot = 6, item_id = 1042, quantity = 1000 }, { slot = 7, item_id = 685, quantity = 1000 }, { slot = 8, item_id = 690, quantity = 1000 }, { slot = 9, item_id = 695, quantity = 1000 }, { slot = 10, item_id = 1037, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 120
+name = "Ireth"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido amigo, vendo ropajes para MUJERES HUMANAS."
+appearance = { head = 71, body = 254, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 879, quantity = 1000 }, { slot = 2, item_id = 880, quantity = 1000 }, { slot = 3, item_id = 884, quantity = 1000 }, { slot = 4, item_id = 885, quantity = 1000 }, { slot = 5, item_id = 886, quantity = 1000 }, { slot = 6, item_id = 891, quantity = 1000 }, { slot = 7, item_id = 892, quantity = 1000 }, { slot = 8, item_id = 893, quantity = 1000 }, { slot = 9, item_id = 894, quantity = 1000 }, { slot = 10, item_id = 896, quantity = 1000 }, { slot = 11, item_id = 899, quantity = 1000 }, { slot = 12, item_id = 900, quantity = 1000 }, { slot = 13, item_id = 901, quantity = 1000 }, { slot = 14, item_id = 902, quantity = 1000 }, { slot = 15, item_id = 904, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 121
+name = "Isaac"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Buscas ropas para HOMBRES HUMANOS? Entonces has hecho bien en acudir a mí."
+appearance = { head = 7, body = 240, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 882, quantity = 1000 }, { slot = 2, item_id = 887, quantity = 1000 }, { slot = 3, item_id = 888, quantity = 1000 }, { slot = 4, item_id = 889, quantity = 1000 }, { slot = 5, item_id = 890, quantity = 1000 }, { slot = 6, item_id = 897, quantity = 1000 }, { slot = 7, item_id = 903, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 122
+name = "Nelvi"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Poseo una gran cantidad de ropajes para los astutos GNOMOS, ¿Deseas algo en particular?"
+appearance = { head = 403, body = 294, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 908, quantity = 1000 }, { slot = 2, item_id = 910, quantity = 1000 }, { slot = 3, item_id = 911, quantity = 1000 }, { slot = 4, item_id = 912, quantity = 1000 }, { slot = 5, item_id = 913, quantity = 1000 }, { slot = 6, item_id = 915, quantity = 1000 }, { slot = 7, item_id = 916, quantity = 1000 }, { slot = 8, item_id = 917, quantity = 1000 }, { slot = 9, item_id = 918, quantity = 1000 }, { slot = 10, item_id = 919, quantity = 1000 }, { slot = 11, item_id = 920, quantity = 1000 }, { slot = 12, item_id = 921, quantity = 1000 }, { slot = 13, item_id = 922, quantity = 1000 }, { slot = 14, item_id = 923, quantity = 1000 }, { slot = 15, item_id = 924, quantity = 1000 }, { slot = 16, item_id = 927, quantity = 1000 }, { slot = 17, item_id = 928, quantity = 1000 }, { slot = 18, item_id = 929, quantity = 1000 }, { slot = 19, item_id = 930, quantity = 1000 }, { slot = 20, item_id = 932, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 123
+name = "Aile"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, vendo ropas para los hermosos GNOMOS de estas tierras."
+appearance = { head = 473, body = 288, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 909, quantity = 1000 }, { slot = 2, item_id = 914, quantity = 1000 }, { slot = 3, item_id = 925, quantity = 1000 }, { slot = 4, item_id = 926, quantity = 1000 }, { slot = 5, item_id = 931, quantity = 1000 }, { slot = 6, item_id = 933, quantity = 1000 }, { slot = 7, item_id = 935, quantity = 1000 }, { slot = 8, item_id = 936, quantity = 1000 }, { slot = 9, item_id = 938, quantity = 1000 }, { slot = 10, item_id = 941, quantity = 1000 }, { slot = 11, item_id = 942, quantity = 1000 }, { slot = 12, item_id = 934, quantity = 1000 }, { slot = 13, item_id = 937, quantity = 1000 }, { slot = 14, item_id = 939, quantity = 1000 }, { slot = 15, item_id = 940, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 124
+name = "Varinya"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tengo para ofrecerte los mejores ropajes para ELFOS."
+appearance = { head = 172, body = 234, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 943, quantity = 1000 }, { slot = 2, item_id = 944, quantity = 1000 }, { slot = 3, item_id = 945, quantity = 1000 }, { slot = 4, item_id = 946, quantity = 1000 }, { slot = 5, item_id = 947, quantity = 1000 }, { slot = 6, item_id = 948, quantity = 1000 }, { slot = 7, item_id = 949, quantity = 1000 }, { slot = 8, item_id = 950, quantity = 1000 }, { slot = 9, item_id = 951, quantity = 1000 }, { slot = 10, item_id = 952, quantity = 1000 }, { slot = 11, item_id = 953, quantity = 1000 }, { slot = 12, item_id = 954, quantity = 1000 }, { slot = 13, item_id = 955, quantity = 1000 }, { slot = 14, item_id = 956, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 125
+name = "Torke"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Solo tengo ropajes para ENANOS, si no las puedes usar, ¡vete de aqui!"
+appearance = { head = 371, body = 306, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 957, quantity = 1000 }, { slot = 2, item_id = 958, quantity = 1000 }, { slot = 3, item_id = 959, quantity = 1000 }, { slot = 4, item_id = 960, quantity = 1000 }, { slot = 5, item_id = 961, quantity = 1000 }, { slot = 6, item_id = 962, quantity = 1000 }, { slot = 7, item_id = 963, quantity = 1000 }, { slot = 8, item_id = 964, quantity = 1000 }, { slot = 9, item_id = 965, quantity = 1000 }, { slot = 10, item_id = 966, quantity = 1000 }, { slot = 11, item_id = 967, quantity = 1000 }, { slot = 12, item_id = 968, quantity = 1000 }, { slot = 13, item_id = 969, quantity = 1000 }, { slot = 14, item_id = 970, quantity = 1000 }, { slot = 15, item_id = 971, quantity = 1000 }, { slot = 16, item_id = 972, quantity = 1000 }, { slot = 17, item_id = 973, quantity = 1000 }, { slot = 18, item_id = 974, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 126
+name = "Gourk"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Vendo ropas para DROWS, de hermosas telas y refinados detalles."
+appearance = { head = 203, body = 264, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 977, quantity = 1000 }, { slot = 2, item_id = 978, quantity = 1000 }, { slot = 3, item_id = 979, quantity = 1000 }, { slot = 4, item_id = 980, quantity = 1000 }, { slot = 5, item_id = 981, quantity = 1000 }, { slot = 6, item_id = 982, quantity = 1000 }, { slot = 7, item_id = 983, quantity = 1000 }, { slot = 8, item_id = 984, quantity = 1000 }, { slot = 9, item_id = 985, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 146
+name = "Unurbar Gorog"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Poseo las mejores y más extrañas bebidas de estas tierras, ¿Qué desea que le sirva?"
+appearance = { head = 304, body = 372, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 498, quantity = 1000 }, { slot = 2, item_id = 522, quantity = 1000 }, { slot = 3, item_id = 550, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }, { slot = 5, item_id = 557, quantity = 1000 }, { slot = 6, item_id = 612, quantity = 1000 }, { slot = 7, item_id = 42, quantity = 1000 }, { slot = 8, item_id = 622, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 8
+name = "Thorkis"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hooooola jovencito, tengo las mejores provisiones de Ullathorpe!!"
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 10000 }, { slot = 2, item_id = 158, quantity = 1000 }, { slot = 3, item_id = 22, quantity = 1000 }, { slot = 4, item_id = 43, quantity = 1000 }, { slot = 5, item_id = 160, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 7
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, rata de alcantarilla, soy el Herrero de Ullathorpe...tengo algunas armas que pueden ayudarte en tus viajes."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 9, quantity = 1000 }, { slot = 5, item_id = 2, quantity = 1000 }, { slot = 6, item_id = 125, quantity = 1000 }, { slot = 7, item_id = 123, quantity = 1000 }, { slot = 8, item_id = 389, quantity = 1000 }, { slot = 9, item_id = 124, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 46
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Ullathorpe... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 363, quantity = 1000 }, { slot = 2, item_id = 199, quantity = 1000 }, { slot = 3, item_id = 200, quantity = 1000 }, { slot = 4, item_id = 197, quantity = 1000 }, { slot = 5, item_id = 658, quantity = 1000 }, { slot = 6, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 12
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! Soy el Sastre de Ullathorpe, Bienvenido!"
+appearance = { head = 9, body = 50, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 641, quantity = 1000 }, { slot = 5, item_id = 501, quantity = 1000 }, { slot = 6, item_id = 135, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 19
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida Viajera! Tengo hermosas vestimentas para ofrecerte..."
+appearance = { head = 70, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 20
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
+appearance = { head = 303, body = 180, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 54
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Acércate, tengo algunas armaduras que podrían protegerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }, { slot = 4, item_id = 1001, quantity = 1000 }, { slot = 5, item_id = 1002, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 15
+name = "Thorkis"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Qué tal amigo! Entra, pues tengo las mejores provisiones de Nix!"
+appearance = { head = 504, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 139, quantity = 1000 }, { slot = 2, item_id = 26, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 37
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, rata de alcantarilla, soy el Herrero de Nix, tengo algunas armas que pueden ayudarte en tus viajes."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 389, quantity = 1000 }, { slot = 5, item_id = 3, quantity = 1000 }, { slot = 6, item_id = 2, quantity = 1000 }, { slot = 7, item_id = 398, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 47
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Nix... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 201, quantity = 1000 }, { slot = 2, item_id = 204, quantity = 1000 }, { slot = 3, item_id = 364, quantity = 1000 }, { slot = 4, item_id = 205, quantity = 1000 }, { slot = 5, item_id = 380, quantity = 1000 }, { slot = 6, item_id = 661, quantity = 1000 }, { slot = 7, item_id = 383, quantity = 1000 }, { slot = 8, item_id = 658, quantity = 1000 }, { slot = 9, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 21
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! Soy el Sastre de Nix, Bienvenido!"
+appearance = { head = 7, body = 50, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 45, quantity = 1000 }, { slot = 5, item_id = 80, quantity = 1000 }, { slot = 6, item_id = 501, quantity = 1000 }, { slot = 7, item_id = 135, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 22
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida Viajera! Entra a mi tienda, ¡Tengo las mejores prendas de Nix!"
+appearance = { head = 71, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 23
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
+appearance = { head = 404, body = 180, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 70
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Acércate, tengo algunas armaduras que podrían protegerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }, { slot = 4, item_id = 359, quantity = 1000 }, { slot = 5, item_id = 499, quantity = 1000 }, { slot = 6, item_id = 667, quantity = 1000 }, { slot = 7, item_id = 1001, quantity = 1000 }, { slot = 8, item_id = 1002, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 50
+name = "Tellez"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Bienvenido al \"Mesón Hostigado\", ¿Qué desea que le sirva?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 38
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado las más poderosas armas de Banderbill para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 2, quantity = 1000 }, { slot = 3, item_id = 19, quantity = 1000 }, { slot = 4, item_id = 123, quantity = 1000 }, { slot = 5, item_id = 389, quantity = 1000 }, { slot = 6, item_id = 401, quantity = 1000 }, { slot = 7, item_id = 478, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 51
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña Tienda de Banderbill... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 394, quantity = 1000 }, { slot = 2, item_id = 203, quantity = 1000 }, { slot = 3, item_id = 207, quantity = 1000 }, { slot = 4, item_id = 657, quantity = 1000 }, { slot = 5, item_id = 206, quantity = 1000 }, { slot = 6, item_id = 361, quantity = 1000 }, { slot = 7, item_id = 319, quantity = 1000 }, { slot = 8, item_id = 531, quantity = 1000 }, { slot = 9, item_id = 318, quantity = 1000 }, { slot = 10, item_id = 537, quantity = 1000 }, { slot = 11, item_id = 662, quantity = 1000 }, { slot = 12, item_id = 658, quantity = 1000 }, { slot = 13, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 25
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenido a la Sastrería de Banderbill! ¿En qué lo puedo ayudar?"
+appearance = { head = 7, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 501, quantity = 1000 }, { slot = 2, item_id = 135, quantity = 1000 }, { slot = 3, item_id = 238, quantity = 1000 }, { slot = 4, item_id = 239, quantity = 1000 }, { slot = 5, item_id = 381, quantity = 1000 }, { slot = 6, item_id = 196, quantity = 1000 }, { slot = 7, item_id = 357, quantity = 1000 }, { slot = 8, item_id = 986, quantity = 1000 }, { slot = 9, item_id = 873, quantity = 1000 }, { slot = 10, item_id = 1036, quantity = 1000 }, { slot = 11, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 26
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Adelante hermosa niña! En mi tienda encontrarás vestidos hechos para tí!"
+appearance = { head = 173, body = 121, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 504, quantity = 1000 }, { slot = 2, item_id = 505, quantity = 1000 }, { slot = 3, item_id = 506, quantity = 1000 }, { slot = 4, item_id = 382, quantity = 1000 }, { slot = 5, item_id = 511, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 27
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas prendas que he confeccionado para nuestra raza!"
+appearance = { head = 305, body = 159, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 486, quantity = 1000 }, { slot = 2, item_id = 507, quantity = 1000 }, { slot = 3, item_id = 502, quantity = 1000 }, { slot = 4, item_id = 707, quantity = 1000 }, { slot = 5, item_id = 671, quantity = 1000 }, { slot = 6, item_id = 670, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 74
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, tengo resistentes armaduras para ofrecerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 1003, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 43
+name = "Sorks"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿¡Estáis sediento y hambriento!?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 139, quantity = 1000 }, { slot = 2, item_id = 754, quantity = 1000 }, { slot = 3, item_id = 43, quantity = 1000 }, { slot = 4, item_id = 160, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 56
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado, aquí en Lindos, poderosas armas para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 2, quantity = 1000 }, { slot = 2, item_id = 19, quantity = 1000 }, { slot = 3, item_id = 123, quantity = 1000 }, { slot = 4, item_id = 401, quantity = 1000 }, { slot = 5, item_id = 125, quantity = 1000 }, { slot = 6, item_id = 753, quantity = 1000 }, { slot = 7, item_id = 404, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 69
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven por aquí joven, las artes mágicas superiores te están llamando..."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 530, quantity = 1000 }, { slot = 2, item_id = 396, quantity = 1000 }, { slot = 3, item_id = 397, quantity = 1000 }, { slot = 4, item_id = 470, quantity = 1000 }, { slot = 5, item_id = 471, quantity = 1000 }, { slot = 6, item_id = 319, quantity = 1000 }, { slot = 7, item_id = 673, quantity = 1000 }, { slot = 8, item_id = 394, quantity = 1000 }, { slot = 9, item_id = 395, quantity = 1000 }, { slot = 10, item_id = 538, quantity = 1000 }, { slot = 11, item_id = 536, quantity = 1000 }, { slot = 12, item_id = 532, quantity = 1000 }, { slot = 13, item_id = 542, quantity = 1000 }, { slot = 14, item_id = 658, quantity = 1000 }, { slot = 15, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 31
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven aquí! Te puedo ofrecer las mejores ropas de la isla..."
+appearance = { head = 7, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 135, quantity = 1000 }, { slot = 5, item_id = 238, quantity = 1000 }, { slot = 6, item_id = 239, quantity = 1000 }, { slot = 7, item_id = 381, quantity = 1000 }, { slot = 8, item_id = 196, quantity = 1000 }, { slot = 9, item_id = 986, quantity = 1000 }, { slot = 10, item_id = 873, quantity = 1000 }, { slot = 11, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 32
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas vestimentas, seguro te encantarán!"
+appearance = { head = 75, body = 118, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 382, quantity = 1000 }, { slot = 3, item_id = 511, quantity = 1000 }, { slot = 4, item_id = 488, quantity = 1000 }, { slot = 5, item_id = 508, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 39
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola forastero! confeccionamos las mejores ropas de la zona."
+appearance = { head = 304, body = 135, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 507, quantity = 1000 }, { slot = 2, item_id = 502, quantity = 1000 }, { slot = 3, item_id = 707, quantity = 1000 }, { slot = 4, item_id = 671, quantity = 1000 }, { slot = 5, item_id = 670, quantity = 1000 }, { slot = 6, item_id = 524, quantity = 1000 }, { slot = 7, item_id = 370, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 113
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Tengo a la venta las mejores armaduras de la isla!"
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 484, quantity = 1000 }, { slot = 7, item_id = 1004, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 103
+name = "Carahuel"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, pequeño amigo! ¿Estás buscando algo para llenar tu estómago? Creo que puedo ayudarte..."
+appearance = { head = 474, body = 309, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 1, quantity = 1000 }, { slot = 2, item_id = 29, quantity = 1000 }, { slot = 3, item_id = 158, quantity = 1000 }, { slot = 4, item_id = 754, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 57
+name = "Bhoemond"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Sea bienvenido a la famosa Taberna de Arghal!, Aquí podrá saciarse con la mejor comida y la mejor bebida de toda la zona."
+appearance = { head = 17, body = 100, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 112
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Con estas manos he construído algunas armas que te podrán servir en tus aventuras... ¡paga por ellas y serán tuyas!"
+appearance = { head = 16, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 15, quantity = 1000 }, { slot = 2, item_id = 619, quantity = 1000 }, { slot = 3, item_id = 165, quantity = 1000 }, { slot = 4, item_id = 389, quantity = 1000 }, { slot = 5, item_id = 9, quantity = 1000 }, { slot = 6, item_id = 2, quantity = 1000 }, { slot = 7, item_id = 125, quantity = 1000 }, { slot = 8, item_id = 123, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 59
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido, neófito a ésta, a mi pequeña escuela de Magia, ubicada en el corazón mismo de la ciudad de Arghal."
+appearance = { head = 20, body = 34, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 199, quantity = 1000 }, { slot = 2, item_id = 200, quantity = 1000 }, { slot = 3, item_id = 201, quantity = 1000 }, { slot = 4, item_id = 202, quantity = 1000 }, { slot = 5, item_id = 204, quantity = 1000 }, { slot = 6, item_id = 658, quantity = 1000 }, { slot = 7, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 63
+name = "Steve"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, acércate, que tengo para ofrecerte las mejores prendas masculinas de todo Arghal..."
+appearance = { head = 22, body = 342, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 31, quantity = 1000 }, { slot = 2, item_id = 32, quantity = 1000 }, { slot = 3, item_id = 35, quantity = 1000 }, { slot = 4, item_id = 641, quantity = 1000 }, { slot = 5, item_id = 501, quantity = 1000 }, { slot = 6, item_id = 135, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 64
+name = "Virgin"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenida jovencita! Soy quien hace los mejores atuendos femeninos de todo Arghal, ven y prueba mi mercadería."
+appearance = { head = 70, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 170, quantity = 1000 }, { slot = 2, item_id = 504, quantity = 1000 }, { slot = 3, item_id = 505, quantity = 1000 }, { slot = 4, item_id = 506, quantity = 1000 }, { slot = 5, item_id = 382, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 68
+name = "Odkon"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Acérquese pequeño vistante de Arghal... Tengo prendas a su medida."
+appearance = { head = 404, body = 371, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 240, quantity = 1000 }, { slot = 2, item_id = 527, quantity = 1000 }, { slot = 3, item_id = 486, quantity = 1000 }, { slot = 4, item_id = 507, quantity = 1000 }, { slot = 5, item_id = 502, quantity = 1000 }, { slot = 6, item_id = 707, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 73
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si tienes agallas como para abandonar la ciudad y enfrentar el peligro de los bosques, deberás comprar una de las armaduras que he fabricado."
+appearance = { head = 39, body = 93, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 30, quantity = 1000 }, { slot = 2, item_id = 529, quantity = 1000 }, { slot = 3, item_id = 668, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 40
+name = "Tolloz"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola! Bienvenido a la Taberna de Arkhein, ¿Qué desea que le sirva?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 13 }
+inventory = { items = [{ slot = 1, item_id = 21, quantity = 1000 }, { slot = 2, item_id = 23, quantity = 1000 }, { slot = 3, item_id = 24, quantity = 1000 }, { slot = 4, item_id = 28, quantity = 1000 }, { slot = 5, item_id = 29, quantity = 1000 }, { slot = 6, item_id = 26, quantity = 1000 }, { slot = 7, item_id = 25, quantity = 1000 }, { slot = 8, item_id = 160, quantity = 1000 }, { slot = 9, item_id = 42, quantity = 1000 }, { slot = 10, item_id = 161, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 55
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven, pasa, que he fabricado las más poderosas armas de Arkhein para tí!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 2, quantity = 1000 }, { slot = 3, item_id = 19, quantity = 1000 }, { slot = 4, item_id = 123, quantity = 1000 }, { slot = 5, item_id = 389, quantity = 1000 }, { slot = 6, item_id = 401, quantity = 1000 }, { slot = 7, item_id = 478, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 61
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda de Arkhein... Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 395, quantity = 1000 }, { slot = 2, item_id = 203, quantity = 1000 }, { slot = 9, item_id = 531, quantity = 1000 }, { slot = 10, item_id = 318, quantity = 1000 }, { slot = 11, item_id = 537, quantity = 1000 }, { slot = 12, item_id = 662, quantity = 1000 }, { slot = 13, item_id = 658, quantity = 1000 }, { slot = 14, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 28
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Entrad Valiente Viajero! En la Sastrería de Arkhein están las mejores ropas del continente."
+appearance = { head = 15, body = 56, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 45, quantity = 1000 }, { slot = 2, item_id = 80, quantity = 1000 }, { slot = 3, item_id = 641, quantity = 1000 }, { slot = 4, item_id = 501, quantity = 1000 }, { slot = 5, item_id = 135, quantity = 1000 }, { slot = 6, item_id = 238, quantity = 1000 }, { slot = 7, item_id = 239, quantity = 1000 }, { slot = 8, item_id = 381, quantity = 1000 }, { slot = 9, item_id = 196, quantity = 1000 }, { slot = 10, item_id = 357, quantity = 1000 }, { slot = 11, item_id = 986, quantity = 1000 }, { slot = 12, item_id = 873, quantity = 1000 }, { slot = 13, item_id = 1036, quantity = 1000 }, { slot = 14, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 29
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Ven y mira estas vestimentas, seguro te encantarán!"
+appearance = { head = 173, body = 80, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 504, quantity = 1000 }, { slot = 2, item_id = 505, quantity = 1000 }, { slot = 3, item_id = 506, quantity = 1000 }, { slot = 4, item_id = 382, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 30
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Aquí encontrarás las mejores prendas para enanos ¡Y a muy buen precio!"
+appearance = { head = 404, body = 159, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 486, quantity = 1000 }, { slot = 2, item_id = 507, quantity = 1000 }, { slot = 3, item_id = 502, quantity = 1000 }, { slot = 4, item_id = 707, quantity = 1000 }, { slot = 5, item_id = 671, quantity = 1000 }, { slot = 6, item_id = 670, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 111
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Ven, tengo resistentes armaduras para ofrecerte."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 359, quantity = 1000 }, { slot = 2, item_id = 499, quantity = 1000 }, { slot = 3, item_id = 667, quantity = 1000 }, { slot = 4, item_id = 360, quantity = 1000 }, { slot = 5, item_id = 648, quantity = 1000 }, { slot = 6, item_id = 1003, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 53
+name = "Roksar"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Hola, buen viajero! Dispongo de todo tipo de provisiones... ¿Qué deseas?"
+appearance = { head = 505, body = 202, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 1 }
+inventory = { items = [{ slot = 1, item_id = 28, quantity = 1000 }, { slot = 2, item_id = 29, quantity = 1000 }, { slot = 3, item_id = 26, quantity = 1000 }, { slot = 4, item_id = 25, quantity = 1000 }, { slot = 5, item_id = 27, quantity = 1000 }, { slot = 6, item_id = 42, quantity = 1000 }, { slot = 7, item_id = 161, quantity = 1000 }, { slot = 8, item_id = 533, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 71
+name = "Herrero"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Tened aquí las armas más poderosas de estas tierras... ¡Pasad y ved!"
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 164, quantity = 1000 }, { slot = 2, item_id = 19, quantity = 1000 }, { slot = 3, item_id = 123, quantity = 1000 }, { slot = 4, item_id = 124, quantity = 1000 }, { slot = 5, item_id = 401, quantity = 1000 }, { slot = 6, item_id = 125, quantity = 1000 }, { slot = 7, item_id = 753, quantity = 1000 }, { slot = 8, item_id = 990, quantity = 1000 }, { slot = 9, item_id = 1009, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 99
+name = "Mago"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¿Estás buscando los hechizos más poderosos? A buen puerto has llegado..."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 542, quantity = 1000 }, { slot = 2, item_id = 532, quantity = 1000 }, { slot = 3, item_id = 658, quantity = 1000 }, { slot = 4, item_id = 659, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 109
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Bienvenidos a la Gran Sastrería de la Ciudad Perdida! Aquí encontrarán las ropas más exóticas del mundo..."
+appearance = { head = 406, body = 130, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 515, quantity = 1000 }, { slot = 2, item_id = 490, quantity = 1000 }, { slot = 3, item_id = 381, quantity = 1000 }, { slot = 4, item_id = 196, quantity = 1000 }, { slot = 5, item_id = 357, quantity = 1000 }, { slot = 6, item_id = 519, quantity = 1000 }, { slot = 7, item_id = 986, quantity = 1000 }, { slot = 8, item_id = 873, quantity = 1000 }, { slot = 9, item_id = 1036, quantity = 1000 }, { slot = 10, item_id = 1010, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 110
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Entra! Jamás verás prendas más bellas que las que tengo para ofrecerte..."
+appearance = { head = 474, body = 124, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 511, quantity = 1000 }, { slot = 2, item_id = 488, quantity = 1000 }, { slot = 3, item_id = 508, quantity = 1000 }, { slot = 4, item_id = 510, quantity = 1000 }, { slot = 5, item_id = 513, quantity = 1000 }, { slot = 6, item_id = 514, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 117
+name = "Sastre"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "¡Aquí en la Ciudad Perdida encontrarán las mejores ropas pequeñas de todo el mundo!"
+appearance = { head = 402, body = 136, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 671, quantity = 1000 }, { slot = 2, item_id = 670, quantity = 1000 }, { slot = 3, item_id = 512, quantity = 1000 }, { slot = 4, item_id = 672, quantity = 1000 }, { slot = 5, item_id = 525, quantity = 1000 }, { slot = 6, item_id = 526, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 116
+name = "Armaduras"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si estás buscando las mejores armaduras de estas tierras, has llegado al lugar correcto..."
+appearance = { head = 6, body = 93, heading = 4 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 672, quantity = 1000 }, { slot = 2, item_id = 359, quantity = 1000 }, { slot = 3, item_id = 499, quantity = 1000 }, { slot = 4, item_id = 667, quantity = 1000 }, { slot = 5, item_id = 360, quantity = 1000 }, { slot = 6, item_id = 648, quantity = 1000 }, { slot = 7, item_id = 356, quantity = 1000 }, { slot = 8, item_id = 854, quantity = 1000 }, { slot = 9, item_id = 195, quantity = 1000 }, { slot = 10, item_id = 243, quantity = 1000 }, { slot = 11, item_id = 1004, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 154
+name = "Lilith"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola, tengo las mejores Pociones de la Alquimia para principiantes."
+appearance = { head = 77, body = 200, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 11 }
+inventory = { items = [{ slot = 1, item_id = 855, quantity = 1000 }, { slot = 2, item_id = 856, quantity = 1000 }, { slot = 3, item_id = 857, quantity = 1000 }, { slot = 4, item_id = 858, quantity = 1000 }, { slot = 5, item_id = 166, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 155
+name = "Armaduras Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Si estás buscando túnicas y armaduras para principiantes, has llegado al lugar indicado."
+appearance = { head = 6, body = 93, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 3 }
+inventory = { items = [{ slot = 1, item_id = 1044, quantity = 1000 }, { slot = 2, item_id = 1045, quantity = 1000 }, { slot = 3, item_id = 1046, quantity = 1000 }, { slot = 4, item_id = 1047, quantity = 1000 }, { slot = 5, item_id = 1048, quantity = 1000 }, { slot = 6, item_id = 1051, quantity = 1000 }, { slot = 7, item_id = 1052, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 156
+name = "Armas Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Hola novato, tengo algunas armas que pueden ayudarte en tus aventuras."
+appearance = { head = 505, body = 199, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 2 }
+inventory = { items = [{ slot = 1, item_id = 861, quantity = 1000 }, { slot = 2, item_id = 859, quantity = 1000 }, { slot = 3, item_id = 860, quantity = 1000 }, { slot = 4, item_id = 564, quantity = 1000 }, { slot = 5, item_id = 565, quantity = 1000 }, { slot = 6, item_id = 562, quantity = 1000 }, { slot = 7, item_id = 561, quantity = 1000 }, { slot = 8, item_id = 563, quantity = 1000 }] }
+
+[[npcs_traders.npcs]]
+id = 157
+name = "Magia Newbie"
+category = "NPCS COMERCIANTES"
+npc_type = 0
+tags = ["pacifico", "comerciante"]
+description = "Bienvenido a mi pequeña tienda. Tengo algunos hechizos que podrían interesarte."
+appearance = { head = 110, body = 46, heading = 3 }
+behavior = { movement = 1, hostile = 0, respawn = 0 }
+flags = { attackable = 0, domable = 0, alignment = 0, backup = 1 }
+economics = { trades = 1, item_type = 24 }
+inventory = { items = [{ slot = 1, item_id = 199, quantity = 1000 }, { slot = 2, item_id = 197, quantity = 1000 }, { slot = 3, item_id = 204, quantity = 1000 }, { slot = 4, item_id = 205, quantity = 1000 }, { slot = 5, item_id = 202, quantity = 1000 }, { slot = 6, item_id = 200, quantity = 1000 }, { slot = 7, item_id = 201, quantity = 1000 }, { slot = 8, item_id = 363, quantity = 1000 }, { slot = 9, item_id = 364, quantity = 1000 }, { slot = 10, item_id = 862, quantity = 1000 }, { slot = 11, item_id = 863, quantity = 1000 }, { slot = 12, item_id = 864, quantity = 1000 }] }

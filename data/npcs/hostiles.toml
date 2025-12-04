@@ -1,0 +1,1626 @@
+# NPCs de Argentum Online - npcs_hostiles
+# Generado automáticamente desde NPCs.dat
+# Total: 147 NPCs
+
+[npcs_hostiles]
+
+[[npcs_hostiles.npcs]]
+id = 500
+name = "Murciélago"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 9, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 400, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 501
+name = "Lobo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 10, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1250, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 8 }
+
+[[npcs_hostiles.npcs]]
+id = 502
+name = "Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 507, body = 196, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 250, min_hp = 250, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 503
+name = "Esqueleto"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 12, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 504
+name = "Serpiente"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 400, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 505
+name = "Goblin"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1500, alignment = 2, backup = 0 }
+combat = { max_hp = 110, min_hp = 110, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 506
+name = "Gallo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 5, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 450, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 507
+name = "Lord Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 508, body = 197, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 34 }
+
+[[npcs_hostiles.npcs]]
+id = 508
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 393, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 150, min_hp = 150, defense = 19 }
+
+[[npcs_hostiles.npcs]]
+id = 509
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
+
+[[npcs_hostiles.npcs]]
+id = 510
+name = "Araña Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 42, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 511
+name = "Ogro Esclavo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 205, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2750, min_hp = 2750, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 512
+name = "Lobo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 10, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 8, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 513
+name = "Cíclope Guardián"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 206, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4500, min_hp = 4500, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 514
+name = "Serpiente de Anthares"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 207, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 515
+name = "Gorila Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 213, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1300, min_hp = 1300, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 516
+name = "Goblin"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 90, min_hp = 90, defense = 15, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 517
+name = "Djinn de Viento"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 215, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4200, min_hp = 4200, defense = 45 }
+
+[[npcs_hostiles.npcs]]
+id = 518
+name = "Dragón de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 218, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 50 }
+
+[[npcs_hostiles.npcs]]
+id = 519
+name = "Gusano de Arena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 216, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 520
+name = "Esqueleto Guerrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 393, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 320, min_hp = 320, defense = 25, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 521
+name = "Tigre Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 147, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 800, min_hp = 800, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 522
+name = "Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 185, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 523
+name = "Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 185, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 350, min_hp = 350, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 524
+name = "Jefe Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 43, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 525
+name = "Águila"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 59, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1200, alignment = 2, backup = 0 }
+combat = { max_hp = 40, min_hp = 40, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 526
+name = "Araña Malaheing"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 42, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 527
+name = "Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 528
+name = "Anfisbena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 203, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 529
+name = "Escorpión"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 51, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 600, alignment = 2, backup = 0 }
+combat = { max_hp = 32, min_hp = 32, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 530
+name = "Bandido"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 2, body = 47, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 531
+name = "Asesino"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 201, body = 48, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 850, min_hp = 850, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 532
+name = "Osezno"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 236, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 533
+name = "Cuervo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 68, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1100, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 2, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 534
+name = "Hormiga Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 69, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 535
+name = "Hormiga Marabunta"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 70, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 425, alignment = 2, backup = 0 }
+combat = { max_hp = 5, min_hp = 5, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 536
+name = "Rata Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 71, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 700, alignment = 2, backup = 0 }
+combat = { max_hp = 15, min_hp = 15, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 537
+name = "Beholder"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 72, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1400, min_hp = 1400, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 538
+name = "Oso Pardo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 73, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 539
+name = "Tortuga Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 74, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 540
+name = "Duende"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 1700, alignment = 2, backup = 0 }
+combat = { max_hp = 210, min_hp = 210, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 541
+name = "Ogro"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 76, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2250, min_hp = 2250, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 542
+name = "Gran Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 6
+tags = ["hostil"]
+appearance = { head = 0, body = 82, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200000, min_hp = 200000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 543
+name = "Demonio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 83, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 544
+name = "Unicornio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 183, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 500, min_hp = 500, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 545
+name = "Licántropo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 212, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 546
+name = "Zombie"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 507, body = 196, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 250, min_hp = 250, defense = 20, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 547
+name = "Tarántula"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 36, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 548
+name = "Leviathan"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 99, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6000, min_hp = 6000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 549
+name = "Orco Brujo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 186, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2250, alignment = 2, backup = 0 }
+combat = { max_hp = 1900, min_hp = 1900, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 550
+name = "Bruja"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 271, body = 125, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4200, min_hp = 4200, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 551
+name = "Mago Malvado"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 401, body = 135, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 552
+name = "Golem"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 141, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 35000, min_hp = 35000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 553
+name = "Medusa"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 151, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6500, min_hp = 6500, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 554
+name = "Liche"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 149, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 555
+name = "Lord Orco"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 187, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1750, min_hp = 1750, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 556
+name = "Quark"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 146, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 800, alignment = 2, backup = 0 }
+combat = { max_hp = 50, min_hp = 50, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 557
+name = "Jabalí Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 150, heading = 3 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 2010, alignment = 2, backup = 0 }
+combat = { max_hp = 515, min_hp = 515, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 558
+name = "Dark mOrGoLoCk"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 101, body = 56, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 559
+name = "Dark NuKeR"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 102, body = 93, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 560
+name = "Dark Valkira"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 72, body = 104, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 561
+name = "Dark Chatillon"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 9, body = 140, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 562
+name = "Dark Jennifer"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 72, body = 64, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 564
+name = "Escorpión"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 51, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 32, min_hp = 32, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 565
+name = "Serpiente"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 566
+name = "Murciélago"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 9, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 567
+name = "Duende Mágico"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 310, min_hp = 310, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 568
+name = "Galeón Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 86, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 4000, min_hp = 4000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 569
+name = "Galeón Fantasmal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 487, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 50 }
+
+[[npcs_hostiles.npcs]]
+id = 573
+name = "Árbol Encantado"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "¡Odio los leñadores!"
+appearance = { head = 0, body = 25, heading = 4 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 574
+name = "Ucorno"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 575
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 3 }
+behavior = { movement = 2, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 576
+name = "Árbol de Jungla"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 25, heading = 4 }
+behavior = { movement = 1, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10, min_hp = 10, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 577
+name = "Alma Putrefacta"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Soy un esclavo del mi señor del mal"
+appearance = { head = 514, body = 145, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 578
+name = "Cerdo Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Oink Oink"
+appearance = { head = 0, body = 6, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 500, alignment = 2, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 579
+name = "Vaca Salvaje"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+description = "Muuuuu"
+appearance = { head = 0, body = 7, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 810, alignment = 2, backup = 0 }
+combat = { max_hp = 65, min_hp = 65, defense = 2 }
+
+[[npcs_hostiles.npcs]]
+id = 582
+name = "Enano de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 304, body = 54, heading = 3 }
+behavior = { movement = 10, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 583
+name = "Liche Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 149, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 584
+name = "Demonio Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 83, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 585
+name = "Dragón Rojo Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 41, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
+
+[[npcs_hostiles.npcs]]
+id = 586
+name = "Golem Infernal"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 181, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 49000, min_hp = 49000, defense = 40 }
+
+[[npcs_hostiles.npcs]]
+id = 587
+name = "Astaroth"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 204, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3500, min_hp = 3500, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 588
+name = "Elemental de Fuego"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 153, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 589
+name = "Elemental de Fuego Anciano"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 394, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 590
+name = "Blattodea"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 231, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 435, min_hp = 435, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 591
+name = "Artopleura"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 229, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 592
+name = "Araña de los Rincones"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 230, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 650, min_hp = 650, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 593
+name = "Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 509, body = 386, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 594
+name = "Escarabajo Gigante"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 391, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 595
+name = "Tentáculo Putrefacto"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 392, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 596
+name = "Espíritu chocarrero"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 219, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 400, min_hp = 400, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 597
+name = "Protector de los muertos"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 426, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 435, min_hp = 435, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 598
+name = "Hada Oscura"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 511, body = 427, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 650, min_hp = 650, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 599
+name = "Engendro de las profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 387, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 600
+name = "Ave de las profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 425, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 700, min_hp = 700, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 601
+name = "Licántropo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 212, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 602
+name = "Piraña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 433, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 800, min_hp = 800, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 603
+name = "Sirena"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 434, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1300, min_hp = 1300, defense = 25 }
+
+[[npcs_hostiles.npcs]]
+id = 604
+name = "Manta raya"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 407, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 600, min_hp = 600, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 605
+name = "Lutra"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 435, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2100, min_hp = 2100, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 606
+name = "Tiburón"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 436, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 607
+name = "Capitán Pirata"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 512, body = 428, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2700, min_hp = 2700, defense = 35 }
+
+[[npcs_hostiles.npcs]]
+id = 608
+name = "Guardián de las Profundidades"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 218, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2000, min_hp = 2000, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 609
+name = "Elemental de Agua Anciano"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 542, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
+
+[[npcs_hostiles.npcs]]
+id = 610
+name = "Kraken"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 408, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 6250, min_hp = 6250, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 611
+name = "Fango"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 403, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 750, min_hp = 750, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 612
+name = "Cocodrilo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 208, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 550, min_hp = 550, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 613
+name = "Unicornio"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 183, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1350, min_hp = 1350, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 614
+name = "Elfo Guardián"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 402, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 1500, min_hp = 1500, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 615
+name = "Árbol capturador de Almas"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 401, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
+
+[[npcs_hostiles.npcs]]
+id = 616
+name = "Sapo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 432, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 900, alignment = 2, backup = 0 }
+combat = { max_hp = 35, min_hp = 35, defense = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 617
+name = "Pequeño Escarabajo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 533, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 618
+name = "Pequeño Duende"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 75, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 100, min_hp = 100, defense = 8 }
+
+[[npcs_hostiles.npcs]]
+id = 619
+name = "Hada del Bosque"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 532, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 278, min_hp = 278, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 620
+name = "Pequeña Araña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 534, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 125, min_hp = 125, defense = 4 }
+
+[[npcs_hostiles.npcs]]
+id = 621
+name = "Piraña"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 433, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 150, min_hp = 150, defense = 4 }
+
+[[npcs_hostiles.npcs]]
+id = 622
+name = "Pequeño Dragón Mágico"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 537, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 200, min_hp = 200, defense = 5 }
+
+[[npcs_hostiles.npcs]]
+id = 623
+name = "Mini Elemental de Fuego"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 535, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 210, min_hp = 210, defense = 3 }
+
+[[npcs_hostiles.npcs]]
+id = 624
+name = "Pequeño Dragón Rojo"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 536, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 300, min_hp = 300, defense = 7 }
+
+[[npcs_hostiles.npcs]]
+id = 625
+name = "Víbora"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 13, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 22, min_hp = 22, defense = 3 }
+
+[[npcs_hostiles.npcs]]
+id = 626
+name = "Goblin Travieso"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 14, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 75, min_hp = 75, defense = 2 }
+
+[[npcs_hostiles.npcs]]
+id = 627
+name = "Protector de almas"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 426, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 130, min_hp = 130, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 628
+name = "Tarántula venenosa"
+category = "NPCS HOSTILES"
+npc_type = 0
+tags = ["hostil"]
+appearance = { head = 0, body = 538, heading = 3 }
+behavior = { movement = 3, hostile = 1, respawn = 0 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 95, min_hp = 95, defense = 2 }
+
+[[npcs_hostiles.npcs]]
+id = 900
+name = "Rey Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 14, body = 63, heading = 3 }
+behavior = { movement = 24, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 901
+name = "Rey Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 14, body = 180, heading = 3 }
+behavior = { movement = 24, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max = 0 }
+
+[[npcs_hostiles.npcs]]
+id = 902
+name = "Clerigo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 130, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 903
+name = "Clerigo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 136, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 904
+name = "Bardo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 130, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 905
+name = "Bardo Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 74, body = 136, heading = 3 }
+behavior = { movement = 20, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 906
+name = "Mago Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 49, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 907
+name = "Mago Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 159, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 908
+name = "Druida Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 56, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 909
+name = "Druida Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 104, body = 135, heading = 3 }
+behavior = { movement = 22, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 910
+name = "Cazador Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 58, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 911
+name = "Cazador Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 155, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 912
+name = "Pirata Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 130, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 913
+name = "Pirata Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 301, body = 136, heading = 3 }
+behavior = { movement = 23, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 914
+name = "Guerrero Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 915
+name = "Guerrero Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 916
+name = "Paladin Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 917
+name = "Paladin Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 918
+name = "Asesino Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 48, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 919
+name = "Asesino Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 539, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 920
+name = "Bandido Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 45, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 921
+name = "Bandido Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 54, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
+
+[[npcs_hostiles.npcs]]
+id = 922
+name = "Ladrón Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 47, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
+
+[[npcs_hostiles.npcs]]
+id = 923
+name = "Ladrón Pretoriano"
+category = "NPCS HOSTILES"
+npc_type = 10
+tags = ["hostil"]
+appearance = { head = 7, body = 374, heading = 3 }
+behavior = { movement = 21, hostile = 1, respawn = 1 }
+flags = { attackable = 1, domable = 0, alignment = 2, backup = 0 }
+combat = { max_hp = 3000, min_hp = 3000, defense = 10 }

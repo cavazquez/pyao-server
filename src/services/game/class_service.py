@@ -101,7 +101,7 @@ class ClassService:
 
         NOTA: Este método existe pero NO se usa. Siguiendo comportamiento VB6 original,
         cualquier clase puede equipar cualquier item. Los modificadores de clase en
-        classes_balance.toml ya balancean el uso inadecuado.
+        classes/balance.toml ya balancean el uso inadecuado.
 
         Args:
             class_id: ID de la clase.
@@ -121,7 +121,7 @@ class ClassService:
 
         NOTA: Este método existe pero NO se usa. Siguiendo comportamiento VB6 original,
         cualquier clase puede equipar cualquier item. Los modificadores de clase en
-        classes_balance.toml ya balancean el uso inadecuado.
+        classes/balance.toml ya balancean el uso inadecuado.
 
         Args:
             class_id: ID de la clase.

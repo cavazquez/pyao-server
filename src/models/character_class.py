@@ -14,7 +14,7 @@ class CharacterClass:
 
     NOTA: allowed_weapon_types y allowed_armor_types están definidos pero NO se validan.
     Siguiendo comportamiento VB6 original: cualquier clase puede equipar cualquier item.
-    Los modificadores de clase en classes_balance.toml ya balancean el uso inadecuado.
+    Los modificadores de clase en classes/balance.toml ya balancean el uso inadecuado.
     """
 
     class_id: int
@@ -95,7 +95,7 @@ class ClassCatalog:
         logger = logging.getLogger(__name__)
 
         try:
-            classes_file = self.data_dir / "classes.toml"
+            classes_file = self.data_dir / "classes" / "definitions.toml"
 
             if not classes_file.exists():
                 logger.warning("No se encontró archivo de clases: %s", classes_file)

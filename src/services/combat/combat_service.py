@@ -22,6 +22,7 @@ from src.utils.level_calculator import (
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
+    from src.models.item_catalog import ItemCatalog
     from src.models.npc import NPC
     from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.inventory_repository import InventoryRepository
@@ -44,6 +45,7 @@ class CombatService:
         npc_repository: "NPCRepository",  # noqa: UP037
         equipment_repo: "EquipmentRepository | None" = None,  # noqa: UP037
         inventory_repo: "InventoryRepository | None" = None,  # noqa: UP037
+        item_catalog: "ItemCatalog | None" = None,  # noqa: UP037
     ) -> None:
         """Inicializa el servicio de combate.
 
@@ -52,11 +54,13 @@ class CombatService:
             npc_repository: Repositorio de NPCs.
             equipment_repo: Repositorio de equipamiento (opcional).
             inventory_repo: Repositorio de inventario (opcional).
+            item_catalog: Catálogo de items para stats de armas/armaduras (opcional).
         """
         self.player_repo = player_repo
         self.npc_repository = npc_repository
         self.equipment_repo = equipment_repo
         self.inventory_repo = inventory_repo
+        self.item_catalog = item_catalog
 
         # Inicializar componentes
         self.damage_calculator = DamageCalculator()
@@ -66,7 +70,7 @@ class CombatService:
         # WeaponService solo si tenemos los repositorios necesarios
         self.weapon_service = None
         if equipment_repo and inventory_repo:
-            self.weapon_service = WeaponService(equipment_repo, inventory_repo)
+            self.weapon_service = WeaponService(equipment_repo, inventory_repo, item_catalog)
 
     async def player_attack_npc(
         self, user_id: int, npc: NPC, message_sender: MessageSender | None = None
@@ -172,13 +176,13 @@ class CombatService:
             gold = self.reward_calculator.calculate_gold_drop(npc.level)
 
             result["experience"] = experience
-            result["gold"] = gold  # Oro para dropear en el suelo, no dar directamente
+            result["gold"] = gold  # Oro para dropear en el suelo (manejado por NPCDeathService)
 
             # Dar experiencia al jugador (esto sí se da directamente)
             await self._give_experience(user_id, experience, message_sender)
 
-            # El oro se debe dropear en el suelo, no darlo directamente
-            # TODO: Crear item de oro en el tile donde murió el NPC
+            # Nota: El drop de oro lo maneja NPCDeathService.handle_npc_death()
+            # cuando attack_handler llama a ese servicio
 
         return result
 

@@ -1,0 +1,80 @@
+# Ciudades y puntos de spawn
+# Migrado desde Ciudades.Dat del servidor VB6 original
+# Define las ciudades principales del juego y sus puntos de respawn
+
+[cities]
+description = "Ciudades principales del juego con coordenadas de spawn"
+
+# Ciudad por defecto para nuevos personajes
+default_city = "Ullathorpe"
+
+[[cities.city]]
+name = "Ullathorpe"
+display_name = "Ullathorpe"
+description = "Ciudad inicial, ideal para nuevos aventureros"
+map_id = 1
+spawn_x = 58
+spawn_y = 45
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Nix"
+display_name = "Nix"
+description = "Ciudad costera al sur del continente"
+map_id = 34
+spawn_x = 44
+spawn_y = 88
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Banderbill"
+display_name = "Banderbill"
+description = "Ciudad comercial en el centro del continente"
+map_id = 59
+spawn_x = 50
+spawn_y = 50
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Lindos"
+display_name = "Lindos"
+description = "Ciudad tranquila en las montañas"
+map_id = 62
+spawn_x = 72
+spawn_y = 41
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Arghal"
+display_name = "Arghal"
+description = "Ciudad de los desiertos del este"
+map_id = 196
+spawn_x = 52
+spawn_y = 75
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Nemahuak"
+display_name = "Nemahuak"
+description = "Ciudad tribal en las selvas del norte"
+map_id = 286
+spawn_x = 50
+spawn_y = 65
+is_safe_zone = true
+faction = "neutral"
+
+[[cities.city]]
+name = "Arkhein"
+display_name = "Arkhein"
+description = "Ciudad oscura, territorio de la Legión Oscura"
+map_id = 151
+spawn_x = 40
+spawn_y = 48
+is_safe_zone = true
+faction = "legion"
+
