@@ -91,7 +91,7 @@ class GoldDecayEffect(TickEffect):
                     f"Has perdido {reduction} monedas de oro ({percentage}%)"
                 )
 
-    def get_interval_seconds(self) -> float:  # noqa: PLR6301
+    def get_interval_seconds(self) -> float:
         """Retorna 1 segundo (se ejecuta cada segundo para contar intervalos).
 
         Returns:
@@ -99,7 +99,7 @@ class GoldDecayEffect(TickEffect):
         """
         return 1.0
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del efecto.
 
         Returns:

@@ -6,11 +6,11 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.models.npc import NPC
-from src.services.player.spell_service import (
-    SPELL_ID_PARALYZE,
-    SPELL_TYPE_STATUS,
-    SpellService,
-)
+from src.services.player.spell_service import SpellService
+
+# Constantes movidas al módulo de efectos
+SPELL_ID_PARALYZE = 9
+SPELL_TYPE_STATUS = 2
 
 
 @pytest.fixture

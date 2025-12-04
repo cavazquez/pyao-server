@@ -39,7 +39,7 @@ class StaminaRegenEffect(TickEffect):
         self.stamina_service = stamina_service
         self.interval_seconds = interval_seconds
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del efecto.
 
         Returns:

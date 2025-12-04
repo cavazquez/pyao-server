@@ -32,7 +32,7 @@ class MerchantDataLoader(BaseDataLoader):
         """
         super().__init__(redis_client)
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del loader.
 
         Returns:

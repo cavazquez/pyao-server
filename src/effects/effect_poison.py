@@ -29,7 +29,7 @@ class PoisonEffect(TickEffect):
         """
         self.interval_seconds = interval_seconds
 
-    async def apply(  # noqa: PLR6301
+    async def apply(
         self,
         user_id: int,
         player_repo: PlayerRepository,
@@ -117,7 +117,7 @@ class PoisonEffect(TickEffect):
         """
         return self.interval_seconds
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del efecto.
 
         Returns:

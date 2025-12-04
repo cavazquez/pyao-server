@@ -67,6 +67,7 @@ ignore = [
     "FBT002",  # boolean default positional argument (necesario para NPCs)
     "C901",    # function is too complex (lógica de negocio compleja)
     "S311",    # standard pseudo-random generators (aceptable para NPCs/juego)
+    "PLR6301", # method could be static (Strategy Pattern requiere instancias)
 ]
 preview = true  # Habilitar reglas experimentales
 
@@ -148,4 +149,8 @@ filterwarnings = [
 ]
 "src/run_server.py" = [
     "E402",    # imports después de warnings.filterwarnings (necesario para GIL)
+]
+"src/services/player/spell_effects/*.py" = [
+    "DOC201",  # métodos de Strategy Pattern no requieren Returns detallado
+    "ARG002",  # argumentos no usados en algunos efectos (Strategy Pattern)
 ]

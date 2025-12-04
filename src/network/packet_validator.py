@@ -446,7 +446,7 @@ class PacketValidator:
 
         return ValidationResult(success=True, data={"heading": heading}, error_message=None)
 
-    def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:  # noqa: PLR6301
+    def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet ATTACK completo.
 
         Formato esperado:

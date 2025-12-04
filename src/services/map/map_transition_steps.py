@@ -47,7 +47,7 @@ class MapTransitionStep(ABC):
 class SendChangeMapStep(MapTransitionStep):
     """Paso 1: Enviar CHANGE_MAP al cliente."""
 
-    async def execute(self, context: MapTransitionContext) -> None:  # noqa: PLR6301
+    async def execute(self, context: MapTransitionContext) -> None:
         """Envía el paquete CHANGE_MAP para que el cliente cargue el nuevo mapa."""
         logger.debug("Paso 1: Enviando CHANGE_MAP al mapa %d", context.new_map)
         await context.message_sender.send_change_map(context.new_map)
@@ -84,7 +84,7 @@ class UpdatePositionStep(MapTransitionStep):
 class SendPositionUpdateStep(MapTransitionStep):
     """Paso 4: Enviar POS_UPDATE al cliente."""
 
-    async def execute(self, context: MapTransitionContext) -> None:  # noqa: PLR6301
+    async def execute(self, context: MapTransitionContext) -> None:
         """Envía la actualización de posición al cliente."""
         logger.debug("Paso 4: Enviando POS_UPDATE a (%d, %d)", context.new_x, context.new_y)
         await context.message_sender.send_pos_update(context.new_x, context.new_y)
@@ -165,7 +165,7 @@ class UpdateTileInNewMapStep(MapTransitionStep):
 class SendSelfCharacterCreateStep(MapTransitionStep):
     """Paso 8: Enviar CHARACTER_CREATE del propio jugador."""
 
-    async def execute(self, context: MapTransitionContext) -> None:  # noqa: PLR6301
+    async def execute(self, context: MapTransitionContext) -> None:
         """Envía el CHARACTER_CREATE del propio jugador."""
         logger.debug("Paso 8: Enviando CHARACTER_CREATE propio")
         await context.message_sender.send_character_create(

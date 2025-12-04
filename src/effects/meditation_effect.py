@@ -41,7 +41,7 @@ class MeditationEffect(TickEffect):
         """
         return self.interval_seconds
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del efecto para logging.
 
         Returns:

@@ -95,7 +95,7 @@ class TaskAttack(Task):
             logger.debug("Ataque falló: %s", result.error_message)
             # El handler ya envió los mensajes necesarios, solo logueamos
 
-    def _get_target_position(  # noqa: PLR6301
+    def _get_target_position(
         self, x: int, y: int, heading: int
     ) -> tuple[int, int]:
         """Calcula la posición objetivo según la dirección del jugador.

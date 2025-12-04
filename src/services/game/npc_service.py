@@ -436,7 +436,7 @@ class NPCService:
         description = npc.get("description", "")
         return description if isinstance(description, str) else ""
 
-    def calculate_npc_difficulty(self, npc: dict[str, Any]) -> str:  # noqa: PLR6301
+    def calculate_npc_difficulty(self, npc: dict[str, Any]) -> str:
         """Calcula la dificultad de un NPC.
 
         Args:

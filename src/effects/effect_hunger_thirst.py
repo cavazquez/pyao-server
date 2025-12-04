@@ -149,7 +149,7 @@ class HungerThirstEffect(TickEffect):
                     min_hunger=min_hunger,
                 )
 
-    def get_interval_seconds(self) -> float:  # noqa: PLR6301
+    def get_interval_seconds(self) -> float:
         """Retorna 1 segundo (se ejecuta cada segundo para contar intervalos).
 
         Returns:
@@ -157,7 +157,7 @@ class HungerThirstEffect(TickEffect):
         """
         return 1.0
 
-    def get_name(self) -> str:  # noqa: PLR6301
+    def get_name(self) -> str:
         """Retorna el nombre del efecto.
 
         Returns:

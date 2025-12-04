@@ -456,7 +456,7 @@ class CreateAccountCommandHandler(CommandHandler):
             user_id,
         )
 
-    async def _log_character_summary(  # noqa: PLR6301
+    async def _log_character_summary(
         self,
         user_id: int,
         username: str,
