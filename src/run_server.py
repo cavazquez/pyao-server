@@ -8,6 +8,7 @@ from pathlib import Path
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.server import ArgentumServer
 from src.server_cli import ServerCLI
+from tools.compression.map_sync import check_map_sync_on_startup
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,15 @@ def main() -> None:
 
     ssl_cert_path = ssl_manager.cert_path
     ssl_key_path = ssl_manager.key_path
+
+    # Verificar sincronización de mapas
+    logger.info("Verificando datos de mapas...")
+    if not check_map_sync_on_startup():
+        logger.error(
+            "No se pudo inicializar map_data/. "
+            "Ejecuta: uv run python -m tools.compression.map_sync status"
+        )
+        sys.exit(1)
 
     # Mostrar información de inicio
     logger.info("Iniciando PyAO Server v%s...", cli.VERSION)
