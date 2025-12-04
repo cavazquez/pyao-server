@@ -95,9 +95,7 @@ class NPCAIService:
 
         return nearest_player
 
-    def get_direction_to_target(
-        self, from_x: int, from_y: int, to_x: int, to_y: int
-    ) -> int:
+    def get_direction_to_target(self, from_x: int, from_y: int, to_x: int, to_y: int) -> int:
         """Calcula la dirección hacia un objetivo.
 
         Args:

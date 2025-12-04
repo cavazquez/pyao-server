@@ -368,7 +368,7 @@ class HandlerRegistry:
         name: str,
         message_sender: MessageSender,
         session_data: dict[str, Any] | None = None,
-    ) -> CommandHandler:
+    ) -> Any:  # noqa: ANN401 - retorna handler específico, tipo exacto no inferible
         """Obtiene o crea un handler por nombre.
 
         Args:

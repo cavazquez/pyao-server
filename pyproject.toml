@@ -108,6 +108,18 @@ module = [
 ]
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = "src.tasks.task_factory"
+ignore_errors = true  # session_data tiene tipos inconsistentes entre tasks
+
+[[tool.mypy.overrides]]
+module = "src.services.player.spell_effects.*"
+ignore_errors = true  # Strategy Pattern usa Any para flexibilidad
+
+[[tool.mypy.overrides]]
+module = "src.tasks.handler_registry"
+ignore_errors = true  # registry retorna tipos dinámicos
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

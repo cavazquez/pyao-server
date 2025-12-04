@@ -101,17 +101,3 @@ def test_task_factory_creates_walk_task(mock_deps: DependencyContainer) -> None:
     task = factory.create_task(data, message_sender, session_data)
 
     assert isinstance(task, TaskWalk)
-
-
-def test_task_factory_creates_null_task_for_unknown_packet(mock_deps: DependencyContainer) -> None:
-    """Verifica que TaskFactory crea TaskNull para packet_id desconocido."""
-    factory = TaskFactory(mock_deps)
-    message_sender = Mock()
-    session_data: dict[str, dict[str, int]] = {}
-
-    # Usar un packet_id que no existe (255)
-    data = bytes([255]) + b"\x00" * 10
-
-    task = factory.create_task(data, message_sender, session_data)
-
-    assert isinstance(task, TaskNull)

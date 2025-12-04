@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 import random
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.services.player.spell_effects import SpellContext, get_spell_effect_registry
 
@@ -203,7 +203,7 @@ class SpellService:
     async def _has_enough_mana(
         self,
         user_id: int,
-        stats: dict,
+        stats: dict[str, int],
         mana_cost: int,
         spell_name: str,
         message_sender: MessageSender,
@@ -232,9 +232,9 @@ class SpellService:
         target_x: int,
         target_y: int,
         user_id: int,
-        spell_data: dict,
+        spell_data: dict[str, Any],
         message_sender: MessageSender,
-    ) -> tuple:
+    ) -> tuple[Any, int | None]:
         """Busca el target del hechizo (NPC o jugador).
 
         Returns:
@@ -273,7 +273,9 @@ class SpellService:
 
         return target_npc, target_player_id
 
-    def _calculate_amount(self, spell_data: dict, caster_stats: dict) -> tuple[int, int]:
+    def _calculate_amount(
+        self, spell_data: dict[str, Any], caster_stats: dict[str, Any]
+    ) -> tuple[int, int]:
         """Calcula el daño o curación del hechizo.
 
         Returns:

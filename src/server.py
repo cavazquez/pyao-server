@@ -64,7 +64,7 @@ class ArgentumServer:
             # Fallback si el factory no está inicializado
             return TaskNull(data, message_sender)
 
-        return self.task_factory.create_task(data, message_sender, session_data)
+        return self.task_factory.create_task(data, message_sender, session_data)  # type: ignore[arg-type]
 
     async def handle_client(  # noqa: PLR0915
         self,
