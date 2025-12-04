@@ -93,14 +93,20 @@ Las herramientas permiten entrar al modo de trabajo (tecla **U**) para talar, mi
 # Ejecutar todos los checks (linter, formatter, type checker, tests)
 ./run_tests.sh
 
-# Solo tests
-uv run pytest -v
+# Modo rápido (solo tests, sin mypy)
+./run_tests.sh -q
+
+# Con cobertura de código
+./run_tests.sh -c
+
+# Ver todas las opciones
+./run_tests.sh -h
+
+# Solo tests específicos
+uv run pytest tests/tasks/clan/ -v
 
 # Tests con cobertura
 uv run pytest -v --cov=src --cov-report=term-missing
-
-# Tests de seguridad (SSL)
-uv run pytest tests/security/test_ssl_manager.py
 
 # Solo linter
 uv run ruff check .
@@ -127,9 +133,10 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
 - **NPCFactory:** 16 factory methods (14 NPCs) ✅
-- **Random Spawns Dinámicos:** Sistema de spawns aleatorios con límites por área ✅ **NUEVO**
-- **Sonidos de NPCs:** Sistema completo de sonidos para ataque, daño y muerte ✅ **NUEVO**
-- **Tests:** 1780 tests pasando (100%) ✅
+- **Random Spawns Dinámicos:** Sistema de spawns aleatorios con límites por área ✅
+- **Sonidos de NPCs:** Sistema completo de sonidos para ataque, daño y muerte ✅
+- **PlayerStats/PlayerAttributes:** Dataclasses tipados para acceso seguro a stats ✅ **NUEVO**
+- **Tests:** 2031 tests pasando (100%), cobertura 75% ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ### Sistema de Validación de Packets
@@ -323,7 +330,7 @@ pyao-server/
 │       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
 │       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (1113 tests) ✅
+├── tests/                       # Tests unitarios (2031 tests, 75% cobertura) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO

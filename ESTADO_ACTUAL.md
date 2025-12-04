@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
-**Fecha:** 2025-11-29  
+**Fecha:** 2025-12-04  
 **Versión en pyproject.toml:** 0.9.1-alpha  
-**Versión real completada:** 0.9.2-alpha (Random Spawns Dinámicos + Sonidos de NPCs + Mimetismo)
+**Versión real completada:** 0.9.3-alpha (Refactor Stats + Tests Ampliados)
 
 ---
 
@@ -102,6 +102,24 @@
   - Duración configurable (default: 5 minutos)
   - Efecto visible para todos los jugadores en el mapa
 
+### Versión 0.9.3-alpha - Refactor Stats y Tests ✅ COMPLETADO
+**Estado:** Refactoring de acceso a stats y ampliación de cobertura de tests
+- ✅ **Refactor acceso a stats**:
+  - Nuevos dataclasses `PlayerStats` y `PlayerAttributes` (inmutables, tipados)
+  - Métodos `get_player_stats()` y `get_player_attributes()` en PlayerRepository
+  - Helpers actualizados: `get_mana()`, `get_experience()`, etc.
+  - Migración gradual del código existente (patrón antiguo sigue funcionando)
+- ✅ **Ampliación de tests**:
+  - TaskCreateClan: 0% → 98% (8 tests)
+  - TaskLeaveClan: 33% → 100% (5 tests)
+  - TaskRequestClanDetails: 35% → 100% (5 tests)
+  - CastSpellCommandHandler: 14% → 100% (15 tests)
+  - Total: 33 nuevos tests
+- ✅ **Mejoras de herramientas**:
+  - run_tests.sh mejorado con opciones CLI (-q, -c, -f, -m, -p)
+  - Silenciado warning GIL de Python 3.13+ (msgpack)
+  - Documentación de mapas huérfanos para arenas PvP
+
 ---
 
 ## 📋 Próximos Pasos (Según Prioridad)
@@ -161,32 +179,28 @@
 ### 🟡 MEDIA PRIORIDAD - Mejoras de Calidad
 
 #### Detectar y Eliminar Antipatrón de Acceso a Stats
-**Estado:** Pendiente  
+**Estado:** ✅ Base completada (migración gradual pendiente)
 **Esfuerzo:** Bajo-Medio
 
-**Problema:** Múltiples módulos acceden directamente a stats usando `stats.get("min_hp", 0)`, etc.
+**Completado:**
+- [x] Creados `PlayerStats` y `PlayerAttributes` dataclasses
+- [x] Añadidos métodos `get_player_stats()` y `get_player_attributes()`
+- [x] Helpers actualizados para usar tipos
+- [x] Migrado `effect_poison.py` como ejemplo
 
-**Acción:**
-- [ ] Buscar todos los usos de acceso directo a stats
-- [ ] Reemplazar con métodos helper de `PlayerRepository`
-- [ ] Actualizar tests si es necesario
-
-**Archivos a revisar:**
-- `src/command_handlers/`
-- `src/services/`
-- `src/tasks/`
+**Pendiente:**
+- [ ] Migrar gradualmente los ~165 usos restantes de `stats.get()`
 
 ---
 
 #### Ampliar Cobertura de Tests
-**Cobertura actual:** ~72%  
+**Cobertura actual:** 75%  
 **Objetivo:** 80%+
 
-**Áreas prioritarias:**
+**Áreas con baja cobertura (pendientes):**
 - [ ] `services/commerce_service.py` - 13% (sistema crítico)
-- [ ] `tasks/inventory/task_use_item.py` - 13% (funcionalidad importante)
-- [ ] `tasks/player/task_attack.py` - 25% (sistema de combate)
-- [ ] `game/map_manager.py` - 48% (módulo grande)
+- [ ] `bank_deposit_handler.py` - 16%
+- [ ] `bank_extract_handler.py` - 16%
 
 ---
 
@@ -215,30 +229,30 @@
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual:** 0.9.2-alpha (completada) ✅
+- **Versión actual:** 0.9.3-alpha (completada) ✅
 - **Versión en pyproject.toml:** 0.9.1-alpha (pendiente actualizar)
 - **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
-- **Total:** 1780+ tests
-- **Pasando:** 1780+ (100%) ✅
-- **Cobertura:** >45% (objetivo: 80%+)
+- **Total:** 2031 tests
+- **Pasando:** 2031 (100%) ✅
+- **Cobertura:** 75% (objetivo: 80%+)
 
 ### Calidad
 - **Linting:** 0 errores ✅
 - **Type Checking:** 0 errores ✅
-- **Documentación:** 40+ documentos técnicos ✅
+- **Documentación:** 65+ documentos técnicos ✅
 
 ---
 
 ## 🎯 Recomendación Inmediata
 
 1. **Comenzar v0.10.0-alpha** (Targeting por Click para Hechizos) - siguiente feature de alta prioridad
-2. **Ampliar tests del sistema de clanes** - aumentar cobertura
-3. **Features avanzadas de clanes** - Almacén, alianzas, guerras (opcional, v0.9.1+)
+2. **Continuar mejorando cobertura** - commerce_service, bank handlers
+3. **Features avanzadas de clanes** - Almacén, alianzas, guerras (opcional)
 
 ---
 
-**Última actualización:** 2025-11-29  
-**Estado:** ✅ Versión 0.9.2-alpha completada (Random Spawns + Sonidos de NPCs + Mimetismo)
+**Última actualización:** 2025-12-04  
+**Estado:** ✅ Versión 0.9.3-alpha completada (Refactor Stats + Tests Ampliados)
 
