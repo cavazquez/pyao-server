@@ -28,7 +28,7 @@ from src.commands.reject_clan_command import RejectClanCommand
 from src.commands.start_player_trade_command import StartPlayerTradeCommand
 from src.commands.talk_command import TalkCommand
 from src.commands.transfer_clan_leadership_command import TransferClanLeadershipCommand
-from src.services.npc.summon_service import MAX_MASCOTAS
+from src.constants.gameplay import MAX_PETS
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -603,7 +603,7 @@ class TalkCommandHandler(CommandHandler):
 
             current_time = time.time()
 
-            pet_info_lines = [f"--- Mascotas ({len(player_pets)}/{MAX_MASCOTAS}) ---"]
+            pet_info_lines = [f"--- Mascotas ({len(player_pets)}/{MAX_PETS}) ---"]
 
             for i, pet in enumerate(player_pets, start=1):
                 time_remaining = max(0, int(pet.summoned_until - current_time))

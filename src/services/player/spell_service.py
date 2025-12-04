@@ -7,8 +7,8 @@ import random
 import time
 from typing import TYPE_CHECKING, Any
 
+from src.constants.gameplay import MAX_PETS
 from src.game.map_manager import MAX_COORDINATE
-from src.services.npc.summon_service import MAX_MASCOTAS
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -1354,7 +1354,7 @@ class SpellService:
         for spawn_x, spawn_y in spawn_positions:
             # Verificar límite antes de cada invocación
             current_pets = await self.summon_service.get_player_pets_count(user_id)
-            if current_pets >= MAX_MASCOTAS:
+            if current_pets >= MAX_PETS:
                 break
 
             # Spawnear NPC

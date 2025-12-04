@@ -434,7 +434,16 @@ class PartyService:
         # Check if user is leader
         if party.is_leader(user_id):
             # If leader leaves, disband party
-            # TODO: Broadcast to members when we have their MessageSenders
+            # Notify all other members that party was disbanded
+            for member_id in party.member_ids:
+                if member_id != user_id:
+                    member_sender = self._get_player_message_sender(member_id)
+                    if member_sender:
+                        await member_sender.send_console_msg(
+                            f"{username} ha abandonado la party. La party se ha disuelto.",
+                            font_color=7,  # FONTTYPE_PARTY
+                        )
+
             await self.party_repo.delete_party(party.party_id)
             logger.info("Party %s disbanded by leader %s", party.party_id, user_id)
 
@@ -443,7 +452,14 @@ class PartyService:
         # Regular member leaves
         party.remove_member(user_id)
 
-        # TODO: Broadcast to remaining members when we have their MessageSenders
+        # Notify remaining members that someone left
+        for member_id in party.member_ids:
+            member_sender = self._get_player_message_sender(member_id)
+            if member_sender:
+                await member_sender.send_console_msg(
+                    f"{username} ha abandonado la party.",
+                    font_color=7,  # FONTTYPE_PARTY
+                )
 
         # Save updated party
         if party.member_count > 0:

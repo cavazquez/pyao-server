@@ -344,7 +344,7 @@ class LoginCommandHandler(CommandHandler):
             str_val = attributes.get("strength", 0)
             agi_val = attributes.get("agility", 0)
             logger.info(
-                "[LOGIN-PACKETS] user_id=%d Enviando UPDATE_STR_DEX (ID=100) str=%d agi=%d",
+                "[LOGIN-PACKETS] user_id=%d UPDATE_STRENGTH_AND_DEXTERITY str=%d agi=%d",
                 user_id,
                 str_val,
                 agi_val,
@@ -489,7 +489,8 @@ class LoginCommandHandler(CommandHandler):
         await player_service.send_inventory(user_id, self.equipment_repo)
 
         # Habilitar botón de party en el cliente (después del spawn completo)
-        # DESHABILITADO: El cliente Godot no tiene handler para este paquete
+        logger.info("[LOGIN-FINALIZE] user_id=%d Enviando SHOW_PARTY_FORM (ID=101)", user_id)
+        await self.message_sender.send_show_party_form()
 
         # NOTA: El envío de CLAN_DETAILS (packet 80) está deshabilitado hasta que el cliente
         # Godot implemente el handler para procesar GuildDetails.

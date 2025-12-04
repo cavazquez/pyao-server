@@ -46,12 +46,16 @@ class PlayerStatsMessageSender:
 
     async def send_update_strength_and_dexterity(self, strength: int, dexterity: int) -> None:
         """Envía paquete UpdateStrengthAndDexterity del protocolo AO estándar."""
+        from src.network.packet_id import ServerPacketID  # noqa: PLC0415
+
         response = build_update_strength_and_dexterity_response(
             strength=strength, dexterity=dexterity
         )
         logger.info(
-            "[%s] Enviando UPDATE_STRENGTH_AND_DEXTERITY: STR=%d DEX=%d",
+            "[%s] Enviando UPDATE_STRENGTH_AND_DEXTERITY (packet_id=%d, bytes=%s): STR=%d DEX=%d",
             self.connection.address,
+            ServerPacketID.UPDATE_STRENGTH_AND_DEXTERITY,
+            response.hex(),
             strength,
             dexterity,
         )

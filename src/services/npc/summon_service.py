@@ -3,14 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.constants.gameplay import MAX_PETS
+
 if TYPE_CHECKING:
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
-
-# Límite máximo de mascotas por jugador (como en VB6: MAXMASCOTAS = 3)
-MAX_MASCOTAS = 3
 
 
 class SummonService:
@@ -58,11 +57,11 @@ class SummonService:
             Tupla (puede_invocar, mensaje_error).
         """
         current_pets = await self.get_player_pets_count(user_id)
-        if current_pets >= MAX_MASCOTAS:
-            return (False, f"No puedes invocar más mascotas. Límite: {MAX_MASCOTAS}")
+        if current_pets >= MAX_PETS:
+            return (False, f"No puedes invocar más mascotas. Límite: {MAX_PETS}")
 
-        if current_pets + count > MAX_MASCOTAS:
-            available_slots = MAX_MASCOTAS - current_pets
+        if current_pets + count > MAX_PETS:
+            available_slots = MAX_PETS - current_pets
             return (
                 False,
                 f"No puedes invocar {count} mascotas. Solo puedes invocar {available_slots} más.",

@@ -37,10 +37,11 @@ class MapMessageSender:
         """
         response = build_change_map_response(map_number=map_number, version=version)
         logger.info(
-            "[%s] Enviando CHANGE_MAP: map=%d, version=%d",
+            "[%s] Enviando CHANGE_MAP: map=%d, version=%d | bytes=%s",
             self.connection.address,
             map_number,
             version,
+            response.hex(),
         )
         await self.connection.send(response)
 

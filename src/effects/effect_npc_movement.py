@@ -6,6 +6,7 @@ import random
 import time
 from typing import TYPE_CHECKING
 
+from src.constants.gameplay import DEFAULT_MAX_NPCS_PER_TICK, DEFAULT_NPC_CHUNK_SIZE
 from src.effects.tick_effect import TickEffect
 
 if TYPE_CHECKING:
@@ -16,9 +17,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# Configuración de optimización
-DEFAULT_MAX_NPCS_PER_TICK = 10  # Máximo de NPCs procesados por tick
-DEFAULT_CHUNK_SIZE = 5  # Tamaño de chunk para procesamiento paralelo
+# Alias for backwards compatibility
+DEFAULT_CHUNK_SIZE = DEFAULT_NPC_CHUNK_SIZE
 
 
 class NPCMovementEffect(TickEffect):

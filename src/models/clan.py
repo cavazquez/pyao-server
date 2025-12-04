@@ -7,13 +7,33 @@ import time
 from dataclasses import dataclass, field
 from enum import IntEnum
 
-# Constants from VB6 server
-MAX_CLAN_MEMBERS = 50  # Maximum members per clan
-MIN_LEVEL_TO_CREATE = 13  # Minimum level to create a clan
-MIN_LEVEL_TO_JOIN = 1  # Minimum level to join a clan
-INVITATION_TIMEOUT_SECONDS = 60  # Invitation expiration timeout in seconds
-MAX_CLAN_NAME_LENGTH = 30
-MAX_CLAN_DESCRIPTION_LENGTH = 200
+from src.constants.gameplay import (
+    CLAN_INVITATION_TIMEOUT,
+    MAX_CLAN_DESCRIPTION_LENGTH,
+    MAX_CLAN_MEMBERS,
+    MAX_CLAN_NAME_LENGTH,
+    MIN_LEVEL_TO_CREATE_CLAN,
+    MIN_LEVEL_TO_JOIN_CLAN,
+)
+
+# Re-exports for backwards compatibility (other modules import these from here)
+MIN_LEVEL_TO_CREATE = MIN_LEVEL_TO_CREATE_CLAN
+MIN_LEVEL_TO_JOIN = MIN_LEVEL_TO_JOIN_CLAN
+INVITATION_TIMEOUT_SECONDS = CLAN_INVITATION_TIMEOUT
+
+# Re-export constants that other modules import from this module
+__all__ = [
+    "INVITATION_TIMEOUT_SECONDS",
+    "MAX_CLAN_DESCRIPTION_LENGTH",
+    "MAX_CLAN_MEMBERS",
+    "MAX_CLAN_NAME_LENGTH",
+    "MIN_LEVEL_TO_CREATE",
+    "MIN_LEVEL_TO_JOIN",
+    "Clan",
+    "ClanInvitation",
+    "ClanMember",
+    "ClanRank",
+]
 
 
 class ClanRank(IntEnum):

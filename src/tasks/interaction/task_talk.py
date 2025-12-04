@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.commands.talk_command import TalkCommand
+from src.constants.gameplay import MAX_CHAT_MESSAGE_LENGTH
 from src.network.packet_data import TalkData
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
@@ -16,9 +17,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# Constantes
+# Constantes de packet
 MIN_TALK_PACKET_SIZE = 3  # PacketID + int16
-MAX_MESSAGE_LENGTH = 255  # Longitud máxima del mensaje de chat
+MAX_MESSAGE_LENGTH = MAX_CHAT_MESSAGE_LENGTH
 
 
 class TaskTalk(Task):

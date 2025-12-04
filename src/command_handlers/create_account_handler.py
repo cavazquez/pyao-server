@@ -7,6 +7,10 @@ from src.command_handlers.login_handler import LoginCommandHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_account_command import CreateAccountCommand
 from src.config.config_manager import ConfigManager, config_manager
+from src.constants.gameplay import (
+    MIN_PASSWORD_LENGTH,
+    MIN_USERNAME_LENGTH,
+)
 from src.game.character_constants import (
     GENDER_ID_TO_NAME,
     HOME_ID_TO_NAME,
@@ -32,12 +36,6 @@ if TYPE_CHECKING:
     from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
-
-# Constantes de validación
-MIN_USERNAME_LENGTH = 3
-MAX_USERNAME_LENGTH = 20
-MIN_PASSWORD_LENGTH = 6
-MAX_PASSWORD_LENGTH = 32
 
 # Constantes de creación de personaje desde configuración
 HP_PER_CON = ConfigManager.as_int(

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.constants.gameplay import MAX_INVENTORY_SLOTS
 from src.utils.item_slot_parser import ItemSlotParser, ParsedItem
 
 if TYPE_CHECKING:
@@ -18,7 +19,7 @@ class BaseSlotRepository:
     en estructuras de slots almacenadas en Redis.
     """
 
-    MAX_SLOTS = 20
+    MAX_SLOTS = MAX_INVENTORY_SLOTS
 
     def __init__(self, redis_client: RedisClient) -> None:
         """Inicializa el repositorio base.

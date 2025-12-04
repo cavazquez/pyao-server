@@ -249,5 +249,5 @@ class ServerPacketID(IntEnum):
     UPDATE_DEXTERITY = 102
     ADD_SLOTS = 103
     MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
-    # STOP_WORKING = 105
-    # CANCEL_OFFER_ITEM = 106
+    STOP_WORKING = 105
+    CANCEL_OFFER_ITEM = 106

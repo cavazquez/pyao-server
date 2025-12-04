@@ -8,6 +8,7 @@ from pathlib import Path
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.server import ArgentumServer
 from src.server_cli import ServerCLI
+from tools.compression.map_binary import ensure_binary_maps
 from tools.compression.map_sync import check_map_sync_on_startup
 
 logger = logging.getLogger(__name__)
@@ -50,6 +51,13 @@ def main() -> None:
             "Ejecuta: uv run python -m tools.compression.map_sync status"
         )
         sys.exit(1)
+
+    # Generar/actualizar mapas binarios si es necesario
+    logger.info("Verificando mapas binarios...")
+    if ensure_binary_maps():
+        logger.info("✓ Mapas binarios listos")
+    else:
+        logger.warning("No se pudieron generar mapas binarios, usando JSON")
 
     # Mostrar información de inicio
     logger.info("Iniciando PyAO Server v%s...", cli.VERSION)

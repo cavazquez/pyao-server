@@ -9,16 +9,41 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass, field
 from typing import Any
 
-# Constants from VB6 server
-MAX_PARTY_MEMBERS = 5  # PARTY_MAXMEMBERS
-MIN_LEVEL_TO_CREATE = 1  # MINPARTYLEVEL (reducido de 15 para testing)
-MIN_LEADERSHIP_SCORE = 100  # Carisma * Liderazgo >= 100 (requisito VB6)
-MAX_LEVEL_DIFFERENCE = 10  # Maximum level difference between party members
-MAX_EXP_DISTANCE = 30  # Maximum distance in tiles to receive experience
+from src.constants.gameplay import (
+    MAX_EXP_SHARING_DISTANCE,
+    MAX_PARTY_LEVEL_DIFFERENCE,
+    MAX_PARTY_MEMBERS,
+    MIN_LEADERSHIP_SCORE,
+    MIN_LEVEL_TO_CREATE_PARTY,
+    PARTY_INVITATION_TIMEOUT,
+)
+
+# Re-exports for backwards compatibility
+MIN_LEVEL_TO_CREATE = MIN_LEVEL_TO_CREATE_PARTY
+MAX_LEVEL_DIFFERENCE = MAX_PARTY_LEVEL_DIFFERENCE
+MAX_EXP_DISTANCE = MAX_EXP_SHARING_DISTANCE
+INVITATION_TIMEOUT_SECONDS = PARTY_INVITATION_TIMEOUT
+
+# Additional constants not in gameplay.py
 LEVEL_EXPONENT = 2.8  # Exponent for level-based experience distribution
-MIN_CHARISMA_LEADERSHIP = 100  # Minimum (charisma * leadership) to create party
-INVITATION_TIMEOUT_SECONDS = 30  # Invitation expiration timeout in seconds
+MIN_CHARISMA_LEADERSHIP = MIN_LEADERSHIP_SCORE
 PARTY_EXPERIENCE_PER_HIT = False  # PARTY_EXPERIENCIAPORGOLPE
+
+# Re-export constants that other modules import from this module
+__all__ = [
+    "INVITATION_TIMEOUT_SECONDS",
+    "LEVEL_EXPONENT",
+    "MAX_EXP_DISTANCE",
+    "MAX_LEVEL_DIFFERENCE",
+    "MAX_PARTY_MEMBERS",
+    "MIN_CHARISMA_LEADERSHIP",
+    "MIN_LEADERSHIP_SCORE",
+    "MIN_LEVEL_TO_CREATE",
+    "PARTY_EXPERIENCE_PER_HIT",
+    "Party",
+    "PartyInvitation",
+    "PartyMember",
+]
 
 
 @dataclass

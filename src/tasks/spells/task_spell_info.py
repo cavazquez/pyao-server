@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.commands.spell_info_command import SpellInfoCommand
+from src.constants.gameplay import MAX_SPELL_SLOTS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
@@ -17,8 +18,6 @@ if TYPE_CHECKING:  # pragma: no cover - hints only
 
 
 logger = logging.getLogger(__name__)
-
-MAX_SPELL_SLOTS = 35
 
 
 class TaskSpellInfo(Task):

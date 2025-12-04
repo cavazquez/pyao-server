@@ -98,7 +98,12 @@ class SessionMessageSender:
             user_class: Clase del personaje (1 byte).
         """
         response = build_logged_response(user_class=user_class)
-        logger.info("[%s] Enviando LOGGED: userClass=%d", self.connection.address, user_class)
+        logger.info(
+            "[%s] Enviando LOGGED: userClass=%d | bytes=%s",
+            self.connection.address,
+            user_class,
+            response.hex(),
+        )
         await self.connection.send(response)
 
     async def send_user_char_index_in_server(self, char_index: int) -> None:
@@ -109,9 +114,10 @@ class SessionMessageSender:
         """
         response = build_user_char_index_in_server_response(char_index=char_index)
         logger.info(
-            "[%s] Enviando USER_CHAR_INDEX_IN_SERVER: charIndex=%d",
+            "[%s] Enviando USER_CHAR_INDEX_IN_SERVER: charIndex=%d | bytes=%s",
             self.connection.address,
             char_index,
+            response.hex(),
         )
         await self.connection.send(response)
 

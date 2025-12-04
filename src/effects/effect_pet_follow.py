@@ -4,6 +4,7 @@ import logging
 import time
 from typing import TYPE_CHECKING
 
+from src.constants.gameplay import MAX_PET_FOLLOW_DISTANCE
 from src.effects.tick_effect import TickEffect
 
 if TYPE_CHECKING:
@@ -14,8 +15,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# Distancia máxima para seguir al dueño (en tiles)
-MAX_FOLLOW_DISTANCE = 5
+# Alias for backwards compatibility
+MAX_FOLLOW_DISTANCE = MAX_PET_FOLLOW_DISTANCE
 
 
 class PetFollowEffect(TickEffect):

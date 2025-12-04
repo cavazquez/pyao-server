@@ -4,6 +4,12 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.commands.create_account_command import CreateAccountCommand
+from src.constants.gameplay import (
+    MAX_PASSWORD_LENGTH,
+    MAX_USERNAME_LENGTH,
+    MIN_PASSWORD_LENGTH,
+    MIN_USERNAME_LENGTH,
+)
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
@@ -13,12 +19,6 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
-
-# Constantes de validación
-MIN_USERNAME_LENGTH = 3
-MAX_USERNAME_LENGTH = 20
-MIN_PASSWORD_LENGTH = 6
-MAX_PASSWORD_LENGTH = 32
 
 
 class TaskCreateAccount(Task):
