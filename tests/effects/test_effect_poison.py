@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.effects.effect_poison import POISON_DAMAGE_PER_TICK, PoisonEffect
+from src.models.player_stats import PlayerStats
 
 
 @pytest.fixture
@@ -15,8 +16,8 @@ def mock_player_repo() -> MagicMock:
     repo.get_poisoned_until = AsyncMock(return_value=0.0)
     repo.update_poisoned_until = AsyncMock()
     repo.is_alive = AsyncMock(return_value=True)
-    repo.get_stats = AsyncMock(return_value={"min_hp": 100, "max_hp": 100})
-    repo.set_stats = AsyncMock()
+    repo.get_player_stats = AsyncMock(return_value=PlayerStats(min_hp=100, max_hp=100))
+    repo.update_hp = AsyncMock()
     return repo
 
 
@@ -39,7 +40,7 @@ async def test_apply_not_poisoned(
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
     mock_player_repo.get_poisoned_until.assert_called_once_with(1)
-    mock_player_repo.set_stats.assert_not_called()
+    mock_player_repo.update_hp.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -56,7 +57,7 @@ async def test_apply_poison_expired(
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
     mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
-    mock_player_repo.set_stats.assert_not_called()
+    mock_player_repo.update_hp.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -67,16 +68,14 @@ async def test_apply_poison_damage(
     """Test aplicar daño de veneno."""
     future_time = time.time() + 30
     mock_player_repo.get_poisoned_until = AsyncMock(return_value=future_time)
-    mock_player_repo.get_stats = AsyncMock(return_value={"min_hp": 100, "max_hp": 100})
+    mock_player_repo.get_player_stats = AsyncMock(return_value=PlayerStats(min_hp=100, max_hp=100))
 
     effect = PoisonEffect()
 
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
     # Verificar que se actualizó el HP con el daño
-    call_args = mock_player_repo.set_stats.call_args
-    assert call_args is not None
-    assert call_args.kwargs["min_hp"] == 100 - POISON_DAMAGE_PER_TICK
+    mock_player_repo.update_hp.assert_called_once_with(1, 100 - POISON_DAMAGE_PER_TICK)
     mock_message_sender.send_update_user_stats.assert_called_once()
 
 
@@ -88,16 +87,14 @@ async def test_apply_poison_kills_player(
     """Test cuando el veneno mata al jugador."""
     future_time = time.time() + 30
     mock_player_repo.get_poisoned_until = AsyncMock(return_value=future_time)
-    mock_player_repo.get_stats = AsyncMock(return_value={"min_hp": 3, "max_hp": 100})
+    mock_player_repo.get_player_stats = AsyncMock(return_value=PlayerStats(min_hp=3, max_hp=100))
 
     effect = PoisonEffect()
 
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
-    # Verificar que el HP llegó a 0 o menos
-    call_args = mock_player_repo.set_stats.call_args
-    assert call_args is not None
-    assert call_args.kwargs["min_hp"] <= 0
+    # Verificar que el HP llegó a 0 (3 - 5 = -2, pero max(0, -2) = 0)
+    mock_player_repo.update_hp.assert_called_once_with(1, 0)
     # Verificar que se limpió el veneno
     mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
 
@@ -118,7 +115,7 @@ async def test_apply_player_dead(
 
     # Verificar que se limpió el veneno
     mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
-    mock_player_repo.set_stats.assert_not_called()
+    mock_player_repo.update_hp.assert_not_called()
 
 
 @pytest.mark.asyncio

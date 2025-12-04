@@ -64,24 +64,31 @@ class PoisonEffect(TickEffect):
             return
 
         # Obtener stats del jugador
-        stats = await player_repo.get_stats(user_id)
+        stats = await player_repo.get_player_stats(user_id)
         if not stats:
             logger.warning("No se pudieron obtener stats para user_id %d", user_id)
             return
 
-        current_hp = stats.get("min_hp", 0)
-        max_hp = stats.get("max_hp", 100)
-
         # Aplicar daño de envenenamiento
-        new_hp = max(0, current_hp - POISON_DAMAGE_PER_TICK)
+        new_hp = max(0, stats.min_hp - POISON_DAMAGE_PER_TICK)
 
         # Actualizar HP
-        stats["min_hp"] = new_hp
-        await player_repo.set_stats(user_id=user_id, **stats)
+        await player_repo.update_hp(user_id, new_hp)
 
         # Notificar al cliente si hay MessageSender
         if message_sender:
-            await message_sender.send_update_user_stats(**stats)
+            await message_sender.send_update_user_stats(
+                max_hp=stats.max_hp,
+                min_hp=new_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
+                level=stats.level,
+                elu=stats.elu,
+                experience=stats.experience,
+            )
 
         # Verificar si el jugador murió
         if new_hp <= 0:
@@ -89,7 +96,7 @@ class PoisonEffect(TickEffect):
                 "user_id %d murió por envenenamiento (HP: %d/%d)",
                 user_id,
                 new_hp,
-                max_hp,
+                stats.max_hp,
             )
             # Limpiar envenenamiento al morir
             await player_repo.update_poisoned_until(user_id, 0.0)
@@ -97,7 +104,7 @@ class PoisonEffect(TickEffect):
             logger.debug(
                 "user_id %d recibió daño de envenenamiento: %d -> %d HP (expira en %.1fs)",
                 user_id,
-                current_hp,
+                stats.min_hp,
                 new_hp,
                 poisoned_until - current_time,
             )

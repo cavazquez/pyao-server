@@ -5,6 +5,7 @@ import time
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager, config_manager
+from src.models.player_stats import PlayerAttributes, PlayerStats
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -92,6 +93,21 @@ class PlayerRepository:
 
         Returns:
             Diccionario con las estadísticas o None si no existe.
+
+        Note:
+            Preferir get_player_stats() que retorna PlayerStats tipado.
+        """
+        stats = await self.get_player_stats(user_id)
+        return stats.to_dict() if stats else None
+
+    async def get_player_stats(self, user_id: int) -> PlayerStats | None:
+        """Obtiene las estadísticas del jugador como objeto tipado.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            PlayerStats con las estadísticas o None si no existe.
         """
         key = RedisKeys.player_user_stats(user_id)
         result: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
@@ -99,20 +115,7 @@ class PlayerRepository:
         if not result:
             return None
 
-        return {
-            "max_hp": int(result.get("max_hp", 100)),
-            "min_hp": int(
-                result.get("hp", result.get("min_hp", 100))
-            ),  # Priorizar "hp" sobre "min_hp"
-            "max_mana": int(result.get("max_mana", 100)),
-            "min_mana": int(result.get("min_mana", 100)),
-            "max_sta": int(result.get("max_sta", 100)),
-            "min_sta": int(result.get("min_sta", 100)),
-            "gold": int(result.get("gold", 0)),
-            "level": int(result.get("level", 1)),
-            "elu": int(result.get("elu", 300)),
-            "experience": int(result.get("experience", 0)),
-        }
+        return PlayerStats.from_dict(result)
 
     async def get_current_hp(self, user_id: int) -> int:
         """Obtiene el HP actual del jugador.
@@ -123,10 +126,8 @@ class PlayerRepository:
         Returns:
             HP actual (min_hp), 0 si el jugador no existe o está muerto.
         """
-        stats = await self.get_stats(user_id)
-        if not stats:
-            return 0
-        return stats.get("min_hp", 0)
+        stats = await self.get_player_stats(user_id)
+        return stats.min_hp if stats else 0
 
     async def get_max_hp(self, user_id: int) -> int:
         """Obtiene el HP máximo del jugador.
@@ -137,10 +138,8 @@ class PlayerRepository:
         Returns:
             HP máximo, 100 por defecto si no existe.
         """
-        stats = await self.get_stats(user_id)
-        if not stats:
-            return 100
-        return stats.get("max_hp", 100)
+        stats = await self.get_player_stats(user_id)
+        return stats.max_hp if stats else 100
 
     async def get_level(self, user_id: int) -> int:
         """Obtiene el nivel del jugador.
@@ -151,10 +150,8 @@ class PlayerRepository:
         Returns:
             Nivel del jugador, 1 por defecto si no existe.
         """
-        stats = await self.get_stats(user_id)
-        if not stats:
-            return 1
-        return stats.get("level", 1)
+        stats = await self.get_player_stats(user_id)
+        return stats.level if stats else 1
 
     async def is_alive(self, user_id: int) -> bool:
         """Verifica si el jugador está vivo.
@@ -165,8 +162,8 @@ class PlayerRepository:
         Returns:
             True si el jugador existe y tiene HP > 0, False en caso contrario.
         """
-        hp = await self.get_current_hp(user_id)
-        return hp > 0
+        stats = await self.get_player_stats(user_id)
+        return stats.is_alive if stats else False
 
     async def get_gold(self, user_id: int) -> int:
         """Obtiene el oro del jugador.
@@ -177,10 +174,36 @@ class PlayerRepository:
         Returns:
             Oro del jugador, 0 por defecto si no existe.
         """
-        stats = await self.get_stats(user_id)
+        stats = await self.get_player_stats(user_id)
+        return stats.gold if stats else 0
+
+    async def get_mana(self, user_id: int) -> tuple[int, int]:
+        """Obtiene el mana actual y máximo del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Tupla (min_mana, max_mana) con mana actual y máximo.
+        """
+        stats = await self.get_player_stats(user_id)
         if not stats:
-            return 0
-        return stats.get("gold", 0)
+            return (100, 100)
+        return (stats.min_mana, stats.max_mana)
+
+    async def get_experience(self, user_id: int) -> tuple[int, int]:
+        """Obtiene experiencia y ELU del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Tupla (experience, elu).
+        """
+        stats = await self.get_player_stats(user_id)
+        if not stats:
+            return (0, 300)
+        return (stats.experience, stats.elu)
 
     async def set_stats(
         self,
@@ -300,6 +323,21 @@ class PlayerRepository:
 
         Returns:
             Diccionario con los atributos o None si no existe.
+
+        Note:
+            Preferir get_player_attributes() que retorna PlayerAttributes tipado.
+        """
+        attrs = await self.get_player_attributes(user_id)
+        return attrs.to_dict() if attrs else None
+
+    async def get_player_attributes(self, user_id: int) -> PlayerAttributes | None:
+        """Obtiene atributos del jugador como objeto tipado.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            PlayerAttributes con los atributos o None si no existe.
         """
         key = RedisKeys.player_stats(user_id)
         result: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
@@ -334,13 +372,13 @@ class PlayerRepository:
             min_agility = 1
             final_agility = max(min_agility, min(final_agility, max_agility))
 
-        return {
-            "strength": final_strength,
-            "agility": final_agility,
-            "intelligence": int(result.get("intelligence", 10)),
-            "charisma": int(result.get("charisma", 10)),
-            "constitution": int(result.get("constitution", 10)),
-        }
+        return PlayerAttributes(
+            strength=final_strength,
+            agility=final_agility,
+            intelligence=int(result.get("intelligence", 10)),
+            charisma=int(result.get("charisma", 10)),
+            constitution=int(result.get("constitution", 10)),
+        )
 
     async def set_attributes(
         self,
@@ -874,11 +912,10 @@ class PlayerRepository:
         Returns:
             Tupla (min_sta, max_sta) con stamina actual y máxima.
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result: list[str | None] = await self.redis.redis.hmget(key, ["min_sta", "max_sta"])  # type: ignore[misc]
-        min_sta = int(result[0]) if result[0] else 100
-        max_sta = int(result[1]) if result[1] else 100
-        return (min_sta, max_sta)
+        stats = await self.get_player_stats(user_id)
+        if not stats:
+            return (100, 100)
+        return (stats.min_sta, stats.max_sta)
 
     async def update_stamina(self, user_id: int, stamina: int) -> None:
         """Actualiza la stamina actual del jugador.

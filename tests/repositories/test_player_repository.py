@@ -333,7 +333,9 @@ class TestPlayerRepository:
     async def test_get_stamina(self) -> None:
         """Test de obtención de stamina."""
         redis_client = MagicMock()
-        redis_client.redis.hmget = AsyncMock(return_value=[b"80", b"100"])
+        redis_client.redis.hgetall = AsyncMock(
+            return_value={"min_sta": "80", "max_sta": "100", "min_hp": "100", "max_hp": "100"}
+        )
 
         repo = PlayerRepository(redis_client)
         min_sta, max_sta = await repo.get_stamina(1)
@@ -344,7 +346,7 @@ class TestPlayerRepository:
     async def test_get_stamina_not_found(self) -> None:
         """Test de obtención de stamina cuando no existe."""
         redis_client = MagicMock()
-        redis_client.redis.hmget = AsyncMock(return_value=[None, None])
+        redis_client.redis.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         min_sta, max_sta = await repo.get_stamina(1)
