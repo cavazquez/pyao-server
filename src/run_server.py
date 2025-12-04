@@ -1,5 +1,10 @@
 """Script para ejecutar el servidor de Argentum Online."""
 
+# Silenciar warning de GIL en Python 3.13+ (msgpack no declara compatibilidad)
+import warnings
+
+warnings.filterwarnings("ignore", message=".*GIL.*", category=RuntimeWarning)
+
 import asyncio
 import logging
 import sys

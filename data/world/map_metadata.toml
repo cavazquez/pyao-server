@@ -1,0 +1,2328 @@
+# Metadatos de mapas - generado automáticamente
+# Tipos: city, dungeon, wilderness, building, water, unknown
+
+[map_1]
+name = "Ullathorpe"
+type = "city"
+blocked_tiles = 3762
+water_tiles = 0
+exits = 344
+entries = 346
+
+[map_2]
+name = "Bosque"
+type = "wilderness"
+blocked_tiles = 2897
+water_tiles = 0
+exits = 338
+entries = 340
+
+[map_3]
+name = "Desierto"
+type = "wilderness"
+blocked_tiles = 2717
+water_tiles = 0
+exits = 254
+entries = 249
+
+[map_4]
+name = "Montañas"
+type = "wilderness"
+blocked_tiles = 2749
+water_tiles = 0
+exits = 336
+entries = 338
+
+[map_5]
+name = "Pradera"
+type = "wilderness"
+blocked_tiles = 2921
+water_tiles = 0
+exits = 336
+entries = 337
+
+[map_6]
+name = "Bosque Oscuro"
+type = "wilderness"
+blocked_tiles = 2621
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_7]
+name = "Río"
+type = "unknown"
+blocked_tiles = 2650
+water_tiles = 0
+exits = 334
+entries = 337
+
+[map_8]
+name = "Montaña Norte"
+type = "wilderness"
+blocked_tiles = 2611
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_9]
+name = "Cañón"
+type = "unknown"
+blocked_tiles = 2566
+water_tiles = 48
+exits = 334
+entries = 332
+
+[map_10]
+name = "Oasis"
+type = "water"
+blocked_tiles = 723
+water_tiles = 1891
+exits = 248
+entries = 248
+
+[map_11]
+name = "Ruinas"
+type = "dungeon"
+blocked_tiles = 3035
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_12]
+name = "Pico Nevado"
+type = "unknown"
+blocked_tiles = 2557
+water_tiles = 0
+exits = 336
+entries = 335
+
+[map_13]
+name = "Minas"
+type = "dungeon"
+blocked_tiles = 2596
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_14]
+name = "Costa"
+type = "unknown"
+blocked_tiles = 2886
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_15]
+name = "Granja"
+type = "water"
+blocked_tiles = 1600
+water_tiles = 1012
+exits = 336
+entries = 336
+
+[map_16]
+name = "Lago"
+type = "unknown"
+blocked_tiles = 2417
+water_tiles = 279
+exits = 336
+entries = 336
+
+[map_17]
+name = "Cementerio"
+type = "water"
+blocked_tiles = 795
+water_tiles = 1835
+exits = 336
+entries = 338
+
+[map_18]
+name = "Cavernas"
+type = "unknown"
+blocked_tiles = 2612
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_19]
+name = "Cascada"
+type = "water"
+blocked_tiles = 1838
+water_tiles = 774
+exits = 336
+entries = 336
+
+[map_20]
+name = "Pantano"
+type = "water"
+blocked_tiles = 663
+water_tiles = 2035
+exits = 335
+entries = 336
+
+[map_21]
+name = "Cima Helada"
+type = "water"
+blocked_tiles = 591
+water_tiles = 2021
+exits = 335
+entries = 336
+
+[map_22]
+name = "Paso de Montaña"
+type = "wilderness"
+blocked_tiles = 2646
+water_tiles = 0
+exits = 339
+entries = 337
+
+[map_23]
+name = "Fortaleza"
+type = "unknown"
+blocked_tiles = 2909
+water_tiles = 0
+exits = 333
+entries = 336
+
+[map_24]
+name = "Volcán"
+type = "water"
+blocked_tiles = 1905
+water_tiles = 826
+exits = 337
+entries = 337
+
+[map_25]
+name = "Palmeral"
+type = "unknown"
+blocked_tiles = 2675
+water_tiles = 1
+exits = 336
+entries = 336
+
+[map_26]
+name = "Dunas"
+type = "unknown"
+blocked_tiles = 2763
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_27]
+name = "Templo Antiguo"
+type = "water"
+blocked_tiles = 1788
+water_tiles = 824
+exits = 336
+entries = 336
+
+[map_28]
+name = "Laberinto"
+type = "dungeon"
+blocked_tiles = 3355
+water_tiles = 74
+exits = 339
+entries = 339
+
+[map_29]
+name = "Mapa 29"
+type = "dungeon"
+blocked_tiles = 3063
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_30]
+name = "Nix"
+type = "city"
+blocked_tiles = 1988
+water_tiles = 661
+exits = 336
+entries = 336
+
+[map_31]
+name = "Lindos"
+type = "water"
+blocked_tiles = 1530
+water_tiles = 1364
+exits = 336
+entries = 335
+
+[map_32]
+name = "Banderbill"
+type = "city"
+blocked_tiles = 2990
+water_tiles = 91
+exits = 336
+entries = 336
+
+[map_33]
+name = "Mapa 33"
+type = "dungeon"
+blocked_tiles = 7491
+water_tiles = 0
+exits = 4
+entries = 3
+
+[map_34]
+name = "Arghal"
+type = "city"
+blocked_tiles = 2557
+water_tiles = 1362
+exits = 280
+entries = 341
+
+[map_35]
+name = "Uthathorpe"
+type = "water"
+blocked_tiles = 2229
+water_tiles = 888
+exits = 251
+entries = 254
+
+[map_37]
+name = "Mapa 37"
+type = "dungeon"
+blocked_tiles = 7065
+water_tiles = 0
+exits = 43
+entries = 42
+
+[map_38]
+name = "Centauro"
+type = "water"
+blocked_tiles = 1761
+water_tiles = 852
+exits = 328
+entries = 332
+
+[map_39]
+name = "Mapa 39"
+type = "unknown"
+blocked_tiles = 2417
+water_tiles = 114
+exits = 254
+entries = 256
+
+[map_40]
+name = "Andarial"
+type = "dungeon"
+blocked_tiles = 8682
+water_tiles = 0
+exits = 8
+entries = 7
+
+[map_41]
+name = "Khan"
+type = "dungeon"
+blocked_tiles = 9600
+water_tiles = 0
+exits = 8
+entries = 9
+
+[map_42]
+name = "Dungeon"
+type = "dungeon"
+blocked_tiles = 9286
+water_tiles = 0
+exits = 9
+entries = 8
+
+[map_43]
+name = "Piratas"
+type = "dungeon"
+blocked_tiles = 9648
+water_tiles = 0
+exits = 8
+entries = 8
+
+[map_44]
+name = "Inferno"
+type = "dungeon"
+blocked_tiles = 9560
+water_tiles = 0
+exits = 9
+entries = 9
+
+[map_45]
+name = "Titan"
+type = "dungeon"
+blocked_tiles = 8758
+water_tiles = 0
+exits = 9
+entries = 8
+
+[map_46]
+name = "Nimrah"
+type = "water"
+blocked_tiles = 1187
+water_tiles = 1385
+exits = 248
+entries = 249
+
+[map_47]
+name = "Hyron"
+type = "water"
+blocked_tiles = 483
+water_tiles = 2692
+exits = 168
+entries = 168
+
+[map_48]
+name = "Gladstone"
+type = "dungeon"
+blocked_tiles = 9692
+water_tiles = 0
+exits = 4
+entries = 5
+
+[map_49]
+name = "Mapa 49"
+type = "water"
+blocked_tiles = 1884
+water_tiles = 1474
+exits = 0
+entries = 1
+
+[map_50]
+name = "Buthon"
+type = "dungeon"
+blocked_tiles = 8499
+water_tiles = 0
+exits = 8
+entries = 7
+
+[map_51]
+name = "Khalos"
+type = "dungeon"
+blocked_tiles = 7838
+water_tiles = 0
+exits = 8
+entries = 8
+
+[map_52]
+name = "Khalos Dungeon"
+type = "dungeon"
+blocked_tiles = 8335
+water_tiles = 0
+exits = 4
+entries = 4
+
+[map_53]
+name = "Khalos Castle"
+type = "unknown"
+blocked_tiles = 2580
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_54]
+name = "Khalos Underground"
+type = "unknown"
+blocked_tiles = 2569
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_55]
+name = "Khalos Throne"
+type = "unknown"
+blocked_tiles = 2587
+water_tiles = 0
+exits = 336
+entries = 342
+
+[map_56]
+name = "Khalos Treasury"
+type = "unknown"
+blocked_tiles = 2661
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_57]
+name = "Khalos Library"
+type = "unknown"
+blocked_tiles = 2705
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_58]
+name = "Khalos Laboratory"
+type = "dungeon"
+blocked_tiles = 3665
+water_tiles = 0
+exits = 232
+entries = 238
+
+[map_59]
+name = "Khalos Barracks"
+type = "dungeon"
+blocked_tiles = 5309
+water_tiles = 0
+exits = 51
+entries = 53
+
+[map_60]
+name = "Khalos Armory"
+type = "dungeon"
+blocked_tiles = 5304
+water_tiles = 0
+exits = 55
+entries = 56
+
+[map_61]
+name = "Khalos Dungeons"
+type = "dungeon"
+blocked_tiles = 1314
+water_tiles = 1779
+exits = 90
+entries = 89
+
+[map_62]
+name = "Khalos Crypts"
+type = "water"
+blocked_tiles = 1102
+water_tiles = 2200
+exits = 338
+entries = 343
+
+[map_63]
+name = "Khalos Catacombs"
+type = "water"
+blocked_tiles = 703
+water_tiles = 2402
+exits = 252
+entries = 253
+
+[map_64]
+name = "Khalos Sanctum"
+type = "water"
+blocked_tiles = 1092
+water_tiles = 2536
+exits = 86
+entries = 86
+
+[map_65]
+name = "Khalos Spire"
+type = "unknown"
+blocked_tiles = 2741
+water_tiles = 0
+exits = 216
+entries = 216
+
+[map_66]
+name = "Khalos Peak"
+type = "dungeon"
+blocked_tiles = 3360
+water_tiles = 0
+exits = 68
+entries = 74
+
+[map_67]
+name = "Khalos Summit"
+type = "unknown"
+blocked_tiles = 2563
+water_tiles = 0
+exits = 252
+entries = 252
+
+[map_68]
+name = "Khalos Apex"
+type = "water"
+blocked_tiles = 1815
+water_tiles = 761
+exits = 335
+entries = 251
+
+[map_69]
+name = "Khalos Zenith"
+type = "water"
+blocked_tiles = 1721
+water_tiles = 850
+exits = 336
+entries = 336
+
+[map_70]
+name = "Khalos Vertex"
+type = "unknown"
+blocked_tiles = 2396
+water_tiles = 172
+exits = 336
+entries = 336
+
+[map_71]
+name = "Khalos Pinnacle"
+type = "water"
+blocked_tiles = 1742
+water_tiles = 838
+exits = 336
+entries = 336
+
+[map_72]
+name = "Khalos Crest"
+type = "water"
+blocked_tiles = 1731
+water_tiles = 838
+exits = 336
+entries = 336
+
+[map_73]
+name = "Khalos Ridge"
+type = "water"
+blocked_tiles = 1726
+water_tiles = 838
+exits = 336
+entries = 336
+
+[map_74]
+name = "Khalos Summit"
+type = "unknown"
+blocked_tiles = 2512
+water_tiles = 83
+exits = 336
+entries = 336
+
+[map_75]
+name = "Khalos Peak"
+type = "water"
+blocked_tiles = 1244
+water_tiles = 1349
+exits = 334
+entries = 334
+
+[map_76]
+name = "Khalos Spire"
+type = "water"
+blocked_tiles = 694
+water_tiles = 1940
+exits = 339
+entries = 338
+
+[map_77]
+name = "Khalos Tower"
+type = "unknown"
+blocked_tiles = 2695
+water_tiles = 12
+exits = 335
+entries = 335
+
+[map_78]
+name = "Khalos Keep"
+type = "water"
+blocked_tiles = 461
+water_tiles = 2151
+exits = 336
+entries = 276
+
+[map_79]
+name = "Khalos Fortress"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 335
+
+[map_80]
+name = "Khalos Citadel"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 334
+
+[map_81]
+name = "Khalos Stronghold"
+type = "unknown"
+blocked_tiles = 2502
+water_tiles = 128
+exits = 333
+entries = 336
+
+[map_82]
+name = "Khalos Bastion"
+type = "water"
+blocked_tiles = 1415
+water_tiles = 1413
+exits = 336
+entries = 335
+
+[map_83]
+name = "Khalos Rampart"
+type = "unknown"
+blocked_tiles = 2501
+water_tiles = 125
+exits = 336
+entries = 336
+
+[map_84]
+name = "Khalos Bulwark"
+type = "water"
+blocked_tiles = 1360
+water_tiles = 1443
+exits = 336
+entries = 336
+
+[map_85]
+name = "Khalos Redoubt"
+type = "water"
+blocked_tiles = 1738
+water_tiles = 874
+exits = 336
+entries = 334
+
+[map_86]
+name = "Khalos Outpost"
+type = "dungeon"
+blocked_tiles = 3063
+water_tiles = 151
+exits = 336
+entries = 336
+
+[map_87]
+name = "Khalos Garrison"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2696
+exits = 334
+entries = 336
+
+[map_88]
+name = "Khalos Command"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_89]
+name = "Khalos HQ"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_90]
+name = "Khalos Base"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_91]
+name = "Khalos Camp"
+type = "water"
+blocked_tiles = 2494
+water_tiles = 942
+exits = 335
+entries = 336
+
+[map_92]
+name = "Khalos Station"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2780
+exits = 332
+entries = 333
+
+[map_93]
+name = "Khalos Post"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2882
+exits = 336
+entries = 328
+
+[map_94]
+name = "Khalos Fort"
+type = "water"
+blocked_tiles = 1384
+water_tiles = 1409
+exits = 336
+entries = 336
+
+[map_95]
+name = "Khalos Castle"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 251
+entries = 251
+
+[map_96]
+name = "Khalos Palace"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 252
+entries = 251
+
+[map_97]
+name = "Khalos Temple"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 337
+
+[map_98]
+name = "Khalos Shrine"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 336
+entries = 336
+
+[map_99]
+name = "Khalos Altar"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2694
+exits = 254
+entries = 255
+
+[map_100]
+name = "Khalos Sanctum"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2609
+exits = 170
+entries = 168
+
+[map_101]
+name = "Khalos Holy"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 337
+
+[map_102]
+name = "Khalos Sacred"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 255
+
+[map_103]
+name = "Khalos Divine"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 338
+
+[map_104]
+name = "Khalos Celestial"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2694
+exits = 254
+entries = 255
+
+[map_105]
+name = "Khalos Ethereal"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 255
+
+[map_106]
+name = "Khalos Astral"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 166
+
+[map_107]
+name = "Khalos Cosmic"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 167
+
+[map_108]
+name = "Khalos Universal"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 252
+entries = 255
+
+[map_109]
+name = "Khalos Infinite"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 166
+entries = 167
+
+[map_110]
+name = "Khalos Eternal"
+type = "water"
+blocked_tiles = 6
+water_tiles = 2615
+exits = 88
+entries = 87
+
+[map_111]
+name = "Khalos Immortal"
+type = "water"
+blocked_tiles = 952
+water_tiles = 1887
+exits = 221
+entries = 306
+
+[map_112]
+name = "Khalos Legendary"
+type = "water"
+blocked_tiles = 1579
+water_tiles = 1886
+exits = 138
+entries = 136
+
+[map_113]
+name = "Khalos Mythic"
+type = "water"
+blocked_tiles = 791
+water_tiles = 1802
+exits = 169
+entries = 169
+
+[map_114]
+name = "Khalos Epic"
+type = "water"
+blocked_tiles = 785
+water_tiles = 1815
+exits = 169
+entries = 170
+
+[map_115]
+name = "Khalos Fabled"
+type = "dungeon"
+blocked_tiles = 7356
+water_tiles = 0
+exits = 11
+entries = 12
+
+[map_116]
+name = "Khalos Lore"
+type = "dungeon"
+blocked_tiles = 7711
+water_tiles = 0
+exits = 9
+entries = 9
+
+[map_117]
+name = "Khalos Chronicle"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 254
+
+[map_118]
+name = "Khalos Saga"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 256
+
+[map_119]
+name = "Khalos Tale"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 258
+entries = 256
+
+[map_120]
+name = "Khalos Story"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 167
+
+[map_121]
+name = "Mapa 121"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 168
+
+[map_122]
+name = "Mapa 122"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 254
+entries = 256
+
+[map_123]
+name = "Mapa 123"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 166
+entries = 166
+
+[map_124]
+name = "Mapa 124"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 172
+entries = 173
+
+[map_125]
+name = "Mapa 125"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 166
+entries = 166
+
+[map_126]
+name = "Mapa 126"
+type = "water"
+blocked_tiles = 8
+water_tiles = 2608
+exits = 168
+entries = 168
+
+[map_127]
+name = "Mapa 127"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 166
+entries = 168
+
+[map_128]
+name = "Mapa 128"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 172
+entries = 174
+
+[map_129]
+name = "Mapa 129"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 173
+
+[map_130]
+name = "Mapa 130"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 174
+entries = 174
+
+[map_131]
+name = "Mapa 131"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 174
+
+[map_132]
+name = "Mapa 132"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 174
+
+[map_133]
+name = "Mapa 133"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 174
+
+[map_134]
+name = "Mapa 134"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 173
+
+[map_135]
+name = "Mapa 135"
+type = "water"
+blocked_tiles = 56
+water_tiles = 2636
+exits = 256
+entries = 258
+
+[map_136]
+name = "Mapa 136"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 172
+
+[map_137]
+name = "Mapa 137"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2693
+exits = 169
+entries = 171
+
+[map_138]
+name = "Mapa 138"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 250
+entries = 250
+
+[map_139]
+name = "Mapa 139"
+type = "water"
+blocked_tiles = 19
+water_tiles = 2608
+exits = 92
+entries = 90
+
+[map_140]
+name = "Mapa 140"
+type = "dungeon"
+blocked_tiles = 9267
+water_tiles = 0
+exits = 87
+entries = 13
+
+[map_141]
+name = "Mapa 141"
+type = "dungeon"
+blocked_tiles = 8365
+water_tiles = 0
+exits = 19
+entries = 94
+
+[map_142]
+name = "Mapa 142"
+type = "dungeon"
+blocked_tiles = 8842
+water_tiles = 0
+exits = 8
+entries = 7
+
+[map_143]
+name = "Mapa 143"
+type = "dungeon"
+blocked_tiles = 9384
+water_tiles = 0
+exits = 14
+entries = 13
+
+[map_144]
+name = "Mapa 144"
+type = "dungeon"
+blocked_tiles = 8884
+water_tiles = 0
+exits = 13
+entries = 13
+
+[map_145]
+name = "Mapa 145"
+type = "dungeon"
+blocked_tiles = 8990
+water_tiles = 0
+exits = 3
+entries = 3
+
+[map_146]
+name = "Mapa 146"
+type = "dungeon"
+blocked_tiles = 9000
+water_tiles = 0
+exits = 3
+entries = 3
+
+[map_147]
+name = "Mapa 147"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 173
+
+[map_148]
+name = "Mapa 148"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 174
+
+[map_149]
+name = "Mapa 149"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2692
+exits = 174
+entries = 173
+
+[map_150]
+name = "Mapa 150"
+type = "water"
+blocked_tiles = 247
+water_tiles = 2366
+exits = 328
+entries = 335
+
+[map_151]
+name = "Mapa 151"
+type = "water"
+blocked_tiles = 2460
+water_tiles = 1750
+exits = 300
+entries = 306
+
+[map_152]
+name = "Mapa 152"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 167
+
+[map_153]
+name = "Mapa 153"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 168
+
+[map_154]
+name = "Mapa 154"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 167
+
+[map_155]
+name = "Mapa 155"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2609
+exits = 253
+entries = 255
+
+[map_156]
+name = "Mapa 156"
+type = "water"
+blocked_tiles = 1914
+water_tiles = 1459
+exits = 308
+entries = 305
+
+[map_157]
+name = "Mapa 157"
+type = "unknown"
+blocked_tiles = 2555
+water_tiles = 121
+exits = 334
+entries = 336
+
+[map_158]
+name = "Mapa 158"
+type = "unknown"
+blocked_tiles = 2787
+water_tiles = 0
+exits = 336
+entries = 333
+
+[map_159]
+name = "Mapa 159"
+type = "dungeon"
+blocked_tiles = 4186
+water_tiles = 59
+exits = 168
+entries = 172
+
+[map_160]
+name = "Mapa 160"
+type = "water"
+blocked_tiles = 1839
+water_tiles = 793
+exits = 337
+entries = 339
+
+[map_161]
+name = "Mapa 161"
+type = "water"
+blocked_tiles = 1311
+water_tiles = 1464
+exits = 170
+entries = 168
+
+[map_162]
+name = "Mapa 162"
+type = "dungeon"
+blocked_tiles = 7707
+water_tiles = 102
+exits = 9
+entries = 7
+
+[map_163]
+name = "Mapa 163"
+type = "dungeon"
+blocked_tiles = 4347
+water_tiles = 116
+exits = 3
+entries = 3
+
+[map_164]
+name = "Mapa 164"
+type = "water"
+blocked_tiles = 4838
+water_tiles = 668
+exits = 60
+entries = 55
+
+[map_165]
+name = "Mapa 165"
+type = "water"
+blocked_tiles = 3152
+water_tiles = 1132
+exits = 51
+entries = 56
+
+[map_166]
+name = "Mapa 166"
+type = "unknown"
+blocked_tiles = 2779
+water_tiles = 0
+exits = 3
+entries = 1
+
+[map_167]
+name = "Mapa 167"
+type = "dungeon"
+blocked_tiles = 7888
+water_tiles = 0
+exits = 48
+entries = 48
+
+[map_168]
+name = "Mapa 168"
+type = "dungeon"
+blocked_tiles = 5122
+water_tiles = 0
+exits = 92
+entries = 92
+
+[map_169]
+name = "Mapa 169"
+type = "water"
+blocked_tiles = 593
+water_tiles = 2608
+exits = 0
+entries = 0
+orphan = true
+
+[map_170]
+name = "Mapa 170"
+type = "dungeon"
+blocked_tiles = 3765
+water_tiles = 133
+exits = 2
+entries = 0
+orphan = true
+
+[map_171]
+name = "Mapa 171"
+type = "water"
+blocked_tiles = 1495
+water_tiles = 2630
+exits = 252
+entries = 251
+
+[map_172]
+name = "Mapa 172"
+type = "dungeon"
+blocked_tiles = 8581
+water_tiles = 0
+exits = 11
+entries = 9
+
+[map_173]
+name = "Mapa 173"
+type = "dungeon"
+blocked_tiles = 7617
+water_tiles = 0
+exits = 18
+entries = 18
+
+[map_174]
+name = "Mapa 174"
+type = "dungeon"
+blocked_tiles = 7255
+water_tiles = 0
+exits = 12
+entries = 6
+
+[map_175]
+name = "Mapa 175"
+type = "dungeon"
+blocked_tiles = 8830
+water_tiles = 0
+exits = 18
+entries = 18
+
+[map_176]
+name = "Mapa 176"
+type = "dungeon"
+blocked_tiles = 7283
+water_tiles = 0
+exits = 12
+entries = 6
+
+[map_177]
+name = "Mapa 177"
+type = "dungeon"
+blocked_tiles = 7124
+water_tiles = 0
+exits = 13
+entries = 12
+
+[map_178]
+name = "Mapa 178"
+type = "dungeon"
+blocked_tiles = 7394
+water_tiles = 0
+exits = 12
+entries = 7
+
+[map_179]
+name = "Mapa 179"
+type = "dungeon"
+blocked_tiles = 7433
+water_tiles = 0
+exits = 2
+entries = 3
+
+[map_180]
+name = "Mapa 180"
+type = "water"
+blocked_tiles = 1843
+water_tiles = 1371
+exits = 270
+entries = 286
+
+[map_181]
+name = "Mapa 181"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 172
+entries = 172
+
+[map_182]
+name = "Mapa 182"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 172
+entries = 172
+
+[map_183]
+name = "Mapa 183"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 172
+entries = 174
+
+[map_184]
+name = "Mapa 184"
+type = "dungeon"
+blocked_tiles = 3311
+water_tiles = 0
+exits = 4
+entries = 4
+
+[map_185]
+name = "Mapa 185"
+type = "dungeon"
+blocked_tiles = 3226
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_186]
+name = "Mapa 186"
+type = "dungeon"
+blocked_tiles = 3849
+water_tiles = 9
+exits = 198
+entries = 199
+
+[map_187]
+name = "Mapa 187"
+type = "water"
+blocked_tiles = 3117
+water_tiles = 726
+exits = 113
+entries = 113
+
+[map_188]
+name = "Mapa 188"
+type = "dungeon"
+blocked_tiles = 3106
+water_tiles = 43
+exits = 336
+entries = 336
+
+[map_189]
+name = "Mapa 189"
+type = "dungeon"
+blocked_tiles = 3831
+water_tiles = 35
+exits = 194
+entries = 196
+
+[map_190]
+name = "Mapa 190"
+type = "dungeon"
+blocked_tiles = 3830
+water_tiles = 0
+exits = 111
+entries = 108
+
+[map_191]
+name = "Mapa 191"
+type = "dungeon"
+blocked_tiles = 3211
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_192]
+name = "Mapa 192"
+type = "water"
+blocked_tiles = 1836
+water_tiles = 807
+exits = 254
+entries = 254
+
+[map_193]
+name = "Mapa 193"
+type = "dungeon"
+blocked_tiles = 3462
+water_tiles = 0
+exits = 336
+entries = 336
+
+[map_194]
+name = "Mapa 194"
+type = "water"
+blocked_tiles = 1778
+water_tiles = 894
+exits = 336
+entries = 336
+
+[map_195]
+name = "Mapa 195"
+type = "water"
+blocked_tiles = 2970
+water_tiles = 650
+exits = 336
+entries = 336
+
+[map_196]
+name = "Mapa 196"
+type = "water"
+blocked_tiles = 3070
+water_tiles = 1034
+exits = 253
+entries = 256
+
+[map_197]
+name = "Mapa 197"
+type = "water"
+blocked_tiles = 2344
+water_tiles = 906
+exits = 172
+entries = 173
+
+[map_198]
+name = "Mapa 198"
+type = "water"
+blocked_tiles = 2323
+water_tiles = 716
+exits = 0
+entries = 0
+orphan = true
+
+[map_199]
+name = "Mapa 199"
+type = "unknown"
+blocked_tiles = 2651
+water_tiles = 275
+exits = 0
+entries = 0
+orphan = true
+
+[map_200]
+name = "Mapa 200"
+type = "dungeon"
+blocked_tiles = 9409
+water_tiles = 0
+exits = 4
+entries = 1
+
+[map_201]
+name = "Mapa 201"
+type = "water"
+blocked_tiles = 22
+water_tiles = 2874
+exits = 89
+entries = 95
+
+[map_202]
+name = "Mapa 202"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_203]
+name = "Mapa 203"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 335
+
+[map_204]
+name = "Mapa 204"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_205]
+name = "Mapa 205"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_206]
+name = "Mapa 206"
+type = "water"
+blocked_tiles = 122
+water_tiles = 2623
+exits = 256
+entries = 254
+
+[map_207]
+name = "Mapa 207"
+type = "water"
+blocked_tiles = 207
+water_tiles = 2694
+exits = 254
+entries = 255
+
+[map_208]
+name = "Mapa 208"
+type = "dungeon"
+blocked_tiles = 3305
+water_tiles = 0
+exits = 0
+entries = 0
+orphan = true
+
+[map_209]
+name = "Mapa 209"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 258
+entries = 254
+
+[map_210]
+name = "Mapa 210"
+type = "water"
+blocked_tiles = 624
+water_tiles = 1988
+exits = 336
+entries = 336
+
+[map_211]
+name = "Mapa 211"
+type = "water"
+blocked_tiles = 473
+water_tiles = 2142
+exits = 252
+entries = 251
+
+[map_212]
+name = "Mapa 212"
+type = "water"
+blocked_tiles = 936
+water_tiles = 1674
+exits = 252
+entries = 252
+
+[map_213]
+name = "Mapa 213"
+type = "water"
+blocked_tiles = 1264
+water_tiles = 1518
+exits = 255
+entries = 254
+
+[map_214]
+name = "Mapa 214"
+type = "water"
+blocked_tiles = 9
+water_tiles = 2612
+exits = 170
+entries = 170
+
+[map_215]
+name = "Mapa 215"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 256
+
+[map_216]
+name = "Mapa 216"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 256
+
+[map_217]
+name = "Mapa 217"
+type = "water"
+blocked_tiles = 14
+water_tiles = 2625
+exits = 256
+entries = 256
+
+[map_218]
+name = "Mapa 218"
+type = "water"
+blocked_tiles = 233
+water_tiles = 2386
+exits = 256
+entries = 256
+
+[map_219]
+name = "Mapa 219"
+type = "water"
+blocked_tiles = 225
+water_tiles = 2386
+exits = 256
+entries = 256
+
+[map_220]
+name = "Mapa 220"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 256
+
+[map_221]
+name = "Mapa 221"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 256
+entries = 256
+
+[map_222]
+name = "Mapa 222"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2609
+exits = 170
+entries = 170
+
+[map_223]
+name = "Mapa 223"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 338
+entries = 423
+
+[map_224]
+name = "Mapa 224"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 169
+entries = 167
+
+[map_225]
+name = "Mapa 225"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 250
+entries = 337
+
+[map_226]
+name = "Mapa 226"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_227]
+name = "Mapa 227"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2614
+exits = 240
+entries = 240
+
+[map_228]
+name = "Mapa 228"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 336
+entries = 336
+
+[map_229]
+name = "Mapa 229"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_230]
+name = "Mapa 230"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_231]
+name = "Mapa 231"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 251
+entries = 251
+
+[map_232]
+name = "Mapa 232"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 251
+entries = 251
+
+[map_233]
+name = "Mapa 233"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 250
+entries = 250
+
+[map_234]
+name = "Mapa 234"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 251
+entries = 251
+
+[map_235]
+name = "Mapa 235"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 338
+entries = 338
+
+[map_236]
+name = "Mapa 236"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 254
+
+[map_237]
+name = "Mapa 237"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 252
+
+[map_238]
+name = "Mapa 238"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 252
+entries = 251
+
+[map_239]
+name = "Mapa 239"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 169
+entries = 83
+
+[map_240]
+name = "Mapa 240"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 252
+entries = 338
+
+[map_241]
+name = "Mapa 241"
+type = "water"
+blocked_tiles = 72
+water_tiles = 2533
+exits = 168
+entries = 169
+
+[map_242]
+name = "Mapa 242"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 171
+entries = 169
+
+[map_243]
+name = "Mapa 243"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 167
+
+[map_244]
+name = "Mapa 244"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_245]
+name = "Mapa 245"
+type = "water"
+blocked_tiles = 600
+water_tiles = 2094
+exits = 254
+entries = 254
+
+[map_246]
+name = "Mapa 246"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2610
+exits = 252
+entries = 249
+
+[map_247]
+name = "Mapa 247"
+type = "water"
+blocked_tiles = 48
+water_tiles = 2562
+exits = 252
+entries = 252
+
+[map_248]
+name = "Mapa 248"
+type = "water"
+blocked_tiles = 800
+water_tiles = 1810
+exits = 166
+entries = 166
+
+[map_249]
+name = "Mapa 249"
+type = "water"
+blocked_tiles = 800
+water_tiles = 1896
+exits = 166
+entries = 166
+
+[map_250]
+name = "Mapa 250"
+type = "water"
+blocked_tiles = 48
+water_tiles = 2562
+exits = 252
+entries = 251
+
+[map_251]
+name = "Mapa 251"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 338
+
+[map_252]
+name = "Mapa 252"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_253]
+name = "Mapa 253"
+type = "water"
+blocked_tiles = 600
+water_tiles = 2094
+exits = 254
+entries = 254
+
+[map_254]
+name = "Mapa 254"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_255]
+name = "Mapa 255"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_256]
+name = "Mapa 256"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 336
+
+[map_257]
+name = "Mapa 257"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2611
+exits = 251
+entries = 251
+
+[map_258]
+name = "Mapa 258"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2612
+exits = 336
+entries = 340
+
+[map_259]
+name = "Mapa 259"
+type = "water"
+blocked_tiles = 3
+water_tiles = 2610
+exits = 168
+entries = 166
+
+[map_260]
+name = "Mapa 260"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 168
+entries = 168
+
+[map_261]
+name = "Mapa 261"
+type = "water"
+blocked_tiles = 72
+water_tiles = 2608
+exits = 87
+entries = 87
+
+[map_262]
+name = "Mapa 262"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 176
+entries = 174
+
+[map_263]
+name = "Mapa 263"
+type = "water"
+blocked_tiles = 0
+water_tiles = 2608
+exits = 176
+entries = 174
+
+[map_264]
+name = "Mapa 264"
+type = "dungeon"
+blocked_tiles = 6274
+water_tiles = 0
+exits = 24
+entries = 14
+
+[map_265]
+name = "Mapa 265"
+type = "dungeon"
+blocked_tiles = 7039
+water_tiles = 0
+exits = 12
+entries = 12
+
+[map_266]
+name = "Mapa 266"
+type = "dungeon"
+blocked_tiles = 8405
+water_tiles = 0
+exits = 8
+entries = 8
+
+[map_267]
+name = "Mapa 267"
+type = "dungeon"
+blocked_tiles = 7752
+water_tiles = 0
+exits = 4
+entries = 4
+
+[map_268]
+name = "Mapa 268"
+type = "dungeon"
+blocked_tiles = 9257
+water_tiles = 0
+exits = 4
+entries = 4
+
+[map_269]
+name = "Mapa 269"
+type = "dungeon"
+blocked_tiles = 9712
+water_tiles = 0
+exits = 4
+entries = 2
+
+[map_270]
+name = "Mapa 270"
+type = "dungeon"
+blocked_tiles = 9552
+water_tiles = 0
+exits = 4
+entries = 2
+
+[map_271]
+name = "Mapa 271"
+type = "dungeon"
+blocked_tiles = 9840
+water_tiles = 0
+exits = 4
+entries = 2
+
+[map_272]
+name = "Mapa 272"
+type = "water"
+blocked_tiles = 664
+water_tiles = 2648
+exits = 0
+entries = 0
+orphan = true
+
+[map_273]
+name = "Mapa 273"
+type = "water"
+blocked_tiles = 843
+water_tiles = 2712
+exits = 0
+entries = 0
+orphan = true
+
+[map_274]
+name = "Mapa 274"
+type = "water"
+blocked_tiles = 942
+water_tiles = 2710
+exits = 4
+entries = 0
+orphan = true
+
+[map_275]
+name = "Mapa 275"
+type = "dungeon"
+blocked_tiles = 9437
+water_tiles = 0
+exits = 4
+entries = 1
+
+[map_276]
+name = "Mapa 276"
+type = "unknown"
+blocked_tiles = 2622
+water_tiles = 20
+exits = 0
+entries = 0
+orphan = true
+
+[map_277]
+name = "Mapa 277"
+type = "water"
+blocked_tiles = 61
+water_tiles = 9280
+exits = 0
+entries = 0
+orphan = true
+
+[map_278]
+name = "Mapa 278"
+type = "water"
+blocked_tiles = 2510
+water_tiles = 864
+exits = 0
+entries = 0
+orphan = true
+
+[map_279]
+name = "Mapa 279"
+type = "water"
+blocked_tiles = 2003
+water_tiles = 736
+exits = 0
+entries = 0
+orphan = true
+
+[map_280]
+name = "Mapa 280"
+type = "dungeon"
+blocked_tiles = 3392
+water_tiles = 0
+exits = 172
+entries = 0
+orphan = true
+
+[map_281]
+name = "Mapa 281"
+type = "dungeon"
+blocked_tiles = 7112
+water_tiles = 0
+exits = 4
+entries = 3
+
+[map_282]
+name = "Mapa 282"
+type = "water"
+blocked_tiles = 158
+water_tiles = 2634
+exits = 86
+entries = 86
+
+[map_283]
+name = "Mapa 283"
+type = "water"
+blocked_tiles = 6821
+water_tiles = 672
+exits = 39
+entries = 34
+
+[map_284]
+name = "Mapa 284"
+type = "water"
+blocked_tiles = 3601
+water_tiles = 699
+exits = 59
+entries = 59
+
+[map_285]
+name = "Mapa 285"
+type = "water"
+blocked_tiles = 6601
+water_tiles = 619
+exits = 28
+entries = 28
+
+[map_286]
+name = "Mapa 286"
+type = "dungeon"
+blocked_tiles = 4042
+water_tiles = 328
+exits = 343
+entries = 344
+
+[map_287]
+name = "Mapa 287"
+type = "water"
+blocked_tiles = 1703
+water_tiles = 1274
+exits = 254
+entries = 246
+
+[map_288]
+name = "Mapa 288"
+type = "water"
+blocked_tiles = 1208
+water_tiles = 1620
+exits = 250
+entries = 258
+
+[map_289]
+name = "Mapa 289"
+type = "water"
+blocked_tiles = 1470
+water_tiles = 1608
+exits = 250
+entries = 258
+
+[map_290]
+name = "Mapa 290"
+type = "water"
+blocked_tiles = 1557
+water_tiles = 1298
+exits = 254
+entries = 246
+

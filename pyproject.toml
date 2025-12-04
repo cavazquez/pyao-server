@@ -114,6 +114,10 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 # No fallar si no hay tests
 addopts = "--strict-markers -q"
+# Silenciar warning de GIL en Python 3.13+ (msgpack no declara compatibilidad)
+filterwarnings = [
+    "ignore::RuntimeWarning:importlib._bootstrap:491",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
@@ -141,4 +145,7 @@ addopts = "--strict-markers -q"
 ]
 "src/inventory_repository.py" = [
     "UP037",   # quotes necesarias para TYPE_CHECKING
+]
+"src/run_server.py" = [
+    "E402",    # imports después de warnings.filterwarnings (necesario para GIL)
 ]

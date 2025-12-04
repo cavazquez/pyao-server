@@ -1,0 +1,2327 @@
+{
+  "version": 1,
+  "total_maps": 289,
+  "maps": {
+    "1": {
+      "name": "Ullathorpe",
+      "type": "city",
+      "exits": 344,
+      "entries": 346
+    },
+    "2": {
+      "name": "Bosque",
+      "type": "wilderness",
+      "exits": 338,
+      "entries": 340
+    },
+    "3": {
+      "name": "Desierto",
+      "type": "wilderness",
+      "exits": 254,
+      "entries": 249
+    },
+    "4": {
+      "name": "Montañas",
+      "type": "wilderness",
+      "exits": 336,
+      "entries": 338
+    },
+    "5": {
+      "name": "Pradera",
+      "type": "wilderness",
+      "exits": 336,
+      "entries": 337
+    },
+    "6": {
+      "name": "Bosque Oscuro",
+      "type": "wilderness",
+      "exits": 336,
+      "entries": 336
+    },
+    "7": {
+      "name": "Río",
+      "type": "unknown",
+      "exits": 334,
+      "entries": 337
+    },
+    "8": {
+      "name": "Montaña Norte",
+      "type": "wilderness",
+      "exits": 336,
+      "entries": 336
+    },
+    "9": {
+      "name": "Cañón",
+      "type": "unknown",
+      "exits": 334,
+      "entries": 332
+    },
+    "10": {
+      "name": "Oasis",
+      "type": "water",
+      "exits": 248,
+      "entries": 248
+    },
+    "11": {
+      "name": "Ruinas",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "12": {
+      "name": "Pico Nevado",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 335
+    },
+    "13": {
+      "name": "Minas",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "14": {
+      "name": "Costa",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "15": {
+      "name": "Granja",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "16": {
+      "name": "Lago",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "17": {
+      "name": "Cementerio",
+      "type": "water",
+      "exits": 336,
+      "entries": 338
+    },
+    "18": {
+      "name": "Cavernas",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "19": {
+      "name": "Cascada",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "20": {
+      "name": "Pantano",
+      "type": "water",
+      "exits": 335,
+      "entries": 336
+    },
+    "21": {
+      "name": "Cima Helada",
+      "type": "water",
+      "exits": 335,
+      "entries": 336
+    },
+    "22": {
+      "name": "Paso de Montaña",
+      "type": "wilderness",
+      "exits": 339,
+      "entries": 337
+    },
+    "23": {
+      "name": "Fortaleza",
+      "type": "unknown",
+      "exits": 333,
+      "entries": 336
+    },
+    "24": {
+      "name": "Volcán",
+      "type": "water",
+      "exits": 337,
+      "entries": 337
+    },
+    "25": {
+      "name": "Palmeral",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "26": {
+      "name": "Dunas",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "27": {
+      "name": "Templo Antiguo",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "28": {
+      "name": "Laberinto",
+      "type": "dungeon",
+      "exits": 339,
+      "entries": 339
+    },
+    "29": {
+      "name": "Mapa 29",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "30": {
+      "name": "Nix",
+      "type": "city",
+      "exits": 336,
+      "entries": 336
+    },
+    "31": {
+      "name": "Lindos",
+      "type": "water",
+      "exits": 336,
+      "entries": 335
+    },
+    "32": {
+      "name": "Banderbill",
+      "type": "city",
+      "exits": 336,
+      "entries": 336
+    },
+    "33": {
+      "name": "Mapa 33",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 3
+    },
+    "34": {
+      "name": "Arghal",
+      "type": "city",
+      "exits": 280,
+      "entries": 341
+    },
+    "35": {
+      "name": "Uthathorpe",
+      "type": "water",
+      "exits": 251,
+      "entries": 254
+    },
+    "37": {
+      "name": "Mapa 37",
+      "type": "dungeon",
+      "exits": 43,
+      "entries": 42
+    },
+    "38": {
+      "name": "Centauro",
+      "type": "water",
+      "exits": 328,
+      "entries": 332
+    },
+    "39": {
+      "name": "Mapa 39",
+      "type": "unknown",
+      "exits": 254,
+      "entries": 256
+    },
+    "40": {
+      "name": "Andarial",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 7
+    },
+    "41": {
+      "name": "Khan",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 9
+    },
+    "42": {
+      "name": "Dungeon",
+      "type": "dungeon",
+      "exits": 9,
+      "entries": 8
+    },
+    "43": {
+      "name": "Piratas",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 8
+    },
+    "44": {
+      "name": "Inferno",
+      "type": "dungeon",
+      "exits": 9,
+      "entries": 9
+    },
+    "45": {
+      "name": "Titan",
+      "type": "dungeon",
+      "exits": 9,
+      "entries": 8
+    },
+    "46": {
+      "name": "Nimrah",
+      "type": "water",
+      "exits": 248,
+      "entries": 249
+    },
+    "47": {
+      "name": "Hyron",
+      "type": "water",
+      "exits": 168,
+      "entries": 168
+    },
+    "48": {
+      "name": "Gladstone",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 5
+    },
+    "49": {
+      "name": "Mapa 49",
+      "type": "water",
+      "exits": 0,
+      "entries": 1
+    },
+    "50": {
+      "name": "Buthon",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 7
+    },
+    "51": {
+      "name": "Khalos",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 8
+    },
+    "52": {
+      "name": "Khalos Dungeon",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 4
+    },
+    "53": {
+      "name": "Khalos Castle",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "54": {
+      "name": "Khalos Underground",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "55": {
+      "name": "Khalos Throne",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 342
+    },
+    "56": {
+      "name": "Khalos Treasury",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "57": {
+      "name": "Khalos Library",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "58": {
+      "name": "Khalos Laboratory",
+      "type": "dungeon",
+      "exits": 232,
+      "entries": 238
+    },
+    "59": {
+      "name": "Khalos Barracks",
+      "type": "dungeon",
+      "exits": 51,
+      "entries": 53
+    },
+    "60": {
+      "name": "Khalos Armory",
+      "type": "dungeon",
+      "exits": 55,
+      "entries": 56
+    },
+    "61": {
+      "name": "Khalos Dungeons",
+      "type": "dungeon",
+      "exits": 90,
+      "entries": 89
+    },
+    "62": {
+      "name": "Khalos Crypts",
+      "type": "water",
+      "exits": 338,
+      "entries": 343
+    },
+    "63": {
+      "name": "Khalos Catacombs",
+      "type": "water",
+      "exits": 252,
+      "entries": 253
+    },
+    "64": {
+      "name": "Khalos Sanctum",
+      "type": "water",
+      "exits": 86,
+      "entries": 86
+    },
+    "65": {
+      "name": "Khalos Spire",
+      "type": "unknown",
+      "exits": 216,
+      "entries": 216
+    },
+    "66": {
+      "name": "Khalos Peak",
+      "type": "dungeon",
+      "exits": 68,
+      "entries": 74
+    },
+    "67": {
+      "name": "Khalos Summit",
+      "type": "unknown",
+      "exits": 252,
+      "entries": 252
+    },
+    "68": {
+      "name": "Khalos Apex",
+      "type": "water",
+      "exits": 335,
+      "entries": 251
+    },
+    "69": {
+      "name": "Khalos Zenith",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "70": {
+      "name": "Khalos Vertex",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "71": {
+      "name": "Khalos Pinnacle",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "72": {
+      "name": "Khalos Crest",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "73": {
+      "name": "Khalos Ridge",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "74": {
+      "name": "Khalos Summit",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "75": {
+      "name": "Khalos Peak",
+      "type": "water",
+      "exits": 334,
+      "entries": 334
+    },
+    "76": {
+      "name": "Khalos Spire",
+      "type": "water",
+      "exits": 339,
+      "entries": 338
+    },
+    "77": {
+      "name": "Khalos Tower",
+      "type": "unknown",
+      "exits": 335,
+      "entries": 335
+    },
+    "78": {
+      "name": "Khalos Keep",
+      "type": "water",
+      "exits": 336,
+      "entries": 276
+    },
+    "79": {
+      "name": "Khalos Fortress",
+      "type": "water",
+      "exits": 336,
+      "entries": 335
+    },
+    "80": {
+      "name": "Khalos Citadel",
+      "type": "water",
+      "exits": 336,
+      "entries": 334
+    },
+    "81": {
+      "name": "Khalos Stronghold",
+      "type": "unknown",
+      "exits": 333,
+      "entries": 336
+    },
+    "82": {
+      "name": "Khalos Bastion",
+      "type": "water",
+      "exits": 336,
+      "entries": 335
+    },
+    "83": {
+      "name": "Khalos Rampart",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 336
+    },
+    "84": {
+      "name": "Khalos Bulwark",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "85": {
+      "name": "Khalos Redoubt",
+      "type": "water",
+      "exits": 336,
+      "entries": 334
+    },
+    "86": {
+      "name": "Khalos Outpost",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "87": {
+      "name": "Khalos Garrison",
+      "type": "water",
+      "exits": 334,
+      "entries": 336
+    },
+    "88": {
+      "name": "Khalos Command",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "89": {
+      "name": "Khalos HQ",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "90": {
+      "name": "Khalos Base",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "91": {
+      "name": "Khalos Camp",
+      "type": "water",
+      "exits": 335,
+      "entries": 336
+    },
+    "92": {
+      "name": "Khalos Station",
+      "type": "water",
+      "exits": 332,
+      "entries": 333
+    },
+    "93": {
+      "name": "Khalos Post",
+      "type": "water",
+      "exits": 336,
+      "entries": 328
+    },
+    "94": {
+      "name": "Khalos Fort",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "95": {
+      "name": "Khalos Castle",
+      "type": "water",
+      "exits": 251,
+      "entries": 251
+    },
+    "96": {
+      "name": "Khalos Palace",
+      "type": "water",
+      "exits": 252,
+      "entries": 251
+    },
+    "97": {
+      "name": "Khalos Temple",
+      "type": "water",
+      "exits": 336,
+      "entries": 337
+    },
+    "98": {
+      "name": "Khalos Shrine",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "99": {
+      "name": "Khalos Altar",
+      "type": "water",
+      "exits": 254,
+      "entries": 255
+    },
+    "100": {
+      "name": "Khalos Sanctum",
+      "type": "water",
+      "exits": 170,
+      "entries": 168
+    },
+    "101": {
+      "name": "Khalos Holy",
+      "type": "water",
+      "exits": 336,
+      "entries": 337
+    },
+    "102": {
+      "name": "Khalos Sacred",
+      "type": "water",
+      "exits": 256,
+      "entries": 255
+    },
+    "103": {
+      "name": "Khalos Divine",
+      "type": "water",
+      "exits": 336,
+      "entries": 338
+    },
+    "104": {
+      "name": "Khalos Celestial",
+      "type": "water",
+      "exits": 254,
+      "entries": 255
+    },
+    "105": {
+      "name": "Khalos Ethereal",
+      "type": "water",
+      "exits": 256,
+      "entries": 255
+    },
+    "106": {
+      "name": "Khalos Astral",
+      "type": "water",
+      "exits": 168,
+      "entries": 166
+    },
+    "107": {
+      "name": "Khalos Cosmic",
+      "type": "water",
+      "exits": 168,
+      "entries": 167
+    },
+    "108": {
+      "name": "Khalos Universal",
+      "type": "water",
+      "exits": 252,
+      "entries": 255
+    },
+    "109": {
+      "name": "Khalos Infinite",
+      "type": "water",
+      "exits": 166,
+      "entries": 167
+    },
+    "110": {
+      "name": "Khalos Eternal",
+      "type": "water",
+      "exits": 88,
+      "entries": 87
+    },
+    "111": {
+      "name": "Khalos Immortal",
+      "type": "water",
+      "exits": 221,
+      "entries": 306
+    },
+    "112": {
+      "name": "Khalos Legendary",
+      "type": "water",
+      "exits": 138,
+      "entries": 136
+    },
+    "113": {
+      "name": "Khalos Mythic",
+      "type": "water",
+      "exits": 169,
+      "entries": 169
+    },
+    "114": {
+      "name": "Khalos Epic",
+      "type": "water",
+      "exits": 169,
+      "entries": 170
+    },
+    "115": {
+      "name": "Khalos Fabled",
+      "type": "dungeon",
+      "exits": 11,
+      "entries": 12
+    },
+    "116": {
+      "name": "Khalos Lore",
+      "type": "dungeon",
+      "exits": 9,
+      "entries": 9
+    },
+    "117": {
+      "name": "Khalos Chronicle",
+      "type": "water",
+      "exits": 256,
+      "entries": 254
+    },
+    "118": {
+      "name": "Khalos Saga",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "119": {
+      "name": "Khalos Tale",
+      "type": "water",
+      "exits": 258,
+      "entries": 256
+    },
+    "120": {
+      "name": "Khalos Story",
+      "type": "water",
+      "exits": 168,
+      "entries": 167
+    },
+    "121": {
+      "name": "Mapa 121",
+      "type": "water",
+      "exits": 168,
+      "entries": 168
+    },
+    "122": {
+      "name": "Mapa 122",
+      "type": "water",
+      "exits": 254,
+      "entries": 256
+    },
+    "123": {
+      "name": "Mapa 123",
+      "type": "water",
+      "exits": 166,
+      "entries": 166
+    },
+    "124": {
+      "name": "Mapa 124",
+      "type": "water",
+      "exits": 172,
+      "entries": 173
+    },
+    "125": {
+      "name": "Mapa 125",
+      "type": "water",
+      "exits": 166,
+      "entries": 166
+    },
+    "126": {
+      "name": "Mapa 126",
+      "type": "water",
+      "exits": 168,
+      "entries": 168
+    },
+    "127": {
+      "name": "Mapa 127",
+      "type": "water",
+      "exits": 166,
+      "entries": 168
+    },
+    "128": {
+      "name": "Mapa 128",
+      "type": "water",
+      "exits": 172,
+      "entries": 174
+    },
+    "129": {
+      "name": "Mapa 129",
+      "type": "water",
+      "exits": 174,
+      "entries": 173
+    },
+    "130": {
+      "name": "Mapa 130",
+      "type": "water",
+      "exits": 174,
+      "entries": 174
+    },
+    "131": {
+      "name": "Mapa 131",
+      "type": "water",
+      "exits": 174,
+      "entries": 174
+    },
+    "132": {
+      "name": "Mapa 132",
+      "type": "water",
+      "exits": 174,
+      "entries": 174
+    },
+    "133": {
+      "name": "Mapa 133",
+      "type": "water",
+      "exits": 174,
+      "entries": 174
+    },
+    "134": {
+      "name": "Mapa 134",
+      "type": "water",
+      "exits": 174,
+      "entries": 173
+    },
+    "135": {
+      "name": "Mapa 135",
+      "type": "water",
+      "exits": 256,
+      "entries": 258
+    },
+    "136": {
+      "name": "Mapa 136",
+      "type": "water",
+      "exits": 174,
+      "entries": 172
+    },
+    "137": {
+      "name": "Mapa 137",
+      "type": "water",
+      "exits": 169,
+      "entries": 171
+    },
+    "138": {
+      "name": "Mapa 138",
+      "type": "water",
+      "exits": 250,
+      "entries": 250
+    },
+    "139": {
+      "name": "Mapa 139",
+      "type": "water",
+      "exits": 92,
+      "entries": 90
+    },
+    "140": {
+      "name": "Mapa 140",
+      "type": "dungeon",
+      "exits": 87,
+      "entries": 13
+    },
+    "141": {
+      "name": "Mapa 141",
+      "type": "dungeon",
+      "exits": 19,
+      "entries": 94
+    },
+    "142": {
+      "name": "Mapa 142",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 7
+    },
+    "143": {
+      "name": "Mapa 143",
+      "type": "dungeon",
+      "exits": 14,
+      "entries": 13
+    },
+    "144": {
+      "name": "Mapa 144",
+      "type": "dungeon",
+      "exits": 13,
+      "entries": 13
+    },
+    "145": {
+      "name": "Mapa 145",
+      "type": "dungeon",
+      "exits": 3,
+      "entries": 3
+    },
+    "146": {
+      "name": "Mapa 146",
+      "type": "dungeon",
+      "exits": 3,
+      "entries": 3
+    },
+    "147": {
+      "name": "Mapa 147",
+      "type": "water",
+      "exits": 174,
+      "entries": 173
+    },
+    "148": {
+      "name": "Mapa 148",
+      "type": "water",
+      "exits": 174,
+      "entries": 174
+    },
+    "149": {
+      "name": "Mapa 149",
+      "type": "water",
+      "exits": 174,
+      "entries": 173
+    },
+    "150": {
+      "name": "Mapa 150",
+      "type": "water",
+      "exits": 328,
+      "entries": 335
+    },
+    "151": {
+      "name": "Mapa 151",
+      "type": "water",
+      "exits": 300,
+      "entries": 306
+    },
+    "152": {
+      "name": "Mapa 152",
+      "type": "water",
+      "exits": 168,
+      "entries": 167
+    },
+    "153": {
+      "name": "Mapa 153",
+      "type": "water",
+      "exits": 168,
+      "entries": 168
+    },
+    "154": {
+      "name": "Mapa 154",
+      "type": "water",
+      "exits": 168,
+      "entries": 167
+    },
+    "155": {
+      "name": "Mapa 155",
+      "type": "water",
+      "exits": 253,
+      "entries": 255
+    },
+    "156": {
+      "name": "Mapa 156",
+      "type": "water",
+      "exits": 308,
+      "entries": 305
+    },
+    "157": {
+      "name": "Mapa 157",
+      "type": "unknown",
+      "exits": 334,
+      "entries": 336
+    },
+    "158": {
+      "name": "Mapa 158",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 333
+    },
+    "159": {
+      "name": "Mapa 159",
+      "type": "dungeon",
+      "exits": 168,
+      "entries": 172
+    },
+    "160": {
+      "name": "Mapa 160",
+      "type": "water",
+      "exits": 337,
+      "entries": 339
+    },
+    "161": {
+      "name": "Mapa 161",
+      "type": "water",
+      "exits": 170,
+      "entries": 168
+    },
+    "162": {
+      "name": "Mapa 162",
+      "type": "dungeon",
+      "exits": 9,
+      "entries": 7
+    },
+    "163": {
+      "name": "Mapa 163",
+      "type": "dungeon",
+      "exits": 3,
+      "entries": 3
+    },
+    "164": {
+      "name": "Mapa 164",
+      "type": "water",
+      "exits": 60,
+      "entries": 55
+    },
+    "165": {
+      "name": "Mapa 165",
+      "type": "water",
+      "exits": 51,
+      "entries": 56
+    },
+    "166": {
+      "name": "Mapa 166",
+      "type": "unknown",
+      "exits": 3,
+      "entries": 1
+    },
+    "167": {
+      "name": "Mapa 167",
+      "type": "dungeon",
+      "exits": 48,
+      "entries": 48
+    },
+    "168": {
+      "name": "Mapa 168",
+      "type": "dungeon",
+      "exits": 92,
+      "entries": 92
+    },
+    "169": {
+      "name": "Mapa 169",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "170": {
+      "name": "Mapa 170",
+      "type": "dungeon",
+      "exits": 2,
+      "entries": 0
+    },
+    "171": {
+      "name": "Mapa 171",
+      "type": "water",
+      "exits": 252,
+      "entries": 251
+    },
+    "172": {
+      "name": "Mapa 172",
+      "type": "dungeon",
+      "exits": 11,
+      "entries": 9
+    },
+    "173": {
+      "name": "Mapa 173",
+      "type": "dungeon",
+      "exits": 18,
+      "entries": 18
+    },
+    "174": {
+      "name": "Mapa 174",
+      "type": "dungeon",
+      "exits": 12,
+      "entries": 6
+    },
+    "175": {
+      "name": "Mapa 175",
+      "type": "dungeon",
+      "exits": 18,
+      "entries": 18
+    },
+    "176": {
+      "name": "Mapa 176",
+      "type": "dungeon",
+      "exits": 12,
+      "entries": 6
+    },
+    "177": {
+      "name": "Mapa 177",
+      "type": "dungeon",
+      "exits": 13,
+      "entries": 12
+    },
+    "178": {
+      "name": "Mapa 178",
+      "type": "dungeon",
+      "exits": 12,
+      "entries": 7
+    },
+    "179": {
+      "name": "Mapa 179",
+      "type": "dungeon",
+      "exits": 2,
+      "entries": 3
+    },
+    "180": {
+      "name": "Mapa 180",
+      "type": "water",
+      "exits": 270,
+      "entries": 286
+    },
+    "181": {
+      "name": "Mapa 181",
+      "type": "water",
+      "exits": 172,
+      "entries": 172
+    },
+    "182": {
+      "name": "Mapa 182",
+      "type": "water",
+      "exits": 172,
+      "entries": 172
+    },
+    "183": {
+      "name": "Mapa 183",
+      "type": "water",
+      "exits": 172,
+      "entries": 174
+    },
+    "184": {
+      "name": "Mapa 184",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 4
+    },
+    "185": {
+      "name": "Mapa 185",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "186": {
+      "name": "Mapa 186",
+      "type": "dungeon",
+      "exits": 198,
+      "entries": 199
+    },
+    "187": {
+      "name": "Mapa 187",
+      "type": "water",
+      "exits": 113,
+      "entries": 113
+    },
+    "188": {
+      "name": "Mapa 188",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "189": {
+      "name": "Mapa 189",
+      "type": "dungeon",
+      "exits": 194,
+      "entries": 196
+    },
+    "190": {
+      "name": "Mapa 190",
+      "type": "dungeon",
+      "exits": 111,
+      "entries": 108
+    },
+    "191": {
+      "name": "Mapa 191",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "192": {
+      "name": "Mapa 192",
+      "type": "water",
+      "exits": 254,
+      "entries": 254
+    },
+    "193": {
+      "name": "Mapa 193",
+      "type": "dungeon",
+      "exits": 336,
+      "entries": 336
+    },
+    "194": {
+      "name": "Mapa 194",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "195": {
+      "name": "Mapa 195",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "196": {
+      "name": "Mapa 196",
+      "type": "water",
+      "exits": 253,
+      "entries": 256
+    },
+    "197": {
+      "name": "Mapa 197",
+      "type": "water",
+      "exits": 172,
+      "entries": 173
+    },
+    "198": {
+      "name": "Mapa 198",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "199": {
+      "name": "Mapa 199",
+      "type": "unknown",
+      "exits": 0,
+      "entries": 0
+    },
+    "200": {
+      "name": "Mapa 200",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 1
+    },
+    "201": {
+      "name": "Mapa 201",
+      "type": "water",
+      "exits": 89,
+      "entries": 95
+    },
+    "202": {
+      "name": "Mapa 202",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "203": {
+      "name": "Mapa 203",
+      "type": "water",
+      "exits": 336,
+      "entries": 335
+    },
+    "204": {
+      "name": "Mapa 204",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "205": {
+      "name": "Mapa 205",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "206": {
+      "name": "Mapa 206",
+      "type": "water",
+      "exits": 256,
+      "entries": 254
+    },
+    "207": {
+      "name": "Mapa 207",
+      "type": "water",
+      "exits": 254,
+      "entries": 255
+    },
+    "208": {
+      "name": "Mapa 208",
+      "type": "dungeon",
+      "exits": 0,
+      "entries": 0
+    },
+    "209": {
+      "name": "Mapa 209",
+      "type": "water",
+      "exits": 258,
+      "entries": 254
+    },
+    "210": {
+      "name": "Mapa 210",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "211": {
+      "name": "Mapa 211",
+      "type": "water",
+      "exits": 252,
+      "entries": 251
+    },
+    "212": {
+      "name": "Mapa 212",
+      "type": "water",
+      "exits": 252,
+      "entries": 252
+    },
+    "213": {
+      "name": "Mapa 213",
+      "type": "water",
+      "exits": 255,
+      "entries": 254
+    },
+    "214": {
+      "name": "Mapa 214",
+      "type": "water",
+      "exits": 170,
+      "entries": 170
+    },
+    "215": {
+      "name": "Mapa 215",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "216": {
+      "name": "Mapa 216",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "217": {
+      "name": "Mapa 217",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "218": {
+      "name": "Mapa 218",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "219": {
+      "name": "Mapa 219",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "220": {
+      "name": "Mapa 220",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "221": {
+      "name": "Mapa 221",
+      "type": "water",
+      "exits": 256,
+      "entries": 256
+    },
+    "222": {
+      "name": "Mapa 222",
+      "type": "water",
+      "exits": 170,
+      "entries": 170
+    },
+    "223": {
+      "name": "Mapa 223",
+      "type": "water",
+      "exits": 338,
+      "entries": 423
+    },
+    "224": {
+      "name": "Mapa 224",
+      "type": "water",
+      "exits": 169,
+      "entries": 167
+    },
+    "225": {
+      "name": "Mapa 225",
+      "type": "water",
+      "exits": 250,
+      "entries": 337
+    },
+    "226": {
+      "name": "Mapa 226",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "227": {
+      "name": "Mapa 227",
+      "type": "water",
+      "exits": 240,
+      "entries": 240
+    },
+    "228": {
+      "name": "Mapa 228",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "229": {
+      "name": "Mapa 229",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "230": {
+      "name": "Mapa 230",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "231": {
+      "name": "Mapa 231",
+      "type": "water",
+      "exits": 251,
+      "entries": 251
+    },
+    "232": {
+      "name": "Mapa 232",
+      "type": "water",
+      "exits": 251,
+      "entries": 251
+    },
+    "233": {
+      "name": "Mapa 233",
+      "type": "water",
+      "exits": 250,
+      "entries": 250
+    },
+    "234": {
+      "name": "Mapa 234",
+      "type": "water",
+      "exits": 251,
+      "entries": 251
+    },
+    "235": {
+      "name": "Mapa 235",
+      "type": "water",
+      "exits": 338,
+      "entries": 338
+    },
+    "236": {
+      "name": "Mapa 236",
+      "type": "water",
+      "exits": 336,
+      "entries": 254
+    },
+    "237": {
+      "name": "Mapa 237",
+      "type": "water",
+      "exits": 168,
+      "entries": 252
+    },
+    "238": {
+      "name": "Mapa 238",
+      "type": "water",
+      "exits": 252,
+      "entries": 251
+    },
+    "239": {
+      "name": "Mapa 239",
+      "type": "water",
+      "exits": 169,
+      "entries": 83
+    },
+    "240": {
+      "name": "Mapa 240",
+      "type": "water",
+      "exits": 252,
+      "entries": 338
+    },
+    "241": {
+      "name": "Mapa 241",
+      "type": "water",
+      "exits": 168,
+      "entries": 169
+    },
+    "242": {
+      "name": "Mapa 242",
+      "type": "water",
+      "exits": 171,
+      "entries": 169
+    },
+    "243": {
+      "name": "Mapa 243",
+      "type": "water",
+      "exits": 168,
+      "entries": 167
+    },
+    "244": {
+      "name": "Mapa 244",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "245": {
+      "name": "Mapa 245",
+      "type": "water",
+      "exits": 254,
+      "entries": 254
+    },
+    "246": {
+      "name": "Mapa 246",
+      "type": "water",
+      "exits": 252,
+      "entries": 249
+    },
+    "247": {
+      "name": "Mapa 247",
+      "type": "water",
+      "exits": 252,
+      "entries": 252
+    },
+    "248": {
+      "name": "Mapa 248",
+      "type": "water",
+      "exits": 166,
+      "entries": 166
+    },
+    "249": {
+      "name": "Mapa 249",
+      "type": "water",
+      "exits": 166,
+      "entries": 166
+    },
+    "250": {
+      "name": "Mapa 250",
+      "type": "water",
+      "exits": 252,
+      "entries": 251
+    },
+    "251": {
+      "name": "Mapa 251",
+      "type": "water",
+      "exits": 336,
+      "entries": 338
+    },
+    "252": {
+      "name": "Mapa 252",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "253": {
+      "name": "Mapa 253",
+      "type": "water",
+      "exits": 254,
+      "entries": 254
+    },
+    "254": {
+      "name": "Mapa 254",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "255": {
+      "name": "Mapa 255",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "256": {
+      "name": "Mapa 256",
+      "type": "water",
+      "exits": 336,
+      "entries": 336
+    },
+    "257": {
+      "name": "Mapa 257",
+      "type": "water",
+      "exits": 251,
+      "entries": 251
+    },
+    "258": {
+      "name": "Mapa 258",
+      "type": "water",
+      "exits": 336,
+      "entries": 340
+    },
+    "259": {
+      "name": "Mapa 259",
+      "type": "water",
+      "exits": 168,
+      "entries": 166
+    },
+    "260": {
+      "name": "Mapa 260",
+      "type": "water",
+      "exits": 168,
+      "entries": 168
+    },
+    "261": {
+      "name": "Mapa 261",
+      "type": "water",
+      "exits": 87,
+      "entries": 87
+    },
+    "262": {
+      "name": "Mapa 262",
+      "type": "water",
+      "exits": 176,
+      "entries": 174
+    },
+    "263": {
+      "name": "Mapa 263",
+      "type": "water",
+      "exits": 176,
+      "entries": 174
+    },
+    "264": {
+      "name": "Mapa 264",
+      "type": "dungeon",
+      "exits": 24,
+      "entries": 14
+    },
+    "265": {
+      "name": "Mapa 265",
+      "type": "dungeon",
+      "exits": 12,
+      "entries": 12
+    },
+    "266": {
+      "name": "Mapa 266",
+      "type": "dungeon",
+      "exits": 8,
+      "entries": 8
+    },
+    "267": {
+      "name": "Mapa 267",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 4
+    },
+    "268": {
+      "name": "Mapa 268",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 4
+    },
+    "269": {
+      "name": "Mapa 269",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 2
+    },
+    "270": {
+      "name": "Mapa 270",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 2
+    },
+    "271": {
+      "name": "Mapa 271",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 2
+    },
+    "272": {
+      "name": "Mapa 272",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "273": {
+      "name": "Mapa 273",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "274": {
+      "name": "Mapa 274",
+      "type": "water",
+      "exits": 4,
+      "entries": 0
+    },
+    "275": {
+      "name": "Mapa 275",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 1
+    },
+    "276": {
+      "name": "Mapa 276",
+      "type": "unknown",
+      "exits": 0,
+      "entries": 0
+    },
+    "277": {
+      "name": "Mapa 277",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "278": {
+      "name": "Mapa 278",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "279": {
+      "name": "Mapa 279",
+      "type": "water",
+      "exits": 0,
+      "entries": 0
+    },
+    "280": {
+      "name": "Mapa 280",
+      "type": "dungeon",
+      "exits": 172,
+      "entries": 0
+    },
+    "281": {
+      "name": "Mapa 281",
+      "type": "dungeon",
+      "exits": 4,
+      "entries": 3
+    },
+    "282": {
+      "name": "Mapa 282",
+      "type": "water",
+      "exits": 86,
+      "entries": 86
+    },
+    "283": {
+      "name": "Mapa 283",
+      "type": "water",
+      "exits": 39,
+      "entries": 34
+    },
+    "284": {
+      "name": "Mapa 284",
+      "type": "water",
+      "exits": 59,
+      "entries": 59
+    },
+    "285": {
+      "name": "Mapa 285",
+      "type": "water",
+      "exits": 28,
+      "entries": 28
+    },
+    "286": {
+      "name": "Mapa 286",
+      "type": "dungeon",
+      "exits": 343,
+      "entries": 344
+    },
+    "287": {
+      "name": "Mapa 287",
+      "type": "water",
+      "exits": 254,
+      "entries": 246
+    },
+    "288": {
+      "name": "Mapa 288",
+      "type": "water",
+      "exits": 250,
+      "entries": 258
+    },
+    "289": {
+      "name": "Mapa 289",
+      "type": "water",
+      "exits": 250,
+      "entries": 258
+    },
+    "290": {
+      "name": "Mapa 290",
+      "type": "water",
+      "exits": 254,
+      "entries": 246
+    }
+  },
+  "by_type": {
+    "city": [
+      1,
+      30,
+      32,
+      34
+    ],
+    "wilderness": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      22
+    ],
+    "unknown": [
+      7,
+      9,
+      12,
+      14,
+      16,
+      18,
+      23,
+      25,
+      26,
+      39,
+      53,
+      54,
+      55,
+      56,
+      57,
+      65,
+      67,
+      70,
+      74,
+      77,
+      81,
+      83,
+      157,
+      158,
+      166,
+      199,
+      276
+    ],
+    "water": [
+      10,
+      15,
+      17,
+      19,
+      20,
+      21,
+      24,
+      27,
+      31,
+      35,
+      38,
+      46,
+      47,
+      49,
+      62,
+      63,
+      64,
+      68,
+      69,
+      71,
+      72,
+      73,
+      75,
+      76,
+      78,
+      79,
+      80,
+      82,
+      84,
+      85,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      160,
+      161,
+      164,
+      165,
+      169,
+      171,
+      180,
+      181,
+      182,
+      183,
+      187,
+      192,
+      194,
+      195,
+      196,
+      197,
+      198,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      272,
+      273,
+      274,
+      277,
+      278,
+      279,
+      282,
+      283,
+      284,
+      285,
+      287,
+      288,
+      289,
+      290
+    ],
+    "dungeon": [
+      11,
+      13,
+      28,
+      29,
+      33,
+      37,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      48,
+      50,
+      51,
+      52,
+      58,
+      59,
+      60,
+      61,
+      66,
+      86,
+      115,
+      116,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      159,
+      162,
+      163,
+      167,
+      168,
+      170,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      184,
+      185,
+      186,
+      188,
+      189,
+      190,
+      191,
+      193,
+      200,
+      208,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      275,
+      280,
+      281,
+      286
+    ]
+  },
+  "by_name": {
+    "ullathorpe": 1,
+    "bosque": 2,
+    "desierto": 3,
+    "montañas": 4,
+    "pradera": 5,
+    "bosque oscuro": 6,
+    "río": 7,
+    "montaña norte": 8,
+    "cañón": 9,
+    "oasis": 10,
+    "ruinas": 11,
+    "pico nevado": 12,
+    "minas": 13,
+    "costa": 14,
+    "granja": 15,
+    "lago": 16,
+    "cementerio": 17,
+    "cavernas": 18,
+    "cascada": 19,
+    "pantano": 20,
+    "cima helada": 21,
+    "paso de montaña": 22,
+    "fortaleza": 23,
+    "volcán": 24,
+    "palmeral": 25,
+    "dunas": 26,
+    "templo antiguo": 27,
+    "laberinto": 28,
+    "mapa 29": 29,
+    "nix": 30,
+    "lindos": 31,
+    "banderbill": 32,
+    "mapa 33": 33,
+    "arghal": 34,
+    "uthathorpe": 35,
+    "mapa 37": 37,
+    "centauro": 38,
+    "mapa 39": 39,
+    "andarial": 40,
+    "khan": 41,
+    "dungeon": 42,
+    "piratas": 43,
+    "inferno": 44,
+    "titan": 45,
+    "nimrah": 46,
+    "hyron": 47,
+    "gladstone": 48,
+    "mapa 49": 49,
+    "buthon": 50,
+    "khalos": 51,
+    "khalos dungeon": 52,
+    "khalos castle": 95,
+    "khalos underground": 54,
+    "khalos throne": 55,
+    "khalos treasury": 56,
+    "khalos library": 57,
+    "khalos laboratory": 58,
+    "khalos barracks": 59,
+    "khalos armory": 60,
+    "khalos dungeons": 61,
+    "khalos crypts": 62,
+    "khalos catacombs": 63,
+    "khalos sanctum": 100,
+    "khalos spire": 76,
+    "khalos peak": 75,
+    "khalos summit": 74,
+    "khalos apex": 68,
+    "khalos zenith": 69,
+    "khalos vertex": 70,
+    "khalos pinnacle": 71,
+    "khalos crest": 72,
+    "khalos ridge": 73,
+    "khalos tower": 77,
+    "khalos keep": 78,
+    "khalos fortress": 79,
+    "khalos citadel": 80,
+    "khalos stronghold": 81,
+    "khalos bastion": 82,
+    "khalos rampart": 83,
+    "khalos bulwark": 84,
+    "khalos redoubt": 85,
+    "khalos outpost": 86,
+    "khalos garrison": 87,
+    "khalos command": 88,
+    "khalos hq": 89,
+    "khalos base": 90,
+    "khalos camp": 91,
+    "khalos station": 92,
+    "khalos post": 93,
+    "khalos fort": 94,
+    "khalos palace": 96,
+    "khalos temple": 97,
+    "khalos shrine": 98,
+    "khalos altar": 99,
+    "khalos holy": 101,
+    "khalos sacred": 102,
+    "khalos divine": 103,
+    "khalos celestial": 104,
+    "khalos ethereal": 105,
+    "khalos astral": 106,
+    "khalos cosmic": 107,
+    "khalos universal": 108,
+    "khalos infinite": 109,
+    "khalos eternal": 110,
+    "khalos immortal": 111,
+    "khalos legendary": 112,
+    "khalos mythic": 113,
+    "khalos epic": 114,
+    "khalos fabled": 115,
+    "khalos lore": 116,
+    "khalos chronicle": 117,
+    "khalos saga": 118,
+    "khalos tale": 119,
+    "khalos story": 120,
+    "mapa 121": 121,
+    "mapa 122": 122,
+    "mapa 123": 123,
+    "mapa 124": 124,
+    "mapa 125": 125,
+    "mapa 126": 126,
+    "mapa 127": 127,
+    "mapa 128": 128,
+    "mapa 129": 129,
+    "mapa 130": 130,
+    "mapa 131": 131,
+    "mapa 132": 132,
+    "mapa 133": 133,
+    "mapa 134": 134,
+    "mapa 135": 135,
+    "mapa 136": 136,
+    "mapa 137": 137,
+    "mapa 138": 138,
+    "mapa 139": 139,
+    "mapa 140": 140,
+    "mapa 141": 141,
+    "mapa 142": 142,
+    "mapa 143": 143,
+    "mapa 144": 144,
+    "mapa 145": 145,
+    "mapa 146": 146,
+    "mapa 147": 147,
+    "mapa 148": 148,
+    "mapa 149": 149,
+    "mapa 150": 150,
+    "mapa 151": 151,
+    "mapa 152": 152,
+    "mapa 153": 153,
+    "mapa 154": 154,
+    "mapa 155": 155,
+    "mapa 156": 156,
+    "mapa 157": 157,
+    "mapa 158": 158,
+    "mapa 159": 159,
+    "mapa 160": 160,
+    "mapa 161": 161,
+    "mapa 162": 162,
+    "mapa 163": 163,
+    "mapa 164": 164,
+    "mapa 165": 165,
+    "mapa 166": 166,
+    "mapa 167": 167,
+    "mapa 168": 168,
+    "mapa 169": 169,
+    "mapa 170": 170,
+    "mapa 171": 171,
+    "mapa 172": 172,
+    "mapa 173": 173,
+    "mapa 174": 174,
+    "mapa 175": 175,
+    "mapa 176": 176,
+    "mapa 177": 177,
+    "mapa 178": 178,
+    "mapa 179": 179,
+    "mapa 180": 180,
+    "mapa 181": 181,
+    "mapa 182": 182,
+    "mapa 183": 183,
+    "mapa 184": 184,
+    "mapa 185": 185,
+    "mapa 186": 186,
+    "mapa 187": 187,
+    "mapa 188": 188,
+    "mapa 189": 189,
+    "mapa 190": 190,
+    "mapa 191": 191,
+    "mapa 192": 192,
+    "mapa 193": 193,
+    "mapa 194": 194,
+    "mapa 195": 195,
+    "mapa 196": 196,
+    "mapa 197": 197,
+    "mapa 198": 198,
+    "mapa 199": 199,
+    "mapa 200": 200,
+    "mapa 201": 201,
+    "mapa 202": 202,
+    "mapa 203": 203,
+    "mapa 204": 204,
+    "mapa 205": 205,
+    "mapa 206": 206,
+    "mapa 207": 207,
+    "mapa 208": 208,
+    "mapa 209": 209,
+    "mapa 210": 210,
+    "mapa 211": 211,
+    "mapa 212": 212,
+    "mapa 213": 213,
+    "mapa 214": 214,
+    "mapa 215": 215,
+    "mapa 216": 216,
+    "mapa 217": 217,
+    "mapa 218": 218,
+    "mapa 219": 219,
+    "mapa 220": 220,
+    "mapa 221": 221,
+    "mapa 222": 222,
+    "mapa 223": 223,
+    "mapa 224": 224,
+    "mapa 225": 225,
+    "mapa 226": 226,
+    "mapa 227": 227,
+    "mapa 228": 228,
+    "mapa 229": 229,
+    "mapa 230": 230,
+    "mapa 231": 231,
+    "mapa 232": 232,
+    "mapa 233": 233,
+    "mapa 234": 234,
+    "mapa 235": 235,
+    "mapa 236": 236,
+    "mapa 237": 237,
+    "mapa 238": 238,
+    "mapa 239": 239,
+    "mapa 240": 240,
+    "mapa 241": 241,
+    "mapa 242": 242,
+    "mapa 243": 243,
+    "mapa 244": 244,
+    "mapa 245": 245,
+    "mapa 246": 246,
+    "mapa 247": 247,
+    "mapa 248": 248,
+    "mapa 249": 249,
+    "mapa 250": 250,
+    "mapa 251": 251,
+    "mapa 252": 252,
+    "mapa 253": 253,
+    "mapa 254": 254,
+    "mapa 255": 255,
+    "mapa 256": 256,
+    "mapa 257": 257,
+    "mapa 258": 258,
+    "mapa 259": 259,
+    "mapa 260": 260,
+    "mapa 261": 261,
+    "mapa 262": 262,
+    "mapa 263": 263,
+    "mapa 264": 264,
+    "mapa 265": 265,
+    "mapa 266": 266,
+    "mapa 267": 267,
+    "mapa 268": 268,
+    "mapa 269": 269,
+    "mapa 270": 270,
+    "mapa 271": 271,
+    "mapa 272": 272,
+    "mapa 273": 273,
+    "mapa 274": 274,
+    "mapa 275": 275,
+    "mapa 276": 276,
+    "mapa 277": 277,
+    "mapa 278": 278,
+    "mapa 279": 279,
+    "mapa 280": 280,
+    "mapa 281": 281,
+    "mapa 282": 282,
+    "mapa 283": 283,
+    "mapa 284": 284,
+    "mapa 285": 285,
+    "mapa 286": 286,
+    "mapa 287": 287,
+    "mapa 288": 288,
+    "mapa 289": 289,
+    "mapa 290": 290
+  }
+}
