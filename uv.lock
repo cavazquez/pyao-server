@@ -292,7 +292,7 @@ wheels = [
 
 [[package]]
 name = "pyao-server"
-version = "0.9.3a0"
+version = "0.9.4a0"
 source = { editable = "." }
 dependencies = [
     { name = "argon2-cffi" },

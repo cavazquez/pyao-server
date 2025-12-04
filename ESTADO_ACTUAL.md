@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
 **Fecha:** 2025-12-04  
-**Versión en pyproject.toml:** 0.9.1-alpha  
-**Versión real completada:** 0.9.3-alpha (Refactor Stats + Tests Ampliados)
+**Versión en pyproject.toml:** 0.9.4-alpha  
+**Versión real completada:** 0.9.4-alpha (Refactor Arquitectura)
 
 ---
 
@@ -120,9 +120,33 @@
   - Silenciado warning GIL de Python 3.13+ (msgpack)
   - Documentación de mapas huérfanos para arenas PvP
 
+### Versión 0.9.4-alpha - Refactor Arquitectura ✅ COMPLETADO
+**Estado:** Refactoring de archivos grandes usando patrones de diseño
+- ✅ **TaskFactory refactorizado** (Strategy + Registry Pattern):
+  - Nuevo `HandlerRegistry` con configuración declarativa
+  - Eliminados 51 métodos `_get_*_handler` repetitivos
+  - task_factory.py: 1811 → 621 líneas (-66%)
+  - handler_registry.py: 405 líneas (nuevo)
+  - **Total: -43% de código**
+- ✅ **SpellService refactorizado** (Strategy Pattern):
+  - Nuevo módulo `spell_effects/` con 8 clases de efectos
+  - `SpellContext`: contexto compartido inmutable
+  - `SpellEffectRegistry`: orquesta aplicación de efectos
+  - Efectos implementados: Heal, Damage, Poison, Paralysis, Blind, Dumb, Invisibility, Morph, Drain, Hunger, WarpPet, Summon, Buffs/Debuffs
+  - spell_service.py: 1410 → 357 líneas (-75%)
+  - **Beneficio: agregar nuevo efecto = 1 nueva clase**
+
 ---
 
 ## 📋 Próximos Pasos (Según Prioridad)
+
+### 🔵 PENDIENTE - Refactoring de Archivos Grandes
+
+#### TODO: Continuar modularización
+**Archivos pendientes de refactorizar:**
+- [ ] `packet_validator.py` (1394 líneas) - Extraer validadores individuales
+- [ ] `map_resources_service.py` (1279 líneas) - Modularizar por tipo de recurso
+- [ ] `map_manager.py` (1160 líneas) - Separar responsabilidades (NPCs, Items, Players)
 
 ### 🔴 ALTA PRIORIDAD - Próxima Versión (0.10.0-alpha)
 

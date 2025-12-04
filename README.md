@@ -119,24 +119,25 @@ uv run mypy .
 
 El servidor utiliza una **arquitectura modular** con patrones de diseño modernos:
 
+- **Strategy Pattern** - SpellEffects, HandlerRegistry (efectos y handlers como clases)
 - **Factory Pattern** - TaskFactory para creación de tasks
+- **Registry Pattern** - HandlerRegistry con configuración declarativa
 - **Dependency Injection** - DependencyContainer centralizado
 - **Facade Pattern** - ServerInitializer para inicialización
 - **Repository Pattern** - Abstracción de acceso a datos
-- **Strategy Pattern** - Dictionary-based task creation
 
 Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de la arquitectura.
 
 ### Estadísticas del Código
 
 - **server.py:** 685 → 194 líneas (-72% reducción) ✅
+- **task_factory.py:** 1811 → 621 líneas (-66%) + handler_registry.py 405 líneas ✅ **REFACTORIZADO**
+- **spell_service.py:** 1410 → 357 líneas (-75%) + spell_effects/ 8 módulos ✅ **REFACTORIZADO**
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
 - **NPCFactory:** 16 factory methods (14 NPCs) ✅
-- **Random Spawns Dinámicos:** Sistema de spawns aleatorios con límites por área ✅
-- **Sonidos de NPCs:** Sistema completo de sonidos para ataque, daño y muerte ✅
-- **PlayerStats/PlayerAttributes:** Dataclasses tipados para acceso seguro a stats ✅ **NUEVO**
-- **Tests:** 2031 tests pasando (100%), cobertura 75% ✅
+- **PlayerStats/PlayerAttributes:** Dataclasses tipados para acceso seguro a stats ✅
+- **Tests:** 2030 tests pasando (100%), cobertura 75% ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ### Sistema de Validación de Packets
@@ -176,7 +177,8 @@ pyao-server/
 │   │
 │   ├── # Arquitectura (Initializers & Containers) ✅ REFACTORIZADO
 │   ├── dependency_container.py  # Contenedor de dependencias (24 deps)
-│   ├── task_factory.py          # Factory para crear tasks (25 tipos)
+│   ├── task_factory.py          # Factory para crear tasks (621 líneas, -66%)
+│   ├── handler_registry.py      # Registry de handlers (405 líneas) ✅ NUEVO
 │   ├── server_initializer.py    # Orquestador principal
 │   ├── redis_initializer.py     # Inicialización de Redis
 │   ├── repository_initializer.py # Creación de repositorios (10)
@@ -199,7 +201,15 @@ pyao-server/
 │   ├── npc_death_service.py     # Gestión de muerte de NPCs
 │   ├── combat_service.py        # Sistema de combate
 │   ├── commerce_service.py      # Sistema de comercio
-│   ├── spell_service.py         # Sistema de hechizos
+│   ├── spell_service.py         # Sistema de hechizos (357 líneas, -75%)
+│   ├── spell_effects/           # Efectos de hechizos (Strategy Pattern) ✅ NUEVO
+│   │   ├── base.py              # SpellContext y SpellEffect ABC
+│   │   ├── healing.py           # HealEffect, ReviveEffect
+│   │   ├── damage.py            # DamageEffect, DrainEffect
+│   │   ├── status.py            # Poison, Paralysis, Blind, Dumb, etc.
+│   │   ├── buffs.py             # Invisibility, Morph, Strength/Agility buffs
+│   │   ├── special.py           # Hunger, WarpPet, Summon
+│   │   └── registry.py          # SpellEffectRegistry
 │   ├── loot_table_service.py    # Sistema de loot
 │   ├── authentication_service.py # Autenticación
 │   ├── session_manager.py       # Gestión de sesiones
