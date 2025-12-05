@@ -10,7 +10,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "saturday"
+      time: "01:00"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "semiannually"
+      day: "saturday"
+      time: "01:00"
