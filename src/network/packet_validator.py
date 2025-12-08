@@ -2,57 +2,18 @@
 
 import logging
 import struct
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 
-from src.config.config_manager import ConfigManager, config_manager
+from src.network.packet_id import ClientPacketID
+from src.network.validation_result import ValidationResult
+from src.network.validators.base import ValidationContext
+from src.network.validators.registry import get_packet_validator_registry
+from src.network.validators.spells import MoveSpellPacketValidator
 
 if TYPE_CHECKING:
     from src.network.packet_reader import PacketReader
 
-T = TypeVar("T")
-
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ValidationResult[T]:
-    """Resultado de validación de un packet.
-
-    Attributes:
-        success: True si la validación fue exitosa.
-        data: Datos validados (solo si success=True).
-        error_message: Mensaje de error (solo si success=False).
-    """
-
-    success: bool
-    data: T | None = None
-    error_message: str | None = None
-
-    def log_validation(self, packet_name: str, packet_id: int, client_address: str) -> None:
-        """Registra el resultado de la validación en los logs.
-
-        Args:
-            packet_name: Nombre del packet (ej: "WALK", "ATTACK").
-            packet_id: ID del packet.
-            client_address: Dirección del cliente (IP:Puerto).
-        """
-        if self.success:
-            logger.debug(
-                "[%s] ✓ Packet %s (ID:%d) validado correctamente: %s",
-                client_address,
-                packet_name,
-                packet_id,
-                self.data,
-            )
-        else:
-            logger.warning(
-                "[%s] ✗ Packet %s (ID:%d) inválido: %s",
-                client_address,
-                packet_name,
-                packet_id,
-                self.error_message,
-            )
 
 
 class PacketValidator:
@@ -369,822 +330,337 @@ class PacketValidator:
     # Estos métodos validan un packet completo y retornan ValidationResult
     # con todos los datos parseados listos para usar en las tasks.
 
-    def validate_packet_by_id(self, packet_id: int) -> ValidationResult[dict[str, Any]] | None:
-        """Valida un packet según su ID usando el método validate_* correspondiente.
-
-        Args:
-            packet_id: ID del packet a validar.
+    def _validate_with_registry(self, packet_id: int) -> ValidationResult[dict[str, Any]]:
+        """Helper que delega en el registry.
 
         Returns:
-            ValidationResult si hay un validador para este packet_id, None si no existe.
+            ValidationResult del validador o error si no existe.
         """
-        # Mapeo de packet_id a método de validación
-        # Importar aquí para evitar dependencia circular
-        from src.network.packet_id import ClientPacketID  # noqa: PLC0415
+        validator = get_packet_validator_registry().get_validator(packet_id)
+        if validator is None:
+            return ValidationResult(
+                success=False, data=None, error_message="Validador no encontrado"
+            )
 
-        validators: dict[int, object] = {
-            ClientPacketID.LOGIN: self.validate_login_packet,
-            ClientPacketID.THROW_DICES: self.validate_throw_dices_packet,
-            ClientPacketID.CREATE_ACCOUNT: self.validate_create_account_packet,
-            ClientPacketID.TALK: self.validate_talk_packet,
-            ClientPacketID.WALK: self.validate_walk_packet,
-            ClientPacketID.REQUEST_POSITION_UPDATE: self.validate_request_position_update_packet,
-            ClientPacketID.ATTACK: self.validate_attack_packet,
-            ClientPacketID.PICK_UP: self.validate_pickup_packet,
-            ClientPacketID.REQUEST_ATTRIBUTES: self.validate_request_attributes_packet,
-            ClientPacketID.COMMERCE_END: self.validate_commerce_end_packet,
-            ClientPacketID.BANK_END: self.validate_bank_end_packet,
-            ClientPacketID.DROP: self.validate_drop_packet,
-            ClientPacketID.CAST_SPELL: self.validate_cast_spell_packet,
-            ClientPacketID.LEFT_CLICK: self.validate_left_click_packet,
-            ClientPacketID.DOUBLE_CLICK: self.validate_double_click_packet,
-            ClientPacketID.USE_ITEM: self.validate_use_item_packet,
-            ClientPacketID.EQUIP_ITEM: self.validate_equip_item_packet,
-            ClientPacketID.CHANGE_HEADING: self.validate_change_heading_packet,
-            ClientPacketID.COMMERCE_BUY: self.validate_commerce_buy_packet,
-            ClientPacketID.SPELL_INFO: self.validate_spell_info_packet,
-            ClientPacketID.BANK_EXTRACT_ITEM: self.validate_bank_extract_packet,
-            ClientPacketID.COMMERCE_SELL: self.validate_commerce_sell_packet,
-            ClientPacketID.BANK_DEPOSIT: self.validate_bank_deposit_packet,
-            ClientPacketID.ONLINE: self.validate_online_packet,
-            ClientPacketID.QUIT: self.validate_quit_packet,
-            ClientPacketID.MEDITATE: self.validate_meditate_packet,
-            ClientPacketID.AYUDA: self.validate_ayuda_packet,
-            ClientPacketID.REQUEST_STATS: self.validate_request_stats_packet,
-            ClientPacketID.INFORMATION: self.validate_information_packet,
-            ClientPacketID.REQUEST_MOTD: self.validate_request_motd_packet,
-            ClientPacketID.UPTIME: self.validate_uptime_packet,
-            ClientPacketID.PING: self.validate_ping_packet,
-            ClientPacketID.BANK_EXTRACT_GOLD: self.validate_bank_extract_gold_packet,
-            ClientPacketID.BANK_DEPOSIT_GOLD: self.validate_bank_deposit_gold_packet,
-            ClientPacketID.GM_COMMANDS: self.validate_gm_commands_packet,
-        }
+        context = ValidationContext(reader=self.reader, errors=self.errors.copy())
+        result = validator.validate(context)
+        self.errors = context.errors
+        return result
 
-        validator_method = validators.get(packet_id)
-        if validator_method and callable(validator_method):
-            return validator_method()  # type: ignore[no-any-return]
+    def validate_packet_by_id(self, packet_id: int) -> ValidationResult[dict[str, Any]] | None:
+        """Valida un packet según su ID usando el registry de validadores.
 
-        # No hay validador para este packet_id
-        return None
+        Returns:
+            ValidationResult si existe validador, None si no está registrado.
+        """
+        validator = get_packet_validator_registry().get_validator(packet_id)
+        if validator is None:
+            return None
+
+        context = ValidationContext(reader=self.reader, errors=self.errors.copy())
+        result = validator.validate(context)
+        self.errors = context.errors
+        return result
 
     def validate_walk_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet WALK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (WALK = 6)
-        - Byte 1: Dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste)
+        """Valida packet WALK.
 
         Returns:
-            ValidationResult con {"heading": int} si es válido.
+            ValidationResult con heading o error.
         """
-        heading = self.read_heading()
-
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"heading": heading}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.WALK)
 
     def validate_attack_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet ATTACK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (ATTACK = 8)
-
-        Nota: El packet ATTACK NO tiene parámetros. El jugador ataca en la dirección
-        que está mirando (según su heading).
+        """Valida packet ATTACK.
 
         Returns:
-            ValidationResult con dict vacío (packet válido solo con PacketID).
+            ValidationResult vacío o error.
         """
-        # El packet ATTACK no tiene datos adicionales, solo el PacketID
-        # El jugador ataca en la dirección que está mirando
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.ATTACK)
 
     def validate_move_spell_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida el packet MOVE_SPELL y retorna el resultado.
-
-        Formato esperado:
-            - Byte: flag 1/0 indicando si se mueve hacia arriba.
-            - Byte: slot origen (1-based).
+        """Valida packet MOVE_SPELL (no está en el registry).
 
         Returns:
-            Resultado de validación con ``slot`` y ``upwards`` en ``data``.
+            ValidationResult con slot y upwards o error.
         """
-        try:
-            upwards_flag = self.reader.read_byte()
-            slot = self.reader.read_spell_slot(max_slot=35)
-        except (ValueError, IndexError, struct.error) as e:
-            self.errors.append(f"Error leyendo MoveSpell: {e}")
-            return ValidationResult(
-                success=False,
-                data=None,
-                error_message=self.get_error_message(),
-            )
-
-        upwards = upwards_flag != 0
-
-        if self.has_errors() or slot is None:
-            error_message = self.get_error_message() or "Movimiento de hechizo inválido"
-            return ValidationResult(success=False, data=None, error_message=error_message)
-
-        return ValidationResult(
-            success=True,
-            data={"slot": slot, "upwards": upwards},
-            error_message=None,
-        )
+        validator = MoveSpellPacketValidator()
+        context = ValidationContext(reader=self.reader, errors=self.errors.copy())
+        result = validator.validate(context)
+        self.errors = context.errors
+        return result
 
     def validate_login_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet LOGIN completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (LOGIN = 2)
-        - String: Username (UTF-8)
-        - String: Password (UTF-8)
+        """Valida packet LOGIN.
 
         Returns:
-            ValidationResult con {"username": str, "password": str} si es válido.
+            ValidationResult con credenciales o error.
         """
-        username = self.read_string(min_length=3, max_length=20, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        password = self.read_string(min_length=6, max_length=32, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True,
-            data={"username": username, "password": password},
-            error_message=None,
-        )
+        return self._validate_with_registry(ClientPacketID.LOGIN)
 
     def validate_cast_spell_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet CAST_SPELL completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (CAST_SPELL = 13)
-        - Byte: Slot del hechizo (1-35)
+        """Valida packet CAST_SPELL.
 
         Returns:
-            ValidationResult con {"spell_slot": int} si es válido.
+            ValidationResult con slot o error.
         """
-        spell_slot = self.read_spell_slot()
-
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"spell_slot": spell_slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.CAST_SPELL)
 
     def validate_spell_info_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet SPELL_INFO completo.
+        """Valida packet SPELL_INFO.
 
         Returns:
-            ValidationResult con el slot solicitado si es válido.
+            ValidationResult con slot o error.
         """
-        slot = self.read_spell_slot(max_slot=35)
-
-        if self.has_errors() or slot is None:
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.SPELL_INFO)
 
     def validate_drop_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet DROP completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (DROP = 18)
-        - Byte: Slot del inventario (1-max_inventory_slots)
-        - Int16: Cantidad a tirar
+        """Valida packet DROP.
 
         Returns:
-            ValidationResult con {"slot": int, "quantity": int} si es válido.
+            ValidationResult con slot y cantidad o error.
         """
-        slot = self.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
-        )
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        quantity = self.read_quantity(min_qty=1, max_qty=10000)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.DROP)
 
     def validate_pickup_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet PICK_UP completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (PICK_UP = 19)
+        """Valida packet PICK_UP.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        # PICK_UP no tiene parámetros adicionales, solo el PacketID
-        # Verificamos que no haya errores previos
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.PICK_UP)
 
     def validate_talk_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet TALK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (TALK = 3)
-        - String: Mensaje (UTF-8)
+        """Valida packet TALK.
 
         Returns:
-            ValidationResult con {"message": str} si es válido.
+            ValidationResult con mensaje o error.
         """
-        message = self.read_string(min_length=1, max_length=255, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"message": message}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.TALK)
 
     def validate_double_click_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet DOUBLE_CLICK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (DOUBLE_CLICK = 27)
-        - Byte: Slot del inventario (1-20)
+        """Valida packet DOUBLE_CLICK.
 
         Returns:
-            ValidationResult con {"slot": int} si es válido.
+            ValidationResult con slot o error.
         """
-        slot = self.read_slot(min_slot=0, max_slot=255)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.DOUBLE_CLICK)
 
     def validate_left_click_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet LEFT_CLICK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (LEFT_CLICK = 26)
-        - Byte: X
-        - Byte: Y
+        """Valida packet LEFT_CLICK.
 
         Returns:
-            ValidationResult con {"x": int, "y": int} si es válido.
+            ValidationResult con coordenadas o error.
         """
-        coords = self.read_coordinates(max_x=100, max_y=100)
-        if self.has_errors() or coords is None:
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"x": coords[0], "y": coords[1]}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.LEFT_CLICK)
 
     def validate_equip_item_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet EQUIP_ITEM completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (EQUIP_ITEM = 36)
-        - Byte: Slot del inventario (1-max_inventory_slots)
+        """Valida packet EQUIP_ITEM.
 
         Returns:
-            ValidationResult con {"slot": int} si es válido.
+            ValidationResult con slot o error.
         """
-        slot = self.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
-        )
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.EQUIP_ITEM)
 
     def validate_use_item_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet USE_ITEM completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (USE_ITEM = 30)
-        - Byte: Slot del inventario (1-max_inventory_slots)
+        """Valida packet USE_ITEM.
 
         Returns:
-            ValidationResult con {"slot": int} si es válido.
+            ValidationResult con slot o error.
         """
-        slot = self.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
-        )
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.USE_ITEM)
 
     def validate_commerce_buy_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet COMMERCE_BUY completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (COMMERCE_BUY = 40)
-        - Byte: Slot del mercader
-        - Int16: Cantidad
+        """Valida packet COMMERCE_BUY.
 
         Returns:
-            ValidationResult con {"slot": int, "quantity": int} si es válido.
+            ValidationResult con slot y cantidad o error.
         """
-        slot = self.read_slot(min_slot=1, max_slot=50)  # Mercaderes tienen más slots
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        quantity = self.read_quantity(min_qty=1, max_qty=10000)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.COMMERCE_BUY)
 
     def validate_commerce_sell_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet COMMERCE_SELL completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (COMMERCE_SELL = 42)
-        - Byte: Slot del inventario (1-20)
-        - Int16: Cantidad
+        """Valida packet COMMERCE_SELL.
 
         Returns:
-            ValidationResult con {"slot": int, "quantity": int} si es válido.
+            ValidationResult con slot y cantidad o error.
         """
-        slot = self.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
-        )
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        quantity = self.read_quantity(min_qty=1, max_qty=10000)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.COMMERCE_SELL)
 
     def validate_bank_deposit_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet BANK_DEPOSIT completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (BANK_DEPOSIT = 43)
-        - Byte: Slot del inventario (1-20)
-        - Int16: Cantidad
+        """Valida packet BANK_DEPOSIT.
 
         Returns:
-            ValidationResult con {"slot": int, "quantity": int} si es válido.
+            ValidationResult con slot y cantidad o error.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        quantity = self.read_quantity(min_qty=1, max_qty=10000)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.BANK_DEPOSIT)
 
     def validate_bank_extract_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet BANK_EXTRACT_ITEM completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (BANK_EXTRACT_ITEM = 41)
-        - Byte: Slot del banco (1-40)
-        - Int16: Cantidad
+        """Valida packet BANK_EXTRACT_ITEM.
 
         Returns:
-            ValidationResult con {"slot": int, "quantity": int} si es válido.
+            ValidationResult con slot y cantidad o error.
         """
-        slot = self.read_slot(
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.bank.max_slots", 40)),
-        )
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        quantity = self.read_quantity(min_qty=1, max_qty=10000)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True, data={"slot": slot, "quantity": quantity}, error_message=None
-        )
+        return self._validate_with_registry(ClientPacketID.BANK_EXTRACT_ITEM)
 
     def validate_bank_extract_gold_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet BANK_EXTRACT_GOLD completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (BANK_EXTRACT_GOLD = 111)
-        - Int32: Cantidad de oro a retirar
+        """Valida packet BANK_EXTRACT_GOLD.
 
         Returns:
-            ValidationResult con {"amount": int} si es válido.
+            ValidationResult con amount o error.
         """
-        amount = self.read_gold_amount(min_amount=0, max_amount=999999999)
-
-        if self.has_errors() or amount is None:
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"amount": amount}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.BANK_EXTRACT_GOLD)
 
     def validate_bank_deposit_gold_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet BANK_DEPOSIT_GOLD completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (BANK_DEPOSIT_GOLD = 112)
-        - Int32: Cantidad de oro a depositar
+        """Valida packet BANK_DEPOSIT_GOLD.
 
         Returns:
-            ValidationResult con {"amount": int} si es válido.
+            ValidationResult con amount o error.
         """
-        amount = self.read_gold_amount(min_amount=0, max_amount=999999999)
-
-        if self.has_errors() or amount is None:
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"amount": amount}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.BANK_DEPOSIT_GOLD)
 
     def validate_change_heading_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet CHANGE_HEADING completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (CHANGE_HEADING = 37)
-        - Byte: Heading (1-4)
+        """Valida packet CHANGE_HEADING.
 
         Returns:
-            ValidationResult con {"heading": int} si es válido.
+            ValidationResult con heading o error.
         """
-        heading = self.read_heading()
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"heading": heading}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.CHANGE_HEADING)
 
     def validate_create_account_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet CREATE_ACCOUNT completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (CREATE_ACCOUNT = 2)
-        - String: Username (UTF-8, 3-20 chars)
-        - String: Password (UTF-8, 6-32 chars)
-        - Byte: Race
-        - Int16: Unknown
-        - Byte: Gender
-        - Byte: Job/Class
-        - Byte: Unknown
-        - Int16: Head
-        - String: Email (UTF-8, 1-100 chars)
-        - Byte: Home
+        """Valida packet CREATE_ACCOUNT.
 
         Returns:
-            ValidationResult con datos del personaje si es válido.
+            ValidationResult con datos o error.
         """
-        # Username
-        username = self.read_string(min_length=3, max_length=20, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        # Password
-        password = self.read_string(min_length=6, max_length=32, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        # Datos del personaje
-        try:
-            race = self.reader.read_byte()
-            _ = self.reader.read_int16()  # Unknown
-            gender = self.reader.read_byte()
-            job = self.reader.read_byte()
-            _ = self.reader.read_byte()  # Unknown
-            head = self.reader.read_int16()
-        except (ValueError, IndexError, struct.error) as e:
-            self.errors.append(f"Error leyendo datos del personaje: {e}")
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        # Email
-        email = self.read_string(min_length=1, max_length=100, encoding="utf-8")
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        # Home
-        try:
-            home = self.reader.read_byte()
-        except (ValueError, IndexError, struct.error) as e:
-            self.errors.append(f"Error leyendo home: {e}")
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(
-            success=True,
-            data={
-                "username": username,
-                "password": password,
-                "email": email,
-                "race": race,
-                "gender": gender,
-                "job": job,
-                "head": head,
-                "home": home,
-            },
-            error_message=None,
-        )
+        return self._validate_with_registry(ClientPacketID.CREATE_ACCOUNT)
 
     def validate_inventory_click_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet INVENTORY_CLICK completo.
-
-        Formato esperado:
-        - Byte 0: PacketID
-        - Byte: Slot del inventario (1-20)
+        """Valida packet INVENTORY_CLICK.
 
         Returns:
-            ValidationResult con {"slot": int} si es válido.
+            ValidationResult con slot o error.
         """
-        slot = self.read_slot(min_slot=1, max_slot=20)
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.LEFT_CLICK)
 
     def validate_throw_dices_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet THROW_DICES completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (THROW_DICES = 1)
+        """Valida packet THROW_DICES.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.THROW_DICES)
 
     def validate_request_attributes_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet REQUEST_ATTRIBUTES completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (REQUEST_ATTRIBUTES = 13)
+        """Valida packet REQUEST_ATTRIBUTES.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.REQUEST_ATTRIBUTES)
 
     def validate_commerce_end_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet COMMERCE_END completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (COMMERCE_END = 17)
+        """Valida packet COMMERCE_END.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.COMMERCE_END)
 
     def validate_bank_end_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet BANK_END completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (BANK_END = 21)
+        """Valida packet BANK_END.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.BANK_END)
 
     def validate_request_position_update_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet REQUEST_POSITION_UPDATE completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (REQUEST_POSITION_UPDATE = 7)
+        """Valida packet REQUEST_POSITION_UPDATE.
 
         Returns:
-            ValidationResult con {} (sin datos adicionales) si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.REQUEST_POSITION_UPDATE)
 
     def validate_gm_commands_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet GM_COMMANDS completo.
-
-        Formato esperado:
-        - Byte 0: PacketID (GM_COMMANDS)
-        - Byte: Subcomando
-        - String: Username
-        - Int16: Map ID
-        - Byte: X
-        - Byte: Y
+        """Valida packet GM_COMMANDS.
 
         Returns:
-            ValidationResult con datos del comando si es válido.
+            ValidationResult con datos GM o error.
         """
-        result = self.validate_gm_teleport()
-        if result is None:
-            return ValidationResult(
-                success=False, data=None, error_message="Error validando GM_COMMANDS"
-            )
-
-        subcommand, username, map_id, x, y = result
-        return ValidationResult(
-            success=True,
-            data={
-                "subcommand": subcommand,
-                "username": username,
-                "map_id": map_id,
-                "x": x,
-                "y": y,
-            },
-            error_message=None,
-        )
+        return self._validate_with_registry(ClientPacketID.GM_COMMANDS)
 
     def validate_meditate_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet MEDITATE completo (sin parámetros).
+        """Valida packet MEDITATE.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.MEDITATE)
 
     def validate_request_stats_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet REQUEST_STATS completo (sin parámetros).
+        """Valida packet REQUEST_STATS.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.REQUEST_STATS)
 
     def validate_information_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet INFORMATION completo (sin parámetros).
+        """Valida packet INFORMATION.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.INFORMATION)
 
     def validate_request_motd_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet REQUEST_MOTD completo (sin parámetros).
+        """Valida packet REQUEST_MOTD.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.REQUEST_MOTD)
 
     def validate_uptime_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet UPTIME completo (sin parámetros).
+        """Valida packet UPTIME.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.UPTIME)
 
     def validate_online_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet ONLINE completo (sin parámetros).
+        """Valida packet ONLINE.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.ONLINE)
 
     def validate_quit_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet QUIT completo (sin parámetros).
+        """Valida packet QUIT.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.QUIT)
 
     def validate_ping_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet PING completo (sin parámetros).
+        """Valida packet PING.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.PING)
 
     def validate_ayuda_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet AYUDA completo (sin parámetros).
+        """Valida packet AYUDA.
 
         Returns:
-            ValidationResult con {} si es válido.
+            ValidationResult vacío o error.
         """
-        if self.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=self.get_error_message()
-            )
-        return ValidationResult(success=True, data={}, error_message=None)
+        return self._validate_with_registry(ClientPacketID.AYUDA)
 
     # Métodos de validación específicos para patrones comunes
     # Estos métodos reemplazan a los métodos read_* para una API consistente

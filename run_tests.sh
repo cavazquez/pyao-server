@@ -15,6 +15,7 @@ SKIP_MYPY=false
 COVERAGE=false
 PARALLEL=4
 TEST_ARGS=""
+RUFF_ONLY=false
 
 show_help() {
     echo "Uso: $0 [opciones] [-- pytest_args]"
@@ -26,6 +27,7 @@ show_help() {
     echo "  -m, --no-mypy    Omitir verificación de tipos con mypy"
     echo "  -c, --coverage   Ejecutar con cobertura de código"
     echo "  -p, --parallel N Número de workers para pytest (default: 4)"
+    echo "  --ruff-only      Solo ejecutar ruff check y salir"
     echo ""
     echo "Ejemplos:"
     echo "  $0                      # Ejecutar todo"
@@ -63,6 +65,12 @@ while [[ $# -gt 0 ]]; do
             PARALLEL="$2"
             shift 2
             ;;
+        --ruff-only)
+            RUFF_ONLY=true
+            SKIP_FORMAT=true
+            SKIP_MYPY=true
+            shift
+            ;;
         --)
             shift
             TEST_ARGS="$*"
@@ -90,6 +98,15 @@ echo ""
 # Versiones (compacto)
 echo -e "${YELLOW}📦 Versiones:${NC} Python $(uv run python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")') | uv $(uv --version | cut -d' ' -f2) | pytest $(uv run pytest --version | head -1 | cut -d' ' -f2)"
 echo ""
+
+# Solo ruff check
+if [[ "$RUFF_ONLY" == true ]]; then
+    t=$(start_time)
+    echo -e "${YELLOW}🔍 Ruff check (solo lint)...${NC}"
+    uv run ruff check src tests --quiet
+    echo -e "${GREEN}   ✓ Sin errores de linting${NC} ($(elapsed $t))"
+    exit 0
+fi
 
 # Auto-format
 if [[ "$SKIP_FORMAT" == false ]]; then
