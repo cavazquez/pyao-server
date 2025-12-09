@@ -11,20 +11,15 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-try:
-    import msgpack  # type: ignore[import-untyped]
-
-    MSGPACK_AVAILABLE = True
-except ImportError:
-    MSGPACK_AVAILABLE = False
+from src.services.map.binary_cache import MapBinaryCache
+from src.services.map.blocked_loader import process_blocked_file
+from src.services.map.cache import MapCacheLoader
+from src.services.map.objects_loader import process_objects_file
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
 logger = logging.getLogger(__name__)
-
-MAP_RESOURCES_CACHE_VERSION = 2
-MAP_BINARY_DIR = Path("map_binary")
 
 
 class MapResourcesService:
@@ -65,25 +60,26 @@ class MapResourcesService:
         self._doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self.map_manager = map_manager
 
+        cache_loader = MapCacheLoader(self.maps_dir, self.cache_dir)
+        binary_loader = MapBinaryCache(self.maps_dir, self.resources, self.signs, self.doors)
+
         # Orden de carga: binario > caché JSON > archivos JSON raw
         loaded = False
 
         # 1. Intentar cargar desde formato binario (más rápido)
-        if MSGPACK_AVAILABLE and not loaded:
-            loaded = self._try_load_from_binary()
+        if not loaded:
+            loaded = binary_loader.try_load_from_binary()
 
         # 2. Intentar cargar desde caché JSON
         if not loaded:
-            loaded = self._try_load_from_cache()
+            loaded = cache_loader.try_load_from_cache(self.resources, self.signs, self.doors)
 
         # 3. Cargar desde archivos JSON raw y generar binario para próxima vez
         if not loaded:
             self._load_all_maps()
             if self.resources:
-                self._save_cache()
-                # Generar binario automáticamente para acelerar próximas cargas
-                if MSGPACK_AVAILABLE:
-                    self._generate_binary_cache()
+                cache_loader.save_cache(self.resources, self.signs, self.doors)
+                binary_loader.generate_binary_cache()
             else:
                 msg = (
                     "MapResourcesService: no se encontraron recursos en %s; "
@@ -123,7 +119,7 @@ class MapResourcesService:
                 return
 
             for blocked_path in blocked_files:
-                self._process_blocked_file_per_file(
+                process_blocked_file(
                     blocked_path,
                     self._blocked_by_map,
                     self._water_by_map,
@@ -132,7 +128,7 @@ class MapResourcesService:
                 )
 
             for objects_path in objects_files:
-                self._process_objects_file_per_file(
+                process_objects_file(
                     objects_path,
                     self._trees_by_map,
                     self._mines_by_map,
@@ -212,84 +208,57 @@ class MapResourcesService:
         except Exception:
             logger.exception("Error cargando recursos de mapas")
 
+    @staticmethod
+    def _process_blocked_file_per_file(
+        blocked_path: Path,
+        blocked_by_map: dict[int, set[tuple[int, int]]],
+        water_by_map: dict[int, set[tuple[int, int]]],
+        trees_by_map: dict[int, set[tuple[int, int]]],
+        mines_by_map: dict[int, set[tuple[int, int]]],
+    ) -> None:
+        """Compatibilidad hacia atrás: delega en process_blocked_file."""
+        process_blocked_file(
+            blocked_path,
+            blocked_by_map,
+            water_by_map,
+            trees_by_map,
+            mines_by_map,
+        )
+
+    @staticmethod
+    def _process_objects_file_per_file(
+        objects_path: Path,
+        trees_by_map: dict[int, set[tuple[int, int]]],
+        mines_by_map: dict[int, set[tuple[int, int]]],
+        blocked_by_map: dict[int, set[tuple[int, int]]],
+        signs_by_map: dict[int, dict[tuple[int, int], int]],
+        doors_by_map: dict[int, dict[tuple[int, int], int]],
+        water_by_map: dict[int, set[tuple[int, int]]],
+        anvils_by_map: dict[int, set[tuple[int, int]]],
+        forges_by_map: dict[int, set[tuple[int, int]]],
+    ) -> None:
+        """Compatibilidad hacia atrás: delega en process_objects_file."""
+        process_objects_file(
+            objects_path,
+            trees_by_map,
+            mines_by_map,
+            blocked_by_map,
+            signs_by_map,
+            doors_by_map,
+            water_by_map,
+            anvils_by_map,
+            forges_by_map,
+        )
+
     def _try_load_from_binary(self) -> bool:
-        """Intenta cargar recursos de mapas desde formato binario (MessagePack).
+        """Compatibilidad hacia atrás: delega en MapBinaryCache.
 
         Returns:
-            True si se cargó correctamente desde binario.
+            True si se cargó binario correctamente, False si no.
         """
-        binary_file = MAP_BINARY_DIR / "maps.msgpack"
-        if not binary_file.exists():
-            return False
-
-        start_time = time.time()
-        try:
-            with binary_file.open("rb") as f:
-                data = msgpack.unpack(f, raw=False)
-
-            # Reconstruir estructuras desde binario
-            for map_id_str, coords in data.get("blocked", {}).items():
-                map_id = int(map_id_str)
-                map_key = f"map_{map_id}"
-                if map_key not in self.resources:
-                    self.resources[map_key] = {
-                        "blocked": set(),
-                        "water": set(),
-                        "trees": set(),
-                        "mines": set(),
-                        "anvils": set(),
-                        "forges": set(),
-                    }
-                self.resources[map_key]["blocked"] = {tuple(c) for c in coords}
-
-            for map_id_str, coords in data.get("water", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                if map_key in self.resources:
-                    self.resources[map_key]["water"] = {tuple(c) for c in coords}
-
-            for map_id_str, coords in data.get("trees", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                if map_key in self.resources:
-                    self.resources[map_key]["trees"] = {tuple(c) for c in coords}
-
-            for map_id_str, coords in data.get("mines", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                if map_key in self.resources:
-                    self.resources[map_key]["mines"] = {tuple(c) for c in coords}
-
-            for map_id_str, coords in data.get("anvils", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                if map_key in self.resources:
-                    self.resources[map_key]["anvils"] = {tuple(c) for c in coords}
-
-            for map_id_str, coords in data.get("forges", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                if map_key in self.resources:
-                    self.resources[map_key]["forges"] = {tuple(c) for c in coords}
-
-            # Cargar signs y doors
-            for map_id_str, sign_list in data.get("signs", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                self.signs[map_key] = {(s[0], s[1]): s[2] for s in sign_list}
-
-            for map_id_str, door_list in data.get("doors", {}).items():
-                map_key = f"map_{int(map_id_str)}"
-                self.doors[map_key] = {(d[0], d[1]): d[2] for d in door_list}
-
-            elapsed_time = time.time() - start_time
-            logger.info(
-                "✓ Recursos de mapas cargados desde binario: %s en %.3f segundos",
-                binary_file,
-                elapsed_time,
-            )
-            return True  # noqa: TRY300
-
-        except Exception:
-            logger.exception("Error cargando mapas desde binario")
-            self.resources.clear()
-            self.signs.clear()
-            self.doors.clear()
-            return False
+        return MapBinaryCache(
+            self.maps_dir, self.resources, self.signs, self.doors
+        ).try_load_from_binary()
 
     def _get_source_mtime(self) -> float:
         """Obtiene el mtime más reciente de los archivos fuente JSON.
@@ -308,118 +277,24 @@ class MapResourcesService:
         return newest_mtime
 
     def _generate_binary_cache(self) -> None:
-        """Genera el caché binario de mapas para acelerar cargas futuras."""
-        try:
-            from tools.compression.map_binary import convert_json_to_binary  # noqa: PLC0415
-
-            logger.info("Generando caché binario de mapas (esto solo ocurre una vez)...")
-            start_time = time.time()
-
-            success = convert_json_to_binary(
-                map_data_dir=self.maps_dir,
-                map_binary_dir=MAP_BINARY_DIR,
-            )
-
-            if success:
-                elapsed = time.time() - start_time
-                logger.info(
-                    "✓ Caché binario generado en %.2f segundos.",
-                    elapsed,
-                )
-            else:
-                logger.warning("No se pudo generar caché binario")
-        except ImportError:
-            logger.debug("tools.compression.map_binary no disponible")
-        except OSError:
-            logger.warning("Error generando caché binario", exc_info=True)
+        """Compatibilidad hacia atrás: delega en MapBinaryCache."""
+        MapBinaryCache(
+            self.maps_dir, self.resources, self.signs, self.doors
+        ).generate_binary_cache()
 
     def _try_load_from_cache(self) -> bool:
-        """Intenta cargar recursos de mapas desde el caché en disco.
+        """Compatibilidad hacia atrás: delega en MapCacheLoader.
 
         Returns:
-            True si el caché es válido y fue cargado correctamente.
+            True si carga caché válida, False en caso contrario.
         """
-        cache_path = self.cache_dir / "map_resources_cache.json"
-        start_time = time.time()
-        if not cache_path.exists():
-            return False
-
-        try:
-            data = self._read_cache_file(cache_path)
-        except (OSError, json.JSONDecodeError):
-            logger.warning("No se pudo leer caché de mapas: %s", cache_path)
-            return False
-
-        if data.get("version") != MAP_RESOURCES_CACHE_VERSION:
-            return False
-
-        source = data.get("source") or {}
-        if not isinstance(source, dict):
-            return False
-
-        blocked_info = source.get("blocked") or {}
-        objects_info = source.get("objects") or {}
-        if not isinstance(blocked_info, dict) or not isinstance(objects_info, dict):
-            return False
-
-        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
-        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
-
-        if not self._is_cache_source_valid(
-            blocked_files,
-            objects_files,
-            blocked_info,
-            objects_info,
-        ):
-            return False
-
-        maps_data = data.get("maps")
-        if not isinstance(maps_data, dict):
-            return False
-
-        try:
-            self._rebuild_resources_from_cache(maps_data)
-        except Exception:
-            logger.exception("Error cargando recursos de mapas desde caché")
-            self.resources.clear()
-            self.signs.clear()
-            self.doors.clear()
-            return False
-        else:
-            elapsed_time = time.time() - start_time
-            logger.info(
-                "✓ Recursos de mapas cargados desde caché: %s en %.3f segundos",
-                cache_path,
-                elapsed_time,
-            )
-            return True
+        loader = MapCacheLoader(self.maps_dir, self.cache_dir)
+        return loader.try_load_from_cache(self.resources, self.signs, self.doors)
 
     def _save_cache(self) -> None:
-        """Guarda los recursos de mapas en caché en disco."""
-        cache_path = self.cache_dir / "map_resources_cache.json"
-
-        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
-        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
-        blocked_names, blocked_mtimes = self._build_mtimes(blocked_files)
-        objects_names, objects_mtimes = self._build_mtimes(objects_files)
-
-        maps_payload = self._build_maps_payload_for_cache()
-
-        payload = {
-            "version": MAP_RESOURCES_CACHE_VERSION,
-            "source": {
-                "blocked": {"files": blocked_names, "mtimes": blocked_mtimes},
-                "objects": {"files": objects_names, "mtimes": objects_mtimes},
-            },
-            "maps": maps_payload,
-        }
-
-        try:
-            with cache_path.open("w", encoding="utf-8") as f:
-                json.dump(payload, f)
-            logger.info("✓ Caché de recursos de mapas guardado en %s", cache_path)
-        except OSError:
-            logger.exception("Error guardando caché de recursos de mapas en %s", cache_path)
+        """Compatibilidad hacia atrás: delega en MapCacheLoader."""
+        loader = MapCacheLoader(self.maps_dir, self.cache_dir)
+        loader.save_cache(self.resources, self.signs, self.doors)
 
     @staticmethod
     def _build_mtimes(files: list[Path]) -> tuple[list[str], dict[str, float]]:
@@ -593,141 +468,6 @@ class MapResourcesService:
             maps_payload[str(map_id)] = map_entry
 
         return maps_payload
-
-    @staticmethod
-    def _process_blocked_file_per_file(
-        blocked_path: Path,
-        blocked_by_map: dict[int, set[tuple[int, int]]],
-        water_by_map: dict[int, set[tuple[int, int]]],
-        trees_by_map: dict[int, set[tuple[int, int]]],
-        mines_by_map: dict[int, set[tuple[int, int]]],
-    ) -> None:
-        """Procesa un archivo blocked completo, agrupando por map_id.
-
-        Cada línea representa un tile con un map_id "m". Se acumulan los
-        resultados en los diccionarios proporcionados.
-        """
-        if not blocked_path.exists():
-            return
-
-        with blocked_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        blocked_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                if not isinstance(entry, dict):
-                    continue
-
-                map_id = entry.get("m")
-                if not isinstance(map_id, int):
-                    continue
-
-                tile_type = entry.get("t")
-                x = entry.get("x")
-                y = entry.get("y")
-
-                if not isinstance(x, int) or not isinstance(y, int):
-                    continue
-
-                if tile_type == "b":  # blocked
-                    blocked_by_map[map_id].add((x, y))
-                elif tile_type == "w":  # water
-                    water_by_map[map_id].add((x, y))
-                    blocked_by_map[map_id].add((x, y))
-                elif tile_type == "t":  # tree
-                    trees_by_map[map_id].add((x, y))
-                    blocked_by_map[map_id].add((x, y))
-                elif tile_type == "m":  # mine
-                    mines_by_map[map_id].add((x, y))
-                    blocked_by_map[map_id].add((x, y))
-
-    @staticmethod
-    def _process_objects_file_per_file(
-        objects_path: Path,
-        trees_by_map: dict[int, set[tuple[int, int]]],
-        mines_by_map: dict[int, set[tuple[int, int]]],
-        blocked_by_map: dict[int, set[tuple[int, int]]],
-        signs_by_map: dict[int, dict[tuple[int, int], int]],
-        doors_by_map: dict[int, dict[tuple[int, int], int]],
-        water_by_map: dict[int, set[tuple[int, int]]],
-        anvils_by_map: dict[int, set[tuple[int, int]]],
-        forges_by_map: dict[int, set[tuple[int, int]]],
-    ) -> None:
-        """Procesa un archivo objects completo, agrupando por map_id.
-
-        Extrae árboles, minas, carteles y puertas, actualizando los
-        diccionarios correspondientes.
-        """
-        if not objects_path.exists():
-            return
-
-        with objects_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        objects_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                if not isinstance(entry, dict):
-                    continue
-
-                map_id = entry.get("m")
-                if not isinstance(map_id, int):
-                    continue
-
-                tile_type = entry.get("t")
-                x = entry.get("x")
-                y = entry.get("y")
-
-                if not isinstance(x, int) or not isinstance(y, int):
-                    continue
-
-                if tile_type == "tree":
-                    trees_by_map.setdefault(map_id, set()).add((x, y))
-                    blocked_by_map.setdefault(map_id, set()).add((x, y))
-                elif tile_type == "mine":
-                    mines_by_map.setdefault(map_id, set()).add((x, y))
-                    blocked_by_map.setdefault(map_id, set()).add((x, y))
-                elif tile_type == "anvil":
-                    anvils_by_map.setdefault(map_id, set()).add((x, y))
-                    blocked_by_map.setdefault(map_id, set()).add((x, y))
-                elif tile_type == "forge":
-                    forges_by_map.setdefault(map_id, set()).add((x, y))
-                    blocked_by_map.setdefault(map_id, set()).add((x, y))
-                elif tile_type == "water":
-                    water_by_map.setdefault(map_id, set()).add((x, y))
-                elif tile_type == "sign":
-                    grh = entry.get("g")
-                    if isinstance(grh, int):
-                        if map_id not in signs_by_map:
-                            signs_by_map[map_id] = {}
-                        signs_by_map[map_id][x, y] = grh
-                elif tile_type == "door":
-                    grh = entry.get("g")
-                    if isinstance(grh, int):
-                        if map_id not in doors_by_map:
-                            doors_by_map[map_id] = {}
-                        doors_by_map[map_id][x, y] = grh
 
     def _find_file_for_map(self, pattern: str, map_id: int) -> Path | None:
         """Encuentra el archivo que contiene el mapa especificado.
