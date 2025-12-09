@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -23,14 +22,14 @@ class NpcIndex:
                 {(map_id, x, y): "npc:<instance_id>" | "player:<user_id>"}.
         """
         self._tile_occupation = tile_occupation
-        self._npcs_by_map: dict[int, dict[str, NPC | SimpleNamespace]] = {}
+        self._npcs_by_map: dict[int, dict[str, NPC]] = {}
 
     @property
-    def npcs_by_map(self) -> dict[int, dict[str, NPC | SimpleNamespace]]:
+    def npcs_by_map(self) -> dict[int, dict[str, NPC]]:
         """Acceso al storage interno (compatibilidad con MapManager)."""
         return self._npcs_by_map
 
-    def add_npc(self, map_id: int, npc: NPC | SimpleNamespace) -> None:
+    def add_npc(self, map_id: int, npc: NPC) -> None:
         """Agrega un NPC al mapa y marca ocupación.
 
         Raises:
@@ -89,7 +88,7 @@ class NpcIndex:
             del self._npcs_by_map[map_id]
             logger.debug("Mapa %d eliminado (sin NPCs)", map_id)
 
-    def get_npcs_in_map(self, map_id: int) -> list[NPC | SimpleNamespace]:
+    def get_npcs_in_map(self, map_id: int) -> list[NPC]:
         """Devuelve los NPCs de un mapa.
 
         Returns:
@@ -99,18 +98,18 @@ class NpcIndex:
             return []
         return list(self._npcs_by_map[map_id].values())
 
-    def get_all_npcs(self) -> list[NPC | SimpleNamespace]:
+    def get_all_npcs(self) -> list[NPC]:
         """Devuelve todos los NPCs de todos los mapas.
 
         Returns:
             list[NPC | SimpleNamespace]: NPCs de todos los mapas.
         """
-        all_npcs: list[NPC | SimpleNamespace] = []
+        all_npcs: list[NPC] = []
         for npcs_in_map in self._npcs_by_map.values():
             all_npcs.extend(npcs_in_map.values())
         return all_npcs
 
-    def get_npc_by_char_index(self, map_id: int, char_index: int) -> NPC | SimpleNamespace | None:
+    def get_npc_by_char_index(self, map_id: int, char_index: int) -> NPC | None:
         """Busca un NPC por char_index en un mapa.
 
         Returns:

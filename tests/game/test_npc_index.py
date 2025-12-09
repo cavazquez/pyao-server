@@ -1,10 +1,14 @@
 """Tests unitarios para NpcIndex (NPCs por mapa y ocupación de tiles)."""
 
 from types import SimpleNamespace
+from typing import TYPE_CHECKING, cast
 
 import pytest
 
 from src.game.npc_index import NpcIndex
+
+if TYPE_CHECKING:
+    from src.models.npc import NPC
 
 
 def make_npc(
@@ -25,7 +29,7 @@ def test_add_npc_marks_occupation_and_storage() -> None:
     index = NpcIndex(tile_occupation)
     npc = make_npc()
 
-    index.add_npc(1, npc)
+    index.add_npc(1, cast("NPC", npc))
 
     assert tile_occupation[1, 1, 1] == "npc:npc-1"
     assert index.get_npcs_in_map(1)[0] is npc
@@ -37,7 +41,7 @@ def test_add_npc_conflict_raises_value_error() -> None:
     index = NpcIndex(tile_occupation)
 
     with pytest.raises(ValueError, match="tile ya ocupado"):
-        index.add_npc(1, make_npc())
+        index.add_npc(1, cast("NPC", make_npc()))
 
 
 def test_move_npc_updates_tile_occupation() -> None:
@@ -45,7 +49,7 @@ def test_move_npc_updates_tile_occupation() -> None:
     tile_occupation: dict[tuple[int, int, int], str] = {}
     index = NpcIndex(tile_occupation)
     npc = make_npc(char_index=5)
-    index.add_npc(1, npc)
+    index.add_npc(1, cast("NPC", npc))
 
     index.move_npc(1, 5, old_x=1, old_y=1, new_x=2, new_y=3)
 
@@ -58,7 +62,7 @@ def test_remove_npc_clears_tile_and_map() -> None:
     tile_occupation: dict[tuple[int, int, int], str] = {}
     index = NpcIndex(tile_occupation)
     npc = make_npc()
-    index.add_npc(1, npc)
+    index.add_npc(1, cast("NPC", npc))
 
     index.remove_npc(1, "npc-1")
 
@@ -73,8 +77,8 @@ def test_get_all_and_by_char_index() -> None:
     npc1 = make_npc(instance_id="npc-1", char_index=10)
     npc2 = make_npc(instance_id="npc-2", char_index=20, x=5, y=5)
 
-    index.add_npc(1, npc1)
-    index.add_npc(2, npc2)
+    index.add_npc(1, cast("NPC", npc1))
+    index.add_npc(2, cast("NPC", npc2))
 
     all_npcs = index.get_all_npcs()
     assert len(all_npcs) == 2

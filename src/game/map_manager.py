@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from src.game.map_manager_spatial import SpatialIndexMixin
 from src.game.map_metadata_loader import MapMetadataLoader
 from src.game.npc_index import NpcIndex
+from src.game.player_index import PlayerIndex
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -39,13 +40,15 @@ class MapManager(SpatialIndexMixin):
             ground_items_repo: Repositorio de ground items (opcional).
 
         Estructura interna:
-        - _players_by_map: {map_id: {user_id: (message_sender, username)}}
+        - _players_by_map: {map_id: {user_id: (message_sender, username)}} (delegado en PlayerIndex)
         - _npcs_by_map: {map_id: {instance_id: NPC}} (delegado en NpcIndex)
         """
-        self._players_by_map: dict[int, dict[int, tuple[MessageSender, str]]] = {}
-
         # Índice espacial para colisiones
         self._tile_occupation: dict[tuple[int, int, int], str] = {}
+
+        # Índice de jugadores (mantiene compatibilidad con _players_by_map)
+        self._player_index = PlayerIndex(self._tile_occupation)
+        self._players_by_map = self._player_index.players_by_map
 
         # Índice de NPCs (mantiene compatibilidad con _npcs_by_map)
         self._npc_index = NpcIndex(self._tile_occupation)
@@ -87,11 +90,7 @@ class MapManager(SpatialIndexMixin):
             message_sender: MessageSender del jugador.
             username: Nombre del usuario (opcional).
         """
-        if map_id not in self._players_by_map:
-            self._players_by_map[map_id] = {}
-
-        self._players_by_map[map_id][user_id] = (message_sender, username)
-        logger.debug("Jugador %d (%s) agregado al mapa %d", user_id, username, map_id)
+        self._player_index.add_player(map_id, user_id, message_sender, username)
 
     def remove_player(self, map_id: int, user_id: int) -> None:
         """Remueve un jugador de un mapa.
@@ -100,26 +99,7 @@ class MapManager(SpatialIndexMixin):
             map_id: ID del mapa.
             user_id: ID del usuario.
         """
-        if map_id in self._players_by_map and user_id in self._players_by_map[map_id]:
-            # Limpiar tile occupation para que el tile quede libre
-            keys_to_remove = []
-            for key, occupant in self._tile_occupation.items():
-                if occupant == f"player:{user_id}" and key[0] == map_id:
-                    keys_to_remove.append(key)
-                    logger.debug(
-                        "Tile (%d,%d) liberado al remover jugador %d", key[1], key[2], user_id
-                    )
-
-            for key in keys_to_remove:
-                del self._tile_occupation[key]
-
-            del self._players_by_map[map_id][user_id]
-            logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
-
-            # Limpiar mapa vacío
-            if not self._players_by_map[map_id]:
-                del self._players_by_map[map_id]
-                logger.debug("Mapa %d eliminado (sin jugadores)", map_id)
+        self._player_index.remove_player(map_id, user_id)
 
     def get_players_in_map(self, map_id: int, exclude_user_id: int | None = None) -> list[int]:
         """Obtiene la lista de user_ids en un mapa.
@@ -131,15 +111,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de user_ids en el mapa.
         """
-        if map_id not in self._players_by_map:
-            return []
-
-        players = list(self._players_by_map[map_id].keys())
-
-        if exclude_user_id is not None and exclude_user_id in players:
-            players.remove(exclude_user_id)
-
-        return players
+        return self._player_index.get_players_in_map(map_id, exclude_user_id)
 
     def get_maps_with_players(self) -> list[int]:
         """Obtiene lista de IDs de mapas que tienen jugadores.
@@ -147,7 +119,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de map_ids con al menos un jugador.
         """
-        return list(self._players_by_map.keys())
+        return self._player_index.get_maps_with_players()
 
     def get_player_message_sender(self, user_id: int) -> MessageSender | None:
         """Get MessageSender for a specific player.
@@ -158,11 +130,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             MessageSender if player found online, None otherwise
         """
-        for players_dict in self._players_by_map.values():
-            if user_id in players_dict:
-                message_sender, _ = players_dict[user_id]
-                return message_sender
-        return None
+        return self._player_index.get_player_message_sender(user_id)
 
     def find_player_by_username(self, username: str) -> int | None:
         """Find online player by username (case-insensitive).
@@ -173,12 +141,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             user_id if player found online, None otherwise
         """
-        username_lower = username.lower().strip()
-        for players_dict in self._players_by_map.values():
-            for user_id, (_, player_username) in players_dict.items():
-                if player_username.lower().strip() == username_lower:
-                    return user_id
-        return None
+        return self._player_index.find_player_by_username(username)
 
     def get_all_online_players(self) -> list[tuple[int, str, int]]:
         """Get list of all online players.
@@ -186,11 +149,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             List of tuples (user_id, username, map_id)
         """
-        players = []
-        for map_id, players_dict in self._players_by_map.items():
-            for user_id, (_, username) in players_dict.items():
-                players.append((user_id, username, map_id))
-        return players
+        return self._player_index.get_all_online_players()
 
     def get_player_username(self, user_id: int) -> str | None:
         """Get username for a specific player.
@@ -201,11 +160,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Username if player found online, None otherwise
         """
-        for players_dict in self._players_by_map.values():
-            if user_id in players_dict:
-                _, username = players_dict[user_id]
-                return username
-        return None
+        return self._player_index.get_player_username(user_id)
 
     def get_username(self, user_id: int, map_id: int | None = None) -> str | None:
         """Obtiene el username de un jugador.
@@ -217,19 +172,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Username del jugador o None si no existe.
         """
-        # Si se especifica un mapa, buscar solo en ese mapa
-        if map_id is not None:
-            if map_id not in self._players_by_map:
-                return None
-            player_data = self._players_by_map[map_id].get(user_id)
-            return player_data[1] if player_data else None
-
-        # Si no se especifica mapa, buscar en todos los mapas
-        for players in self._players_by_map.values():
-            if user_id in players:
-                return players[user_id][1]
-
-        return None
+        return self._player_index.get_username(user_id, map_id)
 
     def get_message_sender(self, user_id: int, map_id: int | None = None) -> MessageSender | None:
         """Obtiene el MessageSender de un jugador.
@@ -241,19 +184,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             MessageSender del jugador o None si no existe.
         """
-        # Si se especifica un mapa, buscar solo en ese mapa
-        if map_id is not None:
-            if map_id not in self._players_by_map:
-                return None
-            player_data = self._players_by_map[map_id].get(user_id)
-            return player_data[0] if player_data else None
-
-        # Si no se especifica mapa, buscar en todos los mapas
-        for players in self._players_by_map.values():
-            if user_id in players:
-                return players[user_id][0]
-
-        return None
+        return self._player_index.get_message_sender(user_id, map_id)
 
     def get_all_message_senders_in_map(
         self, map_id: int, exclude_user_id: int | None = None
@@ -267,15 +198,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de MessageSenders en el mapa.
         """
-        if map_id not in self._players_by_map:
-            return []
-
-        senders = []
-        for user_id, (sender, _username) in self._players_by_map[map_id].items():
-            if exclude_user_id is None or user_id != exclude_user_id:
-                senders.append(sender)
-
-        return senders
+        return self._player_index.get_all_message_senders_in_map(map_id, exclude_user_id)
 
     def get_player_count_in_map(self, map_id: int) -> int:
         """Obtiene el número de jugadores en un mapa.
@@ -286,10 +209,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Número de jugadores en el mapa.
         """
-        if map_id not in self._players_by_map:
-            return 0
-
-        return len(self._players_by_map[map_id])
+        return self._player_index.get_player_count_in_map(map_id)
 
     def remove_player_from_all_maps(self, user_id: int) -> None:
         """Remueve un jugador de todos los mapas.
@@ -297,36 +217,7 @@ class MapManager(SpatialIndexMixin):
         Args:
             user_id: ID del usuario.
         """
-        maps_to_clean = []
-
-        for map_id, players in self._players_by_map.items():
-            if user_id in players:
-                # Limpiar tile occupation para este mapa
-                keys_to_remove = []
-                for key, occupant in self._tile_occupation.items():
-                    if occupant == f"player:{user_id}" and key[0] == map_id:
-                        keys_to_remove.append(key)
-                        logger.debug(
-                            "Tile (%d,%d) liberado al remover jugador %d del mapa %d",
-                            key[1],
-                            key[2],
-                            user_id,
-                            map_id,
-                        )
-
-                for key in keys_to_remove:
-                    del self._tile_occupation[key]
-
-                del players[user_id]
-                logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
-
-                if not players:
-                    maps_to_clean.append(map_id)
-
-        # Limpiar mapas vacíos
-        for map_id in maps_to_clean:
-            del self._players_by_map[map_id]
-            logger.debug("Mapa %d eliminado (sin jugadores)", map_id)
+        self._player_index.remove_player_from_all_maps(user_id)
 
     def get_all_connected_players(self) -> list[str]:
         """Obtiene la lista de nombres de todos los jugadores conectados.
@@ -334,12 +225,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de nombres de usuario conectados.
         """
-        usernames = []
-        for players in self._players_by_map.values():
-            for _sender, username in players.values():
-                if username and username not in usernames:
-                    usernames.append(username)
-        return usernames
+        return self._player_index.get_all_connected_players()
 
     def get_all_connected_user_ids(self) -> list[int]:
         """Obtiene la lista de user_ids de todos los jugadores conectados.
@@ -347,12 +233,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de user_ids conectados.
         """
-        user_ids = []
-        for players in self._players_by_map.values():
-            for user_id in players:
-                if user_id not in user_ids:
-                    user_ids.append(user_id)
-        return user_ids
+        return self._player_index.get_all_connected_user_ids()
 
     # Métodos para NPCs
     def add_npc(self, map_id: int, npc: NPC) -> None:
