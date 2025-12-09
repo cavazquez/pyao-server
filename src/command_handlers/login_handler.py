@@ -93,7 +93,7 @@ class LoginCommandHandler(CommandHandler):
         username = command.username
         password = command.password
 
-        logger.info("LoginCommandHandler: intento de login para '%s'", username)
+        logger.info("🔐 Inicio de login para usuario '%s'", username)
 
         # Validar repositorios
         if not self._validate_repositories():
@@ -108,11 +108,11 @@ class LoginCommandHandler(CommandHandler):
 
         # Verificar si el usuario ya está conectado
         if self._is_user_already_connected(username):
-            logger.warning("Usuario %s (ID: %d) ya está conectado", username, user_id)
+            logger.warning("⚠️ Usuario %s (ID: %d) ya está conectado", username, user_id)
             await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
             return CommandResult.error("Usuario ya conectado")
 
-        logger.info("Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
+        logger.info("✅ Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Configurar sesión
         self._setup_session(user_id, username)
@@ -235,7 +235,7 @@ class LoginCommandHandler(CommandHandler):
 
         # Posición ocupada, buscar una libre cercana
         logger.info(
-            "Spawn position (%d,%d) en mapa %d ocupada, buscando casilla libre...",
+            "🧭 Spawn (%d,%d) en mapa %d ocupado, buscando casilla libre...",
             x,
             y,
             map_id,
@@ -266,7 +266,7 @@ class LoginCommandHandler(CommandHandler):
                         map_id, new_x, new_y
                     ) and not self.map_manager.is_tile_occupied(map_id, new_x, new_y):
                         logger.info(
-                            "Casilla libre encontrada en (%d,%d), moviendo spawn de (%d,%d)",
+                            "🟢 Casilla libre en (%d,%d), moviendo spawn de (%d,%d)",
                             new_x,
                             new_y,
                             x,
@@ -281,7 +281,7 @@ class LoginCommandHandler(CommandHandler):
 
         # No se encontró casilla libre (muy raro)
         logger.warning(
-            "No se encontró casilla libre cerca de (%d,%d) en mapa %d, usando original",
+            "⚠️ Sin casilla libre cerca de (%d,%d) en mapa %d, usando original",
             x,
             y,
             map_id,

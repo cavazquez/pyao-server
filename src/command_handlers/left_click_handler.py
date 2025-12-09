@@ -48,7 +48,11 @@ def _load_signs_catalog() -> dict[int, dict[str, str]]:
     signs_path = Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
 
     if not signs_path.exists():
-        logger.error("No se encontró signs.toml en %s", signs_path)
+        msg = (
+            "No se encontró signs.toml en %s (opcional). "
+            "Crea data/items/world_objects/signs.toml para textos de carteles."
+        )
+        logger.warning(msg, signs_path)
         return {}
 
     try:

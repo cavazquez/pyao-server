@@ -253,19 +253,23 @@
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual:** 0.9.3-alpha (completada) ✅
-- **Versión en pyproject.toml:** 0.9.1-alpha (pendiente actualizar)
+- **Versión actual:** 0.9.4-alpha (completada) ✅
+- **Versión en pyproject.toml:** 0.9.4-alpha ✅
 - **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
-- **Total:** 2031 tests
-- **Pasando:** 2031 (100%) ✅
+- **Total:** 2030 tests
+- **Pasando:** 2030 (100%) ✅
 - **Cobertura:** 75% (objetivo: 80%+)
 
 ### Calidad
 - **Linting:** 0 errores ✅
 - **Type Checking:** 0 errores ✅
 - **Documentación:** 65+ documentos técnicos ✅
+
+### Observabilidad
+- Logs de login con mensajes destacados y colores por nivel (TTY) para diagnósticos rápidos.
+- Logs coloreados configurables: `LOG_COLOR=1` fuerza color; `NO_COLOR=1` lo desactiva.
 
 ---
 
@@ -277,6 +281,6 @@
 
 ---
 
-**Última actualización:** 2025-12-04  
-**Estado:** ✅ Versión 0.9.3-alpha completada (Refactor Stats + Tests Ampliados)
+**Última actualización:** 2025-12-09  
+**Estado:** ✅ Versión 0.9.4-alpha completada (Refactors TaskFactory, SpellService, PacketValidator, MapResources)
 

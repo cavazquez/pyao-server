@@ -1,7 +1,8 @@
 """Configuración de logging por features/módulos."""
 
 import logging
-from typing import Literal
+import os
+from typing import ClassVar, Literal
 
 # Niveles de logging disponibles
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -41,14 +42,63 @@ FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
 DEFAULT_LOG_LEVEL: LogLevel = "WARNING"
 
 
+class ColorFormatter(logging.Formatter):
+    """Formatter con colores ANSI opcionales."""
+
+    COLORS: ClassVar[dict[str, str]] = {
+        "DEBUG": "\033[36m",  # cyan
+        "INFO": "\033[32m",  # green
+        "WARNING": "\033[33m",  # yellow
+        "ERROR": "\033[31m",  # red
+        "CRITICAL": "\033[41m",  # red background
+    }
+    RESET: ClassVar[str] = "\033[0m"
+
+    def __init__(self, fmt: str, datefmt: str, use_color: bool) -> None:
+        """Inicializa el formatter con o sin colores ANSI."""
+        super().__init__(fmt=fmt, datefmt=datefmt)
+        self.use_color = use_color
+
+    def format(self, record: logging.LogRecord) -> str:
+        """Devuelve el mensaje formateado aplicando color al nivel si corresponde.
+
+        Returns:
+            str: Mensaje listo para imprimir en el handler.
+        """
+        original_level = record.levelname
+        if self.use_color and original_level in self.COLORS:
+            record.levelname = f"{self.COLORS[original_level]}{original_level}{self.RESET}"
+        try:
+            return super().format(record)
+        finally:
+            record.levelname = original_level
+
+
 def configure_logging() -> None:
     """Configura el logging según las features definidas."""
-    # Configuración base
-    logging.basicConfig(
-        level=logging.INFO,  # Nivel por defecto: mostrar solo INFO+
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+    use_color = os.getenv("NO_COLOR") is None
+    force_color = os.getenv("LOG_COLOR", "").lower() in {"1", "true", "yes"}
+
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+
+    # Habilitar color cuando hay TTY o si se fuerza vía LOG_COLOR=1/true/yes
+    handler_use_color = use_color and (
+        force_color or getattr(handler.stream, "isatty", lambda: False)()
     )
+
+    handler.setFormatter(
+        ColorFormatter(
+            fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            use_color=handler_use_color,
+        )
+    )
+
+    root = logging.getLogger()
+    root.setLevel(logging.INFO)
+    root.handlers.clear()
+    root.addHandler(handler)
 
     # Aplicar niveles específicos por feature
     for feature, level in FEATURE_LOG_LEVELS.items():
