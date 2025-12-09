@@ -131,7 +131,10 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v6
       with:
+        pattern: dist-*
         path: dist-all
+        merge-multiple: true
+        if-no-files-found: error
     
     - name: Create Release
       uses: softprops/action-gh-release@v2
@@ -140,3 +143,4 @@ jobs:
         generate_release_notes: true
         make_latest: false
         prerelease: true
+        fail_on_unmatched_files: true
