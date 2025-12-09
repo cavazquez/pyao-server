@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from src.game.tile_occupation import TileOccupation
     from src.models.npc import NPC
 
 logger = logging.getLogger(__name__)
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 class NpcIndex:
     """Gestiona NPCs agrupados por mapa y su ocupación de tiles."""
 
-    def __init__(self, tile_occupation: dict[tuple[int, int, int], str]) -> None:
+    def __init__(self, tile_occupation: TileOccupation) -> None:
         """Inicializa el índice.
 
         Args:
@@ -30,41 +31,24 @@ class NpcIndex:
         return self._npcs_by_map
 
     def add_npc(self, map_id: int, npc: NPC) -> None:
-        """Agrega un NPC al mapa y marca ocupación.
-
-        Raises:
-            ValueError: si el tile está ocupado.
-        """
+        """Agrega un NPC al mapa y marca ocupación."""
         if map_id not in self._npcs_by_map:
             self._npcs_by_map[map_id] = {}
 
-        tile_key = (map_id, npc.x, npc.y)
-        if tile_key in self._tile_occupation:
-            occupant = self._tile_occupation[tile_key]
-            msg = (
-                f"No se puede agregar NPC {npc.name} en ({npc.x},{npc.y}): "
-                f"tile ya ocupado por {occupant}"
-            )
-            raise ValueError(msg)
-
         self._npcs_by_map[map_id][npc.instance_id] = npc
-        self._tile_occupation[tile_key] = f"npc:{npc.instance_id}"
+        self._tile_occupation.occupy_npc(map_id, npc.x, npc.y, npc.instance_id)
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
     def move_npc(
         self, map_id: int, char_index: int, old_x: int, old_y: int, new_x: int, new_y: int
     ) -> None:
         """Mueve un NPC liberando y reasignando ocupación."""
-        old_tile_key = (map_id, old_x, old_y)
-        self._tile_occupation.pop(old_tile_key, None)
-
         if map_id not in self._npcs_by_map:
             return
 
         for npc in self._npcs_by_map[map_id].values():
             if getattr(npc, "char_index", None) == char_index:
-                new_tile_key = (map_id, new_x, new_y)
-                self._tile_occupation[new_tile_key] = f"npc:{npc.instance_id}"
+                self._tile_occupation.move_npc(map_id, old_x, old_y, new_x, new_y, npc.instance_id)
                 break
 
     def remove_npc(self, map_id: int, instance_id: str) -> None:
@@ -77,8 +61,8 @@ class NpcIndex:
             return
 
         tile_key = (map_id, npc.x, npc.y)
-        if tile_key in self._tile_occupation:
-            del self._tile_occupation[tile_key]
+        if self._tile_occupation.get_occupant(*tile_key) is not None:
+            self._tile_occupation.remove_npc(map_id, npc.x, npc.y)
             logger.debug("Tile (%d,%d) liberado al remover NPC %s", npc.x, npc.y, npc.name)
 
         del self._npcs_by_map[map_id][instance_id]

@@ -9,6 +9,7 @@ from src.game.map_manager_spatial import SpatialIndexMixin
 from src.game.map_metadata_loader import MapMetadataLoader
 from src.game.npc_index import NpcIndex
 from src.game.player_index import PlayerIndex
+from src.game.tile_occupation import TileOccupation
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -44,14 +45,15 @@ class MapManager(SpatialIndexMixin):
         - _npcs_by_map: {map_id: {instance_id: NPC}} (delegado en NpcIndex)
         """
         # Índice espacial para colisiones
-        self._tile_occupation: dict[tuple[int, int, int], str] = {}
+        self._tile_occupation_store = TileOccupation()
+        self._tile_occupation: dict[tuple[int, int, int], str] = self._tile_occupation_store.data
 
         # Índice de jugadores (mantiene compatibilidad con _players_by_map)
-        self._player_index = PlayerIndex(self._tile_occupation)
+        self._player_index = PlayerIndex(self._tile_occupation_store)
         self._players_by_map = self._player_index.players_by_map
 
         # Índice de NPCs (mantiene compatibilidad con _npcs_by_map)
-        self._npc_index = NpcIndex(self._tile_occupation)
+        self._npc_index = NpcIndex(self._tile_occupation_store)
         self._npcs_by_map = self._npc_index.npcs_by_map
 
         # Tiles bloqueados por mapa (paredes, agua, etc.)

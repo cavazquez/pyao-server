@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from src.game.tile_occupation import TileOccupation
     from src.messaging.message_sender import MessageSender
 
 logger = logging.getLogger(__name__)
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 class PlayerIndex:
     """Gestiona jugadores conectados agrupados por mapa."""
 
-    def __init__(self, tile_occupation: dict[tuple[int, int, int], str]) -> None:
+    def __init__(self, tile_occupation: TileOccupation) -> None:
         """Inicializa el índice.
 
         Args:
@@ -42,14 +43,8 @@ class PlayerIndex:
         if map_id not in self._players_by_map or user_id not in self._players_by_map[map_id]:
             return
 
-        keys_to_remove = [
-            key
-            for key, occupant in self._tile_occupation.items()
-            if occupant == f"player:{user_id}" and key[0] == map_id
-        ]
-        for key in keys_to_remove:
-            del self._tile_occupation[key]
-            logger.debug("Tile (%d,%d) liberado al remover jugador %d", key[1], key[2], user_id)
+        self._tile_occupation.remove_player(user_id, map_id)
+        logger.debug("Tiles liberados para jugador %d en mapa %d", user_id, map_id)
 
         del self._players_by_map[map_id][user_id]
         logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
@@ -64,20 +59,7 @@ class PlayerIndex:
         for map_id, players in self._players_by_map.items():
             if user_id not in players:
                 continue
-            keys_to_remove = [
-                key
-                for key, occupant in self._tile_occupation.items()
-                if occupant == f"player:{user_id}" and key[0] == map_id
-            ]
-            for key in keys_to_remove:
-                del self._tile_occupation[key]
-                logger.debug(
-                    "Tile (%d,%d) liberado al remover jugador %d del mapa %d",
-                    key[1],
-                    key[2],
-                    user_id,
-                    map_id,
-                )
+            self._tile_occupation.remove_player(user_id, map_id)
             del players[user_id]
             logger.debug("Jugador %d removido del mapa %d", user_id, map_id)
             if not players:

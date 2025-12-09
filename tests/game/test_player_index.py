@@ -3,6 +3,7 @@
 from types import SimpleNamespace
 
 from src.game.player_index import PlayerIndex
+from src.game.tile_occupation import TileOccupation
 
 
 def make_sender(name: str) -> SimpleNamespace:
@@ -12,7 +13,8 @@ def make_sender(name: str) -> SimpleNamespace:
 
 def test_add_and_remove_player_updates_occupation() -> None:
     """Agregar y remover limpia ocupación y storage."""
-    tile_occupation: dict[tuple[int, int, int], str] = {(1, 10, 10): "player:999"}
+    tile_occupation = TileOccupation()
+    tile_occupation.data[1, 10, 10] = "player:999"
     index = PlayerIndex(tile_occupation)
 
     index.add_player(1, 1, make_sender("s1"), "Alice")
@@ -20,15 +22,14 @@ def test_add_and_remove_player_updates_occupation() -> None:
 
     index.remove_player(1, 1)
     assert 1 not in index.players_by_map
-    assert (1, 10, 10) in tile_occupation  # no se tocó otro jugador
+    assert (1, 10, 10) in tile_occupation.data  # no se tocó otro jugador
 
 
 def test_remove_player_from_all_maps() -> None:
     """Remove all maps limpia ocupación y mapas vacíos."""
-    tile_occupation: dict[tuple[int, int, int], str] = {
-        (1, 1, 1): "player:1",
-        (2, 2, 2): "player:1",
-    }
+    tile_occupation = TileOccupation()
+    tile_occupation.data[1, 1, 1] = "player:1"
+    tile_occupation.data[2, 2, 2] = "player:1"
     index = PlayerIndex(tile_occupation)
     index.add_player(1, 1, make_sender("s1"), "Alice")
     index.add_player(2, 1, make_sender("s1"), "Alice")
@@ -36,13 +37,13 @@ def test_remove_player_from_all_maps() -> None:
     index.remove_player_from_all_maps(1)
 
     assert not index.players_by_map
-    assert (1, 1, 1) not in tile_occupation
-    assert (2, 2, 2) not in tile_occupation
+    assert (1, 1, 1) not in tile_occupation.data
+    assert (2, 2, 2) not in tile_occupation.data
 
 
 def test_queries_by_username_and_sender() -> None:
     """Consultas de username, sender y búsqueda por nombre."""
-    tile_occupation: dict[tuple[int, int, int], str] = {}
+    tile_occupation = TileOccupation()
     index = PlayerIndex(tile_occupation)
     sender = make_sender("s1")
     index.add_player(1, 42, sender, "Alice")
@@ -55,7 +56,7 @@ def test_queries_by_username_and_sender() -> None:
 
 def test_lists_and_counts() -> None:
     """Listados de usuarios, mapas y conteos."""
-    tile_occupation: dict[tuple[int, int, int], str] = {}
+    tile_occupation = TileOccupation()
     index = PlayerIndex(tile_occupation)
     index.add_player(1, 1, make_sender("s1"), "A")
     index.add_player(2, 2, make_sender("s2"), "B")
@@ -72,7 +73,7 @@ def test_lists_and_counts() -> None:
 
 def test_get_all_message_senders_in_map_with_exclude() -> None:
     """Obtiene senders excluyendo un usuario."""
-    tile_occupation: dict[tuple[int, int, int], str] = {}
+    tile_occupation = TileOccupation()
     index = PlayerIndex(tile_occupation)
     s1 = make_sender("s1")
     s2 = make_sender("s2")
