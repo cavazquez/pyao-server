@@ -9,6 +9,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.game.map_manager import MapManager
+from src.game.map_metadata_loader import MapMetadataLoader
 from src.messaging.message_sender import MessageSender
 from src.models.npc import NPC
 from src.network.client_connection import ClientConnection
@@ -804,7 +805,7 @@ async def test_remove_ground_item_persists_when_repo_exists(map_manager: MapMana
 def test_load_metadata_file_nonexistent() -> None:
     """Test _load_metadata_file con archivo inexistente."""
     nonexistent_path = Path("/nonexistent/metadata.json")
-    width, height, blocked = MapManager._load_metadata_file(nonexistent_path)
+    width, height, blocked = MapMetadataLoader.load_metadata_file_static(nonexistent_path)
 
     assert width == 100  # Valores por defecto
     assert height == 100
@@ -819,7 +820,7 @@ def test_load_metadata_file_simple_json() -> None:
         temp_path = Path(f.name)
 
     try:
-        width, height, blocked = MapManager._load_metadata_file(temp_path)
+        width, height, blocked = MapMetadataLoader.load_metadata_file_static(temp_path)
 
         assert width == 150
         assert height == 200
@@ -837,7 +838,7 @@ def test_load_metadata_file_list_json() -> None:
         temp_path = Path(f.name)
 
     try:
-        width, height, _blocked = MapManager._load_metadata_file(temp_path)
+        width, height, _blocked = MapMetadataLoader.load_metadata_file_static(temp_path)
 
         assert width == 120
         assert height == 180
@@ -848,7 +849,7 @@ def test_load_metadata_file_list_json() -> None:
 def test_load_blocked_file_nonexistent() -> None:
     """Test _load_blocked_file con archivo inexistente."""
     nonexistent_path = Path("/nonexistent/blocked.json")
-    blocked = MapManager._load_blocked_file(nonexistent_path)
+    blocked = MapMetadataLoader.load_blocked_file_static(nonexistent_path)
 
     assert blocked is None
 
@@ -861,7 +862,7 @@ def test_load_blocked_file_simple_json() -> None:
         temp_path = Path(f.name)
 
     try:
-        blocked = MapManager._load_blocked_file(temp_path)
+        blocked = MapMetadataLoader.load_blocked_file_static(temp_path)
 
         assert blocked is not None
         assert len(blocked) == 2

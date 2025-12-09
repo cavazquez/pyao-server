@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from src.game.map_manager import MapManager
+from src.game.map_metadata_loader import MapMetadataLoader
 
 
 @pytest.fixture
@@ -36,7 +37,9 @@ class TestMapManagerLoadTransitions:
             with transitions_path.open("w", encoding="utf-8") as f:
                 json.dump(transitions_data, f)
 
-            map_manager._load_map_transitions(1, transitions_path)
+            loader = map_manager._metadata_loader
+            exit_tiles = map_manager._exit_tiles
+            loader.load_map_transitions(1, transitions_path, exit_tiles)
 
             # Verificar que se cargaron las transiciones
             exit_1 = map_manager.get_exit_tile(1, 50, 1)
@@ -65,7 +68,9 @@ class TestMapManagerLoadTransitions:
             with transitions_path.open("w", encoding="utf-8") as f:
                 json.dump(transitions_data, f)
 
-            map_manager._load_map_transitions(1, transitions_path)
+            loader = map_manager._metadata_loader
+            exit_tiles = map_manager._exit_tiles
+            loader.load_map_transitions(1, transitions_path, exit_tiles)
 
             # Verificar que se cargó la transición
             exit_tile = map_manager.get_exit_tile(1, 50, 1)
@@ -75,10 +80,12 @@ class TestMapManagerLoadTransitions:
     def test_load_map_transitions_nonexistent_file(self, map_manager: MapManager) -> None:
         """Test carga transiciones con archivo inexistente."""
         nonexistent_path = Path("/nonexistent/transitions.json")
-        map_manager._load_map_transitions(1, nonexistent_path)
+        loader = map_manager._metadata_loader
+        exit_tiles = map_manager._exit_tiles
+        loader.load_map_transitions(1, nonexistent_path, exit_tiles)
 
         # No debe crashear, solo registrar en _missing_transitions_files
-        assert nonexistent_path in map_manager._missing_transitions_files
+        assert nonexistent_path in map_manager._metadata_loader.missing_transitions_files
 
     def test_load_map_transitions_invalid_json(self, map_manager: MapManager) -> None:
         """Test carga transiciones con JSON inválido."""
@@ -86,7 +93,9 @@ class TestMapManagerLoadTransitions:
             transitions_path = Path(tmpdir) / "transitions_001-050.json"
             transitions_path.write_text("invalid json {")
 
-            map_manager._load_map_transitions(1, transitions_path)
+            loader = map_manager._metadata_loader
+            exit_tiles = map_manager._exit_tiles
+            loader.load_map_transitions(1, transitions_path, exit_tiles)
 
             # No debe crashear, debe intentar parsear como NDJSON
 
@@ -105,7 +114,9 @@ class TestMapManagerLoadTransitions:
             with transitions_path.open("w", encoding="utf-8") as f:
                 json.dump(transitions_data, f)
 
-            map_manager._load_map_transitions(1, transitions_path)
+            loader = map_manager._metadata_loader
+            exit_tiles = map_manager._exit_tiles
+            loader.load_map_transitions(1, transitions_path, exit_tiles)
 
             # No debe cargar transiciones para mapa 1
             exit_tile = map_manager.get_exit_tile(1, 50, 1)
@@ -131,7 +142,9 @@ class TestMapManagerLoadTransitions:
             with transitions_path.open("w", encoding="utf-8") as f:
                 json.dump(transitions_data, f)
 
-            map_manager._load_map_transitions(1, transitions_path)
+            loader = map_manager._metadata_loader
+            exit_tiles = map_manager._exit_tiles
+            loader.load_map_transitions(1, transitions_path, exit_tiles)
 
             # Solo debe cargar la transición válida
             exit_tile = map_manager.get_exit_tile(1, 50, 1)
@@ -150,7 +163,7 @@ class TestMapManagerBuildBlockedData:
             {"x": 1, "y": 50, "type": "exit", "to_map": 3, "to_x": 99, "to_y": 50},
         ]
 
-        blocked_set, exit_count, exit_tiles = MapManager._build_blocked_data(1, blocked_tiles)
+        blocked_set, exit_count, exit_tiles = MapMetadataLoader.build_blocked_data(1, blocked_tiles)
 
         # Verificar tiles bloqueados
         assert (10, 20) in blocked_set
@@ -171,7 +184,7 @@ class TestMapManagerBuildBlockedData:
             {"x": 15, "y": 25, "type": "wall"},
         ]
 
-        blocked_set, exit_count, exit_tiles = MapManager._build_blocked_data(1, blocked_tiles)
+        blocked_set, exit_count, exit_tiles = MapMetadataLoader.build_blocked_data(1, blocked_tiles)
 
         assert len(blocked_set) == 2
         assert exit_count == 0
@@ -179,7 +192,7 @@ class TestMapManagerBuildBlockedData:
 
     def test_build_blocked_data_empty_list(self) -> None:
         """Test _build_blocked_data con lista vacía."""
-        blocked_set, exit_count, exit_tiles = MapManager._build_blocked_data(1, [])
+        blocked_set, exit_count, exit_tiles = MapMetadataLoader.build_blocked_data(1, [])
 
         assert len(blocked_set) == 0
         assert exit_count == 0
@@ -193,7 +206,9 @@ class TestMapManagerBuildBlockedData:
             {"x": 10, "y": 20},  # Válido
         ]
 
-        blocked_set, _exit_count, _exit_tiles = MapManager._build_blocked_data(1, blocked_tiles)
+        blocked_set, _exit_count, _exit_tiles = MapMetadataLoader.build_blocked_data(
+            1, blocked_tiles
+        )
 
         # Solo debe incluir el tile válido
         assert (10, 20) in blocked_set
@@ -205,36 +220,36 @@ class TestMapManagerCoerceInt:
 
     def test_coerce_int_valid_int(self) -> None:
         """Test _coerce_int con entero válido."""
-        assert MapManager._coerce_int(42) == 42
-        assert MapManager._coerce_int(0) == 0
-        assert MapManager._coerce_int(-10) == -10
+        assert MapMetadataLoader.coerce_int(42) == 42
+        assert MapMetadataLoader.coerce_int(0) == 0
+        assert MapMetadataLoader.coerce_int(-10) == -10
 
     def test_coerce_int_string_number(self) -> None:
         """Test _coerce_int con string numérico."""
-        assert MapManager._coerce_int("42") == 42
-        assert MapManager._coerce_int("0") == 0
+        assert MapMetadataLoader.coerce_int("42") == 42
+        assert MapMetadataLoader.coerce_int("0") == 0
 
     def test_coerce_int_invalid_string(self) -> None:
         """Test _coerce_int con string inválido."""
-        assert MapManager._coerce_int("invalid") is None
-        assert MapManager._coerce_int("abc123") is None
+        assert MapMetadataLoader.coerce_int("invalid") is None
+        assert MapMetadataLoader.coerce_int("abc123") is None
 
     def test_coerce_int_none(self) -> None:
         """Test _coerce_int con None."""
-        assert MapManager._coerce_int(None) is None
+        assert MapMetadataLoader.coerce_int(None) is None
 
     def test_coerce_int_float(self) -> None:
         """Test _coerce_int con float."""
-        assert MapManager._coerce_int(42.5) == 42  # Trunca
-        assert MapManager._coerce_int(42.9) == 42
+        assert MapMetadataLoader.coerce_int(42.5) == 42  # Trunca
+        assert MapMetadataLoader.coerce_int(42.9) == 42
 
     def test_coerce_int_list(self) -> None:
         """Test _coerce_int con lista (inválido)."""
-        assert MapManager._coerce_int([1, 2, 3]) is None
+        assert MapMetadataLoader.coerce_int([1, 2, 3]) is None
 
     def test_coerce_int_dict(self) -> None:
         """Test _coerce_int con dict (inválido)."""
-        assert MapManager._coerce_int({"key": "value"}) is None
+        assert MapMetadataLoader.coerce_int({"key": "value"}) is None
 
 
 class TestMapManagerLoadMapDataEdgeCases:
