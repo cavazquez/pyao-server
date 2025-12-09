@@ -1,10 +1,10 @@
 """Gestor de mapas y jugadores para broadcast multijugador."""
 
-import asyncio
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from src.game.ground_item_index import GroundItemIndex
 from src.game.map_manager_spatial import SpatialIndexMixin
 from src.game.map_metadata_loader import MapMetadataLoader
 from src.game.npc_index import NpcIndex
@@ -66,8 +66,10 @@ class MapManager(SpatialIndexMixin):
         # Tamaños de mapas: {map_id: (width, height)}
         self._map_sizes: dict[int, tuple[int, int]] = {}
 
-        # Ground items: {(map_id, x, y): [Item, Item, ...]}
-        self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
+        # Ground items index (compatibilidad con _ground_items)
+        self._ground_items_repo = ground_items_repo
+        self._ground_index = GroundItemIndex(self.MAX_ITEMS_PER_TILE, ground_items_repo)
+        self._ground_items = self._ground_index.ground_items
 
         # Loader de metadatos (blocked, exits, tamaños)
         self._metadata_loader = MapMetadataLoader(
@@ -320,32 +322,7 @@ class MapManager(SpatialIndexMixin):
                 - owner_id (opcional): Dueño temporal
                 - spawn_time (opcional): Timestamp de spawn
         """
-        key = (map_id, x, y)
-        if key not in self._ground_items:
-            self._ground_items[key] = []
-
-        # Límite de items por tile
-        if len(self._ground_items[key]) >= self.MAX_ITEMS_PER_TILE:
-            logger.warning(
-                "Tile (%d, %d) en mapa %d tiene 10 items, no se puede agregar más", x, y, map_id
-            )
-            return
-
-        self._ground_items[key].append(item)
-        logger.debug(
-            "Item agregado al suelo: mapa=%d pos=(%d,%d) item_id=%d cantidad=%d",
-            map_id,
-            x,
-            y,
-            item.get("item_id"),
-            item.get("quantity"),
-        )
-
-        # Persistir en Redis de forma asíncrona (fire and forget)
-        if self.ground_items_repo:
-            task = asyncio.create_task(self._persist_ground_items(map_id))
-            # Guardar referencia para evitar warning
-            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
+        self._ground_index.add_ground_item(map_id, x, y, item)
 
     def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
         """Obtiene todos los items en un tile específico.
@@ -358,8 +335,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Lista de items en ese tile (vacía si no hay items).
         """
-        key = (map_id, x, y)
-        return self._ground_items.get(key, [])
+        return self._ground_index.get_ground_items(map_id, x, y)
 
     def remove_ground_item(
         self, map_id: int, x: int, y: int, item_index: int = 0
@@ -375,41 +351,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Item removido o None si no existe.
         """
-        key = (map_id, x, y)
-        if key not in self._ground_items:
-            return None
-
-        items = self._ground_items[key]
-        if item_index >= len(items):
-            logger.warning(
-                "Intento de remover item_index=%d pero solo hay %d items en (%d,%d)",
-                item_index,
-                len(items),
-                x,
-                y,
-            )
-            return None
-
-        item = items.pop(item_index)
-
-        # Limpiar si no quedan items
-        if not items:
-            del self._ground_items[key]
-
-        logger.debug(
-            "Item removido del suelo: mapa=%d pos=(%d,%d) item_id=%d",
-            map_id,
-            x,
-            y,
-            item.get("item_id"),
-        )
-
-        # Persistir en Redis
-        if self.ground_items_repo:
-            task = asyncio.create_task(self._persist_ground_items(map_id))
-            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
-
-        return item
+        return self._ground_index.remove_ground_item(map_id, x, y, item_index)
 
     def clear_ground_items(self, map_id: int) -> int:
         """Limpia todos los items de un mapa.
@@ -420,17 +362,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Cantidad de items removidos.
         """
-        keys_to_remove = [key for key in self._ground_items if key[0] == map_id]
-
-        total_items = sum(len(self._ground_items[key]) for key in keys_to_remove)
-
-        for key in keys_to_remove:
-            del self._ground_items[key]
-
-        if total_items > 0:
-            logger.info("Limpiados %d items del mapa %d", total_items, map_id)
-
-        return total_items
+        return self._ground_index.clear_ground_items(map_id)
 
     def get_ground_items_count(self, map_id: int) -> int:
         """Obtiene la cantidad total de items en el suelo de un mapa.
@@ -441,7 +373,17 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Cantidad de items.
         """
-        return sum(len(items) for key, items in self._ground_items.items() if key[0] == map_id)
+        return self._ground_index.get_ground_items_count(map_id)
+
+    @property
+    def ground_items_repo(self) -> "GroundItemsRepository | None":  # noqa: UP037
+        """Repositorio de ground items (getter/setter para propagar al índice)."""
+        return self._ground_items_repo
+
+    @ground_items_repo.setter
+    def ground_items_repo(self, repo: "GroundItemsRepository | None") -> None:  # noqa: UP037
+        self._ground_items_repo = repo
+        self._ground_index.ground_items_repo = repo
 
     async def _persist_ground_items(self, map_id: int) -> None:
         """Persiste los ground items de un mapa en Redis.
@@ -449,17 +391,7 @@ class MapManager(SpatialIndexMixin):
         Args:
             map_id: ID del mapa.
         """
-        if not self.ground_items_repo:
-            return
-
-        # Filtrar items del mapa
-        map_items: dict[tuple[int, int], list[dict[str, int | str | None]]] = {}
-        for (item_map_id, x, y), items in self._ground_items.items():
-            if item_map_id == map_id:
-                map_items[x, y] = items
-
-        # Guardar en Redis
-        await self.ground_items_repo.save_ground_items(map_id, map_items)
+        await self._ground_index.persist_ground_items(map_id)
 
     async def load_ground_items(self, map_id: int) -> None:
         """Carga los ground items de un mapa desde Redis.
@@ -467,20 +399,7 @@ class MapManager(SpatialIndexMixin):
         Args:
             map_id: ID del mapa.
         """
-        if not self.ground_items_repo:
-            return
-
-        # Cargar desde Redis
-        map_items = await self.ground_items_repo.load_ground_items(map_id)
-
-        # Agregar a memoria
-        for (x, y), items in map_items.items():
-            key = (map_id, x, y)
-            self._ground_items[key] = items
-
-        if map_items:
-            total_items = sum(len(items) for items in map_items.values())
-            logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)
+        await self._ground_index.load_ground_items(map_id)
 
     def load_map_data(self, map_id: int, map_file_path: str | Path) -> None:
         """Carga metadatos y tiles bloqueados de un mapa delegando en el loader."""
