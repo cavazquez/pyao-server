@@ -101,6 +101,18 @@ jobs:
     - name: Build package
       run: uv build
     
+    - name: Rename artifacts with OS suffix
+      shell: bash
+      run: |
+        for f in dist/pyao_server-*.whl; do
+          base=$(basename "$f" .whl)
+          mv "$f" "dist/${base}-${{ matrix.os }}.whl"
+        done
+        for f in dist/pyao_server-*.tar.gz; do
+          base=$(basename "$f" .tar.gz)
+          mv "$f" "dist/${base}-${{ matrix.os }}.tar.gz"
+        done
+    
     - name: Upload artifacts
       uses: actions/upload-artifact@v5
       with:
@@ -116,10 +128,9 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     
-    - name: Download linux artifact (avoid duplicate assets)
+    - name: Download all artifacts
       uses: actions/download-artifact@v6
       with:
-        name: dist-ubuntu-latest
         path: dist-all
     
     - name: Create Release
@@ -127,3 +138,5 @@ jobs:
       with:
         files: dist-all/*
         generate_release_notes: true
+        make_latest: false
+        prerelease: true
