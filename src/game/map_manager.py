@@ -426,32 +426,50 @@ class MapManager(SpatialIndexMixin):
     # Métodos de compatibilidad/soporte para tests existentes
     @staticmethod
     def _load_metadata_file(metadata_path: Path) -> tuple[int, int, list[dict[str, object]] | None]:
+        """Compat: delega en MapMetadataLoader versión estática.
+
+        Returns:
+            tuple[int, int, list[dict[str, object]] | None]: ancho, alto y bloqueados.
+        """
         return MapMetadataLoader.load_metadata_file_static(metadata_path)
 
     @staticmethod
     def _load_blocked_file(blocked_path: Path) -> list[dict[str, object]] | None:
+        """Compat: delega en MapMetadataLoader versión estática.
+
+        Returns:
+            list[dict[str, object]] | None: tiles bloqueados o None.
+        """
         return MapMetadataLoader.load_blocked_file_static(blocked_path)
-
-    def _get_blocked_tiles_for_map(
-        self, map_id: int, blocked_path: Path
-    ) -> list[dict[str, object]] | None:
-        return self._metadata_loader.get_blocked_tiles_for_map(map_id, blocked_path)
-
-    def _load_map_transitions(self, map_id: int, transitions_path: Path) -> None:
-        self._metadata_loader.load_map_transitions(map_id, transitions_path, self._exit_tiles)
 
     @staticmethod
     def _build_blocked_data(
         map_id: int, blocked_tiles: list[dict[str, object]]
     ) -> tuple[set[tuple[int, int]], int, dict[tuple[int, int, int], dict[str, int]]]:
+        """Compat: delega en MapMetadataLoader versión estática.
+
+        Returns:
+            tuple[set[tuple[int, int]], int, dict[tuple[int, int, int], dict[str, int]]]:
+            tiles bloqueados, cantidad de exits, mapping de exits.
+        """
         return MapMetadataLoader.build_blocked_data(map_id, blocked_tiles)
+
+    def _load_map_transitions(self, map_id: int, transitions_path: Path) -> None:
+        """Compat: carga transiciones usando el loader."""
+        self._metadata_loader.load_map_transitions(map_id, transitions_path, self._exit_tiles)
 
     @staticmethod
     def _coerce_int(value: object) -> int | None:
+        """Compat: delega en MapMetadataLoader versión estática.
+
+        Returns:
+            int | None: entero o None si no es convertible.
+        """
         return MapMetadataLoader.coerce_int(value)
 
     @property
     def _missing_transitions_files(self) -> set[Path]:
+        """Compat: expone missing transitions del loader."""
         return self._metadata_loader.missing_transitions_files
 
     def get_map_size(self, map_id: int) -> tuple[int, int]:
