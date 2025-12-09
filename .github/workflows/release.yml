@@ -116,13 +116,14 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     
-    - name: Download all artifacts
+    - name: Download linux artifact (avoid duplicate assets)
       uses: actions/download-artifact@v6
       with:
+        name: dist-ubuntu-latest
         path: dist-all
     
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        files: dist-all/**/*
+        files: dist-all/*
         generate_release_notes: true
