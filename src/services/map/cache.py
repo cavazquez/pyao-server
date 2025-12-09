@@ -115,7 +115,7 @@ class MapCacheLoader:
 
     def _read_cache_file(self, cache_path: Path) -> dict[str, Any]:
         with cache_path.open("r", encoding="utf-8") as f:
-            return cast(dict[str, Any], json.load(f))
+            return cast("dict[str, Any]", json.load(f))
 
     def _build_source_info(self) -> dict[str, dict[str, float]]:
         return {

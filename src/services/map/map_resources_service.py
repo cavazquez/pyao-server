@@ -49,15 +49,6 @@ class MapResourcesService:
         self.signs: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
         self.doors: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
 
-        # Estructuras internas para acumulación por mapa durante la carga
-        self._blocked_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._water_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._trees_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._mines_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._anvils_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._forges_by_map: dict[int, set[tuple[int, int]]] = {}
-        self._signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
-        self._doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
         self.map_manager = map_manager
 
         cache_loader = MapCacheLoader(self.maps_dir, self.cache_dir)
@@ -95,107 +86,46 @@ class MapResourcesService:
         """Carga todos los mapas desde el directorio."""
         start_time = time.time()
         try:
-            if not self.maps_dir.exists():
-                logger.warning("Directorio de mapas no encontrado: %s", self.maps_dir)
-                self.maps_dir.mkdir(parents=True, exist_ok=True)
+            blocked_files, objects_files = self._gather_map_files()
+            if blocked_files is None or objects_files is None:
                 return
 
-            # Estructuras internas para acumular datos por mapa durante la carga
-            self._blocked_by_map = defaultdict(set)
-            self._water_by_map = defaultdict(set)
-            self._trees_by_map = defaultdict(set)
-            self._mines_by_map = defaultdict(set)
-            self._anvils_by_map = defaultdict(set)
-            self._forges_by_map = defaultdict(set)
-            self._signs_by_map = {}
-            self._doors_by_map = {}
+            (
+                blocked_by_map,
+                water_by_map,
+                trees_by_map,
+                mines_by_map,
+                anvils_by_map,
+                forges_by_map,
+                signs_by_map,
+                doors_by_map,
+            ) = self._load_map_resources(blocked_files, objects_files)
 
-            # Procesar archivos blocked_*.json una sola vez cada uno
-            blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
-            objects_files = sorted(self.maps_dir.glob("objects_*.json"))
-
-            if not blocked_files and not objects_files:
-                logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
-                return
-
-            for blocked_path in blocked_files:
-                process_blocked_file(
-                    blocked_path,
-                    self._blocked_by_map,
-                    self._water_by_map,
-                    self._trees_by_map,
-                    self._mines_by_map,
-                )
-
-            for objects_path in objects_files:
-                process_objects_file(
-                    objects_path,
-                    self._trees_by_map,
-                    self._mines_by_map,
-                    self._blocked_by_map,
-                    self._signs_by_map,
-                    self._doors_by_map,
-                    self._water_by_map,
-                    self._anvils_by_map,
-                    self._forges_by_map,
-                )
-
-            # Unificar todos los IDs de mapa que tienen algún recurso
-            map_ids: set[int] = set(self._blocked_by_map.keys())
-            map_ids.update(self._water_by_map.keys())
-            map_ids.update(self._trees_by_map.keys())
-            map_ids.update(self._mines_by_map.keys())
-            map_ids.update(self._anvils_by_map.keys())
-            map_ids.update(self._forges_by_map.keys())
-            map_ids.update(self._signs_by_map.keys())
-            map_ids.update(self._doors_by_map.keys())
-
+            map_ids = self._collect_map_ids(
+                blocked_by_map,
+                water_by_map,
+                trees_by_map,
+                mines_by_map,
+                anvils_by_map,
+                forges_by_map,
+                signs_by_map,
+                doors_by_map,
+            )
             if not map_ids:
                 logger.warning("No se encontraron datos de recursos en %s", self.maps_dir)
                 return
 
-            # Construir estructuras públicas (resources, signs, doors) a partir de los acumuladores
-            for map_id in sorted(map_ids):
-                map_key = f"map_{map_id}"
-
-                blocked = self._blocked_by_map.get(map_id, set())
-                water = self._water_by_map.get(map_id, set())
-                trees = self._trees_by_map.get(map_id, set())
-                mines = self._mines_by_map.get(map_id, set())
-                anvils = self._anvils_by_map.get(map_id, set())
-                forges = self._forges_by_map.get(map_id, set())
-
-                self.resources[map_key] = {
-                    "blocked": blocked,
-                    "water": water,
-                    "trees": trees,
-                    "mines": mines,
-                    "anvils": anvils,
-                    "forges": forges,
-                }
-
-                if map_id in self._signs_by_map:
-                    self.signs[map_key] = self._signs_by_map[map_id]
-
-                if map_id in self._doors_by_map:
-                    self.doors[map_key] = self._doors_by_map[map_id]
-
-                signs_count = len(self._signs_by_map.get(map_id, {}))
-                doors_count = len(self._doors_by_map.get(map_id, {}))
-
-                logger.info(
-                    "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, "
-                    "%d yunques, %d fraguas, %d carteles, %d puertas",
-                    map_key,
-                    len(blocked),
-                    len(water),
-                    len(trees),
-                    len(mines),
-                    len(anvils),
-                    len(forges),
-                    signs_count,
-                    doors_count,
-                )
+            self._build_public_structures(
+                map_ids,
+                blocked_by_map,
+                water_by_map,
+                trees_by_map,
+                mines_by_map,
+                anvils_by_map,
+                forges_by_map,
+                signs_by_map,
+                doors_by_map,
+            )
 
             elapsed_time = time.time() - start_time
             logger.info(
@@ -207,6 +137,151 @@ class MapResourcesService:
 
         except Exception:
             logger.exception("Error cargando recursos de mapas")
+
+    def _gather_map_files(self) -> tuple[list[Path] | None, list[Path] | None]:
+        if not self.maps_dir.exists():
+            logger.warning("Directorio de mapas no encontrado: %s", self.maps_dir)
+            self.maps_dir.mkdir(parents=True, exist_ok=True)
+            return None, None
+
+        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
+        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
+
+        if not blocked_files and not objects_files:
+            logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
+            return None, None
+        return blocked_files, objects_files
+
+    def _load_map_resources(
+        self,
+        blocked_files: list[Path],
+        objects_files: list[Path],
+    ) -> tuple[
+        dict[int, set[tuple[int, int]]],
+        dict[int, set[tuple[int, int]]],
+        dict[int, set[tuple[int, int]]],
+        dict[int, set[tuple[int, int]]],
+        dict[int, set[tuple[int, int]]],
+        dict[int, set[tuple[int, int]]],
+        dict[int, dict[tuple[int, int], int]],
+        dict[int, dict[tuple[int, int], int]],
+    ]:
+        blocked_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        water_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        anvils_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        forges_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+        signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
+        doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
+
+        for blocked_path in blocked_files:
+            process_blocked_file(
+                blocked_path,
+                blocked_by_map,
+                water_by_map,
+                trees_by_map,
+                mines_by_map,
+            )
+
+        for objects_path in objects_files:
+            process_objects_file(
+                objects_path,
+                trees_by_map,
+                mines_by_map,
+                blocked_by_map,
+                signs_by_map,
+                doors_by_map,
+                water_by_map,
+                anvils_by_map,
+                forges_by_map,
+            )
+
+        return (
+            blocked_by_map,
+            water_by_map,
+            trees_by_map,
+            mines_by_map,
+            anvils_by_map,
+            forges_by_map,
+            signs_by_map,
+            doors_by_map,
+        )
+
+    @staticmethod
+    def _collect_map_ids(
+        blocked_by_map: dict[int, set[tuple[int, int]]],
+        water_by_map: dict[int, set[tuple[int, int]]],
+        trees_by_map: dict[int, set[tuple[int, int]]],
+        mines_by_map: dict[int, set[tuple[int, int]]],
+        anvils_by_map: dict[int, set[tuple[int, int]]],
+        forges_by_map: dict[int, set[tuple[int, int]]],
+        signs_by_map: dict[int, dict[tuple[int, int], int]],
+        doors_by_map: dict[int, dict[tuple[int, int], int]],
+    ) -> set[int]:
+        map_ids: set[int] = set(blocked_by_map.keys())
+        map_ids.update(water_by_map.keys())
+        map_ids.update(trees_by_map.keys())
+        map_ids.update(mines_by_map.keys())
+        map_ids.update(anvils_by_map.keys())
+        map_ids.update(forges_by_map.keys())
+        map_ids.update(signs_by_map.keys())
+        map_ids.update(doors_by_map.keys())
+        return map_ids
+
+    def _build_public_structures(
+        self,
+        map_ids: set[int],
+        blocked_by_map: dict[int, set[tuple[int, int]]],
+        water_by_map: dict[int, set[tuple[int, int]]],
+        trees_by_map: dict[int, set[tuple[int, int]]],
+        mines_by_map: dict[int, set[tuple[int, int]]],
+        anvils_by_map: dict[int, set[tuple[int, int]]],
+        forges_by_map: dict[int, set[tuple[int, int]]],
+        signs_by_map: dict[int, dict[tuple[int, int], int]],
+        doors_by_map: dict[int, dict[tuple[int, int], int]],
+    ) -> None:
+        for map_id in sorted(map_ids):
+            map_key = f"map_{map_id}"
+
+            blocked = blocked_by_map.get(map_id, set())
+            water = water_by_map.get(map_id, set())
+            trees = trees_by_map.get(map_id, set())
+            mines = mines_by_map.get(map_id, set())
+            anvils = anvils_by_map.get(map_id, set())
+            forges = forges_by_map.get(map_id, set())
+
+            self.resources[map_key] = {
+                "blocked": blocked,
+                "water": water,
+                "trees": trees,
+                "mines": mines,
+                "anvils": anvils,
+                "forges": forges,
+            }
+
+            if map_id in signs_by_map:
+                self.signs[map_key] = signs_by_map[map_id]
+
+            if map_id in doors_by_map:
+                self.doors[map_key] = doors_by_map[map_id]
+
+            signs_count = len(signs_by_map.get(map_id, {}))
+            doors_count = len(doors_by_map.get(map_id, {}))
+
+            logger.info(
+                "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, "
+                "%d yunques, %d fraguas, %d carteles, %d puertas",
+                map_key,
+                len(blocked),
+                len(water),
+                len(trees),
+                len(mines),
+                len(anvils),
+                len(forges),
+                signs_count,
+                doors_count,
+            )
 
     @staticmethod
     def _process_blocked_file_per_file(
