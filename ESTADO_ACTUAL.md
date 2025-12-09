@@ -258,8 +258,8 @@
 - **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
 
 ### Tests
-- **Total:** 2030 tests
-- **Pasando:** 2030 (100%) ✅
+- **Total:** 2052 tests
+- **Pasando:** 2052 (100%) ✅
 - **Cobertura:** 75% (objetivo: 80%+)
 
 ### Calidad
@@ -282,5 +282,5 @@
 ---
 
 **Última actualización:** 2025-12-09  
-**Estado:** ✅ Versión 0.9.4-alpha completada (Refactors TaskFactory, SpellService, PacketValidator, MapResources)
+**Estado:** ✅ Versión 0.9.4-alpha completada (Refactors TaskFactory, SpellService, PacketValidator, MapResources, MapManager modularizado)
 

@@ -127,6 +127,7 @@ El servidor utiliza una **arquitectura modular** con patrones de diseño moderno
 - **Repository Pattern** - Abstracción de acceso a datos
 - **Observabilidad** - Logs de login con mensajes destacados y colores por nivel (TTY) para intento/éxito/spawns ocupados
 - **Logs coloreados** - Usa `LOG_COLOR=1` para forzar color aun sin TTY; `NO_COLOR=1` para desactivar
+- **Índices especializados** - MapManager delega en PlayerIndex, NpcIndex, GroundItemIndex, TileOccupation, DoorState, ExitIndex
 
 Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de la arquitectura.
 
