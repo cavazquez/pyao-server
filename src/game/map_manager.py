@@ -4,6 +4,8 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from src.game.door_state import DoorState
+from src.game.exit_index import ExitIndex
 from src.game.ground_item_index import GroundItemIndex
 from src.game.map_manager_spatial import SpatialIndexMixin
 from src.game.map_metadata_loader import MapMetadataLoader
@@ -59,11 +61,13 @@ class MapManager(SpatialIndexMixin):
         # Tiles bloqueados por mapa (paredes, agua, etc.)
         self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
 
-        # Puertas cerradas por mapa (bloquean movimiento pero no son "bloqueados" permanentes)
-        self._closed_doors: dict[int, set[tuple[int, int]]] = {}
+        # Puertas cerradas
+        self._door_state = DoorState()
+        self._closed_doors = self._door_state.data
 
-        # Tiles de exit por mapa: {(map_id, x, y): {"to_map": int, "to_x": int, "to_y": int}}
-        self._exit_tiles: dict[tuple[int, int, int], dict[str, int]] = {}
+        # Exits
+        self._exit_index = ExitIndex()
+        self._exit_tiles = self._exit_index.data
 
         # Tamaños de mapas: {map_id: (width, height)}
         self._map_sizes: dict[int, tuple[int, int]] = {}
@@ -408,7 +412,7 @@ class MapManager(SpatialIndexMixin):
         result = self._metadata_loader.load_map_data(map_id, map_file_path)
         self._map_sizes[map_id] = (result.width, result.height)
         self._blocked_tiles[map_id] = result.blocked_tiles
-        self._exit_tiles.update(result.exit_tiles)
+        self._exit_index.update(result.exit_tiles)
 
         logger.info(
             "Mapa %d cargado: %dx%d, %d tiles bloqueados, %d exits",
@@ -472,7 +476,7 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Dict con {to_map, to_x, to_y} si es un exit, None si no.
         """
-        return self._exit_tiles.get((map_id, x, y))
+        return self._exit_index.get_exit_tile(map_id, x, y)
 
     def block_tile(self, map_id: int, x: int, y: int) -> None:
         """Marca una puerta como cerrada (bloquea movimiento pero no es un tile "bloqueado").
@@ -482,17 +486,7 @@ class MapManager(SpatialIndexMixin):
             x: Coordenada X.
             y: Coordenada Y.
         """
-        if map_id not in self._closed_doors:
-            self._closed_doors[map_id] = set()
-
-        self._closed_doors[map_id].add((x, y))
-        logger.info(
-            "🚪 PUERTA CERRADA: Mapa %d (%d, %d) - Total puertas cerradas: %d",
-            map_id,
-            x,
-            y,
-            len(self._closed_doors.get(map_id, set())),
-        )
+        self._door_state.block(map_id, x, y)
 
     def unblock_tile(self, map_id: int, x: int, y: int) -> None:
         """Marca una puerta como abierta (permite movimiento).
@@ -502,15 +496,7 @@ class MapManager(SpatialIndexMixin):
             x: Coordenada X.
             y: Coordenada Y.
         """
-        if map_id in self._closed_doors:
-            self._closed_doors[map_id].discard((x, y))
-            logger.info(
-                "🚪 PUERTA ABIERTA: Mapa %d (%d, %d) - Total puertas cerradas: %d",
-                map_id,
-                x,
-                y,
-                len(self._closed_doors.get(map_id, set())),
-            )
+        self._door_state.unblock(map_id, x, y)
 
     def is_door_closed(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si hay una puerta cerrada en una posición.
@@ -523,6 +509,4 @@ class MapManager(SpatialIndexMixin):
         Returns:
             True si hay una puerta cerrada, False en caso contrario.
         """
-        if map_id not in self._closed_doors:
-            return False
-        return (x, y) in self._closed_doors[map_id]
+        return self._door_state.is_closed(map_id, x, y)
