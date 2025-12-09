@@ -47,6 +47,7 @@ from src.network.validators.simple import (
 )
 from src.network.validators.spells import (
     CastSpellPacketValidator,
+    MoveSpellPacketValidator,
     SpellInfoPacketValidator,
 )
 
@@ -80,6 +81,7 @@ class PacketValidatorRegistry:
             ClientPacketID.CHANGE_HEADING: ChangeHeadingPacketValidator(),
             ClientPacketID.COMMERCE_BUY: CommerceBuyPacketValidator(),
             ClientPacketID.SPELL_INFO: SpellInfoPacketValidator(),
+            ClientPacketID.MOVE_SPELL: MoveSpellPacketValidator(),
             ClientPacketID.BANK_EXTRACT_ITEM: BankExtractItemPacketValidator(),
             ClientPacketID.COMMERCE_SELL: CommerceSellPacketValidator(),
             ClientPacketID.BANK_DEPOSIT: BankDepositPacketValidator(),
@@ -95,7 +97,6 @@ class PacketValidatorRegistry:
             ClientPacketID.BANK_EXTRACT_GOLD: BankExtractGoldPacketValidator(),
             ClientPacketID.BANK_DEPOSIT_GOLD: BankDepositGoldPacketValidator(),
             ClientPacketID.GM_COMMANDS: GMCommandsPacketValidator(),
-            # MOVE_SPELL se valida directamente en PacketValidator
         }
 
     def get_validator(self, packet_id: int) -> PacketValidatorProtocol | None:

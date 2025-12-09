@@ -8,7 +8,6 @@ from src.network.packet_id import ClientPacketID
 from src.network.validation_result import ValidationResult
 from src.network.validators.base import ValidationContext
 from src.network.validators.registry import get_packet_validator_registry
-from src.network.validators.spells import MoveSpellPacketValidator
 
 if TYPE_CHECKING:
     from src.network.packet_reader import PacketReader
@@ -379,16 +378,12 @@ class PacketValidator:
         return self._validate_with_registry(ClientPacketID.ATTACK)
 
     def validate_move_spell_packet(self) -> ValidationResult[dict[str, Any]]:
-        """Valida packet MOVE_SPELL (no está en el registry).
+        """Valida packet MOVE_SPELL (usa registry).
 
         Returns:
             ValidationResult con slot y upwards o error.
         """
-        validator = MoveSpellPacketValidator()
-        context = ValidationContext(reader=self.reader, errors=self.errors.copy())
-        result = validator.validate(context)
-        self.errors = context.errors
-        return result
+        return self._validate_with_registry(ClientPacketID.MOVE_SPELL)
 
     def validate_login_packet(self) -> ValidationResult[dict[str, Any]]:
         """Valida packet LOGIN.
