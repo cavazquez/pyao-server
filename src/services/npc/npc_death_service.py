@@ -196,12 +196,9 @@ class NPCDeathService:
             npc: NPC que fue matado.
             total_exp: Experiencia total ganada.
         """
-        stats = await self.player_repo.get_stats(member_id)
-        if not stats:
-            return
-
-        current_exp = stats.get("experience", 0)
-        current_level = stats.get("level", 1)
+        experience_data = await self.player_repo.get_experience(member_id)
+        current_exp = experience_data[0]
+        current_level = await self.player_repo.get_level(member_id)
         new_exp = current_exp + int(exp_amount)
 
         await self.player_repo.update_experience(member_id, new_exp)
@@ -266,12 +263,9 @@ class NPCDeathService:
             experience: Cantidad de experiencia.
             message_sender: MessageSender del jugador.
         """
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return
-
-        current_exp = stats.get("experience", 0)
-        current_level = stats.get("level", 1)
+        experience_data = await self.player_repo.get_experience(user_id)
+        current_exp = experience_data[0]
+        current_level = await self.player_repo.get_level(user_id)
         new_exp = current_exp + experience
 
         await self.player_repo.update_experience(user_id, new_exp)
@@ -448,9 +442,20 @@ class NPCDeathService:
             await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
 
             # Obtener stats actuales y enviar actualización
-            stats = await self.player_repo.get_stats(user_id)
+            stats = await self.player_repo.get_player_stats(user_id)
             if stats:
-                await message_sender.send_update_user_stats(**stats)
+                await message_sender.send_update_user_stats(
+                    max_hp=stats.max_hp,
+                    min_hp=stats.min_hp,
+                    max_mana=stats.max_mana,
+                    min_mana=stats.min_mana,
+                    max_sta=stats.max_sta,
+                    min_sta=stats.min_sta,
+                    gold=stats.gold,
+                    level=stats.level,
+                    elu=stats.elu,
+                    experience=stats.experience,
+                )
             return
 
         # El jugador subió de nivel
@@ -467,17 +472,17 @@ class NPCDeathService:
         # Actualizar nivel y ELU
         await self.player_repo.update_level_and_elu(user_id, new_level, remaining_elu)
 
-        # Obtener stats actuales para actualizar
-        stats = await self.player_repo.get_stats(user_id)
+        # Obtener stats y atributos actuales para actualizar
+        stats = await self.player_repo.get_player_stats(user_id)
         if not stats:
             return
 
         # Calcular nuevos valores de HP, Mana y Stamina basados en nivel
         # Obtener atributos para calcular stats
-        attributes = await self.player_repo.get_attributes(user_id)
+        attributes = await self.player_repo.get_player_attributes(user_id)
         if attributes:
-            constitution = attributes.get("constitution", 10)
-            intelligence = attributes.get("intelligence", 10)
+            constitution = attributes.constitution
+            intelligence = attributes.intelligence
 
             # Calcular nuevos máximos basados en atributos y nivel
             hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
@@ -491,13 +496,13 @@ class NPCDeathService:
             new_max_sta = 100 + (new_level * 10)
 
             # Mantener el porcentaje actual de HP/Mana/Stamina
-            old_max_hp = stats.get("max_hp", 100)
-            old_max_mana = stats.get("max_mana", 100)
-            old_max_sta = stats.get("max_sta", 100)
+            old_max_hp = stats.max_hp
+            old_max_mana = stats.max_mana
+            old_max_sta = stats.max_sta
 
-            old_min_hp = stats.get("min_hp", 100)
-            old_min_mana = stats.get("min_mana", 50)
-            old_min_sta = stats.get("min_sta", 100)
+            old_min_hp = stats.min_hp
+            old_min_mana = stats.min_mana
+            old_min_sta = stats.min_sta
 
             # Calcular nuevos valores actuales manteniendo el porcentaje
             hp_percentage = old_min_hp / old_max_hp if old_max_hp > 0 else 1.0
@@ -517,7 +522,7 @@ class NPCDeathService:
                 min_mana=new_min_mana,
                 max_sta=new_max_sta,
                 min_sta=new_min_sta,
-                gold=stats.get("gold", 0),
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -531,7 +536,7 @@ class NPCDeathService:
                 min_mana=new_min_mana,
                 max_sta=new_max_sta,
                 min_sta=new_min_sta,
-                gold=stats.get("gold", 0),
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -540,13 +545,13 @@ class NPCDeathService:
             # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
             await self.player_repo.set_stats(
                 user_id=user_id,
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 50),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=stats.get("gold", 0),
+                max_hp=stats.max_hp,
+                min_hp=stats.min_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -554,13 +559,13 @@ class NPCDeathService:
 
             # Enviar actualización
             await message_sender.send_update_user_stats(
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 50),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=stats.get("gold", 0),
+                max_hp=stats.max_hp,
+                min_hp=stats.min_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
