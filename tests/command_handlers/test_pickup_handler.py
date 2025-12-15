@@ -8,6 +8,7 @@ from src.command_handlers.pickup_handler import PickupCommandHandler
 from src.commands.pickup_command import PickupCommand
 from src.commands.walk_command import WalkCommand
 from src.models.item_constants import GOLD_ITEM_ID
+from src.models.player_stats import PlayerStats
 
 
 @pytest.fixture
@@ -15,7 +16,21 @@ def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
     repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
-    repo.get_stats = AsyncMock(return_value={"gold": 1000})
+    repo.get_gold = AsyncMock(return_value=1000)
+    repo.get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            max_hp=100,
+            min_hp=100,
+            max_mana=100,
+            min_mana=100,
+            max_sta=100,
+            min_sta=100,
+            gold=1000,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
     repo.update_gold = AsyncMock()
     return repo
 
