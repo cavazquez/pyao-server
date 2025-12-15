@@ -75,8 +75,7 @@ class NPCAIService:
 
         for user_id in user_ids:
             # Verificar que el jugador esté vivo
-            stats = await self.player_repo.get_stats(user_id)
-            if not stats or stats.get("min_hp", 0) <= 0:
+            if not await self.player_repo.is_alive(user_id):
                 continue  # Jugador muerto, ignorar
 
             # Obtener posición del jugador
@@ -138,8 +137,7 @@ class NPCAIService:
             return False
 
         # Verificar que el jugador esté vivo
-        stats = await self.player_repo.get_stats(target_user_id)
-        if not stats or stats.get("min_hp", 0) <= 0:
+        if not await self.player_repo.is_alive(target_user_id):
             return False  # Jugador muerto, no atacar
 
         # Obtener posición del jugador
@@ -199,19 +197,19 @@ class NPCAIService:
             # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar
             message_sender = self.map_manager.get_message_sender(target_user_id)
             if message_sender:
-                stats = await self.player_repo.get_stats(target_user_id)
+                stats = await self.player_repo.get_player_stats(target_user_id)
                 if stats:
                     await message_sender.send_update_user_stats(
-                        max_hp=stats.get("max_hp", 100),
-                        min_hp=stats.get("min_hp", 100),
-                        max_mana=stats.get("max_mana", 100),
-                        min_mana=stats.get("min_mana", 100),
-                        max_sta=stats.get("max_sta", 100),
-                        min_sta=stats.get("min_sta", 100),
-                        gold=stats.get("gold", 0),
-                        level=stats.get("level", 1),
-                        elu=stats.get("elu", 300),
-                        experience=stats.get("experience", 0),
+                        max_hp=stats.max_hp,
+                        min_hp=stats.min_hp,
+                        max_mana=stats.max_mana,
+                        min_mana=stats.min_mana,
+                        max_sta=stats.max_sta,
+                        min_sta=stats.min_sta,
+                        gold=stats.gold,
+                        level=stats.level,
+                        elu=stats.elu,
+                        experience=stats.experience,
                     )
 
                     # Si el jugador murió, procesar muerte completa
@@ -236,22 +234,24 @@ class NPCAIService:
                             )
 
                             # Revivir con HP completo
-                            max_hp = stats.get("max_hp", 100)
+                            max_hp = await self.player_repo.get_max_hp(target_user_id)
                             await self.player_repo.update_hp(target_user_id, max_hp)
 
                             # Enviar UPDATE_USER_STATS con HP restaurado
-                            await message_sender.send_update_user_stats(
-                                max_hp=max_hp,
-                                min_hp=max_hp,
-                                max_mana=stats.get("max_mana", 100),
-                                min_mana=stats.get("min_mana", 100),
-                                max_sta=stats.get("max_sta", 100),
-                                min_sta=stats.get("min_sta", 100),
-                                gold=stats.get("gold", 0),
-                                level=stats.get("level", 1),
-                                elu=stats.get("elu", 300),
-                                experience=stats.get("experience", 0),
-                            )
+                            stats = await self.player_repo.get_player_stats(target_user_id)
+                            if stats:
+                                await message_sender.send_update_user_stats(
+                                    max_hp=stats.max_hp,
+                                    min_hp=max_hp,
+                                    max_mana=stats.max_mana,
+                                    min_mana=stats.min_mana,
+                                    max_sta=stats.max_sta,
+                                    min_sta=stats.min_sta,
+                                    gold=stats.gold,
+                                    level=stats.level,
+                                    elu=stats.elu,
+                                    experience=stats.experience,
+                                )
 
             logger.info(
                 "NPC %s atacó a jugador %d por %d de daño",
