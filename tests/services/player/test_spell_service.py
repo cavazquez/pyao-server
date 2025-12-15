@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.models.npc import NPC
+from src.models.player_stats import PlayerAttributes, PlayerStats
 from src.services.player.spell_service import SpellService
 
 # Constantes movidas al módulo de efectos
@@ -25,7 +26,17 @@ def mock_spell_catalog() -> MagicMock:
 def mock_player_repo() -> MagicMock:
     """Crea un mock de PlayerRepository."""
     repo = MagicMock()
-    repo.get_stats = AsyncMock()
+    repo.get_player_stats = AsyncMock(
+        return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0)
+    )
+    repo.get_mana = AsyncMock(return_value=(100, 100))
+    repo.get_current_hp = AsyncMock(return_value=100)
+    repo.get_max_hp = AsyncMock(return_value=100)
+    repo.get_player_attributes = AsyncMock(
+        return_value=PlayerAttributes(strength=10, agility=10, intelligence=10, charisma=10, constitution=10)
+    )
+    repo.update_mana = AsyncMock()
+    repo.update_hp = AsyncMock()
     repo.get_position = AsyncMock()
     repo.set_stats = AsyncMock()
     repo.get_dumb_until = AsyncMock(return_value=0.0)  # No estúpido por defecto
@@ -132,10 +143,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -150,7 +161,7 @@ class TestCastSpell:
 
         # Assert
         assert result is True
-        mock_player_repo.set_stats.assert_called_once()
+        mock_player_repo.update_mana.assert_called_once()
         mock_npc_repo.update_npc_hp.assert_called_once()
         mock_message_sender.send_console_msg.assert_called()
         mock_message_sender.send_update_user_stats.assert_called_once()
@@ -190,7 +201,8 @@ class TestCastSpell:
         """Test lanzar hechizo sin stats del jugador."""
         # Setup
         mock_spell_catalog.get_spell_data.return_value = {"mana_cost": 10}
-        mock_player_repo.get_stats.return_value = None
+        mock_player_repo.get_player_stats.return_value = None
+        mock_player_repo.get_mana.return_value = (0, 100)
 
         # Execute
         result = await spell_service.cast_spell(
@@ -216,7 +228,10 @@ class TestCastSpell:
         # Setup
         spell_data = {"mana_cost": 50}
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {"min_mana": 10}  # Menos del costo
+        mock_player_repo.get_mana.return_value = (10, 100)  # Menos del costo
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=10, charisma=10, constitution=10
+        )
 
         # Execute
         result = await spell_service.cast_spell(
@@ -315,10 +330,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -362,10 +377,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -405,10 +420,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 50,  # 50 de inteligencia = 50% bonus
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=50, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -447,10 +462,10 @@ class TestCastSpell:
             "loops": 2,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -489,10 +504,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -564,10 +579,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
 
@@ -608,12 +623,16 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "min_hp": 50,
-            "max_hp": 100,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_current_hp.return_value = 50
+        mock_player_repo.get_max_hp.return_value = 100
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
+        mock_player_repo.get_player_stats.return_value = PlayerStats(
+            min_hp=50, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+        )
+        mock_player_repo.update_hp = AsyncMock()
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = []  # Sin NPCs
         mock_map_manager.get_players_in_map.return_value = []  # Sin otros jugadores
@@ -652,10 +671,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position = AsyncMock(
             side_effect=[
                 {"map": 1, "x": 50, "y": 50, "heading": 3},  # Caster position
@@ -667,12 +686,30 @@ class TestCastSpell:
         mock_map_manager.get_player_username = MagicMock(return_value="TargetPlayer")
 
         # Target player stats
-        async def get_stats_side_effect(user_id: int) -> dict[str, int] | None:
+        async def get_player_stats_side_effect(user_id: int) -> PlayerStats | None:
             if user_id == 1:
-                return {"min_mana": 50, "attr_int": 20}
-            return {"min_hp": 80, "max_hp": 100}
+                return PlayerStats(
+                    min_hp=100, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+                )
+            return PlayerStats(
+                min_hp=80, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+            )
 
-        mock_player_repo.get_stats = AsyncMock(side_effect=get_stats_side_effect)
+        async def get_mana_side_effect(user_id: int) -> tuple[int, int]:
+            if user_id == 1:
+                return (50, 100)
+            return (100, 100)
+
+        async def get_player_attributes_side_effect(user_id: int) -> PlayerAttributes | None:
+            return PlayerAttributes(strength=10, agility=10, intelligence=20, charisma=10, constitution=10)
+
+        mock_player_repo.get_player_stats = AsyncMock(side_effect=get_player_stats_side_effect)
+        mock_player_repo.get_mana = AsyncMock(side_effect=get_mana_side_effect)
+        mock_player_repo.get_player_attributes = AsyncMock(side_effect=get_player_attributes_side_effect)
+        mock_player_repo.get_current_hp = AsyncMock(side_effect=lambda uid: 80 if uid == 2 else 100)
+        mock_player_repo.get_max_hp = AsyncMock(return_value=100)
+        mock_player_repo.update_hp = AsyncMock()
+        mock_player_repo.is_alive = AsyncMock(side_effect=lambda uid: uid == 2)  # Solo el target está vivo
 
         # Execute
         result = await spell_service.cast_spell(
@@ -685,7 +722,7 @@ class TestCastSpell:
 
         # Assert
         assert result is True
-        mock_player_repo.set_stats.assert_called()  # Debe actualizar stats del target
+        mock_player_repo.update_hp.assert_called()  # Debe actualizar HP del target
 
     @pytest.mark.asyncio
     async def test_cast_spell_revive(
@@ -704,13 +741,27 @@ class TestCastSpell:
             "revives": True,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats = AsyncMock(
-            side_effect=lambda uid: {
-                "min_mana": 50,
-                "attr_int": 20,
-                "min_hp": 0 if uid == 2 else 50,
-                "max_hp": 100,
-            }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
+        mock_player_repo.is_alive = AsyncMock(side_effect=lambda uid: uid != 2)  # Target está muerto
+        mock_player_repo.get_current_hp = AsyncMock(side_effect=lambda uid: 0 if uid == 2 else 50)
+        mock_player_repo.get_max_hp.return_value = 100
+        mock_player_repo.update_hp = AsyncMock()
+        mock_player_repo.get_player_stats = AsyncMock(
+            side_effect=lambda uid: PlayerStats(
+                min_hp=0 if uid == 2 else 50,
+                max_hp=100,
+                min_mana=50 if uid == 1 else 100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
+            )
         )
 
         async def get_position_side_effect(user_id: int) -> dict[str, int] | None:
@@ -756,13 +807,17 @@ class TestCastSpell:
             "revives": True,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats = AsyncMock(
-            return_value={
-                "min_mana": 50,
-                "attr_int": 20,
-                "min_hp": 50,  # Target tiene HP
-                "max_hp": 100,
-            }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
+        mock_player_repo.is_alive = AsyncMock(return_value=True)  # Target está vivo
+        mock_player_repo.get_current_hp.return_value = 50
+        mock_player_repo.get_max_hp.return_value = 100
+        mock_player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=50, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+            )
         )
 
         async def get_position_side_effect(user_id: int) -> dict[str, int] | None:
@@ -814,10 +869,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
         mock_npc_repo.update_npc_poisoned_until = AsyncMock()
@@ -859,10 +914,10 @@ class TestCastSpell:
             "loops": 1,
         }
         mock_spell_catalog.get_spell_data.return_value = spell_data
-        mock_player_repo.get_stats.return_value = {
-            "min_mana": 50,
-            "attr_int": 20,
-        }
+        mock_player_repo.get_mana.return_value = (50, 100)
+        mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
+            strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+        )
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
         mock_map_manager.get_npcs_in_map.return_value = [sample_npc]
         mock_npc_repo.update_npc_paralyzed_until = AsyncMock()
@@ -932,4 +987,4 @@ class TestCastSpell:
 
         # Assert
         assert result is True
-        mock_player_repo.set_stats.assert_called()  # Debe actualizar HP del target
+        mock_player_repo.update_hp.assert_called()  # Debe actualizar HP del target

@@ -49,21 +49,35 @@ class DamageEffect(SpellEffect):
 
     async def apply_to_player(self, ctx: SpellContext) -> SpellEffectResult:
         """Aplica daño a un jugador."""
-        if not ctx.target_player_id or not ctx.target_player_stats or not ctx.player_repo:
+        if not ctx.target_player_id or not ctx.player_repo:
             return SpellEffectResult(success=False)
 
-        stats = ctx.target_player_stats
-        current_hp = stats.get("min_hp", 0)
+        # Obtener HP actual y calcular nuevo HP
+        current_hp = await ctx.player_repo.get_current_hp(ctx.target_player_id)
         new_hp = max(0, current_hp - ctx.total_amount)
-        stats["min_hp"] = new_hp
 
-        await ctx.player_repo.set_stats(user_id=ctx.target_player_id, **stats)
+        # Actualizar HP
+        await ctx.player_repo.update_hp(ctx.target_player_id, new_hp)
+
+        # Obtener stats completos para enviar actualización
+        stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
 
         # Notificar al jugador objetivo (si no es auto-cast)
         if not ctx.is_self_cast:
             target_sender = await ctx.get_target_message_sender()
-            if target_sender:
-                await target_sender.send_update_user_stats(**stats)
+            if target_sender and stats:
+                await target_sender.send_update_user_stats(
+                    max_hp=stats.max_hp,
+                    min_hp=new_hp,
+                    max_mana=stats.max_mana,
+                    min_mana=stats.min_mana,
+                    max_sta=stats.max_sta,
+                    min_sta=stats.min_sta,
+                    gold=stats.gold,
+                    level=stats.level,
+                    elu=stats.elu,
+                    experience=stats.experience,
+                )
                 await target_sender.send_console_msg(
                     f"{ctx.spell_name} te ha causado {ctx.total_amount} de daño."
                 )
@@ -112,21 +126,31 @@ class DrainEffect(SpellEffect):
         if not ctx.player_repo or not ctx.message_sender:
             return SpellEffectResult(success=False)
 
-        # Obtener stats del caster
-        caster_stats = await ctx.player_repo.get_stats(ctx.user_id)
-        if not caster_stats:
-            return SpellEffectResult(success=False)
-
-        current_caster_hp = caster_stats.get("min_hp", 0)
-        max_caster_hp = caster_stats.get("max_hp", 100)
+        # Obtener HP del caster
+        current_caster_hp = await ctx.player_repo.get_current_hp(ctx.user_id)
+        max_caster_hp = await ctx.player_repo.get_max_hp(ctx.user_id)
 
         # Transferir HP drenado al caster (no exceder max_hp)
         new_caster_hp = min(max_caster_hp, current_caster_hp + ctx.total_amount)
-        caster_stats["min_hp"] = new_caster_hp
 
-        # Guardar stats del caster
-        await ctx.player_repo.set_stats(user_id=ctx.user_id, **caster_stats)
-        await ctx.message_sender.send_update_user_stats(**caster_stats)
+        # Actualizar HP del caster
+        await ctx.player_repo.update_hp(ctx.user_id, new_caster_hp)
+
+        # Obtener stats completos para enviar actualización
+        caster_stats = await ctx.player_repo.get_player_stats(ctx.user_id)
+        if caster_stats and ctx.message_sender:
+            await ctx.message_sender.send_update_user_stats(
+                max_hp=caster_stats.max_hp,
+                min_hp=new_caster_hp,
+                max_mana=caster_stats.max_mana,
+                min_mana=caster_stats.min_mana,
+                max_sta=caster_stats.max_sta,
+                min_sta=caster_stats.min_sta,
+                gold=caster_stats.gold,
+                level=caster_stats.level,
+                elu=caster_stats.elu,
+                experience=caster_stats.experience,
+            )
 
         hp_gained = new_caster_hp - current_caster_hp
         if hp_gained > 0:

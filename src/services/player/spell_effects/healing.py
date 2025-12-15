@@ -48,22 +48,36 @@ class HealEffect(SpellEffect):
 
     async def apply_to_player(self, ctx: SpellContext) -> SpellEffectResult:
         """Aplica curación a un jugador."""
-        if not ctx.target_player_id or not ctx.target_player_stats or not ctx.player_repo:
+        if not ctx.target_player_id or not ctx.player_repo:
             return SpellEffectResult(success=False)
 
-        stats = ctx.target_player_stats
-        current_hp = stats.get("min_hp", 0)
-        max_hp = stats.get("max_hp", 100)
+        # Obtener stats del jugador
+        current_hp = await ctx.player_repo.get_current_hp(ctx.target_player_id)
+        max_hp = await ctx.player_repo.get_max_hp(ctx.target_player_id)
         new_hp = min(current_hp + ctx.total_amount, max_hp)
         healing_amount = new_hp - current_hp
 
-        stats["min_hp"] = new_hp
-        await ctx.player_repo.set_stats(user_id=ctx.target_player_id, **stats)
+        # Actualizar HP
+        await ctx.player_repo.update_hp(ctx.target_player_id, new_hp)
+
+        # Obtener stats completos para enviar actualización
+        stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
 
         # Notificar al jugador objetivo
         target_sender = await ctx.get_target_message_sender()
-        if target_sender:
-            await target_sender.send_update_user_stats(**stats)
+        if target_sender and stats:
+            await target_sender.send_update_user_stats(
+                max_hp=stats.max_hp,
+                min_hp=new_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
+                level=stats.level,
+                elu=stats.elu,
+                experience=stats.experience,
+            )
             if healing_amount > 0:
                 msg = (
                     f"Te has curado {healing_amount} HP."
@@ -109,26 +123,21 @@ class ReviveEffect(SpellEffect):
                 await ctx.message_sender.send_console_msg("No puedes resucitarte a ti mismo.")
             return SpellEffectResult(success=False, stop_processing=True)
 
-        # Obtener stats del target
-        target_stats = await ctx.player_repo.get_stats(ctx.target_player_id)
-        if not target_stats:
-            if ctx.message_sender:
-                await ctx.message_sender.send_console_msg("Objetivo inválido.")
-            return SpellEffectResult(success=False, stop_processing=True)
-
-        current_hp = target_stats.get("min_hp", 0)
-        max_hp = target_stats.get("max_hp", 100)
-
         # Verificar si el jugador está muerto
-        if current_hp > 0:
+        if await ctx.player_repo.is_alive(ctx.target_player_id):
             if ctx.message_sender:
                 await ctx.message_sender.send_console_msg(f"{ctx.target_name} no está muerto.")
             return SpellEffectResult(success=False, stop_processing=True)
 
-        # Revivir con HP parcial
+        # Obtener max_hp para calcular revive_hp
+        max_hp = await ctx.player_repo.get_max_hp(ctx.target_player_id)
         revive_hp = int(max_hp * REVIVE_HP_PERCENTAGE)
-        target_stats["min_hp"] = revive_hp
-        await ctx.player_repo.set_stats(user_id=ctx.target_player_id, **target_stats)
+
+        # Actualizar HP
+        await ctx.player_repo.update_hp(ctx.target_player_id, revive_hp)
+
+        # Obtener stats completos para enviar actualización
+        target_stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
 
         # Notificar al caster
         if ctx.message_sender:
@@ -136,8 +145,19 @@ class ReviveEffect(SpellEffect):
 
         # Notificar al jugador revivido
         target_sender = await ctx.get_target_message_sender()
-        if target_sender:
-            await target_sender.send_update_user_stats(**target_stats)
+        if target_sender and target_stats:
+            await target_sender.send_update_user_stats(
+                max_hp=target_stats.max_hp,
+                min_hp=revive_hp,
+                max_mana=target_stats.max_mana,
+                min_mana=target_stats.min_mana,
+                max_sta=target_stats.max_sta,
+                min_sta=target_stats.min_sta,
+                gold=target_stats.gold,
+                level=target_stats.level,
+                elu=target_stats.elu,
+                experience=target_stats.experience,
+            )
             await target_sender.send_console_msg(
                 f"{ctx.spell_name} te ha resucitado. Tienes {revive_hp}/{max_hp} HP."
             )

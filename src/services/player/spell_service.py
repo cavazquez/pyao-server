@@ -95,15 +95,9 @@ class SpellService:
         if not await self._can_cast(user_id, message_sender):
             return False
 
-        # Obtener stats del jugador
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            logger.warning("No se pudieron obtener stats del jugador %d", user_id)
-            return False
-
         # Verificar mana
         mana_cost = spell_data.get("mana_cost", 0)
-        if not await self._has_enough_mana(user_id, stats, mana_cost, spell_name, message_sender):
+        if not await self._has_enough_mana(user_id, mana_cost, spell_name, message_sender):
             return False
 
         # Obtener posición del jugador
@@ -119,25 +113,48 @@ class SpellService:
             return False
 
         # Reducir mana
-        stats["min_mana"] -= mana_cost
-        await self.player_repo.set_stats(user_id=user_id, **stats)
-        await message_sender.send_update_user_stats(**stats)
+        min_mana, max_mana = await self.player_repo.get_mana(user_id)
+        new_min_mana = max(0, min_mana - mana_cost)
+        await self.player_repo.update_mana(user_id, new_min_mana)
 
-        # Obtener stats del target si es un jugador
+        # Obtener stats completos para enviar actualización
+        stats = await self.player_repo.get_player_stats(user_id)
+        if stats:
+            await message_sender.send_update_user_stats(
+                max_hp=stats.max_hp,
+                min_hp=stats.min_hp,
+                max_mana=stats.max_mana,
+                min_mana=new_min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
+                level=stats.level,
+                elu=stats.elu,
+                experience=stats.experience,
+            )
+
+        # Obtener stats del target si es un jugador (para compatibilidad con SpellContext)
         target_player_stats = None
         if target_player_id:
-            target_player_stats = await self.player_repo.get_stats(target_player_id)
-            if not target_player_stats and target_player_id != user_id:
+            target_stats = await self.player_repo.get_player_stats(target_player_id)
+            if not target_stats and target_player_id != user_id:
                 await message_sender.send_console_msg("Objetivo inválido.")
                 return False
+            # Mantener como dict para compatibilidad con SpellContext (se puede refactorizar después)
+            if target_stats:
+                target_player_stats = target_stats.to_dict()
 
         # Calcular daño/curación base
-        base_amount, total_amount = self._calculate_amount(spell_data, stats)
+        base_amount, total_amount = await self._calculate_amount(spell_data, user_id)
+
+        # Obtener stats del caster para SpellContext (compatibilidad)
+        caster_stats = await self.player_repo.get_player_stats(user_id)
+        caster_stats_dict = caster_stats.to_dict() if caster_stats else {}
 
         # Crear contexto para los efectos
         ctx = SpellContext(
             user_id=user_id,
-            caster_stats=stats,
+            caster_stats=caster_stats_dict,
             caster_position=position,
             spell_id=spell_id,
             spell_data=spell_data,
@@ -203,7 +220,6 @@ class SpellService:
     async def _has_enough_mana(
         self,
         user_id: int,
-        stats: dict[str, int],
         mana_cost: int,
         spell_name: str,
         message_sender: MessageSender,
@@ -213,13 +229,13 @@ class SpellService:
         Returns:
             True si tiene mana suficiente, False en caso contrario.
         """
-        current_mana = stats.get("min_mana", 0)
-        if current_mana < mana_cost:
+        min_mana, _ = await self.player_repo.get_mana(user_id)
+        if min_mana < mana_cost:
             logger.info(
                 "user_id %d no tiene mana para %s: %d/%d",
                 user_id,
                 spell_name,
-                current_mana,
+                min_mana,
                 mana_cost,
             )
             await message_sender.send_console_msg("No tienes suficiente mana.")
@@ -273,8 +289,8 @@ class SpellService:
 
         return target_npc, target_player_id
 
-    def _calculate_amount(
-        self, spell_data: dict[str, Any], caster_stats: dict[str, Any]
+    async def _calculate_amount(
+        self, spell_data: dict[str, Any], user_id: int
     ) -> tuple[int, int]:
         """Calcula el daño o curación del hechizo.
 
@@ -286,7 +302,8 @@ class SpellService:
         base_amount = random.randint(min_damage, max_damage) if max_damage > 0 else 0
 
         # Bonus por inteligencia
-        intelligence = caster_stats.get("attr_int", 0)
+        attributes = await self.player_repo.get_player_attributes(user_id)
+        intelligence = attributes.intelligence if attributes else 10
         intelligence_bonus = int(base_amount * (intelligence / 100))
         total_amount = base_amount + intelligence_bonus
 

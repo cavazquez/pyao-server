@@ -140,11 +140,6 @@ class PartyService:
         if not can_create:
             return None, error_msg
 
-        # Get player stats for level
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return None, "Usuario no encontrado"
-
         # Use provided username or generate one
         if not username:
             username = f"Player{user_id}"
@@ -156,7 +151,7 @@ class PartyService:
         party = Party(party_id=party_id, leader_id=user_id, leader_username=username)
 
         # Update leader's level in party
-        level = stats.get("level", 1)
+        level = await self.player_repo.get_level(user_id)
         party.update_member_level(user_id, level)
 
         # Save to repository
@@ -357,11 +352,8 @@ class PartyService:
             return False, "Ya perteneces a una party", None
 
         # Check if user is dead
-        user_stats = await self.player_repo.get_stats(user_id)
-        if user_stats:
-            user_hp = user_stats.get("min_hp", 0)
-            if user_hp <= 0:
-                return False, "¡¡Estás muerto!!", party
+        if not await self.player_repo.is_alive(user_id):
+            return False, "¡¡Estás muerto!!", party
 
         return True, "", party
 
@@ -375,19 +367,14 @@ class PartyService:
         if not can_accept:
             return error_msg
 
-        # Get player stats
-        player_stats = await self.player_repo.get_stats(user_id)
-        if not player_stats:
-            return "Usuario no encontrado"
-
-        # Get player attributes
+        # Get player attributes for username
         player_attrs = await self.player_repo.get_attributes(user_id)
         if not player_attrs:
             return "Usuario no encontrado"
 
         # Get username and level
         username = player_attrs.get("username", f"Player{user_id}")
-        level = player_stats.get("level", 1)
+        level = await self.player_repo.get_level(user_id)
 
         # Add member to party
         success = party.add_member(user_id, username, level)  # type: ignore[union-attr,arg-type]
@@ -657,18 +644,14 @@ class PartyService:
 
         # Helper functions to get player data
         async def get_user_level(user_id: int) -> int | None:
-            stats = await self.player_repo.get_stats(user_id)
-            return stats.get("level") if stats else None
+            return await self.player_repo.get_level(user_id)
 
         async def get_user_position(user_id: int) -> dict[str, Any] | None:
             position = await self.player_repo.get_position(user_id)
             return position or None
 
         async def is_user_alive(user_id: int) -> bool:
-            stats = await self.player_repo.get_stats(user_id)
-            if not stats:
-                return False
-            return stats.get("min_hp", 0) > 0
+            return await self.player_repo.is_alive(user_id)
 
         # Distribute experience
         distributed_exp = await party.distribute_experience(

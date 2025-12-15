@@ -59,7 +59,18 @@ class TestPartyExperience:
         player_repo.get_experience = AsyncMock(return_value=(100, 300))
         player_repo.get_level = AsyncMock(return_value=1)
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
@@ -126,7 +137,18 @@ class TestPartyExperience:
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.get_player_attributes = AsyncMock(return_value=None)
         player_repo.set_stats = AsyncMock()
@@ -185,7 +207,18 @@ class TestPartyExperience:
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.get_player_attributes = AsyncMock(return_value=None)
         player_repo.set_stats = AsyncMock()
@@ -223,7 +256,18 @@ class TestPartyExperience:
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.get_player_attributes = AsyncMock(return_value=None)
         player_repo.set_stats = AsyncMock()
@@ -326,7 +370,18 @@ class TestLevelUp:
         player_repo.get_experience = AsyncMock(return_value=(100, 300))
         player_repo.get_level = AsyncMock(return_value=1)
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.update_level_and_elu = AsyncMock()
 
@@ -753,7 +808,18 @@ class TestRespawn:
         player_repo.get_experience = AsyncMock(return_value=(100, 300))
         player_repo.get_level = AsyncMock(return_value=1)
         player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=100)
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
         )
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
