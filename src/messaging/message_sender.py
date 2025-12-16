@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from src.models.body_part import BodyPart
     from src.models.clan import Clan
     from src.network.client_connection import ClientConnection
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -238,6 +239,44 @@ class MessageSender:
         """
         await self.player_stats.send_update_user_stats(
             max_hp, min_hp, max_mana, min_mana, max_sta, min_sta, gold, level, elu, experience
+        )
+
+    async def send_update_user_stats_from_repo(
+        self,
+        user_id: int,
+        player_repo: "PlayerRepository",  # noqa: UP037
+        *,
+        min_hp: int | None = None,
+        min_mana: int | None = None,
+        min_sta: int | None = None,
+    ) -> None:
+        """Envía UPDATE_USER_STATS obteniendo datos del repositorio.
+
+        Este helper simplifica el patrón común de obtener stats del repositorio
+        y enviarlos al cliente. Permite sobrescribir valores específicos si es necesario.
+
+        Args:
+            user_id: ID del jugador.
+            player_repo: Repositorio de jugadores.
+            min_hp: HP actual a sobrescribir (opcional).
+            min_mana: Mana actual a sobrescribir (opcional).
+            min_sta: Stamina actual a sobrescribir (opcional).
+
+        Example:
+            # Enviar stats completos del repositorio
+            await sender.send_update_user_stats_from_repo(user_id, player_repo)
+
+            # Enviar stats con HP modificado
+            await sender.send_update_user_stats_from_repo(
+                user_id, player_repo, min_hp=new_hp
+            )
+        """
+        await self.player_stats.send_update_user_stats_from_repo(
+            user_id=user_id,
+            player_repo=player_repo,
+            min_hp=min_hp,
+            min_mana=min_mana,
+            min_sta=min_sta,
         )
 
     async def send_character_create(

@@ -62,6 +62,7 @@ def mock_message_sender() -> MagicMock:
     sender = MagicMock()
     sender.send_console_msg = AsyncMock()
     sender.send_update_user_stats = AsyncMock()
+    sender.send_update_user_stats_from_repo = AsyncMock()
     return sender
 
 

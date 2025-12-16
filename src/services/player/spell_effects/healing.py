@@ -60,23 +60,11 @@ class HealEffect(SpellEffect):
         # Actualizar HP
         await ctx.player_repo.update_hp(ctx.target_player_id, new_hp)
 
-        # Obtener stats completos para enviar actualización
-        stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
-
         # Notificar al jugador objetivo
         target_sender = await ctx.get_target_message_sender()
-        if target_sender and stats:
-            await target_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=new_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=stats.level,
-                elu=stats.elu,
-                experience=stats.experience,
+        if target_sender:
+            await target_sender.send_update_user_stats_from_repo(
+                ctx.target_player_id, ctx.player_repo, min_hp=new_hp
             )
             if healing_amount > 0:
                 msg = (
@@ -136,27 +124,15 @@ class ReviveEffect(SpellEffect):
         # Actualizar HP
         await ctx.player_repo.update_hp(ctx.target_player_id, revive_hp)
 
-        # Obtener stats completos para enviar actualización
-        target_stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
-
         # Notificar al caster
         if ctx.message_sender:
             await ctx.message_sender.send_console_msg(f"Has resucitado a {ctx.target_name}.")
 
         # Notificar al jugador revivido
         target_sender = await ctx.get_target_message_sender()
-        if target_sender and target_stats:
-            await target_sender.send_update_user_stats(
-                max_hp=target_stats.max_hp,
-                min_hp=revive_hp,
-                max_mana=target_stats.max_mana,
-                min_mana=target_stats.min_mana,
-                max_sta=target_stats.max_sta,
-                min_sta=target_stats.min_sta,
-                gold=target_stats.gold,
-                level=target_stats.level,
-                elu=target_stats.elu,
-                experience=target_stats.experience,
+        if target_sender:
+            await target_sender.send_update_user_stats_from_repo(
+                ctx.target_player_id, ctx.player_repo, min_hp=revive_hp
             )
             await target_sender.send_console_msg(
                 f"{ctx.spell_name} te ha resucitado. Tienes {revive_hp}/{max_hp} HP."

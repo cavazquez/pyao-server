@@ -170,20 +170,9 @@ class PlayerDeathService:
             await self._teleport_to_spawn(user_id)
 
         # Actualizar stats del cliente
-        stats = await self.player_repo.get_player_stats(user_id)
-        if stats:
-            await message_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=revive_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=stats.level,
-                elu=stats.elu,
-                experience=stats.experience,
-            )
+        await message_sender.send_update_user_stats_from_repo(
+            user_id, self.player_repo, min_hp=revive_hp
+        )
 
         await message_sender.send_console_msg(
             "Has resucitado.",

@@ -121,20 +121,8 @@ class DropCommandHandler(CommandHandler):
         await self.player_repo.update_gold(user_id, new_gold)
 
         # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
-        stats = await self.player_repo.get_player_stats(user_id)
-        if stats:
-            await self.message_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=new_gold,
-                level=stats.level,
-                elu=stats.elu,
-                experience=stats.experience,
-            )
+        # Nota: new_gold ya está actualizado en el repositorio
+        await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
 
         # Crear ground item
         ground_item: dict[str, int | str | None] = {

@@ -156,20 +156,7 @@ class NPCAIService:
         if not message_sender:
             return
 
-        stats = await self.player_repo.get_player_stats(target_user_id)
-        if stats:
-            await message_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=stats.level,
-                elu=stats.elu,
-                experience=stats.experience,
-            )
+        await message_sender.send_update_user_stats_from_repo(target_user_id, self.player_repo)
 
     async def _handle_player_death_fallback(self, npc: NPC, target_user_id: int) -> None:
         """Maneja la muerte del jugador con fallback (revivir automáticamente).
@@ -197,22 +184,11 @@ class NPCAIService:
         await self.player_repo.update_hp(target_user_id, max_hp)
 
         # Enviar UPDATE_USER_STATS con HP restaurado
-        stats = await self.player_repo.get_player_stats(target_user_id)
-        if stats:
-            message_sender = self.map_manager.get_message_sender(target_user_id)
-            if message_sender:
-                await message_sender.send_update_user_stats(
-                    max_hp=stats.max_hp,
-                    min_hp=max_hp,
-                    max_mana=stats.max_mana,
-                    min_mana=stats.min_mana,
-                    max_sta=stats.max_sta,
-                    min_sta=stats.min_sta,
-                    gold=stats.gold,
-                    level=stats.level,
-                    elu=stats.elu,
-                    experience=stats.experience,
-                )
+        message_sender = self.map_manager.get_message_sender(target_user_id)
+        if message_sender:
+            await message_sender.send_update_user_stats_from_repo(
+                target_user_id, self.player_repo, min_hp=max_hp
+            )
 
     async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:
         """Intenta que el NPC ataque a un jugador.

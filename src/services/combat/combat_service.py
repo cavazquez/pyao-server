@@ -250,21 +250,9 @@ class CombatService:
             remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
             await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
 
-            # Obtener stats actuales y enviar actualización
-            stats = await self.player_repo.get_player_stats(user_id)
-            if stats:
-                await message_sender.send_update_user_stats(
-                    max_hp=stats.max_hp,
-                    min_hp=stats.min_hp,
-                    max_mana=stats.max_mana,
-                    min_mana=stats.min_mana,
-                    max_sta=stats.max_sta,
-                    min_sta=stats.min_sta,
-                    gold=stats.gold,
-                    level=stats.level,
-                    elu=stats.elu,
-                    experience=stats.experience,
-                )
+            # Enviar actualización de stats
+            if message_sender:
+                await message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
             return
 
         # El jugador subió de nivel

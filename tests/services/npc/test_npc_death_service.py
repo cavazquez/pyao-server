@@ -52,6 +52,7 @@ class TestNPCDeathService:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -136,6 +137,7 @@ class TestNPCDeathService:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -231,6 +233,7 @@ class TestNPCDeathService:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -320,6 +323,7 @@ class TestNPCDeathService:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -419,6 +423,7 @@ class TestNPCDeathService:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,

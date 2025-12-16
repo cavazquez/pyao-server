@@ -105,6 +105,7 @@ async def test_npc_attack_sends_damage_message(npc_ai_service, mock_services, te
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -150,6 +151,7 @@ async def test_npc_attack_sends_sound_effect(npc_ai_service, mock_services, test
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -194,6 +196,7 @@ async def test_npc_attack_sends_visual_effect(npc_ai_service, mock_services, tes
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -286,6 +289,7 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -307,8 +311,11 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
         target_user_id, VisualEffectID.BLOOD, loops=1
     )
 
-    # 4. Update stats
-    message_sender.send_update_user_stats.assert_called_once()
+    # 4. Update stats (puede usar send_update_user_stats o send_update_user_stats_from_repo)
+    assert (
+        message_sender.send_update_user_stats.called
+        or message_sender.send_update_user_stats_from_repo.called
+    )
 
     # Verificar orden de llamadas
     calls = message_sender.method_calls

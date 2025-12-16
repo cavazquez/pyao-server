@@ -59,24 +59,12 @@ class DamageEffect(SpellEffect):
         # Actualizar HP
         await ctx.player_repo.update_hp(ctx.target_player_id, new_hp)
 
-        # Obtener stats completos para enviar actualización
-        stats = await ctx.player_repo.get_player_stats(ctx.target_player_id)
-
         # Notificar al jugador objetivo (si no es auto-cast)
         if not ctx.is_self_cast:
             target_sender = await ctx.get_target_message_sender()
-            if target_sender and stats:
-                await target_sender.send_update_user_stats(
-                    max_hp=stats.max_hp,
-                    min_hp=new_hp,
-                    max_mana=stats.max_mana,
-                    min_mana=stats.min_mana,
-                    max_sta=stats.max_sta,
-                    min_sta=stats.min_sta,
-                    gold=stats.gold,
-                    level=stats.level,
-                    elu=stats.elu,
-                    experience=stats.experience,
+            if target_sender:
+                await target_sender.send_update_user_stats_from_repo(
+                    ctx.target_player_id, ctx.player_repo, min_hp=new_hp
                 )
                 await target_sender.send_console_msg(
                     f"{ctx.spell_name} te ha causado {ctx.total_amount} de daño."
@@ -136,20 +124,10 @@ class DrainEffect(SpellEffect):
         # Actualizar HP del caster
         await ctx.player_repo.update_hp(ctx.user_id, new_caster_hp)
 
-        # Obtener stats completos para enviar actualización
-        caster_stats = await ctx.player_repo.get_player_stats(ctx.user_id)
-        if caster_stats and ctx.message_sender:
-            await ctx.message_sender.send_update_user_stats(
-                max_hp=caster_stats.max_hp,
-                min_hp=new_caster_hp,
-                max_mana=caster_stats.max_mana,
-                min_mana=caster_stats.min_mana,
-                max_sta=caster_stats.max_sta,
-                min_sta=caster_stats.min_sta,
-                gold=caster_stats.gold,
-                level=caster_stats.level,
-                elu=caster_stats.elu,
-                experience=caster_stats.experience,
+        # Enviar actualización de stats del caster
+        if ctx.message_sender:
+            await ctx.message_sender.send_update_user_stats_from_repo(
+                ctx.user_id, ctx.player_repo, min_hp=new_caster_hp
             )
 
         hp_gained = new_caster_hp - current_caster_hp

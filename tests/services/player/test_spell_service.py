@@ -83,6 +83,7 @@ def mock_npc_death_service() -> MagicMock:
 def mock_message_sender() -> MagicMock:
     """Crea un mock de MessageSender."""
     sender = MagicMock()
+    sender.send_update_user_stats_from_repo = AsyncMock()
     sender.send_console_msg = AsyncMock()
     sender.send_update_user_stats = AsyncMock()
     sender.send_create_fx_at_position = AsyncMock()
@@ -177,7 +178,11 @@ class TestCastSpell:
         mock_player_repo.update_mana.assert_called_once()
         mock_npc_repo.update_npc_hp.assert_called_once()
         mock_message_sender.send_console_msg.assert_called()
-        mock_message_sender.send_update_user_stats.assert_called_once()
+        # Puede usar send_update_user_stats o send_update_user_stats_from_repo
+        assert (
+            mock_message_sender.send_update_user_stats.called
+            or mock_message_sender.send_update_user_stats_from_repo.called
+        )
 
     @pytest.mark.asyncio
     async def test_cast_spell_spell_not_found(

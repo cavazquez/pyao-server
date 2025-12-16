@@ -50,6 +50,7 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         npc_repo = MagicMock()
@@ -94,6 +95,7 @@ class TestPartyExperience:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -126,6 +128,7 @@ class TestPartyExperience:
                 send_console_msg=AsyncMock(),
                 send_update_exp=AsyncMock(),
                 send_update_user_stats=AsyncMock(),
+                send_update_user_stats_from_repo=AsyncMock(),
             )
             if uid in {1, 2}
             else None
@@ -199,6 +202,7 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         player_repo = MagicMock()
@@ -248,6 +252,7 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         player_repo = MagicMock()
@@ -295,6 +300,7 @@ class TestPartyExperience:
         member_sender = MagicMock()
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         player_repo = MagicMock()
@@ -387,6 +393,7 @@ class TestLevelUp:
 
         message_sender = MagicMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=MagicMock(),
@@ -421,6 +428,7 @@ class TestLevelUp:
 
         message_sender = MagicMock()
         message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         # Execute - No debe crashear
         await service._give_solo_experience(1, 50, message_sender)
@@ -837,6 +845,7 @@ class TestRespawn:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,

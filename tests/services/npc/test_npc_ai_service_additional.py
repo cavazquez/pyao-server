@@ -361,6 +361,7 @@ class TestTryAttackPlayer:
         message_sender.send_play_wave = AsyncMock()
         message_sender.send_create_fx = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         mock_map_manager.get_message_sender = MagicMock(return_value=message_sender)
 
         result = await ai_service.try_attack_player(sample_npc, 1)
@@ -422,6 +423,7 @@ class TestTryAttackPlayer:
         message_sender.send_create_fx = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         mock_map_manager.get_message_sender = MagicMock(return_value=message_sender)
 
         result = await ai_service.try_attack_player(sample_npc, 1)
@@ -598,6 +600,7 @@ class TestProcessHostileNPC:
         message_sender.send_play_wave = AsyncMock()
         message_sender.send_create_fx = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         mock_map_manager.get_message_sender = MagicMock(return_value=message_sender)
 
         sample_npc.last_attack_time = 0  # Sin cooldown
