@@ -3,6 +3,7 @@
 import logging
 import random
 import time
+from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
@@ -583,19 +584,24 @@ class UseItemCommandHandler(CommandHandler):
         max_mod = item_data.get("MaxModificador", 30)
         restore_amount = int(max_mod) if isinstance(max_mod, (int, str)) else 30
 
+        current_hp = await self.player_repo.get_current_hp(user_id)
+        max_hp = await self.player_repo.get_max_hp(user_id)
+        new_hp = min(current_hp + restore_amount, max_hp)
+
+        await self.player_repo.update_hp(user_id, new_hp)
+
+        # Obtener stats actualizados para enviar al cliente
         stats = await self.player_repo.get_stats(user_id)
         if stats:
-            new_hp = min(stats["min_hp"] + restore_amount, stats["max_hp"])
-            stats["min_hp"] = new_hp
-            await self.player_repo.set_stats(user_id=user_id, **stats)
             await self.message_sender.send_update_user_stats(**stats)
-            logger.debug(
-                "HP restaurado: user_id=%d +%d HP (actual: %d/%d)",
-                user_id,
-                restore_amount,
-                new_hp,
-                stats["max_hp"],
-            )
+
+        logger.debug(
+            "HP restaurado: user_id=%d +%d HP (actual: %d/%d)",
+            user_id,
+            restore_amount,
+            new_hp,
+            max_hp,
+        )
 
     async def _handle_mana_potion(self, user_id: int, item_data: dict[str, object]) -> None:
         """Maneja poción de Mana (Tipo 4)."""
@@ -609,30 +615,51 @@ class UseItemCommandHandler(CommandHandler):
         max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 20
         restore_amount = random.randint(min_mod, max_mod)
 
+        min_mana, max_mana = await self.player_repo.get_mana(user_id)
+        new_mana = min(min_mana + restore_amount, max_mana)
+
+        await self.player_repo.update_mana(user_id, new_mana)
+
+        # Obtener stats actualizados para enviar al cliente
         stats = await self.player_repo.get_stats(user_id)
         if stats:
-            new_mana = min(stats["min_mana"] + restore_amount, stats["max_mana"])
-            stats["min_mana"] = new_mana
-            await self.player_repo.set_stats(user_id=user_id, **stats)
             await self.message_sender.send_update_user_stats(**stats)
-            logger.debug(
-                "Mana restaurado: user_id=%d +%d Mana (actual: %d/%d)",
-                user_id,
-                restore_amount,
-                new_mana,
-                stats["max_mana"],
-            )
 
-    async def _handle_agility_potion(self, user_id: int, item_data: dict[str, object]) -> None:
-        """Maneja poción de Agilidad (Tipo 1)."""
+        logger.debug(
+            "Mana restaurado: user_id=%d +%d Mana (actual: %d/%d)",
+            user_id,
+            restore_amount,
+            new_mana,
+            max_mana,
+        )
+
+    async def _handle_attribute_potion(
+        self,
+        user_id: int,
+        item_data: dict[str, object],
+        attribute_name: str,
+        default_min_mod: int,
+        default_max_mod: int,
+        set_modifier_func: Callable[[int, float, int], Awaitable[None]],
+    ) -> None:
+        """Maneja pociones de atributos (Agilidad, Fuerza, etc.).
+
+        Args:
+            user_id: ID del usuario.
+            item_data: Datos del item.
+            attribute_name: Nombre del atributo (para logging).
+            default_min_mod: Valor mínimo por defecto del modificador.
+            default_max_mod: Valor máximo por defecto del modificador.
+            set_modifier_func: Función para establecer el modificador en el repositorio.
+        """
         if not self.player_repo:
             return
 
         # Calcular modificador aleatorio
-        min_mod_val = item_data.get("MinModificador", 3)
-        max_mod_val = item_data.get("MaxModificador", 5)
-        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else 3
-        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 5
+        min_mod_val = item_data.get("MinModificador", default_min_mod)
+        max_mod_val = item_data.get("MaxModificador", default_max_mod)
+        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else default_min_mod
+        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else default_max_mod
         modifier_value = random.randint(min_mod, max_mod)
 
         # Duración en segundos (DuracionEfecto está en milisegundos)
@@ -641,7 +668,8 @@ class UseItemCommandHandler(CommandHandler):
         duration_seconds = duration_ms / 1000.0
         expires_at = time.time() + duration_seconds
 
-        await self.player_repo.set_agility_modifier(user_id, expires_at, modifier_value)
+        # Aplicar modificador
+        await set_modifier_func(user_id, expires_at, modifier_value)
 
         # Obtener atributos actualizados y enviar UPDATE
         attributes = await self.player_repo.get_player_attributes(user_id)
@@ -652,47 +680,34 @@ class UseItemCommandHandler(CommandHandler):
             )
 
         logger.info(
-            "Agilidad modificada: user_id=%d +%d hasta %.2f (%.1fs)",
+            "%s modificada: user_id=%d +%d hasta %.2f (%.1fs)",
+            attribute_name,
             user_id,
             modifier_value,
             expires_at,
             duration_seconds,
         )
 
+    async def _handle_agility_potion(self, user_id: int, item_data: dict[str, object]) -> None:
+        """Maneja poción de Agilidad (Tipo 1)."""
+        await self._handle_attribute_potion(
+            user_id=user_id,
+            item_data=item_data,
+            attribute_name="Agilidad",
+            default_min_mod=3,
+            default_max_mod=5,
+            set_modifier_func=self.player_repo.set_agility_modifier,
+        )
+
     async def _handle_strength_potion(self, user_id: int, item_data: dict[str, object]) -> None:
         """Maneja poción de Fuerza (Tipo 2)."""
-        if not self.player_repo:
-            return
-
-        # Calcular modificador aleatorio
-        min_mod_val = item_data.get("MinModificador", 2)
-        max_mod_val = item_data.get("MaxModificador", 6)
-        min_mod = int(min_mod_val) if isinstance(min_mod_val, (int, str)) else 2
-        max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else 6
-        modifier_value = random.randint(min_mod, max_mod)
-
-        # Duración en segundos (DuracionEfecto está en milisegundos)
-        duration_ms_val = item_data.get("DuracionEfecto", 1000)
-        duration_ms = int(duration_ms_val) if isinstance(duration_ms_val, (int, str)) else 1000
-        duration_seconds = duration_ms / 1000.0
-        expires_at = time.time() + duration_seconds
-
-        await self.player_repo.set_strength_modifier(user_id, expires_at, modifier_value)
-
-        # Obtener atributos actualizados y enviar UPDATE
-        attributes = await self.player_repo.get_player_attributes(user_id)
-        if attributes:
-            await self.message_sender.send_update_strength_and_dexterity(
-                strength=attributes.strength,
-                dexterity=attributes.agility,
-            )
-
-        logger.info(
-            "Fuerza modificada: user_id=%d +%d hasta %.2f (%.1fs)",
-            user_id,
-            modifier_value,
-            expires_at,
-            duration_seconds,
+        await self._handle_attribute_potion(
+            user_id=user_id,
+            item_data=item_data,
+            attribute_name="Fuerza",
+            default_min_mod=2,
+            default_max_mod=6,
+            set_modifier_func=self.player_repo.set_strength_modifier,
         )
 
     async def _handle_cure_poison_potion(self, user_id: int) -> None:
