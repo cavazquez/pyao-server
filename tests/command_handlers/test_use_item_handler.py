@@ -9,6 +9,7 @@ from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
 from src.models.item_constants import BOAT_ITEM_ID
 from src.models.item_types import ObjType, TipoPocion
+from src.models.player_stats import PlayerAttributes
 
 
 @pytest.fixture
@@ -453,7 +454,11 @@ async def test_handle_agility_potion(
         )
 
         mock_player_repo.set_agility_modifier = AsyncMock()
-        mock_player_repo.get_attributes = AsyncMock(return_value={"strength": 10, "agility": 15})
+        mock_player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=10, agility=15, intelligence=10, charisma=10, constitution=10
+            )
+        )
         mock_message_sender.send_update_strength_and_dexterity = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 
@@ -498,7 +503,11 @@ async def test_handle_strength_potion(
         )
 
         mock_player_repo.set_strength_modifier = AsyncMock()
-        mock_player_repo.get_attributes = AsyncMock(return_value={"strength": 10, "agility": 15})
+        mock_player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=10, agility=15, intelligence=10, charisma=10, constitution=10
+            )
+        )
         mock_message_sender.send_update_strength_and_dexterity = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 

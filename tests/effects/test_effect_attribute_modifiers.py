@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.effects.effect_attribute_modifiers import AttributeModifiersEffect
+from src.models.player_stats import PlayerAttributes
 
 
 @pytest.fixture
@@ -16,7 +17,12 @@ def mock_player_repo() -> MagicMock:
     repo.get_agility_modifier = AsyncMock(return_value=(0.0, 0))
     repo.set_strength_modifier = AsyncMock()
     repo.set_agility_modifier = AsyncMock()
-    repo.get_attributes = AsyncMock(return_value={"strength": 15, "agility": 14})
+
+    repo.get_player_attributes = AsyncMock(
+        return_value=PlayerAttributes(
+            strength=15, agility=14, intelligence=10, charisma=10, constitution=10
+        )
+    )
     return repo
 
 

@@ -103,13 +103,9 @@ class PartyService:
             return False, f"Debes ser nivel {MIN_LEVEL_TO_CREATE} o superior para crear una party"
 
         # Get attributes for charisma check
-        attributes = await self.player_repo.get_attributes(user_id)
-        if not attributes:
-            return False, "Error al obtener atributos del jugador"
-
         # Check leadership skill (carisma * liderazgo >= 100)
         # This is from VB6: Carisma * Liderazgo >= 100
-        charisma = attributes.get("charisma", 18)
+        charisma = await self.player_repo.get_charisma(user_id)
 
         # Get leadership skill
         skills = await self.player_repo.get_skills(user_id)

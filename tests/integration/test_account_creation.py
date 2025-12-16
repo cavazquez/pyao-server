@@ -43,6 +43,8 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         ]
     )
     player_repo.get_attributes = AsyncMock(return_value=None)
+    player_repo.get_strength = AsyncMock(return_value=10)
+    player_repo.get_agility = AsyncMock(return_value=10)
     # Mock de redis para InventoryRepository
     redis_client_mock = MagicMock()
     redis_client_mock.redis = AsyncMock()

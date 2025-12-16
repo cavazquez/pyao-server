@@ -341,8 +341,8 @@ class LoginCommandHandler(CommandHandler):
         logger.info("[LOGIN-PACKETS] user_id=%d Atributos obtenidos: %s", user_id, attributes)
 
         if attributes:
-            str_val = attributes.get("strength", 0)
-            agi_val = attributes.get("agility", 0)
+            str_val = await self.player_repo.get_strength(user_id)
+            agi_val = await self.player_repo.get_agility(user_id)
             logger.info(
                 "[LOGIN-PACKETS] user_id=%d UPDATE_STRENGTH_AND_DEXTERITY str=%d agi=%d",
                 user_id,

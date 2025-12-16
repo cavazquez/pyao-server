@@ -644,11 +644,11 @@ class UseItemCommandHandler(CommandHandler):
         await self.player_repo.set_agility_modifier(user_id, expires_at, modifier_value)
 
         # Obtener atributos actualizados y enviar UPDATE
-        attributes = await self.player_repo.get_attributes(user_id)
+        attributes = await self.player_repo.get_player_attributes(user_id)
         if attributes:
             await self.message_sender.send_update_strength_and_dexterity(
-                strength=attributes.get("strength", 0),
-                dexterity=attributes.get("agility", 0),
+                strength=attributes.strength,
+                dexterity=attributes.agility,
             )
 
         logger.info(
@@ -680,11 +680,11 @@ class UseItemCommandHandler(CommandHandler):
         await self.player_repo.set_strength_modifier(user_id, expires_at, modifier_value)
 
         # Obtener atributos actualizados y enviar UPDATE
-        attributes = await self.player_repo.get_attributes(user_id)
+        attributes = await self.player_repo.get_player_attributes(user_id)
         if attributes:
             await self.message_sender.send_update_strength_and_dexterity(
-                strength=attributes.get("strength", 0),
-                dexterity=attributes.get("agility", 0),
+                strength=attributes.strength,
+                dexterity=attributes.agility,
             )
 
         logger.info(

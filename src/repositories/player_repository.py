@@ -380,6 +380,66 @@ class PlayerRepository:
             constitution=int(result.get("constitution", 10)),
         )
 
+    async def get_strength(self, user_id: int) -> int:
+        """Obtiene la fuerza del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Fuerza del jugador, 10 por defecto si no existe.
+        """
+        attributes = await self.get_player_attributes(user_id)
+        return attributes.strength if attributes else 10
+
+    async def get_agility(self, user_id: int) -> int:
+        """Obtiene la agilidad del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Agilidad del jugador, 10 por defecto si no existe.
+        """
+        attributes = await self.get_player_attributes(user_id)
+        return attributes.agility if attributes else 10
+
+    async def get_intelligence(self, user_id: int) -> int:
+        """Obtiene la inteligencia del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Inteligencia del jugador, 10 por defecto si no existe.
+        """
+        attributes = await self.get_player_attributes(user_id)
+        return attributes.intelligence if attributes else 10
+
+    async def get_charisma(self, user_id: int) -> int:
+        """Obtiene el carisma del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Carisma del jugador, 10 por defecto si no existe.
+        """
+        attributes = await self.get_player_attributes(user_id)
+        return attributes.charisma if attributes else 10
+
+    async def get_constitution(self, user_id: int) -> int:
+        """Obtiene la constitución del jugador.
+
+        Args:
+            user_id: ID del usuario.
+
+        Returns:
+            Constitución del jugador, 10 por defecto si no existe.
+        """
+        attributes = await self.get_player_attributes(user_id)
+        return attributes.constitution if attributes else 10
+
     async def set_attributes(
         self,
         user_id: int,
