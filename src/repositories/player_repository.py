@@ -917,6 +917,17 @@ class PlayerRepository:
             return (100, 100)
         return (stats.min_sta, stats.max_sta)
 
+    async def update_mana(self, user_id: int, mana: int) -> None:
+        """Actualiza el mana actual del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            mana: Nuevo mana actual.
+        """
+        key = RedisKeys.player_user_stats(user_id)
+        await self.redis.redis.hset(key, "min_mana", str(mana))  # type: ignore[misc]
+        logger.debug("Mana actualizado para user_id %d: %d", user_id, mana)
+
     async def update_stamina(self, user_id: int, stamina: int) -> None:
         """Actualiza la stamina actual del jugador.
 

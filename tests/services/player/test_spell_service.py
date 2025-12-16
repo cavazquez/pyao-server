@@ -27,13 +27,26 @@ def mock_player_repo() -> MagicMock:
     """Crea un mock de PlayerRepository."""
     repo = MagicMock()
     repo.get_player_stats = AsyncMock(
-        return_value=PlayerStats(min_hp=100, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0)
+        return_value=PlayerStats(
+            min_hp=100,
+            max_hp=100,
+            min_mana=100,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
+        )
     )
     repo.get_mana = AsyncMock(return_value=(100, 100))
     repo.get_current_hp = AsyncMock(return_value=100)
     repo.get_max_hp = AsyncMock(return_value=100)
     repo.get_player_attributes = AsyncMock(
-        return_value=PlayerAttributes(strength=10, agility=10, intelligence=10, charisma=10, constitution=10)
+        return_value=PlayerAttributes(
+            strength=10, agility=10, intelligence=10, charisma=10, constitution=10
+        )
     )
     repo.update_mana = AsyncMock()
     repo.update_hp = AsyncMock()
@@ -630,7 +643,16 @@ class TestCastSpell:
             strength=10, agility=10, intelligence=20, charisma=10, constitution=10
         )
         mock_player_repo.get_player_stats.return_value = PlayerStats(
-            min_hp=50, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+            min_hp=50,
+            max_hp=100,
+            min_mana=50,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
         )
         mock_player_repo.update_hp = AsyncMock()
         mock_player_repo.get_position.return_value = {"map": 1, "x": 50, "y": 50, "heading": 3}
@@ -689,10 +711,28 @@ class TestCastSpell:
         async def get_player_stats_side_effect(user_id: int) -> PlayerStats | None:
             if user_id == 1:
                 return PlayerStats(
-                    min_hp=100, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+                    min_hp=100,
+                    max_hp=100,
+                    min_mana=50,
+                    max_mana=100,
+                    min_sta=100,
+                    max_sta=100,
+                    gold=0,
+                    level=1,
+                    elu=300,
+                    experience=0,
                 )
             return PlayerStats(
-                min_hp=80, max_hp=100, min_mana=100, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+                min_hp=80,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
             )
 
         async def get_mana_side_effect(user_id: int) -> tuple[int, int]:
@@ -700,16 +740,22 @@ class TestCastSpell:
                 return (50, 100)
             return (100, 100)
 
-        async def get_player_attributes_side_effect(user_id: int) -> PlayerAttributes | None:
-            return PlayerAttributes(strength=10, agility=10, intelligence=20, charisma=10, constitution=10)
+        async def get_player_attributes_side_effect(_user_id: int) -> PlayerAttributes | None:
+            return PlayerAttributes(
+                strength=10, agility=10, intelligence=20, charisma=10, constitution=10
+            )
 
         mock_player_repo.get_player_stats = AsyncMock(side_effect=get_player_stats_side_effect)
         mock_player_repo.get_mana = AsyncMock(side_effect=get_mana_side_effect)
-        mock_player_repo.get_player_attributes = AsyncMock(side_effect=get_player_attributes_side_effect)
+        mock_player_repo.get_player_attributes = AsyncMock(
+            side_effect=get_player_attributes_side_effect
+        )
         mock_player_repo.get_current_hp = AsyncMock(side_effect=lambda uid: 80 if uid == 2 else 100)
         mock_player_repo.get_max_hp = AsyncMock(return_value=100)
         mock_player_repo.update_hp = AsyncMock()
-        mock_player_repo.is_alive = AsyncMock(side_effect=lambda uid: uid == 2)  # Solo el target está vivo
+        mock_player_repo.is_alive = AsyncMock(
+            side_effect=lambda uid: uid == 2
+        )  # Solo el target está vivo
 
         # Execute
         result = await spell_service.cast_spell(
@@ -745,7 +791,9 @@ class TestCastSpell:
         mock_player_repo.get_player_attributes.return_value = PlayerAttributes(
             strength=10, agility=10, intelligence=20, charisma=10, constitution=10
         )
-        mock_player_repo.is_alive = AsyncMock(side_effect=lambda uid: uid != 2)  # Target está muerto
+        mock_player_repo.is_alive = AsyncMock(
+            side_effect=lambda uid: uid != 2
+        )  # Target está muerto
         mock_player_repo.get_current_hp = AsyncMock(side_effect=lambda uid: 0 if uid == 2 else 50)
         mock_player_repo.get_max_hp.return_value = 100
         mock_player_repo.update_hp = AsyncMock()
@@ -816,7 +864,16 @@ class TestCastSpell:
         mock_player_repo.get_max_hp.return_value = 100
         mock_player_repo.get_player_stats = AsyncMock(
             return_value=PlayerStats(
-                min_hp=50, max_hp=100, min_mana=50, max_mana=100, min_sta=100, max_sta=100, gold=0, level=1, elu=300, experience=0
+                min_hp=50,
+                max_hp=100,
+                min_mana=50,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
             )
         )
 
