@@ -30,7 +30,7 @@ class RequestStatsCommandHandler(CommandHandler):
         self.player_repo = player_repo
         self.message_sender = message_sender
 
-    async def handle(self, command: Command) -> CommandResult:
+    async def handle(self, command: Command) -> CommandResult:  # noqa: PLR0914
         """Ejecuta el comando de solicitud de estadísticas (solo lógica de negocio).
 
         Args:
@@ -49,16 +49,17 @@ class RequestStatsCommandHandler(CommandHandler):
         )
 
         try:
-            # Obtener estadísticas del jugador
-            stats = await self.player_repo.get_stats(user_id)
-            if not stats:
-                await self.message_sender.send_console_msg(
-                    "Error: No se pudieron obtener las estadisticas"
-                )
-                return CommandResult.error("No se pudieron obtener las estadísticas")
+            # Obtener estadísticas usando métodos helper
+            level = await self.player_repo.get_level(user_id)
+            current_hp = await self.player_repo.get_current_hp(user_id)
+            max_hp = await self.player_repo.get_max_hp(user_id)
+            min_mana, max_mana = await self.player_repo.get_mana(user_id)
+            min_sta, max_sta = await self.player_repo.get_stamina(user_id)
+            experience, elu = await self.player_repo.get_experience(user_id)
+            gold = await self.player_repo.get_gold(user_id)
 
             # Obtener atributos del jugador
-            attributes = await self.player_repo.get_attributes(user_id)
+            attributes = await self.player_repo.get_player_attributes(user_id)
             if not attributes:
                 await self.message_sender.send_console_msg(
                     "Error: No se pudieron obtener los atributos"
@@ -76,31 +77,41 @@ class RequestStatsCommandHandler(CommandHandler):
             # Formatear mensaje de estadísticas
             stats_message = (
                 f"--- Estadisticas ---\n"
-                f"Nivel: {stats['level']}\n"
-                f"Experiencia: {stats['experience']}/{stats['elu']}\n"
-                f"Vida: {stats['min_hp']}/{stats['max_hp']}\n"
-                f"Mana: {stats['min_mana']}/{stats['max_mana']}\n"
-                f"Energia: {stats['min_sta']}/{stats['max_sta']}\n"
-                f"Oro: {stats['gold']}\n"
+                f"Nivel: {level}\n"
+                f"Experiencia: {experience}/{elu}\n"
+                f"Vida: {current_hp}/{max_hp}\n"
+                f"Mana: {min_mana}/{max_mana}\n"
+                f"Energia: {min_sta}/{max_sta}\n"
+                f"Oro: {gold}\n"
                 f"Hambre: {hunger_thirst['min_hunger']}/{hunger_thirst['max_hunger']}\n"
                 f"Sed: {hunger_thirst['min_water']}/{hunger_thirst['max_water']}\n"
                 f"--- Atributos ---\n"
-                f"Fuerza: {attributes['strength']}\n"
-                f"Agilidad: {attributes['agility']}\n"
-                f"Inteligencia: {attributes['intelligence']}\n"
-                f"Carisma: {attributes['charisma']}\n"
-                f"Constitucion: {attributes['constitution']}"
+                f"Fuerza: {attributes.strength}\n"
+                f"Agilidad: {attributes.agility}\n"
+                f"Inteligencia: {attributes.intelligence}\n"
+                f"Carisma: {attributes.charisma}\n"
+                f"Constitucion: {attributes.constitution}"
             )
 
             # Enviar estadísticas línea por línea
             await self.message_sender.send_multiline_console_msg(stats_message)
             logger.info("Estadísticas enviadas para user_id %d", user_id)
 
+            # Obtener stats como dict para el resultado (compatibilidad)
+            stats = await self.player_repo.get_stats(user_id)
+            if not stats:
+                await self.message_sender.send_console_msg(
+                    "Error: No se pudieron obtener las estadísticas"
+                )
+                return CommandResult.error("No se pudieron obtener las estadísticas")
+
+            attributes_dict = attributes.to_dict() if attributes else None
+
             return CommandResult.ok(
                 data={
                     "user_id": user_id,
                     "stats": stats,
-                    "attributes": attributes,
+                    "attributes": attributes_dict,
                     "hunger_thirst": hunger_thirst,
                 }
             )
