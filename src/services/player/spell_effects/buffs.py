@@ -273,13 +273,13 @@ class StrengthBuffEffect(SpellEffect):
         )
 
         # Enviar actualización de atributos
-        attributes = await ctx.player_repo.get_attributes(ctx.target_player_id)
+        attributes = await ctx.player_repo.get_player_attributes(ctx.target_player_id)
         if attributes:
             target_sender = await ctx.get_target_message_sender()
             if target_sender:
                 await target_sender.send_update_strength_and_dexterity(
-                    strength=attributes.get("strength", 0),
-                    dexterity=attributes.get("agility", 0),
+                    strength=attributes.strength,
+                    dexterity=attributes.agility,
                 )
 
         return SpellEffectResult(success=True, data={"modifier": modifier_value})
@@ -337,13 +337,13 @@ class AgilityBuffEffect(SpellEffect):
         )
 
         # Enviar actualización de atributos
-        attributes = await ctx.player_repo.get_attributes(ctx.target_player_id)
+        attributes = await ctx.player_repo.get_player_attributes(ctx.target_player_id)
         if attributes:
             target_sender = await ctx.get_target_message_sender()
             if target_sender:
                 await target_sender.send_update_strength_and_dexterity(
-                    strength=attributes.get("strength", 0),
-                    dexterity=attributes.get("agility", 0),
+                    strength=attributes.strength,
+                    dexterity=attributes.agility,
                 )
 
         return SpellEffectResult(success=True, data={"modifier": modifier_value})

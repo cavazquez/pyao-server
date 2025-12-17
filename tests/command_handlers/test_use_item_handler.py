@@ -9,6 +9,7 @@ from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
 from src.models.item_constants import BOAT_ITEM_ID
 from src.models.item_types import ObjType, TipoPocion
+from src.models.player_stats import PlayerAttributes
 
 
 @pytest.fixture
@@ -118,7 +119,9 @@ async def test_handle_work_tool_equipped(
     """Test usar herramienta de trabajo equipada."""
     with (
         patch("src.command_handlers.use_item_handler.InventoryRepository") as mock_inv_repo_class,
-        patch("src.command_handlers.use_item_handler.EquipmentRepository") as mock_eq_repo_class,
+        patch(
+            "src.command_handlers.use_item_special_handler.EquipmentRepository"
+        ) as mock_eq_repo_class,
     ):
         mock_inv_repo = MagicMock()
         mock_inv_repo.get_slot = AsyncMock(return_value=(561, 1))  # Hacha de Leñador
@@ -156,7 +159,9 @@ async def test_handle_work_tool_not_equipped(
     """Test usar herramienta de trabajo sin equipar."""
     with (
         patch("src.command_handlers.use_item_handler.InventoryRepository") as mock_inv_repo_class,
-        patch("src.command_handlers.use_item_handler.EquipmentRepository") as mock_eq_repo_class,
+        patch(
+            "src.command_handlers.use_item_special_handler.EquipmentRepository"
+        ) as mock_eq_repo_class,
     ):
         mock_inv_repo = MagicMock()
         mock_inv_repo.get_slot = AsyncMock(return_value=(561, 1))
@@ -359,10 +364,12 @@ async def test_handle_hp_potion(
             }
         )
 
+        mock_player_repo.get_current_hp = AsyncMock(return_value=50)
+        mock_player_repo.get_max_hp = AsyncMock(return_value=100)
+        mock_player_repo.update_hp = AsyncMock()
         mock_player_repo.get_stats = AsyncMock(
-            return_value={"min_hp": 50, "max_hp": 100, "min_mana": 80, "max_mana": 100}
+            return_value={"min_hp": 80, "max_hp": 100, "min_mana": 80, "max_mana": 100}
         )
-        mock_player_repo.set_stats = AsyncMock()
         mock_message_sender.send_update_user_stats = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 
@@ -379,7 +386,7 @@ async def test_handle_hp_potion(
 
         assert result.success is True
         assert result.data["handled"] is True
-        mock_player_repo.set_stats.assert_called_once()
+        mock_player_repo.update_hp.assert_called_once_with(1, 80)  # 50 + 30 = 80
 
 
 @pytest.mark.asyncio
@@ -405,10 +412,11 @@ async def test_handle_mana_potion(
             }
         )
 
+        mock_player_repo.get_mana = AsyncMock(return_value=(80, 100))
+        mock_player_repo.update_mana = AsyncMock()
         mock_player_repo.get_stats = AsyncMock(
-            return_value={"min_hp": 50, "max_hp": 100, "min_mana": 80, "max_mana": 100}
+            return_value={"min_hp": 50, "max_hp": 100, "min_mana": 100, "max_mana": 100}
         )
-        mock_player_repo.set_stats = AsyncMock()
         mock_message_sender.send_update_user_stats = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 
@@ -424,7 +432,7 @@ async def test_handle_mana_potion(
         result = await handler.handle(command)
 
         assert result.success is True
-        mock_player_repo.set_stats.assert_called_once()
+        mock_player_repo.update_mana.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -453,7 +461,11 @@ async def test_handle_agility_potion(
         )
 
         mock_player_repo.set_agility_modifier = AsyncMock()
-        mock_player_repo.get_attributes = AsyncMock(return_value={"strength": 10, "agility": 15})
+        mock_player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=10, agility=15, intelligence=10, charisma=10, constitution=10
+            )
+        )
         mock_message_sender.send_update_strength_and_dexterity = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 
@@ -498,7 +510,11 @@ async def test_handle_strength_potion(
         )
 
         mock_player_repo.set_strength_modifier = AsyncMock()
-        mock_player_repo.get_attributes = AsyncMock(return_value={"strength": 10, "agility": 15})
+        mock_player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=10, agility=15, intelligence=10, charisma=10, constitution=10
+            )
+        )
         mock_message_sender.send_update_strength_and_dexterity = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 

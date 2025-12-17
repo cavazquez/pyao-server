@@ -95,19 +95,17 @@ class CombatService:
             logger.warning("Intento de atacar NPC no atacable: %s", npc.name)
             return None
 
-        # Obtener stats del jugador
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            logger.error("No se encontraron stats para user_id %d", user_id)
+        # Obtener atributos del jugador (strength y agility están en attributes)
+        attributes = await self.player_repo.get_player_attributes(user_id)
+        if not attributes:
+            logger.error("No se encontraron atributos para user_id %d", user_id)
             return None
+
+        strength = attributes.strength
+        agility = attributes.agility
 
         # Obtener daño del arma
         weapon_damage = await self._get_weapon_damage(user_id)
-
-        # Obtener atributos del jugador
-        attributes = await self.player_repo.get_attributes(user_id)
-        strength = stats.get("strength", 10)
-        agility = attributes.get("agility", 10) if attributes else 10
 
         # Calcular agilidad del NPC (basada en nivel)
         npc_agility = npc.level * 2
@@ -210,12 +208,9 @@ class CombatService:
             message_sender: MessageSender para enviar update al cliente.
         """
         # Obtener experiencia actual
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return
-
-        current_exp = stats.get("experience", 0)
-        current_level = stats.get("level", 1)
+        experience_data = await self.player_repo.get_experience(user_id)
+        current_exp = experience_data[0]
+        current_level = await self.player_repo.get_level(user_id)
         new_exp = current_exp + experience
 
         # Actualizar experiencia
@@ -255,10 +250,9 @@ class CombatService:
             remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
             await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
 
-            # Obtener stats actuales y enviar actualización
-            stats = await self.player_repo.get_stats(user_id)
-            if stats:
-                await message_sender.send_update_user_stats(**stats)
+            # Enviar actualización de stats
+            if message_sender:
+                await message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
             return
 
         # El jugador subió de nivel
@@ -275,17 +269,17 @@ class CombatService:
         # Actualizar nivel y ELU
         await self.player_repo.update_level_and_elu(user_id, new_level, remaining_elu)
 
-        # Obtener stats actuales para actualizar
-        stats = await self.player_repo.get_stats(user_id)
+        # Obtener stats y atributos actuales para actualizar
+        stats = await self.player_repo.get_player_stats(user_id)
         if not stats:
             return
 
         # Calcular nuevos valores de HP, Mana y Stamina basados en nivel
         # Obtener atributos para calcular stats
-        attributes = await self.player_repo.get_attributes(user_id)
+        attributes = await self.player_repo.get_player_attributes(user_id)
         if attributes:
-            constitution = attributes.get("constitution", 10)
-            intelligence = attributes.get("intelligence", 10)
+            constitution = attributes.constitution
+            intelligence = attributes.intelligence
 
             # Calcular nuevos máximos basados en atributos y nivel
             hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
@@ -299,13 +293,13 @@ class CombatService:
             new_max_sta = 100 + (new_level * 10)
 
             # Mantener el porcentaje actual de HP/Mana/Stamina
-            old_max_hp = stats.get("max_hp", 100)
-            old_max_mana = stats.get("max_mana", 100)
-            old_max_sta = stats.get("max_sta", 100)
+            old_max_hp = stats.max_hp
+            old_max_mana = stats.max_mana
+            old_max_sta = stats.max_sta
 
-            old_min_hp = stats.get("min_hp", 100)
-            old_min_mana = stats.get("min_mana", 50)
-            old_min_sta = stats.get("min_sta", 100)
+            old_min_hp = stats.min_hp
+            old_min_mana = stats.min_mana
+            old_min_sta = stats.min_sta
 
             # Calcular nuevos valores actuales manteniendo el porcentaje
             hp_percentage = old_min_hp / old_max_hp if old_max_hp > 0 else 1.0
@@ -325,7 +319,7 @@ class CombatService:
                 min_mana=new_min_mana,
                 max_sta=new_max_sta,
                 min_sta=new_min_sta,
-                gold=stats.get("gold", 0),
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -339,7 +333,7 @@ class CombatService:
                 min_mana=new_min_mana,
                 max_sta=new_max_sta,
                 min_sta=new_min_sta,
-                gold=stats.get("gold", 0),
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -348,13 +342,13 @@ class CombatService:
             # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
             await self.player_repo.set_stats(
                 user_id=user_id,
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 50),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=stats.get("gold", 0),
+                max_hp=stats.max_hp,
+                min_hp=stats.min_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -362,13 +356,13 @@ class CombatService:
 
             # Enviar actualización
             await message_sender.send_update_user_stats(
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 50),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=stats.get("gold", 0),
+                max_hp=stats.max_hp,
+                min_hp=stats.min_hp,
+                max_mana=stats.max_mana,
+                min_mana=stats.min_mana,
+                max_sta=stats.max_sta,
+                min_sta=stats.min_sta,
+                gold=stats.gold,
                 level=new_level,
                 elu=remaining_elu,
                 experience=new_experience,
@@ -410,7 +404,7 @@ class CombatService:
             - player_died: Si el jugador murió
         """
         # Obtener stats del jugador
-        player_stats = await self.player_repo.get_stats(target_user_id)
+        player_stats = await self.player_repo.get_player_stats(target_user_id)
         if not player_stats:
             logger.warning("No se encontraron stats del jugador %d", target_user_id)
             return None
@@ -427,7 +421,7 @@ class CombatService:
         )
 
         # Aplicar daño al jugador
-        current_hp = player_stats.get("min_hp", 100)
+        current_hp = await self.player_repo.get_current_hp(target_user_id)
         new_hp = max(0, current_hp - damage)
 
         await self.player_repo.update_hp(target_user_id, new_hp)

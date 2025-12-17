@@ -19,6 +19,7 @@ from src.network.msg_skills import build_update_skills_response
 
 if TYPE_CHECKING:
     from src.network.client_connection import ClientConnection
+    from src.repositories.player_repository import PlayerRepository
 
 logger = logging.getLogger(__name__)
 
@@ -200,6 +201,57 @@ class PlayerStatsMessageSender:
             experience,
         )
         await self.connection.send(response)
+
+    async def send_update_user_stats_from_repo(
+        self,
+        user_id: int,
+        player_repo: "PlayerRepository",  # noqa: UP037
+        *,
+        min_hp: int | None = None,
+        min_mana: int | None = None,
+        min_sta: int | None = None,
+    ) -> None:
+        """Envía UPDATE_USER_STATS obteniendo datos del repositorio.
+
+        Este helper simplifica el patrón común de obtener stats del repositorio
+        y enviarlos al cliente. Permite sobrescribir valores específicos si es necesario.
+
+        Args:
+            user_id: ID del jugador.
+            player_repo: Repositorio de jugadores.
+            min_hp: HP actual a sobrescribir (opcional).
+            min_mana: Mana actual a sobrescribir (opcional).
+            min_sta: Stamina actual a sobrescribir (opcional).
+
+        Example:
+            # Enviar stats completos del repositorio
+            await sender.send_update_user_stats_from_repo(user_id, player_repo)
+
+            # Enviar stats con HP modificado
+            await sender.send_update_user_stats_from_repo(
+                user_id, player_repo, min_hp=new_hp
+            )
+        """
+        stats = await player_repo.get_player_stats(user_id)
+        if not stats:
+            logger.warning(
+                "No se encontraron stats para user_id %d al enviar UPDATE_USER_STATS",
+                user_id,
+            )
+            return
+
+        await self.send_update_user_stats(
+            max_hp=stats.max_hp,
+            min_hp=min_hp if min_hp is not None else stats.min_hp,
+            max_mana=stats.max_mana,
+            min_mana=min_mana if min_mana is not None else stats.min_mana,
+            max_sta=stats.max_sta,
+            min_sta=min_sta if min_sta is not None else stats.min_sta,
+            gold=stats.gold,
+            level=stats.level,
+            elu=stats.elu,
+            experience=stats.experience,
+        )
 
     async def send_update_skills(
         self,

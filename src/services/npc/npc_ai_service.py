@@ -75,8 +75,7 @@ class NPCAIService:
 
         for user_id in user_ids:
             # Verificar que el jugador esté vivo
-            stats = await self.player_repo.get_stats(user_id)
-            if not stats or stats.get("min_hp", 0) <= 0:
+            if not await self.player_repo.is_alive(user_id):
                 continue  # Jugador muerto, ignorar
 
             # Obtener posición del jugador
@@ -117,6 +116,80 @@ class NPCAIService:
         # Movimiento vertical
         return 3 if dy > 0 else 1  # Sur o Norte
 
+    async def _send_attack_effects(self, npc: NPC, target_user_id: int, damage: int) -> None:
+        """Envía efectos visuales y sonoros del ataque.
+
+        Args:
+            npc: NPC que ataca.
+            target_user_id: ID del jugador objetivo.
+            damage: Daño causado.
+        """
+        message_sender = self.map_manager.get_message_sender(target_user_id)
+        if not message_sender:
+            return
+
+        await message_sender.send_npc_hit_user(damage)
+
+        # Enviar sonido de ataque del NPC (Snd1) si está disponible
+        if npc.snd1 > 0:
+            # Broadcast sonido a todos los jugadores cercanos
+            if self.broadcast_service:
+                await self.broadcast_service.broadcast_play_wave(
+                    map_id=npc.map_id, wave_id=npc.snd1, x=npc.x, y=npc.y
+                )
+        else:
+            # Fallback: sonido genérico
+            await message_sender.send_play_wave(SoundID.SWORD_HIT, npc.x, npc.y)
+
+        # Enviar efecto visual de sangre sobre el jugador
+        # El efecto se muestra en el char_index del jugador
+        player_char_index = target_user_id  # user_id es el char_index del jugador
+        await message_sender.send_create_fx(player_char_index, VisualEffectID.BLOOD, loops=1)
+
+    async def _send_user_stats_update(self, target_user_id: int) -> None:
+        """Envía actualización de stats del jugador.
+
+        Args:
+            target_user_id: ID del jugador.
+        """
+        message_sender = self.map_manager.get_message_sender(target_user_id)
+        if not message_sender:
+            return
+
+        await message_sender.send_update_user_stats_from_repo(target_user_id, self.player_repo)
+
+    async def _handle_player_death_fallback(self, npc: NPC, target_user_id: int) -> None:
+        """Maneja la muerte del jugador con fallback (revivir automáticamente).
+
+        Args:
+            npc: NPC que mató al jugador.
+            target_user_id: ID del jugador muerto.
+        """
+        message_sender = self.map_manager.get_message_sender(target_user_id)
+        if not message_sender:
+            return
+
+        # Fallback: revivir automáticamente (para testing sin el servicio)
+        await message_sender.send_console_msg(
+            f"¡Has sido asesinado por {npc.name}! (Reviviendo...)"
+        )
+        logger.info(
+            "Jugador %d fue asesinado por NPC %s - Reviviendo",
+            target_user_id,
+            npc.name,
+        )
+
+        # Revivir con HP completo
+        max_hp = await self.player_repo.get_max_hp(target_user_id)
+        await self.player_repo.update_hp(target_user_id, max_hp)
+
+        # Enviar UPDATE_USER_STATS con HP restaurado
+        message_sender = self.map_manager.get_message_sender(target_user_id)
+        if message_sender:
+            await message_sender.send_update_user_stats_from_repo(
+                target_user_id, self.player_repo, min_hp=max_hp
+            )
+
     async def try_attack_player(self, npc: NPC, target_user_id: int) -> bool:
         """Intenta que el NPC ataque a un jugador.
 
@@ -138,8 +211,7 @@ class NPCAIService:
             return False
 
         # Verificar que el jugador esté vivo
-        stats = await self.player_repo.get_stats(target_user_id)
-        if not stats or stats.get("min_hp", 0) <= 0:
+        if not await self.player_repo.is_alive(target_user_id):
             return False  # Jugador muerto, no atacar
 
         # Obtener posición del jugador
@@ -166,102 +238,42 @@ class NPCAIService:
         # Realizar ataque NPC -> Jugador
         result = await self.combat_service.npc_attack_player(npc, target_user_id)
 
+        # Verificar si hubo daño
+        if not result or result.get("damage", 0) <= 0:
+            return False
+
         # Actualizar timestamp del último ataque
-        if result and result.get("damage", 0) > 0:
-            npc.last_attack_time = current_time
+        npc.last_attack_time = current_time
+        damage = result.get("damage", 0)
 
-        if result and result.get("damage", 0) > 0:
-            damage = result.get("damage", 0)
+        # Enviar efectos de ataque
+        await self._send_attack_effects(npc, target_user_id, damage)
 
-            # Enviar mensaje de daño NPCHitUser al jugador
+        # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar
+        await self._send_user_stats_update(target_user_id)
+
+        # Si el jugador murió, procesar muerte completa
+        if result.get("player_died", False):
             message_sender = self.map_manager.get_message_sender(target_user_id)
             if message_sender:
-                await message_sender.send_npc_hit_user(damage)
-
-                # Enviar sonido de ataque del NPC (Snd1) si está disponible
-                if npc.snd1 > 0:
-                    # Broadcast sonido a todos los jugadores cercanos
-                    if self.broadcast_service:
-                        await self.broadcast_service.broadcast_play_wave(
-                            map_id=npc.map_id, wave_id=npc.snd1, x=npc.x, y=npc.y
-                        )
-                else:
-                    # Fallback: sonido genérico
-                    await message_sender.send_play_wave(SoundID.SWORD_HIT, npc.x, npc.y)
-
-                # Enviar efecto visual de sangre sobre el jugador
-                # El efecto se muestra en el char_index del jugador
-                player_char_index = target_user_id  # user_id es el char_index del jugador
-                await message_sender.send_create_fx(
-                    player_char_index, VisualEffectID.BLOOD, loops=1
-                )
-
-            # Enviar UPDATE_USER_STATS al jugador para que vea su HP bajar
-            message_sender = self.map_manager.get_message_sender(target_user_id)
-            if message_sender:
-                stats = await self.player_repo.get_stats(target_user_id)
-                if stats:
-                    await message_sender.send_update_user_stats(
-                        max_hp=stats.get("max_hp", 100),
-                        min_hp=stats.get("min_hp", 100),
-                        max_mana=stats.get("max_mana", 100),
-                        min_mana=stats.get("min_mana", 100),
-                        max_sta=stats.get("max_sta", 100),
-                        min_sta=stats.get("min_sta", 100),
-                        gold=stats.get("gold", 0),
-                        level=stats.get("level", 1),
-                        elu=stats.get("elu", 300),
-                        experience=stats.get("experience", 0),
+                if self.player_death_service:
+                    # Usar servicio de muerte para procesar completamente
+                    await self.player_death_service.handle_player_death(
+                        user_id=target_user_id,
+                        killer_name=npc.name,
+                        message_sender=message_sender,
+                        death_reason="combate con NPC",
                     )
+                else:
+                    await self._handle_player_death_fallback(npc, target_user_id)
 
-                    # Si el jugador murió, procesar muerte completa
-                    if result.get("player_died", False):
-                        if self.player_death_service:
-                            # Usar servicio de muerte para procesar completamente
-                            await self.player_death_service.handle_player_death(
-                                user_id=target_user_id,
-                                killer_name=npc.name,
-                                message_sender=message_sender,
-                                death_reason="combate con NPC",
-                            )
-                        else:
-                            # Fallback: revivir automáticamente (para testing sin el servicio)
-                            await message_sender.send_console_msg(
-                                f"¡Has sido asesinado por {npc.name}! (Reviviendo...)"
-                            )
-                            logger.info(
-                                "Jugador %d fue asesinado por NPC %s - Reviviendo",
-                                target_user_id,
-                                npc.name,
-                            )
-
-                            # Revivir con HP completo
-                            max_hp = stats.get("max_hp", 100)
-                            await self.player_repo.update_hp(target_user_id, max_hp)
-
-                            # Enviar UPDATE_USER_STATS con HP restaurado
-                            await message_sender.send_update_user_stats(
-                                max_hp=max_hp,
-                                min_hp=max_hp,
-                                max_mana=stats.get("max_mana", 100),
-                                min_mana=stats.get("min_mana", 100),
-                                max_sta=stats.get("max_sta", 100),
-                                min_sta=stats.get("min_sta", 100),
-                                gold=stats.get("gold", 0),
-                                level=stats.get("level", 1),
-                                elu=stats.get("elu", 300),
-                                experience=stats.get("experience", 0),
-                            )
-
-            logger.info(
-                "NPC %s atacó a jugador %d por %d de daño",
-                npc.name,
-                target_user_id,
-                result["damage"],
-            )
-            return True
-
-        return False
+        logger.info(
+            "NPC %s atacó a jugador %d por %d de daño",
+            npc.name,
+            target_user_id,
+            damage,
+        )
+        return True
 
     async def try_move_towards(self, npc: NPC, target_x: int, target_y: int) -> bool:
         """Intenta mover el NPC hacia una posición objetivo.

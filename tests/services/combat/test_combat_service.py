@@ -10,6 +10,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.models.npc import NPC
+from src.models.player_stats import PlayerAttributes, PlayerStats
 from src.services.combat.combat_service import CombatService
 
 
@@ -52,8 +53,11 @@ class TestCombatService:
         inventory_repo = MagicMock()
 
         # Setup mocks
-        player_repo.get_stats = AsyncMock(return_value={"strength": 20})
-        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
+        player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=20, agility=10, intelligence=10, charisma=10, constitution=10
+            )
+        )
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(return_value={})
         inventory_repo.get_slot = AsyncMock(return_value=None)
@@ -97,8 +101,13 @@ class TestCombatService:
         inventory_repo = MagicMock()
 
         # Setup mocks
-        player_repo.get_stats = AsyncMock(return_value={"strength": 100, "exp": 0})
-        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
+        player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=100, agility=10, intelligence=10, charisma=10, constitution=10
+            )
+        )
+        player_repo.get_experience = AsyncMock(return_value=(0, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
         player_repo.update_experience = AsyncMock()
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(return_value={})
@@ -169,7 +178,7 @@ class TestCombatService:
         player_repo = MagicMock()
         npc_repo = MagicMock()
 
-        player_repo.get_stats = AsyncMock(return_value=None)
+        player_repo.get_player_attributes = AsyncMock(return_value=None)
 
         service = CombatService(player_repo, npc_repo)
 
@@ -203,8 +212,11 @@ class TestCombatService:
         equipment_repo = MagicMock()
         inventory_repo = MagicMock()
 
-        player_repo.get_stats = AsyncMock(return_value={"strength": 20})
-        player_repo.get_attributes = AsyncMock(return_value={"agility": 10})
+        player_repo.get_player_attributes = AsyncMock(
+            return_value=PlayerAttributes(
+                strength=20, agility=10, intelligence=10, charisma=10, constitution=10
+            )
+        )
         npc_repo.update_npc_hp = AsyncMock()
         equipment_repo.get_all_equipment = AsyncMock(
             return_value={1: 5}  # Arma en slot 5
@@ -244,7 +256,21 @@ class TestCombatService:
         player_repo = MagicMock()
         npc_repo = MagicMock()
 
-        player_repo.get_stats = AsyncMock(return_value={"min_hp": 100, "strength": 20})
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
+            )
+        )
+        player_repo.get_current_hp = AsyncMock(return_value=100)
         player_repo.update_hp = AsyncMock()
 
         service = CombatService(player_repo, npc_repo)
@@ -282,9 +308,21 @@ class TestCombatService:
         player_repo = MagicMock()
         npc_repo = MagicMock()
 
-        player_repo.get_stats = AsyncMock(
-            return_value={"min_hp": 5, "strength": 20}  # Poco HP
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=5,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=0,
+            )
         )
+        player_repo.get_current_hp = AsyncMock(return_value=5)  # Poco HP
         player_repo.update_hp = AsyncMock()
 
         service = CombatService(player_repo, npc_repo)
@@ -319,7 +357,8 @@ class TestCombatService:
         player_repo = MagicMock()
         npc_repo = MagicMock()
 
-        player_repo.get_stats = AsyncMock(return_value=None)
+        player_repo.get_player_stats = AsyncMock(return_value=None)
+        player_repo.get_current_hp = AsyncMock(return_value=0)
 
         service = CombatService(player_repo, npc_repo)
 

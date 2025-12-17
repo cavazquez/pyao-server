@@ -124,11 +124,7 @@ class PickupCommandHandler(CommandHandler):
             Resultado de la ejecución.
         """
         # Obtener oro actual
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return CommandResult.error("No se pudieron obtener los stats del jugador")
-
-        current_gold = stats.get("gold", 0)
+        current_gold = await self.player_repo.get_gold(user_id)
         new_gold = current_gold + gold
 
         # Actualizar oro
@@ -136,20 +132,8 @@ class PickupCommandHandler(CommandHandler):
 
         # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
         # TODO: Optimizar para enviar solo el oro en lugar de todos los stats
-        stats = await self.player_repo.get_stats(user_id)
-        if stats:
-            await self.message_sender.send_update_user_stats(
-                max_hp=stats.get("max_hp", 100),
-                min_hp=stats.get("min_hp", 100),
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 100),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=new_gold,
-                level=stats.get("level", 1),
-                elu=stats.get("elu", 300),
-                experience=stats.get("experience", 0),
-            )
+        # Nota: new_gold ya está actualizado en el repositorio, así que se obtendrá automáticamente
+        await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
 
         # Remover del suelo
         self.map_manager.remove_ground_item(map_id, x, y, item_index=0)

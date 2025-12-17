@@ -6,6 +6,7 @@ import pytest
 
 from src.models.npc import NPC
 from src.models.party import Party
+from src.models.player_stats import PlayerStats
 from src.services.npc.npc_death_service import NPCDeathService
 
 
@@ -49,13 +50,29 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         npc_repo = MagicMock()
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100, "level": 1})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
         player_repo.update_max_hp = AsyncMock()
@@ -78,6 +95,7 @@ class TestPartyExperience:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -110,15 +128,33 @@ class TestPartyExperience:
                 send_console_msg=AsyncMock(),
                 send_update_exp=AsyncMock(),
                 send_update_user_stats=AsyncMock(),
+                send_update_user_stats_from_repo=AsyncMock(),
             )
             if uid in {1, 2}
             else None
         )
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100, "level": 1})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
+        player_repo.get_player_attributes = AsyncMock(return_value=None)
+        player_repo.set_stats = AsyncMock()
 
         party_service = MagicMock()
         party_service.distribute_experience = AsyncMock(return_value={1: 30.0, 2: 20.0})
@@ -166,12 +202,30 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100, "level": 1})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
+        player_repo.get_player_attributes = AsyncMock(return_value=None)
+        player_repo.set_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -198,12 +252,30 @@ class TestPartyExperience:
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100, "level": 1})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
+        player_repo.get_player_attributes = AsyncMock(return_value=None)
+        player_repo.set_stats = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -224,11 +296,22 @@ class TestPartyExperience:
     async def test_update_member_experience_no_stats(self, sample_npc: NPC) -> None:
         """Test actualización sin stats del miembro."""
         # Setup
+        map_manager = MagicMock()
+        member_sender = MagicMock()
+        member_sender.send_console_msg = AsyncMock()
+        member_sender.send_update_exp = AsyncMock()
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
+        map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
+
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value=None)  # Sin stats
+        player_repo.get_experience = AsyncMock(return_value=(0, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
+        player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.get_player_stats = AsyncMock(return_value=None)  # Sin stats
 
         service = NPCDeathService(
-            map_manager=MagicMock(),
+            map_manager=map_manager,
             npc_repo=MagicMock(),
             player_repo=player_repo,
             broadcast_service=MagicMock(),
@@ -290,11 +373,27 @@ class TestLevelUp:
         """Test cuando no hay level up."""
         # Setup
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100, "level": 1})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
         player_repo.update_level_and_elu = AsyncMock()
 
         message_sender = MagicMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=MagicMock(),
@@ -314,7 +413,11 @@ class TestLevelUp:
         """Test dar experiencia sin stats."""
         # Setup
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value=None)  # Sin stats
+        player_repo.get_experience = AsyncMock(return_value=(0, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
+        player_repo.update_experience = AsyncMock()
+        player_repo.update_level_and_elu = AsyncMock()
+        player_repo.get_player_stats = AsyncMock(return_value=None)  # Sin stats
 
         service = NPCDeathService(
             map_manager=MagicMock(),
@@ -324,6 +427,8 @@ class TestLevelUp:
         )
 
         message_sender = MagicMock()
+        message_sender.send_update_exp = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         # Execute - No debe crashear
         await service._give_solo_experience(1, 50, message_sender)
@@ -708,7 +813,22 @@ class TestRespawn:
         npc_repo.remove_npc = AsyncMock()
 
         player_repo = MagicMock()
-        player_repo.get_stats = AsyncMock(return_value={"experience": 100})
+        player_repo.get_experience = AsyncMock(return_value=(100, 300))
+        player_repo.get_level = AsyncMock(return_value=1)
+        player_repo.get_player_stats = AsyncMock(
+            return_value=PlayerStats(
+                min_hp=100,
+                max_hp=100,
+                min_mana=100,
+                max_mana=100,
+                min_sta=100,
+                max_sta=100,
+                gold=0,
+                level=1,
+                elu=300,
+                experience=100,
+            )
+        )
         player_repo.update_experience = AsyncMock()
         player_repo.update_level_and_elu = AsyncMock()
         player_repo.update_max_hp = AsyncMock()
@@ -725,6 +845,7 @@ class TestRespawn:
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
 
         service = NPCDeathService(
             map_manager=map_manager,

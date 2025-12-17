@@ -7,13 +7,28 @@ import pytest
 from src.command_handlers.drop_handler import DropCommandHandler
 from src.commands.drop_command import DropCommand
 from src.commands.walk_command import WalkCommand
+from src.models.player_stats import PlayerStats
 
 
 @pytest.fixture
 def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
-    repo.get_stats = AsyncMock(return_value={"gold": 1000})
+    repo.get_gold = AsyncMock(return_value=1000)
+    repo.get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            max_hp=100,
+            min_hp=100,
+            max_mana=100,
+            min_mana=100,
+            max_sta=100,
+            min_sta=100,
+            gold=1000,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
     repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
     repo.update_gold = AsyncMock()
     return repo
@@ -47,6 +62,7 @@ def mock_message_sender() -> MagicMock:
     sender = MagicMock()
     sender.send_console_msg = AsyncMock()
     sender.send_update_user_stats = AsyncMock()
+    sender.send_update_user_stats_from_repo = AsyncMock()
     return sender
 
 
@@ -136,7 +152,7 @@ async def test_handle_drop_no_gold(
     mock_message_sender: MagicMock,
 ) -> None:
     """Test drop sin oro."""
-    mock_player_repo.get_stats = AsyncMock(return_value={"gold": 0})
+    mock_player_repo.get_gold = AsyncMock(return_value=0)
 
     handler = DropCommandHandler(
         player_repo=mock_player_repo,

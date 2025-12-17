@@ -87,9 +87,7 @@ class PlayerDeathService:
 
         # Obtener datos del jugador
         position = await self.player_repo.get_position(user_id)
-        stats = await self.player_repo.get_stats(user_id)
-
-        if not position or not stats:
+        if not position:
             logger.error(
                 "No se pudieron obtener datos del jugador %d para procesar muerte", user_id
             )
@@ -100,10 +98,10 @@ class PlayerDeathService:
         y = position["y"]
 
         # 1. Aplicar penalización de experiencia
-        await self._apply_exp_penalty(user_id, stats, message_sender)
+        await self._apply_exp_penalty(user_id, message_sender)
 
         # 2. Dropear oro en el suelo
-        await self._drop_gold(user_id, map_id, x, y, stats)
+        await self._drop_gold(user_id, map_id, x, y)
 
         # 3. Dropear algunos items del inventario (aleatorio)
         await self._drop_random_items(user_id, map_id, x, y)
@@ -144,18 +142,13 @@ class PlayerDeathService:
         Returns:
             True si se revivió exitosamente.
         """
-        stats = await self.player_repo.get_stats(user_id)
-
-        if not stats:
-            return False
-
         # Verificar si está muerto (HP = 0)
-        if stats.get("min_hp", 0) > 0:
+        if await self.player_repo.is_alive(user_id):
             await message_sender.send_console_msg("No estás muerto.")
             return False
 
         # Restaurar HP (50% del máximo al revivir)
-        max_hp = stats.get("max_hp", 100)
+        max_hp = await self.player_repo.get_max_hp(user_id)
         revive_hp = max_hp // 2
 
         await self.player_repo.update_hp(user_id, revive_hp)
@@ -177,20 +170,9 @@ class PlayerDeathService:
             await self._teleport_to_spawn(user_id)
 
         # Actualizar stats del cliente
-        stats = await self.player_repo.get_stats(user_id)
-        if stats:
-            await message_sender.send_update_user_stats(
-                max_hp=stats.get("max_hp", 100),
-                min_hp=revive_hp,
-                max_mana=stats.get("max_mana", 100),
-                min_mana=stats.get("min_mana", 100),
-                max_sta=stats.get("max_sta", 100),
-                min_sta=stats.get("min_sta", 100),
-                gold=stats.get("gold", 0),
-                level=stats.get("level", 1),
-                elu=stats.get("elu", 300),
-                experience=stats.get("experience", 0),
-            )
+        await message_sender.send_update_user_stats_from_repo(
+            user_id, self.player_repo, min_hp=revive_hp
+        )
 
         await message_sender.send_console_msg(
             "Has resucitado.",
@@ -203,17 +185,16 @@ class PlayerDeathService:
     async def _apply_exp_penalty(
         self,
         user_id: int,
-        stats: dict[str, int],
         message_sender: MessageSender,
     ) -> None:
         """Aplica penalización de experiencia por morir.
 
         Args:
             user_id: ID del jugador.
-            stats: Stats actuales del jugador.
             message_sender: MessageSender del jugador.
         """
-        current_exp = stats.get("experience", 0)
+        experience_data = await self.player_repo.get_experience(user_id)
+        current_exp = experience_data[0]
 
         # No penalizar si tiene muy poca experiencia
         if current_exp < MIN_EXP_FOR_PENALTY:
@@ -241,7 +222,6 @@ class PlayerDeathService:
         map_id: int,
         x: int,
         y: int,
-        stats: dict[str, int],
     ) -> None:
         """Dropea oro del jugador muerto en el suelo.
 
@@ -250,9 +230,8 @@ class PlayerDeathService:
             map_id: ID del mapa.
             x: Coordenada X.
             y: Coordenada Y.
-            stats: Stats del jugador.
         """
-        current_gold = stats.get("gold", 0)
+        current_gold = await self.player_repo.get_gold(user_id)
 
         if current_gold <= 0:
             return

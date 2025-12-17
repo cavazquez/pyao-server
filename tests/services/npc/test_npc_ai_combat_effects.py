@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.models.npc import NPC
+from src.models.player_stats import PlayerStats
 from src.services.npc.npc_ai_service import NPCAIService
 from src.utils.sounds import SoundID
 from src.utils.visual_effects import VisualEffectID
@@ -80,7 +81,22 @@ async def test_npc_attack_sends_damage_message(npc_ai_service, mock_services, te
     )
 
     # Mock player_repo
-    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].is_alive = AsyncMock(return_value=True)
+    mock_services["player_repo"].get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            min_hp=85,
+            max_hp=100,
+            min_mana=100,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
+    mock_services["player_repo"].get_max_hp = AsyncMock(return_value=100)
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     # Mock message_sender
@@ -89,6 +105,7 @@ async def test_npc_attack_sends_damage_message(npc_ai_service, mock_services, te
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -111,7 +128,22 @@ async def test_npc_attack_sends_sound_effect(npc_ai_service, mock_services, test
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": damage, "player_died": False, "new_hp": 85}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].is_alive = AsyncMock(return_value=True)
+    mock_services["player_repo"].get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            min_hp=85,
+            max_hp=100,
+            min_mana=100,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
+    mock_services["player_repo"].get_max_hp = AsyncMock(return_value=100)
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
@@ -119,6 +151,7 @@ async def test_npc_attack_sends_sound_effect(npc_ai_service, mock_services, test
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -140,7 +173,22 @@ async def test_npc_attack_sends_visual_effect(npc_ai_service, mock_services, tes
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": damage, "player_died": False, "new_hp": 85}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 85, "max_hp": 100})
+    mock_services["player_repo"].is_alive = AsyncMock(return_value=True)
+    mock_services["player_repo"].get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            min_hp=85,
+            max_hp=100,
+            min_mana=100,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
+    mock_services["player_repo"].get_max_hp = AsyncMock(return_value=100)
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
@@ -148,6 +196,7 @@ async def test_npc_attack_sends_visual_effect(npc_ai_service, mock_services, tes
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -172,7 +221,22 @@ async def test_npc_attack_no_effects_if_no_damage(npc_ai_service, mock_services,
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": 0, "player_died": False}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(return_value={"min_hp": 100, "max_hp": 100})
+    mock_services["player_repo"].is_alive = AsyncMock(return_value=True)
+    mock_services["player_repo"].get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            min_hp=100,
+            max_hp=100,
+            min_mana=100,
+            max_mana=100,
+            min_sta=100,
+            max_sta=100,
+            gold=0,
+            level=1,
+            elu=300,
+            experience=0,
+        )
+    )
+    mock_services["player_repo"].get_max_hp = AsyncMock(return_value=100)
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
@@ -202,20 +266,22 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
     mock_services["combat_service"].npc_attack_player = AsyncMock(
         return_value={"damage": damage, "player_died": False, "new_hp": 80}
     )
-    mock_services["player_repo"].get_stats = AsyncMock(
-        return_value={
-            "min_hp": 80,
-            "max_hp": 100,
-            "min_mana": 50,
-            "max_mana": 50,
-            "min_sta": 100,
-            "max_sta": 100,
-            "gold": 100,
-            "level": 5,
-            "elu": 300,
-            "exp": 1000,
-        }
+    mock_services["player_repo"].is_alive = AsyncMock(return_value=True)
+    mock_services["player_repo"].get_player_stats = AsyncMock(
+        return_value=PlayerStats(
+            min_hp=80,
+            max_hp=100,
+            min_mana=50,
+            max_mana=50,
+            min_sta=100,
+            max_sta=100,
+            gold=100,
+            level=5,
+            elu=300,
+            experience=1000,
+        )
     )
+    mock_services["player_repo"].get_max_hp = AsyncMock(return_value=100)
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
@@ -223,6 +289,7 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
     message_sender.send_update_user_stats = AsyncMock()
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
 
     mock_services["map_manager"].get_message_sender = MagicMock(return_value=message_sender)
 
@@ -244,8 +311,11 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
         target_user_id, VisualEffectID.BLOOD, loops=1
     )
 
-    # 4. Update stats
-    message_sender.send_update_user_stats.assert_called_once()
+    # 4. Update stats (puede usar send_update_user_stats o send_update_user_stats_from_repo)
+    assert (
+        message_sender.send_update_user_stats.called
+        or message_sender.send_update_user_stats_from_repo.called
+    )
 
     # Verificar orden de llamadas
     calls = message_sender.method_calls

@@ -632,7 +632,7 @@ class TestTaskAttackFindFreePosition:
             message_sender=MagicMock(),
         )
 
-        pos = attack_handler._find_free_position_for_drop(1, 50, 50, radius=2)
+        pos = attack_handler.loot_handler._find_free_position_for_drop(1, 50, 50, radius=2)
 
         assert pos == (50, 50)
         map_manager.get_ground_items.assert_called_once_with(1, 50, 50)
@@ -668,7 +668,7 @@ class TestTaskAttackFindFreePosition:
             message_sender=MagicMock(),
         )
 
-        pos = attack_handler._find_free_position_for_drop(1, 50, 50, radius=2)
+        pos = attack_handler.loot_handler._find_free_position_for_drop(1, 50, 50, radius=2)
 
         # Debe encontrar una posición libre
         assert pos is not None
@@ -691,7 +691,7 @@ class TestTaskAttackFindFreePosition:
             message_sender=MagicMock(),
         )
 
-        pos = attack_handler._find_free_position_for_drop(1, 50, 50, radius=2)
+        pos = attack_handler.loot_handler._find_free_position_for_drop(1, 50, 50, radius=2)
 
         assert pos is None
 
@@ -717,7 +717,7 @@ class TestTaskAttackFindFreePosition:
             message_sender=MagicMock(),
         )
 
-        pos = attack_handler._find_free_position_for_drop(1, 50, 50, radius=2)
+        pos = attack_handler.loot_handler._find_free_position_for_drop(1, 50, 50, radius=2)
 
         # Después de 20 intentos, debe retornar None
         assert pos is None
@@ -743,7 +743,7 @@ class TestTaskAttackFindFreePosition:
         )
 
         # Posición en el borde (x=1, y=1) - algunos offsets estarán fuera
-        pos = attack_handler._find_free_position_for_drop(1, 1, 1, radius=2)
+        pos = attack_handler.loot_handler._find_free_position_for_drop(1, 1, 1, radius=2)
 
         # Puede retornar None si todos los intentos están fuera de límites
         # o una posición válida si encuentra una dentro de límites

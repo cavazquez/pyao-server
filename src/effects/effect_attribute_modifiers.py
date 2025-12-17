@@ -58,11 +58,11 @@ class AttributeModifiersEffect(TickEffect):
 
         # Si se limpió algún modificador, actualizar atributos en el cliente
         if needs_update and message_sender:
-            attributes = await player_repo.get_attributes(user_id)
+            attributes = await player_repo.get_player_attributes(user_id)
             if attributes:
                 await message_sender.send_update_strength_and_dexterity(
-                    strength=attributes.get("strength", 0),
-                    dexterity=attributes.get("agility", 0),
+                    strength=attributes.strength,
+                    dexterity=attributes.agility,
                 )
                 logger.debug(
                     "Atributos actualizados para user_id %d después de limpiar modificadores",

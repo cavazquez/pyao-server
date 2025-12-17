@@ -43,6 +43,8 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         ]
     )
     player_repo.get_attributes = AsyncMock(return_value=None)
+    player_repo.get_strength = AsyncMock(return_value=10)
+    player_repo.get_agility = AsyncMock(return_value=10)
     # Mock de redis para InventoryRepository
     redis_client_mock = MagicMock()
     redis_client_mock.redis = AsyncMock()
@@ -91,7 +93,6 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         player_repo=player_repo,
         account_repo=account_repo,
         map_manager=None,
-        npc_service=None,
         server_repo=None,
         spellbook_repo=None,
         spell_catalog=None,
@@ -200,7 +201,6 @@ async def test_task_create_account_duplicate_username() -> None:
         player_repo=player_repo,
         account_repo=account_repo,
         map_manager=None,
-        npc_service=None,
         server_repo=None,
         spellbook_repo=None,
         spell_catalog=None,
@@ -325,7 +325,6 @@ async def test_task_create_account_invalid_email() -> None:
         player_repo=player_repo,
         account_repo=account_repo,
         map_manager=None,
-        npc_service=None,
         server_repo=None,
         spellbook_repo=None,
         spell_catalog=None,
@@ -462,7 +461,6 @@ async def test_task_create_account_unicode_username() -> None:
         player_repo=player_repo,
         account_repo=account_repo,
         map_manager=None,
-        npc_service=None,
         server_repo=None,
         spellbook_repo=None,
         spell_catalog=None,

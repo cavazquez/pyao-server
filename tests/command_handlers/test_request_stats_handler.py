@@ -7,12 +7,20 @@ import pytest
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
 from src.commands.request_stats_command import RequestStatsCommand
 from src.commands.walk_command import WalkCommand
+from src.models.player_stats import PlayerAttributes
 
 
 @pytest.fixture
 def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
+    repo.get_level = AsyncMock(return_value=5)
+    repo.get_current_hp = AsyncMock(return_value=80)
+    repo.get_max_hp = AsyncMock(return_value=100)
+    repo.get_mana = AsyncMock(return_value=(50, 75))
+    repo.get_stamina = AsyncMock(return_value=(60, 80))
+    repo.get_experience = AsyncMock(return_value=(1000, 2000))
+    repo.get_gold = AsyncMock(return_value=500)
     repo.get_stats = AsyncMock(
         return_value={
             "level": 5,
@@ -27,14 +35,10 @@ def mock_player_repo() -> MagicMock:
             "gold": 500,
         }
     )
-    repo.get_attributes = AsyncMock(
-        return_value={
-            "strength": 15,
-            "agility": 14,
-            "intelligence": 13,
-            "charisma": 12,
-            "constitution": 16,
-        }
+    repo.get_player_attributes = AsyncMock(
+        return_value=PlayerAttributes(
+            strength=15, agility=14, intelligence=13, charisma=12, constitution=16
+        )
     )
     repo.get_hunger_thirst = AsyncMock(
         return_value={
@@ -103,7 +107,7 @@ async def test_handle_no_attributes(
     mock_message_sender: MagicMock,
 ) -> None:
     """Test cuando no hay atributos disponibles."""
-    mock_player_repo.get_attributes = AsyncMock(return_value=None)
+    mock_player_repo.get_player_attributes = AsyncMock(return_value=None)
 
     handler = RequestStatsCommandHandler(
         player_repo=mock_player_repo,
