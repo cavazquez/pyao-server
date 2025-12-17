@@ -1,8 +1,10 @@
 """Handler para comando de recoger item."""
 
 import logging
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
+from src.command_handlers.pickup_gold_handler import PickupGoldHandler
+from src.command_handlers.pickup_item_handler import PickupItemHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.pickup_command import PickupCommand
 from src.models.item_constants import GOLD_ITEM_ID
@@ -50,6 +52,23 @@ class PickupCommandHandler(CommandHandler):
         self.item_catalog = item_catalog
         self.party_service = party_service
         self.message_sender = message_sender
+
+        # Inicializar handlers especializados
+        self.gold_handler = PickupGoldHandler(
+            player_repo=player_repo,
+            map_manager=map_manager,
+            broadcast_service=broadcast_service,
+            message_sender=message_sender,
+        )
+
+        self.item_handler = PickupItemHandler(
+            player_repo=player_repo,
+            inventory_repo=inventory_repo,
+            map_manager=map_manager,
+            broadcast_service=broadcast_service,
+            item_catalog=item_catalog,
+            message_sender=message_sender,
+        )
 
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de recoger item (solo lógica de negocio).
@@ -102,121 +121,16 @@ class PickupCommandHandler(CommandHandler):
 
         # Manejar oro especialmente
         if item_id == GOLD_ITEM_ID:
-            result = await self._pickup_gold(user_id, quantity, map_id, x, y)
-        else:
-            result = await self._pickup_item(user_id, item_id, quantity, map_id, x, y)
-
-        return result
-
-    async def _pickup_gold(
-        self, user_id: int, gold: int, map_id: int, x: int, y: int
-    ) -> CommandResult:
-        """Recoge oro del suelo.
-
-        Args:
-            user_id: ID del jugador.
-            gold: Cantidad de oro.
-            map_id: ID del mapa.
-            x: Posición X.
-            y: Posición Y.
-
-        Returns:
-            Resultado de la ejecución.
-        """
-        # Obtener oro actual
-        current_gold = await self.player_repo.get_gold(user_id)
-        new_gold = current_gold + gold
-
-        # Actualizar oro
-        await self.player_repo.update_gold(user_id, new_gold)
-
-        # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
-        # TODO: Optimizar para enviar solo el oro en lugar de todos los stats
-        # Nota: new_gold ya está actualizado en el repositorio, así que se obtendrá automáticamente
-        await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
-
-        # Remover del suelo
-        self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-
-        # Broadcast OBJECT_DELETE
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_delete(map_id, x, y)
-
-        # Notificar al jugador
-        await self.message_sender.send_console_msg(f"Recogiste {gold} monedas de oro.")
-        logger.info("Jugador %d recogió %d de oro en (%d,%d)", user_id, gold, x, y)
-
-        return CommandResult.ok(data={"item_id": GOLD_ITEM_ID, "quantity": gold, "type": "gold"})
-
-    async def _pickup_item(
-        self, user_id: int, item_id: int | None, quantity: int, map_id: int, x: int, y: int
-    ) -> CommandResult:
-        """Recoge un item del suelo.
-
-        Args:
-            user_id: ID del jugador.
-            item_id: ID del item.
-            quantity: Cantidad.
-            map_id: ID del mapa.
-            x: Posición X.
-            y: Posición Y.
-
-        Returns:
-            Resultado de la ejecución.
-        """
-        if not self.inventory_repo or not item_id or not self.item_catalog:
-            return CommandResult.error("Servicios no disponibles para recoger item")
-
-        # Obtener datos del item del catálogo
-        item_data = self.item_catalog.get_item_data(item_id)
-        if not item_data:
-            logger.warning("Item %d no encontrado en el catálogo", item_id)
-            return CommandResult.error(f"Item {item_id} no encontrado en el catálogo")
-
-        # Agregar item al inventario
-        modified_slots = await self.inventory_repo.add_item(user_id, item_id, quantity)
-
-        if not modified_slots:
-            await self.message_sender.send_console_msg("Tu inventario está lleno.")
-            return CommandResult.error("Inventario lleno")
-
-        # Enviar CHANGE_INVENTORY_SLOT para todos los slots modificados
-        for slot, slot_quantity in modified_slots:
-            await self.message_sender.send_change_inventory_slot(
-                slot=slot,
-                item_id=item_id,
-                name=str(item_data.get("Name", "Item")),
-                amount=slot_quantity,
-                equipped=False,
-                grh_id=cast("int", item_data.get("GrhIndex", 0)),
-                item_type=cast("int", item_data.get("ObjType", 0)),
-                max_hit=cast("int", item_data.get("MaxHit", 0)),
-                min_hit=cast("int", item_data.get("MinHit", 0)),
-                max_def=cast("int", item_data.get("MaxDef", 0)),
-                min_def=cast("int", item_data.get("MinDef", 0)),
-                sale_price=cast("float", item_data.get("Valor", 0)),
+            success, error_msg, gold_data = await self.gold_handler.pickup_gold(
+                user_id, quantity, map_id, x, y
             )
+            if success and gold_data:
+                return CommandResult.ok(data=cast("Any", gold_data))
+            return CommandResult.error(error_msg or "Error al recoger oro")
 
-        # Notificar al jugador
-        item_name = item_data.get("Name", f"Item {item_id}")
-        await self.message_sender.send_console_msg(f"Recogiste {quantity}x {item_name}.")
-
-        # Remover del suelo
-        self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-
-        # Broadcast OBJECT_DELETE
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_delete(map_id, x, y)
-
-        logger.info(
-            "Jugador %d recogió item %d (cantidad: %d) en (%d,%d)",
-            user_id,
-            item_id,
-            quantity,
-            x,
-            y,
+        success, error_msg, item_data = await self.item_handler.pickup_item(
+            user_id, item_id, quantity, map_id, x, y
         )
-
-        return CommandResult.ok(
-            data={"item_id": item_id, "quantity": quantity, "type": "item", "slots": modified_slots}
-        )
+        if success and item_data:
+            return CommandResult.ok(data=cast("Any", item_data))
+        return CommandResult.error(error_msg or "Error al recoger item")
