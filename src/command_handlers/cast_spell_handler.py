@@ -3,9 +3,10 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.cast_spell_execution_handler import CastSpellExecutionHandler
+from src.command_handlers.cast_spell_validation_handler import CastSpellValidationHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
-from src.services.player.stamina_service import STAMINA_COST_SPELL
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -15,10 +16,6 @@ if TYPE_CHECKING:
     from src.services.player.stamina_service import StaminaService
 
 logger = logging.getLogger(__name__)
-
-# Constantes para validación de coordenadas
-MAX_COORD = 100
-MAX_SPELL_RANGE = 10
 
 
 class CastSpellCommandHandler(CommandHandler):
@@ -47,7 +44,21 @@ class CastSpellCommandHandler(CommandHandler):
         self.stamina_service = stamina_service
         self.message_sender = message_sender
 
-    async def handle(self, command: Command) -> CommandResult:  # noqa: PLR0915
+        # Inicializar handlers especializados
+        self.validation_handler = CastSpellValidationHandler(
+            player_repo=player_repo,
+            spellbook_repo=spellbook_repo,
+            stamina_service=stamina_service,
+            message_sender=message_sender,
+        )
+
+        self.execution_handler = CastSpellExecutionHandler(
+            player_repo=player_repo,
+            spell_service=spell_service,
+            message_sender=message_sender,
+        )
+
+    async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de lanzar hechizo (solo lógica de negocio).
 
         Args:
@@ -72,119 +83,81 @@ class CastSpellCommandHandler(CommandHandler):
             target_y,
         )
 
-        # Validar dependencias
-        if not self.player_repo or not self.spell_service or not self.spellbook_repo:
-            logger.error("Dependencias no disponibles para lanzar hechizo")
-            return CommandResult.error("Error interno: dependencias no disponibles")
-
-        # Consumir stamina por lanzar hechizo
-        if self.stamina_service:
-            can_cast = await self.stamina_service.consume_stamina(
-                user_id=user_id,
-                amount=STAMINA_COST_SPELL,
-                message_sender=self.message_sender,
-            )
-
-            if not can_cast:
-                logger.debug("user_id %d no tiene suficiente stamina para lanzar hechizo", user_id)
-                return CommandResult.error("No tienes suficiente stamina para lanzar el hechizo.")
-
         try:
-            # Validar coordenadas si vienen en el comando
-            if target_x is not None and target_y is not None:
-                if target_x < 1 or target_x > MAX_COORD or target_y < 1 or target_y > MAX_COORD:
-                    await self.message_sender.send_console_msg("Coordenadas inválidas")
-                    return CommandResult.error("Coordenadas inválidas")
+            # Validar dependencias
+            is_valid, error_msg = await self.validation_handler.validate_dependencies()
+            if not is_valid:
+                return CommandResult.error(error_msg or "Error interno")
 
-                logger.info(
-                    "user_id %d intenta lanzar hechizo desde slot %d hacia (%d, %d)",
-                    user_id,
-                    slot,
-                    target_x,
-                    target_y,
-                )
-            else:
-                logger.info(
-                    "user_id %d intenta lanzar hechizo desde slot %d (formato antiguo)",
-                    user_id,
-                    slot,
-                )
+            # Validar stamina
+            is_valid, error_msg = await self.validation_handler.validate_stamina(user_id)
+            if not is_valid:
+                return CommandResult.error(error_msg or "No tienes suficiente stamina")
 
-            # Obtener el hechizo del jugador en ese slot desde Redis
-            spell_id = await self.spellbook_repo.get_spell_in_slot(user_id, slot)
-            if spell_id is None:
-                await self.message_sender.send_console_msg("No tienes ese hechizo.")
-                logger.warning("user_id %d no tiene hechizo en slot %d (slot vacío)", user_id, slot)
-                return CommandResult.error("No tienes ese hechizo.")
+            # Validar coordenadas
+            is_valid, error_msg = self.validation_handler.validate_coordinates(target_x, target_y)
+            if not is_valid:
+                await self.message_sender.send_console_msg(error_msg or "Coordenadas inválidas")
+                return CommandResult.error(error_msg or "Coordenadas inválidas")
 
-            # Obtener posición del jugador
-            position = await self.player_repo.get_position(user_id)
-            if not position:
-                logger.warning("No se encontró posición para user_id %d", user_id)
+            # Validar spell slot
+            is_valid, error_msg, spell_id = await self.validation_handler.validate_spell_slot(
+                user_id, slot
+            )
+            if not is_valid or spell_id is None:
+                await self.message_sender.send_console_msg(error_msg or "No tienes ese hechizo.")
+                return CommandResult.error(error_msg or "No tienes ese hechizo.")
+
+            # Calcular target
+            target_coords = await self.execution_handler.calculate_target(
+                user_id, target_x, target_y
+            )
+            if not target_coords:
                 return CommandResult.error("Posición no encontrada")
 
-            player_x = position["x"]
-            player_y = position["y"]
-
-            # Si no hay coordenadas del target, calcular según heading
-            if target_x is None or target_y is None:
-                heading = position["heading"]
-                target_x = player_x
-                target_y = player_y
-
-                # Calcular posición del target según heading
-                if heading == 1:  # Norte
-                    target_y -= 1
-                elif heading == 2:  # Este  # noqa: PLR2004
-                    target_x += 1
-                elif heading == 3:  # Sur  # noqa: PLR2004
-                    target_y += 1
-                elif heading == 4:  # Oeste  # noqa: PLR2004
-                    target_x -= 1
-
-                logger.debug(
-                    "Target calculado según heading %d: (%d, %d)", heading, target_x, target_y
-                )
+            final_target_x, final_target_y = target_coords
 
             logger.info(
                 "user_id %d lanzará hechizo spell_id=%d desde slot %d hacia (%d, %d)",
                 user_id,
                 spell_id,
                 slot,
-                target_x,
-                target_y,
+                final_target_x,
+                final_target_y,
             )
 
-            # Validar que el target esté en rango (máximo 10 tiles)
-            distance = abs(target_x - player_x) + abs(target_y - player_y)  # Manhattan distance
+            # Obtener posición del jugador para validar rango
+            position = await self.player_repo.get_position(user_id)
+            if not position:
+                return CommandResult.error("Posición no encontrada")
 
-            if distance > MAX_SPELL_RANGE:
+            player_x = position["x"]
+            player_y = position["y"]
+
+            # Validar rango
+            is_valid, error_msg = self.validation_handler.validate_range(
+                player_x, player_y, final_target_x, final_target_y
+            )
+            if not is_valid:
                 await self.message_sender.send_console_msg(
-                    "El objetivo está demasiado lejos para lanzar el hechizo."
-                )
-                logger.debug(
-                    "user_id %d intentó lanzar hechizo fuera de rango: distancia=%d",
-                    user_id,
-                    distance,
+                    error_msg or "El objetivo está demasiado lejos para lanzar el hechizo."
                 )
                 return CommandResult.error(
-                    "El objetivo está demasiado lejos para lanzar el hechizo."
+                    error_msg or "El objetivo está demasiado lejos para lanzar el hechizo."
                 )
 
-            # Lanzar el hechizo
-            success = await self.spell_service.cast_spell(
-                user_id, spell_id, target_x, target_y, self.message_sender
+            # Ejecutar hechizo
+            success, error_msg = await self.execution_handler.execute_spell(
+                user_id, spell_id, final_target_x, final_target_y
             )
-
             if not success:
-                logger.debug("Fallo al lanzar hechizo")
-                return CommandResult.error("Fallo al lanzar el hechizo.")
+                return CommandResult.error(error_msg or "Fallo al lanzar el hechizo.")
 
             return CommandResult.ok(
                 data={
                     "spell_id": spell_id,
-                    "target_x": target_x,
-                    "target_y": target_y,
+                    "target_x": final_target_x,
+                    "target_y": final_target_y,
                     "slot": slot,
                 }
             )
