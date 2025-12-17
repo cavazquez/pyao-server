@@ -102,13 +102,11 @@ class MeditationEffect(TickEffect):
 
             logger.info("user_id %d: aplicando recuperación de maná", user_id)
 
-            # Obtener stats del jugador
-            stats = await player_repo.get_stats(user_id)
-            if not stats:
-                return
+            # Obtener mana actual y máximo
+            min_mana, max_mana = await player_repo.get_mana(user_id)
 
             # Verificar que no tenga mana completo
-            if stats["min_mana"] >= stats["max_mana"]:
+            if min_mana >= max_mana:
                 # Mana completo, detener meditación automáticamente
                 await player_repo.set_meditating(user_id, is_meditating=False)
                 if message_sender:
@@ -120,17 +118,20 @@ class MeditationEffect(TickEffect):
                 return
 
             # Recuperar mana
-            old_mana = stats["min_mana"]
-            stats["min_mana"] = min(stats["min_mana"] + MANA_RECOVERY_PER_TICK, stats["max_mana"])
-            mana_recovered = stats["min_mana"] - old_mana
+            old_mana = min_mana
+            new_mana = min(min_mana + MANA_RECOVERY_PER_TICK, max_mana)
+            mana_recovered = new_mana - old_mana
 
-            # Actualizar stats en Redis
-            await player_repo.set_stats(user_id=user_id, **stats)
+            # Actualizar mana en Redis
+            await player_repo.update_mana(user_id, new_mana)
+
+            # Obtener stats actualizados para enviar al cliente
+            stats = await player_repo.get_stats(user_id)
 
             # Enviar actualización de stats al cliente
-            if message_sender:
+            if message_sender and stats:
                 # Enviar UPDATE_MANA específico
-                await message_sender.send_update_mana(stats["min_mana"])
+                await message_sender.send_update_mana(new_mana)
                 # También enviar UPDATE_USER_STATS completo
                 await message_sender.send_update_user_stats(**stats)
 
@@ -138,8 +139,8 @@ class MeditationEffect(TickEffect):
                 "user_id %d recuperó %d mana meditando (%d/%d)",
                 user_id,
                 mana_recovered,
-                stats["min_mana"],
-                stats["max_mana"],
+                new_mana,
+                max_mana,
             )
 
         except Exception:

@@ -881,7 +881,7 @@ class PlayerRepository:
             hp: Nuevo HP.
         """
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "hp", str(hp))  # type: ignore[misc]
+        await self.redis.redis.hset(key, "min_hp", str(hp))  # type: ignore[misc]
         logger.debug("HP actualizado para user_id %d: %d", user_id, hp)
 
     async def update_experience(self, user_id: int, exp: int) -> None:

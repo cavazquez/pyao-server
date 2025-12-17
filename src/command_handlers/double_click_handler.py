@@ -142,22 +142,27 @@ class DoubleClickCommandHandler(CommandHandler):
         effects_applied = []
 
         if item.restore_hp > 0:
+            current_hp = await self.player_repo.get_current_hp(user_id)
+            max_hp = await self.player_repo.get_max_hp(user_id)
+            new_hp = min(current_hp + item.restore_hp, max_hp)
+            await self.player_repo.update_hp(user_id, new_hp)
+
+            # Obtener stats actualizados para enviar al cliente
             stats = await self.player_repo.get_stats(user_id)
             if stats:
-                new_hp = min(stats["min_hp"] + item.restore_hp, stats["max_hp"])
-                stats["min_hp"] = new_hp
-                await self.player_repo.set_stats(user_id=user_id, **stats)
                 await self.message_sender.send_update_user_stats(**stats)
-                effects_applied.append(f"+{item.restore_hp} HP")
+            effects_applied.append(f"+{item.restore_hp} HP")
 
         if item.restore_mana > 0:
+            min_mana, max_mana = await self.player_repo.get_mana(user_id)
+            new_mana = min(min_mana + item.restore_mana, max_mana)
+            await self.player_repo.update_mana(user_id, new_mana)
+
+            # Obtener stats actualizados para enviar al cliente
             stats = await self.player_repo.get_stats(user_id)
             if stats:
-                new_mana = min(stats["min_mana"] + item.restore_mana, stats["max_mana"])
-                stats["min_mana"] = new_mana
-                await self.player_repo.set_stats(user_id=user_id, **stats)
                 await self.message_sender.send_update_user_stats(**stats)
-                effects_applied.append(f"+{item.restore_mana} Mana")
+            effects_applied.append(f"+{item.restore_mana} Mana")
 
         if item.restore_hunger > 0 or item.restore_thirst > 0:
             hunger_thirst = await self.player_repo.get_hunger_thirst(user_id)

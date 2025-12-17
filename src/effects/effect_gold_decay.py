@@ -57,13 +57,8 @@ class GoldDecayEffect(TickEffect):
         if self._counters[user_id] >= ticks_needed:
             self._counters[user_id] = 0
 
-            # Obtener estadísticas actuales
-            stats = await player_repo.get_stats(user_id)
-            if not stats:
-                logger.warning("No se encontraron stats para user_id %d", user_id)
-                return
-
-            current_gold = stats["gold"]
+            # Obtener oro actual
+            current_gold = await player_repo.get_gold(user_id)
             if current_gold <= 0:
                 return  # No hay oro para reducir
 
@@ -71,9 +66,11 @@ class GoldDecayEffect(TickEffect):
             reduction = max(1, int(current_gold * (percentage / 100.0)))
             new_gold = max(0, current_gold - reduction)
 
-            # Actualizar estadísticas
-            stats["gold"] = new_gold
-            await player_repo.set_stats(user_id=user_id, **stats)
+            # Actualizar oro
+            await player_repo.update_gold(user_id, new_gold)
+
+            # Obtener stats actualizados para enviar al cliente
+            stats = await player_repo.get_stats(user_id)
 
             logger.info(
                 "user_id %d: oro reducido de %d a %d (-%d, %.1f%%)",
@@ -85,7 +82,7 @@ class GoldDecayEffect(TickEffect):
             )
 
             # Notificar al cliente
-            if message_sender:
+            if message_sender and stats:
                 await message_sender.send_update_user_stats(**stats)
                 await message_sender.send_console_msg(
                     f"Has perdido {reduction} monedas de oro ({percentage}%)"
