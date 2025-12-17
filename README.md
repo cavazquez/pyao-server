@@ -140,7 +140,16 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
 - **NPCFactory:** 16 factory methods (14 NPCs) ✅
 - **PlayerStats/PlayerAttributes:** Dataclasses tipados para acceso seguro a stats ✅
-- **Tests:** 2030 tests pasando (100%), cobertura 75% ✅
+- **Command Handlers:** 12 handlers principales refactorizados en 30 handlers especializados ✅ **REFACTORIZADO**
+  - `use_item_handler.py`: 741 → 200 líneas + 2 handlers especializados
+  - `talk_handler.py`: 661 → 127 líneas + 5 handlers especializados
+  - `left_click_handler.py`: 635 → 127 líneas + 2 handlers especializados
+  - `walk_handler.py`: 546 → 115 líneas + 2 handlers especializados
+  - `login_handler.py`: 510 → 192 líneas + 4 handlers especializados
+  - `create_account_handler.py`: 502 → 200 líneas + 3 handlers especializados
+  - `attack_handler.py`: 392 → 161 líneas + 3 handlers especializados
+  - Y 5 más... Ver [HANDLER_REFACTORING_COMPLETED.md](docs/HANDLER_REFACTORING_COMPLETED.md)
+- **Tests:** 2052 tests pasando (100%), cobertura 75% ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy ✅
 
 ### Sistema de Validación de Packets
@@ -710,6 +719,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Arquitectura completa del servidor, patrones de diseño y componentes **NUEVO**
 - **[Refactorización Server](docs/REFACTOR_SERVER_COMPLETED.md)**: Refactorización completada de server.py ✅
 - **[Refactorización MSG](docs/REFACTOR_MSG_COMPLETED.md)**: Refactorización completada de msg.py ✅
+- **[Refactorización Handlers](docs/HANDLER_REFACTORING_COMPLETED.md)**: Refactorización completada de 12 handlers principales en 30 handlers especializados ✅ **NUEVO**
 
 ### Protocolo y Flujos
 - **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login

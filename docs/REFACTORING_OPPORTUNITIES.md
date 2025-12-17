@@ -264,6 +264,23 @@ Reorganizar tasks en subcarpetas según `PROPOSED_CODE_ORGANIZATION.md`:
 
 ## ✅ Refactorizaciones Completadas
 
+### Handlers de Comandos (Command Pattern)
+1. ✅ `use_item_handler.py` - Dividido en `use_item_consumable_handler.py` y `use_item_special_handler.py`
+2. ✅ `talk_handler.py` - Dividido en 5 handlers especializados (metrics, trade, clan, pet, public)
+3. ✅ `left_click_handler.py` - Dividido en `left_click_npc_handler.py` y `left_click_tile_handler.py`
+4. ✅ `walk_handler.py` - Dividido en `walk_validation_handler.py` y `walk_movement_handler.py`
+5. ✅ `login_handler.py` - Dividido en 4 handlers especializados (auth, init, spawn, finalization)
+6. ✅ `create_account_handler.py` - Dividido en 3 handlers especializados (validation, character, finalization)
+7. ✅ `attack_handler.py` - Dividido en 3 handlers especializados (validation, execution, loot)
+8. ✅ `work_left_click_handler.py` - Dividido en 3 handlers especializados (validation, execution, ui)
+9. ✅ `double_click_handler.py` - Dividido en `double_click_item_handler.py` y `double_click_npc_handler.py`
+10. ✅ `drop_handler.py` - Dividido en `drop_gold_handler.py` y `drop_item_handler.py`
+11. ✅ `pickup_handler.py` - Dividido en `pickup_gold_handler.py` y `pickup_item_handler.py`
+12. ✅ `cast_spell_handler.py` - Dividido en `cast_spell_validation_handler.py` y `cast_spell_execution_handler.py`
+
+**Ver [HANDLER_REFACTORING_COMPLETED.md](HANDLER_REFACTORING_COMPLETED.md) para detalles completos.**
+
+### Otros Refactorizaciones
 1. ✅ `drop_handler.py` - Reemplazado `stats.get()` con métodos helper
 2. ✅ `pickup_handler.py` - Reemplazado `stats.get()` con métodos helper
 3. ✅ `msg.py` - Dividido en 8 módulos especializados
@@ -272,6 +289,31 @@ Reorganizar tasks en subcarpetas según `PROPOSED_CODE_ORGANIZATION.md`:
 6. ✅ `spell_service.py` - Dividido en spell_effects/
 7. ✅ `packet_validator.py` - Dividido en validators/
 8. ✅ `message_sender.py` - Dividido en senders/
+
+---
+
+## 🔄 Refactorizaciones Pendientes
+
+### Handlers que aún pueden refactorizarse
+
+Los siguientes handlers son grandes pero aún no han sido refactorizados:
+
+1. **`walk_movement_handler.py`** (516 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+2. **`use_item_consumable_handler.py`** (453 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+3. **`left_click_tile_handler.py`** (394 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+4. **`talk_clan_handler.py`** (358 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+5. **`use_item_special_handler.py`** (292 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+6. **`left_click_npc_handler.py`** (258 líneas) - Ya fue creado en refactorización anterior, pero podría dividirse más si crece
+
+**Nota:** Estos handlers ya fueron creados como parte de refactorizaciones anteriores. Solo deberían refactorizarse más si crecen significativamente o si se identifica duplicación de código.
+
+### Otros archivos grandes pendientes
+
+1. **`map_resources_service.py`** (1094 líneas) - Ver sección 3.1
+2. **`player_repository.py`** (1013 líneas) - Ver sección 3.2
+3. **`clan_service.py`** (882 líneas) - Ver sección 3.3
+4. **`party_service.py`** (726 líneas) - Ver sección 3.7
+5. **`npc_death_service.py`** (638 líneas) - Ver sección 3.9
 
 ---
 
