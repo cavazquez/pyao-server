@@ -3,12 +3,10 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.drop_gold_handler import DropGoldHandler
+from src.command_handlers.drop_item_handler import DropItemHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.drop_command import DropCommand
-
-# Constantes para el oro
-GOLD_ITEM_ID = 12  # ID del item oro en el catálogo
-GOLD_GRH_INDEX = 511  # Índice gráfico del oro
 
 # Slots especiales para oro
 # - slot=0: formato original/VB6
@@ -56,6 +54,23 @@ class DropCommandHandler(CommandHandler):
         self.message_sender = message_sender
         self.item_catalog = item_catalog
 
+        # Inicializar handlers especializados
+        self.gold_handler = DropGoldHandler(
+            player_repo=player_repo,
+            map_manager=map_manager,
+            broadcast_service=broadcast_service,
+            message_sender=message_sender,
+        )
+
+        self.item_handler = DropItemHandler(
+            player_repo=player_repo,
+            inventory_repo=inventory_repo,
+            map_manager=map_manager,
+            broadcast_service=broadcast_service,
+            message_sender=message_sender,
+            item_catalog=item_catalog,
+        )
+
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de soltar item (solo lógica de negocio).
 
@@ -78,214 +93,12 @@ class DropCommandHandler(CommandHandler):
         # - slot <= 0: formato original/VB6
         # - slot = 31: formato cliente Godot (Flagoro)
         if slot <= GOLD_SLOT_CLASSIC or slot == GOLD_SLOT_GODOT:
-            return await self._drop_gold(user_id, quantity)
+            success, error_msg, data = await self.gold_handler.drop_gold(user_id, quantity)
+            if success:
+                return CommandResult.ok(data=data)
+            return CommandResult.error(error_msg or "Error al tirar oro")
 
-        return await self._drop_item(user_id, slot, quantity)
-
-    async def _drop_gold(self, user_id: int, quantity: int) -> CommandResult:
-        """Tira oro del jugador al suelo.
-
-        Args:
-            user_id: ID del jugador.
-            quantity: Cantidad de oro a tirar.
-
-        Returns:
-            Resultado de la ejecución.
-        """
-        # Obtener oro actual del jugador
-        current_gold = await self.player_repo.get_gold(user_id)
-
-        # Validar cantidad
-        if quantity <= 0:
-            await self.message_sender.send_console_msg("Cantidad inválida.")
-            return CommandResult.error("Cantidad inválida")
-
-        # Ajustar cantidad al mínimo entre lo que tiene y lo que quiere tirar
-        actual_quantity = min(quantity, current_gold)
-
-        if actual_quantity == 0:
-            await self.message_sender.send_console_msg("No tienes oro para tirar.")
-            return CommandResult.error("No tienes oro para tirar")
-
-        # Obtener posición del jugador
-        position = await self.player_repo.get_position(user_id)
-        if not position:
-            return CommandResult.error("No se pudo obtener la posición del jugador")
-
-        map_id = position["map"]
-        x = position["x"]
-        y = position["y"]
-
-        # Reducir oro del jugador
-        new_gold = current_gold - actual_quantity
-        await self.player_repo.update_gold(user_id, new_gold)
-
-        # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
-        # Nota: new_gold ya está actualizado en el repositorio
-        await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
-
-        # Crear ground item
-        ground_item: dict[str, int | str | None] = {
-            "item_id": GOLD_ITEM_ID,
-            "quantity": actual_quantity,
-            "grh_index": GOLD_GRH_INDEX,
-            "owner_id": None,
-            "spawn_time": None,
-        }
-
-        # Agregar al MapManager
-        self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=ground_item)
-
-        # Broadcast OBJECT_CREATE a jugadores cercanos
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_create(
-                map_id=map_id, x=x, y=y, grh_index=GOLD_GRH_INDEX
-            )
-
-        # Notificar al jugador
-        await self.message_sender.send_console_msg(
-            f"Tiraste {actual_quantity} monedas de oro al suelo."
-        )
-        logger.info("Jugador %d tiró %d de oro en (%d,%d)", user_id, actual_quantity, x, y)
-
-        return CommandResult.ok(
-            data={"item_id": GOLD_ITEM_ID, "quantity": actual_quantity, "type": "gold"}
-        )
-
-    async def _drop_item(self, user_id: int, slot: int, quantity: int) -> CommandResult:
-        """Tira un item del inventario al suelo.
-
-        Args:
-            user_id: ID del jugador.
-            slot: Número de slot del inventario (1-30).
-            quantity: Cantidad a tirar.
-
-        Returns:
-            Resultado de la ejecución.
-        """
-        if not self.inventory_repo:
-            return CommandResult.error("Repositorio de inventario no disponible")
-
-        # Obtener item del slot
-        slot_data = await self.inventory_repo.get_slot(user_id, slot)
-        if not slot_data:
-            await self.message_sender.send_console_msg("No hay nada en ese slot.")
-            return CommandResult.error("Slot vacío")
-
-        item_id, current_quantity = slot_data
-
-        # Validar cantidad
-        if quantity <= 0:
-            await self.message_sender.send_console_msg("Cantidad inválida.")
-            return CommandResult.error("Cantidad inválida")
-
-        # Ajustar cantidad al mínimo entre lo que tiene y lo que quiere tirar
-        actual_quantity = min(quantity, current_quantity)
-
-        # Obtener posición del jugador
-        position = await self.player_repo.get_position(user_id)
-        if not position:
-            return CommandResult.error("No se pudo obtener la posición del jugador")
-
-        map_id = position["map"]
-        x = position["x"]
-        y = position["y"]
-
-        # Obtener datos del item para el gráfico
-        grh_index = self._get_item_grh_index(item_id)
-        item_name = self._get_item_name(item_id)
-
-        # Actualizar inventario
-        new_quantity = current_quantity - actual_quantity
-        if new_quantity > 0:
-            # Reducir cantidad en el slot
-            await self.inventory_repo.set_slot(user_id, slot, item_id, new_quantity)
-        else:
-            # Vaciar el slot completamente
-            await self.inventory_repo.clear_slot(user_id, slot)
-
-        # Notificar al cliente del cambio en el inventario
-        await self.message_sender.send_change_inventory_slot(
-            slot=slot,
-            item_id=item_id if new_quantity > 0 else 0,
-            name=item_name if new_quantity > 0 else "",
-            amount=new_quantity,
-            equipped=False,
-            grh_id=grh_index if new_quantity > 0 else 0,
-            item_type=0,  # No necesario para actualización
-            max_hit=0,
-            min_hit=0,
-            max_def=0,
-            min_def=0,
-        )
-
-        # Crear ground item
-        ground_item: dict[str, int | str | None] = {
-            "item_id": item_id,
-            "quantity": actual_quantity,
-            "grh_index": grh_index,
-            "owner_id": None,
-            "spawn_time": None,
-        }
-
-        # Agregar al MapManager
-        self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=ground_item)
-
-        # Broadcast OBJECT_CREATE a jugadores cercanos
-        if self.broadcast_service:
-            await self.broadcast_service.broadcast_object_create(
-                map_id=map_id, x=x, y=y, grh_index=grh_index
-            )
-
-        # Notificar al jugador
-        if actual_quantity > 1:
-            await self.message_sender.send_console_msg(
-                f"Tiraste {actual_quantity} {item_name} al suelo."
-            )
-        else:
-            await self.message_sender.send_console_msg(f"Tiraste {item_name} al suelo.")
-
-        logger.info(
-            "Jugador %d tiró %d x item %d (%s) en (%d,%d)",
-            user_id,
-            actual_quantity,
-            item_id,
-            item_name,
-            x,
-            y,
-        )
-
-        return CommandResult.ok(
-            data={"item_id": item_id, "quantity": actual_quantity, "type": "item"}
-        )
-
-    def _get_item_grh_index(self, item_id: int) -> int:
-        """Obtiene el índice gráfico de un item.
-
-        Args:
-            item_id: ID del item.
-
-        Returns:
-            GrhIndex del item o un valor por defecto.
-        """
-        if self.item_catalog:
-            grh = self.item_catalog.get_grh_index(item_id)
-            if grh:
-                return grh
-        # Fallback: usar el item_id como grh_index (común en AO)
-        return item_id
-
-    def _get_item_name(self, item_id: int) -> str:
-        """Obtiene el nombre de un item.
-
-        Args:
-            item_id: ID del item.
-
-        Returns:
-            Nombre del item o "Item desconocido".
-        """
-        if self.item_catalog:
-            name = self.item_catalog.get_item_name(item_id)
-            if name:
-                return name
-        return f"Item #{item_id}"
+        success, error_msg, data = await self.item_handler.drop_item(user_id, slot, quantity)
+        if success:
+            return CommandResult.ok(data=data)
+        return CommandResult.error(error_msg or "Error al tirar item")
