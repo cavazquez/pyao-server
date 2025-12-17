@@ -493,7 +493,7 @@ async def test_handle_sail_to_water_tile(
     mock_inventory_repo.get_inventory_slots = AsyncMock(return_value={1: mock_slot})
 
     # Simular que can_move_to retorna False pero _can_sail_to retorna True
-    walk_handler.map_manager.can_move_to = MagicMock(return_value=False)
+    walk_handler.movement_handler.map_manager.can_move_to = MagicMock(return_value=False)
 
     command = WalkCommand(user_id=1, heading=1)
     result = await walk_handler.handle(command)
