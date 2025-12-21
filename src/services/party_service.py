@@ -116,8 +116,10 @@ class PartyService:
         if leadership_score < MIN_LEADERSHIP_SCORE:
             return (
                 False,
-                f"Necesitas Carisma * Liderazgo >= {MIN_LEADERSHIP_SCORE} "
-                f"(tienes {charisma} * {leadership} = {leadership_score})",
+                (
+                    f"Necesitas Carisma * Liderazgo >= {MIN_LEADERSHIP_SCORE} "
+                    f"(tienes {charisma} * {leadership} = {leadership_score})"
+                ),
             )
 
         return True, ""

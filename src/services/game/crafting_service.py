@@ -169,8 +169,10 @@ class CraftingService:
             if player_inventory[material_id] < required_qty:
                 return (
                     False,
-                    f"Material insuficiente: {material.get('item', material_id)} "
-                    f"(necesitas {required_qty}, tienes {player_inventory[material_id]})",
+                    (
+                        f"Material insuficiente: {material.get('item', material_id)} "
+                        f"(necesitas {required_qty}, tienes {player_inventory[material_id]})"
+                    ),
                 )
 
         return True, "Puedes crear este item"
