@@ -59,7 +59,7 @@ class EquipmentService:
         try:
             item_id_str, _ = slot_value.split(":")
             item_id = int(item_id_str)
-        except (ValueError, AttributeError):
+        except ValueError, AttributeError:
             logger.exception("Formato de slot inválido: %s", slot_value)
             return False
 

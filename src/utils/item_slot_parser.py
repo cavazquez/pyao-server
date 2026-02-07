@@ -65,7 +65,7 @@ class ItemSlotParser:
         """
         try:
             return int(str(slot_key).split("_")[1])
-        except (IndexError, ValueError):
+        except IndexError, ValueError:
             logger.debug("Error parseando número de slot: %s", slot_key)
             return None
 

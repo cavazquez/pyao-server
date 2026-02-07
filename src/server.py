@@ -100,7 +100,7 @@ class ArgentumServer:
                 task = self.create_task(data, message_sender, session_data)
                 await task.execute()
 
-        except (KeyboardInterrupt, asyncio.CancelledError):
+        except KeyboardInterrupt, asyncio.CancelledError:
             # Shutdown graceful, no loguear como error
             logger.debug("Cliente %s desconectado por shutdown del servidor", connection.address)
         except Exception:

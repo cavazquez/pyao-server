@@ -161,7 +161,7 @@ class MerchantDataLoader(BaseDataLoader):
 
         try:
             return int(npc_id_raw)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             logger.warning("npc_id inválido para mercader: %s", npc_id_raw)
             return None
 
@@ -193,7 +193,7 @@ class MerchantDataLoader(BaseDataLoader):
         try:
             item_id = int(item["item_id"])
             quantity = int(item.get("quantity", 0))
-        except (KeyError, TypeError, ValueError):
+        except KeyError, TypeError, ValueError:
             logger.warning("Item inválido en mercader %d: %s", npc_id, item)
             return None
 

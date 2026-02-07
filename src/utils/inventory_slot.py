@@ -47,7 +47,7 @@ class InventorySlot:
                 return None
 
             return cls(item_id=item_id, quantity=quantity)
-        except (ValueError, AttributeError):
+        except ValueError, AttributeError:
             return None
 
     def to_string(self) -> str:

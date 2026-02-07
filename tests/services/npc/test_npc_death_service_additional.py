@@ -124,14 +124,16 @@ class TestPartyExperience:
         # Setup
         map_manager = MagicMock()
         map_manager.get_player_message_sender = MagicMock(
-            side_effect=lambda uid: MagicMock(
-                send_console_msg=AsyncMock(),
-                send_update_exp=AsyncMock(),
-                send_update_user_stats=AsyncMock(),
-                send_update_user_stats_from_repo=AsyncMock(),
+            side_effect=lambda uid: (
+                MagicMock(
+                    send_console_msg=AsyncMock(),
+                    send_update_exp=AsyncMock(),
+                    send_update_user_stats=AsyncMock(),
+                    send_update_user_stats_from_repo=AsyncMock(),
+                )
+                if uid in {1, 2}
+                else None
             )
-            if uid in {1, 2}
-            else None
         )
 
         player_repo = MagicMock()

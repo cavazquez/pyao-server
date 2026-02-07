@@ -71,7 +71,7 @@ class MapMetadataLoader:
                 exit_count=exit_count + transitions_loaded,
             )
 
-        except (OSError, json.JSONDecodeError):
+        except OSError, json.JSONDecodeError:
             logger.exception("Error cargando mapa %d desde %s", map_id, metadata_path)
             return MapMetadataResult(
                 width=100, height=100, blocked_tiles=set(), exit_tiles={}, exit_count=0

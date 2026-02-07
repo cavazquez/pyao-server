@@ -556,7 +556,7 @@ class PlayerRepository:
             return 0.0
         try:
             return float(result)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return 0.0
 
     async def update_poisoned_until(self, user_id: int, poisoned_until: float) -> None:
@@ -589,7 +589,7 @@ class PlayerRepository:
             return 0.0
         try:
             return float(result)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return 0.0
 
     async def update_immobilized_until(self, user_id: int, immobilized_until: float) -> None:
@@ -622,7 +622,7 @@ class PlayerRepository:
             return 0.0
         try:
             return float(result)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return 0.0
 
     async def update_blinded_until(self, user_id: int, blinded_until: float) -> None:
@@ -653,7 +653,7 @@ class PlayerRepository:
             return 0.0
         try:
             return float(result)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return 0.0
 
     async def update_dumb_until(self, user_id: int, dumb_until: float) -> None:
@@ -690,7 +690,7 @@ class PlayerRepository:
                 "morphed_head": int(result[1]),
                 "morphed_until": float(result[2]),
             }
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return None
 
     async def set_morphed_appearance(
@@ -748,7 +748,7 @@ class PlayerRepository:
             return 0.0
         try:
             return float(result)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return 0.0
 
     async def update_invisible_until(self, user_id: int, invisible_until: float) -> None:
@@ -786,13 +786,13 @@ class PlayerRepository:
         if until_str:
             try:
                 until = float(until_str)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 until = 0.0
 
         if value_str:
             try:
                 value = int(value_str)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 value = 0
 
         return (until, value)
@@ -839,13 +839,13 @@ class PlayerRepository:
         if until_str:
             try:
                 until = float(until_str)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 until = 0.0
 
         if value_str:
             try:
                 value = int(value_str)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 value = 0
 
         return (until, value)

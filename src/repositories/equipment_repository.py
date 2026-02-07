@@ -117,7 +117,7 @@ class EquipmentRepository:
                 try:
                     slot = EquipmentSlot(slot_name)
                     result[slot] = int(inventory_slot_str)
-                except (ValueError, KeyError):
+                except ValueError, KeyError:
                     logger.warning("Slot de equipamiento inválido: %s", slot_name)
                     continue
 

@@ -45,7 +45,7 @@ class MapCacheLoader:
 
         try:
             data = self._read_cache_file(cache_path)
-        except (OSError, json.JSONDecodeError):
+        except OSError, json.JSONDecodeError:
             logger.warning("No se pudo leer caché de mapas: %s", cache_path)
             return False
 

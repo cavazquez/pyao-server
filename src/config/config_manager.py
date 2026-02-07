@@ -361,7 +361,7 @@ class ConfigManager:
                 # (puede haber sido modificado con set())
                 if value is not None:
                     return value
-        except (KeyError, TypeError):
+        except KeyError, TypeError:
             pass
 
         # Si no está en _config o es None, usar GameConfig

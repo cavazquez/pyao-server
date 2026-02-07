@@ -252,7 +252,7 @@ class BankRepository(BaseSlotRepository):
             return 0
         try:
             return int(gold)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             logger.warning("Oro inválido en banco de user_id %d: %s", user_id, gold)
             return 0
 

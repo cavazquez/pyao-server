@@ -317,7 +317,7 @@ class GameConfig(BaseSettings):
                     value = value[k]
                 else:
                     return default
-        except (AttributeError, KeyError, TypeError):
+        except AttributeError, KeyError, TypeError:
             return default
 
         # Convertir BaseModel a dict si es necesario para compatibilidad

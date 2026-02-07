@@ -80,7 +80,7 @@ class RandomSpawnService:
 
             try:
                 map_id = int(map_id_str)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 continue
 
             random_spawns = map_data.get("random_spawns", [])

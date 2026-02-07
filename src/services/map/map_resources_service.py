@@ -451,7 +451,7 @@ class MapResourcesService:
 
             try:
                 map_id = int(map_id_str)
-            except (TypeError, ValueError):
+            except TypeError, ValueError:
                 continue
 
             map_key = f"map_{map_id}"
@@ -511,7 +511,7 @@ class MapResourcesService:
                 continue
             try:
                 map_id = int(map_key.split("_")[1])
-            except (IndexError, ValueError):
+            except IndexError, ValueError:
                 continue
 
             blocked = list(res.get("blocked", set()))
@@ -563,7 +563,7 @@ class MapResourcesService:
 
                 if start_map <= map_id <= end_map:
                     return file_path
-            except (ValueError, IndexError):
+            except ValueError, IndexError:
                 continue
         return None
 
