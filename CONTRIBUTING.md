@@ -168,12 +168,17 @@ class <Accion>CommandHandler(BaseCommandHandler):
 **Paso 4:** Registrar en TaskFactory
 
 ```python
-# src/tasks/task_factory.py
-from src.tasks.<categoria>.task_<accion> import Task<Accion>
-
-# En el diccionario _task_classes:
+# src/tasks/task_factory.py - Solo agregar al diccionario _task_classes:
 PacketID.<PACKET_ID>: Task<Accion>,
 ```
+
+> **Nota:** TaskFactory usa **auto-wiring** - resuelve automáticamente las dependencias
+> del constructor del Task por introspección. No es necesario agregar imports ni mapeos
+> manuales de dependencias. Los parámetros se resuelven en este orden:
+> 1. Parámetros fijos: `data`, `message_sender`, `session_data`
+> 2. Handlers: parámetros que terminan en `_handler` (via HandlerRegistry)
+> 3. Datos pre-validados: parámetros que coinciden con claves de `parsed_data`
+> 4. Dependencias del contenedor: atributos de `DependencyContainer`
 
 **Paso 5:** Crear tests
 
@@ -323,12 +328,18 @@ def test_<entidad>_creation():
    uv sync --dev
    ```
 
-2. **Verifica que Redis esté corriendo:**
+2. **Instala los pre-commit hooks:**
    ```bash
-   docker run -d --name pyao-redis -p 6379:6379 redis:8-alpine
+   uv run pre-commit install
    ```
 
-3. **Ejecuta los tests para verificar que todo funciona:**
+3. **Levanta Redis con Docker Compose:**
+   ```bash
+   docker compose up -d                      # Redis
+   docker compose --profile tools up -d      # Redis + Redis Insight GUI
+   ```
+
+4. **Ejecuta los tests para verificar que todo funciona:**
    ```bash
    ./run_tests.sh
    ```
@@ -357,6 +368,8 @@ def test_<entidad>_creation():
 
 ### 3. Antes de Hacer Commit
 
+Los pre-commit hooks ejecutan automáticamente `ruff` y `mypy` al hacer commit. Además:
+
 1. **Verifica que todos los checks pasen:**
    ```bash
    ./run_tests.sh
@@ -367,7 +380,12 @@ def test_<entidad>_creation():
    uv run pytest --cov=src --cov-report=term-missing
    ```
 
-3. **Revisa tus cambios:**
+3. **Ejecuta pre-commit manualmente (opcional):**
+   ```bash
+   uv run pre-commit run --all-files
+   ```
+
+4. **Revisa tus cambios:**
    ```bash
    git diff
    git status
@@ -570,6 +588,6 @@ class TestCommerceService:
 
 ---
 
-**Última actualización:** 2025-01-30  
+**Última actualización:** 2026-02-08  
 **Mantenedor:** Equipo PyAO Server
 

@@ -27,6 +27,51 @@ class PlayerRepository:
         """
         self.redis = redis_client
 
+    # ── Redis hash helpers ──────────────────────────────────────────────
+
+    async def _hget_float(self, key: str, field: str, default: float = 0.0) -> float:
+        """Lee un campo float de un hash Redis.
+
+        Returns:
+            Valor float del campo o default si no existe / es inválido.
+        """
+        result = await self.redis.redis.hget(key, field)  # type: ignore[misc]
+        if not result:
+            return default
+        try:
+            return float(result)
+        except ValueError, TypeError:
+            return default
+
+    async def _hget_int(self, key: str, field: str, default: int = 0) -> int:
+        """Lee un campo int de un hash Redis.
+
+        Returns:
+            Valor int del campo o default si no existe / es inválido.
+        """
+        result = await self.redis.redis.hget(key, field)  # type: ignore[misc]
+        if not result:
+            return default
+        try:
+            return int(result)
+        except ValueError, TypeError:
+            return default
+
+    async def _hget_bool(self, key: str, field: str) -> bool:
+        """Lee un campo booleano (1/0) de un hash Redis.
+
+        Returns:
+            True si el campo es "1", False en caso contrario.
+        """
+        result = await self.redis.redis.hget(key, field)  # type: ignore[misc]
+        return result in {b"1", "1", 1} if result else False
+
+    async def _hset_field(self, key: str, field: str, value: str | float) -> None:
+        """Escribe un campo en un hash Redis."""
+        await self.redis.redis.hset(key, field, str(value))  # type: ignore[misc]
+
+    # ── Position ────────────────────────────────────────────────────────
+
     async def get_position(self, user_id: int) -> dict[str, int] | None:
         """Obtiene la posición del jugador.
 
@@ -471,209 +516,92 @@ class PlayerRepository:
         logger.debug("Atributos guardados para user_id %d", user_id)
 
     async def set_meditating(self, user_id: int, is_meditating: bool) -> None:
-        """Establece el estado de meditación del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            is_meditating: True si está meditando, False si no.
-        """
+        """Establece el estado de meditación del jugador."""
         key = RedisKeys.player_user_stats(user_id)
-        logger.info(
-            "SET_MEDITATING: user_id=%d, is_meditating=%s, key=%s", user_id, is_meditating, key
-        )
-        await self.redis.redis.hset(key, "meditating", "1" if is_meditating else "0")  # type: ignore[misc]
-        logger.info(
-            "Estado de meditación GUARDADO en Redis para user_id %d: %s", user_id, is_meditating
-        )
+        await self._hset_field(key, "meditating", "1" if is_meditating else "0")
+        logger.info("Meditación para user_id %d: %s", user_id, is_meditating)
 
     async def is_meditating(self, user_id: int) -> bool:
         """Verifica si el jugador está meditando.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             True si está meditando, False si no.
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "meditating")  # type: ignore[misc]
-        # Redis puede retornar bytes (b"1") o string ("1") dependiendo de la configuración
-        is_med = result in {b"1", "1", 1} if result else False
-        logger.debug(
-            "IS_MEDITATING: user_id=%d, result=%s (type=%s), is_meditating=%s",
-            user_id,
-            result,
-            type(result).__name__,
-            is_med,
-        )
-        return is_med
+        return await self._hget_bool(RedisKeys.player_user_stats(user_id), "meditating")
 
     async def set_sailing(self, user_id: int, is_sailing: bool) -> None:
-        """Establece el estado de navegación (barca) del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            is_sailing: True si está navegando, False si no.
-        """
+        """Establece el estado de navegación (barca) del jugador."""
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "sailing", "1" if is_sailing else "0")  # type: ignore[misc]
-        logger.info("Estado de navegación guardado para user_id %d: %s", user_id, is_sailing)
+        await self._hset_field(key, "sailing", "1" if is_sailing else "0")
+        logger.info("Navegación para user_id %d: %s", user_id, is_sailing)
 
     async def is_sailing(self, user_id: int) -> bool:
         """Verifica si el jugador está navegando en barca.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             True si está navegando, False si no.
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "sailing")  # type: ignore[misc]
-        is_sailing = result in {b"1", "1", 1} if result else False
-        logger.debug(
-            "IS_SAILING: user_id=%d, result=%s (type=%s), is_sailing=%s",
-            user_id,
-            result,
-            type(result).__name__,
-            is_sailing,
-        )
-        return is_sailing
+        return await self._hget_bool(RedisKeys.player_user_stats(user_id), "sailing")
 
-    # Métodos para estados temporales (status effects)
+    # ── Status effects (timestamps) ────────────────────────────────────
+
     async def get_poisoned_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está envenenado.
-
-        Args:
-            user_id: ID del usuario.
 
         Returns:
             Timestamp hasta cuando está envenenado (0.0 = no envenenado).
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "poisoned_until")  # type: ignore[misc]
-        if not result:
-            return 0.0
-        try:
-            return float(result)
-        except ValueError, TypeError:
-            return 0.0
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), "poisoned_until")
 
     async def update_poisoned_until(self, user_id: int, poisoned_until: float) -> None:
-        """Actualiza el estado de envenenamiento del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            poisoned_until: Timestamp hasta cuando está envenenado (0.0 = no envenenado).
-        """
+        """Actualiza el estado de envenenamiento del jugador."""
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "poisoned_until", str(poisoned_until))  # type: ignore[misc]
-        logger.debug(
-            "Estado de envenenamiento actualizado para user_id %d: hasta %.2f",
-            user_id,
-            poisoned_until,
-        )
+        await self._hset_field(key, "poisoned_until", poisoned_until)
+        logger.debug("Envenenamiento user_id %d: hasta %.2f", user_id, poisoned_until)
 
     async def get_immobilized_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está inmovilizado.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             Timestamp hasta cuando está inmovilizado (0.0 = no inmovilizado).
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "immobilized_until")  # type: ignore[misc]
-        if not result:
-            return 0.0
-        try:
-            return float(result)
-        except ValueError, TypeError:
-            return 0.0
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), "immobilized_until")
 
     async def update_immobilized_until(self, user_id: int, immobilized_until: float) -> None:
-        """Actualiza el estado de inmovilización del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            immobilized_until: Timestamp hasta cuando está inmovilizado (0.0 = no inmovilizado).
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "immobilized_until", str(immobilized_until))  # type: ignore[misc]
-        logger.debug(
-            "Estado de inmovilización actualizado para user_id %d: hasta %.2f",
-            user_id,
-            immobilized_until,
+        """Actualiza el estado de inmovilización del jugador."""
+        await self._hset_field(
+            RedisKeys.player_user_stats(user_id), "immobilized_until", immobilized_until
         )
+        logger.debug("Inmovilización user_id %d: hasta %.2f", user_id, immobilized_until)
 
     async def get_blinded_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está ciego.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             Timestamp hasta cuando está ciego (0.0 = no ciego).
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "blinded_until")  # type: ignore[misc]
-        if not result:
-            return 0.0
-        try:
-            return float(result)
-        except ValueError, TypeError:
-            return 0.0
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), "blinded_until")
 
     async def update_blinded_until(self, user_id: int, blinded_until: float) -> None:
-        """Actualiza el estado de ceguera del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            blinded_until: Timestamp hasta cuando está ciego (0.0 = no ciego).
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "blinded_until", str(blinded_until))  # type: ignore[misc]
-        logger.debug(
-            "Estado de ceguera actualizado para user_id %d: hasta %.2f", user_id, blinded_until
-        )
+        """Actualiza el estado de ceguera del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "blinded_until", blinded_until)
+        logger.debug("Ceguera actualizada para user_id %d: hasta %.2f", user_id, blinded_until)
 
     async def get_dumb_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está estúpido.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             Timestamp hasta cuando está estúpido (0.0 = no estúpido).
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "dumb_until")  # type: ignore[misc]
-        if not result:
-            return 0.0
-        try:
-            return float(result)
-        except ValueError, TypeError:
-            return 0.0
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), "dumb_until")
 
     async def update_dumb_until(self, user_id: int, dumb_until: float) -> None:
-        """Actualiza el estado de estupidez del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            dumb_until: Timestamp hasta cuando está estúpido (0.0 = no estúpido).
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "dumb_until", str(dumb_until))  # type: ignore[misc]
-        logger.debug(
-            "Estado de estupidez actualizado para user_id %d: hasta %.2f", user_id, dumb_until
-        )
+        """Actualiza el estado de estupidez del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "dumb_until", dumb_until)
+        logger.debug("Estupidez actualizada para user_id %d: hasta %.2f", user_id, dumb_until)
 
     async def get_morphed_appearance(self, user_id: int) -> dict[str, int | float] | None:
         """Obtiene la apariencia morfeada del jugador.
-
-        Args:
-            user_id: ID del usuario.
 
         Returns:
             Diccionario con morphed_body, morphed_head, morphed_until o None si no está morfeado.
@@ -736,163 +664,93 @@ class PlayerRepository:
     async def get_invisible_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está invisible.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
             Timestamp hasta cuando está invisible (0.0 = no invisible).
         """
-        key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.redis.hget(key, "invisible_until")  # type: ignore[misc]
-        if not result:
-            return 0.0
-        try:
-            return float(result)
-        except ValueError, TypeError:
-            return 0.0
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), "invisible_until")
 
     async def update_invisible_until(self, user_id: int, invisible_until: float) -> None:
-        """Actualiza el estado de invisibilidad del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            invisible_until: Timestamp hasta cuando está invisible (0.0 = no invisible).
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "invisible_until", str(invisible_until))  # type: ignore[misc]
-        logger.debug(
-            "Estado de invisibilidad actualizado para user_id %d: hasta %.2f",
-            user_id,
-            invisible_until,
+        """Actualiza el estado de invisibilidad del jugador."""
+        await self._hset_field(
+            RedisKeys.player_user_stats(user_id), "invisible_until", invisible_until
         )
+        logger.debug("Invisibilidad user_id %d: hasta %.2f", user_id, invisible_until)
 
-    # Métodos para modificadores temporales de atributos (buffs/debuffs)
-    async def get_strength_modifier(self, user_id: int) -> tuple[float, int]:
-        """Obtiene el modificador temporal de fuerza.
+    # ── Attribute modifiers (buffs/debuffs) ────────────────────────────
+
+    async def _get_modifier(self, user_id: int, name: str) -> tuple[float, int]:
+        """Obtiene un modificador temporal de atributo.
 
         Args:
             user_id: ID del usuario.
+            name: Nombre del atributo (strength, agility).
 
         Returns:
             Tupla (expires_at, modifier_value). Si no hay modificador, retorna (0.0, 0).
         """
         key = RedisKeys.player_stats(user_id)
-        until_str = await self.redis.redis.hget(key, "strength_modifier_until")  # type: ignore[misc]
-        value_str = await self.redis.redis.hget(key, "strength_modifier_value")  # type: ignore[misc]
-
-        until = 0.0
-        value = 0
-
-        if until_str:
-            try:
-                until = float(until_str)
-            except ValueError, TypeError:
-                until = 0.0
-
-        if value_str:
-            try:
-                value = int(value_str)
-            except ValueError, TypeError:
-                value = 0
-
+        until = await self._hget_float(key, f"{name}_modifier_until")
+        value = await self._hget_int(key, f"{name}_modifier_value")
         return (until, value)
+
+    async def _set_modifier(
+        self, user_id: int, name: str, expires_at: float, modifier_value: int
+    ) -> None:
+        """Establece un modificador temporal de atributo."""
+        key = RedisKeys.player_stats(user_id)
+        await self.redis.redis.hset(  # type: ignore[misc]
+            key,
+            mapping={
+                f"{name}_modifier_until": str(expires_at),
+                f"{name}_modifier_value": str(modifier_value),
+            },
+        )
+        logger.debug(
+            "Modificador de %s para user_id %d: valor=%d, expira=%.2f",
+            name,
+            user_id,
+            modifier_value,
+            expires_at,
+        )
+
+    async def get_strength_modifier(self, user_id: int) -> tuple[float, int]:
+        """Obtiene el modificador temporal de fuerza.
+
+        Returns:
+            Tupla (expires_at, modifier_value).
+        """
+        return await self._get_modifier(user_id, "strength")
 
     async def set_strength_modifier(
         self, user_id: int, expires_at: float, modifier_value: int
     ) -> None:
-        """Establece el modificador temporal de fuerza.
-
-        Args:
-            user_id: ID del usuario.
-            expires_at: Timestamp de expiración (0.0 = remover modificador).
-            modifier_value: Valor del modificador (positivo = buff, negativo = debuff).
-        """
-        key = RedisKeys.player_stats(user_id)
-        mapping = {
-            "strength_modifier_until": str(expires_at),
-            "strength_modifier_value": str(modifier_value),
-        }
-        await self.redis.redis.hset(key, mapping=mapping)  # type: ignore[misc]
-        logger.debug(
-            "Modificador de fuerza establecido para user_id %d: valor=%d, expira en %.2f",
-            user_id,
-            modifier_value,
-            expires_at,
-        )
+        """Establece el modificador temporal de fuerza."""
+        await self._set_modifier(user_id, "strength", expires_at, modifier_value)
 
     async def get_agility_modifier(self, user_id: int) -> tuple[float, int]:
         """Obtiene el modificador temporal de agilidad.
 
-        Args:
-            user_id: ID del usuario.
-
         Returns:
-            Tupla (expires_at, modifier_value). Si no hay modificador, retorna (0.0, 0).
+            Tupla (expires_at, modifier_value).
         """
-        key = RedisKeys.player_stats(user_id)
-        until_str = await self.redis.redis.hget(key, "agility_modifier_until")  # type: ignore[misc]
-        value_str = await self.redis.redis.hget(key, "agility_modifier_value")  # type: ignore[misc]
-
-        until = 0.0
-        value = 0
-
-        if until_str:
-            try:
-                until = float(until_str)
-            except ValueError, TypeError:
-                until = 0.0
-
-        if value_str:
-            try:
-                value = int(value_str)
-            except ValueError, TypeError:
-                value = 0
-
-        return (until, value)
+        return await self._get_modifier(user_id, "agility")
 
     async def set_agility_modifier(
         self, user_id: int, expires_at: float, modifier_value: int
     ) -> None:
-        """Establece el modificador temporal de agilidad.
+        """Establece el modificador temporal de agilidad."""
+        await self._set_modifier(user_id, "agility", expires_at, modifier_value)
 
-        Args:
-            user_id: ID del usuario.
-            expires_at: Timestamp de expiración (0.0 = remover modificador).
-            modifier_value: Valor del modificador (positivo = buff, negativo = debuff).
-        """
-        key = RedisKeys.player_stats(user_id)
-        mapping = {
-            "agility_modifier_until": str(expires_at),
-            "agility_modifier_value": str(modifier_value),
-        }
-        await self.redis.redis.hset(key, mapping=mapping)  # type: ignore[misc]
-        logger.debug(
-            "Modificador de agilidad establecido para user_id %d: valor=%d, expira en %.2f",
-            user_id,
-            modifier_value,
-            expires_at,
-        )
+    # ── Single-field updaters ──────────────────────────────────────────
 
     async def update_hp(self, user_id: int, hp: int) -> None:
-        """Actualiza el HP del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            hp: Nuevo HP.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "min_hp", str(hp))  # type: ignore[misc]
+        """Actualiza el HP del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "min_hp", hp)
         logger.debug("HP actualizado para user_id %d: %d", user_id, hp)
 
     async def update_experience(self, user_id: int, exp: int) -> None:
-        """Actualiza la experiencia del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            exp: Nueva experiencia.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "experience", str(exp))  # type: ignore[misc]
+        """Actualiza la experiencia del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "experience", exp)
         logger.debug("Experiencia actualizada para user_id %d: %d", user_id, exp)
 
     async def update_level_and_elu(self, user_id: int, level: int, elu: int) -> None:
@@ -912,14 +770,8 @@ class PlayerRepository:
         )
 
     async def update_gold(self, user_id: int, gold: int) -> None:
-        """Actualiza el oro del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            gold: Nuevo oro.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "gold", str(gold))  # type: ignore[misc]
+        """Actualiza el oro del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "gold", gold)
         logger.debug("Oro actualizado para user_id %d: %d", user_id, gold)
 
     async def add_gold(self, user_id: int, amount: int) -> int:
@@ -978,25 +830,13 @@ class PlayerRepository:
         return (stats.min_sta, stats.max_sta)
 
     async def update_mana(self, user_id: int, mana: int) -> None:
-        """Actualiza el mana actual del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            mana: Nuevo mana actual.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "min_mana", str(mana))  # type: ignore[misc]
+        """Actualiza el mana actual del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "min_mana", mana)
         logger.debug("Mana actualizado para user_id %d: %d", user_id, mana)
 
     async def update_stamina(self, user_id: int, stamina: int) -> None:
-        """Actualiza la stamina actual del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            stamina: Nueva stamina actual.
-        """
-        key = RedisKeys.player_user_stats(user_id)
-        await self.redis.redis.hset(key, "min_sta", str(stamina))  # type: ignore[misc]
+        """Actualiza la stamina actual del jugador."""
+        await self._hset_field(RedisKeys.player_user_stats(user_id), "min_sta", stamina)
         logger.debug("Stamina actualizada para user_id %d: %d", user_id, stamina)
 
     async def get_skills(self, user_id: int) -> dict[str, int] | None:

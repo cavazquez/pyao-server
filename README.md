@@ -46,21 +46,22 @@ uv sync --dev
 ### Configurar Redis (Obligatorio)
 
 ```bash
-# Opción 1: Usar el Dockerfile incluido (recomendado)
+# Opción 1: Docker Compose (recomendado)
+docker compose up -d              # Redis + persistencia
+docker compose --profile tools up -d  # + Redis Insight GUI (puerto 5540)
+
+# Opción 2: Usar el Dockerfile incluido
 docker build -t pyao-redis ./redis
 docker run -d --name pyao-redis -p 6379:6379 pyao-redis
-
-# Opción 2: Usar imagen oficial de Docker
-docker run -d --name pyao-redis -p 6379:6379 redis:8-alpine
 
 # Opción 3: Instalar localmente (Ubuntu/Debian)
 sudo apt-get install redis-server
 redis-server
 ```
 
-**Interfaz Gráfica (Recomendado):** Para gestionar Redis visualmente, instala [Redis Insight](https://redis.io/insight/) (disponible en Snap, Flatpak, Docker y AppImage).
+**Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar usando `redis://redis:6379` desde el contenedor.
 
-Ver [redis/README.md](redis/README.md) para documentación completa de Redis y Redis Insight.
+Ver [redis/README.md](redis/README.md) para documentación completa de Redis.
 
 ### Ejecutar el servidor
 
@@ -115,14 +116,28 @@ uv run ruff check .
 uv run mypy .
 ```
 
+### Pre-commit Hooks
+
+El proyecto incluye hooks de pre-commit que ejecutan `ruff` y `mypy` automáticamente antes de cada commit:
+
+```bash
+# Instalar hooks (una sola vez)
+uv run pre-commit install
+
+# Ejecutar manualmente sobre todos los archivos
+uv run pre-commit run --all-files
+```
+
+Los tests en CI se ejecutan en paralelo con `pytest-xdist` (`-n auto`).
+
 ## 🏗️ Arquitectura
 
 El servidor utiliza una **arquitectura modular** con patrones de diseño modernos:
 
 - **Strategy Pattern** - SpellEffects, HandlerRegistry (efectos y handlers como clases)
-- **Factory Pattern** - TaskFactory para creación de tasks
+- **Factory Pattern + Auto-wiring** - TaskFactory con resolución automática de dependencias por introspección de constructores
 - **Registry Pattern** - HandlerRegistry con configuración declarativa
-- **Dependency Injection** - DependencyContainer centralizado
+- **Dependency Injection** - DependencyContainer centralizado con auto-wiring en TaskFactory
 - **Facade Pattern** - ServerInitializer para inicialización
 - **Repository Pattern** - Abstracción de acceso a datos
 - **Observabilidad** - Logs de login con mensajes destacados y colores por nivel (TTY) para intento/éxito/spawns ocupados
@@ -134,7 +149,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 ### Estadísticas del Código
 
 - **server.py:** 685 → 194 líneas (-72% reducción) ✅
-- **task_factory.py:** 1811 → 621 líneas (-66%) + handler_registry.py 405 líneas ✅ **REFACTORIZADO**
+- **task_factory.py:** 1811 → 254 líneas (-86%) con auto-wiring + handler_registry.py 405 líneas ✅ **REFACTORIZADO**
 - **spell_service.py:** 1410 → 357 líneas (-75%) + spell_effects/ 8 módulos ✅ **REFACTORIZADO**
 - **msg.py:** 763 líneas → 8 módulos especializados ✅
 - **PacketValidator:** 16 tasks migradas (100% de las que leen datos) ✅
@@ -149,8 +164,9 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
   - `create_account_handler.py`: 502 → 200 líneas + 3 handlers especializados
   - `attack_handler.py`: 392 → 161 líneas + 3 handlers especializados
   - Y 5 más... Ver [HANDLER_REFACTORING_COMPLETED.md](docs/HANDLER_REFACTORING_COMPLETED.md)
-- **Tests:** 2052 tests pasando (100%), cobertura 75% ✅
-- **Calidad:** 0 errores de linting, 0 errores de mypy ✅
+- **PlayerRepository:** Helpers `_hget_float/_hget_int/_hget_bool/_hset_field` eliminan duplicación en 20+ métodos ✅ **REFACTORIZADO**
+- **Tests:** 2052 tests pasando (100%), cobertura 75%, ejecución paralela con `pytest-xdist` ✅
+- **Calidad:** 0 errores de linting, 0 errores de mypy, pre-commit hooks (ruff + mypy) ✅
 
 ### Sistema de Validación de Packets
 
@@ -189,7 +205,7 @@ pyao-server/
 │   │
 │   ├── # Arquitectura (Initializers & Containers) ✅ REFACTORIZADO
 │   ├── dependency_container.py  # Contenedor de dependencias (24 deps)
-│   ├── task_factory.py          # Factory para crear tasks (621 líneas, -66%)
+│   ├── task_factory.py          # Factory con auto-wiring (254 líneas, -86%)
 │   ├── handler_registry.py      # Registry de handlers (405 líneas) ✅ NUEVO
 │   ├── server_initializer.py    # Orquestador principal
 │   ├── redis_initializer.py     # Inicialización de Redis
@@ -352,7 +368,7 @@ pyao-server/
 │       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
 │       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (2031 tests, 75% cobertura) ✅
+├── tests/                       # Tests unitarios (2052 tests, 75% cobertura) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO
@@ -402,6 +418,8 @@ pyao-server/
 │   ├── test_msg.py                 # Tests de mensajes y packets
 │   └── test_redis_client.py        # Tests de Redis
 │
+├── docker-compose.yml           # Entorno local: Redis + Redis Insight (opcional)
+├── .pre-commit-config.yaml      # Hooks de pre-commit (ruff + mypy)
 ├── redis/                       # Configuración de Redis
 │   ├── Dockerfile               # Imagen Docker de Redis 8
 │   └── README.md                # Documentación de Redis
@@ -780,9 +798,21 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 El proyecto sigue estrictas reglas de calidad de código:
 - **Ruff**: Todas las reglas habilitadas (modo estricto)
 - **mypy**: Type checking estricto
-- **pytest**: Tests obligatorios antes de commits
+- **pytest**: 2052 tests con ejecución paralela (`pytest-xdist`)
+- **Pre-commit**: Hooks automáticos de ruff y mypy antes de cada commit
+- **Docker Compose**: Entorno local estandarizado con Redis y Redis Insight
 
-Ver [Claude.md](Claude.md) para las reglas completas de desarrollo.
+```bash
+# Setup inicial
+uv sync --dev                # Instalar dependencias
+uv run pre-commit install    # Instalar hooks
+docker compose up -d         # Levantar Redis
+
+# Flujo de desarrollo
+./run_tests.sh               # Verificar todo antes de commit
+```
+
+Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guía completa y [Claude.md](Claude.md) para reglas de desarrollo.
 
 ## 📄 Licencia
 

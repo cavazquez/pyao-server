@@ -119,10 +119,13 @@ PyAO Server utiliza una **arquitectura en capas** con separación clara de respo
   - Gestionar claves de Redis
 
 - **Componentes principales:**
-  - `PlayerRepository`: Datos de jugadores
+  - `PlayerRepository`: Datos de jugadores (con helpers `_hget_float/_hget_int/_hget_bool/_hset_field` para eliminar duplicación en 20+ métodos de status effects, modifiers y estados booleanos)
+  - `BaseSlotRepository`: Clase base para inventarios y bancos
   - `AccountRepository`: Cuentas de usuario
   - `InventoryRepository`: Inventarios
+  - `BankRepository`: Bóvedas bancarias (extiende `BaseSlotRepository`)
   - `NPCRepository`: NPCs
+  - `EquipmentRepository`: Equipamiento
   - Y más...
 
 ---
@@ -227,15 +230,16 @@ await self.player_repo.update_hp(user_id, new_hp)
 - Fácil testing (mock repositories)
 - Código más limpio y mantenible
 
-### 3. Dependency Injection
+### 3. Dependency Injection + Auto-wiring
 
-**Implementación:** `DependencyContainer` + `TaskFactory`
+**Implementación:** `DependencyContainer` + `TaskFactory` con auto-wiring
 
 **Propósito:** Invertir el control de dependencias, facilitando testing y mantenibilidad.
 
 **Ejemplo:**
 ```python
-# TaskFactory inyecta dependencias automáticamente
+# TaskFactory resuelve dependencias automáticamente por introspección del constructor.
+# No requiere mapeo manual de dependencias.
 task = TaskFactory.create_task(
     packet_id=PacketID.LOGIN,
     data=data,
@@ -244,10 +248,18 @@ task = TaskFactory.create_task(
 # Task ya tiene todas sus dependencias inyectadas
 ```
 
+**Auto-wiring:** TaskFactory inspecciona el constructor de cada Task y resuelve
+parámetros automáticamente en este orden de prioridad:
+1. **Parámetros fijos:** `data`, `message_sender`, `session_data`
+2. **Handlers:** parámetros `*_handler` se resuelven via HandlerRegistry
+3. **Datos pre-validados:** parámetros que coinciden con claves de `parsed_data`
+4. **Dependencias del contenedor:** atributos de `DependencyContainer`
+
 **Beneficios:**
+- Agregar un nuevo Task no requiere modificar mapeos de dependencias
 - Fácil testing (inyectar mocks)
 - Bajo acoplamiento
-- Código más modular
+- Código más modular (~254 líneas vs ~1800 originales)
 
 ### 4. Factory Pattern
 
@@ -329,16 +341,17 @@ _task_classes = {
 - 2 Managers (MapManager, GameTick)
 - 3 Catálogos (NPC, Spell, Item)
 
-### TaskFactory
+### TaskFactory (Auto-wiring)
 
-**Ubicación:** `src/tasks/task_factory.py`
+**Ubicación:** `src/tasks/task_factory.py` (254 líneas)
 
 **Responsabilidades:**
 - Crear instancias de Tasks según packet ID
-- Inyectar dependencias automáticamente
+- Resolver dependencias automáticamente por introspección de constructores
 - Validar packets antes de crear tasks
+- Cachear resolución de parámetros para performance
 
-**Patrón:** Factory Pattern + Strategy Pattern
+**Patrón:** Factory Pattern + Strategy Pattern + Auto-wiring
 
 ### MapManager
 
@@ -497,6 +510,17 @@ graph TB
 
 ## 🔗 Integraciones
 
+### Docker Compose (Entorno Local)
+
+El proyecto incluye `docker-compose.yml` para estandarizar el entorno de desarrollo:
+- **Redis**: Servicio principal con healthcheck y volumen persistente
+- **Redis Insight**: GUI opcional (activar con `--profile tools`, puerto 5540)
+
+```bash
+docker compose up -d                      # Solo Redis
+docker compose --profile tools up -d      # Redis + Redis Insight
+```
+
 ### Redis
 
 **Uso:**
@@ -521,6 +545,31 @@ graph TB
 - `MeditationEffect`: Regeneración de mana
 
 **Frecuencia:** 1 segundo (configurable)
+
+---
+
+## 🧪 Calidad de Código
+
+### Tooling
+- **Ruff**: Linter y formatter (modo estricto, todas las reglas)
+- **mypy**: Type checking estático
+- **pytest + pytest-xdist**: 2052 tests con ejecución paralela (`-n auto`)
+- **Pre-commit hooks**: Ejecutan `ruff` y `mypy` automáticamente antes de cada commit
+- **GitHub Actions**: CI/CD con tests paralelos, linting, type checking y cobertura
+
+### Repositorios: Patrón de Helpers
+
+`PlayerRepository` usa helpers privados para eliminar duplicación en operaciones Redis:
+
+```python
+# Helpers que centralizan lectura/escritura de campos Redis con manejo de errores
+await self._hget_float(key, "poisoned_until")   # Lee float, default 0.0
+await self._hget_int(key, "strength_modifier")  # Lee int, default 0
+await self._hget_bool(key, "meditating")        # Lee bool (1/0)
+await self._hset_field(key, "gold", new_gold)   # Escribe campo
+```
+
+Estos 4 helpers reemplazan código repetido en 20+ métodos de status effects, modifiers y estados booleanos.
 
 ---
 
@@ -550,6 +599,6 @@ graph TB
 
 ---
 
-**Última actualización:** 2025-01-30  
+**Última actualización:** 2026-02-08  
 **Mantenedor:** Equipo PyAO Server
 
