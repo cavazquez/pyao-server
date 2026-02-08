@@ -1,0 +1,43 @@
+# Docker Compose para desarrollo local de PyAO Server
+#
+# Uso básico (solo Redis):
+#   docker compose up -d
+#
+# Con Redis Insight (GUI de monitoreo):
+#   docker compose --profile tools up -d
+#
+# Detener todo:
+#   docker compose --profile tools down
+#
+# Ver logs:
+#   docker compose logs -f redis
+
+services:
+  redis:
+    build: ./redis
+    container_name: pyao-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: pyao-redis-insight
+    ports:
+      - "5540:5540"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles:
+      - tools
+
+volumes:
+  redis-data:

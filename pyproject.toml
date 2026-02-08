@@ -21,6 +21,7 @@ dev = [
     "pytest-cov==7.0.0",
     "mypy==1.19.1",
     "fakeredis==2.33.0",
+    "pre-commit>=4.0.0",
 ]
 build = [
     "hatchling==1.27.0",

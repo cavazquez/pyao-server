@@ -71,7 +71,8 @@ interval_seconds = 60.0   # intervalo en segundos
 
 [game.inventory]
 # Configuración de inventario de jugadores
-max_slots = 30
+# Nota: debe coincidir con MaxInventorySlots del cliente Godot (consts.gd)
+max_slots = 25
 
 [game.bank]
 # Configuración de bóvedas bancarias

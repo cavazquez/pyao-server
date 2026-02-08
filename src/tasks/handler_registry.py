@@ -335,7 +335,6 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
             "player_repo",
             "account_repo",
             "map_manager",
-            "npc_service",
             "server_repo",
             "spellbook_repo",
             "spell_catalog",

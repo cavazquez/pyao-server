@@ -164,6 +164,7 @@ class ServerPacketID(IntEnum):
     UPDATE_STA = 15  # Actualizar stamina
     UPDATE_MANA = 16  # Actualizar mana
     UPDATE_HP = 17  # Actualizar HP
+    UPDATE_GOLD = 18  # Actualizar oro del jugador
     UPDATE_BANK_GOLD = 19  # Actualizar oro del banco
     UPDATE_EXP = 20  # Actualizar experiencia
     CHANGE_MAP = 21  # Cambiar mapa del personaje

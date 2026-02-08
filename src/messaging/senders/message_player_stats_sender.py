@@ -7,6 +7,7 @@ from src.network.msg_player_stats import (
     build_update_bank_gold_response,
     build_update_dexterity_response,
     build_update_exp_response,
+    build_update_gold_response,
     build_update_hp_response,
     build_update_hunger_and_thirst_response,
     build_update_mana_response,
@@ -102,6 +103,16 @@ class PlayerStatsMessageSender:
         """
         response = build_update_exp_response(experience=experience)
         logger.info("[%s] Enviando UPDATE_EXP: %d", self.connection.address, experience)
+        await self.connection.send(response)
+
+    async def send_update_gold(self, gold: int) -> None:
+        """Envía paquete UpdateGold del protocolo AO estándar.
+
+        Args:
+            gold: Cantidad total de oro del jugador (int32).
+        """
+        response = build_update_gold_response(gold=gold)
+        logger.info("[%s] Enviando UPDATE_GOLD: %d", self.connection.address, gold)
         await self.connection.send(response)
 
     async def send_update_bank_gold(self, bank_gold: int) -> None:

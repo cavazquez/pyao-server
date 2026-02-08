@@ -177,14 +177,12 @@ class MessageSender:
         await self.player_stats.send_update_exp(experience)
 
     async def send_update_gold(self, gold: int) -> None:
-        """Envía mensaje de consola informando sobre el oro ganado.
+        """Envía paquete UPDATE_GOLD del protocolo AO estándar.
 
         Args:
-            gold: Cantidad de oro ganado.
+            gold: Cantidad total de oro del jugador.
         """
-        # Por ahora solo enviamos un mensaje de consola
-        # TODO: Implementar packet específico de oro o enviar UPDATE_USER_STATS completo
-        await self.send_console_msg(f"Oro: {gold}")
+        await self.player_stats.send_update_gold(gold)
         logger.info("[%s] Oro actualizado a %d", self.connection.address, gold)
 
     async def send_update_bank_gold(self, bank_gold: int) -> None:

@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.config.config_manager import config_manager
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_storage import InventoryStorage
 
@@ -18,7 +19,7 @@ class TestInventoryStorage:
         storage = InventoryStorage(redis_client)
 
         assert storage.redis_client == redis_client
-        assert storage.MAX_SLOTS == 30
+        assert config_manager.get("game.inventory.max_slots", 30) == storage.MAX_SLOTS
 
     async def test_get_slot_valid(self) -> None:
         """Test de obtención de slot válido."""
