@@ -1,17 +1,18 @@
 # Roadmap de Versiones - PyAO Server
 
-**Última actualización:** 2025-01-30  
-**Versión actual:** 0.9.0-alpha (COMPLETADA)  
+**Última actualización:** 2026-02-08  
+**Versión actual:** 0.9.1-alpha (COMPLETADA)  
 **Estrategia:** Una feature principal por versión
 
 ---
 
 ## 📊 Estado Actual
 
-**Versión estable:** 0.9.0-alpha (COMPLETADA)  
-**Tests:** 1765 pasando (100%)  
+**Versión estable:** 0.9.1-alpha (COMPLETADA)  
+**Tests:** 2052 pasando (100%)  
 **Cobertura:** >45%  
-**Calidad:** Excelente (0 errores linting/mypy)
+**Calidad:** Excelente (0 errores linting/mypy)  
+**Tooling:** Pre-commit (ruff + mypy), pytest-xdist, Docker Compose
 
 **Sistemas Completados en 0.6.0:**
 - ✅ IA de NPCs configurable (daño, cooldown, aggro_range)
@@ -115,6 +116,23 @@
 **Beneficio:** Fácil configuración sin recompilar, mejor para deployment
 
 **Referencia:** `todo/TODO_ARQUITECTURA.md#385-443`
+
+---
+
+## 🔍 Análisis Cruzado (2026-02-08)
+
+Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.  
+**Documento completo:** `docs/ANALISIS_CLIENTE_VB6_2026.md`
+
+**Hallazgos principales:**
+- 40 de 130 packets implementados (30.8%)
+- Packets de status effects (Blind, Dumb, Invisible, Paralyze) existen server-side pero no se envían al cliente
+- Toggles visuales (Meditate, Rest, Navigate) no notifican al cliente
+- Level up incompleto — faltan fórmulas VB6 de ELU, HP/Mana/Stamina por clase
+- Fórmulas de combate VB6 no portadas (hit/miss, daño, modificadores por clase)
+- Sistema de muerte incompleto (drop items, cambio apariencia, mascotas)
+- Crafting avanzado (herrería, carpintería, fundición, upgrade) no implementado
+- Skills faltantes: Robar, Tácticas, Apuñalar, Ocultarse, Domar, Wrestling, etc.
 
 ---
 
@@ -252,6 +270,55 @@
 
 ---
 
+### 0.9.5-alpha - Quick Wins: Packets Faltantes
+**Prioridad:** 🔴 Alta  
+**Esfuerzo:** 3-5 días  
+**Estado:** Planificado
+
+**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 1)
+
+**Features:**
+- [ ] Packets de status effects al cliente (Blind/BlindNoMore, Dumb/DumbNoMore, SetInvisible, ParalizeOK)
+- [ ] Toggles visuales (MeditateToggle, RestOK, NavigateToggle)
+- [ ] YELL (chat con rango ampliado) y WHISPER (chat privado)
+- [ ] UpdateTagAndStatus (colores de nick: criminal=rojo, ciudadano=azul, newbie=verde)
+- [ ] MOVE_ITEM (reordenar slots de inventario)
+
+**Archivos a modificar:**
+- `src/network/packet_id.py` — Agregar IDs faltantes
+- `src/network/msg_player_stats.py` — Build functions
+- `src/messaging/senders/` — Send methods
+- `src/tasks/` — Nuevas tasks para YELL, WHISPER, MOVE_ITEM
+
+**Beneficio:** El cliente ya tiene handlers para todos estos packets → impacto visual inmediato sin cambios en el cliente
+
+---
+
+### 0.9.6-alpha - Level Up Completo (Fórmulas VB6)
+**Prioridad:** 🔴 Alta  
+**Esfuerzo:** 1-2 semanas  
+**Estado:** Planificado
+
+**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 2)
+
+**Features:**
+- [ ] Fórmula de ELU progresiva (multiplicadores por rango de nivel)
+- [ ] HP/Mana/Stamina por nivel según clase (con fórmulas VB6)
+- [ ] Hit bonus por nivel según clase
+- [ ] Skill points por nivel (10 iniciales + 5 por nivel)
+- [ ] Packet LevelUp (58) con skill points
+- [ ] Packet MODIFY_SKILLS (38) para distribución de puntos
+- [ ] MiniStats (57) y Fame (56) packets
+
+**Archivos a crear/modificar:**
+- `src/services/player/level_service.py` — Lógica de level up
+- `src/network/packet_id.py` — Agregar LEVEL_UP, MODIFY_SKILLS, MINI_STATS, FAME
+- `data/classes.toml` — Agregar constantes de progresión por clase
+
+**Dependencias:** Sistema de Clases (0.7.0) ✅
+
+---
+
 ### 0.10.0-alpha - Targeting por Click para Hechizos
 **Prioridad:** 🟡 Media  
 **Esfuerzo:** 1 semana  
@@ -302,6 +369,89 @@
 
 **Referencia VB6:** `modHechizos.bas` (97KB)  
 **Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#76-94`
+
+---
+
+### 0.11.5-alpha - Combate VB6 Real + PvP
+**Prioridad:** 🔴 Alta  
+**Esfuerzo:** 3-4 semanas  
+**Estado:** Planificado
+
+**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 3)
+
+**Features:**
+- [ ] Fórmulas de hit/miss del VB6 (PoderAtaque vs PoderEvasion con modificadores por clase)
+- [ ] Daño con modificadores por clase (ModDañoArmas, ModDañoProy, ModDañoWrest)
+- [ ] Ataques especiales (Apuñalar, Acuchillar 20% chance, Golpe Crítico)
+- [ ] Defensa mágica (cascos + anillos con resistencia)
+- [ ] Sistema de proyectiles
+- [ ] PvP: UserAtacaUsuario con reputación y sistema criminal
+- [ ] SafeToggle (seguro anti-PvP)
+- [ ] Sistema de muerte completo (drop items, cambio apariencia, penalidad exp)
+- [ ] Resurrección con restauración de stats y apariencia
+- [ ] Balance.dat → data/balance.toml (ModEvasion, ModAtqArmas, etc.)
+
+**Archivos a crear/modificar:**
+- `src/services/combat/` — Refactorizar con fórmulas VB6
+- `data/balance.toml` — Modificadores por clase
+- `src/services/player/death_service.py` — Sistema de muerte completo
+- `src/services/player/reputation_service.py` — Sistema criminal/ciudadano
+
+**Dependencias:** Sistema de Clases (0.7.0) ✅, Hechizos Avanzados (0.11.0)
+
+---
+
+### 0.11.6-alpha - Crafting Completo
+**Prioridad:** 🟡 Media  
+**Esfuerzo:** 2-3 semanas  
+**Estado:** Planificado
+
+**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.1)
+
+**Features:**
+- [ ] Herrería: fabricar armas/armaduras con lingotes
+- [ ] Carpintería: fabricar con madera
+- [ ] Fundición: desmontar armas → recuperar materiales
+- [ ] Fundición de minerales: convertir minerales en lingotes
+- [ ] Upgrade de items (85% recuperación de materiales)
+- [ ] Packets: ShowBlacksmithForm, ShowCarpenterForm, BlacksmithWeapons/Armors, CarpenterObjects
+- [ ] Packets cliente: CRAFT_BLACKSMITH, CRAFT_CARPENTER, INIT_CRAFTING, ITEM_UPGRADE
+- [ ] Recipes configurables en data/
+
+**Archivos a crear:**
+- `src/services/crafting/blacksmith_service.py`
+- `src/services/crafting/carpenter_service.py`
+- `src/services/crafting/smelting_service.py`
+- `data/recipes_blacksmith.toml`
+- `data/recipes_carpenter.toml`
+
+**Referencia VB6:** `Trabajo.bas` → `HerreroConstruirItem`, `CarpinteroConstruirItem`, `FundirArmas`, `DoUpgrade`
+
+---
+
+### 0.11.7-alpha - Mascotas (Taming)
+**Prioridad:** 🟡 Media  
+**Esfuerzo:** 2-3 semanas  
+**Estado:** Planificado
+
+**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.2)
+
+**Features:**
+- [ ] Skill de domar: check contra nivel del NPC
+- [ ] Máximo 3 mascotas (MAXMASCOTAS = 3)
+- [ ] Comandos: PET_STAND, PET_FOLLOW, RELEASE_PET
+- [ ] AI SigueAmo: mascota sigue al dueño
+- [ ] AI SeguirAgresor: mascota ataca al agresor del dueño
+- [ ] Mascotas mueren si el dueño muere
+- [ ] Persistencia de mascotas en Redis
+
+**Archivos a crear:**
+- `src/services/pet_service.py`
+- `src/models/pet.py`
+- `src/repositories/pet_repository.py`
+- `src/tasks/pet/` — Tasks para cada comando
+
+**Referencia VB6:** `Trabajo.bas` → `DoDomar`, `NPC.bas` → AI SigueAmo/SeguirAgresor
 
 ---
 
@@ -673,31 +823,42 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 
 ## 🎯 Recomendación de Orden de Implementación
 
-### **Fase 1: Completar 0.6.0-alpha (1-2 semanas)**
+### **Fase 1: Completar 0.6.0-alpha (1-2 semanas)** ✅
 1. ✅ 0.6.1 - Tests faltantes
 2. ✅ 0.6.2 - Refactor MapTransitionService
 3. ✅ 0.6.3 - Validación de packets
 4. ✅ 0.6.4 - Configuration Management
 
-### **Fase 2: Gameplay Core (6-8 semanas)**
-5. 0.7.0 - Sistema de Clases
-6. 0.8.0 - Partys
-7. 0.9.0 - Clanes
-8. 0.10.0 - Targeting hechizos
-9. 0.11.0 - Hechizos avanzados
+### **Fase 2: Gameplay Core (6-8 semanas)** ✅
+5. ✅ 0.7.0 - Sistema de Clases
+6. ✅ 0.8.0 - Partys
+7. ✅ 0.9.0 - Clanes
 
-### **Fase 3: Contenido End-game (8-12 semanas)**
-10. 0.12.0 - Facciones
-11. 0.13.0 - Quests
-12. 0.14.0 - Banco avanzado
-13. 0.15.0 - Chat mejorado
-14. 0.16.0 - Anti-cheat
+### **Fase 2.5: Quick Wins del Análisis Cruzado (1-2 semanas)**
+8. 0.9.5 - Packets faltantes (status effects, toggles, YELL/WHISPER, UpdateTag, MOVE_ITEM)
+9. 0.9.6 - Level Up completo con fórmulas VB6
 
-### **Fase 4: Polish y Extras (4-6 semanas)**
-15. 0.17.0 - Estadísticas
-16. 0.18.0 - Sonido
-17. 0.19.0 - Foro
-18. 0.20.0 - Seguridad IP
+### **Fase 3: Hechizos y Combate (6-8 semanas)**
+10. 0.10.0 - Targeting hechizos
+11. 0.11.0 - Hechizos avanzados
+12. 0.11.5 - Combate VB6 real + PvP
+
+### **Fase 3.5: Crafting y Mascotas (4-6 semanas)**
+13. 0.11.6 - Crafting completo (herrería, carpintería, fundición)
+14. 0.11.7 - Mascotas (taming)
+
+### **Fase 4: Contenido End-game (8-12 semanas)**
+15. 0.12.0 - Facciones
+16. 0.13.0 - Quests
+17. 0.14.0 - Banco avanzado
+18. 0.15.0 - Chat mejorado
+19. 0.16.0 - Anti-cheat
+
+### **Fase 5: Polish y Extras (4-6 semanas)**
+20. 0.17.0 - Estadísticas
+21. 0.18.0 - Sonido
+22. 0.19.0 - Foro
+23. 0.20.0 - Seguridad IP
 
 ---
 
@@ -721,7 +882,8 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 
 ---
 
-**Última actualización:** 2025-01-30  
+**Última actualización:** 2026-02-08  
 **Autor:** Roadmap consolidado de todos los TODOs  
 **Estado:** 📋 Documento maestro de planificación  
-**Versiones completadas:** 0.6.0-0.8.0 ✅
+**Versiones completadas:** 0.6.0-0.9.1 ✅  
+**Análisis cruzado:** `docs/ANALISIS_CLIENTE_VB6_2026.md`
