@@ -1,5 +1,6 @@
 """Tests para MorphExpiryEffect."""
 
+import math
 import time
 from unittest.mock import AsyncMock, MagicMock
 
@@ -151,7 +152,7 @@ async def test_get_interval_seconds() -> None:
         map_manager=mock_map_manager,
         interval_seconds=10.0,
     )
-    assert effect.get_interval_seconds() == 10.0
+    assert math.isclose(effect.get_interval_seconds(), 10.0)
 
 
 @pytest.mark.asyncio

@@ -1,5 +1,6 @@
 """Tests para el nuevo sistema de configuración con Pydantic."""
 
+import math
 import os
 import tempfile
 from pathlib import Path
@@ -28,7 +29,7 @@ class TestGameConfig:
         config = GameConfig()
         assert config.server.port == 7666
         assert config.server.host == "0.0.0.0"
-        assert config.game.combat.base_critical_chance == 0.15
+        assert math.isclose(config.game.combat.base_critical_chance, 0.15)
 
     def test_load_from_toml(self) -> None:
         """Test cargar configuración desde TOML."""
@@ -54,7 +55,7 @@ base_critical_chance = 0.20
                 assert config.server.port == 8080
                 assert config.server.max_connections == 500
                 assert config.game.max_players_per_map == 50
-                assert config.game.combat.base_critical_chance == 0.20
+                assert math.isclose(config.game.combat.base_critical_chance, 0.20)
             finally:
                 Path(f.name).unlink()
 
@@ -80,7 +81,7 @@ base_critical_chance = 0.20
         """Test el método get() para compatibilidad."""
         config = GameConfig()
         assert config.get("server.port") == 7666
-        assert config.get("game.combat.base_critical_chance") == 0.15
+        assert math.isclose(config.get("game.combat.base_critical_chance"), 0.15)
         assert config.get("nonexistent.key", "default") == "default"
 
     def test_env_variables(self) -> None:
@@ -93,7 +94,7 @@ base_critical_chance = 0.20
             # Crear nueva instancia (carga variables de entorno)
             config = GameConfig()
             assert config.server.port == 9999
-            assert config.game.combat.base_critical_chance == 0.25
+            assert math.isclose(config.game.combat.base_critical_chance, 0.25)
         finally:
             # Limpiar
             del os.environ["PYAO_SERVER__PORT"]

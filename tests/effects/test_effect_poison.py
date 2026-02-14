@@ -1,5 +1,6 @@
 """Tests para PoisonEffect."""
 
+import math
 import time
 from unittest.mock import AsyncMock, MagicMock
 
@@ -122,7 +123,7 @@ async def test_apply_player_dead(
 async def test_get_interval_seconds() -> None:
     """Test obtener intervalo de segundos."""
     effect = PoisonEffect(interval_seconds=2.0)
-    assert effect.get_interval_seconds() == 2.0
+    assert math.isclose(effect.get_interval_seconds(), 2.0)
 
 
 @pytest.mark.asyncio

@@ -1,5 +1,7 @@
 """Tests para NPCFactory."""
 
+import math
+
 from src.models.npc import NPC
 from src.models.npc_factory import NPCFactory
 
@@ -72,7 +74,7 @@ class TestNPCFactory:
         assert npc.gold_min == 50
         assert npc.gold_max == 200
         assert npc.attack_damage == 25
-        assert npc.attack_cooldown == 2.0
+        assert math.isclose(npc.attack_cooldown, 2.0)
         assert npc.aggro_range == 12
         assert npc.fx == 5
         assert npc.fx_loop == 15
@@ -100,7 +102,7 @@ class TestNPCFactory:
         assert npc.gold_min == 5
         assert npc.gold_max == 20
         assert npc.attack_damage == 10
-        assert npc.attack_cooldown == 3.0
+        assert math.isclose(npc.attack_cooldown, 3.0)
         assert npc.aggro_range == 8
         assert npc.fx == 0
         assert npc.fx_loop == 0
@@ -171,11 +173,11 @@ class TestNPCFactory:
         )
 
         assert fast_npc.attack_damage == 5
-        assert fast_npc.attack_cooldown == 1.0
+        assert math.isclose(fast_npc.attack_cooldown, 1.0)
         assert fast_npc.aggro_range == 5
 
         assert strong_npc.attack_damage == 100
-        assert strong_npc.attack_cooldown == 5.0
+        assert math.isclose(strong_npc.attack_cooldown, 5.0)
         assert strong_npc.aggro_range == 15
 
     def test_create_hostile_with_fx_effects(self) -> None:
@@ -285,7 +287,7 @@ class TestNPCFactory:
         assert npc.level == 5
         assert npc.is_hostile is True
         assert npc.attack_damage == 8
-        assert npc.attack_cooldown == 2.5
+        assert math.isclose(npc.attack_cooldown, 2.5)
         assert npc.aggro_range == 6
         assert npc.fx == 5
 

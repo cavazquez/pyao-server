@@ -1,5 +1,6 @@
 """Tests para AttributeModifiersEffect."""
 
+import math
 import time
 from unittest.mock import AsyncMock, MagicMock
 
@@ -128,7 +129,7 @@ async def test_apply_no_message_sender(
 async def test_get_interval_seconds() -> None:
     """Test obtener intervalo de segundos."""
     effect = AttributeModifiersEffect(interval_seconds=15.0)
-    assert effect.get_interval_seconds() == 15.0
+    assert math.isclose(effect.get_interval_seconds(), 15.0)
 
 
 @pytest.mark.asyncio

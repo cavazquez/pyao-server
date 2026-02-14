@@ -1,5 +1,6 @@
 """Tests para el sistema de configuración centralizada."""
 
+import math
 import os
 import tempfile
 import unittest
@@ -249,7 +250,9 @@ melee_range = -1  # Rango inválido (< 0)
 
             # Verificar que usa los valores por defecto, no los inválidos
             assert config.get("server.port") == 7666  # Default, no 100
-            assert config.get("game.combat.base_critical_chance") == 0.15  # Default, no 1.5
+            assert math.isclose(
+                config.get("game.combat.base_critical_chance"), 0.15
+            )  # Default, no 1.5
             assert config.get("game.combat.melee_range") == 1  # Default, no -1
 
         finally:

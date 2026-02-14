@@ -1,5 +1,6 @@
 """Tests para DamageCalculator."""
 
+import math
 from unittest.mock import patch
 
 from src.combat.combat_damage_calculator import DamageCalculator
@@ -12,7 +13,7 @@ class TestDamageCalculator:
         """Test de inicialización con valores por defecto."""
         calculator = DamageCalculator()
 
-        assert calculator.defense_per_level == 0.1
+        assert math.isclose(calculator.defense_per_level, 0.1)
         assert calculator.critical_calculator is not None
 
     def test_init_custom_values(self) -> None:
@@ -21,7 +22,7 @@ class TestDamageCalculator:
             defense_per_level=0.15,
         )
 
-        assert calculator.defense_per_level == 0.15
+        assert math.isclose(calculator.defense_per_level, 0.15)
         assert calculator.critical_calculator is not None
 
     def test_calculate_player_damage_basic(self) -> None:

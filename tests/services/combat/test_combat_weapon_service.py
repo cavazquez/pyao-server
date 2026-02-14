@@ -1,5 +1,6 @@
 """Tests para WeaponService."""
 
+import math
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -243,7 +244,7 @@ class TestWeaponService:
         reduction = await service.get_armor_reduction(1)
 
         # Sin cap sería 0.1 + 55/100 = 0.65, pero con cap = 0.5
-        assert reduction == 0.5
+        assert math.isclose(reduction, 0.5)
 
     async def test_get_armor_reduction_unknown_armor(
         self,

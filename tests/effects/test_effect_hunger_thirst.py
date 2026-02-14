@@ -1,5 +1,6 @@
 """Tests para HungerThirstEffect."""
 
+import math
 from unittest.mock import AsyncMock
 
 import pytest
@@ -42,7 +43,7 @@ def test_hunger_thirst_effect_initialization(mock_server_repo: AsyncMock) -> Non
 def test_hunger_thirst_effect_get_interval(mock_server_repo: AsyncMock) -> None:
     """Test que verifica que el intervalo es 1 segundo."""
     effect = HungerThirstEffect(mock_server_repo)
-    assert effect.get_interval_seconds() == 1.0
+    assert math.isclose(effect.get_interval_seconds(), 1.0)
 
 
 def test_hunger_thirst_effect_get_name(mock_server_repo: AsyncMock) -> None:

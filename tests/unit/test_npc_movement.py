@@ -1,5 +1,6 @@
 """Tests para el sistema de movimiento de NPCs."""
 
+import math
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -65,7 +66,7 @@ class TestNPCMovementEffect:
         effect = NPCMovementEffect(npc_service, interval_seconds=5.0)
 
         # Verificar configuración
-        assert effect.get_interval_seconds() == 5.0
+        assert math.isclose(effect.get_interval_seconds(), 5.0)
         assert effect.get_name() == "NPCMovement"
 
     @pytest.mark.asyncio

@@ -1,5 +1,6 @@
 """Tests for Party Models."""
 
+import math
 import time
 
 import pytest
@@ -23,7 +24,7 @@ class TestPartyMember:
         assert member.user_id == 1
         assert member.username == "TestPlayer"
         assert member.level == 20
-        assert member.accumulated_exp == 0.0
+        assert math.isclose(member.accumulated_exp, 0.0)
         assert member.is_online is True
         assert member.last_seen > 0
 
@@ -32,10 +33,10 @@ class TestPartyMember:
         member = PartyMember(user_id=1, username="Test", level=20)
 
         member.add_experience(100.5)
-        assert member.accumulated_exp == 100.5
+        assert math.isclose(member.accumulated_exp, 100.5)
 
         member.add_experience(50.0)
-        assert member.accumulated_exp == 150.5
+        assert math.isclose(member.accumulated_exp, 150.5)
 
     def test_add_negative_experience(self):
         """Test adding negative experience sets to 0."""
@@ -43,7 +44,7 @@ class TestPartyMember:
         member.accumulated_exp = 50.0
 
         member.add_experience(-100.0)
-        assert member.accumulated_exp == 0.0
+        assert math.isclose(member.accumulated_exp, 0.0, abs_tol=1e-9)
 
     def test_withdraw_experience(self):
         """Test withdrawing accumulated experience."""
@@ -52,8 +53,8 @@ class TestPartyMember:
 
         withdrawn = member.withdraw_experience()
 
-        assert withdrawn == 150.0
-        assert member.accumulated_exp == 0.0
+        assert math.isclose(withdrawn, 150.0)
+        assert math.isclose(member.accumulated_exp, 0.0, abs_tol=1e-9)
 
     def test_can_receive_experience(self):
         """Test experience receiving conditions."""

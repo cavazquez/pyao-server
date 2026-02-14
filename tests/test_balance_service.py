@@ -4,6 +4,7 @@ Verifica que los datos de balance se carguen correctamente
 y que los cálculos de modificadores funcionen como esperan.
 """
 
+import math
 import shutil
 import sys
 import tempfile
@@ -80,11 +81,11 @@ vida = 0.8
 
     def test_load_class_modifiers(self):
         """Test que los modificadores de clase se cargan correctamente."""
-        assert self.service.get_class_modifier("Guerrero", "danoarmas") == 1.1
-        assert self.service.get_class_modifier("Guerrero", "vida") == 1.2
-        assert self.service.get_class_modifier("Mago", "evasion") == 0.4
-        assert self.service.get_class_modifier("Mago", "danoarmas") == 0.5
-        assert self.service.get_class_modifier("Inexistente", "danoarmas") == 1.0
+        assert math.isclose(self.service.get_class_modifier("Guerrero", "danoarmas"), 1.1)
+        assert math.isclose(self.service.get_class_modifier("Guerrero", "vida"), 1.2)
+        assert math.isclose(self.service.get_class_modifier("Mago", "evasion"), 0.4)
+        assert math.isclose(self.service.get_class_modifier("Mago", "danoarmas"), 0.5)
+        assert math.isclose(self.service.get_class_modifier("Inexistente", "danoarmas"), 1.0)
 
     def test_apply_racial_modifiers(self):
         """Test que se aplican correctamente los modificadores raciales."""
