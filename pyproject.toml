@@ -5,7 +5,7 @@ description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "redis==7.1.0",
+    "redis==7.1.1",
     "argon2-cffi==25.1.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
