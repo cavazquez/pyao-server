@@ -9,7 +9,7 @@ from typing import Any
 import pytest_asyncio
 import redis.asyncio as redis_async
 from fakeredis import aioredis
-from fakeredis._helpers import convert_args_to_redis_init_kwargs  # noqa: PLC2701
+from fakeredis._helpers import convert_args_kwargs  # noqa: PLC2701
 from fakeredis._typing import ServerType, VersionType  # noqa: TC002
 from fakeredis.aioredis import FakeConnection, FakeRedisMixin, FakeServer
 from redis.driver_info import DriverInfo
@@ -30,7 +30,7 @@ def _patched_fake_redis_mixin_init(
     """Misma lógica que FakeRedisMixin.__init__ pero sin args deprecados."""
     from fakeredis._typing import lib_version as _lib_version  # noqa: PLC0415, PLC2701
 
-    kwds = convert_args_to_redis_init_kwargs(client_class, *args, **kwargs)
+    kwds = convert_args_kwargs(client_class, *args, **kwargs)
     kwds.pop("retry_on_timeout", None)
     kwds["server"] = server
     kwds["connected"] = kwargs.get("connected", True)
