@@ -26,7 +26,7 @@ class TestConfigManager(unittest.TestCase):
         ConfigManager._instance = None
         ConfigManager._config = {}
         if hasattr(ConfigManager, "_initialized"):
-            delattr(ConfigManager, "_initialized")
+            del ConfigManager._initialized
 
     def tearDown(self) -> None:
         """Limpia entorno de prueba."""
@@ -44,7 +44,7 @@ class TestConfigManager(unittest.TestCase):
         ConfigManager._instance = None
         ConfigManager._config = {}
         if hasattr(ConfigManager, "_initialized"):
-            delattr(ConfigManager, "_initialized")
+            del ConfigManager._initialized
 
     def test_default_config_creation(self) -> None:
         """Test que se crea configuración por defecto cuando no existe archivo."""
