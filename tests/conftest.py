@@ -11,7 +11,7 @@ import redis.asyncio as redis_async
 from fakeredis import aioredis
 from fakeredis._helpers import convert_args_kwargs  # noqa: PLC2701
 from fakeredis._typing import ServerType, VersionType  # noqa: TC002
-from fakeredis.aioredis import FakeConnection, FakeRedisMixin, FakeServer
+from fakeredis.aioredis import FakeAsyncRedisConnection, FakeRedisMixin, FakeServer
 from redis.driver_info import DriverInfo
 
 from src.utils.redis_client import RedisClient
@@ -67,7 +67,7 @@ def _patched_fake_redis_mixin_init(
             "protocol",
         }
         connection_kwargs = {
-            "connection_class": FakeConnection,
+            "connection_class": FakeAsyncRedisConnection,
             "version": version,
             "server_type": server_type,
             "lua_modules": lua_modules,
