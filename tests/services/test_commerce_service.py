@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.models.item import Item, ItemType
+from src.models.item_constants import MAX_PLAYER_GOLD
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.merchant_repository import MerchantRepository
 from src.repositories.player_repository import PlayerRepository
@@ -388,3 +389,24 @@ class TestCommerceServiceSellItem:
 
         assert success is False
         assert message == "Error al procesar la venta"
+
+    async def test_sell_item_respects_gold_cap(
+        self,
+        commerce_service: CommerceService,
+        mock_player_repo: MagicMock,
+    ) -> None:
+        """Vender no debe superar MAX_PLAYER_GOLD.
+
+        El oro resultante debe caparse en MAX_PLAYER_GOLD aunque la suma
+        aritmética lo exceda.
+        """
+        # El jugador tiene casi el tope; vender 5 pociones a 50 oro c/u sumaría
+        # 250 y excedería el cap.
+        current = MAX_PLAYER_GOLD - 100
+        mock_player_repo.get_gold = AsyncMock(return_value=current)
+
+        success, _msg = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
+
+        assert success is True
+        # El oro final debe estar capaado en MAX_PLAYER_GOLD
+        mock_player_repo.update_gold.assert_called_once_with(1, MAX_PLAYER_GOLD)

@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.item_constants import MAX_PLAYER_GOLD
+
 if TYPE_CHECKING:
     from src.models.item import Item
     from src.repositories.inventory_repository import InventoryRepository
@@ -203,9 +205,9 @@ class CommerceService:
                 )
                 return False, "No se pudo remover el item"
 
-            # Sumar oro al jugador
+            # Sumar oro al jugador (respetando el tope global)
             player_gold = await self.player_repo.get_gold(user_id)
-            new_gold = player_gold + total_price
+            new_gold = min(player_gold + total_price, MAX_PLAYER_GOLD)
             await self.player_repo.update_gold(user_id, new_gold)
 
             # Agregar item al inventario del mercader

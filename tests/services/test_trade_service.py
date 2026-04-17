@@ -1,11 +1,13 @@
 # ruff: noqa: D102, D103, D107
 """Tests para TradeService."""
 
+import asyncio
 from collections import defaultdict
 from unittest.mock import AsyncMock
 
 import pytest
 
+from src.models.item_constants import MAX_PLAYER_GOLD
 from src.services.trade_service import TradeService
 
 
@@ -251,3 +253,158 @@ async def test_confirm_trade_transfers_gold(
 
     assert gold[1] == 100 - 40 + 10
     assert gold[2] == 50 - 10 + 40
+
+
+@pytest.mark.asyncio
+async def test_concurrent_confirm_does_not_double_execute(
+    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
+) -> None:
+    """Reproductores del bug de doble-ejecución de _perform_trade.
+
+    Escenario: Alice y Bob mandan USER_COMMERCE_CONFIRM al mismo tiempo.
+    Ambas coroutines setean su flag y luego ceden control (await) antes de
+    chequear si ambos están listos. Sin la guarda ``_trade_executing``, las
+    dos llamarían ``_perform_trade`` sobre la misma sesión.
+
+    Con el patrón claim-first, solo la primera en alcanzar el chequeo
+    síncrono gana la ejecución; la segunda ve ``_trade_executing=True`` y
+    no hace nada.
+    """
+    map_manager.add_player(1, "Alice")
+    map_manager.add_player(2, "Bob")
+
+    slots = defaultdict(dict)
+    slots[1, 1] = (101, 5)
+
+    async def get_slot(user_id: int, slot: int):
+        await asyncio.sleep(0)  # cede control para maximizar interleaving
+        return slots.get((user_id, slot))
+
+    async def remove_item(user_id: int, slot: int, qty: int) -> bool:
+        await asyncio.sleep(0)
+        key = (user_id, slot)
+        if key not in slots or slots[key][1] < qty:
+            return False
+        remaining = slots[key][1] - qty
+        if remaining == 0:
+            del slots[key]
+        else:
+            slots[key] = (slots[key][0], remaining)
+        return True
+
+    inventory_repo.get_slot = AsyncMock(side_effect=get_slot)
+    inventory_repo.remove_item = AsyncMock(side_effect=remove_item)
+    inventory_repo.add_item = AsyncMock(return_value=[(3, 5)])
+    inventory_repo.remove_item_by_item_id = AsyncMock(return_value=True)
+
+    service = make_service(player_repo, inventory_repo, map_manager)
+    await service.request_trade(1, "Bob")
+    await service.update_offer(1, slot=1, quantity=2)
+
+    # Lanzamos ambas confirmaciones simultáneamente
+    results = await asyncio.gather(
+        service.confirm_trade(1),
+        service.confirm_trade(2),
+    )
+
+    successes = [r for r in results if r[0] is True]
+    # _perform_trade debe haberse llamado exactamente UNA vez (vía add_item)
+    assert inventory_repo.add_item.call_count == 1, (
+        f"_perform_trade ejecutado {inventory_repo.add_item.call_count} veces "
+        f"(esperado: 1). Resultados: {results}"
+    )
+    assert len(successes) >= 1
+
+
+@pytest.mark.asyncio
+async def test_confirm_trade_blocked_by_gold_cap(
+    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
+) -> None:
+    """El intercambio falla si el receptor de oro superaría MAX_PLAYER_GOLD."""
+    map_manager.add_player(1, "Alice")
+    map_manager.add_player(2, "Bob")
+
+    gold = {1: 500, 2: MAX_PLAYER_GOLD - 100}
+
+    async def get_gold(user_id: int) -> int:
+        return gold[user_id]
+
+    async def add_gold(user_id: int, amount: int) -> None:
+        gold[user_id] += amount
+
+    async def remove_gold(user_id: int, amount: int) -> bool:
+        if gold[user_id] < amount:
+            return False
+        gold[user_id] -= amount
+        return True
+
+    player_repo.get_gold = AsyncMock(side_effect=get_gold)
+    player_repo.add_gold = AsyncMock(side_effect=add_gold)
+    player_repo.remove_gold = AsyncMock(side_effect=remove_gold)
+
+    service = make_service(player_repo, inventory_repo, map_manager)
+    await service.request_trade(1, "Bob")
+    # Alice ofrece 500 de oro; Bob tiene casi el tope → excedería MAX_PLAYER_GOLD
+    await service.update_offer(1, slot=0, quantity=500)
+
+    await service.confirm_trade(1)
+    result = await service.confirm_trade(2)
+
+    assert result[0] is False
+    assert "tope" in result[1].lower() or "oro" in result[1].lower()
+    # El oro de Bob no debe haberse modificado
+    assert gold[2] == MAX_PLAYER_GOLD - 100
+
+
+@pytest.mark.asyncio
+async def test_cannot_offer_negative_quantity(
+    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
+) -> None:
+    """Cantidad negativa en oferta debe rechazarse."""
+    map_manager.add_player(1, "Alice")
+    map_manager.add_player(2, "Bob")
+
+    service = make_service(player_repo, inventory_repo, map_manager)
+    await service.request_trade(1, "Bob")
+
+    success, message = await service.update_offer(1, slot=1, quantity=-1)
+
+    assert success is False
+    assert "positiva" in message.lower() or "inválida" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_cannot_offer_more_gold_than_owned(
+    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
+) -> None:
+    """No se puede ofrecer más oro del que tiene el jugador."""
+    map_manager.add_player(1, "Alice")
+    map_manager.add_player(2, "Bob")
+    player_repo.get_gold = AsyncMock(return_value=100)
+
+    service = make_service(player_repo, inventory_repo, map_manager)
+    await service.request_trade(1, "Bob")
+
+    success, message = await service.update_offer(1, slot=0, quantity=999)
+
+    assert success is False
+    assert "oro" in message.lower()
+
+
+@pytest.mark.asyncio
+async def test_confirm_after_cancel_does_nothing(
+    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
+) -> None:
+    """Confirmar tras cancelar no modifica inventarios."""
+    map_manager.add_player(1, "Alice")
+    map_manager.add_player(2, "Bob")
+
+    service = make_service(player_repo, inventory_repo, map_manager)
+    await service.request_trade(1, "Bob")
+    await service.cancel_trade(1)
+
+    result = await service.confirm_trade(1)
+
+    assert result[0] is False
+    inventory_repo.remove_item.assert_not_called()
+    inventory_repo.add_item.assert_not_called()

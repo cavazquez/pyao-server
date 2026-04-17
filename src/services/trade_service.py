@@ -8,6 +8,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
+from src.models.item_constants import MAX_PLAYER_GOLD
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
@@ -58,6 +60,11 @@ class TradeSession:
     target_confirmed: bool = False
     initiator_offer: TradeOffer = field(default_factory=TradeOffer)
     target_offer: TradeOffer = field(default_factory=TradeOffer)
+    # Guarda síncrona contra doble ejecución de _perform_trade. Se fija en
+    # True exactamente una vez, antes de cualquier await, dentro de
+    # confirm_trade. Al ser asyncio de un solo hilo, no hay race entre el
+    # check y el set, ya que no hay punto de cesión entre ellos.
+    _trade_executing: bool = False
 
 
 class TradeService:
@@ -141,6 +148,16 @@ class TradeService:
     async def confirm_trade(self, user_id: int) -> tuple[bool, str]:
         """Marca al usuario como listo para comerciar.
 
+        El patrón *claim-first* se aplica aquí para evitar que dos ``confirm``
+        simultáneos (uno de cada jugador) llamen ``_perform_trade`` dos veces
+        sobre la misma sesión:
+
+        1. Actualizamos los flags de confirmación (sin await).
+        2. Antes de cualquier yield, comprobamos ambos flags Y la guarda
+           ``_trade_executing``. Si los tres permiten ejecutar, marcamos
+           ``_trade_executing = True`` en el mismo bloque síncrono.
+        3. Solo la coroutine que ganó la guarda llama ``_perform_trade``.
+
         Returns:
             Tupla (éxito, mensaje) describiendo la operación.
         """
@@ -154,9 +171,18 @@ class TradeService:
             session.target_confirmed = True
 
         session.last_update = time.time()
+
+        # CLAIM-FIRST: la decisión de ejecutar y el bloqueo se hacen juntos,
+        # sin ningún await entre ellos. Asyncio garantiza que ninguna otra
+        # coroutine puede interleavar entre estas dos líneas.
+        both_ready = session.initiator_confirmed and session.target_confirmed
+        should_execute = both_ready and not session._trade_executing  # noqa: SLF001
+        if should_execute:
+            session._trade_executing = True  # noqa: SLF001
+
         await self._notify_console(user_id, "Marcaste listo para el intercambio.", font_color=7)
 
-        if session.initiator_confirmed and session.target_confirmed:
+        if should_execute:
             success, message = await self._perform_trade(session)
             if success:
                 await self._notify_console(
@@ -168,6 +194,7 @@ class TradeService:
                 self.clear_session(user_id)
                 return True, "Intercambio completado."
 
+            session._trade_executing = False  # noqa: SLF001
             session.initiator_confirmed = False
             session.target_confirmed = False
             await self._notify_console(session.initiator_id, message, font_color=1)
@@ -426,13 +453,23 @@ class TradeService:
                 delivered_items.append((target_id, item.item_id, item.quantity))
 
             if offer.gold:
-                await self.player_repo.add_gold(target_id, offer.gold)
-                delivered_gold.append((target_id, offer.gold))
+                current = await self.player_repo.get_gold(target_id)
+                safe_amount = min(offer.gold, MAX_PLAYER_GOLD - current)
+                if safe_amount > 0:
+                    await self.player_repo.add_gold(target_id, safe_amount)
+                    delivered_gold.append((target_id, safe_amount))
 
         return True, "Intercambio completado."
 
     async def _validate_offers(self, participants: list[tuple[int, TradeOffer, int]]) -> str | None:
-        for user_id, offer, _ in participants:
+        """Verifica que los recursos ofrecidos aún estén disponibles.
+
+        También controla que el receptor de oro no supere ``MAX_PLAYER_GOLD``.
+
+        Returns:
+            Mensaje de error si la validación falla, ``None`` si todo está en orden.
+        """
+        for user_id, offer, target_id in participants:
             for item in offer.items.values():
                 slot_content = await self.inventory_repo.get_slot(user_id, item.slot)
                 if not slot_content:
@@ -445,6 +482,16 @@ class TradeService:
             gold_available = await self.player_repo.get_gold(user_id)
             if offer.gold > gold_available:
                 return f"{self._resolve_username(user_id)} ya no tiene ese oro disponible."
+
+            # Verificar que el receptor de oro no supere el tope
+            if offer.gold > 0:
+                target_gold = await self.player_repo.get_gold(target_id)
+                if target_gold + offer.gold > MAX_PLAYER_GOLD:
+                    return (
+                        f"{self._resolve_username(target_id)} no puede recibir tanto oro "
+                        f"(tope: {MAX_PLAYER_GOLD})."
+                    )
+
         return None
 
     async def _refund_removed_resources(

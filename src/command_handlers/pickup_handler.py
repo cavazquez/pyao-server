@@ -73,6 +73,19 @@ class PickupCommandHandler(CommandHandler):
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de recoger item (solo lógica de negocio).
 
+        La implementación sigue el patrón *claim-first* para evitar
+        duplicación de items por race condition entre múltiples pickups
+        simultáneos sobre el mismo tile:
+
+        1. Leemos la posición del jugador (requiere un await en Redis).
+        2. *Reclamamos* el item del suelo de forma síncrona: ``remove_ground_item``
+           modifica un ``dict`` en memoria sin awaits, así que una única
+           coroutine puede ejecutar el pop antes de que otra llegue al mismo
+           punto.
+        3. Ejecutamos la parte con awaits (escritura en Redis, broadcast).
+        4. Si la escritura falla (inventario lleno, tope de oro, etc.),
+           *restauramos* el item al tile original para no perder estado.
+
         Args:
             command: Comando de recoger item.
 
@@ -86,7 +99,6 @@ class PickupCommandHandler(CommandHandler):
 
         logger.info("PickupCommandHandler: user_id=%d intentando recoger item", user_id)
 
-        # Obtener posición del jugador
         position = await self.player_repo.get_position(user_id)
         if not position:
             logger.error("No se pudo obtener posición del jugador %d", user_id)
@@ -96,41 +108,46 @@ class PickupCommandHandler(CommandHandler):
         x = position["x"]
         y = position["y"]
 
-        # Buscar items en ese tile
-        items = self.map_manager.get_ground_items(map_id, x, y)
-
-        if not items:
+        # Paso crítico: claim sincrónico. Entre este remove_ground_item y el
+        # add_item del inventario no hay ningún await, así que otra coroutine
+        # que corra en paralelo verá el tile sin items y saldrá por el camino
+        # de "No hay nada aquí".
+        claimed = self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
+        if claimed is None:
             await self.message_sender.send_console_msg("No hay nada aquí.")
             logger.info("Jugador %d intentó recoger pero no hay items en (%d,%d)", user_id, x, y)
             return CommandResult.error("No hay nada aquí")
 
-        # Recoger primer item
-        item = items[0]
-        item_id = item.get("item_id")
-        quantity = item.get("quantity", 1)
+        item_id = claimed.get("item_id")
+        quantity = claimed.get("quantity", 1)
 
-        # Validar tipos
         if not isinstance(quantity, int):
             quantity = 1
         if not isinstance(item_id, int) and item_id is not None:
             logger.warning("item_id inválido: %s", item_id)
+            # Restaurar al suelo: el estado del tile no puede corromperse
+            # por datos malformados en Redis.
+            self.map_manager.add_ground_item(map_id, x, y, claimed)
             return CommandResult.error("Item inválido")
 
         # El loot siempre es público - cualquiera puede recogerlo
         # (owner_id se mantiene para compatibilidad futura, pero no se verifica)
 
-        # Manejar oro especialmente
         if item_id == GOLD_ITEM_ID:
-            success, error_msg, gold_data = await self.gold_handler.pickup_gold(
+            success, error_msg, gold_data = await self.gold_handler.pickup_claimed_gold(
                 user_id, quantity, map_id, x, y
             )
             if success and gold_data:
                 return CommandResult.ok(data=cast("Any", gold_data))
+            # Gold handler rechazó: restaurar
+            self.map_manager.add_ground_item(map_id, x, y, claimed)
             return CommandResult.error(error_msg or "Error al recoger oro")
 
-        success, error_msg, item_data = await self.item_handler.pickup_item(
+        success, error_msg, item_data = await self.item_handler.pickup_claimed_item(
             user_id, item_id, quantity, map_id, x, y
         )
         if success and item_data:
             return CommandResult.ok(data=cast("Any", item_data))
+        # Item handler rechazó (inventario lleno): restaurar
+        self.map_manager.add_ground_item(map_id, x, y, claimed)
         return CommandResult.error(error_msg or "Error al recoger item")

@@ -43,39 +43,40 @@ class PickupItemHandler:
         self.item_catalog = item_catalog
         self.message_sender = message_sender
 
-    async def pickup_item(
+    async def pickup_claimed_item(
         self, user_id: int, item_id: int | None, quantity: int, map_id: int, x: int, y: int
     ) -> tuple[bool, str | None, dict[str, int | str | list[tuple[int, int]]] | None]:
-        """Recoge un item del suelo.
+        """Acredita al inventario un item ya reclamado del tile.
+
+        Precondición: el caller invocó ``remove_ground_item`` previamente, por
+        lo que el item YA NO está en el suelo. Si esta operación falla, el
+        caller debe restaurarlo (rollback).
 
         Args:
             user_id: ID del jugador.
             item_id: ID del item.
-            quantity: Cantidad.
-            map_id: ID del mapa.
-            x: Posición X.
-            y: Posición Y.
+            quantity: Cantidad reclamada.
+            map_id: ID del mapa (para broadcast).
+            x: Posición X (para broadcast).
+            y: Posición Y (para broadcast).
 
         Returns:
-            Tupla (success, error_message, result_data).
+            Tupla ``(success, error_message, result_data)``.
         """
         if not self.inventory_repo or not item_id or not self.item_catalog:
             return False, "Servicios no disponibles para recoger item", None
 
-        # Obtener datos del item del catálogo
         item_data = self.item_catalog.get_item_data(item_id)
         if not item_data:
             logger.warning("Item %d no encontrado en el catálogo", item_id)
             return False, f"Item {item_id} no encontrado en el catálogo", None
 
-        # Agregar item al inventario
         modified_slots = await self.inventory_repo.add_item(user_id, item_id, quantity)
 
         if not modified_slots:
             await self.message_sender.send_console_msg("Tu inventario está lleno.")
             return False, "Inventario lleno", None
 
-        # Enviar CHANGE_INVENTORY_SLOT para todos los slots modificados
         for slot, slot_quantity in modified_slots:
             await self.message_sender.send_change_inventory_slot(
                 slot=slot,
@@ -92,14 +93,9 @@ class PickupItemHandler:
                 sale_price=cast("float", item_data.get("Valor", 0)),
             )
 
-        # Notificar al jugador
         item_name = item_data.get("Name", f"Item {item_id}")
         await self.message_sender.send_console_msg(f"Recogiste {quantity}x {item_name}.")
 
-        # Remover del suelo
-        self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-
-        # Broadcast OBJECT_DELETE
         if self.broadcast_service:
             await self.broadcast_service.broadcast_object_delete(map_id, x, y)
 
