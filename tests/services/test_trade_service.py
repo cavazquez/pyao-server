@@ -1,4 +1,4 @@
-# ruff: noqa: D102, D103, D107
+# ruff: noqa: D103, D107
 """Tests para TradeService."""
 
 import asyncio

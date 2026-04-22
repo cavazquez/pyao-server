@@ -136,8 +136,11 @@ filterwarnings = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "S101",    # assert permitido en tests
-    "S105",    # contraseñas hardcodeadas permitidas en tests
+    "S105",    # contraseñas hardcodeadas (strings literales) permitidas en tests
+    "S107",    # contraseñas hardcodeadas en defaults de funciones helper permitidas en tests
     "PLR2004", # magic values permitidos en tests
+    "D101",    # docstring en clases de test no requerido
+    "D102",    # docstring en métodos de test no requerido
     "D104",    # docstring en __init__.py no requerido
     "PLR6301", # métodos de test pueden usar self
     "ERA001",  # código comentado permitido en tests

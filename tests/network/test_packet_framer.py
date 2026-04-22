@@ -174,7 +174,7 @@ class TestBufferOverflowProtection:
 class TestVariableLengthPackets:
     def test_party_message_variable_length(self) -> None:
         framer = PacketFramer()
-        msg = "equipo activo".encode("utf-8")
+        msg = b"equipo activo"
         packet = bytes([ClientPacketID.PARTY_MESSAGE]) + _u16(len(msg)) + msg
         framer.feed(packet + bytes([ClientPacketID.PING]))
 
