@@ -103,11 +103,8 @@ module = "tests.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = [
-    "tools.*",
-    "scripts.*",
-]
-ignore_errors = true
+module = "tools.*"
+ignore_errors = true  # parsers y herramientas auxiliares usan tipos dinámicos
 
 [[tool.mypy.overrides]]
 module = "src.tasks.task_factory"
