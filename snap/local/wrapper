@@ -13,7 +13,7 @@ mkdir -p "${WORKDIR}/map_cache"
 mkdir -p "${WORKDIR}/logs"
 mkdir -p "${WORKDIR}/archives"
 
-# Copiar datos del juego desde el snap (solo si no existen en SNAP_COMMON)
+# Copiar datos del juego desde el snap (solo si no existen en SNAP_USER_COMMON)
 if [ ! -d "${WORKDIR}/data" ]; then
     echo "PyAO: Inicializando datos del juego en ${WORKDIR}/data ..."
     cp -r "${SNAP}/share/pyao/data" "${WORKDIR}/data"
@@ -22,6 +22,11 @@ fi
 if [ ! -d "${WORKDIR}/map_data" ]; then
     echo "PyAO: Inicializando datos de mapas en ${WORKDIR}/map_data ..."
     cp -r "${SNAP}/share/pyao/map_data" "${WORKDIR}/map_data"
+fi
+
+if [ ! -f "${WORKDIR}/config/server.toml" ]; then
+    echo "PyAO: Inicializando configuración en ${WORKDIR}/config/server.toml ..."
+    cp "${SNAP}/share/pyao/config/server.toml" "${WORKDIR}/config/server.toml"
 fi
 
 # Resolver la versión de Python del snap para PYTHONPATH

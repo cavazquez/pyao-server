@@ -398,7 +398,7 @@ class _ConfigSingleton:
                 cls._instance = GameConfig.from_toml(toml_path)
                 logger.info("Configuración cargada desde %s", toml_path)
             except FileNotFoundError:
-                logger.warning("Archivo de configuración no encontrado, usando defaults")
+                logger.info("Archivo de configuración no encontrado, usando defaults")
                 cls._instance = GameConfig()
             except Exception:
                 logger.exception("Error cargando configuración, usando defaults")

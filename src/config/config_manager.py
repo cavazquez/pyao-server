@@ -86,7 +86,7 @@ class ConfigManager:
                     "Configuración cargada desde %s (con validación Pydantic)", self._config_file
                 )
             else:
-                logger.warning("Archivo de configuración no encontrado: %s", self._config_file)
+                logger.info("Archivo de configuración no encontrado: %s", self._config_file)
                 # Crear instancia que carga variables de entorno automáticamente
                 self._game_config = GameConfig()  # Usar defaults + env vars
                 logger.info("Usando configuración por defecto (con validación Pydantic)")

@@ -51,8 +51,10 @@ parts:
     override-build: |
       mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/data"
       mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data"
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/config"
       cp -r "${SNAPCRAFT_PART_SRC}/data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/data/"
       cp -r "${SNAPCRAFT_PART_SRC}/map_data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data/"
+      cp "${SNAPCRAFT_PART_SRC}/config/server.toml" "${SNAPCRAFT_PART_INSTALL}/share/pyao/config/server.toml"
 
   wrapper:
     plugin: dump
