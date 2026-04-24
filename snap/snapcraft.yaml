@@ -1,0 +1,59 @@
+name: pyao
+base: core26
+build-base: devel
+version: '0.9.4-alpha'
+summary: Servidor de Argentum Online en Python
+description: |
+  PyAO es un servidor de juego de rol multijugador online (MMORPG)
+  implementado en Python 3.14+. Compatible con clientes de Argentum Online.
+
+  Requiere Redis. Instala el snap de Redis o apunta a una instancia externa
+  mediante la variable de entorno REDIS_HOST.
+
+  Variables de entorno principales:
+    SERVER_HOST      (default: 0.0.0.0)
+    SERVER_PORT      (default: 7666)
+    REDIS_HOST       (default: localhost)
+    REDIS_PORT       (default: 6379)
+    REDIS_DB         (default: 0)
+
+  Los datos del juego (mapas, items, NPCs, etc.) se copian automáticamente
+  a $SNAP_COMMON la primera vez que se ejecuta el servidor.
+
+grade: devel
+confinement: strict
+
+apps:
+  pyao-server:
+    command: bin/wrapper
+    plugs:
+      - network
+      - network-bind
+
+parts:
+  pyao:
+    plugin: python
+    source: .
+    build-packages:
+      - gcc
+      - libffi-dev
+      - libssl-dev
+      - python3-dev
+    stage-packages:
+      - libffi8
+      - libssl3
+
+  game-data:
+    plugin: nil
+    source: .
+    override-build: |
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/data"
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data"
+      cp -r "${SNAPCRAFT_PART_SRC}/data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/data/"
+      cp -r "${SNAPCRAFT_PART_SRC}/map_data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data/"
+
+  wrapper:
+    plugin: dump
+    source: snap/local/
+    organize:
+      wrapper: bin/wrapper

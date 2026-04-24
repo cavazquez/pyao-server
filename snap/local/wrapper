@@ -1,0 +1,29 @@
+#!/bin/bash
+# Wrapper de inicio para PyAO Server.
+# Prepara el directorio de trabajo en $SNAP_COMMON con los datos del juego
+# antes de lanzar el servidor.
+set -e
+
+WORKDIR="${SNAP_COMMON}"
+
+# Crear directorios de escritura necesarios en el primer arranque
+mkdir -p "${WORKDIR}/certs"
+mkdir -p "${WORKDIR}/map_binary"
+mkdir -p "${WORKDIR}/map_cache"
+mkdir -p "${WORKDIR}/logs"
+mkdir -p "${WORKDIR}/archives"
+
+# Copiar datos del juego desde el snap (solo si no existen en SNAP_COMMON)
+if [ ! -d "${WORKDIR}/data" ]; then
+    echo "PyAO: Inicializando datos del juego en ${WORKDIR}/data ..."
+    cp -r "${SNAP}/share/pyao/data" "${WORKDIR}/data"
+fi
+
+if [ ! -d "${WORKDIR}/map_data" ]; then
+    echo "PyAO: Inicializando datos de mapas en ${WORKDIR}/map_data ..."
+    cp -r "${SNAP}/share/pyao/map_data" "${WORKDIR}/map_data"
+fi
+
+# Ejecutar el servidor desde el directorio de trabajo
+cd "${WORKDIR}"
+exec "${SNAP}/bin/pyao-server" "$@"
