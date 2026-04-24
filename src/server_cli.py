@@ -2,9 +2,18 @@
 
 import argparse
 import logging
+import os
 
 from src import __version__
 from src.logging_config import configure_logging, verbose_mode
+
+
+def _get_command_name() -> str:
+    """Retorna el nombre del comando según el entorno de ejecución."""
+    if os.environ.get("SNAP"):
+        snap_name = os.environ.get("SNAP_NAME", "pyao")
+        return f"{snap_name}.pyao-server"
+    return "pyao-server"
 
 
 class ServerCLI:
@@ -23,15 +32,17 @@ class ServerCLI:
         Returns:
             Parser configurado con todos los argumentos.
         """
+        cmd = _get_command_name()
         parser = argparse.ArgumentParser(
+            prog=cmd,
             description="PyAO Server - Servidor de Argentum Online en Python",
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            epilog="""
+            epilog=f"""
 Ejemplos:
-  pyao-server                    # Iniciar servidor en modo normal
-  pyao-server --debug            # Iniciar con logs de debug
-  pyao-server --host 127.0.0.1   # Iniciar en localhost
-  pyao-server --port 8000        # Usar puerto personalizado
+  {cmd}                    # Iniciar servidor en modo normal
+  {cmd} --debug            # Iniciar con logs de debug
+  {cmd} --host 127.0.0.1   # Iniciar en localhost
+  {cmd} --port 8000        # Usar puerto personalizado
             """,
         )
         parser.add_argument(
@@ -49,7 +60,7 @@ Ejemplos:
             "--port",
             type=int,
             default=7666,
-            help="Puerto donde escuchar (default: 7666)",
+            help="Puerto donde escuchar (default: 7666).",
         )
         parser.add_argument(
             "--ssl",

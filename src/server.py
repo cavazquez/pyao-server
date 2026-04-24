@@ -190,7 +190,11 @@ class ArgentumServer:
                 "El servidor requiere Redis para funcionar. "
                 "Asegúrate de que Redis esté ejecutándose."
             )
-            logger.error("Puedes iniciar Redis con: redis-server")  # noqa: TRY400
+            logger.error(  # noqa: TRY400
+                "Podés iniciar Redis con:\n"
+                "  snap:  sudo snap install redis && sudo snap start redis\n"
+                "  deb:   sudo apt install redis-server && sudo systemctl start redis"
+            )
             sys.exit(1)
         except Exception:
             logger.exception("Error inesperado al conectar con Redis")
@@ -204,12 +208,19 @@ class ArgentumServer:
             logger.exception("Error inicializando el contexto SSL")
             sys.exit(1)
 
-        self.server = await asyncio.start_server(
-            self.handle_client,
-            self.host,
-            self.port,
-            ssl=ssl_context,
-        )
+        try:
+            self.server = await asyncio.start_server(
+                self.handle_client,
+                self.host,
+                self.port,
+                ssl=ssl_context,
+            )
+        except OSError:
+            logger.error(  # noqa: TRY400
+                "No se pudo bindear al puerto %d en %s. Puerto ocupado.", self.port, self.host
+            )
+            logger.error("Cambiá el puerto con --port <número> o liberá el puerto %d.", self.port)  # noqa: TRY400
+            sys.exit(1)
 
         addrs = ", ".join(str(sock.getsockname()) for sock in self.server.sockets)
         logger.info("Servidor escuchando en %s", addrs)

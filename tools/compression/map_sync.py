@@ -335,36 +335,35 @@ def check_map_sync_on_startup(
                 return True
         else:
             logger.warning(
-                "map_data/ no existe. Ejecuta: "
+                "map_data/ no existe. En desarrollo: "
                 "uv run python -m tools.compression.map_sync pull"
             )
             return False
 
     if info.status == SyncStatus.NO_ARCHIVE:
-        logger.warning(
-            "archives/map_data.xz no existe. "
-            "Ejecuta: uv run python -m tools.compression.map_sync push"
+        logger.debug(
+            "archives/map_data.xz no existe (normal en instalaciones sin archivos comprimidos)."
         )
         return map_data_dir.exists()
 
     if info.status == SyncStatus.LOCAL_CHANGES:
         logger.warning(
             "⚠️  Hay cambios locales en map_data/ no comprimidos. "
-            "Ejecuta: uv run python -m tools.compression.map_sync push"
+            "En desarrollo: uv run python -m tools.compression.map_sync push"
         )
         return True
 
     if info.status == SyncStatus.ARCHIVE_NEWER:
         logger.warning(
             "⚠️  archives/map_data.xz es más nuevo que map_data/. "
-            "Ejecuta: uv run python -m tools.compression.map_sync pull"
+            "En desarrollo: uv run python -m tools.compression.map_sync pull"
         )
         return True
 
     if info.status == SyncStatus.CONFLICT:
         logger.warning(
             "⚠️  CONFLICTO: Hay cambios locales Y archive actualizado. "
-            "Ejecuta: uv run python -m tools.compression.map_sync status"
+            "En desarrollo: uv run python -m tools.compression.map_sync status"
         )
         return True
 
