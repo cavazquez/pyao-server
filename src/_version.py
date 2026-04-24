@@ -3,13 +3,6 @@
 try:
     from importlib.metadata import PackageNotFoundError, version
 
-    __version__ = version("src")
+    __version__ = version("pyao-server")
 except PackageNotFoundError:
-    # Fallback: leer desde pyproject.toml si no está instalado
-    import tomllib
-    from pathlib import Path
-
-    pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
-    with pyproject_path.open("rb") as f:
-        pyproject = tomllib.load(f)
-    __version__ = pyproject["project"]["version"]
+    __version__ = "unknown"
