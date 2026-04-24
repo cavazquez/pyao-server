@@ -49,10 +49,14 @@ class ConfigManager:
         self._initialized = True
 
         # Usar paths configurados o defaults.
-        # Path.cwd() apunta al directorio de trabajo del servidor (repo root en
-        # desarrollo, $SNAP_USER_COMMON en snap), evitando escribir en site-packages.
+        # En snap usa SNAP_USER_COMMON; en desarrollo usa path relativo a __file__.
         if not hasattr(self, "_config_dir"):
-            self._config_dir = Path.cwd() / "config"
+            snap_common = os.getenv("SNAP_USER_COMMON")
+            self._config_dir = (
+                Path(snap_common) / "config"
+                if snap_common
+                else Path(__file__).parent.parent.parent / "config"
+            )
         if not hasattr(self, "_config_file"):
             self._config_file = self._config_dir / "server.toml"
 

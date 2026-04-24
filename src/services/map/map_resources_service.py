@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sys
 import time
 import tomllib
@@ -1044,7 +1045,12 @@ class MapResourcesService:
         Las puertas no están en los archivos .map del servidor VB6,
         por lo que se definen manualmente en data/world/map_doors.toml
         """
-        doors_config_path = Path.cwd() / "data/world/map_doors.toml"
+        snap_common = os.environ.get("SNAP_USER_COMMON")
+        doors_config_path = (
+            Path(snap_common) / "data/world/map_doors.toml"
+            if snap_common
+            else Path(__file__).parent.parent.parent.parent / "data/world/map_doors.toml"
+        )
 
         if not doors_config_path.exists():
             logger.info("No se encontró archivo de configuración de puertas: %s", doors_config_path)

@@ -37,7 +37,12 @@ def _load_signs_catalog() -> dict[int, dict[str, str]]:
     Returns:
         Diccionario con GrhIndex como key y datos del cartel como value.
     """
-    signs_path = Path.cwd() / "data/items/world_objects/signs.toml"
+    snap_common = os.environ.get("SNAP_USER_COMMON")
+    signs_path = (
+        Path(snap_common) / "data/items/world_objects/signs.toml"
+        if snap_common
+        else Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
+    )
 
     if not signs_path.exists():
         msg = (

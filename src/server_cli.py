@@ -9,7 +9,11 @@ from src.logging_config import configure_logging, verbose_mode
 
 
 def _get_command_name() -> str:
-    """Retorna el nombre del comando según el entorno de ejecución."""
+    """Retorna el nombre del comando según el entorno de ejecución.
+
+    Returns:
+        Nombre del comando adaptado al entorno (snap o desarrollo).
+    """
     if os.environ.get("SNAP"):
         snap_name = os.environ.get("SNAP_NAME", "pyao")
         return f"{snap_name}.pyao-server"

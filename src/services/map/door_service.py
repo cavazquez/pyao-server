@@ -1,6 +1,7 @@
 """Servicio para gestionar puertas en el mapa."""
 
 import logging
+import os
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -34,7 +35,12 @@ class DoorService:
 
     def _load_doors_catalog(self) -> None:
         """Carga el catálogo de puertas desde doors.toml."""
-        doors_path = Path.cwd() / "data/items/world_objects/doors.toml"
+        snap_common = os.environ.get("SNAP_USER_COMMON")
+        doors_path = (
+            Path(snap_common) / "data/items/world_objects/doors.toml"
+            if snap_common
+            else Path(__file__).parent.parent.parent.parent / "data/items/world_objects/doors.toml"
+        )
 
         if not doors_path.exists():
             logger.warning("Archivo doors.toml no encontrado en %s", doors_path)
