@@ -214,3 +214,9 @@ certs/
 
 # Mapas binarios (generados desde map_data)
 map_binary/
+
+# Snap
+*.snap
+parts/
+prime/
+stage/
