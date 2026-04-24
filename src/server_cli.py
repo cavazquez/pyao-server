@@ -39,10 +39,10 @@ class ServerCLI:
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=f"""
 Ejemplos:
-  {cmd}                    # Iniciar servidor en modo normal
-  {cmd} --debug            # Iniciar con logs de debug
-  {cmd} --host 127.0.0.1   # Iniciar en localhost
-  {cmd} --port 8000        # Usar puerto personalizado
+  {cmd}                     # Iniciar servidor en modo normal (puerto 7666)
+  {cmd} --debug             # Iniciar con logs de debug
+  {cmd} --host 127.0.0.1    # Escuchar solo en localhost
+  {cmd} --port 7667         # Usar puerto alternativo
             """,
         )
         parser.add_argument(
