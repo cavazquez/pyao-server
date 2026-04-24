@@ -34,9 +34,7 @@ class DoorService:
 
     def _load_doors_catalog(self) -> None:
         """Carga el catálogo de puertas desde doors.toml."""
-        doors_path = (
-            Path(__file__).parent.parent.parent.parent / "data/items/world_objects/doors.toml"
-        )
+        doors_path = Path.cwd() / "data/items/world_objects/doors.toml"
 
         if not doors_path.exists():
             logger.warning("Archivo doors.toml no encontrado en %s", doors_path)

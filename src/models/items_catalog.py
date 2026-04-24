@@ -87,7 +87,7 @@ def _load_items_from_toml() -> dict[int, Item]:
     Returns:
         Diccionario con todos los items indexados por ID.
     """
-    data_dir = Path(__file__).parent.parent.parent / "data"
+    data_dir = Path.cwd() / "data"
     items_dir = data_dir / "items"
     legacy_file = data_dir / "items.toml"
 
