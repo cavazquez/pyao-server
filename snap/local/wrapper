@@ -24,6 +24,11 @@ if [ ! -d "${WORKDIR}/map_data" ]; then
     cp -r "${SNAP}/share/pyao/map_data" "${WORKDIR}/map_data"
 fi
 
+# Resolver la versión de Python del snap para PYTHONPATH
+PYTHON_BIN="${SNAP}/bin/python3"
+PYTHON_VERSION=$("${PYTHON_BIN}" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+export PYTHONPATH="${SNAP}/lib/python${PYTHON_VERSION}/site-packages"
+
 # Ejecutar el servidor desde el directorio de trabajo
 cd "${WORKDIR}"
-exec "${SNAP}/bin/pyao-server" "$@"
+exec "${PYTHON_BIN}" "${SNAP}/bin/pyao-server" "$@"
