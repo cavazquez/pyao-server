@@ -4,7 +4,7 @@
 # antes de lanzar el servidor.
 set -e
 
-WORKDIR="${SNAP_COMMON}"
+WORKDIR="${SNAP_USER_COMMON}"
 
 # Crear directorios de escritura necesarios en el primer arranque
 mkdir -p "${WORKDIR}/certs"
