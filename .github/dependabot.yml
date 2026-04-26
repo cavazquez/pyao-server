@@ -9,12 +9,12 @@ updates:
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "saturday"
-      time: "01:00"
+      interval: "cron"
+      # Sábados 01:00 UTC solo en diciembre (campo mes = 12)
+      cronjob: "0 1 * 12 6"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "semiannually"
-      day: "saturday"
-      time: "01:00"
+      interval: "cron"
+      # 1 y 15 de diciembre 01:00 UTC (dos pasadas al año, solo en diciembre)
+      cronjob: "0 1 1,15 12 *"
