@@ -217,7 +217,7 @@ Agregar factory methods para NPCs adicionales del TOML:
 
 - **Body IDs verificados:** `/clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Dat/NPCs.dat`
 - **Configuración actual:** `data/npcs_hostiles.toml`, `data/npcs_amigables.toml`
-- **Diseño original:** `todo/TODO_NPC_FACTORY.md`
+- **Diseño original:** documentado en este mismo archivo y en `docs/todo/` (no existía `TODO_NPC_FACTORY.md` separado en el repo actual).
 
 ---
 

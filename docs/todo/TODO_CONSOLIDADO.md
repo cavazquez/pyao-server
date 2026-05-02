@@ -238,7 +238,7 @@
 ### Logging Estructurado (JSON) 🟢 Baja Prioridad
 **Estado:** 📝 Propuesta  
 **Esfuerzo:** 2-3 horas  
-**Referencia:** `TODO_REFACTORING.md#191-203`
+**Referencia:** [`TECH_IMPROVEMENTS_BACKLOG.md`](../TECH_IMPROVEMENTS_BACKLOG.md) (sección observabilidad / logs operativos)
 
 **Beneficios:**
 - Logs parseables automáticamente

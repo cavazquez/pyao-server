@@ -53,20 +53,9 @@
 
 ---
 
-### 2. TODO_GENERAL.md
+### 2. ~~TODO_GENERAL.md~~ (eliminado del repo)
 
-**Estado:** ✅ Completo pero duplicado con ROADMAP_VERSIONES.md  
-**Última actualización:** 2025-01-29
-
-**Contenido:**
-- Roadmap legacy (similar a ROADMAP_VERSIONES.md)
-- Estado actual del proyecto
-- Métricas de progreso
-
-**Observación:** 
-- ⚠️ Hay duplicación con ROADMAP_VERSIONES.md
-- ✅ Útil como referencia histórica
-- 💡 **Sugerencia:** Marcar como "legacy" y referenciar a ROADMAP_VERSIONES.md
+**Estado 2026:** El archivo `TODO_GENERAL.md` **ya no existe**. El roadmap único vive en **`ROADMAP_VERSIONES.md`**; el backlog general en **`TODO_CONSOLIDADO.md`**. No consolidar nada: usar esos dos documentos como fuente de verdad.
 
 ---
 
@@ -97,22 +86,16 @@
 
 ---
 
-### 4. TODO_REFACTORING.md
+### 4. ~~TODO_REFACTORING.md~~ (eliminado; contenido repartido)
 
-**Estado:** ✅ **COMPLETADO** - Todas las refactorizaciones principales finalizadas  
-**Última actualización:** 2025-10-21
+**Estado 2026:** El archivo `TODO_REFACTORING.md` **ya no está en el repo**. Referencias equivalentes:
 
-**Refactorizaciones Completadas:**
-1. ✅ PacketReader + PacketValidator (100% - 8/8 tasks migradas)
-2. ✅ MessageSender Refactoring (100% - 8 componentes, 75 tests)
-3. ✅ NPC Factory Pattern (100% - 16 factory methods, 17 tests)
-4. ✅ Validación de longitud de Packets (100%)
-
-**Mejoras Futuras Opcionales:**
-- 📝 Service Container (prioridad baja)
-- 📝 Logging Estructurado (prioridad baja)
-
-**Recomendación:** ✅ **Archivo histórico** - Documenta refactorizaciones exitosas
+| Tema | Documento actual |
+|------|------------------|
+| Validación de packets / migración | [`PACKET_VALIDATOR_MIGRATION.md`](PACKET_VALIDATOR_MIGRATION.md) |
+| Handlers / MessageSender completados | [`HANDLER_REFACTORING_COMPLETED.md`](HANDLER_REFACTORING_COMPLETED.md), [`REFACTOR_MSG_COMPLETED.md`](REFACTOR_MSG_COMPLETED.md) |
+| DI / TaskFactory | [`TODO_ARQUITECTURA.md`](todo/TODO_ARQUITECTURA.md) §1 (histórico), código en `TaskFactory` + `DependencyContainer` |
+| Mejoras técnicas pendientes (métricas, logs, Redis…) | [`TECH_IMPROVEMENTS_BACKLOG.md`](TECH_IMPROVEMENTS_BACKLOG.md) |
 
 ---
 
@@ -346,11 +329,10 @@
 ## 💡 Recomendaciones
 
 ### 1. Consolidación de Documentos
-- ⚠️ **TODO_GENERAL.md** duplica contenido con **ROADMAP_VERSIONES.md**
-- 💡 Marcar TODO_GENERAL.md como "legacy" y referenciar a ROADMAP_VERSIONES.md
+- ✅ **TODO_GENERAL.md** eliminado; usar solo **`ROADMAP_VERSIONES.md`** + **`TODO_CONSOLIDADO.md`**.
 
 ### 2. Actualización de Estado
-- ✅ **TODO_REFACTORING.md** - Ya completado, mantener como histórico
+- ✅ **TODO_REFACTORING.md** eliminado; ver tabla en §4 de esta revisión para rutas sustitutas
 - ✅ **TODO_NPC_FACTORY.md** - Ya completado, mantener como histórico
 - ✅ **TODO_MAP_TRANSITIONS.md** - Ya completado, mantener como histórico
 - ✅ **TODO_MAP_MANAGER_TILE_OCCUPATION.md** - Ya completado, mantener como histórico
@@ -376,9 +358,8 @@
 ## ✅ Checklist de Acciones Sugeridas
 
 ### Inmediato (Esta Semana)
-- [ ] Corregir 29 tests fallando del sistema de Parties
-- [ ] Actualizar estado de TODOs completados
-- [ ] Consolidar TODO_GENERAL.md con ROADMAP_VERSIONES.md
+- [ ] Mantener **ROADMAP_VERSIONES.md** y **TODO_CONSOLIDADO.md** alineados con releases reales
+- [ ] Al mencionar refactor histórico, enlazar **PACKET_VALIDATOR_MIGRATION** / **TECH_IMPROVEMENTS_BACKLOG**, no `TODO_REFACTORING.md`
 
 ### Corto Plazo (Próximo Mes)
 - [ ] Completar sistema de Parties (experiencia compartida, loot)
@@ -402,8 +383,8 @@
 5. ✅ **Estado actualizado** - La mayoría de docs reflejan el estado real
 
 ### Áreas de Mejora
-1. ⚠️ Consolidar documentos duplicados
-2. ⚠️ Corregir tests fallando del sistema de Parties
+1. Mantener un solo hilo de roadmap (`ROADMAP_VERSIONES` + `TODO_CONSOLIDADO`); evitar revivir `TODO_GENERAL` / `TODO_REFACTORING` como nombres de archivo
+2. Revisar tests/cobertura según prioridad del equipo (los estados “Parties fallando” pueden estar desactualizados frente a `main`)
 3. 📋 Completar funcionalidades pendientes de Parties
 4. 📋 Generar API docs automáticos
 

@@ -98,7 +98,7 @@
 
 **Beneficio:** Prevenir crashes por packets malformados, mejor seguridad
 
-**Referencia:** `TODO_REFACTORING.md#179-194`
+**Referencia:** [`PACKET_VALIDATOR_MIGRATION.md`](../PACKET_VALIDATOR_MIGRATION.md)
 
 ---
 
@@ -503,7 +503,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (independiente)
 
-**Referencia:** `TODO_GENERAL.md#131-138`
+**Referencia:** [`TODO_CARACTERISTICAS_VB6.md`](TODO_CARACTERISTICAS_VB6.md) (características VB6 / backlog de diseño)
 
 ---
 
@@ -551,7 +551,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (independiente)
 
-**Referencia:** `TODO_GENERAL.md#140-146`
+**Referencia:** [`TODO_CARACTERISTICAS_VB6.md`](TODO_CARACTERISTICAS_VB6.md) (características VB6 / backlog de diseño)
 
 ---
 
@@ -747,7 +747,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - `structlog` - Logging estructurado para Python
 - `python-json-logger` - JSON formatter para logging estándar
 
-**Referencia:** `TODO_REFACTORING.md#197-209`
+**Referencia:** [`TECH_IMPROVEMENTS_BACKLOG.md`](../TECH_IMPROVEMENTS_BACKLOG.md) (observabilidad / métricas / logs)
 
 ---
 
