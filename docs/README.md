@@ -15,6 +15,9 @@
 | [TOOLS_DIRECTORY.md](TOOLS_DIRECTORY.md) | Herramientas en `tools/` |
 | [DATA_DIRECTORY.md](DATA_DIRECTORY.md) | Árbol de datos TOML en `data/` |
 | [DATA_ITEMS.md](DATA_ITEMS.md) | Convenciones de `data/items/` |
+| [HANDLER_REFACTORING.md](HANDLER_REFACTORING.md) | Refactor de command handlers (hecho + backlog opcional) |
+| [REDUNDANT_TESTS.md](REDUNDANT_TESTS.md) | Cobertura / tests redundantes (análisis + verificación manual) |
+| [CLAN_BUTTON.md](CLAN_BUTTON.md) | Packet GuildDetails (80) y botón de clan en el cliente |
 
 ## Planificación y TODOs
 
@@ -24,6 +27,7 @@
 
 ## Otros análisis (raíz movidos aquí)
 
-- [ANALISIS_PROYECTO.md](ANALISIS_PROYECTO.md), [AUDITORIA.md](AUDITORIA.md), [REVISION_TODOS_DOCS.md](REVISION_TODOS_DOCS.md)
+- [AUDITORIA.md](AUDITORIA.md) — auditoría puntual  
+- Histórico / snapshots: [archive/](archive/README.md) (`ANALISIS_PROYECTO`, `REVISION_TODOS_DOCS`, `PROPOSED_CODE_ORGANIZATION`)
 
 La documentación de la raíz del repositorio sigue siendo el [**README.md**](../README.md) (presentación del proyecto).

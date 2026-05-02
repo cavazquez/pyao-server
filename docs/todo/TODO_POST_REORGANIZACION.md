@@ -38,4 +38,4 @@
 
 ---
 
-**Nota:** No buscar archivos **`TODO_GENERAL.md`** ni **`TODO_REFACTORING.md`** — fueron retirados; las referencias sustitutas están en **`REVISION_TODOS_DOCS.md`** y en los enlaces actualizados de **`ROADMAP_VERSIONES.md`**.
+**Nota:** No buscar **`TODO_GENERAL.md`** ni **`TODO_REFACTORING.md`** — fueron retirados. Metadocumentación antigua: **`docs/archive/REVISION_TODOS_DOCS.md`**. Roadmap actualizado: **`ROADMAP_VERSIONES.md`**.

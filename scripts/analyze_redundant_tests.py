@@ -17,7 +17,7 @@ El script:
 2. Ejecuta cada archivo de test individualmente con coverage
 3. Compara qué archivos de código cubre cada test
 4. Identifica tests redundantes (mismo conjunto de archivos cubiertos)
-5. Genera un reporte en docs/REDUNDANT_TESTS_ANALYSIS.md
+5. Genera un reporte en docs/REDUNDANT_TESTS_AUTOGEN.md (fusionar o contrastar con la Parte A de docs/REDUNDANT_TESTS.md)
 """
 
 import argparse
@@ -381,7 +381,7 @@ def main() -> None:
     test_analysis = analyze_redundant_tests(test_files, base_dir, args.sample)
 
     # Paso 3: Generar reporte
-    output_file = base_dir / "docs" / "REDUNDANT_TESTS_ANALYSIS.md"
+    output_file = base_dir / "docs" / "REDUNDANT_TESTS_AUTOGEN.md"
     generate_report(test_analysis, output_file)
 
     print("\n" + "=" * 70)

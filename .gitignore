@@ -220,3 +220,6 @@ map_binary/
 parts/
 prime/
 stage/
+
+# Salida regenerable del análisis de tests redundantes (ver docs/REDUNDANT_TESTS.md)
+docs/REDUNDANT_TESTS_AUTOGEN.md

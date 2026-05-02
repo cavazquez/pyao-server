@@ -169,7 +169,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
   - `login_handler.py`: 510 → 192 líneas + 4 handlers especializados
   - `create_account_handler.py`: 502 → 200 líneas + 3 handlers especializados
   - `attack_handler.py`: 392 → 161 líneas + 3 handlers especializados
-  - Y 5 más... Ver [HANDLER_REFACTORING_COMPLETED.md](docs/HANDLER_REFACTORING_COMPLETED.md)
+  - Y 5 más... Ver [HANDLER_REFACTORING.md](docs/HANDLER_REFACTORING.md)
 - **PlayerRepository:** Helpers `_hget_float/_hget_int/_hget_bool/_hset_field` eliminan duplicación en 20+ métodos ✅ **REFACTORIZADO**
 - **Tests:** 2052 tests pasando (100%), cobertura 75%, ejecución paralela con `pytest-xdist` ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy, pre-commit hooks (ruff + mypy) ✅
@@ -747,7 +747,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Arquitectura completa del servidor, patrones de diseño y componentes **NUEVO**
 - **[Refactorización Server](docs/REFACTOR_SERVER_COMPLETED.md)**: Refactorización completada de server.py ✅
 - **[Refactorización MSG](docs/REFACTOR_MSG_COMPLETED.md)**: Refactorización completada de msg.py ✅
-- **[Refactorización Handlers](docs/HANDLER_REFACTORING_COMPLETED.md)**: Refactorización completada de 12 handlers principales en 30 handlers especializados ✅ **NUEVO**
+- **[Refactorización Handlers](docs/HANDLER_REFACTORING.md)**: Handlers refactorizados + backlog opcional de división futura ✅ **NUEVO**
 
 ### Protocolo y Flujos
 - **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login

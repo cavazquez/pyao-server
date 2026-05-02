@@ -1,4 +1,9 @@
-# Habilitación del Botón de Clanes - Estado Actual
+# Botón de clan en el cliente (GuildDetails / packet 80)
+
+Guía única: estado servidor/cliente, formato del packet y pasos para habilitar el envío cuando el cliente implemente el handler.
+
+---
+
 
 **Fecha:** 2025-01-31  
 **Problema:** El botón de clanes no se activa aunque el jugador tenga un clan
@@ -96,7 +101,7 @@ Campos incluidos:
 4. El formato del packet es correcto según el protocolo VB6
 
 **Para habilitar cuando el cliente lo implemente:**
-- Ver `docs/CLAN_BUTTON_ENABLING.md` para instrucciones
+- Seguir la sección [Pasos en el servidor (cuando el cliente esté listo)](#pasos-en-el-servidor-cuando-el-cliente-esté-listo) más abajo
 - Agregar el código necesario en `login_handler.py` usando `message_sender.send_clan_details(clan)`
 - Agregar `clan_service` al constructor de `LoginCommandHandler` si se necesita
 
@@ -112,4 +117,56 @@ Campos incluidos:
 ---
 
 **Conclusión:** El servidor tiene todo listo pero NO envía el packet actualmente. Cuando el cliente implemente el handler, se puede habilitar fácilmente descomentando el código en `login_handler.py`.
+
+
+---
+
+## Pasos en el servidor (cuando el cliente esté listo)
+
+Cuando el cliente Godot implemente el handler para el packet 80 (GuildDetails):
+
+### Paso 1: Modificar LoginCommandHandler
+
+En `src/command_handlers/login_handler.py`, agregar `clan_service` al constructor y enviar el packet:
+
+```python
+# En el constructor, agregar:
+clan_service: "ClanService | None" = None,
+
+# Y guardar:
+self.clan_service = clan_service
+```
+
+Luego, en `_finalize_login()`, después de enviar `SHOW_PARTY_FORM`, agregar:
+
+```python
+# Enviar detalles del clan si el jugador pertenece a uno (habilitar botón de clan)
+if self.clan_service:
+    clan = await self.clan_service.clan_repo.get_user_clan(user_id)
+    if clan:
+        logger.info(
+            "Enviando CLAN_DETAILS para habilitar botón CLAN (user_id: %d, clan: %s)",
+            user_id,
+            clan.name,
+        )
+        await self.message_sender.send_clan_details(clan)
+```
+
+### Paso 2: Modificar TaskFactory
+
+En `src/tasks/task_factory.py`, en `_get_login_handler()`, agregar `clan_service`:
+
+```python
+clan_service=self.deps.clan_service,
+```
+
+### Paso 3: Verificar
+
+1. El packet `CLAN_DETAILS` (80) ya está implementado en `src/network/msg_clan.py`
+2. Los métodos `send_clan_details()` ya existen en `MessageSender` y `SessionMessageSender`
+3. Solo falta habilitar el envío cuando el cliente esté listo
+
+---
+
+El formato del packet se describe en la primera parte de esta guía.
 

@@ -8,7 +8,7 @@ El sistema de clanes (guilds) permite a los jugadores crear y gestionar organiza
 
 **El servidor envía correctamente el packet `CLAN_DETAILS` (ID 80) durante el login para habilitar el botón de clanes en el cliente, pero el cliente Godot actualmente NO procesa este packet.**
 
-- ✅ El servidor envía el packet correctamente cuando está habilitado (ver `docs/HOW_TO_ENABLE_CLAN_BUTTON.md`)
+- ✅ El servidor envía el packet correctamente cuando está habilitado (ver [`docs/CLAN_BUTTON.md`](CLAN_BUTTON.md))
 - ❌ El cliente Godot no tiene implementado el manejo del packet 80
 - 📝 **Solución**: El cliente necesita implementar el handler para el packet 80 que habilite el botón de clanes en la UI
 
@@ -392,8 +392,7 @@ Las invitaciones expiran automáticamente después de 60 segundos. El sistema ve
 
 - **Estado de implementación**: `docs/CLAN_SYSTEM_IMPLEMENTATION_STATUS.md`
 - **Guía de pruebas**: `docs/TESTING_CLAN_SYSTEM.md`
-- **Habilitar botón**: `docs/HOW_TO_ENABLE_CLAN_BUTTON.md`
-- **Problema del botón**: `docs/CLAN_BUTTON_ENABLING.md`
+- **Botón de clan / packet GuildDetails**: [`docs/CLAN_BUTTON.md`](CLAN_BUTTON.md)
 - **Código fuente**: `src/services/clan_service.py`
 - **Modelos**: `src/models/clan.py`
 - **Repositorio**: `src/repositories/clan_repository.py`

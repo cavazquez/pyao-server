@@ -10,6 +10,7 @@ Documentación completa del sistema de comercio (compra/venta) con NPCs mercader
 - [Flujo de Comercio](#flujo-de-comercio)
 - [Implementación del Cliente](#implementación-del-cliente)
 - [Casos de Uso](#casos-de-uso)
+- [Implementación completada](#implementación-completada)
 
 ---
 
@@ -515,18 +516,23 @@ session:{user_id}:active_merchant = npc_id  # String con ID del mercader
 
 ---
 
-## 🎯 Próximos Pasos
+## ✅ Implementación completada
 
-1. **Crear `MerchantRepository`** para gestionar inventarios de mercaderes en Redis
-2. **Implementar `CommerceService`** con lógica de compra/venta
-3. **Crear Tasks** para manejar packets `COMMERCE_BUY` y `COMMERCE_SELL`
-4. **Modificar `TaskLeftClick`** para abrir ventana de comercio con mercaderes
-5. **Agregar tests** para todas las funcionalidades
-6. **Configurar mercaderes** en `data/npcs.toml` con inventarios iniciales
-7. **Actualizar README.md** con documentación del sistema de comercio
+El comercio con mercaderes está **implementado y estable** en el servidor. Rutas actuales (el árbol de `src/` puede diferir de borradores antiguos):
+
+| Componente | Ubicación típica |
+|------------|-------------------|
+| Lógica de negocio | `src/services/commerce_service.py` |
+| Inventario mercader (Redis) | `src/repositories/merchant_repository.py` |
+| Tasks de packets | `src/tasks/commerce/` (`task_commerce_buy`, `task_commerce_sell`, `task_commerce_end`, …) |
+| Orquestación / handlers | `src/command_handlers/` (comercio integrado con `CommerceService`) |
+| Datos | `data/merchant_inventories.toml`, definición de NPCs mercader en datos de NPCs |
+
+**Comportamiento:** validación de oro, espacio y cantidad; transacciones atómicas con rollback; precios según catálogo (`sale_price`, venta al mercader típicamente ~50 % del precio de compra). **Tests:** `tests/services/test_commerce_service.py`, `tests/tasks/commerce/`, `tests/repositories/test_merchant_repository.py`, etc.
+
+Las secciones anteriores de este documento describen protocolo y flujo; sirven como contrato con el cliente Godot.
 
 ---
 
-**Última actualización:** 2025-10-21  
-**Versión:** 0.6.0-alpha  
-**Estado:** ✅ COMPLETADO - Sistema implementado y funcionando
+**Última actualización:** 2026-05-02  
+**Estado:** Funcional en producción de desarrollo; mantener al día con cambios de protocolo.

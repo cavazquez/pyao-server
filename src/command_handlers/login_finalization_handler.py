@@ -63,7 +63,7 @@ class LoginFinalizationHandler:
 
         # NOTA: El envío de CLAN_DETAILS (packet 80) está deshabilitado hasta que el cliente
         # Godot implemente el handler para procesar GuildDetails.
-        # Ver: docs/CLAN_BUTTON_ENABLING.md para instrucciones de cómo habilitarlo.
+        # Ver: docs/CLAN_BUTTON.md para instrucciones de cómo habilitarlo.
 
         # Enviar MOTD (Mensaje del Día)
         logger.info("[LOGIN-FINALIZE] user_id=%d Enviando MOTD", user_id)

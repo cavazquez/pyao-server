@@ -93,7 +93,7 @@
 | Tema | Documento actual |
 |------|------------------|
 | Validación de packets / migración | [`PACKET_VALIDATOR_MIGRATION.md`](PACKET_VALIDATOR_MIGRATION.md) |
-| Handlers / MessageSender completados | [`HANDLER_REFACTORING_COMPLETED.md`](HANDLER_REFACTORING_COMPLETED.md), [`REFACTOR_MSG_COMPLETED.md`](REFACTOR_MSG_COMPLETED.md) |
+| Handlers / MessageSender completados | [`HANDLER_REFACTORING.md`](../HANDLER_REFACTORING.md), [`REFACTOR_MSG_COMPLETED.md`](../REFACTOR_MSG_COMPLETED.md) |
 | DI / TaskFactory | [`TODO_ARQUITECTURA.md`](todo/TODO_ARQUITECTURA.md) §1 (histórico), código en `TaskFactory` + `DependencyContainer` |
 | Mejoras técnicas pendientes (métricas, logs, Redis…) | [`TECH_IMPROVEMENTS_BACKLOG.md`](TECH_IMPROVEMENTS_BACKLOG.md) |
 
