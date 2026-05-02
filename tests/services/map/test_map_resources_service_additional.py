@@ -7,7 +7,14 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from src.services.map.cache import (
+    build_mtimes,
+    is_cache_source_valid_lists,
+    read_cache_file_strict,
+    rebuild_resources_from_maps_data,
+)
 from src.services.map.map_resources_service import MapResourcesService
+from src.services.map.map_single_map_loader import load_doors_from_objects, load_signs_from_objects
 
 
 @pytest.fixture
@@ -31,7 +38,7 @@ class TestMapResourcesServiceCache:
         with cache_path.open("w", encoding="utf-8") as f:
             json.dump(cache_data, f)
 
-        data = MapResourcesService._read_cache_file(cache_path)
+        data = read_cache_file_strict(cache_path)
         assert data == cache_data
 
     def test_read_cache_file_invalid_json(self, temp_map_dir):
@@ -40,7 +47,7 @@ class TestMapResourcesServiceCache:
         cache_path.write_text("invalid json {")
 
         with pytest.raises(json.JSONDecodeError):
-            MapResourcesService._read_cache_file(cache_path)
+            read_cache_file_strict(cache_path)
 
     def test_read_cache_file_not_dict(self, temp_map_dir):
         """Test _read_cache_file con JSON que no es dict."""
@@ -49,7 +56,7 @@ class TestMapResourcesServiceCache:
             json.dump([1, 2, 3], f)  # Lista, no dict
 
         with pytest.raises(json.JSONDecodeError):
-            MapResourcesService._read_cache_file(cache_path)
+            read_cache_file_strict(cache_path)
 
     def test_is_cache_source_valid_matching(self, temp_map_dir):
         """Test _is_cache_source_valid con archivos que coinciden."""
@@ -63,13 +70,13 @@ class TestMapResourcesServiceCache:
         objects_files = [objects_file]
 
         # Construir info del caché
-        blocked_names, blocked_mtimes = MapResourcesService._build_mtimes(blocked_files)
-        objects_names, objects_mtimes = MapResourcesService._build_mtimes(objects_files)
+        blocked_names, blocked_mtimes = build_mtimes(blocked_files)
+        objects_names, objects_mtimes = build_mtimes(objects_files)
 
         blocked_info = {"files": blocked_names, "mtimes": blocked_mtimes}
         objects_info = {"files": objects_names, "mtimes": objects_mtimes}
 
-        is_valid = MapResourcesService._is_cache_source_valid(
+        is_valid = is_cache_source_valid_lists(
             blocked_files, objects_files, blocked_info, objects_info
         )
         assert is_valid is True
@@ -86,7 +93,7 @@ class TestMapResourcesServiceCache:
         blocked_info = {"files": ["blocked_2-50.json"], "mtimes": {}}
         objects_info = {"files": [], "mtimes": {}}
 
-        is_valid = MapResourcesService._is_cache_source_valid(
+        is_valid = is_cache_source_valid_lists(
             blocked_files, objects_files, blocked_info, objects_info
         )
         assert is_valid is False
@@ -99,12 +106,12 @@ class TestMapResourcesServiceCache:
         blocked_files = [blocked_file]
         objects_files = []
 
-        blocked_names, _ = MapResourcesService._build_mtimes(blocked_files)
+        blocked_names, _ = build_mtimes(blocked_files)
         # Mtimes diferentes
         blocked_info = {"files": blocked_names, "mtimes": {"blocked_1-50.json": 999999}}
         objects_info = {"files": [], "mtimes": {}}
 
-        is_valid = MapResourcesService._is_cache_source_valid(
+        is_valid = is_cache_source_valid_lists(
             blocked_files, objects_files, blocked_info, objects_info
         )
         assert is_valid is False
@@ -116,7 +123,7 @@ class TestMapResourcesServiceCache:
         mock_path.name = "test.json"
         mock_path.stat.side_effect = OSError("Permission denied")
 
-        names, mtimes = MapResourcesService._build_mtimes([mock_path])
+        names, mtimes = build_mtimes([mock_path])
 
         assert names == []
         assert mtimes == {}
@@ -137,12 +144,12 @@ class TestMapResourcesServiceRebuildCache:
                 "mines": [[40, 40]],
                 "anvils": [[50, 50]],
                 "forges": [[60, 60]],
-                "signs": [[(70, 70), 1001]],
-                "doors": [[(80, 80), 2001]],
+                "signs": [[70, 70, 1001]],
+                "doors": [[80, 80, 2001]],
             }
         }
 
-        service._rebuild_resources_from_cache(maps_data)
+        rebuild_resources_from_maps_data(maps_data, service.resources, service.signs, service.doors)
 
         assert "map_1" in service.resources
         assert (10, 20) in service.resources["map_1"]["blocked"]
@@ -161,7 +168,7 @@ class TestMapResourcesServiceRebuildCache:
             "999": {"blocked": [[10, 20]]},  # Válido
         }
 
-        service._rebuild_resources_from_cache(maps_data)
+        rebuild_resources_from_maps_data(maps_data, service.resources, service.signs, service.doors)
 
         # Solo debe cargar el válido
         assert "map_999" in service.resources
@@ -176,7 +183,7 @@ class TestMapResourcesServiceRebuildCache:
             "2": {"blocked": [[10, 20]]},  # Válido
         }
 
-        service._rebuild_resources_from_cache(maps_data)
+        rebuild_resources_from_maps_data(maps_data, service.resources, service.signs, service.doors)
 
         # Solo debe cargar el válido
         assert "map_2" in service.resources
@@ -197,7 +204,7 @@ class TestMapResourcesServiceRebuildCache:
             }
         }
 
-        service._rebuild_resources_from_cache(maps_data)
+        rebuild_resources_from_maps_data(maps_data, service.resources, service.signs, service.doors)
 
         assert "map_1" in service.resources
         assert len(service.resources["map_1"]["blocked"]) == 0
@@ -213,7 +220,7 @@ class TestMapResourcesServiceLoadSignsDoors:
             f.write(json.dumps({"m": 1, "t": "sign", "x": 10, "y": 20, "g": 1001}) + "\n")
             f.write(json.dumps({"m": 1, "t": "sign", "x": 15, "y": 25, "g": 1002}) + "\n")
 
-        signs = MapResourcesService._load_signs_from_objects(objects_path, 1)
+        signs = load_signs_from_objects(objects_path, 1)
 
         assert (10, 20) in signs
         assert signs[10, 20] == 1001
@@ -226,7 +233,7 @@ class TestMapResourcesServiceLoadSignsDoors:
         with objects_path.open("w", encoding="utf-8") as f:
             f.write(json.dumps({"m": 2, "t": "sign", "x": 10, "y": 20, "g": 1001}) + "\n")
 
-        signs = MapResourcesService._load_signs_from_objects(objects_path, 1)
+        signs = load_signs_from_objects(objects_path, 1)
 
         assert len(signs) == 0
 
@@ -236,7 +243,7 @@ class TestMapResourcesServiceLoadSignsDoors:
         with objects_path.open("w", encoding="utf-8") as f:
             f.write(json.dumps({"m": 1, "t": "tree", "x": 10, "y": 20, "g": 1001}) + "\n")
 
-        signs = MapResourcesService._load_signs_from_objects(objects_path, 1)
+        signs = load_signs_from_objects(objects_path, 1)
 
         assert len(signs) == 0
 
@@ -247,7 +254,7 @@ class TestMapResourcesServiceLoadSignsDoors:
             f.write("invalid json {}\n")
             f.write(json.dumps({"m": 1, "t": "sign", "x": 10, "y": 20, "g": 1001}) + "\n")
 
-        signs = MapResourcesService._load_signs_from_objects(objects_path, 1)
+        signs = load_signs_from_objects(objects_path, 1)
 
         # Debe ignorar la línea inválida y cargar la válida
         assert (10, 20) in signs
@@ -255,7 +262,7 @@ class TestMapResourcesServiceLoadSignsDoors:
     def test_load_signs_from_objects_nonexistent_file(self):
         """Test _load_signs_from_objects con archivo inexistente."""
         nonexistent_path = Path("/nonexistent/objects.json")
-        signs = MapResourcesService._load_signs_from_objects(nonexistent_path, 1)
+        signs = load_signs_from_objects(nonexistent_path, 1)
 
         assert len(signs) == 0
 
@@ -266,7 +273,7 @@ class TestMapResourcesServiceLoadSignsDoors:
             f.write(json.dumps({"m": 1, "t": "door", "x": 10, "y": 20, "g": 2001}) + "\n")
             f.write(json.dumps({"m": 1, "t": "door", "x": 15, "y": 25, "g": 2002}) + "\n")
 
-        doors = MapResourcesService._load_doors_from_objects(objects_path, 1)
+        doors = load_doors_from_objects(objects_path, 1)
 
         assert (10, 20) in doors
         assert doors[10, 20] == 2001
@@ -279,7 +286,7 @@ class TestMapResourcesServiceLoadSignsDoors:
         with objects_path.open("w", encoding="utf-8") as f:
             f.write(json.dumps({"m": 2, "t": "door", "x": 10, "y": 20, "g": 2001}) + "\n")
 
-        doors = MapResourcesService._load_doors_from_objects(objects_path, 1)
+        doors = load_doors_from_objects(objects_path, 1)
 
         assert len(doors) == 0
 
@@ -290,7 +297,7 @@ class TestMapResourcesServiceLoadSignsDoors:
             f.write(json.dumps({"m": 1, "t": "door", "x": "invalid", "y": 20, "g": 2001}) + "\n")
             f.write(json.dumps({"m": 1, "t": "door", "x": 10, "y": 20, "g": 2001}) + "\n")
 
-        doors = MapResourcesService._load_doors_from_objects(objects_path, 1)
+        doors = load_doors_from_objects(objects_path, 1)
 
         # Solo debe cargar la válida
         assert (10, 20) in doors

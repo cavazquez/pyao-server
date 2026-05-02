@@ -7,7 +7,15 @@ from pathlib import Path
 
 import pytest
 
+from src.services.map.blocked_loader import process_blocked_file
 from src.services.map.map_resources_service import MapResourcesService
+from src.services.map.map_single_map_loader import (
+    process_blocked_file as process_blocked_file_single_map,
+)
+from src.services.map.map_single_map_loader import (
+    process_objects_file as process_objects_file_single_map,
+)
+from src.services.map.objects_loader import process_objects_file
 
 
 @pytest.fixture
@@ -36,9 +44,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         assert (10, 20) in blocked_by_map[1]
         assert (15, 25) in blocked_by_map[1]
@@ -54,9 +60,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         assert (5, 5) in water_by_map[1]
         assert (5, 5) in blocked_by_map[1]  # Agua también bloquea
@@ -72,9 +76,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         assert (30, 30) in trees_by_map[1]
         assert (30, 30) in blocked_by_map[1]  # Árboles también bloquean
@@ -90,9 +92,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         assert (40, 40) in mines_by_map[1]
         assert (40, 40) in blocked_by_map[1]  # Minas también bloquean
@@ -109,9 +109,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         # Debe ignorar la línea inválida y procesar la válida
         assert (10, 20) in blocked_by_map[1]
@@ -128,9 +126,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         # Solo debe procesar la válida
         assert (15, 25) in blocked_by_map[1]
@@ -148,9 +144,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         # Solo debe procesar la válida
         assert (15, 25) in blocked_by_map[1]
@@ -163,7 +157,7 @@ class TestProcessBlockedFilePerFile:
         trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
         mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
+        process_blocked_file(
             nonexistent_path, blocked_by_map, water_by_map, trees_by_map, mines_by_map
         )
 
@@ -189,7 +183,7 @@ class TestProcessObjectsFilePerFile:
         anvils_by_map: dict[int, set[tuple[int, int]]] = {}
         forges_by_map: dict[int, set[tuple[int, int]]] = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_path,
             trees_by_map,
             mines_by_map,
@@ -220,7 +214,7 @@ class TestProcessObjectsFilePerFile:
         anvils_by_map: dict[int, set[tuple[int, int]]] = {}
         forges_by_map: dict[int, set[tuple[int, int]]] = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_path,
             trees_by_map,
             mines_by_map,
@@ -252,7 +246,7 @@ class TestProcessObjectsFilePerFile:
         anvils_by_map: dict[int, set[tuple[int, int]]] = {}
         forges_by_map: dict[int, set[tuple[int, int]]] = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_path,
             trees_by_map,
             mines_by_map,
@@ -285,7 +279,7 @@ class TestProcessObjectsFilePerFile:
         anvils_by_map: dict[int, set[tuple[int, int]]] = {}
         forges_by_map: dict[int, set[tuple[int, int]]] = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_path,
             trees_by_map,
             mines_by_map,
@@ -318,7 +312,7 @@ class TestProcessObjectsFilePerFile:
         anvils_by_map: dict[int, set[tuple[int, int]]] = {}
         forges_by_map: dict[int, set[tuple[int, int]]] = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_path,
             trees_by_map,
             mines_by_map,
@@ -380,7 +374,7 @@ class TestProcessBlockedFile:
             f.write(json.dumps({"m": 1, "t": "w", "x": 5, "y": 5}) + "\n")
             f.write(json.dumps({"m": 2, "t": "b", "x": 15, "y": 25}) + "\n")  # Mapa diferente
 
-        blocked, water, _trees, _mines = MapResourcesService._process_blocked_file(blocked_path, 1)
+        blocked, water, _trees, _mines = process_blocked_file_single_map(blocked_path, 1)
 
         assert (10, 20) in blocked
         assert (5, 5) in water
@@ -389,7 +383,7 @@ class TestProcessBlockedFile:
 
     def test_process_blocked_file_nonexistent(self):
         """Test procesamiento con archivo inexistente."""
-        blocked, water, trees, mines = MapResourcesService._process_blocked_file(None, 1)
+        blocked, water, trees, mines = process_blocked_file_single_map(None, 1)
 
         assert len(blocked) == 0
         assert len(water) == 0
@@ -415,7 +409,7 @@ class TestProcessObjectsFile:
         anvils: set[tuple[int, int]] = set()
         forges: set[tuple[int, int]] = set()
 
-        MapResourcesService._process_objects_file(
+        process_objects_file_single_map(
             objects_path, 1, trees, mines, blocked, water, anvils, forges
         )
 
@@ -434,9 +428,7 @@ class TestProcessObjectsFile:
         anvils: set[tuple[int, int]] = set()
         forges: set[tuple[int, int]] = set()
 
-        MapResourcesService._process_objects_file(
-            None, 1, trees, mines, blocked, water, anvils, forges
-        )
+        process_objects_file_single_map(None, 1, trees, mines, blocked, water, anvils, forges)
 
         assert len(trees) == 0
         assert len(anvils) == 0

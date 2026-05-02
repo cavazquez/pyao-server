@@ -9,7 +9,26 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from src.services.map.blocked_loader import process_blocked_file
+from src.services.map.cache import (
+    build_mtimes,
+    is_cache_source_valid_lists,
+    read_cache_file_strict,
+    rebuild_resources_from_maps_data,
+    serialize_resources_to_maps_dict,
+)
 from src.services.map.map_resources_service import MapResourcesService
+from src.services.map.map_single_map_loader import (
+    load_doors_from_objects,
+    load_signs_from_objects,
+)
+from src.services.map.map_single_map_loader import (
+    process_blocked_file as process_blocked_file_single_map,
+)
+from src.services.map.map_single_map_loader import (
+    process_objects_file as process_objects_file_single_map,
+)
+from src.services.map.objects_loader import process_objects_file
 
 
 @pytest.fixture
@@ -276,7 +295,7 @@ class TestMapResourcesService:
         file2.write_text("{}")
 
         files = [file1, file2]
-        names, mtimes = MapResourcesService._build_mtimes(files)
+        names, mtimes = build_mtimes(files)
 
         assert len(names) == 2
         assert "test1.json" in names
@@ -291,7 +310,7 @@ class TestMapResourcesService:
         missing_file = temp_map_dir / "missing.json"
         files = [missing_file]
 
-        names, mtimes = MapResourcesService._build_mtimes(files)
+        names, mtimes = build_mtimes(files)
 
         assert len(names) == 0
         assert len(mtimes) == 0
@@ -301,7 +320,7 @@ class TestMapResourcesService:
         cache_file = temp_map_dir / "cache.json"
         cache_file.write_text('{"version": 2, "maps": {}}')
 
-        data = MapResourcesService._read_cache_file(cache_file)
+        data = read_cache_file_strict(cache_file)
 
         assert data["version"] == 2
         assert "maps" in data
@@ -312,7 +331,7 @@ class TestMapResourcesService:
         cache_file.write_text("invalid json")
 
         with pytest.raises(json.JSONDecodeError):
-            MapResourcesService._read_cache_file(cache_file)
+            read_cache_file_strict(cache_file)
 
     def test_is_cache_source_valid(self, temp_map_dir):
         """Test _is_cache_source_valid."""
@@ -326,16 +345,14 @@ class TestMapResourcesService:
         objects_files = [file2]
 
         # Construir info del caché
-        blocked_names, blocked_mtimes = MapResourcesService._build_mtimes(blocked_files)
-        objects_names, objects_mtimes = MapResourcesService._build_mtimes(objects_files)
+        blocked_names, blocked_mtimes = build_mtimes(blocked_files)
+        objects_names, objects_mtimes = build_mtimes(objects_files)
 
         blocked_info = {"files": blocked_names, "mtimes": blocked_mtimes}
         objects_info = {"files": objects_names, "mtimes": objects_mtimes}
 
         # Debe ser válido
-        assert MapResourcesService._is_cache_source_valid(
-            blocked_files, objects_files, blocked_info, objects_info
-        )
+        assert is_cache_source_valid_lists(blocked_files, objects_files, blocked_info, objects_info)
 
     def test_is_cache_source_valid_different_files(self, temp_map_dir):
         """Test _is_cache_source_valid con archivos diferentes."""
@@ -350,7 +367,7 @@ class TestMapResourcesService:
         objects_info = {"files": [], "mtimes": {}}
 
         # No debe ser válido
-        assert not MapResourcesService._is_cache_source_valid(
+        assert not is_cache_source_valid_lists(
             blocked_files, objects_files, blocked_info, objects_info
         )
 
@@ -385,9 +402,7 @@ class TestMapResourcesService:
             '{"m": 2, "t": "b", "x": 10, "y": 10}\n'  # Diferente mapa
         )
 
-        blocked, water, trees, mines = MapResourcesService._process_blocked_file(
-            blocked_file, map_id=1
-        )
+        blocked, water, trees, mines = process_blocked_file_single_map(blocked_file, map_id=1)
 
         assert (10, 10) in blocked  # blocked
         assert (20, 20) in water  # water
@@ -403,9 +418,7 @@ class TestMapResourcesService:
         """Test _process_blocked_file con archivo que no existe."""
         missing_file = temp_map_dir / "missing.json"
 
-        blocked, water, trees, mines = MapResourcesService._process_blocked_file(
-            missing_file, map_id=1
-        )
+        blocked, water, trees, mines = process_blocked_file_single_map(missing_file, map_id=1)
 
         assert len(blocked) == 0
         assert len(water) == 0
@@ -417,9 +430,7 @@ class TestMapResourcesService:
         blocked_file = temp_map_dir / "blocked_1-50.json"
         blocked_file.write_text("invalid json\n{'m': 1, 't': 'b', 'x': 10, 'y': 10}\n")
 
-        blocked, _water, _trees, _mines = MapResourcesService._process_blocked_file(
-            blocked_file, map_id=1
-        )
+        blocked, _water, _trees, _mines = process_blocked_file_single_map(blocked_file, map_id=1)
 
         # Debe ignorar líneas inválidas
         assert len(blocked) == 0
@@ -443,7 +454,7 @@ class TestMapResourcesService:
         anvils = set()
         forges = set()
 
-        MapResourcesService._process_objects_file(
+        process_objects_file_single_map(
             objects_file,
             map_id=1,
             trees=trees,
@@ -476,7 +487,7 @@ class TestMapResourcesService:
         anvils = set()
         forges = set()
 
-        MapResourcesService._process_objects_file(
+        process_objects_file_single_map(
             missing_file,
             map_id=1,
             trees=trees,
@@ -502,7 +513,7 @@ class TestMapResourcesService:
             '{"m": 1, "t": "sign", "x": 20, "y": 20, "g": 7002}\n'
         )
 
-        signs = MapResourcesService._load_signs_from_objects(objects_file, map_id=1)
+        signs = load_signs_from_objects(objects_file, map_id=1)
 
         assert (10, 10) in signs
         assert signs[10, 10] == 7001
@@ -513,7 +524,7 @@ class TestMapResourcesService:
         """Test _load_signs_from_objects con archivo que no existe."""
         missing_file = temp_map_dir / "missing.json"
 
-        signs = MapResourcesService._load_signs_from_objects(missing_file, map_id=1)
+        signs = load_signs_from_objects(missing_file, map_id=1)
 
         assert len(signs) == 0
 
@@ -525,7 +536,7 @@ class TestMapResourcesService:
             '{"m": 1, "t": "door", "x": 20, "y": 20, "g": 5002}\n'
         )
 
-        doors = MapResourcesService._load_doors_from_objects(objects_file, map_id=1)
+        doors = load_doors_from_objects(objects_file, map_id=1)
 
         assert (10, 10) in doors
         assert doors[10, 10] == 5001
@@ -536,7 +547,7 @@ class TestMapResourcesService:
         """Test _load_doors_from_objects con archivo que no existe."""
         missing_file = temp_map_dir / "missing.json"
 
-        doors = MapResourcesService._load_doors_from_objects(missing_file, map_id=1)
+        doors = load_doors_from_objects(missing_file, map_id=1)
 
         assert len(doors) == 0
 
@@ -556,9 +567,7 @@ class TestMapResourcesService:
         trees_by_map = defaultdict(set)
         mines_by_map = defaultdict(set)
 
-        MapResourcesService._process_blocked_file_per_file(
-            blocked_file, blocked_by_map, water_by_map, trees_by_map, mines_by_map
-        )
+        process_blocked_file(blocked_file, blocked_by_map, water_by_map, trees_by_map, mines_by_map)
 
         assert 1 in blocked_by_map
         assert (10, 10) in blocked_by_map[1]
@@ -589,7 +598,7 @@ class TestMapResourcesService:
         anvils_by_map = {}
         forges_by_map = {}
 
-        MapResourcesService._process_objects_file_per_file(
+        process_objects_file(
             objects_file,
             trees_by_map,
             mines_by_map,
@@ -619,7 +628,7 @@ class TestMapResourcesService:
         assert doors_by_map[1][70, 70] == 5001
 
     def test_build_maps_payload_for_cache(self, temp_map_dir):
-        """Test _build_maps_payload_for_cache."""
+        """Test serialize_resources_to_maps_dict (formato del archivo maps)."""
         service = MapResourcesService(maps_dir=temp_map_dir)
 
         # Agregar datos manualmente
@@ -634,11 +643,10 @@ class TestMapResourcesService:
         service.signs["map_1"] = {(60, 60): 7001}
         service.doors["map_1"] = {(70, 70): 5001}
 
-        payload = service._build_maps_payload_for_cache()
+        payload = serialize_resources_to_maps_dict(service.resources, service.signs, service.doors)
 
-        # El payload usa str(map_id) como clave, no "map_1"
-        assert "1" in payload
-        map_data = payload["1"]
+        assert "map_1" in payload
+        map_data = payload["map_1"]
         assert "blocked" in map_data
         assert "water" in map_data
         assert "trees" in map_data
@@ -649,24 +657,23 @@ class TestMapResourcesService:
         assert "doors" in map_data
 
     def test_rebuild_resources_from_cache(self, temp_map_dir):
-        """Test _rebuild_resources_from_cache."""
+        """Test rebuild_resources_from_maps_data (mismo formato que save_cache)."""
         service = MapResourcesService(maps_dir=temp_map_dir)
 
-        # El formato del caché usa str(map_id) como clave y signs/doors como listas de tuplas
         maps_data = {
-            "1": {  # str(map_id), no "map_1"
+            "1": {
                 "blocked": [[10, 10], [10, 11]],
                 "water": [[5, 5]],
                 "trees": [[20, 20]],
                 "mines": [[30, 30]],
                 "anvils": [[40, 40]],
                 "forges": [[50, 50]],
-                "signs": [((60, 60), 7001)],  # Lista de tuplas ((x, y), grh)
-                "doors": [((70, 70), 5001)],  # Lista de tuplas ((x, y), grh)
+                "signs": [[60, 60, 7001]],
+                "doors": [[70, 70, 5001]],
             }
         }
 
-        service._rebuild_resources_from_cache(maps_data)
+        rebuild_resources_from_maps_data(maps_data, service.resources, service.signs, service.doors)
 
         assert "map_1" in service.resources
         assert (10, 10) in service.resources["map_1"]["blocked"]
@@ -725,20 +732,10 @@ class TestMapResourcesService:
             mock_path = MagicMock(spec=Path)
             mock_path.exists.return_value = False
 
-            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
-                # Si es la construcción de la ruta de puertas, retornar mock que no existe
-                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
-                    return mock_path
-                # Para __file__, crear un mock con parent chain
-                if len(args) == 1 and str(args[0]) == "__file__":
-                    mock_file_path = MagicMock()
-                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
-                        return_value=mock_path
-                    )
-                    return mock_file_path
-                return Path(*args, **kwargs)
-
-            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+            with patch(
+                "src.services.map.map_resources_service.resolve_manual_doors_config_path",
+                return_value=mock_path,
+            ):
                 # No debe lanzar excepción si el archivo no existe
                 service._load_manual_doors()
                 # El conteo no debe cambiar
@@ -796,24 +793,10 @@ is_open = false
             # Limpiar puertas que puedan haberse cargado del archivo real
             service.doors.clear()
 
-            # Mockear la construcción de la ruta de puertas
-            mock_path = MagicMock(spec=Path)
-            mock_path.exists.return_value = True
-            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
-            mock_path.open.return_value.__exit__ = lambda *_: None
-
-            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
-                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
-                    return mock_path
-                if len(args) == 1 and str(args[0]) == "__file__":
-                    mock_file_path = MagicMock()
-                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
-                        return_value=mock_path
-                    )
-                    return mock_file_path
-                return Path(*args, **kwargs)
-
-            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+            with patch(
+                "src.services.map.map_resources_service.resolve_manual_doors_config_path",
+                return_value=temp_toml_path,
+            ):
                 # Cargar puertas manuales
                 service._load_manual_doors()
 
@@ -860,24 +843,10 @@ grh_index = 5003
         try:
             service = MapResourcesService(maps_dir=temp_map_dir)
 
-            # Mockear la construcción de la ruta de puertas
-            mock_path = MagicMock(spec=Path)
-            mock_path.exists.return_value = True
-            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
-            mock_path.open.return_value.__exit__ = lambda *_: None
-
-            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
-                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
-                    return mock_path
-                if len(args) == 1 and str(args[0]) == "__file__":
-                    mock_file_path = MagicMock()
-                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
-                        return_value=mock_path
-                    )
-                    return mock_file_path
-                return Path(*args, **kwargs)
-
-            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+            with patch(
+                "src.services.map.map_resources_service.resolve_manual_doors_config_path",
+                return_value=temp_toml_path,
+            ):
                 # No debe lanzar excepción, solo debe ignorar las puertas incompletas
                 service._load_manual_doors()
 
@@ -910,18 +879,10 @@ grh_index = 5003
         mock_path.exists.return_value = True
         mock_path.open.side_effect = OSError("Error de lectura")
 
-        def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
-            if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
-                return mock_path
-            if len(args) == 1 and str(args[0]) == "__file__":
-                mock_file_path = MagicMock(spec=Path)
-                mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
-                    return_value=mock_path
-                )
-                return mock_file_path
-            return Path(*args, **kwargs)
-
-        with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+        with patch(
+            "src.services.map.map_resources_service.resolve_manual_doors_config_path",
+            return_value=mock_path,
+        ):
             # No debe lanzar excepción, solo debe loguear el error
             service._load_manual_doors()
 
@@ -958,24 +919,10 @@ is_open = true
             service.doors.clear()
             mock_map_manager.reset_mock()
 
-            # Mockear la construcción de la ruta de puertas
-            mock_path = MagicMock(spec=Path)
-            mock_path.exists.return_value = True
-            mock_path.open.return_value.__enter__ = lambda _: Path(temp_toml_path).open("rb")  # noqa: SIM115
-            mock_path.open.return_value.__exit__ = lambda *_: None
-
-            def path_side_effect(*args, **kwargs):  # noqa: ANN002, ANN003
-                if len(args) == 1 and str(args[0]).endswith("map_doors.toml"):
-                    return mock_path
-                if len(args) == 1 and str(args[0]) == "__file__":
-                    mock_file_path = MagicMock()
-                    mock_file_path.parent.parent.parent.parent.__truediv__ = MagicMock(
-                        return_value=mock_path
-                    )
-                    return mock_file_path
-                return Path(*args, **kwargs)
-
-            with patch("src.services.map.map_resources_service.Path", side_effect=path_side_effect):
+            with patch(
+                "src.services.map.map_resources_service.resolve_manual_doors_config_path",
+                return_value=temp_toml_path,
+            ):
                 # Cargar puertas manuales
                 service._load_manual_doors()
 

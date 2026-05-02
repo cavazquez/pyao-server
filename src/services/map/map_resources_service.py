@@ -2,25 +2,50 @@
 
 from __future__ import annotations
 
-import json
 import logging
 import os
 import sys
-import time
-import tomllib
-from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from src.services.map.binary_cache import MapBinaryCache
 from src.services.map.blocked_loader import process_blocked_file
 from src.services.map.cache import MapCacheLoader
+from src.services.map.map_bulk_resources_loader import run_load_all_maps
+from src.services.map.map_manual_doors import load_manual_doors
+from src.services.map.map_resource_queries import (
+    get_door_at,
+    get_resource_counts,
+    get_sign_at,
+    tile_in_optional_layer,
+    tile_in_required_layer,
+)
+from src.services.map.map_single_map_loader import (
+    find_file_for_map,
+    load_doors_from_objects,
+    load_signs_from_objects,
+    load_single_map_into,
+)
+from src.services.map.map_single_map_loader import (
+    process_blocked_file as process_blocked_file_single_map,
+)
+from src.services.map.map_single_map_loader import (
+    process_objects_file as process_objects_file_single_map,
+)
 from src.services.map.objects_loader import process_objects_file
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
 logger = logging.getLogger(__name__)
+
+
+def resolve_manual_doors_config_path() -> Path:
+    """Ruta a ``data/world/map_doors.toml`` (repo o jerarquía Snap)."""
+    snap_common = os.environ.get("SNAP_USER_COMMON")
+    if snap_common:
+        return Path(snap_common) / "data/world/map_doors.toml"
+    return Path(__file__).resolve().parent.parent.parent.parent / "data/world/map_doors.toml"
 
 
 class MapResourcesService:
@@ -35,38 +60,29 @@ class MapResourcesService:
             maps_dir: Directorio con los archivos JSON de recursos (opcional).
             map_manager: MapManager para inicializar puertas cerradas (opcional).
         """
-        # Directorio de origen de datos de mapas (blocked_*.json, objects_*.json, etc.)
         self.maps_dir = Path(maps_dir) if maps_dir is not None else Path("map_data")
-        # Solo consideramos "fatal" la falta de recursos cuando se usa el valor por
-        # defecto (map_data/) y no se especificó maps_dir explícitamente (por ejemplo,
-        # en tests o herramientas de consola).
         self._fatal_on_missing_resources = maps_dir is None and self.maps_dir == Path("map_data")
 
-        # Directorio para cachés derivados (map_resources_cache.json)
         self.cache_dir = Path("map_cache")
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
-        self.signs: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
-        self.doors: dict[str, dict[tuple[int, int], int]] = {}  # map_key -> {(x,y): grh_index}
+        self.signs: dict[str, dict[tuple[int, int], int]] = {}
+        self.doors: dict[str, dict[tuple[int, int], int]] = {}
 
         self.map_manager = map_manager
 
         cache_loader = MapCacheLoader(self.maps_dir, self.cache_dir)
         binary_loader = MapBinaryCache(self.maps_dir, self.resources, self.signs, self.doors)
 
-        # Orden de carga: binario > caché JSON > archivos JSON raw
         loaded = False
 
-        # 1. Intentar cargar desde formato binario (más rápido)
         if not loaded:
             loaded = binary_loader.try_load_from_binary()
 
-        # 2. Intentar cargar desde caché JSON
         if not loaded:
             loaded = cache_loader.try_load_from_cache(self.resources, self.signs, self.doors)
 
-        # 3. Cargar desde archivos JSON raw y generar binario para próxima vez
         if not loaded:
             self._load_all_maps()
             if self.resources:
@@ -85,204 +101,13 @@ class MapResourcesService:
 
     def _load_all_maps(self) -> None:
         """Carga todos los mapas desde el directorio."""
-        start_time = time.time()
-        try:
-            blocked_files, objects_files = self._gather_map_files()
-            if blocked_files is None or objects_files is None:
-                return
-
-            (
-                blocked_by_map,
-                water_by_map,
-                trees_by_map,
-                mines_by_map,
-                anvils_by_map,
-                forges_by_map,
-                signs_by_map,
-                doors_by_map,
-            ) = self._load_map_resources(blocked_files, objects_files)
-
-            map_ids = self._collect_map_ids(
-                blocked_by_map,
-                water_by_map,
-                trees_by_map,
-                mines_by_map,
-                anvils_by_map,
-                forges_by_map,
-                signs_by_map,
-                doors_by_map,
-            )
-            if not map_ids:
-                logger.warning("No se encontraron datos de recursos en %s", self.maps_dir)
-                return
-
-            self._build_public_structures(
-                map_ids,
-                blocked_by_map,
-                water_by_map,
-                trees_by_map,
-                mines_by_map,
-                anvils_by_map,
-                forges_by_map,
-                signs_by_map,
-                doors_by_map,
-            )
-
-            elapsed_time = time.time() - start_time
-            logger.info(
-                "✓ Recursos cargados desde %s: %d mapas en %.2f segundos",
-                self.maps_dir,
-                len(self.resources),
-                elapsed_time,
-            )
-
-        except Exception:
-            logger.exception("Error cargando recursos de mapas")
-
-    def _gather_map_files(self) -> tuple[list[Path] | None, list[Path] | None]:
-        if not self.maps_dir.exists():
-            logger.warning("Directorio de mapas no encontrado: %s", self.maps_dir)
-            self.maps_dir.mkdir(parents=True, exist_ok=True)
-            return None, None
-
-        blocked_files = sorted(self.maps_dir.glob("blocked_*.json"))
-        objects_files = sorted(self.maps_dir.glob("objects_*.json"))
-
-        if not blocked_files and not objects_files:
-            logger.warning("No se encontraron archivos de mapas en %s", self.maps_dir)
-            return None, None
-        return blocked_files, objects_files
-
-    def _load_map_resources(
-        self,
-        blocked_files: list[Path],
-        objects_files: list[Path],
-    ) -> tuple[
-        dict[int, set[tuple[int, int]]],
-        dict[int, set[tuple[int, int]]],
-        dict[int, set[tuple[int, int]]],
-        dict[int, set[tuple[int, int]]],
-        dict[int, set[tuple[int, int]]],
-        dict[int, set[tuple[int, int]]],
-        dict[int, dict[tuple[int, int], int]],
-        dict[int, dict[tuple[int, int], int]],
-    ]:
-        blocked_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        water_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        anvils_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        forges_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-        signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
-        doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
-
-        for blocked_path in blocked_files:
-            process_blocked_file(
-                blocked_path,
-                blocked_by_map,
-                water_by_map,
-                trees_by_map,
-                mines_by_map,
-            )
-
-        for objects_path in objects_files:
-            process_objects_file(
-                objects_path,
-                trees_by_map,
-                mines_by_map,
-                blocked_by_map,
-                signs_by_map,
-                doors_by_map,
-                water_by_map,
-                anvils_by_map,
-                forges_by_map,
-            )
-
-        return (
-            blocked_by_map,
-            water_by_map,
-            trees_by_map,
-            mines_by_map,
-            anvils_by_map,
-            forges_by_map,
-            signs_by_map,
-            doors_by_map,
+        run_load_all_maps(
+            self.maps_dir,
+            self.resources,
+            self.signs,
+            self.doors,
+            log=logger,
         )
-
-    @staticmethod
-    def _collect_map_ids(
-        blocked_by_map: dict[int, set[tuple[int, int]]],
-        water_by_map: dict[int, set[tuple[int, int]]],
-        trees_by_map: dict[int, set[tuple[int, int]]],
-        mines_by_map: dict[int, set[tuple[int, int]]],
-        anvils_by_map: dict[int, set[tuple[int, int]]],
-        forges_by_map: dict[int, set[tuple[int, int]]],
-        signs_by_map: dict[int, dict[tuple[int, int], int]],
-        doors_by_map: dict[int, dict[tuple[int, int], int]],
-    ) -> set[int]:
-        map_ids: set[int] = set(blocked_by_map.keys())
-        map_ids.update(water_by_map.keys())
-        map_ids.update(trees_by_map.keys())
-        map_ids.update(mines_by_map.keys())
-        map_ids.update(anvils_by_map.keys())
-        map_ids.update(forges_by_map.keys())
-        map_ids.update(signs_by_map.keys())
-        map_ids.update(doors_by_map.keys())
-        return map_ids
-
-    def _build_public_structures(
-        self,
-        map_ids: set[int],
-        blocked_by_map: dict[int, set[tuple[int, int]]],
-        water_by_map: dict[int, set[tuple[int, int]]],
-        trees_by_map: dict[int, set[tuple[int, int]]],
-        mines_by_map: dict[int, set[tuple[int, int]]],
-        anvils_by_map: dict[int, set[tuple[int, int]]],
-        forges_by_map: dict[int, set[tuple[int, int]]],
-        signs_by_map: dict[int, dict[tuple[int, int], int]],
-        doors_by_map: dict[int, dict[tuple[int, int], int]],
-    ) -> None:
-        for map_id in sorted(map_ids):
-            map_key = f"map_{map_id}"
-
-            blocked = blocked_by_map.get(map_id, set())
-            water = water_by_map.get(map_id, set())
-            trees = trees_by_map.get(map_id, set())
-            mines = mines_by_map.get(map_id, set())
-            anvils = anvils_by_map.get(map_id, set())
-            forges = forges_by_map.get(map_id, set())
-
-            self.resources[map_key] = {
-                "blocked": blocked,
-                "water": water,
-                "trees": trees,
-                "mines": mines,
-                "anvils": anvils,
-                "forges": forges,
-            }
-
-            if map_id in signs_by_map:
-                self.signs[map_key] = signs_by_map[map_id]
-
-            if map_id in doors_by_map:
-                self.doors[map_key] = doors_by_map[map_id]
-
-            signs_count = len(signs_by_map.get(map_id, {}))
-            doors_count = len(doors_by_map.get(map_id, {}))
-
-            logger.info(
-                "  %s (multiple files): %d bloqueados, %d agua, %d árboles, %d minas, "
-                "%d yunques, %d fraguas, %d carteles, %d puertas",
-                map_key,
-                len(blocked),
-                len(water),
-                len(trees),
-                len(mines),
-                len(anvils),
-                len(forges),
-                signs_count,
-                doors_count,
-            )
 
     @staticmethod
     def _process_blocked_file_per_file(
@@ -326,247 +151,13 @@ class MapResourcesService:
             forges_by_map,
         )
 
-    def _try_load_from_binary(self) -> bool:
-        """Compatibilidad hacia atrás: delega en MapBinaryCache.
-
-        Returns:
-            True si se cargó binario correctamente, False si no.
-        """
-        return MapBinaryCache(
-            self.maps_dir, self.resources, self.signs, self.doors
-        ).try_load_from_binary()
-
-    def _get_source_mtime(self) -> float:
-        """Obtiene el mtime más reciente de los archivos fuente JSON.
-
-        Returns:
-            El mtime más reciente o 0 si no hay archivos.
-        """
-        newest_mtime: float = 0
-        for pattern in ["blocked_*.json", "objects_*.json"]:
-            for f in self.maps_dir.glob(pattern):
-                try:
-                    mtime = f.stat().st_mtime
-                    newest_mtime = max(newest_mtime, mtime)
-                except OSError:
-                    continue
-        return newest_mtime
-
-    def _generate_binary_cache(self) -> None:
-        """Compatibilidad hacia atrás: delega en MapBinaryCache."""
-        MapBinaryCache(
-            self.maps_dir, self.resources, self.signs, self.doors
-        ).generate_binary_cache()
-
-    def _try_load_from_cache(self) -> bool:
-        """Compatibilidad hacia atrás: delega en MapCacheLoader.
-
-        Returns:
-            True si carga caché válida, False en caso contrario.
-        """
-        loader = MapCacheLoader(self.maps_dir, self.cache_dir)
-        return loader.try_load_from_cache(self.resources, self.signs, self.doors)
-
     def _save_cache(self) -> None:
-        """Compatibilidad hacia atrás: delega en MapCacheLoader."""
+        """Delega en MapCacheLoader."""
         loader = MapCacheLoader(self.maps_dir, self.cache_dir)
         loader.save_cache(self.resources, self.signs, self.doors)
 
-    @staticmethod
-    def _build_mtimes(files: list[Path]) -> tuple[list[str], dict[str, float]]:
-        """Construye listas de nombres y mtimes para una lista de paths.
-
-        Returns:
-            Tupla ``(names, mtimes)`` donde ``names`` es la lista de nombres de
-            archivo y ``mtimes`` un diccionario ``nombre -> mtime``.
-        """
-        names: list[str] = []
-        mtimes: dict[str, float] = {}
-        for fp in files:
-            try:
-                stat = fp.stat()
-            except OSError:
-                continue
-            name = fp.name
-            names.append(name)
-            mtimes[name] = stat.st_mtime
-        return names, mtimes
-
-    @staticmethod
-    def _read_cache_file(cache_path: Path) -> dict[str, object]:
-        """Lee y parsea el archivo de caché de mapas.
-
-        Returns:
-            Diccionario raíz del archivo de caché.
-
-        Raises:
-            JSONDecodeError: Si el contenido del archivo no es un objeto JSON
-            de nivel raíz (dict).
-        """
-        with cache_path.open(encoding="utf-8") as f:
-            data = json.load(f)
-        if not isinstance(data, dict):  # Defensa extra para mypy y robustez
-            msg = "Cache root is not a dict"
-            raise json.JSONDecodeError(msg, doc="", pos=0)
-        return data
-
-    @staticmethod
-    def _is_cache_source_valid(
-        blocked_files: list[Path],
-        objects_files: list[Path],
-        blocked_info: dict[str, object],
-        objects_info: dict[str, object],
-    ) -> bool:
-        """Valida que los archivos y mtimes actuales coinciden con el caché.
-
-        Returns:
-            ``True`` si los nombres y mtimes de los archivos actuales coinciden
-            exactamente con los almacenados en el caché, ``False`` en caso
-            contrario.
-        """
-        current_blocked_names, current_blocked_mtimes = MapResourcesService._build_mtimes(
-            blocked_files
-        )
-        current_objects_names, current_objects_mtimes = MapResourcesService._build_mtimes(
-            objects_files
-        )
-
-        if blocked_info.get("files") != current_blocked_names:
-            return False
-        if objects_info.get("files") != current_objects_names:
-            return False
-
-        if blocked_info.get("mtimes") != current_blocked_mtimes:
-            return False
-        return objects_info.get("mtimes") == current_objects_mtimes
-
-    def _rebuild_resources_from_cache(self, maps_data: dict[str, object]) -> None:  # noqa: PLR0914
-        """Reconstruye resources, signs y doors a partir del payload del caché."""
-        self.resources.clear()
-        self.signs.clear()
-        self.doors.clear()
-
-        for map_id_str, map_payload_obj in maps_data.items():
-            if not isinstance(map_payload_obj, dict):
-                continue
-
-            try:
-                map_id = int(map_id_str)
-            except TypeError, ValueError:
-                continue
-
-            map_key = f"map_{map_id}"
-            blocked_list = map_payload_obj.get("blocked", [])
-            water_list = map_payload_obj.get("water", [])
-            trees_list = map_payload_obj.get("trees", [])
-            mines_list = map_payload_obj.get("mines", [])
-            anvils_list = map_payload_obj.get("anvils", [])
-            forges_list = map_payload_obj.get("forges", [])
-
-            blocked = {(int(x), int(y)) for x, y in blocked_list}
-            water = {(int(x), int(y)) for x, y in water_list}
-            trees = {(int(x), int(y)) for x, y in trees_list}
-            mines = {(int(x), int(y)) for x, y in mines_list}
-            anvils = {(int(x), int(y)) for x, y in anvils_list}
-            forges = {(int(x), int(y)) for x, y in forges_list}
-
-            self.resources[map_key] = {
-                "blocked": blocked,
-                "water": water,
-                "trees": trees,
-                "mines": mines,
-                "anvils": anvils,
-                "forges": forges,
-            }
-
-            signs_list = map_payload_obj.get("signs", [])
-            if signs_list:
-                signs_dict: dict[tuple[int, int], int] = {}
-                for coord, grh in signs_list:
-                    x, y = coord
-                    if isinstance(grh, int):
-                        signs_dict[int(x), int(y)] = grh
-                if signs_dict:
-                    self.signs[map_key] = signs_dict
-
-            doors_list = map_payload_obj.get("doors", [])
-            if doors_list:
-                doors_dict: dict[tuple[int, int], int] = {}
-                for coord, grh in doors_list:
-                    x, y = coord
-                    if isinstance(grh, int):
-                        doors_dict[int(x), int(y)] = grh
-                if doors_dict:
-                    self.doors[map_key] = doors_dict
-
-    def _build_maps_payload_for_cache(self) -> dict[str, dict[str, object]]:
-        """Construye el payload de mapas a guardar en el archivo de caché.
-
-        Returns:
-            Diccionario ``{map_id_str: payload}`` listo para serializar en el
-            archivo de caché.
-        """
-        maps_payload: dict[str, dict[str, object]] = {}
-        for map_key, res in self.resources.items():
-            if not map_key.startswith("map_"):
-                continue
-            try:
-                map_id = int(map_key.split("_")[1])
-            except IndexError, ValueError:
-                continue
-
-            blocked = list(res.get("blocked", set()))
-            water = list(res.get("water", set()))
-            trees = list(res.get("trees", set()))
-            mines = list(res.get("mines", set()))
-            anvils = list(res.get("anvils", set()))
-            forges = list(res.get("forges", set()))
-
-            map_entry: dict[str, object] = {
-                "blocked": blocked,
-                "water": water,
-                "trees": trees,
-                "mines": mines,
-                "anvils": anvils,
-                "forges": forges,
-            }
-
-            signs_dict = self.signs.get(map_key)
-            if signs_dict:
-                signs_list = [((x, y), grh) for (x, y), grh in signs_dict.items()]
-                map_entry["signs"] = signs_list
-
-            doors_dict = self.doors.get(map_key)
-            if doors_dict:
-                doors_list = [((x, y), grh) for (x, y), grh in doors_dict.items()]
-                map_entry["doors"] = doors_list
-
-            maps_payload[str(map_id)] = map_entry
-
-        return maps_payload
-
     def _find_file_for_map(self, pattern: str, map_id: int) -> Path | None:
-        """Encuentra el archivo que contiene el mapa especificado.
-
-        Args:
-            pattern: Patrón glob para buscar archivos (ej: "blocked_*.json").
-            map_id: ID del mapa a buscar.
-
-        Returns:
-            Path del archivo encontrado o None.
-        """
-        for file_path in self.maps_dir.glob(pattern):
-            try:
-                stem = file_path.stem
-                range_part = stem.split("_")[1]
-                start_map = int(range_part.split("-")[0])
-                end_map = int(range_part.split("-")[1])
-
-                if start_map <= map_id <= end_map:
-                    return file_path
-            except ValueError, IndexError:
-                continue
-        return None
+        return find_file_for_map(self.maps_dir, pattern, map_id)
 
     @staticmethod
     def _process_blocked_file(
@@ -574,64 +165,7 @@ class MapResourcesService:
     ) -> tuple[
         set[tuple[int, int]], set[tuple[int, int]], set[tuple[int, int]], set[tuple[int, int]]
     ]:
-        """Procesa el archivo blocked para extraer tiles bloqueados, agua, árboles y minas.
-
-        Args:
-            blocked_path: Path al archivo blocked o None.
-            map_id: ID del mapa a filtrar.
-
-        Returns:
-            Tupla con (blocked, water, trees, mines).
-        """
-        blocked: set[tuple[int, int]] = set()
-        water: set[tuple[int, int]] = set()
-        trees: set[tuple[int, int]] = set()
-        mines: set[tuple[int, int]] = set()
-
-        if not blocked_path or not blocked_path.exists():
-            return blocked, water, trees, mines
-
-        with blocked_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        blocked_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                # Filtrar por mapa específico
-                if entry.get("m") != map_id:
-                    continue
-
-                tile_type = entry.get("t")
-                x = entry.get("x")
-                y = entry.get("y")
-
-                if not isinstance(x, int) or not isinstance(y, int):
-                    continue
-
-                # Convertir tipos compactos a nombres completos
-                if tile_type == "b":  # blocked
-                    blocked.add((x, y))
-                elif tile_type == "w":  # water
-                    water.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "t":  # tree
-                    trees.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "m":  # mine
-                    mines.add((x, y))
-                    blocked.add((x, y))
-
-        return blocked, water, trees, mines
+        return process_blocked_file_single_map(blocked_path, map_id)
 
     @staticmethod
     def _process_objects_file(
@@ -644,457 +178,76 @@ class MapResourcesService:
         anvils: set[tuple[int, int]],
         forges: set[tuple[int, int]],
     ) -> None:
-        """Procesa el archivo objects para agregar recursos a un mapa.
-
-        Args:
-            objects_path: Path al archivo objects o None.
-            map_id: ID del mapa a procesar.
-            trees: Set de árboles a actualizar.
-            mines: Set de minas a actualizar.
-            blocked: Set de tiles bloqueados a actualizar.
-            water: Set de tiles con agua a actualizar.
-            anvils: Set de tiles con yunques a actualizar.
-            forges: Set de tiles con fraguas a actualizar.
-        """
-        if not objects_path or not objects_path.exists():
-            return
-
-        with objects_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        objects_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                if not isinstance(entry, dict):
-                    continue
-
-                # FILTRAR POR MAP_ID
-                entry_map_id = entry.get("m")
-                if entry_map_id != map_id:
-                    continue
-
-                tile_type = entry.get("t")
-                x = entry.get("x")
-                y = entry.get("y")
-
-                if not isinstance(x, int) or not isinstance(y, int):
-                    continue
-
-                if tile_type == "tree":
-                    trees.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "mine":
-                    mines.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "anvil":
-                    anvils.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "forge":
-                    forges.add((x, y))
-                    blocked.add((x, y))
-                elif tile_type == "water":
-                    water.add((x, y))
-                elif tile_type == "sign":
-                    # Los carteles se manejan por separado (necesitamos el GrhIndex)
-                    pass
+        process_objects_file_single_map(
+            objects_path,
+            map_id,
+            trees,
+            mines,
+            blocked,
+            water,
+            anvils,
+            forges,
+        )
 
     def _load_map(self, map_id: int) -> None:
-        """Carga un mapa específico desde sus archivos de datos disponibles.
-
-        Args:
-            map_id: ID del mapa.
-        """
-        map_key = f"map_{map_id}"
-
-        # Encontrar archivos que contienen este mapa
-        blocked_path = self._find_file_for_map("blocked_*.json", map_id)
-        objects_path = self._find_file_for_map("objects_*.json", map_id)
-
-        if blocked_path is None and objects_path is None:
-            logger.debug("No se encontraron archivos de datos para mapa %d", map_id)
-            return
-
-        try:
-            blocked, water, trees, mines = self._process_blocked_file(blocked_path, map_id)
-
-            anvils: set[tuple[int, int]] = set()
-            forges: set[tuple[int, int]] = set()
-
-            # Cargar árboles, minas, yunques, fraguas y agua adicional desde archivo objects
-            self._process_objects_file(
-                objects_path,
-                map_id,
-                trees,
-                mines,
-                blocked,
-                water,
-                anvils,
-                forges,
-            )
-
-            # Determinar fuente de datos para logging
-            if blocked_path and objects_path:
-                blocked_name = blocked_path.name if blocked_path else "(sin blocked)"
-                source = f"{blocked_name} + {objects_path.name}"
-            else:
-                source = (
-                    blocked_path.name
-                    if blocked_path
-                    else (objects_path.name if objects_path else "unknown")
-                )
-
-            self.resources[map_key] = {
-                "blocked": blocked,
-                "water": water,
-                "trees": trees,
-                "mines": mines,
-            }
-
-            # Cargar carteles desde objects file
-            signs_dict = self._load_signs_from_objects(objects_path, map_id)
-            if signs_dict:
-                self.signs[map_key] = signs_dict
-
-            # Cargar puertas desde objects file
-            doors_dict = self._load_doors_from_objects(objects_path, map_id)
-            if doors_dict:
-                self.doors[map_key] = doors_dict
-
-            logger.info(
-                "  %s (%s): %d bloqueados, %d agua, %d árboles, %d minas, %d yunques, %d fraguas",
-                map_key,
-                source,
-                len(blocked),
-                len(water),
-                len(trees),
-                len(mines),
-                len(anvils),
-                len(forges),
-            )
-
-        except Exception:
-            logger.exception("Error cargando datos de recursos para mapa %d", map_id)
+        load_single_map_into(
+            self.resources,
+            self.signs,
+            self.doors,
+            self.maps_dir,
+            map_id,
+            log=logger,
+        )
 
     def is_blocked(self, map_id: int, x: int, y: int) -> bool:
-        """Indica si un tile está marcado como bloqueado en el mapa.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            True si el tile está bloqueado, False en caso contrario.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key]["blocked"]
+        """Indica si un tile está marcado como bloqueado en el mapa."""
+        return tile_in_required_layer(self.resources, map_id, "blocked", x, y)
 
     def has_water(self, map_id: int, x: int, y: int) -> bool:
-        """Verifica si una posición tiene agua.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            True si hay agua, False si no.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key]["water"]
+        """Verifica si una posición tiene agua."""
+        return tile_in_required_layer(self.resources, map_id, "water", x, y)
 
     def has_tree(self, map_id: int, x: int, y: int) -> bool:
-        """Verifica si una posición tiene un árbol.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            True si hay un árbol, False si no.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key]["trees"]
+        """Verifica si una posición tiene un árbol."""
+        return tile_in_required_layer(self.resources, map_id, "trees", x, y)
 
     def has_mine(self, map_id: int, x: int, y: int) -> bool:
-        """Verifica si una posición tiene un yacimiento de minerales.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            True si hay un yacimiento, False si no.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key]["mines"]
+        """Verifica si una posición tiene un yacimiento de minerales."""
+        return tile_in_required_layer(self.resources, map_id, "mines", x, y)
 
     def has_anvil(self, map_id: int, x: int, y: int) -> bool:
-        """Verifica si una posición tiene un yunque.
-
-        Returns:
-            True si hay un yunque, False si no.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key].get("anvils", set())
+        """Verifica si una posición tiene un yunque."""
+        return tile_in_optional_layer(self.resources, map_id, "anvils", x, y)
 
     def has_forge(self, map_id: int, x: int, y: int) -> bool:
-        """Verifica si una posición tiene una fragua.
-
-        Returns:
-            True si hay una fragua, False si no.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return False
-        return (x, y) in self.resources[map_key].get("forges", set())
+        """Verifica si una posición tiene una fragua."""
+        return tile_in_optional_layer(self.resources, map_id, "forges", x, y)
 
     def get_resource_counts(self, map_id: int) -> dict[str, int]:
-        """Obtiene el conteo de recursos en un mapa.
-
-        Args:
-            map_id: ID del mapa.
-
-        Returns:
-            Diccionario con conteos de recursos.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.resources:
-            return {"water": 0, "trees": 0, "mines": 0}
-
-        signs_count = len(self.signs.get(map_key, {}))
-        doors_count = len(self.doors.get(map_key, {}))
-        anvils_count = len(self.resources[map_key].get("anvils", set()))
-        forges_count = len(self.resources[map_key].get("forges", set()))
-
-        return {
-            "water": len(self.resources[map_key]["water"]),
-            "trees": len(self.resources[map_key]["trees"]),
-            "mines": len(self.resources[map_key]["mines"]),
-            "anvils": anvils_count,
-            "forges": forges_count,
-            "signs": signs_count,
-            "doors": doors_count,
-        }
+        """Obtiene el conteo de recursos en un mapa."""
+        return get_resource_counts(self.resources, self.signs, self.doors, map_id)
 
     def get_sign_at(self, map_id: int, x: int, y: int) -> int | None:
-        """Obtiene el GrhIndex del cartel en una posición.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            GrhIndex del cartel o None si no hay cartel.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.signs:
-            return None
-
-        return self.signs[map_key].get((x, y))
+        """Obtiene el GrhIndex del cartel en una posición."""
+        return get_sign_at(self.signs, map_id, x, y)
 
     @staticmethod
     def _load_signs_from_objects(
         objects_path: Path | None, map_id: int
     ) -> dict[tuple[int, int], int]:
-        """Carga carteles desde el archivo objects.
-
-        Args:
-            objects_path: Path al archivo objects.
-            map_id: ID del mapa.
-
-        Returns:
-            Diccionario {(x, y): grh_index} con los carteles.
-        """
-        signs_dict: dict[tuple[int, int], int] = {}
-
-        if not objects_path or not objects_path.exists():
-            return signs_dict
-
-        with objects_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        objects_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                if not isinstance(entry, dict):
-                    continue
-
-                # Filtrar por mapa y tipo
-                if entry.get("m") != map_id:
-                    continue
-
-                if entry.get("t") != "sign":
-                    continue
-
-                x = entry.get("x")
-                y = entry.get("y")
-                grh = entry.get("g")
-
-                if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
-                    signs_dict[x, y] = grh
-
-        return signs_dict
+        return load_signs_from_objects(objects_path, map_id)
 
     def get_door_at(self, map_id: int, x: int, y: int) -> int | None:
-        """Obtiene el GrhIndex de la puerta en una posición.
-
-        Args:
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-
-        Returns:
-            GrhIndex de la puerta o None si no hay puerta.
-        """
-        map_key = f"map_{map_id}"
-        if map_key not in self.doors:
-            return None
-
-        return self.doors[map_key].get((x, y))
+        """Obtiene el GrhIndex de la puerta en una posición."""
+        return get_door_at(self.doors, map_id, x, y)
 
     @staticmethod
     def _load_doors_from_objects(
         objects_path: Path | None, map_id: int
     ) -> dict[tuple[int, int], int]:
-        """Carga puertas desde el archivo objects.
-
-        Args:
-            objects_path: Path al archivo objects.
-            map_id: ID del mapa.
-
-        Returns:
-            Diccionario {(x, y): grh_index} con las puertas.
-        """
-        doors_dict: dict[tuple[int, int], int] = {}
-
-        if not objects_path or not objects_path.exists():
-            return doors_dict
-
-        with objects_path.open(encoding="utf-8") as f:
-            for line_number, raw_line in enumerate(f, start=1):
-                line = raw_line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    logger.debug(
-                        "Entrada inválida en %s línea %d: %s",
-                        objects_path.name,
-                        line_number,
-                        line,
-                    )
-                    continue
-
-                if not isinstance(entry, dict):
-                    continue
-
-                # Filtrar por mapa y tipo
-                if entry.get("m") != map_id:
-                    continue
-
-                if entry.get("t") != "door":
-                    continue
-
-                x = entry.get("x")
-                y = entry.get("y")
-                grh = entry.get("g")
-
-                if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
-                    doors_dict[x, y] = grh
-
-        return doors_dict
+        return load_doors_from_objects(objects_path, map_id)
 
     def _load_manual_doors(self) -> None:
-        """Carga puertas desde el archivo de configuración manual.
-
-        Las puertas no están en los archivos .map del servidor VB6,
-        por lo que se definen manualmente en data/world/map_doors.toml
-        """
-        snap_common = os.environ.get("SNAP_USER_COMMON")
-        doors_config_path = (
-            Path(snap_common) / "data/world/map_doors.toml"
-            if snap_common
-            else Path(__file__).parent.parent.parent.parent / "data/world/map_doors.toml"
+        load_manual_doors(
+            resolve_manual_doors_config_path(), self.doors, self.map_manager, log=logger
         )
-
-        if not doors_config_path.exists():
-            logger.info("No se encontró archivo de configuración de puertas: %s", doors_config_path)
-            return
-
-        try:
-            with Path(doors_config_path).open("rb") as f:
-                data = tomllib.load(f)
-
-            door_count = 0
-            for door in data.get("door", []):
-                map_id = door.get("map_id")
-                x = door.get("x")
-                y = door.get("y")
-                grh_index = door.get("grh_index")
-
-                if not all([map_id, x, y, grh_index]):
-                    logger.warning("Puerta con datos incompletos: %s", door)
-                    continue
-
-                map_key = f"map_{map_id}"
-                if map_key not in self.doors:
-                    self.doors[map_key] = {}
-
-                self.doors[map_key][x, y] = grh_index
-                door_count += 1
-
-                # Inicializar estado de la puerta como cerrada en MapManager
-                is_open = door.get("is_open", False)
-                if not is_open and self.map_manager:
-                    self.map_manager.block_tile(map_id, x, y)
-                    logger.debug("Puerta inicializada como cerrada en (%d, %d, %d)", map_id, x, y)
-
-                logger.debug(
-                    "Puerta cargada: Mapa %d (%d, %d) - GrhIndex=%d - %s - Estado: %s",
-                    map_id,
-                    x,
-                    y,
-                    grh_index,
-                    door.get("name", "Sin nombre"),
-                    "abierta" if is_open else "cerrada",
-                )
-
-            logger.info("✓ Cargadas %d puertas desde configuración manual", door_count)
-
-        except Exception:
-            logger.exception("Error cargando puertas manuales")

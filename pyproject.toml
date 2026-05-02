@@ -167,3 +167,23 @@ filterwarnings = [
     "DOC201",  # métodos de Strategy Pattern no requieren Returns detallado
     "ARG002",  # argumentos no usados en algunos efectos (Strategy Pattern)
 ]
+"src/services/map/cache.py" = [
+    "D103",  # funciones de módulo; docstrings breves
+    "DOC201",
+    "DOC501",
+]
+"src/services/map/map_resources_service.py" = [
+    "DOC201",  # API pública documentada en resumen; Returns redundantes
+]
+"src/services/map/map_resource_queries.py" = [
+    "D103",
+    "DOC201",
+]
+"src/services/map/map_bulk_resources_loader.py" = [
+    "D103",
+    "DOC201",
+]
+"src/services/map/map_single_map_loader.py" = [
+    "DOC201",
+    "E501",  # docstring de referencia a _load_map
+]
