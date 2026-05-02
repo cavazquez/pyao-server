@@ -1,5 +1,9 @@
 # PyAO Server
 
+<p align="center">
+  <img src="assets/icon.png" alt="Icono de PyAO Server" width="160" height="160">
+</p>
+
 [![CI](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml)
 [![Release](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg)](https://codecov.io/gh/cavazquez/pyao-server)
@@ -445,6 +449,8 @@ pyao-server/
 │       ├── ci.yml               # Integración continua
 │       └── release.yml          # Releases automáticos
 │
+├── assets/                      # Recursos estáticos
+│   └── icon.png                 # Icono del programa
 ├── pyproject.toml               # Configuración del proyecto y dependencias
 ├── uv.lock                      # Lock file de dependencias
 ├── run_tests.sh                 # Script para ejecutar todos los checks
