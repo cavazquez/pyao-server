@@ -1,10 +1,10 @@
 # TODO Consolidado - PyAO Server
 
-**Última actualización:** 2025-01-30  
-**Versión actual:** 0.6.4-alpha  
-**Estado:** Documento maestro de tareas pendientes
+**Última actualización:** 2026-05-02  
+**Versión actual (pyproject):** 0.9.4-alpha  
+**Estado:** Documento maestro de tareas pendientes — mantener alineado con **`docs/ESTADO_ACTUAL.md`** (fuente de verdad del estado del código).
 
-> **Nota:** Este documento consolida todos los TODOs activos del proyecto. Para TODOs completados, ver `TODOS_COMPLETADOS.md`. Para roadmap de versiones, ver `ROADMAP_VERSIONES.md`.
+> **Nota:** Este documento consolida TODOs activos. Histórico de completados: `TODOS_COMPLETADOS.md`. Roadmap por versión: `ROADMAP_VERSIONES.md`.
 
 ---
 
@@ -80,29 +80,27 @@
 
 ---
 
-### Sistema de Clanes/Guilds (v0.9.0-alpha) 🔴 Alta Prioridad
-**Estado:** 📋 Pendiente  
-**Esfuerzo:** 2-3 semanas  
-**Referencia:** `TODO_CARACTERISTICAS_VB6.md#9-30`
+### Sistema de Clanes/Guilds (v0.9.x-alpha) ✅ Core completado — avanzado pendiente
 
-**Features:**
-- [ ] Creación de clanes
-- [ ] Gestión de miembros (invitar, expulsar, promover)
-- [ ] Almacén/depósito del clan
-- [ ] Chat interno del clan
-- [ ] Alianzas entre clanes
-- [ ] Guerras de clanes
-- [ ] Edificio del clan con NPCs
-- [ ] Sistema de rangos jerárquicos
+**Estado:** ✅ **Core + mejoras 0.9.1 implementados** en servidor (ver **`docs/ESTADO_ACTUAL.md`**, **`docs/CLAN_SYSTEM.md`**, **`docs/CLAN_SYSTEM_IMPLEMENTATION_STATUS.md`**).  
+**Referencia VB6 / gaps:** `TODO_CARACTERISTICAS_VB6.md`
 
-**Archivos a crear:**
-- `src/models/clan.py`
-- `src/services/clan_service.py`
-- `src/repositories/clan_repository.py`
-- `src/tasks/clan/`
-- `data/clans.toml`
+**Completado (servidor):**
+- ✅ Creación de clanes, rangos (MEMBER → LEADER), invitaciones y gestión de miembros
+- ✅ Chat interno del clan (`/CLAN`), transferencia de liderazgo
+- ✅ Persistencia Redis, comandos vía chat, notificaciones entre miembros
+- ✅ Tests del servicio ampliados (ver ESTADO_ACTUAL)
 
-**Dependencias:** Requiere sistema de Partys funcionando (v0.8.0)
+**Pendiente — funcionalidades avanzadas** (no bloquean gameplay core de clan):
+
+| Prioridad | Feature | Notas |
+|-----------|---------|--------|
+| 🟡 Media | Almacén / depósito del clan | |
+| 🟡 Media | Alianzas entre clanes | modelo puede tener métodos; falta UX/comandos |
+| 🟡 Media | Guerras de clanes | idem |
+| 🟡 Media | Edificio del clan con NPCs | |
+
+**Dependencias:** Partys (v0.8.0) — ✅ satisfecho.
 
 ---
 
@@ -160,7 +158,7 @@
 - [ ] Sistema de prestigio de facción
 - [ ] NPCs de facciones con comportamiento diferenciado
 
-**Dependencias:** Requiere clanes/partys para interacción social (v0.8.0, v0.9.0)
+**Dependencias:** Partys y clanes core ya disponibles (v0.8.x / v0.9.x)
 
 ---
 
@@ -285,25 +283,25 @@
 ---
 
 ### Ampliar Cobertura de Tests 🔴 Alta Prioridad
-**Estado:** 🚧 En progreso  
-**Cobertura actual:** 72%  
-**Objetivo:** 80%+
+**Estado:** 🚧 Mejora continua (los % por archivo **envejecen**; no tomar los números antiguos como verdad sin remediar).
 
-**Áreas prioritarias:**
-- [ ] `services/commerce_service.py` - 13% (sistema crítico)
-- [ ] `tasks/inventory/task_use_item.py` - 13% (funcionalidad importante)
-- [ ] `tasks/player/task_attack.py` - 25% (sistema de combate)
-- [ ] `game/map_manager.py` - 48% (módulo grande)
-- [ ] `services/map/map_resources_service.py` - 28% (módulo grande)
+**Objetivo típico:** subir cobertura global hacia **80%+** donde tenga sentido para el equipo.
 
-**Referencia:** `TODO_POST_REORGANIZACION.md#23-44`
+**Cómo medir:** `uv run pytest --cov=src --cov-report=term-missing` (y `docs/COVERAGE_ANALYSIS.md` si está actualizado).
+
+**Áreas habituales a revisar** (priorizar según el último reporte, no esta lista fija):
+- [ ] Tasks de combate / inventario de alto uso
+- [ ] Servicios de mapa (`map_resources_service`, transiciones, pathfinding)
+- [ ] `map_manager` y broadcast
+
+**Referencia:** `TODO_POST_REORGANIZACION.md`
 
 ---
 
 ### Documentar APIs por Módulo 🟡 Media Prioridad
 **Estado:** 📋 Pendiente  
 **Esfuerzo:** Medio  
-**Referencia:** `TODO_POST_REORGANIZACION.md#48-70`
+**Referencia:** `TODO_POST_REORGANIZACION.md` (API auto-gen opcional; índice humano en `docs/README.md`)
 
 **Tareas:**
 - [ ] Generar docs automáticos con Sphinx o MkDocs
@@ -424,40 +422,41 @@
 
 ---
 
-## 📊 Priorización
+## 📊 Priorización (2026 — según `ESTADO_ACTUAL`)
 
-### 🔴 Alta Prioridad (Implementar primero)
-1. Completar sistema de Parties (corregir tests, funcionalidades faltantes)
-2. Sistema de Clases (v0.7.0)
-3. Ampliar cobertura de tests (áreas críticas)
-4. Mostrar posición en GUI del cliente
+### 🔴 Alta prioridad (siguiente oleada útil)
+1. **Targeting por click para hechizos (v0.10)** — mayormente cliente Godot; servidor ya admite coordenadas en gran medida
+2. **Cobertura / tests** en flujos que el equipo marque como críticos (ver `docs/COVERAGE_ANALYSIS.md` si está vigente)
+3. Mejoras **cliente** de alto impacto (ej. posición en GUI — `TODO_CLIENTE.md`)
 
-### 🟡 Media Prioridad (Implementar después)
-1. Sistema de Clanes (v0.9.0)
-2. Targeting por click para hechizos (v0.10.0)
-3. Hechizos Avanzados (v0.11.0)
-4. Documentar APIs por módulo
-5. Mejorar CI/CD con tests por categoría
+### 🟡 Media prioridad
+1. **Clanes — funcionalidades avanzadas** (almacén, alianzas/guerras, edificio)
+2. **Hechizos avanzados (v0.11)** cuando tenga sentido tras 0.10
+3. **Facciones, quests**, etc. según roadmap de producto
+4. Documentación API automática (Sphinx/MkDocs) — opcional
 
-### 🟢 Baja Prioridad (Implementar al final)
-1. Mejoras arquitectónicas opcionales
-2. Logging estructurado
-3. Features avanzadas de items
-4. Panel de inventario completo del cliente
+### 🟢 Baja prioridad
+1. Mejoras arquitectónicas opcionales (`TODO_ARQUITECTURA.md`)
+2. Logging estructurado / observabilidad (`TECH_IMPROVEMENTS_BACKLOG.md`)
+3. Features avanzadas de ítems (durabilidad, encantamientos)
+4. Panel de inventario completo en cliente
+
+**Ya completado en servidor (no priorizar de nuevo):** clases (v0.7), parties (v0.8), **clanes core** (v0.9.x). Detalle en **`docs/ESTADO_ACTUAL.md`**.
 
 ---
 
 ## 🔗 Referencias
 
-- **Roadmap completo:** `ROADMAP_VERSIONES.md` ⭐
-- **TODOs completados:** `TODOS_COMPLETADOS.md`
+- **Roadmap por versión:** `ROADMAP_VERSIONES.md`
+- **Estado real del proyecto:** `../ESTADO_ACTUAL.md`
+- **TODOs completados (histórico):** `TODOS_COMPLETADOS.md`
 - **Características VB6:** `TODO_CARACTERISTICAS_VB6.md`
-- **Arquitectura:** `TODO_ARQUITECTURA.md`
+- **Arquitectura (propuestas):** `TODO_ARQUITECTURA.md`
 - **Cliente:** `TODO_CLIENTE.md`
 - **Items:** `ITEMS_SYSTEM_TODO.md`
 
 ---
 
-**Última actualización:** 2025-01-30  
-**Mantenido por:** Consolidación automática de TODOs
+**Última actualización:** 2026-05-02  
+**Mantenido por:** revisión manual + alineación con `ESTADO_ACTUAL.md`
 
