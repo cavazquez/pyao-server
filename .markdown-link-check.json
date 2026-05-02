@@ -1,0 +1,15 @@
+{
+  "timeout": "10s",
+  "retryOn429": true,
+  "retryCount": 2,
+  "fallbackRetryDelay": "5s",
+  "aliveStatusCodes": [200, 206, 403, 429],
+  "ignorePatterns": [
+    { "pattern": "^https://codecov.io" },
+    { "pattern": "^https://deepwiki.com" },
+    { "pattern": "^https://img.shields.io" },
+    { "pattern": "^https://github.com/.*/(blob|actions)" },
+    { "pattern": "^mailto:" },
+    { "pattern": "^https://redis-py.readthedocs.io" }
+  ]
+}

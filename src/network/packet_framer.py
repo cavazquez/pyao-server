@@ -126,7 +126,7 @@ class PacketFramer:
         ClientPacketID.CAST_SPELL: 2,
         # PARTY_JOIN: el cliente Godot envía solo el packet_id (el target se
         # obtiene del último click izquierdo). El servidor intenta leer un
-        # nickname que nunca llega: bug aparte documentado en AUDITORIA.md.
+        # nickname que nunca llega: bug aparte documentado en docs/AUDITORIA.md.
         ClientPacketID.PARTY_JOIN: 1,
     }
 

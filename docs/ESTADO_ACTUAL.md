@@ -143,10 +143,15 @@
 ### 🔵 PENDIENTE - Refactoring de Archivos Grandes
 
 #### TODO: Continuar modularización
-**Archivos pendientes de refactorizar:**
-- [ ] `packet_validator.py` (1394 líneas) - Extraer validadores individuales
-- [ ] `map_resources_service.py` (1279 líneas) - Modularizar por tipo de recurso
-- [ ] `map_manager.py` (1160 líneas) - Separar responsabilidades (NPCs, Items, Players)
+*(Renumera y revisión 2026-02: alinear con el árbol actual `src/`)*
+
+**Archivos donde aún tiene sentido invertir tiempo:**
+- [ ] `src/services/map/map_resources_service.py` (~1100 líneas) — sigue siendo el archivo más grande y cohesionado por dominio; el mejor candidato a partir por recurso o sub-servicios.
+- [ ] `src/network/packet_validator.py` (~860 líneas) — ya hay extracción parcial en `src/network/validators/` (auth, bank, commerce, movement, etc.); queda delgazar la fachada si aún duplica lógica o molesta en revisiones.
+
+**Reubicado / ya abordado en el código (no repetir el mismo “TODO”):**
+- `map_manager.py` — ya no es un monolito de ~1000 líneas: `MapManager` (~480 líneas) delega en `PlayerIndex`, `NpcIndex`, `GroundItemIndex`, `TileOccupation`, `SpatialIndexMixin`, etc. Refactor futuro aquí sería **afinado**, no “separar por primera vez”.
+- Inyección de dependencias en tasks — `DependencyContainer` + `TaskFactory` (introspección) + `packet_handlers.TASK_HANDLERS` como mapa id→clase ya cubren lo que `todo/TODO_ARQUITECTURA.md` §1 proponía como “service container”; ese documento es histórico en ese punto.
 
 ### 🔴 ALTA PRIORIDAD - Próxima Versión (0.10.0-alpha)
 

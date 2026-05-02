@@ -181,21 +181,15 @@
 
 ## 🏗️ Mejoras Arquitectónicas
 
-### Service Container / Dependency Injection 🟢 Baja Prioridad
-**Estado:** 📝 Propuesta  
-**Esfuerzo:** 4-6 horas  
-**Referencia:** `TODO_ARQUITECTURA.md#15-130`
+### Service Container / Dependency Injection — **Cubierto en código**
+**Estado:** **Resuelto** con `DependencyContainer`, `TaskFactory` y `TASK_HANDLERS` (detalle en `TODO_ARQUITECTURA.md` §1).  
+**Referencia:** `TODO_ARQUITECTURA.md#15-130` conserva el planteamiento histórico del problema.
 
-**Problema:** Código repetitivo en creación de tasks con dependencias.
+**Problema original:** Código repetitivo al crear tasks con dependencias (patrón antiguo).
 
-**Solución:** Contenedor de servicios con inyección automática de dependencias.
+**En código actual:** Mapa id→clase en `packet_handlers.py` + resolución de deps en `TaskFactory`.
 
-**Beneficios:**
-- Código más limpio
-- Fácil agregar nuevas dependencias
-- Mejor testabilidad
-
-**Cuándo:** Antes de v0.9.0 (clanes)
+**Beneficios logrados:** menos repetición en wiring de tasks y deps centralizadas en el contenedor.
 
 ---
 

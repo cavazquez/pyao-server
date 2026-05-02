@@ -324,5 +324,5 @@ if not modified_slots:
 ## 🔗 Ver También
 
 - [Sistema de Comercio](COMMERCE_SYSTEM.md)
-- [Sistema de Inventario](TODO_REFACTORING.md)
-- [Protocolo de Red](../src/packet_id.py)
+- [Sistema de Inventario](ITEMS_SYSTEM.md)
+- [Protocolo de Red](../src/network/packet_id.py)

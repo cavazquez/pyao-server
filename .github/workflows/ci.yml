@@ -71,3 +71,17 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
+
+  markdown-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Verify Markdown links (entry points)
+        run: |
+          npm install -g markdown-link-check@3.12.2
+          for f in README.md Claude.md docs/README.md; do
+            markdown-link-check -q -c .markdown-link-check.json "$f"
+          done

@@ -1,5 +1,7 @@
 # Arquitectura del Proyecto - PyAO Server
 
+> **Rol de este documento:** visión **ampliada** (tabla de contenidos larga, capas, flujos y patrones con más detalle). Para el resumen operativo que suele mantenerse como primera lectura, usar **[ARCHITECTURE.md](ARCHITECTURE.md)**.
+
 Este documento describe la arquitectura del servidor PyAO, sus capas, patrones de diseño y flujos de datos.
 
 ## 📋 Tabla de Contenidos

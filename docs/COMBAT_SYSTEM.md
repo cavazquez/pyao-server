@@ -387,7 +387,7 @@ packet.add_byte(y)
 - [Cliente Godot - Item.gd](../clientes/ArgentumOnlineGodot/common/data/Item.gd)
 - [Cliente Godot - GameProtocol.gd](../clientes/ArgentumOnlineGodot/engine/autoload/game_protocol.gd)
 - [GAME_TICK_SYSTEM.md](./GAME_TICK_SYSTEM.md)
-- [TODO.md](../TODO.md)
+- [TODO consolidado](todo/TODO_CONSOLIDADO.md)
 
 ## 📜 Changelog
 

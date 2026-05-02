@@ -1,5 +1,7 @@
 # Arquitectura del Servidor PyAO
 
+> **Rol de este documento:** referencia **principal** y actualizada del armado del servidor (diagramas centrales, inicialización, componentes clave). Para una descripción **más extensa** del proyecto (capas, patrones y diagramas adicionales), ver **[ARCHITECTURE_PROJECT.md](ARCHITECTURE_PROJECT.md)**.
+
 ## 📋 Visión General
 
 PyAO Server es un servidor de juego MMORPG implementado en Python con arquitectura modular, siguiendo principios SOLID y patrones de diseño modernos.

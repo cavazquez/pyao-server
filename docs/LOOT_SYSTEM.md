@@ -565,7 +565,7 @@ gold = base_gold + bonus
 - [COMBAT_SYSTEM.md](./COMBAT_SYSTEM.md) - Sistema de combate
 - [Cliente Godot - Item.gd](../clientes/ArgentumOnlineGodot/common/data/Item.gd)
 - [Cliente Godot - GameProtocol.gd](../clientes/ArgentumOnlineGodot/engine/autoload/game_protocol.gd)
-- [TODO.md](../TODO.md)
+- [TODO consolidado](todo/TODO_CONSOLIDADO.md)
 
 ## 📜 Changelog
 

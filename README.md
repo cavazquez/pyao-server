@@ -17,6 +17,8 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
 > Implementación moderna y eficiente del servidor de Argentum Online.
 
+Índice de toda la documentación interna: **[docs/README.md](docs/README.md)**.
+
 ## 🛠️ Tecnologías
 
 - ![Python](https://img.shields.io/badge/Python-3.14+-3776AB?logo=python&logoColor=white) - Lenguaje de programación
@@ -65,7 +67,7 @@ redis-server
 
 **Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar usando `redis://redis:6379` desde el contenedor.
 
-Ver [redis/README.md](redis/README.md) para documentación completa de Redis.
+Ver [docs/REDIS.md](docs/REDIS.md) para documentación completa de Redis.
 
 ### Ejecutar el servidor
 
@@ -426,7 +428,7 @@ pyao-server/
 ├── .pre-commit-config.yaml      # Hooks de pre-commit (ruff + mypy)
 ├── redis/                       # Configuración de Redis
 │   ├── Dockerfile               # Imagen Docker de Redis 8
-│   └── README.md                # Documentación de Redis
+│   └── README.md                # Puntero → docs/REDIS.md
 │
 ├── docs/                        # Documentación
 │   ├── ARCHITECTURE.md          # Arquitectura completa del servidor ⭐ NUEVO
@@ -435,11 +437,11 @@ pyao-server/
 │   ├── NPC_SYSTEM.md            # Sistema de NPCs
 │   ├── COMMERCE_SYSTEM.md       # Sistema de comercio con mercaderes
 │   ├── GAME_TICK_SYSTEM.md      # Sistema de tick y efectos periódicos
-│   ├── MESSAGE_SENDER_USAGE.md  # Guía de uso de MessageSender
+│   ├── SERVICES_ARCHITECTURE.md # Servicios y patrones
 │   ├── REFACTOR_MSG_COMPLETED.md # Refactorización de msg.py ✅ COMPLETADO
 │   ├── REFACTOR_SERVER_COMPLETED.md # Refactorización de server.py ✅ COMPLETADO
-│   ├── TODO_PACKET_VALIDATOR.md # TODO: Sistema de validación de packets ⭐ NUEVO
-│   ├── redis_architecture.md    # Arquitectura de Redis
+│   ├── PACKET_VALIDATOR_MIGRATION.md # Validación de packets
+│   ├── REDIS_ARCHITECTURE.md    # Arquitectura de Redis
 │   ├── REDIS_INTEGRATION.md     # Integración con Redis
 │   ├── REFACTOR_REPOSITORIES.md # Refactorización de repositorios
 │   └── COVERAGE_ANALYSIS.md     # Análisis de cobertura de tests
@@ -454,7 +456,7 @@ pyao-server/
 ├── pyproject.toml               # Configuración del proyecto y dependencias
 ├── uv.lock                      # Lock file de dependencias
 ├── run_tests.sh                 # Script para ejecutar todos los checks
-├── Claude.md                    # Reglas de desarrollo
+├── Claude.md                    # Puntero → docs/CLAUDE.md
 ├── README.md                    # Este archivo
 └── LICENSE                      # Licencia Apache 2.0
 ```
@@ -739,6 +741,8 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ## 📚 Documentación
 
+Índice y documentos maestros: **[docs/README.md](docs/README.md)**.
+
 ### Arquitectura ⭐
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Arquitectura completa del servidor, patrones de diseño y componentes **NUEVO**
 - **[Refactorización Server](docs/REFACTOR_SERVER_COMPLETED.md)**: Refactorización completada de server.py ✅
@@ -788,11 +792,11 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
   - Efecto visible para todos los jugadores en el mapa
 
 ### TODOs y Mejoras Futuras
-- **[TODO: Refactoring](docs/TODO_REFACTORING.md)**: Mejoras de arquitectura pendientes
+- **[Mejoras arquitectónicas](docs/todo/TODO_ARQUITECTURA.md)**: Propuestas y backlog técnico relacionado
 
 ### Arquitectura y Diseño
 - **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
-- **[Arquitectura Redis](docs/redis_architecture.md)**: Estructura de datos y claves en Redis
+- **[Arquitectura Redis](docs/REDIS_ARCHITECTURE.md)**: Estructura de datos y claves en Redis
 - **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
 - **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
 
@@ -818,7 +822,7 @@ docker compose up -d         # Levantar Redis
 ./run_tests.sh               # Verificar todo antes de commit
 ```
 
-Ver [CONTRIBUTING.md](CONTRIBUTING.md) para guía completa y [Claude.md](Claude.md) para reglas de desarrollo.
+Ver [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para guía completa y [docs/CLAUDE.md](docs/CLAUDE.md) para reglas de desarrollo.
 
 ## 📄 Licencia
 

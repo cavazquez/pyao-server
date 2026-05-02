@@ -98,7 +98,7 @@
 
 **Beneficio:** Prevenir crashes por packets malformados, mejor seguridad
 
-**Referencia:** `todo/TODO_REFACTORING.md#179-194`
+**Referencia:** `TODO_REFACTORING.md#179-194`
 
 ---
 
@@ -115,7 +115,7 @@
 
 **Beneficio:** Fácil configuración sin recompilar, mejor para deployment
 
-**Referencia:** `todo/TODO_ARQUITECTURA.md#385-443`
+**Referencia:** `TODO_ARQUITECTURA.md#385-443`
 
 ---
 
@@ -154,7 +154,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (puede empezar tras completar 0.6.0) ✅
 
-**Referencia:** `todo/TODO_CLASS_SYSTEM.md`
+**Referencia:** `TODO_CLASS_SYSTEM.md`
 
 **Archivos creados:**
 - `src/models/character_class.py`
@@ -193,7 +193,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 ---
 
-**Nota:** Party Finder está documentado en `todo/TODO_PARTY_FINDER.md` pero sin versión asignada. Se implementará más adelante según necesidad.
+**Nota:** Party Finder está documentado en `TODO_PARTY_FINDER.md` pero sin versión asignada. Se implementará más adelante según necesidad.
 
 ---
 
@@ -239,7 +239,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** ✅ Sistema de Partys funcionando (0.8.0)
 
 **Referencia VB6:** `modGuilds.bas` (71KB), `clsClan.cls` (29KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#9-30`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#9-30`
 
 ---
 
@@ -342,7 +342,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (servidor ya preparado)
 
-**Referencia:** `todo/TODO_SPELL_CLICK_TARGETING.md`
+**Referencia:** `TODO_SPELL_CLICK_TARGETING.md`
 
 ---
 
@@ -368,7 +368,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Conviene tener targeting por click listo (0.10.0)
 
 **Referencia VB6:** `modHechizos.bas` (97KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#76-94`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#76-94`
 
 ---
 
@@ -477,7 +477,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Requiere clanes/partys para interacción social (0.8.0, 0.9.0)
 
 **Referencia VB6:** `ModFacciones.bas` (33KB), `praetorians.bas` (39KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#55-73`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#55-73`
 
 ---
 
@@ -503,7 +503,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (independiente)
 
-**Referencia:** `todo/TODO_GENERAL.md#131-138`
+**Referencia:** `TODO_GENERAL.md#131-138`
 
 ---
 
@@ -527,7 +527,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Extiende banco actual (ya implementado en 0.4.0)
 
 **Referencia VB6:** `modBanco.bas` (12KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#97-112`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#97-112`
 
 ---
 
@@ -551,7 +551,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Dependencias:** Ninguna (independiente)
 
-**Referencia:** `todo/TODO_GENERAL.md#140-146`
+**Referencia:** `TODO_GENERAL.md#140-146`
 
 ---
 
@@ -575,7 +575,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Requiere logging estructurado y buena cobertura de tests
 
 **Referencia VB6:** `modCentinela.bas` (23KB), `clsAntiMassClon.cls`  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#135-151`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#135-151`
 
 ---
 
@@ -598,7 +598,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Requiere datos consolidados, quizás Event Bus
 
 **Referencia VB6:** `Statistics.bas` (15KB), `clsEstadisticasIPC.cls`  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#154-169`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#154-169`
 
 ---
 
@@ -621,7 +621,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Requiere transición de mapas estable (ya implementado)
 
 **Referencia VB6:** `clsMapSoundManager.cls`  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#172-187`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#172-187`
 
 ---
 
@@ -646,7 +646,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Ninguna (independiente)
 
 **Referencia VB6:** `modForum.bas` (14KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#115-132`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#115-132`
 
 ---
 
@@ -669,7 +669,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Dependencias:** Ninguna (independiente)
 
 **Referencia VB6:** `SecurityIp.bas` (12KB)  
-**Referencia:** `todo/TODO_CARACTERISTICAS_VB6.md#207-222`
+**Referencia:** `TODO_CARACTERISTICAS_VB6.md#207-222`
 
 ---
 
@@ -687,7 +687,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - Menos código boilerplate
 - Mejor testabilidad
 
-**Referencia:** `todo/TODO_ARQUITECTURA.md#534-640`
+**Referencia:** `TODO_ARQUITECTURA.md#534-640`
 
 ---
 
@@ -701,7 +701,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - Fácil agregar listeners para eventos
 - Útil para logros, quests, notificaciones
 
-**Referencia:** `todo/TODO_ARQUITECTURA.md#534-640`
+**Referencia:** `TODO_ARQUITECTURA.md#534-640`
 
 ---
 
@@ -715,7 +715,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - Cola de comandos
 - Mejor logging de acciones
 
-**Referencia:** `todo/TODO_ARQUITECTURA.md#534-640`
+**Referencia:** `TODO_ARQUITECTURA.md#534-640`
 
 ---
 
@@ -729,7 +729,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - Fácil cambiar de Redis a PostgreSQL
 - Mejor separación de responsabilidades
 
-**Referencia:** `todo/TODO_ARQUITECTURA.md#534-640`
+**Referencia:** `TODO_ARQUITECTURA.md#534-640`
 
 ---
 
@@ -747,7 +747,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - `structlog` - Logging estructurado para Python
 - `python-json-logger` - JSON formatter para logging estándar
 
-**Referencia:** `todo/TODO_REFACTORING.md#197-209`
+**Referencia:** `TODO_REFACTORING.md#197-209`
 
 ---
 
@@ -761,7 +761,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 
 **Beneficios:** Facilita debugging y testing
 
-**Referencia:** `todo/TODO_CLIENTE.md#7-28`
+**Referencia:** `TODO_CLIENTE.md#7-28`
 
 ---
 
@@ -775,7 +775,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 - Atacar (efecto visual mejorado)
 - Recibir daño (screen shake, efecto rojo)
 
-**Referencia:** `todo/TODO_CLIENTE.md#41-49`
+**Referencia:** `TODO_CLIENTE.md#41-49`
 
 ---
 
@@ -789,7 +789,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 - Click derecho para usar/equipar
 - Tooltip con stats del item
 
-**Referencia:** `todo/TODO_CLIENTE.md#50-58`
+**Referencia:** `TODO_CLIENTE.md#50-58`
 
 ---
 
@@ -797,7 +797,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 **Prioridad:** 🟢 Baja  
 **Esfuerzo:** 3-4 horas
 
-**Referencia:** `todo/TODO_CLIENTE.md#63-64`
+**Referencia:** `TODO_CLIENTE.md#63-64`
 
 ---
 
@@ -878,7 +878,7 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 - **Servidor VB6:** `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/`
 - **Cliente Godot:** `clientes/ArgentumOnlineGodot/`
 - **Documentación existente:** `docs/`
-- **TODOs detallados:** `todo/`
+- **TODOs detallados:** `docs/todo/`
 
 ---
 

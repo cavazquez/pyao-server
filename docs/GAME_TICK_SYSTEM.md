@@ -475,9 +475,9 @@ self.game_tick.add_effect(GoldDecayEffect(percentage=0.5, interval_seconds=120.0
 ## 🔗 Referencias
 
 - [COMBAT_SYSTEM.md](./COMBAT_SYSTEM.md) - Sistema de combate
-- [TODO.md](../TODO.md) - Lista completa de tareas
-- [server.py](../src/server.py) - Inicialización del GameTick
-- [game_tick.py](../src/game_tick.py) - Implementación del loop
+- [TODO consolidado](todo/TODO_CONSOLIDADO.md) – backlog de tareas
+- [server.py](../src/server.py) – inicialización del servidor
+- [game_tick.py](../src/game/game_tick.py) – implementación del loop
 
 ## 📜 Changelog
 

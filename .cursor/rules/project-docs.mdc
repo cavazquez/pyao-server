@@ -1,0 +1,10 @@
+---
+description: Ubicación de la documentación del proyecto y reglas para el agente
+alwaysApply: true
+---
+
+# Documentación PyAO Server
+
+- Convenciones y reglas para IA / desarrollo: **solo** en `docs/CLAUDE.md` (no duplicar en la raíz salvo el stub `Claude.md`).
+- Índice general: `docs/README.md`.
+- TODOs y roadmap: `docs/todo/`.

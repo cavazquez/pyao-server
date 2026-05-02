@@ -131,6 +131,4 @@ End Sub
 
 ## Referencias
 
-- [Documentación del Motor Gráfico](ENGINE.md)
-- [Sistema de Mapas](MAP_SYSTEM.md)
-- [Guía de Triggers](TRIGGERS.md)
+- Documentación interna relacionada: [MAP_ORPHANS_ANALYSIS.md](MAP_ORPHANS_ANALYSIS.md), [PATHFINDING_ASTAR.md](PATHFINDING_ASTAR.md) (no existían `ENGINE.md` / `MAP_SYSTEM.md` / `TRIGGERS.md` en este repo).

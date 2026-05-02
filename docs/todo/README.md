@@ -30,7 +30,7 @@ Esta carpeta contiene documentos de tareas pendientes, ideas y refactorizaciones
 ## 📝 Convención
 
 Todos los archivos TODO deben:
-- Estar en esta carpeta (`todo/`)
+- Estar en esta carpeta (`docs/todo/`)
 - Seguir el formato `TODO_<TEMA>.md`
 - Incluir prioridad, esfuerzo estimado y beneficios
 - Actualizarse cuando se completen tareas

@@ -14,6 +14,8 @@ Este documento describe mejoras arquitecturales propuestas para mejorar la mante
 
 ## 1. Service Container / Dependency Injection
 
+> **Estado (2026): implementado en otro diseño.** El código actual usa `DependencyContainer`, `TaskFactory` (inyección por introspección del `__init__`), `HandlerRegistry` para handlers nombrados y `src/network/packet_handlers.py` solo como `TASK_HANDLERS: dict[int, type[Task]]` (mapa packet → clase). Lo siguiente describe el problema **antes** de ese diseño; conservarlo como referencia histórica, no como backlog activo.
+
 ### Problema Actual
 
 Las tasks se crean manualmente con todas sus dependencias en `packet_handlers.py`:
