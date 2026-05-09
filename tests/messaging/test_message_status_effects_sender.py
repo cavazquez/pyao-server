@@ -146,9 +146,7 @@ async def test_send_update_tag_and_status() -> None:
     connection, writer = _create_connection()
     sender = StatusEffectsMessageSender(connection)
 
-    await sender.send_update_tag_and_status(
-        char_index=10, nick_color=1, user_tag="TestPlayer"
-    )
+    await sender.send_update_tag_and_status(char_index=10, nick_color=1, user_tag="TestPlayer")
 
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.UPDATE_TAG_AND_STATUS
@@ -175,9 +173,7 @@ async def test_send_update_tag_and_status_with_empty_tag() -> None:
     connection, writer = _create_connection()
     sender = StatusEffectsMessageSender(connection)
 
-    await sender.send_update_tag_and_status(
-        char_index=3, nick_color=0, user_tag=""
-    )
+    await sender.send_update_tag_and_status(char_index=3, nick_color=0, user_tag="")
 
     written_data = writer.write.call_args[0][0]
     assert written_data[0] == ServerPacketID.UPDATE_TAG_AND_STATUS

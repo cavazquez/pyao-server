@@ -49,8 +49,7 @@ class SafeToggleCommandHandler(CommandHandler):
 
         status_text = "ACTIVADO" if new_safe_mode else "DESACTIVADO"
         await self.message_sender.send_console_msg(
-            f"Modo seguro {status_text}. "
-             "Otros jugadores no podrán atacarte."
+            f"Modo seguro {status_text}. Otros jugadores no podrán atacarte."
             if new_safe_mode
             else "Ahora puedes ser atacado por otros jugadores."
         )

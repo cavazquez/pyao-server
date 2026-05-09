@@ -545,18 +545,44 @@ class PlayerRepository:
 
     # ── Status effects (timestamps) ────────────────────────────────────
 
+    async def _get_status_timestamp(self, user_id: int, effect: str) -> float:
+        """Obtiene el timestamp de un efecto de estado genérico.
+
+        Args:
+            user_id: ID del usuario.
+            effect: Nombre del efecto (ej: "poisoned", "immobilized", "blinded").
+
+        Returns:
+            Timestamp hasta cuando está activo (0.0 = inactivo).
+        """
+        return await self._hget_float(
+            RedisKeys.player_user_stats(user_id), f"{effect}_until"
+        )
+
+    async def _set_status_timestamp(self, user_id: int, effect: str, timestamp: float) -> None:
+        """Establece el timestamp de un efecto de estado genérico.
+
+        Args:
+            user_id: ID del usuario.
+            effect: Nombre del efecto (ej: "poisoned", "immobilized").
+            timestamp: Timestamp hasta cuando está activo (0.0 = desactivar).
+        """
+        await self._hset_field(
+            RedisKeys.player_user_stats(user_id), f"{effect}_until", timestamp
+        )
+        logger.debug("Effect '%s' updated for user_id %d: until %.2f", effect, user_id, timestamp)
+
     async def get_poisoned_until(self, user_id: int) -> float:
         """Obtiene el timestamp hasta cuando el jugador está envenenado.
 
         Returns:
             Timestamp hasta cuando está envenenado (0.0 = no envenenado).
         """
-        return await self._hget_float(RedisKeys.player_user_stats(user_id), "poisoned_until")
+        return await self._get_status_timestamp(user_id, "poisoned")
 
     async def update_poisoned_until(self, user_id: int, poisoned_until: float) -> None:
         """Actualiza el estado de envenenamiento del jugador."""
-        key = RedisKeys.player_user_stats(user_id)
-        await self._hset_field(key, "poisoned_until", poisoned_until)
+        await self._set_status_timestamp(user_id, "poisoned", poisoned_until)
         logger.debug("Envenenamiento user_id %d: hasta %.2f", user_id, poisoned_until)
 
     async def get_immobilized_until(self, user_id: int) -> float:
@@ -565,13 +591,11 @@ class PlayerRepository:
         Returns:
             Timestamp hasta cuando está inmovilizado (0.0 = no inmovilizado).
         """
-        return await self._hget_float(RedisKeys.player_user_stats(user_id), "immobilized_until")
+        return await self._get_status_timestamp(user_id, "immobilized")
 
     async def update_immobilized_until(self, user_id: int, immobilized_until: float) -> None:
         """Actualiza el estado de inmovilización del jugador."""
-        await self._hset_field(
-            RedisKeys.player_user_stats(user_id), "immobilized_until", immobilized_until
-        )
+        await self._set_status_timestamp(user_id, "immobilized", immobilized_until)
         logger.debug("Inmovilización user_id %d: hasta %.2f", user_id, immobilized_until)
 
     async def get_blinded_until(self, user_id: int) -> float:
@@ -580,11 +604,11 @@ class PlayerRepository:
         Returns:
             Timestamp hasta cuando está ciego (0.0 = no ciego).
         """
-        return await self._hget_float(RedisKeys.player_user_stats(user_id), "blinded_until")
+        return await self._get_status_timestamp(user_id, "blinded")
 
     async def update_blinded_until(self, user_id: int, blinded_until: float) -> None:
         """Actualiza el estado de ceguera del jugador."""
-        await self._hset_field(RedisKeys.player_user_stats(user_id), "blinded_until", blinded_until)
+        await self._set_status_timestamp(user_id, "blinded", blinded_until)
         logger.debug("Ceguera actualizada para user_id %d: hasta %.2f", user_id, blinded_until)
 
     async def get_dumb_until(self, user_id: int) -> float:
@@ -593,11 +617,11 @@ class PlayerRepository:
         Returns:
             Timestamp hasta cuando está estúpido (0.0 = no estúpido).
         """
-        return await self._hget_float(RedisKeys.player_user_stats(user_id), "dumb_until")
+        return await self._get_status_timestamp(user_id, "dumb")
 
     async def update_dumb_until(self, user_id: int, dumb_until: float) -> None:
-        """Actualiza el estado de estupidez del jugador."""
-        await self._hset_field(RedisKeys.player_user_stats(user_id), "dumb_until", dumb_until)
+        """Actualiza el estado de stupidez del jugador."""
+        await self._set_status_timestamp(user_id, "dumb", dumb_until)
         logger.debug("Estupidez actualizada para user_id %d: hasta %.2f", user_id, dumb_until)
 
     async def get_morphed_appearance(self, user_id: int) -> dict[str, int | float] | None:
@@ -667,13 +691,11 @@ class PlayerRepository:
         Returns:
             Timestamp hasta cuando está invisible (0.0 = no invisible).
         """
-        return await self._hget_float(RedisKeys.player_user_stats(user_id), "invisible_until")
+        return await self._get_status_timestamp(user_id, "invisible")
 
     async def update_invisible_until(self, user_id: int, invisible_until: float) -> None:
         """Actualiza el estado de invisibilidad del jugador."""
-        await self._hset_field(
-            RedisKeys.player_user_stats(user_id), "invisible_until", invisible_until
-        )
+        await self._set_status_timestamp(user_id, "invisible", invisible_until)
         logger.debug("Invisibilidad user_id %d: hasta %.2f", user_id, invisible_until)
 
     async def get_safe_mode(self, user_id: int) -> bool:

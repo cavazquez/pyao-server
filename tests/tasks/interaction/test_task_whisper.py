@@ -42,7 +42,9 @@ async def test_task_whisper_success() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock(return_value=CommandResult.ok())
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_called_once()
@@ -83,7 +85,9 @@ async def test_task_whisper_empty_receiver() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock()
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_not_called()
@@ -119,7 +123,9 @@ async def test_task_whisper_empty_message() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock()
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_not_called()
@@ -155,7 +161,9 @@ async def test_task_whisper_no_session() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock()
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_not_called()
@@ -222,7 +230,9 @@ async def test_task_whisper_unicode() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock(return_value=CommandResult.ok())
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_called_once()
@@ -261,7 +271,9 @@ async def test_task_whisper_long_receiver() -> None:
     whisper_handler = MagicMock()
     whisper_handler.handle = AsyncMock(return_value=CommandResult.ok())
 
-    task = TaskWhisper(data, message_sender, whisper_handler=whisper_handler, session_data=session_data)
+    task = TaskWhisper(
+        data, message_sender, whisper_handler=whisper_handler, session_data=session_data
+    )
     await task.execute()
 
     whisper_handler.handle.assert_called_once()

@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.command_handlers.yell_handler import YellCommandHandler
-from src.commands.yell_command import YellCommand
 from src.commands.walk_command import WalkCommand
+from src.commands.yell_command import YellCommand
 
 
 @pytest.fixture
@@ -152,9 +152,7 @@ async def test_handle_empty_username(
     """Test mensaje con username vacío usa nombre por defecto."""
     other_sender = MagicMock()
     other_sender.send_console_msg = AsyncMock()
-    mock_map_manager.get_all_message_senders_in_map = MagicMock(
-        return_value=[other_sender]
-    )
+    mock_map_manager.get_all_message_senders_in_map = MagicMock(return_value=[other_sender])
 
     handler = YellCommandHandler(
         player_repo=mock_player_repo,

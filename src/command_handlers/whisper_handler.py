@@ -83,9 +83,7 @@ class WhisperCommandHandler(CommandHandler):
         formatted_message = f"{sender_username} susurra: {message}"
         await target_sender.send_console_msg(formatted_message, font_color=3)
 
-        await self.message_sender.send_console_msg(
-            f"A {receiver_name}: {message}", font_color=3
-        )
+        await self.message_sender.send_console_msg(f"A {receiver_name}: {message}", font_color=3)
 
         logger.info(
             "WHISPER de user_id %d a '%s': '%s'",

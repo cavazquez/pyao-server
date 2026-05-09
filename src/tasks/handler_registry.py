@@ -313,7 +313,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         deps_keys=["player_repo", "account_repo", "map_manager"],
         needs_session_data=True,
     ),
-"talk": HandlerConfig(
+    "talk": HandlerConfig(
         TalkCommandHandler,
         deps_keys=["player_repo", "account_repo", "map_manager", "game_tick", "session_data"],
     ),

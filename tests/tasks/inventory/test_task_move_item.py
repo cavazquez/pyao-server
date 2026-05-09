@@ -6,13 +6,12 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.command_handlers.move_item_handler import MoveItemCommandHandler
 from src.commands.base import CommandResult
 from src.commands.move_item_command import MoveItemCommand
-from src.command_handlers.move_item_handler import MoveItemCommandHandler
 from src.network.packet_id import ClientPacketID
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
-from src.network.validation_result import ValidationResult
 from src.repositories.inventory_repository import SwapSlotsResult
 from src.tasks.inventory.task_move_item import TaskMoveItem
 

@@ -96,9 +96,7 @@ def build_set_invisible_response(char_index: int, invisible: bool) -> bytes:
     return packet.to_bytes()
 
 
-def build_update_tag_and_status_response(
-    char_index: int, nick_color: int, user_tag: str
-) -> bytes:
+def build_update_tag_and_status_response(char_index: int, nick_color: int, user_tag: str) -> bytes:
     """Construye el paquete UPDATE_TAG_AND_STATUS del protocolo AO estándar.
 
      Actualiza el color del nick y el tag/nombre visible de un personaje.

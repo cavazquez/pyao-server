@@ -87,6 +87,4 @@ class YellCommandHandler(CommandHandler):
             map_id,
         )
 
-        return CommandResult.ok(
-            data={"user_id": user_id, "message": message, "map_id": map_id}
-        )
+        return CommandResult.ok(data={"user_id": user_id, "message": message, "map_id": map_id})

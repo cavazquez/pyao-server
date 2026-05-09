@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.command_handlers.whisper_handler import WhisperCommandHandler
-from src.commands.whisper_command import WhisperCommand
 from src.commands.walk_command import WalkCommand
+from src.commands.whisper_command import WhisperCommand
 
 
 @pytest.fixture
