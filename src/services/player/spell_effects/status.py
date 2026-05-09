@@ -141,8 +141,31 @@ class ParalysisEffect(SpellEffect):
         return SpellEffectResult(success=True)
 
     async def apply_to_player(self, ctx: SpellContext) -> SpellEffectResult:
-        """La parálisis para jugadores se maneja como inmovilización."""
-        return SpellEffectResult(success=False)
+        """Aplica parálisis a un jugador (inmovilización + PARALIZE_OK)."""
+        if not ctx.target_player_id or not ctx.player_repo:
+            return SpellEffectResult(success=False)
+
+        immobilized_until = time.time() + IMMOBILIZATION_DURATION_SECONDS
+        await ctx.player_repo.update_immobilized_until(ctx.target_player_id, immobilized_until)
+
+        logger.info(
+            "Jugador user_id %d paralizado por hechizo %s (duración: %.1fs)",
+            ctx.target_player_id,
+            ctx.spell_name,
+            IMMOBILIZATION_DURATION_SECONDS,
+        )
+
+        target_sender = await ctx.get_target_message_sender()
+        if target_sender:
+            msg = (
+                "Te has paralizado."
+                if ctx.is_self_cast
+                else "Has sido paralizado."
+            )
+            await target_sender.send_console_msg(msg)
+            await target_sender.send_paralize_ok()
+
+        return SpellEffectResult(success=True)
 
 
 class RemoveParalysisEffect(SpellEffect):
