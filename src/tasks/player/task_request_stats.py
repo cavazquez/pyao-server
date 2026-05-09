@@ -50,7 +50,7 @@ class TaskRequestStats(Task):
         if user_id is None:
             logger.warning(
                 "Solicitud de estadísticas recibida sin sesión activa desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

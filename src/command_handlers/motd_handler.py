@@ -44,7 +44,7 @@ class MotdCommandHandler(CommandHandler):
 
         logger.debug(
             "MotdCommandHandler: solicitud de MOTD desde %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
@@ -57,7 +57,7 @@ class MotdCommandHandler(CommandHandler):
 
             # Enviar MOTD línea por línea
             await self.message_sender.send_multiline_console_msg(motd)
-            logger.info("MOTD enviado a %s", self.message_sender.connection.address)
+            logger.info("MOTD enviado a %s", self.message_sender.address)
 
             return CommandResult.ok(data={"motd": motd})
 

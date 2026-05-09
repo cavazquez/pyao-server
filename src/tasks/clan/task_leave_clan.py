@@ -50,7 +50,7 @@ class TaskLeaveClan(Task):
         if user_id is None:
             logger.warning(
                 "Intento de salir del clan sin user_id en sesión desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             await self.message_sender.send_console_msg(
                 "Error: Debes estar logueado para salir del clan.",

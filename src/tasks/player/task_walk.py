@@ -73,14 +73,14 @@ class TaskWalk(Task):
         if heading is None:
             logger.warning(
                 "Paquete de movimiento inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 
         logger.debug(
             "TaskWalk: Recibido WALK con heading=%d desde %s",
             heading,
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         # Obtener user_id de la sesión

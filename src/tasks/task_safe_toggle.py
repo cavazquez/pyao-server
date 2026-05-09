@@ -46,7 +46,7 @@ class TaskSafeToggle(Task):
         if user_id is None:
             logger.warning(
                 "SafeToggle sin sesión activa desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

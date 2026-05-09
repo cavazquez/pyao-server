@@ -32,8 +32,7 @@ def mock_message_sender() -> MagicMock:
     sender = MagicMock()
     sender.connection = MagicMock()
     sender.connection.address = "127.0.0.1:12345"
-    sender.connection.close = MagicMock()
-    sender.connection.wait_closed = AsyncMock()
+    sender.disconnect = AsyncMock()
     sender.send_character_remove = AsyncMock()
     return sender
 
@@ -58,7 +57,7 @@ async def test_handle_quit_success(
     assert result.data["user_id"] == 1
     assert result.data["username"] == "TestUser"
     mock_map_manager.remove_player_from_all_maps.assert_called_once_with(1)
-    mock_message_sender.connection.close.assert_called_once()
+    mock_message_sender.disconnect.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -77,7 +76,7 @@ async def test_handle_quit_without_repo(
     result = await handler.handle(command)
 
     assert result.success is True
-    mock_message_sender.connection.close.assert_called_once()
+    mock_message_sender.disconnect.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -136,7 +135,7 @@ async def test_handle_error_handling(
     mock_message_sender: MagicMock,
 ) -> None:
     """Test manejo de errores."""
-    mock_message_sender.connection.close = MagicMock(side_effect=Exception("Error"))
+    mock_message_sender.disconnect = MagicMock(side_effect=Exception("Error"))
 
     handler = QuitCommandHandler(
         player_repo=mock_player_repo,

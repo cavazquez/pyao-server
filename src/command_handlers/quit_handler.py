@@ -61,7 +61,7 @@ class QuitCommandHandler(CommandHandler):
             "QuitCommandHandler: jugador %d (%s) solicitó desconexión desde %s",
             user_id,
             username,
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
@@ -112,8 +112,7 @@ class QuitCommandHandler(CommandHandler):
                 logger.debug("Jugador %d removido del MapManager", user_id)
 
             # Cerrar la conexión
-            self.message_sender.connection.close()
-            await self.message_sender.connection.wait_closed()
+            await self.message_sender.disconnect()
             logger.info("Jugador %d (%s) desconectado correctamente", user_id, username)
 
             return CommandResult.ok(data={"user_id": user_id, "username": username})

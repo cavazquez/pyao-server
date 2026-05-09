@@ -74,7 +74,7 @@ class TaskDice(Task):
                 self.session_data["dice_attributes"] = result.data["attributes"]
                 logger.info(
                     "Atributos guardados en sesión para %s",
-                    self.message_sender.connection.address,
+                    self.message_sender.address,
                 )
         elif not result.success:
             logger.debug("Tirada de dados falló: %s", result.error_message or "Error desconocido")

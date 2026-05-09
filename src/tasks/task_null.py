@@ -14,7 +14,7 @@ class TaskNull(Task):
         """Loguea información detallada del mensaje no reconocido."""
         logger.warning(
             "Mensaje no reconocido desde %s - Tamaño: %d bytes",
-            self.message_sender.connection.address,
+            self.message_sender.address,
             len(self.data),
         )
 

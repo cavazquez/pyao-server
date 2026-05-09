@@ -12,10 +12,8 @@ class TaskTLSHandshake(Task):
 
     async def execute(self) -> None:
         """Registra el intento de handshake TLS y cierra la conexión."""
-        connection = self.message_sender.connection
         logger.warning(
             "Cliente %s intentó iniciar handshake TLS, pero el servidor no tiene SSL habilitado.",
-            connection.address,
+            self.message_sender.address,
         )
-        connection.close()
-        await connection.wait_closed()
+        await self.message_sender.disconnect()

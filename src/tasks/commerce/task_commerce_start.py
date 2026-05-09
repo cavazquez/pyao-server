@@ -20,7 +20,7 @@ class TaskCommerceStart(Task):
         """Notifica que la funcionalidad aún no está disponible."""
         logger.info(
             "COMMERCE_START recibido desde %s. Funcionalidad no implementada.",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
         await self.message_sender.send_console_msg(
             "El comando /COMERCIAR aún no está disponible en esta versión.",

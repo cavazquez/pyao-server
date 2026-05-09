@@ -162,7 +162,7 @@ class TaskCreateAccount(Task):
         if parsed is None:
             logger.warning(
                 "Paquete de creación de cuenta inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             await self.message_sender.send_error_msg("Formato de paquete inválido")
             return

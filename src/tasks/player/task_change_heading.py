@@ -72,7 +72,7 @@ class TaskChangeHeading(Task):
         if heading is None:
             logger.warning(
                 "Paquete de cambio de dirección inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 
@@ -80,7 +80,7 @@ class TaskChangeHeading(Task):
         if "user_id" not in self.session_data:
             logger.warning(
                 "Intento de cambio de dirección sin user_id en sesión desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

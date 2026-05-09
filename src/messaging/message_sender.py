@@ -54,6 +54,21 @@ class MessageSender:
         self.visual_effects = VisualEffectsMessageSender(connection)
         self.work = WorkMessageSender(connection)
 
+    @property
+    def address(self) -> tuple[str, int] | str:
+        """Dirección del cliente conectado. Delega en ClientConnection."""
+        return self.connection.address
+
+    @property
+    def is_ssl_enabled(self) -> bool:
+        """Si la conexión usa TLS. Delega en ClientConnection."""
+        return self.connection.is_ssl_enabled
+
+    async def disconnect(self) -> None:
+        """Cierra la conexión del cliente y espera su finalización."""
+        self.connection.close()
+        await self.connection.wait_closed()
+
     async def send_dice_roll(
         self,
         strength: int,
@@ -185,7 +200,7 @@ class MessageSender:
             gold: Cantidad total de oro del jugador.
         """
         await self.player_stats.send_update_gold(gold)
-        logger.info("[%s] Oro actualizado a %d", self.connection.address, gold)
+        logger.info("[%s] Oro actualizado a %d", self.address, gold)
 
     async def send_update_bank_gold(self, bank_gold: int) -> None:
         """Envía actualización de oro del banco al cliente.
@@ -639,7 +654,7 @@ class MessageSender:
     async def send_navigate_toggle(self) -> None:
         """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""
         response = bytes([ServerPacketID.NAVIGATE_TOGGLE])
-        logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.connection.address)
+        logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.address)
         await self.connection.send(response)
 
     async def send_pong(self) -> None:
@@ -670,7 +685,7 @@ class MessageSender:
         response = build_user_commerce_init_response(partner_username)
         logger.info(
             "[%s] Enviando USER_COMMERCE_INIT (partner=%s)",
-            self.connection.address,
+            self.address,
             partner_username,
         )
         await self.connection.send(response)
@@ -678,7 +693,7 @@ class MessageSender:
     async def send_user_commerce_end(self) -> None:
         """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
         response = build_user_commerce_end_response()
-        logger.info("[%s] Enviando USER_COMMERCE_END", self.connection.address)
+        logger.info("[%s] Enviando USER_COMMERCE_END", self.address)
         await self.connection.send(response)
 
     async def send_work_request_target(self, skill_type: int) -> None:

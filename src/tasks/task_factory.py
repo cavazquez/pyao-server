@@ -83,7 +83,7 @@ class TaskFactory:
         # Buscar la clase de task en el mapa
         task_class = TASK_HANDLERS.get(packet_id)
         if task_class is None:
-            client_address = message_sender.connection.address
+            client_address = message_sender.address
             logger.warning(
                 "Packet_id=%d no implementado desde %s. Retornando TaskNull.",
                 packet_id,
@@ -207,7 +207,7 @@ class TaskFactory:
                 packet_name = f"UNKNOWN_{packet_id}"
 
             # Log del resultado
-            client_address = message_sender.connection.address
+            client_address = message_sender.address
             validation_result.log_validation(packet_name, packet_id, client_address)
 
             # Si la validación falló, enviar error al cliente
@@ -240,11 +240,7 @@ class TaskFactory:
         if len(data) < TLS_HEADER_MIN_LENGTH:
             return False
 
-        connection = getattr(message_sender, "connection", None)
-        if connection is None:
-            return False
-
-        if getattr(connection, "is_ssl_enabled", False):
+        if getattr(message_sender, "is_ssl_enabled", False):
             return False
 
         return (

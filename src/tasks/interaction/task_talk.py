@@ -78,7 +78,7 @@ class TaskTalk(Task):
         if talk_data is None:
             logger.warning(
                 "Paquete Talk inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 
@@ -88,7 +88,7 @@ class TaskTalk(Task):
         if user_id is None:
             logger.warning(
                 "Mensaje de chat recibido sin sesión activa desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

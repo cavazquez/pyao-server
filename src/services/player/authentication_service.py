@@ -50,7 +50,7 @@ class AuthenticationService:
         """
         logger.info(
             "Intento de autenticación desde %s - Username: %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
             username,
         )
 

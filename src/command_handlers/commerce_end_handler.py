@@ -40,13 +40,13 @@ class CommerceEndCommandHandler(CommandHandler):
 
         logger.debug(
             "CommerceEndCommandHandler: cliente %s solicitó cerrar la ventana de comercio",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
             # Enviar confirmación para cerrar la ventana
             await self.message_sender.send_commerce_end()
-            logger.debug("COMMERCE_END enviado a %s", self.message_sender.connection.address)
+            logger.debug("COMMERCE_END enviado a %s", self.message_sender.address)
 
             return CommandResult.ok()
 

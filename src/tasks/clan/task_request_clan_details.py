@@ -51,7 +51,7 @@ class TaskRequestClanDetails(Task):
         if user_id is None:
             logger.warning(
                 "Intento de solicitar detalles del clan sin user_id en sesión desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             await self.message_sender.send_console_msg(
                 "Error: Debes estar logueado para ver los detalles del clan.",

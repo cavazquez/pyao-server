@@ -40,7 +40,7 @@ class AyudaCommandHandler(CommandHandler):
 
         logger.debug(
             "AyudaCommandHandler: solicitud de ayuda desde %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
@@ -84,7 +84,7 @@ class AyudaCommandHandler(CommandHandler):
 
             # Enviar ayuda línea por línea
             await self.message_sender.send_multiline_console_msg(help_message)
-            logger.debug("Ayuda enviada a %s", self.message_sender.connection.address)
+            logger.debug("Ayuda enviada a %s", self.message_sender.address)
 
             return CommandResult.ok(data={"help_message": help_message})
 

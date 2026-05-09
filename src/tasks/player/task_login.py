@@ -77,7 +77,7 @@ class TaskLogin(Task):
         if parsed is None:
             logger.warning(
                 "Paquete de login inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

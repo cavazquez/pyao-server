@@ -40,13 +40,13 @@ class PingCommandHandler(CommandHandler):
 
         logger.debug(
             "PingCommandHandler: ping recibido desde %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
             # Enviar paquete PONG usando MessageSender
             await self.message_sender.send_pong()
-            logger.debug("Pong enviado a %s", self.message_sender.connection.address)
+            logger.debug("Pong enviado a %s", self.message_sender.address)
 
             return CommandResult.ok()
 

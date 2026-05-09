@@ -46,7 +46,7 @@ class DiceCommandHandler(CommandHandler):
             "DiceCommandHandler: tirada de dados con rango %d-%d para %s",
             min_value,
             max_value,
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:

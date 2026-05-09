@@ -49,7 +49,7 @@ class InformationCommandHandler(CommandHandler):
 
         logger.debug(
             "InformationCommandHandler: solicitud de información desde %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
@@ -96,7 +96,7 @@ class InformationCommandHandler(CommandHandler):
 
             # Enviar información línea por línea
             await self.message_sender.send_multiline_console_msg(message)
-            logger.debug("Información enviada a %s", self.message_sender.connection.address)
+            logger.debug("Información enviada a %s", self.message_sender.address)
 
             return CommandResult.ok(data={"message": message})
 

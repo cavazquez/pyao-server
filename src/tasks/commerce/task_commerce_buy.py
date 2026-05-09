@@ -53,7 +53,7 @@ class TaskCommerceBuy(Task):
         """
         logger.debug(
             "Cliente %s intenta comprar: slot=%d, quantity=%d",
-            self.message_sender.connection.address,
+            self.message_sender.address,
             self.slot,
             self.quantity,
         )

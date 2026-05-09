@@ -56,7 +56,7 @@ class TaskRequestPositionUpdate(Task):
         if user_id is None:
             logger.warning(
                 "Solicitud de posición sin estar logueado desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 

@@ -76,7 +76,7 @@ class TaskGMCommands(Task):
         if parsed is None:
             logger.warning(
                 "Paquete GM_COMMANDS inválido desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             return
 
@@ -96,7 +96,7 @@ class TaskGMCommands(Task):
         if user_id is None:
             logger.warning(
                 "Intento de comando GM sin user_id en sesión desde %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
             await self.message_sender.send_console_msg(
                 "Error: Debes estar logueado para usar comandos GM.",

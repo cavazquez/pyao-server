@@ -58,7 +58,7 @@ class TaskRequestAttributes(Task):
             dice_attributes = self.session_data["dice_attributes"]
             logger.info(
                 "Atributos desde sesión encontrados para %s",
-                self.message_sender.connection.address,
+                self.message_sender.address,
             )
         else:
             # Si no hay en sesión, obtener user_id para buscar en repositorio
@@ -66,7 +66,7 @@ class TaskRequestAttributes(Task):
             if user_id is None:
                 logger.warning(
                     "Cliente %s solicitó atributos pero no hay user_id en sesión",
-                    self.message_sender.connection.address,
+                    self.message_sender.address,
                 )
                 await self.message_sender.send_attributes(0, 0, 0, 0, 0)
                 return

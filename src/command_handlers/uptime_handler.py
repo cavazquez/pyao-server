@@ -45,7 +45,7 @@ class UptimeCommandHandler(CommandHandler):
 
         logger.debug(
             "UptimeCommandHandler: solicitud de uptime desde %s",
-            self.message_sender.connection.address,
+            self.message_sender.address,
         )
 
         try:
@@ -83,7 +83,7 @@ class UptimeCommandHandler(CommandHandler):
 
             # Enviar mensaje
             await self.message_sender.send_console_msg(message)
-            logger.debug("Uptime enviado a %s", self.message_sender.connection.address)
+            logger.debug("Uptime enviado a %s", self.message_sender.address)
 
             return CommandResult.ok(data={"message": message})
 
