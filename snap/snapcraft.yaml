@@ -1,7 +1,6 @@
 name: pyao
 base: core26
 build-base: devel
-version: '0.10.0'
 summary: Servidor de Argentum Online en Python
 description: |
   PyAO es un servidor de juego de rol multijugador online (MMORPG)
@@ -22,6 +21,7 @@ description: |
 
 grade: devel
 confinement: strict
+adopt-info: snap-version
 architectures:
   - amd64
   - arm64
@@ -80,3 +80,10 @@ parts:
     source: snap/local/
     organize:
       wrapper: bin/wrapper
+
+  snap-version:
+    plugin: nil
+    source: .
+    override-pull: |
+      VERSION=$(grep '^version' pyproject.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
+      craftctl set version="$VERSION"
