@@ -76,7 +76,7 @@ max_slots = 40
 
 [game.character]
 hp_per_con = 10
-mana_per_int = 10
+mana_per_int = 50000
 initial_gold = 0
 initial_elu = 300
 elu_exponent = 1.8
