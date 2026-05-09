@@ -6,6 +6,7 @@ import sys
 from typing import TYPE_CHECKING
 
 import redis.asyncio as redis
+
 from src.config.config_manager import config_manager
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender

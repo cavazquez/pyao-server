@@ -46,7 +46,9 @@ class GroundItemsRepository:
 
             # Guardar en Redis como JSON
             if serializable_items:
-                await self.redis_client.set(key, json.dumps(serializable_items), ex=self.GROUND_ITEMS_TTL)
+                await self.redis_client.set(
+                    key, json.dumps(serializable_items), ex=self.GROUND_ITEMS_TTL
+                )
                 logger.debug(
                     "Guardados %d tiles con items en mapa %d", len(serializable_items), map_id
                 )

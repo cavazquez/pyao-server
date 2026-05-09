@@ -107,9 +107,7 @@ class MerchantDataLoader(BaseDataLoader):
             await self._execute_redis(
                 self.redis_client.delete(RedisKeys.merchant_inventory(npc_id))
             )
-            await self._execute_redis(
-                self.redis_client.delete(self._merchant_items_key(npc_id))
-            )
+            await self._execute_redis(self.redis_client.delete(self._merchant_items_key(npc_id)))
             deleted += 1
 
         logger.info("Eliminados inventarios de %d mercaderes", deleted)

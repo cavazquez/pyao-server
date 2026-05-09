@@ -127,8 +127,7 @@ class PacketReaderMixin:
         else:
             if not (1 <= x <= max_x and 1 <= y <= max_y):
                 self.errors.append(
-                    f"Coordenadas inválidas: ({x}, {y}) "
-                    f"(deben estar entre 1-{max_x}, 1-{max_y})"
+                    f"Coordenadas inválidas: ({x}, {y}) (deben estar entre 1-{max_x}, 1-{max_y})"
                 )
                 return None
             return (x, y)
@@ -150,14 +149,10 @@ class PacketReaderMixin:
             return None
         else:
             if len(password) < min_length:
-                self.errors.append(
-                    f"Contraseña muy corta: {len(password)} (mínimo: {min_length})"
-                )
+                self.errors.append(f"Contraseña muy corta: {len(password)} (mínimo: {min_length})")
                 return None
             if len(password) > max_length:
-                self.errors.append(
-                    f"Contraseña muy larga: {len(password)} (máximo: {max_length})"
-                )
+                self.errors.append(f"Contraseña muy larga: {len(password)} (máximo: {max_length})")
                 return None
             if not password:
                 self.errors.append("Contraseña vacía")
@@ -272,9 +267,7 @@ class PacketReaderMixin:
             return None
 
         if not username or len(username) > self.MAX_GM_USERNAME:
-            self.errors.append(
-                f"Username inválido: '{username}' (longitud: {len(username)})"
-            )
+            self.errors.append(f"Username inválido: '{username}' (longitud: {len(username)})")
             return None
 
         return subcommand, username, map_id, x, y

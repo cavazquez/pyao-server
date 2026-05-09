@@ -555,9 +555,7 @@ class PlayerRepository:
         Returns:
             Timestamp hasta cuando está activo (0.0 = inactivo).
         """
-        return await self._hget_float(
-            RedisKeys.player_user_stats(user_id), f"{effect}_until"
-        )
+        return await self._hget_float(RedisKeys.player_user_stats(user_id), f"{effect}_until")
 
     async def _set_status_timestamp(self, user_id: int, effect: str, timestamp: float) -> None:
         """Establece el timestamp de un efecto de estado genérico.
@@ -567,9 +565,7 @@ class PlayerRepository:
             effect: Nombre del efecto (ej: "poisoned", "immobilized").
             timestamp: Timestamp hasta cuando está activo (0.0 = desactivar).
         """
-        await self._hset_field(
-            RedisKeys.player_user_stats(user_id), f"{effect}_until", timestamp
-        )
+        await self._hset_field(RedisKeys.player_user_stats(user_id), f"{effect}_until", timestamp)
         logger.debug("Effect '%s' updated for user_id %d: until %.2f", effect, user_id, timestamp)
 
     async def get_poisoned_until(self, user_id: int) -> float:

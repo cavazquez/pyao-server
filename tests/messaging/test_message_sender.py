@@ -123,14 +123,14 @@ async def test_delegation_to_map_component() -> None:
     await message_sender.send_pos_update(50, 75)
     await message_sender.send_object_create(10, 20, 100)
     await message_sender.send_object_delete(10, 20)
-    await message_sender.send_block_position(15, 25, True)  # noqa: FBT003
+    await message_sender.send_block_position(15, 25, True)
 
     # Verificar delegación
     message_sender.map.send_change_map.assert_called_once_with(1, 0)
     message_sender.map.send_pos_update.assert_called_once_with(50, 75)
     message_sender.map.send_object_create.assert_called_once_with(10, 20, 100)
     message_sender.map.send_object_delete.assert_called_once_with(10, 20)
-    message_sender.map.send_block_position.assert_called_once_with(15, 25, True)  # noqa: FBT003
+    message_sender.map.send_block_position.assert_called_once_with(15, 25, True)
 
 
 @pytest.mark.asyncio

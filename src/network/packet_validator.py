@@ -594,8 +594,7 @@ class PacketValidator(PacketReaderMixin):
                     success=False,
                     data=None,
                     error_message=(
-                        f"String truncado: se esperaban {length} bytes, "
-                        f"hay {len(string_bytes)}"
+                        f"String truncado: se esperaban {length} bytes, hay {len(string_bytes)}"
                     ),
                 )
 

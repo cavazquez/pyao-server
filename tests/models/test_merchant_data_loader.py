@@ -4,10 +4,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from tests.conftest import create_mock_redis_client
 from src.models.merchant_data_loader import MerchantDataLoader
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisKeys
+from tests.conftest import create_mock_redis_client
 
 
 @pytest.fixture

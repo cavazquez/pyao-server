@@ -44,7 +44,7 @@ async def test_handle_start_meditation(
 
     assert result.success is True
     assert result.data["is_meditating"] is True
-    mock_player_repo.set_meditating.assert_called_once_with(1, True)  # noqa: FBT003
+    mock_player_repo.set_meditating.assert_called_once_with(1, True)
     mock_message_sender.send_create_fx.assert_called_once()
 
 
@@ -66,7 +66,7 @@ async def test_handle_stop_meditation(
 
     assert result.success is True
     assert result.data["is_meditating"] is False
-    mock_player_repo.set_meditating.assert_called_once_with(1, False)  # noqa: FBT003
+    mock_player_repo.set_meditating.assert_called_once_with(1, False)
 
 
 @pytest.mark.asyncio

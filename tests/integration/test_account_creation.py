@@ -48,9 +48,23 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     # Mock de redis para InventoryRepository
     redis_client_mock = MagicMock()
     for method in (
-        "hget", "hset", "hset_field", "hgetall", "hdel", "hmget",
-        "exists", "set", "get", "delete", "sadd", "smembers", "srem",
-        "incr", "decr", "incrby", "decrby",
+        "hget",
+        "hset",
+        "hset_field",
+        "hgetall",
+        "hdel",
+        "hmget",
+        "exists",
+        "set",
+        "get",
+        "delete",
+        "sadd",
+        "smembers",
+        "srem",
+        "incr",
+        "decr",
+        "incrby",
+        "decrby",
     ):
         setattr(redis_client_mock, method, AsyncMock())
     redis_client_mock.hgetall = AsyncMock(return_value={})

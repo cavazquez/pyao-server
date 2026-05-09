@@ -61,7 +61,7 @@ async def test_get_door_state_no_redis() -> None:
 async def test_set_door_state_open(mock_redis_client: MagicMock) -> None:
     """Test guardar estado de puerta abierta."""
     repo = DoorRepository(redis=mock_redis_client)
-    result = await repo.set_door_state(1, 10, 20, 123, True)  # noqa: FBT003
+    result = await repo.set_door_state(1, 10, 20, 123, True)
 
     assert result is True
     mock_redis_client.set.assert_called_once_with("door:1:10:20", "123:1")
@@ -71,7 +71,7 @@ async def test_set_door_state_open(mock_redis_client: MagicMock) -> None:
 async def test_set_door_state_closed(mock_redis_client: MagicMock) -> None:
     """Test guardar estado de puerta cerrada."""
     repo = DoorRepository(redis=mock_redis_client)
-    result = await repo.set_door_state(1, 10, 20, 123, False)  # noqa: FBT003
+    result = await repo.set_door_state(1, 10, 20, 123, False)
 
     assert result is True
     mock_redis_client.set.assert_called_once_with("door:1:10:20", "123:0")
@@ -81,7 +81,7 @@ async def test_set_door_state_closed(mock_redis_client: MagicMock) -> None:
 async def test_set_door_state_no_redis() -> None:
     """Test cuando no hay Redis disponible."""
     repo = DoorRepository(redis=None)
-    result = await repo.set_door_state(1, 10, 20, 123, True)  # noqa: FBT003
+    result = await repo.set_door_state(1, 10, 20, 123, True)
 
     assert result is False
 

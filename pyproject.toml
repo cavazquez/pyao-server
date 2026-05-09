@@ -148,6 +148,7 @@ filterwarnings = [
     "RUF029",  # async sin await permitido en mocks
     "SIM118",  # simplificaciones no requeridas en tests
     "SLF001",  # acceso a miembros privados permitido en tests
+    "FBT003",  # boolean positional en assert_called_once_with
 ]
 "tools/**/*.py" = [
     "PLR1702", # parsers pueden tener muchos bloques anidados
@@ -186,4 +187,8 @@ filterwarnings = [
 "src/services/map/map_single_map_loader.py" = [
     "DOC201",
     "E501",  # docstring de referencia a _load_map
+]
+"src/utils/redis_client.py" = [
+    "DOC201",  # wrapper methods delegan a Redis
+    "DOC501",  # RuntimeError documentado en __init__
 ]

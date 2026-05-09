@@ -220,7 +220,7 @@ async def test_handle_boat_start_sailing(
 
         assert result.success is True
         assert result.data["is_sailing"] is True
-        mock_player_repo.set_sailing.assert_called_once_with(1, True)  # noqa: FBT003
+        mock_player_repo.set_sailing.assert_called_once_with(1, True)
 
 
 @pytest.mark.asyncio
@@ -253,7 +253,7 @@ async def test_handle_boat_stop_sailing(
 
         assert result.success is True
         assert result.data["is_sailing"] is False
-        mock_player_repo.set_sailing.assert_called_once_with(1, False)  # noqa: FBT003
+        mock_player_repo.set_sailing.assert_called_once_with(1, False)
 
 
 # Tests para manzanas

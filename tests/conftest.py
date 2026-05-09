@@ -5,6 +5,7 @@
 # los warnings sin tocar Redis/ConnectionPool y sin romper decode_responses.
 import warnings
 from typing import Any
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest_asyncio
 import redis.asyncio as redis_async
@@ -90,17 +91,34 @@ def _patched_fake_redis_mixin_init(
 aioredis.FakeRedisMixin.__init__ = _patched_fake_redis_mixin_init
 
 
-from unittest.mock import AsyncMock, MagicMock
-
 _REDIS_WRAPPER_METHODS = (
-    "hget", "hset", "hset_field", "hgetall", "hdel", "hmget",
-    "exists", "set", "get", "delete", "sadd", "smembers", "srem",
-    "keys", "incr", "incrby", "decr", "decrby", "setex", "scard",
-    "get_active_merchant", "set_active_merchant", "delete_active_merchant",
+    "hget",
+    "hset",
+    "hset_field",
+    "hgetall",
+    "hdel",
+    "hmget",
+    "exists",
+    "set",
+    "get",
+    "delete",
+    "sadd",
+    "smembers",
+    "srem",
+    "keys",
+    "incr",
+    "incrby",
+    "decr",
+    "decrby",
+    "setex",
+    "scard",
+    "get_active_merchant",
+    "set_active_merchant",
+    "delete_active_merchant",
 )
 
 
-def create_mock_redis_client(**overrides: Any) -> MagicMock:
+def create_mock_redis_client(**overrides: object) -> MagicMock:
     """Crea un MagicMock de RedisClient con todos los wrappers como AsyncMock.
 
     Args:

@@ -116,9 +116,7 @@ class PartyRepository:
         party_data = json.loads(party_json)
 
         # Get all members
-        members_json = await self.redis.hgetall(
-            self.PARTY_MEMBERS_KEY.format(party_id=party_id)
-        )
+        members_json = await self.redis.hgetall(self.PARTY_MEMBERS_KEY.format(party_id=party_id))
 
         members: dict[int, PartyMember] = {}
         for member_json in members_json.values():
@@ -163,9 +161,7 @@ class PartyRepository:
         pipe = self.redis.pipeline()
 
         # Get members to clean up their party references
-        members_json = await self.redis.hgetall(
-            self.PARTY_MEMBERS_KEY.format(party_id=party_id)
-        )
+        members_json = await self.redis.hgetall(self.PARTY_MEMBERS_KEY.format(party_id=party_id))
 
         for member_json in members_json.values():
             member_data = json.loads(member_json)
@@ -236,10 +232,7 @@ class PartyRepository:
         if current_data:
             party_data = json.loads(current_data)
             party_data["member_count"] = (
-                len(
-                    await self.redis.hgetall(self.PARTY_MEMBERS_KEY.format(party_id=party_id))
-                )
-                + 1
+                len(await self.redis.hgetall(self.PARTY_MEMBERS_KEY.format(party_id=party_id))) + 1
             )  # +1 for the new member
 
             pipe.set(self.PARTY_KEY.format(party_id=party_id), json.dumps(party_data))
