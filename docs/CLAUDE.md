@@ -96,21 +96,21 @@ Para maximizar la cobertura de ramas, asegurar tests para:
 ## Workflow
 1. **Proponer cambios**: Mostrar qué cambios se van a realizar y esperar confirmación del usuario
 2. **Implementar**: Solo después de la aprobación, realizar los cambios en el código
-3. **Ejecutar tests**: Correr `./run_tests.sh` y verificar que no haya errores ni warnings
+3. **Ejecutar tests**: Correr `./scripts/checks.sh` y verificar que no haya errores ni warnings
 4. **Generar tests**: Crear o actualizar los tests necesarios para los cambios realizados
 5. **Verificar coverage**: Ejecutar `pytest --cov=src --cov-report=term` y verificar que:
    - La cobertura global se mantenga o mejore
    - Los nuevos módulos tengan cobertura adecuada según su tipo
    - Se cubran las ramas principales (if/else, try/except)
-6. **Ejecutar tests nuevamente**: Correr `./run_tests.sh` hasta que no haya ningún error ni warning
+6. **Ejecutar tests nuevamente**: Correr `./scripts/checks.sh` hasta que no haya ningún error ni warning
 7. **Actualizar README.md**: Si se agregaron/eliminaron archivos o cambió la arquitectura
 8. **Commit y Push**: Solo cuando todo esté limpio y funcionando
 
 ## Pre-commit
-- **OBLIGATORIO**: Antes de cada commit, ejecutar `./run_tests.sh` y verificar que todo pase
+- **OBLIGATORIO**: Antes de cada commit, ejecutar `./scripts/checks.sh` y verificar que todo pase
 - El script incluye: ruff linter, ruff formatter, mypy type checker, y pytest
 - NO hacer commit si algún check falla
 
 ## CI/CD
-- GitHub Actions corre automáticamente los mismos checks que `run_tests.sh` en cada push
+- GitHub Actions corre automáticamente los mismos checks que `scripts/checks.sh` en cada push
 - Los checks deben pasar para poder mergear PRs

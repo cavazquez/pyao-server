@@ -352,7 +352,7 @@ packet.add_byte(y)
 
 ```bash
 # Ejecutar tests
-./run_tests.sh
+./scripts/checks.sh
 
 # Tests: 374 pasando
 ```

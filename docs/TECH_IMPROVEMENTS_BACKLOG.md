@@ -95,7 +95,7 @@ Este documento resume propuestas detectadas en una revision general del proyecto
 
 ## Criterio de exito
 
-- `run_tests.sh` verde.
+- `scripts/checks.sh` verde.
 - Sin regresion funcional en gameplay.
 - Mejora medible en latencia/carga en escenarios con alta cantidad de NPCs.
 - Trazabilidad de errores y tiempos en produccion/dev.

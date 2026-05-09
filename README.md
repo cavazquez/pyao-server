@@ -98,16 +98,16 @@ Las herramientas permiten entrar al modo de trabajo (tecla **U**) para talar, mi
 
 ```bash
 # Ejecutar todos los checks (linter, formatter, type checker, tests)
-./run_tests.sh
+./scripts/checks.sh
 
 # Modo rápido (solo tests, sin mypy)
-./run_tests.sh -q
+./scripts/checks.sh -q
 
 # Con cobertura de código
-./run_tests.sh -c
+./scripts/checks.sh -c
 
 # Ver todas las opciones
-./run_tests.sh -h
+./scripts/checks.sh -h
 
 # Solo tests específicos
 uv run pytest tests/tasks/clan/ -v
@@ -455,7 +455,7 @@ pyao-server/
 │   └── icon.png                 # Icono del programa
 ├── pyproject.toml               # Configuración del proyecto y dependencias
 ├── uv.lock                      # Lock file de dependencias
-├── run_tests.sh                 # Script para ejecutar todos los checks
+├── scripts/checks.sh                 # Script para ejecutar todos los checks
 ├── Claude.md                    # Puntero → docs/CLAUDE.md
 ├── README.md                    # Este archivo
 └── LICENSE                      # Licencia Apache 2.0
@@ -819,7 +819,7 @@ uv run pre-commit install    # Instalar hooks
 docker compose up -d         # Levantar Redis
 
 # Flujo de desarrollo
-./run_tests.sh               # Verificar todo antes de commit
+./scripts/checks.sh               # Verificar todo antes de commit
 ```
 
 Ver [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para guía completa y [docs/CLAUDE.md](docs/CLAUDE.md) para reglas de desarrollo.

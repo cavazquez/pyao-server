@@ -116,7 +116,7 @@
   - CastSpellCommandHandler: 14% → 100% (15 tests)
   - Total: 33 nuevos tests
 - ✅ **Mejoras de herramientas**:
-  - run_tests.sh mejorado con opciones CLI (-q, -c, -f, -m, -p)
+  - scripts/checks.sh mejorado con opciones CLI (-q, -c, -f, -m, -p)
   - Silenciado warning GIL de Python 3.13+ (msgpack)
   - Documentación de mapas huérfanos para arenas PvP
 

@@ -341,7 +341,7 @@ def test_<entidad>_creation():
 
 4. **Ejecuta los tests para verificar que todo funciona:**
    ```bash
-   ./run_tests.sh
+   ./scripts/checks.sh
    ```
 
 ### 2. Durante el Desarrollo
@@ -363,7 +363,7 @@ def test_<entidad>_creation():
 
 4. **Verifica calidad de código:**
    ```bash
-   ./run_tests.sh  # Ejecuta linter, formatter, type checker y tests
+   ./scripts/checks.sh  # Ejecuta linter, formatter, type checker y tests
    ```
 
 ### 3. Antes de Hacer Commit
@@ -372,7 +372,7 @@ Los pre-commit hooks ejecutan automáticamente `ruff` y `mypy` al hacer commit. 
 
 1. **Verifica que todos los checks pasen:**
    ```bash
-   ./run_tests.sh
+   ./scripts/checks.sh
    ```
 
 2. **Asegúrate de que la cobertura no baje:**

@@ -380,7 +380,7 @@ ground_items:map:{map_id}:*
 
 1. **Proponer cambios** → Esperar confirmación
 2. **Implementar** → Solo después de aprobación
-3. **Ejecutar tests** → `./run_tests.sh`
+3. **Ejecutar tests** → `./scripts/checks.sh`
 4. **Generar tests** → Cobertura adecuada
 5. **Verificar coverage** → Mantener >45%
 6. **Actualizar README** → Si cambia estructura
@@ -395,7 +395,7 @@ ground_items:map:{map_id}:*
 
 ### Pre-commit
 
-- **OBLIGATORIO:** Ejecutar `./run_tests.sh` antes de commit
+- **OBLIGATORIO:** Ejecutar `./scripts/checks.sh` antes de commit
 - Incluye: ruff linter, ruff formatter, mypy, pytest
 - NO hacer commit si algún check falla
 

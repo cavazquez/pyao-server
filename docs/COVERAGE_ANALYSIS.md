@@ -181,7 +181,7 @@ touch tests/test_account_repository.py
 touch tests/test_task_login.py
 
 # 2. Ejecutar tests con cobertura
-./run_tests.sh
+./scripts/checks.sh
 
 # 3. Verificar mejora
 uv run pytest --cov=src --cov-report=term-missing

@@ -396,7 +396,7 @@ Reorganizar puede exponer circular imports. Solución:
 ### 3. **Tests**
 Cada reorganización debe ir acompañada de:
 ```bash
-./run_tests.sh  # Verificar que todo sigue funcionando
+./scripts/checks.sh  # Verificar que todo sigue funcionando
 ```
 
 ### 4. **Git History**
