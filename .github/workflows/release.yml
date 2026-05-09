@@ -119,6 +119,24 @@ jobs:
         name: dist-${{ matrix.os }}
         path: dist/*
   
+  snap:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - uses: actions/checkout@v6
+    
+    - name: Install Snapcraft
+      run: sudo snap install snapcraft --classic
+    
+    - name: Login to Snap Store
+      run: echo "${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}" | snapcraft login --with -
+    
+    - name: Build for amd64 + arm64 via Launchpad
+      run: snapcraft remote-build --launchpad-accept-public-upload
+
   release:
     needs: build
     runs-on: ubuntu-latest

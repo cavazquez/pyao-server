@@ -22,6 +22,9 @@ description: |
 
 grade: devel
 confinement: strict
+architectures:
+  - amd64
+  - arm64
 
 apps:
   pyao-server:
