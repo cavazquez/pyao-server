@@ -12,6 +12,7 @@ from src.messaging.senders.message_map_sender import MapMessageSender
 from src.messaging.senders.message_npc_sender import NPCMessageSender
 from src.messaging.senders.message_player_stats_sender import PlayerStatsMessageSender
 from src.messaging.senders.message_session_sender import SessionMessageSender
+from src.messaging.senders.message_status_effects_sender import StatusEffectsMessageSender
 from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
 from src.messaging.senders.message_work_sender import WorkMessageSender
 from src.network.msg_user_commerce import (
@@ -49,6 +50,7 @@ class MessageSender:
         self.npc = NPCMessageSender(connection)
         self.player_stats = PlayerStatsMessageSender(connection)
         self.session = SessionMessageSender(connection)
+        self.status_effects = StatusEffectsMessageSender(connection)
         self.visual_effects = VisualEffectsMessageSender(connection)
         self.work = WorkMessageSender(connection)
 
@@ -801,3 +803,48 @@ class MessageSender:
             damage: Cantidad de daño infligido al NPC.
         """
         await self.combat.send_user_hit_npc(damage)
+
+    async def send_blind(self) -> None:
+        """Envía paquete BLIND para activar efecto de ceguera en el cliente."""
+        await self.status_effects.send_blind()
+
+    async def send_blind_no_more(self) -> None:
+        """Envía paquete BLIND_NO_MORE para desactivar efecto de ceguera."""
+        await self.status_effects.send_blind_no_more()
+
+    async def send_dumb(self) -> None:
+        """Envía paquete DUMB para activar efecto de estupidez en el cliente."""
+        await self.status_effects.send_dumb()
+
+    async def send_dumb_no_more(self) -> None:
+        """Envía paquete DUMB_NO_MORE para desactivar efecto de estupidez."""
+        await self.status_effects.send_dumb_no_more()
+
+    async def send_paralize_ok(self) -> None:
+        """Envía paquete PARALIZE_OK para confirmar parálisis/inmovilización."""
+        await self.status_effects.send_paralize_ok()
+
+    async def send_rest_ok(self) -> None:
+        """Envía paquete REST_OK para confirmar modo descanso."""
+        await self.status_effects.send_rest_ok()
+
+    async def send_set_invisible(self, char_index: int, invisible: bool) -> None:
+        """Envía paquete SET_INVISIBLE para marcar personaje como invisible/visible.
+
+        Args:
+            char_index: Índice del personaje.
+            invisible: True para hacer visible (el cliente invierte la lógica).
+        """
+        await self.status_effects.send_set_invisible(char_index, invisible)
+
+    async def send_update_tag_and_status(
+        self, char_index: int, nick_color: int, user_tag: str
+    ) -> None:
+        """Envía paquete UPDATE_TAG_AND_STATUS para actualizar nick color y tag.
+
+        Args:
+            char_index: Índice del personaje.
+            nick_color: Color del nick (0=Ciudadano, 1=Criminal, 2=Newbie, etc.).
+            user_tag: Nombre/tag del personaje.
+        """
+        await self.status_effects.send_update_tag_and_status(char_index, nick_color, user_tag)

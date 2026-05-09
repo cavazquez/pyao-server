@@ -28,6 +28,7 @@ from src.command_handlers.left_click_handler import LeftClickCommandHandler
 from src.command_handlers.login_handler import LoginCommandHandler
 from src.command_handlers.meditate_handler import MeditateCommandHandler
 from src.command_handlers.motd_handler import MotdCommandHandler
+from src.command_handlers.move_item_handler import MoveItemCommandHandler
 from src.command_handlers.move_spell_handler import MoveSpellCommandHandler
 from src.command_handlers.online_handler import OnlineCommandHandler
 from src.command_handlers.party_accept_handler import PartyAcceptCommandHandler
@@ -47,6 +48,7 @@ from src.command_handlers.request_position_update_handler import (
 )
 from src.command_handlers.request_skills_handler import RequestSkillsCommandHandler
 from src.command_handlers.request_stats_handler import RequestStatsCommandHandler
+from src.command_handlers.safe_toggle_handler import SafeToggleCommandHandler
 from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
 from src.command_handlers.update_player_trade_handler import UpdatePlayerTradeCommandHandler
@@ -54,8 +56,10 @@ from src.command_handlers.update_trade_offer_handler import UpdateTradeOfferComm
 from src.command_handlers.uptime_handler import UptimeCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
+from src.command_handlers.whisper_handler import WhisperCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
 from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
+from src.command_handlers.yell_handler import YellCommandHandler
 from src.commands.base import CommandHandler  # noqa: TC001 - usado en runtime
 
 if TYPE_CHECKING:
@@ -82,6 +86,10 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     "motd": HandlerConfig(MotdCommandHandler),
     "uptime": HandlerConfig(UptimeCommandHandler),
     "quit": HandlerConfig(QuitCommandHandler),
+    "safe_toggle": HandlerConfig(
+        SafeToggleCommandHandler,
+        deps_keys=["player_repo"],
+    ),
     "dice": HandlerConfig(DiceCommandHandler),
     # Handlers con player_repo
     "meditate": HandlerConfig(
@@ -126,6 +134,10 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         deps_keys=["player_repo", "spell_service", "spellbook_repo", "stamina_service"],
     ),
     # Handlers de inventario
+    "move_item": HandlerConfig(
+        MoveItemCommandHandler,
+        deps_keys=["inventory_repo", "item_catalog"],
+    ),
     "equip_item": HandlerConfig(
         EquipItemCommandHandler,
         deps_keys=["player_repo", "equipment_repo"],
@@ -301,19 +313,17 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         deps_keys=["player_repo", "account_repo", "map_manager"],
         needs_session_data=True,
     ),
-    "talk": HandlerConfig(
+"talk": HandlerConfig(
         TalkCommandHandler,
-        deps_keys=[
-            "player_repo",
-            "account_repo",
-            "map_manager",
-            "game_tick",
-            "clan_service",
-            "trade_service",
-            "npc_service",
-            "summon_service",
-        ],
-        needs_session_data=True,
+        deps_keys=["player_repo", "account_repo", "map_manager", "game_tick", "session_data"],
+    ),
+    "yell": HandlerConfig(
+        YellCommandHandler,
+        deps_keys=["player_repo", "map_manager", "session_data"],
+    ),
+    "whisper": HandlerConfig(
+        WhisperCommandHandler,
+        deps_keys=["player_repo", "map_manager", "session_data"],
     ),
     "login": HandlerConfig(
         LoginCommandHandler,

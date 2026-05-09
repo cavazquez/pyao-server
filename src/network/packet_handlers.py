@@ -24,9 +24,12 @@ from src.tasks.interaction.task_information import TaskInformation
 from src.tasks.interaction.task_left_click import TaskLeftClick
 from src.tasks.interaction.task_pickup import TaskPickup
 from src.tasks.interaction.task_talk import TaskTalk
+from src.tasks.interaction.task_whisper import TaskWhisper
+from src.tasks.interaction.task_yell import TaskYell
 from src.tasks.inventory.task_double_click import TaskDoubleClick
 from src.tasks.inventory.task_drop import TaskDrop
 from src.tasks.inventory.task_equip_item import TaskEquipItem
+from src.tasks.inventory.task_move_item import TaskMoveItem
 from src.tasks.inventory.task_use_item import TaskUseItem
 from src.tasks.player.task_account import TaskCreateAccount
 from src.tasks.player.task_attack import TaskAttack
@@ -54,6 +57,7 @@ from src.tasks.task_party_set_leader import TaskPartySetLeader
 from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_request_skills import TaskRequestSkills
+from src.tasks.task_safe_toggle import TaskSafeToggle
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
 from src.tasks.work.task_work_left_click import TaskWorkLeftClick
@@ -67,6 +71,8 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.THROW_DICES: TaskDice,
     ClientPacketID.CREATE_ACCOUNT: TaskCreateAccount,
     ClientPacketID.TALK: TaskTalk,
+    ClientPacketID.YELL: TaskYell,
+    ClientPacketID.WHISPER: TaskWhisper,
     ClientPacketID.WALK: TaskWalk,
     ClientPacketID.REQUEST_POSITION_UPDATE: TaskRequestPositionUpdate,  # Solicitar posición
     ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
@@ -78,6 +84,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.DOUBLE_CLICK: TaskDoubleClick,  # Doble click - item o NPC
     ClientPacketID.USE_ITEM: TaskUseItem,  # Usar ítem del inventario
     ClientPacketID.EQUIP_ITEM: TaskEquipItem,  # Equipar/desequipar item
+    ClientPacketID.MOVE_ITEM: TaskMoveItem,  # Reordenar items del inventario
     ClientPacketID.CHANGE_HEADING: TaskChangeHeading,
     ClientPacketID.WORK: TaskWork,  # Trabajar (talar, minar, pescar)
     ClientPacketID.WORK_LEFT_CLICK: TaskWorkLeftClick,  # Trabajar con click en coordenadas
@@ -104,6 +111,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.UPTIME: TaskUptime,
     ClientPacketID.ONLINE: TaskOnline,
     ClientPacketID.QUIT: TaskQuit,
+    ClientPacketID.SAFE_TOGGLE: TaskSafeToggle,
     ClientPacketID.PING: TaskPing,
     ClientPacketID.BANK_EXTRACT_GOLD: TaskBankExtractGold,  # Retirar oro del banco
     ClientPacketID.BANK_DEPOSIT_GOLD: TaskBankDepositGold,  # Depositar oro en banco

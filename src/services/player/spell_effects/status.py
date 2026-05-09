@@ -177,12 +177,13 @@ class RemoveParalysisEffect(SpellEffect):
 
         target_sender = await ctx.get_target_message_sender()
         if target_sender:
-            msg = (
-                "Te has devuelto la movilidad."
-                if ctx.is_self_cast
-                else "Te han devuelto la movilidad."
-            )
+            msg = "Te has devuelto la movilidad."
+            if ctx.is_self_cast:
+                msg = "Te has devuelto la movilidad."
+            else:
+                msg = "Te han devuelto la movilidad."
             await target_sender.send_console_msg(msg)
+            await target_sender.send_paralize_ok()
 
         return SpellEffectResult(success=True)
 
@@ -217,6 +218,7 @@ class ImmobilizeEffect(SpellEffect):
         if target_sender:
             msg = "Te has inmovilizado." if ctx.is_self_cast else "Has sido inmovilizado."
             await target_sender.send_console_msg(msg)
+            await target_sender.send_paralize_ok()
 
         return SpellEffectResult(success=True)
 
@@ -251,6 +253,7 @@ class BlindEffect(SpellEffect):
         if target_sender:
             msg = "Te has cegado." if ctx.is_self_cast else "Has sido cegado."
             await target_sender.send_console_msg(msg)
+            await target_sender.send_blind()
 
         return SpellEffectResult(success=True)
 
@@ -285,6 +288,7 @@ class DumbEffect(SpellEffect):
         if target_sender:
             msg = "Te has aturdido." if ctx.is_self_cast else "Has sido aturdido."
             await target_sender.send_console_msg(msg)
+            await target_sender.send_dumb()
 
         return SpellEffectResult(success=True)
 
@@ -320,5 +324,6 @@ class RemoveDumbEffect(SpellEffect):
                 else "Te han quitado el aturdimiento."
             )
             await target_sender.send_console_msg(msg)
+            await target_sender.send_dumb_no_more()
 
         return SpellEffectResult(success=True)

@@ -5,14 +5,28 @@ los componentes más simples: InventoryStorage y InventoryStackingStrategy.
 """
 
 import logging
+from dataclasses import dataclass
 
 from src.config.config_manager import ConfigManager, config_manager
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
 from src.utils.inventory_storage import InventoryStorage
 from src.utils.redis_client import RedisClient  # noqa: TC001
+from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass(slots=True)
+class SwapSlotsResult:
+    """Resultado de intercambiar dos slots del inventario."""
+
+    success: bool
+    old_slot: int
+    new_slot: int
+    old_slot_data: tuple[int, int] | None
+    new_slot_data: tuple[int, int] | None
+    reason: str | None = None
 
 
 class InventoryRepository:
@@ -196,3 +210,83 @@ class InventoryRepository:
             True si hay al menos un slot vacío.
         """
         return await self.storage.has_space(user_id)
+
+    async def swap_slots(
+        self, user_id: int, old_slot: int, new_slot: int
+    ) -> SwapSlotsResult | None:
+        """Intercambia el contenido de dos slots del inventario.
+
+        Args:
+            user_id: ID del jugador.
+            old_slot: Slot de origen (1-based).
+            new_slot: Slot de destino (1-based).
+
+        Returns:
+            SwapSlotsResult con información del intercambio, o None si Redis no disponible.
+        """
+        max_slots = ConfigManager.as_int(self.MAX_SLOTS)
+
+        if not (1 <= old_slot <= max_slots and 1 <= new_slot <= max_slots):
+            reasons = []
+            if not 1 <= old_slot <= max_slots:
+                reasons.append(f"old_slot={old_slot}")
+            if not 1 <= new_slot <= max_slots:
+                reasons.append(f"new_slot={new_slot}")
+            return SwapSlotsResult(
+                success=False,
+                old_slot=old_slot,
+                new_slot=new_slot,
+                old_slot_data=None,
+                new_slot_data=None,
+                reason=f"Slot fuera de rango: {', '.join(reasons)}",
+            )
+
+        key = RedisKeys.player_inventory(user_id)
+
+        # Leer ambos slots en un pipeline
+        pipe = self.redis_client.redis.pipeline()
+        pipe.hget(key, f"slot_{old_slot}")
+        pipe.hget(key, f"slot_{new_slot}")
+        old_value, new_value = await pipe.execute()
+
+        # Parsear valores actuales
+        old_slot_data = None
+        if old_value:
+            parsed = InventorySlot.parse(old_value)
+            if parsed and not parsed.is_empty():
+                old_slot_data = (parsed.item_id, parsed.quantity)
+
+        new_slot_data = None
+        if new_value:
+            parsed = InventorySlot.parse(new_value)
+            if parsed and not parsed.is_empty():
+                new_slot_data = (parsed.item_id, parsed.quantity)
+
+        # Intercambiar valores en un pipeline transaccional
+        pipe = self.redis_client.redis.pipeline(transaction=True)
+        if new_value:
+            pipe.hset(key, f"slot_{old_slot}", new_value)
+        else:
+            pipe.hdel(key, f"slot_{old_slot}")
+
+        if old_value:
+            pipe.hset(key, f"slot_{new_slot}", old_value)
+        else:
+            pipe.hdel(key, f"slot_{new_slot}")
+
+        await pipe.execute()
+
+        logger.info(
+            "Swap slots user_id=%d: slot %s <-> slot %s",
+            user_id,
+            old_slot,
+            new_slot,
+        )
+
+        return SwapSlotsResult(
+            success=True,
+            old_slot=old_slot,
+            new_slot=new_slot,
+            old_slot_data=new_slot_data,
+            new_slot_data=old_slot_data,
+        )

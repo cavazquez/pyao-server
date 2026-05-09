@@ -11,7 +11,11 @@ from src.network.validators.bank import (
     BankExtractGoldPacketValidator,
     BankExtractItemPacketValidator,
 )
-from src.network.validators.chat import TalkPacketValidator
+from src.network.validators.chat import (
+    TalkPacketValidator,
+    WhisperPacketValidator,
+    YellPacketValidator,
+)
 from src.network.validators.commerce import (
     CommerceBuyPacketValidator,
     CommerceEndPacketValidator,
@@ -23,6 +27,7 @@ from src.network.validators.inventory import (
     DropPacketValidator,
     EquipItemPacketValidator,
     LeftClickPacketValidator,
+    MoveItemPacketValidator,
     PickupPacketValidator,
     UseItemPacketValidator,
 )
@@ -65,6 +70,8 @@ class PacketValidatorRegistry:
             ClientPacketID.THROW_DICES: ThrowDicesPacketValidator(),
             ClientPacketID.CREATE_ACCOUNT: CreateAccountPacketValidator(),
             ClientPacketID.TALK: TalkPacketValidator(),
+            ClientPacketID.YELL: YellPacketValidator(),
+            ClientPacketID.WHISPER: WhisperPacketValidator(),
             ClientPacketID.WALK: WalkPacketValidator(),
             ClientPacketID.REQUEST_POSITION_UPDATE: RequestPositionUpdatePacketValidator(),
             ClientPacketID.ATTACK: AttackPacketValidator(),
@@ -97,6 +104,7 @@ class PacketValidatorRegistry:
             ClientPacketID.BANK_EXTRACT_GOLD: BankExtractGoldPacketValidator(),
             ClientPacketID.BANK_DEPOSIT_GOLD: BankDepositGoldPacketValidator(),
             ClientPacketID.GM_COMMANDS: GMCommandsPacketValidator(),
+            ClientPacketID.MOVE_ITEM: MoveItemPacketValidator(),
         }
 
     def get_validator(self, packet_id: int) -> PacketValidatorProtocol | None:

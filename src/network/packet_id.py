@@ -14,13 +14,13 @@ class ClientPacketID(IntEnum):
     THROW_DICES = 1  # ThrowDices
     CREATE_ACCOUNT = 2  # LoginNewChar
     TALK = 3  # Hablar (chat normal)
-    # YELL = 4
-    # WHISPER = 5
+    YELL = 4  # Gritar (chat con rango ampliado)
+    WHISPER = 5  # Susurrar (chat privado)
     WALK = 6  # Caminar/moverse
     REQUEST_POSITION_UPDATE = 7  # Solicitar actualización de posición
     ATTACK = 8  # Atacar (cuerpo a cuerpo)
     PICK_UP = 9  # Recoger item del suelo
-    # SAFE_TOGGLE = 10
+    SAFE_TOGGLE = 10  # Toggle modo seguro (PvP)
     # RESUSCITATION_SAFE_TOGGLE = 11
     # REQUEST_GUILD_LEADER_INFO = 12
     REQUEST_ATTRIBUTES = 13  # RequestAtributes
@@ -139,7 +139,7 @@ class ClientPacketID(IntEnum):
     # SHARE_NPC = 126
     # STOP_SHARING_NPC = 127
     # CONSULTATION = 128
-    # MOVE_ITEM = 129
+    MOVE_ITEM = 129  # Reordenar slots del inventario
 
 
 class ServerPacketID(IntEnum):
@@ -199,10 +199,10 @@ class ServerPacketID(IntEnum):
     # BLACKSMITH_WEAPONS = 51
     # BLACKSMITH_ARMORS = 52
     # CARPENTER_OBJECTS = 53
-    # REST_OK = 54
+    REST_OK = 54  # Confirmar descanso
     ERROR_MSG = 55  # Mensaje de error
-    # BLIND = 56
-    # DUMB = 57
+    BLIND = 56  # Activar efecto de ceguera
+    DUMB = 57  # Activar efecto de estupidez
     # SHOW_SIGNAL = 58
     CHANGE_NPC_INVENTORY_SLOT = 59  # Actualizar slot del inventario del mercader
     UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
@@ -211,11 +211,11 @@ class ServerPacketID(IntEnum):
     # LEVEL_UP = 63
     # ADD_FORUM_MSG = 64
     # SHOW_FORUM_FORM = 65
-    # SET_INVISIBLE = 66
+    SET_INVISIBLE = 66  # Marcar personaje como invisible/visible
     DICE_ROLL = 67  # Enviar resultado de tirada de dados
     MEDITATE_TOGGLE = 68  # Toggle meditación
-    # BLIND_NO_MORE = 69
-    # DUMB_NO_MORE = 70
+    BLIND_NO_MORE = 69  # Desactivar efecto de ceguera
+    DUMB_NO_MORE = 70  # Desactivar efecto de estupidez
     SEND_SKILLS = 71  # Enviar habilidades del jugador
     # TRAINER_CREATURE_LIST = 72
     # GUILD_NEWS = 73
@@ -227,14 +227,14 @@ class ServerPacketID(IntEnum):
     # GUILD_MEMBER_INFO = 79
     CLAN_DETAILS = 80  # Enviar detalles del clan al cliente
     # SHOW_GUILD_FUNDATION_FORM = 81
-    # PARALIZE_OK = 82
+    PARALIZE_OK = 82  # Confirmar parálisis/inmovilización
     # SHOW_USER_REQUEST = 83
     # TRADE_OK = 84
     BANK_OK = 85  # Confirmar operación bancaria
     # CHANGE_USER_TRADE_SLOT = 86
     # SEND_NIGHT = 87
     PONG = 88
-    # UPDATE_TAG_AND_STATUS = 89
+    UPDATE_TAG_AND_STATUS = 89  # Actualizar nick颜色 y tag del personaje
     # SPAWN_LIST = 90
     # SHOW_SOS_FORM = 91
     # SHOW_MOTD_EDITION_FORM = 92

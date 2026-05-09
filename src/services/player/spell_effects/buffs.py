@@ -70,6 +70,7 @@ class InvisibilityEffect(SpellEffect):
         target_sender = await ctx.get_target_message_sender()
         if target_sender:
             await target_sender.send_console_msg("Te has vuelto invisible.")
+            await target_sender.send_set_invisible(ctx.target_player_id, invisible=False)
 
         return SpellEffectResult(success=True)
 
@@ -137,6 +138,7 @@ class RemoveInvisibilityEffect(SpellEffect):
         target_sender = await ctx.get_target_message_sender()
         if target_sender:
             await target_sender.send_console_msg("Ya no eres invisible.")
+            await target_sender.send_set_invisible(ctx.target_player_id, invisible=True)
 
         return SpellEffectResult(success=True)
 

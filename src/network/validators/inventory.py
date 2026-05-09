@@ -133,3 +133,45 @@ class LeftClickPacketValidator:
         return ValidationResult(
             success=True, data={"x": coords[0], "y": coords[1]}, error_message=None
         )
+
+
+class MoveItemPacketValidator:
+    """Valida packet MOVE_ITEM completo."""
+
+    def validate(self, context: ValidationContext) -> ValidationResult[dict[str, Any]]:
+        """Valida packet MOVE_ITEM.
+
+        Returns:
+            ValidationResult con old_slot y new_slot o error.
+        """
+        old_slot = ValidationHelpers.read_slot(
+            context,
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
+        )
+        if context.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=context.get_error_message()
+            )
+
+        new_slot = ValidationHelpers.read_slot(
+            context,
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
+        )
+        if context.has_errors():
+            return ValidationResult(
+                success=False, data=None, error_message=context.get_error_message()
+            )
+
+        if old_slot == new_slot:
+            context.add_error("Los slots de origen y destino son iguales")
+            return ValidationResult(
+                success=False, data=None, error_message=context.get_error_message()
+            )
+
+        return ValidationResult(
+            success=True,
+            data={"old_slot": old_slot, "new_slot": new_slot},
+            error_message=None,
+        )

@@ -657,6 +657,30 @@ class PacketValidator:
         """
         return self._validate_with_registry(ClientPacketID.AYUDA)
 
+    def validate_move_item_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet MOVE_ITEM.
+
+        Returns:
+            ValidationResult con old_slot y new_slot o error.
+        """
+        return self._validate_with_registry(ClientPacketID.MOVE_ITEM)
+
+    def validate_yell_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet YELL.
+
+        Returns:
+            ValidationResult con message o error.
+        """
+        return self._validate_with_registry(ClientPacketID.YELL)
+
+    def validate_whisper_packet(self) -> ValidationResult[dict[str, Any]]:
+        """Valida packet WHISPER.
+
+        Returns:
+            ValidationResult con receiver y message o error.
+        """
+        return self._validate_with_registry(ClientPacketID.WHISPER)
+
     # Métodos de validación específicos para patrones comunes
     # Estos métodos reemplazan a los métodos read_* para una API consistente
 

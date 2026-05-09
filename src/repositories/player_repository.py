@@ -676,6 +676,26 @@ class PlayerRepository:
         )
         logger.debug("Invisibilidad user_id %d: hasta %.2f", user_id, invisible_until)
 
+    async def get_safe_mode(self, user_id: int) -> bool:
+        """Obtiene el estado del modo seguro (anti-PvP) del jugador.
+
+        Returns:
+            True si el modo seguro está activo, False en caso contrario.
+        """
+        return await self._hget_bool(RedisKeys.player_user_stats(user_id), "safe_mode")
+
+    async def set_safe_mode(self, user_id: int, safe_mode: bool) -> None:
+        """Establece el modo seguro (anti-PvP) del jugador.
+
+        Args:
+            user_id: ID del usuario.
+            safe_mode: True para activar, False para desactivar.
+        """
+        await self._hset_field(
+            RedisKeys.player_user_stats(user_id), "safe_mode", 1 if safe_mode else 0
+        )
+        logger.info("Safe mode toggled for user_id %d: %s", user_id, "ON" if safe_mode else "OFF")
+
     # ── Attribute modifiers (buffs/debuffs) ────────────────────────────
 
     async def _get_modifier(self, user_id: int, name: str) -> tuple[float, int]:

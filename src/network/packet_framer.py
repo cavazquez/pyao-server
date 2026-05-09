@@ -109,6 +109,7 @@ class PacketFramer:
         # Packets con 2 bytes de payload.
         ClientPacketID.LEFT_CLICK: 3,
         ClientPacketID.MOVE_SPELL: 3,
+        ClientPacketID.MOVE_ITEM: 3,
         # Packets con 3 bytes de payload.
         ClientPacketID.WORK_LEFT_CLICK: 4,
         ClientPacketID.USER_COMMERCE_OFFER: 4,  # slot(1) + quantity(2)
@@ -274,12 +275,21 @@ class PacketFramer:
 
     @staticmethod
     def _probe_single_string(buf: bytes) -> int | None:
-        """Packet con un único string variable (TALK, PARTY_MESSAGE, PARTY_KICK, etc.).
+        """Packet con un único string variable (TALK, YELL, PARTY_MESSAGE, etc.).
 
         Returns:
             Longitud total en bytes o ``None`` si el buffer está incompleto.
         """
         return _probe_n_strings(buf, start_offset=1, num_strings=1)
+
+    @staticmethod
+    def _probe_two_strings(buf: bytes) -> int | None:
+        """Packet con dos strings variables (WHISPER: receiver + message).
+
+        Returns:
+            Longitud total en bytes o ``None`` si el buffer está incompleto.
+        """
+        return _probe_n_strings(buf, start_offset=1, num_strings=2)
 
     @staticmethod
     def _probe_gm_commands(buf: bytes) -> int | None:
@@ -333,6 +343,8 @@ PacketFramer._VARIABLE_PROBES = {  # noqa: SLF001 - inicialización diferida nec
     ClientPacketID.LOGIN: PacketFramer._probe_login,  # noqa: SLF001
     ClientPacketID.CREATE_ACCOUNT: PacketFramer._probe_create_account,  # noqa: SLF001
     ClientPacketID.TALK: PacketFramer._probe_single_string,  # noqa: SLF001
+    ClientPacketID.YELL: PacketFramer._probe_single_string,  # noqa: SLF001
+    ClientPacketID.WHISPER: PacketFramer._probe_two_strings,  # noqa: SLF001
     ClientPacketID.PARTY_JOIN: PacketFramer._probe_single_string,  # noqa: SLF001
     ClientPacketID.PARTY_MESSAGE: PacketFramer._probe_single_string,  # noqa: SLF001
     ClientPacketID.PARTY_KICK: PacketFramer._probe_single_string,  # noqa: SLF001
