@@ -171,7 +171,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
   - `attack_handler.py`: 392 → 161 líneas + 3 handlers especializados
   - Y 5 más... Ver [HANDLER_REFACTORING.md](docs/HANDLER_REFACTORING.md)
 - **PlayerRepository:** Helpers `_hget_float/_hget_int/_hget_bool/_hset_field` eliminan duplicación en 20+ métodos ✅ **REFACTORIZADO**
-- **Tests:** 2052 tests pasando (100%), cobertura 75%, ejecución paralela con `pytest-xdist` ✅
+- **Tests:** 2133 tests pasando (100%), cobertura 75%, ejecución paralela con `pytest-xdist` ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy, pre-commit hooks (ruff + mypy) ✅
 
 ### Sistema de Validación de Packets
@@ -374,7 +374,7 @@ pyao-server/
 │       ├── optimize_map_data.py      # Optimiza metadata/blocked → JSON compacto
 │       └── reoptimize_metadata.py    # Formato mejorado: 1 mapa por línea
 │
-├── tests/                       # Tests unitarios (2052 tests, 75% cobertura) ✅
+├── tests/                       # Tests unitarios (2133 tests, 75% cobertura) ✅
 │   ├── __init__.py              # Inicialización del paquete de tests
 │   │
 │   ├── # Tests de Arquitectura (13 tests) ✅ NUEVO
@@ -808,7 +808,7 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 El proyecto sigue estrictas reglas de calidad de código:
 - **Ruff**: Todas las reglas habilitadas (modo estricto)
 - **mypy**: Type checking estricto
-- **pytest**: 2052 tests con ejecución paralela (`pytest-xdist`)
+- **pytest**: 2133 tests con ejecución paralela (`pytest-xdist`)
 - **Pre-commit**: Hooks automáticos de ruff y mypy antes de cada commit
 - **Docker Compose**: Entorno local estandarizado con Redis y Redis Insight
 

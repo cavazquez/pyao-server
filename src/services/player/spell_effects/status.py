@@ -157,11 +157,7 @@ class ParalysisEffect(SpellEffect):
 
         target_sender = await ctx.get_target_message_sender()
         if target_sender:
-            msg = (
-                "Te has paralizado."
-                if ctx.is_self_cast
-                else "Has sido paralizado."
-            )
+            msg = "Te has paralizado." if ctx.is_self_cast else "Has sido paralizado."
             await target_sender.send_console_msg(msg)
             await target_sender.send_paralize_ok()
 
