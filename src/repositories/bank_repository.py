@@ -49,14 +49,14 @@ class BankRepository(BaseSlotRepository):
             Diccionario con los slots del banco (slot_N: "item_id:quantity").
         """
         key = RedisKeys.bank(user_id)
-        bank = await self.redis_client.hgetall(key)  # type: ignore[misc]
+        bank = await self.redis_client.hgetall(key)
 
         # Si no existe, inicializar bóveda vacía
         if not bank:
             await self._initialize_empty_bank(user_id)
-            bank = await self.redis_client.hgetall(key)  # type: ignore[misc]
+            bank = await self.redis_client.hgetall(key)
 
-        return bank  # type: ignore[no-any-return]
+        return bank
 
     async def get_item(self, user_id: int, slot: int) -> BankItem | None:
         """Obtiene un item específico de la bóveda.

@@ -46,7 +46,7 @@ class InventoryStorage:
 
         key = RedisKeys.player_inventory(user_id)
         slot_key = f"slot_{slot}"
-        value = await self.redis_client.hget(key, slot_key)  # type: ignore[misc]
+        value = await self.redis_client.hget(key, slot_key)
 
         return InventorySlot.parse(value) if value else None
 
@@ -70,11 +70,11 @@ class InventoryStorage:
 
         if inventory_slot is None or inventory_slot.is_empty():
             # Vaciar el slot
-            await self.redis_client.hset_field(key, slot_key, "")  # type: ignore[misc]
+            await self.redis_client.hset_field(key, slot_key, "")
             logger.debug("Slot %d vaciado para user_id %d", slot, user_id)
         else:
             value = inventory_slot.to_string()
-            await self.redis_client.hset_field(key, slot_key, value)  # type: ignore[misc]
+            await self.redis_client.hset_field(key, slot_key, value)
             logger.debug(
                 "Slot %d actualizado para user_id %d: %s",
                 slot,
@@ -94,7 +94,7 @@ class InventoryStorage:
             Diccionario {slot_number: InventorySlot} con solo los slots ocupados.
         """
         key = RedisKeys.player_inventory(user_id)
-        inventory = await self.redis_client.hgetall(key)  # type: ignore[misc]
+        inventory = await self.redis_client.hgetall(key)
 
         # Si no existe, crear inventario vacío
         if not inventory:
@@ -166,7 +166,7 @@ class InventoryStorage:
             f"slot_{i}": "" for i in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1)
         }
 
-        await self.redis_client.hset(key, mapping=empty_inventory)  # type: ignore[misc]
+        await self.redis_client.hset(key, mapping=empty_inventory)
         logger.info("Inventario vacío creado para user_id %d", user_id)
 
     def _is_valid_slot(self, slot: int) -> bool:

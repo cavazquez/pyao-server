@@ -164,9 +164,15 @@ class RedisClient:
         """Verifica si una key existe."""
         return await self._redis.exists(key)  # type: ignore[union-attr,no-any-return]
 
-    async def set(self, key: str, value: str) -> bool:
-        """Establece el valor de una key."""
-        return await self._redis.set(key, value)  # type: ignore[union-attr,no-any-return]
+    async def set(self, key: str, value: str, ex: int | None = None) -> bool:
+        """Establece el valor de una key.
+
+        Args:
+            key: Clave.
+            value: Valor.
+            ex: TTL en segundos (opcional).
+        """
+        return await self._redis.set(key, value, ex=ex)  # type: ignore[union-attr,no-any-return]
 
     async def get(self, key: str) -> str | None:
         """Obtiene el valor de una key."""
@@ -180,7 +186,7 @@ class RedisClient:
         """Agrega miembros a un set."""
         return await self._redis.sadd(key, *members)  # type: ignore[union-attr,no-any-return]
 
-    async def smembers(self, key: str) -> set[str]:
+    async def smembers(self, key: str) -> set[str]:  # type: ignore[valid-type]
         """Obtiene todos los miembros de un set."""
         return await self._redis.smembers(key)  # type: ignore[union-attr,no-any-return]
 
@@ -216,7 +222,7 @@ class RedisClient:
         """Tamaño de un set."""
         return await self._redis.scard(key)  # type: ignore[union-attr,no-any-return]
 
-    def pipeline(self, transaction: bool = True) -> redis.client.Pipeline:
+    def pipeline(self, transaction: bool = True) -> redis.client.Pipeline:  # type: ignore[name-defined]
         """Crea un pipeline Redis para operaciones atómicas."""
         return self._redis.pipeline(transaction=transaction)  # type: ignore[union-attr]
 
@@ -296,7 +302,7 @@ class RedisClient:
             return None
         try:
             return int(value)
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             return None
 
     async def set_active_merchant(self, user_id: int, npc_id: int) -> None:

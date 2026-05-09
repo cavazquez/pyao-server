@@ -171,11 +171,11 @@ class NPCRepository:
             "snd3": str(snd3),
         }
 
-        await self.redis.hset(key, mapping=npc_data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=npc_data)
 
         # Agregar a índice de mapa
         map_key = RedisKeys.npc_map_index(map_id)
-        await self.redis.sadd(map_key, instance_id)  # type: ignore[misc]
+        await self.redis.sadd(map_key, instance_id)
 
         logger.debug(
             "NPC creado: %s (ID: %d, CharIndex: %d) en mapa %d (%d, %d)",
@@ -199,7 +199,7 @@ class NPCRepository:
             Instancia de NPC o None si no existe.
         """
         key = RedisKeys.npc_instance(instance_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -251,7 +251,7 @@ class NPCRepository:
             Lista de NPCs en el mapa.
         """
         map_key = RedisKeys.npc_map_index(map_id)
-        instance_ids: set[str] = await self.redis.smembers(map_key)  # type: ignore[misc]
+        instance_ids: set[str] = await self.redis.smembers(map_key)
 
         npcs = []
         for instance_id in instance_ids:
@@ -296,7 +296,7 @@ class NPCRepository:
             "y": str(y),
             "heading": str(heading),
         }
-        await self.redis.hset(key, mapping=position_data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=position_data)
         logger.debug("Posición actualizada para NPC %s: (%d, %d)", instance_id, x, y)
 
     async def update_npc_hp(self, instance_id: str, hp: int) -> None:
@@ -307,7 +307,7 @@ class NPCRepository:
             hp: Nuevo HP.
         """
         key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(key, "hp", str(hp))  # type: ignore[misc]
+        await self.redis.hset(key, "hp", str(hp))
         logger.debug("HP actualizado para NPC %s: %d", instance_id, hp)
 
     async def update_npc_paralyzed_until(self, instance_id: str, paralyzed_until: float) -> None:
@@ -318,7 +318,7 @@ class NPCRepository:
             paralyzed_until: Timestamp hasta cuando está paralizado (0.0 = no paralizado).
         """
         key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(key, "paralyzed_until", str(paralyzed_until))  # type: ignore[misc]
+        await self.redis.hset(key, "paralyzed_until", str(paralyzed_until))
         logger.debug(
             "Estado de parálisis actualizado para NPC %s: hasta %.2f", instance_id, paralyzed_until
         )
@@ -334,7 +334,7 @@ class NPCRepository:
             poisoned_by_user_id: ID del jugador que envenenó al NPC (0 = sistema/desconocido).
         """
         key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(  # type: ignore[misc]
+        await self.redis.hset(
             key,
             mapping={
                 "poisoned_until": str(poisoned_until),
@@ -360,7 +360,7 @@ class NPCRepository:
             summoned_until: Timestamp hasta cuando existe (0.0 = permanente/no invocado).
         """
         key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(  # type: ignore[misc]
+        await self.redis.hset(
             key,
             mapping={
                 "summoned_by_user_id": str(summoned_by_user_id),
@@ -388,7 +388,7 @@ class NPCRepository:
 
         # Eliminar de índice de mapa
         map_key = RedisKeys.npc_map_index(npc.map_id)
-        await self.redis.srem(map_key, instance_id)  # type: ignore[misc]
+        await self.redis.srem(map_key, instance_id)
 
         # Eliminar datos del NPC
         key = RedisKeys.npc_instance(instance_id)

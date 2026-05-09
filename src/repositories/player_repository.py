@@ -35,7 +35,7 @@ class PlayerRepository:
         Returns:
             Valor float del campo o default si no existe / es inválido.
         """
-        result = await self.redis.hget(key, field)  # type: ignore[misc]
+        result = await self.redis.hget(key, field)
         if not result:
             return default
         try:
@@ -49,7 +49,7 @@ class PlayerRepository:
         Returns:
             Valor int del campo o default si no existe / es inválido.
         """
-        result = await self.redis.hget(key, field)  # type: ignore[misc]
+        result = await self.redis.hget(key, field)
         if not result:
             return default
         try:
@@ -63,12 +63,12 @@ class PlayerRepository:
         Returns:
             True si el campo es "1", False en caso contrario.
         """
-        result = await self.redis.hget(key, field)  # type: ignore[misc]
+        result = await self.redis.hget(key, field)
         return result in {b"1", "1", 1} if result else False
 
     async def _hset_field(self, key: str, field: str, value: str | float) -> None:
         """Escribe un campo en un hash Redis."""
-        await self.redis.hset_field(key, field, str(value))  # type: ignore[misc]
+        await self.redis.hset_field(key, field, str(value))
 
     # ── Position ────────────────────────────────────────────────────────
 
@@ -82,7 +82,7 @@ class PlayerRepository:
             Diccionario con x, y, map, heading o None si no existe.
         """
         key = RedisKeys.player_position(user_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -114,7 +114,7 @@ class PlayerRepository:
         }
         if heading is not None:
             position_data["heading"] = str(heading)
-        await self.redis.hset(key, mapping=position_data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=position_data)
         logger.debug(
             "Posición guardada para user_id %d: (%d, %d) en mapa %d", user_id, x, y, map_number
         )
@@ -127,7 +127,7 @@ class PlayerRepository:
             heading: Dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste).
         """
         key = RedisKeys.player_position(user_id)
-        await self.redis.hset(key, "heading", str(heading))  # type: ignore[misc]
+        await self.redis.hset(key, "heading", str(heading))
         logger.debug("Dirección actualizada para user_id %d: heading=%d", user_id, heading)
 
     async def get_stats(self, user_id: int) -> dict[str, int] | None:
@@ -155,7 +155,7 @@ class PlayerRepository:
             PlayerStats con las estadísticas o None si no existe.
         """
         key = RedisKeys.player_user_stats(user_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -292,7 +292,7 @@ class PlayerRepository:
             "elu": str(elu),
             "experience": str(experience),
         }
-        await self.redis.hset(key, mapping=stats_data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=stats_data)
         logger.debug("Estadísticas guardadas para user_id %d", user_id)
 
     async def get_hunger_thirst(self, user_id: int) -> dict[str, int] | None:
@@ -305,7 +305,7 @@ class PlayerRepository:
             Diccionario con hambre, sed, flags y contadores o None si no existe.
         """
         key = RedisKeys.player_hunger_thirst(user_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -357,7 +357,7 @@ class PlayerRepository:
             "water_counter": str(water_counter),
             "hunger_counter": str(hunger_counter),
         }
-        await self.redis.hset(key, mapping=data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=data)
         logger.debug("Hambre y sed guardadas para user_id %d", user_id)
 
     async def get_attributes(self, user_id: int) -> dict[str, int] | None:
@@ -385,7 +385,7 @@ class PlayerRepository:
             PlayerAttributes con los atributos o None si no existe.
         """
         key = RedisKeys.player_stats(user_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -512,7 +512,7 @@ class PlayerRepository:
             "charisma": str(charisma),
             "constitution": str(constitution),
         }
-        await self.redis.hset(key, mapping=stats_data)  # type: ignore[misc]
+        await self.redis.hset(key, mapping=stats_data)
         logger.debug("Atributos guardados para user_id %d", user_id)
 
     async def set_meditating(self, user_id: int, is_meditating: bool) -> None:
@@ -627,9 +627,7 @@ class PlayerRepository:
             Diccionario con morphed_body, morphed_head, morphed_until o None si no está morfeado.
         """
         key = RedisKeys.player_user_stats(user_id)
-        result = await self.redis.hmget(  # type: ignore[misc]
-            key, ["morphed_body", "morphed_head", "morphed_until"]
-        )
+        result = await self.redis.hmget(key, ["morphed_body", "morphed_head", "morphed_until"])
         if not result or not result[0] or not result[1] or not result[2]:
             return None
         try:
@@ -653,7 +651,7 @@ class PlayerRepository:
             morphed_until: Timestamp hasta cuando está morfeado (0.0 = no morfeado).
         """
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.hset(  # type: ignore[misc]
+        await self.redis.hset(
             key,
             mapping={
                 "morphed_body": str(morphed_body),
@@ -676,9 +674,7 @@ class PlayerRepository:
             user_id: ID del usuario.
         """
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.hdel(  # type: ignore[misc]
-            key, "morphed_body", "morphed_head", "morphed_until"
-        )
+        await self.redis.hdel(key, "morphed_body", "morphed_head", "morphed_until")
         logger.debug("Apariencia morfeada eliminada para user_id %d", user_id)
 
     async def get_invisible_until(self, user_id: int) -> float:
@@ -736,7 +732,7 @@ class PlayerRepository:
     ) -> None:
         """Establece un modificador temporal de atributo."""
         key = RedisKeys.player_stats(user_id)
-        await self.redis.hset(  # type: ignore[misc]
+        await self.redis.hset(
             key,
             mapping={
                 f"{name}_modifier_until": str(expires_at),
@@ -800,9 +796,7 @@ class PlayerRepository:
             elu: Nuevo ELU (experiencia para siguiente nivel).
         """
         key = RedisKeys.player_user_stats(user_id)
-        await self.redis.hset(  # type: ignore[misc]
-            key, mapping={"level": str(level), "elu": str(elu)}
-        )
+        await self.redis.hset(key, mapping={"level": str(level), "elu": str(elu)})
         logger.debug(
             "Nivel y ELU actualizados para user_id %d: nivel=%d, elu=%d", user_id, level, elu
         )
@@ -887,7 +881,7 @@ class PlayerRepository:
             Diccionario con las habilidades o None si no existe.
         """
         key = RedisKeys.player_skills(user_id)
-        result: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(key)
 
         if not result:
             return None
@@ -914,7 +908,7 @@ class PlayerRepository:
         """
         key = RedisKeys.player_skills(user_id)
         if skills:
-            await self.redis.hset(key, mapping={k: str(v) for k, v in skills.items()})  # type: ignore[misc]
+            await self.redis.hset(key, mapping={k: str(v) for k, v in skills.items()})
             logger.debug(
                 "Habilidades actualizadas para user_id %d: %s", user_id, list(skills.keys())
             )

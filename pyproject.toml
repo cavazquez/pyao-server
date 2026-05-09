@@ -118,6 +118,14 @@ ignore_errors = true  # Strategy Pattern usa Any para flexibilidad
 module = "src.tasks.handler_registry"
 ignore_errors = true  # registry retorna tipos dinámicos
 
+[[tool.mypy.overrides]]
+module = "src.utils.redis_client"
+ignore_errors = true  # wrappers de Redis con union types (fakeredis + redis async)
+
+[[tool.mypy.overrides]]
+module = "src.network.packet_reader_mixin"
+ignore_errors = true  # mixin: reader/errors definidos en subclase
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

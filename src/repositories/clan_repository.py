@@ -8,7 +8,7 @@ Handles storage and retrieval of clans, memberships, and invitations.
 
 import json
 import time
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any
 
 from src.models.clan import Clan, ClanInvitation, ClanMember, ClanRank
 
@@ -45,7 +45,7 @@ class ClanRepository:
         """Initialize repository - create next clan ID if not exists."""
         exists = await self.redis.exists(self.NEXT_CLAN_ID_KEY)
         if not exists:
-            await self.redis.set(self.NEXT_CLAN_ID_KEY, 1)
+            await self.redis.set(self.NEXT_CLAN_ID_KEY, "1")
 
     async def get_next_clan_id(self) -> int:
         """Get next available clan ID.
@@ -53,10 +53,10 @@ class ClanRepository:
         Returns:
             int: The next clan ID.
         """
-        clan_id = cast("int", await self.redis.incr(self.NEXT_CLAN_ID_KEY))
+        clan_id = await self.redis.incr(self.NEXT_CLAN_ID_KEY)
         if clan_id > self.MAX_CLAN_ID:
             # Reset to 1 if we exceed maximum
-            await self.redis.set(self.NEXT_CLAN_ID_KEY, 1)
+            await self.redis.set(self.NEXT_CLAN_ID_KEY, "1")
             clan_id = 1
         return clan_id
 

@@ -57,7 +57,7 @@ class MessageSender:
     @property
     def address(self) -> tuple[str, int] | str:
         """Dirección del cliente conectado. Delega en ClientConnection."""
-        return self.connection.address
+        return self.connection.address  # type: ignore[no-any-return]
 
     @property
     def is_ssl_enabled(self) -> bool:

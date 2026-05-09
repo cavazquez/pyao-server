@@ -2,6 +2,10 @@
 
 import logging
 import struct
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.network.packet_reader import PacketReader
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +15,15 @@ class PacketReaderMixin:
 
     Proporciona métodos para leer slots, quantities, coordenadas, etc.
     con validación de rangos.
+
+    Las clases que usen este mixin deben definir:
+        reader: PacketReader
+        errors: list[str]
     """
+
+    if TYPE_CHECKING:
+        reader: PacketReader
+        errors: list[str]
 
     def read_slot(self, min_slot: int = 1, max_slot: int = 20) -> int | None:
         """Lee y valida un slot de inventario/banco.

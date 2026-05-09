@@ -8,7 +8,7 @@ Handles storage and retrieval of parties, memberships, and invitations.
 
 import json
 import time
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from src.models.party import Party, PartyInvitation, PartyMember
 
@@ -44,7 +44,7 @@ class PartyRepository:
         """Initialize repository - create next party ID if not exists."""
         exists = await self.redis.exists(self.NEXT_PARTY_ID_KEY)
         if not exists:
-            await self.redis.set(self.NEXT_PARTY_ID_KEY, 1)
+            await self.redis.set(self.NEXT_PARTY_ID_KEY, "1")
 
     async def get_next_party_id(self) -> int:
         """Get next available party ID.
@@ -52,10 +52,10 @@ class PartyRepository:
         Returns:
             int: The next party ID.
         """
-        party_id = cast("int", await self.redis.incr(self.NEXT_PARTY_ID_KEY))
+        party_id = await self.redis.incr(self.NEXT_PARTY_ID_KEY)
         if party_id > self.MAX_PARTY_ID:
             # Reset to 1 if we exceed maximum
-            await self.redis.set(self.NEXT_PARTY_ID_KEY, 1)
+            await self.redis.set(self.NEXT_PARTY_ID_KEY, "1")
             party_id = 1
         return party_id
 
@@ -246,7 +246,7 @@ class PartyRepository:
         Returns:
             list[int]: List of all active party IDs.
         """
-        party_ids = await self.redis.smembers(self.PARTY_INDEX_KEY)
+        party_ids: set[str] = await self.redis.smembers(self.PARTY_INDEX_KEY)
         return [int(pid) for pid in party_ids]
 
     async def get_party_count(self) -> int:

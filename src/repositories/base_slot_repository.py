@@ -46,7 +46,7 @@ class BaseSlotRepository:
         """
         slot_key = f"slot_{slot}"
         value = ItemSlotParser.format_value(item_id, quantity)
-        await self.redis_client.hset_field(key, slot_key, value)  # type: ignore[misc]
+        await self.redis_client.hset_field(key, slot_key, value)
 
     async def _clear_slot(self, key: str, slot: int) -> None:
         """Vacía un slot.
@@ -56,7 +56,7 @@ class BaseSlotRepository:
             slot: Número de slot.
         """
         slot_key = f"slot_{slot}"
-        await self.redis_client.hset_field(key, slot_key, "")  # type: ignore[misc]
+        await self.redis_client.hset_field(key, slot_key, "")
 
     async def _get_slot_value(self, key: str, slot: int) -> ParsedItem | None:
         """Obtiene el valor parseado de un slot.
@@ -69,7 +69,7 @@ class BaseSlotRepository:
             ParsedItem o None si el slot está vacío o hay error.
         """
         slot_key = f"slot_{slot}"
-        value = await self.redis_client.hget(key, slot_key)  # type: ignore[misc]
+        value = await self.redis_client.hget(key, slot_key)
         return ItemSlotParser.parse(value)
 
     async def _get_all_slots(self, key: str) -> dict[str, str]:
@@ -81,7 +81,7 @@ class BaseSlotRepository:
         Returns:
             Diccionario con todos los slots.
         """
-        slots = await self.redis_client.hgetall(key)  # type: ignore[misc]
+        slots = await self.redis_client.hgetall(key)
         return slots or {}
 
     async def _initialize_empty_slots(self, key: str) -> None:
@@ -91,7 +91,7 @@ class BaseSlotRepository:
             key: Key de Redis para el hash.
         """
         data = {f"slot_{i}": "" for i in range(1, self.MAX_SLOTS + 1)}
-        await self.redis_client.hset(key, mapping=data)  # type: ignore[misc]
+        await self.redis_client.hset(key, mapping=data)
 
     async def _find_stackable_slot(
         self,

@@ -6,15 +6,13 @@ import logging
 import tomllib
 from collections.abc import Awaitable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 
 from src.utils.base_data_loader import BaseDataLoader
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
-
-_RedisResultT = TypeVar("_RedisResultT")
 
 logger = logging.getLogger(__name__)
 
@@ -219,8 +217,13 @@ class MerchantDataLoader(BaseDataLoader):
 
     @staticmethod
     async def _execute_redis(
-        result: Awaitable[_RedisResultT] | _RedisResultT,
-    ) -> _RedisResultT:
+        result: Awaitable[Any] | Any,  # noqa: ANN401
+    ) -> Any:  # noqa: ANN401
+        """Compatibilidad con comandos Redis que pueden ser sync o async.
+
+        Returns:
+            Resultado del comando ejecutado.
+        """
         """Compatibilidad con comandos Redis que pueden ser sync o async.
 
         Returns:

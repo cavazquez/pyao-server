@@ -45,7 +45,7 @@ class TestPartyRepository:
 
         await party_repository.initialize()
 
-        mock_redis.set.assert_called_once_with("party:next_id", 1)
+        mock_redis.set.assert_called_once_with("party:next_id", "1")
 
     @pytest.mark.asyncio
     async def test_get_next_party_id(self, party_repository, mock_redis):

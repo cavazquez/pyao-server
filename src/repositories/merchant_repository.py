@@ -48,14 +48,14 @@ class MerchantRepository(BaseSlotRepository):
             Formato: {"slot_1": "item_id:quantity", "slot_2": "", ...}
         """
         key = RedisKeys.merchant_inventory(npc_id)
-        inventory = await self.redis_client.hgetall(key)  # type: ignore[misc]
+        inventory = await self.redis_client.hgetall(key)
 
         # Si no existe, retornar inventario vacío
         if not inventory:
             logger.warning("Mercader %d no tiene inventario configurado", npc_id)
             return {}
 
-        return inventory  # type: ignore[no-any-return]
+        return inventory  # type: ignore[return-value]
 
     async def get_item(self, npc_id: int, slot: int) -> MerchantItem | None:
         """Obtiene un item específico del inventario del mercader.
@@ -216,7 +216,7 @@ class MerchantRepository(BaseSlotRepository):
                 break
             inventory_data[f"slot_{slot}"] = f"{item_id}:{quantity}"
 
-        await self.redis_client.hset(key, mapping=inventory_data)  # type: ignore[misc]
+        await self.redis_client.hset(key, mapping=inventory_data)
         logger.info("Inventario inicializado para mercader %d con %d items", npc_id, len(items))
 
     async def _update_slot_by_npc(
