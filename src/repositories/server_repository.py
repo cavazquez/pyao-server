@@ -148,3 +148,23 @@ class ServerRepository:
         """
         await self.redis_client.set("server:dice:max_value", str(value))
         logger.info("Valor máximo de dados establecido: %d", value)
+
+    async def get_config(self, key: str) -> str | None:
+        """Obtiene un valor de configuración genérico.
+
+        Args:
+            key: Clave de configuración.
+
+        Returns:
+            Valor o None si no existe.
+        """
+        return await self.redis_client.get(key)
+
+    async def set_config(self, key: str, value: str) -> None:
+        """Establece un valor de configuración genérico.
+
+        Args:
+            key: Clave de configuración.
+            value: Valor a establecer.
+        """
+        await self.redis_client.set(key, value)

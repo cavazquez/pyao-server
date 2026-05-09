@@ -206,8 +206,8 @@ async def test_data_initializer_with_real_merchant_loader(
     redis_client: RedisClient,
 ) -> None:
     """Verifica que DataInitializer funciona con el MerchantDataLoader real."""
-    redis_client.redis.hset = AsyncMock()
-    redis_client.redis.delete = AsyncMock()
+    redis_client.hset = AsyncMock()
+    redis_client.delete = AsyncMock()
 
     initializer = DataInitializer(redis_client)
 
@@ -215,4 +215,4 @@ async def test_data_initializer_with_real_merchant_loader(
     await initializer.initialize_all(force_clear=False)
 
     # Debe haber cargado datos
-    assert redis_client.redis.hset.called
+    assert redis_client.hset.called

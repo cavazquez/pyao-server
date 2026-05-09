@@ -47,7 +47,6 @@ class MerchantDataLoader(BaseDataLoader):
             logger.warning("No se encontraron inventarios de mercaderes para cargar")
             return
 
-        redis = self.redis_client.redis
         total_items = 0
         merchants_loaded = 0
 
@@ -61,7 +60,7 @@ class MerchantDataLoader(BaseDataLoader):
                 continue
 
             inventory_key = RedisKeys.merchant_inventory(npc_id)
-            await self._execute_redis(redis.delete(inventory_key))
+            await self._execute_redis(self.redis_client.delete(inventory_key))
 
             slot = 1
             item_ids: list[str] = []
@@ -73,15 +72,15 @@ class MerchantDataLoader(BaseDataLoader):
                 item_id, quantity = formatted_item
                 slot_key = f"slot_{slot}"
                 value = f"{item_id}:{quantity}"
-                await self._execute_redis(redis.hset(inventory_key, slot_key, value))
+                await self._execute_redis(self.redis_client.hset(inventory_key, slot_key, value))
                 item_ids.append(str(item_id))
                 total_items += 1
                 slot += 1
 
             if item_ids:
                 items_key = self._merchant_items_key(npc_id)
-                await self._execute_redis(redis.delete(items_key))
-                await self._execute_redis(redis.sadd(items_key, *item_ids))
+                await self._execute_redis(self.redis_client.delete(items_key))
+                await self._execute_redis(self.redis_client.sadd(items_key, *item_ids))
 
             merchants_loaded += 1
 
@@ -98,7 +97,6 @@ class MerchantDataLoader(BaseDataLoader):
             logger.warning("No hay inventarios de mercaderes para limpiar")
             return
 
-        redis = self.redis_client.redis
         deleted = 0
 
         for merchant in merchants:
@@ -106,8 +104,12 @@ class MerchantDataLoader(BaseDataLoader):
             if npc_id is None:
                 continue
 
-            await self._execute_redis(redis.delete(RedisKeys.merchant_inventory(npc_id)))
-            await self._execute_redis(redis.delete(self._merchant_items_key(npc_id)))
+            await self._execute_redis(
+                self.redis_client.delete(RedisKeys.merchant_inventory(npc_id))
+            )
+            await self._execute_redis(
+                self.redis_client.delete(self._merchant_items_key(npc_id))
+            )
             deleted += 1
 
         logger.info("Eliminados inventarios de %d mercaderes", deleted)
