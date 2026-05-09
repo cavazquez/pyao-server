@@ -1,7 +1,7 @@
 name: pyao
 base: core26
 build-base: devel
-version: '0.9.4-alpha'
+version: '0.10.0'
 summary: Servidor de Argentum Online en Python
 description: |
   PyAO es un servidor de juego de rol multijugador online (MMORPG)
