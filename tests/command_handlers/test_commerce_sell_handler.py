@@ -37,11 +37,8 @@ def mock_inventory_repo() -> MagicMock:
 @pytest.fixture
 def mock_redis_client() -> MagicMock:
     """Mock de RedisClient."""
-    redis_mock = MagicMock()
-    redis_mock.get = AsyncMock(return_value=b"123")  # npc_id
-
     client = MagicMock()
-    client.redis = redis_mock
+    client.get_active_merchant = AsyncMock(return_value=123)
     return client
 
 
@@ -89,7 +86,7 @@ async def test_handle_sell_no_merchant(
     mock_message_sender: MagicMock,
 ) -> None:
     """Test venta sin mercader activo."""
-    mock_redis_client.redis.get = AsyncMock(return_value=None)
+    mock_redis_client.get_active_merchant = AsyncMock(return_value=None)
 
     handler = CommerceSellCommandHandler(
         commerce_service=mock_commerce_service,

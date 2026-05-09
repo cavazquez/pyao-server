@@ -7,7 +7,6 @@ from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.commerce_sell_command import CommerceSellCommand
 from src.config.config_manager import ConfigManager
 from src.models.items_catalog import ITEMS_CATALOG
-from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -99,9 +98,7 @@ class CommerceSellCommandHandler(CommandHandler):
         Returns:
             ID del mercader activo o None si no hay comercio activo.
         """
-        key = RedisKeys.session_active_merchant(user_id)
-        result = await self.redis_client.redis.get(key)
-        return int(result) if result else None
+        return await self.redis_client.get_active_merchant(user_id)
 
     async def _update_player_gold(self, user_id: int) -> None:
         """Envía actualización de oro al cliente.

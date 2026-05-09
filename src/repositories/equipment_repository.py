@@ -1,7 +1,7 @@
 """Repositorio para gestionar el equipamiento de los jugadores en Redis."""
 
 import logging
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, cast
 
 from src.utils.equipment_slot import EquipmentSlot
 from src.utils.redis_config import RedisKeys
@@ -23,8 +23,7 @@ class EquipmentRepository:
             redis_client: Cliente de Redis (RedisClient wrapper).
         """
         self.redis_client = redis_client
-        # Acceder al cliente Redis interno
-        self.redis = redis_client.redis
+        self.redis = redis_client
 
     @require_redis(default_return=False)
     async def equip_item(self, user_id: int, slot: EquipmentSlot, inventory_slot: int) -> bool:
@@ -40,7 +39,7 @@ class EquipmentRepository:
         """
         try:
             key = RedisKeys.player_equipment(user_id)
-            await cast("Any", self.redis).hset(key, slot.value, str(inventory_slot))
+            await self.redis_client.hset(key, slot.value, str(inventory_slot))
             logger.info(
                 "Item equipado: user_id=%d, slot=%s, inventory_slot=%d",
                 user_id,
@@ -66,7 +65,7 @@ class EquipmentRepository:
         """
         try:
             key = RedisKeys.player_equipment(user_id)
-            result = await cast("Any", self.redis).hdel(key, slot.value)
+            result = await self.redis_client.hdel(key, slot.value)
             if result > 0:
                 logger.info("Item desequipado: user_id=%d, slot=%s", user_id, slot.value)
                 return True
@@ -88,7 +87,7 @@ class EquipmentRepository:
         """
         try:
             key = RedisKeys.player_equipment(user_id)
-            inventory_slot_str = await cast("Any", self.redis).hget(key, slot.value)
+            inventory_slot_str = await self.redis_client.hget(key, slot.value)
             if inventory_slot_str:
                 return int(inventory_slot_str)
         except Exception:
@@ -107,7 +106,7 @@ class EquipmentRepository:
         """
         try:
             key = RedisKeys.player_equipment(user_id)
-            equipment_data = await cast("Any", self.redis).hgetall(key)
+            equipment_data = await self.redis_client.hgetall(key)
             if not equipment_data:
                 return {}
 
@@ -155,7 +154,7 @@ class EquipmentRepository:
         """
         try:
             key = RedisKeys.player_equipment(user_id)
-            await cast("Any", self.redis).delete(key)
+            await self.redis_client.delete(key)
             logger.debug("Equipamiento limpiado para user_id %d", user_id)
         except Exception:
             logger.exception("Error al limpiar equipamiento")

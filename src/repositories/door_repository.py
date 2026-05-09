@@ -45,13 +45,13 @@ class DoorRepository:
         Returns:
             Tupla (item_id, is_open) o None si no existe estado guardado.
         """
-        if not self.redis or not self.redis.redis:
+        if not self.redis or not getattr(self.redis, "is_connected", False):
             return None
 
         key = self._get_door_key(map_id, x, y)
 
         try:
-            value = await self.redis.redis.get(key)
+            value = await self.redis.get(key)
             if not value:
                 return None
 
@@ -86,14 +86,14 @@ class DoorRepository:
         Returns:
             True si se guardó correctamente.
         """
-        if not self.redis or not self.redis.redis:
+        if not self.redis or not getattr(self.redis, "is_connected", False):
             return False
 
         key = self._get_door_key(map_id, x, y)
         value = f"{item_id}:{'1' if is_open else '0'}"
 
         try:
-            await self.redis.redis.set(key, value)
+            await self.redis.set(key, value)
         except Exception:
             logger.exception("Error guardando estado de puerta en (%d, %d, %d)", map_id, x, y)
             return False
@@ -111,13 +111,13 @@ class DoorRepository:
         Returns:
             True si se eliminó correctamente.
         """
-        if not self.redis or not self.redis.redis:
+        if not self.redis or not getattr(self.redis, "is_connected", False):
             return False
 
         key = self._get_door_key(map_id, x, y)
 
         try:
-            await self.redis.redis.delete(key)
+            await self.redis.delete(key)
         except Exception:
             logger.exception("Error eliminando estado de puerta en (%d, %d, %d)", map_id, x, y)
             return False

@@ -4,7 +4,6 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from src.models.items_catalog import ITEMS_CATALOG
-from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -80,8 +79,7 @@ class LeftClickNPCHandler:
         )
 
         # Guardar mercader activo en sesión de Redis
-        key = RedisKeys.session_active_merchant(user_id)
-        await self.redis_client.redis.set(key, str(npc.npc_id))
+        await self.redis_client.set_active_merchant(user_id, npc.npc_id)
 
         # Enviar packet COMMERCE_INIT vacío PRIMERO (abre la ventana)
         await self.message_sender.send_commerce_init_empty()

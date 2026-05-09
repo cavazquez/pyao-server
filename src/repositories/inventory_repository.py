@@ -244,7 +244,7 @@ class InventoryRepository:
         key = RedisKeys.player_inventory(user_id)
 
         # Leer ambos slots en un pipeline
-        pipe = self.redis_client.redis.pipeline()
+        pipe = self.redis_client.pipeline()
         pipe.hget(key, f"slot_{old_slot}")
         pipe.hget(key, f"slot_{new_slot}")
         old_value, new_value = await pipe.execute()
@@ -263,7 +263,7 @@ class InventoryRepository:
                 new_slot_data = (parsed.item_id, parsed.quantity)
 
         # Intercambiar valores en un pipeline transaccional
-        pipe = self.redis_client.redis.pipeline(transaction=True)
+        pipe = self.redis_client.pipeline(transaction=True)
         if new_value:
             pipe.hset(key, f"slot_{old_slot}", new_value)
         else:

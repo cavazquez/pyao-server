@@ -1,10 +1,11 @@
 """Tests para PlayerRepository."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
 from src.repositories.player_repository import PlayerRepository
+from tests.conftest import create_mock_redis_client
 
 
 @pytest.mark.asyncio
@@ -13,15 +14,15 @@ class TestPlayerRepository:
 
     async def test_init(self) -> None:
         """Test de inicialización."""
-        redis_client = MagicMock()
+        redis_client = create_mock_redis_client()
         repo = PlayerRepository(redis_client)
 
         assert repo.redis == redis_client
 
     async def test_get_gold(self) -> None:
         """Test de obtención de oro."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={"gold": "1000", "level": "1", "min_hp": "100", "max_hp": "100"}
         )
 
@@ -32,8 +33,8 @@ class TestPlayerRepository:
 
     async def test_get_gold_not_found(self) -> None:
         """Test de obtención de oro cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         gold = await repo.get_gold(1)
@@ -42,38 +43,38 @@ class TestPlayerRepository:
 
     async def test_update_gold(self) -> None:
         """Test de actualización de oro."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset_field = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.update_gold(1, 500)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()
 
     async def test_update_hp(self) -> None:
         """Test de actualización de HP."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset_field = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.update_hp(1, 50)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()
 
     async def test_update_experience(self) -> None:
         """Test de actualización de experiencia."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset_field = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.update_experience(1, 1000)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()
 
     async def test_get_position(self) -> None:
         """Test de obtención de posición."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={
                 b"x": b"50",
                 b"y": b"50",
@@ -92,8 +93,8 @@ class TestPlayerRepository:
 
     async def test_get_position_not_found(self) -> None:
         """Test de obtención de posición cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         position = await repo.get_position(1)
@@ -102,38 +103,38 @@ class TestPlayerRepository:
 
     async def test_set_position(self) -> None:
         """Test de configuración de posición."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_position(1, 50, 50, 1, 3)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_set_position_without_heading(self) -> None:
         """Test de configuración de posición sin heading."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_position(1, 60, 70, 2)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_set_heading(self) -> None:
         """Test de configuración de heading."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_heading(1, 2)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_get_stats(self) -> None:
         """Test de obtención de stats."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={
                 "min_hp": "100",
                 "max_hp": "100",
@@ -158,8 +159,8 @@ class TestPlayerRepository:
 
     async def test_get_stats_not_found(self) -> None:
         """Test de obtención de stats cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         stats = await repo.get_stats(1)
@@ -168,8 +169,8 @@ class TestPlayerRepository:
 
     async def test_set_stats(self) -> None:
         """Test de configuración de stats."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_stats(
@@ -186,12 +187,12 @@ class TestPlayerRepository:
             experience=0,
         )
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_get_hunger_thirst(self) -> None:
         """Test de obtención de hambre y sed."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={
                 "min_hunger": "50",
                 "max_hunger": "100",
@@ -212,8 +213,8 @@ class TestPlayerRepository:
 
     async def test_get_hunger_thirst_not_found(self) -> None:
         """Test de obtención de hambre y sed cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         hunger_thirst = await repo.get_hunger_thirst(1)
@@ -222,8 +223,8 @@ class TestPlayerRepository:
 
     async def test_set_hunger_thirst(self) -> None:
         """Test de configuración de hambre y sed."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_hunger_thirst(
@@ -238,12 +239,12 @@ class TestPlayerRepository:
             thirst_flag=0,
         )
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_get_attributes(self) -> None:
         """Test de obtención de atributos."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={
                 "strength": "18",
                 "agility": "18",
@@ -253,7 +254,7 @@ class TestPlayerRepository:
             }
         )
         # Mock para modificadores (no hay modificadores activos)
-        redis_client.redis.hget = AsyncMock(return_value=None)
+        redis_client.hget = AsyncMock(return_value=None)
 
         repo = PlayerRepository(redis_client)
         attributes = await repo.get_attributes(1)
@@ -265,8 +266,8 @@ class TestPlayerRepository:
 
     async def test_get_attributes_not_found(self) -> None:
         """Test de obtención de atributos cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         attributes = await repo.get_attributes(1)
@@ -275,8 +276,8 @@ class TestPlayerRepository:
 
     async def test_set_attributes(self) -> None:
         """Test de configuración de atributos."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_attributes(
@@ -288,22 +289,22 @@ class TestPlayerRepository:
             constitution=18,
         )
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset.assert_called_once()
 
     async def test_set_meditating(self) -> None:
         """Test de configuración de meditación."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.set_meditating(1, is_meditating=True)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()
 
     async def test_is_meditating_true(self) -> None:
         """Test de verificación de meditación (True)."""
-        redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=b"1")  # Redis guarda "1" para True
+        redis_client = create_mock_redis_client()
+        redis_client.hget = AsyncMock(return_value=b"1")  # Redis guarda "1" para True
 
         repo = PlayerRepository(redis_client)
         is_meditating = await repo.is_meditating(1)
@@ -312,8 +313,8 @@ class TestPlayerRepository:
 
     async def test_is_meditating_false(self) -> None:
         """Test de verificación de meditación (False)."""
-        redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=b"0")  # Redis guarda "0" para False
+        redis_client = create_mock_redis_client()
+        redis_client.hget = AsyncMock(return_value=b"0")  # Redis guarda "0" para False
 
         repo = PlayerRepository(redis_client)
         is_meditating = await repo.is_meditating(1)
@@ -322,8 +323,8 @@ class TestPlayerRepository:
 
     async def test_is_meditating_not_found(self) -> None:
         """Test de verificación de meditación cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=None)
+        redis_client = create_mock_redis_client()
+        redis_client.hget = AsyncMock(return_value=None)
 
         repo = PlayerRepository(redis_client)
         is_meditating = await repo.is_meditating(1)
@@ -332,8 +333,8 @@ class TestPlayerRepository:
 
     async def test_get_stamina(self) -> None:
         """Test de obtención de stamina."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={"min_sta": "80", "max_sta": "100", "min_hp": "100", "max_hp": "100"}
         )
 
@@ -345,8 +346,8 @@ class TestPlayerRepository:
 
     async def test_get_stamina_not_found(self) -> None:
         """Test de obtención de stamina cuando no existe."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
 
         repo = PlayerRepository(redis_client)
         min_sta, max_sta = await repo.get_stamina(1)
@@ -356,10 +357,10 @@ class TestPlayerRepository:
 
     async def test_update_stamina(self) -> None:
         """Test de actualización de stamina."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset = AsyncMock()
 
         repo = PlayerRepository(redis_client)
         await repo.update_stamina(1, 90)
 
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()

@@ -31,10 +31,10 @@ async def cleanup_redis(redis_client: RedisClient) -> None:
         None: Control back to the test after limpiar la instancia.
     """
     if redis_client.redis:
-        await redis_client.redis.flushdb()
+        await redis_client.flushdb()
     yield
     if redis_client.redis:
-        await redis_client.redis.flushdb()
+        await redis_client.flushdb()
 
 
 class TestEquipmentRepository:

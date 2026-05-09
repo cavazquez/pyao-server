@@ -197,8 +197,7 @@ async def test_handle_npc_click_merchant(
     mock_merchant_repo = MagicMock()
     mock_merchant_repo.get_all_items = AsyncMock(return_value=[])
     mock_redis_client = MagicMock()
-    mock_redis_client.redis = MagicMock()
-    mock_redis_client.redis.set = AsyncMock()
+    mock_redis_client.set_active_merchant = AsyncMock()
 
     mock_message_sender.send_commerce_init_empty = AsyncMock()
     mock_message_sender.send_console_msg = AsyncMock()
@@ -508,8 +507,7 @@ async def test_handle_merchant_no_items(
     mock_merchant_repo = MagicMock()
     mock_merchant_repo.get_all_items = AsyncMock(return_value=[])
     mock_redis_client = MagicMock()
-    mock_redis_client.redis = MagicMock()
-    mock_redis_client.redis.set = AsyncMock()
+    mock_redis_client.set_active_merchant = AsyncMock()
 
     mock_message_sender.send_commerce_init_empty = AsyncMock()
     mock_message_sender.send_console_msg = AsyncMock()

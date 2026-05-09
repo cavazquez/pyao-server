@@ -90,6 +90,34 @@ def _patched_fake_redis_mixin_init(
 aioredis.FakeRedisMixin.__init__ = _patched_fake_redis_mixin_init
 
 
+from unittest.mock import AsyncMock, MagicMock
+
+_REDIS_WRAPPER_METHODS = (
+    "hget", "hset", "hset_field", "hgetall", "hdel", "hmget",
+    "exists", "set", "get", "delete", "sadd", "smembers", "srem",
+    "keys", "incr", "incrby", "decr", "decrby", "setex", "scard",
+    "get_active_merchant", "set_active_merchant", "delete_active_merchant",
+)
+
+
+def create_mock_redis_client(**overrides: Any) -> MagicMock:
+    """Crea un MagicMock de RedisClient con todos los wrappers como AsyncMock.
+
+    Args:
+        **overrides: Métodos específicos con valores de retorno personalizados.
+
+    Returns:
+        MagicMock con los wrappers de RedisClient preconfigurados como AsyncMock.
+    """
+    mock = MagicMock()
+    for method in _REDIS_WRAPPER_METHODS:
+        setattr(mock, method, AsyncMock())
+    mock.pipeline = MagicMock()
+    for key, value in overrides.items():
+        setattr(mock, key, value)
+    return mock
+
+
 @pytest_asyncio.fixture
 async def redis_client() -> RedisClient:
     """Fixture que proporciona un cliente Redis fake para tests.

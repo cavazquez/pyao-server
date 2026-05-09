@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from src.repositories.spellbook_repository import SpellbookRepository
+from tests.conftest import create_mock_redis_client
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
@@ -194,8 +195,8 @@ class TestSpellbookRepository:
 
     async def test_move_spell_redis_unavailable(self) -> None:
         """Retorna None cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
         result = await repo.move_spell(user_id=1, slot=1, upwards=True)
@@ -359,8 +360,8 @@ class TestSpellbookRepository:
 
     async def test_add_spell_redis_none(self) -> None:
         """Test de agregar hechizo cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
 
@@ -370,8 +371,8 @@ class TestSpellbookRepository:
 
     async def test_remove_spell_redis_none(self) -> None:
         """Test de eliminar hechizo cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
 
@@ -381,8 +382,8 @@ class TestSpellbookRepository:
 
     async def test_get_spell_in_slot_redis_none(self) -> None:
         """Test de obtener hechizo cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
 
@@ -392,8 +393,8 @@ class TestSpellbookRepository:
 
     async def test_get_all_spells_redis_none(self) -> None:
         """Test de obtener todos los hechizos cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
 
@@ -403,8 +404,8 @@ class TestSpellbookRepository:
 
     async def test_clear_spellbook_redis_none(self) -> None:
         """Test de limpiar libro cuando Redis no está disponible."""
-        redis_client = MagicMock()
-        redis_client.redis = None
+        redis_client = create_mock_redis_client()
+        redis_client.is_connected = False
 
         repo = SpellbookRepository(redis_client)
 

@@ -32,7 +32,7 @@ class RedisInitializer:
         logger.info("✓ Datos iniciales cargados")
 
         # Resetear contador de conexiones
-        await redis_client.redis.set("server:connections:count", "0")
+        await redis_client.set("server:connections:count", "0")
         logger.info("✓ Contador de conexiones reseteado")
 
         # Establecer timestamp de inicio del servidor
@@ -60,11 +60,11 @@ class RedisInitializer:
         dice_max_key = "server:dice:max_value"
 
         # Verificar si existen, si no, crear con valores por defecto
-        if await redis_client.redis.get(dice_min_key) is None:
+        if await redis_client.get(dice_min_key) is None:
             await server_repo.set_dice_min_value(6)
             logger.info("Valor mínimo de dados inicializado: 6")
 
-        if await redis_client.redis.get(dice_max_key) is None:
+        if await redis_client.get(dice_max_key) is None:
             await server_repo.set_dice_max_value(18)
             logger.info("Valor máximo de dados inicializado: 18")
 
@@ -92,20 +92,20 @@ class RedisInitializer:
         """Inicializa la configuración de efectos en Redis si no existe."""
         # Hambre y Sed - 180 segundos (3 minutos)
         # SIEMPRE establecer valores correctos (sobrescribe valores de testing)
-        await redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
+        await redis_client.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
         logger.info("Intervalo de sed configurado: 180 segundos (3 minutos)")
 
-        await redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
+        await redis_client.set(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
         logger.info("Intervalo de hambre configurado: 180 segundos (3 minutos)")
 
-        if await redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
-            await redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")
+        if await redis_client.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
+            await redis_client.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")
             logger.info("Reducción de agua inicializada: 10 puntos")
 
-        if await redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE) is None:
-            await redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10")
+        if await redis_client.get(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE) is None:
+            await redis_client.set(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10")
             logger.info("Reducción de hambre inicializada: 10 puntos")
 
-        if await redis_client.redis.get(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED) is None:
-            await redis_client.redis.set(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
+        if await redis_client.get(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED) is None:
+            await redis_client.set(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
             logger.info("Sistema de hambre/sed habilitado por defecto")

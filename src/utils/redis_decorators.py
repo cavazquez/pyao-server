@@ -64,8 +64,10 @@ def require_redis[T](
                 )
                 return default_return  # type: ignore[return-value]
 
-            # Verificar si redis está disponible
-            if self.redis is None:
+            # Verificar si redis está disponible (legacy None check + is_connected)
+            if self.redis is None or (
+                hasattr(self.redis, "is_connected") and not self.redis.is_connected
+            ):
                 logger.error(
                     "Cliente Redis no disponible en %s.%s",
                     self.__class__.__name__,

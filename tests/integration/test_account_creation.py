@@ -47,9 +47,16 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.get_agility = AsyncMock(return_value=10)
     # Mock de redis para InventoryRepository
     redis_client_mock = MagicMock()
-    redis_client_mock.redis = AsyncMock()
-    redis_client_mock.redis.hgetall = AsyncMock(return_value={})
-    redis_client_mock.redis.hset = AsyncMock()
+    for method in (
+        "hget", "hset", "hset_field", "hgetall", "hdel", "hmget",
+        "exists", "set", "get", "delete", "sadd", "smembers", "srem",
+        "incr", "decr", "incrby", "decrby",
+    ):
+        setattr(redis_client_mock, method, AsyncMock())
+    redis_client_mock.hgetall = AsyncMock(return_value={})
+    redis_client_mock.get = AsyncMock(return_value=None)
+    redis_client_mock.hget = AsyncMock(return_value=None)
+    redis_client_mock.pipeline = MagicMock()
     player_repo.redis = redis_client_mock
 
     account_repo = MagicMock(spec=AccountRepository)

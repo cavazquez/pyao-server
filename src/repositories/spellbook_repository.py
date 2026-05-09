@@ -36,8 +36,7 @@ class SpellbookRepository:
             redis_client: Cliente de Redis (RedisClient wrapper).
         """
         self.redis_client = redis_client
-        # Acceder al cliente Redis interno
-        self.redis = redis_client.redis
+        self.redis = redis_client
 
     @require_redis(default_return=False)
     async def add_spell(self, user_id: int, slot: int, spell_id: int) -> bool:
@@ -57,7 +56,7 @@ class SpellbookRepository:
 
         try:
             key = RedisKeys.player_spellbook(user_id)
-            await cast("Any", self.redis).hset(key, str(slot), str(spell_id))
+            await self.redis_client.hset(key, str(slot), str(spell_id))
             logger.debug("Hechizo %d agregado al slot %d del user_id %d", spell_id, slot, user_id)
         except Exception:
             logger.exception("Error al agregar hechizo al libro")
@@ -78,7 +77,7 @@ class SpellbookRepository:
         """
         try:
             key = RedisKeys.player_spellbook(user_id)
-            result = await cast("Any", self.redis).hdel(key, str(slot))
+            result = await self.redis_client.hdel(key, str(slot))
             if result > 0:
                 logger.debug("Hechizo eliminado del slot %d del user_id %d", slot, user_id)
                 return True
@@ -100,7 +99,7 @@ class SpellbookRepository:
         """
         try:
             key = RedisKeys.player_spellbook(user_id)
-            spell_id_str = await cast("Any", self.redis).hget(key, str(slot))
+            spell_id_str = await self.redis_client.hget(key, str(slot))
             if spell_id_str:
                 return int(spell_id_str)
         except Exception:
@@ -119,7 +118,7 @@ class SpellbookRepository:
         """
         try:
             key = RedisKeys.player_spellbook(user_id)
-            spells_data = await cast("Any", self.redis).hgetall(key)
+            spells_data = await self.redis_client.hgetall(key)
             if not spells_data:
                 return {}
 
@@ -179,7 +178,7 @@ class SpellbookRepository:
         key = RedisKeys.player_spellbook(user_id)
 
         try:
-            pipe = cast("Any", self.redis).pipeline()
+            pipe = self.redis_client.pipeline()
             pipe.hget(key, str(slot))
             pipe.hget(key, str(target_slot))
             slot_value, target_value = await pipe.execute()
@@ -187,7 +186,7 @@ class SpellbookRepository:
             new_slot_value = target_value
             new_target_value = slot_value
 
-            pipe = cast("Any", self.redis).pipeline(transaction=True)
+            pipe = self.redis_client.pipeline(transaction=True)
 
             if new_slot_value is None:
                 pipe.hdel(key, str(slot))
@@ -246,7 +245,7 @@ class SpellbookRepository:
         """
         try:
             key = RedisKeys.player_spellbook(user_id)
-            await cast("Any", self.redis).delete(key)
+            await self.redis_client.delete(key)
             logger.debug("Libro de hechizos limpiado para user_id %d", user_id)
         except Exception:
             logger.exception("Error al limpiar libro de hechizos")

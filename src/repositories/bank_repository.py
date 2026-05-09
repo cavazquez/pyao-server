@@ -49,12 +49,12 @@ class BankRepository(BaseSlotRepository):
             Diccionario con los slots del banco (slot_N: "item_id:quantity").
         """
         key = RedisKeys.bank(user_id)
-        bank = await self.redis_client.redis.hgetall(key)  # type: ignore[misc]
+        bank = await self.redis_client.hgetall(key)  # type: ignore[misc]
 
         # Si no existe, inicializar bóveda vacía
         if not bank:
             await self._initialize_empty_bank(user_id)
-            bank = await self.redis_client.redis.hgetall(key)  # type: ignore[misc]
+            bank = await self.redis_client.hgetall(key)  # type: ignore[misc]
 
         return bank  # type: ignore[no-any-return]
 
@@ -247,7 +247,7 @@ class BankRepository(BaseSlotRepository):
             Cantidad de oro en el banco (0 si no hay).
         """
         key = RedisKeys.bank_gold(user_id)
-        gold = await self.redis_client.redis.get(key)
+        gold = await self.redis_client.get(key)
         if gold is None:
             return 0
         try:
@@ -271,7 +271,7 @@ class BankRepository(BaseSlotRepository):
             return await self.get_gold(user_id)
 
         key = RedisKeys.bank_gold(user_id)
-        new_gold = await self.redis_client.redis.incrby(key, amount)
+        new_gold = await self.redis_client.incrby(key, amount)
         logger.info("user_id %d depositó %d oro en banco. Total: %d", user_id, amount, new_gold)
         return int(new_gold)
 
@@ -300,6 +300,6 @@ class BankRepository(BaseSlotRepository):
             return False
 
         key = RedisKeys.bank_gold(user_id)
-        new_gold = await self.redis_client.redis.decrby(key, amount)
+        new_gold = await self.redis_client.decrby(key, amount)
         logger.info("user_id %d retiró %d oro del banco. Restante: %d", user_id, amount, new_gold)
         return True

@@ -43,9 +43,9 @@ class ClanRepository:
 
     async def initialize(self) -> None:
         """Initialize repository - create next clan ID if not exists."""
-        exists = await self.redis.redis.exists(self.NEXT_CLAN_ID_KEY)
+        exists = await self.redis.exists(self.NEXT_CLAN_ID_KEY)
         if not exists:
-            await self.redis.redis.set(self.NEXT_CLAN_ID_KEY, 1)
+            await self.redis.set(self.NEXT_CLAN_ID_KEY, 1)
 
     async def get_next_clan_id(self) -> int:
         """Get next available clan ID.
@@ -53,16 +53,16 @@ class ClanRepository:
         Returns:
             int: The next clan ID.
         """
-        clan_id = cast("int", await self.redis.redis.incr(self.NEXT_CLAN_ID_KEY))
+        clan_id = cast("int", await self.redis.incr(self.NEXT_CLAN_ID_KEY))
         if clan_id > self.MAX_CLAN_ID:
             # Reset to 1 if we exceed maximum
-            await self.redis.redis.set(self.NEXT_CLAN_ID_KEY, 1)
+            await self.redis.set(self.NEXT_CLAN_ID_KEY, 1)
             clan_id = 1
         return clan_id
 
     async def save_clan(self, clan: Clan) -> None:
         """Save complete clan data to Redis."""
-        pipe = self.redis.redis.pipeline()
+        pipe = self.redis.pipeline()
 
         # Save clan metadata
         clan_data = {
@@ -120,7 +120,7 @@ class ClanRepository:
         Args:
             user_id: ID of the user to clear.
         """
-        await self.redis.redis.delete(self.USER_CLAN_KEY.format(user_id=user_id))
+        await self.redis.delete(self.USER_CLAN_KEY.format(user_id=user_id))
 
     async def get_clan(self, clan_id: int) -> Clan | None:
         """Get clan by ID.
@@ -131,7 +131,7 @@ class ClanRepository:
         Returns:
             Clan if found, None otherwise.
         """
-        data_str = await self.redis.redis.get(self.CLAN_KEY.format(clan_id=clan_id))
+        data_str = await self.redis.get(self.CLAN_KEY.format(clan_id=clan_id))
         if not data_str:
             return None
 
@@ -149,7 +149,7 @@ class ClanRepository:
         Returns:
             Clan if found, None otherwise.
         """
-        clan_id = await self.redis.redis.get(self.CLAN_NAME_INDEX_KEY.format(name=name.lower()))
+        clan_id = await self.redis.get(self.CLAN_NAME_INDEX_KEY.format(name=name.lower()))
         if not clan_id:
             return None
 
@@ -164,7 +164,7 @@ class ClanRepository:
         Returns:
             Clan if user is in a clan, None otherwise.
         """
-        clan_id = await self.redis.redis.get(self.USER_CLAN_KEY.format(user_id=user_id))
+        clan_id = await self.redis.get(self.USER_CLAN_KEY.format(user_id=user_id))
         if not clan_id:
             return None
 
@@ -180,7 +180,7 @@ class ClanRepository:
         if not clan:
             return
 
-        pipe = self.redis.redis.pipeline()
+        pipe = self.redis.pipeline()
 
         # Remove clan data
         pipe.delete(self.CLAN_KEY.format(clan_id=clan_id))
@@ -214,7 +214,7 @@ class ClanRepository:
             "created_at": invitation.created_at,
             "expires_at": invitation.expires_at,
         }
-        await self.redis.redis.setex(key, self.INVITATION_TIMEOUT, json.dumps(data))
+        await self.redis.setex(key, self.INVITATION_TIMEOUT, json.dumps(data))
 
     async def get_invitation(self, target_id: int) -> ClanInvitation | None:
         """Get pending invitation for a user.
@@ -226,7 +226,7 @@ class ClanRepository:
             ClanInvitation if found, None otherwise.
         """
         key = self.INVITATIONS_KEY.format(target_id=target_id)
-        data_str = await self.redis.redis.get(key)
+        data_str = await self.redis.get(key)
         if not data_str:
             return None
 
@@ -240,7 +240,7 @@ class ClanRepository:
             target_id: User ID of the invited player.
         """
         key = self.INVITATIONS_KEY.format(target_id=target_id)
-        await self.redis.redis.delete(key)
+        await self.redis.delete(key)
 
     async def _get_clan_members(self, clan_id: int) -> dict[int, ClanMember]:
         """Get all members of a clan.
@@ -252,7 +252,7 @@ class ClanRepository:
             Dictionary mapping user_id to ClanMember.
         """
         key = self.CLAN_MEMBERS_KEY.format(clan_id=clan_id)
-        members_data = await self.redis.redis.hgetall(key)
+        members_data = await self.redis.hgetall(key)
         members = {}
 
         for user_id_str, member_data_str in members_data.items():

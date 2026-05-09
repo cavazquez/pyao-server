@@ -26,7 +26,7 @@ class ServerRepository:
         Returns:
             El mensaje del día o un mensaje por defecto si no existe.
         """
-        value = await self.redis_client.redis.get("server:motd")
+        value = await self.redis_client.get("server:motd")
         if value is None:
             return "Bienvenido a Argentum Online!\nServidor en desarrollo."
         return str(value)
@@ -37,7 +37,7 @@ class ServerRepository:
         Args:
             message: El nuevo mensaje del día.
         """
-        await self.redis_client.redis.set("server:motd", message)
+        await self.redis_client.set("server:motd", message)
         logger.info("MOTD actualizado: %s", message[:50])
 
     async def get_uptime_start(self) -> int | None:
@@ -46,7 +46,7 @@ class ServerRepository:
         Returns:
             Timestamp de inicio o None si no existe.
         """
-        value = await self.redis_client.redis.get("server:uptime:start")
+        value = await self.redis_client.get("server:uptime:start")
         if value is None:
             return None
         return int(value)
@@ -57,7 +57,7 @@ class ServerRepository:
         Args:
             timestamp: Timestamp de inicio.
         """
-        await self.redis_client.redis.set("server:uptime:start", str(timestamp))
+        await self.redis_client.set("server:uptime:start", str(timestamp))
         logger.info("Timestamp de inicio del servidor establecido: %d", timestamp)
 
     # Configuración de efectos del juego
@@ -71,7 +71,7 @@ class ServerRepository:
         Returns:
             Valor de configuración como entero.
         """
-        value = await self.redis_client.redis.get(key)
+        value = await self.redis_client.get(key)
         if value is None:
             return default
         try:
@@ -90,7 +90,7 @@ class ServerRepository:
         Returns:
             Valor de configuración como float.
         """
-        value = await self.redis_client.redis.get(key)
+        value = await self.redis_client.get(key)
         if value is None:
             return default
         try:
@@ -109,7 +109,7 @@ class ServerRepository:
         Returns:
             Valor de configuración como booleano (1=True, 0=False).
         """
-        value = await self.redis_client.redis.get(key)
+        value = await self.redis_client.get(key)
         if value is None:
             return default
         return bool(value == "1")
@@ -137,7 +137,7 @@ class ServerRepository:
         Args:
             value: Nuevo valor mínimo.
         """
-        await self.redis_client.redis.set("server:dice:min_value", str(value))
+        await self.redis_client.set("server:dice:min_value", str(value))
         logger.info("Valor mínimo de dados establecido: %d", value)
 
     async def set_dice_max_value(self, value: int) -> None:
@@ -146,5 +146,5 @@ class ServerRepository:
         Args:
             value: Nuevo valor máximo.
         """
-        await self.redis_client.redis.set("server:dice:max_value", str(value))
+        await self.redis_client.set("server:dice:max_value", str(value))
         logger.info("Valor máximo de dados establecido: %d", value)

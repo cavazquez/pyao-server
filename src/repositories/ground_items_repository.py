@@ -24,7 +24,7 @@ class GroundItemsRepository:
             redis_client: Cliente de Redis.
         """
         self.redis_client = redis_client
-        self.redis = redis_client.redis
+        self.redis = redis_client
 
     async def save_ground_items(
         self, map_id: int, items: dict[tuple[int, int], list[dict[str, int | str | None]]]
@@ -46,13 +46,13 @@ class GroundItemsRepository:
 
             # Guardar en Redis como JSON
             if serializable_items:
-                await self.redis.set(key, json.dumps(serializable_items), ex=self.GROUND_ITEMS_TTL)
+                await self.redis_client.set(key, json.dumps(serializable_items), ex=self.GROUND_ITEMS_TTL)
                 logger.debug(
                     "Guardados %d tiles con items en mapa %d", len(serializable_items), map_id
                 )
             else:
                 # Si no hay items, eliminar la clave
-                await self.redis.delete(key)
+                await self.redis_client.delete(key)
 
         except Exception:
             logger.exception("Error al guardar ground items del mapa %d", map_id)
@@ -70,7 +70,7 @@ class GroundItemsRepository:
         """
         try:
             key = RedisKeys.ground_items(map_id)
-            data = await self.redis.get(key)
+            data = await self.redis_client.get(key)
 
             if not data:
                 return {}
@@ -171,7 +171,7 @@ class GroundItemsRepository:
 
             # Eliminar de Redis
             key = RedisKeys.ground_items(map_id)
-            await self.redis.delete(key)
+            await self.redis_client.delete(key)
 
             if count > 0:
                 logger.info("Limpiados %d tiles con items del mapa %d", count, map_id)

@@ -25,7 +25,7 @@ def mock_redis():
     mock_pipeline.srem = MagicMock(return_value=mock_pipeline)
     mock_pipeline.hdel = MagicMock(return_value=mock_pipeline)
     mock_pipeline.delete = MagicMock(return_value=mock_pipeline)
-    mock.redis.pipeline = MagicMock(return_value=mock_pipeline)
+    mock.pipeline = MagicMock(return_value=mock_pipeline)
     return mock
 
 
@@ -41,21 +41,21 @@ class TestPartyRepository:
     @pytest.mark.asyncio
     async def test_initialize(self, party_repository, mock_redis):
         """Test repository initialization."""
-        mock_redis.redis.exists.return_value = False
+        mock_redis.exists.return_value = False
 
         await party_repository.initialize()
 
-        mock_redis.redis.set.assert_called_once_with("party:next_id", 1)
+        mock_redis.set.assert_called_once_with("party:next_id", 1)
 
     @pytest.mark.asyncio
     async def test_get_next_party_id(self, party_repository, mock_redis):
         """Test getting next party ID."""
-        mock_redis.redis.incr.return_value = 5
+        mock_redis.incr.return_value = 5
 
         party_id = await party_repository.get_next_party_id()
 
         assert party_id == 5
-        mock_redis.redis.incr.assert_called_once_with("party:next_id")
+        mock_redis.incr.assert_called_once_with("party:next_id")
 
     @pytest.mark.asyncio
     async def test_save_party(self, party_repository, mock_redis):
@@ -66,10 +66,10 @@ class TestPartyRepository:
         await party_repository.save_party(party)
 
         # Verify Redis calls
-        assert mock_redis.redis.pipeline.called
+        assert mock_redis.pipeline.called
 
         # Get the pipeline and verify calls
-        pipeline = mock_redis.redis.pipeline.return_value
+        pipeline = mock_redis.pipeline.return_value
         pipeline.hset.assert_called()
         pipeline.set.assert_called()
         pipeline.sadd.assert_called()
@@ -112,8 +112,8 @@ class TestPartyRepository:
             ),
         }
 
-        mock_redis.redis.get.return_value = json.dumps(party_data)
-        mock_redis.redis.hgetall.return_value = member_data
+        mock_redis.get.return_value = json.dumps(party_data)
+        mock_redis.hgetall.return_value = member_data
 
         party = await party_repository.get_party(1)
 
@@ -128,7 +128,7 @@ class TestPartyRepository:
     @pytest.mark.asyncio
     async def test_get_party_not_exists(self, party_repository, mock_redis):
         """Test getting a non-existent party."""
-        mock_redis.redis.get.return_value = None
+        mock_redis.get.return_value = None
 
         party = await party_repository.get_party(999)
 
@@ -138,7 +138,7 @@ class TestPartyRepository:
     async def test_get_user_party(self, party_repository, mock_redis):
         """Test getting user's current party."""
         # Mock user has party ID 1
-        mock_redis.redis.get.return_value = b"1"
+        mock_redis.get.return_value = b"1"
 
         # Mock party data
         party_data = {
@@ -176,8 +176,8 @@ class TestPartyRepository:
                 return member_data
             return {}
 
-        mock_redis.redis.get.side_effect = mock_get
-        mock_redis.redis.hgetall.side_effect = mock_hgetall
+        mock_redis.get.side_effect = mock_get
+        mock_redis.hgetall.side_effect = mock_hgetall
 
         party = await party_repository.get_user_party(1)
 
@@ -188,7 +188,7 @@ class TestPartyRepository:
     @pytest.mark.asyncio
     async def test_get_user_party_no_party(self, party_repository, mock_redis):
         """Test getting party for user not in any party."""
-        mock_redis.redis.get.return_value = None
+        mock_redis.get.return_value = None
 
         party = await party_repository.get_user_party(1)
 
@@ -203,12 +203,12 @@ class TestPartyRepository:
             "2": json.dumps({"user_id": 2, "username": "Member2"}),
         }
 
-        mock_redis.redis.hgetall.return_value = members_json
+        mock_redis.hgetall.return_value = members_json
 
         await party_repository.delete_party(1)
 
         # Verify cleanup calls
-        pipeline = mock_redis.redis.pipeline.return_value
+        pipeline = mock_redis.pipeline.return_value
         pipeline.delete.assert_called()
         pipeline.hdel.assert_called()
         pipeline.srem.assert_called()
@@ -232,7 +232,7 @@ class TestPartyRepository:
             }
         )
 
-        mock_redis.redis.hset.assert_called_once_with("party:1:members", "1", expected_data)
+        mock_redis.hset.assert_called_once_with("party:1:members", "1", expected_data)
 
     @pytest.mark.asyncio
     async def test_add_member_to_party(self, party_repository, mock_redis):
@@ -250,12 +250,12 @@ class TestPartyRepository:
             "member_count": 1,
         }
 
-        mock_redis.redis.get.return_value = json.dumps(party_data)
+        mock_redis.get.return_value = json.dumps(party_data)
 
         await party_repository.add_member_to_party(1, member)
 
         # Verify member added and user party reference updated
-        pipeline = mock_redis.redis.pipeline.return_value
+        pipeline = mock_redis.pipeline.return_value
         pipeline.hset.assert_called()
         pipeline.set.assert_called()
         pipeline.execute.assert_called_once()
@@ -265,7 +265,7 @@ class TestPartyRepository:
         """Test removing a member from party."""
         await party_repository.remove_member_from_party(1, 2)
 
-        pipeline = mock_redis.redis.pipeline.return_value
+        pipeline = mock_redis.pipeline.return_value
         pipeline.hdel.assert_called_once_with("party:1:members", "2")
         pipeline.delete.assert_called_once_with("user:2:party")
         pipeline.execute.assert_called_once()
@@ -273,22 +273,22 @@ class TestPartyRepository:
     @pytest.mark.asyncio
     async def test_get_all_parties(self, party_repository, mock_redis):
         """Test getting all party IDs."""
-        mock_redis.redis.smembers.return_value = {b"1", b"2", b"3"}
+        mock_redis.smembers.return_value = {b"1", b"2", b"3"}
 
         party_ids = await party_repository.get_all_parties()
 
         assert sorted(party_ids) == [1, 2, 3]
-        mock_redis.redis.smembers.assert_called_once_with("party:index")
+        mock_redis.smembers.assert_called_once_with("party:index")
 
     @pytest.mark.asyncio
     async def test_get_party_count(self, party_repository, mock_redis):
         """Test getting total party count."""
-        mock_redis.redis.scard.return_value = 5
+        mock_redis.scard.return_value = 5
 
         count = await party_repository.get_party_count()
 
         assert count == 5
-        mock_redis.redis.scard.assert_called_once_with("party:index")
+        mock_redis.scard.assert_called_once_with("party:index")
 
     @pytest.mark.asyncio
     async def test_save_invitation(self, party_repository, mock_redis):
@@ -314,7 +314,7 @@ class TestPartyRepository:
             }
         )
 
-        mock_redis.redis.hset.assert_called_once_with("party_invitations:2", "1", expected_data)
+        mock_redis.hset.assert_called_once_with("party_invitations:2", "1", expected_data)
 
     @pytest.mark.asyncio
     async def test_get_invitation_exists(self, party_repository, mock_redis):
@@ -328,7 +328,7 @@ class TestPartyRepository:
             "created_at": 1234567890,
         }
 
-        mock_redis.redis.hget.return_value = json.dumps(invitation_data)
+        mock_redis.hget.return_value = json.dumps(invitation_data)
 
         invitation = await party_repository.get_invitation(2, 1)
 
@@ -340,7 +340,7 @@ class TestPartyRepository:
     @pytest.mark.asyncio
     async def test_get_invitation_not_exists(self, party_repository, mock_redis):
         """Test getting a non-existent invitation."""
-        mock_redis.redis.hget.return_value = None
+        mock_redis.hget.return_value = None
 
         invitation = await party_repository.get_invitation(2, 1)
 
@@ -370,7 +370,7 @@ class TestPartyRepository:
 
         invitations_json = {"1": json.dumps(fresh_invitation), "2": json.dumps(expired_invitation)}
 
-        mock_redis.redis.hgetall.return_value = invitations_json
+        mock_redis.hgetall.return_value = invitations_json
 
         invitations = await party_repository.get_user_invitations(2)
 
@@ -379,21 +379,21 @@ class TestPartyRepository:
         assert invitations[0].party_id == 1
 
         # Expired invitation should be removed
-        mock_redis.redis.hdel.assert_called_once_with("party_invitations:2", "2")
+        mock_redis.hdel.assert_called_once_with("party_invitations:2", "2")
 
     @pytest.mark.asyncio
     async def test_remove_invitation(self, party_repository, mock_redis):
         """Test removing a specific invitation."""
         await party_repository.remove_invitation(2, 1)
 
-        mock_redis.redis.hdel.assert_called_once_with("party_invitations:2", "1")
+        mock_redis.hdel.assert_called_once_with("party_invitations:2", "1")
 
     @pytest.mark.asyncio
     async def test_clear_user_invitations(self, party_repository, mock_redis):
         """Test clearing all invitations for a user."""
         await party_repository.clear_user_invitations(2)
 
-        mock_redis.redis.delete.assert_called_once_with("party_invitations:2")
+        mock_redis.delete.assert_called_once_with("party_invitations:2")
 
     @pytest.mark.asyncio
     async def test_update_party_metadata(self, party_repository, mock_redis):
@@ -415,7 +415,7 @@ class TestPartyRepository:
             }
         )
 
-        pipeline = mock_redis.redis.pipeline.return_value
+        pipeline = mock_redis.pipeline.return_value
         pipeline.set.assert_called_once_with("party:1", expected_data)
         pipeline.hset.assert_called_once()
         pipeline.execute.assert_called_once()

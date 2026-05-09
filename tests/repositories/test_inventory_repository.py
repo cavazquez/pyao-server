@@ -9,11 +9,12 @@ Para tests unitarios de los componentes individuales, ver:
 - test_inventory_stacking_strategy.py
 """
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
 from src.repositories.inventory_repository import InventoryRepository
+from tests.conftest import create_mock_redis_client
 
 
 @pytest.mark.asyncio
@@ -22,7 +23,7 @@ class TestInventoryRepository:
 
     async def test_init(self) -> None:
         """Test de inicialización con componentes."""
-        redis_client = MagicMock()
+        redis_client = create_mock_redis_client()
         repo = InventoryRepository(redis_client, max_stack=20)
 
         assert repo.redis_client == redis_client
@@ -31,8 +32,8 @@ class TestInventoryRepository:
 
     async def test_get_inventory_legacy_format(self) -> None:
         """Test que get_inventory retorna formato legacy para compatibilidad."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(
             return_value={
                 "slot_1": "10:5",
                 "slot_2": "20:3",
@@ -50,10 +51,10 @@ class TestInventoryRepository:
 
     async def test_add_item_integration(self) -> None:
         """Test de integración: agregar item usa storage y stacking."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={})
-        redis_client.redis.hget = AsyncMock(return_value=None)
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={})
+        redis_client.hget = AsyncMock(return_value=None)
+        redis_client.hset_field = AsyncMock()
 
         repo = InventoryRepository(redis_client)
         result = await repo.add_item(1, 10, 5)
@@ -61,13 +62,13 @@ class TestInventoryRepository:
         # Debe retornar slots modificados
         assert len(result) > 0
         # Debe haber llamado a Redis para guardar
-        assert redis_client.redis.hset.called
+        assert redis_client.hset_field.called
 
     async def test_remove_item_integration(self) -> None:
         """Test de integración: remover item usa storage y stacking."""
-        redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=b"10:5")
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hget = AsyncMock(return_value=b"10:5")
+        redis_client.hset_field = AsyncMock()
 
         repo = InventoryRepository(redis_client)
         result = await repo.remove_item(1, 1, 2)
@@ -75,12 +76,12 @@ class TestInventoryRepository:
         # Debe retornar True si fue exitoso
         assert result is True
         # Debe haber actualizado Redis
-        assert redis_client.redis.hset.called
+        assert redis_client.hset_field.called
 
     async def test_get_slot_delegates_to_storage(self) -> None:
         """Test que get_slot delega correctamente a storage."""
-        redis_client = MagicMock()
-        redis_client.redis.hget = AsyncMock(return_value=b"10:5")
+        redis_client = create_mock_redis_client()
+        redis_client.hget = AsyncMock(return_value=b"10:5")
 
         repo = InventoryRepository(redis_client)
         slot_data = await repo.get_slot(1, 1)
@@ -90,19 +91,19 @@ class TestInventoryRepository:
 
     async def test_set_slot_delegates_to_storage(self) -> None:
         """Test que set_slot delega correctamente a storage."""
-        redis_client = MagicMock()
-        redis_client.redis.hset = AsyncMock()
+        redis_client = create_mock_redis_client()
+        redis_client.hset_field = AsyncMock()
 
         repo = InventoryRepository(redis_client)
         result = await repo.set_slot(1, 1, 10, 5)
 
         assert result is True
-        redis_client.redis.hset.assert_called_once()
+        redis_client.hset_field.assert_called_once()
 
     async def test_has_space_delegates_to_storage(self) -> None:
         """Test que has_space delega correctamente a storage."""
-        redis_client = MagicMock()
-        redis_client.redis.hgetall = AsyncMock(return_value={"slot_1": "10:5"})
+        redis_client = create_mock_redis_client()
+        redis_client.hgetall = AsyncMock(return_value={"slot_1": "10:5"})
 
         repo = InventoryRepository(redis_client)
         has_space = await repo.has_space(1)

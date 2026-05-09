@@ -44,17 +44,17 @@ class AccountRepository:
         """
         # Verificar si el usuario ya existe
         username_key = RedisKeys.account_id_by_username(username)
-        existing_id = await self.redis.redis.get(username_key)
+        existing_id = await self.redis.get(username_key)
 
         if existing_id is not None:
             msg = f"La cuenta '{username}' ya existe"
             raise ValueError(msg)
 
         # Generar nuevo user_id
-        user_id = int(await self.redis.redis.incr(RedisKeys.ACCOUNTS_COUNTER))
+        user_id = int(await self.redis.incr(RedisKeys.ACCOUNTS_COUNTER))
 
         # Guardar mapeo username -> user_id
-        await self.redis.redis.set(username_key, str(user_id))
+        await self.redis.set(username_key, str(user_id))
 
         # Guardar datos de la cuenta
         account_key = RedisKeys.account_data(username)
@@ -78,7 +78,7 @@ class AccountRepository:
                 }
             )
 
-        await self.redis.redis.hset(account_key, mapping=account_data)  # type: ignore[misc]
+        await self.redis.hset(account_key, mapping=account_data)  # type: ignore[misc]
         logger.info("Cuenta creada: %s (ID: %d)", username, user_id)
 
         return user_id
@@ -93,7 +93,7 @@ class AccountRepository:
             Diccionario con los datos de la cuenta o None si no existe.
         """
         account_key = RedisKeys.account_data(username)
-        result: dict[str, str] = await self.redis.redis.hgetall(account_key)  # type: ignore[misc]
+        result: dict[str, str] = await self.redis.hgetall(account_key)  # type: ignore[misc]
 
         if not result:
             return None
@@ -142,7 +142,7 @@ class AccountRepository:
             is_gm: True para hacer GM, False para quitar GM.
         """
         account_key = RedisKeys.account_data(username)
-        await self.redis.redis.hset(account_key, "is_gm", "1" if is_gm else "0")  # type: ignore[misc]
+        await self.redis.hset(account_key, "is_gm", "1" if is_gm else "0")  # type: ignore[misc]
         logger.info("Estado GM actualizado para %s: %s", username, "GM" if is_gm else "No GM")
 
     async def get_account_by_user_id(self, user_id: int) -> dict[str, str] | None:
@@ -158,11 +158,11 @@ class AccountRepository:
         # En el futuro, podríamos mantener un índice user_id -> username en Redis
         # Por ahora, iteramos sobre las claves de cuentas
         pattern = "account:*:data"
-        keys = await self.redis.redis.keys(pattern)
+        keys = await self.redis.keys(pattern)
         logger.debug("Buscando cuenta para user_id=%d, encontradas %d claves", user_id, len(keys))
 
         for key in keys:
-            account_data: dict[str, str] = await self.redis.redis.hgetall(key)  # type: ignore[misc]
+            account_data: dict[str, str] = await self.redis.hgetall(key)  # type: ignore[misc]
             account_user_id_str = account_data.get("user_id")
             if account_user_id_str == str(user_id):
                 logger.debug("Cuenta encontrada para user_id=%d en key=%s", user_id, key)
