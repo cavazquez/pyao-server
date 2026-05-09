@@ -44,6 +44,22 @@ parts:
       - libssl3
       - python3
       - python3-venv
+    stage:
+      - -usr/lib/x86_64-linux-gnu/libBrokenLocale*
+      - -usr/lib/x86_64-linux-gnu/libanl*
+      - -usr/lib/x86_64-linux-gnu/libc_malloc_debug*
+      - -usr/lib/x86_64-linux-gnu/libexpatw*
+      - -usr/lib/x86_64-linux-gnu/libformw*
+      - -usr/lib/x86_64-linux-gnu/libhistory*
+      - -usr/lib/x86_64-linux-gnu/libmemusage*
+      - -usr/lib/x86_64-linux-gnu/libmenuw*
+      - -usr/lib/x86_64-linux-gnu/libmvec*
+      - -usr/lib/x86_64-linux-gnu/libnsl*
+      - -usr/lib/x86_64-linux-gnu/libnss_*
+      - -usr/lib/x86_64-linux-gnu/libpcprofile*
+      - -usr/lib/x86_64-linux-gnu/libthread_db*
+      - -usr/lib/x86_64-linux-gnu/libtic.*
+      - -usr/lib/x86_64-linux-gnu/libutil*
 
   game-data:
     plugin: nil

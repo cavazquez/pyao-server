@@ -10,6 +10,7 @@ WORKDIR="${SNAP_USER_COMMON}"
 mkdir -p "${WORKDIR}/certs"
 mkdir -p "${WORKDIR}/map_binary"
 mkdir -p "${WORKDIR}/map_cache"
+mkdir -p "${WORKDIR}/config"
 mkdir -p "${WORKDIR}/logs"
 mkdir -p "${WORKDIR}/archives"
 
