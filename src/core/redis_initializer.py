@@ -29,10 +29,10 @@ class RedisInitializer:
         await data_initializer.initialize_all()
         logger.info("✓ Datos iniciales cargados")
 
-        await redis_client.set("server:connections:count", "0")
+        server_repo = ServerRepository(redis_client)
+        await server_repo.reset_connections_count()
         logger.info("✓ Contador de conexiones reseteado")
 
-        server_repo = ServerRepository(redis_client)
         await server_repo.set_uptime_start(int(time.time()))
         logger.info("✓ Timestamp de inicio establecido")
 

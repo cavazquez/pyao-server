@@ -1,15 +1,13 @@
 """Loader para inicializar inventarios de mercaderes desde TOML."""
 
 import asyncio
-import inspect
 import logging
 import tomllib
-from collections.abc import Awaitable
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from src.repositories.merchant_repository import MerchantRepository
 from src.utils.base_data_loader import BaseDataLoader
-from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
@@ -29,6 +27,7 @@ class MerchantDataLoader(BaseDataLoader):
             redis_client: Cliente de Redis.
         """
         super().__init__(redis_client)
+        self._merchant_repo = MerchantRepository(redis_client)
 
     def get_name(self) -> str:
         """Retorna el nombre del loader.
@@ -57,29 +56,22 @@ class MerchantDataLoader(BaseDataLoader):
             if items is None:
                 continue
 
-            inventory_key = RedisKeys.merchant_inventory(npc_id)
-            await self._execute_redis(self.redis_client.delete(inventory_key))
-
-            slot = 1
+            formatted_items: list[tuple[int, int]] = []
             item_ids: list[str] = []
             for item in items:
                 formatted_item = self._format_item(item, npc_id)
                 if formatted_item is None:
                     continue
-
                 item_id, quantity = formatted_item
-                slot_key = f"slot_{slot}"
-                value = f"{item_id}:{quantity}"
-                await self._execute_redis(self.redis_client.hset(inventory_key, slot_key, value))
+                formatted_items.append((item_id, quantity))
                 item_ids.append(str(item_id))
-                total_items += 1
-                slot += 1
 
+            await self._merchant_repo.clear_merchant(npc_id)
+            loaded = await self._merchant_repo.load_inventory_slots(npc_id, formatted_items)
             if item_ids:
-                items_key = self._merchant_items_key(npc_id)
-                await self._execute_redis(self.redis_client.delete(items_key))
-                await self._execute_redis(self.redis_client.sadd(items_key, *item_ids))
+                await self._merchant_repo.set_item_id_index(npc_id, item_ids)
 
+            total_items += loaded
             merchants_loaded += 1
 
         logger.info(
@@ -102,10 +94,7 @@ class MerchantDataLoader(BaseDataLoader):
             if npc_id is None:
                 continue
 
-            await self._execute_redis(
-                self.redis_client.delete(RedisKeys.merchant_inventory(npc_id))
-            )
-            await self._execute_redis(self.redis_client.delete(self._merchant_items_key(npc_id)))
+            await self._merchant_repo.clear_merchant(npc_id)
             deleted += 1
 
         logger.info("Eliminados inventarios de %d mercaderes", deleted)
@@ -205,30 +194,3 @@ class MerchantDataLoader(BaseDataLoader):
             return None
 
         return item_id, quantity
-
-    @staticmethod
-    def _merchant_items_key(npc_id: int) -> str:
-        """Clave del conjunto de items de un mercader.
-
-        Returns:
-            Nombre de la clave en Redis para el conjunto de items.
-        """
-        return f"merchant:{npc_id}:items"
-
-    @staticmethod
-    async def _execute_redis(
-        result: Awaitable[Any] | Any,  # noqa: ANN401
-    ) -> Any:  # noqa: ANN401
-        """Compatibilidad con comandos Redis que pueden ser sync o async.
-
-        Returns:
-            Resultado del comando ejecutado.
-        """
-        """Compatibilidad con comandos Redis que pueden ser sync o async.
-
-        Returns:
-            Resultado del comando ejecutado.
-        """
-        if inspect.isawaitable(result):
-            return await result
-        return result

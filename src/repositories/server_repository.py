@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.utils.redis_config import RedisKeys
+
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
 
@@ -19,6 +21,10 @@ class ServerRepository:
             redis_client: Cliente de Redis.
         """
         self.redis_client = redis_client
+
+    async def reset_connections_count(self) -> None:
+        """Resetea el contador de conexiones activas a cero."""
+        await self.redis_client.set(RedisKeys.SERVER_CONNECTIONS_COUNT, "0")
 
     async def get_motd(self) -> str:
         """Obtiene el Mensaje del Día desde Redis.

@@ -219,6 +219,52 @@ class MerchantRepository(BaseSlotRepository):
         await self.redis_client.hset(key, mapping=inventory_data)
         logger.info("Inventario inicializado para mercader %d con %d items", npc_id, len(items))
 
+    @staticmethod
+    def _merchant_items_key(npc_id: int) -> str:
+        """Clave del conjunto de item_ids conocidos de un mercader.
+
+        Returns:
+            Nombre de la clave Redis del set auxiliar.
+        """
+        return f"merchant:{npc_id}:items"
+
+    async def clear_merchant(self, npc_id: int) -> None:
+        """Elimina inventario y set auxiliar de un mercader."""
+        await self.redis_client.delete(RedisKeys.merchant_inventory(npc_id))
+        await self.redis_client.delete(self._merchant_items_key(npc_id))
+
+    async def load_inventory_slots(
+        self,
+        npc_id: int,
+        items: list[tuple[int, int]],
+    ) -> int:
+        """Carga slots 1..N desde TOML (formato ``item_id:quantity`` por slot).
+
+        Returns:
+            Cantidad de items escritos.
+        """
+        inventory_key = RedisKeys.merchant_inventory(npc_id)
+        await self.redis_client.delete(inventory_key)
+
+        loaded = 0
+        for slot, (item_id, quantity) in enumerate(items, start=1):
+            if slot > self.MAX_SLOTS:
+                break
+            await self.redis_client.hset(
+                inventory_key,
+                f"slot_{slot}",
+                f"{item_id}:{quantity}",
+            )
+            loaded += 1
+        return loaded
+
+    async def set_item_id_index(self, npc_id: int, item_ids: list[str]) -> None:
+        """Reemplaza el set ``merchant:{npc_id}:items`` con los IDs dados."""
+        items_key = self._merchant_items_key(npc_id)
+        await self.redis_client.delete(items_key)
+        if item_ids:
+            await self.redis_client.sadd(items_key, *item_ids)
+
     async def _update_slot_by_npc(
         self,
         npc_id: int,

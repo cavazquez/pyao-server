@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock
 import pytest
 
 from src.repositories.server_repository import ServerRepository
+from src.utils.redis_config import RedisKeys
 from tests.conftest import create_mock_redis_client
 
 
@@ -78,3 +79,13 @@ class TestServerRepository:
         value = await repo.get_dice_max_value()
 
         assert value == 18
+
+    async def test_reset_connections_count(self) -> None:
+        """Test de reseteo del contador de conexiones."""
+        redis_client = create_mock_redis_client()
+        redis_client.set = AsyncMock()
+
+        repo = ServerRepository(redis_client)
+        await repo.reset_connections_count()
+
+        redis_client.set.assert_called_once_with(RedisKeys.SERVER_CONNECTIONS_COUNT, "0")
