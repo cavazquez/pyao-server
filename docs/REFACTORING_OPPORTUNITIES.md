@@ -13,26 +13,11 @@ Se identificaron **5 áreas principales** de refactorización con diferentes niv
 
 ## 🔴 Prioridad Alta
 
-### 1. Eliminar Acceso Directo a `stats.get()` en Servicios
+### 1. Eliminar Acceso Directo a `stats.get()` en Servicios — ✅ Completado (2026-05)
 
-**Problema:**
-- **100 usos** de `stats.get()` en 8 archivos de servicios
-- Duplicación de conocimiento del formato de datos
-- Falta de type safety
-- Propenso a errores de typos en keys
+**Estado:** 0 usos en `src/services/`; los servicios usan métodos tipados de `PlayerRepository` (`get_current_hp`, `get_level`, `get_player_stats`, etc.).
 
-**Archivos afectados:**
-1. `services/npc/npc_ai_service.py` - 21 usos
-2. `services/combat/combat_service.py` - 26 usos
-3. `services/npc/npc_death_service.py` - 26 usos
-4. `services/player/player_death_service.py` - 13 usos
-5. `services/party_service.py` - 5 usos
-6. `services/player/spell_effects/healing.py` - 4 usos
-7. `services/player/spell_effects/damage.py` - 3 usos
-8. `services/player/spell_service.py` - 2 usos
-
-**Solución:**
-Reemplazar con métodos helper de `PlayerRepository`:
+**Referencia histórica:** Ver métodos helper listados abajo. Completado también en `drop_handler.py` y `pickup_handler.py`.
 - `stats.get("min_hp", 0)` → `await player_repo.get_current_hp(user_id)`
 - `stats.get("max_hp", 100)` → `await player_repo.get_max_hp(user_id)`
 - `stats.get("level", 1)` → `await player_repo.get_level(user_id)`
@@ -115,35 +100,32 @@ Agregar métodos helper a `PlayerRepository`:
 **Esfuerzo restante:** Bajo (transiciones/pathfinding si se desea el mismo patrón)  
 **Beneficio:** Alto (ya obtenido en mantenibilidad)
 
-#### 3.2 `player_repository.py` (1013 líneas)
-**Problema:** Muchos métodos, podría dividirse por dominio  
-**Solución:** Mantener como está (Repository Pattern típico) o dividir en:
-- `player_stats_repository.py` - Stats y atributos
-- `player_position_repository.py` - Posición y heading
-- `player_status_repository.py` - Estados (poison, blind, etc.)
+#### 3.2 `player_repository.py` — mixins por dominio (2026-05)
+**Estado:** Completado. Mixins bajo `src/repositories/player_mixins/`:
+- `_base.py` — helpers Redis
+- `_position_mixin.py` — posición y heading
+- `_stats_mixin.py` — stats, hambre/sed, flags de meditación/navegación
+- `_attributes_mixin.py` — atributos y modificadores temporales
+- `_status_mixin.py` — efectos de estado (veneno, ceguera, etc.)
+- `_skills_mixin.py` — habilidades
 
-**Esfuerzo:** Alto (4-6 horas)  
-**Beneficio:** Medio (puede complicar el código)
+`PlayerRepository` en la ruta original compone los mixins (~25 líneas).
 
-#### 3.3 `clan_service.py` (882 líneas)
-**Problema:** Mucha lógica de negocio  
-**Solución:** Dividir en:
-- `clan_management_service.py` - Crear, eliminar, modificar
-- `clan_membership_service.py` - Invitar, aceptar, expulsar
-- `clan_leadership_service.py` - Promover, degradar, transferir
+#### 3.3 `clan_service.py` — split por dominio (2026-05)
+**Estado:** Completado. Submódulos bajo `src/services/clan/`:
+- `creation.py` — crear clan
+- `membership.py` — invitar, aceptar, expulsar, abandonar
+- `ranks.py` — promover, degradar, transferir liderazgo
+- `messaging.py` — mensajes de clan
+- `_helpers.py` — helpers compartidos y nombres de rango
 
-**Esfuerzo:** Medio (3-4 horas)  
-**Beneficio:** Medio-Alto
+`ClanService` compone mixins; `src/services/clan_service.py` re-exporta para compatibilidad.
 
-#### 3.4 `packet_validator.py` (865 líneas)
-**Problema:** Muchos validadores en un solo archivo  
-**Solución:** Ya está dividido en `network/validators/` ✅  
-**Estado:** Ya refactorizado
+#### 3.4 `packet_validator.py` — fachada delgada (2026-05)
+**Estado:** Completado. Eliminados ~40 wrappers `validate_*_packet()`; producción y tests usan `validate_packet_by_id(ClientPacketID.X)`.
 
-#### 3.5 `message_sender.py` (766 líneas)
-**Problema:** Facade muy grande  
-**Solución:** Ya está dividido en `messaging/senders/` ✅  
-**Estado:** Ya refactorizado
+#### 3.5 `message_sender.py` — sin envíos inline (2026-05)
+**Estado:** Completado. `send_navigate_toggle`, `send_user_commerce_init` y `send_user_commerce_end` delegan en `InventoryMessageSender`. Sub-senders en `messaging/senders/`.
 
 #### 3.6 `use_item_handler.py` (741 líneas)
 **Problema:** Mucha lógica de diferentes tipos de items  

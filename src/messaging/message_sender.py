@@ -15,11 +15,6 @@ from src.messaging.senders.message_session_sender import SessionMessageSender
 from src.messaging.senders.message_status_effects_sender import StatusEffectsMessageSender
 from src.messaging.senders.message_visual_effects_sender import VisualEffectsMessageSender
 from src.messaging.senders.message_work_sender import WorkMessageSender
-from src.network.msg_user_commerce import (
-    build_user_commerce_end_response,
-    build_user_commerce_init_response,
-)
-from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
     from src.models.body_part import BodyPart
@@ -653,9 +648,7 @@ class MessageSender:
 
     async def send_navigate_toggle(self) -> None:
         """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""
-        response = bytes([ServerPacketID.NAVIGATE_TOGGLE])
-        logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.address)
-        await self.connection.send(response)
+        await self.inventory.send_navigate_toggle()
 
     async def send_pong(self) -> None:
         """Envía paquete PONG en respuesta a un PING."""
@@ -682,19 +675,11 @@ class MessageSender:
 
     async def send_user_commerce_init(self, partner_username: str) -> None:
         """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
-        response = build_user_commerce_init_response(partner_username)
-        logger.info(
-            "[%s] Enviando USER_COMMERCE_INIT (partner=%s)",
-            self.address,
-            partner_username,
-        )
-        await self.connection.send(response)
+        await self.inventory.send_user_commerce_init(partner_username)
 
     async def send_user_commerce_end(self) -> None:
         """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
-        response = build_user_commerce_end_response()
-        logger.info("[%s] Enviando USER_COMMERCE_END", self.address)
-        await self.connection.send(response)
+        await self.inventory.send_user_commerce_end()
 
     async def send_work_request_target(self, skill_type: int) -> None:
         """Envía paquete WORK_REQUEST_TARGET para cambiar cursor al modo de trabajo.

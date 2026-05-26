@@ -10,6 +10,10 @@ from src.network.msg_inventory import (
     build_change_spell_slot_response,
     build_commerce_init_response,
 )
+from src.network.msg_user_commerce import (
+    build_user_commerce_end_response,
+    build_user_commerce_init_response,
+)
 from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
@@ -238,4 +242,26 @@ class InventoryMessageSender:
         """Envía paquete MEDITATE_TOGGLE para confirmar meditación."""
         response = bytes([ServerPacketID.MEDITATE_TOGGLE])
         logger.debug("[%s] Enviando MEDITATE_TOGGLE", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_navigate_toggle(self) -> None:
+        """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""
+        response = bytes([ServerPacketID.NAVIGATE_TOGGLE])
+        logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.connection.address)
+        await self.connection.send(response)
+
+    async def send_user_commerce_init(self, partner_username: str) -> None:
+        """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
+        response = build_user_commerce_init_response(partner_username)
+        logger.info(
+            "[%s] Enviando USER_COMMERCE_INIT (partner=%s)",
+            self.connection.address,
+            partner_username,
+        )
+        await self.connection.send(response)
+
+    async def send_user_commerce_end(self) -> None:
+        """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
+        response = build_user_commerce_end_response()
+        logger.info("[%s] Enviando USER_COMMERCE_END", self.connection.address)
         await self.connection.send(response)

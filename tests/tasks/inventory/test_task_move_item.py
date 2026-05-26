@@ -14,6 +14,7 @@ from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.repositories.inventory_repository import SwapSlotsResult
 from src.tasks.inventory.task_move_item import TaskMoveItem
+from tests.network.validator_helpers import validate_registered_packet
 
 
 def create_mock_move_item_handler(
@@ -129,7 +130,7 @@ class TestTaskMoveItem:
         data = bytes([ClientPacketID.MOVE_ITEM, 5, 5])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_move_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MOVE_ITEM)
         assert not result.success
 
 
@@ -141,7 +142,7 @@ class TestMoveItemPacketValidator:
         data = bytes([ClientPacketID.MOVE_ITEM, 1, 5])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_move_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MOVE_ITEM)
         assert result.success
         assert result.data is not None
         assert result.data["old_slot"] == 1
@@ -152,7 +153,7 @@ class TestMoveItemPacketValidator:
         data = bytes([ClientPacketID.MOVE_ITEM, 3, 3])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_move_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MOVE_ITEM)
         assert not result.success
 
     def test_move_item_out_of_range(self) -> None:
@@ -160,7 +161,7 @@ class TestMoveItemPacketValidator:
         data = bytes([ClientPacketID.MOVE_ITEM, 0, 5])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_move_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MOVE_ITEM)
         assert not result.success
 
     def test_move_item_second_slot_out_of_range(self) -> None:
@@ -168,7 +169,7 @@ class TestMoveItemPacketValidator:
         data = bytes([ClientPacketID.MOVE_ITEM, 1, 50])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_move_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MOVE_ITEM)
         assert not result.success
 
 

@@ -3,8 +3,10 @@
 import struct
 
 from src.config import config
+from src.network.packet_id import ClientPacketID
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
+from tests.network.validator_helpers import validate_registered_packet
 
 
 def test_validate_walk_packet_success() -> None:
@@ -14,7 +16,7 @@ def test_validate_walk_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_walk_packet()
+    result = validate_registered_packet(validator, ClientPacketID.WALK)
 
     assert result.success is True
     assert result.data == {"heading": 1}
@@ -28,7 +30,7 @@ def test_validate_walk_packet_invalid_heading() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_walk_packet()
+    result = validate_registered_packet(validator, ClientPacketID.WALK)
 
     assert result.success is False
     assert result.data is None
@@ -47,7 +49,7 @@ def test_validate_attack_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_attack_packet()
+    result = validate_registered_packet(validator, ClientPacketID.ATTACK)
 
     assert result.success is True
     assert result.data == {}  # No hay datos, solo PacketID
@@ -61,7 +63,7 @@ def test_validate_attack_packet_minimal() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_attack_packet()
+    result = validate_registered_packet(validator, ClientPacketID.ATTACK)
 
     # El packet es válido incluso con solo el PacketID
     assert result.success is True
@@ -90,7 +92,7 @@ def test_validate_login_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_login_packet()
+    result = validate_registered_packet(validator, ClientPacketID.LOGIN)
 
     assert result.success is True
     assert result.data == {"username": username, "password": password}
@@ -117,7 +119,7 @@ def test_validate_login_packet_username_too_short() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_login_packet()
+    result = validate_registered_packet(validator, ClientPacketID.LOGIN)
 
     assert result.success is False
     assert result.data is None
@@ -145,7 +147,7 @@ def test_validate_login_packet_password_too_short() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_login_packet()
+    result = validate_registered_packet(validator, ClientPacketID.LOGIN)
 
     assert result.success is False
     assert result.data is None
@@ -160,7 +162,7 @@ def test_validate_cast_spell_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_cast_spell_packet()
+    result = validate_registered_packet(validator, ClientPacketID.CAST_SPELL)
 
     assert result.success is True
     assert result.data == {"spell_slot": 5}
@@ -174,7 +176,7 @@ def test_validate_cast_spell_packet_invalid_slot() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_cast_spell_packet()
+    result = validate_registered_packet(validator, ClientPacketID.CAST_SPELL)
 
     assert result.success is False
     assert result.data is None
@@ -189,7 +191,7 @@ def test_validate_drop_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_drop_packet()
+    result = validate_registered_packet(validator, ClientPacketID.DROP)
 
     assert result.success is True
     assert result.data == {"slot": 5, "quantity": 10}
@@ -203,7 +205,7 @@ def test_validate_drop_packet_invalid_slot() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_drop_packet()
+    result = validate_registered_packet(validator, ClientPacketID.DROP)
 
     assert result.success is False
     assert result.data is None
@@ -218,7 +220,7 @@ def test_validate_drop_packet_invalid_quantity() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_drop_packet()
+    result = validate_registered_packet(validator, ClientPacketID.DROP)
 
     assert result.success is False
     assert result.data is None
@@ -233,7 +235,7 @@ def test_validate_pickup_packet_success() -> None:
     reader = PacketReader(data)
     validator = PacketValidator(reader)
 
-    result = validator.validate_pickup_packet()
+    result = validate_registered_packet(validator, ClientPacketID.PICK_UP)
 
     assert result.success is True
     assert result.data == {}
@@ -246,7 +248,7 @@ def test_validation_result_log_validation_success() -> None:
     data = bytes([6, 1])
     reader = PacketReader(data)
     validator = PacketValidator(reader)
-    result = validator.validate_walk_packet()
+    result = validate_registered_packet(validator, ClientPacketID.WALK)
 
     # Llamar a log_validation (no lanza excepción)
     result.log_validation("WALK", 6, "127.0.0.1:12345")
@@ -261,7 +263,7 @@ def test_validation_result_log_validation_failure() -> None:
     data = bytes([6, 5])  # heading inválido
     reader = PacketReader(data)
     validator = PacketValidator(reader)
-    result = validator.validate_walk_packet()
+    result = validate_registered_packet(validator, ClientPacketID.WALK)
 
     # Llamar a log_validation (no lanza excepción)
     result.log_validation("WALK", 6, "127.0.0.1:12345")

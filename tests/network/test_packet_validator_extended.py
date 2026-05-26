@@ -5,8 +5,10 @@ from __future__ import annotations
 import struct
 from typing import TYPE_CHECKING
 
+from src.network.packet_id import ClientPacketID
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
+from tests.network.validator_helpers import validate_registered_packet
 
 if TYPE_CHECKING:
     import pytest
@@ -44,7 +46,7 @@ class TestValidateCreateAccountPacket:
 
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_create_account_packet()
+        result = validate_registered_packet(validator, ClientPacketID.CREATE_ACCOUNT)
 
         assert result.success is True
         assert result.data is not None
@@ -82,7 +84,7 @@ class TestValidateCreateAccountPacket:
 
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_create_account_packet()
+        result = validate_registered_packet(validator, ClientPacketID.CREATE_ACCOUNT)
 
         assert result.success is False
         assert result.data is None
@@ -97,7 +99,7 @@ class TestValidateThrowDicesPacket:
         data = bytes([1])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_throw_dices_packet()
+        result = validate_registered_packet(validator, ClientPacketID.THROW_DICES)
 
         assert result.success is True
         assert result.data == {}
@@ -111,7 +113,7 @@ class TestValidateRequestAttributesPacket:
         data = bytes([13])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_request_attributes_packet()
+        result = validate_registered_packet(validator, ClientPacketID.REQUEST_ATTRIBUTES)
 
         assert result.success is True
         assert result.data == {}
@@ -125,7 +127,7 @@ class TestValidateCommerceEndPacket:
         data = bytes([17])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_commerce_end_packet()
+        result = validate_registered_packet(validator, ClientPacketID.COMMERCE_END)
 
         assert result.success is True
         assert result.data == {}
@@ -139,7 +141,7 @@ class TestValidateBankEndPacket:
         data = bytes([21])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_bank_end_packet()
+        result = validate_registered_packet(validator, ClientPacketID.BANK_END)
 
         assert result.success is True
         assert result.data == {}
@@ -153,7 +155,7 @@ class TestValidateRequestPositionUpdatePacket:
         data = bytes([7])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_request_position_update_packet()
+        result = validate_registered_packet(validator, ClientPacketID.REQUEST_POSITION_UPDATE)
 
         assert result.success is True
         assert result.data == {}
@@ -179,7 +181,7 @@ class TestValidateGMCommandsPacket:
 
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_gm_commands_packet()
+        result = validate_registered_packet(validator, ClientPacketID.GM_COMMANDS)
 
         assert result.success is True
         assert result.data is not None
@@ -198,7 +200,7 @@ class TestValidateMeditatePacket:
         data = bytes([79])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_meditate_packet()
+        result = validate_registered_packet(validator, ClientPacketID.MEDITATE)
 
         assert result.success is True
         assert result.data == {}
@@ -212,7 +214,7 @@ class TestValidateRequestStatsPacket:
         data = bytes([83])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_request_stats_packet()
+        result = validate_registered_packet(validator, ClientPacketID.REQUEST_STATS)
 
         assert result.success is True
         assert result.data == {}
@@ -226,7 +228,7 @@ class TestValidateInformationPacket:
         data = bytes([87])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_information_packet()
+        result = validate_registered_packet(validator, ClientPacketID.INFORMATION)
 
         assert result.success is True
         assert result.data == {}
@@ -240,7 +242,7 @@ class TestValidateRequestMotdPacket:
         data = bytes([89])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_request_motd_packet()
+        result = validate_registered_packet(validator, ClientPacketID.REQUEST_MOTD)
 
         assert result.success is True
         assert result.data == {}
@@ -254,7 +256,7 @@ class TestValidateUptimePacket:
         data = bytes([90])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_uptime_packet()
+        result = validate_registered_packet(validator, ClientPacketID.UPTIME)
 
         assert result.success is True
         assert result.data == {}
@@ -268,7 +270,7 @@ class TestValidateOnlinePacket:
         data = bytes([70])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_online_packet()
+        result = validate_registered_packet(validator, ClientPacketID.ONLINE)
 
         assert result.success is True
         assert result.data == {}
@@ -282,7 +284,7 @@ class TestValidateQuitPacket:
         data = bytes([71])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_quit_packet()
+        result = validate_registered_packet(validator, ClientPacketID.QUIT)
 
         assert result.success is True
         assert result.data == {}
@@ -296,7 +298,7 @@ class TestValidatePingPacket:
         data = bytes([119])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_ping_packet()
+        result = validate_registered_packet(validator, ClientPacketID.PING)
 
         assert result.success is True
         assert result.data == {}
@@ -310,7 +312,7 @@ class TestValidateAyudaPacket:
         data = bytes([82])  # PacketID
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_ayuda_packet()
+        result = validate_registered_packet(validator, ClientPacketID.AYUDA)
 
         assert result.success is True
         assert result.data == {}
@@ -348,7 +350,7 @@ class TestValidationResultLogValidation:
         data = bytes([6, 1])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_walk_packet()
+        result = validate_registered_packet(validator, ClientPacketID.WALK)
 
         with caplog.at_level("DEBUG"):
             result.log_validation("WALK", 6, "127.0.0.1:12345")
@@ -362,7 +364,7 @@ class TestValidationResultLogValidation:
         data = bytes([6, 5])  # heading inválido
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_walk_packet()
+        result = validate_registered_packet(validator, ClientPacketID.WALK)
 
         with caplog.at_level("WARNING"):
             result.log_validation("WALK", 6, "127.0.0.1:12345")
@@ -380,7 +382,7 @@ class TestValidateCommerceBuyPacket:
         data = bytes([40, 10]) + struct.pack("<H", 5)  # slot=10, quantity=5
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_commerce_buy_packet()
+        result = validate_registered_packet(validator, ClientPacketID.COMMERCE_BUY)
 
         assert result.success is True
         assert result.data == {"slot": 10, "quantity": 5}
@@ -390,7 +392,7 @@ class TestValidateCommerceBuyPacket:
         data = bytes([40, 10]) + struct.pack("<H", 20000)  # quantity > 10000
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_commerce_buy_packet()
+        result = validate_registered_packet(validator, ClientPacketID.COMMERCE_BUY)
 
         assert result.success is False
 
@@ -403,7 +405,7 @@ class TestValidateCommerceSellPacket:
         data = bytes([42, 5]) + struct.pack("<H", 3)  # slot=5, quantity=3
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_commerce_sell_packet()
+        result = validate_registered_packet(validator, ClientPacketID.COMMERCE_SELL)
 
         assert result.success is True
         assert result.data == {"slot": 5, "quantity": 3}
@@ -417,7 +419,7 @@ class TestValidateBankDepositPacket:
         data = bytes([43, 8]) + struct.pack("<H", 100)  # slot=8, quantity=100
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_bank_deposit_packet()
+        result = validate_registered_packet(validator, ClientPacketID.BANK_DEPOSIT)
 
         assert result.success is True
         assert result.data == {"slot": 8, "quantity": 100}
@@ -431,7 +433,7 @@ class TestValidateBankExtractPacket:
         data = bytes([41, 15]) + struct.pack("<H", 50)  # slot=15, quantity=50
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_bank_extract_packet()
+        result = validate_registered_packet(validator, ClientPacketID.BANK_EXTRACT_ITEM)
 
         assert result.success is True
         assert result.data == {"slot": 15, "quantity": 50}
@@ -441,7 +443,7 @@ class TestValidateBankExtractPacket:
         data = bytes([41, 50]) + struct.pack("<H", 50)  # slot=50 > 40
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_bank_extract_packet()
+        result = validate_registered_packet(validator, ClientPacketID.BANK_EXTRACT_ITEM)
 
         assert result.success is False
 
@@ -454,7 +456,7 @@ class TestValidateChangeHeadingPacket:
         data = bytes([37, 2])  # heading=2
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_change_heading_packet()
+        result = validate_registered_packet(validator, ClientPacketID.CHANGE_HEADING)
 
         assert result.success is True
         assert result.data == {"heading": 2}
@@ -464,7 +466,7 @@ class TestValidateChangeHeadingPacket:
         data = bytes([37, 5])  # heading=5 (inválido)
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_change_heading_packet()
+        result = validate_registered_packet(validator, ClientPacketID.CHANGE_HEADING)
 
         assert result.success is False
 
@@ -477,7 +479,7 @@ class TestValidateDoubleClickPacket:
         data = bytes([27, 10])  # slot=10
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_double_click_packet()
+        result = validate_registered_packet(validator, ClientPacketID.DOUBLE_CLICK)
 
         assert result.success is True
         assert result.data == {"slot": 10}
@@ -491,7 +493,7 @@ class TestValidateLeftClickPacket:
         data = bytes([26, 50, 60])  # x=50, y=60
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_left_click_packet()
+        result = validate_registered_packet(validator, ClientPacketID.LEFT_CLICK)
 
         assert result.success is True
         assert result.data == {"x": 50, "y": 60}
@@ -501,7 +503,7 @@ class TestValidateLeftClickPacket:
         data = bytes([26, 150, 60])  # x=150 > 100
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_left_click_packet()
+        result = validate_registered_packet(validator, ClientPacketID.LEFT_CLICK)
 
         assert result.success is False
 
@@ -514,7 +516,7 @@ class TestValidateEquipItemPacket:
         data = bytes([36, 5])  # slot=5
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_equip_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.EQUIP_ITEM)
 
         assert result.success is True
         assert result.data == {"slot": 5}
@@ -528,7 +530,7 @@ class TestValidateUseItemPacket:
         data = bytes([30, 12])  # slot=12
         reader = PacketReader(data)
         validator = PacketValidator(reader)
-        result = validator.validate_use_item_packet()
+        result = validate_registered_packet(validator, ClientPacketID.USE_ITEM)
 
         assert result.success is True
         assert result.data == {"slot": 12}

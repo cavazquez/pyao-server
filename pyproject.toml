@@ -126,6 +126,10 @@ ignore_errors = true  # wrappers de Redis con union types (fakeredis + redis asy
 module = "src.network.packet_reader_mixin"
 ignore_errors = true  # mixin: reader/errors definidos en subclase
 
+[[tool.mypy.overrides]]
+module = "src.repositories.player_mixins.*"
+ignore_errors = true  # mixins: redis y helpers provistos por PlayerRepositoryBase en runtime
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

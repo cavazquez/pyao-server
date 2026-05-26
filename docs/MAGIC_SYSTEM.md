@@ -91,7 +91,7 @@ PacketID (1 byte) + Slot (1 byte)
 - Handler: `TaskSpellInfo`
 - Dependencias: `SpellbookRepository`, `SpellCatalog`
 - Respuesta: `ConsoleMsg` multilínea con nombre, descripción, skill requerido, maná y energía
-- Validación previa: `PacketValidator.validate_spell_info_packet()`
+- Validación previa: `validator.validate_packet_by_id(ClientPacketID.SPELL_INFO)`
 
 ---
 

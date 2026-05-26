@@ -531,7 +531,8 @@ El servidor implementa un **sistema de validación en dos capas** (defensa en pr
 **Ejemplo de uso:**
 ```python
 # En TaskFactory.create_task()
-validation_result = validator.validate_walk_packet()
+validation_result = validator.validate_packet_by_id(ClientPacketID.WALK)
+assert validation_result is not None
 validation_result.log_validation("WALK", 6, "127.0.0.1:12345")
 
 if not validation_result.success:

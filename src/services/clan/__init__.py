@@ -1,4 +1,4 @@
-"""Backward-compatible re-export of ClanService."""
+"""Clan service package."""
 
 from src.services.clan.clan_service import ClanService
 
