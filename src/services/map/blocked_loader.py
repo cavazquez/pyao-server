@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
+
+from src.services.map.ndjson_reader import iter_ndjson_entries
 
 logger = logging.getLogger(__name__)
 
@@ -20,44 +21,26 @@ def process_blocked_file(
     if not blocked_path.exists():
         return
 
-    with blocked_path.open(encoding="utf-8") as f:
-        for line_number, raw_line in enumerate(f, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                logger.debug(
-                    "Entrada inválida en %s línea %d: %s",
-                    blocked_path.name,
-                    line_number,
-                    line,
-                )
-                continue
+    for _line_number, entry in iter_ndjson_entries(blocked_path, log=logger):
+        map_id = entry.get("m")
+        if not isinstance(map_id, int):
+            continue
 
-            if not isinstance(entry, dict):
-                continue
+        tile_type = entry.get("t")
+        x = entry.get("x")
+        y = entry.get("y")
 
-            map_id = entry.get("m")
-            if not isinstance(map_id, int):
-                continue
+        if not isinstance(x, int) or not isinstance(y, int):
+            continue
 
-            tile_type = entry.get("t")
-            x = entry.get("x")
-            y = entry.get("y")
-
-            if not isinstance(x, int) or not isinstance(y, int):
-                continue
-
-            if tile_type == "b":  # blocked
-                blocked_by_map.setdefault(map_id, set()).add((x, y))
-            elif tile_type == "w":  # water
-                water_by_map.setdefault(map_id, set()).add((x, y))
-                blocked_by_map.setdefault(map_id, set()).add((x, y))
-            elif tile_type == "t":  # tree
-                trees_by_map.setdefault(map_id, set()).add((x, y))
-                blocked_by_map.setdefault(map_id, set()).add((x, y))
-            elif tile_type == "m":  # mine
-                mines_by_map.setdefault(map_id, set()).add((x, y))
-                blocked_by_map.setdefault(map_id, set()).add((x, y))
+        if tile_type == "b":  # blocked
+            blocked_by_map.setdefault(map_id, set()).add((x, y))
+        elif tile_type == "w":  # water
+            water_by_map.setdefault(map_id, set()).add((x, y))
+            blocked_by_map.setdefault(map_id, set()).add((x, y))
+        elif tile_type == "t":  # tree
+            trees_by_map.setdefault(map_id, set()).add((x, y))
+            blocked_by_map.setdefault(map_id, set()).add((x, y))
+        elif tile_type == "m":  # mine
+            mines_by_map.setdefault(map_id, set()).add((x, y))
+            blocked_by_map.setdefault(map_id, set()).add((x, y))

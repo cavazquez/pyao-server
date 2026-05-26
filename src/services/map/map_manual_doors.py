@@ -7,6 +7,8 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from src.services.map.map_resource_queries import map_key
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
@@ -40,11 +42,11 @@ def load_manual_doors(
                 log.warning("Puerta con datos incompletos: %s", door)
                 continue
 
-            map_key = f"map_{map_id}"
-            if map_key not in doors:
-                doors[map_key] = {}
+            mk = map_key(map_id)
+            if mk not in doors:
+                doors[mk] = {}
 
-            doors[map_key][x, y] = grh_index
+            doors[mk][x, y] = grh_index
             door_count += 1
 
             is_open = door.get("is_open", False)

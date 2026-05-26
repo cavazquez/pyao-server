@@ -146,7 +146,7 @@
 *(Renumera y revisión 2026-02: alinear con el árbol actual `src/`)*
 
 **Archivos donde aún tiene sentido invertir tiempo:**
-- [ ] `src/services/map/map_resources_service.py` (~1100 líneas) — sigue siendo el archivo más grande y cohesionado por dominio; el mejor candidato a partir por recurso o sub-servicios.
+- [x] `src/services/map/map_resources_service.py` — modularizado (bulk/single loaders, cache, queries, ndjson_reader; servicio ~140 líneas).
 - [ ] `src/network/packet_validator.py` (~860 líneas) — ya hay extracción parcial en `src/network/validators/` (auth, bank, commerce, movement, etc.); queda delgazar la fachada si aún duplica lógica o molesta en revisiones.
 
 **Reubicado / ya abordado en el código (no repetir el mismo “TODO”):**

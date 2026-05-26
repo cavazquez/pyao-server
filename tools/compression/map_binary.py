@@ -11,10 +11,14 @@ import json
 import logging
 import sys
 import time
+from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 
 import msgpack
+
+from src.services.map.blocked_loader import process_blocked_file
+from src.services.map.objects_loader import process_objects_file
 
 logger = logging.getLogger(__name__)
 
@@ -39,67 +43,78 @@ def convert_json_to_binary(  # noqa: PLR0914
     map_binary_dir.mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
-    # Estructuras para acumular datos
-    all_blocked: dict[int, list[tuple[int, int]]] = {}
-    all_water: dict[int, list[tuple[int, int]]] = {}
-    all_trees: dict[int, list[tuple[int, int]]] = {}
-    all_mines: dict[int, list[tuple[int, int]]] = {}
-    all_anvils: dict[int, list[tuple[int, int]]] = {}
-    all_forges: dict[int, list[tuple[int, int]]] = {}
-    all_signs: dict[int, list[tuple[int, int, int]]] = {}  # (x, y, grh)
-    all_doors: dict[int, list[tuple[int, int, int]]] = {}  # (x, y, grh)
-    all_objects: dict[int, list[dict]] = {}
+    blocked_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    water_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    anvils_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    forges_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
+    doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
+    generic_objects_by_map: dict[int, list[dict]] = {}
     all_transitions: dict[int, list[dict]] = {}
 
-    # Procesar archivos blocked_*.json
     blocked_files = sorted(map_data_dir.glob("blocked_*.json"))
     for blocked_path in blocked_files:
         logger.info("Procesando %s...", blocked_path.name)
-        _process_blocked_file(
-            blocked_path, all_blocked, all_water, all_trees, all_mines
+        process_blocked_file(
+            blocked_path,
+            blocked_by_map,
+            water_by_map,
+            trees_by_map,
+            mines_by_map,
         )
 
-    # Procesar archivos objects_*.json
     objects_files = sorted(map_data_dir.glob("objects_*.json"))
     for objects_path in objects_files:
         logger.info("Procesando %s...", objects_path.name)
-        _process_objects_file(
-            objects_path, all_trees, all_mines, all_blocked,
-            all_signs, all_doors, all_water, all_anvils, all_forges, all_objects
+        process_objects_file(
+            objects_path,
+            trees_by_map,
+            mines_by_map,
+            blocked_by_map,
+            signs_by_map,
+            doors_by_map,
+            water_by_map,
+            anvils_by_map,
+            forges_by_map,
+            generic_objects_by_map=generic_objects_by_map,
         )
 
-    # Procesar archivos transitions_*.json
     transitions_files = sorted(map_data_dir.glob("transitions_*.json"))
     for transitions_path in transitions_files:
         logger.info("Procesando %s...", transitions_path.name)
         _process_transitions_file(transitions_path, all_transitions)
 
-    # Construir payload binario
     payload = {
         "version": BINARY_VERSION,
-        "blocked": {str(k): list(v) for k, v in all_blocked.items()},
-        "water": {str(k): list(v) for k, v in all_water.items()},
-        "trees": {str(k): list(v) for k, v in all_trees.items()},
-        "mines": {str(k): list(v) for k, v in all_mines.items()},
-        "anvils": {str(k): list(v) for k, v in all_anvils.items()},
-        "forges": {str(k): list(v) for k, v in all_forges.items()},
-        "signs": {str(k): v for k, v in all_signs.items()},
-        "doors": {str(k): v for k, v in all_doors.items()},
-        "objects": {str(k): v for k, v in all_objects.items()},
+        "blocked": {str(k): list(v) for k, v in blocked_by_map.items()},
+        "water": {str(k): list(v) for k, v in water_by_map.items()},
+        "trees": {str(k): list(v) for k, v in trees_by_map.items()},
+        "mines": {str(k): list(v) for k, v in mines_by_map.items()},
+        "anvils": {str(k): list(v) for k, v in anvils_by_map.items()},
+        "forges": {str(k): list(v) for k, v in forges_by_map.items()},
+        "signs": {
+            str(map_id): [[x, y, grh] for (x, y), grh in signs.items()]
+            for map_id, signs in signs_by_map.items()
+        },
+        "doors": {
+            str(map_id): [[x, y, grh] for (x, y), grh in doors.items()]
+            for map_id, doors in doors_by_map.items()
+        },
+        "objects": {str(k): v for k, v in generic_objects_by_map.items()},
         "transitions": {str(k): v for k, v in all_transitions.items()},
     }
 
-    # Guardar como MessagePack
     output_file = map_binary_dir / "maps.msgpack"
     with output_file.open("wb") as f:
         msgpack.pack(payload, f, use_bin_type=True)
 
-    # Guardar metadata
     metadata = {
         "version": BINARY_VERSION,
         "created_at": time.time(),
         "source_dir": str(map_data_dir),
-        "map_count": len(set(all_blocked.keys()) | set(all_water.keys())),
+        "map_count": len(set(blocked_by_map.keys()) | set(water_by_map.keys())),
     }
     metadata_file = map_binary_dir / "metadata.json"
     with metadata_file.open("w") as f:
@@ -113,142 +128,6 @@ def convert_json_to_binary(  # noqa: PLR0914
         elapsed, output_file, file_size
     )
     return True
-
-
-def _process_blocked_file(
-    blocked_path: Path,
-    all_blocked: dict[int, list[tuple[int, int]]],
-    all_water: dict[int, list[tuple[int, int]]],
-    all_trees: dict[int, list[tuple[int, int]]],
-    all_mines: dict[int, list[tuple[int, int]]],
-) -> None:
-    """Procesa un archivo blocked_*.json."""
-    with blocked_path.open(encoding="utf-8") as f:
-        for raw_line in f:
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-
-            map_id = entry.get("m")
-            if not isinstance(map_id, int):
-                continue
-
-            tile_type = entry.get("t")
-            x = entry.get("x")
-            y = entry.get("y")
-
-            if not isinstance(x, int) or not isinstance(y, int):
-                continue
-
-            if map_id not in all_blocked:
-                all_blocked[map_id] = []
-
-            coord = (x, y)
-
-            if tile_type == "b":
-                all_blocked[map_id].append(coord)
-            elif tile_type == "w":
-                if map_id not in all_water:
-                    all_water[map_id] = []
-                all_water[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "t":
-                if map_id not in all_trees:
-                    all_trees[map_id] = []
-                all_trees[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "m":
-                if map_id not in all_mines:
-                    all_mines[map_id] = []
-                all_mines[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-
-
-def _process_objects_file(  # noqa: PLR0915
-    objects_path: Path,
-    all_trees: dict[int, list[tuple[int, int]]],
-    all_mines: dict[int, list[tuple[int, int]]],
-    all_blocked: dict[int, list[tuple[int, int]]],
-    all_signs: dict[int, list[tuple[int, int, int]]],
-    all_doors: dict[int, list[tuple[int, int, int]]],
-    all_water: dict[int, list[tuple[int, int]]],
-    all_anvils: dict[int, list[tuple[int, int]]],
-    all_forges: dict[int, list[tuple[int, int]]],
-    all_objects: dict[int, list[dict]],
-) -> None:
-    """Procesa un archivo objects_*.json."""
-    with objects_path.open(encoding="utf-8") as f:
-        for raw_line in f:
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-
-            map_id = entry.get("m")
-            if not isinstance(map_id, int):
-                continue
-
-            tile_type = entry.get("t")
-            x = entry.get("x")
-            y = entry.get("y")
-
-            if not isinstance(x, int) or not isinstance(y, int):
-                continue
-
-            coord = (x, y)
-
-            # Inicializar listas si no existen
-            if map_id not in all_blocked:
-                all_blocked[map_id] = []
-
-            if tile_type == "tree":
-                if map_id not in all_trees:
-                    all_trees[map_id] = []
-                all_trees[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "mine":
-                if map_id not in all_mines:
-                    all_mines[map_id] = []
-                all_mines[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "anvil":
-                if map_id not in all_anvils:
-                    all_anvils[map_id] = []
-                all_anvils[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "forge":
-                if map_id not in all_forges:
-                    all_forges[map_id] = []
-                all_forges[map_id].append(coord)
-                all_blocked[map_id].append(coord)
-            elif tile_type == "water":
-                if map_id not in all_water:
-                    all_water[map_id] = []
-                all_water[map_id].append(coord)
-            elif tile_type == "sign":
-                grh = entry.get("g")
-                if isinstance(grh, int):
-                    if map_id not in all_signs:
-                        all_signs[map_id] = []
-                    all_signs[map_id].append((x, y, grh))
-            elif tile_type == "door":
-                grh = entry.get("g")
-                if isinstance(grh, int):
-                    if map_id not in all_doors:
-                        all_doors[map_id] = []
-                    all_doors[map_id].append((x, y, grh))
-            else:
-                # Guardar objetos genéricos
-                if map_id not in all_objects:
-                    all_objects[map_id] = []
-                all_objects[map_id].append(entry)
 
 
 def _process_transitions_file(
@@ -315,7 +194,6 @@ def check_binary_needs_rebuild(
 
     binary_created = metadata.get("created_at", 0)
 
-    # Verificar si algún archivo JSON es más nuevo
     for pattern in ["blocked_*.json", "objects_*.json", "transitions_*.json"]:
         for json_file in map_data_dir.glob(pattern):
             if json_file.stat().st_mtime > binary_created:
@@ -383,7 +261,6 @@ def cmd_status(args: argparse.Namespace) -> int:
         print("\n  Ejecuta: uv run python -m tools.compression.map_binary convert\n")
         return 1
 
-    # Mostrar info
     size_mb = binary_file.stat().st_size / 1024 / 1024
     print(f"  Archivo: {binary_file}")
     print(f"  Tamano:  {size_mb:.2f} MB")

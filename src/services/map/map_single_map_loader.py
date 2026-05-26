@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from pathlib import Path
+
+from src.services.map.ndjson_reader import iter_ndjson_entries
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ def find_file_for_map(maps_dir: Path, pattern: str, map_id: int) -> Path | None:
     return None
 
 
-def process_blocked_file(
+def parse_blocked_for_map(
     blocked_path: Path | None, map_id: int
 ) -> tuple[
     set[tuple[int, int]],
@@ -42,48 +43,33 @@ def process_blocked_file(
     if not blocked_path or not blocked_path.exists():
         return blocked, water, trees, mines
 
-    with blocked_path.open(encoding="utf-8") as f:
-        for line_number, raw_line in enumerate(f, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                logger.debug(
-                    "Entrada inválida en %s línea %d: %s",
-                    blocked_path.name,
-                    line_number,
-                    line,
-                )
-                continue
+    for _line_number, entry in iter_ndjson_entries(blocked_path, log=logger):
+        if entry.get("m") != map_id:
+            continue
 
-            if entry.get("m") != map_id:
-                continue
+        tile_type = entry.get("t")
+        x = entry.get("x")
+        y = entry.get("y")
 
-            tile_type = entry.get("t")
-            x = entry.get("x")
-            y = entry.get("y")
+        if not isinstance(x, int) or not isinstance(y, int):
+            continue
 
-            if not isinstance(x, int) or not isinstance(y, int):
-                continue
-
-            if tile_type == "b":
-                blocked.add((x, y))
-            elif tile_type == "w":
-                water.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "t":
-                trees.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "m":
-                mines.add((x, y))
-                blocked.add((x, y))
+        if tile_type == "b":
+            blocked.add((x, y))
+        elif tile_type == "w":
+            water.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "t":
+            trees.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "m":
+            mines.add((x, y))
+            blocked.add((x, y))
 
     return blocked, water, trees, mines
 
 
-def process_objects_file(
+def parse_objects_for_map(
     objects_path: Path | None,
     map_id: int,
     trees: set[tuple[int, int]],
@@ -97,51 +83,33 @@ def process_objects_file(
     if not objects_path or not objects_path.exists():
         return
 
-    with objects_path.open(encoding="utf-8") as f:
-        for line_number, raw_line in enumerate(f, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                logger.debug(
-                    "Entrada inválida en %s línea %d: %s",
-                    objects_path.name,
-                    line_number,
-                    line,
-                )
-                continue
+    for _line_number, entry in iter_ndjson_entries(objects_path, log=logger):
+        if entry.get("m") != map_id:
+            continue
 
-            if not isinstance(entry, dict):
-                continue
+        tile_type = entry.get("t")
+        x = entry.get("x")
+        y = entry.get("y")
 
-            if entry.get("m") != map_id:
-                continue
+        if not isinstance(x, int) or not isinstance(y, int):
+            continue
 
-            tile_type = entry.get("t")
-            x = entry.get("x")
-            y = entry.get("y")
-
-            if not isinstance(x, int) or not isinstance(y, int):
-                continue
-
-            if tile_type == "tree":
-                trees.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "mine":
-                mines.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "anvil":
-                anvils.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "forge":
-                forges.add((x, y))
-                blocked.add((x, y))
-            elif tile_type == "water":
-                water.add((x, y))
-            elif tile_type == "sign":
-                pass
+        if tile_type == "tree":
+            trees.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "mine":
+            mines.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "anvil":
+            anvils.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "forge":
+            forges.add((x, y))
+            blocked.add((x, y))
+        elif tile_type == "water":
+            water.add((x, y))
+        elif tile_type == "sign":
+            pass
 
 
 def load_signs_from_objects(objects_path: Path | None, map_id: int) -> dict[tuple[int, int], int]:
@@ -151,37 +119,19 @@ def load_signs_from_objects(objects_path: Path | None, map_id: int) -> dict[tupl
     if not objects_path or not objects_path.exists():
         return signs_dict
 
-    with objects_path.open(encoding="utf-8") as f:
-        for line_number, raw_line in enumerate(f, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                logger.debug(
-                    "Entrada inválida en %s línea %d: %s",
-                    objects_path.name,
-                    line_number,
-                    line,
-                )
-                continue
+    for _line_number, entry in iter_ndjson_entries(objects_path, log=logger):
+        if entry.get("m") != map_id:
+            continue
 
-            if not isinstance(entry, dict):
-                continue
+        if entry.get("t") != "sign":
+            continue
 
-            if entry.get("m") != map_id:
-                continue
+        x = entry.get("x")
+        y = entry.get("y")
+        grh = entry.get("g")
 
-            if entry.get("t") != "sign":
-                continue
-
-            x = entry.get("x")
-            y = entry.get("y")
-            grh = entry.get("g")
-
-            if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
-                signs_dict[x, y] = grh
+        if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
+            signs_dict[x, y] = grh
 
     return signs_dict
 
@@ -193,37 +143,19 @@ def load_doors_from_objects(objects_path: Path | None, map_id: int) -> dict[tupl
     if not objects_path or not objects_path.exists():
         return doors_dict
 
-    with objects_path.open(encoding="utf-8") as f:
-        for line_number, raw_line in enumerate(f, start=1):
-            line = raw_line.strip()
-            if not line:
-                continue
-            try:
-                entry = json.loads(line)
-            except json.JSONDecodeError:
-                logger.debug(
-                    "Entrada inválida en %s línea %d: %s",
-                    objects_path.name,
-                    line_number,
-                    line,
-                )
-                continue
+    for _line_number, entry in iter_ndjson_entries(objects_path, log=logger):
+        if entry.get("m") != map_id:
+            continue
 
-            if not isinstance(entry, dict):
-                continue
+        if entry.get("t") != "door":
+            continue
 
-            if entry.get("m") != map_id:
-                continue
+        x = entry.get("x")
+        y = entry.get("y")
+        grh = entry.get("g")
 
-            if entry.get("t") != "door":
-                continue
-
-            x = entry.get("x")
-            y = entry.get("y")
-            grh = entry.get("g")
-
-            if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
-                doors_dict[x, y] = grh
+        if isinstance(x, int) and isinstance(y, int) and isinstance(grh, int):
+            doors_dict[x, y] = grh
 
     return doors_dict
 
@@ -237,7 +169,7 @@ def load_single_map_into(
     *,
     log: logging.Logger,
 ) -> None:
-    """Carga un mapa en los dicts destino (misma semántica que ``MapResourcesService._load_map``)."""
+    """Carga un mapa en los dicts destino."""
     map_key = f"map_{map_id}"
 
     blocked_path = find_file_for_map(maps_dir, "blocked_*.json", map_id)
@@ -248,12 +180,12 @@ def load_single_map_into(
         return
 
     try:
-        blocked, water, trees, mines = process_blocked_file(blocked_path, map_id)
+        blocked, water, trees, mines = parse_blocked_for_map(blocked_path, map_id)
 
         anvils: set[tuple[int, int]] = set()
         forges: set[tuple[int, int]] = set()
 
-        process_objects_file(
+        parse_objects_for_map(
             objects_path,
             map_id,
             trees,
@@ -279,6 +211,8 @@ def load_single_map_into(
             "water": water,
             "trees": trees,
             "mines": mines,
+            "anvils": anvils,
+            "forges": forges,
         }
 
         signs_dict = load_signs_from_objects(objects_path, map_id)

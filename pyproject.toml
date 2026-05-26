@@ -192,9 +192,12 @@ filterwarnings = [
     "D103",
     "DOC201",
 ]
+"src/services/map/ndjson_reader.py" = [
+    "D103",
+    "DOC201",
+]
 "src/services/map/map_single_map_loader.py" = [
     "DOC201",
-    "E501",  # docstring de referencia a _load_map
 ]
 "src/utils/redis_client.py" = [
     "DOC201",  # wrapper methods delegan a Redis

@@ -427,17 +427,11 @@ Los siguientes handlers ya fueron creados como parte de refactorizaciones anteri
 
 ## 📋 Otros Archivos Grandes Pendientes
 
-### 1. `map_resources_service.py` (1094 líneas)
+### 1. `map_resources_service.py` — modularizado (2026-05)
 
-**Problema:** Muy grande, múltiples responsabilidades  
-**Solución propuesta:** Dividir en:
-- `map_resources_loader.py` - Carga de datos
-- `map_resources_cache.py` - Sistema de caché
-- `map_resources_validator.py` - Validación
+**Estado:** Completado. Submódulos en `src/services/map/` (`map_bulk_resources_loader`, `map_single_map_loader`, `map_resource_queries`, `cache`, `blocked_loader`, `objects_loader`, `ndjson_reader`, etc.). El servicio principal expone solo API pública y ciclo de vida.
 
-**Esfuerzo:** Alto (4-6 horas)  
-**Beneficio:** Alto  
-**Prioridad:** 🟡 Media
+**Prioridad:** Completado
 
 ---
 

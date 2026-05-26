@@ -101,15 +101,19 @@ Agregar métodos helper a `PlayerRepository`:
 
 **Archivos candidatos (>600 líneas):**
 
-#### 3.1 `map_resources_service.py` (1094 líneas)
-**Problema:** Muy grande, múltiples responsabilidades  
-**Solución:** Dividir en:
-- `map_resources_loader.py` - Carga de datos
-- `map_resources_cache.py` - Sistema de caché
-- `map_resources_validator.py` - Validación
+#### 3.1 `map_resources_service.py` — modularizado (2026-05)
+**Estado:** Completado parcialmente. El monolito (~1100 líneas) se dividió en submódulos bajo `src/services/map/`:
+- `map_bulk_resources_loader.py` — carga masiva NDJSON
+- `map_single_map_loader.py` — carga por mapa (`parse_blocked_for_map`, `parse_objects_for_map`)
+- `map_resource_queries.py` — consultas puras
+- `cache.py` / `binary_cache.py` — caché JSON y MessagePack
+- `blocked_loader.py` / `objects_loader.py` / `ndjson_reader.py` — parsing compartido
+- `map_manual_doors.py` — puertas TOML
 
-**Esfuerzo:** Alto (4-6 horas)  
-**Beneficio:** Alto
+`MapResourcesService` (~140 líneas) conserva solo ciclo de vida y API pública.
+
+**Esfuerzo restante:** Bajo (transiciones/pathfinding si se desea el mismo patrón)  
+**Beneficio:** Alto (ya obtenido en mantenibilidad)
 
 #### 3.2 `player_repository.py` (1013 líneas)
 **Problema:** Muchos métodos, podría dividirse por dominio  
@@ -309,7 +313,7 @@ Los siguientes handlers son grandes pero aún no han sido refactorizados:
 
 ### Otros archivos grandes pendientes
 
-1. **`map_resources_service.py`** (1094 líneas) - Ver sección 3.1
+1. **`map_resources_service.py`** — Ver sección 3.1 (modularizado en submódulos `src/services/map/`)
 2. **`player_repository.py`** (1013 líneas) - Ver sección 3.2
 3. **`clan_service.py`** (882 líneas) - Ver sección 3.3
 4. **`party_service.py`** (726 líneas) - Ver sección 3.7

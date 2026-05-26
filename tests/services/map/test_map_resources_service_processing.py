@@ -10,10 +10,9 @@ import pytest
 from src.services.map.blocked_loader import process_blocked_file
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.map_single_map_loader import (
-    process_blocked_file as process_blocked_file_single_map,
-)
-from src.services.map.map_single_map_loader import (
-    process_objects_file as process_objects_file_single_map,
+    find_file_for_map,
+    parse_blocked_for_map,
+    parse_objects_for_map,
 )
 from src.services.map.objects_loader import process_objects_file
 
@@ -330,41 +329,38 @@ class TestProcessObjectsFilePerFile:
 
 
 class TestFindFileForMap:
-    """Tests para _find_file_for_map."""
+    """Tests para find_file_for_map."""
 
     def test_find_file_for_map_found(self, temp_map_dir):
         """Test encontrar archivo para un mapa."""
-        service = MapResourcesService(maps_dir=temp_map_dir)
         blocked_file = temp_map_dir / "blocked_1-50.json"
         blocked_file.write_text("[]")
 
-        found = service._find_file_for_map("blocked_*.json", 25)
+        found = find_file_for_map(temp_map_dir, "blocked_*.json", 25)
 
         assert found == blocked_file
 
     def test_find_file_for_map_not_found(self, temp_map_dir):
         """Test no encontrar archivo para un mapa fuera de rango."""
-        service = MapResourcesService(maps_dir=temp_map_dir)
         blocked_file = temp_map_dir / "blocked_1-50.json"
         blocked_file.write_text("[]")
 
-        found = service._find_file_for_map("blocked_*.json", 999)
+        found = find_file_for_map(temp_map_dir, "blocked_*.json", 999)
 
         assert found is None
 
     def test_find_file_for_map_invalid_filename(self, temp_map_dir):
         """Test con nombre de archivo inválido."""
-        service = MapResourcesService(maps_dir=temp_map_dir)
         blocked_file = temp_map_dir / "blocked_invalid.json"
         blocked_file.write_text("[]")
 
-        found = service._find_file_for_map("blocked_*.json", 1)
+        found = find_file_for_map(temp_map_dir, "blocked_*.json", 1)
 
         assert found is None
 
 
-class TestProcessBlockedFile:
-    """Tests para _process_blocked_file."""
+class TestParseBlockedForMap:
+    """Tests para parse_blocked_for_map."""
 
     def test_process_blocked_file_valid(self, temp_map_dir):
         """Test procesamiento de archivo blocked válido."""
@@ -374,7 +370,7 @@ class TestProcessBlockedFile:
             f.write(json.dumps({"m": 1, "t": "w", "x": 5, "y": 5}) + "\n")
             f.write(json.dumps({"m": 2, "t": "b", "x": 15, "y": 25}) + "\n")  # Mapa diferente
 
-        blocked, water, _trees, _mines = process_blocked_file_single_map(blocked_path, 1)
+        blocked, water, _trees, _mines = parse_blocked_for_map(blocked_path, 1)
 
         assert (10, 20) in blocked
         assert (5, 5) in water
@@ -383,7 +379,7 @@ class TestProcessBlockedFile:
 
     def test_process_blocked_file_nonexistent(self):
         """Test procesamiento con archivo inexistente."""
-        blocked, water, trees, mines = process_blocked_file_single_map(None, 1)
+        blocked, water, trees, mines = parse_blocked_for_map(None, 1)
 
         assert len(blocked) == 0
         assert len(water) == 0
@@ -391,8 +387,8 @@ class TestProcessBlockedFile:
         assert len(mines) == 0
 
 
-class TestProcessObjectsFile:
-    """Tests para _process_objects_file."""
+class TestParseObjectsForMap:
+    """Tests para parse_objects_for_map."""
 
     def test_process_objects_file_valid(self, temp_map_dir):
         """Test procesamiento de archivo objects válido."""
@@ -409,9 +405,7 @@ class TestProcessObjectsFile:
         anvils: set[tuple[int, int]] = set()
         forges: set[tuple[int, int]] = set()
 
-        process_objects_file_single_map(
-            objects_path, 1, trees, mines, blocked, water, anvils, forges
-        )
+        parse_objects_for_map(objects_path, 1, trees, mines, blocked, water, anvils, forges)
 
         assert (30, 30) in trees
         assert (50, 50) in anvils
@@ -428,7 +422,7 @@ class TestProcessObjectsFile:
         anvils: set[tuple[int, int]] = set()
         forges: set[tuple[int, int]] = set()
 
-        process_objects_file_single_map(None, 1, trees, mines, blocked, water, anvils, forges)
+        parse_objects_for_map(None, 1, trees, mines, blocked, water, anvils, forges)
 
         assert len(trees) == 0
         assert len(anvils) == 0
@@ -436,6 +430,22 @@ class TestProcessObjectsFile:
 
 class TestLoadMap:
     """Tests para _load_map."""
+
+    def test_load_map_includes_anvils_and_forges(self, temp_map_dir):
+        """Test que _load_map persiste anvils y forges en resources."""
+        service = MapResourcesService(maps_dir=temp_map_dir)
+
+        objects_file = temp_map_dir / "objects_1-50.json"
+        with objects_file.open("w", encoding="utf-8") as f:
+            f.write(json.dumps({"m": 1, "t": "anvil", "x": 40, "y": 40}) + "\n")
+            f.write(json.dumps({"m": 1, "t": "forge", "x": 50, "y": 50}) + "\n")
+
+        service._load_map(1)
+
+        assert service.has_anvil(1, 40, 40)
+        assert service.has_forge(1, 50, 50)
+        assert (40, 40) in service.resources["map_1"]["anvils"]
+        assert (50, 50) in service.resources["map_1"]["forges"]
 
     def test_load_map_with_both_files(self, temp_map_dir):
         """Test carga de mapa con ambos archivos."""

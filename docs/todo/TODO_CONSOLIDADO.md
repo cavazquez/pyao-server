@@ -291,7 +291,7 @@
 
 **Áreas habituales a revisar** (priorizar según el último reporte, no esta lista fija):
 - [ ] Tasks de combate / inventario de alto uso
-- [ ] Servicios de mapa (`map_resources_service`, transiciones, pathfinding)
+- [x] Servicios de mapa — `map_resources_service` modularizado; pendiente ampliar cobertura en transiciones/pathfinding según último reporte
 - [ ] `map_manager` y broadcast
 
 **Referencia:** `TODO_POST_REORGANIZACION.md`

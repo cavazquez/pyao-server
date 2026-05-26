@@ -11,6 +11,7 @@ import pytest
 
 from src.services.map.blocked_loader import process_blocked_file
 from src.services.map.cache import (
+    MapCacheLoader,
     build_mtimes,
     is_cache_source_valid_lists,
     read_cache_file_strict,
@@ -19,14 +20,11 @@ from src.services.map.cache import (
 )
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.map_single_map_loader import (
+    find_file_for_map,
     load_doors_from_objects,
     load_signs_from_objects,
-)
-from src.services.map.map_single_map_loader import (
-    process_blocked_file as process_blocked_file_single_map,
-)
-from src.services.map.map_single_map_loader import (
-    process_objects_file as process_objects_file_single_map,
+    parse_blocked_for_map,
+    parse_objects_for_map,
 )
 from src.services.map.objects_loader import process_objects_file
 
@@ -372,18 +370,14 @@ class TestMapResourcesService:
         )
 
     def test_find_file_for_map(self, temp_map_dir):
-        """Test _find_file_for_map."""
+        """Test find_file_for_map."""
         # Crear archivos con formato correcto (rango de mapas: blocked_XXX-YYY.json)
         (temp_map_dir / "blocked_1-50.json").write_text("{}")
         (temp_map_dir / "blocked_51-100.json").write_text("{}")
 
-        service = MapResourcesService(maps_dir=temp_map_dir)
-
-        # _find_file_for_map busca archivos que coincidan con el patrón y el map_id
-        # El formato esperado es blocked_XXX-YYY.json donde XXX-YYY es un rango
-        file1 = service._find_file_for_map("blocked_*.json", 1)  # Debe estar en 1-50
-        file2 = service._find_file_for_map("blocked_*.json", 75)  # Debe estar en 51-100
-        file3 = service._find_file_for_map("blocked_*.json", 999)  # No existe
+        file1 = find_file_for_map(temp_map_dir, "blocked_*.json", 1)
+        file2 = find_file_for_map(temp_map_dir, "blocked_*.json", 75)
+        file3 = find_file_for_map(temp_map_dir, "blocked_*.json", 999)
 
         assert file1 is not None
         assert "1-50" in str(file1)
@@ -402,7 +396,7 @@ class TestMapResourcesService:
             '{"m": 2, "t": "b", "x": 10, "y": 10}\n'  # Diferente mapa
         )
 
-        blocked, water, trees, mines = process_blocked_file_single_map(blocked_file, map_id=1)
+        blocked, water, trees, mines = parse_blocked_for_map(blocked_file, map_id=1)
 
         assert (10, 10) in blocked  # blocked
         assert (20, 20) in water  # water
@@ -418,7 +412,7 @@ class TestMapResourcesService:
         """Test _process_blocked_file con archivo que no existe."""
         missing_file = temp_map_dir / "missing.json"
 
-        blocked, water, trees, mines = process_blocked_file_single_map(missing_file, map_id=1)
+        blocked, water, trees, mines = parse_blocked_for_map(missing_file, map_id=1)
 
         assert len(blocked) == 0
         assert len(water) == 0
@@ -430,7 +424,7 @@ class TestMapResourcesService:
         blocked_file = temp_map_dir / "blocked_1-50.json"
         blocked_file.write_text("invalid json\n{'m': 1, 't': 'b', 'x': 10, 'y': 10}\n")
 
-        blocked, _water, _trees, _mines = process_blocked_file_single_map(blocked_file, map_id=1)
+        blocked, _water, _trees, _mines = parse_blocked_for_map(blocked_file, map_id=1)
 
         # Debe ignorar líneas inválidas
         assert len(blocked) == 0
@@ -454,7 +448,7 @@ class TestMapResourcesService:
         anvils = set()
         forges = set()
 
-        process_objects_file_single_map(
+        parse_objects_for_map(
             objects_file,
             map_id=1,
             trees=trees,
@@ -487,7 +481,7 @@ class TestMapResourcesService:
         anvils = set()
         forges = set()
 
-        process_objects_file_single_map(
+        parse_objects_for_map(
             missing_file,
             map_id=1,
             trees=trees,
@@ -706,7 +700,9 @@ class TestMapResourcesService:
         service.doors["map_1"] = {(70, 70): 5001}
 
         # Guardar caché
-        service._save_cache()
+        MapCacheLoader(temp_map_dir, service.cache_dir).save_cache(
+            service.resources, service.signs, service.doors
+        )
 
         # Verificar que se creó el archivo de caché
         cache_path = service.cache_dir / "map_resources_cache.json"
