@@ -1,8 +1,8 @@
 # Estado Actual del Proyecto - PyAO Server
 
-**Fecha:** 2025-12-04  
+**Fecha:** 2026-05-26  
 **Versión en pyproject.toml:** 0.9.4-alpha  
-**Versión real completada:** 0.9.4-alpha (Refactor Arquitectura)
+**Versión real completada:** 0.9.4-alpha (Refactor Arquitectura + modularización 2026-05)
 
 ---
 
@@ -46,246 +46,148 @@
 - ✅ Tests básicos del servicio
 
 ### Versión 0.9.1-alpha - Mejoras del Sistema de Clanes ✅ COMPLETADO
-**Estado:** Completado según `docs/systems/CLAN_SYSTEM.md`
-- ✅ Notificaciones completas para todos los eventos (unirse, abandonar, promover, degradar, transferir liderazgo)
+- ✅ Notificaciones completas para todos los eventos
 - ✅ Broadcast automático a todos los miembros del clan
-- ✅ Tests ampliados (11 → 24 tests, 100% pasando)
-- ✅ Documentación completa del sistema (`docs/systems/CLAN_SYSTEM.md`)
-- ✅ Casos de error y validaciones cubiertos
-- ✅ Tests de notificaciones implementados
+- ✅ Tests ampliados (11 → 24 tests)
+- ✅ Documentación completa (`docs/systems/CLAN_SYSTEM.md`)
 
 ### Versión 0.9.1-alpha - Sistema de Pociones ✅ COMPLETADO
-**Estado:** Sistema completo de pociones implementado
-- ✅ 6 tipos de pociones funcionando completamente:
-  - Poción Azul (ID 37): Restaura Mana (12-20 puntos)
-  - Poción Roja (ID 38): Restaura HP (30 puntos)
-  - Poción Verde (ID 39): Modifica Fuerza temporalmente
-  - Poción Amarilla (ID 36): Modifica Agilidad temporalmente
-  - Poción Violeta (ID 166): Cura envenenamiento
-  - Poción Negra (ID 645): Invisibilidad por 5 minutos
-- ✅ Modificadores temporales (Agilidad/Fuerza) con duración configurable
-- ✅ Restauración inmediata (HP/Mana) con valores aleatorios
-- ✅ Curación de estados (veneno)
-- ✅ Invisibilidad con broadcast multijugador (CHARACTER_REMOVE)
-- ✅ Integración completa con sistema de inventario
-- ✅ Consumo correcto de items (decremento de cantidad)
+- ✅ 6 tipos de pociones funcionando (HP, Mana, buffs, veneno, invisibilidad)
+- ✅ Modificadores temporales con duración configurable
+- ✅ Integración completa con inventario
 
 ### Versión 0.9.1-alpha - Mejoras de NPCs ✅ COMPLETADO
-**Estado:** Mejoras significativas en sistema de NPCs
-- ✅ Extracción de todos los NPCs desde mapas VB6 (1,604 NPCs en 99 mapas)
-- ✅ Scripts de extracción y limpieza de spawns duplicados
-- ✅ Corrección de procesamiento de random_spawns (se manejan dinámicamente)
-- ✅ Sistema de mascotas/invocación mejorado:
-  - Comando `/PET` completo (INFO, LIBERAR)
-  - Seguimiento automático de mascotas
-  - Limpieza automática al desconectar jugador
-- ✅ Mejora en manejo de spawns ocupados
+- ✅ Extracción de NPCs desde mapas VB6 (1,604 NPCs en 99 mapas)
+- ✅ Sistema de mascotas/invocación (`/PET`)
+- ✅ Scripts de extracción y limpieza de spawns
 
-### Versión 0.9.2-alpha - Random Spawns Dinámicos y Sonidos de NPCs ✅ COMPLETADO
-**Estado:** Sistema completo de spawns aleatorios y sonidos implementado
-- ✅ **Random Spawns Dinámicos**:
-  - Servicio `RandomSpawnService` para gestionar spawns aleatorios
-  - Spawnea NPCs cuando jugadores entran en áreas designadas
-  - Límite global por área (multijugador-safe)
-  - NPCs persisten hasta que mueren (sin despawn automático)
-  - Cooldowns de respawn configurables (default: 60 segundos)
-  - Verificación de tiles libres antes de spawn
-- ✅ **Sonidos de NPCs**:
-  - Sonidos de ataque (snd1) cuando NPC ataca
-  - Sonidos de daño (snd2) cuando NPC recibe daño
-  - Sonidos de muerte (snd3) cuando NPC muere
-  - Integrado con sistema de broadcast multijugador
-  - Soporte para múltiples NPCs con sonidos configurados
-- ✅ **Hechizo Mimetismo**:
-  - Transformación temporal de apariencia del jugador
-  - Cambia body_id y head_id temporalmente
-  - Duración configurable (default: 5 minutos)
-  - Efecto visible para todos los jugadores en el mapa
+### Versión 0.9.2-alpha - Random Spawns y Sonidos ✅ COMPLETADO
+- ✅ `RandomSpawnService` con límites multijugador y cooldowns
+- ✅ Sonidos de NPCs (ataque, daño, muerte)
+- ✅ Hechizo Mimetismo
 
 ### Versión 0.9.3-alpha - Refactor Stats y Tests ✅ COMPLETADO
-**Estado:** Refactoring de acceso a stats y ampliación de cobertura de tests
-- ✅ **Refactor acceso a stats**:
-  - Nuevos dataclasses `PlayerStats` y `PlayerAttributes` (inmutables, tipados)
-  - Métodos `get_player_stats()` y `get_player_attributes()` en PlayerRepository
-  - Helpers actualizados: `get_mana()`, `get_experience()`, etc.
-  - Migración gradual del código existente (patrón antiguo sigue funcionando)
-- ✅ **Ampliación de tests**:
-  - TaskCreateClan: 0% → 98% (8 tests)
-  - TaskLeaveClan: 33% → 100% (5 tests)
-  - TaskRequestClanDetails: 35% → 100% (5 tests)
-  - CastSpellCommandHandler: 14% → 100% (15 tests)
-  - Total: 33 nuevos tests
-- ✅ **Mejoras de herramientas**:
-  - scripts/checks.sh mejorado con opciones CLI (-q, -c, -f, -m, -p)
-  - Silenciado warning GIL de Python 3.13+ (msgpack)
-  - Documentación de mapas huérfanos para arenas PvP
+- ✅ Dataclasses `PlayerStats` y `PlayerAttributes`
+- ✅ Métodos tipados en `PlayerRepository`
+- ✅ Ampliación de tests (clan tasks, cast spell handler)
+- ✅ `scripts/checks.sh` con opciones CLI
 
 ### Versión 0.9.4-alpha - Refactor Arquitectura ✅ COMPLETADO
-**Estado:** Refactoring de archivos grandes usando patrones de diseño
-- ✅ **TaskFactory refactorizado** (Strategy + Registry Pattern):
-  - Nuevo `HandlerRegistry` con configuración declarativa
-  - Eliminados 51 métodos `_get_*_handler` repetitivos
-  - task_factory.py: 1811 → 621 líneas (-66%)
-  - handler_registry.py: 405 líneas (nuevo)
-  - **Total: -43% de código**
-- ✅ **SpellService refactorizado** (Strategy Pattern):
-  - Nuevo módulo `spell_effects/` con 8 clases de efectos
-  - `SpellContext`: contexto compartido inmutable
-  - `SpellEffectRegistry`: orquesta aplicación de efectos
-  - Efectos implementados: Heal, Damage, Poison, Paralysis, Blind, Dumb, Invisibility, Morph, Drain, Hunger, WarpPet, Summon, Buffs/Debuffs
-  - spell_service.py: 1410 → 357 líneas (-75%)
-  - **Beneficio: agregar nuevo efecto = 1 nueva clase**
+- ✅ `TaskFactory` → `HandlerRegistry` (-66%)
+- ✅ `SpellService` → `spell_effects/` (-75%)
+
+### Refactors adicionales (2026-05) ✅ COMPLETADO
+- ✅ **`stats.get()`:** 0 usos en `src/` (migración completa)
+- ✅ **`attributes.get()`:** migrado a helpers de `PlayerRepository`
+- ✅ **`map_resources_service.py`:** submódulos en `src/services/map/`
+- ✅ **`player_repository.py`:** mixins en `src/repositories/player_mixins/`
+- ✅ **`clan_service.py`:** mixins en `src/services/clan/`
+- ✅ **`packet_validator.py`:** fachada delgada (~274 líneas)
+- ✅ **`message_sender.py`:** commerce/navigate en `InventoryMessageSender`
+- ✅ **Documentación:** reorganización en subcarpetas (`guides/`, `systems/`, `development/`, etc.)
 
 ---
 
 ## 📋 Próximos Pasos (Según Prioridad)
 
-### 🔵 PENDIENTE - Refactoring de Archivos Grandes
-
-#### TODO: Continuar modularización
-*(Renumera y revisión 2026-02: alinear con el árbol actual `src/`)*
-
-**Archivos donde aún tiene sentido invertir tiempo:**
-- [x] `src/services/map/map_resources_service.py` — modularizado (bulk/single loaders, cache, queries, ndjson_reader; servicio ~140 líneas).
-- [ ] `src/network/packet_validator.py` (~860 líneas) — ya hay extracción parcial en `src/network/validators/` (auth, bank, commerce, movement, etc.); queda delgazar la fachada si aún duplica lógica o molesta en revisiones.
-
-**Reubicado / ya abordado en el código (no repetir el mismo “TODO”):**
-- `map_manager.py` — ya no es un monolito de ~1000 líneas: `MapManager` (~480 líneas) delega en `PlayerIndex`, `NpcIndex`, `GroundItemIndex`, `TileOccupation`, `SpatialIndexMixin`, etc. Refactor futuro aquí sería **afinado**, no “separar por primera vez”.
-- Inyección de dependencias en tasks — `DependencyContainer` + `TaskFactory` (introspección) + `packet_handlers.TASK_HANDLERS` como mapa id→clase ya cubren lo que `todo/TODO_ARQUITECTURA.md` §1 proponía como “service container”; ese documento es histórico en ese punto.
-
 ### 🔴 ALTA PRIORIDAD - Próxima Versión (0.10.0-alpha)
 
 #### Targeting por Click para Hechizos
-**Esfuerzo:** 1 semana  
-**Nota:** Servidor ya está preparado para recibir coordenadas
+**Esfuerzo:** ~1 semana  
+**Nota:** Servidor ya acepta coordenadas en `CAST_SPELL`; el trabajo principal es en el cliente Godot.
 
 **Features:**
-- [ ] Sistema de "click para seleccionar target" en hechizos
-- [ ] Cursor cambia visualmente al modo targeting
-- [ ] Cliente envía CAST_SPELL con coordenadas (x, y)
+- [ ] Click para seleccionar target en hechizos
+- [ ] Cursor visual en modo targeting
+- [ ] Cliente envía `CAST_SPELL` con coordenadas (x, y)
 - [ ] Validación de rango antes de lanzar
-- [ ] Se puede cancelar el targeting (ESC o click derecho)
+- [ ] Cancelar targeting (ESC o click derecho)
 
-**Archivos a modificar (cliente Godot):**
+**Archivos cliente Godot:**
 - `ui/hub/spell_list_panel.gd`
 - `screens/game_screen.gd`
 - `engine/autoload/game_protocol.gd`
 
 ---
 
-### 🟡 MEDIA PRIORIDAD - Sistema de Clanes - Features Avanzadas
+### 🟡 MEDIA PRIORIDAD - Refactoring restante
 
-#### Funcionalidades Futuras de Clanes
-**Estado:** Funcionalidades core completadas, features avanzadas pendientes
+Ver [`REFACTORING.md`](REFACTORING.md) para detalle.
 
-**Features pendientes:**
+- [ ] `party_service.py` (~707 líneas) — split por dominio
+- [ ] `npc_death_service.py` (~630 líneas) — death / exp / level up
+- [ ] `use_item_handler.py` — handlers especializados adicionales si crece
+
+**Ya completado (no repetir):**
+- [x] `packet_validator.py`, `map_resources_service`, `player_repository`, `clan_service`, `message_sender`
+- [x] `MapManager` ya delega en índices especializados (afinado futuro, no split inicial)
+
+---
+
+### 🟡 MEDIA PRIORIDAD - Clanes avanzados
+
 - [ ] Almacén/depósito del clan
-- [ ] Alianzas entre clanes (métodos en modelo, falta UI/comandos)
-- [ ] Guerras de clanes (métodos en modelo, falta UI/comandos)
+- [ ] Alianzas entre clanes
+- [ ] Guerras de clanes
 - [ ] Edificio del clan con NPCs
 
 ---
 
-### 🟡 MEDIA PRIORIDAD - Versión 0.11.0-alpha
+### 🟡 MEDIA PRIORIDAD - Calidad
 
-#### Hechizos Avanzados
-**Esfuerzo:** 3-4 semanas  
-**Dependencias:** Targeting por click (0.10.0) recomendado
-
-**Features:**
-- [ ] Sistema de escuelas de magia (Fuego, Agua, Tierra, Aire, Luz, Oscuridad)
-- [ ] Hechizos de área (AOE)
-- [ ] Hechizos con duración y efectos over time (DoT)
-- [ ] Sistema de runas y componentes
-- [ ] Hechizos de invocación
-- [ ] Protecciones y barreras mágicas
-- [ ] Libros de hechizos equipables
-
-**Referencia VB6:** `modHechizos.bas` (97KB)
-
----
-
-### 🟡 MEDIA PRIORIDAD - Mejoras de Calidad
-
-#### Detectar y Eliminar Antipatrón de Acceso a Stats
-**Estado:** ✅ Base completada (migración gradual pendiente)
-**Esfuerzo:** Bajo-Medio
-
-**Completado:**
-- [x] Creados `PlayerStats` y `PlayerAttributes` dataclasses
-- [x] Añadidos métodos `get_player_stats()` y `get_player_attributes()`
-- [x] Helpers actualizados para usar tipos
-- [x] Migrado `effect_poison.py` como ejemplo
-
-**Pendiente:**
-- [ ] Migrar gradualmente los ~165 usos restantes de `stats.get()`
-
----
-
-#### Ampliar Cobertura de Tests
-**Cobertura actual:** 75%  
+#### Cobertura de tests
 **Objetivo:** 80%+
 
-**Áreas con baja cobertura (pendientes):**
-- [ ] `services/commerce_service.py` - 13% (sistema crítico)
-- [ ] `bank_deposit_handler.py` - 16%
-- [ ] `bank_extract_handler.py` - 16%
+**Progreso reciente:**
+- [x] `tests/command_handlers/test_bank_item_handlers.py` — deposit/extract (éxito, vacío, rollback, inventario lleno)
+- [x] `tests/services/test_commerce_service.py` — suite existente amplia
+
+**Pendiente revisar:**
+- [ ] Ramas sin cubrir en `commerce_service.py` (ejecutar `pytest --cov=src/services/commerce_service.py`)
+
+#### Antipatrón stats/attributes
+- [x] `stats.get()` — 0 usos en `src/`
+- [x] `attributes.get()` — migrado (solo `.get()` residual en dict local de dados en `class_service.py`)
 
 ---
 
-### 🟢 BAJA PRIORIDAD - Mejoras Futuras
+### 🟢 BAJA PRIORIDAD
 
-#### Versiones Futuras (0.12.0 - 0.20.0)
-- 0.12.0-alpha - Sistema de Facciones
-- 0.13.0-alpha - Sistema de Quests
-- 0.14.0-alpha - Banco Avanzado
-- 0.15.0-alpha - Chat Mejorado
-- 0.16.0-alpha - Sistema Anti-cheat/Centinelas
-- 0.17.0-alpha - Estadísticas Avanzadas
-- 0.18.0-alpha - Sistema de Sonido por Mapa
-- 0.19.0-alpha - Foro/Noticias Interno
-- 0.20.0-alpha - Seguridad IP Avanzada
-
-#### Mejoras Arquitectónicas Opcionales
-- Service Container / Dependency Injection (prioridad baja)
-- Event Bus / Message Bus (prioridad baja)
-- Command Pattern para Tasks (prioridad media)
-- Repository Pattern Mejorado (prioridad baja)
-- Logging Estructurado (JSON) (prioridad baja)
+- Helper `send_update_user_stats_from_repo` en `MessageSender`
+- Reorganización de `tasks/` en subcarpetas (propuesta archivada)
+- Roadmap 0.11+ (hechizos avanzados, facciones, quests, etc.)
 
 ---
 
 ## 📊 Resumen de Estado
 
 ### Versiones
-- **Versión actual:** 0.9.4-alpha (completada) ✅
-- **Versión en pyproject.toml:** 0.9.4-alpha ✅
-- **Próxima versión:** 0.10.0-alpha (Targeting por Click para Hechizos)
+- **Versión actual:** 0.9.4-alpha ✅
+- **Próxima versión:** 0.10.0-alpha (Targeting por Click)
 
 ### Tests
-- **Total:** 2052 tests
-- **Pasando:** 2052 (100%) ✅
-- **Cobertura:** 75% (objetivo: 80%+)
+- **Total:** 2154 tests
+- **Pasando:** 100% ✅
+- **Cobertura:** ~75% (objetivo 80%+)
 
 ### Calidad
 - **Linting:** 0 errores ✅
-- **Type Checking:** 0 errores ✅
-- **Documentación:** 65+ documentos técnicos ✅
+- **Type checking:** 0 errores ✅
+- **Documentación:** reorganizada en `docs/` con índice en `docs/README.md`
 
 ### Observabilidad
-- Logs de login con mensajes destacados y colores por nivel (TTY) para diagnósticos rápidos.
-- Logs coloreados configurables: `LOG_COLOR=1` fuerza color; `NO_COLOR=1` lo desactiva.
+- Logs de login con mensajes destacados y colores por nivel (TTY)
+- `LOG_COLOR=1` fuerza color; `NO_COLOR=1` lo desactiva
 
 ---
 
 ## 🎯 Recomendación Inmediata
 
-1. **Comenzar v0.10.0-alpha** (Targeting por Click para Hechizos) - siguiente feature de alta prioridad
-2. **Continuar mejorando cobertura** - commerce_service, bank handlers
-3. **Features avanzadas de clanes** - Almacén, alianzas, guerras (opcional)
+1. **v0.10.0-alpha** — targeting por click (cliente Godot)
+2. **Cobertura** — medir gaps en `commerce_service` tras suite de banco
+3. **Refactor opcional** — `party_service` o `npc_death_service` si hay tiempo
 
 ---
 
-**Última actualización:** 2025-12-09  
-**Estado:** ✅ Versión 0.9.4-alpha completada (Refactors TaskFactory, SpellService, PacketValidator, MapResources, MapManager modularizado)
-
+**Última actualización:** 2026-05-26  
+**Estado:** ✅ 0.9.4-alpha + refactors mayo 2026 completados; docs al día

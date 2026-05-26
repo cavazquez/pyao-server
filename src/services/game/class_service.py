@@ -7,6 +7,8 @@ from src.models.character_class import CharacterClass, ClassCatalog
 
 logger = logging.getLogger(__name__)
 
+_ATTRIBUTE_NAMES = ("strength", "agility", "intelligence", "charisma", "constitution")
+
 
 class ClassService:
     """Servicio centralizado para manejar clases de personaje."""
@@ -89,10 +91,9 @@ class ClassService:
         base_attributes = self.get_base_attributes(class_id)
 
         final_attributes = {}
-        for stat in ["strength", "agility", "intelligence", "charisma", "constitution"]:
+        for stat in _ATTRIBUTE_NAMES:
             dice_value = dice_attributes.get(stat, 10)
-            base_value = base_attributes.get(stat, 10)
-            final_attributes[stat] = dice_value + base_value
+            final_attributes[stat] = dice_value + base_attributes[stat]
 
         return final_attributes
 

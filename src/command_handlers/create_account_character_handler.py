@@ -117,8 +117,8 @@ class CreateAccountCharacterHandler:
             final_attributes,
         )
 
-        constitution = final_attributes.get("constitution", 10)
-        intelligence = final_attributes.get("intelligence", 10)
+        constitution = final_attributes["constitution"]
+        intelligence = final_attributes["intelligence"]
         base_hp = constitution * HP_PER_CON
         max_hp = balance_service.calculate_max_health(base_hp, class_name)
         initial_stats: dict[str, int] = {
