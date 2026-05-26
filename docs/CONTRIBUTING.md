@@ -557,8 +557,8 @@ class TestCommerceService:
 
 ## 📚 Recursos Adicionales
 
-- **Arquitectura**: Ver [`ARCHITECTURE.md`](ARCHITECTURE.md) para diagramas y flujos
-- **Documentación de Servicios**: Ver [`SERVICES_ARCHITECTURE.md`](SERVICES_ARCHITECTURE.md)
+- **Arquitectura**: Ver [`architecture/ARCHITECTURE.md`](architecture/ARCHITECTURE.md) para diagramas y flujos
+- **Documentación de Servicios**: Ver [`architecture/SERVICES_ARCHITECTURE.md`](architecture/SERVICES_ARCHITECTURE.md)
 - **Roadmap**: Ver [`todo/ROADMAP_VERSIONES.md`](todo/ROADMAP_VERSIONES.md)
 - **TODOs**: Ver [`todo/TODO_CONSOLIDADO.md`](todo/TODO_CONSOLIDADO.md)
 

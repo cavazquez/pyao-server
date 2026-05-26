@@ -114,7 +114,7 @@ Los siguientes comandos no están implementados pero el servicio sí los soporta
 - ✅ Packet `CLAN_DETAILS` (packet 80) construido según protocolo VB6 (`build_clan_details_response`)
 - ✅ Métodos implementados: `send_clan_details()` en `MessageSender` y `SessionMessageSender`
 - ⚠️ **DESHABILITADO**: El envío del packet está comentado en `login_handler.py` hasta que el cliente implemente el handler
-- 📝 **NOTA**: Ver [`docs/CLAN_BUTTON.md`](CLAN_BUTTON.md). El código está listo para habilitar cuando el cliente tenga el handler
+- 📝 **NOTA**: Ver [`docs/systems/CLAN_SYSTEM.md`](systems/CLAN_SYSTEM.md). El código está listo para habilitar cuando el cliente tenga el handler
 
 #### Almacén del Clan
 - ❌ Sistema de depósito del clan
@@ -146,7 +146,7 @@ Los siguientes comandos no están implementados pero el servicio sí los soporta
 - ❌ Tests de alianzas y guerras
 
 ### Documentación Faltante
-- ❌ Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
+- ❌ Documentación completa del sistema (`docs/systems/CLAN_SYSTEM.md`)
 - ❌ Diagramas de flujo
 - ❌ Ejemplos de uso
 - ❌ Protocolo completo de packets
@@ -230,7 +230,7 @@ Los siguientes comandos no están implementados pero el servicio sí los soporta
 
 - **VB6 Original**: `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/modGuilds.bas`
 - **VB6 Original**: `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/clsClan.cls`
-- **Sistema Similar**: `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md` (parties como referencia)
+- **Sistema Similar**: `docs/systems/PARTY_SYSTEM.md` (parties como referencia)
 
 ---
 

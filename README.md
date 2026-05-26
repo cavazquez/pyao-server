@@ -68,7 +68,7 @@ redis-server
 
 **Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar usando `redis://redis:6379` desde el contenedor.
 
-Ver [docs/REDIS.md](docs/REDIS.md) para documentación completa de Redis.
+Ver [docs/guides/REDIS.md](docs/guides/REDIS.md) para documentación completa de Redis.
 
 ### Ejecutar el servidor
 
@@ -151,7 +151,7 @@ El servidor utiliza una **arquitectura modular** con patrones de diseño moderno
 - **Logs coloreados** - Usa `LOG_COLOR=1` para forzar color aun sin TTY; `NO_COLOR=1` para desactivar
 - **Índices especializados** - MapManager delega en PlayerIndex, NpcIndex, GroundItemIndex, TileOccupation, DoorState, ExitIndex
 
-Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de la arquitectura.
+Ver **[ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)** para documentación completa de la arquitectura.
 
 ### Estadísticas del Código
 
@@ -170,7 +170,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
   - `login_handler.py`: 510 → 192 líneas + 4 handlers especializados
   - `create_account_handler.py`: 502 → 200 líneas + 3 handlers especializados
   - `attack_handler.py`: 392 → 161 líneas + 3 handlers especializados
-  - Y 5 más... Ver [HANDLER_REFACTORING.md](docs/HANDLER_REFACTORING.md)
+  - Y 5 más... Ver [HANDLER_REFACTORING.md](docs/development/REFACTORING.md)
 - **PlayerRepository:** Helpers `_hget_float/_hget_int/_hget_bool/_hset_field` eliminan duplicación en 20+ métodos ✅ **REFACTORIZADO**
 - **Tests:** 2133 tests pasando (100%), cobertura 75%, ejecución paralela con `pytest-xdist` ✅
 - **Calidad:** 0 errores de linting, 0 errores de mypy, pre-commit hooks (ruff + mypy) ✅
@@ -186,7 +186,7 @@ Ver **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** para documentación completa de 
 - ✅ **Mensajes de error descriptivos** para debugging
 - ✅ **Corrección 2025-11-13:** Validación de EQUIP_ITEM exige ahora 2 bytes (PacketID + slot) para evitar falsos positivos de packets truncados
 
-Ver **[PACKET_VALIDATOR_MIGRATION.md](docs/PACKET_VALIDATOR_MIGRATION.md)** para documentación completa.
+Ver **[PACKET_VALIDATOR_MIGRATION.md](docs/archive/completed/PACKET_VALIDATOR_MIGRATION.md)** para documentación completa.
 
 ## 📦 Estructura del Proyecto
 
@@ -429,7 +429,7 @@ pyao-server/
 ├── .pre-commit-config.yaml      # Hooks de pre-commit (ruff + mypy)
 ├── redis/                       # Configuración de Redis
 │   ├── Dockerfile               # Imagen Docker de Redis 8
-│   └── README.md                # Puntero → docs/REDIS.md
+│   └── README.md                # Puntero → docs/guides/REDIS.md
 │
 ├── docs/                        # Documentación
 │   ├── ARCHITECTURE.md          # Arquitectura completa del servidor ⭐ NUEVO
@@ -675,7 +675,7 @@ INFO - user_id 1: oro reducido de 1000 a 990 (-10, 1.0%)
 INFO - user_id 2 tiene sed (agua = 0)
 ```
 
-Ver **[documentación completa del sistema de tick](docs/GAME_TICK_SYSTEM.md)** para crear efectos personalizados.
+Ver **[documentación completa del sistema de tick](docs/systems/GAME_TICK_SYSTEM.md)** para crear efectos personalizados.
 
 ## ⚙️ Configuración
 
@@ -743,67 +743,17 @@ Este servidor implementa el **protocolo estándar de Argentum Online Godot** y e
 
 ## 📚 Documentación
 
-Índice y documentos maestros: **[docs/README.md](docs/README.md)**.
+Índice completo: **[docs/README.md](docs/README.md)**.
 
-### Arquitectura ⭐
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Arquitectura completa del servidor, patrones de diseño y componentes **NUEVO**
-- **[Refactorización Server](docs/REFACTOR_SERVER_COMPLETED.md)**: Refactorización completada de server.py ✅
-- **[Refactorización MSG](docs/REFACTOR_MSG_COMPLETED.md)**: Refactorización completada de msg.py ✅
-- **[Refactorización Handlers](docs/HANDLER_REFACTORING.md)**: Handlers refactorizados + backlog opcional de división futura ✅ **NUEVO**
+| Enlace | Contenido |
+|--------|-----------|
+| [Arquitectura](docs/architecture/ARCHITECTURE.md) | Diseño del servidor y patrones |
+| [Contribuir](docs/CONTRIBUTING.md) | Guía de desarrollo y PRs |
+| [Redis](docs/guides/REDIS.md) | Setup y operación de Redis |
+| [Estado actual](docs/development/ESTADO_ACTUAL.md) | Roadmap interno y sistemas completados |
+| [TODOs](docs/todo/README.md) | Backlog y planificación |
 
-### Protocolo y Flujos
-- **[Flujo de Login](docs/LOGIN_FLOW.md)**: Protocolo estándar de login y mensajes post-login
-- **[Creación de Cuentas](docs/ACCOUNT_CREATION.md)**: Protocolo y validaciones para crear cuentas
-
-### Sistema de Juego
-- **[Sistema de NPCs](docs/NPC_SYSTEM.md)**: NPCs, spawns, catálogos y protocolo
-  - ✅ **Random Spawns Dinámicos**: Spawns aleatorios con límites por área (multijugador-safe)
-  - ✅ **Sonidos de NPCs**: Sistema completo de sonidos (ataque, daño, muerte)
-- **[Sistema de Comercio](docs/COMMERCE_SYSTEM.md)**: Compra/venta con mercaderes, protocolo completo
-- **[Sistema de Ítems](docs/ITEMS_SYSTEM.md)**: Uso de ítems, comportamiento actual y roadmap
-- **[Sistema de Magia](docs/MAGIC_SYSTEM.md)**: Hechizos y sistema de magia
-  - ✅ **Mimetismo**: Hechizo de transformación (cambiar apariencia temporalmente)
-- **[Sistema de Tick del Juego](docs/GAME_TICK_SYSTEM.md)**: Efectos periódicos (hambre, sed, oro, meditación)
-
-### Sistemas Completados ✅
-- **[NPC Factory](docs/NPC_FACTORY_COMPLETED.md)**: Sistema de factory methods para crear NPCs con FX ✅ **COMPLETADO**
-- **[Sistema de Validación](docs/PACKET_VALIDATOR_MIGRATION.md)**: PacketValidator centralizado ✅ **COMPLETADO**
-- **Sistema de Puertas**: Puertas interactivas con estado persistente en Redis ✅ **COMPLETADO**
-  - Detecta puertas por coordenadas, alterna estados (abierta/cerrada)
-  - Bloquea/desbloquea movimiento dinámicamente
-  - Persiste estado en Redis, sincroniza ambos tiles
-  - Soporte para puertas con llave
-- **Sistema de Teleports**: Transiciones automáticas entre mapas ✅ **COMPLETADO**
-  - 263 transiciones extraídas del mapa 1 desde archivos .inf VB6
-  - Detección automática y teletransporte al caminar sobre tiles de exit
-  - Workaround para desbloquear tiles de exit en cliente
-- **Random Spawns Dinámicos**: Sistema de spawns aleatorios con límites por área ✅ **COMPLETADO**
-  - Spawnea NPCs cuando jugadores entran en áreas designadas
-  - Límite global por área (multijugador-safe)
-  - NPCs persisten hasta que mueren (sin despawn automático)
-  - Cooldowns de respawn configurables
-  - Verificación de tiles libres antes de spawn
-- **Sonidos de NPCs**: Sistema completo de sonidos ✅ **COMPLETADO**
-  - Sonidos de ataque (snd1) cuando NPC ataca
-  - Sonidos de daño (snd2) cuando NPC recibe daño
-  - Sonidos de muerte (snd3) cuando NPC muere
-  - Integrado con sistema de broadcast multijugador
-- **Hechizo Mimetismo**: Transformación temporal de apariencia ✅ **COMPLETADO**
-  - Cambia temporalmente el body_id y head_id del jugador
-  - Duración configurable (default: 5 minutos)
-  - Efecto visible para todos los jugadores en el mapa
-
-### TODOs y Mejoras Futuras
-- **[Mejoras arquitectónicas](docs/todo/TODO_ARQUITECTURA.md)**: Propuestas y backlog técnico relacionado
-
-### Arquitectura y Diseño
-- **[Arquitectura de Servicios](docs/SERVICES_ARCHITECTURE.md)**: Servicios reutilizables y patrones de diseño
-- **[Arquitectura Redis](docs/REDIS_ARCHITECTURE.md)**: Estructura de datos y claves en Redis
-- **[Integración Redis](docs/REDIS_INTEGRATION.md)**: Guía de integración con Redis
-- **[Refactorización de Repositorios](docs/REFACTOR_REPOSITORIES.md)**: Separación de responsabilidades
-
-### Calidad y Testing
-- **[Análisis de Cobertura](docs/COVERAGE_ANALYSIS.md)**: Análisis detallado de cobertura de tests
+Documentación histórica (refactors completados, snapshots pre-fusión): [docs/archive/](docs/archive/README.md).
 
 ## 📝 Desarrollo
 

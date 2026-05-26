@@ -264,7 +264,7 @@ Reorganizar tasks en subcarpetas (referencia histórica de layout: `docs/archive
 11. ✅ `pickup_handler.py` - Dividido en `pickup_gold_handler.py` y `pickup_item_handler.py`
 12. ✅ `cast_spell_handler.py` - Dividido en `cast_spell_validation_handler.py` y `cast_spell_execution_handler.py`
 
-**Ver [HANDLER_REFACTORING.md](HANDLER_REFACTORING.md) para detalles completos.**
+**Ver [HANDLER_REFACTORING.md](development/REFACTORING.md) para detalles completos.**
 
 ### Otros Refactorizaciones
 1. ✅ `drop_handler.py` - Reemplazado `stats.get()` con métodos helper

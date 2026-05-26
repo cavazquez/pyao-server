@@ -74,7 +74,7 @@ Features extra vs el cliente original:
 | `RemoveDumbEffect` | ❌ | ✅ | Debería afectar NPCs |
 
 ### 5. Status effect packets al cliente
-**Doc:** `docs/ANALISIS_CLIENTE_VB6_2026.md` (sección 1.1)
+**Doc:** `docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` (sección 1.1)
 
 El servidor tiene los efectos server-side pero podría no estar enviando todos los packets visuales al cliente:
 
@@ -154,7 +154,7 @@ Ya mejorado pero aún usa `redis_client.set("server:connections:count", "0")` di
 |-----------|-----------|
 | `docs/todo/TODO_SPELL_CLICK_TARGETING.md` | Detalle completo del targeting de hechizos |
 | `docs/todo/TODO_CLIENTE.md` | TODOs del cliente Godot |
-| `docs/ANALISIS_CLIENTE_VB6_2026.md` | Análisis cruzado VB6 vs Godot vs PyAO |
-| `docs/SPELL_ADVANCED_IMPLEMENTATION_PLAN.md` | Plan de spell effects |
+| `docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` | Análisis cruzado VB6 vs Godot vs PyAO |
+| `docs/systems/MAGIC_SYSTEM.md` | Plan de spell effects |
 | `docs/todo/ROADMAP_VERSIONES.md` | Roadmap de versiones |
 | `docs/todo/TODO_CONSOLIDADO.md` | TODOs consolidados |

@@ -195,4 +195,4 @@ DuracionEfecto = 1000   # Duración en ms (para modificadores temporales)
 - `src/models/item_types.py`: Tipos de pociones
 - `data/items/consumables/potions.toml`: Definiciones completas
 - `src/command_handlers/use_item_handler.py`: Implementación del handler
-- `docs/MAGIC_SYSTEM.md`: Sistema de magia relacionado (hechizos)
+- `docs/systems/MAGIC_SYSTEM.md`: Sistema de magia relacionado (hechizos)

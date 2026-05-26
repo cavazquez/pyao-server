@@ -16,7 +16,7 @@
 | **5. Plantillas nuevos componentes** | Pendiente | `scripts/templates/` aún no existe. |
 | **6. Refactor core** (effects/, utils/) | Backlog bajo | Solo si hay dolor real de imports o navegación. |
 | **7. Re-exports `__init__.py`** | Pendiente | Convención actual: imports explícitos desde módulos. |
-| **8. Convenciones y README** | **Hecho** | [`CONTRIBUTING.md`](../CONTRIBUTING.md), [`ARCHITECTURE.md`](../ARCHITECTURE.md), [`ARCHITECTURE_PROJECT.md`](../ARCHITECTURE_PROJECT.md), README raíz e índice [`docs/README.md`](../README.md). |
+| **8. Convenciones y README** | **Hecho** | [`CONTRIBUTING.md`](../CONTRIBUTING.md), [`architecture/ARCHITECTURE.md`](../architecture/ARCHITECTURE.md), [`architecture/ARCHITECTURE_PROJECT.md`](../architecture/ARCHITECTURE_PROJECT.md), README raíz e índice [`docs/README.md`](../README.md). |
 | **Enlaces Markdown en CI** | **Hecho** | Workflow comprueba `README.md`, `Claude.md`, `docs/README.md`. |
 
 ---
@@ -33,7 +33,7 @@
 
 ## Quick wins todavía útiles
 
-1. Revisar cobertura de módulos críticos con melón real (`commerce`, combate, Redis) según `docs/COVERAGE_ANALYSIS.md` si está actualizado.
+1. Revisar cobertura de módulos críticos con melón real (`commerce`, combate, Redis) según `docs/development/TESTING.md` si está actualizado.
 2. Si se añade mucha documentación nueva: mantener el índice en **`docs/README.md`**.
 
 ---

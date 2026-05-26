@@ -406,15 +406,15 @@ ground_items:map:{map_id}:*
 ### Documentación Disponible
 
 1. **README.md** - Documentación principal completa
-2. **docs/ARCHITECTURE.md** - Arquitectura detallada
-3. **docs/SERVICES_ARCHITECTURE.md** - Arquitectura de servicios
-4. **docs/GAME_TICK_SYSTEM.md** - Sistema de efectos periódicos
-5. **docs/LOGIN_FLOW.md** - Flujo de login
-6. **docs/COMBAT_SYSTEM.md** - Sistema de combate
-7. **docs/COMMERCE_SYSTEM.md** - Sistema de comercio
-8. **docs/NPC_SYSTEM.md** - Sistema de NPCs
-9. **docs/PARTY_SYSTEM.md** - Sistema de parties
-10. **docs/PACKET_VALIDATOR_MIGRATION.md** - Sistema de validación
+2. **docs/architecture/ARCHITECTURE.md** - Arquitectura detallada
+3. **docs/architecture/SERVICES_ARCHITECTURE.md** - Arquitectura de servicios
+4. **docs/systems/GAME_TICK_SYSTEM.md** - Sistema de efectos periódicos
+5. **docs/guides/LOGIN_FLOW.md** - Flujo de login
+6. **docs/systems/COMBAT_SYSTEM.md** - Sistema de combate
+7. **docs/systems/COMMERCE_SYSTEM.md** - Sistema de comercio
+8. **docs/systems/NPC_SYSTEM.md** - Sistema de NPCs
+9. **docs/systems/PARTY_SYSTEM.md** - Sistema de parties
+10. **docs/archive/completed/PACKET_VALIDATOR_MIGRATION.md** - Sistema de validación
 
 ### Calidad de Documentación
 

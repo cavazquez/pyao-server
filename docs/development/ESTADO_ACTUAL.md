@@ -23,7 +23,7 @@
 - ✅ 26 tests pasando
 
 ### Versión 0.8.0-alpha - Sistema de Parties ✅ COMPLETADO
-**Estado:** Completado según `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md`
+**Estado:** Completado según `docs/systems/PARTY_SYSTEM.md`
 - ✅ Modelos de datos (Party, PartyMember, PartyInvitation)
 - ✅ Persistencia en Redis
 - ✅ Lógica de negocio completa
@@ -34,7 +34,7 @@
 - ✅ 60 tests pasando
 
 ### Versión 0.9.0-alpha - Sistema de Clanes/Guilds ✅ COMPLETADO
-**Estado:** Completado según `docs/CLAN_SYSTEM_IMPLEMENTATION_STATUS.md`
+**Estado:** Completado según `docs/systems/CLAN_SYSTEM.md`
 - ✅ Modelos de datos (Clan, ClanMember, ClanInvitation)
 - ✅ Persistencia en Redis
 - ✅ Lógica de negocio completa
@@ -46,11 +46,11 @@
 - ✅ Tests básicos del servicio
 
 ### Versión 0.9.1-alpha - Mejoras del Sistema de Clanes ✅ COMPLETADO
-**Estado:** Completado según `docs/CLAN_SYSTEM.md`
+**Estado:** Completado según `docs/systems/CLAN_SYSTEM.md`
 - ✅ Notificaciones completas para todos los eventos (unirse, abandonar, promover, degradar, transferir liderazgo)
 - ✅ Broadcast automático a todos los miembros del clan
 - ✅ Tests ampliados (11 → 24 tests, 100% pasando)
-- ✅ Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
+- ✅ Documentación completa del sistema (`docs/systems/CLAN_SYSTEM.md`)
 - ✅ Casos de error y validaciones cubiertos
 - ✅ Tests de notificaciones implementados
 

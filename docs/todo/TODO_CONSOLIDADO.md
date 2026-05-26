@@ -2,7 +2,7 @@
 
 **Última actualización:** 2026-05-02  
 **Versión actual (pyproject):** 0.9.4-alpha  
-**Estado:** Documento maestro de tareas pendientes — mantener alineado con **`docs/ESTADO_ACTUAL.md`** (fuente de verdad del estado del código).
+**Estado:** Documento maestro de tareas pendientes — mantener alineado con **`docs/development/ESTADO_ACTUAL.md`** (fuente de verdad del estado del código).
 
 > **Nota:** Este documento consolida TODOs activos. Histórico de completados: `TODOS_COMPLETADOS.md`. Roadmap por versión: `ROADMAP_VERSIONES.md`.
 
@@ -50,7 +50,7 @@
 ### Sistema de Partys/Grupos (v0.8.0-alpha) ✅ COMPLETADO
 **Estado:** ✅ Sistema completo y funcional  
 **Progreso:** 100% (10/10 criterios)  
-**Referencia:** `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md`
+**Referencia:** `docs/systems/PARTY_SYSTEM.md`
 
 **Completado:**
 - ✅ Modelos de datos (Party, PartyMember, PartyInvitation)
@@ -82,7 +82,7 @@
 
 ### Sistema de Clanes/Guilds (v0.9.x-alpha) ✅ Core completado — avanzado pendiente
 
-**Estado:** ✅ **Core + mejoras 0.9.1 implementados** en servidor (ver **`docs/ESTADO_ACTUAL.md`**, **`docs/CLAN_SYSTEM.md`**, **`docs/CLAN_SYSTEM_IMPLEMENTATION_STATUS.md`**).  
+**Estado:** ✅ **Core + mejoras 0.9.1 implementados** en servidor (ver **`docs/development/ESTADO_ACTUAL.md`**, **`docs/systems/CLAN_SYSTEM.md`**, **`docs/systems/CLAN_SYSTEM.md`**).  
 **Referencia VB6 / gaps:** `TODO_CARACTERISTICAS_VB6.md`
 
 **Completado (servidor):**
@@ -236,7 +236,7 @@
 ### Logging Estructurado (JSON) 🟢 Baja Prioridad
 **Estado:** 📝 Propuesta  
 **Esfuerzo:** 2-3 horas  
-**Referencia:** [`TECH_IMPROVEMENTS_BACKLOG.md`](../TECH_IMPROVEMENTS_BACKLOG.md) (sección observabilidad / logs operativos)
+**Referencia:** [`development/TECH_IMPROVEMENTS_BACKLOG.md`](../development/TECH_IMPROVEMENTS_BACKLOG.md) (sección observabilidad / logs operativos)
 
 **Beneficios:**
 - Logs parseables automáticamente
@@ -287,7 +287,7 @@
 
 **Objetivo típico:** subir cobertura global hacia **80%+** donde tenga sentido para el equipo.
 
-**Cómo medir:** `uv run pytest --cov=src --cov-report=term-missing` (y `docs/COVERAGE_ANALYSIS.md` si está actualizado).
+**Cómo medir:** `uv run pytest --cov=src --cov-report=term-missing` (y `docs/development/TESTING.md` si está actualizado).
 
 **Áreas habituales a revisar** (priorizar según el último reporte, no esta lista fija):
 - [ ] Tasks de combate / inventario de alto uso
@@ -426,7 +426,7 @@
 
 ### 🔴 Alta prioridad (siguiente oleada útil)
 1. **Targeting por click para hechizos (v0.10)** — mayormente cliente Godot; servidor ya admite coordenadas en gran medida
-2. **Cobertura / tests** en flujos que el equipo marque como críticos (ver `docs/COVERAGE_ANALYSIS.md` si está vigente)
+2. **Cobertura / tests** en flujos que el equipo marque como críticos (ver `docs/development/TESTING.md` si está vigente)
 3. Mejoras **cliente** de alto impacto (ej. posición en GUI — `TODO_CLIENTE.md`)
 
 ### 🟡 Media prioridad
@@ -441,7 +441,7 @@
 3. Features avanzadas de ítems (durabilidad, encantamientos)
 4. Panel de inventario completo en cliente
 
-**Ya completado en servidor (no priorizar de nuevo):** clases (v0.7), parties (v0.8), **clanes core** (v0.9.x). Detalle en **`docs/ESTADO_ACTUAL.md`**.
+**Ya completado en servidor (no priorizar de nuevo):** clases (v0.7), parties (v0.8), **clanes core** (v0.9.x). Detalle en **`docs/development/ESTADO_ACTUAL.md`**.
 
 ---
 

@@ -254,7 +254,7 @@ if _gameContext.castingSpell:
 
 ## 📚 Referencias
 
-- **Sistema de Trabajo:** `docs/WORK_SYSTEM_PROTOCOL.md`
+- **Sistema de Trabajo:** `docs/guides/WORK_SYSTEM.md`
 - **TaskCastSpell:** `src/task_cast_spell.py` (líneas 102-115)
 - **Cliente Godot:** `clientes/ArgentumOnlineGodot/ui/hub/spell_list_panel.gd`
 - **Protocolo MULTI_MESSAGE:** Ya documentado en sistema de trabajo

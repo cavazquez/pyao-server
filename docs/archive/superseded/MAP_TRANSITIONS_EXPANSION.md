@@ -144,11 +144,11 @@ mapas_a_probar = [1, 30, 51, 101, 151, 201, 251]
 - `map_data/transitions_151-200.json` - Mapas altos
 - `map_data/transitions_201-250.json` - Mapas superiores
 - `map_data/transitions_251-290.json` - Mapas finales
-- `docs/MAP_TRANSITIONS_EXPANSION.md` - Esta documentación
+- `docs/systems/MAP_TRANSITIONS_SYSTEM.md` - Esta documentación
 
 **Modificados:**
 - `src/game/map_manager.py` - Sistema de carga por rangos
-- `docs/MAP_TRANSITIONS_SYSTEM.md` - Actualización de documentación
+- `docs/systems/MAP_TRANSITIONS_SYSTEM.md` - Actualización de documentación
 
 **Scripts de análisis:**
 - `extract_transitions.py` - Script para extraer datos VB6

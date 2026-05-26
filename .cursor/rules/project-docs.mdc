@@ -7,4 +7,11 @@ alwaysApply: true
 
 - Convenciones y reglas para IA / desarrollo: **solo** en `docs/CLAUDE.md` (no duplicar en la raíz salvo el stub `Claude.md`).
 - Índice general: `docs/README.md`.
-- TODOs y roadmap: `docs/todo/`.
+- Estructura por tipo:
+  - `docs/guides/` — setup, protocolo, datos, herramientas
+  - `docs/architecture/` — diseño del servidor
+  - `docs/systems/` — features de juego (un doc canónico por sistema)
+  - `docs/development/` — estado, refactor, testing
+  - `docs/analysis/` — informes puntuales
+  - `docs/todo/` — TODOs y roadmaps
+  - `docs/archive/` — histórico y docs reemplazados

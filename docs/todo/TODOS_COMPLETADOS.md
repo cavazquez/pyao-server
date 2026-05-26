@@ -10,7 +10,7 @@
 ### 1. PacketReader + PacketValidator ✅
 **Estado:** COMPLETADO - 8/8 tasks migradas (100%)  
 **Fecha:** 2025-10-19  
-**Documentación:** `docs/PACKET_VALIDATOR_MIGRATION.md`
+**Documentación:** `docs/archive/completed/PACKET_VALIDATOR_MIGRATION.md`
 
 **Logros:**
 - PacketReader para lectura estructurada de packets
@@ -28,7 +28,7 @@
 ### 2. MessageSender Refactoring ✅
 **Estado:** COMPLETADO - 8 componentes creados  
 **Fecha:** 2025-11-13  
-**Documentación:** `docs/REFACTOR_MSG_COMPLETED.md`
+**Documentación:** `docs/archive/completed/REFACTOR_MSG_COMPLETED.md`
 
 **Componentes creados:**
 1. `message_console_sender.py` - Mensajes de consola
@@ -50,7 +50,7 @@
 ### 3. NPC Factory Pattern ✅
 **Estado:** COMPLETADO - 16 factory methods  
 **Fecha:** 2025-10-21  
-**Documentación:** `docs/NPC_FACTORY_COMPLETED.md`
+**Documentación:** `docs/archive/completed/NPC_FACTORY_COMPLETED.md`
 
 **Factory Methods:**
 - 11 NPCs hostiles (Goblin, Lobo, Orco, Araña, etc.)
@@ -67,7 +67,7 @@
 ### 4. Sistema de Transiciones de Mapa ✅
 **Estado:** COMPLETADO  
 **Fecha:** 2025-10-19  
-**Documentación:** `docs/MAP_TRANSITIONS_SYSTEM.md`
+**Documentación:** `docs/systems/MAP_TRANSITIONS_SYSTEM.md`
 
 **Implementación:**
 - MapTransitionService creado
@@ -85,7 +85,7 @@
 ### 5. Bug Fix: Tile Occupation ✅
 **Estado:** COMPLETADO  
 **Fecha:** 2025-11-18  
-**Documentación:** `docs/BUGFIX_TILE_OCCUPATION.md`
+**Documentación:** `docs/archive/superseded/BUGFIX_TILE_OCCUPATION.md`
 
 **Problema resuelto:**
 - `remove_npc()` no limpiaba `_tile_occupation`
@@ -120,7 +120,7 @@
 **Estado:** COMPLETADO  
 **Fecha:** 2025-01-29  
 **Versión:** 0.6.4-alpha  
-**Documentación:** `docs/CONFIGURATION.md`
+**Documentación:** `docs/guides/CONFIGURATION.md`
 
 **Implementación:**
 - `config/server.toml` creado
@@ -139,7 +139,7 @@
 ### 1. Sistema de Trabajo (Pesca, Tala, Minería) ✅
 **Estado:** COMPLETADO  
 **Fecha:** 2025-10-21  
-**Documentación:** `docs/WORK_SYSTEM_PROTOCOL.md`
+**Documentación:** `docs/guides/WORK_SYSTEM.md`
 
 **Características:**
 - Protocolo MULTI_MESSAGE descubierto
@@ -152,7 +152,7 @@
 ### 2. Pathfinding A* para NPCs ✅
 **Estado:** COMPLETADO  
 **Fecha:** 2025-01-20  
-**Documentación:** `docs/PATHFINDING_ASTAR.md`
+**Documentación:** `docs/systems/PATHFINDING_ASTAR.md`
 
 **Características:**
 - Algoritmo A* clásico
@@ -165,7 +165,7 @@
 ### 3. IA de NPCs Configurable ✅
 **Estado:** COMPLETADO  
 **Fecha:** 2025-01-20  
-**Documentación:** `docs/NPC_AI_CONFIGURABLE.md`
+**Documentación:** `docs/systems/NPC_AI_CONFIGURABLE.md`
 
 **Parámetros configurables:**
 - attack_damage (5-50)
@@ -176,7 +176,7 @@
 
 ### 4. Sistema de Banco ✅
 **Estado:** COMPLETADO  
-**Documentación:** `docs/BANK_SYSTEM.md`
+**Documentación:** `docs/systems/BANK_SYSTEM.md`
 
 **Características:**
 - Protocolo completo cliente-servidor
@@ -200,11 +200,11 @@
 ## 📚 Referencias
 
 Para detalles completos de cada refactorización, ver:
-- `docs/REFACTOR_SERVER_COMPLETED.md`
-- `docs/REFACTOR_MSG_COMPLETED.md`
-- `docs/PACKET_VALIDATOR_MIGRATION.md`
-- `docs/NPC_FACTORY_COMPLETED.md`
-- `docs/MAP_TRANSITIONS_SYSTEM.md`
+- `docs/archive/completed/REFACTOR_SERVER_COMPLETED.md`
+- `docs/archive/completed/REFACTOR_MSG_COMPLETED.md`
+- `docs/archive/completed/PACKET_VALIDATOR_MIGRATION.md`
+- `docs/archive/completed/NPC_FACTORY_COMPLETED.md`
+- `docs/systems/MAP_TRANSITIONS_SYSTEM.md`
 
 ---
 

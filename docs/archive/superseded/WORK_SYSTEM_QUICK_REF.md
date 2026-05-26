@@ -197,9 +197,9 @@ uv run python -m src.main
 
 ## 📚 Docs Relacionados
 
-- **Documentación completa:** `docs/WORK_SYSTEM_PROTOCOL.md`
+- **Documentación completa:** `docs/guides/WORK_SYSTEM.md`
 - **Optimización de recursos:** `docs/MAP_RESOURCES_OPTIMIZATION.md`
-- **Items y armaduras:** `docs/ARMOR_SETS.md`
+- **Items y armaduras:** `docs/systems/ARMOR_SETS.md`
 
 ---
 

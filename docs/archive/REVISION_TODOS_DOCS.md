@@ -92,10 +92,10 @@
 
 | Tema | Documento actual |
 |------|------------------|
-| Validación de packets / migración | [`PACKET_VALIDATOR_MIGRATION.md`](PACKET_VALIDATOR_MIGRATION.md) |
-| Handlers / MessageSender completados | [`HANDLER_REFACTORING.md`](../HANDLER_REFACTORING.md), [`REFACTOR_MSG_COMPLETED.md`](../REFACTOR_MSG_COMPLETED.md) |
+| Validación de packets / migración | [`archive/completed/PACKET_VALIDATOR_MIGRATION.md`](archive/completed/PACKET_VALIDATOR_MIGRATION.md) |
+| Handlers / MessageSender completados | [`development/REFACTORING.md`](../development/REFACTORING.md), [`archive/completed/REFACTOR_MSG_COMPLETED.md`](../archive/completed/REFACTOR_MSG_COMPLETED.md) |
 | DI / TaskFactory | [`TODO_ARQUITECTURA.md`](todo/TODO_ARQUITECTURA.md) §1 (histórico), código en `TaskFactory` + `DependencyContainer` |
-| Mejoras técnicas pendientes (métricas, logs, Redis…) | [`TECH_IMPROVEMENTS_BACKLOG.md`](TECH_IMPROVEMENTS_BACKLOG.md) |
+| Mejoras técnicas pendientes (métricas, logs, Redis…) | [`development/TECH_IMPROVEMENTS_BACKLOG.md`](development/TECH_IMPROVEMENTS_BACKLOG.md) |
 
 ---
 
@@ -153,7 +153,7 @@
 
 ### 7. TODO_NPC_FACTORY.md
 
-**Estado:** ✅ **COMPLETADO** - Ver docs/NPC_FACTORY_COMPLETED.md
+**Estado:** ✅ **COMPLETADO** - Ver docs/archive/completed/NPC_FACTORY_COMPLETED.md
 
 **Recomendación:** ✅ **Archivo histórico** - Ya completado
 
@@ -196,7 +196,7 @@
 
 ### 11. TODO_MAP_MANAGER_TILE_OCCUPATION.md
 
-**Estado:** ✅ **COMPLETADO** - Bug fix documentado en docs/BUGFIX_TILE_OCCUPATION.md
+**Estado:** ✅ **COMPLETADO** - Bug fix documentado en docs/archive/superseded/BUGFIX_TILE_OCCUPATION.md
 
 **Recomendación:** ✅ **Archivo histórico** - Ya completado
 

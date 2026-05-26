@@ -17,7 +17,7 @@ El script:
 2. Ejecuta cada archivo de test individualmente con coverage
 3. Compara qué archivos de código cubre cada test
 4. Identifica tests redundantes (mismo conjunto de archivos cubiertos)
-5. Genera un reporte en docs/REDUNDANT_TESTS_AUTOGEN.md (fusionar o contrastar con la Parte A de docs/REDUNDANT_TESTS.md)
+5. Genera un reporte en docs/REDUNDANT_TESTS_AUTOGEN.md (fusionar o contrastar con la Parte A de docs/development/TESTING.md)
 """
 
 import argparse

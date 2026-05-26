@@ -104,7 +104,7 @@ uv run python tools/validation/check_signs.py
 ## 🔗 Documentación
 
 Para más detalles, ver:
-- `docs/TOOLS_ANALYSIS.md` - Análisis completo de todas las herramientas
+- `docs/development/TOOLS_ANALYSIS.md` - Análisis completo de todas las herramientas
 
 ## ⚠️ Advertencias
 

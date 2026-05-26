@@ -267,6 +267,6 @@ redis-server
 
 ## Referencias
 
-- [SERVICES_ARCHITECTURE.md](SERVICES_ARCHITECTURE.md) - Arquitectura del servidor
-- [GAME_TICK_SYSTEM.md](GAME_TICK_SYSTEM.md) - Sistema de efectos y tick
-- [NPC_SYSTEM.md](NPC_SYSTEM.md) - Sistema de NPCs
+- [SERVICES_ARCHITECTURE.md](architecture/SERVICES_ARCHITECTURE.md) - Arquitectura del servidor
+- [GAME_TICK_SYSTEM.md](systems/GAME_TICK_SYSTEM.md) - Sistema de efectos y tick
+- [NPC_SYSTEM.md](systems/NPC_SYSTEM.md) - Sistema de NPCs

@@ -104,7 +104,7 @@ GET server:connections:count
 
 Para una experiencia visual y más amigable, se recomienda usar **Redis Insight**, la GUI oficial de Redis.
 
-Ver instrucciones de instalación en [`REDIS.md`](REDIS.md#-redis-insight-gui-recomendada) (disponible en Snap, Flatpak, Docker y AppImage).
+Ver instrucciones de instalación en [`guides/REDIS.md`](REDIS.md#-redis-insight-gui-recomendada) (disponible en Snap, Flatpak, Docker y AppImage).
 
 ## 🧪 Tests
 
@@ -243,7 +243,7 @@ uv run mypy .
 - [Redis Python Async](https://redis-py.readthedocs.io/en/stable/examples/asyncio_examples.html)
 - [FakeRedis](https://github.com/cunla/fakeredis-py)
 - [pytest-asyncio](https://pytest-asyncio.readthedocs.io/)
-- [Arquitectura detallada](REDIS_ARCHITECTURE.md)
+- [Arquitectura detallada](architecture/REDIS_DATA.md)
 
 ---
 

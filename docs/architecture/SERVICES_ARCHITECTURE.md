@@ -439,6 +439,6 @@ await service.do_something(user_id)
 
 ## 📚 Referencias
 
-- [LOGIN_FLOW.md](LOGIN_FLOW.md) - Flujo detallado de login
-- [GAME_TICK_SYSTEM.md](GAME_TICK_SYSTEM.md) - Sistema de efectos periódicos
+- [LOGIN_FLOW.md](guides/LOGIN_FLOW.md) - Flujo detallado de login
+- [GAME_TICK_SYSTEM.md](systems/GAME_TICK_SYSTEM.md) - Sistema de efectos periódicos
 - [README.md](../README.md) - Documentación principal del proyecto

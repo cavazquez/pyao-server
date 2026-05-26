@@ -131,4 +131,4 @@ End Sub
 
 ## Referencias
 
-- Documentación interna relacionada: [MAP_ORPHANS_ANALYSIS.md](MAP_ORPHANS_ANALYSIS.md), [PATHFINDING_ASTAR.md](PATHFINDING_ASTAR.md) (no existían `ENGINE.md` / `MAP_SYSTEM.md` / `TRIGGERS.md` en este repo).
+- Documentación interna relacionada: [MAP_ORPHANS_ANALYSIS.md](analysis/MAP_ORPHANS_ANALYSIS.md), [PATHFINDING_ASTAR.md](systems/PATHFINDING_ASTAR.md) (no existían `ENGINE.md` / `MAP_SYSTEM.md` / `TRIGGERS.md` en este repo).

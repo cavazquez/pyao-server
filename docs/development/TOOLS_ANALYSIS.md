@@ -15,7 +15,7 @@ tools/
 └── dev/             # 2 herramientas - Utilidades de desarrollo
 ```
 
-> **Nota**: Ver [`TOOLS_DIRECTORY.md`](TOOLS_DIRECTORY.md) para instrucciones de uso detalladas.
+> **Nota**: Ver [`guides/TOOLS_DIRECTORY.md`](guides/TOOLS_DIRECTORY.md) para instrucciones de uso detalladas.
 
 1. **Extracción de Datos** (7 herramientas)
 2. **Análisis de Mapas** (10 herramientas)
@@ -232,7 +232,7 @@ Herramientas para desarrollo y testing.
     compression/     # Compresión/descompresión
     dev/             # Utilidades de desarrollo
   ```
-- ✅ **README**: Documentación en `docs/TOOLS_DIRECTORY.md` (antes `tools/README.md`)
+- ✅ **README**: Documentación en `docs/guides/TOOLS_DIRECTORY.md` (antes `tools/README.md`)
 
 ### 3. Mantenimiento
 - ⚠️ **Atención**: Algunas herramientas tienen paths absolutos hardcodeados

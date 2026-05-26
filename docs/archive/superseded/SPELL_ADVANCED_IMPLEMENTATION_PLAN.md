@@ -350,7 +350,7 @@
 - **Hechizos.dat:** `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Dat/Hechizos.dat`
 - **VB6 Code:** `clientes/ArgentumOnline0.13.3-Cliente-Servidor/server/Codigo/modHechizos.bas`
 - **Sistema Actual:** `src/services/player/spell_service.py`
-- **Documentación:** `docs/MAGIC_SYSTEM.md`
+- **Documentación:** `docs/systems/MAGIC_SYSTEM.md`
 
 ---
 

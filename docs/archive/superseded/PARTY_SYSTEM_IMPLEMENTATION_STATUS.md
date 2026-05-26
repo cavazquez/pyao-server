@@ -69,7 +69,7 @@
 - ✅ TaskFactory actualizado con factory methods para party tasks
 
 ### 6. Documentación
-- ✅ `docs/PARTY_SYSTEM.md` - Documentación completa del sistema
+- ✅ `docs/systems/PARTY_SYSTEM.md` - Documentación completa del sistema
 - ✅ Docstrings en todos los métodos públicos
 - ✅ Comentarios explicativos en código complejo
 

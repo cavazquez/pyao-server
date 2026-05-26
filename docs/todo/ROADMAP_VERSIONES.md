@@ -98,7 +98,7 @@
 
 **Beneficio:** Prevenir crashes por packets malformados, mejor seguridad
 
-**Referencia:** [`PACKET_VALIDATOR_MIGRATION.md`](../PACKET_VALIDATOR_MIGRATION.md)
+**Referencia:** [`archive/completed/PACKET_VALIDATOR_MIGRATION.md`](../archive/completed/PACKET_VALIDATOR_MIGRATION.md)
 
 ---
 
@@ -110,7 +110,7 @@
 **Tareas:**
 - [x] Centralizar configuraciones hardcodeadas en ficheros de config (`config/server.toml`) y un `ConfigManager`
 - [x] Configurar Redis host/port, server host/port, timeouts y límites principales
-- [x] Documentar todas las configuraciones en `docs/CONFIGURATION.md`
+- [x] Documentar todas las configuraciones en `docs/guides/CONFIGURATION.md`
 - [x] Tests básicos de carga de configuración
 
 **Beneficio:** Fácil configuración sin recompilar, mejor para deployment
@@ -122,7 +122,7 @@
 ## 🔍 Análisis Cruzado (2026-02-08)
 
 Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.  
-**Documento completo:** `docs/ANALISIS_CLIENTE_VB6_2026.md`
+**Documento completo:** `docs/analysis/ANALISIS_CLIENTE_VB6_2026.md`
 
 **Hallazgos principales:**
 - 40 de 130 packets implementados (30.8%)
@@ -189,7 +189,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 
 **Tests:** 60 tests pasando (100%)
 
-**Referencia:** `docs/PARTY_SYSTEM_IMPLEMENTATION_STATUS.md`
+**Referencia:** `docs/systems/PARTY_SYSTEM.md`
 
 ---
 
@@ -259,14 +259,14 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
   - Tests de notificaciones
   - Tests de chat de clan
   - Tests de casos límite
-- [x] Documentación completa del sistema (`docs/CLAN_SYSTEM.md`)
+- [x] Documentación completa del sistema (`docs/systems/CLAN_SYSTEM.md`)
 
 **Mejoras implementadas:**
 - Sistema de notificaciones robusto y completo
 - Cobertura de tests mejorada significativamente
 - Documentación exhaustiva para desarrolladores
 
-**Referencia:** `docs/CLAN_SYSTEM.md`
+**Referencia:** `docs/systems/CLAN_SYSTEM.md`
 
 ---
 
@@ -275,7 +275,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Esfuerzo:** 3-5 días  
 **Estado:** Planificado
 
-**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 1)
+**Origen:** Análisis cruzado (`docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` — Fase 1)
 
 **Features:**
 - [ ] Packets de status effects al cliente (Blind/BlindNoMore, Dumb/DumbNoMore, SetInvisible, ParalizeOK)
@@ -299,7 +299,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Esfuerzo:** 1-2 semanas  
 **Estado:** Planificado
 
-**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 2)
+**Origen:** Análisis cruzado (`docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` — Fase 2)
 
 **Features:**
 - [ ] Fórmula de ELU progresiva (multiplicadores por rango de nivel)
@@ -377,7 +377,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Esfuerzo:** 3-4 semanas  
 **Estado:** Planificado
 
-**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 3)
+**Origen:** Análisis cruzado (`docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` — Fase 3)
 
 **Features:**
 - [ ] Fórmulas de hit/miss del VB6 (PoderAtaque vs PoderEvasion con modificadores por clase)
@@ -406,7 +406,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Esfuerzo:** 2-3 semanas  
 **Estado:** Planificado
 
-**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.1)
+**Origen:** Análisis cruzado (`docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.1)
 
 **Features:**
 - [ ] Herrería: fabricar armas/armaduras con lingotes
@@ -434,7 +434,7 @@ Análisis detallado comparando cliente Godot, servidor VB6 y servidor Python.
 **Esfuerzo:** 2-3 semanas  
 **Estado:** Planificado
 
-**Origen:** Análisis cruzado (`docs/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.2)
+**Origen:** Análisis cruzado (`docs/analysis/ANALISIS_CLIENTE_VB6_2026.md` — Fase 4.2)
 
 **Features:**
 - [ ] Skill de domar: check contra nivel del NPC
@@ -747,7 +747,7 @@ Estas mejoras no bloquean features pero mejoran la calidad del código:
 - `structlog` - Logging estructurado para Python
 - `python-json-logger` - JSON formatter para logging estándar
 
-**Referencia:** [`TECH_IMPROVEMENTS_BACKLOG.md`](../TECH_IMPROVEMENTS_BACKLOG.md) (observabilidad / métricas / logs)
+**Referencia:** [`development/TECH_IMPROVEMENTS_BACKLOG.md`](../development/TECH_IMPROVEMENTS_BACKLOG.md) (observabilidad / métricas / logs)
 
 ---
 
@@ -886,4 +886,4 @@ Estas mejoras pueden hacerse en paralelo al desarrollo del servidor:
 **Autor:** Roadmap consolidado de todos los TODOs  
 **Estado:** 📋 Documento maestro de planificación  
 **Versiones completadas:** 0.6.0-0.9.1 ✅  
-**Análisis cruzado:** `docs/ANALISIS_CLIENTE_VB6_2026.md`
+**Análisis cruzado:** `docs/analysis/ANALISIS_CLIENTE_VB6_2026.md`

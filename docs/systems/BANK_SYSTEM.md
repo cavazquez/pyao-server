@@ -323,6 +323,6 @@ if not modified_slots:
 
 ## 🔗 Ver También
 
-- [Sistema de Comercio](COMMERCE_SYSTEM.md)
-- [Sistema de Inventario](ITEMS_SYSTEM.md)
+- [Sistema de Comercio](systems/COMMERCE_SYSTEM.md)
+- [Sistema de Inventario](systems/ITEMS_SYSTEM.md)
 - [Protocolo de Red](../src/network/packet_id.py)

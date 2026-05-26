@@ -23,7 +23,7 @@ El sistema de comercio permite a los jugadores:
 - Ver su **propio inventario** durante la transacción
 - **Cerrar la ventana** de comercio en cualquier momento
 
-> **Nota:** el flujo de comercio entre jugadores se documenta en detalle en `docs/PLAYER_TRADE_SYSTEM.md`.
+> **Nota:** el flujo de comercio entre jugadores se documenta en detalle en `docs/systems/PLAYER_TRADE_SYSTEM.md`.
 
 ### Características Principales
 
