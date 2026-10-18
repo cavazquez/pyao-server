@@ -32,6 +32,7 @@ SUPPORTED_CAPABILITIES = (
     | Capability.TRADE_STATE
     | Capability.SKILL_ALLOCATION
     | Capability.PASSWORD_CHANGE
+    | Capability.TARGETED_CAST
 )
 
 

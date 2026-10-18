@@ -1219,6 +1219,29 @@
             "type": "i32"
           }
         ]
+      },
+      "253": {
+        "name": "CAST_TARGET",
+        "status": "supported",
+        "requires_capability": 2,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "x",
+            "type": "i16"
+          },
+          {
+            "name": "y",
+            "type": "i16"
+          }
+        ]
       }
     },
     "server": {

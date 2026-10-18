@@ -457,5 +457,24 @@
       "status": 3,
       "message": "No hay resultado confirmado."
     }
+  },
+  {
+    "name": "cast_legacy",
+    "direction": "client",
+    "hex": "1901",
+    "values": {
+      "slot": 1
+    }
+  },
+  {
+    "name": "cast_target",
+    "direction": "client",
+    "hex": "fd010137003200",
+    "values": {
+      "version": 1,
+      "slot": 1,
+      "x": 55,
+      "y": 50
+    }
   }
 ]

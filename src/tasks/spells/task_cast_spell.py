@@ -1,11 +1,12 @@
 """Tarea para lanzar hechizos."""
 
 import logging
+import struct
 from typing import TYPE_CHECKING
 
 from src.commands.cast_spell_command import CastSpellCommand
-from src.network.packet_reader import PacketReader
-from src.network.packet_validator import PacketValidator
+from src.network.capabilities import Capability
+from src.network.packet_id import ClientPacketID
 from src.network.session_manager import SessionManager
 from src.tasks.task import Task
 
@@ -16,8 +17,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # Constantes para el packet CAST_SPELL
-CAST_SPELL_MIN_SIZE_OLD = 3  # Formato antiguo: PacketID + slot + padding
-PACKET_SIZE_WITH_COORDS = 7  # Tamaño del packet con coordenadas
+MAX_SPELL_SLOTS = 35
+MAX_MAP_COORD = 100
+CAST_SPELL_MIN_SIZE_OLD = 2  # ID + slot, igual al writer legacy
+PACKET_SIZE_WITH_COORDS = 7  # ID distinto + versión + slot + dos i16
 
 
 class TaskCastSpell(Task):
@@ -52,36 +55,33 @@ class TaskCastSpell(Task):
             Tupla (slot, target_x, target_y) o None si hay error.
             target_x y target_y pueden ser None si el packet usa formato antiguo.
         """
-        # Validar longitud mínima del packet
-        if len(self.data) < CAST_SPELL_MIN_SIZE_OLD:
+        if not self.data:
             return None
-
-        try:
-            reader = PacketReader(self.data)
-            validator = PacketValidator(reader)
-            slot = validator.read_slot(min_slot=1, max_slot=35)  # Spellbook tiene más slots
-
-            if validator.has_errors() or slot is None:
+        if self.data[0] == ClientPacketID.CAST_SPELL:
+            if len(self.data) != CAST_SPELL_MIN_SIZE_OLD:
                 return None
-
-            # Determinar si el packet incluye coordenadas del target
-            has_target_coords = len(self.data) >= PACKET_SIZE_WITH_COORDS
-
-            if has_target_coords:
-                # Formato nuevo: coordenadas del target incluidas
-                if len(self.data) < PACKET_SIZE_WITH_COORDS:
-                    return None
-
-                # Leer coordenadas directamente con el reader (ya consumimos el slot)
-                target_x = reader.read_int16()
-                target_y = reader.read_int16()
-                return (slot, target_x, target_y)
-            # Formato antiguo: sin coordenadas
-            return (slot, None, None)  # noqa: TRY300
-
-        except Exception:
-            logger.exception("Error al parsear packet CAST_SPELL")
+            slot = self.data[1]
+            return (slot, None, None) if 1 <= slot <= MAX_SPELL_SLOTS else None
+        if (
+            self.data[0] != ClientPacketID.CAST_TARGET
+            or len(self.data) != PACKET_SIZE_WITH_COORDS
+            or self.data[1] != 1
+        ):
             return None
+        slot, x, y = struct.unpack_from("<Bhh", self.data, 2)
+        if (
+            not 1 <= slot <= MAX_SPELL_SLOTS
+            or not 1 <= x <= MAX_MAP_COORD
+            or not 1 <= y <= MAX_MAP_COORD
+        ):
+            return None
+        connection = self.message_sender.connection
+        if (
+            connection.is_authenticated is not True
+            or not connection.capabilities.enabled & Capability.TARGETED_CAST
+        ):
+            return None
+        return slot, x, y
 
     async def execute(self) -> None:
         """Procesa el lanzamiento de hechizo (solo parsing y delegación).

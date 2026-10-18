@@ -140,6 +140,7 @@ class ClientPacketID(IntEnum):
     # STOP_SHARING_NPC = 127
     # CONSULTATION = 128
     MOVE_ITEM = 129  # Reordenar slots del inventario
+    CAST_TARGET = 253  # ID distinto, versión y coordenadas; capacidad 2
     TRADE_ACTION = 252  # Acción con sesión y revisión explícitas
     CAPABILITIES = 250  # Negociación optativa después del login
 

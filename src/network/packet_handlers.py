@@ -86,6 +86,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
     ClientPacketID.PICK_UP: TaskPickup,  # Recoger item del suelo
     ClientPacketID.DROP: TaskDrop,  # Tirar item al suelo
+    ClientPacketID.CAST_TARGET: TaskCastSpell,
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
     ClientPacketID.MOVE_SPELL: TaskMoveSpell,  # Reordenar hechizo en el libro
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC
