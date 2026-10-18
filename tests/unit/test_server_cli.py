@@ -34,8 +34,8 @@ class TestServerCLI:
             args = cli.parse_args()
 
             assert args.debug is False
-            assert args.host == "0.0.0.0"
-            assert args.port == 7666
+            assert args.host is None
+            assert args.port is None
             assert args.ssl is False
             assert args.ssl_cert is None
             assert args.ssl_key is None

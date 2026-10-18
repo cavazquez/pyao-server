@@ -57,14 +57,14 @@ Ejemplos:
         parser.add_argument(
             "--host",
             type=str,
-            default="0.0.0.0",
-            help="Host donde escuchar (default: 0.0.0.0)",
+            default=None,
+            help="Host donde escuchar (CLI > entorno > TOML > 0.0.0.0)",
         )
         parser.add_argument(
             "--port",
             type=int,
-            default=7666,
-            help="Puerto donde escuchar (default: 7666).",
+            default=None,
+            help="Puerto donde escuchar (CLI > entorno > TOML > 7666)",
         )
         parser.add_argument(
             "--ssl",

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
 
@@ -216,6 +216,22 @@ class GameConfig(BaseSettings):
     redis: RedisConfig = Field(default_factory=RedisConfig)
 
     @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],  # noqa: ARG003 - firma requerida por Pydantic
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """Prioriza el entorno sobre el TOML representado por init_settings.
+
+        Returns:
+            Fuentes en orden de precedencia; el CLI se aplica en ArgentumServer.
+        """
+        return env_settings, dotenv_settings, init_settings, file_secret_settings
+
+    @classmethod
     def from_toml(cls, toml_path: Path | str) -> GameConfig:
         """Carga configuración desde archivo TOML.
 
@@ -275,12 +291,7 @@ class GameConfig(BaseSettings):
             config_dict["redis"] = data["redis"]
 
         try:
-            # Crear instancia desde TOML
-            # Nota: Cuando se carga desde TOML, los valores del TOML tienen prioridad
-            # sobre las variables de entorno (comportamiento estándar de Pydantic Settings).
-            #
-            # Para que las variables de entorno tengan prioridad, usa GameConfig() directamente
-            # sin from_toml, o establece las variables de entorno ANTES de llamar from_toml.
+            # El entorno y .env prevalecen sobre los valores del archivo.
             return cls(**config_dict)
         except Exception as e:
             msg = f"Error validando configuración: {e}"

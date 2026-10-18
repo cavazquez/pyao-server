@@ -4,6 +4,7 @@ import logging
 import time
 from pathlib import Path
 
+from src.config.config_manager import config_manager
 from src.core.dependency_container import DependencyContainer
 from src.core.game_tick_initializer import GameTickInitializer
 from src.core.redis_initializer import RedisInitializer
@@ -74,10 +75,10 @@ class ServerInitializer:
         # 1. Inicializar Redis y datos
         redis_client = await RedisInitializer.initialize()
 
-        # Obtener configuración de host y port desde Redis
-        host = await redis_client.get_server_host()
-        port = await redis_client.get_server_port()
-        logger.info("✓ Configuración cargada: %s:%d", host, port)
+        # Redis conserva metadatos históricos; no participa del bind del socket.
+        host = str(config_manager.get("server.host", "0.0.0.0"))
+        port = int(str(config_manager.get("server.port", 7666)))
+        logger.info("✓ Configuración local cargada: %s:%d", host, port)
 
         # 2. Inicializar repositorios
         repo_init = RepositoryInitializer(redis_client)

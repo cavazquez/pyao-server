@@ -66,7 +66,6 @@ def main() -> None:
 
     # Mostrar información de inicio
     logger.info("Iniciando PyAO Server v%s...", cli.VERSION)
-    logger.info("Host: %s | Puerto: %d", args.host, args.port)
     if ssl_manager.enabled:
         logger.info(
             "SSL habilitado | Certificado: %s | Clave: %s",
@@ -80,6 +79,7 @@ def main() -> None:
         port=args.port,
         ssl_manager=ssl_manager,
     )
+    logger.info("Endpoint efectivo: %s:%d", server.host, server.port)
 
     try:
         asyncio.run(server.start())

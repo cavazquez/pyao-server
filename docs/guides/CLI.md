@@ -270,3 +270,15 @@ redis-server
 - [SERVICES_ARCHITECTURE.md](architecture/SERVICES_ARCHITECTURE.md) - Arquitectura del servidor
 - [GAME_TICK_SYSTEM.md](systems/GAME_TICK_SYSTEM.md) - Sistema de efectos y tick
 - [NPC_SYSTEM.md](systems/NPC_SYSTEM.md) - Sistema de NPCs
+
+
+## Precedencia del endpoint
+
+El socket se resuelve una vez: opciones explícitas `--host`/`--port`, variables `PYAO_SERVER__HOST`/`PYAO_SERVER__PORT` (o sus alias heredados), `.env`, `config/server.toml` y finalmente `0.0.0.0:7666`. Una opción omitida queda como `None` en el parser y no bloquea la configuración del entorno/archivo. Los valores `config:server:host` y `config:server:port` históricos de Redis se conservan como metadatos de compatibilidad y no determinan el bind. El log `Endpoint efectivo` y el log del socket reflejan la dirección realmente elegida. Un puerto explícito inválido provoca un error; no se sustituye por el default.
+
+```bash
+PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1
+# 127.0.0.1:8000, aunque el TOML tenga otro puerto.
+PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1 --port 7777
+# 127.0.0.1:7777.
+```

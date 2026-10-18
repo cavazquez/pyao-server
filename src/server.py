@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import redis.asyncio as redis
 
 from src.config.config_manager import config_manager
+from src.config.game_config import ServerConfig
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
@@ -38,8 +39,12 @@ class ArgentumServer:
             port: Puerto donde escuchar (usa config si es None).
             ssl_manager: Gestor de configuración SSL.
         """
-        self.host = host or config_manager.get("server.host", "0.0.0.0")
-        self.port = port or config_manager.get("server.port", 7666)
+        endpoint = ServerConfig(
+            host=host if host is not None else str(config_manager.get("server.host", "0.0.0.0")),
+            port=port if port is not None else int(str(config_manager.get("server.port", 7666))),
+        )
+        self.host = endpoint.host
+        self.port = endpoint.port
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
@@ -175,7 +180,7 @@ class ArgentumServer:
         """Inicia el servidor TCP."""
         try:
             # Inicializar todas las dependencias usando ServerInitializer
-            self.deps, self.host, self.port = await ServerInitializer.initialize_all()
+            self.deps, _, _ = await ServerInitializer.initialize_all()
 
             # Crear TaskFactory con las dependencias
             self.task_factory = TaskFactory(self.deps)
