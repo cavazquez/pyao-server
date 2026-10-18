@@ -2,7 +2,7 @@
 
 Índice de la documentación interna. Presentación del proyecto: [**README.md**](../README.md).
 
-> **Última reorganización:** 2026-05 — docs agrupadas por tipo en subcarpetas.
+Primera lectura para trabajar en la próxima versión: **[Alcance de la 1.0](development/ALCANCE_1_0.md)**. Define las funciones, el orden de los issues y las pruebas conjuntas de servidor y cliente. Actualizado el 18/10/2026 mediante el [issue #123](https://github.com/cavazquez/pyao-server/issues/123).
 
 ## Entrada rápida
 
@@ -11,7 +11,7 @@
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Cómo contribuir, estilo, PRs |
 | [CLAUDE.md](CLAUDE.md) | Reglas de desarrollo para asistentes IA |
 | [architecture/ARCHITECTURE.md](architecture/ARCHITECTURE.md) | Arquitectura del servidor (primera lectura) |
-| [development/ESTADO_ACTUAL.md](development/ESTADO_ACTUAL.md) | Estado y roadmap interno |
+| [development/ESTADO_ACTUAL.md](development/ESTADO_ACTUAL.md) | Versiones observadas y bloqueos conocidos |
 | [guides/REDIS.md](guides/REDIS.md) | Docker Redis, operación |
 | [todo/README.md](todo/README.md) | TODOs y roadmaps |
 
@@ -59,7 +59,8 @@ Setup, protocolo, datos y herramientas.
 
 ## Desarrollo ([development/](development/README.md))
 
-- [ESTADO_ACTUAL.md](development/ESTADO_ACTUAL.md) — Estado del proyecto
+- [ALCANCE_1_0.md](development/ALCANCE_1_0.md) — Requisitos, issues y pruebas de servidor y cliente para la 1.0
+- [ESTADO_ACTUAL.md](development/ESTADO_ACTUAL.md) — Estado observado y bloqueos conocidos
 - [REFACTORING.md](development/REFACTORING.md) — Oportunidades de refactor + handlers
 - [TESTING.md](development/TESTING.md) — Cobertura y tests
 - [TECH_IMPROVEMENTS_BACKLOG.md](development/TECH_IMPROVEMENTS_BACKLOG.md) — Backlog técnico
@@ -76,8 +77,8 @@ Setup, protocolo, datos y herramientas.
 ## Planificación
 
 - [todo/README.md](todo/README.md) — Índice de TODOs
-- [todo/TODO_CONSOLIDADO.md](todo/TODO_CONSOLIDADO.md) — Backlog consolidado
-- [todo/ROADMAP_VERSIONES.md](todo/ROADMAP_VERSIONES.md) — Roadmap por versiones
+- [todo/TODO_CONSOLIDADO.md](todo/TODO_CONSOLIDADO.md) — Backlog y conservación de funciones existentes
+- [todo/ROADMAP_VERSIONES.md](todo/ROADMAP_VERSIONES.md) — Objetivo de versión y acceso al alcance vigente
 
 ## Histórico
 
