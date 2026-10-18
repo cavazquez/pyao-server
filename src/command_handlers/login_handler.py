@@ -137,6 +137,21 @@ class LoginCommandHandler(CommandHandler):
             await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
             return CommandResult.error("Usuario ya conectado")
 
+        if not await self.message_sender.connection.reserve_session(user_id):
+            await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
+            return CommandResult.error("Usuario ya conectado")
+        try:
+            return await self._complete_login(user_id, user_class, username)
+        except BaseException:
+            self.message_sender.connection.close()
+            raise
+
+    async def _complete_login(self, user_id: int, user_class: int, username: str) -> CommandResult:
+        """Publica y completa el login únicamente después de obtener la reserva.
+
+        Returns:
+            Estado confirmado del jugador inicializado.
+        """
         logger.info("✅ Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Configurar sesión

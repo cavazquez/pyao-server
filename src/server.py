@@ -52,6 +52,7 @@ class ArgentumServer:
         ).max_connections
         security = SecurityConfig.model_validate(config_manager.get_section("security"))
         self.auth_timeout_seconds = security.auth_timeout_seconds
+        self.session_lease_seconds = security.session_lease_seconds
         self.auth_limiter = AuthLimiter(security)
         self._active_connections = 0
         self.ssl_manager = ssl_manager or SSLManager.disabled()
@@ -107,9 +108,14 @@ class ArgentumServer:
         self._active_connections += 1
         counted_in_redis = False
         session_data: dict[str, dict[str, int]] = {}
+        connection: ClientConnection | None = None
+        message_sender: MessageSender | None = None
         try:
             connection = ClientConnection(reader, writer)
             connection.auth_limiter = self.auth_limiter
+            connection.session_lease_seconds = self.session_lease_seconds
+            if self.deps and self.deps.redis_client:
+                connection.session_redis = self.deps.redis_client.redis
             deadline = asyncio.get_running_loop().time() + self.auth_timeout_seconds
             message_sender = MessageSender(connection)
             logger.info("Nueva conexión desde %s", connection.address)
@@ -132,10 +138,15 @@ class ArgentumServer:
             logger.exception("Error manejando conexión")
         finally:
             try:
-                await self._cleanup_player(session_data)
+                await self._cleanup_player(session_data, message_sender)
             except Exception:
                 logger.exception("Error limpiando jugador desconectado")
             finally:
+                if connection is not None:
+                    try:
+                        await connection.release_session()
+                    except Exception:
+                        logger.exception("No se pudo liberar la reserva; vencerá por TTL")
                 # Incluso si falla el login, Redis o el cierre lógico, liberar exactamente una vez.
                 self._active_connections -= 1
                 try:
@@ -150,7 +161,9 @@ class ArgentumServer:
                         except Exception:
                             logger.exception("No se pudo actualizar la métrica de conexiones")
 
-    async def _cleanup_player(self, session_data: dict[str, dict[str, int]]) -> None:
+    async def _cleanup_player(
+        self, session_data: dict[str, dict[str, int]], message_sender: MessageSender | None = None
+    ) -> None:
         """Retira el jugador del mundo al finalizar su conexión."""
         if "user_id" not in session_data or not self.deps or not self.deps.player_repo:
             return
@@ -158,6 +171,10 @@ class ArgentumServer:
         if isinstance(user_id_value, dict):
             return
         user_id = int(user_id_value)
+        if message_sender is not None:
+            current = self.deps.map_manager.get_player_message_sender(user_id)
+            if current is not message_sender:
+                return
         # Obtener el mapa del jugador antes de removerlo
         position = await self.deps.player_repo.get_position(user_id)
         if position:

@@ -347,3 +347,16 @@ sin desalojar contadores activos. Cada opción admite `PYAO_SECURITY__<NOMBRE>`.
 Los límites por IP/cuenta son por proceso; al usar varios procesos debe aplicarse
 también un límite en el ingreso común. Las respuestas de rechazo del login no
 indican si el usuario existe.
+
+### Una sesión por cuenta
+
+Después de verificar la contraseña se reserva `session:<user_id>:owner` mediante
+`SET NX EX`, antes de guardar la sesión o publicar el personaje. Cada conexión
+tiene un token aleatorio privado. La renovación y liberación comparan ese token
+con WATCH/MULTI, por lo que una conexión anterior nunca borra la reserva de una
+nueva. `security.session_lease_seconds` (`PYAO_SECURITY__SESSION_LEASE_SECONDS`,
+por defecto 90 segundos) fija el TTL; se renueva cada tercio de ese plazo. Una
+pérdida/error de renovación cierra y cancela la sesión propietaria. Fallar durante
+el login termina en la limpieza de la conexión y su reserva; una caída de proceso
+permite reingresar al vencer el TTL sin editar Redis. En un cierre limpio se
+libera después de retirar al jugador del mundo.

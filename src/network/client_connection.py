@@ -2,8 +2,13 @@
 
 import asyncio
 import logging
+from typing import TYPE_CHECKING
 
 from src.security.auth_limits import AuthLimiter, ConnectionAttempts
+from src.security.session_lease import SessionLease
+
+if TYPE_CHECKING:
+    from redis.asyncio import Redis
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +25,10 @@ class ClientConnection:
         """
         self.auth_limiter: AuthLimiter | None = None
         self.auth_attempts = ConnectionAttempts()
+        self.session_redis: Redis | None = None
+        self.session_lease_seconds = 90
+        self._session_lease: SessionLease | None = None
+        self._lease_heartbeat: asyncio.Task[None] | None = None
         self.is_authenticated = False
         self.reader = reader
         self.writer = writer
@@ -39,6 +48,51 @@ class ClientConnection:
             return True
         ip = str(self.address[0]) if isinstance(self.address, tuple) else str(self.address)
         return self.auth_limiter.allow(ip, username, self.auth_attempts)
+
+    async def reserve_session(self, user_id: int) -> bool:
+        """Reserva una cuenta antes del spawn, manteniendo el propietario hasta cerrar.
+
+        Returns:
+            True si se adquirió la reserva.
+        """
+        if self._session_lease is not None:
+            return False
+        if self.session_redis is None:
+            return True  # Conexiones de prueba sin persistencia.
+        lease = SessionLease(self.session_redis, user_id, self.session_lease_seconds)
+        self._session_lease = lease
+        if not await lease.acquire():
+            self._session_lease = None
+            return False
+        owner_task = asyncio.current_task()
+        self._lease_heartbeat = asyncio.create_task(self._renew_session(lease, owner_task))
+        return True
+
+    async def _renew_session(
+        self, lease: SessionLease, owner_task: asyncio.Task[object] | None
+    ) -> None:
+        try:
+            while True:
+                await asyncio.sleep(lease.ttl / 3)
+                if not await lease.renew():
+                    break
+        except asyncio.CancelledError:
+            return
+        except Exception:
+            logger.exception("No se pudo renovar la reserva de sesión")
+        self.close()
+        if owner_task is not None:
+            owner_task.cancel()
+
+    async def release_session(self) -> None:
+        """Detiene la renovación y retira sólo la reserva de esta conexión."""
+        if self._lease_heartbeat is not None:
+            self._lease_heartbeat.cancel()
+            await asyncio.gather(self._lease_heartbeat, return_exceptions=True)
+            self._lease_heartbeat = None
+        if self._session_lease is not None:
+            lease, self._session_lease = self._session_lease, None
+            await lease.release()
 
     async def send(self, data: bytes) -> None:
         """Envía datos al cliente.

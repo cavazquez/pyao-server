@@ -198,6 +198,7 @@ class SecurityConfig(BaseModel):
     auth_attempts_per_ip: int = Field(default=30, ge=1)
     auth_attempts_per_account: int = Field(default=8, ge=1)
     auth_max_keys: int = Field(default=10000, ge=2)
+    session_lease_seconds: int = Field(default=90, ge=3, le=3600)
 
 
 class GameConfig(BaseSettings):
