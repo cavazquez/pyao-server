@@ -82,3 +82,8 @@ mana_per_int = 50000
 initial_gold = 0
 initial_elu = 300
 elu_exponent = 1.8
+
+[security]
+# Cada hash usa ~64 MiB; limitar también las solicitudes pendientes.
+hash_workers = 2
+hash_max_pending = 4

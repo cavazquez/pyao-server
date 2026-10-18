@@ -12,6 +12,7 @@ from src.config.game_config import ServerConfig
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
+from src.security.password_executor import close_password_executor
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.tasks.task_factory import TaskFactory
 from src.tasks.task_null import TaskNull
@@ -260,6 +261,8 @@ class ArgentumServer:
             self.server.close()
             await self.server.wait_closed()
             logger.info("Servidor detenido")
+
+        await close_password_executor()
 
         # Desconectar de Redis
         if self.deps and self.deps.redis_client:

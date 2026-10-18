@@ -183,6 +183,7 @@ class ConfigManager:
                 "format": self._game_config.logging.format,
                 "file": self._game_config.logging.file,
             },
+            "security": self._game_config.security.model_dump(),
             "redis": {
                 "host": self._game_config.redis.host,
                 "port": self._game_config.redis.port,

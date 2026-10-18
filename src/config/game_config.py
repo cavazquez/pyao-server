@@ -187,6 +187,13 @@ class RedisConfig(BaseModel):
     socket_connect_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
 
 
+class SecurityConfig(BaseModel):
+    """Presupuestos de CPU y memoria para autenticación."""
+
+    hash_workers: int = Field(default=2, ge=1, le=16)
+    hash_max_pending: int = Field(default=4, ge=0, le=128)
+
+
 class GameConfig(BaseSettings):
     """Configuración completa del juego con validación estricta.
 
@@ -217,6 +224,7 @@ class GameConfig(BaseSettings):
     game: GameConfigSection = Field(default_factory=GameConfigSection)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
+    security: SecurityConfig = Field(default_factory=SecurityConfig)
 
     @classmethod
     def settings_customise_sources(
@@ -292,6 +300,9 @@ class GameConfig(BaseSettings):
         # Redis
         if "redis" in data:
             config_dict["redis"] = data["redis"]
+
+        if "security" in data:
+            config_dict["security"] = data["security"]
 
         try:
             # El entorno y .env prevalecen sobre los valores del archivo.
@@ -384,6 +395,7 @@ class GameConfig(BaseSettings):
         self.game = new_config.game
         self.logging = new_config.logging
         self.redis = new_config.redis
+        self.security = new_config.security
 
         logger.info("Configuración recargada desde %s", toml_path)
 

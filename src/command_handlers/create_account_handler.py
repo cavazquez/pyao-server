@@ -14,6 +14,7 @@ from src.command_handlers.create_account_validation_handler import (
 )
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_account_command import CreateAccountCommand
+from src.security.password_executor import PasswordQueueFullError, get_password_executor
 from src.services.game.balance_service import get_balance_service
 from src.utils.password_utils import hash_password
 
@@ -132,7 +133,10 @@ class CreateAccountCommandHandler(CommandHandler):
             return CommandResult.error("Campos de cuenta inválidos")
 
         # Hash de la contraseña
-        password_hash = hash_password(password)
+        try:
+            password_hash = await get_password_executor().run(hash_password, password)
+        except PasswordQueueFullError:
+            return CommandResult.error("Servicio de autenticación ocupado; reintentá más tarde")
 
         # Obtener atributos de dados de la sesión
         stats_data = self.character_handler.get_dice_attributes_from_session(self.session_data)

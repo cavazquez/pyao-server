@@ -322,3 +322,14 @@ o cancelación liberan la plaza una sola vez; el contador Redis es una métrica,
 no una barrera de admisión. El backlog TCP del sistema operativo no configura
 este límite. En despliegues con varios procesos el operador debe considerar la
 suma de sus límites.
+
+### Presupuesto de Argon2
+
+`security.hash_workers` (`PYAO_SECURITY__HASH_WORKERS`, por defecto 2) limita los
+trabajos activos; cada uno mantiene los parámetros previos Argon2id y usa unos
+64 MiB. `security.hash_max_pending` (`PYAO_SECURITY__HASH_MAX_PENDING`, por defecto
+4) limita los pendientes. Altas y verificaciones comparten el mismo pool por
+proceso. La saturación se rechaza con un error de servicio ocupado. Cancelar una
+conexión no libera prematuramente la plaza de un hash: sigue ocupada hasta que
+el trabajo realmente termina, evitando acumular tareas nativas invisibles. El
+apagado rechaza nuevos trabajos, cancela los pendientes y espera los activos.
