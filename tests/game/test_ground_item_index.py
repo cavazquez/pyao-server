@@ -1,8 +1,72 @@
 """Tests unitarios para GroundItemIndex."""
 
+import asyncio
+from unittest.mock import AsyncMock
+
 import pytest
 
 from src.game.ground_item_index import GroundItemIndex
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("update", ["load", "commit"])
+async def test_snapshot_orders_concurrent_load_or_commit_after_visible_objects(update):
+    """El suelo inicial precede a la siguiente carga/commit y usa el stack visible."""
+    index = GroundItemIndex(max_items_per_tile=3)
+    index.add_ground_item(1, 1, 1, {"grh_index": 100})
+    index.add_ground_item(1, 1, 1, {"grh_index": 999})
+    index.add_ground_item(1, 2, 2, {"grh_index": 101})
+    index.add_ground_item(2, 3, 3, {"grh_index": 900})
+    started, release = asyncio.Event(), asyncio.Event()
+    stream = []
+
+    async def send_object(x, y, graphic):
+        stream.append((x, y, graphic))
+        if len(stream) == 1:
+            started.set()
+            await release.wait()
+
+    snapshot = asyncio.create_task(index.send_snapshot(1, send_object))
+    await started.wait()
+    if update == "load":
+        repository = DummyRepo()
+        repository.to_load[1] = {(3, 3): [{"grh_index": 102}]}
+        index.ground_items_repo = repository
+        changed = asyncio.create_task(index.load_ground_items(1))
+    else:
+        changed = asyncio.create_task(
+            index.add_committed(1, 3, 3, {"item_id": 1, "quantity": 1, "grh_index": 102}, None)
+        )
+    await asyncio.sleep(0)
+    assert not changed.done()
+    release.set()
+    assert await snapshot == 2
+    await changed
+    assert stream == [(1, 1, 100), (2, 2, 101)]
+    assert index.get_ground_items(1, 3, 3)[0]["grh_index"] == 102
+    assert index.get_ground_items(2, 3, 3)[0]["grh_index"] == 900
+
+
+@pytest.mark.asyncio
+async def test_cancelled_snapshot_does_not_keep_map_locked():
+    """Cancelar el envío permite continuar una operación posterior del mapa."""
+    index = GroundItemIndex(max_items_per_tile=3)
+    index.add_ground_item(1, 1, 1, {"grh_index": 100})
+    started, release = asyncio.Event(), asyncio.Event()
+
+    async def send_object(_x, _y, _graphic):
+        started.set()
+        await release.wait()
+
+    snapshot = asyncio.create_task(index.send_snapshot(1, send_object))
+    await started.wait()
+    snapshot.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await snapshot
+    assert await asyncio.wait_for(
+        index.add_committed(1, 2, 2, {"item_id": 1, "quantity": 1}, None), timeout=1
+    )
+    assert await index.send_snapshot(2, AsyncMock()) == 0
 
 
 class DummyRepo:

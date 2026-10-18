@@ -93,7 +93,8 @@ class TestCombatService:
         assert result["damage"] > 0
         assert result["critical"] is False
 
-    async def test_player_attack_npc_kills_npc(self) -> None:
+    @pytest.mark.parametrize("defer_rewards", [False, True])
+    async def test_player_attack_npc_kills_npc(self, defer_rewards: bool) -> None:
         """Test de ataque que mata al NPC."""
         player_repo = MagicMock()
         npc_repo = MagicMock()
@@ -134,7 +135,7 @@ class TestCombatService:
         )
 
         with patch("src.combat.combat_critical_calculator.random.random", return_value=1.0):
-            result = await service.player_attack_npc(1, npc)
+            result = await service.player_attack_npc(1, npc, defer_rewards=defer_rewards)
 
         assert result is not None
         assert result["npc_died"] is True
@@ -142,6 +143,7 @@ class TestCombatService:
         assert "gold" in result
         assert result["experience"] > 0
         assert result["gold"] > 0
+        assert player_repo.update_experience.await_count == (0 if defer_rewards else 1)
 
     async def test_player_attack_non_attackable_npc(self) -> None:
         """Test de ataque a NPC no atacable."""

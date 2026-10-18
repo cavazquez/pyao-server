@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
+SNAPSHOT_SEND_BATCH = 32
 
 
 class GroundItemIndex:
@@ -84,6 +85,37 @@ class GroundItemIndex:
             list[dict[str, int | str | None]]: Items en el tile (o lista vacía).
         """
         return self._ground_items.get((map_id, x, y), [])
+
+    @staticmethod
+    def _graphic_for(item: dict[str, int | str | None]) -> int:
+        graphic = item.get("grh_index")
+        if not isinstance(graphic, int):
+            definition = ITEMS_CATALOG.get(int(item.get("item_id") or 0))
+            graphic = definition.graphic_id if definition else 0
+        return graphic
+
+    async def send_snapshot(
+        self, map_id: int, send_object: Callable[[int, int, int], Awaitable[None]]
+    ) -> int:
+        """Encola el suelo visible antes de permitir nuevas cargas/commits/notificaciones.
+
+        Returns:
+            Número de posiciones visibles enviadas.
+        """
+        async with self._locks.setdefault(map_id, asyncio.Lock()):
+            entries = [
+                (x, y, self._graphic_for(items[0]))
+                for (current_map, x, y), items in self._ground_items.items()
+                if current_map == map_id and items
+            ]
+            sent = 0
+            for x, y, graphic in entries:
+                if graphic > 0:
+                    await send_object(x, y, graphic)
+                    sent += 1
+                    if sent % SNAPSHOT_SEND_BATCH == 0:
+                        await asyncio.sleep(0)
+            return sent
 
     def remove_ground_item(
         self, map_id: int, x: int, y: int, item_index: int = 0
@@ -185,11 +217,7 @@ class GroundItemIndex:
         tile = self.get_ground_items(map_id, x, y)
         if not tile:
             return
-        item = tile[0]
-        graphic = item.get("grh_index")
-        if not isinstance(graphic, int):
-            definition = ITEMS_CATALOG.get(int(item.get("item_id") or 0))
-            graphic = definition.graphic_id if definition else 0
+        graphic = self._graphic_for(tile[0])
         if graphic > 0:
             await broadcast.broadcast_object_create(map_id=map_id, x=x, y=y, grh_index=graphic)
 

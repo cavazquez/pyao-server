@@ -30,7 +30,7 @@ async def test_task_talk_success() -> None:
 
     # Construir paquete TALK con mensaje "Hola"
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -71,7 +71,7 @@ async def test_task_talk_with_broadcast() -> None:
 
     # Construir paquete TALK con mensaje "Hola mundo"
     message = "Hola mundo"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -110,7 +110,7 @@ async def test_task_talk_empty_message() -> None:
 
     # Construir paquete TALK con mensaje vacío (debería fallar validación)
     message = ""
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -140,7 +140,7 @@ async def test_task_talk_long_message() -> None:
 
     # Construir paquete TALK con mensaje largo (pero dentro del límite de 255)
     message = "Este es un mensaje largo " * 8  # ~200 caracteres, dentro del límite
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -160,7 +160,7 @@ async def test_task_talk_long_message() -> None:
 
 @pytest.mark.asyncio
 async def test_task_talk_unicode_message() -> None:
-    """Verifica que TaskTalk maneje correctamente mensajes con Unicode."""
+    """Verifica que TaskTalk maneje acentos del contrato Latin-1."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -172,8 +172,8 @@ async def test_task_talk_unicode_message() -> None:
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     # Construir paquete TALK con mensaje Unicode
-    message = "Hola 你好 مرحبا 🎮"
-    message_bytes = message.encode("utf-8")
+    message = "Hola, pingüino: caña y aceptación"
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -261,7 +261,7 @@ async def test_task_talk_no_session() -> None:
 
     # Construir paquete TALK válido
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -292,7 +292,7 @@ async def test_task_talk_without_username() -> None:
 
     # Construir paquete TALK
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -326,7 +326,7 @@ async def test_task_talk_handler_not_available() -> None:
 
     # Construir paquete TALK válido
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.TALK]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 

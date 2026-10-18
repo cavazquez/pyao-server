@@ -39,7 +39,10 @@ async def test_password_file_reaches_constructor_without_logging(tmp_path, monke
     raw.set = AsyncMock(return_value=False)
     raw.aclose = AsyncMock()
     client = RedisClient()
-    with patch("src.utils.redis_client.redis.Redis", return_value=raw) as constructor:
+    with (
+        patch("src.utils.redis_client.redis.BlockingConnectionPool") as constructor,
+        patch("src.utils.redis_client.redis.Redis.from_pool", return_value=raw),
+    ):
         await client.connect(settings)
         assert constructor.call_args.kwargs["password"] == canary
     await client.disconnect()

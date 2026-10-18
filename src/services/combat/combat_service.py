@@ -76,7 +76,12 @@ class CombatService:
             self.weapon_service = WeaponService(equipment_repo, inventory_repo, item_catalog)
 
     async def player_attack_npc(
-        self, user_id: int, npc: NPC, message_sender: MessageSender | None = None
+        self,
+        user_id: int,
+        npc: NPC,
+        message_sender: MessageSender | None = None,
+        *,
+        defer_rewards: bool = False,
     ) -> dict[str, int | bool] | None:
         """Jugador ataca a un NPC.
 
@@ -84,6 +89,7 @@ class CombatService:
             user_id: ID del jugador atacante.
             npc: NPC objetivo.
             message_sender: MessageSender para enviar updates al cliente.
+            defer_rewards: El servicio de muerte liquidará la recompensa una sola vez.
 
         Returns:
             Diccionario con resultado del ataque:
@@ -179,8 +185,10 @@ class CombatService:
             result["experience"] = experience
             result["gold"] = gold  # Oro para dropear en el suelo (manejado por NPCDeathService)
 
-            # Dar experiencia al jugador (esto sí se da directamente)
-            await self._give_experience(user_id, experience, message_sender)
+            # El flujo de producción usa NPCDeathService para solo/party. El
+            # fallback sin ese servicio conserva el otorgamiento directo.
+            if not defer_rewards:
+                await self._give_experience(user_id, experience, message_sender)
 
             # Nota: El drop de oro lo maneja NPCDeathService.handle_npc_death()
             # cuando attack_handler llama a ese servicio

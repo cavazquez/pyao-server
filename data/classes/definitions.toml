@@ -62,3 +62,103 @@ allowed_armor_types = ["ligera", "cuero"]
 initial_skills = { agilidad = 10, robustez = 7, supervivencia = 5, magia = 2 }
 description = "Combatiente a distancia. Especializado en arquería y supervivencia."
 
+
+# Clases del contrato propio que utilizaban el fallback histórico de atributos
+# neutros (10) y sin skills adicionales. Se explicitan sin cambiar el balance
+# de classes/balance.toml ni renumerar IDs.
+
+[[classes.character_class]]
+id = 4
+name = "Asesino"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 5
+name = "Ladron"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 6
+name = "Bardo"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 7
+name = "Druida"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 8
+name = "Bandido"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 9
+name = "Paladin"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 11
+name = "Trabajador"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}
+
+[[classes.character_class]]
+id = 12
+name = "Pirata"
+base_strength = 10
+base_agility = 10
+base_intelligence = 10
+base_charisma = 10
+base_constitution = 10
+allowed_weapon_types = []
+allowed_armor_types = []
+initial_skills = {}

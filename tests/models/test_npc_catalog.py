@@ -8,6 +8,43 @@ from src.models.npc_catalog import NPCCatalog
 class TestNPCCatalog:
     """Tests para NPCCatalog."""
 
+    def test_versioned_hostiles_preserve_identity_and_stats(self) -> None:
+        """Spawn e invocación consumen el catálogo real, sin NPC/100 HP por defecto."""
+        catalog = NPCCatalog()
+        bat = catalog.get_npc_data(500)
+        assert bat is not None
+        assert (bat["nombre"], bat["body_id"], bat["head_id"], bat["hp_max"]) == (
+            "Murciélago",
+            9,
+            0,
+            15,
+        )
+        assert bat["es_hostil"] is True
+        assert bat["es_atacable"] is True
+        skeleton = catalog.get_npc_data(520)
+        assert skeleton is not None
+        assert (skeleton["nombre"], skeleton["body_id"], skeleton["hp_max"]) == (
+            "Esqueleto Guerrero",
+            393,
+            320,
+        )
+
+    def test_legacy_fields_take_precedence_over_regenerated_aliases(self) -> None:
+        """Un override explícito del formato propio nunca se reemplaza al adaptar."""
+        row = {
+            "name": "Generated",
+            "nombre": "Propio",
+            "hp_max": 50,
+            "combat": {"max_hp": 100},
+            "es_hostil": False,
+            "behavior": {"hostile": 1},
+        }
+        normalized = NPCCatalog._normalize(row)
+        assert normalized["nombre"] == "Propio"
+        assert normalized["hp_max"] == 50
+        assert normalized["es_hostil"] is False
+        assert "body_id" not in row
+
     def test_load_catalog_success(self, tmp_path: Path) -> None:
         """Test de carga exitosa del catálogo."""
         # Crear archivos temporales con NPCs hostiles y amigables

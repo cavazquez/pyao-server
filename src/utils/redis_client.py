@@ -56,16 +56,18 @@ class RedisClient:
             config = RedisConfig.model_validate(config_manager.get_section("redis"))
 
         try:
-            self._redis = redis.Redis(
+            pool = redis.BlockingConnectionPool(
                 host=config.host,
                 password=config.read_password(),
                 port=config.port,
                 db=config.db,
                 max_connections=config.max_connections,
+                timeout=config.pool_timeout,
                 decode_responses=config.decode_responses,
                 socket_timeout=config.socket_timeout,
                 socket_connect_timeout=config.socket_connect_timeout,
             )
+            self._redis = redis.Redis.from_pool(pool)
             ping_response = self._redis.ping()
             if isinstance(ping_response, bool):
                 _ensure_ping_success(ping_response)
@@ -79,11 +81,11 @@ class RedisClient:
 
         except redis.ConnectionError as e:
             logger.warning("No se pudo conectar a Redis en %s:%d - %s", config.host, config.port, e)
-            self._redis = None
+            await self.disconnect()
             raise
         except redis.RedisError:
             logger.exception("Error al conectar a Redis")
-            self._redis = None
+            await self.disconnect()
             raise
 
     async def initialize_defaults(self) -> None:

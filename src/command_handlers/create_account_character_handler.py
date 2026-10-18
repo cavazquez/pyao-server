@@ -8,6 +8,7 @@ from src.models.item_constants import BOAT_ITEM_ID
 from src.models.mana import calculate_mana
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.game.class_service import get_class_service
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
@@ -44,6 +45,22 @@ class CreateAccountCharacterHandler:
             player_repo: Repositorio de jugadores.
         """
         self.player_repo = player_repo
+
+    async def create_initial_position(self, user_id: int, home: int) -> None:
+        """Aplica la ciudad elegida exclusivamente a un personaje sin posición.
+
+        Raises:
+            ValueError: Si el arranque no cargó la ciudad solicitada.
+        """
+        if await self.player_repo.get_position(user_id) is not None:
+            return
+        spawn = await self.player_repo.redis.hgetall(RedisKeys.home_spawn(home))
+        if not spawn:
+            msg = "La ciudad inicial no está configurada"
+            raise ValueError(msg)
+        await self.player_repo.set_position(
+            user_id, int(spawn["x"]), int(spawn["y"]), int(spawn["map"]), int(spawn["heading"])
+        )
 
     def get_dice_attributes_from_session(
         self, session_data: dict[str, dict[str, int] | int | str] | None

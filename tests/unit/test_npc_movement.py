@@ -6,7 +6,36 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.effects.effect_npc_movement import NPCMovementEffect
+from src.game.map_manager import MapManager
 from src.models.npc import NPC
+from src.models.npc_catalog import NPCCatalog
+from src.repositories.npc_repository import NPCRepository
+from src.services.npc.npc_service import NPCService
+
+
+@pytest.mark.asyncio
+async def test_follow_from_redis_copy_updates_live_actor_and_releases_tile(redis_client):
+    """La mascota leída de Redis mantiene actor/colisiones coherentes hasta liberarla."""
+    NPCService.reset_instance()
+    try:
+        maps = MapManager()
+        repository = NPCRepository(redis_client)
+        service = NPCService(repository, NPCCatalog(), maps, AsyncMock())
+        live = await service.spawn_npc(520, 1, 50, 50)
+        assert live is not None
+        recovered = await repository.get_npc(live.instance_id)
+        assert recovered is not None
+        assert recovered is not live
+        await service.move_npc(recovered, 49, 50, 4)
+        assert (live.x, live.y, live.heading) == (49, 50, 4)
+        assert maps.is_tile_occupied(1, 49, 50)
+        assert not maps.is_tile_occupied(1, 50, 50)
+        await service.remove_npc(recovered)
+        assert not maps.is_tile_occupied(1, 49, 50)
+        assert not maps.get_npcs_in_map(1)
+        assert await repository.get_npc(live.instance_id) is None
+    finally:
+        NPCService.reset_instance()
 
 
 def create_test_npc(

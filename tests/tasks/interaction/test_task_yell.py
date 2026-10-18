@@ -26,7 +26,7 @@ async def test_task_yell_success() -> None:
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -57,7 +57,7 @@ async def test_task_yell_long_message() -> None:
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     message = "Grito largo " * 10
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -84,7 +84,7 @@ async def test_task_yell_empty_message() -> None:
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     message = ""
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -111,7 +111,7 @@ async def test_task_yell_no_session() -> None:
     session_data: dict[str, dict[str, int]] = {}
 
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -138,7 +138,7 @@ async def test_task_yell_handler_not_available() -> None:
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
     message = "Hola"
-    message_bytes = message.encode("utf-8")
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 
@@ -148,7 +148,7 @@ async def test_task_yell_handler_not_available() -> None:
 
 @pytest.mark.asyncio
 async def test_task_yell_unicode() -> None:
-    """Verifica que TaskYell maneje correctamente mensajes Unicode."""
+    """Verifica que TaskYell maneje acentos del contrato Latin-1."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -159,8 +159,8 @@ async def test_task_yell_unicode() -> None:
 
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
-    message = " Gritó 你好"
-    message_bytes = message.encode("utf-8")
+    message = " ¡Gritó el pingüino!"
+    message_bytes = message.encode("latin-1")
     msg_length = len(message_bytes)
     data = bytes([ClientPacketID.YELL]) + msg_length.to_bytes(2, byteorder="little") + message_bytes
 

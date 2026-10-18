@@ -80,13 +80,13 @@ class TaskWhisper(Task):
         validator = PacketValidator(reader)
 
         receiver_result = validator.validate_string(
-            min_length=1, max_length=MAX_WHISPER_RECEIVER_LENGTH, encoding="utf-8"
+            min_length=1, max_length=MAX_WHISPER_RECEIVER_LENGTH, encoding="latin-1"
         )
         if not receiver_result.success:
             return None, None
 
         message_result = validator.validate_string(
-            min_length=1, max_length=MAX_CHAT_MESSAGE_LENGTH, encoding="utf-8"
+            min_length=1, max_length=MAX_CHAT_MESSAGE_LENGTH, encoding="latin-1"
         )
         if not message_result.success:
             return None, None

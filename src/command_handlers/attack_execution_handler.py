@@ -25,6 +25,8 @@ class AttackExecutionHandler:
         combat_service: CombatService,
         broadcast_service: MultiplayerBroadcastService | None,
         message_sender: MessageSender,
+        *,
+        defer_rewards: bool = False,
     ) -> None:
         """Inicializa el handler de ejecución.
 
@@ -32,10 +34,12 @@ class AttackExecutionHandler:
             combat_service: Servicio de combate.
             broadcast_service: Servicio de broadcast.
             message_sender: Enviador de mensajes.
+            defer_rewards: NPCDeathService aplicará la recompensa de la muerte.
         """
         self.combat_service = combat_service
         self.broadcast_service = broadcast_service
         self.message_sender = message_sender
+        self.defer_rewards = defer_rewards
 
     async def execute_attack(
         self, user_id: int, target_npc: NPC, target_x: int, target_y: int
@@ -53,7 +57,7 @@ class AttackExecutionHandler:
         """
         # Realizar el ataque
         result = await self.combat_service.player_attack_npc(
-            user_id, target_npc, self.message_sender
+            user_id, target_npc, self.message_sender, defer_rewards=self.defer_rewards
         )
 
         if not result:

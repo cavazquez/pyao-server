@@ -39,6 +39,18 @@ docker compose down
 `down` conserva el volumen. La configuración usa `noeviction` para el progreso;
 una política de caché que expulse claves puede borrar cuentas o economía.
 
+Las cuentas y el progreso mutable de la partida (posición, inventario, banco,
+oro, habilidades, hechizos y relaciones sociales) se guardan en Redis. Los
+catálogos y recursos versionados aportan los datos iniciales; AOF/RDB y los
+procedimientos de backup de esta guía protegen el estado persistido.
+
+El pool async conserva el límite `redis.max_connections` (20 por defecto).
+Cuando todas están ocupadas, las tareas esperan una conexión libre durante
+`redis.pool_timeout` segundos (5 por defecto), sin bloquear el event loop.
+`PYAO_REDIS__POOL_TIMEOUT` permite ajustar ese plazo positivo. Es independiente
+de los timeouts de conexión y lectura de red; al vencer devuelve un error en
+vez de esperar indefinidamente. Cerrar el cliente cierra también su pool.
+
 ## Redis Insight
 
 ```bash

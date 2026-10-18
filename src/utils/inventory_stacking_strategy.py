@@ -1,5 +1,6 @@
 """Apilamiento atómico sobre el mismo recurso que utilizan banco y comercio."""
 
+from enum import IntEnum
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
@@ -23,6 +24,8 @@ class InventoryStackingStrategy:
         Returns:
             Slots modificados y sus cantidades confirmadas, o lista vacía si no entra.
         """
+        if isinstance(item_id, IntEnum):
+            item_id = int(item_id)
         if type(quantity) is not int or type(item_id) is not int or quantity < 1 or item_id < 1:
             return []
         result = await change_inventory(
@@ -63,6 +66,8 @@ class InventoryStackingStrategy:
         Returns:
             Éxito de la cantidad completa.
         """
+        if isinstance(item_id, IntEnum):
+            item_id = int(item_id)
         if type(quantity) is not int or type(item_id) is not int:
             return False
         if quantity < 1:

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.city_data_loader import CityDataLoader
 from src.models.merchant_data_loader import MerchantDataLoader
 
 if TYPE_CHECKING:
@@ -25,6 +26,7 @@ class DataInitializer:
 
         # Lista de loaders a ejecutar (en orden)
         self.loaders: list[BaseDataLoader] = [
+            CityDataLoader(redis_client),
             MerchantDataLoader(redis_client),
         ]
 

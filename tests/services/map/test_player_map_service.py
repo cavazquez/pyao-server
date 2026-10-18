@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from src.game.map_manager import MapManager
 from src.models.npc import NPC
 from src.services.map.player_map_service import PlayerMapService, PlayerVisualData
 
@@ -37,6 +38,7 @@ def mock_map_manager():
     manager.get_players_in_map.return_value = []
     manager.get_npcs_in_map.return_value = []
     manager._ground_items = {}
+    manager.send_ground_items_snapshot = AsyncMock(return_value=0)
     manager.add_player = MagicMock()
     manager.remove_player = MagicMock()
     manager.update_player_tile = MagicMock()
@@ -240,15 +242,35 @@ class TestPlayerMapService:
     ):
         """Test enviar ground items cuando hay items en el suelo."""
         # Simular items en el suelo
-        player_map_service.map_manager._ground_items = {
-            (1, 50, 50): [{"grh_index": 100}],
-            (1, 51, 51): [{"grh_index": 101}],
-        }
+        player_map_service.map_manager = MapManager()
+        player_map_service.map_manager.add_ground_item(1, 50, 50, {"grh_index": 100})
+        player_map_service.map_manager.add_ground_item(1, 51, 51, {"grh_index": 101})
 
         count = await player_map_service._send_ground_items_in_map(1, mock_message_sender)
 
         assert count == 2
         assert mock_message_sender.send_object_create.call_count == 2
+
+    @pytest.mark.asyncio
+    async def test_ground_dictionary_changed_during_send_does_not_interrupt_login(
+        self, player_map_service, mock_message_sender
+    ):
+        """Reproduce las claves reemplazadas durante el await de OBJECT_CREATE."""
+        manager = MapManager()
+        player_map_service.map_manager = manager
+        manager.add_ground_item(1, 50, 50, {"grh_index": 100})
+        manager.add_ground_item(1, 51, 51, {"grh_index": 101})
+        changed = False
+
+        async def replace_keys(_x, _y, _graphic):
+            nonlocal changed
+            if not changed:
+                changed = True
+                manager.remove_ground_item(1, 50, 50)
+                manager.add_ground_item(1, 52, 52, {"grh_index": 102})
+
+        mock_message_sender.send_object_create.side_effect = replace_keys
+        assert await player_map_service._send_ground_items_in_map(1, mock_message_sender) == 2
 
     @pytest.mark.asyncio
     async def test_unblock_exit_tiles_without_exits(self, player_map_service, mock_message_sender):

@@ -4,8 +4,23 @@ import asyncio
 
 import pytest
 
+from src.constants.items import ResourceItemID
 from src.repositories.inventory_repository import InventoryRepository
 from src.utils.redis_config import RedisKeys
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("item_id", list(ResourceItemID))
+async def test_work_resource_enums_can_be_added_and_removed(redis_client, item_id):
+    """Tala, minería y pesca entregan los IDs canónicos sin relajar cantidades."""
+    repo = InventoryRepository(redis_client)
+    assert await repo.add_item(1, item_id, 5) == [(1, 5)]
+    assert await repo.get_slot(1, 1) == (int(item_id), 5)
+    assert await repo.remove_item_by_item_id(1, item_id, 2)
+    assert await repo.get_slot(1, 1) == (int(item_id), 3)
+    for invalid_id in [True, str(item_id.value), float(item_id.value)]:
+        assert await repo.add_item(1, invalid_id, 1) == []
+    assert await repo.get_slot(1, 1) == (int(item_id), 3)
 
 
 @pytest.mark.asyncio

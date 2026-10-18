@@ -151,6 +151,10 @@ El servidor utiliza una **arquitectura modular** con patrones de diseño moderno
 - **Logs coloreados** - Usa `LOG_COLOR=1` para forzar color aun sin TTY; `NO_COLOR=1` para desactivar
 - **Índices especializados** - MapManager delega en PlayerIndex, NpcIndex, GroundItemIndex, TileOccupation, DoorState, ExitIndex
 
+`GroundItemIndex` ordena el envío inicial de objetos del suelo con sus cargas,
+commits y notificaciones en la misma exclusión por mapa. El login utiliza la
+apariencia del primer stack visible y libera esa exclusión incluso si se cancela.
+
 Ver **[ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)** para documentación completa de la arquitectura.
 
 ### Estado y validación
@@ -172,7 +176,7 @@ pyao-server/
 │   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
 │   ├── repositories/         # Persistencia
 │   ├── operations/           # Redis, smoke y distribution: validación y ensamblado de releases
-│   ├── models/               # Entidades y catálogos
+│   ├── models/               # Entidades y catálogos; city_data_loader.py carga los seis spawns
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
 ├── data/                     # Dataset propio versionado
@@ -198,6 +202,15 @@ pyao-server/
 
 El servidor sigue una **arquitectura en capas** con separación de responsabilidades:
 
+`DataInitializer` carga las seis ciudades de `data/world/cities.toml` en Redis
+antes de abrir el listener. El alta consulta ese catálogo y aplica el home
+elegido sólo si el personaje todavía no tiene posición. Los logins posteriores
+conservan su ubicación. Las doce clases del protocolo están declaradas en
+`data/classes/definitions.toml`; las ocho que usaban atributos neutros mantienen
+ese perfil, sus IDs y el balance existente de `data/classes/balance.toml`.
+`NPCCatalog` adapta los campos anidados de los TOML regenerados al contrato de
+spawn/invocación, conservando nombre, apariencia, HP y flags del catálogo propio.
+
 #### Capa de Red
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
 - **`ClientConnection`**: Gestiona la conexión TCP (send/receive, close, wait_closed)
@@ -207,7 +220,7 @@ El servidor sigue una **arquitectura en capas** con separación de responsabilid
 - **`PlayerRepository`**: Gestión de datos de jugadores (posición, stats, hambre/sed, atributos)
 - **`NPCRepository`**: Gestión de NPCs en Redis (crear, obtener, actualizar, eliminar)
 - **`AccountRepository`**: Gestión de cuentas (crear, obtener, verificar password)
-- **`RedisClient`**: Cliente Redis de bajo nivel (conexión, configuración, sesiones)
+- **`RedisClient`**: Cliente Redis de bajo nivel, con pool async limitado y espera con timeout (conexión, configuración, sesiones)
 - **`RedisConfig`**: Configuración y constantes de Redis
 
 #### Capa de Servicios

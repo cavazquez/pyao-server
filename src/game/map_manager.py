@@ -387,6 +387,16 @@ class MapManager(SpatialIndexMixin):
         """
         return self._ground_index.get_ground_items(map_id, x, y)
 
+    async def send_ground_items_snapshot(
+        self, map_id: int, send_object: Callable[[int, int, int], Awaitable[None]]
+    ) -> int:
+        """Envía el suelo inicial en el mismo orden que sus commits y notificaciones.
+
+        Returns:
+            Número de posiciones visibles enviadas.
+        """
+        return await self._ground_index.send_snapshot(map_id, send_object)
+
     def remove_ground_item(
         self, map_id: int, x: int, y: int, item_index: int = 0
     ) -> dict[str, int | str | None] | None:

@@ -6,6 +6,7 @@ import json
 from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox, docker
 from src.operations.trade_atomic_smoke import settings
+from src.repositories.account_repository import AccountRepository
 from src.repositories.spellbook_repository import SpellbookRepository
 from src.services.scroll_learning import ScrollRule, learn_scroll
 from src.utils.gold_atomic import operation_id
@@ -19,8 +20,12 @@ async def exercise(sandbox: RedisSandbox, identity: str, *, recovery: bool = Fal
     await client.connect(settings(sandbox), seed_defaults=False)
     try:
         if not recovery:
-            await client.hset(
-                RedisKeys.account_data("usr"), mapping={"user_id": "1", "char_class": "1"}
+            require(
+                await AccountRepository(client).create_account(
+                    "usr", "unused-fixture-hash", "usr@example.invalid", {"job": 1}
+                )
+                == 1,
+                "Cuenta creada por el repositorio real",
             )
             await client.hset(RedisKeys.player_inventory(1), mapping={"slot_30": "197:2"})
             await client.hset(
