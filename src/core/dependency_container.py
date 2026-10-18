@@ -1,7 +1,9 @@
 """Contenedor de dependencias del servidor."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from src.services.action_cadence import ActionCadence
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -99,3 +101,5 @@ class DependencyContainer:
     npc_catalog: NPCCatalog
     spell_catalog: SpellCatalog
     item_catalog: ItemCatalog
+
+    action_cadence: ActionCadence = field(default_factory=ActionCadence)

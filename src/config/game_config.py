@@ -140,6 +140,14 @@ class CharacterConfig(BaseModel):
     )
 
 
+class CadenceConfig(BaseModel):
+    """Intervalos mínimos autoritativos, expresados en segundos."""
+
+    walk_seconds: float = Field(default=0.2, ge=0.01, le=10.0)
+    attack_seconds: float = Field(default=0.5, ge=0.01, le=10.0)
+    cast_seconds: float = Field(default=1.0, ge=0.01, le=10.0)
+
+
 class GameConfigSection(BaseModel):
     """Sección de configuración del juego."""
 
@@ -153,6 +161,7 @@ class GameConfigSection(BaseModel):
     npc_respawn_random_variance: float = Field(
         default=15.0, ge=0.0, description="Varianza aleatoria en respawns"
     )
+    cadence: CadenceConfig = Field(default_factory=CadenceConfig)
     combat: CombatConfig = Field(default_factory=CombatConfig)
     work: WorkConfig = Field(default_factory=WorkConfig)
     stamina: StaminaConfig = Field(default_factory=StaminaConfig)
@@ -311,6 +320,7 @@ class GameConfig(BaseSettings):
                 "respawn_check_interval": game_data.get("respawn_check_interval", 5.0),
                 "npc_respawn_base_time": game_data.get("npc_respawn_base_time", 30.0),
                 "npc_respawn_random_variance": game_data.get("npc_respawn_random_variance", 15.0),
+                "cadence": game_data.get("cadence", {}),
                 "combat": game_data.get("combat", {}),
                 "work": game_data.get("work", {}),
                 "stamina": game_data.get("stamina", {}),

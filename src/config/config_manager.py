@@ -119,6 +119,7 @@ class ConfigManager:
                 "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
             },
             "game": {
+                "cadence": self._game_config.game.cadence.model_dump(),
                 "max_players_per_map": self._game_config.game.max_players_per_map,
                 "respawn_check_interval": self._game_config.game.respawn_check_interval,
                 "npc_respawn_base_time": self._game_config.game.npc_respawn_base_time,
@@ -217,6 +218,7 @@ class ConfigManager:
                 "buffer_size": 4096,
             },
             "game": {
+                "cadence": {"walk_seconds": 0.2, "attack_seconds": 0.5, "cast_seconds": 1.0},
                 "max_players_per_map": 100,
                 "respawn_check_interval": 5.0,
                 "npc_respawn_base_time": 30.0,

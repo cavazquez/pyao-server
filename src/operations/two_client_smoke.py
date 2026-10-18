@@ -25,6 +25,7 @@ from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox
 from src.security.password_executor import close_password_executor, get_password_executor
 from src.server import ArgentumServer
+from src.services.action_cadence import ActionCadence
 from src.services.map.player_map_service import PlayerMapService
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.services.player.stamina_service import StaminaService
@@ -212,6 +213,7 @@ async def scenario(settings: RedisConfig) -> dict[str, Any]:  # noqa: PLR0914, P
         await ensure_schema_ready(client.redis)
         await client.initialize_defaults()
         deps = minimum_dependencies(client)
+        deps.action_cadence = ActionCadence(clock=lambda: 0.0)
         server = ArgentumServer(host="127.0.0.1")
         server.deps = deps
         server.task_factory = TaskFactory(deps)
@@ -312,6 +314,7 @@ async def scenario(settings: RedisConfig) -> dict[str, Any]:  # noqa: PLR0914, P
         require(
             await client.redis.exists(f"session:{user_ids[0]}:owner") == 0, "reserva de A liberada"
         )
+        deps.action_cadence.clock = lambda: 1.0
         await second.send(b"\x06\x03\x77")  # B puede volver al sur después de cerrar A.
         await second.wait(
             lambda frames: sum(frame[0] == ServerPacketID.PONG for frame in frames) == SECOND_PONG

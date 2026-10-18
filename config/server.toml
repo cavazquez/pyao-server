@@ -97,3 +97,9 @@ auth_attempts_per_ip = 30
 auth_attempts_per_account = 8
 auth_max_keys = 10000
 session_lease_seconds = 90
+
+# Cadencias mínimas del servidor, independientes del cliente y del reloj de pared.
+[game.cadence]
+walk_seconds = 0.2
+attack_seconds = 0.5
+cast_seconds = 1.0

@@ -131,7 +131,13 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "cast_spell": HandlerConfig(
         CastSpellCommandHandler,
-        deps_keys=["player_repo", "spell_service", "spellbook_repo", "stamina_service"],
+        deps_keys=[
+            "action_cadence",
+            "player_repo",
+            "spell_service",
+            "spellbook_repo",
+            "stamina_service",
+        ],
     ),
     # Handlers de inventario
     "move_item": HandlerConfig(
@@ -222,6 +228,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     "walk": HandlerConfig(
         WalkCommandHandler,
         deps_keys=[
+            "action_cadence",
             "player_repo",
             "map_manager",
             "broadcast_service",
@@ -234,6 +241,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     "attack": HandlerConfig(
         AttackCommandHandler,
         deps_keys=[
+            "action_cadence",
             "player_repo",
             "combat_service",
             "map_manager",

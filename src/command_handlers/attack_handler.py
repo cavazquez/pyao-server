@@ -8,6 +8,7 @@ from src.command_handlers.attack_loot_handler import AttackLootHandler
 from src.command_handlers.attack_validation_handler import AttackValidationHandler
 from src.commands.attack_command import AttackCommand
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.services.action_cadence import ActionCadence
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -41,6 +42,7 @@ class AttackCommandHandler(CommandHandler):
         item_catalog: ItemCatalog | None,
         stamina_service: StaminaService | None,
         message_sender: MessageSender,
+        action_cadence: ActionCadence | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -55,6 +57,7 @@ class AttackCommandHandler(CommandHandler):
             loot_table_service: Servicio de loot tables.
             item_catalog: Catálogo de items.
             stamina_service: Servicio de stamina.
+            action_cadence: Presupuesto compartido entre handlers del servidor.
             message_sender: Enviador de mensajes.
         """
         self.player_repo = player_repo
@@ -62,6 +65,7 @@ class AttackCommandHandler(CommandHandler):
         self.npc_service = npc_service
         self.npc_death_service = npc_death_service
         self.npc_respawn_service = npc_respawn_service
+        self.action_cadence = action_cadence or ActionCadence()
         self.message_sender = message_sender
 
         # Inicializar handlers especializados
@@ -86,7 +90,7 @@ class AttackCommandHandler(CommandHandler):
             message_sender=message_sender,
         )
 
-    async def handle(self, command: Command) -> CommandResult:
+    async def _handle_accepted(self, command: Command) -> CommandResult:
         """Ejecuta el comando de ataque (solo lógica de negocio).
 
         Args:
@@ -159,3 +163,18 @@ class AttackCommandHandler(CommandHandler):
             )
 
         return CommandResult.ok(result_data or {})
+
+    async def handle(self, command: Command) -> CommandResult:
+        """Reserva la cadencia antes de leer estado o consumir recursos.
+
+        Returns:
+            Resultado o rechazo sin efectos cuando no hay presupuesto.
+        """
+        if not isinstance(command, AttackCommand):
+            return CommandResult.error("Comando inválido: se esperaba AttackCommand")
+        if not self.action_cadence.claim(command.user_id, "attack"):
+            return CommandResult.error("Acción demasiado frecuente")
+        try:
+            return await self._handle_accepted(command)
+        finally:
+            self.action_cadence.release(command.user_id, "attack")
