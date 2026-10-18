@@ -87,3 +87,9 @@ elu_exponent = 1.8
 # Cada hash usa ~64 MiB; limitar también las solicitudes pendientes.
 hash_workers = 2
 hash_max_pending = 4
+auth_timeout_seconds = 30.0
+auth_window_seconds = 60.0
+auth_attempts_per_connection = 6
+auth_attempts_per_ip = 30
+auth_attempts_per_account = 8
+auth_max_keys = 10000

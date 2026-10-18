@@ -120,6 +120,10 @@ class LoginCommandHandler(CommandHandler):
         if not self.auth_handler.validate_repositories():
             return CommandResult.error("Repositorios no disponibles")
 
+        if not self.message_sender.connection.allow_authentication(username):
+            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
+            return CommandResult.error("Autenticación fallida")
+
         # Autenticar usuario
         auth_result = await self.auth_handler.authenticate_user(username, password)
         if auth_result is None:
@@ -173,6 +177,7 @@ class LoginCommandHandler(CommandHandler):
         # Enviar inventario y MOTD
         await self.finalization_handler.finalize_login(user_id)
 
+        self.message_sender.connection.is_authenticated = True
         return CommandResult.ok(
             data={
                 "user_id": user_id,

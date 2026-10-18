@@ -192,6 +192,12 @@ class SecurityConfig(BaseModel):
 
     hash_workers: int = Field(default=2, ge=1, le=16)
     hash_max_pending: int = Field(default=4, ge=0, le=128)
+    auth_timeout_seconds: float = Field(default=30.0, gt=0, allow_inf_nan=False)
+    auth_window_seconds: float = Field(default=60.0, gt=0, allow_inf_nan=False)
+    auth_attempts_per_connection: int = Field(default=6, ge=1)
+    auth_attempts_per_ip: int = Field(default=30, ge=1)
+    auth_attempts_per_account: int = Field(default=8, ge=1)
+    auth_max_keys: int = Field(default=10000, ge=2)
 
 
 class GameConfig(BaseSettings):

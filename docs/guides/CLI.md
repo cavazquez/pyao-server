@@ -333,3 +333,17 @@ proceso. La saturación se rechaza con un error de servicio ocupado. Cancelar un
 conexión no libera prematuramente la plaza de un hash: sigue ocupada hasta que
 el trabajo realmente termina, evitando acumular tareas nativas invisibles. El
 apagado rechaza nuevos trabajos, cancela los pendientes y espera los activos.
+
+### Límites de autenticación
+
+En `[security]`, `auth_timeout_seconds` limita todo el login (lectura, hash e
+inicialización) desde que se acepta la conexión, y el handshake TLS usa el mismo
+plazo. Las conexiones autenticadas no tienen ese timeout. `auth_window_seconds`
+define ventanas fijas de intentos; `auth_attempts_per_connection`,
+`auth_attempts_per_ip` y `auth_attempts_per_account` se comprueban conjuntamente
+antes de admitir Argon2 en alta/login. Reconectar no reinicia los contadores de
+IP o cuenta. `auth_max_keys` acota la memoria y rechaza claves nuevas al llenarse,
+sin desalojar contadores activos. Cada opción admite `PYAO_SECURITY__<NOMBRE>`.
+Los límites por IP/cuenta son por proceso; al usar varios procesos debe aplicarse
+también un límite en el ingreso común. Las respuestas de rechazo del login no
+indican si el usuario existe.

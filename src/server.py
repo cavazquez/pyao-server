@@ -8,10 +8,11 @@ from typing import TYPE_CHECKING
 import redis.asyncio as redis
 
 from src.config.config_manager import config_manager
-from src.config.game_config import ServerConfig
+from src.config.game_config import SecurityConfig, ServerConfig
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
+from src.security.auth_limits import AuthLimiter
 from src.security.password_executor import close_password_executor
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.tasks.task_factory import TaskFactory
@@ -49,6 +50,9 @@ class ArgentumServer:
         self.max_connections = ServerConfig(
             max_connections=int(str(config_manager.get("server.max_connections", 1000)))
         ).max_connections
+        security = SecurityConfig.model_validate(config_manager.get_section("security"))
+        self.auth_timeout_seconds = security.auth_timeout_seconds
+        self.auth_limiter = AuthLimiter(security)
         self._active_connections = 0
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
@@ -105,17 +109,22 @@ class ArgentumServer:
         session_data: dict[str, dict[str, int]] = {}
         try:
             connection = ClientConnection(reader, writer)
+            connection.auth_limiter = self.auth_limiter
+            deadline = asyncio.get_running_loop().time() + self.auth_timeout_seconds
             message_sender = MessageSender(connection)
             logger.info("Nueva conexión desde %s", connection.address)
             if self.deps and self.deps.redis_client:
                 await self.deps.redis_client.increment_connections()
                 counted_in_redis = True
             while True:
-                data = await connection.receive()
-                if not data:
-                    break
-                task = self.create_task(data, message_sender, session_data)
-                await task.execute()
+                async with asyncio.timeout_at(None if connection.is_authenticated else deadline):
+                    data = await connection.receive()
+                    if not data:
+                        break
+                    task = self.create_task(data, message_sender, session_data)
+                    await task.execute()
+        except TimeoutError:
+            logger.info("Conexión cerrada por plazo de autenticación agotado")
         except asyncio.CancelledError:
             logger.debug("Conexión cancelada por shutdown")
             raise
@@ -236,6 +245,7 @@ class ArgentumServer:
                 self.host,
                 self.port,
                 ssl=ssl_context,
+                ssl_handshake_timeout=self.auth_timeout_seconds if ssl_context else None,
             )
         except OSError:
             logger.error(  # noqa: TRY400

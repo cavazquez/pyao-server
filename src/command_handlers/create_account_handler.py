@@ -132,6 +132,9 @@ class CreateAccountCommandHandler(CommandHandler):
         if not await self.validation_handler.validate_account_fields(username, password, email):
             return CommandResult.error("Campos de cuenta inválidos")
 
+        if not self.message_sender.connection.allow_authentication(username):
+            return CommandResult.error("No se pudo completar la autenticación")
+
         # Hash de la contraseña
         try:
             password_hash = await get_password_executor().run(hash_password, password)

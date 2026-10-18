@@ -3,6 +3,8 @@
 import asyncio
 import logging
 
+from src.security.auth_limits import AuthLimiter, ConnectionAttempts
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,10 +18,27 @@ class ClientConnection:
             reader: Stream para leer datos del cliente.
             writer: Stream para enviar datos al cliente.
         """
+        self.auth_limiter: AuthLimiter | None = None
+        self.auth_attempts = ConnectionAttempts()
+        self.is_authenticated = False
         self.reader = reader
         self.writer = writer
         self.address = writer.get_extra_info("peername")
         self.is_ssl_enabled = writer.get_extra_info("ssl_object") is not None
+
+    def allow_authentication(self, username: str) -> bool:
+        """Consume el presupuesto de autenticación antes de ejecutar Argon2.
+
+        Returns:
+            True si el intento está permitido por conexión/IP/cuenta.
+        """
+        if self.is_authenticated:
+            return False
+        if self.auth_limiter is None:
+            # Sólo conexiones de prueba/uso aislado carecen del limitador del servidor.
+            return True
+        ip = str(self.address[0]) if isinstance(self.address, tuple) else str(self.address)
+        return self.auth_limiter.allow(ip, username, self.auth_attempts)
 
     async def send(self, data: bytes) -> None:
         """Envía datos al cliente.
