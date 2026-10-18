@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import sys
+from collections.abc import Awaitable
 from typing import TYPE_CHECKING
 
 import redis.asyncio as redis
@@ -57,6 +58,11 @@ class ArgentumServer:
         self.session_lease_seconds = security.session_lease_seconds
         self.auth_limiter = AuthLimiter(security)
         self._active_connections = 0
+        self._stopping = False
+        self._stop_task: asyncio.Task[None] | None = None
+        self._client_tasks: set[asyncio.Task[None]] = set()
+        self._receivers: set[asyncio.Task[bytes]] = set()
+        self._connections: set[ClientConnection] = set()
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
@@ -99,7 +105,7 @@ class ArgentumServer:
             CancelledError: Al cancelar la tarea de conexión durante el apagado.
         """
         # No hay await entre comprobar y reservar: atómico dentro del event loop.
-        if self._active_connections >= self.max_connections:
+        if self._stopping or self._active_connections >= self.max_connections:
             logger.info("Conexión rechazada: límite de %d alcanzado", self.max_connections)
             writer.close()
             try:
@@ -108,6 +114,9 @@ class ArgentumServer:
                 logger.debug("La conexión rechazada ya estaba cerrada")
             return
         self._active_connections += 1
+        owner = asyncio.current_task()
+        if owner is not None:
+            self._client_tasks.add(owner)
         counted_in_redis = False
         session_data: dict[str, dict[str, int]] = {}
         connection: ClientConnection | None = None
@@ -121,6 +130,7 @@ class ArgentumServer:
                 drain_timeout=self.outgoing_config.outgoing_drain_timeout,
             )
             connection.owner_task = asyncio.current_task()
+            self._connections.add(connection)
             connection.auth_limiter = self.auth_limiter
             connection.session_lease_seconds = self.session_lease_seconds
             if self.deps and self.deps.redis_client:
@@ -132,9 +142,9 @@ class ArgentumServer:
                 await self.deps.redis_client.increment_connections()
                 counted_in_redis = True
             framer = PacketFramer()
-            while True:
+            while not self._stopping:
                 async with asyncio.timeout_at(None if connection.is_authenticated else deadline):
-                    data = await connection.receive()
+                    data = await self._receive(connection)
                     if not data:
                         if framer.buffer_size:
                             logger.info(
@@ -144,6 +154,8 @@ class ArgentumServer:
                         break
                     framer.feed(data)
                     while (packet := framer.next_packet()) is not None:
+                        if self._stopping:
+                            break
                         task = self.create_task(packet, message_sender, session_data)
                         await task.execute()
         except FramingError as error:
@@ -157,15 +169,21 @@ class ArgentumServer:
             logger.exception("Error manejando conexión")
         finally:
             try:
-                await self._cleanup_player(session_data, message_sender)
-            except Exception:
-                logger.exception("Error limpiando jugador desconectado")
-            finally:
+                try:
+                    await self._cleanup_player(session_data, message_sender)
+                except Exception:
+                    logger.exception("Error limpiando jugador desconectado")
                 if connection is not None:
                     try:
                         await connection.release_session()
                     except Exception:
                         logger.exception("No se pudo liberar la reserva; vencerá por TTL")
+                    if self._stopping:
+                        try:
+                            await connection.flush()
+                        except ConnectionError:
+                            logger.debug("La salida de la sesión ya estaba cerrada")
+            finally:
                 # Incluso si falla el login, Redis o el cierre lógico, liberar exactamente una vez.
                 self._active_connections -= 1
                 try:
@@ -178,11 +196,39 @@ class ArgentumServer:
                 except ConnectionError:
                     logger.debug("El transporte ya estaba cerrado")
                 finally:
-                    if counted_in_redis and self.deps and self.deps.redis_client:
-                        try:
+                    try:
+                        if counted_in_redis and self.deps and self.deps.redis_client:
                             await self.deps.redis_client.decrement_connections()
-                        except Exception:
-                            logger.exception("No se pudo actualizar la métrica de conexiones")
+                    except Exception:
+                        logger.exception("No se pudo actualizar la métrica de conexiones")
+                    finally:
+                        if connection is not None:
+                            self._connections.discard(connection)
+                        if owner is not None:
+                            self._client_tasks.discard(owner)
+
+    async def _receive(self, connection: ClientConnection) -> bytes:
+        """Permite despertar lectores ociosos sin cancelar una operación en curso.
+
+        Returns:
+            Bytes de red o EOF lógico cuando comienza el cierre.
+
+        Raises:
+            CancelledError: Si se cancela el handler, en lugar de sólo su lectura.
+        """
+        reader = asyncio.create_task(connection.receive(), name="pyao-client-reader")
+        self._receivers.add(reader)
+        if self._stopping:
+            reader.cancel()
+        try:
+            return await reader
+        except asyncio.CancelledError:
+            owner = asyncio.current_task()
+            if self._stopping and owner is not None and not owner.cancelling():
+                return b""
+            raise
+        finally:
+            self._receivers.discard(reader)
 
     async def _cleanup_player(
         self, session_data: dict[str, dict[str, int]], message_sender: MessageSender | None = None
@@ -303,21 +349,63 @@ class ArgentumServer:
             await self.server.serve_forever()
 
     async def stop(self) -> None:
-        """Detiene el servidor."""
-        # Detener sistema de tick del juego
+        """Cierra una sola vez; un solicitante cancelado no cancela el cierre compartido."""
+        if self._stop_task is None:
+            self._stopping = True
+            if self.server:
+                self.server.close()
+            for reader in tuple(self._receivers):
+                reader.cancel()
+            self._stop_task = asyncio.create_task(self._shutdown(), name="pyao-shutdown")
+        await asyncio.shield(self._stop_task)
+
+    @staticmethod
+    async def _shutdown_step(operation: Awaitable[object], label: str, deadline: float) -> None:
+        """Acota cada paso al presupuesto restante sin omitir los pasos posteriores."""
+        try:
+            async with asyncio.timeout_at(max(deadline, asyncio.get_running_loop().time() + 0.001)):
+                await operation
+        except TimeoutError:
+            logger.warning("Plazo de cierre agotado en %s", label)
+        except Exception:
+            logger.exception("Fallo cerrando %s", label)
+
+    async def _shutdown(self) -> None:
+        """Drena handlers y trabajos propios antes de cerrar las conexiones Redis."""
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + self.outgoing_config.shutdown_timeout_seconds
+        work_deadline = deadline - 1
         if self.deps and self.deps.game_tick:
-            await self.deps.game_tick.stop()
-            logger.info("Sistema de tick del juego detenido")
-
-        if self.server:
-            self.server.close()
-            await self.server.wait_closed()
-            logger.info("Servidor detenido")
-
+            await self._shutdown_step(self.deps.game_tick.stop(), "tick", work_deadline)
+        tasks = tuple(self._client_tasks)
+        if tasks:
+            _, pending = await asyncio.wait(
+                tasks,
+                timeout=max(
+                    0, min(self.outgoing_config.shutdown_drain_seconds, work_deadline - loop.time())
+                ),
+            )
+            for task in pending:
+                task.cancel()
+            await self._shutdown_step(
+                asyncio.gather(*tasks, return_exceptions=True), "sesiones", work_deadline
+            )
+        # El cierre forzado conserva recibos/journals; no compensa commits inciertos.
+        for connection in tuple(self._connections):
+            connection.close(abort=True)
         if self.deps and self.deps.trade_service:
-            await self.deps.trade_service.close()
-        await close_password_executor()
-
-        # Desconectar de Redis
+            await self._shutdown_step(self.deps.trade_service.close(), "trades", work_deadline)
+        if self.deps and self.deps.player_death_service:
+            await self._shutdown_step(
+                self.deps.player_death_service.close(
+                    deadline_seconds=max(0, work_deadline - loop.time())
+                ),
+                "ciclo de vida",
+                work_deadline,
+            )
+        await self._shutdown_step(close_password_executor(), "autenticación", work_deadline)
+        if self.server:
+            await self._shutdown_step(self.server.wait_closed(), "listener", work_deadline)
         if self.deps and self.deps.redis_client:
-            await self.deps.redis_client.disconnect()
+            await self._shutdown_step(self.deps.redis_client.disconnect(), "Redis", deadline)
+        logger.info("Servidor detenido; sesiones activas: %d", self._active_connections)

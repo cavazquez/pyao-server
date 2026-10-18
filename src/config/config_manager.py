@@ -111,6 +111,8 @@ class ConfigManager:
                 "buffer_size": self._game_config.server.buffer_size,
                 "outgoing_max_packets": self._game_config.server.outgoing_max_packets,
                 "outgoing_max_bytes": self._game_config.server.outgoing_max_bytes,
+                "shutdown_timeout_seconds": self._game_config.server.shutdown_timeout_seconds,
+                "shutdown_drain_seconds": self._game_config.server.shutdown_drain_seconds,
                 "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
             },
             "game": {

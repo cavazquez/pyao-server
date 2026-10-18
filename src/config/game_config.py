@@ -25,6 +25,8 @@ class ServerConfig(BaseModel):
     buffer_size: int = Field(default=4096, ge=1024, description="Tamaño del buffer de red")
     outgoing_max_packets: int = Field(default=128, ge=1)
     outgoing_max_bytes: int = Field(default=262144, ge=1024)
+    shutdown_timeout_seconds: float = Field(default=20.0, ge=2, le=120)
+    shutdown_drain_seconds: float = Field(default=5.0, ge=0.1, le=30)
     outgoing_drain_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
 
 

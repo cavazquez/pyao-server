@@ -10,6 +10,8 @@ buffer_size = 4096
 outgoing_max_packets = 128
 outgoing_max_bytes = 262144
 outgoing_drain_timeout = 5.0
+shutdown_timeout_seconds = 20.0
+shutdown_drain_seconds = 5.0
 
 [redis]
 host = "localhost"
