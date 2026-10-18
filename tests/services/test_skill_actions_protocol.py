@@ -8,17 +8,26 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import pytest_asyncio
 
+from src.combat.combat_critical_calculator import CriticalCalculator
 from src.command_handlers.work_handler import WorkCommandHandler
 from src.commands.work_command import WorkCommand
 from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
+from src.models.spell_catalog import SpellCatalog
 from src.network.capabilities import SUPPORTED_CAPABILITIES
 from src.network.packet_builder import PacketBuilder
 from src.network.packet_id import ServerPacketID
 from src.services.action_cadence import ActionCadence
 from src.services.combat.combat_service import CombatService
+from src.services.combat.physical_plan import (
+    PhysicalPlan,
+    PhysicalRequest,
+    commit_physical,
+    defend_npc,
+)
 from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 from src.services.npc.npc_ai_service import NPCAIService
+from src.services.player.spell_service import SpellService
 from src.services.skill_action_service import SkillActionService
 from src.tasks.task_skill_action import TaskSkillAction
 from src.utils.gold_atomic import operation_id
@@ -99,6 +108,62 @@ async def test_real_npc_ai_routes_damage_and_training_through_atomic_defense(act
     assert await world.redis.hget(RedisKeys.player_skills(1), "xp:defensa") == "20"
     packets = [call.args[0][0] for call in world.senders[1].connection.send.await_args_list]
     assert ServerPacketID.UPDATE_USER_STATS in packets
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("spell", [18, 19, 20, 21])
+async def test_actual_attribute_spells_change_physical_combat_until_expiration(action_world, spell):
+    """Celeridad/Torpeza y Fuerza/Debilidad actúan en combate sin mutar atributos base."""
+    world = action_world
+    attribute = "agility" if spell in {18, 19} else "strength"
+    await world.redis.hset(RedisKeys.player_skills(2), "level:magia", "100")
+    await world.redis.hset(RedisKeys.player_spellbook(2), str(spell), str(spell))
+    await world.redis.hset(
+        RedisKeys.player_user_stats(2), mapping={"min_mana": "5000", "max_mana": "5000"}
+    )
+    service = SpellService(
+        SpellCatalog(), world.player, world.npcs, world.maps, item_catalog=world.catalog
+    )
+
+    async def attack():
+        if attribute == "strength":
+            with patch(
+                "src.services.combat.physical_plan.random.random",
+                side_effect=[0.0, 0.99, 0.99, 0.5, 0.99],
+            ):
+                plan = PhysicalPlan(PhysicalRequest(1, target_npc="animal"), world.catalog, 30, 20)
+            return await commit_physical(world.redis.redis, plan, operation_id())
+        await world.redis.hset(RedisKeys.npc_instance("animal"), "last_attack_time", "0")
+        with patch(
+            "src.services.combat.physical_plan.random.random",
+            side_effect=[
+                CriticalCalculator().calculate_dodge_chance(20)
+                + (0.005 if spell == 18 else -0.005),
+                0.99,
+            ],
+        ):
+            return await defend_npc(
+                world.redis.redis, 1, "animal", world.catalog, 100, operation_id()
+            )
+
+    before = await attack()
+    with patch("src.services.combat.spell_plan.require_durable", new=AsyncMock()):
+        assert await service.cast_spell(2, spell, 50, 50, world.senders[2], slot=spell)
+    active = await attack()
+    await world.redis.hset(RedisKeys.player_stats(1), f"{attribute}_modifier_until", "1")
+    expired = await attack()
+    assert await world.redis.hget(RedisKeys.player_stats(1), attribute) == "20"
+    if spell == 18:
+        assert before["damage"] > 0
+        assert active["damage"] == 0
+    elif spell == 19:
+        assert before["damage"] == 0
+        assert active["damage"] > 0
+    elif spell == 20:
+        assert active["damage"] > before["damage"]
+    else:
+        assert active["damage"] < before["damage"]
+    assert expired["damage"] == before["damage"]
 
 
 def wire_request(action, params, identity=None):

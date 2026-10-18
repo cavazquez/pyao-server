@@ -82,11 +82,11 @@ def effective_attribute(snapshot: Snapshot, user: int, name: str, now: float) ->
         Atributo actual, respetando los límites previos de los modificadores.
     """
     attrs = cast("dict[str, str]", snapshot[RedisKeys.player_stats(user)])
-    stats = cast("dict[str, str]", snapshot[RedisKeys.player_user_stats(user)])
     base = int(attrs.get(name, 10))
-    if float(stats.get(f"{name}_until", 0)) <= now:
+    modifier = int(attrs.get(f"{name}_modifier_value", 0))
+    if float(attrs.get(f"{name}_modifier_until", 0)) <= now or modifier == 0:
         return base
-    return max(1, min(50, base * 2, base + int(stats.get(f"{name}_modifier", 0))))
+    return max(1, min(50, base * 2, base + modifier))
 
 
 def defense(
