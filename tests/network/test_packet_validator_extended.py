@@ -474,14 +474,14 @@ class TestValidateDoubleClickPacket:
     """Tests para validate_double_click_packet."""
 
     def test_double_click_valid(self) -> None:
-        """Test con slot válido."""
-        data = bytes([27, 10])  # slot=10
+        """Test con coordenadas válidas de mapa."""
+        data = bytes([27, 10, 20])
         reader = PacketReader(data)
         validator = PacketValidator(reader)
         result = validate_registered_packet(validator, ClientPacketID.DOUBLE_CLICK)
 
         assert result.success is True
-        assert result.data == {"slot": 10}
+        assert result.data == {"x": 10, "y": 20}
 
 
 class TestValidateLeftClickPacket:
