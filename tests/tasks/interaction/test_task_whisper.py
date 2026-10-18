@@ -27,8 +27,8 @@ async def test_task_whisper_success() -> None:
 
     receiver = "destino"
     message = "Hola"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -70,8 +70,8 @@ async def test_task_whisper_empty_receiver() -> None:
 
     receiver = ""
     message = "Hola"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -108,8 +108,8 @@ async def test_task_whisper_empty_message() -> None:
 
     receiver = "destino"
     message = ""
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -146,8 +146,8 @@ async def test_task_whisper_no_session() -> None:
 
     receiver = "destino"
     message = "Hola"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -184,8 +184,8 @@ async def test_task_whisper_handler_not_available() -> None:
 
     receiver = "destino"
     message = "Hola"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -202,7 +202,7 @@ async def test_task_whisper_handler_not_available() -> None:
 
 @pytest.mark.asyncio
 async def test_task_whisper_unicode() -> None:
-    """Verifica que TaskWhisper maneje correctamente mensajes Unicode."""
+    """Verifica que TaskWhisper maneje acentos del contrato Latin-1."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -213,10 +213,10 @@ async def test_task_whisper_unicode() -> None:
 
     session_data: dict[str, dict[str, int]] = {"user_id": 123}
 
-    receiver = "用户"
-    message = "你好"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver = "José"
+    message = "¡Buena pesca, caña!"
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (
@@ -256,8 +256,8 @@ async def test_task_whisper_long_receiver() -> None:
 
     receiver = "a" * 20
     message = "Hola"
-    receiver_bytes = receiver.encode("utf-8")
-    message_bytes = message.encode("utf-8")
+    receiver_bytes = receiver.encode("latin-1")
+    message_bytes = message.encode("latin-1")
     receiver_len = len(receiver_bytes)
     message_len = len(message_bytes)
     data = (

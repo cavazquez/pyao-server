@@ -118,6 +118,33 @@ jobs:
           path: artifacts/
           retention-days: 7
 
+  redis-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --no-dev
+      - name: Preparar cliente Redis para backups reales
+        run: sudo apt-get update && sudo apt-get install -y redis-tools
+      - name: Reinicio, caída tras fsync, backup y restauración en otra instancia
+        run: |
+          mkdir -p artifacts
+          timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.redis_persistence > artifacts/persistence.json 2> artifacts/persistence.log
+          timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.redis_backup selftest > artifacts/backup.json 2> artifacts/backup.log
+          timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.redis_schema selftest > artifacts/schema.json 2> artifacts/schema.log
+      - name: Conservar evidencia de recuperación
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: redis-recovery-results
+          path: artifacts/
+          retention-days: 7
+
   distribution:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -144,18 +171,20 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     if: ${{ always() }}
-    needs: [quality, fast-tests, redis-integration, distribution]
+    needs: [quality, fast-tests, redis-integration, redis-recovery, distribution]
     steps:
       - name: Require every validation group
         env:
           QUALITY: ${{ needs.quality.result }}
           FAST_TESTS: ${{ needs.fast-tests.result }}
           INTEGRATION: ${{ needs.redis-integration.result }}
+          RECOVERY: ${{ needs.redis-recovery.result }}
           DISTRIBUTION: ${{ needs.distribution.result }}
         run: |
           test "$QUALITY" = success
           test "$FAST_TESTS" = success
           test "$INTEGRATION" = success
+          test "$RECOVERY" = success
           test "$DISTRIBUTION" = success
 
   markdown-links:

@@ -16,11 +16,11 @@ def _build_packet(clan_name: str, description: str = "") -> bytes:
     # PacketReader salta el primer byte asumiendo que es PacketID
     packet = bytes([0x00])  # Dummy PacketID
 
-    name_bytes = clan_name.encode("utf-8")
+    name_bytes = clan_name.encode("latin-1")
     packet += len(name_bytes).to_bytes(2, "little") + name_bytes
 
     if description:
-        desc_bytes = description.encode("utf-8")
+        desc_bytes = description.encode("latin-1")
         packet += len(desc_bytes).to_bytes(2, "little") + desc_bytes
 
     return packet

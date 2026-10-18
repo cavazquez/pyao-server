@@ -74,6 +74,8 @@ class HandlerConfig:
     handler_class: type[CommandHandler]
     deps_keys: list[str] = field(default_factory=list)
     needs_session_data: bool = False
+    needs_message_sender: bool = True
+    initial_kwargs: dict[str, Any] = field(default_factory=dict)
 
 
 # Mapeo de nombres de handler a su configuración
@@ -83,9 +85,9 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     "ayuda": HandlerConfig(AyudaCommandHandler),
     "commerce_end": HandlerConfig(CommerceEndCommandHandler),
     "bank_end": HandlerConfig(BankEndCommandHandler),
-    "motd": HandlerConfig(MotdCommandHandler),
-    "uptime": HandlerConfig(UptimeCommandHandler),
-    "quit": HandlerConfig(QuitCommandHandler),
+    "motd": HandlerConfig(MotdCommandHandler, deps_keys=["server_repo"]),
+    "uptime": HandlerConfig(UptimeCommandHandler, deps_keys=["server_repo"]),
+    "quit": HandlerConfig(QuitCommandHandler, deps_keys=["player_repo", "map_manager"]),
     "safe_toggle": HandlerConfig(
         SafeToggleCommandHandler,
         deps_keys=["player_repo"],
@@ -114,11 +116,11 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "online": HandlerConfig(
         OnlineCommandHandler,
-        deps_keys=["player_repo"],
+        deps_keys=["map_manager"],
     ),
     "information": HandlerConfig(
         InformationCommandHandler,
-        deps_keys=["player_repo"],
+        deps_keys=["server_repo", "map_manager"],
     ),
     # Handlers de spellbook
     "spell_info": HandlerConfig(
@@ -289,7 +291,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "party_message": HandlerConfig(
         PartyMessageCommandHandler,
-        deps_keys=["party_service", "broadcast_service"],
+        deps_keys=["party_service"],
     ),
     "party_kick": HandlerConfig(
         PartyKickCommandHandler,
@@ -303,10 +305,13 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     "leave_clan": HandlerConfig(
         LeaveClanCommandHandler,
         deps_keys=["clan_service"],
+        needs_message_sender=False,
+        initial_kwargs={"user_id": 0},
     ),
     "request_clan_details": HandlerConfig(
         RequestClanDetailsCommandHandler,
         deps_keys=["clan_service"],
+        initial_kwargs={"user_id": 0},
     ),
     # Handlers de trade
     "trade_update": HandlerConfig(
@@ -325,15 +330,27 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "talk": HandlerConfig(
         TalkCommandHandler,
-        deps_keys=["player_repo", "account_repo", "map_manager", "game_tick", "session_data"],
+        deps_keys=[
+            "player_repo",
+            "account_repo",
+            "map_manager",
+            "game_tick",
+            "clan_service",
+            "trade_service",
+            "npc_service",
+            "summon_service",
+        ],
+        needs_session_data=True,
     ),
     "yell": HandlerConfig(
         YellCommandHandler,
-        deps_keys=["player_repo", "map_manager", "session_data"],
+        deps_keys=["player_repo", "map_manager"],
+        needs_session_data=True,
     ),
     "whisper": HandlerConfig(
         WhisperCommandHandler,
-        deps_keys=["player_repo", "map_manager", "session_data"],
+        deps_keys=["player_repo", "map_manager"],
+        needs_session_data=True,
     ),
     "login": HandlerConfig(
         LoginCommandHandler,
@@ -425,7 +442,11 @@ class HandlerRegistry:
         Returns:
             Diccionario de kwargs para el constructor.
         """
-        kwargs: dict[str, Any] = {"message_sender": message_sender}
+        # Los tasks de clan asignan el usuario autenticado antes de ejecutar el
+        # handler. Cada petición recibe su propio diccionario y su propia instancia.
+        kwargs: dict[str, Any] = dict(config.initial_kwargs)
+        if config.needs_message_sender:
+            kwargs["message_sender"] = message_sender
 
         # Agregar dependencias desde deps
         for key in config.deps_keys:

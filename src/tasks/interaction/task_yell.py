@@ -77,7 +77,7 @@ class TaskYell(Task):
         reader = PacketReader(data)
         validator = PacketValidator(reader)
         result = validator.validate_string(
-            min_length=1, max_length=MAX_CHAT_MESSAGE_LENGTH, encoding="utf-8"
+            min_length=1, max_length=MAX_CHAT_MESSAGE_LENGTH, encoding="latin-1"
         )
 
         if not result.success:

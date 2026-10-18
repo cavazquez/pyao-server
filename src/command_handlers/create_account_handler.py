@@ -175,6 +175,9 @@ class CreateAccountCommandHandler(CommandHandler):
             )
 
             await self.character_handler.create_initial_inventory(user_id)
+            await self.character_handler.create_initial_position(
+                user_id, char_data.get("home", 1) if char_data else 1
+            )
             await self._initialize_starter_book(user_id, class_id)
 
             self.finalization_handler.log_character_summary(

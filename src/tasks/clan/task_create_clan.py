@@ -57,7 +57,7 @@ class TaskCreateClan(Task):
         validator = PacketValidator(reader)
 
         # Leer nombre del clan
-        name_result = validator.validate_string(min_length=1, max_length=30, encoding="utf-8")
+        name_result = validator.validate_string(min_length=1, max_length=30, encoding="latin-1")
         if not name_result.success or not name_result.data:
             return None
 
@@ -66,7 +66,9 @@ class TaskCreateClan(Task):
         # Leer descripción (opcional)
         description = ""
         if validator.reader.has_more_data():
-            desc_result = validator.validate_string(min_length=0, max_length=200, encoding="utf-8")
+            desc_result = validator.validate_string(
+                min_length=0, max_length=200, encoding="latin-1"
+            )
             if desc_result.success and desc_result.data:
                 description = desc_result.data
 

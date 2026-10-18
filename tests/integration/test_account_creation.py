@@ -48,6 +48,10 @@ async def test_task_create_account_success(redis_client) -> None:  # noqa: PLR09
     player_repo.get_agility = AsyncMock(return_value=10)
     # El inventario usa Redis concreto, incluidos WATCH y recibos.
     player_repo.redis = redis_client
+    # La posición inicial se resuelve con la ciudad cargada antes del listener.
+    await redis_client.redis.hset(
+        "world:home:1", mapping={"map": 1, "x": 50, "y": 50, "heading": 3}
+    )
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)

@@ -12,6 +12,16 @@ from src.tasks.player.task_account import TaskCreateAccount
 from src.tasks.player.task_login import TaskLogin
 
 
+@pytest.mark.parametrize("name", sorted(HANDLER_CONFIGS))
+def test_production_registry_can_construct_every_handler(name):
+    """Un comando anunciado nunca falla por argumentos ausentes o incompatibles."""
+    registry = HandlerRegistry(Mock())
+    first = registry.get(name, Mock(), {"user_id": 1})
+    second = registry.get(name, Mock(), {"user_id": 2})
+    assert isinstance(first, HANDLER_CONFIGS[name].handler_class)
+    assert first is not second
+
+
 class SuspendedLogin(CommandHandler):
     """Simula un login suspendido mientras otro cliente solicita el mismo handler."""
 
@@ -91,6 +101,28 @@ def test_real_login_subhandlers_and_session_identity():
             handler.finalization_handler,
         ):
             assert subhandler.message_sender is sender
+
+
+@pytest.mark.parametrize("name", ["talk", "yell", "whisper"])
+def test_chat_handlers_receive_request_session(name):
+    """La sesión del chat procede de la petición, nunca del contenedor compartido."""
+    deps = Mock()
+    registry = HandlerRegistry(deps)
+    session_a, session_b = {}, {"user_id": 2}
+    first = registry.get(name, Mock(), session_a)
+    second = registry.get(name, Mock(), session_b)
+    assert first.session_data is session_a
+    assert second.session_data is session_b
+
+
+def test_talk_receives_real_world_services():
+    """El wiring de producción no deja deshabilitados trade, clanes ni mascotas."""
+    deps = Mock()
+    handler = HandlerRegistry(deps).get("talk", Mock(), {})
+    assert handler.trade_handler.trade_service is deps.trade_service
+    assert handler.clan_handler.clan_service is deps.clan_service
+    assert handler.pet_handler.npc_service is deps.npc_service
+    assert handler.pet_handler.summon_service is deps.summon_service
 
 
 @pytest.mark.parametrize("name", ["login", "create_account"])

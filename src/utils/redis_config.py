@@ -9,6 +9,15 @@ __all__ = ["DEFAULT_EFFECTS_CONFIG", "DEFAULT_SERVER_CONFIG", "RedisConfig", "Re
 class RedisKeys:
     """Constantes para las claves de Redis."""
 
+    @staticmethod
+    def home_spawn(home: int) -> str:
+        """Clave del spawn inicial del catálogo, ajena al estado de personajes.
+
+        Returns:
+            Clave del hash cargado durante el arranque.
+        """
+        return f"world:home:{home}"
+
     # Configuración del servidor
     CONFIG_SERVER_HOST = "config:server:host"
     CONFIG_SERVER_PORT = "config:server:port"

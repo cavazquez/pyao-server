@@ -50,7 +50,7 @@ class TaskTalk(Task):
     def _parse_packet(self) -> TalkData | None:
         """Parsea el paquete Talk.
 
-        Formato: PacketID (1 byte) + longitud (int16) + mensaje (string UTF-8)
+        Formato: PacketID (1 byte) + longitud (int16) + mensaje (string Latin-1)
 
         Returns:
             TalkData con el mensaje validado o None si el paquete es inválido.
@@ -60,7 +60,7 @@ class TaskTalk(Task):
 
         # Usar nueva API consistente
         message_result = validator.validate_string(
-            min_length=1, max_length=MAX_MESSAGE_LENGTH, encoding="utf-8"
+            min_length=1, max_length=MAX_MESSAGE_LENGTH, encoding="latin-1"
         )
 
         if not message_result.success:

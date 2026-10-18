@@ -172,7 +172,7 @@ pyao-server/
 │   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
 │   ├── repositories/         # Persistencia
 │   ├── operations/           # Redis, smoke y distribution: validación y ensamblado de releases
-│   ├── models/               # Entidades y catálogos
+│   ├── models/               # Entidades y catálogos; city_data_loader.py carga los seis spawns
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
 ├── data/                     # Dataset propio versionado
@@ -197,6 +197,13 @@ pyao-server/
 ### Arquitectura
 
 El servidor sigue una **arquitectura en capas** con separación de responsabilidades:
+
+`DataInitializer` carga las seis ciudades de `data/world/cities.toml` en Redis
+antes de abrir el listener. El alta consulta ese catálogo y aplica el home
+elegido sólo si el personaje todavía no tiene posición. Los logins posteriores
+conservan su ubicación. Las doce clases del protocolo están declaradas en
+`data/classes/definitions.toml`; las ocho que usaban atributos neutros mantienen
+ese perfil, sus IDs y el balance existente de `data/classes/balance.toml`.
 
 #### Capa de Red
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor
