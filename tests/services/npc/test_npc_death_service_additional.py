@@ -580,7 +580,7 @@ class TestDropGold:
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=False)  # Todas bloqueadas
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         broadcast_service = MagicMock()
         broadcast_service.broadcast_object_create = AsyncMock()
@@ -596,7 +596,7 @@ class TestDropGold:
         await service._drop_gold(sample_npc)
 
         # Assert - No debe dropear oro
-        map_manager.add_ground_item.assert_not_called()
+        map_manager.add_ground_item_committed.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_drop_gold_zero_amount(self) -> None:
@@ -624,7 +624,7 @@ class TestDropGold:
         )
 
         map_manager = MagicMock()
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         service = NPCDeathService(
             map_manager=map_manager,
@@ -637,7 +637,7 @@ class TestDropGold:
         await service._drop_gold(npc)
 
         # Assert - No debe dropear oro
-        map_manager.add_ground_item.assert_not_called()
+        map_manager.add_ground_item_committed.assert_not_called()
 
 
 class TestRemoveNPC:
@@ -739,7 +739,7 @@ class TestDropLoot:
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.is_tile_occupied = MagicMock(return_value=False)
         map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         loot_table_service = MagicMock()
         loot_table_service.get_loot_for_npc = MagicMock(return_value=[(1, 1)])  # item_id, quantity
@@ -764,7 +764,7 @@ class TestDropLoot:
         await service._drop_loot(sample_npc)
 
         # Assert - No debe dropear item sin GrhIndex
-        map_manager.add_ground_item.assert_not_called()
+        map_manager.add_ground_item_committed.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_drop_loot_no_position(self, sample_npc: NPC) -> None:
@@ -773,7 +773,7 @@ class TestDropLoot:
         map_manager = MagicMock()
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=False)  # Todas bloqueadas
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         loot_table_service = MagicMock()
         loot_table_service.get_loot_for_npc = MagicMock(return_value=[(1, 1)])
@@ -798,7 +798,7 @@ class TestDropLoot:
         await service._drop_loot(sample_npc)
 
         # Assert - No debe dropear item
-        map_manager.add_ground_item.assert_not_called()
+        map_manager.add_ground_item_committed.assert_not_called()
 
 
 class TestRespawn:

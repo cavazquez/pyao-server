@@ -1,13 +1,14 @@
-"""Handler para comando de recoger item."""
+"""Pickup conjunto de suelo e inventario/oro, sin claim ni compensación en memoria."""
 
 import logging
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING
 
-from src.command_handlers.pickup_gold_handler import PickupGoldHandler
-from src.command_handlers.pickup_item_handler import PickupItemHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.pickup_command import PickupCommand
+from src.config.config_manager import ConfigManager
 from src.models.item_constants import GOLD_ITEM_ID
+from src.services.ground_transfer import GroundRequest, transfer_ground
+from src.services.inventory_notifications import notify_inventory
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class PickupCommandHandler(CommandHandler):
-    """Handler para comando de recoger item (solo lógica de negocio)."""
+    """Recoge una identidad estable y notifica sólo después del commit durable."""
 
     def __init__(
         self,
@@ -34,17 +35,7 @@ class PickupCommandHandler(CommandHandler):
         party_service: PartyService | None,
         message_sender: MessageSender,
     ) -> None:
-        """Inicializa el handler.
-
-        Args:
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventario.
-            map_manager: Gestor de mapas.
-            broadcast_service: Servicio de broadcast.
-            item_catalog: Catálogo de items.
-            party_service: Servicio de parties (para loot compartido).
-            message_sender: Enviador de mensajes.
-        """
+        """Conserva los servicios de la sesión y el contrato propio de pickup libre."""
         self.player_repo = player_repo
         self.inventory_repo = inventory_repo
         self.map_manager = map_manager
@@ -53,101 +44,74 @@ class PickupCommandHandler(CommandHandler):
         self.party_service = party_service
         self.message_sender = message_sender
 
-        # Inicializar handlers especializados
-        self.gold_handler = PickupGoldHandler(
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            message_sender=message_sender,
-        )
-
-        self.item_handler = PickupItemHandler(
-            player_repo=player_repo,
-            inventory_repo=inventory_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            item_catalog=item_catalog,
-            message_sender=message_sender,
-        )
-
     async def handle(self, command: Command) -> CommandResult:
-        """Ejecuta el comando de recoger item (solo lógica de negocio).
-
-        La implementación sigue el patrón *claim-first* para evitar
-        duplicación de items por race condition entre múltiples pickups
-        simultáneos sobre el mismo tile:
-
-        1. Leemos la posición del jugador (requiere un await en Redis).
-        2. *Reclamamos* el item del suelo de forma síncrona: ``remove_ground_item``
-           modifica un ``dict`` en memoria sin awaits, así que una única
-           coroutine puede ejecutar el pop antes de que otra llegue al mismo
-           punto.
-        3. Ejecutamos la parte con awaits (escritura en Redis, broadcast).
-        4. Si la escritura falla (inventario lleno, tope de oro, etc.),
-           *restauramos* el item al tile original para no perder estado.
-
-        Args:
-            command: Comando de recoger item.
+        """Confirma origen e ingreso juntos sin retirar primero del índice local.
 
         Returns:
-            Resultado de la ejecución.
+            Resultado confirmado o rechazo sin recursos perdidos.
         """
         if not isinstance(command, PickupCommand):
-            return CommandResult.error("Comando inválido: se esperaba PickupCommand")
-
-        user_id = command.user_id
-
-        logger.info("PickupCommandHandler: user_id=%d intentando recoger item", user_id)
-
-        position = await self.player_repo.get_position(user_id)
-        if not position:
-            logger.error("No se pudo obtener posición del jugador %d", user_id)
-            return CommandResult.error("No se pudo obtener la posición del jugador")
-
-        map_id = position["map"]
-        x = position["x"]
-        y = position["y"]
-
-        # Paso crítico: claim sincrónico. Entre este remove_ground_item y el
-        # add_item del inventario no hay ningún await, así que otra coroutine
-        # que corra en paralelo verá el tile sin items y saldrá por el camino
-        # de "No hay nada aquí".
-        claimed = self.map_manager.remove_ground_item(map_id, x, y, item_index=0)
-        if claimed is None:
-            await self.message_sender.send_console_msg("No hay nada aquí.")
-            logger.info("Jugador %d intentó recoger pero no hay items en (%d,%d)", user_id, x, y)
-            return CommandResult.error("No hay nada aquí")
-
-        item_id = claimed.get("item_id")
-        quantity = claimed.get("quantity", 1)
-
-        if not isinstance(quantity, int):
-            quantity = 1
-        if not isinstance(item_id, int) and item_id is not None:
-            logger.warning("item_id inválido: %s", item_id)
-            # Restaurar al suelo: el estado del tile no puede corromperse
-            # por datos malformados en Redis.
-            self.map_manager.add_ground_item(map_id, x, y, claimed)
-            return CommandResult.error("Item inválido")
-
-        # El loot siempre es público - cualquiera puede recogerlo
-        # (owner_id se mantiene para compatibilidad futura, pero no se verifica)
-
-        if item_id == GOLD_ITEM_ID:
-            success, error_msg, gold_data = await self.gold_handler.pickup_claimed_gold(
-                user_id, quantity, map_id, x, y
+            return CommandResult.error("Comando inválido")
+        try:
+            if command.origin is None:
+                position = await self.player_repo.get_position(command.user_id)
+                if not position:
+                    return CommandResult.error("No se pudo obtener la posición del jugador")
+                command.origin = position["map"], position["x"], position["y"]
+            map_id, x, y = command.origin
+            if command.expected_stack_id is None:
+                await self.map_manager.load_ground_items(map_id)
+                tile = self.map_manager.get_ground_items(map_id, x, y)
+                command.expected_stack_id = str(tile[0].get("stack_id", "")) if tile else ""
+                command.expected_item_id = int(tile[0].get("item_id") or 0) if tile else 0
+            if command.expected_item_id and command.expected_item_id != GOLD_ITEM_ID:
+                if self.inventory_repo is None or self.item_catalog is None:
+                    return CommandResult.error("Servicios no disponibles para recoger objetos")
+                if not self.item_catalog.get_item_data(command.expected_item_id):
+                    return CommandResult.error("Objeto no encontrado en catálogo")
+            request = GroundRequest(
+                command.user_id, map_id, x, y, "pickup", expected_stack=command.expected_stack_id
             )
-            if success and gold_data:
-                return CommandResult.ok(data=cast("Any", gold_data))
-            # Gold handler rechazó: restaurar
-            self.map_manager.add_ground_item(map_id, x, y, claimed)
-            return CommandResult.error(error_msg or "Error al recoger oro")
-
-        success, error_msg, item_data = await self.item_handler.pickup_claimed_item(
-            user_id, item_id, quantity, map_id, x, y
-        )
-        if success and item_data:
-            return CommandResult.ok(data=cast("Any", item_data))
-        # Item handler rechazó (inventario lleno): restaurar
-        self.map_manager.add_ground_item(map_id, x, y, claimed)
-        return CommandResult.error(error_msg or "Error al recoger item")
+            capacity = (
+                ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) if self.inventory_repo else 30
+            )
+            max_stack = self.inventory_repo.stacking.max_stack if self.inventory_repo else 20
+            result = await self.map_manager.apply_ground_operation(
+                map_id,
+                x,
+                y,
+                self.player_repo.redis.redis,
+                lambda: transfer_ground(
+                    self.player_repo.redis.redis, request, command.operation_id, capacity, max_stack
+                ),
+                broadcast_service=self.broadcast_service,
+                operation_id=command.operation_id,
+            )
+            if not result["applied"]:
+                await self.message_sender.send_console_msg(result["error"])
+                return CommandResult.error(result["error"])
+            if command.notified:
+                return CommandResult.ok(data=result)
+            if result["type"] == "gold":
+                await self.message_sender.send_update_user_stats_from_repo(
+                    command.user_id, self.player_repo
+                )
+                label = "monedas de oro"
+            else:
+                if self.inventory_repo:
+                    await notify_inventory(
+                        self.message_sender, self.inventory_repo, command.user_id
+                    )
+                label = (
+                    (self.item_catalog.get_item_name(result["item_id"]) or "objeto")
+                    if self.item_catalog
+                    else "objeto"
+                )
+            await self.message_sender.send_console_msg(f"Recogiste {result['quantity']} {label}.")
+            command.notified = True
+            return CommandResult.ok(data=result)
+        except Exception:
+            logger.exception("No se pudo confirmar el pickup")
+            return CommandResult.error(
+                "No se pudo confirmar la operación; revisá el inventario al reconectar."
+            )

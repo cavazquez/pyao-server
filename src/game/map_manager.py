@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.game.door_state import DoorState
 from src.game.exit_index import ExitIndex
@@ -14,9 +14,14 @@ from src.game.player_index import PlayerIndex
 from src.game.tile_occupation import TileOccupation
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
+    from redis.asyncio import Redis
+
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.repositories.ground_items_repository import GroundItemsRepository
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 
 logger = logging.getLogger(__name__)
@@ -329,6 +334,45 @@ class MapManager(SpatialIndexMixin):
                 - spawn_time (opcional): Timestamp de spawn
         """
         self._ground_index.add_ground_item(map_id, x, y, item)
+
+    async def add_ground_item_committed(
+        self,
+        map_id: int,
+        x: int,
+        y: int,
+        item: dict[str, int | str | None],
+        *,
+        broadcast_service: MultiplayerBroadcastService | None = None,
+        operation_id: str | None = None,
+    ) -> bool:
+        """Confirma y publica un spawn sin persistencia ciega en segundo plano.
+
+        Returns:
+            Si el objeto fue agregado completo.
+        """
+        return await self._ground_index.add_committed(
+            map_id, x, y, item, broadcast_service, operation_id
+        )
+
+    async def apply_ground_operation(
+        self,
+        map_id: int,
+        x: int,
+        y: int,
+        redis: Redis,
+        operation: Callable[[], Awaitable[dict[str, Any]]],
+        *,
+        broadcast_service: MultiplayerBroadcastService | None = None,
+        operation_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Ordena cambios persistidos y sus mensajes por mapa.
+
+        Returns:
+            Resultado confirmado sin dejar notificaciones pendientes de otra operación.
+        """
+        return await self._ground_index.run_committed(
+            map_id, x, y, redis, operation, broadcast_service, operation_id
+        )
 
     def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
         """Obtiene todos los items en un tile específico.

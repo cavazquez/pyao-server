@@ -311,16 +311,14 @@ class NPCDeathService:
             "spawn_time": None,
         }
 
-        # Agregar al mapa
-        self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=gold_item)
-
-        # Broadcast a todos los jugadores
-        await self.broadcast_service.broadcast_object_create(
+        if not await self.map_manager.add_ground_item_committed(
             map_id=npc.map_id,
             x=drop_x,
             y=drop_y,
-            grh_index=511,
-        )
+            item=gold_item,
+            broadcast_service=self.broadcast_service,
+        ):
+            return
 
         logger.info(
             "Dropeado %d oro en (%d,%d) por muerte de %s", gold_amount, drop_x, drop_y, npc.name
@@ -367,16 +365,14 @@ class NPCDeathService:
                 "spawn_time": None,
             }
 
-            # Agregar al mapa
-            self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=item)
-
-            # Broadcast a todos los jugadores
-            await self.broadcast_service.broadcast_object_create(
+            if not await self.map_manager.add_ground_item_committed(
                 map_id=npc.map_id,
                 x=drop_x,
                 y=drop_y,
-                grh_index=grh_index,
-            )
+                item=item,
+                broadcast_service=self.broadcast_service,
+            ):
+                continue
 
             logger.info(
                 "Dropeado item %s (x%d) en (%d,%d) por muerte de %s",

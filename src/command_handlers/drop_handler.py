@@ -1,18 +1,13 @@
-"""Handler para comando de soltar item."""
+"""Drop identificado con transferencia conjunta de inventario/oro al suelo persistido."""
 
 import logging
 from typing import TYPE_CHECKING
 
-from src.command_handlers.drop_gold_handler import DropGoldHandler
-from src.command_handlers.drop_item_handler import DropItemHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.drop_command import DropCommand
-
-# Slots especiales para oro
-# - slot=0: formato original/VB6
-# - slot=31: formato cliente Godot (Flagoro)
-GOLD_SLOT_CLASSIC = 0
-GOLD_SLOT_GODOT = 31  # Consts.Flagoro en el cliente Godot
+from src.config.config_manager import ConfigManager
+from src.services.ground_transfer import GroundRequest, transfer_ground
+from src.services.inventory_notifications import notify_inventory
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -23,10 +18,12 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
+GOLD_SLOT_CLASSIC = 0
+GOLD_SLOT_GODOT = 31
 
 
 class DropCommandHandler(CommandHandler):
-    """Handler para comando de soltar item (solo lógica de negocio)."""
+    """Conserva los slots clásicos/Godot y espera un resultado confirmado antes de notificar."""
 
     def __init__(
         self,
@@ -37,16 +34,7 @@ class DropCommandHandler(CommandHandler):
         message_sender: MessageSender,
         item_catalog: ItemCatalog | None = None,
     ) -> None:
-        """Inicializa el handler.
-
-        Args:
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventario.
-            map_manager: Gestor de mapas.
-            broadcast_service: Servicio de broadcast.
-            message_sender: Enviador de mensajes.
-            item_catalog: Catálogo de items para obtener datos gráficos.
-        """
+        """Conserva las dependencias de la sesión."""
         self.player_repo = player_repo
         self.inventory_repo = inventory_repo
         self.map_manager = map_manager
@@ -54,51 +42,87 @@ class DropCommandHandler(CommandHandler):
         self.message_sender = message_sender
         self.item_catalog = item_catalog
 
-        # Inicializar handlers especializados
-        self.gold_handler = DropGoldHandler(
-            player_repo=player_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            message_sender=message_sender,
-        )
-
-        self.item_handler = DropItemHandler(
-            player_repo=player_repo,
-            inventory_repo=inventory_repo,
-            map_manager=map_manager,
-            broadcast_service=broadcast_service,
-            message_sender=message_sender,
-            item_catalog=item_catalog,
-        )
-
     async def handle(self, command: Command) -> CommandResult:
-        """Ejecuta el comando de soltar item (solo lógica de negocio).
-
-        Args:
-            command: Comando de soltar item.
+        """Confirma el stack y el débito en un EXEC, sin persistir snapshots de caché.
 
         Returns:
-            Resultado de la ejecución.
+            Cantidad efectiva confirmada o rechazo sin debitar recursos.
         """
         if not isinstance(command, DropCommand):
-            return CommandResult.error("Comando inválido: se esperaba DropCommand")
-
-        user_id = command.user_id
-        slot = command.slot
-        quantity = command.quantity
-
-        logger.info("DropCommandHandler: user_id=%d slot=%d quantity=%d", user_id, slot, quantity)
-
-        # Slots especiales de oro:
-        # - slot <= 0: formato original/VB6
-        # - slot = 31: formato cliente Godot (Flagoro)
-        if slot <= GOLD_SLOT_CLASSIC or slot == GOLD_SLOT_GODOT:
-            success, error_msg, data = await self.gold_handler.drop_gold(user_id, quantity)
-            if success:
-                return CommandResult.ok(data=data)
-            return CommandResult.error(error_msg or "Error al tirar oro")
-
-        success, error_msg, data = await self.item_handler.drop_item(user_id, slot, quantity)
-        if success:
-            return CommandResult.ok(data=data)
-        return CommandResult.error(error_msg or "Error al tirar item")
+            return CommandResult.error("Comando inválido")
+        if command.quantity < 1:
+            return CommandResult.error("Cantidad inválida")
+        gold = command.slot <= GOLD_SLOT_CLASSIC or command.slot == GOLD_SLOT_GODOT
+        try:
+            if command.origin is None:
+                position = await self.player_repo.get_position(command.user_id)
+                if not position:
+                    return CommandResult.error("No se pudo obtener la posición del jugador")
+                command.origin = position["map"], position["x"], position["y"]
+            if not gold:
+                if self.inventory_repo is None:
+                    return CommandResult.error("Repositorio de inventario no disponible")
+                if command.expected_item_id is None:
+                    source = await self.inventory_repo.get_slot(command.user_id, command.slot)
+                    command.expected_item_id = source[0] if source else 0
+                if not command.expected_item_id:
+                    return CommandResult.error("No hay nada en ese slot")
+            map_id, x, y = command.origin
+            request = GroundRequest(
+                command.user_id,
+                map_id,
+                x,
+                y,
+                "drop_gold" if gold else "drop_item",
+                slot=command.slot,
+                quantity=command.quantity,
+                expected_item_id=command.expected_item_id or 0,
+                graphic_id=(
+                    self.item_catalog.get_grh_index(command.expected_item_id or 0)
+                    if self.item_catalog and not gold
+                    else None
+                ),
+            )
+            capacity = (
+                ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) if self.inventory_repo else 30
+            )
+            max_stack = self.inventory_repo.stacking.max_stack if self.inventory_repo else 20
+            result = await self.map_manager.apply_ground_operation(
+                map_id,
+                x,
+                y,
+                self.player_repo.redis.redis,
+                lambda: transfer_ground(
+                    self.player_repo.redis.redis, request, command.operation_id, capacity, max_stack
+                ),
+                broadcast_service=self.broadcast_service,
+                operation_id=command.operation_id,
+            )
+            if not result["applied"]:
+                await self.message_sender.send_console_msg(result["error"])
+                return CommandResult.error(result["error"])
+            if command.notified:
+                return CommandResult.ok(data=result)
+            if gold:
+                await self.message_sender.send_update_user_stats_from_repo(
+                    command.user_id, self.player_repo
+                )
+                label = "monedas de oro"
+            else:
+                if self.inventory_repo:
+                    await notify_inventory(
+                        self.message_sender, self.inventory_repo, command.user_id
+                    )
+                label = (
+                    (self.item_catalog.get_item_name(result["item_id"]) or "objeto")
+                    if self.item_catalog
+                    else "objeto"
+                )
+            await self.message_sender.send_console_msg(f"Tiraste {result['quantity']} {label}.")
+            command.notified = True
+            return CommandResult.ok(data=result)
+        except Exception:
+            logger.exception("No se pudo confirmar el drop")
+            return CommandResult.error(
+                "No se pudo confirmar la operación; revisá el inventario al reconectar."
+            )

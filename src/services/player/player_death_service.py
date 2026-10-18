@@ -3,7 +3,12 @@
 import logging
 import random
 import time
+from functools import partial
 from typing import TYPE_CHECKING
+
+from src.config.config_manager import ConfigManager
+from src.services.ground_transfer import GroundRequest, transfer_ground
+from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -241,29 +246,27 @@ class PlayerDeathService:
         if gold_to_drop <= 0:
             return
 
-        # Reducir oro del jugador
-        if not await self.player_repo.remove_gold(user_id, gold_to_drop):
-            return
-
-        # Crear ground item de oro
-        gold_item: dict[str, int | str | None] = {
-            "item_id": 12,  # ID del oro
-            "quantity": gold_to_drop,
-            "grh_index": 511,  # GrhIndex del oro
-            "owner_id": None,  # Cualquiera puede recoger
-            "spawn_time": None,
-        }
-
-        # Agregar al mapa
-        self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=gold_item)
-
-        # Broadcast a jugadores cercanos
-        await self.broadcast_service.broadcast_object_create(
-            map_id=map_id,
-            x=x,
-            y=y,
-            grh_index=511,
+        request = GroundRequest(
+            user_id,
+            map_id,
+            x,
+            y,
+            "drop_gold",
+            quantity=gold_to_drop,
+            allow_dead=True,
+            graphic_id=511,
         )
+        identity = operation_id()
+        result = await self.map_manager.apply_ground_operation(
+            map_id,
+            x,
+            y,
+            self.player_repo.redis.redis,
+            lambda: transfer_ground(self.player_repo.redis.redis, request, identity),
+            broadcast_service=self.broadcast_service,
+        )
+        if not result["applied"]:
+            return
 
         logger.info("Jugador %d dropeó %d oro al morir", user_id, gold_to_drop)
 
@@ -311,28 +314,37 @@ class PlayerDeathService:
             if grh_index is None:
                 continue
 
-            # Vaciar el slot del inventario
-            await self.inventory_repo.clear_slot(user_id, slot)
-
-            # Crear ground item
-            item: dict[str, int | str | None] = {
-                "item_id": item_id,
-                "quantity": quantity,
-                "grh_index": grh_index,
-                "owner_id": None,
-                "spawn_time": None,
-            }
-
-            # Agregar al mapa
-            self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=item)
-
-            # Broadcast
-            await self.broadcast_service.broadcast_object_create(
-                map_id=map_id,
-                x=x,
-                y=y,
-                grh_index=grh_index,
+            request = GroundRequest(
+                user_id,
+                map_id,
+                x,
+                y,
+                "drop_item",
+                slot=slot,
+                quantity=quantity,
+                allow_dead=True,
+                expected_item_id=item_id,
+                graphic_id=grh_index,
             )
+            identity = operation_id()
+            inventory_repo = self.inventory_repo
+            result = await self.map_manager.apply_ground_operation(
+                map_id,
+                x,
+                y,
+                self.player_repo.redis.redis,
+                partial(
+                    transfer_ground,
+                    self.player_repo.redis.redis,
+                    request,
+                    identity,
+                    ConfigManager.as_int(inventory_repo.MAX_SLOTS),
+                    inventory_repo.stacking.max_stack,
+                ),
+                broadcast_service=self.broadcast_service,
+            )
+            if not result["applied"]:
+                continue
 
             item_name = self.item_catalog.get_item_name(item_id) or f"Item #{item_id}"
             logger.info(

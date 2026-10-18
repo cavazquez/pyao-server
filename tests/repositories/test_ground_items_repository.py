@@ -1,31 +1,66 @@
-"""Tests básicos para GroundItemsRepository."""
+"""Suelo con Redis concreto: identidades, append concurrente y fallas visibles."""
 
-from unittest.mock import AsyncMock, MagicMock
+import asyncio
+import json
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
 from src.repositories.ground_items_repository import GroundItemsRepository
+from src.utils.redis_config import RedisKeys
+
+
+@pytest.fixture(autouse=True)
+def durable_adapter():
+    """Sustituye sólo fsync de Redis fake; el smoke nativo verifica la persistencia.
+
+    Yields:
+        Contexto de pruebas rápidas sin requerir comandos AOF de fakeredis.
+    """
+    with patch("src.repositories.ground_items_repository.require_durable", new=AsyncMock()):
+        yield
 
 
 @pytest.mark.asyncio
-class TestGroundItemsRepository:
-    """Tests básicos para GroundItemsRepository."""
+async def test_legacy_identity_is_stable_and_read_does_not_rewrite(redis_client):
+    """Dos stacks legacy idénticos reciben identidades distintas sin modificar el JSON al leer."""
+    repo = GroundItemsRepository(redis_client)
+    raw = json.dumps({"50,50": [{"item_id": 1, "quantity": 2}, {"item_id": 1, "quantity": 2}]})
+    await redis_client.set(RedisKeys.ground_items(1), raw)
+    first = await repo.load_ground_items(1)
+    second = await repo.load_ground_items(1)
+    assert first == second
+    assert first[50, 50][0]["stack_id"] != first[50, 50][1]["stack_id"]
+    assert await redis_client.get(RedisKeys.ground_items(1)) == raw
+    await repo.remove_ground_item(1, 50, 50, 0)
+    remaining = (await repo.load_ground_items(1))[50, 50][0]
+    assert remaining["stack_id"] == first[50, 50][1]["stack_id"]
 
-    async def test_init(self) -> None:
-        """Test de inicialización."""
-        redis_client = MagicMock()
-        repo = GroundItemsRepository(redis_client)
 
-        assert repo.redis_client == redis_client
+@pytest.mark.asyncio
+async def test_parallel_appends_and_identified_replay_preserve_all_stacks(redis_client):
+    """El mapa compartido no pierde drops de productores que corren en paralelo."""
+    repo = GroundItemsRepository(redis_client)
+    results = await asyncio.gather(
+        *(repo.add_ground_item(1, 50, 50, {"item_id": 1, "quantity": 1}) for _ in range(10))
+    )
+    assert all(result["applied"] for result in results)
+    assert len((await repo.load_ground_items(1))[50, 50]) == 10
+    assert not (await repo.add_ground_item(1, 50, 50, {"item_id": 1, "quantity": 1}))["applied"]
+    assert 0 < await redis_client.redis.ttl(RedisKeys.ground_items(1)) <= 3600
 
-    async def test_add_ground_item(self) -> None:
-        """Test de agregar item al suelo (test básico)."""
-        redis_client = MagicMock()
-        redis_client.get = AsyncMock(return_value=None)
-        redis_client.set = AsyncMock()
 
-        repo = GroundItemsRepository(redis_client)
-        item = {"item_id": 10, "quantity": 5}
-
-        # Solo verificar que no crashea
-        await repo.add_ground_item(map_id=1, x=50, y=50, item=item)
+@pytest.mark.asyncio
+async def test_corruption_and_maintenance_guard_do_not_replace_data(redis_client):
+    """Redis inválido no se trata como vacío; una sesión activa impide reemplazar snapshots."""
+    repo = GroundItemsRepository(redis_client)
+    await redis_client.set(RedisKeys.ground_items(1), "corrupt")
+    with pytest.raises(json.JSONDecodeError):
+        await repo.load_ground_items(1)
+    result = await repo.add_ground_item(1, 50, 50, {"item_id": 1, "quantity": 1})
+    assert not result["applied"]
+    assert await redis_client.get(RedisKeys.ground_items(1)) == "corrupt"
+    await redis_client.set("session:1:owner", "nonce")
+    with pytest.raises(RuntimeError, match="sin sesiones"):
+        await repo.save_ground_items(1, {})
+    assert await redis_client.get(RedisKeys.ground_items(1)) == "corrupt"

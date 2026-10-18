@@ -35,6 +35,7 @@ class Resource:
 
     key: str
     kind: Literal["hash", "string"]
+    ttl_seconds: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,6 +75,13 @@ async def transact(
         msg = "Retención del recibo insuficiente para la ventana de reintento"
         raise ValueError(msg)
     created_at = validate_operation_id(identity)
+    if any(
+        resource.ttl_seconds is not None
+        and (type(resource.ttl_seconds) is not int or resource.ttl_seconds < 1)
+        for resource in resources
+    ):
+        msg = "TTL de recurso inválido"
+        raise ValueError(msg)
     by_key = {resource.key: resource for resource in resources}
     receipt_key = f"operation:resources:{identity}"
     if len(by_key) != len(resources) or receipt_key in by_key:
@@ -117,7 +125,7 @@ async def transact(
                     if isinstance(value, dict) and value:
                         pipe.hset(key, mapping=value)
                     elif isinstance(value, str):
-                        pipe.set(key, value)
+                        pipe.set(key, value, ex=by_key[key].ttl_seconds)
                 pipe.set(receipt_key, receipt_json, ex=receipt_ttl_seconds)
                 await pipe.execute()
             except WatchError, RedisConnectionError, RedisTimeoutError:
