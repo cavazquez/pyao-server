@@ -3,6 +3,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from fakeredis.aioredis import FakeRedis
 
 from src.config.config_manager import ConfigManager
 from src.config.game_config import GameConfig
@@ -53,6 +54,8 @@ async def test_initializer_injects_central_settings():
     """El arranque nunca llama connect con defaults independientes."""
     client = MagicMock()
     client.connect = AsyncMock()
+    client.initialize_defaults = AsyncMock()
+    client.redis = FakeRedis(decode_responses=True)
     repo = MagicMock()
     repo.reset_connections_count = AsyncMock()
     repo.set_uptime_start = AsyncMock()
@@ -71,7 +74,8 @@ async def test_initializer_injects_central_settings():
     ):
         data.return_value.initialize_all = AsyncMock()
         assert await RedisInitializer.initialize() is client
-    client.connect.assert_awaited_once_with(settings)
+    client.connect.assert_awaited_once_with(settings, seed_defaults=False)
+    await client.redis.aclose()
 
 
 @pytest.mark.parametrize(

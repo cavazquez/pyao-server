@@ -35,11 +35,14 @@ class RedisClient:
             cls._instance = cast("RedisClient", super().__new__(cls))
         return cast("Self", cls._instance)
 
-    async def connect(self, config: RedisConfig | None = None) -> None:
+    async def connect(
+        self, config: RedisConfig | None = None, *, seed_defaults: bool = True
+    ) -> None:
         """Conecta al servidor Redis.
 
         Args:
             config: Configuración validada. Si es None, usa la configuración central.
+            seed_defaults: Inicializa defaults; el arranque valida el esquema antes de hacerlo.
 
         Raises:
             ConnectionError: Si no se puede conectar a Redis (puerto cerrado, host inaccesible).
@@ -71,7 +74,8 @@ class RedisClient:
                 _ensure_ping_success(awaited_result)
             logger.info("Conectado a Redis en %s:%d", config.host, config.port)
 
-            await self._initialize_default_config()
+            if seed_defaults:
+                await self._initialize_default_config()
 
         except redis.ConnectionError as e:
             logger.warning("No se pudo conectar a Redis en %s:%d - %s", config.host, config.port, e)
@@ -81,6 +85,10 @@ class RedisClient:
             logger.exception("Error al conectar a Redis")
             self._redis = None
             raise
+
+    async def initialize_defaults(self) -> None:
+        """Inicializa los defaults después de validar el esquema persistido."""
+        await self._initialize_default_config()
 
     async def _initialize_default_config(self) -> None:
         """Inicializa la configuración por defecto en Redis si no existe."""

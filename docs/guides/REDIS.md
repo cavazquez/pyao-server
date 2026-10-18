@@ -133,5 +133,39 @@ oro, inventario y habilidades, y rechazo de un archivo alterado:
 uv run --locked python -m src.operations.redis_backup selftest
 ```
 
+## Esquema y migraciones
+
+`schema:state` conserva la versión y un journal por paso. La versión 1 adopta
+explícitamente el layout legado de cuentas/economía/progreso, sin reemplazar
+datos por seeds. Una base nueva se inicializa en la versión actual. Una base con
+estado legado exige migración explícita antes de abrir el juego, y una versión
+futura se rechaza antes de escribir defaults o cargar datos iniciales.
+
+Con el perfil AOF configurado, el juego detenido y sin sesiones activas:
+
+```bash
+uv run --locked python -m src.operations.redis_schema status
+uv run --locked python -m src.operations.redis_backup backup --output .backups/antes-de-migrar.rdb
+uv run --locked python -m src.operations.redis_schema migrate --backup .backups/antes-de-migrar.rdb
+uv run --locked python -m src.operations.redis_schema status
+```
+
+La migración vuelve a verificar una restauración del backup y comprueba que el
+origen siga igual a ese snapshot. Rechaza sesiones de jugadores y otra migración
+activa. Cada paso confirma versión y journal con un HSET dentro de WATCH/MULTI;
+repetir tras perder la respuesta de EXEC no duplica el paso. La reserva tiene
+propietario y vence a los cinco minutos si el proceso cae; sólo el dueño puede
+liberarla. El arranque también rechaza una reserva activa. Se confirma fsync antes
+de anunciar éxito. Una interrupción previa a la confirmación permite reintentar;
+una posterior conserva versión y journal. La recuperación usa otro volumen
+restaurado desde el backup verificado, conservando el origen para revisión.
+
+Las transformaciones de formatos posteriores deben agregar su paso ordenado y
+su fixture de conservación; cambiar los seeds no migra jugadores existentes.
+
+```bash
+uv run --locked python -m src.operations.redis_schema selftest
+```
+
 Referencias: [persistencia de Redis](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/)
 y [release 8.10.2](https://github.com/redis/redis/releases/tag/8.10.2).

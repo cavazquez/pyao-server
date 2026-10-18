@@ -64,13 +64,6 @@ export PYAO_REDIS_PASSWORD_FILE="$PWD/.local/redis-password"
 docker compose up -d --build redis  # Redis autenticado + persistencia
 docker compose --profile tools up -d  # + Redis Insight GUI (puerto 5540)
 
-# Opción 2: Usar el Dockerfile incluido
-docker build -t pyao-redis ./redis
-docker run -d --name pyao-redis -p 6379:6379 pyao-redis
-
-# Opción 3: Instalar localmente (Ubuntu/Debian)
-sudo apt-get install redis-server
-redis-server
 ```
 
 **Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar al host interno `redis`, puerto `6379`, usuario `default` y la credencial del archivo privado. Ambos puertos se publican sólo en loopback.

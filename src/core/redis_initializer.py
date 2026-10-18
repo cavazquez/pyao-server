@@ -5,6 +5,7 @@ import time
 
 from src.config.config_manager import config_manager
 from src.core.data_initializer import DataInitializer
+from src.core.schema_manager import ensure_schema_ready
 from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisConfig, RedisKeys
@@ -24,7 +25,9 @@ class RedisInitializer:
         """
         redis_client = RedisClient()
         effective_config = RedisConfig.model_validate(config_manager.get_section("redis"))
-        await redis_client.connect(effective_config)
+        await redis_client.connect(effective_config, seed_defaults=False)
+        await ensure_schema_ready(redis_client.redis)
+        await redis_client.initialize_defaults()
         logger.info("✓ Conectado a Redis")
 
         data_initializer = DataInitializer(redis_client)
