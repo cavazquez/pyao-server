@@ -5,6 +5,8 @@ import time
 from typing import TYPE_CHECKING
 
 from src.effects.tick_effect import TickEffect
+from src.services.player.lifecycle import apply_player_damage
+from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -51,7 +53,7 @@ class PoisonEffect(TickEffect):
         if poisoned_until <= 0.0 or current_time >= poisoned_until:
             # Limpiar el estado si expiró
             if poisoned_until > 0.0 and current_time >= poisoned_until:
-                await player_repo.update_poisoned_until(user_id, 0.0)
+                await player_repo.clear_poisoned_until_if(user_id, poisoned_until)
                 logger.debug("Envenenamiento expirado para user_id %d", user_id)
             return
 
@@ -59,7 +61,6 @@ class PoisonEffect(TickEffect):
         is_alive = await player_repo.is_alive(user_id)
         if not is_alive:
             # Limpiar envenenamiento si el jugador murió
-            await player_repo.update_poisoned_until(user_id, 0.0)
             logger.debug("Envenenamiento limpiado para user_id %d (jugador muerto)", user_id)
             return
 
@@ -69,11 +70,16 @@ class PoisonEffect(TickEffect):
             logger.warning("No se pudieron obtener stats para user_id %d", user_id)
             return
 
-        # Aplicar daño de envenenamiento
-        new_hp = max(0, stats.min_hp - POISON_DAMAGE_PER_TICK)
-
-        # Actualizar HP
-        await player_repo.update_hp(user_id, new_hp)
+        result = await apply_player_damage(
+            player_repo.redis.redis,
+            user_id,
+            POISON_DAMAGE_PER_TICK,
+            operation_id(),
+            require_poison=True,
+        )
+        if not result.get("applied", True):
+            return
+        new_hp = int(result["new_hp"])
 
         # Notificar al cliente si hay MessageSender
         if message_sender:
@@ -98,8 +104,7 @@ class PoisonEffect(TickEffect):
                 new_hp,
                 stats.max_hp,
             )
-            # Limpiar envenenamiento al morir
-            await player_repo.update_poisoned_until(user_id, 0.0)
+            # El commit letal ya limpia el veneno de esa generación.
         else:
             logger.debug(
                 "user_id %d recibió daño de envenenamiento: %d -> %d HP (expira en %.1fs)",

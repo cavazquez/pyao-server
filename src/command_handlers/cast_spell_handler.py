@@ -93,11 +93,6 @@ class CastSpellCommandHandler(CommandHandler):
             if not is_valid:
                 return CommandResult.error(error_msg or "Error interno")
 
-            # Validar stamina
-            is_valid, error_msg = await self.validation_handler.validate_stamina(user_id)
-            if not is_valid:
-                return CommandResult.error(error_msg or "No tienes suficiente stamina")
-
             # Validar coordenadas
             is_valid, error_msg = self.validation_handler.validate_coordinates(target_x, target_y)
             if not is_valid:
@@ -152,7 +147,12 @@ class CastSpellCommandHandler(CommandHandler):
 
             # Ejecutar hechizo
             success, error_msg = await self.execution_handler.execute_spell(
-                user_id, spell_id, final_target_x, final_target_y
+                user_id,
+                spell_id,
+                final_target_x,
+                final_target_y,
+                identity=command.operation_id,
+                slot=slot,
             )
             if not success:
                 return CommandResult.error(error_msg or "Fallo al lanzar el hechizo.")

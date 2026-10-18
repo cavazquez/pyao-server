@@ -163,6 +163,7 @@ class ServiceInitializer:
             broadcast_service=broadcast_service,  # Para invisibilidad
             npc_service=npc_service,  # Para invocación
             summon_service=summon_service,  # Para invocación
+            item_catalog=item_catalog,
         )
         logger.info(
             "✓ Sistema de magia inicializado (con NPCDeathService, invisibilidad e invocación)"
@@ -200,6 +201,7 @@ class ServiceInitializer:
             item_catalog=item_catalog,
             account_repo=self.repositories["account_repo"],
         )
+        spell_service.player_death_service = player_death_service
         logger.info("✓ Servicio de muerte de jugadores inicializado")
 
         # Servicio de IA de NPCs

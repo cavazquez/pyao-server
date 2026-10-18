@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
@@ -192,6 +193,11 @@ class PlayerService:
                 # Si body es 0, usar valor por defecto
                 if char_body == 0:
                     char_body = 1
+
+        # Una reconexión conserva el fantasma o mimetismo ya confirmado.
+        morph = await self.player_repo.get_morphed_appearance(user_id)
+        if morph and float(morph["morphed_until"]) > time.time():
+            char_body, char_head = int(morph["morphed_body"]), int(morph["morphed_head"])
 
         char_heading = position.get("heading", 3)  # Obtener heading de Redis, default Sur
 

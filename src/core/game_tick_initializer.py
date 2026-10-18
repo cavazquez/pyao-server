@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.effects.effect_attribute_modifiers import AttributeModifiersEffect
 from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
+from src.effects.effect_lifecycle import LifecycleEffect
 from src.effects.effect_morph_expiry import MorphExpiryEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_npc_poison import NPCPoisonEffect
@@ -122,6 +123,8 @@ class GameTickInitializer:
 
         # Efecto de envenenamiento para jugadores (siempre habilitado)
         game_tick.add_effect(PoisonEffect(interval_seconds=2.0))
+        if self.npc_ai_service.player_death_service:
+            game_tick.add_effect(LifecycleEffect(self.npc_ai_service.player_death_service))
         logger.info("✓ Efecto de envenenamiento (jugadores) habilitado")
 
         # Efecto de envenenamiento para NPCs (siempre habilitado)

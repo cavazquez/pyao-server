@@ -14,6 +14,18 @@ OBJTYPE_ARMOR = 4
 class ItemCatalog:
     """Gestiona el catálogo de items desde el archivo data/items.toml."""
 
+    def staff_item_ids(self) -> frozenset[int]:
+        """Obtiene bastones del catálogo por sus propiedades, sin deducirlos del nombre.
+
+        Returns:
+            Armas con StaffPower explícito en el dataset propio.
+        """
+        return frozenset(
+            item_id
+            for item_id, data in self._items.items()
+            if data.get("ObjType") == OBJTYPE_WEAPON and int(str(data.get("StaffPower", 0))) > 0
+        )
+
     def __init__(self, data_path: str = "data/items.toml") -> None:
         """Inicializa el catálogo de items.
 

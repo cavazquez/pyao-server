@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
+MAX_CHARACTER_INDEX = 32767
 
 
 class NPCService:
@@ -202,6 +203,22 @@ class NPCService:
             logger.warning("No se encontraron spawns de NPC en %s", spawns_path)
 
         return validated_entries
+
+    def reserve_character_indices(self, count: int) -> tuple[int, ...]:
+        """Reserva índices en memoria sin publicar NPCs antes del commit.
+
+        Returns:
+            Índices únicos del proceso dentro del rango i16 del protocolo.
+
+        Raises:
+            ValueError: Si no quedan índices representables.
+        """
+        if count < 0 or self._next_char_index + count > MAX_CHARACTER_INDEX:
+            message = "No quedan índices de NPC disponibles"
+            raise ValueError(message)
+        first = self._next_char_index
+        self._next_char_index += count
+        return tuple(range(first, first + count))
 
     async def spawn_npc(
         self, npc_id: int, map_id: int, x: int, y: int, heading: int = 3

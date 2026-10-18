@@ -7,6 +7,7 @@ from src.command_handlers.left_click_npc_handler import LeftClickNPCHandler
 from src.command_handlers.left_click_tile_handler import LeftClickTileHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.left_click_command import LeftClickCommand
+from src.config.config_manager import config_manager
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.door_service import DoorService
     from src.services.map.map_resources_service import MapResourcesService
+    from src.services.player.player_death_service import PlayerDeathService
     from src.utils.redis_client import RedisClient
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,7 @@ class LeftClickCommandHandler(CommandHandler):
         door_repo: DoorRepository | None,
         redis_client: RedisClient | None,
         message_sender: MessageSender,
+        player_death_service: PlayerDeathService | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -49,7 +52,9 @@ class LeftClickCommandHandler(CommandHandler):
             door_repo: Repositorio de puertas.
             redis_client: Cliente Redis.
             message_sender: Enviador de mensajes.
+            player_death_service: Operación compartida para los sacerdotes.
         """
+        self.player_death_service = player_death_service
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.message_sender = message_sender
@@ -109,6 +114,21 @@ class LeftClickCommandHandler(CommandHandler):
                     break
 
             if npc_found:
+                priests = config_manager.get("game.spells.resurrection_npc_ids", [81, 82, 119])
+                if (
+                    command.double_click
+                    and isinstance(priests, list)
+                    and npc_found.npc_id in priests
+                    and self.player_death_service
+                ):
+                    revived = await self.player_death_service.revive_player(
+                        user_id, self.message_sender, priest=npc_found
+                    )
+                    return (
+                        CommandResult.ok()
+                        if revived
+                        else CommandResult.error("No se pudo resucitar")
+                    )
                 success, error_msg, data = await self.npc_handler.handle_npc_click(
                     user_id, npc_found
                 )

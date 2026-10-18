@@ -89,7 +89,7 @@ class PlayerStats:
         """
         return cls(
             max_hp=int(data.get("max_hp", 100)),
-            min_hp=int(data.get("hp", data.get("min_hp", 100))),
+            min_hp=int(data.get("min_hp", data.get("hp", 100))),
             max_mana=int(data.get("max_mana", 100)),
             min_mana=int(data.get("min_mana", 100)),
             max_sta=int(data.get("max_sta", 100)),

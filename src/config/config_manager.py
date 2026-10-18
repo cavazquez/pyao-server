@@ -14,7 +14,7 @@ from src.config.game_config import GameConfig
 logger = logging.getLogger(__name__)
 
 # Tipo para valores de configuración
-ConfigValue = str | int | float | bool | dict[str, Any] | None
+ConfigValue = str | int | float | bool | dict[str, Any] | list[int] | None
 ConfigDict = dict[str, ConfigValue]
 
 

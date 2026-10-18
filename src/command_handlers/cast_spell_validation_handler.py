@@ -62,10 +62,9 @@ class CastSpellValidationHandler:
             Tupla (is_valid, error_message).
         """
         if self.stamina_service:
-            can_cast = await self.stamina_service.consume_stamina(
+            can_cast = await self.stamina_service.can_perform_action(
                 user_id=user_id,
-                amount=STAMINA_COST_SPELL,
-                message_sender=self.message_sender,
+                stamina_cost=STAMINA_COST_SPELL,
             )
 
             if not can_cast:

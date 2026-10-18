@@ -168,7 +168,7 @@ pyao-server/
 │   ├── network/              # Protocolo y conexiones
 │   ├── tasks/                # Parsing y despacho
 │   ├── command_handlers/     # Ejecución de comandos
-│   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro
+│   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
 │   ├── repositories/         # Persistencia
 │   ├── models/               # Entidades y catálogos
 │   └── messaging/            # Respuestas al cliente

@@ -820,6 +820,10 @@ class MessageSender:
         """Envía paquete DUMB_NO_MORE para desactivar efecto de estupidez."""
         await self.status_effects.send_dumb_no_more()
 
+    async def sync_status(self, user_id: int, repository: PlayerRepository) -> None:
+        """Sincroniza estados temporales sin invertir toggles por reintentos o expiración."""
+        await self.status_effects.sync_status(user_id, repository)
+
     async def send_paralize_ok(self) -> None:
         """Envía paquete PARALIZE_OK para confirmar parálisis/inmovilización."""
         await self.status_effects.send_paralize_ok()

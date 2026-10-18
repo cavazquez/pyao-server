@@ -260,6 +260,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         LeftClickCommandHandler,
         deps_keys=[
             "player_repo",
+            "player_death_service",
             "map_manager",
             "map_resources_service",
             "bank_repo",

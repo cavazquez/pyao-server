@@ -830,6 +830,7 @@ Crucial = 1
 MaxHit = 1
 MinHit = 1
 Newbie = 1
+StaffPower = 1
 Valor = 100
 
 [[item]]

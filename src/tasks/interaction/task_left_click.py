@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.left_click_command import LeftClickCommand
 from src.network.packet_data import LeftClickData
+from src.network.packet_id import ClientPacketID
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
 from src.network.session_manager import SessionManager
@@ -110,6 +111,7 @@ class TaskLeftClick(Task):
             map_id=map_id,
             x=click_data.x,
             y=click_data.y,
+            double_click=self.data[0] == ClientPacketID.DOUBLE_CLICK,
         )
 
         # Delegar al handler (separación de responsabilidades)

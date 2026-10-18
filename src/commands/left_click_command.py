@@ -23,6 +23,7 @@ class LeftClickCommand(Command):
     x: int
     y: int
     timestamp: float | None = None
+    double_click: bool = False
 
     def __post_init__(self) -> None:
         """Inicializa timestamp si no se proporciona."""

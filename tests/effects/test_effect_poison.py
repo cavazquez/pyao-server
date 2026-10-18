@@ -11,14 +11,23 @@ from src.models.player_stats import PlayerStats
 
 
 @pytest.fixture
-def mock_player_repo() -> MagicMock:
+def mock_player_repo(monkeypatch) -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
     repo.get_poisoned_until = AsyncMock(return_value=0.0)
     repo.update_poisoned_until = AsyncMock()
+    repo.clear_poisoned_until_if = AsyncMock()
     repo.is_alive = AsyncMock(return_value=True)
     repo.get_player_stats = AsyncMock(return_value=PlayerStats(min_hp=100, max_hp=100))
     repo.update_hp = AsyncMock()
+
+    async def damage_commit(_redis, _user_id, amount, _identity, **_kwargs: object):
+        stats = await repo.get_player_stats(1)
+        hp = max(0, stats.min_hp - amount)
+        return {"new_hp": hp, "life_id": 0, "player_died": hp <= 0}
+
+    repo.damage_commit = AsyncMock(side_effect=damage_commit)
+    monkeypatch.setattr("src.effects.effect_poison.apply_player_damage", repo.damage_commit)
     return repo
 
 
@@ -57,7 +66,7 @@ async def test_apply_poison_expired(
 
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
-    mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
+    mock_player_repo.clear_poisoned_until_if.assert_awaited_once_with(1, expired_time)
     mock_player_repo.update_hp.assert_not_called()
 
 
@@ -76,7 +85,11 @@ async def test_apply_poison_damage(
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
     # Verificar que se actualizó el HP con el daño
-    mock_player_repo.update_hp.assert_called_once_with(1, 100 - POISON_DAMAGE_PER_TICK)
+    mock_player_repo.damage_commit.assert_awaited_once()
+    assert (
+        mock_message_sender.send_update_user_stats.call_args.kwargs["min_hp"]
+        == 100 - POISON_DAMAGE_PER_TICK
+    )
     mock_message_sender.send_update_user_stats.assert_called_once()
 
 
@@ -95,9 +108,10 @@ async def test_apply_poison_kills_player(
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
     # Verificar que el HP llegó a 0 (3 - 5 = -2, pero max(0, -2) = 0)
-    mock_player_repo.update_hp.assert_called_once_with(1, 0)
-    # Verificar que se limpió el veneno
-    mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
+    mock_player_repo.damage_commit.assert_awaited_once()
+    assert mock_message_sender.send_update_user_stats.call_args.kwargs["min_hp"] == 0
+    # La limpieza pertenece al commit letal, evitando mutar una vida posterior.
+    mock_player_repo.update_poisoned_until.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -114,8 +128,8 @@ async def test_apply_player_dead(
 
     await effect.apply(1, mock_player_repo, mock_message_sender)
 
-    # Verificar que se limpió el veneno
-    mock_player_repo.update_poisoned_until.assert_called_once_with(1, 0.0)
+    # La limpieza pertenece al commit letal, evitando mutar una vida posterior.
+    mock_player_repo.update_poisoned_until.assert_not_called()
     mock_player_repo.update_hp.assert_not_called()
 
 

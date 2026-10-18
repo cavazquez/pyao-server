@@ -31,6 +31,8 @@ npc_respawn_base_time = 30.0
 npc_respawn_random_variance = 15.0
 
 [game.combat]
+pvp_enabled = true
+safe_maps = [1, 34, 59, 62, 151, 196, 286]
 melee_range = 1
 base_critical_chance = 0.15
 base_dodge_chance = 0.05
@@ -106,6 +108,7 @@ attack_seconds = 0.5
 cast_seconds = 1.0
 
 [game.spells]
+resurrection_npc_ids = [81, 82, 119]
 development_all_spells = false
 
 # Dardo Mágico (2) y Curar Heridas Leves (3), entregados sólo al crear la cuenta.

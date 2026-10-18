@@ -294,7 +294,13 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.0):
+        with (
+            patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.0),
+            patch(
+                "src.services.combat.combat_service.apply_player_damage",
+                new=AsyncMock(return_value={"new_hp": 90, "player_died": False, "life_id": 0}),
+            ),
+        ):
             result = await service.npc_attack_player(npc, 1)
 
         assert result is not None
@@ -346,7 +352,13 @@ class TestCombatService:
             head_id=0,
         )
 
-        with patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.2):
+        with (
+            patch("src.combat.combat_damage_calculator.random.uniform", return_value=1.2),
+            patch(
+                "src.services.combat.combat_service.apply_player_damage",
+                new=AsyncMock(return_value={"new_hp": 0, "player_died": True, "life_id": 0}),
+            ),
+        ):
             result = await service.npc_attack_player(npc, 1)
 
         assert result is not None

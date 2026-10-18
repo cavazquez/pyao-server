@@ -1,9 +1,11 @@
 """Player repository mixins."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
+from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
@@ -181,3 +183,20 @@ class PlayerStatusMixin:
             RedisKeys.player_user_stats(user_id), "safe_mode", 1 if safe_mode else 0
         )
         logger.info("Safe mode toggled for user_id %d: %s", user_id, "ON" if safe_mode else "OFF")
+
+    async def clear_poisoned_until_if(self, user_id: int, expected: float) -> None:
+        """Un tick viejo no borra un veneno posterior ni el estado de otra vida."""
+        key = RedisKeys.player_user_stats(user_id)
+
+        def decide(snapshot: Snapshot) -> Decision:
+            stats = cast("dict[str,str]", snapshot[key])
+            changed = float(stats.get("poisoned_until", 0)).hex() == expected.hex()
+            return Decision({"applied": changed}, {key: {"poisoned_until": "0"}} if changed else {})
+
+        await transact(
+            self.redis.redis,
+            (Resource(key, "hash"),),
+            operation_id(),
+            {"expire_poison": user_id, "expected": expected},
+            decide,
+        )

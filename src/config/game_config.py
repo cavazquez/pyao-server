@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, Settings
 logger = logging.getLogger(__name__)
 
 # Tipo para valores de configuración (compatible con ConfigManager)
-ConfigValue = str | int | float | bool | dict[str, Any] | None
+ConfigValue = str | int | float | bool | dict[str, Any] | list[int] | None
 
 
 class ServerConfig(BaseModel):
@@ -28,6 +28,11 @@ class ServerConfig(BaseModel):
 
 class CombatConfig(BaseModel):
     """Configuración de combate."""
+
+    pvp_enabled: bool = True
+    safe_maps: list[Annotated[int, Field(ge=1, le=290)]] = Field(
+        default_factory=lambda: [1, 34, 59, 62, 151, 196, 286]
+    )
 
     melee_range: int = Field(default=1, ge=1, le=10, description="Rango de combate cuerpo a cuerpo")
     base_critical_chance: float = Field(
@@ -149,6 +154,9 @@ ClassID = Annotated[int, Field(ge=1, le=12)]
 class SpellbookConfig(BaseModel):
     """Progreso inicial explícito y modo de desarrollo apagado en distribución."""
 
+    resurrection_npc_ids: list[Annotated[int, Field(ge=1)]] = Field(
+        default_factory=lambda: [81, 82, 119]
+    )
     development_all_spells: bool = False
     starter_by_class: dict[ClassID, StarterSpells] = Field(
         default_factory=lambda: {class_id: [2, 3] for class_id in range(1, 13)}

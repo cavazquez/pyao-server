@@ -258,11 +258,11 @@ class NPCAIService:
             if message_sender:
                 if self.player_death_service:
                     # Usar servicio de muerte para procesar completamente
-                    await self.player_death_service.handle_player_death(
+                    self.player_death_service.schedule_death(
                         user_id=target_user_id,
                         killer_name=npc.name,
-                        message_sender=message_sender,
                         death_reason="combate con NPC",
+                        expected_life_id=int(result.get("life_id", 0)),
                     )
                 else:
                     await self._handle_player_death_fallback(npc, target_user_id)

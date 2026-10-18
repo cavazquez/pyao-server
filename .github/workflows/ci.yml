@@ -108,6 +108,7 @@ jobs:
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.skill_allocation_smoke > artifacts/skill-allocation-smoke.json 2> artifacts/skill-allocation-smoke.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.password_change_smoke > artifacts/password-change-smoke.json 2> artifacts/password-change-smoke.log
           timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.scroll_learning_smoke > artifacts/scroll-learning-smoke.json 2> artifacts/scroll-learning-smoke.log
+          timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.spell_lifecycle_smoke > artifacts/spell-lifecycle-smoke.json 2> artifacts/spell-lifecycle-smoke.log
           cat artifacts/ground-smoke.json
       - name: Preserve integration evidence even on failure
         if: always()

@@ -138,7 +138,7 @@ async def test_cast_spell_no_stamina(
     mock_message_sender: MagicMock,
 ) -> None:
     """Test sin stamina suficiente."""
-    mock_stamina_service.consume_stamina = AsyncMock(return_value=False)
+    mock_spell_service.cast_spell = AsyncMock(return_value=False)
 
     handler = CastSpellCommandHandler(
         mock_player_repo,
@@ -152,7 +152,8 @@ async def test_cast_spell_no_stamina(
     result = await handler.handle(command)
 
     assert not result.success
-    assert "stamina" in result.error_message.lower()
+    mock_stamina_service.consume_stamina.assert_not_awaited()
+    mock_spell_service.cast_spell.assert_awaited_once()
 
 
 @pytest.mark.asyncio

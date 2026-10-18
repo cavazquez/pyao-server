@@ -111,10 +111,6 @@ module = "src.tasks.task_factory"
 ignore_errors = true  # session_data tiene tipos inconsistentes entre tasks
 
 [[tool.mypy.overrides]]
-module = "src.services.player.spell_effects.*"
-ignore_errors = true  # Strategy Pattern usa Any para flexibilidad
-
-[[tool.mypy.overrides]]
 module = "src.tasks.handler_registry"
 ignore_errors = true  # registry retorna tipos dinámicos
 
@@ -175,10 +171,6 @@ filterwarnings = [
 ]
 "src/run_server.py" = [
     "E402",    # imports después de warnings.filterwarnings (necesario para GIL)
-]
-"src/services/player/spell_effects/*.py" = [
-    "DOC201",  # métodos de Strategy Pattern no requieren Returns detallado
-    "ARG002",  # argumentos no usados en algunos efectos (Strategy Pattern)
 ]
 "src/services/map/cache.py" = [
     "D103",  # funciones de módulo; docstrings breves

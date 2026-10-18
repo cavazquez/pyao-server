@@ -4,6 +4,7 @@ import asyncio
 import json
 import random
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
 from hashlib import sha256
 from typing import TYPE_CHECKING, Any, Literal, cast
@@ -24,8 +25,9 @@ if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
     from redis.asyncio import Redis
+    from redis.asyncio.client import Pipeline
 
-ResourceValue = str | dict[str, str] | None
+ResourceValue = str | dict[str, str] | set[str] | None
 Snapshot = dict[str, ResourceValue]
 
 
@@ -34,7 +36,7 @@ class Resource:
     """Clave y tipo esperado de un recurso cubierto por WATCH."""
 
     key: str
-    kind: Literal["hash", "string"]
+    kind: Literal["hash", "string", "set"]
     ttl_seconds: int | None = None
 
 
@@ -43,7 +45,7 @@ class Decision:
     """Resultado serializable y valores completos que se confirman juntos."""
 
     result: dict[str, Any]
-    writes: dict[str, str | dict[str, str]]
+    writes: Mapping[str, str | dict[str, str] | set[str]]
 
 
 def _request_fingerprint(resources: tuple[Resource, ...], request: dict[str, Any]) -> str:
@@ -144,17 +146,17 @@ async def transact(
                         snapshot[resource.key] = await cast(
                             "Awaitable[dict[str, str]]", pipe.hgetall(resource.key)
                         )
+                    elif resource.kind == "set":
+                        snapshot[resource.key] = await cast(
+                            "Awaitable[set[str]]", pipe.smembers(resource.key)
+                        )
                     else:
                         snapshot[resource.key] = await pipe.get(resource.key)
                 decision = decide(snapshot)
                 _validate_writes(by_key, decision.writes)
                 receipt_json = json.dumps({"request": fingerprint, "result": decision.result})
                 pipe.multi()  # type: ignore[no-untyped-call]
-                for key, value in decision.writes.items():
-                    if isinstance(value, dict) and value:
-                        pipe.hset(key, mapping=value)
-                    elif isinstance(value, str):
-                        pipe.set(key, value, ex=by_key[key].ttl_seconds)
+                _enqueue_writes(pipe, by_key, decision.writes)
                 pipe.set(receipt_key, receipt_json, ex=receipt_ttl_seconds)
                 await pipe.execute()
             except WatchError, RedisConnectionError, RedisTimeoutError:
@@ -166,7 +168,7 @@ async def transact(
 
 
 def _validate_writes(
-    resources: dict[str, Resource], writes: dict[str, str | dict[str, str]]
+    resources: dict[str, Resource], writes: Mapping[str, str | dict[str, str] | set[str]]
 ) -> None:
     """Rechaza toda mutación inválida antes de encolar el primer comando.
 
@@ -175,7 +177,11 @@ def _validate_writes(
         TypeError: Si una decisión intenta persistir valores de otro tipo.
     """
     for key, value in writes.items():
-        if key not in resources or (isinstance(value, dict) != (resources[key].kind == "hash")):
+        if (
+            key not in resources
+            or (isinstance(value, dict) != (resources[key].kind == "hash"))
+            or (isinstance(value, set) != (resources[key].kind == "set"))
+        ):
             msg = "La decisión escribió fuera de sus recursos o cambió su tipo"
             raise ValueError(msg)
         if isinstance(value, dict) and not all(
@@ -183,6 +189,26 @@ def _validate_writes(
         ):
             msg = "Campos Redis inválidos"
             raise ValueError(msg)
-        if not isinstance(value, (str, dict)):
+        if isinstance(value, set) and not all(isinstance(member, str) for member in value):
+            msg = "Miembros Redis inválidos"
+            raise ValueError(msg)
+        if not isinstance(value, (str, dict, set)):
             msg = "Valor Redis inválido"
             raise TypeError(msg)
+
+
+def _enqueue_writes(
+    pipe: Pipeline,
+    resources: dict[str, Resource],
+    writes: Mapping[str, str | dict[str, str] | set[str]],
+) -> None:
+    """Encola sólo valores previamente validados y sin hacer I/O antes de EXEC."""
+    for key, value in writes.items():
+        if isinstance(value, dict) and value:
+            pipe.hset(key, mapping=value)
+        elif isinstance(value, set):
+            pipe.delete(key)
+            if value:
+                pipe.sadd(key, *sorted(value))
+        elif isinstance(value, str):
+            pipe.set(key, value, ex=resources[key].ttl_seconds)
