@@ -98,7 +98,7 @@ class RedisClient:
         for key, value in DEFAULT_SERVER_CONFIG.items():
             await self._redis.set(key, value, nx=True)
         effects = dict(DEFAULT_EFFECTS_CONFIG)
-        config = ConfigManager()
+        config = config_manager
         effects[RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED] = str(
             ConfigManager.as_int(config.get("game.hunger_thirst.interval_sed", 180))
         )

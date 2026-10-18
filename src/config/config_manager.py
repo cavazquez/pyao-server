@@ -119,6 +119,7 @@ class ConfigManager:
                 "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
             },
             "game": {
+                "spells": self._game_config.game.spells.model_dump(mode="json"),
                 "cadence": self._game_config.game.cadence.model_dump(),
                 "max_players_per_map": self._game_config.game.max_players_per_map,
                 "respawn_check_interval": self._game_config.game.respawn_check_interval,
@@ -218,6 +219,10 @@ class ConfigManager:
                 "buffer_size": 4096,
             },
             "game": {
+                "spells": {
+                    "development_all_spells": False,
+                    "starter_by_class": {str(i): [2, 3] for i in range(1, 13)},
+                },
                 "cadence": {"walk_seconds": 0.2, "attack_seconds": 0.5, "cast_seconds": 1.0},
                 "max_players_per_map": 100,
                 "respawn_check_interval": 5.0,

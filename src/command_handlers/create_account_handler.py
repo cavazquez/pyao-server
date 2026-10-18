@@ -16,6 +16,7 @@ from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_account_command import CreateAccountCommand
 from src.security.password_executor import PasswordQueueFullError, get_password_executor
 from src.services.game.balance_service import get_balance_service
+from src.services.starter_spellbook import initialize_starter_spellbook
 from src.utils.password_utils import hash_password
 
 if TYPE_CHECKING:
@@ -174,6 +175,7 @@ class CreateAccountCommandHandler(CommandHandler):
             )
 
             await self.character_handler.create_initial_inventory(user_id)
+            await self._initialize_starter_book(user_id, class_id)
 
             self.finalization_handler.log_character_summary(
                 user_id,
@@ -205,3 +207,9 @@ class CreateAccountCommandHandler(CommandHandler):
         except Exception:
             logger.exception("Error inesperado creando cuenta para %s", username)
             return CommandResult.error("Error interno del servidor")
+
+    async def _initialize_starter_book(self, user_id: int, class_id: int) -> None:
+        repo = self.finalization_handler.spellbook_repo
+        catalog = self.finalization_handler.spell_catalog
+        if repo is not None and catalog is not None:
+            await initialize_starter_spellbook(repo, user_id, class_id, catalog)

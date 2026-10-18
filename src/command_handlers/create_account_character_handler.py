@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager, config_manager
+from src.models.item_constants import BOAT_ITEM_ID
 from src.models.mana import calculate_mana
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.game.class_service import get_class_service
@@ -185,6 +186,8 @@ class CreateAccountCharacterHandler:
         await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
         # Armadura inicial (Newbie)
         await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
+
+        await inventory_repo.add_item(user_id, item_id=BOAT_ITEM_ID, quantity=1)
 
         # Herramientas de trabajo (Newbie)
         await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador

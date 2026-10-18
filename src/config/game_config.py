@@ -3,7 +3,7 @@
 import logging
 import tomllib
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
@@ -140,6 +140,20 @@ class CharacterConfig(BaseModel):
     )
 
 
+SpellID = Annotated[int, Field(ge=1, le=32767)]
+StarterSpells = Annotated[list[SpellID], Field(max_length=35)]
+ClassID = Annotated[int, Field(ge=1, le=12)]
+
+
+class SpellbookConfig(BaseModel):
+    """Progreso inicial explícito y modo de desarrollo apagado en distribución."""
+
+    development_all_spells: bool = False
+    starter_by_class: dict[ClassID, StarterSpells] = Field(
+        default_factory=lambda: {class_id: [2, 3] for class_id in range(1, 13)}
+    )
+
+
 class CadenceConfig(BaseModel):
     """Intervalos mínimos autoritativos, expresados en segundos."""
 
@@ -161,6 +175,7 @@ class GameConfigSection(BaseModel):
     npc_respawn_random_variance: float = Field(
         default=15.0, ge=0.0, description="Varianza aleatoria en respawns"
     )
+    spells: SpellbookConfig = Field(default_factory=SpellbookConfig)
     cadence: CadenceConfig = Field(default_factory=CadenceConfig)
     combat: CombatConfig = Field(default_factory=CombatConfig)
     work: WorkConfig = Field(default_factory=WorkConfig)
@@ -320,6 +335,7 @@ class GameConfig(BaseSettings):
                 "respawn_check_interval": game_data.get("respawn_check_interval", 5.0),
                 "npc_respawn_base_time": game_data.get("npc_respawn_base_time", 30.0),
                 "npc_respawn_random_variance": game_data.get("npc_respawn_random_variance", 15.0),
+                "spells": game_data.get("spells", {}),
                 "cadence": game_data.get("cadence", {}),
                 "combat": game_data.get("combat", {}),
                 "work": game_data.get("work", {}),

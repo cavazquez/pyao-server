@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from time import monotonic
 from typing import Literal
 
-from src.config.config_manager import ConfigManager
+from src.config.config_manager import ConfigManager, config_manager
 
 Action = Literal["walk", "attack", "cast"]
 DEFAULT_INTERVALS: dict[Action, float] = {"walk": 0.2, "attack": 0.5, "cast": 1.0}
@@ -48,7 +48,7 @@ class ActionCadence:
         if previous and (previous.busy or now < previous.next_at):
             return False
         interval = ConfigManager.as_float(
-            ConfigManager().get(f"game.cadence.{action}_seconds", DEFAULT_INTERVALS[action]),
+            config_manager.get(f"game.cadence.{action}_seconds", DEFAULT_INTERVALS[action]),
             DEFAULT_INTERVALS[action],
         )
         self._reservations[key] = Reservation(now + interval)

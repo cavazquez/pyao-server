@@ -103,3 +103,21 @@ session_lease_seconds = 90
 walk_seconds = 0.2
 attack_seconds = 0.5
 cast_seconds = 1.0
+
+[game.spells]
+development_all_spells = false
+
+# Dardo Mágico (2) y Curar Heridas Leves (3), entregados sólo al crear la cuenta.
+[game.spells.starter_by_class]
+1 = [2, 3]
+2 = [2, 3]
+3 = [2, 3]
+4 = [2, 3]
+5 = [2, 3]
+6 = [2, 3]
+7 = [2, 3]
+8 = [2, 3]
+9 = [2, 3]
+10 = [2, 3]
+11 = [2, 3]
+12 = [2, 3]

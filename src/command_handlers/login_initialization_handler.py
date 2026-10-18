@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import config_manager
 from src.services.player.player_service import PlayerService
 
 if TYPE_CHECKING:
@@ -137,11 +138,10 @@ class LoginInitializationHandler:
         if not self.spellbook_repo or not self.spell_catalog:
             return
 
-        # Inicializar libro de hechizos con hechizos por defecto si es necesario
-        # Pasar spell_catalog para agregar TODOS los hechizos disponibles
-        await self.spellbook_repo.initialize_default_spells(
-            user_id, spell_catalog=self.spell_catalog
-        )
+        if config_manager.get("game.spells.development_all_spells", False) is True:
+            await self.spellbook_repo.initialize_default_spells(
+                user_id, spell_catalog=self.spell_catalog
+            )
 
         # Cargar y enviar todos los hechizos del jugador
         logger.info("Cargando libro de hechizos para user_id %d desde Redis", user_id)
