@@ -53,7 +53,7 @@ def test_golden_fields_consume_exactly_the_packet(fixture: dict) -> None:
         decoded[field["name"]] = value
     assert offset == len(data)
     expected = dict(fixture["values"])
-    if "version" in expected and fixture["direction"] == "client":
+    if isinstance(expected.get("version"), list) and fixture["direction"] == "client":
         expected.update(zip(["major", "minor", "patch"], expected.pop("version"), strict=True))
     for name, value in expected.items():
         assert decoded[name] == value

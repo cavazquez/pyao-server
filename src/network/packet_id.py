@@ -140,6 +140,7 @@ class ClientPacketID(IntEnum):
     # STOP_SHARING_NPC = 127
     # CONSULTATION = 128
     MOVE_ITEM = 129  # Reordenar slots del inventario
+    CAPABILITIES = 250  # Negociación optativa después del login
 
 
 class ServerPacketID(IntEnum):
@@ -252,3 +253,4 @@ class ServerPacketID(IntEnum):
     MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
     STOP_WORKING = 105
     CANCEL_OFFER_ITEM = 106
+    CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud

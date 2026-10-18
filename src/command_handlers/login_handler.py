@@ -192,7 +192,7 @@ class LoginCommandHandler(CommandHandler):
         # Enviar inventario y MOTD
         await self.finalization_handler.finalize_login(user_id)
 
-        self.message_sender.connection.is_authenticated = True
+        self.message_sender.connection.mark_authenticated()
         return CommandResult.ok(
             data={
                 "user_id": user_id,

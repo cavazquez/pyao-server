@@ -963,6 +963,20 @@
             "type": "u8"
           }
         ]
+      },
+      "250": {
+        "name": "CAPABILITIES",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "mask",
+            "type": "i32"
+          }
+        ]
       }
     },
     "server": {
@@ -2181,6 +2195,20 @@
         "name": "CANCEL_OFFER_ITEM",
         "status": "unsupported",
         "fields": []
+      },
+      "250": {
+        "name": "CAPABILITIES",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "mask",
+            "type": "i32"
+          }
+        ]
       }
     }
   },
@@ -2192,5 +2220,22 @@
     "commerce_init": "ID 7 opens window, inventory follows in ID 59. The unused extended builder is not a supported layout.",
     "skills": "ID 71 documents legacy nine signed int16 values. Catalog/progress alignment is tracked in server #126.",
     "extensions": "Opt-in negotiation AFTER successful login only (server #117); unnegotiated clients keep the legacy stream."
+  },
+  "capabilities": {
+    "packet_id": 250,
+    "version": 1,
+    "after_login_only": true,
+    "response_timeout_client_seconds": 2,
+    "request_window_server_seconds": 10,
+    "mask_bits": {
+      "skills_catalog": 1,
+      "targeted_cast": 2,
+      "skill_allocation": 4,
+      "password_change": 8,
+      "visual_damage": 16,
+      "projectiles": 32,
+      "weather": 64,
+      "trade_state": 128
+    }
   }
 }

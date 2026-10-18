@@ -171,5 +171,23 @@
       "codex": "Paz",
       "description": "Descripción"
     }
+  },
+  {
+    "name": "capabilities_request_v1",
+    "direction": "client",
+    "hex": "fa01ff000000",
+    "values": {
+      "version": 1,
+      "mask": 255
+    }
+  },
+  {
+    "name": "capabilities_response_none",
+    "direction": "server",
+    "hex": "fa0100000000",
+    "values": {
+      "version": 1,
+      "mask": 0
+    }
   }
 ]

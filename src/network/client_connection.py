@@ -4,6 +4,7 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING
 
+from src.network.capabilities import ConnectionCapabilities
 from src.security.auth_limits import AuthLimiter, ConnectionAttempts
 from src.security.session_lease import SessionLease
 
@@ -57,10 +58,17 @@ class ClientConnection:
         self._session_lease: SessionLease | None = None
         self._lease_heartbeat: asyncio.Task[None] | None = None
         self.is_authenticated = False
+        self.capabilities = ConnectionCapabilities()
         self.reader = reader
         self.writer = writer
         self.address = writer.get_extra_info("peername")
         self.is_ssl_enabled = writer.get_extra_info("ssl_object") is not None
+
+    def mark_authenticated(self) -> None:
+        """Completa login y abre negociación sin modificar el stream legacy."""
+        if not self.is_authenticated:
+            self.is_authenticated = True
+            self.capabilities.after_login()
 
     def allow_authentication(self, username: str) -> bool:
         """Consume el presupuesto de autenticación antes de ejecutar Argon2.
@@ -207,6 +215,8 @@ class ClientConnection:
         if self._closed:
             return
         self._closed = True
+        self.is_authenticated = False
+        self.capabilities.clear()
         self._write_failed = self._write_failed or self._pending_packets > 0
         while not self._outbox.empty():
             data = self._outbox.get_nowait()
