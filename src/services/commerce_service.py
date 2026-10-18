@@ -1,39 +1,40 @@
-"""Servicio de comercio con NPCs mercaderes."""
+"""Comercio NPC con precio del servidor y commit conjunto de todos los recursos."""
 
-import logging
+from dataclasses import asdict
 from typing import TYPE_CHECKING
 
+from src.config.config_manager import ConfigManager
+from src.services.npc_trade_plan import NpcTradePlan, NpcTradeRequest
+from src.utils.durability import require_durable
+from src.utils.gold_atomic import operation_id as new_operation_id
+from src.utils.inventory_slot import InventorySlot
+from src.utils.redis_config import RedisKeys
+from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
+from src.utils.slot_plan import MAX_SLOT_QUANTITY
+
 if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
     from src.models.item import Item
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.merchant_repository import MerchantRepository
     from src.repositories.player_repository import PlayerRepository
 
-logger = logging.getLogger(__name__)
-
 
 class CommerceService:
-    """Gestiona transacciones de compra/venta con mercaderes."""
+    """Compra y venta indivisibles, con recibo identificado para reintentos inciertos."""
 
     def __init__(
         self,
-        inventory_repo: "InventoryRepository",  # noqa: UP037
-        merchant_repo: "MerchantRepository",  # noqa: UP037
-        item_catalog: "dict[int, Item]",  # noqa: UP037
-        player_repo: "PlayerRepository",  # noqa: UP037
+        inventory_repo: InventoryRepository,
+        merchant_repo: MerchantRepository,
+        item_catalog: dict[int, Item],
+        player_repo: PlayerRepository,
     ) -> None:
-        """Inicializa el servicio de comercio.
-
-        Args:
-            inventory_repo: Repositorio de inventarios de jugadores.
-            merchant_repo: Repositorio de inventarios de mercaderes.
-            item_catalog: Catálogo de items del juego.
-            player_repo: Repositorio de datos de jugadores.
-        """
+        """Conserva repositorios concretos y el catálogo autoritativo del servidor."""
         self.inventory_repo = inventory_repo
         self.merchant_repo = merchant_repo
-        self.player_repo = player_repo
         self.items_catalog = item_catalog
+        self.player_repo = player_repo
 
     async def buy_item(
         self,
@@ -41,110 +42,17 @@ class CommerceService:
         npc_id: int,
         slot: int,
         quantity: int,
+        *,
+        operation_id: str | None = None,
     ) -> tuple[bool, str]:
-        """Comprar item de un mercader.
-
-        Args:
-            user_id: ID del jugador.
-            npc_id: ID del NPC mercader.
-            slot: Slot del inventario del mercader (1-based).
-            quantity: Cantidad a comprar.
+        """Compra stock y entrega stacks con un débito indivisible.
 
         Returns:
-            Tupla (éxito, mensaje).
+            Éxito y mensaje del resultado confirmado.
         """
-        # Validar cantidad
-        if quantity <= 0:
-            return False, "Cantidad inválida"
-
-        # Obtener item del mercader
-        merchant_item = await self.merchant_repo.get_item(npc_id, slot)
-        if not merchant_item:
-            return False, "El mercader no tiene ese item"
-
-        if merchant_item.quantity < quantity:
-            return False, f"El mercader solo tiene {merchant_item.quantity} disponibles"
-
-        # Obtener datos del item del catálogo
-        item = self.items_catalog.get(merchant_item.item_id)
-        if not item:
-            logger.error("Item %d no encontrado en catálogo", merchant_item.item_id)
-            return False, "Item no encontrado"
-
-        # Verificar que el item tenga precio
-        if item.value <= 0:
-            logger.warning(
-                "Intento de comprar item %d (%s) sin precio del mercader %d",
-                item.item_id,
-                item.name,
-                npc_id,
-            )
-            return False, "Este item no está a la venta"
-
-        # Calcular precio total
-        total_price = item.value * quantity
-
-        # Verificar oro del jugador
-        player_gold = await self.player_repo.get_gold(user_id)
-        if player_gold < total_price:
-            return False, f"No tienes suficiente oro. Necesitas {total_price} oro."
-
-        # Verificar espacio en inventario
-        # TODO: Implementar has_space_for_item que considere stackable items
-        has_space = await self.inventory_repo.has_space(user_id)
-        if not has_space:
-            return False, "Tu inventario está lleno"
-
-        # Realizar transacción
-        try:
-            # Restar oro
-            if not await self.player_repo.remove_gold(user_id, total_price):
-                return False, "El saldo cambió; intentá nuevamente."
-
-            # Agregar item al inventario del jugador
-            modified_slots = await self.inventory_repo.add_item(
-                user_id, merchant_item.item_id, quantity
-            )
-
-            if not modified_slots:
-                # Rollback: devolver oro
-                await self.player_repo.add_gold(user_id, total_price)
-                logger.error(
-                    "No se pudo agregar item %d al inventario de user_id %d",
-                    merchant_item.item_id,
-                    user_id,
-                )
-                return False, "No se pudo agregar el item al inventario"
-
-            # Restar item del inventario del mercader
-            success = await self.merchant_repo.remove_item(npc_id, slot, quantity)
-            if not success:
-                # Rollback: devolver oro y remover items
-                await self.player_repo.add_gold(user_id, total_price)
-                for mod_slot, _ in modified_slots:
-                    await self.inventory_repo.remove_item(user_id, mod_slot, quantity)
-                logger.error(
-                    "No se pudo remover item del mercader %d, slot %d",
-                    npc_id,
-                    slot,
-                )
-                return False, "Error al procesar la compra"
-
-            logger.info(
-                "user_id %d compró %dx %s (item_id=%d) por %d oro del mercader %d",
-                user_id,
-                quantity,
-                item.name,
-                item.item_id,
-                total_price,
-                npc_id,
-            )
-
-        except Exception:
-            logger.exception("Error en transacción de compra")
-            return False, "Error al procesar la compra"
-
-        return True, f"Has comprado {quantity}x {item.name} por {total_price} oro"
+        return await self._trade(
+            NpcTradeRequest(user_id, npc_id, slot, quantity, "buy"), operation_id
+        )
 
     async def sell_item(
         self,
@@ -152,83 +60,82 @@ class CommerceService:
         npc_id: int,
         slot: int,
         quantity: int,
+        *,
+        operation_id: str | None = None,
     ) -> tuple[bool, str]:
-        """Vender item a un mercader.
-
-        Args:
-            user_id: ID del jugador.
-            npc_id: ID del NPC mercader.
-            slot: Slot del inventario del jugador (1-based).
-            quantity: Cantidad a vender.
+        """Retira objetos y acredita (valor // 2) por cantidad sin truncar el pago.
 
         Returns:
-            Tupla (éxito, mensaje).
+            Éxito y mensaje del resultado confirmado.
         """
-        # Validar cantidad
-        if quantity <= 0:
+        return await self._trade(
+            NpcTradeRequest(user_id, npc_id, slot, quantity, "sell"), operation_id
+        )
+
+    async def _trade(self, request: NpcTradeRequest, identity: str | None) -> tuple[bool, str]:
+        """Planifica y confirma tres recursos con AOF y un recibo estable.
+
+        Returns:
+            Resultado confirmado o rechazo sin modificar recursos.
+        """
+        capacity = ConfigManager.as_int(self.inventory_repo.MAX_SLOTS)
+        source_capacity = self.merchant_repo.MAX_SLOTS if request.action == "buy" else capacity
+        if type(request.quantity) is not int or not 1 <= request.quantity <= MAX_SLOT_QUANTITY:
             return False, "Cantidad inválida"
+        if not 1 <= request.slot <= source_capacity or request.user_id < 1 or request.npc_id < 1:
+            return False, "Slot o comerciante inválidos"
+        expected_item: int | None = None
 
-        # Obtener item del jugador
-        player_item = await self.inventory_repo.get_slot(user_id, slot)
-        if not player_item:
-            return False, "No tienes ese item"
-
-        item_id, current_quantity = player_item
-        if current_quantity < quantity:
-            return False, f"Solo tienes {current_quantity} disponibles"
-
-        # Obtener datos del item del catálogo
-        item = self.items_catalog.get(item_id)
-        if not item:
-            logger.error("Item %d no encontrado en catálogo", item_id)
-            return False, "Item no encontrado"
-
-        # Verificar si el item se puede vender
-        if item.value == 0:
-            return False, "Este item no se puede vender"
-
-        # Calcular precio de venta (50% del precio de compra)
-        sale_price = item.value // 2
-        total_price = sale_price * quantity
-
-        # Realizar transacción
-        try:
-            # Remover item del inventario del jugador
-            success = await self.inventory_repo.remove_item(user_id, slot, quantity)
-            if not success:
-                logger.error(
-                    "No se pudo remover item del inventario de user_id %d, slot %d",
-                    user_id,
-                    slot,
+        def decide(snapshot: Snapshot) -> Decision:
+            nonlocal expected_item
+            try:
+                plan = NpcTradePlan(
+                    snapshot,
+                    request,
+                    capacity,
+                    self.inventory_repo.stacking.max_stack,
+                    self.merchant_repo.MAX_SLOTS,
                 )
-                return False, "No se pudo remover el item"
+            except ValueError as error:
+                return Decision({"applied": False, "message": str(error)}, {})
+            if expected_item is None:
+                expected_item = plan.source_item_id()
+            return plan.decide(self.items_catalog, expected_item)
 
-            # Sumar oro al jugador (respetando el tope global)
-            await self.player_repo.add_gold_capped(user_id, total_price)
-
-            # Agregar item al inventario del mercader
-            merchant_success = await self.merchant_repo.add_item(npc_id, item_id, quantity)
-            if not merchant_success:
-                logger.warning(
-                    "Inventario del mercader %d lleno, item %d no agregado",
-                    npc_id,
-                    item_id,
-                )
-                # No hacemos rollback porque el mercader puede tener inventario lleno
-                # El jugador ya vendió el item y recibió el oro
-
-            logger.info(
-                "user_id %d vendió %dx %s (item_id=%d) por %d oro al mercader %d",
-                user_id,
-                quantity,
-                item.name,
-                item_id,
-                total_price,
-                npc_id,
+        resources = tuple(
+            Resource(key, "hash")
+            for key in (
+                RedisKeys.player_inventory(request.user_id),
+                RedisKeys.player_user_stats(request.user_id),
+                RedisKeys.player_equipment(request.user_id),
+                RedisKeys.merchant_inventory(request.npc_id),
             )
+        )
+        redis = self.player_repo.redis.redis
+        await require_durable(redis)
+        result = await transact(
+            redis, resources, identity or new_operation_id(), asdict(request), decide
+        )
+        await require_durable(redis)
+        return bool(result["applied"]), str(result["message"])
 
-        except Exception:
-            logger.exception("Error en transacción de venta")
-            return False, "Error al procesar la venta"
-
-        return True, f"Has vendido {quantity}x {item.name} por {total_price} oro"
+    async def notify_merchant(self, sender: MessageSender, npc_id: int) -> None:
+        """Actualiza el stock confirmado también cuando la compra fue rechazada."""
+        inventory = await self.merchant_repo.get_inventory(npc_id)
+        for slot in range(1, self.merchant_repo.MAX_SLOTS + 1):
+            raw = inventory.get(f"slot_{slot}", "")
+            stack = InventorySlot.parse(str(raw))
+            item = self.items_catalog.get(stack.item_id) if stack else None
+            await sender.send_change_npc_inventory_slot(
+                slot=slot,
+                name=item.name if item else "",
+                amount=stack.quantity if stack and item else 0,
+                sale_price=float(item.value) if item else 0.0,
+                grh_id=item.graphic_id if item else 0,
+                item_id=item.item_id if item else 0,
+                item_type=item.item_type.to_client_type() if item else 0,
+                max_hit=(item.max_damage or 0) if item else 0,
+                min_hit=(item.min_damage or 0) if item else 0,
+                max_def=(item.defense or 0) if item else 0,
+                min_def=(item.defense or 0) if item else 0,
+            )

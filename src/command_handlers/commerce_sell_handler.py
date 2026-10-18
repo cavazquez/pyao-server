@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.commerce_sell_command import CommerceSellCommand
-from src.config.config_manager import ConfigManager
-from src.models.items_catalog import ITEMS_CATALOG
+from src.services.inventory_notifications import notify_inventory
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -71,7 +70,11 @@ class CommerceSellCommandHandler(CommandHandler):
             return CommandResult.error("No tienes una ventana de comercio abierta")
 
         # Ejecutar venta
-        success, message = await self.commerce_service.sell_item(user_id, npc_id, slot, quantity)
+        success, message = await self.commerce_service.sell_item(
+            user_id, npc_id, slot, quantity, operation_id=command.operation_id
+        )
+
+        await self.commerce_service.notify_merchant(self.message_sender, npc_id)
 
         # Enviar mensaje de resultado
         await self.message_sender.send_console_msg(message)
@@ -110,47 +113,5 @@ class CommerceSellCommandHandler(CommandHandler):
         await self.message_sender.send_update_gold(gold)
 
     async def _update_player_inventory(self, user_id: int) -> None:
-        """Envía actualizaciones del inventario del jugador.
-
-        Args:
-            user_id: ID del jugador.
-        """
-        # Enviar todos los slots del inventario
-        for slot in range(1, ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) + 1):
-            slot_data = await self.inventory_repo.get_slot(user_id, slot)
-
-            if slot_data:
-                item_id, amount = slot_data
-                item = ITEMS_CATALOG.get(item_id)
-
-                if item:
-                    await self.message_sender.send_change_inventory_slot(
-                        slot=slot,
-                        item_id=item_id,
-                        name=item.name,
-                        amount=amount,
-                        equipped=False,
-                        grh_id=item.graphic_id,
-                        item_type=item.item_type.to_client_type(),
-                        max_hit=item.max_damage or 0,
-                        min_hit=item.min_damage or 0,
-                        max_def=item.defense or 0,
-                        min_def=item.defense or 0,
-                        sale_price=float(item.value),
-                    )
-            else:
-                # Slot vacío
-                await self.message_sender.send_change_inventory_slot(
-                    slot=slot,
-                    item_id=0,
-                    name="",
-                    amount=0,
-                    equipped=False,
-                    grh_id=0,
-                    item_type=0,
-                    max_hit=0,
-                    min_hit=0,
-                    max_def=0,
-                    min_def=0,
-                    sale_price=0.0,
-                )
+        """Sincroniza slots confirmados preservando el equipamiento existente."""
+        await notify_inventory(self.message_sender, self.inventory_repo, user_id)

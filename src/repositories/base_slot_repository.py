@@ -90,8 +90,10 @@ class BaseSlotRepository:
         Args:
             key: Key de Redis para el hash.
         """
-        data = {f"slot_{i}": "" for i in range(1, self.MAX_SLOTS + 1)}
-        await self.redis_client.hset(key, mapping=data)
+        async with self.redis_client.redis.pipeline() as pipe:
+            for slot in range(1, self.MAX_SLOTS + 1):
+                pipe.hsetnx(key, f"slot_{slot}", "")
+            await pipe.execute()
 
     async def _find_stackable_slot(
         self,

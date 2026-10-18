@@ -1,8 +1,11 @@
-"""Tests para CommerceService."""
+"""Comercio NPC con recursos reales: última unidad, pagos exactos y fallas de EXEC."""
 
-from unittest.mock import AsyncMock, MagicMock
+import asyncio
+from unittest.mock import AsyncMock, patch
 
 import pytest
+import pytest_asyncio
+from redis.exceptions import ConnectionError as RedisConnectionError
 
 from src.models.item import Item, ItemType
 from src.models.item_constants import MAX_PLAYER_GOLD
@@ -10,402 +13,194 @@ from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.merchant_repository import MerchantRepository
 from src.repositories.player_repository import PlayerRepository
 from src.services.commerce_service import CommerceService
+from src.utils.gold_atomic import operation_id
+from src.utils.redis_config import RedisKeys
 
 
-@pytest.fixture
-def mock_item() -> Item:
-    """Crea un item de prueba."""
-    return Item(
+@pytest_asyncio.fixture
+async def market(redis_client):
+    """Comparte recursos concretos y sustituye sólo fsync en tests rápidos.
+
+    Yields:
+        Servicio, inventario, jugador y Redis con una poción de valor impar.
+    """
+    item = Item(
         item_id=1,
-        name="Poción de Vida",
+        name="Poción",
         item_type=ItemType.POTION,
         graphic_id=100,
-        value=100,  # Precio de compra: 100 oro
+        value=11,
         stackable=True,
     )
-
-
-@pytest.fixture
-def mock_item_no_value() -> Item:
-    """Crea un item sin precio (no vendible)."""
-    return Item(
-        item_id=2,
-        name="Item Especial",
-        item_type=ItemType.MISC,
-        graphic_id=101,
-        value=0,  # Sin precio
-        stackable=False,
-    )
-
-
-@pytest.fixture
-def mock_inventory_repo() -> MagicMock:
-    """Crea un mock de InventoryRepository."""
-    repo = MagicMock(spec=InventoryRepository)
-    repo.has_space = AsyncMock(return_value=True)
-    repo.add_item = AsyncMock(return_value=[(1, 5)])  # Slot 1, cantidad 5
-    repo.remove_item = AsyncMock(return_value=True)
-    repo.get_slot = AsyncMock(return_value=(1, 10))  # item_id=1, quantity=10
-    return repo
-
-
-@pytest.fixture
-def mock_merchant_repo() -> MagicMock:
-    """Crea un mock de MerchantRepository."""
-    repo = MagicMock(spec=MerchantRepository)
-    repo.get_item = AsyncMock(return_value=MagicMock(item_id=1, quantity=10))
-    repo.remove_item = AsyncMock(return_value=True)
-    repo.add_item = AsyncMock(return_value=True)
-    return repo
-
-
-@pytest.fixture
-def mock_player_repo() -> MagicMock:
-    """Crea un mock de PlayerRepository."""
-    repo = MagicMock(spec=PlayerRepository)
-    repo.get_gold = AsyncMock(return_value=1000)  # 1000 oro
-    repo.remove_gold = AsyncMock(return_value=True)
-    repo.add_gold = AsyncMock()
-    repo.add_gold_capped = AsyncMock()
-    return repo
-
-
-@pytest.fixture
-def commerce_service(
-    mock_inventory_repo: MagicMock,
-    mock_merchant_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_item: Item,
-) -> CommerceService:
-    """Crea una instancia de CommerceService con mocks."""
-    item_catalog = {1: mock_item}
-    return CommerceService(
-        inventory_repo=mock_inventory_repo,
-        merchant_repo=mock_merchant_repo,
-        item_catalog=item_catalog,
-        player_repo=mock_player_repo,
-    )
+    inventory, player = InventoryRepository(redis_client), PlayerRepository(redis_client)
+    await player.update_gold(1, 100)
+    await player.update_gold(2, 100)
+    await inventory.set_slot(1, 30, 1, 5)
+    await redis_client.hset(RedisKeys.merchant_inventory(123), mapping={"slot_1": "1:5"})
+    service = CommerceService(inventory, MerchantRepository(redis_client), {1: item}, player)
+    with patch("src.services.commerce_service.require_durable", new=AsyncMock()):
+        yield service, inventory, player, redis_client
 
 
 @pytest.mark.asyncio
-class TestCommerceServiceBuyItem:
-    """Tests para el método buy_item de CommerceService."""
-
-    async def test_buy_item_success(
-        self,
-        commerce_service: CommerceService,
-    ) -> None:
-        """Test de compra exitosa."""
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is True
-        assert "Has comprado 5x Poción de Vida por 500 oro" in message
-        commerce_service.player_repo.remove_gold.assert_called_once_with(1, 500)  # 1000 - 500
-        commerce_service.inventory_repo.add_item.assert_called_once_with(1, 1, 5)
-        commerce_service.merchant_repo.remove_item.assert_called_once_with(2, 1, 5)
-
-    async def test_buy_item_invalid_quantity(
-        self,
-        commerce_service: CommerceService,
-    ) -> None:
-        """Test con cantidad inválida (0 o negativa)."""
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=0)
-
-        assert success is False
-        assert message == "Cantidad inválida"
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=-1)
-
-        assert success is False
-        assert message == "Cantidad inválida"
-
-    async def test_buy_item_merchant_has_no_item(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-    ) -> None:
-        """Test cuando el mercader no tiene el item."""
-        mock_merchant_repo.get_item = AsyncMock(return_value=None)
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "El mercader no tiene ese item"
-
-    async def test_buy_item_insufficient_merchant_quantity(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-    ) -> None:
-        """Test cuando el mercader no tiene suficiente cantidad."""
-        merchant_item = MagicMock(item_id=1, quantity=3)  # Solo tiene 3
-        mock_merchant_repo.get_item = AsyncMock(return_value=merchant_item)
-
-        success, message = await commerce_service.buy_item(
-            user_id=1,
-            npc_id=2,
-            slot=1,
-            quantity=5,  # Intenta comprar 5
-        )
-
-        assert success is False
-        assert "El mercader solo tiene 3 disponibles" in message
-
-    async def test_buy_item_not_in_catalog(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-    ) -> None:
-        """Test cuando el item no está en el catálogo."""
-        merchant_item = MagicMock(item_id=999, quantity=10)  # Item inexistente
-        mock_merchant_repo.get_item = AsyncMock(return_value=merchant_item)
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Item no encontrado"
-
-    async def test_buy_item_no_price(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-        mock_item_no_value: Item,
-    ) -> None:
-        """Test cuando el item no tiene precio."""
-        merchant_item = MagicMock(item_id=2, quantity=10)
-        mock_merchant_repo.get_item = AsyncMock(return_value=merchant_item)
-        commerce_service.items_catalog[2] = mock_item_no_value
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Este item no está a la venta"
-
-    async def test_buy_item_insufficient_gold(
-        self,
-        commerce_service: CommerceService,
-        mock_player_repo: MagicMock,
-    ) -> None:
-        """Test cuando el jugador no tiene suficiente oro."""
-        mock_player_repo.get_gold = AsyncMock(return_value=100)  # Solo 100 oro
-        # Precio total: 100 * 5 = 500 oro
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert "No tienes suficiente oro" in message
-        assert "Necesitas 500 oro" in message
-
-    async def test_buy_item_inventory_full(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test cuando el inventario está lleno."""
-        mock_inventory_repo.has_space = AsyncMock(return_value=False)
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Tu inventario está lleno"
-
-    async def test_buy_item_add_item_fails(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-        mock_player_repo: MagicMock,
-    ) -> None:
-        """Test cuando falla agregar item al inventario (rollback de oro)."""
-        mock_inventory_repo.add_item = AsyncMock(return_value=None)  # Falla
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert "No se pudo agregar el item al inventario" in message
-        # Verificar rollback: se devuelve el oro original
-        mock_player_repo.remove_gold.assert_called_once_with(1, 500)
-        mock_player_repo.add_gold.assert_called_once_with(1, 500)
-
-    async def test_buy_item_remove_merchant_item_fails(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-        mock_inventory_repo: MagicMock,
-        mock_player_repo: MagicMock,
-    ) -> None:
-        """Test cuando falla remover item del mercader (rollback completo)."""
-        mock_merchant_repo.remove_item = AsyncMock(return_value=False)  # Falla
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert "Error al procesar la compra" in message
-        # Verificar rollback: oro y items
-        mock_player_repo.remove_gold.assert_called_once_with(1, 500)
-        mock_player_repo.add_gold.assert_called_once_with(1, 500)
-        mock_inventory_repo.remove_item.assert_called_once_with(1, 1, 5)  # Rollback items
-
-    async def test_buy_item_exception_handling(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test manejo de excepciones durante la transacción."""
-        # La excepción debe ocurrir dentro del bloque try/except
-        # Simulamos que falla al agregar el item (dentro del try)
-        mock_inventory_repo.add_item = AsyncMock(side_effect=Exception("Error de conexión"))
-
-        success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Error al procesar la compra"
+async def test_buy_and_odd_sell_are_identified_and_exact(market):
+    """Repetir una petición no vuelve a comprar ni a pagar; 11//2 por tres es quince."""
+    service, inventory, player, redis = market
+    buy_id, sell_id = operation_id(), operation_id()
+    for _ in range(2):
+        assert (await service.buy_item(1, 123, 1, 1, operation_id=buy_id))[0]
+    assert await player.get_gold(1) == 89
+    assert await inventory.get_slot(1, 30) == (1, 6)
+    for _ in range(2):
+        success, message = await service.sell_item(1, 123, 30, 3, operation_id=sell_id)
+        assert success
+        assert "15 oro" in message
+    assert await player.get_gold(1) == 104
+    assert await inventory.get_slot(1, 30) == (1, 3)
+    assert (await redis.hgetall(RedisKeys.merchant_inventory(123)))["slot_1"] == "1:7"
 
 
 @pytest.mark.asyncio
-class TestCommerceServiceSellItem:
-    """Tests para el método sell_item de CommerceService."""
+async def test_two_buyers_compete_for_last_unit_without_double_debit(market):
+    """WATCH del stock serializa compras aunque los jugadores tengan distintas claves."""
+    service, inventory, player, redis = market
+    await redis.hset(RedisKeys.merchant_inventory(123), mapping={"slot_1": "1:1"})
+    results = await asyncio.gather(service.buy_item(1, 123, 1, 1), service.buy_item(2, 123, 1, 1))
+    assert sum(success for success, _message in results) == 1
+    assert await player.get_gold(1) + await player.get_gold(2) == 189
+    inventories = await asyncio.gather(*(inventory.get_inventory_slots(user) for user in [1, 2]))
+    total = sum(stack.quantity for values in inventories for stack in values.values())
+    assert total == 6
+    assert not (await redis.hgetall(RedisKeys.merchant_inventory(123)))["slot_1"]
 
-    async def test_sell_item_success(
-        self,
-        commerce_service: CommerceService,
-    ) -> None:
-        """Test de venta exitosa."""
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
 
-        assert success is True
-        assert "Has vendido 5x Poción de Vida por 250 oro" in message  # 50% de 100 * 5
-        commerce_service.inventory_repo.remove_item.assert_called_once_with(1, 1, 5)
-        commerce_service.player_repo.add_gold_capped.assert_called_once_with(1, 250)  # 1000 + 250
-        commerce_service.merchant_repo.add_item.assert_called_once_with(2, 1, 5)
+@pytest.mark.asyncio
+async def test_competing_sales_pay_for_source_once(market):
+    """Dos ventas de tres unidades compiten por cinco; una sola cobra quince."""
+    service, inventory, player, _redis = market
+    results = await asyncio.gather(
+        service.sell_item(1, 123, 30, 3), service.sell_item(1, 123, 30, 3)
+    )
+    assert sum(success for success, _message in results) == 1
+    assert await player.get_gold(1) == 115
+    assert await inventory.get_slot(1, 30) == (1, 2)
 
-    async def test_sell_item_invalid_quantity(
-        self,
-        commerce_service: CommerceService,
-    ) -> None:
-        """Test con cantidad inválida."""
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=0)
 
-        assert success is False
-        assert message == "Cantidad inválida"
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "case",
+    ["full", "partial", "overflow", "excess_buy", "excess_sell", "negative", "price", "equipment"],
+)
+async def test_rejection_preserves_stock_wallet_and_inventory(market, case):
+    """Un rechazo conserva los tres recursos completos, incluido espacio parcial insuficiente."""
+    service, inventory, player, redis = market
+    action, slot, quantity = service.buy_item, 1, 1
+    if case in {"full", "partial"}:
+        for index in range(1, 31):
+            await inventory.set_slot(1, index, 2, 20)
+        if case == "partial":
+            await inventory.set_slot(1, 30, 1, 19)
+            quantity = 2
+    elif case == "overflow":
+        action, slot = service.sell_item, 30
+        await player.update_gold(1, MAX_PLAYER_GOLD)
+    elif case == "excess_buy":
+        quantity = 6
+    elif case == "excess_sell":
+        action, slot, quantity = service.sell_item, 30, 6
+    elif case == "negative":
+        quantity = -1
+    elif case == "price":
+        service.items_catalog[1].value = -1
+    else:
+        action, slot = service.sell_item, 30
+        await redis.hset(RedisKeys.player_equipment(1), mapping={"weapon": "30"})
+    before = (
+        await inventory.get_inventory(1),
+        await player.get_gold(1),
+        await redis.hgetall(RedisKeys.merchant_inventory(123)),
+    )
+    assert not (await action(1, 123, slot, quantity))[0]
+    assert (
+        await inventory.get_inventory(1),
+        await player.get_gold(1),
+        await redis.hgetall(RedisKeys.merchant_inventory(123)),
+    ) == before
 
-    async def test_sell_item_player_has_no_item(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test cuando el jugador no tiene el item."""
-        mock_inventory_repo.get_slot = AsyncMock(return_value=None)
 
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
+@pytest.mark.asyncio
+async def test_full_merchant_keeps_prior_buyback_policy_without_partial_stock(market):
+    """El NPC paga aunque no guarde el objeto para revender; no añade medio stack."""
+    service, inventory, player, redis = market
+    await redis.hset(
+        RedisKeys.merchant_inventory(123), mapping={f"slot_{i}": "2:32767" for i in range(1, 21)}
+    )
+    await redis.hset(RedisKeys.merchant_inventory(123), mapping={"slot_1": "1:32766"})
+    before = await redis.hgetall(RedisKeys.merchant_inventory(123))
+    assert (await service.sell_item(1, 123, 30, 3))[0]
+    assert await player.get_gold(1) == 115
+    assert await inventory.get_slot(1, 30) == (1, 2)
+    assert await redis.hgetall(RedisKeys.merchant_inventory(123)) == before
 
-        assert success is False
-        assert message == "No tienes ese item"
 
-    async def test_sell_item_insufficient_quantity(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test cuando el jugador no tiene suficiente cantidad."""
-        mock_inventory_repo.get_slot = AsyncMock(return_value=(1, 3))  # Solo tiene 3
+@pytest.mark.asyncio
+@pytest.mark.parametrize("action", ["buy", "sell"])
+@pytest.mark.parametrize("after_exec", [False, True])
+async def test_exec_failure_recovers_identified_result_without_partial_resources(
+    market, action, after_exec
+):
+    """Cortes a ambos lados de EXEC no separan débito, stock y entrega o pago."""
+    service, inventory, player, redis = market
+    pipeline_type = type(redis.redis.pipeline())
+    original = pipeline_type.execute
+    failed_once = False
 
-        success, message = await commerce_service.sell_item(
-            user_id=1,
-            npc_id=2,
-            slot=1,
-            quantity=5,  # Intenta vender 5
-        )
+    async def faulty_exec(self, *args: object, **kwargs: object):
+        nonlocal failed_once
+        if failed_once:
+            return await original(self, *args, **kwargs)
+        failed_once = True
+        if after_exec:
+            await original(self, *args, **kwargs)
+        message = "Falla simulada de EXEC en comercio"
+        raise RedisConnectionError(message)
 
-        assert success is False
-        assert "Solo tienes 3 disponibles" in message
+    identity = operation_id()
+    method, slot = (service.buy_item, 1) if action == "buy" else (service.sell_item, 30)
+    with patch.object(pipeline_type, "execute", faulty_exec):
+        assert (await method(1, 123, slot, 3, operation_id=identity))[0]
+    assert (await method(1, 123, slot, 3, operation_id=identity))[0]
+    assert await player.get_gold(1) == (67 if action == "buy" else 115)
+    assert await inventory.get_slot(1, 30) == (1, 8 if action == "buy" else 2)
 
-    async def test_sell_item_not_in_catalog(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test cuando el item no está en el catálogo."""
-        mock_inventory_repo.get_slot = AsyncMock(return_value=(999, 10))  # Item inexistente
 
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
+@pytest.mark.asyncio
+async def test_purchase_replans_when_gain_and_equipped_drag_commit_first(market):
+    """Un plan de compra ya calculado no pisa ganancias ni un MOVE_ITEM concurrente."""
+    service, inventory, player, redis = market
+    await inventory.set_slot(1, 1, 2, 1)
+    await redis.hset(RedisKeys.player_equipment(1), mapping={"weapon": "1"})
+    pipeline_type = type(redis.redis.pipeline())
+    original = pipeline_type.execute
+    entered, resume = asyncio.Event(), asyncio.Event()
+    first = True
 
-        assert success is False
-        assert message == "Item no encontrado"
+    async def pause_exec(self, *args: object, **kwargs: object):
+        nonlocal first
+        if first:
+            first = False
+            entered.set()
+            await resume.wait()
+        return await original(self, *args, **kwargs)
 
-    async def test_sell_item_cannot_sell(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-        mock_item_no_value: Item,
-    ) -> None:
-        """Test cuando el item no se puede vender (value=0)."""
-        mock_inventory_repo.get_slot = AsyncMock(return_value=(2, 10))
-        commerce_service.items_catalog[2] = mock_item_no_value
-
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Este item no se puede vender"
-
-    async def test_sell_item_remove_fails(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test cuando falla remover el item del inventario."""
-        mock_inventory_repo.remove_item = AsyncMock(return_value=False)
-
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "No se pudo remover el item"
-
-    async def test_sell_item_merchant_inventory_full(
-        self,
-        commerce_service: CommerceService,
-        mock_merchant_repo: MagicMock,
-    ) -> None:
-        """Test cuando el inventario del mercader está lleno (no hace rollback)."""
-        mock_merchant_repo.add_item = AsyncMock(return_value=False)  # Mercader lleno
-
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        # La venta es exitosa aunque el mercader no pueda recibir el item
-        assert success is True
-        assert "Has vendido 5x Poción de Vida por 250 oro" in message
-        # El jugador recibió el oro (no hay rollback)
-        commerce_service.player_repo.add_gold_capped.assert_called_once_with(1, 250)
-
-    async def test_sell_item_exception_handling(
-        self,
-        commerce_service: CommerceService,
-        mock_inventory_repo: MagicMock,
-    ) -> None:
-        """Test manejo de excepciones durante la venta."""
-        mock_inventory_repo.remove_item = AsyncMock(side_effect=Exception("Error de conexión"))
-
-        success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is False
-        assert message == "Error al procesar la venta"
-
-    async def test_sell_item_respects_gold_cap(
-        self,
-        commerce_service: CommerceService,
-        mock_player_repo: MagicMock,
-    ) -> None:
-        """Vender no debe superar MAX_PLAYER_GOLD.
-
-        El oro resultante debe caparse en MAX_PLAYER_GOLD aunque la suma
-        aritmética lo exceda.
-        """
-        # El jugador tiene casi el tope; vender 5 pociones a 50 oro c/u sumaría
-        # 250 y excedería el cap.
-        current = MAX_PLAYER_GOLD - 100
-        mock_player_repo.get_gold = AsyncMock(return_value=current)
-
-        success, _msg = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
-
-        assert success is True
-        # El oro final debe estar capaado en MAX_PLAYER_GOLD
-        mock_player_repo.add_gold_capped.assert_called_once_with(1, 250)
+    with patch.object(pipeline_type, "execute", pause_exec):
+        purchase = asyncio.create_task(service.buy_item(1, 123, 1, 1))
+        await asyncio.wait_for(entered.wait(), 2)
+        assert await inventory.add_item(1, 1, 2)
+        assert (await inventory.swap_slots(1, 1, 30)).success
+        resume.set()
+        assert (await asyncio.wait_for(purchase, 2))[0]
+    assert await inventory.get_slot(1, 1) == (1, 8)
+    assert await inventory.get_slot(1, 30) == (2, 1)
+    assert (await redis.hgetall(RedisKeys.player_equipment(1)))["weapon"] == "30"
+    assert await player.get_gold(1) == 89

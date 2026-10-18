@@ -51,6 +51,9 @@ async def transact(
     identity: str,
     request: dict[str, Any],
     decide: Callable[[Snapshot], Decision],
+    *,
+    receipt_ttl_seconds: int = RECEIPT_TTL_SECONDS,
+    retry_window_seconds: int = RETRY_WINDOW_SECONDS,
 ) -> dict[str, Any]:
     """Lee precondiciones y confirma todos los cambios con su recibo en un EXEC.
 
@@ -64,6 +67,12 @@ async def transact(
         ValueError: Por identidad vencida/reutilizada, claves o campos inválidos.
         RuntimeError: Si no puede determinar el commit tras reintentos acotados.
     """
+    if (
+        retry_window_seconds < 1
+        or receipt_ttl_seconds <= retry_window_seconds + MAX_CLOCK_SKEW_SECONDS
+    ):
+        msg = "Retención del recibo insuficiente para la ventana de reintento"
+        raise ValueError(msg)
     created_at = validate_operation_id(identity)
     by_key = {resource.key: resource for resource in resources}
     receipt_key = f"operation:resources:{identity}"
@@ -89,7 +98,7 @@ async def transact(
                         raise ValueError(msg)
                     return cast("dict[str, Any]", receipt["result"])
                 age = time.time() - created_at
-                if age < -MAX_CLOCK_SKEW_SECONDS or age > RETRY_WINDOW_SECONDS:
+                if age < -MAX_CLOCK_SKEW_SECONDS or age > retry_window_seconds:
                     msg = "Operación vencida; consultar estado antes de iniciar otra"
                     raise ValueError(msg)
                 snapshot: Snapshot = {}
@@ -109,7 +118,7 @@ async def transact(
                         pipe.hset(key, mapping=value)
                     elif isinstance(value, str):
                         pipe.set(key, value)
-                pipe.set(receipt_key, receipt_json, ex=RECEIPT_TTL_SECONDS)
+                pipe.set(receipt_key, receipt_json, ex=receipt_ttl_seconds)
                 await pipe.execute()
             except WatchError, RedisConnectionError, RedisTimeoutError:
                 await asyncio.sleep(random.uniform(0, min(0.0002 * (attempt + 1), 0.01)))

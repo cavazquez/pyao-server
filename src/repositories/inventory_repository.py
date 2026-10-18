@@ -8,11 +8,11 @@ import logging
 from dataclasses import dataclass
 
 from src.config.config_manager import ConfigManager, config_manager
+from src.utils.inventory_atomic import change_inventory
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
 from src.utils.inventory_storage import InventoryStorage
 from src.utils.redis_client import RedisClient  # noqa: TC001
-from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,8 @@ class SwapSlotsResult:
     old_slot_data: tuple[int, int] | None
     new_slot_data: tuple[int, int] | None
     reason: str | None = None
+    old_equipped: bool = False
+    new_equipped: bool = False
 
 
 class InventoryRepository:
@@ -180,26 +182,7 @@ class InventoryRepository:
         Returns:
             True si se removió la cantidad solicitada.
         """
-        if quantity <= 0:
-            return True
-
-        slots = await self.get_inventory_slots(user_id)
-        remaining = quantity
-
-        for slot_number, slot in slots.items():
-            if slot.item_id != item_id or remaining <= 0:
-                continue
-
-            removable = min(slot.quantity, remaining)
-            success = await self.remove_item(user_id, slot_number, removable)
-            if not success:
-                return False
-            remaining -= removable
-
-            if remaining == 0:
-                return True
-
-        return remaining == 0
+        return await self.stacking.remove_item_by_id(user_id, item_id, quantity)
 
     async def has_space(self, user_id: int) -> bool:
         """Verifica si hay espacio en el inventario.
@@ -242,52 +225,23 @@ class InventoryRepository:
                 reason=f"Slot fuera de rango: {', '.join(reasons)}",
             )
 
-        key = RedisKeys.player_inventory(user_id)
-
-        # Leer ambos slots en un pipeline
-        pipe = self.redis_client.pipeline()
-        pipe.hget(key, f"slot_{old_slot}")
-        pipe.hget(key, f"slot_{new_slot}")
-        old_value, new_value = await pipe.execute()
-
-        # Parsear valores actuales
-        old_slot_data = None
-        if old_value:
-            parsed = InventorySlot.parse(old_value)
-            if parsed and not parsed.is_empty():
-                old_slot_data = (parsed.item_id, parsed.quantity)
-
-        new_slot_data = None
-        if new_value:
-            parsed = InventorySlot.parse(new_value)
-            if parsed and not parsed.is_empty():
-                new_slot_data = (parsed.item_id, parsed.quantity)
-
-        # Intercambiar valores en un pipeline transaccional
-        pipe = self.redis_client.pipeline(transaction=True)
-        if new_value:
-            pipe.hset(key, f"slot_{old_slot}", new_value)
-        else:
-            pipe.hdel(key, f"slot_{old_slot}")
-
-        if old_value:
-            pipe.hset(key, f"slot_{new_slot}", old_value)
-        else:
-            pipe.hdel(key, f"slot_{new_slot}")
-
-        await pipe.execute()
-
-        logger.info(
-            "Swap slots user_id=%d: slot %s <-> slot %s",
+        result = await change_inventory(
+            self.redis_client.redis,
             user_id,
-            old_slot,
-            new_slot,
+            "swap",
+            (old_slot, new_slot),
+            max_slots,
+            self.stacking.max_stack,
         )
-
+        old = InventorySlot.parse(result.get("first", ""))
+        new = InventorySlot.parse(result.get("second", ""))
         return SwapSlotsResult(
-            success=True,
+            success=bool(result["applied"]),
             old_slot=old_slot,
             new_slot=new_slot,
-            old_slot_data=new_slot_data,
-            new_slot_data=old_slot_data,
+            old_slot_data=(old.item_id, old.quantity) if old else None,
+            new_slot_data=(new.item_id, new.quantity) if new else None,
+            reason=result.get("error"),
+            old_equipped=result.get("first_equipped", False),
+            new_equipped=result.get("second_equipped", False),
         )

@@ -25,7 +25,11 @@ class SlotPlan:
             if not value:
                 continue
             parsed = InventorySlot.parse(value)
-            if parsed is None or parsed.quantity > MAX_SLOT_QUANTITY:
+            if (
+                parsed is None
+                or parsed.quantity > MAX_SLOT_QUANTITY
+                or parsed.item_id > MAX_SLOT_QUANTITY
+            ):
                 msg = "Slot persistido inválido"
                 raise ValueError(msg)
             self.slots[slot] = parsed
@@ -54,9 +58,15 @@ class SlotPlan:
         Raises:
             ValueError: Si los datos no son válidos o no entra la cantidad completa.
         """
-        if item_id < 1 or quantity < 1:
+        if (
+            type(item_id) is not int
+            or type(quantity) is not int
+            or not 1 <= item_id <= MAX_SLOT_QUANTITY
+            or quantity < 1
+        ):
             msg = "Objeto o cantidad inválidos"
             raise ValueError(msg)
+        before = self.slots.copy()
         remaining = quantity
         matching = [slot for slot, item in self.slots.items() if item.item_id == item_id]
         empty = [slot for slot in range(1, self.capacity + 1) if slot not in self.slots]
@@ -69,6 +79,7 @@ class SlotPlan:
                 remaining -= accepted
             if remaining == 0:
                 return
+        self.slots = before
         msg = "No hay espacio suficiente para todos los objetos"
         raise ValueError(msg)
 

@@ -101,6 +101,8 @@ jobs:
           cat artifacts/trade-smoke.json
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.bank_items_smoke > artifacts/bank-items-smoke.json 2> artifacts/bank-items-smoke.log
           cat artifacts/bank-items-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.npc_commerce_smoke > artifacts/npc-commerce-smoke.json 2> artifacts/npc-commerce-smoke.log
+          cat artifacts/npc-commerce-smoke.json
       - name: Preserve integration evidence even on failure
         if: always()
         uses: actions/upload-artifact@v7

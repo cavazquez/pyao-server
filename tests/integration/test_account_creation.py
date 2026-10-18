@@ -9,13 +9,14 @@ from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID, ServerPacketID
 from src.repositories.account_repository import AccountRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.player.task_account import TaskCreateAccount
 from src.utils.password_utils import hash_password
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
+async def test_task_create_account_success(redis_client) -> None:  # noqa: PLR0914, PLR0915
     """Verifica que TaskCreateAccount cree una cuenta exitosamente."""
     # Mock del writer
     writer = MagicMock()
@@ -45,33 +46,8 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.get_attributes = AsyncMock(return_value=None)
     player_repo.get_strength = AsyncMock(return_value=10)
     player_repo.get_agility = AsyncMock(return_value=10)
-    # Mock de redis para InventoryRepository
-    redis_client_mock = MagicMock()
-    for method in (
-        "hget",
-        "hset",
-        "hset_field",
-        "hgetall",
-        "hdel",
-        "hmget",
-        "exists",
-        "set",
-        "get",
-        "delete",
-        "sadd",
-        "smembers",
-        "srem",
-        "incr",
-        "decr",
-        "incrby",
-        "decrby",
-    ):
-        setattr(redis_client_mock, method, AsyncMock())
-    redis_client_mock.hgetall = AsyncMock(return_value={})
-    redis_client_mock.get = AsyncMock(return_value=None)
-    redis_client_mock.hget = AsyncMock(return_value=None)
-    redis_client_mock.pipeline = MagicMock()
-    player_repo.redis = redis_client_mock
+    # El inventario usa Redis concreto, incluidos WATCH y recibos.
+    player_repo.redis = redis_client
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
@@ -130,6 +106,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         session_data=None,
     )
     await task.execute()
+
+    initial = await InventoryRepository(redis_client).get_inventory_slots(1)
+    assert sum(slot.quantity for slot in initial.values() if slot.item_id == 36) == 30
 
     # Verificar que se llamó a create_account
     account_repo.create_account.assert_called_once()
