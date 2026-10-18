@@ -21,6 +21,7 @@ def mock_message_sender() -> MagicMock:
     """Mock de MessageSender."""
     sender = MagicMock()
     sender.send_console_msg = AsyncMock()
+    sender.send_clan_details = AsyncMock()
     return sender
 
 
@@ -34,6 +35,7 @@ def sample_clan() -> Clan:
         leader_id=1,
         leader_username="LeaderUser",
     )
+    clan.members[1] = ClanMember(user_id=1, username="LeaderUser", level=25, rank=ClanRank.LEADER)
     # Agregar miembro adicional
     member = ClanMember(user_id=2, username="MemberUser", level=5, rank=ClanRank.MEMBER)
     clan.members[2] = member
@@ -60,8 +62,7 @@ async def test_handle_request_clan_details_success(
     result = await handler.handle(command)
 
     assert result.success is True
-    # Verificar que se enviaron mensajes al cliente
-    assert mock_message_sender.send_console_msg.call_count >= 4
+    mock_message_sender.send_clan_details.assert_awaited_once_with(sample_clan)
 
 
 @pytest.mark.asyncio

@@ -302,5 +302,29 @@
       "version": 1,
       "snapshot": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"revision\":1,\"state\":\"active\",\"viewer\":1,\"players\":[[1,\"Alice\",0,false,[[30,101,2]]],[2,\"Bob\",10,false,[]]],\"reason\":\"\",\"sequence\":1}"
     }
+  },
+  {
+    "name": "clan_empty",
+    "direction": "server",
+    "hex": "50000000000a0030312f30312f3139373000000000000000000006004e455554524f00000000000000000300302f3500000000",
+    "values": {
+      "name": "",
+      "members": 0,
+      "enemies": 0,
+      "allies": 0,
+      "website": ""
+    }
+  },
+  {
+    "name": "clan_accents_zero",
+    "direction": "server",
+    "hex": "5004005065f16105004ced6465720a0030312f30312f3139373005004ced6465720000000000000006004e455554524f00000000000000000300302f3500001300c172626f6c65732079206176656e7475726173",
+    "values": {
+      "name": "Peña",
+      "members": 0,
+      "enemies": 0,
+      "allies": 0,
+      "website": ""
+    }
   }
 ]

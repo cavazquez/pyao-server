@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.request_clan_details_command import RequestClanDetailsCommand
-from src.models.clan import MAX_CLAN_MEMBERS, ClanRank
+from src.models.clan import Clan
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -49,51 +49,11 @@ class RequestClanDetailsCommandHandler(CommandHandler):
         try:
             # Obtener el clan del usuario
             clan = await self.clan_service.clan_repo.get_user_clan(self.user_id)
-            if not clan:
+            if not clan or clan.get_member(self.user_id) is None:
+                # Estado vacío estándar: permite confirmar un abandono y limpiar la UI.
+                await self.message_sender.send_clan_details(Clan(clan_id=0, name="", created_at=0))
                 return CommandResult.error("No perteneces a ningún clan")
-
-            # Enviar detalles del clan al cliente
-            # TODO: Implementar el envío del paquete CLAN_DETAILS (80)
-            # Por ahora, enviar información básica por consola
-            member = clan.get_member(self.user_id)
-            rank_name = "Líder" if member and member.rank == ClanRank.LEADER else "Miembro"
-
-            await self.message_sender.send_console_msg(
-                f"=== Clan: {clan.name} ===",
-                font_color=7,  # FONTTYPE_PARTY
-            )
-            await self.message_sender.send_console_msg(
-                f"Líder: {clan.leader_username}",
-                font_color=7,
-            )
-            await self.message_sender.send_console_msg(
-                f"Miembros: {clan.member_count}/{MAX_CLAN_MEMBERS}",
-                font_color=7,
-            )
-            await self.message_sender.send_console_msg(
-                f"Tu rango: {rank_name}",
-                font_color=7,
-            )
-            if clan.description:
-                await self.message_sender.send_console_msg(
-                    f"Descripción: {clan.description}",
-                    font_color=7,
-                )
-
-            # Listar miembros
-            if clan.members:
-                await self.message_sender.send_console_msg(
-                    "Miembros:",
-                    font_color=7,
-                )
-                for member in clan.members.values():
-                    rank_str = (
-                        "Líder" if member.rank == ClanRank.LEADER else f"Nivel {member.level}"
-                    )
-                    await self.message_sender.send_console_msg(
-                        f"  - {member.username} ({rank_str})",
-                        font_color=7,
-                    )
+            await self.message_sender.send_clan_details(clan)
 
             logger.info("Detalles del clan '%s' enviados a user_id %s", clan.name, self.user_id)
             return CommandResult.ok()
