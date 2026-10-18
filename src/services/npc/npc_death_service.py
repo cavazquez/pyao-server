@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
+from src.models.mana import calculate_mana
 from src.utils.level_calculator import (
     calculate_level_from_experience,
     calculate_remaining_elu,
@@ -473,12 +474,14 @@ class NPCDeathService:
 
             # Calcular nuevos máximos basados en atributos y nivel
             hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
-            mana_per_int = config_manager.as_int("game.character.mana_per_int", 10)
+            mana_per_int = config_manager.as_int(
+                config_manager.get("game.character.mana_per_int", 10)
+            )
 
             # HP = constitution * hp_per_con * nivel (con mínimo)
             new_max_hp = max(constitution * hp_per_con * new_level, 100)
             # Mana = intelligence * mana_per_int * nivel (con mínimo)
-            new_max_mana = max(intelligence * mana_per_int * new_level, 100)
+            new_max_mana = max(calculate_mana(intelligence, mana_per_int, new_level), 100)
             # Stamina aumenta con nivel (base 100 + 10 por nivel)
             new_max_sta = 100 + (new_level * 10)
 

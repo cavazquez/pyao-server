@@ -169,3 +169,23 @@ uv run --locked python -m src.operations.redis_schema selftest
 
 Referencias: [persistencia de Redis](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/)
 y [release 8.10.2](https://github.com/redis/redis/releases/tag/8.10.2).
+
+### Migración v2: maná dentro de int16
+
+El balance incluido usa `mana_per_int = 10`: inteligencia 10 genera 100 de maná.
+Los cálculos de alta/subida de nivel saturan a 32767 antes de persistir. Los setters
+rechazan maná negativo, mayor al máximo o mayor a 32767; no se repara al enviar.
+
+`uv run python -m src.operations.redis_schema status` muestra `mana_out_of_range`
+sin escribir. Para reparar estado histórico, detener el servidor, crear y verificar
+el backup como arriba y ejecutar `uv run python -m src.operations.redis_schema
+migrate --backup <archivo.rdb>`. La migración v2 limita máximo a 0–32767 y actual
+a 0–máximo; conserva originales en `migration:mana:current_before` y
+`migration:mana:maximum_before` del hash del personaje. Conserva oro, experiencia,
+inventario y todos los demás campos. El backup preserva el estado original completo.
+
+Los cambios pendientes y sus journals se confirman en una sola transacción; ante
+una respuesta perdida se puede repetir sin duplicar pasos ni auditoría. Un dato no
+numérico requiere inspección y aborta antes del commit. El arranque rechaza esquema
+v1 hasta completar esta migración explícita. La autoverificación descartable sigue
+siendo `uv run python -m src.operations.redis_schema selftest`.

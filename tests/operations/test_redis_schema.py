@@ -12,6 +12,7 @@ from src.core.redis_initializer import RedisInitializer
 from src.core.schema_manager import (
     CURRENT_SCHEMA_VERSION,
     MIGRATION_LOCK_KEY,
+    MIGRATIONS,
     SCHEMA_KEY,
     SchemaMigrationError,
     ensure_schema_ready,
@@ -88,7 +89,7 @@ def test_lost_ack_after_commit_is_recoverable_without_duplicate_step():
             apply_ordered_steps(raw, claim, "synthetic-backup-digest")
         assert apply_ordered_steps(raw, claim, "synthetic-backup-digest") == []
         assert raw.hget(SCHEMA_KEY, "version") == str(CURRENT_SCHEMA_VERSION)
-        assert raw.hlen(SCHEMA_KEY) == 2
+        assert raw.hlen(SCHEMA_KEY) == 1 + len(MIGRATIONS)
         assert raw.hget("player:1:stats", "gold") == "1234"
     finally:
         raw.close()

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.mana import validate_mana
 from src.models.player_stats import PlayerStats
 from src.utils.redis_config import RedisKeys
 
@@ -167,6 +168,7 @@ class PlayerStatsMixin:
             elu: Experiencia para subir de nivel.
             experience: Experiencia total.
         """
+        validate_mana(min_mana, max_mana)
         key = RedisKeys.player_user_stats(user_id)
         stats_data = {
             "max_hp": str(max_hp),
@@ -361,7 +363,10 @@ class PlayerStatsMixin:
         return (stats.min_sta, stats.max_sta)
 
     async def update_mana(self, user_id: int, mana: int) -> None:
-        """Actualiza el mana actual del jugador."""
+        """Actualiza el maná validado contra el máximo persistido."""
+        validate_mana(mana)
+        _, maximum = await self.get_mana(user_id)
+        validate_mana(mana, maximum)
         await self._hset_field(RedisKeys.player_user_stats(user_id), "min_mana", mana)
         logger.debug("Mana actualizado para user_id %d: %d", user_id, mana)
 

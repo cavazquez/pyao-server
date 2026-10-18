@@ -21,6 +21,7 @@ from src.core.schema_manager import (
     SchemaMigrationError,
     parse_version,
 )
+from src.operations.mana_repair import mana_repairs
 from src.operations.redis_backup import (
     create_backup,
     manifest_for,
@@ -74,31 +75,47 @@ def release_lock(client: Redis, token: str) -> None:
                 return
 
 
+MANA_SCHEMA_VERSION = 2
+
+
 def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[str]:
-    """Confirma cada paso y su versión/journal como un único HSET.
+    """Confirma los pasos pendientes y sus journals en una sola transacción.
 
     Returns:
-        Nombres de pasos efectivamente aplicados, en orden.
+        Nombres de pasos aplicados, en orden; vacío al repetir una confirmación.
 
     Raises:
         SchemaMigrationError: Si se pierde la reserva o hay una carrera persistente.
     """
-    applied = []
-    for target, name in sorted(MIGRATIONS.items()):
-        for _ in range(3):
-            with client.pipeline() as pipe:
-                try:
-                    pipe.watch(SCHEMA_KEY, MIGRATION_LOCK_KEY)  # type: ignore[no-untyped-call]
-                    if pipe.get(MIGRATION_LOCK_KEY) != token:
-                        msg = "La migración perdió su reserva; no se modifica el estado"
-                        raise SchemaMigrationError(msg)
-                    current = parse_version(
-                        cast("str | bytes | None", pipe.hget(SCHEMA_KEY, "version"))
-                    )
-                    if current >= target:
-                        break
+    for _ in range(3):
+        with client.pipeline() as pipe:
+            try:
+                pipe.watch(SCHEMA_KEY, MIGRATION_LOCK_KEY)  # type: ignore[no-untyped-call]
+                if pipe.get(MIGRATION_LOCK_KEY) != token:
+                    msg = "La migración perdió su reserva; no se modifica el estado"
+                    raise SchemaMigrationError(msg)
+                current = parse_version(
+                    cast("str | bytes | None", pipe.hget(SCHEMA_KEY, "version"))
+                )
+                pending = [
+                    (target, name)
+                    for target, name in sorted(MIGRATIONS.items())
+                    if target > current
+                ]
+                if not pending:
+                    return []
+                repairs = mana_repairs(client) if current < MANA_SCHEMA_VERSION else {}
+                if repairs:
+                    pipe.watch(*repairs)  # type: ignore[no-untyped-call]
+                    revalidated = mana_repairs(client)
+                    if revalidated.keys() != repairs.keys():
+                        continue
+                    repairs = revalidated
+                pipe.multi()
+                for key, fields in repairs.items():
+                    pipe.hset(key, mapping=fields)
+                for target, name in pending:
                     require(current == target - 1, "orden de migraciones")
-                    # v1 adopta el layout existente. No normaliza ni reinicializa progreso.
                     entry = json.dumps(
                         {
                             "name": name,
@@ -106,21 +123,19 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                             "to": target,
                             "backup_sha256": backup_digest,
                             "applied_at": datetime.now(UTC).isoformat(),
+                            "mana_repaired": len(repairs) if target == MANA_SCHEMA_VERSION else 0,
                         }
                     )
-                    pipe.multi()
                     pipe.hset(
                         SCHEMA_KEY, mapping={"version": str(target), f"migration:{target}": entry}
                     )
-                    pipe.execute()
-                    applied.append(name)
-                    break
-                except WatchError:
-                    continue
-        else:
-            msg = "No se pudo confirmar el paso de migración"
-            raise SchemaMigrationError(msg)
-    return applied
+                    current = target
+                pipe.execute()
+                return [name for _, name in pending]
+            except WatchError:
+                continue
+    msg = "No se pudo confirmar la migración"
+    raise SchemaMigrationError(msg)
 
 
 def migrate(settings: RedisConfig, backup: Path) -> dict[str, Any]:
@@ -183,14 +198,26 @@ def selftest() -> dict[str, Any]:
             client.hset(
                 "player:1:stats", mapping={"gold": "1234", "level": "7", "experience": "431"}
             )
+            client.hset(
+                "player:1:user_stats",
+                mapping={"max_mana": "500000", "min_mana": "400000", "gold": "1234"},
+            )
             client.hset("player:1:inventory", mapping={"slot_30": "1:2"})
             client.hset("player:1:skills", mapping={"points": "4", "skill_1": "37"})
         path = Path(directory) / "before.rdb"
         create_backup(settings, path)
-        require(migrate(settings, path)["applied"] == ["adopt-legacy-layout"], "paso v1")
+        require(migrate(settings, path)["applied"] == list(MIGRATIONS.values()), "pasos ordenados")
         require(migrate(settings, path)["applied"] == [], "reintento idempotente")
         with sandbox.client() as client:
             require(client.hget("player:1:stats", "gold") == "1234", "oro preservado")
+            require(
+                client.hmget("player:1:user_stats", "min_mana", "max_mana") == ["32767", "32767"],
+                "maná reparado",
+            )
+            require(
+                client.hget("player:1:user_stats", "migration:mana:maximum_before") == "500000",
+                "auditoría de maná",
+            )
             require(client.hget("player:1:inventory", "slot_30") == "1:2", "objetos preservados")
             require(client.hget("player:1:skills", "points") == "4", "progreso preservado")
             client.hset(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION + 1))
@@ -204,6 +231,7 @@ def selftest() -> dict[str, Any]:
         return {
             "legacy_migrated": True,
             "progress_preserved": True,
+            "mana_repaired_with_audit": True,
             "idempotent": True,
             "future_rejected": True,
             "production_data_used": False,
@@ -222,7 +250,11 @@ def main() -> None:
         settings = RedisConfig.model_validate(config_manager.get_section("redis"))
         if args.command == "status":
             with connection(settings) as client:
-                result = {"current": version_of(client), "supported": CURRENT_SCHEMA_VERSION}
+                result = {
+                    "current": version_of(client),
+                    "supported": CURRENT_SCHEMA_VERSION,
+                    "mana_out_of_range": len(mana_repairs(client)),
+                }
         else:
             if args.backup is None:
                 parser.error("migrate requiere --backup <archivo.rdb> previamente verificado")
