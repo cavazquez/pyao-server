@@ -28,6 +28,7 @@ class InventoryStorage:
         Args:
             redis_client: Cliente de Redis.
         """
+        self.MAX_SLOTS = ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30))
         self.redis_client = redis_client
 
     async def get_slot(self, user_id: int, slot: int) -> InventorySlot | None:
@@ -35,7 +36,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
 
         Returns:
             InventorySlot o None si está vacío o inválido.
@@ -55,7 +56,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
             inventory_slot: InventorySlot a guardar, o None para vaciar.
 
         Returns:
@@ -119,7 +120,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
 
         Returns:
             True si se vació correctamente.

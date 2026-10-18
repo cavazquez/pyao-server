@@ -19,7 +19,11 @@ class BankDepositPacketValidator:
         Returns:
             ValidationResult con slot y cantidad o error.
         """
-        slot = ValidationHelpers.read_slot(context, min_slot=1, max_slot=20)
+        slot = ValidationHelpers.read_slot(
+            context,
+            min_slot=1,
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
+        )
         if context.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=context.get_error_message()

@@ -58,7 +58,7 @@ class TaskBankDeposit(Task):
         validator = PacketValidator(reader)
         slot = validator.read_slot(
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.bank.max_slots", 40)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
         quantity = validator.read_quantity(min_qty=1, max_qty=10000)
 

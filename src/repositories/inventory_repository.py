@@ -47,6 +47,7 @@ class InventoryRepository:
             redis_client: Cliente de Redis.
             max_stack: Cantidad máxima por stack (default: 20).
         """
+        self.MAX_SLOTS = ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30))
         self.redis_client = redis_client
         self.storage = InventoryStorage(redis_client)
         self.stacking = InventoryStackingStrategy(self.storage, max_stack)
@@ -110,7 +111,7 @@ class InventoryRepository:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
             item_id: ID del item.
             quantity: Cantidad del item.
 
@@ -132,7 +133,7 @@ class InventoryRepository:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
 
         Returns:
             True si se vació correctamente.

@@ -68,7 +68,7 @@ class EquipItemPacketValidator:
         slot = ValidationHelpers.read_slot(
             context,
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
         if context.has_errors():
             return ValidationResult(
@@ -89,7 +89,7 @@ class UseItemPacketValidator:
         slot = ValidationHelpers.read_slot(
             context,
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
         if context.has_errors():
             return ValidationResult(
