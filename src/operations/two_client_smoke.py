@@ -10,7 +10,7 @@ import json
 import logging
 import struct
 from collections.abc import Callable
-from dataclasses import fields
+from dataclasses import MISSING, fields
 from typing import TYPE_CHECKING, Any
 
 from src.config.game_config import RedisConfig
@@ -126,7 +126,11 @@ def minimum_dependencies(client: RedisClient) -> DependencyContainer:
     account = repositories["account_repo"]
     maps = MapManager(repositories["ground_items_repo"])
     broadcast = MultiplayerBroadcastService(maps, player, account)
-    values: dict[str, Any] = {entry.name: None for entry in fields(DependencyContainer)}
+    values: dict[str, Any] = {
+        entry.name: None
+        for entry in fields(DependencyContainer)
+        if entry.default is MISSING and entry.default_factory is MISSING
+    }
     values.update(repositories)
     values.update(
         redis_client=client,

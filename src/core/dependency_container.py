@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from src.services.action_cadence import ActionCadence
+from src.services.chat_budget import ChatBudget
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -103,3 +104,5 @@ class DependencyContainer:
     item_catalog: ItemCatalog
 
     action_cadence: ActionCadence = field(default_factory=ActionCadence)
+
+    chat_budget: ChatBudget = field(default_factory=ChatBudget)
