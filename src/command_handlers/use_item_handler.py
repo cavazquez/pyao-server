@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from redis.exceptions import RedisError
+
 from src.command_handlers.use_item_consumable_handler import UseItemConsumableHandler
 from src.command_handlers.use_item_special_handler import UseItemSpecialHandler
 from src.commands.base import Command, CommandHandler, CommandResult
@@ -10,11 +12,14 @@ from src.commands.use_item_command import UseItemCommand
 from src.models.item_constants import BOAT_ITEM_ID
 from src.models.item_types import ObjType
 from src.repositories.inventory_repository import InventoryRepository
+from src.services.inventory_notifications import notify_inventory
+from src.services.scroll_learning import ScrollRule, learn_scroll
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.models.item_catalog import ItemCatalog
+    from src.models.spell_catalog import SpellCatalog
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.map_resources_service import MapResourcesService
@@ -48,6 +53,7 @@ class UseItemCommandHandler(CommandHandler):
         item_catalog: ItemCatalog | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
         map_manager: MapManager | None = None,
+        spell_catalog: SpellCatalog | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -59,7 +65,9 @@ class UseItemCommandHandler(CommandHandler):
             item_catalog: Catálogo de items (para datos completos de pociones).
             broadcast_service: Servicio de broadcast multijugador (para invisibilidad).
             map_manager: Gestor de mapas (para obtener message senders).
+            spell_catalog: Catálogo autoritativo para validar pergaminos.
         """
+        self.spell_catalog = spell_catalog
         self.player_repo = player_repo
         self.map_resources = map_resources
         self.account_repo = account_repo
@@ -138,6 +146,8 @@ class UseItemCommandHandler(CommandHandler):
             item_data = self.item_catalog.get_item_data(item_id)
             if item_data:
                 obj_type = item_data.get("ObjType")
+                if obj_type == ObjType.PERGAMINOS:
+                    return await self._learn_scroll(command, item_id, item_data, inventory_repo)
                 if isinstance(obj_type, int) and obj_type == ObjType.POCIONES:
                     potion_type = item_data.get("TipoPocion")
                     if isinstance(potion_type, int):
@@ -154,3 +164,54 @@ class UseItemCommandHandler(CommandHandler):
         # Si llegamos aquí, el ítem no tiene un comportamiento definido
         logger.info("El ítem %d no tiene un comportamiento de uso definido", item_id)
         return CommandResult.ok(data={"item_id": item_id, "handled": False})
+
+    async def _learn_scroll(
+        self,
+        command: UseItemCommand,
+        item_id: int,
+        item_data: dict[str, object],
+        inventory_repo: InventoryRepository,
+    ) -> CommandResult:
+        """Publica únicamente inventario/libro confirmados, conservando el ID al reintentar.
+
+        Returns:
+            Resultado del aprendizaje o rechazo sin consumir el pergamino.
+        """
+        if not self.spell_catalog or not command.username:
+            return CommandResult.error("Aprendizaje no disponible")
+        try:
+            spell_id = int(str(item_data.get("HechizoIndex", 0)))
+            spell = self.spell_catalog.get_spell_data(spell_id)
+            classes = item_data.get("AllowedClasses")
+            if not spell or not isinstance(classes, list) or not classes:
+                return CommandResult.error("Pergamino sin requisitos válidos")
+            rule = ScrollRule(
+                item_id,
+                spell_id,
+                int(str(item_data.get("MinLevel", 1))),
+                int(spell.get("min_skill", 0)),
+                tuple(int(value) for value in classes),
+            )
+            result = await learn_scroll(
+                self.player_repo.redis.redis,
+                command.user_id,
+                command.username,
+                command.slot,
+                command.operation_id,
+                rule,
+            )
+        except RedisError, RuntimeError:
+            await self.message_sender.send_console_msg(
+                "Aprendizaje sin confirmar. Reconecta para consultar el libro y el inventario."
+            )
+            return CommandResult.error("Resultado sin confirmar")
+        except ValueError, TypeError:
+            return CommandResult.error("Pergamino o requisitos inválidos")
+        await self.message_sender.send_console_msg(result["message"])
+        if not result["applied"]:
+            return CommandResult.error(result["message"])
+        await notify_inventory(self.message_sender, inventory_repo, command.user_id)
+        await self.message_sender.send_change_spell_slot(
+            result["book_slot"], spell_id, spell.get("name", "hechizo")
+        )
+        return CommandResult.ok(data=result)

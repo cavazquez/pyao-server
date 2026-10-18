@@ -168,7 +168,7 @@ pyao-server/
 │   ├── network/              # Protocolo y conexiones
 │   ├── tasks/                # Parsing y despacho
 │   ├── command_handlers/     # Ejecución de comandos
-│   ├── services/             # Reglas de juego
+│   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro
 │   ├── repositories/         # Persistencia
 │   ├── models/               # Entidades y catálogos
 │   └── messaging/            # Respuestas al cliente

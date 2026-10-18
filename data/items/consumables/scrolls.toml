@@ -8,6 +8,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 6
 Valor = 2300
 
@@ -18,6 +20,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 2
 Valor = 500
 
@@ -28,6 +32,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 1
 Valor = 200
 
@@ -38,6 +44,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 3
 Valor = 500
 
@@ -48,6 +56,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 4
 Valor = 3000
 
@@ -58,6 +68,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 5
 Valor = 35000
 
@@ -68,6 +80,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 7
 Valor = 4500
 
@@ -78,6 +92,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 8
 Valor = 9000
 
@@ -88,6 +104,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 9
 Valor = 50000
 
@@ -98,6 +116,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 10
 Valor = 33000
 
@@ -108,6 +128,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 14
 Valor = 210000
 
@@ -118,6 +140,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 11
 Valor = 290000
 
@@ -128,6 +152,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 15
 Valor = 32000
 
@@ -138,6 +164,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 12
 Valor = 100
 
@@ -148,6 +176,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 13
 Valor = 350
 
@@ -158,6 +188,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 33
 Valor = 100000
 
@@ -168,6 +200,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 16
 Valor = 15000
 
@@ -178,6 +212,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 17
 Valor = 40000
 
@@ -188,6 +224,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 18
 Valor = 12050
 
@@ -198,6 +236,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 19
 Valor = 13450
 
@@ -208,6 +248,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 20
 Valor = 15000
 
@@ -218,6 +260,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 21
 Valor = 13450
 
@@ -228,6 +272,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 24
 Valor = 110000
 
@@ -238,6 +284,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 23
 Log = 1
 Valor = 1200000
@@ -249,6 +297,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 25
 Log = 1
 Valor = 2400000
@@ -260,6 +310,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 26
 Valor = 950000
 
@@ -270,6 +322,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 27
 Log = 1
 Valor = 350000
@@ -281,6 +335,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 28
 Valor = 500000
 
@@ -291,6 +347,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 29
 Valor = 90000
 
@@ -301,6 +359,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 30
 Valor = 200000
 
@@ -311,6 +371,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 31
 Valor = 100000
 
@@ -321,6 +383,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 41
 Valor = 50000
 
@@ -331,6 +395,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 1
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 42
 Valor = 400000
 
@@ -341,6 +407,8 @@ GrhIndex = 609
 ObjType = 24
 Agarrable = 0
 Crucial = 0
+MinLevel = 1
+AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 43
 Valor = 6000000
 

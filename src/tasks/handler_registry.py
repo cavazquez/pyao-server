@@ -220,6 +220,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
             "map_resources_service",
             "account_repo",
             "item_catalog",
+            "spell_catalog",
             "broadcast_service",
             "map_manager",
         ],
