@@ -67,7 +67,7 @@ class TaskPartyKick(Task):
             validator = PacketValidator(reader)
 
             # Read target username using PacketValidator (UTF-8, same as login)
-            target_username = validator.read_string(min_length=1, max_length=20, encoding="utf-8")
+            target_username = validator.read_string(min_length=1, max_length=20, encoding="latin-1")
 
             if validator.has_errors() or target_username is None:
                 await self.message_sender.send_console_msg(

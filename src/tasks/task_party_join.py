@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.party_join_command import PartyJoinCommand
 from src.network.packet_reader import PacketReader
+from src.network.packet_validator import PacketValidator
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -64,19 +65,11 @@ class TaskPartyJoin(Task):
             # Parse packet data
             reader = PacketReader(self.data)
 
-            # Verificar si hay datos suficientes (al menos 4 bytes para int32 de longitud)
-            if not reader.validate_remaining_bytes(4):
+            validator = PacketValidator(reader)
+            target_username = validator.read_string(min_length=3, max_length=20, encoding="latin-1")
+            if target_username is None or validator.has_errors() or reader.has_more_data():
                 await self.message_sender.send_console_msg(
-                    "Debes especificar un nombre de usuario. Uso: /PARTY <nombre>", font_color=7
-                )
-                return
-
-            # Read target username (cliente Godot usa put_string() que es int32 length + UTF-8)
-            target_username = reader.read_godot_put_string(encoding="utf-8")
-
-            if not target_username:
-                await self.message_sender.send_console_msg(
-                    "Debes especificar un nombre de usuario. Uso: /PARTY <nombre>", font_color=7
+                    "Invitación inválida. Uso: /PARTY <nombre de 3 a 20 caracteres>", font_color=7
                 )
                 return
 

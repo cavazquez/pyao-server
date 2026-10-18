@@ -107,7 +107,7 @@ class PacketReaderMixin:
             Username válido o None si hay error.
         """
         try:
-            username = self.reader.read_string().strip()
+            username = self.reader.read_ascii_string()
         except (ValueError, IndexError, UnicodeDecodeError, struct.error) as e:
             self.errors.append(f"Error leyendo username: {e}")
             return None
@@ -155,7 +155,7 @@ class PacketReaderMixin:
             Contraseña válida o None si hay error.
         """
         try:
-            password = self.reader.read_string()
+            password = self.reader.read_ascii_string()
         except (ValueError, IndexError, UnicodeDecodeError, struct.error) as e:
             self.errors.append(f"Error leyendo contraseña: {e}")
             return None
@@ -204,7 +204,7 @@ class PacketReaderMixin:
         self,
         min_length: int = 1,
         max_length: int = 255,
-        encoding: str = "utf-8",
+        encoding: str = "latin-1",
     ) -> str | None:
         """Lee y valida un string con longitud variable.
 
@@ -213,7 +213,7 @@ class PacketReaderMixin:
         Args:
             min_length: Longitud mínima del string.
             max_length: Longitud máxima del string.
-            encoding: Encoding del string (default: utf-8).
+            encoding: Encoding del string (default: Latin-1).
 
         Returns:
             String validado o None si es inválido.
@@ -250,7 +250,7 @@ class PacketReaderMixin:
 
         Formato esperado:
         - Byte: Subcomando GM
-        - String: Username (UTF-16LE con length prefix)
+        - String: Username (u16 + Latin-1)
         - Int16: Map ID
         - Byte: X
         - Byte: Y
@@ -260,7 +260,7 @@ class PacketReaderMixin:
         """
         try:
             subcommand = self.reader.read_byte()
-            username = self.reader.read_string()
+            username = self.reader.read_ascii_string()
             map_id = self.reader.read_int16()
             x = self.reader.read_byte()
             y = self.reader.read_byte()

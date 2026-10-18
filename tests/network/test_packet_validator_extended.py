@@ -33,11 +33,10 @@ class TestValidateCreateAccountPacket:
             + username_bytes
             + struct.pack("<H", len(password_bytes))
             + password_bytes
+            + bytes([0, 13, 0])  # versión legacy
             + bytes([1])  # race
-            + struct.pack("<H", 0)  # unknown
             + bytes([1])  # gender
             + bytes([1])  # job
-            + bytes([0])  # unknown
             + struct.pack("<H", 1)  # head
             + struct.pack("<H", len(email_bytes))
             + email_bytes
@@ -167,7 +166,7 @@ class TestValidateGMCommandsPacket:
     def test_gm_commands_valid(self) -> None:
         """Test con comando GM válido."""
         username = "testuser"
-        username_bytes = username.encode("utf-16le")
+        username_bytes = username.encode("latin-1")
 
         data = (
             bytes([122])  # PacketID GM_COMMANDS

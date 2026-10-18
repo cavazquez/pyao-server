@@ -47,7 +47,7 @@ class TaskGMCommands(Task):
         El formato esperado es:
         - Byte 0: PacketID (GM_COMMANDS = 122)
         - Byte 1: Subcomando GM (ej: WARP_CHAR)
-        - String: Username (UTF-16LE con length prefix)
+        - String: Username (u16 + Latin-1)
         - Int16: Map ID
         - Byte: X
         - Byte: Y

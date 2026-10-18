@@ -92,20 +92,19 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     # Username
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     # Password
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     # Char data (race, unknown int16, gender, job, unknown byte, head int16)
+    data.extend(bytes([0, 13, 0]))  # versión legacy
     data.append(1)  # race
-    data.extend((0).to_bytes(2, byteorder="little"))  # unknown int16
     data.append(1)  # gender
     data.append(1)  # job
-    data.append(1)  # unknown byte
     data.extend((18).to_bytes(2, byteorder="little"))  # head
     # Email
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
     # Home
     data.append(1)  # home
 
@@ -211,11 +210,11 @@ async def test_task_create_account_duplicate_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear handler
     create_account_handler = CreateAccountCommandHandler(
@@ -263,11 +262,11 @@ async def test_task_create_account_invalid_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
@@ -299,11 +298,11 @@ async def test_task_create_account_invalid_password() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
@@ -335,11 +334,11 @@ async def test_task_create_account_invalid_email() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear handler
     create_account_handler = CreateAccountCommandHandler(
@@ -385,11 +384,11 @@ async def test_task_create_account_no_redis() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear tarea sin handler (None)
     task = TaskCreateAccount(bytes(data), message_sender, create_account_handler=None)
@@ -459,21 +458,20 @@ async def test_task_create_account_unicode_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     # Username
-    data.extend(len(username.encode("utf-8")).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(len(username.encode("latin-1")).to_bytes(2, byteorder="little"))
+    data.extend(username.encode("latin-1"))
     # Password
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     # Char data
+    data.extend(bytes([0, 13, 0]))  # versión legacy
     data.append(1)  # race
-    data.extend((0).to_bytes(2, byteorder="little"))  # unknown int16
     data.append(1)  # gender
     data.append(1)  # job
-    data.append(1)  # unknown byte
     data.extend((18).to_bytes(2, byteorder="little"))  # head
     # Email
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
     # Home
     data.append(1)  # home
 

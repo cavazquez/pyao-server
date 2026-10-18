@@ -82,7 +82,7 @@ class ValidationHelpers:
             Username válido o None si hay error.
         """
         try:
-            username = context.reader.read_string().strip()
+            username = context.reader.read_ascii_string()
         except (ValueError, IndexError, UnicodeDecodeError, struct.error) as e:
             context.add_error(f"Error leyendo username: {e}")
             return None
@@ -105,7 +105,7 @@ class ValidationHelpers:
             Password válido o None si hay error.
         """
         try:
-            password = context.reader.read_string().strip()
+            password = context.reader.read_ascii_string()
         except (ValueError, IndexError, UnicodeDecodeError, struct.error) as e:
             context.add_error(f"Error leyendo password: {e}")
             return None
@@ -172,7 +172,7 @@ class ValidationHelpers:
         context: ValidationContext,
         min_length: int = 1,
         max_length: int = 255,
-        encoding: str = "utf-8",
+        encoding: str = "latin-1",
     ) -> str | None:
         """Lee y valida un string con longitud variable.
 

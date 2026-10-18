@@ -67,7 +67,7 @@ class TaskPartyMessage(Task):
 
             # Read message using PacketValidator (UTF-8, same as login)
             validator = PacketValidator(reader)
-            message = validator.read_string(min_length=1, max_length=255, encoding="utf-8")
+            message = validator.read_string(min_length=1, max_length=255, encoding="latin-1")
 
             if validator.has_errors() or message is None:
                 await self.message_sender.send_console_msg(
