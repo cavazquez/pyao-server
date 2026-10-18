@@ -278,7 +278,7 @@ async def scenario(settings: RedisConfig) -> dict[str, Any]:  # noqa: PLR0914, P
             await verify_own_session(peer, profile[2], profile[3], uid)
         first, second = peers
         # A permanece legacy; sólo B pide el catálogo extendido.
-        await second.send(b"\xfa\x01\xff\x00\x00\x00\x0f")
+        await second.send(b"\xfa\x01\x01\x00\x00\x00\x0f")
         await second.wait(
             lambda frames: any(frame[0] == ServerPacketID.SKILL_CATALOG for frame in frames)
         )
