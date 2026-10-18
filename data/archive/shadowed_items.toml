@@ -1,0 +1,308 @@
+# Definiciones que ItemCatalog ya sobrescribía; no forman parte del dataset activo.
+# Conservadas sin renumerar. Ver docs/guides/DATA_VALIDATION.md.
+
+# Origen: data/items/consumables/scrolls.toml
+[[item]]
+id = 1007
+Name = "Invocar Mascota"
+GrhIndex = 609
+ObjType = 24
+Agarrable = 0
+Crucial = 1
+HechizoIndex = 46
+Valor = 100000
+
+
+# Origen: data/items/equipment/helmets.toml
+[[item]]
+id = 1001
+Name = "Casco de Águila"
+GrhIndex = 20238
+ObjType = 17
+Agarrable = 0
+Anim = 14
+ClasesProhibidas = ['PIRATA']
+Crucial = 0
+MaxDef = 5
+MinDef = 1
+NumRopaje = 2
+Valor = 2500
+
+
+# Origen: data/items/equipment/helmets.toml
+[[item]]
+id = 1002
+Name = "Casco de Lobo"
+GrhIndex = 20066
+ObjType = 17
+Agarrable = 0
+Anim = 11
+ClasesProhibidas = ['MAGO']
+Crucial = 1
+MaxDef = 7
+MinDef = 3
+NumRopaje = 2
+Valor = 4200
+
+
+# Origen: data/items/equipment/helmets.toml
+[[item]]
+id = 1003
+Name = "Casco de Oso"
+GrhIndex = 20067
+ObjType = 17
+Agarrable = 0
+Anim = 12
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'PIRATA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 6
+DefensaMagicaMin = 4
+MaxDef = 15
+MinDef = 10
+NumRopaje = 2
+Valor = 10500
+
+
+# Origen: data/items/equipment/helmets.toml
+[[item]]
+id = 1004
+Name = "Casco de Tigre"
+GrhIndex = 20068
+ObjType = 17
+Agarrable = 0
+Anim = 13
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'PIRATA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 12
+DefensaMagicaMin = 8
+MaxDef = 15
+MinDef = 10
+NumRopaje = 2
+Valor = 18500
+
+
+# Origen: data/items/equipment/helmets.toml
+[[item]]
+id = 1010
+Name = "Sombrero Pirata"
+GrhIndex = 22034
+ObjType = 17
+Agarrable = 0
+Anim = 15
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'DRUIDA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+DefensaMagicaMax = 9
+DefensaMagicaMin = 5
+MaxDef = 6
+MinDef = 2
+Valor = 25000
+
+
+# Origen: data/items/equipment/weapons.toml
+[[item]]
+id = 1000
+Name = "Antorcha Olímpica de Mano"
+GrhIndex = 20460
+ObjType = 2
+Agarrable = 0
+Anim = 33
+Crucial = 0
+MaxHit = 8
+MinHit = 1
+RazaEnanaAnim = 69
+Valor = 210
+
+
+# Origen: data/items/equipment/weapons.toml
+[[item]]
+id = 1005
+Name = "Hacha de leña Elfica"
+GrhIndex = 603
+ObjType = 2
+Agarrable = 0
+Anim = 37
+Crucial = 1
+LingH = 15
+LingO = 0
+LingP = 0
+MaxHit = 8
+MinHit = 3
+SkHerreria = 30
+Valor = 1750
+
+
+# Origen: data/items/equipment/weapons.toml
+[[item]]
+id = 1009
+Name = "Cuchillas"
+GrhIndex = 2341
+ObjType = 2
+Acuchilla = 1
+Agarrable = 0
+Anim = 38
+ClasesProhibidas = ['MAGO', 'PALADIN', 'LADRON', 'BARDO', 'DRUIDA', 'GUERRERO', 'ASESINO', 'BANDIDO', 'CAZADOR', 'CLERIGO', 'TRABAJADOR']
+Crucial = 1
+LingH = 1
+MaxHit = 16
+MinHit = 7
+Proyectil = 1
+RazaEnanaAnim = 39
+SkHerreria = 10
+Valor = 50
+
+
+# Origen: data/items/misc/other.toml
+[[item]]
+id = 1008
+Name = "Árbol élfico"
+GrhIndex = 18802
+ObjType = 36
+Agarrable = 1
+
+
+# Origen: data/items/resources/wood.toml
+[[item]]
+id = 1006
+Name = "Leña Elfica"
+GrhIndex = 1999
+ObjType = 14
+Agarrable = 0
+Crucial = 0
+Valor = 5
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 832
+Name = "Arbusto"
+GrhIndex = 1536
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 833
+Name = "Taza"
+GrhIndex = 1537
+ObjType = 20
+Agarrable = 0
+Crucial = 0
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 834
+Name = "Fósil"
+GrhIndex = 1538
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 835
+Name = "Fósil"
+GrhIndex = 1539
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 836
+Name = "Cuadro"
+GrhIndex = 2619
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 837
+Name = "Cuadro"
+GrhIndex = 2620
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 838
+Name = "Cuadro"
+GrhIndex = 2621
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 839
+Name = "Cuadro"
+GrhIndex = 2622
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 840
+Name = "Cuadro"
+GrhIndex = 2623
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 841
+Name = "Cuadro"
+GrhIndex = 2624
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 842
+Name = "Cuadro"
+GrhIndex = 2625
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 843
+Name = "Cuadro"
+GrhIndex = 2626
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 844
+Name = "Cuadro"
+GrhIndex = 2627
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 845
+Name = "Cuadro"
+GrhIndex = 2628
+ObjType = 20
+Agarrable = 1
+
+
+# Origen: data/items/world_objects/furniture.toml
+[[item]]
+id = 846
+Name = "Cuadro"
+GrhIndex = 2629
+ObjType = 20
+Agarrable = 1
+

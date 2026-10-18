@@ -16,7 +16,7 @@ data/
 │   ├── carpentry.toml    # Recetas de carpintería
 │   └── materials.toml    # Materiales para crafting
 │
-├── items/                # Catálogo de items (1,096 items)
+├── items/                # Catálogo activo de items (1070 IDs únicos)
 │   ├── consumables/      # Comida, pociones, bebidas, scrolls
 │   ├── equipment/        # Armas, armaduras, escudos, cascos
 │   ├── misc/             # Teleports, flechas, barcos
@@ -46,7 +46,7 @@ data/
 | Categoría | Archivos | Registros |
 |-----------|----------|-----------|
 | NPCs | 7 | 336 totales |
-| Items | 30 | 1,096 |
+| Items activos | 30 | 1070 |
 | Hechizos | 1 | 45 |
 | Clases | 2 | 11 |
 | Crafting | 4 | ~150 recetas |
@@ -56,10 +56,10 @@ data/
 
 ### Cargar NPCs
 ```python
-from src.services.game.npc_service import NPCService
+from src.models.npc_catalog import NPCCatalog
 
-service = NPCService(Path('data'))
-print(f'{len(service.all_npcs)} NPCs cargados')
+catalog = NPCCatalog()
+print(f'{len(catalog.get_all_npc_ids())} NPCs cargados')
 ```
 
 ### Cargar Items
@@ -84,3 +84,5 @@ spell = catalog.get_spell_data(2)  # Dardo Mágico
 - El formato TOML es validado automáticamente por `tomllib`
 - Los IDs deben ser únicos dentro de cada catálogo
 - Los archivos se cargan al iniciar el servidor
+
+La validación previa al arranque y sus fallbacks están documentados en [DATA_VALIDATION.md](DATA_VALIDATION.md).

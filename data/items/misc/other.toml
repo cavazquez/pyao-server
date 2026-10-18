@@ -74,10 +74,3 @@ MinHit = 1
 MochilaType = 1
 Valor = 10000
 
-[[item]]
-id = 1008
-Name = "Árbol élfico"
-GrhIndex = 18802
-ObjType = 36
-Agarrable = 1
-

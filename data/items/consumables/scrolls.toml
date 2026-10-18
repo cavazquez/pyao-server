@@ -344,13 +344,3 @@ Crucial = 0
 HechizoIndex = 43
 Valor = 6000000
 
-[[item]]
-id = 1007
-Name = "Invocar Mascota"
-GrhIndex = 609
-ObjType = 24
-Agarrable = 0
-Crucial = 1
-HechizoIndex = 46
-Valor = 100000
-
