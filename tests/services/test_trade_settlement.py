@@ -78,11 +78,39 @@ async def test_durability_requires_same_dedicated_connection():
     dedicated = AsyncMock()
     dedicated.execute_command.return_value = [1, 0]
     redis.client = lambda: dedicated
-    dedicated.__aenter__.return_value = dedicated
     await require_durable(redis)
+    dedicated.initialize.assert_awaited_once()
+    dedicated.aclose.assert_awaited_once()
     dedicated.set.assert_awaited_once()
     dedicated.execute_command.assert_awaited_once_with("WAITAOF", 1, 0, 5000)
     redis.set.assert_not_awaited()
     dedicated.execute_command.return_value = [0, 0]
     with pytest.raises(RuntimeError, match="AOF"):
         await require_durable(redis)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("phase", ["initialize", "set", "execute_command"])
+async def test_cancelled_durability_returns_dedicated_connection(redis_client, monkeypatch, phase):
+    """Una desconexión devuelve la conexión aun durante la entrada o la barrera AOF."""
+    root = redis_client.redis
+    dedicated = root.client()
+    reached = asyncio.Event()
+    original = getattr(dedicated, phase)
+
+    async def interrupt(*args: object, **kwargs: object) -> None:
+        if phase != "execute_command":
+            await original(*args, **kwargs)
+        reached.set()
+        await asyncio.Event().wait()
+
+    monkeypatch.setattr(root, "client", lambda: dedicated)
+    monkeypatch.setattr(dedicated, phase, interrupt)
+    task = asyncio.create_task(require_durable(root))
+    await asyncio.wait_for(reached.wait(), timeout=5)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    assert dedicated.connection is None
+    assert not root.connection_pool._in_use_connections
+    assert await root.ping()
