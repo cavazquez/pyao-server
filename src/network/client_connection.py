@@ -5,9 +5,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Constante para el límite de bytes a mostrar en logs
-MAX_LOG_BYTES = 32
-
 
 class ClientConnection:
     """Encapsula la conexión con un cliente y provee métodos para comunicación."""
@@ -32,14 +29,7 @@ class ClientConnection:
         """
         self.writer.write(data)
         await self.writer.drain()
-        hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
-        logger.debug(
-            "Enviados %d bytes a %s: %s%s",
-            len(data),
-            self.address,
-            hex_data,
-            "..." if len(data) > MAX_LOG_BYTES else "",
-        )
+        logger.debug("Enviados %d bytes a %s", len(data), self.address)
 
     async def receive(self, max_bytes: int = 1024) -> bytes:
         """Recibe datos del cliente.
@@ -52,14 +42,7 @@ class ClientConnection:
         """
         data = await self.reader.read(max_bytes)
         if data:
-            hex_data = " ".join(f"{byte:02X}" for byte in data[:MAX_LOG_BYTES])
-            logger.debug(
-                "Recibidos %d bytes de %s: %s%s",
-                len(data),
-                self.address,
-                hex_data,
-                "..." if len(data) > MAX_LOG_BYTES else "",
-            )
+            logger.debug("Recibidos %d bytes de %s", len(data), self.address)
         return data
 
     def close(self) -> None:

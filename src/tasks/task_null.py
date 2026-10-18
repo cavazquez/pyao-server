@@ -18,19 +18,6 @@ class TaskNull(Task):
             len(self.data),
         )
 
-        # Mostrar los primeros bytes en hexadecimal
-        hex_preview = " ".join(f"{byte:02X}" for byte in self.data[:32])
-        logger.warning("Primeros bytes (hex): %s", hex_preview)
-
-        # Mostrar el primer byte como posible PacketID
-        if len(self.data) > 0:
-            packet_id = self.data[0]
-            logger.warning("Posible PacketID: %d (0x%02X)", packet_id, packet_id)
-
-        # Mostrar representación ASCII (caracteres imprimibles)
-        ascii_min = 32
-        ascii_max = 127
-        ascii_repr = "".join(
-            chr(byte) if ascii_min <= byte < ascii_max else "." for byte in self.data[:64]
-        )
-        logger.warning("Representación ASCII: %s", ascii_repr)
+        # Un fragmento TCP desconocido también puede contener credenciales.
+        if self.data:
+            logger.warning("Posible PacketID: %d", self.data[0])

@@ -95,16 +95,10 @@ class PacketReader:
         self.ensure_remaining_bytes(length, "read_string")
         string_bytes = self.data[self.offset : self.offset + length]
 
-        logger.debug(
-            "read_string: length=%d, bytes=%s",
-            length,
-            string_bytes.hex() if string_bytes else "empty",
-        )
+        logger.debug("read_string: length=%d", length)
 
         value = string_bytes.decode("utf-16-le")
         self.offset += length
-
-        logger.debug("read_string: decoded='%s'", value)
 
         return value
 
@@ -132,17 +126,8 @@ class PacketReader:
         self.ensure_remaining_bytes(length, "read_ascii_string")
         string_bytes = self.data[self.offset : self.offset + length]
 
-        logger.debug(
-            "read_ascii_string: length=%d, bytes=%s, hex=%s",
-            length,
-            string_bytes,
-            string_bytes.hex() if string_bytes else "empty",
-        )
-
         value = string_bytes.decode("latin-1")  # Latin-1 soporta caracteres especiales
         self.offset += length
-
-        logger.debug("read_ascii_string: decoded='%s' (len=%d)", value, len(value))
 
         return value
 
@@ -186,16 +171,7 @@ class PacketReader:
         string_bytes = self.data[self.offset : self.offset + length]
         self.offset += length
 
-        logger.debug(
-            "read_godot_put_string: bytes=%s, hex=%s",
-            string_bytes,
-            string_bytes.hex() if string_bytes else "empty",
-        )
-
-        value = string_bytes.decode(encoding)
-        logger.debug("read_godot_put_string: decoded='%s' (len=%d)", value, len(value))
-
-        return value
+        return string_bytes.decode(encoding)
 
     def remaining_bytes(self) -> int:
         """Retorna el número de bytes restantes sin leer.

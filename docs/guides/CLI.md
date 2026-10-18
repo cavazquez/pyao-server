@@ -294,3 +294,21 @@ con menor prioridad que los nombres con doble guion bajo. El pool de redis-py
 recibe el límite configurado. Un TOML o entorno inválido aborta el arranque antes
 de abrir el socket del juego; corregí el valor y volvé a iniciar. No hay sustitución
 silenciosa por otra base ni por localhost.
+
+### Diagnóstico sin credenciales
+
+Los logs de transporte conservan dirección, cantidad de bytes y tipo de paquete.
+Los lectores de strings sólo informan longitudes y offsets; ni DEBUG vuelca
+contenido, contraseñas, hashes o fragmentos desconocidos. Se aplica también a
+TCP fragmentado: filtrar sólo por el primer ID de paquete no protege el secreto
+que llega en un read posterior. Las pruebas usan canarios sintéticos en INFO y
+DEBUG y buscan texto y hex UTF-8/Latin-1/UTF-16.
+
+Las versiones anteriores podían registrar contraseñas en altas y lecturas de red.
+Para retirar esos logs históricos, detener su recolección y revisar tanto
+`logs/` como rotaciones, copias y destinos externos de observabilidad; restringir
+su acceso y eliminarlos conforme a la retención acordada. Comprobar las copias
+en cada destino sin imprimir sus payloads. Cambiar las credenciales que hayan
+quedado expuestas y registrar la fecha de retiro, no su contenido. La actualización
+no borra automáticamente archivos del operador ni garantiza el borrado físico
+de copias fuera del servidor.

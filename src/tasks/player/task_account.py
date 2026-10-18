@@ -87,7 +87,7 @@ class TaskCreateAccount(Task):
                 )
                 return None
 
-            logger.debug("Username: %s", username)
+            logger.debug("Username parseado (%d caracteres)", len(username))
             logger.debug("Password parsed")
 
             # Actualizar offset para continuar leyendo datos del personaje
@@ -128,7 +128,7 @@ class TaskCreateAccount(Task):
             if email is None:
                 email = ""
             offset = reader.offset
-            logger.debug("Email: %s, offset: %d", email, offset)
+            logger.debug("Email parseado, offset: %d", offset)
 
             # Leer home (último byte) - validar que haya al menos 1 byte más
             # Leer home (último byte)
@@ -137,7 +137,7 @@ class TaskCreateAccount(Task):
                 logger.debug("Home: %d", char_data["home"])
 
         except (ValueError, UnicodeDecodeError) as e:
-            logger.warning("Error parseando paquete de creación de cuenta: %s", e)
+            logger.warning("Error parseando creación de cuenta: %s", type(e).__name__)
             return None
         else:
             return (username, password, email, char_data)
@@ -149,12 +149,8 @@ class TaskCreateAccount(Task):
         """
         logger.info("TaskCreateAccount.execute() llamado")
 
-        # Log de datos recibidos en hexadecimal para debugging
-        hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
         logger.info(
-            "Datos recibidos para creación de cuenta (%d bytes): %s",
-            len(self.data),
-            hex_data,
+            "Creación de cuenta: %d bytes desde %s", len(self.data), self.message_sender.address
         )
 
         # Parsear datos del paquete
