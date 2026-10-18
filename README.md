@@ -32,6 +32,8 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 - ![pytest](https://img.shields.io/badge/pytest-testing-0A9EDC?logo=pytest&logoColor=white) - Framework de testing
 - ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?logo=github-actions&logoColor=white) - Integración continua
 
+Los command handlers se crean por petición: cada instancia y sus subhandlers conservan el emisor y la sesión de esa conexión durante todos sus `await`. `HandlerRegistry` comparte servicios, pero no almacena handlers mutables entre jugadores.
+
 ## 🚀 Inicio Rápido
 
 ### Requisitos

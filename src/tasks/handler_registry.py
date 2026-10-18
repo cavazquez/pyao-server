@@ -361,7 +361,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
 
 
 class HandlerRegistry:
-    """Registry para gestionar la creación y caché de command handlers."""
+    """Crea handlers por petición con dependencias de sesión estables."""
 
     def __init__(self, deps: TaskDependencies) -> None:
         """Inicializa el registry.
@@ -370,7 +370,6 @@ class HandlerRegistry:
             deps: Dependencias compartidas de la aplicación.
         """
         self.deps = deps
-        self._cache: dict[str, CommandHandler] = {}
 
     def get(
         self,
@@ -378,7 +377,7 @@ class HandlerRegistry:
         message_sender: MessageSender,
         session_data: dict[str, Any] | None = None,
     ) -> Any:  # noqa: ANN401 - retorna handler específico, tipo exacto no inferible
-        """Obtiene o crea un handler por nombre.
+        """Crea un handler que pertenece exclusivamente a esta petición.
 
         Args:
             name: Nombre del handler (ej: "attack", "walk").
@@ -396,20 +395,9 @@ class HandlerRegistry:
             msg = f"Handler '{name}' no registrado"
             raise KeyError(msg)
 
-        handler = self._cache.get(name)
-
-        if handler is None:
-            # Construir kwargs de dependencias
-            kwargs = self._build_kwargs(config, message_sender, session_data)
-            handler = config.handler_class(**kwargs)
-            self._cache[name] = handler
-        else:
-            # Actualizar message_sender y session_data si es necesario
-            handler.message_sender = message_sender
-            if config.needs_session_data and session_data is not None:
-                handler.session_data = session_data  # type: ignore[attr-defined]
-
-        return handler
+        # Los subhandlers capturan el emisor y la sesión en su constructor.
+        # Mutar una instancia compartida cruza conexiones al suspenderse un await.
+        return config.handler_class(**self._build_kwargs(config, message_sender, session_data))
 
     def _build_kwargs(
         self,
@@ -459,5 +447,4 @@ class HandlerRegistry:
         return mappings.get(dep_key, dep_key)
 
     def clear_cache(self) -> None:
-        """Limpia la caché de handlers."""
-        self._cache.clear()
+        """Compatibilidad: no hay handlers de sesión almacenados en caché."""
