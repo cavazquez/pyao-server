@@ -53,6 +53,7 @@ class ClientConnection:
         self.owner_task: asyncio.Task[object] | None = None
         self.auth_limiter: AuthLimiter | None = None
         self.auth_attempts = ConnectionAttempts()
+        self.password_status_after = 0.0
         self.session_redis: Redis | None = None
         self.session_lease_seconds = 90
         self._session_lease: SessionLease | None = None
@@ -80,6 +81,19 @@ class ClientConnection:
             return False
         if self.auth_limiter is None:
             # Sólo conexiones de prueba/uso aislado carecen del limitador del servidor.
+            return True
+        ip = str(self.address[0]) if isinstance(self.address, tuple) else str(self.address)
+        return self.auth_limiter.allow(ip, username, self.auth_attempts)
+
+    def allow_password_change(self, username: str) -> bool:
+        """Reutiliza el presupuesto de cuenta/IP/conexión después de autenticar.
+
+        Returns:
+            Si hay presupuesto para verificar y cambiar la contraseña.
+        """
+        if not self.is_authenticated:
+            return False
+        if self.auth_limiter is None:
             return True
         ip = str(self.address[0]) if isinstance(self.address, tuple) else str(self.address)
         return self.auth_limiter.allow(ip, username, self.auth_attempts)

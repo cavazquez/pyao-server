@@ -117,7 +117,7 @@ class ClientPacketID(IntEnum):
     # CHANGE_DESCRIPTION = 104
     # GUILD_VOTE = 105
     # PUNISHMENTS = 106
-    # CHANGE_PASSWORD = 107
+    CHANGE_PASSWORD = 107  # Cambio/query versionado con capacidad 8
     # GAMBLE = 108
     # INQUIRY_VOTE = 109
     # LEAVE_FACTION = 110
@@ -256,5 +256,6 @@ class ServerPacketID(IntEnum):
     CANCEL_OFFER_ITEM = 106
     TRADE_STATE = 252  # Snapshot optativo de ambas ofertas
     CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
+    PASSWORD_CHANGE_RESULT = 253  # Resultado optativo sin secretos
     SKILL_ALLOCATION_STATE = 254  # Resultado y snapshot optativos
     SKILL_CATALOG = 251  # Catálogo v1 negociado con 22 habilidades

@@ -46,6 +46,41 @@ class Decision:
     writes: dict[str, str | dict[str, str]]
 
 
+def _request_fingerprint(resources: tuple[Resource, ...], request: dict[str, Any]) -> str:
+    return sha256(
+        json.dumps(
+            {"request": request, "resources": [(r.key, r.kind) for r in resources]},
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
+
+
+async def read_resource_receipt(
+    redis: Redis,
+    resources: tuple[Resource, ...],
+    identity: str,
+    request: dict[str, Any],
+) -> dict[str, Any] | None:
+    """Consulta el resultado sin escribir ni permitir cruces de cuenta/recurso.
+
+    Returns:
+        Resultado original o None si no existe un recibo vigente.
+
+    Raises:
+        ValueError: Si el ID pertenece a otra petición o no cumple el formato.
+    """
+    validate_operation_id(identity)
+    saved = await redis.get(f"operation:resources:{identity}")
+    if saved is None:
+        return None
+    receipt = json.loads(saved)
+    if receipt["request"] != _request_fingerprint(resources, request):
+        message = "Identificador reutilizado para otra petición"
+        raise ValueError(message)
+    return cast("dict[str, Any]", receipt["result"])
+
+
 async def transact(
     redis: Redis,
     resources: tuple[Resource, ...],
@@ -87,13 +122,7 @@ async def transact(
     if len(by_key) != len(resources) or receipt_key in by_key:
         msg = "Recursos duplicados o reservados"
         raise ValueError(msg)
-    fingerprint = sha256(
-        json.dumps(
-            {"request": request, "resources": [(r.key, r.kind) for r in resources]},
-            sort_keys=True,
-            separators=(",", ":"),
-        ).encode()
-    ).hexdigest()
+    fingerprint = _request_fingerprint(resources, request)
     for attempt in range(MAX_TRANSACTION_ATTEMPTS):
         async with redis.pipeline() as pipe:
             try:

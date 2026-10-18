@@ -972,9 +972,30 @@
         "fields": []
       },
       "107": {
-        "name": "ChangePassword",
-        "status": "unsupported",
-        "fields": []
+        "name": "CHANGE_PASSWORD",
+        "status": "supported",
+        "requires_capability": 8,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "operation_id",
+            "type": "str16",
+            "max_bytes": 46
+          },
+          {
+            "name": "current_password",
+            "type": "str16",
+            "max_bytes": 32
+          },
+          {
+            "name": "new_password",
+            "type": "str16",
+            "max_bytes": 32
+          }
+        ]
       },
       "108": {
         "name": "Gamble",
@@ -3023,6 +3044,37 @@
           {
             "name": "percentage_22",
             "type": "u8"
+          }
+        ]
+      },
+      "253": {
+        "name": "PASSWORD_CHANGE_RESULT",
+        "status": "supported",
+        "requires_capability": 8,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "operation_id",
+            "type": "str16",
+            "max_bytes": 46
+          },
+          {
+            "name": "next_operation_id",
+            "type": "str16",
+            "min_bytes": 43,
+            "max_bytes": 46
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 160
           }
         ]
       }

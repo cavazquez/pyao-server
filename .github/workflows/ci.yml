@@ -106,6 +106,7 @@ jobs:
           cat artifacts/npc-commerce-smoke.json
           timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.ground_atomic_smoke > artifacts/ground-smoke.json 2> artifacts/ground-smoke.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.skill_allocation_smoke > artifacts/skill-allocation-smoke.json 2> artifacts/skill-allocation-smoke.log
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.password_change_smoke > artifacts/password-change-smoke.json 2> artifacts/password-change-smoke.log
           cat artifacts/ground-smoke.json
       - name: Preserve integration evidence even on failure
         if: always()

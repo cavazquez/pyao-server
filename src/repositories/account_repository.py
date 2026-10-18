@@ -117,7 +117,11 @@ class AccountRepository:
             return False
 
         stored_hash = account_data.get("password_hash", "")
-        return await get_password_executor().run(verify_password_hash, password, stored_hash)
+        if not await get_password_executor().run(verify_password_hash, password, stored_hash):
+            return False
+        # La credencial no puede haber cambiado durante el trabajo de Argon2.
+        current = await self.get_account(username)
+        return current is not None and current.get("password_hash", "") == stored_hash
 
     async def is_gm(self, username: str) -> bool:
         """Verifica si un usuario es Game Master.
