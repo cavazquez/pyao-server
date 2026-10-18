@@ -8,6 +8,8 @@ import pytest
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.tasks.handler_registry import HANDLER_CONFIGS, HandlerConfig, HandlerRegistry
+from src.tasks.player.task_account import TaskCreateAccount
+from src.tasks.player.task_login import TaskLogin
 
 
 class SuspendedLogin(CommandHandler):
@@ -89,3 +91,16 @@ def test_real_login_subhandlers_and_session_identity():
             handler.finalization_handler,
         ):
             assert subhandler.message_sender is sender
+
+
+@pytest.mark.parametrize("name", ["login", "create_account"])
+def test_initially_empty_session_is_kept_through_authentication(name):
+    """Un alta sin tirada previa no publica el login en un diccionario descartado."""
+    registry = HandlerRegistry(Mock())
+    session = {}
+    handler = registry.get(name, Mock(), session)
+    assert handler.session_data is session
+    if name == "create_account":
+        assert handler.finalization_handler.session_data is session
+    for task_type in [TaskLogin, TaskCreateAccount]:
+        assert task_type(b"", Mock(), session_data=session).session_data is session
