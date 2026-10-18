@@ -27,7 +27,7 @@ class Capability(IntFlag):
 
 
 # Se habilitan sólo al integrar la implementación y sus pruebas de cada feature.
-SUPPORTED_CAPABILITIES = Capability.NONE
+SUPPORTED_CAPABILITIES = Capability.SKILLS_CATALOG
 
 
 @dataclass

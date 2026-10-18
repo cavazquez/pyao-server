@@ -2209,6 +2209,285 @@
             "type": "i32"
           }
         ]
+      },
+      "251": {
+        "name": "SKILL_CATALOG",
+        "status": "supported",
+        "requires_capability": 1,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "free_points",
+            "type": "i16"
+          },
+          {
+            "name": "id_1",
+            "type": "u8"
+          },
+          {
+            "name": "level_1",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_1",
+            "type": "u8"
+          },
+          {
+            "name": "id_2",
+            "type": "u8"
+          },
+          {
+            "name": "level_2",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_2",
+            "type": "u8"
+          },
+          {
+            "name": "id_3",
+            "type": "u8"
+          },
+          {
+            "name": "level_3",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_3",
+            "type": "u8"
+          },
+          {
+            "name": "id_4",
+            "type": "u8"
+          },
+          {
+            "name": "level_4",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_4",
+            "type": "u8"
+          },
+          {
+            "name": "id_5",
+            "type": "u8"
+          },
+          {
+            "name": "level_5",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_5",
+            "type": "u8"
+          },
+          {
+            "name": "id_6",
+            "type": "u8"
+          },
+          {
+            "name": "level_6",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_6",
+            "type": "u8"
+          },
+          {
+            "name": "id_7",
+            "type": "u8"
+          },
+          {
+            "name": "level_7",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_7",
+            "type": "u8"
+          },
+          {
+            "name": "id_8",
+            "type": "u8"
+          },
+          {
+            "name": "level_8",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_8",
+            "type": "u8"
+          },
+          {
+            "name": "id_9",
+            "type": "u8"
+          },
+          {
+            "name": "level_9",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_9",
+            "type": "u8"
+          },
+          {
+            "name": "id_10",
+            "type": "u8"
+          },
+          {
+            "name": "level_10",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_10",
+            "type": "u8"
+          },
+          {
+            "name": "id_11",
+            "type": "u8"
+          },
+          {
+            "name": "level_11",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_11",
+            "type": "u8"
+          },
+          {
+            "name": "id_12",
+            "type": "u8"
+          },
+          {
+            "name": "level_12",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_12",
+            "type": "u8"
+          },
+          {
+            "name": "id_13",
+            "type": "u8"
+          },
+          {
+            "name": "level_13",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_13",
+            "type": "u8"
+          },
+          {
+            "name": "id_14",
+            "type": "u8"
+          },
+          {
+            "name": "level_14",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_14",
+            "type": "u8"
+          },
+          {
+            "name": "id_15",
+            "type": "u8"
+          },
+          {
+            "name": "level_15",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_15",
+            "type": "u8"
+          },
+          {
+            "name": "id_16",
+            "type": "u8"
+          },
+          {
+            "name": "level_16",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_16",
+            "type": "u8"
+          },
+          {
+            "name": "id_17",
+            "type": "u8"
+          },
+          {
+            "name": "level_17",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_17",
+            "type": "u8"
+          },
+          {
+            "name": "id_18",
+            "type": "u8"
+          },
+          {
+            "name": "level_18",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_18",
+            "type": "u8"
+          },
+          {
+            "name": "id_19",
+            "type": "u8"
+          },
+          {
+            "name": "level_19",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_19",
+            "type": "u8"
+          },
+          {
+            "name": "id_20",
+            "type": "u8"
+          },
+          {
+            "name": "level_20",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_20",
+            "type": "u8"
+          },
+          {
+            "name": "id_21",
+            "type": "u8"
+          },
+          {
+            "name": "level_21",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_21",
+            "type": "u8"
+          },
+          {
+            "name": "id_22",
+            "type": "u8"
+          },
+          {
+            "name": "level_22",
+            "type": "u8"
+          },
+          {
+            "name": "percentage_22",
+            "type": "u8"
+          }
+        ]
       }
     }
   },

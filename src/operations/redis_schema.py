@@ -30,6 +30,7 @@ from src.operations.redis_backup import (
 )
 from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox
+from src.operations.skill_migration import skill_repairs
 
 
 def connection(settings: RedisConfig, *, binary: bool = False) -> Redis:
@@ -76,6 +77,19 @@ def release_lock(client: Redis, token: str) -> None:
 
 
 MANA_SCHEMA_VERSION = 2
+SKILL_SCHEMA_VERSION = 3
+
+
+def migration_fields(client: Redis, current: int) -> dict[str, dict[str, str]]:
+    """Calcula todos los campos que se van a confirmar juntos.
+
+    Returns:
+        Cambios de maná/progreso pendientes según la versión de origen.
+    """
+    result = mana_repairs(client) if current < MANA_SCHEMA_VERSION else {}
+    if current < SKILL_SCHEMA_VERSION:
+        result.update(skill_repairs(client))
+    return result
 
 
 def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[str]:
@@ -104,10 +118,10 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                 ]
                 if not pending:
                     return []
-                repairs = mana_repairs(client) if current < MANA_SCHEMA_VERSION else {}
+                repairs = migration_fields(client, current)
                 if repairs:
                     pipe.watch(*repairs)  # type: ignore[no-untyped-call]
-                    revalidated = mana_repairs(client)
+                    revalidated = migration_fields(client, current)
                     if revalidated.keys() != repairs.keys():
                         continue
                     repairs = revalidated
@@ -123,7 +137,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                             "to": target,
                             "backup_sha256": backup_digest,
                             "applied_at": datetime.now(UTC).isoformat(),
-                            "mana_repaired": len(repairs) if target == MANA_SCHEMA_VERSION else 0,
+                            "changed_hashes": len(repairs),
                         }
                     )
                     pipe.hset(
@@ -203,7 +217,10 @@ def selftest() -> dict[str, Any]:
                 mapping={"max_mana": "500000", "min_mana": "400000", "gold": "1234"},
             )
             client.hset("player:1:inventory", mapping={"slot_30": "1:2"})
-            client.hset("player:1:skills", mapping={"points": "4", "skill_1": "37"})
+            client.hset(
+                "player:1:skills",
+                mapping={"points": "4", "skill_1": "37", "magia": "10", "talar": "275"},
+            )
         path = Path(directory) / "before.rdb"
         create_backup(settings, path)
         require(migrate(settings, path)["applied"] == list(MIGRATIONS.values()), "pasos ordenados")
@@ -220,6 +237,11 @@ def selftest() -> dict[str, Any]:
             )
             require(client.hget("player:1:inventory", "slot_30") == "1:2", "objetos preservados")
             require(client.hget("player:1:skills", "points") == "4", "progreso preservado")
+            require(
+                client.hmget("player:1:skills", ["level:magia", "level:talar", "xp:talar", "talar"])
+                == ["10", "2", "275", "275"],
+                "XP/nivel separados sin borrar legado",
+            )
             client.hset(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION + 1))
         try:
             migrate(settings, path)
@@ -232,6 +254,7 @@ def selftest() -> dict[str, Any]:
             "legacy_migrated": True,
             "progress_preserved": True,
             "mana_repaired_with_audit": True,
+            "skill_progress_preserved": True,
             "idempotent": True,
             "future_rejected": True,
             "production_data_used": False,

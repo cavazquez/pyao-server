@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 SCHEMA_KEY = "schema:state"
 MIGRATION_LOCK_KEY = "schema:migration:lock"
-CURRENT_SCHEMA_VERSION = 2
-MIGRATIONS = {1: "adopt-legacy-layout", 2: "normalize-mana-int16"}
+CURRENT_SCHEMA_VERSION = 3
+MIGRATIONS = {1: "adopt-legacy-layout", 2: "normalize-mana-int16", 3: "separate-skill-progress"}
 
 
 class SchemaMigrationError(RuntimeError):

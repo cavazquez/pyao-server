@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "max_level": 100,
+  "default_xp_per_level": 100,
+  "legacy_wire_order": [
+    1,
+    21,
+    9,
+    22,
+    12,
+    13,
+    15,
+    14,
+    8
+  ],
+  "skills": [
+    {
+      "id": 1,
+      "name": "Magia",
+      "key": "magia",
+      "implemented": true,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 2,
+      "name": "Robar",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 3,
+      "name": "Tácticas",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 4,
+      "name": "Armas",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 5,
+      "name": "Meditar",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 6,
+      "name": "Apuñalar",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 7,
+      "name": "Ocultarse",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 8,
+      "name": "Supervivencia",
+      "key": "supervivencia",
+      "implemented": true,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 9,
+      "name": "Talar",
+      "key": "talar",
+      "implemented": true,
+      "legacy_semantics": "experience"
+    },
+    {
+      "id": 10,
+      "name": "Comerciar",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 11,
+      "name": "Defensa",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 12,
+      "name": "Pesca",
+      "key": "pesca",
+      "implemented": true,
+      "legacy_semantics": "experience"
+    },
+    {
+      "id": 13,
+      "name": "Minería",
+      "key": "mineria",
+      "implemented": true,
+      "legacy_semantics": "experience"
+    },
+    {
+      "id": 14,
+      "name": "Carpintería",
+      "key": "carpinteria",
+      "implemented": false,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 15,
+      "name": "Herrería",
+      "key": "herreria",
+      "implemented": false,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 16,
+      "name": "Liderazgo",
+      "key": "liderazgo",
+      "implemented": true,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 17,
+      "name": "Domar",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 18,
+      "name": "Proyectiles",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 19,
+      "name": "Wrestling",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 20,
+      "name": "Navegación",
+      "key": null,
+      "implemented": false,
+      "legacy_semantics": "unimplemented"
+    },
+    {
+      "id": 21,
+      "name": "Robustez",
+      "key": "robustez",
+      "implemented": true,
+      "legacy_semantics": "level"
+    },
+    {
+      "id": 22,
+      "name": "Agilidad",
+      "key": "agilidad",
+      "implemented": true,
+      "legacy_semantics": "level"
+    }
+  ]
+}

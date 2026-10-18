@@ -189,3 +189,16 @@ una respuesta perdida se puede repetir sin duplicar pasos ni auditoría. Un dato
 numérico requiere inspección y aborta antes del commit. El arranque rechaza esquema
 v1 hasta completar esta migración explícita. La autoverificación descartable sigue
 siendo `uv run python -m src.operations.redis_schema selftest`.
+
+### Migración v3: progreso de habilidades
+
+La versión v3 agrega niveles y XP separados según `src/network/protocol/skills.json`.
+Conserva todos los campos originales, los puntos disponibles y las claves desconocidas.
+Por ejemplo, `magia=10` conserva nivel 10; `talar=275` conserva XP 275 y representa
+nivel 2 con 75% usando el umbral 100. Robustez y agilidad mantienen sus IDs propios.
+El umbral efectivo se guarda en cada perfil. No se repara ni se migra durante envíos.
+
+Usar el procedimiento anterior con el servidor detenido y backup verificado;
+`redis_schema migrate` aplica los pasos pendientes hasta v3 en una transacción.
+Repetir no convierte otra vez los valores históricos. `redis_schema selftest`
+comprueba también que XP, niveles, puntos, oro e inventario sobreviven a la migración.

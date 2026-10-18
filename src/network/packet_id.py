@@ -254,3 +254,4 @@ class ServerPacketID(IntEnum):
     STOP_WORKING = 105
     CANCEL_OFFER_ITEM = 106
     CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
+    SKILL_CATALOG = 251  # Catálogo v1 negociado con 22 habilidades

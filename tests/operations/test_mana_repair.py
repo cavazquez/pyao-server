@@ -25,9 +25,8 @@ def test_mana_migration_preserves_other_progress_and_is_idempotent() -> None:
         before = raw.hgetall("player:1:user_stats")
         assert list(mana_repairs(raw)) == ["player:1:user_stats"]
         assert raw.hgetall("player:1:user_stats") == before  # Audit no modifica.
-        assert (
-            apply_ordered_steps(raw, "synthetic-owner", "synthetic-backup")[-1]
-            == "normalize-mana-int16"
+        assert "normalize-mana-int16" in apply_ordered_steps(
+            raw, "synthetic-owner", "synthetic-backup"
         )
         values = raw.hgetall("player:1:user_stats")
         assert values["min_mana"] == values["max_mana"] == "32767"

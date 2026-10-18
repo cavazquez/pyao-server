@@ -63,3 +63,33 @@ El cliente espera como máximo 2 segundos por la respuesta; ante ausencia, versi
 inválida o bits no solicitados conserva las funciones base y cero extensiones.
 Esta negociación no sustituye TLS ni importa el flujo cuenta/hash de AO Libre.
 Una extensión nueva debe definir su propio layout, fixtures y bit antes de activarse.
+
+## Catálogo y progreso de habilidades v1
+
+`skills.json` asigna 22 IDs: conserva los 20 de AO y agrega **Robustez=21 y
+Agilidad=22**, propias de pyao. Cada entrada declara almacenamiento, semántica
+histórica e implementación. Los IDs sin progreso implementado se representan
+explícitamente; un valor histórico de herrería/carpintería se conserva aunque su
+progresión aún no esté habilitada.
+
+SEND_SKILLS=71 conserva sus **9 int16** y su orden legacy. El reader reconstruye el
+catálogo por IDs, sin tomar bytes de ChangeMap ni de otros mensajes para llenar
+20 pares inexistentes. Las conexiones que negociaron el bit `skills_catalog=1`
+reciben **ID 251**, versión u8, puntos libres i16 y 22 triples `(id u8, nivel u8,
+porcentaje u8)`, en orden canónico: **70 bytes exactos**. El porcentaje es 0–99,
+el nivel 0–100. XP acumulada no se empaqueta como nivel. El cliente rechaza esa
+extensión si no la negoció. El servidor anuncia ahora el bit 1 al implementar
+este catálogo; los demás bits siguen deshabilitados.
+
+El esquema Redis v3 agrega `level:<clave>` y `xp:<clave>` sin borrar ni reescribir
+los campos históricos. Tala, pesca y minería guardaban XP acumulada: se conserva
+exactamente y se deriva nivel/porcentaje. Las demás claves guardaban niveles y
+conservan su nivel inicial. `xp_per_level` guarda el umbral efectivo por personaje
+para que una configuración posterior no reinterprete su progreso. Las subidas de
+XP son transaccionales; cruzar un umbral incrementa el nivel, y asignar un nivel
+explícito conserva la XP. El presupuesto `points` permanece autoritativo en Redis.
+
+Migrar requiere el mismo procedimiento de backup verificado y servidor detenido
+documentado en REDIS.md. Los pasos pendientes y sus journals se confirman juntos,
+con idempotencia y auditoría. Las fixtures `skills_legacy` y `skills_catalog_v1`
+se prueban seguidas por ChangeMap y partidas en cada frontera.

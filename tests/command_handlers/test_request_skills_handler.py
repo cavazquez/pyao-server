@@ -34,6 +34,7 @@ def mock_message_sender() -> MagicMock:
     """Mock de MessageSender."""
     sender = MagicMock()
     sender.send_update_skills = AsyncMock()
+    sender.connection.capabilities.enabled = 0
     return sender
 
 
@@ -116,3 +117,24 @@ async def test_handle_error_handling(
 
     assert result.success is False
     assert "error" in result.error_message.lower()
+
+
+@pytest.mark.asyncio
+async def test_negotiated_skills_send_catalog_and_authoritative_budget(redis_client) -> None:
+    """El catálogo sólo reemplaza legacy para una conexión que solicitó su bit."""
+    from src.network.capabilities import Capability  # noqa: PLC0415
+    from src.network.packet_framer import packet_length  # noqa: PLC0415
+    from src.repositories.player_repository import PlayerRepository  # noqa: PLC0415
+    from src.utils.redis_config import RedisKeys  # noqa: PLC0415
+
+    repository = PlayerRepository(redis_client)
+    await repository.set_skills(123, magia=10)
+    await redis_client.hset(RedisKeys.player_skills(123), "points", "4")
+    sender = MagicMock()
+    sender.connection.capabilities.enabled = Capability.SKILLS_CATALOG
+    sender.connection.send = AsyncMock()
+    result = await RequestSkillsCommandHandler(repository, sender).handle(RequestSkillsCommand(123))
+    assert result.success
+    packet = sender.connection.send.call_args.args[0]
+    assert packet[:4] == bytes([251, 1, 4, 0])
+    assert packet_length(packet, "server") == len(packet) == 70
