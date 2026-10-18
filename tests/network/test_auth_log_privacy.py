@@ -48,6 +48,7 @@ async def test_auth_and_unknown_fragments_never_log_passwords(caplog, level):
     writer = MagicMock()
     writer.get_extra_info.return_value = sender.address
     writer.drain = AsyncMock()
+    writer.wait_closed = AsyncMock()
     reader = MagicMock()
     reader.read = AsyncMock(side_effect=[account[:6], secret_latin1, secret_utf8])
     connection = ClientConnection(reader, writer)
@@ -55,6 +56,9 @@ async def test_auth_and_unknown_fragments_never_log_passwords(caplog, level):
         fragment = await connection.receive()
         await TaskNull(fragment, sender).execute()
     await connection.send(password_hash.encode())
+    await connection.flush()
+    connection.close()
+    await connection.wait_closed()
     for encoding, method in [("utf-16-le", "read_string"), ("latin-1", "read_ascii_string")]:
         packet = PacketReader(b"\x00" + field(secret.encode(encoding)))
         assert getattr(packet, method)() == secret

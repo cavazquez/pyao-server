@@ -21,6 +21,9 @@ class ServerConfig(BaseModel):
     port: int = Field(default=7666, ge=1024, le=65535, description="Puerto del servidor")
     max_connections: int = Field(default=1000, ge=1, description="Máximo de conexiones simultáneas")
     buffer_size: int = Field(default=4096, ge=1024, description="Tamaño del buffer de red")
+    outgoing_max_packets: int = Field(default=128, ge=1)
+    outgoing_max_bytes: int = Field(default=262144, ge=1024)
+    outgoing_drain_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
 
 
 class CombatConfig(BaseModel):

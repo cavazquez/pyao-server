@@ -366,3 +366,16 @@ El perfil Docker Redis persistente requiere `PYAO_REDIS_PASSWORD_FILE` (alias
 y su contenido no se incluye en ConfigManager ni se imprime. Generarlo con
 `uv run --locked python -m src.operations.redis_secret --output .local/redis-password`.
 Una instancia externa sin autenticación puede dejar esa opción sin definir.
+
+### Salida y clientes lentos
+
+`server.outgoing_max_packets` (128), `server.outgoing_max_bytes` (262144) y
+`server.outgoing_drain_timeout` (5 segundos) acotan cada conexión; admiten
+`PYAO_SERVER__OUTGOING_MAX_PACKETS`, `PYAO_SERVER__OUTGOING_MAX_BYTES` y
+`PYAO_SERVER__OUTGOING_DRAIN_TIMEOUT`. Los límites incluyen el mensaje en vuelo.
+Cada cliente tiene un escritor FIFO propio. `send()` encola y cede el loop para
+que un burst de login no penalice al cliente rápido; no espera su drain. Saturar
+la cola o exceder el plazo aborta sólo ese transporte y cancela su sesión. Los
+broadcasts continúan hacia el resto. `flush()` permite esperar la salida antes
+de un cierre drenado; `close()/wait_closed()` cancelan y recogen escritor y cola.
+Los logs conservan metadata sin imprimir payloads ni argumentos de excepciones.

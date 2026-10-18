@@ -114,6 +114,9 @@ class ConfigManager:
                 "port": self._game_config.server.port,
                 "max_connections": self._game_config.server.max_connections,
                 "buffer_size": self._game_config.server.buffer_size,
+                "outgoing_max_packets": self._game_config.server.outgoing_max_packets,
+                "outgoing_max_bytes": self._game_config.server.outgoing_max_bytes,
+                "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
             },
             "game": {
                 "max_players_per_map": self._game_config.game.max_players_per_map,

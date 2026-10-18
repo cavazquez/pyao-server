@@ -79,6 +79,10 @@ async def test_two_logins_publish_only_one_session():
     finally:
         await first.release_session()
         await second.release_session()
+        first.close()
+        second.close()
+        await first.wait_closed()
+        await second.wait_closed()
         await raw.aclose()
 
 

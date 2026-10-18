@@ -45,6 +45,7 @@ class ArgentumServer:
             host=host if host is not None else str(config_manager.get("server.host", "0.0.0.0")),
             port=port if port is not None else int(str(config_manager.get("server.port", 7666))),
         )
+        self.outgoing_config = ServerConfig.model_validate(config_manager.get_section("server"))
         self.host = endpoint.host
         self.port = endpoint.port
         self.max_connections = ServerConfig(
@@ -111,7 +112,14 @@ class ArgentumServer:
         connection: ClientConnection | None = None
         message_sender: MessageSender | None = None
         try:
-            connection = ClientConnection(reader, writer)
+            connection = ClientConnection(
+                reader,
+                writer,
+                max_outgoing_packets=self.outgoing_config.outgoing_max_packets,
+                max_outgoing_bytes=self.outgoing_config.outgoing_max_bytes,
+                drain_timeout=self.outgoing_config.outgoing_drain_timeout,
+            )
+            connection.owner_task = asyncio.current_task()
             connection.auth_limiter = self.auth_limiter
             connection.session_lease_seconds = self.session_lease_seconds
             if self.deps and self.deps.redis_client:
@@ -150,8 +158,12 @@ class ArgentumServer:
                 # Incluso si falla el login, Redis o el cierre lógico, liberar exactamente una vez.
                 self._active_connections -= 1
                 try:
-                    writer.close()
-                    await writer.wait_closed()
+                    if connection is not None:
+                        connection.close()
+                        await connection.wait_closed()
+                    else:
+                        writer.close()
+                        await writer.wait_closed()
                 except ConnectionError:
                     logger.debug("El transporte ya estaba cerrado")
                 finally:

@@ -16,13 +16,40 @@ logger = logging.getLogger(__name__)
 class ClientConnection:
     """Encapsula la conexión con un cliente y provee métodos para comunicación."""
 
-    def __init__(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+    def __init__(
+        self,
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+        *,
+        max_outgoing_packets: int = 128,
+        max_outgoing_bytes: int = 262144,
+        drain_timeout: float = 5.0,
+    ) -> None:
         """Inicializa la conexión del cliente.
 
         Args:
             reader: Stream para leer datos del cliente.
             writer: Stream para enviar datos al cliente.
+            max_outgoing_packets: Límite de mensajes, incluido el que está en drain.
+            max_outgoing_bytes: Límite de payload retenido, incluido el mensaje en vuelo.
+            drain_timeout: Plazo máximo del escritor de esta conexión.
+
+        Raises:
+            ValueError: Si los límites de salida no son positivos.
         """
+        if max_outgoing_packets < 1 or max_outgoing_bytes < 1 or drain_timeout <= 0:
+            msg = "Límites de salida inválidos"
+            raise ValueError(msg)
+        self._outbox: asyncio.Queue[bytes] = asyncio.Queue(maxsize=max_outgoing_packets)
+        self._max_outgoing_packets = max_outgoing_packets
+        self._max_outgoing_bytes = max_outgoing_bytes
+        self._drain_timeout = drain_timeout
+        self._pending_packets = 0
+        self._pending_bytes = 0
+        self._writer_task: asyncio.Task[None] | None = None
+        self._closed = False
+        self._write_failed = False
+        self.owner_task: asyncio.Task[object] | None = None
         self.auth_limiter: AuthLimiter | None = None
         self.auth_attempts = ConnectionAttempts()
         self.session_redis: Redis | None = None
@@ -94,15 +121,72 @@ class ClientConnection:
             lease, self._session_lease = self._session_lease, None
             await lease.release()
 
-    async def send(self, data: bytes) -> None:
-        """Envía datos al cliente.
+    @property
+    def pending_packets(self) -> int:
+        """Mensajes retenidos en cola o en el drain activo."""
+        return self._pending_packets
 
-        Args:
-            data: Bytes a enviar al cliente.
+    @property
+    def pending_bytes(self) -> int:
+        """Bytes de payload retenidos en cola o en el drain activo."""
+        return self._pending_bytes
+
+    async def send(self, data: bytes) -> None:
+        """Encola sin esperar al drain de un cliente lento; preserva el orden.
+
+        Al saturar se desconecta sólo este destinatario. Un broadcast puede
+        continuar hacia los demás clientes sin propagar un fallo del peer cerrado.
         """
-        self.writer.write(data)
-        await self.writer.drain()
-        logger.debug("Enviados %d bytes a %s", len(data), self.address)
+        if self._closed or not data:
+            return
+        if (
+            self._pending_packets >= self._max_outgoing_packets
+            or self._pending_bytes + len(data) > self._max_outgoing_bytes
+        ):
+            logger.warning("Cliente %s desconectado por saturación de salida", self.address)
+            self._write_failed = True
+            self.close(abort=True)
+            return
+        immutable = bytes(data)
+        self._outbox.put_nowait(immutable)
+        self._pending_packets += 1
+        self._pending_bytes += len(immutable)
+        if self._writer_task is None:
+            self._writer_task = asyncio.create_task(self._write_loop(), name="pyao-client-writer")
+        # Dar oportunidad al escritor evita saturar clientes rápidos en un burst de login.
+        await asyncio.sleep(0)
+
+    async def _write_loop(self) -> None:
+        try:
+            while True:
+                data = await self._outbox.get()
+                try:
+                    self.writer.write(data)
+                    async with asyncio.timeout(self._drain_timeout):
+                        await self.writer.drain()
+                    logger.debug("Enviados %d bytes a %s", len(data), self.address)
+                finally:
+                    self._pending_packets -= 1
+                    self._pending_bytes -= len(data)
+                    self._outbox.task_done()
+        except asyncio.CancelledError:
+            raise
+        except Exception as error:  # noqa: BLE001 - frontera de transporte, sin payload en log.
+            # No imprimir argumentos de excepciones que puedan contener payloads.
+            logger.warning("Escritor de %s cerrado: %s", self.address, type(error).__name__)
+            self._write_failed = True
+            self.close(abort=True)
+
+    async def flush(self) -> None:
+        """Espera la salida pendiente; usar antes de cerrar al drenar el servidor.
+
+        Raises:
+            ConnectionError: Si la cola se descartó por cierre/error del transporte.
+        """
+        await self._outbox.join()
+        if self._write_failed:
+            msg = "La conexión se cerró con salida pendiente"
+            raise ConnectionError(msg)
 
     async def receive(self, max_bytes: int = 1024) -> bytes:
         """Recibe datos del cliente.
@@ -118,10 +202,31 @@ class ClientConnection:
             logger.debug("Recibidos %d bytes de %s", len(data), self.address)
         return data
 
-    def close(self) -> None:
-        """Cierra la conexión con el cliente."""
+    def close(self, *, abort: bool = False) -> None:
+        """Cierra y descarta salida pendiente, cancelando sólo el escritor propio."""
+        if self._closed:
+            return
+        self._closed = True
+        self._write_failed = self._write_failed or self._pending_packets > 0
+        while not self._outbox.empty():
+            data = self._outbox.get_nowait()
+            self._pending_packets -= 1
+            self._pending_bytes -= len(data)
+            self._outbox.task_done()
+        if (
+            self._writer_task is not None
+            and not self._writer_task.done()
+            and self._writer_task is not asyncio.current_task()
+        ):
+            self._writer_task.cancel()
+        if abort:
+            self.writer.transport.abort()
+            if self.owner_task is not None:
+                self.owner_task.cancel()
         self.writer.close()
 
     async def wait_closed(self) -> None:
-        """Espera a que la conexión se cierre completamente."""
+        """Espera también el escritor para no dejar tareas o buffers huérfanos."""
+        if self._writer_task is not None:
+            await asyncio.gather(self._writer_task, return_exceptions=True)
         await self.writer.wait_closed()

@@ -7,6 +7,9 @@ host = "0.0.0.0"
 port = 7666
 max_connections = 1000
 buffer_size = 4096
+outgoing_max_packets = 128
+outgoing_max_bytes = 262144
+outgoing_drain_timeout = 5.0
 
 [redis]
 host = "localhost"
