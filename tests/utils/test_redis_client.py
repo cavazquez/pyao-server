@@ -149,8 +149,9 @@ class TestRedisClient:
         mock_instance.ping = AsyncMock(
             side_effect=redis.ConnectionError("Error 111 connecting to invalid-host:9999")
         )
+        mock_instance.aclose = AsyncMock()
 
-        with patch("redis.asyncio.Redis", return_value=mock_instance):
+        with patch("redis.asyncio.Redis.from_pool", return_value=mock_instance):
             with pytest.raises(redis.ConnectionError):
                 await client.connect(config)
 
@@ -199,7 +200,7 @@ class TestRedisClient:
         mock_instance.set = AsyncMock()
         mock_instance.aclose = AsyncMock()
 
-        with patch("redis.asyncio.Redis", return_value=mock_instance):
+        with patch("redis.asyncio.Redis.from_pool", return_value=mock_instance):
             await client.connect(None)  # Sin config
 
             # Verificar que se creó la conexión
@@ -225,7 +226,7 @@ class TestRedisClient:
         mock_instance.ping = MagicMock(return_value=False)  # Retorna bool False
         mock_instance.aclose = AsyncMock()
 
-        with patch("redis.asyncio.Redis", return_value=mock_instance):
+        with patch("redis.asyncio.Redis.from_pool", return_value=mock_instance):
             with pytest.raises(redis.ConnectionError, match="Redis ping failed"):
                 await client.connect(config)
 
@@ -251,7 +252,7 @@ class TestRedisClient:
         mock_instance.ping = AsyncMock(return_value=False)  # Retorna awaitable False
         mock_instance.aclose = AsyncMock()
 
-        with patch("redis.asyncio.Redis", return_value=mock_instance):
+        with patch("redis.asyncio.Redis.from_pool", return_value=mock_instance):
             with pytest.raises(redis.ConnectionError, match="Redis ping failed"):
                 await client.connect(config)
 
@@ -277,7 +278,7 @@ class TestRedisClient:
         mock_instance.ping = AsyncMock(side_effect=redis.RedisError("Redis error"))
         mock_instance.aclose = AsyncMock()
 
-        with patch("redis.asyncio.Redis", return_value=mock_instance):
+        with patch("redis.asyncio.Redis.from_pool", return_value=mock_instance):
             with pytest.raises(redis.RedisError):
                 await client.connect(config)
 

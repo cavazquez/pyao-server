@@ -1,9 +1,12 @@
 """Conexión Redis con configuración central, sin servicios externos."""
 
+import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from fakeredis.aioredis import FakeRedis
+from fakeredis.aioredis import FakeAsyncRedisConnection, FakeRedis
+from redis.asyncio import BlockingConnectionPool
+from redis.exceptions import ConnectionError as RedisConnectionError
 
 from src.config.config_manager import ConfigManager
 from src.config.game_config import GameConfig
@@ -19,13 +22,14 @@ async def test_file_and_environment_reach_redis_constructor(tmp_path, monkeypatc
     path = tmp_path / "server.toml"
     path.write_text(
         '[redis]\nhost="cache-file"\nport=6381\ndb=3\nmax_connections=7\n'
-        "socket_timeout=2.5\nsocket_connect_timeout=1.25\n"
+        "socket_timeout=2.5\nsocket_connect_timeout=1.25\npool_timeout=3.5\n"
     )
     if override:
         monkeypatch.setenv("PYAO_REDIS__HOST", "cache-env")
         monkeypatch.setenv("PYAO_REDIS__PORT", "6382")
         monkeypatch.setenv("PYAO_REDIS__DB", "4")
         monkeypatch.setenv("PYAO_REDIS__MAX_CONNECTIONS", "9")
+        monkeypatch.setenv("PYAO_REDIS__POOL_TIMEOUT", "4.5")
     effective = GameConfig.from_toml(path).redis
     monkeypatch.setattr(RedisClient, "_instance", None)
     monkeypatch.setattr(RedisClient, "_redis", None)
@@ -35,7 +39,10 @@ async def test_file_and_environment_reach_redis_constructor(tmp_path, monkeypatc
     raw.exists = AsyncMock(return_value=True)
     raw.set = AsyncMock(return_value=False)
     raw.aclose = AsyncMock()
-    with patch("src.utils.redis_client.redis.Redis", return_value=raw) as constructor:
+    with (
+        patch("src.utils.redis_client.redis.BlockingConnectionPool") as constructor,
+        patch("src.utils.redis_client.redis.Redis.from_pool", return_value=raw) as client_factory,
+    ):
         await client.connect(effective)
         constructor.assert_called_once_with(
             host="cache-env" if override else "cache-file",
@@ -43,10 +50,12 @@ async def test_file_and_environment_reach_redis_constructor(tmp_path, monkeypatc
             port=6382 if override else 6381,
             db=4 if override else 3,
             max_connections=9 if override else 7,
+            timeout=4.5 if override else 3.5,
             decode_responses=True,
             socket_timeout=2.5,
             socket_connect_timeout=1.25,
         )
+        client_factory.assert_called_once_with(constructor.return_value)
     await client.disconnect()
 
 
@@ -85,6 +94,7 @@ async def test_initializer_injects_central_settings():
         ("port", 0),
         ("db", -1),
         ("max_connections", 0),
+        ("pool_timeout", 0),
         ("socket_timeout", 0),
         ("socket_connect_timeout", -1),
     ],
@@ -100,3 +110,48 @@ def test_invalid_configuration_never_falls_back(tmp_path, monkeypatch, field, va
         ConfigManager()
     path.write_text('[redis]\nhost="private-cache"\n')
     assert ConfigManager().get("redis.host") == "private-cache"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("outcome", ["release", "timeout", "cancel"])
+async def test_saturated_pool_waits_with_deadline_and_releases_on_cancel(monkeypatch, outcome):
+    """Un pico espera sin bloquear el loop; timeout/cancelación no consumen conexiones."""
+    monkeypatch.setattr(RedisClient, "_instance", None)
+    monkeypatch.setattr(RedisClient, "_redis", None)
+    pool = BlockingConnectionPool(
+        max_connections=1,
+        timeout=0.1,
+        connection_class=FakeAsyncRedisConnection,
+        decode_responses=True,
+    )
+    client = RedisClient()
+    with patch("src.utils.redis_client.redis.BlockingConnectionPool", return_value=pool):
+        await client.connect(RedisConfig(max_connections=1), seed_defaults=False)
+    held = await pool.get_connection()
+    try:
+        pending = asyncio.create_task(client.set("pool:probe", "saved"))
+        await asyncio.sleep(0.01)
+        assert not pending.done()
+        assert len(pool._in_use_connections) == 1
+        if outcome == "release":
+            await pool.release(held)
+            held = None
+            assert await pending
+        elif outcome == "timeout":
+            with pytest.raises(RedisConnectionError, match="No connection available"):
+                await pending
+        else:
+            pending.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await pending
+        if held is not None:
+            await pool.release(held)
+            held = None
+        assert await client.set("pool:probe", "saved")
+        assert await client.get("pool:probe") == "saved"
+        assert not pool._in_use_connections
+    finally:
+        if held is not None:
+            await pool.release(held)
+        await client.disconnect()
+    assert all(not connection.is_connected for connection in pool._available_connections)

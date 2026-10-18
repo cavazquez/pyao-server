@@ -216,7 +216,7 @@ spawn/invocación, conservando nombre, apariencia, HP y flags del catálogo prop
 - **`PlayerRepository`**: Gestión de datos de jugadores (posición, stats, hambre/sed, atributos)
 - **`NPCRepository`**: Gestión de NPCs en Redis (crear, obtener, actualizar, eliminar)
 - **`AccountRepository`**: Gestión de cuentas (crear, obtener, verificar password)
-- **`RedisClient`**: Cliente Redis de bajo nivel (conexión, configuración, sesiones)
+- **`RedisClient`**: Cliente Redis de bajo nivel, con pool async limitado y espera con timeout (conexión, configuración, sesiones)
 - **`RedisConfig`**: Configuración y constantes de Redis
 
 #### Capa de Servicios

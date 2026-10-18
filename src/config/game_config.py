@@ -222,6 +222,7 @@ class RedisConfig(BaseModel):
     port: int = Field(default=6379, ge=1, le=65535, description="Puerto de Redis")
     db: int = Field(default=0, ge=0, description="Base de datos de Redis")
     max_connections: int = Field(default=20, ge=1, description="Máximo de conexiones a Redis")
+    pool_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
     password_file: Path | None = None
     decode_responses: bool = True
     socket_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
