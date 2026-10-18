@@ -3,6 +3,7 @@
 import logging
 import tomllib
 from pathlib import Path
+from typing import Any
 
 from src.runtime_paths import data_dir
 
@@ -81,7 +82,7 @@ class NPCCatalog:
                     logger.warning("NPC sin ID encontrado, ignorando: %s", npc_data)
                     continue
 
-                self._npcs[npc_id] = npc_data
+                self._npcs[npc_id] = self._normalize(npc_data)
                 logger.debug(
                     "NPC cargado: %d - %s",
                     npc_id,
@@ -93,6 +94,34 @@ class NPCCatalog:
 
         except Exception:
             logger.exception("Error al cargar NPCs %s desde %s", file_type, file_path)
+
+    @staticmethod
+    def _normalize(row: dict[str, Any]) -> dict[str, object]:
+        """Adapta los TOML regenerados al contrato de spawn e invocación.
+
+        Returns:
+            Datos originales más aliases; los campos legacy explícitos prevalecen.
+        """
+        result = dict(row)
+        for target, source in (("nombre", "name"), ("descripcion", "description")):
+            if source in row:
+                result.setdefault(target, row[source])
+        for section, fields in (
+            ("appearance", {"body_id": "body", "head_id": "head"}),
+            ("combat", {"hp_max": "max_hp", "oro_min": "gold_min", "oro_max": "gold_max"}),
+        ):
+            values = row.get(section, {})
+            for target, source in fields.items():
+                if source in values:
+                    result.setdefault(target, values[source])
+        for target, section, source in (
+            ("es_hostil", "behavior", "hostile"),
+            ("es_atacable", "flags", "attackable"),
+        ):
+            values = row.get(section, {})
+            if source in values:
+                result.setdefault(target, bool(values[source]))
+        return result
 
     def _load_catalog(self) -> None:
         """Carga el catálogo de NPCs desde todos los archivos."""

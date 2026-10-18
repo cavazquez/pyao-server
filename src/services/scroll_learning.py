@@ -51,9 +51,9 @@ async def learn_scroll(
         message = ""
         if int(owner.get("user_id", 0)) != user_id:
             message = "Personaje no disponible."
-        elif int(saved.get("hp", saved.get("min_hp", 0))) <= 0:
+        elif int(saved.get("min_hp", saved.get("hp", 0))) <= 0:
             message = "No puedes aprender estando muerto."
-        elif int(owner.get("char_class", 0)) not in rule.allowed_classes:
+        elif int(owner.get("char_job", 0)) not in rule.allowed_classes:
             message = "Tu clase no puede aprender este hechizo."
         elif int(saved.get("level", 1)) < rule.minimum_level:
             message = "Nivel insuficiente para aprender este hechizo."

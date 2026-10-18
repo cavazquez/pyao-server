@@ -7,6 +7,7 @@ import pytest
 import pytest_asyncio
 from redis.exceptions import ConnectionError as RedisConnectionError
 
+from src.repositories.account_repository import AccountRepository
 from src.repositories.spellbook_repository import SpellbookRepository
 from src.services.scroll_learning import ScrollRule, learn_scroll
 from src.utils.gold_atomic import operation_id
@@ -16,9 +17,10 @@ from src.utils.redis_config import RedisKeys
 @pytest_asyncio.fixture
 async def scroll_user(redis_client):
     """Personaje sintético habilitado y dos unidades de un pergamino del catálogo propio."""
-    await redis_client.hset(
-        RedisKeys.account_data("usr"), mapping={"user_id": "1", "char_class": "1"}
+    user_id = await AccountRepository(redis_client).create_account(
+        "usr", "unused-test-hash", "usr@example.invalid", {"job": 1}
     )
+    assert user_id == 1
     await redis_client.hset(RedisKeys.player_inventory(1), mapping={"slot_30": "197:2"})
     await redis_client.hset(RedisKeys.player_user_stats(1), mapping={"min_hp": "100", "level": "5"})
     await redis_client.hset(RedisKeys.player_skills(1), mapping={"level:magia": "20"})
@@ -89,6 +91,17 @@ async def test_full_book_preserves_scroll_and_order(scroll_user, redis_client):
             "book_slot"
         ] == 27
     assert (await SpellbookRepository(redis_client).get_all_spells(1))[1] == 2
+
+
+@pytest.mark.asyncio
+async def test_dead_character_cannot_use_stale_legacy_hp(scroll_user, redis_client):
+    """min_hp canónico impide aprender aunque quede un hp antiguo positivo."""
+    await redis_client.hset(RedisKeys.player_user_stats(1), mapping={"min_hp": "0", "hp": "100"})
+    with patch("src.services.scroll_learning.require_durable", new=AsyncMock()):
+        result = await learn_scroll(scroll_user, 1, "usr", 30, operation_id(), rule())
+    assert not result["applied"]
+    assert await redis_client.hget(RedisKeys.player_inventory(1), "slot_30") == "197:2"
+    assert not await redis_client.hgetall(RedisKeys.player_spellbook(1))
 
 
 @pytest.mark.asyncio

@@ -125,6 +125,14 @@ def test_talk_receives_real_world_services():
     assert handler.pet_handler.summon_service is deps.summon_service
 
 
+def test_attack_defers_rewards_to_the_death_service():
+    """Producción liquida XP/party una vez; el fallback conserva su concesión directa."""
+    deps = Mock()
+    assert HandlerRegistry(deps).get("attack", Mock()).execution_handler.defer_rewards is True
+    deps.npc_death_service = None
+    assert HandlerRegistry(deps).get("attack", Mock()).execution_handler.defer_rewards is False
+
+
 @pytest.mark.parametrize("name", ["login", "create_account"])
 def test_initially_empty_session_is_kept_through_authentication(name):
     """Un alta sin tirada previa no publica el login en un diccionario descartado."""

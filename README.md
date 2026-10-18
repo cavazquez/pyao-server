@@ -204,6 +204,8 @@ elegido sólo si el personaje todavía no tiene posición. Los logins posteriore
 conservan su ubicación. Las doce clases del protocolo están declaradas en
 `data/classes/definitions.toml`; las ocho que usaban atributos neutros mantienen
 ese perfil, sus IDs y el balance existente de `data/classes/balance.toml`.
+`NPCCatalog` adapta los campos anidados de los TOML regenerados al contrato de
+spawn/invocación, conservando nombre, apariencia, HP y flags del catálogo propio.
 
 #### Capa de Red
 - **`ArgentumServer`**: Maneja conexiones TCP y el ciclo de vida del servidor

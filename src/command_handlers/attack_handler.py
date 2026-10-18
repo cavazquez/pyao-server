@@ -80,6 +80,7 @@ class AttackCommandHandler(CommandHandler):
             combat_service=combat_service,
             broadcast_service=broadcast_service,
             message_sender=message_sender,
+            defer_rewards=npc_death_service is not None,
         )
 
         self.loot_handler = AttackLootHandler(
