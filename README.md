@@ -58,7 +58,10 @@ uv sync --locked --dev
 
 ```bash
 # Opción 1: Docker Compose (recomendado)
-docker compose up -d              # Redis + persistencia
+# Generar sólo la primera vez; reutilizar el archivo existente en reinicios.
+uv run --locked python -m src.operations.redis_secret --output .local/redis-password
+export PYAO_REDIS_PASSWORD_FILE="$PWD/.local/redis-password"
+docker compose up -d --build redis  # Redis autenticado + persistencia
 docker compose --profile tools up -d  # + Redis Insight GUI (puerto 5540)
 
 # Opción 2: Usar el Dockerfile incluido
@@ -70,7 +73,7 @@ sudo apt-get install redis-server
 redis-server
 ```
 
-**Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar usando `redis://redis:6379` desde el contenedor.
+**Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar al host interno `redis`, puerto `6379`, usuario `default` y la credencial del archivo privado. Ambos puertos se publican sólo en loopback.
 
 Ver [docs/guides/REDIS.md](docs/guides/REDIS.md) para documentación completa de Redis.
 
@@ -500,7 +503,7 @@ El proyecto sigue estrictas reglas de calidad de código:
 # Setup inicial
 uv sync --locked --dev                # Instalar dependencias
 uv run pre-commit install    # Instalar hooks
-docker compose up -d         # Levantar Redis
+docker compose up -d         # Levantar Redis con el secreto preparado en Inicio Rápido
 
 # Flujo de desarrollo
 ./scripts/checks.sh               # Verificar todo antes de commit

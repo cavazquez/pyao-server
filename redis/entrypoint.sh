@@ -17,5 +17,10 @@ unset redis_secret
 printf 'user default on #%s ~* &* +@all\n' "$redis_hash" > /data/pyao-users.acl.tmp
 chown redis:redis /data/pyao-users.acl.tmp
 mv /data/pyao-users.acl.tmp /data/pyao-users.acl
+if [ -f /data/dump.rdb ]; then
+  # docker cp conserva permisos privados; Redis debe leer su propia restauración.
+  chown redis:redis /data/dump.rdb
+  chmod 600 /data/dump.rdb
+fi
 unset redis_hash
 exec /usr/local/bin/docker-entrypoint.sh "$@"

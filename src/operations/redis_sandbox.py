@@ -8,11 +8,12 @@ import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import TracebackType
-from typing import Self
+from typing import Literal, Self
 from uuid import uuid4
 
 from redis import ConnectionError as RedisConnectionError
 from redis import Redis
+from src.config.game_config import RedisConfig
 from src.operations.redis_secret import create_secret
 
 
@@ -37,20 +38,30 @@ def docker(*arguments: str) -> str:
 class RedisSandbox:
     """Administra únicamente recursos aleatorios creados por esta instancia."""
 
-    def __init__(self, *, appendonly: bool = True) -> None:
+    def __init__(
+        self,
+        *,
+        appendonly: bool = True,
+        password_file: Path | None = None,
+        purpose: Literal["validation", "recovery"] = "validation",
+    ) -> None:
         """Prepara identidades nuevas, sin acceder a Redis del operador."""
         self.root = Path(__file__).resolve().parents[2]
         self.image = (
             (self.root / "redis/Dockerfile").read_text().splitlines()[0].removeprefix("FROM ")
         )
         identity = uuid4().hex
-        self.name = f"pyao-validation-{identity}"
-        self.volume = f"pyao-validation-data-{identity}"
+        self.name = f"pyao-{purpose}-{identity}"
+        self.volume = f"pyao-{purpose}-data-{identity}"
+        self.purpose = purpose
         self.appendonly = appendonly
-        self._secrets = TemporaryDirectory(prefix="pyao-redis-secret-")
-        self.password_file = Path(self._secrets.name) / "redis-password"
-        create_secret(self.password_file)
-        self._password = self.password_file.read_text().strip()
+        self._secrets: TemporaryDirectory[str] | None = None
+        if password_file is None:
+            self._secrets = TemporaryDirectory(prefix="pyao-redis-secret-")
+            password_file = Path(self._secrets.name) / "redis-password"
+            create_secret(password_file)
+        self.password_file = password_file.resolve()
+        self._password = RedisConfig(password_file=self.password_file).read_password()
         self._container_created = False
         self._volume_created = False
 
@@ -61,39 +72,9 @@ class RedisSandbox:
             Sandbox listo para recibir conexiones.
         """
         try:
-            docker("volume", "create", "--label", "proyectoao=validation", self.volume)
+            docker("volume", "create", "--label", f"proyectoao={self.purpose}", self.volume)
             self._volume_created = True
-            docker(
-                "create",
-                "--name",
-                self.name,
-                "--label",
-                "proyectoao=validation",
-                "-p",
-                "127.0.0.1::6379",
-                "--entrypoint",
-                "/etc/pyao-entrypoint.sh",
-                "--mount",
-                f"type=bind,src={self.root / 'redis/entrypoint.sh'},"
-                "dst=/etc/pyao-entrypoint.sh,readonly",
-                "--mount",
-                f"type=bind,src={self.password_file},dst=/run/secrets/redis_password,readonly",
-                "--mount",
-                f"type=volume,src={self.volume},dst=/data",
-                "--mount",
-                f"type=bind,src={self.root / 'redis/redis.conf'},dst=/etc/pyao-redis.conf,readonly",
-                self.image,
-                "redis-server",
-                "/etc/pyao-redis.conf",
-                "--aclfile",
-                "/data/pyao-users.acl",
-                "--appendonly",
-                "yes" if self.appendonly else "no",
-            )
-            self._container_created = True
-            docker("start", self.name)
-            with self.client() as client:
-                client.ping()
+            self._start_container()
         except BaseException:
             try:
                 if self._container_created:
@@ -102,6 +83,40 @@ class RedisSandbox:
                 self.close()
             raise
         return self
+
+    def _start_container(self) -> None:
+        """Crea el contenedor propio sobre su volumen y espera Redis."""
+        docker(
+            "create",
+            "--name",
+            self.name,
+            "--label",
+            f"proyectoao={self.purpose}",
+            "-p",
+            "127.0.0.1::6379",
+            "--entrypoint",
+            "/etc/pyao-entrypoint.sh",
+            "--mount",
+            f"type=bind,src={self.root / 'redis/entrypoint.sh'},"
+            "dst=/etc/pyao-entrypoint.sh,readonly",
+            "--mount",
+            f"type=bind,src={self.password_file},dst=/run/secrets/redis_password,readonly",
+            "--mount",
+            f"type=volume,src={self.volume},dst=/data",
+            "--mount",
+            f"type=bind,src={self.root / 'redis/redis.conf'},dst=/etc/pyao-redis.conf,readonly",
+            self.image,
+            "redis-server",
+            "/etc/pyao-redis.conf",
+            "--aclfile",
+            "/data/pyao-users.acl",
+            "--appendonly",
+            "yes" if self.appendonly else "no",
+        )
+        self._container_created = True
+        docker("start", self.name)
+        with self.client() as client:
+            client.ping()
 
     def __exit__(
         self,
@@ -128,7 +143,7 @@ class RedisSandbox:
             raise RuntimeError(msg)
         return int(published[0]["HostPort"])
 
-    def client(self) -> Redis:
+    def client(self, *, decode_responses: bool = True) -> Redis:
         """Espera el arranque con plazo y crea un cliente contra el endpoint propio.
 
         Returns:
@@ -140,7 +155,7 @@ class RedisSandbox:
         client = Redis(
             host="127.0.0.1",
             port=self.port,
-            decode_responses=True,
+            decode_responses=decode_responses,
             password=self._password,
             socket_connect_timeout=1,
             socket_timeout=10,
@@ -158,6 +173,26 @@ class RedisSandbox:
         msg = "Redis descartable no respondió al arranque"
         raise TimeoutError(msg) from last_error
 
+    def recreate(self, *, appendonly: bool) -> None:
+        """Recrea sólo el contenedor propio conservando su volumen y secreto."""
+        docker("stop", "--time", "5", self.name)
+        docker("rm", self.name)
+        self._container_created = False
+        self.appendonly = appendonly
+        self._start_container()
+
+    def retain(self) -> None:
+        """Entrega una restauración verificada al operador sin eliminar sus recursos.
+
+        Raises:
+            RuntimeError: Si el secreto pertenece a un directorio temporal.
+        """
+        if self._secrets is not None:
+            msg = "Conservar una restauración requiere un archivo de secreto permanente"
+            raise RuntimeError(msg)
+        self._container_created = False
+        self._volume_created = False
+
     def close(self) -> None:
         """Elimina exclusivamente los recursos cuyo alta completó esta instancia."""
         try:
@@ -168,4 +203,5 @@ class RedisSandbox:
             if self._volume_created:
                 docker("volume", "rm", self.volume)
                 self._volume_created = False
-            self._secrets.cleanup()
+            if self._secrets is not None:
+                self._secrets.cleanup()
