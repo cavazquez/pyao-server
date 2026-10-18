@@ -7,3 +7,9 @@ Una operación puede recibir `operation_id` generado con `src.utils.gold_atomic.
 Subir de nivel conserva el saldo persistido; no vuelve a guardar la copia que leyó para calcular los atributos. Compras, drops y efectos consumen las primitivas relativas. Las transferencias que afectan otros recursos requieren sus propios commits conjuntos (#92, #93, #131, #132, #133, #134 y #153).
 
 Validación: tests de concurrencia, límites, ACK perdido después de EXEC y rechazo de replay vencido; `uv run python -m src.operations.gold_atomic_smoke` reproduce créditos y débitos concurrentes contra un Redis nuevo autenticado, y limpia su contenedor y volumen.
+
+## Banco
+
+Depósitos y retiros usan el mismo EXEC para el saldo del jugador, el saldo del banco y el recibo. WATCH valida ambos valores actuales; fondos insuficientes y exceso del límite de destino conservan los dos saldos. El banco respeta int32 firmado (2147483647), y el jugador el límite de 999999999.
+
+El identificador se crea al construir el comando y se conserva si se reejecuta ese mismo comando tras un resultado incierto. Dos acciones nuevas del protocolo legado son peticiones independientes. El cliente recibe los saldos sólo desde un resultado confirmado. La prueba nativa incluye depósitos simultáneos, retiro repetido y conservación del total. Las pruebas de fallas antes y después de EXEC verifican que no se utiliza compensación separada.

@@ -8,8 +8,10 @@ from src.models.item_constants import MAX_PLAYER_GOLD
 from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox
 from src.repositories.player_repository import PlayerRepository
+from src.services.bank_gold_transfer import transfer_gold
 from src.utils.gold_atomic import operation_id
 from src.utils.redis_client import RedisClient
+from src.utils.redis_config import RedisKeys
 
 PARALLEL_CREDITS = 100
 COMPETING_DEBIT = 80
@@ -39,11 +41,30 @@ async def scenario(settings: RedisConfig) -> dict[str, bool]:
         await repo.update_gold(1, MAX_PLAYER_GOLD - 1)
         accepted, balance = await repo.add_gold_capped(1, 9)
         require((accepted, balance) == (1, MAX_PLAYER_GOLD), "Cap sin overflow")
+        await repo.update_gold(2, 100)
+        transfers = await asyncio.gather(
+            *(transfer_gold(client.redis, 2, 80, "deposit", operation_id()) for _ in range(2))
+        )
+        require(sum(t["applied"] for t in transfers) == 1, "Depósitos sin sobregiro")
+        require(await repo.get_gold(2) == PARALLEL_CREDITS - COMPETING_DEBIT, "Saldo jugador")
+        require(await client.get(RedisKeys.bank_gold(2)) == str(COMPETING_DEBIT), "Saldo banco")
+        identity = operation_id()
+        result = await transfer_gold(client.redis, 2, 10, "withdraw", identity)
+        require(
+            await transfer_gold(client.redis, 2, 10, "withdraw", identity) == result, "Replay banco"
+        )
+        require(
+            await repo.get_gold(2) + int(await client.get(RedisKeys.bank_gold(2)) or 0)
+            == PARALLEL_CREDITS,
+            "Conservación total",
+        )
         return {
             "concurrent_credits": True,
             "conditional_debits": True,
             "identified_retry": True,
             "bounded_credit": True,
+            "atomic_bank_transfer": True,
+            "bank_identified_retry": True,
             "production_data_used": False,
         }
     finally:

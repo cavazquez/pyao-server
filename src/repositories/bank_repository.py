@@ -2,9 +2,11 @@
 
 import logging
 from dataclasses import dataclass
+from typing import Any, Literal
 
 from src.config.config_manager import ConfigManager, config_manager
 from src.repositories.base_slot_repository import BaseSlotRepository
+from src.services.bank_gold_transfer import transfer_gold
 from src.utils.item_slot_parser import ItemSlotParser
 from src.utils.redis_client import RedisClient  # noqa: TC001
 from src.utils.redis_config import RedisKeys
@@ -303,3 +305,19 @@ class BankRepository(BaseSlotRepository):
         new_gold = await self.redis_client.decrby(key, amount)
         logger.info("user_id %d retiró %d oro del banco. Restante: %d", user_id, amount, new_gold)
         return True
+
+    async def transfer_gold(
+        self,
+        user_id: int,
+        amount: int,
+        direction: Literal["deposit", "withdraw"],
+        operation_id: str,
+    ) -> dict[str, Any]:
+        """Confirma conjuntamente ambos saldos y devuelve el resultado persistido.
+
+        Returns:
+            Resultado de depósito/extracción, incluido un rechazo confirmado.
+        """
+        return await transfer_gold(
+            self.redis_client.redis, user_id, amount, direction, operation_id
+        )
