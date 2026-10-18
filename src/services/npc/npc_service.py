@@ -422,6 +422,12 @@ class NPCService:
         npc.x = new_x
         npc.y = new_y
         npc.heading = new_heading
+        # El seguimiento lee copias desde Redis. Sin actualizar el actor vivo,
+        # los siguientes spawns/clics usan la posición vieja y el remove deja
+        # ocupado el último tile, aunque Redis ya haya eliminado la mascota.
+        live = self.map_manager.get_npc_by_char_index(npc.map_id, npc.char_index)
+        if live is not None and live.instance_id == npc.instance_id:
+            live.x, live.y, live.heading = new_x, new_y, new_heading
 
         # Actualizar índice espacial
         self.map_manager.update_npc_tile(npc.instance_id, npc.map_id, old_x, old_y, new_x, new_y)
