@@ -1242,6 +1242,22 @@
             "type": "i16"
           }
         ]
+      },
+      "251": {
+        "name": "SKILL_ACTION",
+        "status": "supported",
+        "requires_capability": 256,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "request",
+            "type": "str16",
+            "max_bytes": 1020
+          }
+        ]
       }
     },
     "server": {
@@ -3100,6 +3116,22 @@
             "max_bytes": 160
           }
         ]
+      },
+      "255": {
+        "name": "SKILL_ACTION_STATE",
+        "status": "supported",
+        "requires_capability": 256,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "result",
+            "type": "str16",
+            "max_bytes": 3800
+          }
+        ]
       }
     }
   },
@@ -3126,7 +3158,8 @@
       "visual_damage": 16,
       "projectiles": 32,
       "weather": 64,
-      "trade_state": 128
+      "trade_state": 128,
+      "skill_actions": 256
     }
   }
 }

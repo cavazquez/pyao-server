@@ -1,0 +1,299 @@
+"""Protocolo real y publicaciones de habilidades sobre repositorios Redis reales."""
+
+import json
+import struct
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+import pytest_asyncio
+
+from src.command_handlers.work_handler import WorkCommandHandler
+from src.commands.work_command import WorkCommand
+from src.game.map_manager import MapManager
+from src.messaging.message_sender import MessageSender
+from src.network.capabilities import SUPPORTED_CAPABILITIES
+from src.network.packet_builder import PacketBuilder
+from src.network.packet_id import ServerPacketID
+from src.services.action_cadence import ActionCadence
+from src.services.combat.combat_service import CombatService
+from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+from src.services.npc.npc_ai_service import NPCAIService
+from src.services.skill_action_service import SkillActionService
+from src.tasks.task_skill_action import TaskSkillAction
+from src.utils.gold_atomic import operation_id
+from src.utils.redis_config import RedisKeys
+
+
+@pytest_asyncio.fixture
+async def action_world(mechanics_world):
+    """Conserva servidor, protocolo y mensajes reales; reemplaza sólo transporte/AOF.
+
+    Yields:
+        Mundo de dos observadores con cadencia controlable y paquetes capturados.
+    """
+    world = mechanics_world
+    maps = MapManager()
+    world.senders = {}
+    for uid in (1, 2):
+        connection = SimpleNamespace(
+            send=AsyncMock(),
+            address="prueba-local",
+            is_authenticated=True,
+            capabilities=SimpleNamespace(enabled=SUPPORTED_CAPABILITIES),
+        )
+        sender = MessageSender(connection)
+        world.senders[uid] = sender
+        maps.add_player(2, uid, sender, f"Prueba{uid}")
+        maps.update_player_tile(uid, 2, 0, 0, 50, 49 + uid)
+    maps.add_npc(2, world.npc)
+    clock = [0.0]
+    service = SkillActionService(
+        world.player,
+        world.inventory,
+        world.terrain,
+        maps,
+        world.catalog,
+        SimpleNamespace(npc_repository=world.npcs),
+        SimpleNamespace(handle_npc_death=AsyncMock()),
+        SimpleNamespace(publish_state=AsyncMock(), schedule_death=MagicMock()),
+        ActionCadence(clock=lambda: clock[0]),
+    )
+    world.maps, world.actions, world.clock = maps, service, clock
+    with patch("src.services.skill_action_service.require_durable", new=AsyncMock()):
+        yield world
+
+
+@pytest.mark.asyncio
+async def test_front_work_executes_the_same_atomic_action_as_target_work(action_world):
+    """TaskWork sobre un recurso frontal no se queda solicitando otro cursor."""
+    world = action_world
+    await world.redis.hset(RedisKeys.player_inventory(1), "slot_1", "127:1")
+    await world.redis.hset(RedisKeys.player_equipment(1), "weapon", "1")
+    handler = WorkCommandHandler(
+        world.player, world.inventory, world.terrain, world.senders[1], skill_actions=world.actions
+    )
+    with patch("src.services.gathering.random.random", return_value=0.0):
+        result = await handler.handle(WorkCommand(1, 2, 49, 50, skill_type=9))
+    assert result.success is True
+    assert await world.redis.hget(RedisKeys.player_skills(1), "xp:talar") == "50"
+
+
+@pytest.mark.asyncio
+async def test_real_npc_ai_routes_damage_and_training_through_atomic_defense(action_world):
+    """IA, combate, repositorios y mensajes reales consumen un solo turno del NPC."""
+    world = action_world
+    await world.redis.hset(RedisKeys.player_inventory(1), "slot_1", "404:1")
+    await world.redis.hset(RedisKeys.player_equipment(1), "shield", "1")
+    combat = CombatService(world.player, world.npcs, None, world.inventory, world.catalog)
+    broadcast = MultiplayerBroadcastService(world.maps, world.player, AsyncMock())
+    ai = NPCAIService(
+        SimpleNamespace(), world.maps, world.player, combat, broadcast, SimpleNamespace()
+    )
+    with patch("src.services.combat.physical_plan.random.random", return_value=0.99):
+        assert await ai.try_attack_player(world.npc, 1) is True
+        assert await ai.try_attack_player(world.npc, 1) is False
+    stats = await world.redis.hgetall(RedisKeys.player_user_stats(1))
+    assert int(stats["min_hp"]) < 500
+    assert await world.redis.hget(RedisKeys.player_skills(1), "xp:tacticas") == "20"
+    assert await world.redis.hget(RedisKeys.player_skills(1), "xp:defensa") == "20"
+    packets = [call.args[0][0] for call in world.senders[1].connection.send.await_args_list]
+    assert ServerPacketID.UPDATE_USER_STATS in packets
+
+
+def wire_request(action, params, identity=None):
+    """Construye bytes de un pedido, independiente del parser de la tarea.
+
+    Returns:
+        Packet 251 versión 1 con JSON Latin-1 limitado por el contrato.
+    """
+    return (
+        PacketBuilder()
+        .add_byte(251)
+        .add_byte(1)
+        .add_unicode_string(
+            json.dumps({"id": identity or operation_id(), "action": action, "params": params})
+        )
+        .to_bytes()
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("skill", ["herreria", "carpinteria", "mineria"])
+async def test_recipe_pagination_through_negotiated_task_fits_packet_limit(action_world, skill):
+    """La consulta real entrega nombres y páginas que caben en el framer del cliente."""
+    world = action_world
+    sender = world.senders[1]
+    identity = operation_id()
+    task = TaskSkillAction(
+        wire_request("recipes", {"skill": skill, "page": 0}, identity),
+        sender,
+        world.actions,
+        {"user_id": 1},
+    )
+    await task.execute()
+    packet = sender.connection.send.await_args.args[0]
+    assert packet[0] == ServerPacketID.SKILL_ACTION_STATE
+    assert len(packet) <= 3804
+    size = int.from_bytes(packet[2:4], "little")
+    result = json.loads(packet[4 : 4 + size].decode("latin-1"))
+    assert result["id"] == identity
+    assert result["applied"] is True
+    assert 1 <= len(result["recipes"]) <= 4
+    assert result["recipes"][0]["materials"][0]["name"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "case",
+    [
+        "unauthenticated",
+        "unnegotiated",
+        "unknown_field",
+        "boolean_quantity",
+        "oversized",
+        "trailing",
+        "version",
+    ],
+)
+async def test_untrusted_action_never_mutates_or_trains(action_world, case):
+    """Autenticación, negociación, esquema, tipos y tamaños se validan antes de operar."""
+    world = action_world
+    sender = world.senders[1]
+    packet = wire_request("hide", {})
+    if case == "unauthenticated":
+        sender.connection.is_authenticated = False
+    elif case == "unnegotiated":
+        sender.connection.capabilities.enabled = 0
+    elif case == "unknown_field":
+        packet = wire_request("hide", {"level": 100})
+    elif case == "boolean_quantity":
+        packet = wire_request("craft", {"recipe": "carpinteria:480", "quantity": True})
+    elif case == "oversized":
+        packet = wire_request("craft", {"recipe": "x" * 1100, "quantity": 1})
+    elif case == "trailing":
+        packet += b"x"
+    elif case == "version":
+        packet = bytes([251, 2]) + packet[2:]
+    before = await world.redis.hgetall(RedisKeys.player_skills(1))
+    await TaskSkillAction(packet, sender, world.actions, {"user_id": 1}).execute()
+    assert await world.redis.hgetall(RedisKeys.player_skills(1)) == before
+    assert sender.connection.send.await_count == 0
+
+
+@pytest.mark.asyncio
+async def test_work_through_service_updates_inventory_progress_and_peer_fx(action_world):
+    """El mismo servicio confirma el recurso y publica progreso antes de su respuesta."""
+    world = action_world
+    await world.redis.hset(RedisKeys.player_inventory(1), "slot_1", "127:1")
+    await world.redis.hset(RedisKeys.player_equipment(1), "weapon", "1")
+    identity = operation_id()
+    with patch("src.services.gathering.random.random", return_value=0.0):
+        first = await world.actions.execute(
+            1, "work", {"skill": 9, "x": 51, "y": 50}, world.senders[1], identity=identity
+        )
+        rejected = await world.actions.execute(
+            1, "work", {"skill": 9, "x": 51, "y": 50}, world.senders[1]
+        )
+        world.clock[0] += 1
+        replay = await world.actions.execute(
+            1, "work", {"skill": 9, "x": 51, "y": 50}, world.senders[1], identity=identity
+        )
+    assert first == replay
+    assert rejected["applied"] is False
+    assert await world.inventory.get_slot(1, 2) == (58, 5)
+    assert any(
+        c.args[0][0] == ServerPacketID.SKILL_CATALOG
+        for c in world.senders[1].connection.send.await_args_list
+    )
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("water", [True, False])
+async def test_ranged_service_uses_actual_actor_for_all_observers_and_respects_wall(
+    action_world, water
+):
+    """Los dos observadores reciben efecto sobre el NPC real; una pared impide el disparo."""
+    world = action_world
+    world.terrain.has_water = lambda _map, x, _y: water and x == 52
+    world.terrain.is_blocked = lambda _map, x, _y: water and x == 52
+    await world.redis.hset(
+        RedisKeys.player_inventory(1), mapping={"slot_1": "665:1", "slot_2": "480:3"}
+    )
+    await world.redis.hset(RedisKeys.player_equipment(1), "weapon", "1")
+    world.maps.remove_npc(2, "animal")
+    world.npc.x = 53
+    world.maps.add_npc(2, world.npc)
+    await world.redis.hset(RedisKeys.npc_instance("animal"), "x", "53")
+    with patch(
+        "src.services.combat.physical_plan.random.random", side_effect=[0.0, 0.99, 0.99, 0.5, 0.99]
+    ):
+        result = await world.actions.execute(
+            1, "work", {"skill": 18, "x": 53, "y": 50}, world.senders[1]
+        )
+    assert result["damage"] > 0
+    for sender in world.senders.values():
+        fx = [
+            c.args[0]
+            for c in sender.connection.send.await_args_list
+            if c.args[0][0] == ServerPacketID.CREATE_FX
+        ]
+        assert any(int.from_bytes(p[1:3], "little") == 10001 for p in fx)
+        assert any(
+            c.args[0][0] == ServerPacketID.PLAY_WAVE for c in sender.connection.send.await_args_list
+        )
+    world.clock[0] += 1
+    world.terrain.has_water = lambda *_: False
+    world.terrain.is_blocked = lambda _m, x, _y: x == 52
+    second = await world.actions.execute(
+        1, "work", {"skill": 18, "x": 53, "y": 50}, world.senders[1]
+    )
+    assert second["applied"] is False
+    assert await world.inventory.get_slot(1, 2) == (480, 2)
+
+
+@pytest.mark.asyncio
+async def test_visibility_magic_hiding_expiry_and_recreated_actor(action_world):
+    """El dueño y su observador recuperan invisibilidad, revelación y recreación de actor."""
+    world = action_world
+    key = RedisKeys.player_user_stats(1)
+    await world.redis.hset(key, mapping={"invisible_until": "200", "hidden_until": "150"})
+    with patch("src.messaging.senders.message_status_effects_sender.time.time", return_value=100):
+        for viewer, sender in world.senders.items():
+            await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+            packet = next(
+                c.args[0]
+                for c in sender.connection.send.await_args_list
+                if c.args[0][0] == ServerPacketID.SET_INVISIBLE
+                and int.from_bytes(c.args[0][1:3], "little") == 1
+            )
+            assert packet[-1] == 1
+        await world.redis.hset(key, "hidden_until", "0")
+        world.senders[2].status_effects.invalidate_character(1)
+        await world.senders[2].status_effects.sync_visibility(2, world.player, world.maps)
+        assert world.senders[2].connection.send.await_args.args[0][-1] == 1
+    with patch("src.messaging.senders.message_status_effects_sender.time.time", return_value=201):
+        for viewer, sender in world.senders.items():
+            await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+            assert sender.connection.send.await_args.args[0] == struct.pack(
+                "<BhB", ServerPacketID.SET_INVISIBLE, 1, 0
+            )
+
+
+@pytest.mark.asyncio
+async def test_campfire_is_visible_to_peers_and_removed_when_expired(action_world):
+    """La fogata usa un objeto real del mapa y desaparece al expirar su clave Redis."""
+    world = action_world
+    await world.redis.hset("world:campfire:2:49:50", mapping={"until": "200", "x": "49", "y": "50"})
+    with patch("src.messaging.senders.message_status_effects_sender.time.time", return_value=100):
+        for uid, sender in world.senders.items():
+            await sender.status_effects.sync_campfires(uid, world.player)
+            assert sender.connection.send.await_args.args[0] == struct.pack(
+                "<BBBh", ServerPacketID.OBJECT_CREATE, 49, 50, 1521
+            )
+        await world.redis.redis.delete("world:campfire:2:49:50")
+        for uid, sender in world.senders.items():
+            await sender.status_effects.sync_campfires(uid, world.player)
+            assert sender.connection.send.await_args.args[0] == bytes(
+                [ServerPacketID.OBJECT_DELETE, 49, 50]
+            )

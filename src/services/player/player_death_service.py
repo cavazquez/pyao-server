@@ -205,12 +205,18 @@ class PlayerDeathService:
             body, head = GHOST_BODY_MALE, GHOST_HEAD
         elif float(stats.get("morphed_until", 0)) > time.time():
             body, head = int(stats.get("morphed_body", body)), int(stats.get("morphed_head", head))
+        if alive and stats.get("sailing") == "1":
+            body, head = 84, 0
+            appearance = {"weapon": 0, "shield": 0, "helmet": 0}
         for sender in self.map_manager.get_all_message_senders_in_map(position["map"]):
             await sender.send_character_change(
                 user_id, body=body, head=head, heading=position.get("heading", 3), **appearance
             )
             await sender.send_set_invisible(
-                user_id, invisible=not (float(stats.get("invisible_until", 0)) > time.time())
+                user_id,
+                invisible=alive
+                and max(float(stats.get("invisible_until", 0)), float(stats.get("hidden_until", 0)))
+                > time.time(),
             )
         owner_sender = self.map_manager.get_player_message_sender(user_id)
         if owner_sender:

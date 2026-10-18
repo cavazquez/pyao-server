@@ -71,7 +71,9 @@ class PetFollowEffect(TickEffect):
 
             # Filtrar solo mascotas invocadas
             pets = [
-                npc for npc in all_npcs if npc.summoned_by_user_id > 0 and npc.summoned_until > 0.0
+                npc
+                for npc in all_npcs
+                if npc.summoned_by_user_id > 0 and (npc.summoned_until > 0.0 or npc.is_tamed)
             ]
 
             if not pets:
@@ -81,9 +83,11 @@ class PetFollowEffect(TickEffect):
             for pet in pets:
                 owner_id = pet.summoned_by_user_id
 
+                if not self.npc_service.map_manager.get_player_message_sender(owner_id):
+                    continue
                 # Obtener posición del dueño
                 owner_position = await player_repo.get_position(owner_id)
-                if not owner_position:
+                if not owner_position or not await player_repo.is_alive(owner_id):
                     # Dueño no conectado o no encontrado, saltar
                     continue
 

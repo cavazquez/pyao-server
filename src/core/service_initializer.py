@@ -8,6 +8,7 @@ from src.models.item_catalog import ItemCatalog
 from src.models.items_catalog import ITEMS_CATALOG
 from src.models.npc_catalog import NPCCatalog
 from src.models.spell_catalog import SpellCatalog
+from src.services.action_cadence import ActionCadence
 from src.services.clan_service import ClanService
 from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
@@ -28,6 +29,7 @@ from src.services.party_service import PartyService
 from src.services.player.player_death_service import PlayerDeathService
 from src.services.player.spell_service import SpellService
 from src.services.player.stamina_service import StaminaService
+from src.services.skill_action_service import SkillActionService
 from src.services.trade_service import TradeService
 
 if TYPE_CHECKING:
@@ -223,24 +225,39 @@ class ServiceInitializer:
         logger.info("✓ Servicio de stamina inicializado")
 
         # Servicio de mapas de jugador (spawn y transiciones)
+        map_resources_service = MapResourcesService(map_manager=self.map_manager)
         player_map_service = PlayerMapService(
             self.repositories["player_repo"],
             self.repositories["account_repo"],
             self.map_manager,
             broadcast_service,
             random_spawn_service,
+            map_resources_service,
         )
         logger.info("✓ Servicio de mapas de jugador inicializado")
 
         # Servicio de recursos de mapas (agua, árboles, minas, puertas)
-        map_resources_service = MapResourcesService(map_manager=self.map_manager)
         logger.info("✓ Servicio de recursos de mapas inicializado")
 
         # Servicio de puertas
         door_service = DoorService()
         logger.info("✓ Servicio de puertas inicializado")
 
+        action_cadence = ActionCadence()
+        skill_actions = SkillActionService(
+            self.repositories["player_repo"],
+            self.repositories["inventory_repo"],
+            map_resources_service,
+            self.map_manager,
+            item_catalog,
+            npc_service,
+            npc_death_service,
+            player_death_service,
+            action_cadence,
+        )
         services = {
+            "skill_actions": skill_actions,
+            "action_cadence": action_cadence,
             "broadcast_service": broadcast_service,
             "npc_service": npc_service,
             "npc_respawn_service": npc_respawn_service,

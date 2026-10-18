@@ -35,8 +35,8 @@ class NpcIndex:
         if map_id not in self._npcs_by_map:
             self._npcs_by_map[map_id] = {}
 
-        self._npcs_by_map[map_id][npc.instance_id] = npc
         self._tile_occupation.occupy_npc(map_id, npc.x, npc.y, npc.instance_id)
+        self._npcs_by_map[map_id][npc.instance_id] = npc
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
     def move_npc(
@@ -61,7 +61,7 @@ class NpcIndex:
             return
 
         tile_key = (map_id, npc.x, npc.y)
-        if self._tile_occupation.get_occupant(*tile_key) is not None:
+        if self._tile_occupation.get_occupant(*tile_key) == f"npc:{instance_id}":
             self._tile_occupation.remove_npc(map_id, npc.x, npc.y)
             logger.debug("Tile (%d,%d) liberado al remover NPC %s", npc.x, npc.y, npc.name)
 

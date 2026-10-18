@@ -13,6 +13,8 @@ from src.commands.walk_command import WalkCommand
 def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
+    repo.get_stats = AsyncMock(return_value={"min_hp": 100})
+    repo.redis.hset = AsyncMock()
     repo.is_meditating = AsyncMock(return_value=False)
     repo.set_meditating = AsyncMock()
     return repo

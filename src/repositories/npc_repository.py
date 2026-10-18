@@ -58,6 +58,8 @@ class NPCRepository:
         snd1: int = 0,
         snd2: int = 0,
         snd3: int = 0,
+        domable: int = 0,
+        is_tamed: bool = False,
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -92,6 +94,8 @@ class NPCRepository:
             snd1: Sonido de ataque (cuando el NPC ataca).
             snd2: Sonido de daño recibido (cuando el NPC recibe daño).
             snd3: Sonido de muerte (cuando el NPC muere).
+            domable: Umbral de Carisma por habilidad para domar.
+            is_tamed: Indica una mascota permanente.
 
         Returns:
             Instancia de NPC creada.
@@ -130,6 +134,8 @@ class NPCRepository:
             snd1=snd1,
             snd2=snd2,
             snd3=snd3,
+            domable=domable,
+            is_tamed=is_tamed,
         )
 
         # Guardar en Redis
@@ -166,6 +172,8 @@ class NPCRepository:
             "poisoned_by_user_id": "0",
             "summoned_by_user_id": str(summoned_by_user_id),
             "summoned_until": str(summoned_until),
+            "domable": str(domable),
+            "is_tamed": str(is_tamed),
             "snd1": str(snd1),
             "snd2": str(snd2),
             "snd3": str(snd3),
@@ -239,6 +247,8 @@ class NPCRepository:
             snd1=int(result.get("snd1", "0")),
             snd2=int(result.get("snd2", "0")),
             snd3=int(result.get("snd3", "0")),
+            domable=int(result.get("domable", "0")),
+            is_tamed=result.get("is_tamed", "False").lower() == "true",
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
@@ -390,17 +400,31 @@ class NPCRepository:
         map_key = RedisKeys.npc_map_index(npc.map_id)
         await self.redis.srem(map_key, instance_id)
 
+        if npc.summoned_by_user_id:
+            await self.redis.srem(f"player:{npc.summoned_by_user_id}:pets", instance_id)
         # Eliminar datos del NPC
         key = RedisKeys.npc_instance(instance_id)
         await self.redis.delete(key)
 
         logger.debug("NPC eliminado: %s (%s)", npc.name, instance_id)
 
-    async def clear_all_npcs(self) -> None:
+    async def clear_all_npcs(self, *, preserve_tamed: bool = False) -> None:
         """Elimina todos los NPCs del mundo (útil para reiniciar).
 
         ADVERTENCIA: Esta operación es destructiva.
         """
+        if preserve_tamed:
+            for npc in await self.get_all_npcs():
+                if not npc.is_tamed or npc.hp <= 0:
+                    await self.remove_npc(npc.instance_id)
+            keys = await self.redis.keys("npc:map:*")
+            if keys:
+                await self.redis.delete(*keys)
+            for pet in await self.get_all_npcs():
+                await self.redis.sadd(RedisKeys.npc_map_index(pet.map_id), pet.instance_id)
+                await self.redis.sadd(f"player:{pet.summoned_by_user_id}:pets", pet.instance_id)
+            return
+
         # Eliminar todas las instancias de NPCs
         pattern = "npc:instance:*"
         keys = await self.redis.keys(pattern)

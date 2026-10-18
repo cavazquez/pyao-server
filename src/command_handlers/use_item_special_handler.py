@@ -16,6 +16,9 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 WORK_TOOL_SKILLS: dict[int, int] = {
+    127: 9,
+    187: 13,
+    138: 12,
     561: 9,  # Hacha de Leñador → Skill Talar
     562: 13,  # Piquete de Minero → Skill Minería
     563: 12,  # Caña de pescar → Skill Pesca

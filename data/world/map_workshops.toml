@@ -1,0 +1,142 @@
+# Objetos de los .inf de AO 0.13.3; coordenadas de 1 a 100.
+# Regenerar: python -m tools.extraction.extract_map_workshops --maps RUTA_MAPAS_VB6
+
+[[workshop]]
+map_id = 1
+x = 32
+y = 62
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 1
+x = 36
+y = 62
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 34
+x = 39
+y = 30
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 34
+x = 43
+y = 30
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 59
+x = 69
+y = 77
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 59
+x = 72
+y = 77
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 62
+x = 41
+y = 57
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 62
+x = 45
+y = 57
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 151
+x = 62
+y = 19
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 151
+x = 66
+y = 19
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 171
+x = 59
+y = 17
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 171
+x = 62
+y = 17
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 171
+x = 69
+y = 17
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 171
+x = 71
+y = 17
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 171
+x = 73
+y = 17
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 196
+x = 29
+y = 20
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 196
+x = 35
+y = 24
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 196
+x = 35
+y = 28
+kind = "anvil"
+grh_index = 600
+
+[[workshop]]
+map_id = 286
+x = 78
+y = 61
+kind = "forge"
+grh_index = 722
+
+[[workshop]]
+map_id = 286
+x = 82
+y = 63
+kind = "anvil"
+grh_index = 600

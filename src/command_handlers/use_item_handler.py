@@ -15,6 +15,9 @@ from src.repositories.inventory_repository import InventoryRepository
 from src.services.inventory_notifications import notify_inventory
 from src.services.scroll_learning import ScrollRule, learn_scroll
 
+BOAT_TYPE = 31
+
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
@@ -26,10 +29,14 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import (
         MultiplayerBroadcastService,
     )
+    from src.services.skill_action_service import SkillActionService
 
 logger = logging.getLogger(__name__)
 
 WORK_TOOL_SKILLS: dict[int, int] = {
+    127: 9,
+    187: 13,
+    138: 12,
     561: 9,  # Hacha de Leñador → Skill Talar
     562: 13,  # Piquete de Minero → Skill Minería
     563: 12,  # Caña de pescar → Skill Pesca
@@ -53,6 +60,7 @@ class UseItemCommandHandler(CommandHandler):
         item_catalog: ItemCatalog | None = None,
         broadcast_service: MultiplayerBroadcastService | None = None,
         map_manager: MapManager | None = None,
+        skill_actions: SkillActionService | None = None,
         spell_catalog: SpellCatalog | None = None,
     ) -> None:
         """Inicializa el handler.
@@ -61,6 +69,7 @@ class UseItemCommandHandler(CommandHandler):
             player_repo: Repositorio de jugadores.
             map_resources: Servicio de recursos de mapa.
             account_repo: Repositorio de cuentas.
+            skill_actions: Servicio compartido de acciones de habilidades.
             message_sender: Enviador de mensajes.
             item_catalog: Catálogo de items (para datos completos de pociones).
             broadcast_service: Servicio de broadcast multijugador (para invisibilidad).
@@ -72,6 +81,7 @@ class UseItemCommandHandler(CommandHandler):
         self.map_resources = map_resources
         self.account_repo = account_repo
         self.message_sender = message_sender
+        self.skill_actions = skill_actions
         self.item_catalog = item_catalog
         self.broadcast_service = broadcast_service
         self.map_manager = map_manager
@@ -132,6 +142,19 @@ class UseItemCommandHandler(CommandHandler):
             return await self.special_handler.handle_work_tool(user_id, item_id, slot)
 
         # Barca: delegar a handler especializado
+        if (
+            self.skill_actions is not None
+            and self.item_catalog is not None
+            and (self.item_catalog.get_item_data(item_id) or {}).get("ObjType") == BOAT_TYPE
+        ):
+            result = await self.skill_actions.execute(
+                user_id, "navigate", {"slot": slot}, self.message_sender
+            )
+            return (
+                CommandResult.ok(result)
+                if result["applied"]
+                else CommandResult.error(str(result.get("message", "Navegación rechazada")))
+            )
         if item_id == BOAT_ITEM_ID:
             return await self.special_handler.handle_boat(user_id, slot, username)
 

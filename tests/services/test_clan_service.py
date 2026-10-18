@@ -85,6 +85,8 @@ async def test_kick_member_clears_redis_entries(redis_client):
 def mock_player_repo() -> MagicMock:
     """Create a mock PlayerRepository."""
     repo = MagicMock()
+    repo.redis.get = AsyncMock(return_value=None)
+    repo.redis.hgetall = AsyncMock(return_value={"level:liderazgo": "90"})
     repo.get_level = AsyncMock(return_value=20)
     repo.get_stats = AsyncMock(return_value={"level": 20})
     repo.is_alive = AsyncMock(return_value=True)

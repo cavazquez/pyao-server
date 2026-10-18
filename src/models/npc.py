@@ -70,3 +70,6 @@ class NPC:
     # Campos para invocación de mascotas
     summoned_by_user_id: int = 0  # ID del jugador que invocó al NPC (0 = no invocado)
     summoned_until: float = 0.0  # Timestamp hasta cuando existe (0 = permanente/no invocado)
+
+    domable: int = 0  # Umbral clásico Carisma por habilidad; cero impide domar.
+    is_tamed: bool = False  # Mascota permanente, independiente de invocaciones temporales.

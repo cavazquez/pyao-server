@@ -2,19 +2,15 @@
 
 from __future__ import annotations
 
-import logging
 from typing import TYPE_CHECKING
 
 from src.effects.tick_effect import TickEffect
+from src.services.meditation import meditate_tick
+from src.services.player_progression import publish_progress
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.player_repository import PlayerRepository
-
-logger = logging.getLogger(__name__)
-
-# Cantidad de mana recuperada por tick
-MANA_RECOVERY_PER_TICK = 10
 
 
 class MeditationEffect(TickEffect):
@@ -30,8 +26,6 @@ class MeditationEffect(TickEffect):
             interval_seconds: Intervalo en segundos entre recuperaciones (default: 3s).
         """
         self.interval_seconds = interval_seconds
-        # Contadores por jugador: {user_id: ticks_elapsed}
-        self._tick_counters: dict[int, int] = {}
 
     def get_interval_seconds(self) -> float:
         """Retorna el intervalo en segundos entre aplicaciones del efecto.
@@ -62,86 +56,12 @@ class MeditationEffect(TickEffect):
             player_repo: Repositorio de jugadores.
             message_sender: Enviador de mensajes (puede ser None).
         """
-        try:
-            logger.debug("MeditationEffect.apply llamado para user_id %d", user_id)
-
-            # Verificar si está meditando
-            is_meditating = await player_repo.is_meditating(user_id)
-            logger.debug("user_id %d - is_meditating: %s", user_id, is_meditating)
-
-            if not is_meditating:
-                # Resetear contador si no está meditando
-                if user_id in self._tick_counters:
-                    logger.debug("user_id %d dejó de meditar, reseteando contador", user_id)
-                    del self._tick_counters[user_id]
-                return
-
-            # Incrementar contador de ticks
-            if user_id not in self._tick_counters:
-                self._tick_counters[user_id] = 0
-
-            self._tick_counters[user_id] += 1
-
-            # Calcular cuántos ticks necesitamos (GameTick corre cada 0.5s)
-            # Para 3 segundos con tick de 0.5s: 3 / 0.5 = 6 ticks
-            ticks_needed = int(self.interval_seconds / 0.5)  # 0.5s es el tick_interval del GameTick
-
-            logger.debug(
-                "user_id %d meditando - tick %d/%d",
-                user_id,
-                self._tick_counters[user_id],
-                ticks_needed,
-            )
-
-            # Solo aplicar efecto cuando alcancemos los ticks necesarios
-            if self._tick_counters[user_id] < ticks_needed:
-                return
-
-            # Resetear contador
-            self._tick_counters[user_id] = 0
-
-            logger.info("user_id %d: aplicando recuperación de maná", user_id)
-
-            # Obtener mana actual y máximo
-            min_mana, max_mana = await player_repo.get_mana(user_id)
-
-            # Verificar que no tenga mana completo
-            if min_mana >= max_mana:
-                # Mana completo, detener meditación automáticamente
-                await player_repo.set_meditating(user_id, is_meditating=False)
-                if message_sender:
-                    await message_sender.send_meditate_toggle()
-                    await message_sender.send_console_msg(
-                        "Tu mana esta completo. Dejas de meditar."
-                    )
-                logger.info("user_id %d dejó de meditar automáticamente (mana completo)", user_id)
-                return
-
-            # Recuperar mana
-            old_mana = min_mana
-            new_mana = min(min_mana + MANA_RECOVERY_PER_TICK, max_mana)
-            mana_recovered = new_mana - old_mana
-
-            # Actualizar mana en Redis
-            await player_repo.update_mana(user_id, new_mana)
-
-            # Obtener stats actualizados para enviar al cliente
-            stats = await player_repo.get_stats(user_id)
-
-            # Enviar actualización de stats al cliente
-            if message_sender and stats:
-                # Enviar UPDATE_MANA específico
-                await message_sender.send_update_mana(new_mana)
-                # También enviar UPDATE_USER_STATS completo
-                await message_sender.send_update_user_stats(**stats)
-
-            logger.info(
-                "user_id %d recuperó %d mana meditando (%d/%d)",
-                user_id,
-                mana_recovered,
-                new_mana,
-                max_mana,
-            )
-
-        except Exception:
-            logger.exception("Error al aplicar efecto de meditación para user_id %d", user_id)
+        result = await meditate_tick(player_repo, user_id, self.interval_seconds)
+        if not result.get("applied") or message_sender is None:
+            return
+        if result.get("stopped"):
+            await message_sender.send_meditate_toggle()
+            await message_sender.send_create_fx(char_index=user_id, fx=0, loops=0)
+        if result.get("recovered"):
+            await message_sender.send_update_mana(int(result["mana"]))
+        await publish_progress(player_repo, user_id, message_sender)

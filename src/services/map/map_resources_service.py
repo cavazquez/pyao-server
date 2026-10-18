@@ -19,6 +19,7 @@ from src.services.map.map_resource_queries import (
     tile_in_required_layer,
 )
 from src.services.map.map_single_map_loader import load_single_map_into
+from src.services.map.map_workshops import load_workshops
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -81,6 +82,17 @@ class MapResourcesService:
                     sys.exit(msg % self.maps_dir)
 
         self._load_manual_doors()
+        # Los talleres son objetos .inf, omitidos por el antiguo extractor de .map.
+        # Se superponen tras la caché para reparar también instalaciones existentes.
+        self.workshops = (
+            load_workshops(data_dir() / "world/map_workshops.toml", self.resources)
+            if maps_dir is None
+            else {}
+        )
+        if map_manager is not None:
+            for map_id, rows in self.workshops.items():
+                for x, y, _graphic in rows:
+                    map_manager.block_tile(map_id, x, y)
 
     def _load_all_maps(self) -> None:
         """Carga todos los mapas desde el directorio."""

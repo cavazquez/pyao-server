@@ -9,24 +9,30 @@ recetas balanceadas con materiales y requerimientos de skill.
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Tuple
-import random
+import tomllib
+
+from src.models.item_catalog import ItemCatalog
 
 
 class CraftingDataExtractor:
     def __init__(self, data_dir: Path, output_dir: Path):
         self.data_dir = data_dir
         self.output_dir = output_dir
-        self.output_dir.mkdir(exist_ok=True)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.catalog = ItemCatalog()
+        self.existing = {}
+        for path in self.output_dir.glob("*.toml"):
+            data = tomllib.loads(path.read_text())
+            for category in ("weapons_recipes", "armor_recipes"):
+                for recipe in data.get(category, {}).get("recipes", []):
+                    self.existing[recipe["index"]] = recipe
 
         # Materiales base para crafting
         self.base_materials = {
-            "hierro": {"index": 1, "name": "Lingote de Hierro", "skill_req": 10},
-            "plata": {"index": 2, "name": "Lingote de Plata", "skill_req": 30},
-            "oro": {"index": 3, "name": "Lingote de Oro", "skill_req": 50},
-            "acero": {"index": 4, "name": "Lingote de Acero", "skill_req": 40},
-            "madera": {"index": 5, "name": "Leña", "skill_req": 1},
-            "cuero": {"index": 6, "name": "Piel de Animal", "skill_req": 5},
-            "hueso": {"index": 7, "name": "Hueso de Animal", "skill_req": 3},
+            "hierro": {"index": 386, "name": "Lingote de Hierro", "skill_req": 25},
+            "plata": {"index": 387, "name": "Lingote de Plata", "skill_req": 50},
+            "oro": {"index": 388, "name": "Lingote de Oro", "skill_req": 75},
+            "madera": {"index": 58, "name": "Leña", "skill_req": 0},
         }
 
     def parse_crafting_file(self, file_path: Path) -> Dict[str, Any]:
@@ -62,89 +68,21 @@ class CraftingDataExtractor:
 
     def generate_recipe(self, item: Dict[str, Any], item_type: str, tier: int = 1) -> Dict[str, Any]:
         """Genera una receta balanceada para un item."""
-        name = item["name"].lower()
-        
-        # Determinar materiales base según el nombre
-        materials = []
-        skill_req = 5 + (tier * 10)
-        
-        if "daga" in name or "espada" in name or "hacha" in name:
-            # Armas de metal
-            if "plata" in name:
-                materials.append({"item": "plata", "quantity": 2 + tier})
-                skill_req += 20
-            elif "dragon" in name or "mata dragones" in name:
-                materials.append({"item": "acero", "quantity": 3 + tier})
-                skill_req += 30
-            elif "barbaro" in name or "guerra" in name:
-                materials.append({"item": "hierro", "quantity": 3 + tier})
-                skill_req += 15
-            else:
-                materials.append({"item": "hierro", "quantity": 1 + tier})
-            
-            if "mango" in name or "vara" in name:
-                materials.append({"item": "madera", "quantity": 1})
-                
-        elif "casco" in name or "armadura" in name or "cota" in name:
-            # Armaduras
-            if "plata" in name:
-                materials.append({"item": "plata", "quantity": 3 + tier})
-                skill_req += 20
-            elif "dragon" in name or "dorada" in name:
-                materials.append({"item": "acero", "quantity": 4 + tier})
-                skill_req += 30
-            elif "hierro" in name:
-                materials.append({"item": "hierro", "quantity": 2 + tier})
-            else:
-                materials.append({"item": "cuero", "quantity": 2 + tier})
-                skill_req -= 5
-                
-        elif "escudo" in name:
-            # Escudos
-            if "plata" in name:
-                materials.append({"item": "plata", "quantity": 3 + tier})
-                skill_req += 25
-            elif "tortuga" in name:
-                materials.append({"item": "hueso", "quantity": 3})
-                skill_req += 10
-            else:
-                materials.append({"item": "hierro", "quantity": 2 + tier})
-                
-        elif "hacha de leñador" in name or "serrucho" in name or "piquete" in name:
-            # Herramientas
-            materials.append({"item": "hierro", "quantity": 1})
-            materials.append({"item": "madera", "quantity": 2})
-            skill_req = max(5, skill_req - 10)
-            
-        elif "flecha" in name:
-            # Munición
-            materials.append({"item": "madera", "quantity": 5})
-            materials.append({"item": "hueso", "quantity": 2})
-            skill_req = max(1, skill_req - 15)
-            
-        elif "laud" in name:
-            # Instrumentos
-            materials.append({"item": "madera", "quantity": 3})
-            if "mágico" in name or "élfico" in name:
-                skill_req += 25
-                
-        else:
-            # Default - materiales básicos
-            materials.append({"item": "hierro", "quantity": 1})
-            materials.append({"item": "madera", "quantity": 1})
-        
-        # Añadir chance de éxito basado en skill
-        success_rate = min(95, 50 + (skill_req // 2))
-        
+        canonical = self.catalog.get_item_data(item["index"])
+        if canonical is None:
+            raise ValueError(f"Objeto inexistente en receta: {item['index']}")
+        materials = [{"item_id": identifier, "quantity": int(canonical[field])}
+                     for field, identifier in (("LingH", 386), ("LingP", 387), ("LingO", 388))
+                     if int(canonical.get(field, 0)) > 0]
+        if not materials:
+            raise ValueError(f"Sin materiales canónicos: {item['index']}")
+        skill_req = int(canonical.get("SkHerreria", 0))
+        existing = self.existing.get(item["index"], {})
         return {
-            "item_id": item["id"],
-            "item_name": item["name"],
-            "item_index": item["index"],
-            "skill_requirement": max(1, skill_req),
-            "materials": materials,
-            "success_rate": success_rate,
-            "experience": 10 + (tier * 5),
-            "tier": tier
+            "item_id": item["id"], "item_name": canonical["Name"], "item_index": item["index"],
+            "skill_requirement": skill_req, "materials": materials,
+            "success_rate": existing.get("success_rate", min(95, 50 + skill_req // 2)),
+            "experience": existing.get("experience", 10 + tier * 5), "tier": tier,
         }
 
     def determine_tier(self, item: Dict[str, Any]) -> int:
@@ -205,25 +143,25 @@ class CraftingDataExtractor:
         """Guarda los datos de crafting en formato TOML."""
         
         # Separar por tipo
-        weapons = [r for r in recipes if "item_id" in r and "Arma" in r["item_id"]]
-        armor = [r for r in recipes if "item_id" in r and "Armadura" in r["item_id"]]
+        weapons = [r for r in recipes if "item_id" in r and re.fullmatch(r"Arma\d+", r["item_id"]) is not None]
+        armor = [r for r in recipes if "item_id" in r and re.fullmatch(r"Armadura\d+", r["item_id"]) is not None]
         
         # Guardar armas
-        weapons_file = self.output_dir / "weapons_crafting.toml"
+        weapons_file = self.output_dir / "weapons.toml"
         weapons_toml = self.convert_recipes_to_toml(weapons, "weapons")
         with open(weapons_file, 'w', encoding='utf-8') as f:
             f.write(weapons_toml)
         print(f"✅ Armas guardadas en: {weapons_file}")
         
         # Guardar armaduras
-        armor_file = self.output_dir / "armor_crafting.toml"
+        armor_file = self.output_dir / "armor.toml"
         armor_toml = self.convert_recipes_to_toml(armor, "armor")
         with open(armor_file, 'w', encoding='utf-8') as f:
             f.write(armor_toml)
         print(f"✅ Armaduras guardadas en: {armor_file}")
         
         # Guardar materiales
-        materials_file = self.output_dir / "crafting_materials.toml"
+        materials_file = self.output_dir / "materials.toml"
         materials_toml = self.convert_materials_to_toml()
         with open(materials_file, 'w', encoding='utf-8') as f:
             f.write(materials_toml)
@@ -249,13 +187,13 @@ class CraftingDataExtractor:
             # Materiales
             toml_content.append("materials = [")
             for material in recipe["materials"]:
-                toml_content.append(f'    {{item = "{material["item"]}", quantity = {material["quantity"]}}},')
+                toml_content.append(f'    {{item_id = {material["item_id"]}, quantity = {material["quantity"]}}},')
             if recipe["materials"]:
                 toml_content[-1] = toml_content[-1][:-1]  # Eliminar última coma
             toml_content.append("]")
             toml_content.append("")
         
-        return '\n'.join(toml_content)
+        return '\n'.join(toml_content).rstrip() + '\n'
 
     def convert_materials_to_toml(self) -> str:
         """Convierte materiales a formato TOML."""
@@ -272,13 +210,13 @@ class CraftingDataExtractor:
             toml_content.append(f'skill_requirement = {mat_data["skill_req"]}')
             toml_content.append("")
         
-        return '\n'.join(toml_content)
+        return '\n'.join(toml_content).rstrip() + '\n'
 
 
 def main():
-    base_dir = Path(__file__).parent.parent
+    base_dir = Path(__file__).resolve().parents[2]
     data_dir = base_dir / "clientes" / "ArgentumOnline0.13.3-Cliente-Servidor" / "server" / "Dat"
-    output_dir = base_dir / "data"
+    output_dir = base_dir / "data" / "crafting"
     
     if not data_dir.exists():
         print(f"Error: No existe {data_dir}")

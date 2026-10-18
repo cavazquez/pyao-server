@@ -357,6 +357,10 @@ class TestTryAttackPlayer:
         )
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_npc_hit_user = AsyncMock()
         message_sender.send_play_wave = AsyncMock()
         message_sender.send_create_fx = AsyncMock()
@@ -418,6 +422,10 @@ class TestTryAttackPlayer:
         )
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_npc_hit_user = AsyncMock()
         message_sender.send_play_wave = AsyncMock()
         message_sender.send_create_fx = AsyncMock()
@@ -596,6 +604,10 @@ class TestProcessHostileNPC:
         mock_combat_service.npc_attack_player = AsyncMock(return_value={"damage": 10})
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_npc_hit_user = AsyncMock()
         message_sender.send_play_wave = AsyncMock()
         message_sender.send_create_fx = AsyncMock()

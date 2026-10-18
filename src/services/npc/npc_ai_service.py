@@ -5,6 +5,7 @@ import random
 import time
 from typing import TYPE_CHECKING
 
+from src.services.player_progression import publish_progress
 from src.utils.sounds import SoundID
 from src.utils.visual_effects import VisualEffectID
 
@@ -238,9 +239,23 @@ class NPCAIService:
         # Realizar ataque NPC -> Jugador
         result = await self.combat_service.npc_attack_player(npc, target_user_id)
 
-        # Verificar si hubo daño
-        if not result or result.get("damage", 0) <= 0:
+        if not result:
             return False
+        observer = self.map_manager.get_message_sender(target_user_id)
+        # Un esquive o bloqueo válido también consume el turno del NPC y entrena.
+        if result.get("applied", True):
+            npc.last_attack_time = current_time
+            observer = self.map_manager.get_message_sender(target_user_id)
+            if observer:
+                await publish_progress(self.player_repo, target_user_id, observer)
+        if result.get("damage", 0) <= 0:
+            if observer and result.get("applied", False):
+                await observer.send_console_msg(
+                    "Bloqueaste el golpe con el escudo."
+                    if result.get("blocked")
+                    else "Esquivaste el ataque."
+                )
+            return bool(result.get("applied", False))
 
         # Actualizar timestamp del último ataque
         npc.last_attack_time = current_time

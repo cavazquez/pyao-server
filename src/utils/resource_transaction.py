@@ -212,3 +212,6 @@ def _enqueue_writes(
                 pipe.sadd(key, *sorted(value))
         elif isinstance(value, str):
             pipe.set(key, value, ex=resources[key].ttl_seconds)
+        ttl = resources[key].ttl_seconds
+        if not isinstance(value, str) and ttl is not None:
+            pipe.expire(key, ttl)

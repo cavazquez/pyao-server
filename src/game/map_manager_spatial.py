@@ -13,10 +13,11 @@ logger = logging.getLogger(__name__)
 class SpatialIndexMixin:
     """Mixin para agregar índice espacial al MapManager."""
 
-    def can_move_to(self, map_id: int, x: int, y: int) -> bool:
+    def can_move_to(self, map_id: int, x: int, y: int, *, reservation: str = "") -> bool:
         """Verifica si se puede mover a una posición.
 
         Args:
+            reservation: Reserva propia que puede ocupar el destino.
             map_id: ID del mapa.
             x: Coordenada X.
             y: Coordenada Y.
@@ -46,7 +47,34 @@ class SpatialIndexMixin:
             "dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {})
         )
         key = (map_id, x, y)
-        return key not in tile_occupation
+        return key not in tile_occupation or bool(
+            reservation and tile_occupation.get(key) == f"reservation:{reservation}"
+        )
+
+    def reserve_positions(
+        self, identity: str, map_id: int, positions: list[tuple[int, int]]
+    ) -> None:
+        """Reserva casillas sin ceder control entre validar y ocupar.
+
+        Raises:
+            ValueError: Si cambió la ocupación o el terreno antes de reservar.
+        """
+        if not positions or not all(
+            self.can_move_to(map_id, x, y, reservation=identity) for x, y in positions
+        ):
+            message = "El lugar de invocación cambió"
+            raise ValueError(message)
+        for x, y in positions:
+            self._tile_occupation[map_id, x, y] = f"reservation:{identity}"  # type: ignore[attr-defined]
+
+    def release_positions(
+        self, identity: str, position: tuple[int, int, int] | None = None
+    ) -> None:
+        """Libera sólo casillas de la reserva propia, sin borrar jugadores ni NPCs."""
+        occupied = cast("dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {}))
+        for key, occupant in list(occupied.items()):
+            if occupant == f"reservation:{identity}" and (position is None or key == position):
+                del occupied[key]
 
     def is_tile_occupied(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si un tile está ocupado por un jugador o NPC.

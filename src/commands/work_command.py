@@ -23,6 +23,7 @@ class WorkCommand(Command):
     target_x: int
     target_y: int
     timestamp: float | None = None
+    skill_type: int = 0
 
     def __post_init__(self) -> None:
         """Inicializa timestamp si no se proporciona."""

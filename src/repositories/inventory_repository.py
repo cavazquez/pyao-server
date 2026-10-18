@@ -38,8 +38,8 @@ class InventoryRepository:
     y InventoryStackingStrategy para proporcionar una API simple.
     """
 
-    MAX_SLOTS = config_manager.get(
-        "game.inventory.max_slots", 30
+    MAX_SLOTS: int = ConfigManager.as_int(
+        config_manager.get("game.inventory.max_slots", 30)
     )  # Número máximo de slots de inventario
 
     def __init__(self, redis_client: RedisClient, max_stack: int = 20) -> None:

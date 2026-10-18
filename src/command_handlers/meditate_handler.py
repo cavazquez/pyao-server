@@ -50,9 +50,16 @@ class MeditateCommandHandler(CommandHandler):
             # Obtener estado actual de meditación
             is_currently_meditating = await self.player_repo.is_meditating(user_id)
 
+            stats = await self.player_repo.get_stats(user_id)
+            if not stats or int(stats.get("min_hp", 0)) <= 0:
+                return CommandResult.error("No puedes meditar estando muerto.")
             # Toggle: cambiar estado
             new_state = not is_currently_meditating
             await self.player_repo.set_meditating(user_id, new_state)
+            if new_state:
+                await self.player_repo.redis.hset(
+                    f"player:{user_id}:user_stats", "meditation_due", "0"
+                )
 
             # Enviar toggle de meditación al cliente
             await self.message_sender.send_meditate_toggle()
@@ -77,7 +84,7 @@ class MeditateCommandHandler(CommandHandler):
                 # Esto detiene el efecto visual inmediatamente
                 await self.message_sender.send_create_fx(
                     char_index=user_id,
-                    fx=16,
+                    fx=0,
                     loops=0,  # loops=0 = cancela el FX
                 )
                 logger.info("user_id %d dejó de meditar", user_id)

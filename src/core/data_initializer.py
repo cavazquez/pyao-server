@@ -4,7 +4,9 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.models.city_data_loader import CityDataLoader
+from src.models.crafting_data_loader import CraftingDataLoader
 from src.models.merchant_data_loader import MerchantDataLoader
+from src.models.skill_data_loader import SkillDataLoader
 
 if TYPE_CHECKING:
     from src.utils.base_data_loader import BaseDataLoader
@@ -28,6 +30,8 @@ class DataInitializer:
         self.loaders: list[BaseDataLoader] = [
             CityDataLoader(redis_client),
             MerchantDataLoader(redis_client),
+            SkillDataLoader(redis_client),
+            CraftingDataLoader(redis_client),
         ]
 
     async def initialize_all(self, force_clear: bool = False) -> None:

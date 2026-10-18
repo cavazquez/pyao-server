@@ -4,11 +4,6 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
-from src.models.mana import calculate_mana
-from src.utils.level_calculator import (
-    calculate_level_from_experience,
-    calculate_remaining_elu,
-)
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -414,163 +409,19 @@ class NPCDeathService:
             char_index=npc.char_index,
         )
 
-    async def _check_and_handle_level_up(  # noqa: PLR0914
+    async def _check_and_handle_level_up(
         self,
         user_id: int,
-        current_level: int,
-        new_experience: int,
+        _current_level: int,
+        _new_experience: int,
         message_sender: MessageSender,
     ) -> None:
-        """Verifica si el jugador subió de nivel y maneja el proceso completo.
+        """Confirma crecimiento y puntos desde el estado Redis más reciente."""
+        from src.services.player_progression import advance_player_level  # noqa: PLC0415
 
-        Args:
-            user_id: ID del jugador.
-            current_level: Nivel actual del jugador.
-            new_experience: Nueva experiencia total.
-            message_sender: MessageSender del jugador.
-        """
-        # Calcular nuevo nivel basado en experiencia
-        new_level = calculate_level_from_experience(new_experience, config_manager)
-
-        # Si no subió de nivel, solo actualizar ELU
-        if new_level <= current_level:
-            # Actualizar ELU restante
-            remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
-            await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
-
-            # Enviar actualización de stats
-            await message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
-            return
-
-        # El jugador subió de nivel
-        logger.info(
-            "¡Jugador %d subió de nivel! %d → %d",
-            user_id,
-            current_level,
-            new_level,
-        )
-
-        # Calcular nuevo ELU
-        remaining_elu = calculate_remaining_elu(new_experience, new_level, config_manager)
-
-        # Actualizar nivel y ELU
-        await self.player_repo.update_level_and_elu(user_id, new_level, remaining_elu)
-
-        # Obtener stats y atributos actuales para actualizar
-        stats = await self.player_repo.get_player_stats(user_id)
-        if not stats:
-            return
-
-        # Calcular nuevos valores de HP, Mana y Stamina basados en nivel
-        # Obtener atributos para calcular stats
-        attributes = await self.player_repo.get_player_attributes(user_id)
-        if attributes:
-            constitution = attributes.constitution
-            intelligence = attributes.intelligence
-
-            # Calcular nuevos máximos basados en atributos y nivel
-            hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
-            mana_per_int = config_manager.as_int(
-                config_manager.get("game.character.mana_per_int", 10)
-            )
-
-            # HP = constitution * hp_per_con * nivel (con mínimo)
-            new_max_hp = max(constitution * hp_per_con * new_level, 100)
-            # Mana = intelligence * mana_per_int * nivel (con mínimo)
-            new_max_mana = max(calculate_mana(intelligence, mana_per_int, new_level), 100)
-            # Stamina aumenta con nivel (base 100 + 10 por nivel)
-            new_max_sta = 100 + (new_level * 10)
-
-            # Mantener el porcentaje actual de HP/Mana/Stamina
-            old_max_hp = stats.max_hp
-            old_max_mana = stats.max_mana
-            old_max_sta = stats.max_sta
-
-            old_min_hp = stats.min_hp
-            old_min_mana = stats.min_mana
-            old_min_sta = stats.min_sta
-
-            # Calcular nuevos valores actuales manteniendo el porcentaje
-            hp_percentage = old_min_hp / old_max_hp if old_max_hp > 0 else 1.0
-            mana_percentage = old_min_mana / old_max_mana if old_max_mana > 0 else 1.0
-            sta_percentage = old_min_sta / old_max_sta if old_max_sta > 0 else 1.0
-
-            new_min_hp = int(new_max_hp * hp_percentage)
-            new_min_mana = int(new_max_mana * mana_percentage)
-            new_min_sta = int(new_max_sta * sta_percentage)
-
-            # Actualizar stats
-            await self.player_repo.set_stats(
-                preserve_gold=True,
-                user_id=user_id,
-                max_hp=new_max_hp,
-                min_hp=new_min_hp,
-                max_mana=new_max_mana,
-                min_mana=new_min_mana,
-                max_sta=new_max_sta,
-                min_sta=new_min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-            # Enviar actualización completa de stats
-            await message_sender.send_update_user_stats(
-                max_hp=new_max_hp,
-                min_hp=new_min_hp,
-                max_mana=new_max_mana,
-                min_mana=new_min_mana,
-                max_sta=new_max_sta,
-                min_sta=new_min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-        else:
-            # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
-            await self.player_repo.set_stats(
-                preserve_gold=True,
-                user_id=user_id,
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-            # Enviar actualización
-            await message_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-        # Reproducir sonido de level up
-        await message_sender.play_sound_level_up()
-
-        # Enviar mensaje de felicitación
-        await message_sender.send_console_msg(
-            f"¡Felicidades! Has subido al nivel {new_level}!",
-            font_color=14,  # Color dorado/amarillo para level up
-        )
-
-        # Si está en party, actualizar el nivel en la party
-        if self.party_service:
-            await self.party_service.update_member_level(user_id, new_level)
+        result = await advance_player_level(self.player_repo, user_id, message_sender)
+        if self.party_service and result["level"] > result["previous_level"]:
+            await self.party_service.update_member_level(user_id, int(result["level"]))
 
     def _find_free_position_for_drop(
         self, map_id: int, center_x: int, center_y: int, radius: int = 4, max_attempts: int = 40

@@ -41,6 +41,10 @@ class LifecycleEffect(TickEffect):
         if message_sender is None:
             return
         await message_sender.sync_status(user_id, player_repo)
+        await message_sender.status_effects.sync_campfires(user_id, player_repo)
+        await message_sender.status_effects.sync_visibility(
+            user_id, player_repo, self.death_service.map_manager
+        )
         stats = await player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
         if (
             stats

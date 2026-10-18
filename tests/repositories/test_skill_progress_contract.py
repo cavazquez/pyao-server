@@ -8,7 +8,7 @@ import pytest
 from fakeredis import FakeRedis
 
 from src.core.schema_manager import MIGRATION_LOCK_KEY
-from src.models.skills import CATALOG, skill_migration_fields, skill_progress
+from src.models.skills import CATALOG, skill_migration_fields, skill_progress, skill_threshold
 from src.network.msg_skills import build_skill_catalog_response
 from src.operations.redis_schema import apply_ordered_steps
 from src.repositories.player_repository import PlayerRepository
@@ -28,11 +28,11 @@ LEGACY = {
 }
 
 
-def test_catalog_keeps_own_skills_and_explicit_unimplemented_ids() -> None:
+def test_catalog_keeps_own_skills_and_all_ids_are_implemented() -> None:
     """No se pierde robustez/agilidad al representar los 20 IDs del cliente AO."""
     assert [entry.skill_id for entry in CATALOG] == list(range(1, 23))
     assert (CATALOG[20].key, CATALOG[21].key) == ("robustez", "agilidad")
-    assert not CATALOG[1].implemented
+    assert all(entry.implemented for entry in CATALOG)
     progress = {p.definition.key: p for p in skill_progress(LEGACY)}
     assert (progress["magia"].level, progress["magia"].experience) == (10, 0)
     assert (
@@ -76,9 +76,12 @@ async def test_experience_updates_do_not_overwrite_levels_or_lose_concurrent_gai
     """Magia parte del nivel otorgado por clase y tala suma XP concurrente sin pérdidas."""
     repository = PlayerRepository(redis_client)
     await repository.set_skills(123, magia=10, talar=0)
-    assert await repository.add_skill_experience(123, "magia", 100) == (100, True)
+    required = skill_threshold(10)
+    assert await repository.add_skill_experience(123, "magia", required) == (required, True)
     assert (await repository.get_skills(123))["magia"] == 11
-    await redis_client.hset(RedisKeys.player_skills(123), mapping={"xp:talar": "99"})
+    await redis_client.hset(
+        RedisKeys.player_skills(123), mapping={"xp:talar": "99", "partial:talar": "199"}
+    )
     results = await asyncio.gather(
         *(repository.add_skill_experience(123, "talar", 1) for _ in range(4))
     )
@@ -88,7 +91,7 @@ async def test_experience_updates_do_not_overwrite_levels_or_lose_concurrent_gai
     assert sum(leveled for _, leveled in results) == 1
     # Asignar un nivel explícito conserva la experiencia ya ganada.
     await repository.set_skills(123, magia=12)
-    assert (await repository.get_skill_progress(123))[0].experience == 100
+    assert (await repository.get_skill_progress(123))[0].experience == required
     with pytest.raises(ValueError, match="experiencia inválida"):
         await repository.add_skill_experience(123, "talar", -1)
     with pytest.raises(ValueError, match="nivel de habilidad inválida"):

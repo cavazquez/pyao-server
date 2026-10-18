@@ -3,6 +3,8 @@
 from src.utils.inventory_slot import InventorySlot
 
 MAX_SLOT_QUANTITY = 32767
+MATERIAL_STACK_LIMIT = 10000
+CRAFT_MATERIAL_IDS = frozenset({58, 136, 192, 193, 194, 386, 387, 388})
 
 
 class SlotPlan:
@@ -66,6 +68,11 @@ class SlotPlan:
         ):
             msg = "Objeto o cantidad inválidos"
             raise ValueError(msg)
+        stack_limit = (
+            max(self.max_stack, MATERIAL_STACK_LIMIT)
+            if item_id in CRAFT_MATERIAL_IDS
+            else self.max_stack
+        )
         before = self.slots.copy()
         remaining = quantity
         matching = [slot for slot, item in self.slots.items() if item.item_id == item_id]
@@ -73,7 +80,7 @@ class SlotPlan:
         for slot in sorted(matching) + empty:
             current = self.slots.get(slot)
             existing = current.quantity if current else 0
-            accepted = min(remaining, max(0, self.max_stack - existing))
+            accepted = min(remaining, max(0, stack_limit - existing))
             if accepted:
                 self.slots[slot] = InventorySlot(item_id, existing + accepted)
                 remaining -= accepted

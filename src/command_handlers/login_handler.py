@@ -154,6 +154,10 @@ class LoginCommandHandler(CommandHandler):
         """
         logger.info("✅ Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
+        await self.player_repo.redis.hset(
+            f"player:{user_id}:user_stats", "class_id", str(user_class)
+        )
+
         # Configurar sesión
         self._setup_session(user_id, username)
 
@@ -185,6 +189,9 @@ class LoginCommandHandler(CommandHandler):
 
         # Spawn del jugador
         await self.spawn_handler.spawn_player(user_id, username, position)
+
+        if await self.player_repo.is_sailing(user_id):
+            await self.message_sender.send_navigate_toggle()
 
         # Enviar datos del mapa y finalizar login
         await self.spawn_handler.send_map_data(user_id, position)

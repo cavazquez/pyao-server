@@ -84,7 +84,7 @@ def build_set_invisible_response(char_index: int, invisible: bool) -> bytes:
 
     Args:
         char_index: Índice del personaje (int16).
-        invisible: True para hacer visible (el cliente invierte la lógica).
+        invisible: True para ocultar el personaje, False para mostrarlo.
 
     Returns:
         Paquete de bytes: PacketID (66) + charIndex (int16) + invisible (u8).

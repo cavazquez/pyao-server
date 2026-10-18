@@ -102,7 +102,13 @@ class TaskWork(Task):
             return
 
         # Crear comando (solo datos)
-        command = WorkCommand(user_id=user_id, map_id=map_id, target_x=target_x, target_y=target_y)
+        command = WorkCommand(
+            user_id=user_id,
+            map_id=map_id,
+            target_x=target_x,
+            target_y=target_y,
+            skill_type=self.data[1] if len(self.data) > 1 else 0,
+        )
 
         # Delegar al handler (separación de responsabilidades)
         result = await self.work_handler.handle(command)

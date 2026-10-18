@@ -77,7 +77,7 @@ def release_lock(client: Redis, token: str) -> None:
 
 
 MANA_SCHEMA_VERSION = 2
-SKILL_SCHEMA_VERSION = 3
+SKILL_SCHEMA_VERSION = 4
 
 
 def migration_fields(client: Redis, current: int) -> dict[str, dict[str, str]]:

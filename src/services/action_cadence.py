@@ -7,8 +7,8 @@ from typing import Literal
 
 from src.config.config_manager import ConfigManager, config_manager
 
-Action = Literal["walk", "attack", "cast"]
-DEFAULT_INTERVALS: dict[Action, float] = {"walk": 0.2, "attack": 0.5, "cast": 1.0}
+Action = Literal["walk", "attack", "cast", "work"]
+DEFAULT_INTERVALS: dict[Action, float] = {"walk": 0.2, "attack": 0.5, "cast": 1.0, "work": 0.5}
 PRUNE_SECONDS = 60.0
 
 

@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
-from src.models.item_constants import BOAT_ITEM_ID
+from src.models.item_constants import BOAT_ITEM_IDS
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -353,7 +353,7 @@ class WalkMovementHandler:
             return False
 
         inventory = await self.inventory_repo.get_inventory_slots(user_id)
-        return any(slot.item_id == BOAT_ITEM_ID for slot in inventory.values())
+        return any(slot.item_id in BOAT_ITEM_IDS for slot in inventory.values())
 
     async def _can_sail_to(self, user_id: int, map_id: int, x: int, y: int) -> bool:
         """Determina si el jugador puede moverse a un tile de agua usando una barca.
@@ -464,6 +464,7 @@ class WalkMovementHandler:
         """
         if self.player_repo:
             await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
+            await self.player_repo.redis.hset(f"player:{user_id}:user_stats", "hidden_until", "0")
 
         if self.map_manager:
             self.map_manager.update_player_tile(

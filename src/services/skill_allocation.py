@@ -45,7 +45,10 @@ async def allocate_skill_points(
         spent = sum(delta for _, delta in deltas)
         if not 0 <= points <= MAX_FREE_SKILL_POINTS or spent < 1 or spent > points:
             return Decision({"applied": False, "message": "Puntos disponibles insuficientes."}, {})
-        changes: dict[str, str] = {"points": str(points - spent)}
+        changes: dict[str, str] = {
+            "points": str(points - spent),
+            "assigned_points": str(min(10, int(values.get("assigned_points", 0)) + spent)),
+        }
         for entry, (_, delta) in zip(progress, deltas, strict=True):
             definition = entry.definition
             available = definition.implemented and definition.key is not None

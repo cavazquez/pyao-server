@@ -3,7 +3,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.services.player.stamina_service import STAMINA_COST_ATTACK
 from src.utils.sounds import SoundID
 
 if TYPE_CHECKING:
@@ -55,18 +54,6 @@ class AttackValidationHandler:
         Returns:
             Tupla (can_attack, error_message, position, target_npc).
         """
-        # Consumir stamina por ataque
-        if self.stamina_service:
-            can_attack = await self.stamina_service.consume_stamina(
-                user_id=user_id,
-                amount=STAMINA_COST_ATTACK,
-                message_sender=self.message_sender,
-            )
-
-            if not can_attack:
-                logger.debug("user_id %d no tiene suficiente stamina para atacar", user_id)
-                return False, "No tienes suficiente stamina para atacar.", None, None
-
         # Obtener posición del jugador
         position = await self.player_repo.get_position(user_id)
         if not position:
@@ -108,4 +95,6 @@ class AttackValidationHandler:
             await self.message_sender.send_console_msg(f"No puedes atacar a {target_npc.name}.")
             return False, f"No puedes atacar a {target_npc.name}.", position, None
 
+        if position["map"] != map_id or max(abs(player_x - target_x), abs(player_y - target_y)) > 1:
+            return False, "El objetivo está fuera de alcance.", position, None
         return True, None, position, target_npc

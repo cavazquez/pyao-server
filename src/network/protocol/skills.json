@@ -24,44 +24,44 @@
     {
       "id": 2,
       "name": "Robar",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "robar",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 3,
       "name": "Tácticas",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "tacticas",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 4,
       "name": "Armas",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "armas",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 5,
       "name": "Meditar",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "meditar",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 6,
       "name": "Apuñalar",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "apunalar",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 7,
       "name": "Ocultarse",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "ocultarse",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 8,
@@ -80,16 +80,16 @@
     {
       "id": 10,
       "name": "Comerciar",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "comerciar",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 11,
       "name": "Defensa",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "defensa",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 12,
@@ -109,14 +109,14 @@
       "id": 14,
       "name": "Carpintería",
       "key": "carpinteria",
-      "implemented": false,
+      "implemented": true,
       "legacy_semantics": "level"
     },
     {
       "id": 15,
       "name": "Herrería",
       "key": "herreria",
-      "implemented": false,
+      "implemented": true,
       "legacy_semantics": "level"
     },
     {
@@ -129,30 +129,30 @@
     {
       "id": 17,
       "name": "Domar",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "domar",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 18,
       "name": "Proyectiles",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "proyectiles",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 19,
       "name": "Wrestling",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "wrestling",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 20,
       "name": "Navegación",
-      "key": null,
-      "implemented": false,
-      "legacy_semantics": "unimplemented"
+      "key": "navegacion",
+      "implemented": true,
+      "legacy_semantics": "level"
     },
     {
       "id": 21,

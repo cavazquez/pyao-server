@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, cast
 from src.models.skills import skill_progress
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
 from src.services.player.lifecycle import hp_changes, revive_changes
+from src.services.skill_training import trained_decision, training_resources
 from src.utils.durability import require_durable
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
@@ -80,7 +81,15 @@ class SpellPlan:
             keys.add(RedisKeys.npc_instance(request.target_npc))
         if request.target_username:
             keys.add(RedisKeys.account_data(request.target_username))
-        self.resources = tuple(Resource(key, "hash") for key in sorted(keys))
+        self.resources = tuple(
+            {
+                resource.key: resource
+                for resource in (
+                    *(Resource(key, "hash") for key in sorted(keys)),
+                    *training_resources(request.user_id),
+                )
+            }.values()
+        )
 
     def decide(self, snapshot: Snapshot) -> Decision:  # noqa: PLR0914, PLR0915 - plan puro de un commit
         """Rechaza antes del coste; un EXEC confirma maná, stamina y todos los efectos.
@@ -120,6 +129,8 @@ class SpellPlan:
         writes: dict[str, str | dict[str, str]] = {}
         target_changes: dict[str, str] = {}
         source_changes = {
+            "hidden_until": "0",
+            "meditating": "0",
             "min_mana": str(int(source.get("min_mana", 0)) - int(self.spell.get("mana_cost", 0))),
             "min_sta": str(int(source.get("min_sta", 0)) - int(self.spell.get("stamina_cost", 3))),
         }
@@ -217,16 +228,21 @@ class SpellPlan:
             target_changes.update(source_changes)
         else:
             writes[source_key] = source_changes
-        return Decision(
-            {
-                "applied": True,
-                "message": "Hechizo confirmado.",
-                "amount": amount,
-                "target_hp": int(target_changes.get(hp_field, hp)),
-                "revived": bool(self.spell.get("revives")),
-                "target_life_id": int(target_changes.get("life_id", target.get("life_id", 0))),
-            },
-            writes,
+        return trained_decision(
+            Decision(
+                {
+                    "applied": True,
+                    "message": "Hechizo confirmado.",
+                    "amount": amount,
+                    "target_hp": int(target_changes.get(hp_field, hp)),
+                    "revived": bool(self.spell.get("revives")),
+                    "target_life_id": int(target_changes.get("life_id", target.get("life_id", 0))),
+                },
+                writes,
+            ),
+            snapshot,
+            request.user_id,
+            (("magia", True),),
         )
 
     def _validate_caster(

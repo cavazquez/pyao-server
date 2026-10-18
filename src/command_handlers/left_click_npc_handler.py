@@ -4,6 +4,9 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from src.models.items_catalog import ITEMS_CATALOG
+from src.models.skills import skill_progress
+from src.services.npc_trade_plan import commerce_price
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -93,6 +96,13 @@ class LeftClickNPCHandler:
             return True, None, {"merchant_id": npc.npc_id, "items_count": 0, "type": "merchant"}
 
         # Preparar lista de items para el packet COMMERCE_INIT
+        commerce_level = next(
+            p.level
+            for p in skill_progress(
+                await self.redis_client.hgetall(RedisKeys.player_skills(user_id))
+            )
+            if p.definition.key == "comerciar"
+        )
         items_data = []
         for merchant_item in merchant_items:
             item = ITEMS_CATALOG.get(merchant_item.item_id)
@@ -106,7 +116,7 @@ class LeftClickNPCHandler:
                     merchant_item.item_id,
                     item.name,
                     merchant_item.quantity,
-                    item.value,
+                    commerce_price(item.value, commerce_level, "buy"),
                     item.graphic_id,
                     item.item_type.to_client_type(),
                     item.max_damage or 0,

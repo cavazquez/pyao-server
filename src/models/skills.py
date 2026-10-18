@@ -11,6 +11,15 @@ CATALOG_DATA = json.loads(
 MAX_SKILL_LEVEL = 100
 
 
+def skill_threshold(level: int, base: int = 200) -> int:
+    """Calcula el umbral creciente de la versión clásica sin truncar el redondeo.
+
+    Returns:
+        Experiencia requerida para el siguiente punto.
+    """
+    return max(1, round(base * 1.05 ** max(0, min(MAX_SKILL_LEVEL, level))))
+
+
 @dataclass(frozen=True, slots=True)
 class SkillDefinition:
     """ID estable, nombre y semántica histórica; los IDs propios no se pierden."""
@@ -72,7 +81,15 @@ def skill_progress(
                 level = min(MAX_SKILL_LEVEL, experience // threshold)
             else:
                 level = min(MAX_SKILL_LEVEL, max(0, int(values.get(key, 0))))
-        percentage = 0 if level == MAX_SKILL_LEVEL else (experience % threshold) * 100 // threshold
+        if str(values.get("progress_version", "")) == "2" and definition.key is not None:
+            required = skill_threshold(level, int(values.get("natural_xp_base", 200)))
+            percentage = min(
+                99, max(0, int(values.get(f"partial:{definition.key}", 0))) * 100 // required
+            )
+        else:
+            percentage = (experience % threshold) * 100 // threshold
+        if level == MAX_SKILL_LEVEL:
+            percentage = 0
         result.append(SkillProgress(definition, level, experience, percentage))
     return result
 
@@ -87,15 +104,21 @@ def skill_migration_fields(values: Mapping[str, str | int], threshold: int = 100
         ValueError: Si el formato ya versionado es desconocido.
     """
     version = values.get("progress_version")
-    if version == "1":
+    if str(version) == "2":
         return {}
-    if version is not None:
+    if version is not None and str(version) != "1":
         msg = "Versión de progreso de habilidades desconocida"
         raise ValueError(msg)
-    result = {"progress_version": "1", "xp_per_level": str(threshold)}
+    result = {"progress_version": "2", "xp_per_level": str(threshold), "natural_xp_base": "200"}
+    result["assigned_points"] = str(min(10, max(0, 10 - int(values.get("points", 10)))))
+    if "points" not in values:
+        result["points"] = "10"
     for progress in skill_progress(values, threshold):
         if progress.definition.key is not None:
             key = progress.definition.key
             result[f"level:{key}"] = str(progress.level)
             result[f"xp:{key}"] = str(progress.experience)
+            result[f"partial:{key}"] = str(
+                progress.percentage * skill_threshold(progress.level) // 100
+            )
     return result

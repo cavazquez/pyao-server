@@ -32,6 +32,7 @@ def mock_player_repo():
     """Create a mock player repository."""
     # Use MagicMock as base, then configure async methods
     repo = MagicMock()
+    repo.redis.get = AsyncMock(return_value=None)
 
     # Mock get_stats to return a dict with proper values
     repo.get_stats = AsyncMock(

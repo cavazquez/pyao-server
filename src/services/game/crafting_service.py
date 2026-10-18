@@ -44,7 +44,7 @@ class CraftingService:
         """Carga los datos de crafting desde archivos TOML."""
         try:
             # Cargar recetas de armas
-            weapons_file = self.data_dir / "weapons_crafting.toml"
+            weapons_file = self.data_dir / "crafting" / "weapons.toml"
             if weapons_file.exists():
                 with weapons_file.open("rb") as f:
                     weapons_data = tomllib_load(f)
@@ -53,14 +53,14 @@ class CraftingService:
                     )
 
             # Cargar recetas de armaduras
-            armor_file = self.data_dir / "armor_crafting.toml"
+            armor_file = self.data_dir / "crafting" / "armor.toml"
             if armor_file.exists():
                 with armor_file.open("rb") as f:
                     armor_data = tomllib_load(f)
                     self.armor_recipes = armor_data.get("armor_recipes", {}).get("recipes", [])
 
             # Cargar materiales
-            materials_file = self.data_dir / "crafting_materials.toml"
+            materials_file = self.data_dir / "crafting" / "materials.toml"
             if materials_file.exists():
                 with materials_file.open("rb") as f:
                     materials_data = tomllib_load(f)

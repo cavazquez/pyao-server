@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_respawn_service import NPCRespawnService
     from src.services.npc.npc_service import NPCService
     from src.services.player.stamina_service import StaminaService
+    from src.services.skill_action_service import SkillActionService
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,7 @@ class AttackCommandHandler(CommandHandler):
         stamina_service: StaminaService | None,
         message_sender: MessageSender,
         action_cadence: ActionCadence | None = None,
+        skill_actions: SkillActionService | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -58,8 +60,10 @@ class AttackCommandHandler(CommandHandler):
             item_catalog: Catálogo de items.
             stamina_service: Servicio de stamina.
             action_cadence: Presupuesto compartido entre handlers del servidor.
+            skill_actions: Servicio compartido de acciones de habilidades.
             message_sender: Enviador de mensajes.
         """
+        self.skill_actions = skill_actions
         self.player_repo = player_repo
         self.map_manager = map_manager
         self.npc_service = npc_service
@@ -173,6 +177,18 @@ class AttackCommandHandler(CommandHandler):
         """
         if not isinstance(command, AttackCommand):
             return CommandResult.error("Comando inválido: se esperaba AttackCommand")
+        if self.skill_actions is not None:
+            result = await self.skill_actions.execute(
+                command.user_id,
+                "attack",
+                {"x": command.target_x, "y": command.target_y},
+                self.message_sender,
+            )
+            return (
+                CommandResult.ok(result)
+                if result["applied"]
+                else CommandResult.error(str(result.get("message", "Ataque rechazado")))
+            )
         if not self.action_cadence.claim(command.user_id, "attack"):
             return CommandResult.error("Acción demasiado frecuente")
         try:
