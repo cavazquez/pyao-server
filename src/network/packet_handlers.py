@@ -46,6 +46,7 @@ from src.tasks.spells.task_spell_info import TaskSpellInfo
 from src.tasks.task_ayuda import TaskAyuda
 from src.tasks.task_capabilities import TaskCapabilities
 from src.tasks.task_dice import TaskDice
+from src.tasks.task_modify_skills import TaskModifySkills
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_online import TaskOnline
 from src.tasks.task_party_accept_member import TaskPartyAcceptMember
@@ -70,6 +71,7 @@ if TYPE_CHECKING:
 # Mapeo de PacketID a clase de Task
 TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CAPABILITIES: TaskCapabilities,
+    ClientPacketID.MODIFY_SKILLS: TaskModifySkills,
     ClientPacketID.TRADE_ACTION: TaskTradeAction,
     ClientPacketID.LOGIN: TaskLogin,
     ClientPacketID.THROW_DICES: TaskDice,

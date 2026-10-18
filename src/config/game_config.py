@@ -133,6 +133,7 @@ class CharacterConfig(BaseModel):
     mana_per_int: int = Field(
         default=10, ge=1, le=32767, description="Mana adicional por punto de inteligencia"
     )
+    initial_skill_points: int = Field(default=10, ge=0, le=32767)
     initial_gold: int = Field(default=0, ge=0, description="Oro inicial de nuevos personajes")
     initial_elu: int = Field(default=300, ge=0, description="ELU inicial de nuevos personajes")
     elu_exponent: float = Field(

@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING, cast
 
-from src.config.config_manager import config_manager
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
@@ -33,23 +33,29 @@ async def initialize_starter_spellbook(
         message = "Hechizo inicial inexistente o duplicado"
         raise ValueError(message)
     book, stats = RedisKeys.player_spellbook(user_id), RedisKeys.player_user_stats(user_id)
+    skills_key = RedisKeys.player_skills(user_id)
+    initial_points = ConfigManager.as_int(
+        config_manager.get("game.character.initial_skill_points", 10)
+    )
 
     def decide(snapshot: Snapshot) -> Decision:
         saved = cast("dict[str, str]", snapshot[stats])
         existing = cast("dict[str, str]", snapshot[book])
         if saved.get("spellbook_seeded") or existing:
             return Decision({"applied": False}, {})
+        skills = cast("dict[str, str]", snapshot[skills_key])
         return Decision(
             {"applied": True},
             {
                 book: {str(slot): str(spell) for slot, spell in enumerate(spells, 1)},
                 stats: {"spellbook_seeded": "1"},
+                skills_key: {} if "points" in skills else {"points": str(initial_points)},
             },
         )
 
     await transact(
         repository.redis_client.redis,
-        (Resource(book, "hash"), Resource(stats, "hash")),
+        (Resource(book, "hash"), Resource(stats, "hash"), Resource(skills_key, "hash")),
         operation_id(),
         {"starter": user_id, "class_id": class_id, "spells": spells},
         decide,

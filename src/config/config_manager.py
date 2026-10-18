@@ -179,6 +179,7 @@ class ConfigManager:
                 "character": {
                     "hp_per_con": self._game_config.game.character.hp_per_con,
                     "mana_per_int": self._game_config.game.character.mana_per_int,
+                    "initial_skill_points": self._game_config.game.character.initial_skill_points,
                     "initial_gold": self._game_config.game.character.initial_gold,
                     "initial_elu": self._game_config.game.character.initial_elu,
                     "elu_exponent": self._game_config.game.character.elu_exponent,
@@ -282,6 +283,7 @@ class ConfigManager:
                 "character": {
                     "hp_per_con": 10,
                     "mana_per_int": 10,
+                    "initial_skill_points": 10,
                     "initial_gold": 0,
                     "initial_elu": 300,
                     "elu_exponent": 1.8,  # Exponente para cálculo de ELU por nivel

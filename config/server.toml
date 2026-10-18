@@ -80,6 +80,7 @@ max_slots = 30
 max_slots = 40
 
 [game.character]
+initial_skill_points = 10
 hp_per_con = 10
 mana_per_int = 10
 initial_gold = 0
