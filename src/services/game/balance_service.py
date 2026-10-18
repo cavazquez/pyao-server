@@ -9,6 +9,8 @@ from pathlib import Path
 from tomllib import load as tomllib_load
 from typing import Any
 
+from src.runtime_paths import data_dir as default_data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +24,7 @@ class BalanceService:
             data_dir: Directorio donde se encuentran los datos de balance.
                      Si es None, usa "data" por defecto.
         """
-        self.data_dir = data_dir or Path("data")
+        self.data_dir = data_dir or default_data_dir()
         self.racial_modifiers: dict[str, dict[str, int]] = {}
         self.class_modifiers: dict[str, dict[str, float]] = {}
         self.balance_data: dict[str, Any] = {}

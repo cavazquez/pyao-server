@@ -35,6 +35,12 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src", "tools"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"data" = "src/runtime_data/data"
+"config" = "src/runtime_data/config"
+"archives/map_data.xz" = "src/runtime_data/archives/map_data.xz"
+"redis" = "src/runtime_data/redis"
+
 [project.scripts]
 pyao-server = "src.run_server:main"
 

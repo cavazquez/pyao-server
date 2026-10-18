@@ -164,6 +164,7 @@ Las versiones observadas y los bloqueos están en [ESTADO_ACTUAL.md](docs/develo
 ```text
 pyao-server/
 ├── src/
+│   ├── runtime_paths.py      # Recursos del wheel y estado editable independientes del cwd
 │   ├── core/                 # Inicialización y dependencias
 │   ├── network/              # Protocolo y conexiones
 │   ├── tasks/                # Parsing y despacho
@@ -510,3 +511,7 @@ Ver [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para guía completa y [docs/CLA
 Apache License 2.0 - ver [LICENSE](LICENSE) para más detalles.
 
 La release conserva los nombres originales del wheel y sdist. `uv run --group build python -m src.operations.distribution validate --platform ubuntu-24.04` instala el wheel sin dependencias en un entorno nuevo, después de instalar el runtime fijado por `uv.lock`; comprueba metadata, entry point y `--help` fuera del checkout. El ensamblador exige esos manifiestos y hashes y guarda los builds por OS en ZIP independientes.
+
+El wheel incluye el dataset TOML, configuración por defecto y archive de mapas bajo `src/runtime_data`. Los mapas se extraen en caché por SHA256 bajo el estado del operador; no se modifica el paquete. En Linux instalado el estado usa `$XDG_STATE_HOME/pyao-server` (por defecto `~/.local/state/pyao-server`); en Windows `%LOCALAPPDATA%/PyAO`; Snap conserva `$SNAP_USER_COMMON`. El checkout usa sus recursos versionados con rutas absolutas.
+
+`pyao-server --config-file /ruta/server.toml --state-dir /ruta/estado` elige archivos editables. `--data-dir` y `--maps-dir` seleccionan datasets externos; sus equivalentes son `PYAO_CONFIG_FILE`, `PYAO_STATE_DIR`, `PYAO_DATA_DIR` y `PYAO_MAPS_DIR`. `pyao-server --check-resources` valida el conjunto efectivo sin Redis; el arranque también rechaza referencias inválidas. La validación de distribución ejecuta esta comprobación desde el wheel instalado, en una carpeta temporal, en cada OS de la matriz de release.

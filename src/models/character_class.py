@@ -5,6 +5,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.runtime_paths import data_dir as default_data_dir
+
 
 @dataclass
 class CharacterClass:
@@ -85,7 +87,7 @@ class ClassCatalog:
             data_dir: Directorio donde se encuentran los datos.
                      Si es None, usa "data" por defecto.
         """
-        self.data_dir = data_dir or Path("data")
+        self.data_dir = data_dir or default_data_dir()
         self._classes: dict[int, CharacterClass] = {}
         self._classes_by_name: dict[str, CharacterClass] = {}
         self._load_classes()

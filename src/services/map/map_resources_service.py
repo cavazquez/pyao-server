@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -24,15 +23,15 @@ from src.services.map.map_single_map_loader import load_single_map_into
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
+from src.runtime_paths import data_dir, state_dir
+from src.runtime_paths import maps_dir as default_maps_dir
+
 logger = logging.getLogger(__name__)
 
 
 def resolve_manual_doors_config_path() -> Path:
     """Ruta a ``data/world/map_doors.toml`` (repo o jerarquía Snap)."""
-    snap_common = os.environ.get("SNAP_USER_COMMON")
-    if snap_common:
-        return Path(snap_common) / "data/world/map_doors.toml"
-    return Path(__file__).resolve().parent.parent.parent.parent / "data/world/map_doors.toml"
+    return data_dir() / "world/map_doors.toml"
 
 
 class MapResourcesService:
@@ -47,10 +46,10 @@ class MapResourcesService:
             maps_dir: Directorio con los archivos JSON de recursos (opcional).
             map_manager: MapManager para inicializar puertas cerradas (opcional).
         """
-        self.maps_dir = Path(maps_dir) if maps_dir is not None else Path("map_data")
-        self._fatal_on_missing_resources = maps_dir is None and self.maps_dir == Path("map_data")
+        self.maps_dir = Path(maps_dir) if maps_dir is not None else default_maps_dir()
+        self._fatal_on_missing_resources = maps_dir is None
 
-        self.cache_dir = Path("map_cache")
+        self.cache_dir = state_dir() / "map_cache"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
         self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}

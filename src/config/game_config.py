@@ -8,6 +8,8 @@ from typing import Annotated, Any
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
 
+from src.runtime_paths import config_file as default_config_file
+
 logger = logging.getLogger(__name__)
 
 # Tipo para valores de configuración (compatible con ConfigManager)
@@ -450,7 +452,7 @@ class GameConfig(BaseSettings):
             toml_path: Ruta al archivo TOML. Si es None, usa el path por defecto.
         """
         if toml_path is None:
-            toml_path = Path(__file__).parent.parent.parent / "config" / "server.toml"
+            toml_path = default_config_file()
 
         new_config = self.from_toml(toml_path)
         # Actualizar valores
@@ -481,7 +483,7 @@ class _ConfigSingleton:
         """
         if cls._instance is None:
             if toml_path is None:
-                toml_path = Path(__file__).parent.parent.parent / "config" / "server.toml"
+                toml_path = default_config_file()
 
             try:
                 cls._instance = GameConfig.from_toml(toml_path)

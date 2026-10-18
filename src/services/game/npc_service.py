@@ -12,6 +12,8 @@ from pathlib import Path
 from tomllib import load as tomllib_load
 from typing import Any, ClassVar, cast
 
+from src.runtime_paths import data_dir as default_data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +37,7 @@ class NPCService:
         if getattr(self, "_initialized", False):
             return
 
-        self.data_dir = data_dir or Path("data")
+        self.data_dir = data_dir or default_data_dir()
         self.all_npcs: list[dict[str, Any]] = []
         self.npcs_by_id: dict[int, dict[str, Any]] = {}
         self.npcs_by_name: dict[str, dict[str, Any]] = {}

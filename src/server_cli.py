@@ -88,6 +88,18 @@ Ejemplos:
             action="version",
             version=f"PyAO Server {self.VERSION}",
         )
+        for option, description in (
+            ("config-file", "Archivo TOML editable del operador"),
+            ("data-dir", "Dataset TOML externo; por defecto usa el incluido"),
+            ("maps-dir", "Dataset JSON de mapas externo"),
+            ("state-dir", "Cachés y certificados fuera del paquete instalado"),
+        ):
+            parser.add_argument(f"--{option}", help=description)
+        parser.add_argument(
+            "--check-resources",
+            action="store_true",
+            help="Validar el dataset efectivo sin conectar a Redis ni abrir el listener",
+        )
         return parser
 
     def _configure_logging(self, debug: bool) -> None:

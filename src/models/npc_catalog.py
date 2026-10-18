@@ -4,6 +4,8 @@ import logging
 import tomllib
 from pathlib import Path
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -20,8 +22,8 @@ class NPCCatalog:
 
     def __init__(
         self,
-        hostile_path: str = "data/npcs/hostiles.toml",
-        friendly_path: str = "data/npcs/friendly.toml",
+        hostile_path: str | None = None,
+        friendly_path: str | None = None,
     ) -> None:
         """Inicializa el catálogo de NPCs.
 
@@ -30,8 +32,12 @@ class NPCCatalog:
             friendly_path: Ruta al archivo de NPCs amigables.
         """
         self._npcs: dict[int, dict[str, object]] = {}
-        self._hostile_path = hostile_path
-        self._friendly_path = friendly_path
+        self._hostile_path = (
+            str(data_dir() / "npcs/hostiles.toml") if hostile_path is None else hostile_path
+        )
+        self._friendly_path = (
+            str(data_dir() / "npcs/friendly.toml") if friendly_path is None else friendly_path
+        )
         self._load_catalog()
 
     def _load_file(self, file_path: str, file_type: str) -> None:

@@ -5,6 +5,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -30,14 +32,14 @@ class MapTransition:
 class MapTransitionService:
     """Servicio que maneja las transiciones entre mapas."""
 
-    def __init__(self, transitions_path: str = "data/map_transitions.toml") -> None:
+    def __init__(self, transitions_path: str | None = None) -> None:
         """Inicializa el servicio de transiciones.
 
         Args:
             transitions_path: Ruta al archivo de transiciones.
         """
         self._transitions: dict[tuple[int, str], MapTransition] = {}
-        self._load_transitions(transitions_path)
+        self._load_transitions(transitions_path or str(data_dir() / "map_transitions.toml"))
 
     def _load_transitions(self, path: str) -> None:
         """Carga las transiciones desde el archivo TOML.

@@ -123,9 +123,13 @@ def validate(directory: Path, platform: str, *, project_root: Path = ROOT) -> di
     runtime_lock = _run(
         [uv, "export", "--locked", "--no-dev", "--no-emit-project"], cwd=project_root
     ).stdout
-    environment = dict(os.environ, PYTHONPATH="", PYTHONNOUSERSITE="1")
+    environment = {
+        key: value for key, value in os.environ.items() if not key.startswith(("PYAO_", "SNAP"))
+    }
+    environment.update(PYTHONPATH="", PYTHONNOUSERSITE="1")
     with TemporaryDirectory(prefix="pyao-wheel-validation-") as temporary:
         work = Path(temporary)
+        environment["PYAO_STATE_DIR"] = str(work / "operator-state")
         venv = work / "environment"
         _run([uv, "venv", "--python", sys.executable, str(venv)], cwd=work, environment=environment)
         scripts = venv / ("Scripts" if os.name == "nt" else "bin")
@@ -148,6 +152,7 @@ def validate(directory: Path, platform: str, *, project_root: Path = ROOT) -> di
         )
         entry = scripts / ("pyao-server.exe" if os.name == "nt" else "pyao-server")
         _run([str(entry), "--help"], cwd=work, environment=environment)
+        _run([str(entry), "--check-resources"], cwd=work, environment=environment)
     result = {
         "project": PROJECT,
         "version": identity[1],

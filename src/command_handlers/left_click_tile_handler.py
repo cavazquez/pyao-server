@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from src.services.map.door_service import DoorService
     from src.services.map.map_resources_service import MapResourcesService
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 # Mapa para el que se quieren ver logs detallados de recursos. Si es 0 (por
@@ -40,14 +42,7 @@ def load_signs_catalog(data_root: Path | None = None) -> dict[int, dict[str, str
     Returns:
         Diccionario con GrhIndex como key y datos del cartel como value.
     """
-    snap_common = os.environ.get("SNAP_USER_COMMON")
-    root = (
-        Path(snap_common) / "data"
-        if snap_common
-        else data_root
-        if data_root is not None
-        else Path(__file__).resolve().parents[2] / "data"
-    )
+    root = data_dir() if os.environ.get("SNAP_USER_COMMON") or data_root is None else data_root
     signs_path = root / "items/world_objects/signs.toml"
     logger.info("Catálogo de carteles efectivo: %s", signs_path)
 

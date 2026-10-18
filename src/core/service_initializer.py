@@ -33,6 +33,8 @@ from src.services.trade_service import TradeService
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -86,7 +88,7 @@ class ServiceInitializer:
 
         # Servicio de spawns aleatorios dinámicos
         random_spawn_service = RandomSpawnService(npc_service, self.map_manager)
-        random_spawn_service.load_random_spawn_configs("data/world/map_npcs.toml")
+        random_spawn_service.load_random_spawn_configs(data_dir() / "world/map_npcs.toml")
         logger.info("✓ Sistema de spawns aleatorios dinámicos inicializado")
 
         # Servicio de NPCs del mundo

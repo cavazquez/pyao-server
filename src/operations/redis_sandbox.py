@@ -15,6 +15,7 @@ from redis import ConnectionError as RedisConnectionError
 from redis import Redis
 from src.config.game_config import RedisConfig
 from src.operations.redis_secret import create_secret
+from src.runtime_paths import resource_root
 
 
 def docker(*arguments: str) -> str:
@@ -46,7 +47,7 @@ class RedisSandbox:
         purpose: Literal["validation", "recovery"] = "validation",
     ) -> None:
         """Prepara identidades nuevas, sin acceder a Redis del operador."""
-        self.root = Path(__file__).resolve().parents[2]
+        self.root = resource_root()
         self.image = (
             (self.root / "redis/Dockerfile").read_text().splitlines()[0].removeprefix("FROM ")
         )

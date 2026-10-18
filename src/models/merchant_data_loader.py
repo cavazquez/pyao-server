@@ -12,6 +12,8 @@ from src.utils.base_data_loader import BaseDataLoader
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -122,7 +124,11 @@ class MerchantDataLoader(BaseDataLoader):
         Returns:
             Diccionario con los datos cargados o ``None`` si ocurre un error.
         """
-        toml_path = Path(self.TOML_FILE)
+        toml_path = (
+            data_dir() / "npcs/merchants.toml"
+            if self.TOML_FILE == "data/npcs/merchants.toml"
+            else Path(self.TOML_FILE)
+        )
         if not toml_path.exists():
             logger.error("Archivo %s no encontrado", toml_path)
             return None

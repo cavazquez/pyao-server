@@ -6,10 +6,10 @@ migra gradualmente al nuevo sistema basado en Pydantic.
 
 import logging
 import os
-from pathlib import Path
 from typing import Any, ClassVar, Self
 
 from src.config.game_config import GameConfig
+from src.runtime_paths import config_file as default_config_file
 
 logger = logging.getLogger(__name__)
 
@@ -49,14 +49,9 @@ class ConfigManager:
         # Usar paths configurados o defaults.
         # En snap usa SNAP_USER_COMMON; en desarrollo usa path relativo a __file__.
         if not hasattr(self, "_config_dir"):
-            snap_common = os.getenv("SNAP_USER_COMMON")
-            self._config_dir = (
-                Path(snap_common) / "config"
-                if snap_common
-                else Path(__file__).parent.parent.parent / "config"
-            )
+            self._config_dir = default_config_file().parent
         if not hasattr(self, "_config_file"):
-            self._config_file = self._config_dir / "server.toml"
+            self._config_file = default_config_file()
 
         # Instancia de GameConfig (no es ClassVar)
         self._game_config: GameConfig | None = None

@@ -6,6 +6,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,14 +33,14 @@ class LootTable:
 class LootTableService:
     """Servicio que maneja las loot tables de NPCs."""
 
-    def __init__(self, loot_tables_path: str = "data/npcs/loot_tables.toml") -> None:
+    def __init__(self, loot_tables_path: str | None = None) -> None:
         """Inicializa el servicio de loot tables.
 
         Args:
             loot_tables_path: Ruta al archivo loot_tables.toml.
         """
         self._loot_tables: dict[int, LootTable] = {}
-        self._loot_tables_path = loot_tables_path
+        self._loot_tables_path = loot_tables_path or str(data_dir() / "npcs/loot_tables.toml")
         self._load_loot_tables()
 
     def _load_loot_tables(self) -> None:

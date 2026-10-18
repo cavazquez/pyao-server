@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from src.repositories.npc_repository import NPCRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 MAX_CHARACTER_INDEX = 32767
 
@@ -74,7 +76,7 @@ class NPCService:
         NPCService._initialized = True
         NPCService._instance = self
 
-    async def initialize_world_npcs(self, spawns_path: str = "data/world/map_npcs.toml") -> None:
+    async def initialize_world_npcs(self, spawns_path: str | None = None) -> None:
         """Inicializa todos los NPCs del mundo al iniciar el servidor.
 
         TODO: Apenas se inicia Redis se cargan los recursos desde los archivos TOML y maps,
@@ -88,6 +90,7 @@ class NPCService:
         Args:
             spawns_path: Ruta al archivo de configuración de spawns.
         """
+        spawns_path = spawns_path or str(data_dir() / "world/map_npcs.toml")
         logger.info("Inicializando NPCs del mundo desde %s...", spawns_path)
 
         # Limpiar NPCs existentes (reinicio limpio)

@@ -2,7 +2,6 @@
 
 import logging
 import time
-from pathlib import Path
 
 from src.config.config_manager import config_manager
 from src.core.dependency_container import DependencyContainer
@@ -13,6 +12,7 @@ from src.core.service_initializer import ServiceInitializer
 from src.game.map_manager import MapManager
 from src.network.session_manager import SessionManager
 from src.repositories.ground_items_repository import GroundItemsRepository
+from src.runtime_paths import maps_dir
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class ServerInitializer:
         logger.info("Iniciando carga de mapas...")
         start_time = time.perf_counter()
 
-        map_data_dir = Path("map_data")
+        map_data_dir = maps_dir()
         if not map_data_dir.exists():
             logger.warning("⚠️  Directorio map_data/ no encontrado")
             return

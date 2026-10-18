@@ -4,6 +4,8 @@ import logging
 import tomllib
 from pathlib import Path
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 # ObjType constants from Argentum Online
@@ -26,14 +28,14 @@ class ItemCatalog:
             if data.get("ObjType") == OBJTYPE_WEAPON and int(str(data.get("StaffPower", 0))) > 0
         )
 
-    def __init__(self, data_path: str = "data/items.toml") -> None:
+    def __init__(self, data_path: str | None = None) -> None:
         """Inicializa el catálogo de items.
 
         Args:
             data_path: Ruta al archivo items.toml.
         """
         self._items: dict[int, dict[str, object]] = {}
-        self._data_path = data_path
+        self._data_path = data_path or str(data_dir() / "items.toml")
         self._load_catalog()
 
     def _load_catalog(self) -> None:
