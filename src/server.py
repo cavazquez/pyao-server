@@ -45,6 +45,10 @@ class ArgentumServer:
         )
         self.host = endpoint.host
         self.port = endpoint.port
+        self.max_connections = ServerConfig(
+            max_connections=int(str(config_manager.get("server.max_connections", 1000)))
+        ).max_connections
+        self._active_connections = 0
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
@@ -82,99 +86,110 @@ class ArgentumServer:
         Args:
             reader: Stream para leer datos del cliente (pasado a ClientConnection).
             writer: Stream para escribir datos al cliente (pasado a ClientConnection).
+
+        Raises:
+            CancelledError: Al cancelar la tarea de conexión durante el apagado.
         """
-        connection = ClientConnection(reader, writer)
-        message_sender = MessageSender(connection)
-        logger.info("Nueva conexión desde %s", connection.address)
-
-        # Incrementar contador de conexiones en Redis
-        if self.deps and self.deps.redis_client:
-            await self.deps.redis_client.increment_connections()
-            connections = await self.deps.redis_client.get_connections_count()
-            logger.info("Conexiones activas: %d", connections)
-
-        # Datos de sesión compartidos entre tareas (mutable)
+        # No hay await entre comprobar y reservar: atómico dentro del event loop.
+        if self._active_connections >= self.max_connections:
+            logger.info("Conexión rechazada: límite de %d alcanzado", self.max_connections)
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except ConnectionError:
+                logger.debug("La conexión rechazada ya estaba cerrada")
+            return
+        self._active_connections += 1
+        counted_in_redis = False
         session_data: dict[str, dict[str, int]] = {}
-
-        try:  # noqa: PLR1702
+        try:
+            connection = ClientConnection(reader, writer)
+            message_sender = MessageSender(connection)
+            logger.info("Nueva conexión desde %s", connection.address)
+            if self.deps and self.deps.redis_client:
+                await self.deps.redis_client.increment_connections()
+                counted_in_redis = True
             while True:
                 data = await connection.receive()
                 if not data:
                     break
-
-                # Crear y ejecutar tarea apropiada según el mensaje
                 task = self.create_task(data, message_sender, session_data)
                 await task.execute()
-
-        except KeyboardInterrupt, asyncio.CancelledError:
-            # Shutdown graceful, no loguear como error
-            logger.debug("Cliente %s desconectado por shutdown del servidor", connection.address)
+        except asyncio.CancelledError:
+            logger.debug("Conexión cancelada por shutdown")
+            raise
         except Exception:
-            logger.exception("Error manejando cliente %s", connection.address)
+            logger.exception("Error manejando conexión")
         finally:
-            logger.info("Cerrando conexión con %s", connection.address)
-
-            # Broadcast multijugador: notificar desconexión
-            if "user_id" in session_data and self.deps and self.deps.player_repo:
-                user_id_value = session_data["user_id"]
-                if not isinstance(user_id_value, dict):
-                    user_id = int(user_id_value)
-
-                    # Obtener el mapa del jugador antes de removerlo
-                    position = await self.deps.player_repo.get_position(user_id)
-                    if position:
-                        map_id = position["map"]
-
-                        # Enviar CHARACTER_REMOVE a todos los jugadores en el mapa
-                        other_senders = self.deps.map_manager.get_all_message_senders_in_map(
-                            map_id, exclude_user_id=user_id
-                        )
-                        for sender in other_senders:
-                            await sender.send_character_remove(user_id)
-
-                        logger.info(
-                            "Desconexión de user %d notificada a %d jugadores en mapa %d",
-                            user_id,
-                            len(other_senders),
-                            map_id,
-                        )
-
-                    # Limpiar mascotas del jugador
-                    if self.deps and self.deps.summon_service and self.deps.npc_service:
+            try:
+                await self._cleanup_player(session_data)
+            except Exception:
+                logger.exception("Error limpiando jugador desconectado")
+            finally:
+                # Incluso si falla el login, Redis o el cierre lógico, liberar exactamente una vez.
+                self._active_connections -= 1
+                try:
+                    writer.close()
+                    await writer.wait_closed()
+                except ConnectionError:
+                    logger.debug("El transporte ya estaba cerrado")
+                finally:
+                    if counted_in_redis and self.deps and self.deps.redis_client:
                         try:
-                            pet_instance_ids = (
-                                await self.deps.summon_service.remove_all_player_pets(user_id)
-                            )
-                            # Remover cada mascota del mundo
-                            all_npcs = await self.deps.npc_service.npc_repository.get_all_npcs()
-                            for pet_instance_id in pet_instance_ids:
-                                pet_npc = next(
-                                    (npc for npc in all_npcs if npc.instance_id == pet_instance_id),
-                                    None,
-                                )
-                                if pet_npc:
-                                    await self.deps.npc_service.remove_npc(pet_npc)
-                                    logger.info(
-                                        "Mascota removida al desconectar: user_id=%d, mascota=%s",
-                                        user_id,
-                                        pet_npc.name,
-                                    )
+                            await self.deps.redis_client.decrement_connections()
                         except Exception:
-                            logger.exception(
-                                "Error al limpiar mascotas del jugador %d al desconectar", user_id
-                            )
+                            logger.exception("No se pudo actualizar la métrica de conexiones")
 
-                    # Remover jugador de todos los mapas
-                    self.deps.map_manager.remove_player_from_all_maps(user_id)
+    async def _cleanup_player(self, session_data: dict[str, dict[str, int]]) -> None:
+        """Retira el jugador del mundo al finalizar su conexión."""
+        if "user_id" not in session_data or not self.deps or not self.deps.player_repo:
+            return
+        user_id_value = session_data["user_id"]
+        if isinstance(user_id_value, dict):
+            return
+        user_id = int(user_id_value)
+        # Obtener el mapa del jugador antes de removerlo
+        position = await self.deps.player_repo.get_position(user_id)
+        if position:
+            map_id = position["map"]
 
-            connection.close()
-            await connection.wait_closed()
+            # Enviar CHARACTER_REMOVE a todos los jugadores en el mapa
+            other_senders = self.deps.map_manager.get_all_message_senders_in_map(
+                map_id, exclude_user_id=user_id
+            )
+            for sender in other_senders:
+                await sender.send_character_remove(user_id)
 
-            # Decrementar contador de conexiones en Redis
-            if self.deps and self.deps.redis_client:
-                await self.deps.redis_client.decrement_connections()
-                connections = await self.deps.redis_client.get_connections_count()
-                logger.info("Conexiones activas: %d", connections)
+            logger.info(
+                "Desconexión de user %d notificada a %d jugadores en mapa %d",
+                user_id,
+                len(other_senders),
+                map_id,
+            )
+
+        # Limpiar mascotas del jugador
+        if self.deps and self.deps.summon_service and self.deps.npc_service:
+            try:
+                pet_instance_ids = await self.deps.summon_service.remove_all_player_pets(user_id)
+                # Remover cada mascota del mundo
+                all_npcs = await self.deps.npc_service.npc_repository.get_all_npcs()
+                for pet_instance_id in pet_instance_ids:
+                    pet_npc = next(
+                        (npc for npc in all_npcs if npc.instance_id == pet_instance_id),
+                        None,
+                    )
+                    if pet_npc:
+                        await self.deps.npc_service.remove_npc(pet_npc)
+                        logger.info(
+                            "Mascota removida al desconectar: user_id=%d, mascota=%s",
+                            user_id,
+                            pet_npc.name,
+                        )
+            except Exception:
+                logger.exception("Error al limpiar mascotas del jugador %d al desconectar", user_id)
+
+        # Remover jugador de todos los mapas
+        self.deps.map_manager.remove_player_from_all_maps(user_id)
 
     async def start(self) -> None:
         """Inicia el servidor TCP."""

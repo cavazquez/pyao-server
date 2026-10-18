@@ -312,3 +312,13 @@ en cada destino sin imprimir sus payloads. Cambiar las credenciales que hayan
 quedado expuestas y registrar la fecha de retiro, no su contenido. La actualización
 no borra automáticamente archivos del operador ni garantiza el borrado físico
 de copias fuera del servidor.
+
+### Capacidad de conexiones
+
+`server.max_connections` (`PYAO_SERVER__MAX_CONNECTIONS`) limita las conexiones
+de aplicación simultáneas por proceso, incluyendo las pendientes de login. El
+exceso se cierra antes de crear servicios de sesión. EOF, error de Redis/handler
+o cancelación liberan la plaza una sola vez; el contador Redis es una métrica,
+no una barrera de admisión. El backlog TCP del sistema operativo no configura
+este límite. En despliegues con varios procesos el operador debe considerar la
+suma de sus límites.
