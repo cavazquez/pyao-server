@@ -46,9 +46,7 @@ async def test_known_sign_is_returned_by_interaction(monkeypatch) -> None:
         door_repo=None,
         message_sender=MagicMock(send_console_msg=AsyncMock()),
     )
-    with patch(
-        "src.command_handlers.left_click_tile_handler._SIGNS_CATALOG", load_signs_catalog()
-    ):
+    with patch("src.command_handlers.left_click_tile_handler._SIGNS_CATALOG", load_signs_catalog()):
         assert (
             await handler._get_sign_text(1, 50, 50)
             == "Tenemos las mejores armas para los mejores guerreros."
