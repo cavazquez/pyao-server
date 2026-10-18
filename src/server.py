@@ -419,6 +419,8 @@ class ArgentumServer:
             )
         await self._shutdown_step(close_password_executor(), "autenticación", work_deadline)
         if self.server:
+            # Incluye sockets cuyo handshake TLS aún no llegó a handle_client.
+            self.server.abort_clients()
             await self._shutdown_step(self.server.wait_closed(), "listener", work_deadline)
         if self.deps and self.deps.redis_client:
             await self._shutdown_step(self.deps.redis_client.disconnect(), "Redis", deadline)
