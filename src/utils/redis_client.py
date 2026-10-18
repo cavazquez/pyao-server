@@ -6,7 +6,7 @@ from typing import Any, Self, cast
 
 import redis.asyncio as redis
 
-from src.config.config_manager import config_manager
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.redis_config import (
     DEFAULT_EFFECTS_CONFIG,
     DEFAULT_SERVER_CONFIG,
@@ -96,16 +96,17 @@ class RedisClient:
             return
 
         for key, value in DEFAULT_SERVER_CONFIG.items():
-            exists = await self._redis.exists(key)
-            if not exists:
-                await self._redis.set(key, value)
-                logger.info("Configuración inicializada: %s = %s", key, value)
-
-        for key, value in DEFAULT_EFFECTS_CONFIG.items():
-            exists = await self._redis.exists(key)
-            if not exists:
-                await self._redis.set(key, value)
-                logger.info("Configuración de efecto inicializada: %s = %s", key, value)
+            await self._redis.set(key, value, nx=True)
+        effects = dict(DEFAULT_EFFECTS_CONFIG)
+        config = ConfigManager()
+        effects[RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED] = str(
+            ConfigManager.as_int(config.get("game.hunger_thirst.interval_sed", 180))
+        )
+        effects[RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE] = str(
+            ConfigManager.as_int(config.get("game.hunger_thirst.interval_hambre", 180))
+        )
+        for key, value in effects.items():
+            await self._redis.set(key, value, nx=True)
 
     async def disconnect(self) -> None:
         """Desconecta del servidor Redis."""

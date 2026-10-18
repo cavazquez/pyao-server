@@ -33,6 +33,7 @@ async def test_file_and_environment_reach_redis_constructor(tmp_path, monkeypatc
     raw = MagicMock()
     raw.ping = AsyncMock(return_value=True)
     raw.exists = AsyncMock(return_value=True)
+    raw.set = AsyncMock(return_value=False)
     raw.aclose = AsyncMock()
     with patch("src.utils.redis_client.redis.Redis", return_value=raw) as constructor:
         await client.connect(effective)

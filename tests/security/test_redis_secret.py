@@ -36,6 +36,7 @@ async def test_password_file_reaches_constructor_without_logging(tmp_path, monke
     raw = MagicMock()
     raw.ping = AsyncMock(return_value=True)
     raw.exists = AsyncMock(return_value=True)
+    raw.set = AsyncMock(return_value=False)
     raw.aclose = AsyncMock()
     client = RedisClient()
     with patch("src.utils.redis_client.redis.Redis", return_value=raw) as constructor:
