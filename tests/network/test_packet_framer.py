@@ -15,6 +15,7 @@ import pytest
 
 from src.network.packet_framer import (
     BufferOverflowError,
+    InvalidLengthError,
     PacketFramer,
     UnknownPacketError,
 )
@@ -30,8 +31,8 @@ def _login_packet(username: str = "pepe", password: str = "secret") -> bytes:
 
     Layout: packet_id + unicode_str(user) + unicode_str(pwd) + 3 bytes trailer.
     """
-    u = username.encode("utf-8")
-    p = password.encode("utf-8")
+    u = username.encode("latin-1")
+    p = password.encode("latin-1")
     return (
         bytes([ClientPacketID.LOGIN])
         + _u16(len(u))
@@ -43,7 +44,7 @@ def _login_packet(username: str = "pepe", password: str = "secret") -> bytes:
 
 
 def _talk_packet(message: str) -> bytes:
-    m = message.encode("utf-8")
+    m = message.encode("latin-1")
     return bytes([ClientPacketID.TALK]) + _u16(len(m)) + m
 
 
@@ -163,12 +164,9 @@ class TestBufferOverflowProtection:
         # TALK con longitud anunciada = 65000 (>MAX_BUFFER_BYTES)
         framer.feed(bytes([ClientPacketID.TALK]) + _u16(65000))
 
-        # El probe indica "necesito 65k bytes" → next_packet devuelve None.
-        assert framer.next_packet() is None
-
-        # Al seguir enviando bytes eventualmente MAX_BUFFER_BYTES corta.
-        with pytest.raises(BufferOverflowError):
-            framer.feed(b"x" * PacketFramer.MAX_BUFFER_BYTES)
+        # Rechazar con sólo el prefijo: no esperar a llenar el buffer.
+        with pytest.raises(InvalidLengthError):
+            framer.next_packet()
 
 
 class TestVariableLengthPackets:
@@ -186,7 +184,7 @@ class TestVariableLengthPackets:
         # subcmd(1) + username_str + map_id(i16) + x(1) + y(1)
         username = b"admin"
         packet = (
-            bytes([ClientPacketID.GM_COMMANDS, 0x01])
+            bytes([ClientPacketID.GM_COMMANDS, 11])
             + _u16(len(username))
             + username
             + _u16(1)
@@ -210,12 +208,12 @@ class TestVariableLengthPackets:
         assert framer.next_packet() == packet
         assert framer.next_packet() == bytes([ClientPacketID.PING])
 
-    def test_party_join_is_fixed_single_byte(self) -> None:
-        """El cliente Godot envía PARTY_JOIN sin payload (solo 1 byte)."""
+    def test_party_join_consumes_canonical_nickname(self) -> None:
+        """La actualización coordinada usa nickname u16 + Latin-1."""
         framer = PacketFramer()
-        framer.feed(bytes([ClientPacketID.PARTY_JOIN, ClientPacketID.PING]))
-
-        assert framer.next_packet() == bytes([ClientPacketID.PARTY_JOIN])
+        packet = bytes([ClientPacketID.PARTY_JOIN]) + _u16(3) + b"Ana"
+        framer.feed(packet + bytes([ClientPacketID.PING]))
+        assert framer.next_packet() == packet
         assert framer.next_packet() == bytes([ClientPacketID.PING])
 
 
@@ -229,3 +227,49 @@ class TestEmptyAndNoOpFeeds:
     def test_next_packet_on_empty_buffer(self) -> None:
         framer = PacketFramer()
         assert framer.next_packet() is None
+
+
+def test_double_click_and_safe_toggle_preserve_following_packet() -> None:
+    """Las dos regresiones respetan sus fronteras aun concatenadas."""
+    framer = PacketFramer()
+    framer.feed(bytes([27, 50, 51, 10, 6, 2]))
+    assert [framer.next_packet() for _ in range(3)] == [bytes([27, 50, 51]), b"\x0a", b"\x06\x02"]
+
+
+def test_every_supported_handler_at_every_boundary() -> None:
+    """Ningún handler queda sin regla y ningún split roba bytes del PING siguiente."""
+    from src.network.packet_framer import CONTRACT  # noqa: PLC0415
+    from src.network.packet_handlers import TASK_HANDLERS  # noqa: PLC0415
+
+    for packet_id in TASK_HANDLERS:
+        entry = CONTRACT["directions"]["client"][str(packet_id)]
+        packet = bytes([packet_id])
+        fields = entry["fields"]
+        if "variants" in entry:
+            packet += b"\x0b"
+            fields = entry["variants"]["11"]
+        for field in fields:
+            if field["type"] == "str16":
+                text = b"a" * max(1, field.get("min_bytes", 0))
+                packet += _u16(len(text)) + text
+            else:
+                packet += b"\x01" * {"u8": 1, "i16": 2, "i32": 4}[field["type"]]
+        for split in range(1, len(packet)):
+            framer = PacketFramer()
+            framer.feed(packet[:split])
+            assert framer.next_packet() is None, (packet_id, split)
+            framer.feed(packet[split:] + b"\x77")
+            assert framer.next_packet() == packet, (packet_id, split)
+            assert framer.next_packet() == b"\x77"
+            assert framer.next_packet() is None
+
+
+@pytest.mark.parametrize("data", [b"\x7a\x01", b"\x7a\xff"])
+def test_unknown_gm_subcommand_fails_without_waiting(data: bytes) -> None:
+    """Un subcomando no declarado corta inmediatamente."""
+    from src.network.packet_framer import InvalidVariantError  # noqa: PLC0415
+
+    framer = PacketFramer()
+    framer.feed(data)
+    with pytest.raises(InvalidVariantError):
+        framer.next_packet()
