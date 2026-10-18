@@ -23,3 +23,11 @@ El journal `trade:settlement:<operation_id>` conserva participantes, huella y re
 Antes de operar se comprueba AOF. Antes de anunciar el resultado se escribe una barrera y se exige fsync local con WAITAOF en una conexión exclusiva. La barrera posterior a EXEC también cubre ese commit previo en el orden de AOF; no se supone que el pool entregue la misma conexión que ejecutó la transacción. [Semántica oficial de WAITAOF](https://redis.io/docs/latest/commands/waitaof/).
 
 `uv run python -m src.operations.trade_atomic_smoke` verifica confirmaciones concurrentes, mata sólo su propio Redis con SIGKILL, lo reinicia, consulta el journal y repite la operación sin duplicar recursos. Un segundo Redis sin AOF debe rechazar antes de tocar inventarios o saldos. No usa datos productivos. Las pruebas rápidas inyectan ACK perdido después de EXEC y una confirmación de fsync incierta.
+
+## Objetos del banco
+
+Depósito y retiro confirman ambos contenedores y el recibo en un solo EXEC. La distribución completa se calcula en memoria, incluyendo espacio en stacks existentes y nuevos. Inventario mantiene su tope configurado de stack y la bóveda limita cada stack a 32767, representable en el protocolo. Se rechazan cantidades persistidas fuera de rango sin corregir ni descartar objetos silenciosamente. Banco e inventario capturan sus capacidades efectivas al inicializarse.
+
+El origen se comprueba por slot, identidad y cantidad; un cambio de identidad durante un reintento de WATCH se rechaza. Depositar equipo requiere desequiparlo primero. No se persiste una distribución parcial cuando el destino sólo admite parte de la cantidad. Ambos inventarios se sincronizan desde Redis después de confirmar AOF, incluidos los slots vacíos. El ID del comando y la política de recibos/replay acotados permiten resolver respuestas inciertas sin duplicar objetos; después del plazo se exige consultar los contenedores.
+
+`uv run python -m src.operations.bank_items_smoke` prueba distribución en el banco y al retirar, usa el slot 30, mata su Redis propio con SIGKILL y repite ambas operaciones tras reiniciarlo. El total y los stacks deben coincidir exactamente con el primer commit.

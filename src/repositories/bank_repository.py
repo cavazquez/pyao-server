@@ -39,6 +39,7 @@ class BankRepository(BaseSlotRepository):
             redis_client: Cliente de Redis.
         """
         super().__init__(redis_client)
+        self.MAX_SLOTS = ConfigManager.as_int(config_manager.get("game.bank.max_slots", 40))
         self.redis_client = redis_client
 
     async def get_bank(self, user_id: int) -> dict[str, str]:

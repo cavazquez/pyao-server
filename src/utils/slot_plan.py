@@ -2,6 +2,8 @@
 
 from src.utils.inventory_slot import InventorySlot
 
+MAX_SLOT_QUANTITY = 32767
+
 
 class SlotPlan:
     """Copia validada de slots para calcular un commit conjunto de inventarios."""
@@ -23,7 +25,7 @@ class SlotPlan:
             if not value:
                 continue
             parsed = InventorySlot.parse(value)
-            if parsed is None:
+            if parsed is None or parsed.quantity > MAX_SLOT_QUANTITY:
                 msg = "Slot persistido inválido"
                 raise ValueError(msg)
             self.slots[slot] = parsed
