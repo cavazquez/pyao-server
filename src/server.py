@@ -12,6 +12,7 @@ from src.config.game_config import SecurityConfig, ServerConfig
 from src.core.server_initializer import ServerInitializer
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
+from src.network.packet_framer import FramingError, PacketFramer
 from src.security.auth_limits import AuthLimiter
 from src.security.password_executor import close_password_executor
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
@@ -130,13 +131,23 @@ class ArgentumServer:
             if self.deps and self.deps.redis_client:
                 await self.deps.redis_client.increment_connections()
                 counted_in_redis = True
+            framer = PacketFramer()
             while True:
                 async with asyncio.timeout_at(None if connection.is_authenticated else deadline):
                     data = await connection.receive()
                     if not data:
+                        if framer.buffer_size:
+                            logger.info(
+                                "EOF con paquete incompleto: %d bytes pendientes",
+                                framer.buffer_size,
+                            )
                         break
-                    task = self.create_task(data, message_sender, session_data)
-                    await task.execute()
+                    framer.feed(data)
+                    while (packet := framer.next_packet()) is not None:
+                        task = self.create_task(packet, message_sender, session_data)
+                        await task.execute()
+        except FramingError as error:
+            logger.info("Conexión cerrada por framing inválido: %s", error)
         except TimeoutError:
             logger.info("Conexión cerrada por plazo de autenticación agotado")
         except asyncio.CancelledError:
