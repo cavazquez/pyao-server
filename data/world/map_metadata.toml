@@ -23,7 +23,7 @@ type = "wilderness"
 blocked_tiles = 2717
 water_tiles = 0
 exits = 254
-entries = 249
+entries = 335
 
 [map_4]
 name = "Montañas"
@@ -279,7 +279,7 @@ type = "water"
 blocked_tiles = 2229
 water_tiles = 888
 exits = 251
-entries = 254
+entries = 336
 
 [map_37]
 name = "Mapa 37"
@@ -303,7 +303,7 @@ type = "unknown"
 blocked_tiles = 2417
 water_tiles = 114
 exits = 254
-entries = 256
+entries = 338
 
 [map_40]
 name = "Andarial"
@@ -359,7 +359,7 @@ type = "water"
 blocked_tiles = 1187
 water_tiles = 1385
 exits = 248
-entries = 249
+entries = 335
 
 [map_47]
 name = "Hyron"
@@ -2326,3 +2326,12 @@ water_tiles = 1298
 exits = 254
 entries = 246
 
+
+# Recuperado del mapa original durante #143
+[map_36]
+name = "Mapa 36"
+type = "unknown"
+blocked_tiles = 2729
+water_tiles = 886
+exits = 336
+entries = 0

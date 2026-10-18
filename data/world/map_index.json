@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "total_maps": 289,
+  "total_maps": 290,
   "maps": {
     "1": {
       "name": "Ullathorpe",
@@ -18,7 +18,7 @@
       "name": "Desierto",
       "type": "wilderness",
       "exits": 254,
-      "entries": 249
+      "entries": 335
     },
     "4": {
       "name": "Montañas",
@@ -210,7 +210,13 @@
       "name": "Uthathorpe",
       "type": "water",
       "exits": 251,
-      "entries": 254
+      "entries": 336
+    },
+    "36": {
+      "name": "Mapa 36",
+      "type": "unknown",
+      "exits": 336,
+      "entries": 0
     },
     "37": {
       "name": "Mapa 37",
@@ -228,7 +234,7 @@
       "name": "Mapa 39",
       "type": "unknown",
       "exits": 254,
-      "entries": 256
+      "entries": 338
     },
     "40": {
       "name": "Andarial",
@@ -270,7 +276,7 @@
       "name": "Nimrah",
       "type": "water",
       "exits": 248,
-      "entries": 249
+      "entries": 335
     },
     "47": {
       "name": "Hyron",
