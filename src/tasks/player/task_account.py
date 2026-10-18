@@ -134,7 +134,6 @@ class TaskCreateAccount(Task):
             # Leer home (último byte)
             if len(self.data) >= offset + 1:
                 char_data["home"] = self.data[offset]
-                logger.debug("Home: %d", char_data["home"])
 
         except (ValueError, UnicodeDecodeError) as e:
             logger.warning("Error parseando creación de cuenta: %s", type(e).__name__)
