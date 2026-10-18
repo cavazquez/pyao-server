@@ -97,6 +97,17 @@ class NPCAIEffect(TickEffect):
         errors = sum(1 for r in results if isinstance(r, Exception))
         if errors > 0:
             logger.warning("Errores procesando %d/%d NPCs hostiles", errors, len(active_npcs))
+            for npc, result in zip(active_npcs, results, strict=True):
+                if isinstance(result, Exception):
+                    logger.error(
+                        "Falló IA de NPC %s (instance_id=%s, mapa=%d, posición=%d,%d)",
+                        npc.name,
+                        npc.instance_id,
+                        npc.map_id,
+                        npc.x,
+                        npc.y,
+                        exc_info=(type(result), result, result.__traceback__),
+                    )
 
         logger.debug(
             "Procesados %d NPCs hostiles en paralelo (%d en mapas vacíos ignorados)",

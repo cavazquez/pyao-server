@@ -1,7 +1,9 @@
 """Tests básicos para NPCAIEffect."""
 
 import math
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
+
+import pytest
 
 from src.effects.npc_ai_effect import NPCAIEffect
 
@@ -46,3 +48,25 @@ class TestNPCAIEffect:
         effect = NPCAIEffect(npc_service, npc_ai_service)
 
         assert effect.get_name() == "NPCAI"
+
+    @pytest.mark.asyncio
+    async def test_failure_records_npc_and_traceback_without_stopping_others(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Un fallo aislado conserva su causa y no impide procesar el otro NPC."""
+        failed = MagicMock(instance_id="murcielago-1", map_id=1, x=50, y=51, is_hostile=True, hp=15)
+        failed.name = "Murciélago"
+        healthy = MagicMock(is_hostile=True, hp=15, map_id=1)
+        npc_service = MagicMock()
+        npc_service.map_manager.get_all_npcs.return_value = [failed, healthy]
+        npc_service.map_manager.get_maps_with_players.return_value = [1]
+        ai_service = MagicMock()
+        ai_service.process_hostile_npc = AsyncMock(side_effect=[ValueError("causa real"), None])
+
+        await NPCAIEffect(npc_service, ai_service).apply(1, MagicMock(), None)
+
+        assert ai_service.process_hostile_npc.await_count == 2
+        failure = next(record for record in caplog.records if record.levelname == "ERROR")
+        assert "instance_id=murcielago-1" in failure.getMessage()
+        assert failure.exc_info is not None
+        assert str(failure.exc_info[1]) == "causa real"
