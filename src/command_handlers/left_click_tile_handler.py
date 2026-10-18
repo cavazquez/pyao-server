@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from src.services.map.door_service import DoorService
     from src.services.map.map_resources_service import MapResourcesService
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 # Mapa para el que se quieren ver logs detallados de recursos. Si es 0 (por
@@ -31,18 +33,18 @@ WOODEN_DOOR_CLOSED_ID = 8
 _SIGNS_CATALOG: dict[int, dict[str, str]] = {}
 
 
-def _load_signs_catalog() -> dict[int, dict[str, str]]:
+def load_signs_catalog(data_root: Path | None = None) -> dict[int, dict[str, str]]:
     """Carga el catálogo de carteles desde signs.toml.
+
+    Args:
+        data_root: Raíz explícita de datos; SNAP_USER_COMMON tiene precedencia.
 
     Returns:
         Diccionario con GrhIndex como key y datos del cartel como value.
     """
-    snap_common = os.environ.get("SNAP_USER_COMMON")
-    signs_path = (
-        Path(snap_common) / "data/items/world_objects/signs.toml"
-        if snap_common
-        else Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
-    )
+    root = data_dir() if os.environ.get("SNAP_USER_COMMON") or data_root is None else data_root
+    signs_path = root / "items/world_objects/signs.toml"
+    logger.info("Catálogo de carteles efectivo: %s", signs_path)
 
     if not signs_path.exists():
         msg = (
@@ -74,7 +76,7 @@ def _load_signs_catalog() -> dict[int, dict[str, str]]:
 
 
 # Cargar catálogo al importar el módulo
-_SIGNS_CATALOG = _load_signs_catalog()
+_SIGNS_CATALOG = load_signs_catalog()
 
 
 class LeftClickTileHandler:

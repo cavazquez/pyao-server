@@ -5,20 +5,22 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
 class SpellCatalog:
     """Catálogo de hechizos disponibles en el juego."""
 
-    def __init__(self, spells_path: str = "data/spells.toml") -> None:
+    def __init__(self, spells_path: str | None = None) -> None:
         """Inicializa el catálogo de hechizos.
 
         Args:
             spells_path: Ruta al archivo de hechizos.
         """
         self.spells: dict[int, dict[str, Any]] = {}
-        self._load_spells(spells_path)
+        self._load_spells(spells_path or str(data_dir() / "spells.toml"))
 
     def _load_spells(self, spells_path: str) -> None:
         """Carga los hechizos desde el archivo TOML.

@@ -1,11 +1,11 @@
 """Catálogo de items del juego."""
 
-import os
 import tomllib
 from pathlib import Path
 
 from src.models.item import Item, ItemType
 from src.models.item_types import ObjType
+from src.runtime_paths import data_dir as default_data_dir
 
 
 def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
@@ -88,10 +88,7 @@ def _load_items_from_toml() -> dict[int, Item]:
     Returns:
         Diccionario con todos los items indexados por ID.
     """
-    snap_common = os.environ.get("SNAP_USER_COMMON")
-    data_dir = (
-        Path(snap_common) / "data" if snap_common else Path(__file__).parent.parent.parent / "data"
-    )
+    data_dir = default_data_dir()
     items_dir = data_dir / "items"
     legacy_file = data_dir / "items.toml"
 

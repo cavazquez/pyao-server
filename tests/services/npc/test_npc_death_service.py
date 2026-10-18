@@ -197,7 +197,7 @@ class TestNPCDeathService:
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         npc_repo = MagicMock()
         npc_repo.remove_npc = AsyncMock()
@@ -275,8 +275,11 @@ class TestNPCDeathService:
         )
 
         # Assert - Oro dropeado
-        map_manager.add_ground_item.assert_called_once()
-        broadcast_service.broadcast_object_create.assert_called()
+        map_manager.add_ground_item_committed.assert_called_once()
+        assert (
+            map_manager.add_ground_item_committed.await_args.kwargs["broadcast_service"]
+            is broadcast_service
+        )
 
     async def test_drop_position_avoids_blocked_tiles(self) -> None:
         """Test que los drops no caen en tiles bloqueados."""
@@ -287,7 +290,7 @@ class TestNPCDeathService:
         # Primera posición bloqueada, segunda libre
         map_manager.can_move_to = MagicMock(side_effect=[False, True])
         map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         npc_repo = MagicMock()
         npc_repo.remove_npc = AsyncMock()
@@ -368,7 +371,7 @@ class TestNPCDeathService:
         assert map_manager.can_move_to.call_count >= 2
 
         # Assert - Oro dropeado en posición válida
-        map_manager.add_ground_item.assert_called_once()
+        map_manager.add_ground_item_committed.assert_called_once()
 
     async def test_handle_npc_death_with_loot_table(self) -> None:
         """Test que el NPC dropea items según su loot table."""
@@ -378,7 +381,7 @@ class TestNPCDeathService:
         map_manager.get_ground_items = MagicMock(return_value=[])
         map_manager.can_move_to = MagicMock(return_value=True)
         map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item = MagicMock()
+        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
 
         npc_repo = MagicMock()
         npc_repo.remove_npc = AsyncMock()
@@ -467,5 +470,8 @@ class TestNPCDeathService:
         )
 
         # Assert - Items dropeados (2 items)
-        assert map_manager.add_ground_item.call_count == 2
-        assert broadcast_service.broadcast_object_create.call_count == 2
+        assert map_manager.add_ground_item_committed.call_count == 2
+        assert all(
+            call.kwargs["broadcast_service"] is broadcast_service
+            for call in map_manager.add_ground_item_committed.await_args_list
+        )

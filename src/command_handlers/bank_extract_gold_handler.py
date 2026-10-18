@@ -63,31 +63,19 @@ class BankExtractGoldCommandHandler(CommandHandler):
                 )
                 return CommandResult.error("Cantidad inválida: debe ser mayor a 0")
 
-            # Verificar que el banco tenga suficiente oro
-            bank_gold = await self.bank_repo.get_gold(user_id)
-            if bank_gold < amount:
-                await self.message_sender.send_console_msg(
-                    f"No tienes suficiente oro en el banco. Tienes: {bank_gold}"
-                )
-                return CommandResult.error(
-                    f"No tienes suficiente oro en el banco. Tienes: {bank_gold}"
-                )
-
-            # Retirar oro del banco
-            success = await self.bank_repo.remove_gold(user_id, amount)
-            if not success:
-                await self.message_sender.send_console_msg("Error al retirar oro del banco")
-                return CommandResult.error("Error al retirar oro del banco")
-
-            # Agregar oro al jugador
-            await self.player_repo.add_gold(user_id, amount)
+            result = await self.bank_repo.transfer_gold(
+                user_id, amount, "withdraw", command.operation_id
+            )
+            if not result["applied"]:
+                await self.message_sender.send_console_msg(result["error"])
+                return CommandResult.error(result["error"])
+            player_gold = result["player_gold"]
+            bank_gold = result["bank_gold"]
 
             # Actualizar oro del jugador en cliente
-            player_gold = await self.player_repo.get_gold(user_id)
             await self.message_sender.send_update_gold(player_gold)
 
             # Actualizar oro del banco en cliente
-            bank_gold = await self.bank_repo.get_gold(user_id)
             await self.message_sender.send_update_bank_gold(bank_gold)
 
             # Mensaje de éxito

@@ -63,25 +63,16 @@ class BankDepositGoldCommandHandler(CommandHandler):
                 )
                 return CommandResult.error("Cantidad inválida: debe ser mayor a 0")
 
-            # Verificar que el jugador tenga suficiente oro
-            player_gold = await self.player_repo.get_gold(user_id)
-            if player_gold < amount:
-                await self.message_sender.send_console_msg(
-                    f"No tienes suficiente oro. Tienes: {player_gold}"
-                )
-                return CommandResult.error(f"No tienes suficiente oro. Tienes: {player_gold}")
-
-            # Remover oro del jugador
-            success = await self.player_repo.remove_gold(user_id, amount)
-            if not success:
-                await self.message_sender.send_console_msg("Error al depositar oro en el banco")
-                return CommandResult.error("Error al depositar oro en el banco")
-
-            # Agregar oro al banco
-            bank_gold = await self.bank_repo.add_gold(user_id, amount)
+            result = await self.bank_repo.transfer_gold(
+                user_id, amount, "deposit", command.operation_id
+            )
+            if not result["applied"]:
+                await self.message_sender.send_console_msg(result["error"])
+                return CommandResult.error(result["error"])
+            player_gold = result["player_gold"]
+            bank_gold = result["bank_gold"]
 
             # Actualizar oro del jugador en cliente
-            player_gold = await self.player_repo.get_gold(user_id)
             await self.message_sender.send_update_gold(player_gold)
 
             # Actualizar oro del banco en cliente

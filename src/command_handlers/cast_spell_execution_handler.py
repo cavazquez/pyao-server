@@ -78,7 +78,14 @@ class CastSpellExecutionHandler:
         return (target_x, target_y)
 
     async def execute_spell(
-        self, user_id: int, spell_id: int, target_x: int, target_y: int
+        self,
+        user_id: int,
+        spell_id: int,
+        target_x: int,
+        target_y: int,
+        *,
+        identity: str | None = None,
+        slot: int = 0,
     ) -> tuple[bool, str | None]:
         """Ejecuta el hechizo.
 
@@ -87,12 +94,14 @@ class CastSpellExecutionHandler:
             spell_id: ID del hechizo.
             target_x: Coordenada X del target.
             target_y: Coordenada Y del target.
+            identity: Identidad estable del cast.
+            slot: Slot que debe seguir conteniendo el mismo hechizo.
 
         Returns:
             Tupla (success, error_message).
         """
         success = await self.spell_service.cast_spell(
-            user_id, spell_id, target_x, target_y, self.message_sender
+            user_id, spell_id, target_x, target_y, self.message_sender, identity=identity, slot=slot
         )
 
         if not success:

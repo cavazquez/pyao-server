@@ -91,21 +91,17 @@ class AttackLootHandler:
                 "spawn_time": None,
             }
 
-            # Agregar al MapManager
-            self.map_manager.add_ground_item(
-                map_id=npc.map_id, x=drop_x, y=drop_y, item=ground_item
+            added = await self.map_manager.add_ground_item_committed(
+                map_id=npc.map_id,
+                x=drop_x,
+                y=drop_y,
+                item=ground_item,
+                broadcast_service=self.broadcast_service,
             )
+            if not added:
+                continue
 
-            # Broadcast OBJECT_CREATE a jugadores cercanos
-            if self.broadcast_service:
-                await self.broadcast_service.broadcast_object_create(
-                    map_id=npc.map_id,
-                    x=drop_x,
-                    y=drop_y,
-                    grh_index=grh_index,
-                )
-
-            item_name = self.item_catalog.get_item_name(item_id) or f"Item {item_id}"
+            item_name = self.item_catalog.get_item_name(item_id)
             logger.info(
                 "NPC %s dropeó %dx %s en (%d, %d)",
                 npc.name,

@@ -270,3 +270,112 @@ redis-server
 - [SERVICES_ARCHITECTURE.md](architecture/SERVICES_ARCHITECTURE.md) - Arquitectura del servidor
 - [GAME_TICK_SYSTEM.md](systems/GAME_TICK_SYSTEM.md) - Sistema de efectos y tick
 - [NPC_SYSTEM.md](systems/NPC_SYSTEM.md) - Sistema de NPCs
+
+
+## Precedencia del endpoint
+
+El socket se resuelve una vez: opciones explícitas `--host`/`--port`, variables `PYAO_SERVER__HOST`/`PYAO_SERVER__PORT` (o sus alias heredados), `.env`, `config/server.toml` y finalmente `0.0.0.0:7666`. Una opción omitida queda como `None` en el parser y no bloquea la configuración del entorno/archivo. Los valores `config:server:host` y `config:server:port` históricos de Redis se conservan como metadatos de compatibilidad y no determinan el bind. El log `Endpoint efectivo` y el log del socket reflejan la dirección realmente elegida. Un puerto explícito inválido provoca un error; no se sustituye por el default.
+
+```bash
+PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1
+# 127.0.0.1:8000, aunque el TOML tenga otro puerto.
+PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1 --port 7777
+# 127.0.0.1:7777.
+```
+
+### Conexión Redis
+
+El arranque utiliza la sección `[redis]` de `config/server.toml`. El entorno
+prevalece por campo: `PYAO_REDIS__HOST`, `PYAO_REDIS__PORT`, `PYAO_REDIS__DB`,
+`PYAO_REDIS__MAX_CONNECTIONS`, `PYAO_REDIS__SOCKET_TIMEOUT` y
+`PYAO_REDIS__SOCKET_CONNECT_TIMEOUT` (timeouts positivos, en segundos). Los nombres
+legados `PYAO_REDIS_HOST`, `PYAO_REDIS_PORT` y `PYAO_REDIS_DB` siguen admitidos,
+con menor prioridad que los nombres con doble guion bajo. El pool de redis-py
+recibe el límite configurado. Un TOML o entorno inválido aborta el arranque antes
+de abrir el socket del juego; corregí el valor y volvé a iniciar. No hay sustitución
+silenciosa por otra base ni por localhost.
+
+### Diagnóstico sin credenciales
+
+Los logs de transporte conservan dirección, cantidad de bytes y tipo de paquete.
+Los lectores de strings sólo informan longitudes y offsets; ni DEBUG vuelca
+contenido, contraseñas, hashes o fragmentos desconocidos. Se aplica también a
+TCP fragmentado: filtrar sólo por el primer ID de paquete no protege el secreto
+que llega en un read posterior. Las pruebas usan canarios sintéticos en INFO y
+DEBUG y buscan texto y hex UTF-8/Latin-1/UTF-16.
+
+Las versiones anteriores podían registrar contraseñas en altas y lecturas de red.
+Para retirar esos logs históricos, detener su recolección y revisar tanto
+`logs/` como rotaciones, copias y destinos externos de observabilidad; restringir
+su acceso y eliminarlos conforme a la retención acordada. Comprobar las copias
+en cada destino sin imprimir sus payloads. Cambiar las credenciales que hayan
+quedado expuestas y registrar la fecha de retiro, no su contenido. La actualización
+no borra automáticamente archivos del operador ni garantiza el borrado físico
+de copias fuera del servidor.
+
+### Capacidad de conexiones
+
+`server.max_connections` (`PYAO_SERVER__MAX_CONNECTIONS`) limita las conexiones
+de aplicación simultáneas por proceso, incluyendo las pendientes de login. El
+exceso se cierra antes de crear servicios de sesión. EOF, error de Redis/handler
+o cancelación liberan la plaza una sola vez; el contador Redis es una métrica,
+no una barrera de admisión. El backlog TCP del sistema operativo no configura
+este límite. En despliegues con varios procesos el operador debe considerar la
+suma de sus límites.
+
+### Presupuesto de Argon2
+
+`security.hash_workers` (`PYAO_SECURITY__HASH_WORKERS`, por defecto 2) limita los
+trabajos activos; cada uno mantiene los parámetros previos Argon2id y usa unos
+64 MiB. `security.hash_max_pending` (`PYAO_SECURITY__HASH_MAX_PENDING`, por defecto
+4) limita los pendientes. Altas y verificaciones comparten el mismo pool por
+proceso. La saturación se rechaza con un error de servicio ocupado. Cancelar una
+conexión no libera prematuramente la plaza de un hash: sigue ocupada hasta que
+el trabajo realmente termina, evitando acumular tareas nativas invisibles. El
+apagado rechaza nuevos trabajos, cancela los pendientes y espera los activos.
+
+### Límites de autenticación
+
+En `[security]`, `auth_timeout_seconds` limita todo el login (lectura, hash e
+inicialización) desde que se acepta la conexión, y el handshake TLS usa el mismo
+plazo. Las conexiones autenticadas no tienen ese timeout. `auth_window_seconds`
+define ventanas fijas de intentos; `auth_attempts_per_connection`,
+`auth_attempts_per_ip` y `auth_attempts_per_account` se comprueban conjuntamente
+antes de admitir Argon2 en alta/login. Reconectar no reinicia los contadores de
+IP o cuenta. `auth_max_keys` acota la memoria y rechaza claves nuevas al llenarse,
+sin desalojar contadores activos. Cada opción admite `PYAO_SECURITY__<NOMBRE>`.
+Los límites por IP/cuenta son por proceso; al usar varios procesos debe aplicarse
+también un límite en el ingreso común. Las respuestas de rechazo del login no
+indican si el usuario existe.
+
+### Una sesión por cuenta
+
+Después de verificar la contraseña se reserva `session:<user_id>:owner` mediante
+`SET NX EX`, antes de guardar la sesión o publicar el personaje. Cada conexión
+tiene un token aleatorio privado. La renovación y liberación comparan ese token
+con WATCH/MULTI, por lo que una conexión anterior nunca borra la reserva de una
+nueva. `security.session_lease_seconds` (`PYAO_SECURITY__SESSION_LEASE_SECONDS`,
+por defecto 90 segundos) fija el TTL; se renueva cada tercio de ese plazo. Una
+pérdida/error de renovación cierra y cancela la sesión propietaria. Fallar durante
+el login termina en la limpieza de la conexión y su reserva; una caída de proceso
+permite reingresar al vencer el TTL sin editar Redis. En un cierre limpio se
+libera después de retirar al jugador del mundo.
+
+El perfil Docker Redis persistente requiere `PYAO_REDIS_PASSWORD_FILE` (alias
+`PYAO_REDIS__PASSWORD_FILE`, o `redis.password_file` en TOML). Se lee al conectar
+y su contenido no se incluye en ConfigManager ni se imprime. Generarlo con
+`uv run --locked python -m src.operations.redis_secret --output .local/redis-password`.
+Una instancia externa sin autenticación puede dejar esa opción sin definir.
+
+### Salida y clientes lentos
+
+`server.outgoing_max_packets` (128), `server.outgoing_max_bytes` (262144) y
+`server.outgoing_drain_timeout` (5 segundos) acotan cada conexión; admiten
+`PYAO_SERVER__OUTGOING_MAX_PACKETS`, `PYAO_SERVER__OUTGOING_MAX_BYTES` y
+`PYAO_SERVER__OUTGOING_DRAIN_TIMEOUT`. Los límites incluyen el mensaje en vuelo.
+Cada cliente tiene un escritor FIFO propio. `send()` encola y cede el loop para
+que un burst de login no penalice al cliente rápido; no espera su drain. Saturar
+la cola o exceder el plazo aborta sólo ese transporte y cancela su sesión. Los
+broadcasts continúan hacia el resto. `flush()` permite esperar la salida antes
+de un cierre drenado; `close()/wait_closed()` cancelan y recogen escritor y cola.
+Los logs conservan metadata sin imprimir payloads ni argumentos de excepciones.

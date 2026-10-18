@@ -4,6 +4,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager, config_manager
+from src.models.item_constants import BOAT_ITEM_ID
+from src.models.mana import calculate_mana
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.game.class_service import get_class_service
 
@@ -124,8 +126,8 @@ class CreateAccountCharacterHandler:
         initial_stats: dict[str, int] = {
             "max_hp": max_hp,
             "min_hp": max_hp,
-            "max_mana": intelligence * MANA_PER_INT,
-            "min_mana": intelligence * MANA_PER_INT,
+            "max_mana": calculate_mana(intelligence, MANA_PER_INT),
+            "min_mana": calculate_mana(intelligence, MANA_PER_INT),
             "max_sta": 100,
             "min_sta": 100,
             "gold": INITIAL_GOLD,
@@ -133,7 +135,7 @@ class CreateAccountCharacterHandler:
             "elu": INITIAL_ELU,
             "experience": 0,
         }
-        await self.player_repo.set_stats(user_id=user_id, **initial_stats)
+        await self.player_repo.set_stats(user_id=user_id, preserve_gold=False, **initial_stats)
         logger.info(
             "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
             user_id,
@@ -184,6 +186,8 @@ class CreateAccountCharacterHandler:
         await inventory_repo.add_item(user_id, item_id=11, quantity=1)  # 1 Daga
         # Armadura inicial (Newbie)
         await inventory_repo.add_item(user_id, item_id=1073, quantity=1)  # Armadura de Aprendiz
+
+        await inventory_repo.add_item(user_id, item_id=BOAT_ITEM_ID, quantity=1)
 
         # Herramientas de trabajo (Newbie)
         await inventory_repo.add_item(user_id, item_id=561, quantity=1)  # Hacha de Leñador

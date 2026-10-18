@@ -1,7 +1,10 @@
 """Contenedor de dependencias del servidor."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from src.services.action_cadence import ActionCadence
+from src.services.chat_budget import ChatBudget
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -38,6 +41,7 @@ if TYPE_CHECKING:
     from src.services.npc.npc_service import NPCService
     from src.services.npc.summon_service import SummonService
     from src.services.party_service import PartyService
+    from src.services.player.player_death_service import PlayerDeathService
     from src.services.player.spell_service import SpellService
     from src.services.player.stamina_service import StaminaService
     from src.services.trade_service import TradeService
@@ -99,3 +103,9 @@ class DependencyContainer:
     npc_catalog: NPCCatalog
     spell_catalog: SpellCatalog
     item_catalog: ItemCatalog
+
+    player_death_service: PlayerDeathService | None = None
+
+    action_cadence: ActionCadence = field(default_factory=ActionCadence)
+
+    chat_budget: ChatBudget = field(default_factory=ChatBudget)

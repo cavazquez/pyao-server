@@ -41,15 +41,11 @@ class TestPlayerRepository:
 
         assert gold == 0
 
-    async def test_update_gold(self) -> None:
-        """Test de actualización de oro."""
-        redis_client = create_mock_redis_client()
-        redis_client.hset_field = AsyncMock()
-
+    async def test_update_gold(self, redis_client) -> None:
+        """El saldo absoluto se valida y se confirma en Redis."""
         repo = PlayerRepository(redis_client)
         await repo.update_gold(1, 500)
-
-        redis_client.hset_field.assert_called_once()
+        assert await repo.get_gold(1) == 500
 
     async def test_update_hp(self) -> None:
         """Test de actualización de HP."""

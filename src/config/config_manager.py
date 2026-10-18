@@ -6,15 +6,15 @@ migra gradualmente al nuevo sistema basado en Pydantic.
 
 import logging
 import os
-from pathlib import Path
 from typing import Any, ClassVar, Self
 
 from src.config.game_config import GameConfig
+from src.runtime_paths import config_file as default_config_file
 
 logger = logging.getLogger(__name__)
 
 # Tipo para valores de configuración
-ConfigValue = str | int | float | bool | dict[str, Any] | None
+ConfigValue = str | int | float | bool | dict[str, Any] | list[int] | None
 ConfigDict = dict[str, ConfigValue]
 
 
@@ -46,19 +46,12 @@ class ConfigManager:
         if getattr(self, "_initialized", False):
             return
 
-        self._initialized = True
-
         # Usar paths configurados o defaults.
         # En snap usa SNAP_USER_COMMON; en desarrollo usa path relativo a __file__.
         if not hasattr(self, "_config_dir"):
-            snap_common = os.getenv("SNAP_USER_COMMON")
-            self._config_dir = (
-                Path(snap_common) / "config"
-                if snap_common
-                else Path(__file__).parent.parent.parent / "config"
-            )
+            self._config_dir = default_config_file().parent
         if not hasattr(self, "_config_file"):
-            self._config_file = self._config_dir / "server.toml"
+            self._config_file = default_config_file()
 
         # Instancia de GameConfig (no es ClassVar)
         self._game_config: GameConfig | None = None
@@ -68,43 +61,18 @@ class ConfigManager:
 
         # Mantener _config para compatibilidad
         self._sync_to_legacy_dict()
+        self._initialized = True
 
     def _load_config_with_pydantic(self) -> None:
         """Carga la configuración usando el nuevo sistema Pydantic."""
-        try:
-            # Crear directorio config si no existe
-            self._config_dir.mkdir(exist_ok=True)
-
-            # Mapear variables de entorno antiguas a nuevas (compatibilidad)
-            # Debe hacerse ANTES de crear GameConfig
-            ConfigManager._map_legacy_env_vars()
-
-            # Cargar usando GameConfig (con validación Pydantic)
-            # Las variables de entorno se cargan automáticamente por Pydantic Settings
-            if self._config_file.exists():
-                # Cargar desde TOML
-                # Nota: Pydantic Settings carga variables de entorno automáticamente
-                # y las sobrescribe sobre los valores del TOML cuando se crea la instancia
-                self._game_config = GameConfig.from_toml(self._config_file)
-                logger.info(
-                    "Configuración cargada desde %s (con validación Pydantic)", self._config_file
-                )
-            else:
-                logger.info("Archivo de configuración no encontrado: %s", self._config_file)
-                # Crear instancia que carga variables de entorno automáticamente
-                self._game_config = GameConfig()  # Usar defaults + env vars
-                logger.info("Usando configuración por defecto (con validación Pydantic)")
-
-        except Exception:
-            logger.exception("Error cargando configuración con Pydantic, usando defaults")
-            # En caso de error, intentar crear con defaults
-            try:
-                self._map_legacy_env_vars()
-                self._game_config = GameConfig()
-            except Exception:
-                logger.exception("Error crítico cargando configuración")
-                # Último recurso: crear sin validación
-                self._game_config = None
+        # Un archivo o entorno inválido debe impedir el arranque, sin cambiar de DB.
+        self._map_legacy_env_vars()
+        if self._config_file.exists():
+            self._game_config = GameConfig.from_toml(self._config_file)
+            logger.info("Configuración validada desde %s", self._config_file)
+        else:
+            self._game_config = GameConfig()
+            logger.info("Configuración validada desde entorno y valores por defecto")
 
     @staticmethod
     def _map_legacy_env_vars() -> None:
@@ -119,6 +87,7 @@ class ConfigManager:
             "PYAO_REDIS_HOST": "PYAO_REDIS__HOST",
             "PYAO_REDIS_PORT": "PYAO_REDIS__PORT",
             "PYAO_REDIS_DB": "PYAO_REDIS__DB",
+            "PYAO_REDIS_PASSWORD_FILE": "PYAO_REDIS__PASSWORD_FILE",
             "PYAO_LOG_LEVEL": "PYAO_LOGGING__LEVEL",
         }
 
@@ -140,8 +109,15 @@ class ConfigManager:
                 "port": self._game_config.server.port,
                 "max_connections": self._game_config.server.max_connections,
                 "buffer_size": self._game_config.server.buffer_size,
+                "outgoing_max_packets": self._game_config.server.outgoing_max_packets,
+                "outgoing_max_bytes": self._game_config.server.outgoing_max_bytes,
+                "shutdown_timeout_seconds": self._game_config.server.shutdown_timeout_seconds,
+                "shutdown_drain_seconds": self._game_config.server.shutdown_drain_seconds,
+                "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
             },
             "game": {
+                "spells": self._game_config.game.spells.model_dump(mode="json"),
+                "cadence": self._game_config.game.cadence.model_dump(),
                 "max_players_per_map": self._game_config.game.max_players_per_map,
                 "respawn_check_interval": self._game_config.game.respawn_check_interval,
                 "npc_respawn_base_time": self._game_config.game.npc_respawn_base_time,
@@ -200,6 +176,7 @@ class ConfigManager:
                 "character": {
                     "hp_per_con": self._game_config.game.character.hp_per_con,
                     "mana_per_int": self._game_config.game.character.mana_per_int,
+                    "initial_skill_points": self._game_config.game.character.initial_skill_points,
                     "initial_gold": self._game_config.game.character.initial_gold,
                     "initial_elu": self._game_config.game.character.initial_elu,
                     "elu_exponent": self._game_config.game.character.elu_exponent,
@@ -210,11 +187,18 @@ class ConfigManager:
                 "format": self._game_config.logging.format,
                 "file": self._game_config.logging.file,
             },
+            "security": self._game_config.security.model_dump(),
             "redis": {
                 "host": self._game_config.redis.host,
                 "port": self._game_config.redis.port,
                 "db": self._game_config.redis.db,
+                "password_file": str(self._game_config.redis.password_file)
+                if self._game_config.redis.password_file is not None
+                else None,
                 "max_connections": self._game_config.redis.max_connections,
+                "decode_responses": self._game_config.redis.decode_responses,
+                "socket_timeout": self._game_config.redis.socket_timeout,
+                "socket_connect_timeout": self._game_config.redis.socket_connect_timeout,
             },
         }
 
@@ -233,6 +217,11 @@ class ConfigManager:
                 "buffer_size": 4096,
             },
             "game": {
+                "spells": {
+                    "development_all_spells": False,
+                    "starter_by_class": {str(i): [2, 3] for i in range(1, 13)},
+                },
+                "cadence": {"walk_seconds": 0.2, "attack_seconds": 0.5, "cast_seconds": 1.0},
                 "max_players_per_map": 100,
                 "respawn_check_interval": 5.0,
                 "npc_respawn_base_time": 30.0,
@@ -291,6 +280,7 @@ class ConfigManager:
                 "character": {
                     "hp_per_con": 10,
                     "mana_per_int": 10,
+                    "initial_skill_points": 10,
                     "initial_gold": 0,
                     "initial_elu": 300,
                     "elu_exponent": 1.8,  # Exponente para cálculo de ELU por nivel

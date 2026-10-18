@@ -42,7 +42,7 @@ Documento único de estado: qué está hecho, qué queda pendiente y dónde est�
 ### Refactors arquitectónicos previos
 
 - `task_factory.py` → `HandlerRegistry` (-66% líneas)
-- `spell_service.py` → `spell_effects/` (-75% líneas)
+- Magia 1.0: `spell_service.py` orquesta `combat/spell_plan.py` y `player/lifecycle.py`; el antiguo `spell_effects/` se retiró al sustituir las escrituras separadas por commits conjuntos.
 - `msg.py`, `server.py` → módulos especializados
 
 ### Handlers divididos (Command Pattern)

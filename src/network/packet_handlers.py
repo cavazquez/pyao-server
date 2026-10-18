@@ -44,7 +44,10 @@ from src.tasks.spells.task_cast_spell import TaskCastSpell
 from src.tasks.spells.task_move_spell import TaskMoveSpell
 from src.tasks.spells.task_spell_info import TaskSpellInfo
 from src.tasks.task_ayuda import TaskAyuda
+from src.tasks.task_capabilities import TaskCapabilities
+from src.tasks.task_change_password import TaskChangePassword
 from src.tasks.task_dice import TaskDice
+from src.tasks.task_modify_skills import TaskModifySkills
 from src.tasks.task_motd import TaskMotd
 from src.tasks.task_online import TaskOnline
 from src.tasks.task_party_accept_member import TaskPartyAcceptMember
@@ -58,6 +61,7 @@ from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_request_skills import TaskRequestSkills
 from src.tasks.task_safe_toggle import TaskSafeToggle
+from src.tasks.task_trade_action import TaskTradeAction
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
 from src.tasks.work.task_work_left_click import TaskWorkLeftClick
@@ -67,6 +71,10 @@ if TYPE_CHECKING:
 
 # Mapeo de PacketID a clase de Task
 TASK_HANDLERS: dict[int, type[Task]] = {
+    ClientPacketID.CAPABILITIES: TaskCapabilities,
+    ClientPacketID.CHANGE_PASSWORD: TaskChangePassword,
+    ClientPacketID.MODIFY_SKILLS: TaskModifySkills,
+    ClientPacketID.TRADE_ACTION: TaskTradeAction,
     ClientPacketID.LOGIN: TaskLogin,
     ClientPacketID.THROW_DICES: TaskDice,
     ClientPacketID.CREATE_ACCOUNT: TaskCreateAccount,
@@ -78,6 +86,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.ATTACK: TaskAttack,  # Atacar (cuerpo a cuerpo)
     ClientPacketID.PICK_UP: TaskPickup,  # Recoger item del suelo
     ClientPacketID.DROP: TaskDrop,  # Tirar item al suelo
+    ClientPacketID.CAST_TARGET: TaskCastSpell,
     ClientPacketID.CAST_SPELL: TaskCastSpell,  # Lanzar hechizo
     ClientPacketID.MOVE_SPELL: TaskMoveSpell,  # Reordenar hechizo en el libro
     ClientPacketID.LEFT_CLICK: TaskLeftClick,  # Click en personaje/NPC

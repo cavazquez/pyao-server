@@ -3,10 +3,12 @@
 import logging
 import time
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.core.data_initializer import DataInitializer
+from src.core.schema_manager import ensure_schema_ready
 from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
-from src.utils.redis_config import RedisKeys
+from src.utils.redis_config import RedisConfig, RedisKeys
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +24,10 @@ class RedisInitializer:
             Cliente de Redis conectado y configurado.
         """
         redis_client = RedisClient()
-        await redis_client.connect()
+        effective_config = RedisConfig.model_validate(config_manager.get_section("redis"))
+        await redis_client.connect(effective_config, seed_defaults=False)
+        await ensure_schema_ready(redis_client.redis)
+        await redis_client.initialize_defaults()
         logger.info("✓ Conectado a Redis")
 
         data_initializer = DataInitializer(redis_client)
@@ -77,11 +82,14 @@ class RedisInitializer:
     @staticmethod
     async def _initialize_effects_config(server_repo: ServerRepository) -> None:
         """Inicializa la configuración de efectos en Redis si no existe."""
-        await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "180")
-        logger.info("Intervalo de sed configurado: 180 segundos (3 minutos)")
-
-        await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "180")
-        logger.info("Intervalo de hambre configurado: 180 segundos (3 minutos)")
+        for key, setting in (
+            (RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED, "interval_sed"),
+            (RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE, "interval_hambre"),
+        ):
+            effective = ConfigManager.as_int(
+                config_manager.get(f"game.hunger_thirst.{setting}", 180)
+            )
+            await server_repo.set_config_if_absent(key, str(effective))
 
         if await server_repo.get_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
             await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")

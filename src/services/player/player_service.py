@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import logging
+import time
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
-from src.models.item_constants import BOAT_ITEM_ID
 from src.models.items_catalog import get_item
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.equipment_service import EquipmentService
@@ -123,7 +123,7 @@ class PlayerService:
                 "elu": 300,
                 "experience": 0,
             }
-            await self.player_repo.set_stats(user_id=user_id, **user_stats)
+            await self.player_repo.set_stats(user_id=user_id, preserve_gold=False, **user_stats)
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
         # Enviar stats al cliente
@@ -194,6 +194,11 @@ class PlayerService:
                 if char_body == 0:
                     char_body = 1
 
+        # Una reconexión conserva el fantasma o mimetismo ya confirmado.
+        morph = await self.player_repo.get_morphed_appearance(user_id)
+        if morph and float(morph["morphed_until"]) > time.time():
+            char_body, char_head = int(morph["morphed_body"]), int(morph["morphed_head"])
+
         char_heading = position.get("heading", 3)  # Obtener heading de Redis, default Sur
 
         # Enviar CHARACTER_CREATE con efecto de spawn
@@ -221,18 +226,6 @@ class PlayerService:
             equipment_repo: Repositorio de equipamiento (opcional).
         """
         inventory_repo = InventoryRepository(self.player_repo.redis)
-
-        # Asegurar que el jugador tenga una barca para navegar
-        slots_dict = await inventory_repo.get_inventory_slots(user_id)
-        has_boat = any(slot.item_id == BOAT_ITEM_ID for slot in slots_dict.values())
-        if not has_boat:
-            added_slots = await inventory_repo.add_item(user_id, BOAT_ITEM_ID, quantity=1)
-            if added_slots:
-                logger.info(
-                    "Barca agregada al inventario de user_id %d en slot %d",
-                    user_id,
-                    added_slots[0][0],
-                )
 
         inventory = await inventory_repo.get_inventory(user_id)
 

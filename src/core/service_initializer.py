@@ -33,6 +33,8 @@ from src.services.trade_service import TradeService
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -86,7 +88,7 @@ class ServiceInitializer:
 
         # Servicio de spawns aleatorios dinámicos
         random_spawn_service = RandomSpawnService(npc_service, self.map_manager)
-        random_spawn_service.load_random_spawn_configs("data/world/map_npcs.toml")
+        random_spawn_service.load_random_spawn_configs(data_dir() / "world/map_npcs.toml")
         logger.info("✓ Sistema de spawns aleatorios dinámicos inicializado")
 
         # Servicio de NPCs del mundo
@@ -163,6 +165,7 @@ class ServiceInitializer:
             broadcast_service=broadcast_service,  # Para invisibilidad
             npc_service=npc_service,  # Para invocación
             summon_service=summon_service,  # Para invocación
+            item_catalog=item_catalog,
         )
         logger.info(
             "✓ Sistema de magia inicializado (con NPCDeathService, invisibilidad e invocación)"
@@ -200,6 +203,7 @@ class ServiceInitializer:
             item_catalog=item_catalog,
             account_repo=self.repositories["account_repo"],
         )
+        spell_service.player_death_service = player_death_service
         logger.info("✓ Servicio de muerte de jugadores inicializado")
 
         # Servicio de IA de NPCs

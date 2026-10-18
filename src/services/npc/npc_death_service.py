@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
+from src.models.mana import calculate_mana
 from src.utils.level_calculator import (
     calculate_level_from_experience,
     calculate_remaining_elu,
@@ -310,16 +311,14 @@ class NPCDeathService:
             "spawn_time": None,
         }
 
-        # Agregar al mapa
-        self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=gold_item)
-
-        # Broadcast a todos los jugadores
-        await self.broadcast_service.broadcast_object_create(
+        if not await self.map_manager.add_ground_item_committed(
             map_id=npc.map_id,
             x=drop_x,
             y=drop_y,
-            grh_index=511,
-        )
+            item=gold_item,
+            broadcast_service=self.broadcast_service,
+        ):
+            return
 
         logger.info(
             "Dropeado %d oro en (%d,%d) por muerte de %s", gold_amount, drop_x, drop_y, npc.name
@@ -366,16 +365,14 @@ class NPCDeathService:
                 "spawn_time": None,
             }
 
-            # Agregar al mapa
-            self.map_manager.add_ground_item(map_id=npc.map_id, x=drop_x, y=drop_y, item=item)
-
-            # Broadcast a todos los jugadores
-            await self.broadcast_service.broadcast_object_create(
+            if not await self.map_manager.add_ground_item_committed(
                 map_id=npc.map_id,
                 x=drop_x,
                 y=drop_y,
-                grh_index=grh_index,
-            )
+                item=item,
+                broadcast_service=self.broadcast_service,
+            ):
+                continue
 
             logger.info(
                 "Dropeado item %s (x%d) en (%d,%d) por muerte de %s",
@@ -473,12 +470,14 @@ class NPCDeathService:
 
             # Calcular nuevos máximos basados en atributos y nivel
             hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
-            mana_per_int = config_manager.as_int("game.character.mana_per_int", 10)
+            mana_per_int = config_manager.as_int(
+                config_manager.get("game.character.mana_per_int", 10)
+            )
 
             # HP = constitution * hp_per_con * nivel (con mínimo)
             new_max_hp = max(constitution * hp_per_con * new_level, 100)
             # Mana = intelligence * mana_per_int * nivel (con mínimo)
-            new_max_mana = max(intelligence * mana_per_int * new_level, 100)
+            new_max_mana = max(calculate_mana(intelligence, mana_per_int, new_level), 100)
             # Stamina aumenta con nivel (base 100 + 10 por nivel)
             new_max_sta = 100 + (new_level * 10)
 
@@ -502,6 +501,7 @@ class NPCDeathService:
 
             # Actualizar stats
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=new_max_hp,
                 min_hp=new_min_hp,
@@ -531,6 +531,7 @@ class NPCDeathService:
         else:
             # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=stats.max_hp,
                 min_hp=stats.min_hp,

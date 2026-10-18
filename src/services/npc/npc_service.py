@@ -14,7 +14,10 @@ if TYPE_CHECKING:
     from src.repositories.npc_repository import NPCRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
+from src.runtime_paths import data_dir
+
 logger = logging.getLogger(__name__)
+MAX_CHARACTER_INDEX = 32767
 
 
 class NPCService:
@@ -73,7 +76,7 @@ class NPCService:
         NPCService._initialized = True
         NPCService._instance = self
 
-    async def initialize_world_npcs(self, spawns_path: str = "data/world/map_npcs.toml") -> None:
+    async def initialize_world_npcs(self, spawns_path: str | None = None) -> None:
         """Inicializa todos los NPCs del mundo al iniciar el servidor.
 
         TODO: Apenas se inicia Redis se cargan los recursos desde los archivos TOML y maps,
@@ -87,6 +90,7 @@ class NPCService:
         Args:
             spawns_path: Ruta al archivo de configuración de spawns.
         """
+        spawns_path = spawns_path or str(data_dir() / "world/map_npcs.toml")
         logger.info("Inicializando NPCs del mundo desde %s...", spawns_path)
 
         # Limpiar NPCs existentes (reinicio limpio)
@@ -202,6 +206,22 @@ class NPCService:
             logger.warning("No se encontraron spawns de NPC en %s", spawns_path)
 
         return validated_entries
+
+    def reserve_character_indices(self, count: int) -> tuple[int, ...]:
+        """Reserva índices en memoria sin publicar NPCs antes del commit.
+
+        Returns:
+            Índices únicos del proceso dentro del rango i16 del protocolo.
+
+        Raises:
+            ValueError: Si no quedan índices representables.
+        """
+        if count < 0 or self._next_char_index + count > MAX_CHARACTER_INDEX:
+            message = "No quedan índices de NPC disponibles"
+            raise ValueError(message)
+        first = self._next_char_index
+        self._next_char_index += count
+        return tuple(range(first, first + count))
 
     async def spawn_npc(
         self, npc_id: int, map_id: int, x: int, y: int, heading: int = 3

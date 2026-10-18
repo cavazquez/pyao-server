@@ -4,14 +4,9 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.commands.create_account_command import CreateAccountCommand
-from src.constants.gameplay import (
-    MAX_PASSWORD_LENGTH,
-    MAX_USERNAME_LENGTH,
-    MIN_PASSWORD_LENGTH,
-    MIN_USERNAME_LENGTH,
-)
 from src.network.packet_reader import PacketReader
-from src.network.packet_validator import PacketValidator
+from src.network.validators.auth import CreateAccountPacketValidator
+from src.network.validators.base import ValidationContext
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -44,103 +39,26 @@ class TaskCreateAccount(Task):
         """
         super().__init__(data, message_sender)
         self.create_account_handler = create_account_handler
-        self.session_data = session_data or {}
+        self.session_data = {} if session_data is None else session_data
 
     def _parse_packet(self) -> tuple[str, str, str, dict[str, int]] | None:
-        """Parsea el paquete de creación de cuenta.
-
-        El formato esperado es:
-        - Byte 0: PacketID (CREATE_ACCOUNT)
-        - Bytes 1-2: Longitud del username (int16, little-endian)
-        - Bytes siguientes: Username (UTF-8)
-        - Bytes siguientes (2): Longitud del password (int16, little-endian)
-        - Bytes siguientes: Password (UTF-8)
-        - Byte siguiente: race (1 byte)
-        - Bytes siguientes (2): Longitud de algo? (int16)
-        - Byte siguiente: gender (1 byte)
-        - Byte siguiente: class/job (1 byte)
-        - Byte siguiente: ? (1 byte)
-        - Bytes siguientes (2): head (int16)
-        - Bytes siguientes (2): Longitud del email (int16, little-endian)
-        - Bytes siguientes: Email (UTF-8)
-        - Byte siguiente: home (1 byte)
+        """Parsea una sola vez el layout u16/Latin-1 compartido de alta.
 
         Returns:
-            Tupla (username, password, email, char_data) o None si hay error.
+            Credenciales, email y selección literal, o None ante un payload inválido.
         """
-        try:
-            # Usar PacketValidator para leer username y password
-            # NOTA: task_account usa UTF-8, no UTF-16LE como otros packets
-            reader = PacketReader(self.data)
-            validator = PacketValidator(reader)
-
-            username = validator.read_string(
-                min_length=MIN_USERNAME_LENGTH, max_length=MAX_USERNAME_LENGTH, encoding="utf-8"
-            )
-            password = validator.read_string(
-                min_length=MIN_PASSWORD_LENGTH, max_length=MAX_PASSWORD_LENGTH, encoding="utf-8"
-            )
-
-            if validator.has_errors() or username is None or password is None:
-                logger.warning(
-                    "Error validando username/password: %s", validator.get_error_message()
-                )
-                return None
-
-            logger.debug("Username: %s", username)
-            logger.debug("Password parsed")
-
-            # Actualizar offset para continuar leyendo datos del personaje
-            offset = reader.offset
-
-            # Leer datos del personaje (vienen antes del email)
-            char_data = {}
-            # Validar que haya suficientes bytes para los datos del personaje
-            # Protocolo cliente (ver GameProtocol.WriteLoginNewChar):
-            # [0, 13, 0] + race (u8) + gender (u8) + job (u8) + head (u16) noqa: ERA001
-            if len(self.data) >= offset + 9:
-                # Saltar los 3 bytes fijos (0, 13, 0)
-                offset += 3
-
-                char_data["race"] = self.data[offset]
-                offset += 1
-
-                char_data["gender"] = self.data[offset]
-                offset += 1
-
-                char_data["job"] = self.data[offset]
-                offset += 1
-
-                # Leer head (int16)
-                char_data["head"] = int.from_bytes(
-                    self.data[offset : offset + 2],
-                    byteorder="little",
-                    signed=False,
-                )
-                offset += 2
-                logger.debug("Char data parsed, offset: %d", offset)
-
-            # Leer email usando PacketValidator
-            # Actualizar el reader al offset actual
-            reader.offset = offset
-
-            email = validator.read_string() if not validator.has_errors() else ""
-            if email is None:
-                email = ""
-            offset = reader.offset
-            logger.debug("Email: %s, offset: %d", email, offset)
-
-            # Leer home (último byte) - validar que haya al menos 1 byte más
-            # Leer home (último byte)
-            if len(self.data) >= offset + 1:
-                char_data["home"] = self.data[offset]
-                logger.debug("Home: %d", char_data["home"])
-
-        except (ValueError, UnicodeDecodeError) as e:
-            logger.warning("Error parseando paquete de creación de cuenta: %s", e)
+        context = ValidationContext(reader=PacketReader(self.data), errors=[])
+        result = CreateAccountPacketValidator().validate(context)
+        if not result.success or result.data is None:
+            logger.warning("Formato de alta inválido")
             return None
-        else:
-            return (username, password, email, char_data)
+        data = result.data
+        return (
+            data["username"],
+            data["password"],
+            data["email"],
+            {key: data[key] for key in ("race", "gender", "job", "head", "home")},
+        )
 
     async def execute(self) -> None:
         """Ejecuta la creación de cuenta (solo parsing y delegación).
@@ -149,12 +67,8 @@ class TaskCreateAccount(Task):
         """
         logger.info("TaskCreateAccount.execute() llamado")
 
-        # Log de datos recibidos en hexadecimal para debugging
-        hex_data = " ".join(f"{byte:02X}" for byte in self.data[:64])
         logger.info(
-            "Datos recibidos para creación de cuenta (%d bytes): %s",
-            len(self.data),
-            hex_data,
+            "Creación de cuenta: %d bytes desde %s", len(self.data), self.message_sender.address
         )
 
         # Parsear datos del paquete

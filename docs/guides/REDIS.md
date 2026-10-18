@@ -1,223 +1,204 @@
 # Redis para PyAO Server
 
-Este directorio contiene la configuración de Redis para el servidor de Argentum Online.
+El perfil de desarrollo utiliza Redis **8.10.2 Alpine**, fijado también por digest,
+con autenticación, modo protegido y persistencia. Los comandos siguientes se
+usan desde la raíz del servidor con uv.
 
-## 🐳 Docker
+## Preparar e iniciar
 
-### Construir la imagen
-
-```bash
-docker build -t pyao-redis ./redis
-```
-
-### Ejecutar el contenedor
+Generar la credencial sólo la primera vez; un archivo existente se reutiliza:
 
 ```bash
-# Modo básico
-docker run -d --name pyao-redis -p 6379:6379 pyao-redis
-
-# Con persistencia de datos
-docker run -d --name pyao-redis \
-  -p 6379:6379 \
-  -v pyao-redis-data:/data \
-  pyao-redis
-
-# Con configuración personalizada
-docker run -d --name pyao-redis \
-  -p 6379:6379 \
-  -v $(pwd)/redis.conf:/usr/local/etc/redis/redis.conf \
-  pyao-redis redis-server /usr/local/etc/redis/redis.conf
+uv sync --locked
+uv run --locked python -m src.operations.redis_secret --output .local/redis-password
+export PYAO_REDIS_PASSWORD_FILE="$PWD/.local/redis-password"
+docker compose up -d --build redis
+uv run --locked pyao-server
 ```
 
-### Comandos útiles
+El generador usa creación exclusiva y permisos 0600. El contenido no se imprime,
+no se pasa en argumentos y `.local/` está excluido de Git. El servidor reconoce
+`PYAO_REDIS_PASSWORD_FILE`, `PYAO_REDIS__PASSWORD_FILE` o `redis.password_file`
+en TOML. El entrypoint prepara un hash ACL privado en `/data/pyao-users.acl` y
+conserva `protected-mode yes`. Para una instancia externa sin autenticación se
+puede dejar `password_file` sin definir.
+
+Compose publica Redis únicamente en `127.0.0.1:6379`. Para otro puerto local,
+exportar `PYAO_REDIS_PORT`; el servidor reconoce el mismo nombre legado.
+La red de Compose conserva el servicio interno `redis:6379`. Para acceso remoto
+administrativo, utilizar un túnel SSH hacia loopback.
+
+Comprobar disponibilidad sin imprimir la credencial:
 
 ```bash
-# Ver logs
-docker logs pyao-redis
-
-# Acceder a Redis CLI
-docker exec -it pyao-redis redis-cli
-
-# Detener el contenedor
-docker stop pyao-redis
-
-# Iniciar el contenedor
-docker start pyao-redis
-
-# Eliminar el contenedor
-docker rm pyao-redis
-
-# Eliminar el volumen de datos
-docker volume rm pyao-redis-data
+docker compose exec -T redis sh -c 'REDISCLI_AUTH=$(cat /run/secrets/redis_password) redis-cli PING'
+docker compose logs redis
+docker compose down
 ```
 
-## 🔧 Configuración
+`down` conserva el volumen. La configuración usa `noeviction` para el progreso;
+una política de caché que expulse claves puede borrar cuentas o economía.
 
-### Variables de entorno
-
-Puedes pasar variables de entorno al contenedor:
+## Redis Insight
 
 ```bash
-docker run -d --name pyao-redis \
-  -p 6379:6379 \
-  -e REDIS_PASSWORD=tu_password_seguro \
-  pyao-redis redis-server --requirepass tu_password_seguro
+docker compose --profile tools up -d
 ```
 
-### Configuración avanzada
+La UI queda en [localhost:5540](http://127.0.0.1:5540). Configurar host `redis`,
+puerto `6379`, usuario `default` y la credencial del archivo privado. El puerto
+local admite `PYAO_REDIS_INSIGHT_PORT`. El perfil es optativo y publica sólo en
+loopback.
 
-Para configuración avanzada, crea un archivo `redis.conf` y móntalo:
+## Durabilidad
+
+`redis/redis.conf` habilita AOF con `appendfsync everysec`, sin desactivar fsync
+al reescribir, y RDB a los 900 s/1 cambio, 300 s/10 cambios o 60 s/10000 cambios.
+Se persiste **todo `/data`**, incluido `appendonlydir` y su manifiesto. Un cierre
+limpio guarda escrituras pendientes. Ante caída abrupta, everysec puede perder
+aproximadamente el último segundo; el almacenamiento debe cumplir fsync. Un
+reinicio de proceso no equivale a un corte eléctrico. Los snapshots agregan
+puntos de recuperación; el volumen local sigue necesitando un backup externo.
+
+Ensayo con datos sintéticos, contenedor/volumen UUID y puerto local aleatorio:
 
 ```bash
-# redis.conf
-maxmemory 256mb
-maxmemory-policy allkeys-lru
-save 900 1
-save 300 10
-save 60 10000
+uv run --locked python -m src.operations.redis_persistence
 ```
+
+Comprueba CONFIG GET, autenticación obligatoria, reinicio limpio y SIGKILL después
+de WAITAOF confirmado. Retira sólo sus recursos y nunca conecta al Redis activo.
+Este último caso demuestra persistencia sincronizada; no promete conservar
+escrituras que todavía no llegaron a fsync.
+
+## Backup consistente y privado
+
+Se requieren Docker y `redis-cli`. La instancia debe estar dedicada a pyao: el
+RDB contiene **todos los DBs**, no sólo el seleccionado por el servidor, además
+de cuentas, hashes de contraseña, oro, inventario, progreso y configuración.
 
 ```bash
-docker run -d --name pyao-redis \
-  -p 6379:6379 \
-  -v $(pwd)/redis/redis.conf:/usr/local/etc/redis/redis.conf \
-  pyao-redis redis-server /usr/local/etc/redis/redis.conf
+uv run --locked python -m src.operations.redis_backup backup --output .backups/pyao-2026-10-18.rdb
+uv run --locked python -m src.operations.redis_backup verify .backups/pyao-2026-10-18.rdb
 ```
 
-## 🐳 Docker Compose (Recomendado)
+`backup` lee un RDB consistente por el protocolo de replicación y lo restaura en
+un volumen descartable antes de publicar el archivo y su recibo `.rdb.json`, ambos
+0600 y sin sobrescribir archivos existentes. El recibo registra versión, fecha,
+SHA256 y un digest canónico por DB de las claves persistentes. Los valores y
+nombres de claves no se imprimen. Para otro origen, usar `--host`, `--port` y
+`--password-file`; la contraseña sigue fuera de los argumentos.
 
-Si usas Docker Compose, agrega esto a tu `docker-compose.yml`:
+`verify` comprueba el SHA256 antes de iniciar un destino, carga el RDB con AOF
+inicialmente deshabilitado, activa AOF, confirma su fsync y recrea el contenedor
+sobre el mismo volumen para verificar la recarga. Compara contenido y cantidades
+de strings, hashes, listas, sets y zsets. Las claves con TTL mantienen su fecha
+absoluta y pueden vencer durante la recuperación; no forman parte del digest
+persistente. Se rechazan tipos ajenos al contrato de pyao. Al finalizar se retiran
+los recursos descartables.
 
-```yaml
-services:
-  redis:
-    build: ./redis
-    container_name: pyao-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
+Política inicial de operación: backup diario, 14 copias diarias y 8 semanales,
+con una copia cifrada fuera del host. Verificar semanalmente una restauración y
+antes/después de una migración. Registrar fecha, digest y resultado sin datos de
+jugadores. La rotación elimina una copia sólo después de verificar una más nueva;
+la herramienta conserva la decisión de retención en el operador. `.backups/`
+está excluido de Git y debe restringirse también el acceso a las copias externas.
 
-volumes:
-  redis-data:
-```
+## Recuperar sin sobrescribir la instancia activa
 
-Luego ejecuta:
+Conservar el origen y detener el juego antes de cambiarlo de destino. Para
+mantener la restauración en un volumen y contenedor nuevos:
 
 ```bash
-docker-compose up -d redis
+uv run --locked python -m src.operations.redis_backup restore .backups/pyao-2026-10-18.rdb --password-file "$PYAO_REDIS_PASSWORD_FILE"
 ```
 
-## 📊 Monitoreo
+El comando exige un archivo de credencial permanente, realiza la misma validación
+y entrega nombre de contenedor, volumen y puerto loopback del destino. Conserva
+esos recursos sólo después de la comprobación completa. No modifica ni detiene la
+instancia de origen. El operador actualiza host/puerto del servidor al endpoint
+entregado y comprueba el ingreso antes de retirar el origen. La contraseña del
+nuevo destino es la del archivo seleccionado; su contenido no aparece en el
+resultado. Un error de integridad o de restauración retira sólo el destino nuevo.
 
-### Verificar estado
+Activar AOF directamente sobre una restauración RDB sin convertirla primero puede
+seleccionar un AOF vacío; la herramienta aplica la secuencia RDB → AOF → recarga.
+Para volver a una versión anterior se conserva el backup y se restaura otro
+volumen, en lugar de ejecutar una migración inversa destructiva.
+
+Ensayo reproducible de backup, restauración, varios DBs, conservación de cuenta,
+oro, inventario y habilidades, y rechazo de un archivo alterado:
 
 ```bash
-# Ping
-docker exec pyao-redis redis-cli ping
-
-# Info
-docker exec pyao-redis redis-cli info
-
-# Estadísticas de memoria
-docker exec pyao-redis redis-cli info memory
-
-# Clientes conectados
-docker exec pyao-redis redis-cli client list
+uv run --locked python -m src.operations.redis_backup selftest
 ```
 
-### Monitorear comandos en tiempo real
+## Esquema y migraciones
+
+`schema:state` conserva la versión y un journal por paso. La versión 1 adopta
+explícitamente el layout legado de cuentas/economía/progreso, sin reemplazar
+datos por seeds. Una base nueva se inicializa en la versión actual. Una base con
+estado legado exige migración explícita antes de abrir el juego, y una versión
+futura se rechaza antes de escribir defaults o cargar datos iniciales.
+
+Con el perfil AOF configurado, el juego detenido y sin sesiones activas:
 
 ```bash
-docker exec -it pyao-redis redis-cli monitor
+uv run --locked python -m src.operations.redis_schema status
+uv run --locked python -m src.operations.redis_backup backup --output .backups/antes-de-migrar.rdb
+uv run --locked python -m src.operations.redis_schema migrate --backup .backups/antes-de-migrar.rdb
+uv run --locked python -m src.operations.redis_schema status
 ```
 
-## 🖥️ Redis Insight (GUI Recomendada)
+La migración vuelve a verificar una restauración del backup y comprueba que el
+origen siga igual a ese snapshot. Rechaza sesiones de jugadores y otra migración
+activa. Cada paso confirma versión y journal con un HSET dentro de WATCH/MULTI;
+repetir tras perder la respuesta de EXEC no duplica el paso. La reserva tiene
+propietario y vence a los cinco minutos si el proceso cae; sólo el dueño puede
+liberarla. El arranque también rechaza una reserva activa. Se confirma fsync antes
+de anunciar éxito. Una interrupción previa a la confirmación permite reintentar;
+una posterior conserva versión y journal. La recuperación usa otro volumen
+restaurado desde el backup verificado, conservando el origen para revisión.
 
-**Redis Insight** es la herramienta oficial de Redis para gestión visual y monitoreo. Proporciona una interfaz gráfica moderna para:
-
-- Visualizar y editar claves en tiempo real
-- Monitorear rendimiento y métricas
-- Ejecutar comandos con autocompletado
-- Analizar uso de memoria
-- Depurar consultas lentas
-
-### Instalación
-
-#### Snap (Ubuntu/Debian)
+Las transformaciones de formatos posteriores deben agregar su paso ordenado y
+su fixture de conservación; cambiar los seeds no migra jugadores existentes.
 
 ```bash
-sudo snap install redis-insight
+uv run --locked python -m src.operations.redis_schema selftest
 ```
 
-Ejecutar:
-```bash
-redis-insight
-```
+Referencias: [persistencia de Redis](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/)
+y [release 8.10.2](https://github.com/redis/redis/releases/tag/8.10.2).
 
-#### Flatpak (Distribuciones con soporte Flatpak)
+### Migración v2: maná dentro de int16
 
-```bash
-# Agregar repositorio Flathub (si no está agregado)
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+El balance incluido usa `mana_per_int = 10`: inteligencia 10 genera 100 de maná.
+Los cálculos de alta/subida de nivel saturan a 32767 antes de persistir. Los setters
+rechazan maná negativo, mayor al máximo o mayor a 32767; no se repara al enviar.
 
-# Instalar Redis Insight
-flatpak install flathub com.redis.RedisInsight
+`uv run python -m src.operations.redis_schema status` muestra `mana_out_of_range`
+sin escribir. Para reparar estado histórico, detener el servidor, crear y verificar
+el backup como arriba y ejecutar `uv run python -m src.operations.redis_schema
+migrate --backup <archivo.rdb>`. La migración v2 limita máximo a 0–32767 y actual
+a 0–máximo; conserva originales en `migration:mana:current_before` y
+`migration:mana:maximum_before` del hash del personaje. Conserva oro, experiencia,
+inventario y todos los demás campos. El backup preserva el estado original completo.
 
-# Ejecutar
-flatpak run com.redis.RedisInsight
-```
+Los cambios pendientes y sus journals se confirman en una sola transacción; ante
+una respuesta perdida se puede repetir sin duplicar pasos ni auditoría. Un dato no
+numérico requiere inspección y aborta antes del commit. El arranque rechaza esquema
+v1 hasta completar esta migración explícita. La autoverificación descartable sigue
+siendo `uv run python -m src.operations.redis_schema selftest`.
 
-#### Otras opciones
+### Migración v3: progreso de habilidades
 
-```bash
-# Docker
-docker run -d --name redis-insight \
-  -p 5540:5540 \
-  redis/redisinsight:latest
+La versión v3 agrega niveles y XP separados según `src/network/protocol/skills.json`.
+Conserva todos los campos originales, los puntos disponibles y las claves desconocidas.
+Por ejemplo, `magia=10` conserva nivel 10; `talar=275` conserva XP 275 y representa
+nivel 2 con 75% usando el umbral 100. Robustez y agilidad mantienen sus IDs propios.
+El umbral efectivo se guarda en cada perfil. No se repara ni se migra durante envíos.
 
-# Acceder en: http://localhost:5540
-
-# AppImage (descarga desde redis.com/redis-enterprise/redis-insight/)
-chmod +x RedisInsight-v2-linux-x86_64.AppImage
-./RedisInsight-v2-linux-x86_64.AppImage
-```
-
-### Conectar a Redis local
-
-1. Abrir Redis Insight
-2. Click en "Add Redis Database"
-3. Configurar:
-   - **Host**: `localhost`
-   - **Port**: `6379`
-   - **Name**: `PyAO Redis`
-4. Click en "Add Redis Database"
-
-### Conectar a Redis en Docker
-
-Si Redis está en Docker, usa:
-- **Host**: `localhost` (si usas `-p 6379:6379`)
-- **Port**: `6379`
-
-O desde la red de Docker:
-- **Host**: `pyao-redis` (nombre del contenedor)
-- **Port**: `6379`
-
-## 🔒 Seguridad
-
-Para producción, considera:
-
-1. **Usar contraseña**: `--requirepass tu_password_seguro`
-2. **Limitar conexiones**: `--bind 127.0.0.1` (solo localhost)
-3. **Configurar maxmemory**: `--maxmemory 256mb`
-4. **Habilitar persistencia**: Configurar `save` en redis.conf
-
-## 📝 Versión
-
-Este Dockerfile usa **Redis 8 Alpine**, la última versión estable de Redis con una imagen ligera basada en Alpine Linux.
+Usar el procedimiento anterior con el servidor detenido y backup verificado;
+`redis_schema migrate` aplica los pasos pendientes hasta v3 en una transacción.
+Repetir no convierte otra vez los valores históricos. `redis_schema selftest`
+comprueba también que XP, niveles, puntos, oro e inventario sobreviven a la migración.

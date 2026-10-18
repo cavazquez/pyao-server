@@ -85,7 +85,7 @@ def test_packet_validator_read_quantity_invalid_too_high() -> None:
 def test_packet_validator_read_username_valid() -> None:
     """Verifica que read_username valida usernames correctos."""
     username = "TestUser"
-    username_bytes = username.encode("utf-16-le")
+    username_bytes = username.encode("latin-1")
     length = len(username_bytes)
     data = bytes([1]) + struct.pack("<H", length) + username_bytes
     reader = PacketReader(data)
@@ -113,7 +113,7 @@ def test_packet_validator_read_username_empty() -> None:
 def test_packet_validator_read_username_too_long() -> None:
     """Verifica que read_username rechaza usernames muy largos."""
     username = "A" * 30
-    username_bytes = username.encode("utf-16-le")
+    username_bytes = username.encode("latin-1")
     length = len(username_bytes)
     data = bytes([1]) + struct.pack("<H", length) + username_bytes
     reader = PacketReader(data)
@@ -154,7 +154,7 @@ def test_packet_validator_read_coordinates_invalid() -> None:
 def test_packet_validator_read_password_valid() -> None:
     """Verifica que read_password valida contraseñas correctas."""
     password = "SecurePass123"
-    password_bytes = password.encode("utf-16-le")
+    password_bytes = password.encode("latin-1")
     length = len(password_bytes)
     data = bytes([1]) + struct.pack("<H", length) + password_bytes
     reader = PacketReader(data)
@@ -169,7 +169,7 @@ def test_packet_validator_read_password_valid() -> None:
 def test_packet_validator_read_password_too_short() -> None:
     """Verifica que read_password rechaza contraseñas muy cortas."""
     password = "123"
-    password_bytes = password.encode("utf-16-le")
+    password_bytes = password.encode("latin-1")
     length = len(password_bytes)
     data = bytes([1]) + struct.pack("<H", length) + password_bytes
     reader = PacketReader(data)
@@ -185,7 +185,7 @@ def test_packet_validator_read_password_too_short() -> None:
 def test_packet_validator_read_password_too_long() -> None:
     """Verifica que read_password rechaza contraseñas muy largas."""
     password = "A" * 50
-    password_bytes = password.encode("utf-16-le")
+    password_bytes = password.encode("latin-1")
     length = len(password_bytes)
     data = bytes([1]) + struct.pack("<H", length) + password_bytes
     reader = PacketReader(data)

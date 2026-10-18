@@ -1,0 +1,480 @@
+[
+  {
+    "name": "login_latin1",
+    "direction": "client",
+    "hex": "0004005065f1610600636ce1766531000d00",
+    "values": {
+      "username": "Peña",
+      "password": "cláve1",
+      "version": [
+        0,
+        13,
+        0
+      ]
+    }
+  },
+  {
+    "name": "create_latin1",
+    "direction": "client",
+    "hex": "0204005065f1610600636ce1766531000d000101010100140074657374406578616d706c652e696e76616c696401",
+    "values": {
+      "username": "Peña",
+      "password": "cláve1",
+      "race": 1,
+      "gender": 1,
+      "job": 1,
+      "head": 1,
+      "email": "test@example.invalid",
+      "home": 1
+    }
+  },
+  {
+    "name": "walk",
+    "direction": "client",
+    "hex": "0601",
+    "values": {
+      "heading": 1
+    }
+  },
+  {
+    "name": "talk_latin1",
+    "direction": "client",
+    "hex": "031300a1486f6c612c207365f16f722120e1e9edf3fa",
+    "values": {
+      "message": "¡Hola, señor! áéíóú"
+    }
+  },
+  {
+    "name": "party_join",
+    "direction": "client",
+    "hex": "5d0300416e61",
+    "values": {
+      "nickname": "Ana"
+    }
+  },
+  {
+    "name": "double_click",
+    "direction": "client",
+    "hex": "1b3233",
+    "values": {
+      "x": 50,
+      "y": 51
+    }
+  },
+  {
+    "name": "move_item",
+    "direction": "client",
+    "hex": "81191e",
+    "values": {
+      "source": 25,
+      "destination": 30
+    }
+  },
+  {
+    "name": "logged",
+    "direction": "server",
+    "hex": "0001",
+    "values": {
+      "class": 1
+    }
+  },
+  {
+    "name": "change_map",
+    "direction": "server",
+    "hex": "1501000000",
+    "values": {
+      "map": 1,
+      "version": 0
+    }
+  },
+  {
+    "name": "negative_mana",
+    "direction": "server",
+    "hex": "10ffff",
+    "values": {
+      "value": -1
+    }
+  },
+  {
+    "name": "inventory_25",
+    "direction": "server",
+    "hex": "2f1901000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 25,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "inventory_26",
+    "direction": "server",
+    "hex": "2f1a01000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 26,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "inventory_30",
+    "direction": "server",
+    "hex": "2f1e01000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 30,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "clan_large_counts",
+    "direction": "server",
+    "hex": "500400436c616e04005065f1610a00323032362d31302d313804005065f1610000008000000007004e65757472616c0180000002800000010030030050617a0b00446573637269706369f36e",
+    "values": {
+      "name": "Clan",
+      "founder": "Peña",
+      "foundation_date": "2026-10-18",
+      "leader": "Peña",
+      "website": "",
+      "members": 32768,
+      "elections": 0,
+      "alignment": "Neutral",
+      "enemies": 32769,
+      "allies": 32770,
+      "antifaction_points": "0",
+      "codex": "Paz",
+      "description": "Descripción"
+    }
+  },
+  {
+    "name": "capabilities_request_v1",
+    "direction": "client",
+    "hex": "fa01ff000000",
+    "values": {
+      "version": 1,
+      "mask": 255
+    }
+  },
+  {
+    "name": "capabilities_response_none",
+    "direction": "server",
+    "hex": "fa0100000000",
+    "values": {
+      "version": 1,
+      "mask": 0
+    }
+  },
+  {
+    "name": "skills_legacy",
+    "direction": "server",
+    "hex": "470a0005000200030001000400060007000800",
+    "values": {
+      "magic": 10,
+      "robustness": 5,
+      "woodcutting": 2,
+      "agility": 3,
+      "fishing": 1,
+      "mining": 4,
+      "blacksmithing": 6,
+      "carpentry": 7,
+      "survival": 8
+    }
+  },
+  {
+    "name": "skills_catalog_v1",
+    "direction": "server",
+    "hex": "fb010400010a0002000003000004000005000006000007000008080009024b0a00000b00000c01140d04320e07000f0600100500110000120000130000140000150500160300",
+    "values": {
+      "version": 1,
+      "free_points": 4,
+      "id_1": 1,
+      "level_1": 10,
+      "percentage_1": 0,
+      "id_2": 2,
+      "level_2": 0,
+      "percentage_2": 0,
+      "id_3": 3,
+      "level_3": 0,
+      "percentage_3": 0,
+      "id_4": 4,
+      "level_4": 0,
+      "percentage_4": 0,
+      "id_5": 5,
+      "level_5": 0,
+      "percentage_5": 0,
+      "id_6": 6,
+      "level_6": 0,
+      "percentage_6": 0,
+      "id_7": 7,
+      "level_7": 0,
+      "percentage_7": 0,
+      "id_8": 8,
+      "level_8": 8,
+      "percentage_8": 0,
+      "id_9": 9,
+      "level_9": 2,
+      "percentage_9": 75,
+      "id_10": 10,
+      "level_10": 0,
+      "percentage_10": 0,
+      "id_11": 11,
+      "level_11": 0,
+      "percentage_11": 0,
+      "id_12": 12,
+      "level_12": 1,
+      "percentage_12": 20,
+      "id_13": 13,
+      "level_13": 4,
+      "percentage_13": 50,
+      "id_14": 14,
+      "level_14": 7,
+      "percentage_14": 0,
+      "id_15": 15,
+      "level_15": 6,
+      "percentage_15": 0,
+      "id_16": 16,
+      "level_16": 5,
+      "percentage_16": 0,
+      "id_17": 17,
+      "level_17": 0,
+      "percentage_17": 0,
+      "id_18": 18,
+      "level_18": 0,
+      "percentage_18": 0,
+      "id_19": 19,
+      "level_19": 0,
+      "percentage_19": 0,
+      "id_20": 20,
+      "level_20": 0,
+      "percentage_20": 0,
+      "id_21": 21,
+      "level_21": 5,
+      "percentage_21": 0,
+      "id_22": 22,
+      "level_22": 3,
+      "percentage_22": 0
+    }
+  },
+  {
+    "name": "trade_action",
+    "direction": "client",
+    "hex": "fc012000616161616161616161616161616161616161616161616161616161616161616101000000030000000000",
+    "values": {
+      "version": 1,
+      "session_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "revision": 1,
+      "action": 3,
+      "slot": 0,
+      "quantity": 0
+    }
+  },
+  {
+    "name": "trade_state",
+    "direction": "server",
+    "hex": "fc01ae007b226964223a226161616161616161616161616161616161616161616161616161616161616161222c227265766973696f6e223a312c227374617465223a22616374697665222c22766965776572223a312c22706c6179657273223a5b5b312c22416c696365222c302c66616c73652c5b5b33302c3130312c325d5d5d2c5b322c22426f62222c31302c66616c73652c5b5d5d5d2c22726561736f6e223a22222c2273657175656e6365223a317d",
+    "values": {
+      "version": 1,
+      "snapshot": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"revision\":1,\"state\":\"active\",\"viewer\":1,\"players\":[[1,\"Alice\",0,false,[[30,101,2]]],[2,\"Bob\",10,false,[]]],\"reason\":\"\",\"sequence\":1}"
+    }
+  },
+  {
+    "name": "clan_empty",
+    "direction": "server",
+    "hex": "50000000000a0030312f30312f3139373000000000000000000006004e455554524f00000000000000000300302f3500000000",
+    "values": {
+      "name": "",
+      "members": 0,
+      "enemies": 0,
+      "allies": 0,
+      "website": ""
+    }
+  },
+  {
+    "name": "clan_accents_zero",
+    "direction": "server",
+    "hex": "5004005065f16105004ced6465720a0030312f30312f3139373005004ced6465720000000000000006004e455554524f00000000000000000300302f3500001300c172626f6c65732079206176656e7475726173",
+    "values": {
+      "name": "Peña",
+      "members": 0,
+      "enemies": 0,
+      "allies": 0,
+      "website": ""
+    }
+  },
+  {
+    "name": "allocation_request",
+    "direction": "client",
+    "hex": "26012b00313739323332343830302e62626262626262626262626262626262626262626262626262626262626262620101000200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "id_1": 1,
+      "delta_1": 1
+    }
+  },
+  {
+    "name": "allocation_state",
+    "direction": "server",
+    "hex": "fe012b00313739323332343830302e61616161616161616161616161616161616161616161616161616161616161612b00313739323332343830302e62626262626262626262626262626262626262626262626262626262626262620000000800010c4d0200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "next_operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "status": 0,
+      "message": "",
+      "free_points": 8
+    }
+  },
+  {
+    "name": "allocation_accepted",
+    "direction": "server",
+    "hex": "fe012b00313739323332343830302e62626262626262626262626262626262626262626262626262626262626262622b00313739323332343830302e6363636363636363636363636363636363636363636363636363636363636363011400417369676e616369f36e2067756172646164612e0700010d4d0200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "next_operation_id": "1792324800.cccccccccccccccccccccccccccccccc",
+      "status": 1,
+      "message": "Asignación guardada.",
+      "free_points": 7
+    }
+  },
+  {
+    "name": "allocation_rejected",
+    "direction": "server",
+    "hex": "fe012b00313739323332343830302e63636363636363636363636363636363636363636363636363636363636363632b00313739323332343830302e646464646464646464646464646464646464646464646464646464646464646402150050756e746f7320696e737566696369656e7465732e0700010d4d0200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.cccccccccccccccccccccccccccccccc",
+      "next_operation_id": "1792324800.dddddddddddddddddddddddddddddddd",
+      "status": 2,
+      "message": "Puntos insuficientes.",
+      "free_points": 7
+    }
+  },
+  {
+    "name": "password_challenge",
+    "direction": "client",
+    "hex": "6b01000000000000",
+    "values": {
+      "version": 1,
+      "operation_id": "",
+      "current_password": "",
+      "new_password": ""
+    }
+  },
+  {
+    "name": "password_change_request",
+    "direction": "client",
+    "hex": "6b012b00313739323332343830302e61616161616161616161616161616161616161616161616161616161616161610600636ce176653107006e756576613432",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "current_password": "cláve1",
+      "new_password": "nueva42"
+    }
+  },
+  {
+    "name": "password_change_query",
+    "direction": "client",
+    "hex": "6b012b00313739323332343830302e616161616161616161616161616161616161616161616161616161616161616100000000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "current_password": "",
+      "new_password": ""
+    }
+  },
+  {
+    "name": "password_ready",
+    "direction": "server",
+    "hex": "fd0100002b00313739323332343830302e6161616161616161616161616161616161616161616161616161616161616161000000",
+    "values": {
+      "version": 1,
+      "operation_id": "",
+      "next_operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": 0,
+      "message": ""
+    }
+  },
+  {
+    "name": "password_changed",
+    "direction": "server",
+    "hex": "fd012b00313739323332343830302e61616161616161616161616161616161616161616161616161616161616161612b00313739323332343830302e6262626262626262626262626262626262626262626262626262626262626262011700436f6e7472617365f1612061637475616c697a6164612e",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "next_operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "status": 1,
+      "message": "Contraseña actualizada."
+    }
+  },
+  {
+    "name": "password_rejected",
+    "direction": "server",
+    "hex": "fd012b00313739323332343830302e62626262626262626262626262626262626262626262626262626262626262622b00313739323332343830302e63636363636363636363636363636363636363636363636363636363636363630223004c6120636f6e7472617365f1612061637475616c20657320696e636f7272656374612e",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "next_operation_id": "1792324800.cccccccccccccccccccccccccccccccc",
+      "status": 2,
+      "message": "La contraseña actual es incorrecta."
+    }
+  },
+  {
+    "name": "password_unknown",
+    "direction": "server",
+    "hex": "fd012b00313739323332343830302e63636363636363636363636363636363636363636363636363636363636363632b00313739323332343830302e6464646464646464646464646464646464646464646464646464646464646464031c004e6f2068617920726573756c7461646f20636f6e6669726d61646f2e",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.cccccccccccccccccccccccccccccccc",
+      "next_operation_id": "1792324800.dddddddddddddddddddddddddddddddd",
+      "status": 3,
+      "message": "No hay resultado confirmado."
+    }
+  },
+  {
+    "name": "cast_legacy",
+    "direction": "client",
+    "hex": "1901",
+    "values": {
+      "slot": 1
+    }
+  },
+  {
+    "name": "cast_target",
+    "direction": "client",
+    "hex": "fd010137003200",
+    "values": {
+      "version": 1,
+      "slot": 1,
+      "x": 55,
+      "y": 50
+    }
+  }
+]

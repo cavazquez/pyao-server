@@ -1,277 +1,96 @@
-"""Tests para handlers de banco (depositar/extraer items)."""
+"""Banco e inventario concretos: transferencias completas y avisos postcommit."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, patch
 
 import pytest
+import pytest_asyncio
 
 from src.command_handlers.bank_deposit_handler import BankDepositCommandHandler
 from src.command_handlers.bank_extract_handler import BankExtractCommandHandler
 from src.commands.bank_deposit_command import BankDepositCommand
 from src.commands.bank_extract_command import BankExtractCommand
 from src.commands.walk_command import WalkCommand
-from src.repositories.bank_repository import BankItem
+from src.repositories.bank_repository import BankRepository
+from src.repositories.inventory_repository import InventoryRepository
+from src.repositories.player_repository import PlayerRepository
+from src.utils.redis_config import RedisKeys
 
 
-@pytest.fixture
-def mock_bank_repo() -> MagicMock:
-    """Mock de BankRepository."""
-    repo = MagicMock()
-    repo.deposit_item = AsyncMock(return_value=3)
-    repo.extract_item = AsyncMock(return_value=True)
-    repo.get_item = AsyncMock(
-        return_value=BankItem(slot=3, item_id=1, quantity=5),
-    )
-    return repo
+@pytest_asyncio.fixture
+async def bank_setup(redis_client):
+    """Comparte contenedores persistidos; sustituye sólo fsync de Redis fake.
 
-
-@pytest.fixture
-def mock_inventory_repo() -> MagicMock:
-    """Mock de InventoryRepository."""
-    repo = MagicMock()
-    repo.get_slot = AsyncMock(return_value=(1, 10))
-    repo.remove_item = AsyncMock(return_value=True)
-    repo.add_item = AsyncMock(return_value=[(2, 5)])
-    return repo
-
-
-@pytest.fixture
-def mock_player_repo() -> MagicMock:
-    """Mock de PlayerRepository."""
-    return MagicMock()
-
-
-@pytest.fixture
-def mock_message_sender() -> MagicMock:
-    """Mock de MessageSender."""
-    sender = MagicMock()
-    sender.send_console_msg = AsyncMock()
-    sender.send_change_inventory_slot = AsyncMock()
-    sender.send_change_bank_slot = AsyncMock()
-    return sender
+    Yields:
+        Cliente Redis, banco, inventario, jugador y emisor.
+    """
+    bank, inventory = BankRepository(redis_client), InventoryRepository(redis_client)
+    sender = AsyncMock()
+    await inventory.set_slot(1, 30, 1, 45)
+    with patch("src.services.bank_item_transfer.require_durable", new=AsyncMock()):
+        yield redis_client, bank, inventory, PlayerRepository(redis_client), sender
 
 
 @pytest.mark.asyncio
-async def test_deposit_item_success(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Depositar item exitosamente."""
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankDepositCommand(user_id=1, slot=5, quantity=5))
-
-    assert result.success is True
-    assert result.data == {"item_id": 1, "quantity": 5, "bank_slot": 3}
-    mock_inventory_repo.remove_item.assert_awaited_once_with(1, 5, 5)
-
-
-@pytest.mark.asyncio
-async def test_deposit_item_empty_slot(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Depositar desde slot vacío."""
-    mock_inventory_repo.get_slot = AsyncMock(return_value=None)
-
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankDepositCommand(user_id=1, slot=5, quantity=1))
-
-    assert result.success is False
-    mock_bank_repo.deposit_item.assert_not_called()
+async def test_round_trip_distributes_stacks_and_replays_once(bank_setup):
+    """El slot 30 y una bóveda casi al tope distribuyen sin perder el remanente."""
+    redis, bank, inventory, player, sender = bank_setup
+    await redis.hset(RedisKeys.bank(1), mapping={"slot_1": "1:32760"})
+    deposit = BankDepositCommandHandler(bank, inventory, player, sender)
+    command = BankDepositCommand(1, 30, 42)
+    assert (await deposit.handle(command)).success
+    assert (await deposit.handle(command)).success
+    assert await inventory.get_slot(1, 30) == (1, 3)
+    assert (await bank.get_item(1, 1)).quantity == 32767
+    assert (await bank.get_item(1, 2)).quantity == 35
+    extract = BankExtractCommandHandler(bank, inventory, player, sender)
+    command = BankExtractCommand(1, 2, 27)
+    assert (await extract.handle(command)).success
+    assert (await extract.handle(command)).success
+    assert await inventory.get_slot(1, 30) == (1, 20)
+    assert await inventory.get_slot(1, 1) == (1, 10)
+    assert (await bank.get_item(1, 2)).quantity == 8
+    # Cada confirmación sincroniza también slots vacíos, sin optimismo local.
+    assert sender.send_change_inventory_slot.await_count == 120
+    assert sender.send_change_bank_slot.await_count == 160
+    reconnected = InventoryRepository(redis)
+    assert await reconnected.get_slot(1, 30) == (1, 20)
 
 
 @pytest.mark.asyncio
-async def test_deposit_item_insufficient_quantity(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Depositar más items de los que hay en el slot."""
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
+@pytest.mark.parametrize("kind", ["bank_full", "partial_stack", "inventory_full", "equipped"])
+async def test_rejected_transfer_preserves_both_containers(bank_setup, kind):
+    """Capacidad parcial insuficiente tampoco persiste los primeros stacks calculados."""
+    redis, bank, inventory, player, sender = bank_setup
+    if kind in {"bank_full", "partial_stack"}:
+        await redis.hset(RedisKeys.bank(1), mapping={f"slot_{i}": "2:32767" for i in range(1, 41)})
+        if kind == "partial_stack":
+            await redis.hset(RedisKeys.bank(1), mapping={"slot_1": "1:32760"})
+        handler, command = BankDepositCommandHandler, BankDepositCommand(1, 30, 10)
+    elif kind == "inventory_full":
+        for slot in range(1, 31):
+            await inventory.set_slot(1, slot, 2, 20)
+        await redis.hset(RedisKeys.bank(1), mapping={"slot_1": "1:10"})
+        handler, command = BankExtractCommandHandler, BankExtractCommand(1, 1, 10)
+    else:
+        await redis.hset(RedisKeys.player_equipment(1), mapping={"weapon": "30"})
+        handler, command = BankDepositCommandHandler, BankDepositCommand(1, 30, 10)
+    before = (
+        await redis.hgetall(RedisKeys.player_inventory(1)),
+        await redis.hgetall(RedisKeys.bank(1)),
     )
-
-    result = await handler.handle(BankDepositCommand(user_id=1, slot=5, quantity=20))
-
-    assert result.success is False
-    assert "solo tienes" in result.error_message.lower()
+    assert not (await handler(bank, inventory, player, sender).handle(command)).success
+    assert (
+        await redis.hgetall(RedisKeys.player_inventory(1)),
+        await redis.hgetall(RedisKeys.bank(1)),
+    ) == before
+    sender.send_change_inventory_slot.assert_not_awaited()
+    sender.send_change_bank_slot.assert_not_awaited()
 
 
 @pytest.mark.asyncio
-async def test_deposit_item_bank_full(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Depositar cuando el banco no tiene espacio."""
-    mock_bank_repo.deposit_item = AsyncMock(return_value=None)
-
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankDepositCommand(user_id=1, slot=5, quantity=5))
-
-    assert result.success is False
-    mock_inventory_repo.remove_item.assert_not_called()
-
-
-@pytest.mark.asyncio
-async def test_deposit_item_remove_fails_rollback(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Rollback si falla la remoción del inventario."""
-    mock_inventory_repo.remove_item = AsyncMock(return_value=False)
-
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankDepositCommand(user_id=1, slot=5, quantity=5))
-
-    assert result.success is False
-    mock_bank_repo.extract_item.assert_awaited_once_with(1, 3, 5)
-
-
-@pytest.mark.asyncio
-async def test_deposit_invalid_command(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Comando inválido en deposit handler."""
-    handler = BankDepositCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(WalkCommand(user_id=1, heading=2))
-
-    assert result.success is False
-
-
-@pytest.mark.asyncio
-async def test_extract_item_success(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Extraer item exitosamente."""
-    mock_bank_repo.get_item = AsyncMock(
-        side_effect=[
-            BankItem(slot=4, item_id=1, quantity=10),
-            BankItem(slot=4, item_id=1, quantity=5),
-        ]
-    )
-
-    handler = BankExtractCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankExtractCommand(user_id=1, slot=4, quantity=5))
-
-    assert result.success is True
-    assert result.data["item_id"] == 1
-    mock_inventory_repo.add_item.assert_awaited_once_with(1, 1, 5)
-
-
-@pytest.mark.asyncio
-async def test_extract_item_empty_slot(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Extraer de slot vacío del banco."""
-    mock_bank_repo.get_item = AsyncMock(return_value=None)
-
-    handler = BankExtractCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankExtractCommand(user_id=1, slot=4, quantity=1))
-
-    assert result.success is False
-
-
-@pytest.mark.asyncio
-async def test_extract_item_inventory_full(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Revertir extracción si el inventario está lleno."""
-    mock_bank_repo.get_item = AsyncMock(return_value=BankItem(slot=4, item_id=1, quantity=10))
-    mock_inventory_repo.add_item = AsyncMock(return_value=[])
-
-    handler = BankExtractCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(BankExtractCommand(user_id=1, slot=4, quantity=5))
-
-    assert result.success is False
-    mock_bank_repo.deposit_item.assert_awaited_once_with(1, 1, 5)
-
-
-@pytest.mark.asyncio
-async def test_extract_invalid_command(
-    mock_bank_repo: MagicMock,
-    mock_inventory_repo: MagicMock,
-    mock_player_repo: MagicMock,
-    mock_message_sender: MagicMock,
-) -> None:
-    """Comando inválido en extract handler."""
-    handler = BankExtractCommandHandler(
-        bank_repo=mock_bank_repo,
-        inventory_repo=mock_inventory_repo,
-        player_repo=mock_player_repo,
-        message_sender=mock_message_sender,
-    )
-
-    result = await handler.handle(WalkCommand(user_id=1, heading=2))
-
-    assert result.success is False
+@pytest.mark.parametrize("handler", [BankDepositCommandHandler, BankExtractCommandHandler])
+async def test_invalid_command_is_not_a_transfer(bank_setup, handler):
+    """El handler no muta ni notifica inventarios para otro tipo de comando."""
+    _redis, bank, inventory, player, sender = bank_setup
+    assert not (await handler(bank, inventory, player, sender).handle(WalkCommand(1, 1))).success
+    sender.send_change_inventory_slot.assert_not_awaited()

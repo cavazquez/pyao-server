@@ -91,16 +91,11 @@ class TestInventoryStorage:
 
         assert result is True
 
-    async def test_get_all_slots_empty(self) -> None:
-        """Test de obtener todos los slots cuando está vacío."""
-        redis_client = create_mock_redis_client()
-        redis_client.hgetall = AsyncMock(return_value={})
-        redis_client.hset = AsyncMock()
-
+    async def test_get_all_slots_empty(self, redis_client) -> None:
+        """Inicializar un inventario vacío conserva los slots confirmados concurrentemente."""
         storage = InventoryStorage(redis_client)
-        slots = await storage.get_all_slots(1)
-
-        assert slots == {}
+        assert await storage.get_all_slots(1) == {}
+        assert await storage.get_slot(1, 30) is None
 
     async def test_get_all_slots_with_items(self) -> None:
         """Test de obtener todos los slots con items."""

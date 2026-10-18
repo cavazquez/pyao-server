@@ -4,8 +4,10 @@ import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
 
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 from src.utils.redis_decorators import require_redis
+from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
 if TYPE_CHECKING:
     from src.models.spell_catalog import SpellCatalog
@@ -123,7 +125,11 @@ class SpellbookRepository:
                 return {}
 
             # Convertir strings a int
-            return {int(slot): int(spell_id) for slot, spell_id in spells_data.items()}
+            return {
+                int(slot): int(spell_id)
+                for slot, spell_id in spells_data.items()
+                if spell_id and int(spell_id) > 0
+            }
         except Exception:
             logger.exception("Error al obtener todos los hechizos del user_id %d", user_id)
             return {}
@@ -178,30 +184,37 @@ class SpellbookRepository:
         key = RedisKeys.player_spellbook(user_id)
 
         try:
-            pipe = self.redis_client.pipeline()
-            pipe.hget(key, str(slot))
-            pipe.hget(key, str(target_slot))
-            slot_value, target_value = await pipe.execute()
 
-            new_slot_value = target_value
-            new_target_value = slot_value
+            def decide(snapshot: Snapshot) -> Decision:
+                known = cast("dict[str, str]", snapshot[key])
+                source, destination = known.get(str(slot), ""), known.get(str(target_slot), "")
+                if not source or source == "0":
+                    return Decision(
+                        {"success": False, "source": source, "destination": destination}, {}
+                    )
+                return Decision(
+                    {"success": True, "source": destination, "destination": source},
+                    {key: {str(slot): destination, str(target_slot): source}},
+                )
 
-            pipe = self.redis_client.pipeline(transaction=True)
-
-            if new_slot_value is None:
-                pipe.hdel(key, str(slot))
-            else:
-                pipe.hset(key, str(slot), str(new_slot_value))
-
-            if new_target_value is None:
-                pipe.hdel(key, str(target_slot))
-            else:
-                pipe.hset(key, str(target_slot), str(new_target_value))
-
-            await pipe.execute()
-
-            slot_spell_id = int(new_slot_value) if new_slot_value is not None else None
-            target_spell_id = int(new_target_value) if new_target_value is not None else None
+            result = await transact(
+                self.redis_client.redis,
+                (Resource(key, "hash"),),
+                operation_id(),
+                {"move_spell": user_id, "slot": slot, "target": target_slot},
+                decide,
+            )
+            slot_spell_id = int(result["source"]) if result["source"] else None
+            target_spell_id = int(result["destination"]) if result["destination"] else None
+            if not result["success"]:
+                return MoveSpellResult(
+                    success=False,
+                    slot=slot,
+                    target_slot=target_slot,
+                    slot_spell_id=slot_spell_id,
+                    target_slot_spell_id=target_spell_id,
+                    reason="empty_slot",
+                )
 
             logger.debug(
                 "Hechizos intercambiados para user_id %d: slot %d <-> %d",

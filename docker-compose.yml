@@ -17,12 +17,14 @@ services:
     build: ./redis
     container_name: pyao-redis
     ports:
-      - "6379:6379"
+      - "127.0.0.1:${PYAO_REDIS_PORT:-6379}:6379"
     volumes:
       - redis-data:/data
+    secrets:
+      - redis_password
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "REDISCLI_AUTH=$$(cat /run/secrets/redis_password) redis-cli ping | grep -q PONG"]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -31,7 +33,7 @@ services:
     image: redis/redisinsight:latest
     container_name: pyao-redis-insight
     ports:
-      - "5540:5540"
+      - "127.0.0.1:${PYAO_REDIS_INSIGHT_PORT:-5540}:5540"
     depends_on:
       redis:
         condition: service_healthy
@@ -41,3 +43,7 @@ services:
 
 volumes:
   redis-data:
+
+secrets:
+  redis_password:
+    file: ${PYAO_REDIS_PASSWORD_FILE:-./.local/redis-password}

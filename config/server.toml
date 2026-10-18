@@ -7,12 +7,19 @@ host = "0.0.0.0"
 port = 7666
 max_connections = 1000
 buffer_size = 4096
+outgoing_max_packets = 128
+outgoing_max_bytes = 262144
+outgoing_drain_timeout = 5.0
+shutdown_timeout_seconds = 20.0
+shutdown_drain_seconds = 5.0
 
 [redis]
 host = "localhost"
 port = 6379
 db = 0
 max_connections = 20
+socket_timeout = 5.0
+socket_connect_timeout = 5.0
 
 [logging]
 level = "INFO"
@@ -26,6 +33,8 @@ npc_respawn_base_time = 30.0
 npc_respawn_random_variance = 15.0
 
 [game.combat]
+pvp_enabled = true
+safe_maps = [1, 34, 59, 62, 151, 196, 286]
 melee_range = 1
 base_critical_chance = 0.15
 base_dodge_chance = 0.05
@@ -75,8 +84,46 @@ max_slots = 30
 max_slots = 40
 
 [game.character]
+initial_skill_points = 10
 hp_per_con = 10
-mana_per_int = 50000
+mana_per_int = 10
 initial_gold = 0
 initial_elu = 300
 elu_exponent = 1.8
+
+[security]
+# Cada hash usa ~64 MiB; limitar también las solicitudes pendientes.
+hash_workers = 2
+hash_max_pending = 4
+auth_timeout_seconds = 30.0
+auth_window_seconds = 60.0
+auth_attempts_per_connection = 6
+auth_attempts_per_ip = 30
+auth_attempts_per_account = 8
+auth_max_keys = 10000
+session_lease_seconds = 90
+
+# Cadencias mínimas del servidor, independientes del cliente y del reloj de pared.
+[game.cadence]
+walk_seconds = 0.2
+attack_seconds = 0.5
+cast_seconds = 1.0
+
+[game.spells]
+resurrection_npc_ids = [81, 82, 119]
+development_all_spells = false
+
+# Dardo Mágico (2) y Curar Heridas Leves (3), entregados sólo al crear la cuenta.
+[game.spells.starter_by_class]
+1 = [2, 3]
+2 = [2, 3]
+3 = [2, 3]
+4 = [2, 3]
+5 = [2, 3]
+6 = [2, 3]
+7 = [2, 3]
+8 = [2, 3]
+9 = [2, 3]
+10 = [2, 3]
+11 = [2, 3]
+12 = [2, 3]

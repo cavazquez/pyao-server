@@ -7,6 +7,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from src.runtime_paths import state_dir
+
 logger = logging.getLogger(__name__)
 
 try:
@@ -16,7 +18,7 @@ try:
 except ImportError:
     MSGPACK_AVAILABLE = False
 
-MAP_BINARY_DIR = Path("map_binary")
+MAP_BINARY_DIR = state_dir() / "map_binary"
 
 
 class MapBinaryCache:

@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.security.password_executor import PasswordQueueFullError
+
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
@@ -68,7 +70,14 @@ class AuthenticationService:
             return None
 
         # Verificar la contraseña
-        if not await self.account_repo.verify_password(username, password):
+        try:
+            valid_password = await self.account_repo.verify_password(username, password)
+        except PasswordQueueFullError:
+            await self.message_sender.send_error_msg(
+                "Servicio de autenticación ocupado; reintentá más tarde"
+            )
+            return None
+        if not valid_password:
             logger.warning("Contraseña incorrecta para usuario: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
             return None

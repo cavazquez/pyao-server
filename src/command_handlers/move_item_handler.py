@@ -72,8 +72,12 @@ class MoveItemCommandHandler(CommandHandler):
             return CommandResult.error(error_msg)
 
         # Enviar actualización de ambos slots al cliente
-        await self._send_slot_update(user_id, result.old_slot, result.old_slot_data)
-        await self._send_slot_update(user_id, result.new_slot, result.new_slot_data)
+        await self._send_slot_update(
+            user_id, result.old_slot, result.old_slot_data, equipped=result.old_equipped
+        )
+        await self._send_slot_update(
+            user_id, result.new_slot, result.new_slot_data, equipped=result.new_equipped
+        )
 
         return CommandResult.ok(
             data={
@@ -83,7 +87,7 @@ class MoveItemCommandHandler(CommandHandler):
         )
 
     async def _send_slot_update(
-        self, _user_id: int, slot: int, slot_data: tuple[int, int] | None
+        self, _user_id: int, slot: int, slot_data: tuple[int, int] | None, *, equipped: bool = False
     ) -> None:
         """Envía la actualización de un slot del inventario al cliente."""
         if slot_data is None:
@@ -106,7 +110,7 @@ class MoveItemCommandHandler(CommandHandler):
                 item_id=item_id,
                 name=f"Item {item_id}",
                 amount=quantity,
-                equipped=False,
+                equipped=equipped,
                 grh_id=0,
                 item_type=0,
             )
@@ -117,8 +121,8 @@ class MoveItemCommandHandler(CommandHandler):
 
         item_data = self.item_catalog.get_item_data(item_id)
         obj_type: int = 0
-        if item_data and "obj_type" in item_data:
-            val = item_data["obj_type"]
+        if item_data:
+            val = item_data.get("ObjType", item_data.get("obj_type", 0))
             if isinstance(val, int):
                 obj_type = val
 
@@ -127,7 +131,22 @@ class MoveItemCommandHandler(CommandHandler):
             item_id=item_id,
             name=item_name,
             amount=quantity,
-            equipped=False,
+            equipped=equipped,
             grh_id=grh_id,
             item_type=obj_type,
+            max_hit=_item_int(item_data, "MaxHit"),
+            min_hit=_item_int(item_data, "MinHit"),
+            max_def=_item_int(item_data, "MaxDef"),
+            min_def=_item_int(item_data, "MinDef"),
+            sale_price=float(_item_int(item_data, "Valor")),
         )
+
+
+def _item_int(data: dict[str, object] | None, field: str) -> int:
+    """Lee un atributo numérico de catálogo sin perderlo durante el arrastre.
+
+    Returns:
+        Valor entero o cero si no existe.
+    """
+    value = data.get(field, 0) if data else 0
+    return value if isinstance(value, int) else 0

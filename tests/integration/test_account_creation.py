@@ -9,13 +9,14 @@ from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_id import ClientPacketID, ServerPacketID
 from src.repositories.account_repository import AccountRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.player_repository import PlayerRepository
 from src.tasks.player.task_account import TaskCreateAccount
 from src.utils.password_utils import hash_password
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
+async def test_task_create_account_success(redis_client) -> None:  # noqa: PLR0914, PLR0915
     """Verifica que TaskCreateAccount cree una cuenta exitosamente."""
     # Mock del writer
     writer = MagicMock()
@@ -45,33 +46,8 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     player_repo.get_attributes = AsyncMock(return_value=None)
     player_repo.get_strength = AsyncMock(return_value=10)
     player_repo.get_agility = AsyncMock(return_value=10)
-    # Mock de redis para InventoryRepository
-    redis_client_mock = MagicMock()
-    for method in (
-        "hget",
-        "hset",
-        "hset_field",
-        "hgetall",
-        "hdel",
-        "hmget",
-        "exists",
-        "set",
-        "get",
-        "delete",
-        "sadd",
-        "smembers",
-        "srem",
-        "incr",
-        "decr",
-        "incrby",
-        "decrby",
-    ):
-        setattr(redis_client_mock, method, AsyncMock())
-    redis_client_mock.hgetall = AsyncMock(return_value={})
-    redis_client_mock.get = AsyncMock(return_value=None)
-    redis_client_mock.hget = AsyncMock(return_value=None)
-    redis_client_mock.pipeline = MagicMock()
-    player_repo.redis = redis_client_mock
+    # El inventario usa Redis concreto, incluidos WATCH y recibos.
+    player_repo.redis = redis_client
 
     account_repo = MagicMock(spec=AccountRepository)
     account_repo.create_account = AsyncMock(return_value=1)
@@ -92,20 +68,19 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     # Username
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     # Password
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     # Char data (race, unknown int16, gender, job, unknown byte, head int16)
+    data.extend(bytes([0, 13, 0]))  # versión legacy
     data.append(1)  # race
-    data.extend((0).to_bytes(2, byteorder="little"))  # unknown int16
     data.append(1)  # gender
     data.append(1)  # job
-    data.append(1)  # unknown byte
     data.extend((18).to_bytes(2, byteorder="little"))  # head
     # Email
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
     # Home
     data.append(1)  # home
 
@@ -131,6 +106,9 @@ async def test_task_create_account_success() -> None:  # noqa: PLR0914, PLR0915
         session_data=None,
     )
     await task.execute()
+
+    initial = await InventoryRepository(redis_client).get_inventory_slots(1)
+    assert sum(slot.quantity for slot in initial.values() if slot.item_id == 36) == 30
 
     # Verificar que se llamó a create_account
     account_repo.create_account.assert_called_once()
@@ -211,11 +189,11 @@ async def test_task_create_account_duplicate_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear handler
     create_account_handler = CreateAccountCommandHandler(
@@ -263,11 +241,11 @@ async def test_task_create_account_invalid_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
@@ -299,11 +277,11 @@ async def test_task_create_account_invalid_password() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     task = TaskCreateAccount(bytes(data), message_sender, player_repo, account_repo)
     await task.execute()
@@ -335,11 +313,11 @@ async def test_task_create_account_invalid_email() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear handler
     create_account_handler = CreateAccountCommandHandler(
@@ -385,11 +363,11 @@ async def test_task_create_account_no_redis() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     data.extend(len(username).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(username.encode("latin-1"))
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
 
     # Crear tarea sin handler (None)
     task = TaskCreateAccount(bytes(data), message_sender, create_account_handler=None)
@@ -459,21 +437,20 @@ async def test_task_create_account_unicode_username() -> None:
 
     data = bytearray([ClientPacketID.CREATE_ACCOUNT])
     # Username
-    data.extend(len(username.encode("utf-8")).to_bytes(2, byteorder="little"))
-    data.extend(username.encode("utf-8"))
+    data.extend(len(username.encode("latin-1")).to_bytes(2, byteorder="little"))
+    data.extend(username.encode("latin-1"))
     # Password
     data.extend(len(password).to_bytes(2, byteorder="little"))
-    data.extend(password.encode("utf-8"))
+    data.extend(password.encode("latin-1"))
     # Char data
+    data.extend(bytes([0, 13, 0]))  # versión legacy
     data.append(1)  # race
-    data.extend((0).to_bytes(2, byteorder="little"))  # unknown int16
     data.append(1)  # gender
     data.append(1)  # job
-    data.append(1)  # unknown byte
     data.extend((18).to_bytes(2, byteorder="little"))  # head
     # Email
     data.extend(len(email).to_bytes(2, byteorder="little"))
-    data.extend(email.encode("utf-8"))
+    data.extend(email.encode("latin-1"))
     # Home
     data.append(1)  # home
 

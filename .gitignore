@@ -223,3 +223,7 @@ stage/
 
 # Salida regenerable del análisis de tests redundantes (ver docs/REDUNDANT_TESTS.md)
 docs/REDUNDANT_TESTS_AUTOGEN.md
+
+# Secretos de operación y backups locales
+.local/
+.backups/

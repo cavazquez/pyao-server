@@ -45,7 +45,7 @@ class TestTaskGMCommands:
         self, subcommand: int = 11, map_id: int = 1, x: int = 50, y: int = 50, username: str = "YO"
     ) -> bytes:
         """Crea un packet GM_COMMANDS básico."""
-        username_bytes = username.encode("utf-16-le")
+        username_bytes = username.encode("latin-1")
         username_len = len(username_bytes)
 
         return struct.pack(

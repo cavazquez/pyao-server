@@ -69,7 +69,7 @@ async def test_gold_decay_effect_reduces_gold(
 
     # Estado inicial: jugador con 1000 de oro
     mock_player_repo.get_gold = AsyncMock(return_value=1000)
-    mock_player_repo.update_gold = AsyncMock()
+    mock_player_repo.remove_gold = AsyncMock(return_value=True)
     mock_player_repo.get_stats = AsyncMock(
         return_value={
             "max_hp": 100,
@@ -95,7 +95,7 @@ async def test_gold_decay_effect_reduces_gold(
         await effect.apply(user_id, mock_player_repo, mock_message_sender)
 
     # Verificar que se guardó con oro reducido (1% de 1000 = 10)
-    mock_player_repo.update_gold.assert_called_once_with(user_id, 990)  # 1000 - 10
+    mock_player_repo.remove_gold.assert_called_once_with(user_id, 10)  # 1000 - 10
 
     # Verificar que se notificó al cliente
     mock_message_sender.send_update_user_stats.assert_called_once()
@@ -113,7 +113,7 @@ async def test_gold_decay_effect_no_gold(
 
     # Estado inicial: jugador sin oro
     mock_player_repo.get_gold = AsyncMock(return_value=0)
-    mock_player_repo.update_gold = AsyncMock()
+    mock_player_repo.remove_gold = AsyncMock(return_value=True)
 
     mock_server_repo = AsyncMock()
     mock_server_repo.get_effect_config_float.side_effect = [1.0, 0.1]  # percentage, interval
@@ -123,7 +123,7 @@ async def test_gold_decay_effect_no_gold(
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
 
     # Verificar que NO se guardó (no hay oro para reducir)
-    mock_player_repo.update_gold.assert_not_called()
+    mock_player_repo.remove_gold.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -175,7 +175,7 @@ async def test_game_tick_applies_multiple_effects(
 
     # Configurar mocks
     mock_player_repo.get_gold = AsyncMock(return_value=1000)
-    mock_player_repo.update_gold = AsyncMock()
+    mock_player_repo.remove_gold = AsyncMock(return_value=True)
     mock_player_repo.get_stats = AsyncMock(
         return_value={
             "max_hp": 100,
@@ -254,7 +254,7 @@ async def test_gold_decay_custom_percentage(
 
     # Estado inicial: jugador con 1000 de oro
     mock_player_repo.get_gold = AsyncMock(return_value=1000)
-    mock_player_repo.update_gold = AsyncMock()
+    mock_player_repo.remove_gold = AsyncMock(return_value=True)
     mock_player_repo.get_stats = AsyncMock(
         return_value={
             "max_hp": 100,
@@ -279,7 +279,7 @@ async def test_gold_decay_custom_percentage(
     await effect.apply(user_id, mock_player_repo, mock_message_sender)
 
     # Verificar que se redujo 5% (50 de oro)
-    mock_player_repo.update_gold.assert_called_once_with(user_id, 950)  # 1000 - 50
+    mock_player_repo.remove_gold.assert_called_once_with(user_id, 50)  # 1000 - 50
 
 
 @pytest.mark.asyncio

@@ -7,6 +7,7 @@ from src.command_handlers.walk_movement_handler import WalkMovementHandler
 from src.command_handlers.walk_validation_handler import WalkValidationHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.walk_command import WalkCommand
+from src.services.action_cadence import ActionCadence
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -34,6 +35,7 @@ class WalkCommandHandler(CommandHandler):
         inventory_repo: InventoryRepository | None,
         map_resources: MapResourcesService | None,
         message_sender: MessageSender,
+        action_cadence: ActionCadence | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -45,9 +47,11 @@ class WalkCommandHandler(CommandHandler):
             player_map_service: Servicio de transición de mapas.
             inventory_repo: Repositorio de inventario.
             map_resources: Servicio de recursos de mapa.
+            action_cadence: Presupuesto compartido entre handlers del servidor.
             message_sender: Enviador de mensajes.
         """
         self.player_repo = player_repo
+        self.action_cadence = action_cadence or ActionCadence()
         self.message_sender = message_sender
 
         # Inicializar handlers especializados
@@ -67,7 +71,7 @@ class WalkCommandHandler(CommandHandler):
             message_sender=message_sender,
         )
 
-    async def handle(self, command: Command) -> CommandResult:
+    async def _handle_accepted(self, command: Command) -> CommandResult:
         """Ejecuta el comando de movimiento (solo lógica de negocio).
 
         Args:
@@ -113,3 +117,18 @@ class WalkCommandHandler(CommandHandler):
         if success:
             return CommandResult.ok(data=data)
         return CommandResult.error(error_msg or "Error al ejecutar movimiento")
+
+    async def handle(self, command: Command) -> CommandResult:
+        """Reserva la cadencia antes de leer estado o consumir recursos.
+
+        Returns:
+            Resultado o rechazo sin efectos cuando no hay presupuesto.
+        """
+        if not isinstance(command, WalkCommand):
+            return CommandResult.error("Comando inválido: se esperaba WalkCommand")
+        if not self.action_cadence.claim(command.user_id, "walk"):
+            return CommandResult.error("Acción demasiado frecuente")
+        try:
+            return await self._handle_accepted(command)
+        finally:
+            self.action_cadence.release(command.user_id, "walk")

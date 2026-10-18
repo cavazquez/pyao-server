@@ -68,7 +68,7 @@ class EquipItemPacketValidator:
         slot = ValidationHelpers.read_slot(
             context,
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
         if context.has_errors():
             return ValidationResult(
@@ -89,25 +89,8 @@ class UseItemPacketValidator:
         slot = ValidationHelpers.read_slot(
             context,
             min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.max_inventory_slots", 25)),
+            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
         )
-        if context.has_errors():
-            return ValidationResult(
-                success=False, data=None, error_message=context.get_error_message()
-            )
-        return ValidationResult(success=True, data={"slot": slot}, error_message=None)
-
-
-class DoubleClickPacketValidator:
-    """Valida packet DOUBLE_CLICK completo."""
-
-    def validate(self, context: ValidationContext) -> ValidationResult[dict[str, Any]]:
-        """Valida packet DOUBLE_CLICK.
-
-        Returns:
-            ValidationResult con slot o error.
-        """
-        slot = ValidationHelpers.read_slot(context, min_slot=0, max_slot=255)
         if context.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=context.get_error_message()
@@ -133,6 +116,10 @@ class LeftClickPacketValidator:
         return ValidationResult(
             success=True, data={"x": coords[0], "y": coords[1]}, error_message=None
         )
+
+
+class DoubleClickPacketValidator(LeftClickPacketValidator):
+    """Valida las mismas coordenadas de mapa para ID 27, nunca un slot."""
 
 
 class MoveItemPacketValidator:

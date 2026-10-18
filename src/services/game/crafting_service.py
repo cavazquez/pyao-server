@@ -12,6 +12,8 @@ from pathlib import Path
 from tomllib import load as tomllib_load
 from typing import Any, ClassVar
 
+from src.runtime_paths import data_dir as default_data_dir
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,7 +31,7 @@ class CraftingService:
         if getattr(self, "_initialized", False):
             return
 
-        self.data_dir = data_dir or Path("data")
+        self.data_dir = data_dir or default_data_dir()
         self.weapons_recipes: list[dict[str, Any]] = []
         self.armor_recipes: list[dict[str, Any]] = []
         self.materials: dict[str, dict[str, Any]] = {}

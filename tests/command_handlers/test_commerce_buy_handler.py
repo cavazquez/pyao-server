@@ -13,6 +13,7 @@ from src.commands.walk_command import WalkCommand
 def mock_commerce_service() -> MagicMock:
     """Mock de CommerceService."""
     service = MagicMock()
+    service.notify_merchant = AsyncMock()
     service.buy_item = AsyncMock(return_value=(True, "Compra exitosa"))
     return service
 
@@ -31,6 +32,9 @@ def mock_inventory_repo() -> MagicMock:
     repo = MagicMock()
     repo.MAX_SLOTS = 30
     repo.get_slot = AsyncMock(return_value=None)
+    repo.get_inventory = AsyncMock(return_value={})
+    repo.redis_client = MagicMock()
+    repo.redis_client.hgetall = AsyncMock(return_value={})
     return repo
 
 
@@ -74,7 +78,9 @@ async def test_handle_buy_success(
 
     assert result.success is True
     assert result.data["npc_id"] == 123
-    mock_commerce_service.buy_item.assert_called_once_with(1, 123, 1, 1)
+    mock_commerce_service.buy_item.assert_called_once_with(
+        1, 123, 1, 1, operation_id=command.operation_id
+    )
 
 
 @pytest.mark.asyncio

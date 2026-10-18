@@ -28,6 +28,7 @@ class InventoryStorage:
         Args:
             redis_client: Cliente de Redis.
         """
+        self.MAX_SLOTS = ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30))
         self.redis_client = redis_client
 
     async def get_slot(self, user_id: int, slot: int) -> InventorySlot | None:
@@ -35,7 +36,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
 
         Returns:
             InventorySlot o None si está vacío o inválido.
@@ -55,7 +56,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
             inventory_slot: InventorySlot a guardar, o None para vaciar.
 
         Returns:
@@ -99,7 +100,7 @@ class InventoryStorage:
         # Si no existe, crear inventario vacío
         if not inventory:
             await self._create_empty_inventory(user_id)
-            return {}
+            inventory = await self.redis_client.hgetall(key)
 
         # Parsear slots
         slots: dict[int, InventorySlot] = {}
@@ -119,7 +120,7 @@ class InventoryStorage:
 
         Args:
             user_id: ID del jugador.
-            slot: Número de slot (1-20).
+            slot: Número de slot (1 al límite efectivo de inventario).
 
         Returns:
             True si se vació correctamente.
@@ -162,11 +163,10 @@ class InventoryStorage:
             user_id: ID del jugador.
         """
         key = RedisKeys.player_inventory(user_id)
-        empty_inventory = {
-            f"slot_{i}": "" for i in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1)
-        }
-
-        await self.redis_client.hset(key, mapping=empty_inventory)
+        async with self.redis_client.redis.pipeline() as pipe:
+            for slot in range(1, ConfigManager.as_int(self.MAX_SLOTS) + 1):
+                pipe.hsetnx(key, f"slot_{slot}", "")
+            await pipe.execute()
         logger.info("Inventario vacío creado para user_id %d", user_id)
 
     def _is_valid_slot(self, slot: int) -> bool:

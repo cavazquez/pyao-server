@@ -49,34 +49,18 @@ class TestInventoryRepository:
         assert inventory["slot_1"] == "10:5"
         assert "slot_20" in inventory  # Debe incluir todos los slots
 
-    async def test_add_item_integration(self) -> None:
-        """Test de integración: agregar item usa storage y stacking."""
-        redis_client = create_mock_redis_client()
-        redis_client.hgetall = AsyncMock(return_value={})
-        redis_client.hget = AsyncMock(return_value=None)
-        redis_client.hset_field = AsyncMock()
-
+    async def test_add_item_integration(self, redis_client) -> None:
+        """El repositorio confirma slots completos sobre Redis."""
         repo = InventoryRepository(redis_client)
-        result = await repo.add_item(1, 10, 5)
+        assert await repo.add_item(1, 10, 5) == [(1, 5)]
+        assert await repo.get_slot(1, 1) == (10, 5)
 
-        # Debe retornar slots modificados
-        assert len(result) > 0
-        # Debe haber llamado a Redis para guardar
-        assert redis_client.hset_field.called
-
-    async def test_remove_item_integration(self) -> None:
-        """Test de integración: remover item usa storage y stacking."""
-        redis_client = create_mock_redis_client()
-        redis_client.hget = AsyncMock(return_value=b"10:5")
-        redis_client.hset_field = AsyncMock()
-
+    async def test_remove_item_integration(self, redis_client) -> None:
+        """El débito relativo conserva el remanente confirmado."""
         repo = InventoryRepository(redis_client)
-        result = await repo.remove_item(1, 1, 2)
-
-        # Debe retornar True si fue exitoso
-        assert result is True
-        # Debe haber actualizado Redis
-        assert redis_client.hset_field.called
+        await repo.set_slot(1, 1, 10, 5)
+        assert await repo.remove_item(1, 1, 2)
+        assert await repo.get_slot(1, 1) == (10, 3)
 
     async def test_get_slot_delegates_to_storage(self) -> None:
         """Test que get_slot delega correctamente a storage."""

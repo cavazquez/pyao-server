@@ -603,8 +603,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         Cero si los datos son válidos; uno ante errores bloqueantes.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data-dir", type=Path, default=Path("data"))
-    parser.add_argument("--maps-dir", type=Path, default=Path("map_data"))
+    from src.runtime_paths import data_dir, maps_dir  # noqa: PLC0415
+
+    parser.add_argument("--data-dir", type=Path, default=data_dir())
+    parser.add_argument("--maps-dir", type=Path, default=maps_dir())
     parser.add_argument("--client-dir", type=Path, help="Checkout propio del cliente (opcional)")
     parser.add_argument("--json", action="store_true", dest="json_output")
     args = parser.parse_args(argv)

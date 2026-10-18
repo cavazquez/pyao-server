@@ -1,9 +1,10 @@
 """Comando de usar item."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from time import time
 
 from src.commands.base import Command
+from src.utils.gold_atomic import operation_id
 
 
 @dataclass
@@ -21,6 +22,7 @@ class UseItemCommand(Command):
     slot: int
     username: str | None = None
     timestamp: float | None = None
+    operation_id: str = field(default_factory=operation_id)
 
     def __post_init__(self) -> None:
         """Inicializa timestamp si no se proporciona."""

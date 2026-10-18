@@ -3,15 +3,17 @@
 import logging
 import tomllib
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict
+
+from src.runtime_paths import config_file as default_config_file
 
 logger = logging.getLogger(__name__)
 
 # Tipo para valores de configuración (compatible con ConfigManager)
-ConfigValue = str | int | float | bool | dict[str, Any] | None
+ConfigValue = str | int | float | bool | dict[str, Any] | list[int] | None
 
 
 class ServerConfig(BaseModel):
@@ -21,10 +23,20 @@ class ServerConfig(BaseModel):
     port: int = Field(default=7666, ge=1024, le=65535, description="Puerto del servidor")
     max_connections: int = Field(default=1000, ge=1, description="Máximo de conexiones simultáneas")
     buffer_size: int = Field(default=4096, ge=1024, description="Tamaño del buffer de red")
+    outgoing_max_packets: int = Field(default=128, ge=1)
+    outgoing_max_bytes: int = Field(default=262144, ge=1024)
+    shutdown_timeout_seconds: float = Field(default=20.0, ge=2, le=120)
+    shutdown_drain_seconds: float = Field(default=5.0, ge=0.1, le=30)
+    outgoing_drain_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
 
 
 class CombatConfig(BaseModel):
     """Configuración de combate."""
+
+    pvp_enabled: bool = True
+    safe_maps: list[Annotated[int, Field(ge=1, le=290)]] = Field(
+        default_factory=lambda: [1, 34, 59, 62, 151, 196, 286]
+    )
 
     melee_range: int = Field(default=1, ge=1, le=10, description="Rango de combate cuerpo a cuerpo")
     base_critical_chance: float = Field(
@@ -128,13 +140,39 @@ class CharacterConfig(BaseModel):
 
     hp_per_con: int = Field(default=10, ge=1, description="HP adicional por punto de constitución")
     mana_per_int: int = Field(
-        default=10, ge=1, description="Mana adicional por punto de inteligencia"
+        default=10, ge=1, le=32767, description="Mana adicional por punto de inteligencia"
     )
+    initial_skill_points: int = Field(default=10, ge=0, le=32767)
     initial_gold: int = Field(default=0, ge=0, description="Oro inicial de nuevos personajes")
     initial_elu: int = Field(default=300, ge=0, description="ELU inicial de nuevos personajes")
     elu_exponent: float = Field(
         default=1.8, ge=1.0, le=3.0, description="Exponente para cálculo de ELU por nivel"
     )
+
+
+SpellID = Annotated[int, Field(ge=1, le=32767)]
+StarterSpells = Annotated[list[SpellID], Field(max_length=35)]
+ClassID = Annotated[int, Field(ge=1, le=12)]
+
+
+class SpellbookConfig(BaseModel):
+    """Progreso inicial explícito y modo de desarrollo apagado en distribución."""
+
+    resurrection_npc_ids: list[Annotated[int, Field(ge=1)]] = Field(
+        default_factory=lambda: [81, 82, 119]
+    )
+    development_all_spells: bool = False
+    starter_by_class: dict[ClassID, StarterSpells] = Field(
+        default_factory=lambda: {class_id: [2, 3] for class_id in range(1, 13)}
+    )
+
+
+class CadenceConfig(BaseModel):
+    """Intervalos mínimos autoritativos, expresados en segundos."""
+
+    walk_seconds: float = Field(default=0.2, ge=0.01, le=10.0)
+    attack_seconds: float = Field(default=0.5, ge=0.01, le=10.0)
+    cast_seconds: float = Field(default=1.0, ge=0.01, le=10.0)
 
 
 class GameConfigSection(BaseModel):
@@ -150,6 +188,8 @@ class GameConfigSection(BaseModel):
     npc_respawn_random_variance: float = Field(
         default=15.0, ge=0.0, description="Varianza aleatoria en respawns"
     )
+    spells: SpellbookConfig = Field(default_factory=SpellbookConfig)
+    cadence: CadenceConfig = Field(default_factory=CadenceConfig)
     combat: CombatConfig = Field(default_factory=CombatConfig)
     work: WorkConfig = Field(default_factory=WorkConfig)
     stamina: StaminaConfig = Field(default_factory=StaminaConfig)
@@ -178,10 +218,45 @@ class LoggingConfig(BaseModel):
 class RedisConfig(BaseModel):
     """Configuración de Redis."""
 
-    host: str = Field(default="localhost", description="Host de Redis")
+    host: str = Field(default="localhost", min_length=1, description="Host de Redis")
     port: int = Field(default=6379, ge=1, le=65535, description="Puerto de Redis")
     db: int = Field(default=0, ge=0, description="Base de datos de Redis")
     max_connections: int = Field(default=20, ge=1, description="Máximo de conexiones a Redis")
+    password_file: Path | None = None
+    decode_responses: bool = True
+    socket_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
+    socket_connect_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
+
+    def read_password(self) -> str | None:
+        """Lee el secreto al conectar, sin incorporarlo al modelo ni a los logs.
+
+        Returns:
+            Contraseña o None para una instancia externa sin autenticación.
+
+        Raises:
+            ValueError: Si el archivo está vacío o contiene más de una línea.
+        """
+        if self.password_file is None:
+            return None
+        value = self.password_file.read_text(encoding="utf-8").rstrip("\r\n")
+        if not value or "\n" in value or "\r" in value:
+            msg = "El archivo de secreto Redis debe contener una sola línea no vacía"
+            raise ValueError(msg)
+        return value
+
+
+class SecurityConfig(BaseModel):
+    """Presupuestos de CPU y memoria para autenticación."""
+
+    hash_workers: int = Field(default=2, ge=1, le=16)
+    hash_max_pending: int = Field(default=4, ge=0, le=128)
+    auth_timeout_seconds: float = Field(default=30.0, gt=0, allow_inf_nan=False)
+    auth_window_seconds: float = Field(default=60.0, gt=0, allow_inf_nan=False)
+    auth_attempts_per_connection: int = Field(default=6, ge=1)
+    auth_attempts_per_ip: int = Field(default=30, ge=1)
+    auth_attempts_per_account: int = Field(default=8, ge=1)
+    auth_max_keys: int = Field(default=10000, ge=2)
+    session_lease_seconds: int = Field(default=90, ge=3, le=3600)
 
 
 class GameConfig(BaseSettings):
@@ -214,6 +289,23 @@ class GameConfig(BaseSettings):
     game: GameConfigSection = Field(default_factory=GameConfigSection)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
+    security: SecurityConfig = Field(default_factory=SecurityConfig)
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],  # noqa: ARG003 - firma requerida por Pydantic
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """Prioriza el entorno sobre el TOML representado por init_settings.
+
+        Returns:
+            Fuentes en orden de precedencia; el CLI se aplica en ArgentumServer.
+        """
+        return env_settings, dotenv_settings, init_settings, file_secret_settings
 
     @classmethod
     def from_toml(cls, toml_path: Path | str) -> GameConfig:
@@ -256,6 +348,8 @@ class GameConfig(BaseSettings):
                 "respawn_check_interval": game_data.get("respawn_check_interval", 5.0),
                 "npc_respawn_base_time": game_data.get("npc_respawn_base_time", 30.0),
                 "npc_respawn_random_variance": game_data.get("npc_respawn_random_variance", 15.0),
+                "spells": game_data.get("spells", {}),
+                "cadence": game_data.get("cadence", {}),
                 "combat": game_data.get("combat", {}),
                 "work": game_data.get("work", {}),
                 "stamina": game_data.get("stamina", {}),
@@ -274,13 +368,11 @@ class GameConfig(BaseSettings):
         if "redis" in data:
             config_dict["redis"] = data["redis"]
 
+        if "security" in data:
+            config_dict["security"] = data["security"]
+
         try:
-            # Crear instancia desde TOML
-            # Nota: Cuando se carga desde TOML, los valores del TOML tienen prioridad
-            # sobre las variables de entorno (comportamiento estándar de Pydantic Settings).
-            #
-            # Para que las variables de entorno tengan prioridad, usa GameConfig() directamente
-            # sin from_toml, o establece las variables de entorno ANTES de llamar from_toml.
+            # El entorno y .env prevalecen sobre los valores del archivo.
             return cls(**config_dict)
         except Exception as e:
             msg = f"Error validando configuración: {e}"
@@ -362,7 +454,7 @@ class GameConfig(BaseSettings):
             toml_path: Ruta al archivo TOML. Si es None, usa el path por defecto.
         """
         if toml_path is None:
-            toml_path = Path(__file__).parent.parent.parent / "config" / "server.toml"
+            toml_path = default_config_file()
 
         new_config = self.from_toml(toml_path)
         # Actualizar valores
@@ -370,6 +462,7 @@ class GameConfig(BaseSettings):
         self.game = new_config.game
         self.logging = new_config.logging
         self.redis = new_config.redis
+        self.security = new_config.security
 
         logger.info("Configuración recargada desde %s", toml_path)
 
@@ -392,16 +485,13 @@ class _ConfigSingleton:
         """
         if cls._instance is None:
             if toml_path is None:
-                toml_path = Path(__file__).parent.parent.parent / "config" / "server.toml"
+                toml_path = default_config_file()
 
             try:
                 cls._instance = GameConfig.from_toml(toml_path)
                 logger.info("Configuración cargada desde %s", toml_path)
             except FileNotFoundError:
                 logger.info("Archivo de configuración no encontrado, usando defaults")
-                cls._instance = GameConfig()
-            except Exception:
-                logger.exception("Error cargando configuración, usando defaults")
                 cls._instance = GameConfig()
 
         return cls._instance

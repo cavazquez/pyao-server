@@ -5,6 +5,9 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.request_skills_command import RequestSkillsCommand
+from src.network.capabilities import Capability
+from src.network.msg_skills import build_skill_catalog_response
+from src.services.skill_allocation import send_allocation_state
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -49,6 +52,9 @@ class RequestSkillsCommandHandler(CommandHandler):
         )
 
         try:
+            if self.message_sender.connection.capabilities.enabled & Capability.SKILL_ALLOCATION:
+                await send_allocation_state(self.message_sender, self.player_repo, user_id)
+                return CommandResult.ok(data={"user_id": user_id})
             # Obtener habilidades del jugador
             skills = await self.player_repo.get_skills(user_id)
             if not skills:
@@ -65,6 +71,16 @@ class RequestSkillsCommandHandler(CommandHandler):
                     "carpinteria": 0,
                     "supervivencia": 0,
                 }
+
+            # El formato extendido sólo se envía a quien lo solicitó y negoció.
+            if self.message_sender.connection.capabilities.enabled & Capability.SKILLS_CATALOG:
+                progress = await self.player_repo.get_skill_progress(user_id)
+                await self.message_sender.connection.send(
+                    build_skill_catalog_response(
+                        progress, await self.player_repo.get_skill_points(user_id)
+                    )
+                )
+                return CommandResult.ok(data={"user_id": user_id, "skills": skills})
 
             # Enviar habilidades al cliente
             await self.message_sender.send_update_skills(

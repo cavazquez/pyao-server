@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING
 
 from src.commands.login_command import LoginCommand
 from src.network.packet_reader import PacketReader
-from src.network.packet_validator import PacketValidator
+from src.network.validators.auth import LoginPacketValidator
+from src.network.validators.base import ValidationContext
 from src.tasks.task import Task
 
 if TYPE_CHECKING:
@@ -38,34 +39,21 @@ class TaskLogin(Task):
         """
         super().__init__(data, message_sender)
         self.login_handler = login_handler
-        self.session_data = session_data or {}
+        self.session_data = {} if session_data is None else session_data
 
     def _parse_packet(self) -> tuple[str, str] | None:
-        """Parsea el paquete de login.
-
-        El formato esperado es:
-        - Byte 0: PacketID (LOGIN)
-        - Bytes 1-2: Longitud del username (int16, little-endian)
-        - Bytes siguientes: Username (UTF-8)
-        - Bytes siguientes (2): Longitud del password (int16, little-endian)
-        - Bytes siguientes: Password (UTF-8)
+        """Lee las credenciales Latin-1 con los mismos límites del alta.
 
         Returns:
-            Tupla (username, password) o None si hay error.
+            Usuario y contraseña literales o None si están fuera del contrato.
         """
-        # Usar PacketValidator para leer username y password
-        # NOTA: task_login usa UTF-8, igual que task_account
-        reader = PacketReader(self.data)
-        validator = PacketValidator(reader)
-
-        username = validator.read_string(min_length=1, max_length=20, encoding="utf-8")
-        password = validator.read_string(min_length=1, max_length=32, encoding="utf-8")
-
-        if validator.has_errors() or username is None or password is None:
-            logger.warning("Error validando login: %s", validator.get_error_message())
+        result = LoginPacketValidator().validate(
+            ValidationContext(reader=PacketReader(self.data), errors=[])
+        )
+        if not result.success or result.data is None:
+            logger.warning("Formato de login inválido")
             return None
-
-        return (username, password)
+        return (result.data["username"], result.data["password"])
 
     async def execute(self) -> None:
         """Ejecuta el login del usuario (solo parsing y delegación).

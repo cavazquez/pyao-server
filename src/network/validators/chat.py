@@ -19,7 +19,7 @@ class TalkPacketValidator:
             ValidationResult con mensaje o error.
         """
         message = ValidationHelpers.read_string(
-            context, min_length=1, max_length=255, encoding="utf-8"
+            context, min_length=1, max_length=255, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -39,7 +39,7 @@ class YellPacketValidator:
             ValidationResult con mensaje o error.
         """
         message = ValidationHelpers.read_string(
-            context, min_length=1, max_length=255, encoding="utf-8"
+            context, min_length=1, max_length=255, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -59,7 +59,7 @@ class WhisperPacketValidator:
             ValidationResult con receiver y message o error.
         """
         receiver = ValidationHelpers.read_string(
-            context, min_length=1, max_length=20, encoding="utf-8"
+            context, min_length=1, max_length=20, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -67,7 +67,7 @@ class WhisperPacketValidator:
             )
 
         message = ValidationHelpers.read_string(
-            context, min_length=1, max_length=255, encoding="utf-8"
+            context, min_length=1, max_length=255, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(

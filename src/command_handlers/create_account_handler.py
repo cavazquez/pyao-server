@@ -14,7 +14,9 @@ from src.command_handlers.create_account_validation_handler import (
 )
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.create_account_command import CreateAccountCommand
+from src.security.password_executor import PasswordQueueFullError, get_password_executor
 from src.services.game.balance_service import get_balance_service
+from src.services.starter_spellbook import initialize_starter_spellbook
 from src.utils.password_utils import hash_password
 
 if TYPE_CHECKING:
@@ -64,7 +66,7 @@ class CreateAccountCommandHandler(CommandHandler):
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.message_sender = message_sender
-        self.session_data = session_data or {}
+        self.session_data = {} if session_data is None else session_data
 
         # Inicializar handlers especializados
         self.validation_handler = CreateAccountValidationHandler(
@@ -131,8 +133,14 @@ class CreateAccountCommandHandler(CommandHandler):
         if not await self.validation_handler.validate_account_fields(username, password, email):
             return CommandResult.error("Campos de cuenta inválidos")
 
+        if not self.message_sender.connection.allow_authentication(username):
+            return CommandResult.error("No se pudo completar la autenticación")
+
         # Hash de la contraseña
-        password_hash = hash_password(password)
+        try:
+            password_hash = await get_password_executor().run(hash_password, password)
+        except PasswordQueueFullError:
+            return CommandResult.error("Servicio de autenticación ocupado; reintentá más tarde")
 
         # Obtener atributos de dados de la sesión
         stats_data = self.character_handler.get_dice_attributes_from_session(self.session_data)
@@ -167,6 +175,7 @@ class CreateAccountCommandHandler(CommandHandler):
             )
 
             await self.character_handler.create_initial_inventory(user_id)
+            await self._initialize_starter_book(user_id, class_id)
 
             self.finalization_handler.log_character_summary(
                 user_id,
@@ -198,3 +207,9 @@ class CreateAccountCommandHandler(CommandHandler):
         except Exception:
             logger.exception("Error inesperado creando cuenta para %s", username)
             return CommandResult.error("Error interno del servidor")
+
+    async def _initialize_starter_book(self, user_id: int, class_id: int) -> None:
+        repo = self.finalization_handler.spellbook_repo
+        catalog = self.finalization_handler.spell_catalog
+        if repo is not None and catalog is not None:
+            await initialize_starter_spellbook(repo, user_id, class_id, catalog)

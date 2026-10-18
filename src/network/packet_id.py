@@ -48,7 +48,7 @@ class ClientPacketID(IntEnum):
     SPELL_INFO = 35
     EQUIP_ITEM = 36  # Equipar/desequipar item
     CHANGE_HEADING = 37  # Cambiar dirección sin moverse
-    # MODIFY_SKILLS = 38
+    MODIFY_SKILLS = 38  # Sólo deltas versionados con capacidad 4
     # TRAIN = 39
     COMMERCE_BUY = 40  # Comprar item del mercader
     BANK_EXTRACT_ITEM = 41  # Extraer item del banco
@@ -117,7 +117,7 @@ class ClientPacketID(IntEnum):
     # CHANGE_DESCRIPTION = 104
     # GUILD_VOTE = 105
     # PUNISHMENTS = 106
-    # CHANGE_PASSWORD = 107
+    CHANGE_PASSWORD = 107  # Cambio/query versionado con capacidad 8
     # GAMBLE = 108
     # INQUIRY_VOTE = 109
     # LEAVE_FACTION = 110
@@ -140,6 +140,9 @@ class ClientPacketID(IntEnum):
     # STOP_SHARING_NPC = 127
     # CONSULTATION = 128
     MOVE_ITEM = 129  # Reordenar slots del inventario
+    CAST_TARGET = 253  # ID distinto, versión y coordenadas; capacidad 2
+    TRADE_ACTION = 252  # Acción con sesión y revisión explícitas
+    CAPABILITIES = 250  # Negociación optativa después del login
 
 
 class ServerPacketID(IntEnum):
@@ -252,3 +255,8 @@ class ServerPacketID(IntEnum):
     MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
     STOP_WORKING = 105
     CANCEL_OFFER_ITEM = 106
+    TRADE_STATE = 252  # Snapshot optativo de ambas ofertas
+    CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
+    PASSWORD_CHANGE_RESULT = 253  # Resultado optativo sin secretos
+    SKILL_ALLOCATION_STATE = 254  # Resultado y snapshot optativos
+    SKILL_CATALOG = 251  # Catálogo v1 negociado con 22 habilidades

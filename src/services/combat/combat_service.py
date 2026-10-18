@@ -14,7 +14,10 @@ from src.combat.combat_damage_calculator import DamageCalculator
 from src.combat.combat_reward_calculator import RewardCalculator
 from src.combat.combat_validator import CombatValidator
 from src.config.config_manager import ConfigManager
+from src.models.mana import calculate_mana
 from src.services.combat.combat_weapon_service import WeaponService
+from src.services.player.lifecycle import apply_player_damage
+from src.utils.gold_atomic import operation_id
 from src.utils.level_calculator import (
     calculate_level_from_experience,
     calculate_remaining_elu,
@@ -283,12 +286,14 @@ class CombatService:
 
             # Calcular nuevos máximos basados en atributos y nivel
             hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
-            mana_per_int = config_manager.as_int("game.character.mana_per_int", 10)
+            mana_per_int = config_manager.as_int(
+                config_manager.get("game.character.mana_per_int", 10)
+            )
 
             # HP = constitution * hp_per_con * nivel (con mínimo)
             new_max_hp = max(constitution * hp_per_con * new_level, 100)
             # Mana = intelligence * mana_per_int * nivel (con mínimo)
-            new_max_mana = max(intelligence * mana_per_int * new_level, 100)
+            new_max_mana = max(calculate_mana(intelligence, mana_per_int, new_level), 100)
             # Stamina aumenta con nivel (base 100 + 10 por nivel)
             new_max_sta = 100 + (new_level * 10)
 
@@ -312,6 +317,7 @@ class CombatService:
 
             # Actualizar stats
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=new_max_hp,
                 min_hp=new_min_hp,
@@ -341,6 +347,7 @@ class CombatService:
         else:
             # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=stats.max_hp,
                 min_hp=stats.min_hp,
@@ -420,14 +427,11 @@ class CombatService:
             armor_reduction=armor_reduction,
         )
 
-        # Aplicar daño al jugador
         current_hp = await self.player_repo.get_current_hp(target_user_id)
-        new_hp = max(0, current_hp - damage)
-
-        await self.player_repo.update_hp(target_user_id, new_hp)
-
-        # Verificar si el jugador murió
-        player_died = new_hp <= 0
+        result = await apply_player_damage(
+            self.player_repo.redis.redis, target_user_id, damage, operation_id()
+        )
+        new_hp, player_died = int(result["new_hp"]), bool(result["player_died"])
 
         logger.info(
             "NPC %s (nivel %d) atacó a jugador %d por %d de daño (HP: %d -> %d)",
@@ -443,4 +447,5 @@ class CombatService:
             "damage": damage,
             "player_died": player_died,
             "new_hp": new_hp,
+            "life_id": result["life_id"],
         }

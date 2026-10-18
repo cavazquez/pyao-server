@@ -204,8 +204,8 @@ class TestTaskPartyJoin:
             data={"target_username": "Player2", "message": "Player2 invitado a tu party"}
         )
 
-        # Mock packet data with username (Godot put_string format: int32 length + UTF-8)
-        data = build_godot_put_string_packet(0x5D, "Player2")
+        # Nickname según contrato u16 + Latin-1 compartido con Godot
+        data = build_ascii_string_packet(0x5D, "Player2")
 
         task = TaskPartyJoin(
             data=data,

@@ -23,7 +23,7 @@ class GMCommandsPacketValidator:
         """
         try:
             subcommand = context.reader.read_byte()
-            username = context.reader.read_string()
+            username = context.reader.read_ascii_string()
             map_id = context.reader.read_int16()
             x = context.reader.read_byte()
             y = context.reader.read_byte()

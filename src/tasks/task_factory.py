@@ -17,7 +17,10 @@ from typing import TYPE_CHECKING, Any
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
+from src.network.session_manager import SessionManager
+from src.services.chat_budget import ChatBudget
 from src.tasks.handler_registry import HandlerRegistry
+from src.tasks.task_chat_limited import TaskChatLimited
 from src.tasks.task_null import TaskNull
 from src.tasks.task_tls_handshake import TaskTLSHandshake
 
@@ -101,6 +104,13 @@ class TaskFactory:
                     return TaskNull(data, message_sender)
                 # Si validación fue exitosa, extraer datos parseados
                 parsed_data = validation_result.data or {}
+
+        user_id = SessionManager.get_user_id(session_data)
+        budget = getattr(self.deps, "chat_budget", None)
+        if user_id and isinstance(budget, ChatBudget):
+            verdict = budget.gate(user_id, data)
+            if verdict is not None and not verdict[0]:
+                return TaskChatLimited(data, message_sender, notify=verdict[1])
 
         # Crear la task con las dependencias apropiadas
         return self._create_task_with_deps(

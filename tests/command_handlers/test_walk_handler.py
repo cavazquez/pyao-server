@@ -1,5 +1,6 @@
 """Tests para WalkCommandHandler."""
 
+import asyncio
 import time
 from unittest.mock import AsyncMock, MagicMock
 
@@ -9,6 +10,7 @@ from src.command_handlers.walk_handler import WalkCommandHandler
 from src.commands.use_item_command import UseItemCommand
 from src.commands.walk_command import WalkCommand
 from src.models.item_constants import BOAT_ITEM_ID
+from src.services.action_cadence import ActionCadence
 
 
 @pytest.fixture
@@ -539,3 +541,20 @@ async def test_handle_blocked_movement_reason(
     assert result.success is True
     assert result.data is not None
     assert result.data.get("blocked") is True
+
+
+@pytest.mark.asyncio
+async def test_walk_burst_has_one_position_change_and_one_stamina_charge(
+    walk_handler, mock_player_repo, mock_stamina_service
+):
+    """Una ráfaga concurrente no llega a validar/cobrar los pasos rechazados."""
+    now = [100.0]
+    walk_handler.action_cadence = ActionCadence(clock=lambda: now[0])
+    results = await asyncio.gather(*(walk_handler.handle(WalkCommand(1, 2)) for _ in range(20)))
+    assert sum(result.success for result in results) == 1
+    assert mock_player_repo.set_position.await_count == 1
+    assert mock_stamina_service.consume_stamina.await_count == 1
+    now[0] += 0.2
+    assert (await walk_handler.handle(WalkCommand(1, 2))).success
+    assert mock_player_repo.set_position.await_count == 2
+    assert mock_stamina_service.consume_stamina.await_count == 2

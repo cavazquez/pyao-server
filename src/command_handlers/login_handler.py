@@ -120,6 +120,10 @@ class LoginCommandHandler(CommandHandler):
         if not self.auth_handler.validate_repositories():
             return CommandResult.error("Repositorios no disponibles")
 
+        if not self.message_sender.connection.allow_authentication(username):
+            await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
+            return CommandResult.error("Autenticación fallida")
+
         # Autenticar usuario
         auth_result = await self.auth_handler.authenticate_user(username, password)
         if auth_result is None:
@@ -133,6 +137,21 @@ class LoginCommandHandler(CommandHandler):
             await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
             return CommandResult.error("Usuario ya conectado")
 
+        if not await self.message_sender.connection.reserve_session(user_id):
+            await self.message_sender.send_error_msg("Ya estás conectado desde otra sesión.")
+            return CommandResult.error("Usuario ya conectado")
+        try:
+            return await self._complete_login(user_id, user_class, username)
+        except BaseException:
+            self.message_sender.connection.close()
+            raise
+
+    async def _complete_login(self, user_id: int, user_class: int, username: str) -> CommandResult:
+        """Publica y completa el login únicamente después de obtener la reserva.
+
+        Returns:
+            Estado confirmado del jugador inicializado.
+        """
         logger.info("✅ Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
 
         # Configurar sesión
@@ -173,6 +192,7 @@ class LoginCommandHandler(CommandHandler):
         # Enviar inventario y MOTD
         await self.finalization_handler.finalize_login(user_id)
 
+        self.message_sender.connection.mark_authenticated()
         return CommandResult.ok(
             data={
                 "user_id": user_id,

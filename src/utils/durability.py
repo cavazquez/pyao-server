@@ -1,0 +1,27 @@
+"""Barrera de AOF sobre una conexión dedicada antes de anunciar commits críticos."""
+
+from typing import TYPE_CHECKING
+from uuid import uuid4
+
+if TYPE_CHECKING:
+    from redis.asyncio import Redis
+
+AOF_TIMEOUT_MS = 5000
+BARRIER_TTL_SECONDS = 60
+
+
+async def require_durable(redis: Redis) -> None:
+    """Exige fsync local de todos los writes anteriores en el orden de Redis.
+
+    La conexión exclusiva escribe una barrera después de EXEC y ejecuta WAITAOF
+    sobre esa misma conexión. No depende de qué conexión devolvió el pool tras EXEC.
+
+    Raises:
+        RuntimeError: Si Redis no confirma la persistencia local dentro del plazo.
+    """
+    async with redis.client() as connection:
+        await connection.set(f"durability:barrier:{uuid4().hex}", "1", ex=BARRIER_TTL_SECONDS)
+        response = await connection.execute_command("WAITAOF", 1, 0, AOF_TIMEOUT_MS)  # type: ignore[no-untyped-call]
+        if not response or response[0] != 1:
+            msg = "Commit registrado pero persistencia AOF todavía no confirmada"
+            raise RuntimeError(msg)

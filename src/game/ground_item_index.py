@@ -4,10 +4,21 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
+from src.models.items_catalog import ITEMS_CATALOG
+from src.utils.gold_atomic import RECEIPT_TTL_SECONDS
+from src.utils.gold_atomic import operation_id as new_operation_id
+from src.utils.ground_state import GroundItem, GroundState, stack_identity
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
+    from redis.asyncio import Redis
+
     from src.repositories.ground_items_repository import GroundItemsRepository
+    from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +37,8 @@ class GroundItemIndex:
             max_items_per_tile: Límite de items por tile.
             ground_items_repo: Repo opcional para persistencia en Redis.
         """
+        self._published: dict[str, float] = {}
+        self._locks: dict[int, asyncio.Lock] = {}
         self.max_items_per_tile = max_items_per_tile
         self.ground_items_repo = ground_items_repo
         self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
@@ -39,6 +52,7 @@ class GroundItemIndex:
         self, map_id: int, x: int, y: int, item: dict[str, int | str | None]
     ) -> None:
         """Agrega un item al suelo en una posición específica."""
+        self._require_memory_mode()
         key = (map_id, x, y)
         if key not in self._ground_items:
             self._ground_items[key] = []
@@ -63,10 +77,6 @@ class GroundItemIndex:
             item.get("quantity"),
         )
 
-        if self.ground_items_repo:
-            task = asyncio.create_task(self.persist_ground_items(map_id))
-            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
-
     def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
         """Obtiene todos los items en un tile específico.
 
@@ -83,6 +93,7 @@ class GroundItemIndex:
         Returns:
             dict[str, int | str | None] | None: Item removido o None si no existe.
         """
+        self._require_memory_mode()
         key = (map_id, x, y)
         if key not in self._ground_items:
             return None
@@ -110,10 +121,6 @@ class GroundItemIndex:
             item.get("item_id"),
         )
 
-        if self.ground_items_repo:
-            task = asyncio.create_task(self.persist_ground_items(map_id))
-            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
-
         return item
 
     def clear_ground_items(self, map_id: int) -> int:
@@ -122,6 +129,7 @@ class GroundItemIndex:
         Returns:
             int: Cantidad de items removidos.
         """
+        self._require_memory_mode()
         keys_to_remove = [key for key in self._ground_items if key[0] == map_id]
         total_items = sum(len(self._ground_items[key]) for key in keys_to_remove)
 
@@ -141,27 +149,109 @@ class GroundItemIndex:
         """
         return sum(len(items) for key, items in self._ground_items.items() if key[0] == map_id)
 
-    async def persist_ground_items(self, map_id: int) -> None:
-        """Persiste los ground items de un mapa en Redis."""
-        if not self.ground_items_repo:
-            return
+    def _require_memory_mode(self) -> None:
+        """Impide reintroducir snapshots ciegos desde la API síncrona de tests.
 
-        map_items: dict[tuple[int, int], list[dict[str, int | str | None]]] = {}
-        for (item_map_id, x, y), items in self._ground_items.items():
-            if item_map_id == map_id:
-                map_items[x, y] = items
+        Raises:
+            RuntimeError: Si se intenta mutar suelo persistido sin esperar el commit.
+        """
+        if self.ground_items_repo is not None:
+            msg = "El suelo persistido requiere la API de commit esperable"
+            raise RuntimeError(msg)
 
-        await self.ground_items_repo.save_ground_items(map_id, map_items)
+    async def persist_ground_items(self, _map_id: int) -> None:
+        """La API antigua sólo se admite en el modo puramente en memoria."""
+        self._require_memory_mode()
+
+    def _replace_map(self, map_id: int, positions: dict[tuple[int, int], list[GroundItem]]) -> None:
+        for key in [key for key in self._ground_items if key[0] == map_id]:
+            del self._ground_items[key]
+        for (x, y), values in positions.items():
+            self._ground_items[map_id, x, y] = [item.copy() for item in values]
 
     async def load_ground_items(self, map_id: int) -> None:
-        """Carga los ground items de un mapa desde Redis."""
-        if not self.ground_items_repo:
+        """Carga el mapa en la misma exclusión que sus commits y notificaciones."""
+        if self.ground_items_repo is None:
             return
+        async with self._locks.setdefault(map_id, asyncio.Lock()):
+            self._replace_map(map_id, await self.ground_items_repo.load_ground_items(map_id))
 
-        map_items = await self.ground_items_repo.load_ground_items(map_id)
-        for (x, y), items in map_items.items():
-            self._ground_items[map_id, x, y] = items
+    async def _publish(
+        self, map_id: int, x: int, y: int, broadcast: MultiplayerBroadcastService | None
+    ) -> None:
+        if broadcast is None:
+            return
+        await broadcast.broadcast_object_delete(map_id, x, y)
+        tile = self.get_ground_items(map_id, x, y)
+        if not tile:
+            return
+        item = tile[0]
+        graphic = item.get("grh_index")
+        if not isinstance(graphic, int):
+            definition = ITEMS_CATALOG.get(int(item.get("item_id") or 0))
+            graphic = definition.graphic_id if definition else 0
+        if graphic > 0:
+            await broadcast.broadcast_object_create(map_id=map_id, x=x, y=y, grh_index=graphic)
 
-        if map_items:
-            total_items = sum(len(items) for items in map_items.values())
-            logger.info("Cargados %d items del mapa %d desde Redis", total_items, map_id)
+    async def run_committed(
+        self,
+        map_id: int,
+        x: int,
+        y: int,
+        redis: Redis,
+        operation: Callable[[], Awaitable[dict[str, Any]]],
+        broadcast: MultiplayerBroadcastService | None,
+        identity: str | None = None,
+    ) -> dict[str, Any]:
+        """Ordena commit, caché y notificación; un replay nunca repone una caché vieja.
+
+        Returns:
+            Resultado confirmado de la operación solicitada.
+        """
+        async with self._locks.setdefault(map_id, asyncio.Lock()):
+            result = await operation()
+            raw = await redis.get(RedisKeys.ground_items(map_id))
+            self._replace_map(map_id, GroundState(map_id, raw).positions())
+            now = asyncio.get_running_loop().time()
+            self._published = {
+                key: expiry for key, expiry in self._published.items() if expiry > now
+            }
+            if identity is None or identity not in self._published:
+                await self._publish(map_id, x, y, broadcast)
+                if identity is not None:
+                    self._published[identity] = now + RECEIPT_TTL_SECONDS
+            return result
+
+    async def add_committed(
+        self,
+        map_id: int,
+        x: int,
+        y: int,
+        item: GroundItem,
+        broadcast: MultiplayerBroadcastService | None,
+        identity: str | None = None,
+    ) -> bool:
+        """Agrega y publica sólo después del commit, respetando capacidad e identidad.
+
+        Returns:
+            Si el stack fue persistido; el modo sin repositorio es sólo de test en memoria.
+        """
+        identity = identity or new_operation_id()
+        if self.ground_items_repo is None:
+            async with self._locks.setdefault(map_id, asyncio.Lock()):
+                if len(self.get_ground_items(map_id, x, y)) >= self.max_items_per_tile:
+                    return False
+                self.add_ground_item(map_id, x, y, {**item, "stack_id": stack_identity(identity)})
+                await self._publish(map_id, x, y, broadcast)
+                return True
+        repository = self.ground_items_repo
+        result = await self.run_committed(
+            map_id,
+            x,
+            y,
+            repository.redis_client.redis,
+            lambda: repository.add_ground_item(map_id, x, y, item, operation_id=identity),
+            broadcast,
+            identity,
+        )
+        return bool(result["applied"])

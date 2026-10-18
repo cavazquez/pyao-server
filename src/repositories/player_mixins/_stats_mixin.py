@@ -3,7 +3,10 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.models.item_constants import MAX_PLAYER_GOLD
+from src.models.mana import validate_mana
 from src.models.player_stats import PlayerStats
+from src.utils.gold_atomic import change_gold
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -151,6 +154,8 @@ class PlayerStatsMixin:
         level: int,
         elu: int,
         experience: int,
+        *,
+        preserve_gold: bool = False,
     ) -> None:
         """Guarda las estadísticas del jugador.
 
@@ -166,7 +171,15 @@ class PlayerStatsMixin:
             level: Nivel del jugador.
             elu: Experiencia para subir de nivel.
             experience: Experiencia total.
+            preserve_gold: Conserva el saldo confirmado durante cambios de nivel.
+
+        Raises:
+            ValueError: Si el oro o mana están fuera del rango persistible.
         """
+        if not preserve_gold and (type(gold) is not int or not 0 <= gold <= MAX_PLAYER_GOLD):
+            msg = "Saldo de oro fuera de rango"
+            raise ValueError(msg)
+        validate_mana(min_mana, max_mana)
         key = RedisKeys.player_user_stats(user_id)
         stats_data = {
             "max_hp": str(max_hp),
@@ -180,6 +193,8 @@ class PlayerStatsMixin:
             "elu": str(elu),
             "experience": str(experience),
         }
+        if preserve_gold:
+            del stats_data["gold"]
         await self.redis.hset(key, mapping=stats_data)
         logger.debug("Estadísticas guardadas para user_id %d", user_id)
 
@@ -301,50 +316,57 @@ class PlayerStatsMixin:
         )
 
     async def update_gold(self, user_id: int, gold: int) -> None:
-        """Actualiza el oro del jugador."""
-        await self._hset_field(RedisKeys.player_user_stats(user_id), "gold", gold)
-        logger.debug("Oro actualizado para user_id %d: %d", user_id, gold)
+        """Asigna un saldo absoluto validado; los cambios relativos usan add/remove."""
+        await change_gold(self.redis.redis, RedisKeys.player_user_stats(user_id), gold, "set")
 
-    async def add_gold(self, user_id: int, amount: int) -> int:
-        """Agrega oro al jugador.
-
-        Args:
-            user_id: ID del usuario.
-            amount: Cantidad de oro a agregar.
+    async def add_gold(self, user_id: int, amount: int, *, operation_id: str | None = None) -> int:
+        """Acredita sin perder actualizaciones y rechaza overflow sin tocar el saldo.
 
         Returns:
-            Nueva cantidad total de oro.
+            Saldo confirmado de la operación.
+
+        Raises:
+            ValueError: Si el crédito superaría el máximo permitido.
         """
-        current_gold = await self.get_gold(user_id)
-        new_gold = current_gold + amount
-        await self.update_gold(user_id, new_gold)
-        logger.info("user_id %d recibió %d oro. Total: %d", user_id, amount, new_gold)
-        return new_gold
+        result = await change_gold(
+            self.redis.redis,
+            RedisKeys.player_user_stats(user_id),
+            amount,
+            "credit",
+            identity=operation_id,
+        )
+        if not result.applied:
+            msg = "El crédito de oro supera el límite de saldo"
+            raise ValueError(msg)
+        return result.balance
 
-    async def remove_gold(self, user_id: int, amount: int) -> bool:
-        """Remueve oro del jugador.
-
-        Args:
-            user_id: ID del usuario.
-            amount: Cantidad de oro a remover.
+    async def add_gold_capped(self, user_id: int, amount: int) -> tuple[int, int]:
+        """Acredita sólo la capacidad disponible para que pickup conserve el remanente.
 
         Returns:
-            True si se pudo remover, False si no tiene suficiente oro.
+            Cantidad aceptada y saldo confirmado, calculados en la misma transacción.
         """
-        current_gold = await self.get_gold(user_id)
-        if current_gold < amount:
-            logger.debug(
-                "user_id %d no tiene suficiente oro: tiene %d, intenta usar %d",
-                user_id,
-                current_gold,
-                amount,
-            )
-            return False
+        result = await change_gold(
+            self.redis.redis, RedisKeys.player_user_stats(user_id), amount, "capped_credit"
+        )
+        return result.amount, result.balance
 
-        new_gold = current_gold - amount
-        await self.update_gold(user_id, new_gold)
-        logger.info("user_id %d gastó %d oro. Restante: %d", user_id, amount, new_gold)
-        return True
+    async def remove_gold(
+        self, user_id: int, amount: int, *, operation_id: str | None = None
+    ) -> bool:
+        """Debita condicionalmente sin permitir saldo negativo.
+
+        Returns:
+            True sólo si se confirmó el débito, incluido un reintento del mismo ID.
+        """
+        result = await change_gold(
+            self.redis.redis,
+            RedisKeys.player_user_stats(user_id),
+            amount,
+            "debit",
+            identity=operation_id,
+        )
+        return result.applied
 
     async def get_stamina(self, user_id: int) -> tuple[int, int]:
         """Obtiene la stamina actual y máxima del jugador.
@@ -361,7 +383,10 @@ class PlayerStatsMixin:
         return (stats.min_sta, stats.max_sta)
 
     async def update_mana(self, user_id: int, mana: int) -> None:
-        """Actualiza el mana actual del jugador."""
+        """Actualiza el maná validado contra el máximo persistido."""
+        validate_mana(mana)
+        _, maximum = await self.get_mana(user_id)
+        validate_mana(mana, maximum)
         await self._hset_field(RedisKeys.player_user_stats(user_id), "min_mana", mana)
         logger.debug("Mana actualizado para user_id %d: %d", user_id, mana)
 

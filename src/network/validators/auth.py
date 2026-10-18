@@ -20,7 +20,7 @@ class LoginPacketValidator:
             ValidationResult con credenciales o error.
         """
         username = ValidationHelpers.read_string(
-            context, min_length=3, max_length=20, encoding="utf-8"
+            context, min_length=3, max_length=20, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -28,7 +28,7 @@ class LoginPacketValidator:
             )
 
         password = ValidationHelpers.read_string(
-            context, min_length=6, max_length=32, encoding="utf-8"
+            context, min_length=6, max_length=32, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -52,7 +52,7 @@ class CreateAccountPacketValidator:
             ValidationResult con datos de creación o error.
         """
         username = ValidationHelpers.read_string(
-            context, min_length=3, max_length=20, encoding="utf-8"
+            context, min_length=3, max_length=20, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -60,7 +60,7 @@ class CreateAccountPacketValidator:
             )
 
         password = ValidationHelpers.read_string(
-            context, min_length=6, max_length=32, encoding="utf-8"
+            context, min_length=6, max_length=32, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(
@@ -69,11 +69,12 @@ class CreateAccountPacketValidator:
 
         # Datos del personaje
         try:
+            # Versión legacy [major, minor, patch], seguida de selección.
+            for _ in range(3):
+                context.reader.read_byte()
             race = context.reader.read_byte()
-            _ = context.reader.read_int16()  # Unknown
             gender = context.reader.read_byte()
             job = context.reader.read_byte()
-            _ = context.reader.read_byte()  # Unknown
             head = context.reader.read_int16()
         except (ValueError, IndexError, struct.error) as e:
             context.add_error(f"Error leyendo datos del personaje: {e}")
@@ -82,7 +83,7 @@ class CreateAccountPacketValidator:
             )
 
         email = ValidationHelpers.read_string(
-            context, min_length=1, max_length=100, encoding="utf-8"
+            context, min_length=1, max_length=254, encoding="latin-1"
         )
         if context.has_errors():
             return ValidationResult(

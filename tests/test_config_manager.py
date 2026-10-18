@@ -1,10 +1,12 @@
 """Tests para el sistema de configuración centralizada."""
 
-import math
 import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
 
 from src.config.config_manager import ConfigManager
 
@@ -15,7 +17,18 @@ class TestConfigManager(unittest.TestCase):
     def setUp(self) -> None:
         """Configura entorno de prueba."""
         # Crear directorio temporal
-        self.temp_dir = Path(tempfile.mkdtemp())
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.temp_dir = Path(temporary.name)
+        self._config_class_state = {
+            name: ConfigManager.__dict__[name]
+            for name in ("_instance", "_config", "_initialized", "_config_dir", "_config_file")
+            if name in ConfigManager.__dict__
+        }
+        self.addCleanup(self._restore_configuration)
+        environment = patch.dict(os.environ)
+        environment.start()
+        self.addCleanup(environment.stop)
         self.config_file = self.temp_dir / "test_server.toml"
 
         # Configurar variables de entorno para pruebas (notación nueva con __)
@@ -27,6 +40,14 @@ class TestConfigManager(unittest.TestCase):
         ConfigManager._config = {}
         if hasattr(ConfigManager, "_initialized"):
             del ConfigManager._initialized
+
+    def _restore_configuration(self) -> None:
+        """Restaura rutas y singleton originales incluso tras validar un TOML inválido."""
+        for name in ("_instance", "_config", "_initialized", "_config_dir", "_config_file"):
+            if name in self._config_class_state:
+                setattr(ConfigManager, name, self._config_class_state[name])
+            elif name in ConfigManager.__dict__:
+                delattr(ConfigManager, name)
 
     def tearDown(self) -> None:
         """Limpia entorno de prueba."""
@@ -244,16 +265,10 @@ melee_range = -1  # Rango inválido (< 0)
             ConfigManager._initialized = False
             # No limpiar _config para que cargue el archivo inválido
 
-            # El ConfigManager debe manejar el error y usar defaults
-            # Verificamos que se creó correctamente (con defaults)
-            config = ConfigManager()
-
-            # Verificar que usa los valores por defecto, no los inválidos
-            assert config.get("server.port") == 7666  # Default, no 100
-            assert math.isclose(
-                config.get("game.combat.base_critical_chance"), 0.15
-            )  # Default, no 1.5
-            assert config.get("game.combat.melee_range") == 1  # Default, no -1
+            # La configuración inválida impide arrancar; nunca cambia de endpoint.
+            with pytest.raises(ValueError, match="Error validando configuración"):
+                ConfigManager()
+            assert not getattr(ConfigManager._instance, "_initialized", False)
 
         finally:
             # Restaurar variables de entorno

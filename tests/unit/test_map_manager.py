@@ -1,6 +1,5 @@
 """Tests para MapManager."""
 
-import asyncio
 import json
 import tempfile
 from pathlib import Path
@@ -652,23 +651,13 @@ def test_is_door_closed_nonexistent_map(map_manager: MapManager) -> None:
 # Tests para Persistencia
 @pytest.mark.asyncio
 async def test_persist_ground_items(map_manager: MapManager) -> None:
-    """Test _persist_ground_items persiste items en Redis."""
+    """El modo persistido rechaza guardar una copia de caché por fuera de un commit."""
     mock_repo = MagicMock()
     mock_repo.save_ground_items = AsyncMock()
     map_manager.ground_items_repo = mock_repo
-
-    item = {"item_id": 1, "quantity": 1, "grh_index": 100}
-    map_manager.add_ground_item(1, 10, 20, item)
-    map_manager.add_ground_item(1, 15, 25, item)
-
-    await map_manager._persist_ground_items(1)
-
-    mock_repo.save_ground_items.assert_called_once()
-    call_args = mock_repo.save_ground_items.call_args[0]
-    assert call_args[0] == 1  # map_id
-    map_items = call_args[1]
-    assert (10, 20) in map_items
-    assert (15, 25) in map_items
+    with pytest.raises(RuntimeError, match="commit"):
+        await map_manager._persist_ground_items(1)
+    mock_repo.save_ground_items.assert_not_awaited()
 
 
 @pytest.mark.asyncio
@@ -783,22 +772,13 @@ def test_remove_ground_item_clears_when_empty(map_manager: MapManager) -> None:
 
 @pytest.mark.asyncio
 async def test_remove_ground_item_persists_when_repo_exists(map_manager: MapManager) -> None:
-    """Test remove_ground_item persiste cuando hay repositorio."""
-    mock_repo = MagicMock()
-    mock_repo.save_ground_items = AsyncMock()
-    map_manager.ground_items_repo = mock_repo
-
+    """Un claim síncrono no retira nada antes de confirmar suelo e ingreso juntos."""
     item = {"item_id": 1, "quantity": 1, "grh_index": 100}
     map_manager.add_ground_item(1, 10, 20, item)
-
-    # Remover item (debe persistir)
-    removed = map_manager.remove_ground_item(1, 10, 20)
-
-    assert removed == item
-    # Dar tiempo para que la tarea asíncrona se ejecute
-    await asyncio.sleep(0.1)
-    # Verificar que se intentó persistir
-    assert mock_repo.save_ground_items.called
+    map_manager.ground_items_repo = MagicMock()
+    with pytest.raises(RuntimeError, match="commit"):
+        map_manager.remove_ground_item(1, 10, 20)
+    assert map_manager.get_ground_items(1, 10, 20) == [item]
 
 
 # Tests para carga de datos de mapas

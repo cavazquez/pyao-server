@@ -174,3 +174,11 @@ class ServerRepository:
             value: Valor a establecer.
         """
         await self.redis_client.set(key, value)
+
+    async def set_config_if_absent(self, key: str, value: str) -> bool:
+        """Inicializa una opción mediante SET NX, sin carrera entre lectura y escritura.
+
+        Returns:
+            Si este proceso creó la clave.
+        """
+        return bool(await self.redis_client.redis.set(key, value, nx=True))

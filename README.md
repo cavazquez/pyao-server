@@ -32,6 +32,8 @@ Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 - ![pytest](https://img.shields.io/badge/pytest-testing-0A9EDC?logo=pytest&logoColor=white) - Framework de testing
 - ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?logo=github-actions&logoColor=white) - Integración continua
 
+Los command handlers se crean por petición: cada instancia y sus subhandlers conservan el emisor y la sesión de esa conexión durante todos sus `await`. `HandlerRegistry` comparte servicios, pero no almacena handlers mutables entre jugadores.
+
 ## 🚀 Inicio Rápido
 
 ### Requisitos
@@ -56,19 +58,15 @@ uv sync --locked --dev
 
 ```bash
 # Opción 1: Docker Compose (recomendado)
-docker compose up -d              # Redis + persistencia
+# Generar sólo la primera vez; reutilizar el archivo existente en reinicios.
+uv run --locked python -m src.operations.redis_secret --output .local/redis-password
+export PYAO_REDIS_PASSWORD_FILE="$PWD/.local/redis-password"
+docker compose up -d --build redis  # Redis autenticado + persistencia
 docker compose --profile tools up -d  # + Redis Insight GUI (puerto 5540)
 
-# Opción 2: Usar el Dockerfile incluido
-docker build -t pyao-redis ./redis
-docker run -d --name pyao-redis -p 6379:6379 pyao-redis
-
-# Opción 3: Instalar localmente (Ubuntu/Debian)
-sudo apt-get install redis-server
-redis-server
 ```
 
-**Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar usando `redis://redis:6379` desde el contenedor.
+**Interfaz Gráfica:** Redis Insight está incluido en Docker Compose (activar con `--profile tools`). Conectar al host interno `redis`, puerto `6379`, usuario `default` y la credencial del archivo privado. Ambos puertos se publican sólo en loopback.
 
 Ver [docs/guides/REDIS.md](docs/guides/REDIS.md) para documentación completa de Redis.
 
@@ -166,12 +164,14 @@ Las versiones observadas y los bloqueos están en [ESTADO_ACTUAL.md](docs/develo
 ```text
 pyao-server/
 ├── src/
+│   ├── runtime_paths.py      # Recursos del wheel y estado editable independientes del cwd
 │   ├── core/                 # Inicialización y dependencias
 │   ├── network/              # Protocolo y conexiones
 │   ├── tasks/                # Parsing y despacho
 │   ├── command_handlers/     # Ejecución de comandos
-│   ├── services/             # Reglas de juego
+│   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
 │   ├── repositories/         # Persistencia
+│   ├── operations/           # Redis, smoke y distribution: validación y ensamblado de releases
 │   ├── models/               # Entidades y catálogos
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
@@ -498,7 +498,7 @@ El proyecto sigue estrictas reglas de calidad de código:
 # Setup inicial
 uv sync --locked --dev                # Instalar dependencias
 uv run pre-commit install    # Instalar hooks
-docker compose up -d         # Levantar Redis
+docker compose up -d         # Levantar Redis con el secreto preparado en Inicio Rápido
 
 # Flujo de desarrollo
 ./scripts/checks.sh               # Verificar todo antes de commit
@@ -509,3 +509,13 @@ Ver [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para guía completa y [docs/CLA
 ## 📄 Licencia
 
 Apache License 2.0 - ver [LICENSE](LICENSE) para más detalles.
+
+La release conserva los nombres originales del wheel y sdist. `uv run --group build python -m src.operations.distribution validate --platform ubuntu-24.04` instala el wheel sin dependencias en un entorno nuevo, después de instalar el runtime fijado por `uv.lock`; comprueba metadata, entry point y `--help` fuera del checkout. El ensamblador exige esos manifiestos y hashes y guarda los builds por OS en ZIP independientes.
+
+El wheel incluye el dataset TOML, configuración por defecto y archive de mapas bajo `src/runtime_data`. Los mapas se extraen en caché por SHA256 bajo el estado del operador; no se modifica el paquete. En Linux instalado el estado usa `$XDG_STATE_HOME/pyao-server` (por defecto `~/.local/state/pyao-server`); en Windows `%LOCALAPPDATA%/PyAO`; Snap conserva `$SNAP_USER_COMMON`. El checkout usa sus recursos versionados con rutas absolutas.
+
+`pyao-server --config-file /ruta/server.toml --state-dir /ruta/estado` elige archivos editables. `--data-dir` y `--maps-dir` seleccionan datasets externos; sus equivalentes son `PYAO_CONFIG_FILE`, `PYAO_STATE_DIR`, `PYAO_DATA_DIR` y `PYAO_MAPS_DIR`. `pyao-server --check-resources` valida el conjunto efectivo sin Redis; el arranque también rechaza referencias inválidas. La validación de distribución ejecuta esta comprobación desde el wheel instalado, en una carpeta temporal, en cada OS de la matriz de release.
+
+El cierre por SIGTERM/SIGINT deja de aceptar conexiones, despierta lectores ociosos y concede `server.shutdown_drain_seconds` a los handlers activos. Luego cancela los restantes, drena o descarta salida acotada, libera sesiones/mascotas y cierra trades y tareas de muerte antes de Redis. `server.shutdown_timeout_seconds` limita el cierre completo (20 s por defecto, 5 s de drenaje). `stop()` es compartido e idempotente. Un commit de resultado incierto conserva su recibo/journal y su identificador; el cierre no aplica compensaciones que puedan duplicar recursos.
+
+El candidato de la versión 1.0 se identifica como `1.0.0rc1` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.

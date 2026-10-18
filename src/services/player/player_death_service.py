@@ -1,41 +1,39 @@
-"""Servicio para manejar la muerte de jugadores."""
+"""Orquestación del ciclo de vida; las pérdidas nunca se repiten por caller o reconexión."""
 
+import asyncio
 import logging
-import random
 import time
 from typing import TYPE_CHECKING
+
+from redis.exceptions import RedisError
+
+from src.services.inventory_notifications import notify_inventory
+from src.services.player.lifecycle import resurrect, settle_death
+from src.utils.gold_atomic import operation_id
+from src.utils.inventory_slot import InventorySlot
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
     from src.models.item_catalog import ItemCatalog
+    from src.models.npc import NPC
     from src.repositories.account_repository import AccountRepository
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 logger = logging.getLogger(__name__)
-
-# Constantes de fantasma (IDs de body/head cuando el jugador está muerto)
-GHOST_BODY_MALE = 500  # Body de fantasma masculino
-GHOST_BODY_FEMALE = 501  # Body de fantasma femenino
-GHOST_HEAD = 500  # Head de fantasma (sin rostro)
-MALE_BODY_THRESHOLD = 50  # Bodies < 50 son masculinos, >= 50 son femeninos
-
-# Constantes de penalización
-DEATH_EXP_PENALTY_PERCENT = 0.05  # 5% de pérdida de experiencia al morir
-DEATH_GOLD_DROP_PERCENT = 0.10  # 10% del oro se dropea al morir
-MAX_ITEMS_TO_DROP = 3  # Máximo de items que puede perder al morir
-MIN_EXP_FOR_PENALTY = 100  # Experiencia mínima para aplicar penalización
-
-# Puntos de respawn por defecto (ciudad segura)
-DEFAULT_RESPAWN_MAP = 1
-DEFAULT_RESPAWN_X = 50
-DEFAULT_RESPAWN_Y = 50
+GHOST_BODY_MALE = 500
+GHOST_HEAD = 500
+DEATH_EXP_PENALTY_PERCENT = 0.05
+DEATH_GOLD_DROP_PERCENT = 0.10
+MAX_ITEMS_TO_DROP = 3
+MIN_EXP_FOR_PENALTY = 100
 
 
 class PlayerDeathService:
-    """Servicio centralizado para manejar la muerte de jugadores."""
+    """Mantiene tareas propias y publica únicamente el estado confirmado de una vida."""
 
     def __init__(
         self,
@@ -46,406 +44,188 @@ class PlayerDeathService:
         item_catalog: ItemCatalog | None = None,
         account_repo: AccountRepository | None = None,
     ) -> None:
-        """Inicializa el servicio de muerte de jugadores.
-
-        Args:
-            map_manager: Gestor de mapas.
-            player_repo: Repositorio de jugadores.
-            broadcast_service: Servicio de broadcast.
-            inventory_repo: Repositorio de inventario (opcional).
-            item_catalog: Catálogo de items (opcional).
-            account_repo: Repositorio de cuentas (opcional).
-        """
+        """Recibe dependencias del mundo y conserva la propiedad de sus liquidaciones."""
         self.map_manager = map_manager
         self.player_repo = player_repo
         self.broadcast_service = broadcast_service
         self.inventory_repo = inventory_repo
         self.item_catalog = item_catalog
         self.account_repo = account_repo
+        self._jobs: dict[int, asyncio.Task[None]] = {}
+        self._closing = False
+
+    def schedule_death(
+        self,
+        user_id: int,
+        killer_name: str,
+        death_reason: str = "combate",
+        *,
+        expected_life_id: int | None = None,
+    ) -> None:
+        """No espera AOF en el tick; una tarea propia resuelve toda la muerte en un commit."""
+        if self._closing or user_id in self._jobs:
+            return
+        self._jobs[user_id] = asyncio.create_task(
+            self._run_death(user_id, killer_name, death_reason, expected_life_id),
+            name=f"death:{user_id}",
+        )
+
+    async def _run_death(
+        self, user_id: int, killer_name: str, reason: str, life_id: int | None
+    ) -> None:
+        try:
+            await self.handle_player_death(
+                user_id, killer_name, death_reason=reason, expected_life_id=life_id
+            )
+        except RedisError, RuntimeError, ValueError:
+            logger.exception(
+                "Liquidación de muerte pendiente para jugador %d; se reintentará", user_id
+            )
+        finally:
+            self._jobs.pop(user_id, None)
 
     async def handle_player_death(
         self,
         user_id: int,
         killer_name: str,
-        message_sender: MessageSender,
+        message_sender: MessageSender | None = None,
         death_reason: str = "combate",
+        *,
+        expected_life_id: int | None = None,
     ) -> None:
-        """Maneja completamente la muerte de un jugador.
-
-        Args:
-            user_id: ID del jugador que murió.
-            killer_name: Nombre del asesino (NPC o jugador).
-            message_sender: MessageSender del jugador.
-            death_reason: Razón de la muerte ("combate", "hechizo", "veneno", etc).
-        """
-        logger.info(
-            "Jugador %d murió por %s (%s). Procesando muerte...",
-            user_id,
-            killer_name,
-            death_reason,
-        )
-
-        # Obtener datos del jugador
+        """Liquida una vida una sola vez, incluso tras perder ACK o reiniciar el proceso."""
+        values = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
         position = await self.player_repo.get_position(user_id)
-        if not position:
-            logger.error(
-                "No se pudieron obtener datos del jugador %d para procesar muerte", user_id
-            )
+        if not position or not values:
             return
-
-        map_id = position["map"]
-        x = position["x"]
-        y = position["y"]
-
-        # 1. Aplicar penalización de experiencia
-        await self._apply_exp_penalty(user_id, message_sender)
-
-        # 2. Dropear oro en el suelo
-        await self._drop_gold(user_id, map_id, x, y)
-
-        # 3. Dropear algunos items del inventario (aleatorio)
-        await self._drop_random_items(user_id, map_id, x, y)
-
-        # 4. Convertir en fantasma (cambiar apariencia usando sistema de morph)
-        await self._convert_to_ghost(user_id)
-
-        # 5. Enviar mensaje de muerte
-        await message_sender.send_console_msg(
-            f"¡Has sido asesinado por {killer_name}!",
-            font_color=6,  # FONTTYPE_FIGHT (rojo)
+        life_id = int(values.get("life_id", 0))
+        if expected_life_id is not None and expected_life_id != life_id:
+            return
+        map_id, x, y = (
+            int(values.get("death_map", position["map"])),
+            int(values.get("death_x", position["x"])),
+            int(values.get("death_y", position["y"])),
         )
-
-        # 6. Teletransportar a punto de respawn (opcional - puede esperar a que resucite)
-        # Por ahora dejamos al jugador como fantasma donde murió
-        # El jugador deberá buscar un sacerdote para resucitar
-
-        logger.info(
-            "Jugador %d procesado como muerto. Convertido en fantasma en (%d,%d)",
-            user_id,
+        result = await self.map_manager.apply_ground_operation(
+            map_id,
             x,
             y,
+            self.player_repo.redis.redis,
+            lambda: settle_death(self.player_repo.redis.redis, user_id, life_id, map_id, x, y),
+            broadcast_service=self.broadcast_service,
+        )
+        if result["applied"]:
+            await self.publish_state(user_id)
+            sender = self.map_manager.get_player_message_sender(user_id)
+            if sender is not None and (message_sender is None or sender is message_sender):
+                await sender.send_console_msg(
+                    f"Has muerto por {killer_name}. "
+                    f"Perdiste {result['exp_loss']} puntos de experiencia."
+                )
+        logger.debug(
+            "Muerte jugador=%d vida=%d causa=%s confirmada=%s",
+            user_id,
+            life_id,
+            death_reason,
+            result["applied"],
         )
 
     async def revive_player(
         self,
         user_id: int,
         message_sender: MessageSender,
-        revive_at_spawn: bool = True,
+        revive_at_spawn: bool = False,
+        *,
+        priest: NPC | None = None,
     ) -> bool:
-        """Revive a un jugador muerto.
-
-        Args:
-            user_id: ID del jugador a revivir.
-            message_sender: MessageSender del jugador.
-            revive_at_spawn: Si True, teletransporta al punto de respawn.
+        """Resucita en el lugar a media vida; no desplaza ni cobra a un vivo.
 
         Returns:
-            True si se revivió exitosamente.
+            Confirmación única; el parámetro legacy de spawn se rechaza explícitamente.
         """
-        # Verificar si está muerto (HP = 0)
-        if await self.player_repo.is_alive(user_id):
-            await message_sender.send_console_msg("No estás muerto.")
-            return False
-
-        # Restaurar HP (50% del máximo al revivir)
-        max_hp = await self.player_repo.get_max_hp(user_id)
-        revive_hp = max_hp // 2
-
-        await self.player_repo.update_hp(user_id, revive_hp)
-
-        # Restaurar apariencia original eliminando el morph de fantasma
-        # Ponemos morphed_until en 0 para que el sistema use la apariencia original
-        await self.player_repo.set_morphed_appearance(
-            user_id,
-            morphed_body=0,
-            morphed_head=0,
-            morphed_until=0.0,
-        )
-
-        # El broadcast del cambio de apariencia se hará automáticamente
-        # cuando el cliente se reconecte o el sistema de broadcast actualice
-
-        # Teletransportar a spawn si es necesario
         if revive_at_spawn:
-            await self._teleport_to_spawn(user_id)
-
-        # Actualizar stats del cliente
-        await message_sender.send_update_user_stats_from_repo(
-            user_id, self.player_repo, min_hp=revive_hp
+            await message_sender.send_console_msg(
+                "La resurrección de la 1.0 se realiza en el lugar."
+            )
+            return False
+        # Adopta fantasmas antiguos sin volver a aplicarles penalizaciones históricas.
+        values = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
+        if (
+            int(values.get("min_hp", values.get("hp", 0))) <= 0
+            and values.get("death_state") != "complete"
+        ):
+            await self.handle_player_death(user_id, "una vida anterior")
+        result = await resurrect(
+            self.player_repo.redis.redis, user_id, operation_id(), priest=priest
         )
-
-        await message_sender.send_console_msg(
-            "Has resucitado.",
-            font_color=14,  # FONTTYPE_INFO (dorado)
-        )
-
-        logger.info("Jugador %d revivido con %d HP", user_id, revive_hp)
+        if not result["applied"]:
+            await message_sender.send_console_msg(result["message"])
+            return False
+        await self.publish_state(user_id)
+        await message_sender.send_console_msg("Has resucitado con la mitad de tu vida.")
         return True
 
-    async def _apply_exp_penalty(
-        self,
-        user_id: int,
-        message_sender: MessageSender,
-    ) -> None:
-        """Aplica penalización de experiencia por morir.
-
-        Args:
-            user_id: ID del jugador.
-            message_sender: MessageSender del jugador.
-        """
-        experience_data = await self.player_repo.get_experience(user_id)
-        current_exp = experience_data[0]
-
-        # No penalizar si tiene muy poca experiencia
-        if current_exp < MIN_EXP_FOR_PENALTY:
-            return
-
-        # Calcular penalización
-        exp_loss = int(current_exp * DEATH_EXP_PENALTY_PERCENT)
-        new_exp = max(0, current_exp - exp_loss)
-
-        # Actualizar experiencia
-        await self.player_repo.update_experience(user_id, new_exp)
-
-        # Notificar al jugador
-        await message_sender.send_console_msg(
-            f"Perdiste {exp_loss} puntos de experiencia.",
-            font_color=6,  # FONTTYPE_FIGHT
-        )
-        await message_sender.send_update_exp(new_exp)
-
-        logger.info("Jugador %d perdió %d EXP por morir (tenía %d)", user_id, exp_loss, current_exp)
-
-    async def _drop_gold(
-        self,
-        user_id: int,
-        map_id: int,
-        x: int,
-        y: int,
-    ) -> None:
-        """Dropea oro del jugador muerto en el suelo.
-
-        Args:
-            user_id: ID del jugador.
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-        """
-        current_gold = await self.player_repo.get_gold(user_id)
-
-        if current_gold <= 0:
-            return
-
-        # Calcular oro a dropear
-        gold_to_drop = int(current_gold * DEATH_GOLD_DROP_PERCENT)
-        if gold_to_drop <= 0:
-            return
-
-        # Reducir oro del jugador
-        new_gold = current_gold - gold_to_drop
-        await self.player_repo.update_gold(user_id, new_gold)
-
-        # Crear ground item de oro
-        gold_item: dict[str, int | str | None] = {
-            "item_id": 12,  # ID del oro
-            "quantity": gold_to_drop,
-            "grh_index": 511,  # GrhIndex del oro
-            "owner_id": None,  # Cualquiera puede recoger
-            "spawn_time": None,
-        }
-
-        # Agregar al mapa
-        self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=gold_item)
-
-        # Broadcast a jugadores cercanos
-        await self.broadcast_service.broadcast_object_create(
-            map_id=map_id,
-            x=x,
-            y=y,
-            grh_index=511,
-        )
-
-        logger.info("Jugador %d dropeó %d oro al morir", user_id, gold_to_drop)
-
-    async def _drop_random_items(
-        self,
-        user_id: int,
-        map_id: int,
-        x: int,
-        y: int,
-    ) -> None:
-        """Dropea items aleatorios del inventario del jugador muerto.
-
-        Args:
-            user_id: ID del jugador.
-            map_id: ID del mapa.
-            x: Coordenada X.
-            y: Coordenada Y.
-        """
-        if not self.inventory_repo or not self.item_catalog:
-            return
-
-        # Obtener inventario
-        inventory = await self.inventory_repo.get_inventory_slots(user_id)
-        if not inventory:
-            return
-
-        # Seleccionar slots aleatorios para dropear (máximo MAX_ITEMS_TO_DROP)
-        occupied_slots = list(inventory.keys())
-        if not occupied_slots:
-            return
-
-        items_to_drop = min(len(occupied_slots), MAX_ITEMS_TO_DROP)
-        slots_to_drop = random.sample(occupied_slots, items_to_drop)
-
-        for slot in slots_to_drop:
-            slot_data = inventory.get(slot)
-            if not slot_data:
-                continue
-
-            item_id = slot_data.item_id
-            quantity = slot_data.quantity
-
-            # Obtener GrhIndex del catálogo
-            grh_index = self.item_catalog.get_grh_index(item_id)
-            if grh_index is None:
-                continue
-
-            # Vaciar el slot del inventario
-            await self.inventory_repo.clear_slot(user_id, slot)
-
-            # Crear ground item
-            item: dict[str, int | str | None] = {
-                "item_id": item_id,
-                "quantity": quantity,
-                "grh_index": grh_index,
-                "owner_id": None,
-                "spawn_time": None,
-            }
-
-            # Agregar al mapa
-            self.map_manager.add_ground_item(map_id=map_id, x=x, y=y, item=item)
-
-            # Broadcast
-            await self.broadcast_service.broadcast_object_create(
-                map_id=map_id,
-                x=x,
-                y=y,
-                grh_index=grh_index,
-            )
-
-            item_name = self.item_catalog.get_item_name(item_id) or f"Item #{item_id}"
-            logger.info(
-                "Jugador %d dropeó %s (x%d) al morir",
-                user_id,
-                item_name,
-                quantity,
-            )
-
-    async def _convert_to_ghost(
-        self,
-        user_id: int,
-    ) -> None:
-        """Convierte al jugador en fantasma (cambia su apariencia).
-
-        Usa el sistema de morph existente para cambiar temporalmente
-        la apariencia del jugador a fantasma.
-
-        Args:
-            user_id: ID del jugador.
-        """
-        # Usar fantasma masculino por defecto
-        # En una implementación completa, se detectaría el género del personaje
-        ghost_body = GHOST_BODY_MALE
-
-        # Usar sistema de morph para cambiar apariencia a fantasma
-        # Morph indefinido (un año en el futuro)
-        morph_until = time.time() + (365 * 24 * 60 * 60)
-        await self.player_repo.set_morphed_appearance(
-            user_id,
-            morphed_body=ghost_body,
-            morphed_head=GHOST_HEAD,
-            morphed_until=morph_until,
-        )
-
-        # Broadcast cambio de apariencia a todos los jugadores
-        # Usamos remove + create para refrescar el personaje
+    async def publish_state(self, user_id: int) -> None:
+        """Restaura apariencia/equipo/flags en todos los observadores y en el dueño actual."""
         position = await self.player_repo.get_position(user_id)
-        if position:
-            # Remover y recrear el personaje para actualizar la vista
-            await self.broadcast_service.broadcast_character_remove(
-                map_id=position["map"],
-                char_index=user_id,
-            )
-
-            # Obtener nombre del jugador para recrear
-            player_name = await self._get_player_name(user_id)
-
-            await self.broadcast_service.broadcast_character_create(
-                map_id=position["map"],
-                char_index=user_id,
-                body=ghost_body,
-                head=GHOST_HEAD,
-                heading=position.get("heading", 3),
-                x=position["x"],
-                y=position["y"],
-                name=player_name,
-            )
-
-        # Actualizar HP a 0 para indicar que está muerto
-        await self.player_repo.update_hp(user_id, 0)
-
-        logger.info("Jugador %d convertido en fantasma (body=%d)", user_id, ghost_body)
-
-    async def _get_player_name(self, user_id: int) -> str:
-        """Obtiene el nombre del jugador.
-
-        Args:
-            user_id: ID del jugador.
-
-        Returns:
-            Nombre del jugador o valor por defecto.
-        """
-        if self.account_repo:
-            account_data = await self.account_repo.get_account_by_user_id(user_id)
-            if account_data:
-                return account_data.get("username", f"Player{user_id}")
-        return f"Player{user_id}"
-
-    async def _teleport_to_spawn(
-        self,
-        user_id: int,
-    ) -> None:
-        """Teletransporta al jugador al punto de respawn.
-
-        Args:
-            user_id: ID del jugador.
-        """
-        # Obtener posición actual
-        old_position = await self.player_repo.get_position(user_id)
-        old_map = old_position["map"] if old_position else 0
-
-        # Actualizar posición a spawn
-        await self.player_repo.set_position(
-            user_id,
-            x=DEFAULT_RESPAWN_X,
-            y=DEFAULT_RESPAWN_Y,
-            map_number=DEFAULT_RESPAWN_MAP,
-            heading=3,  # Mirando al sur
+        if not position:
+            return
+        stats = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
+        username = self.map_manager.get_player_username(user_id)
+        account = (
+            await self.account_repo.get_account(username)
+            if self.account_repo and username
+            else None
         )
+        alive = int(stats.get("min_hp", stats.get("hp", 0))) > 0
+        body = int((account or {}).get("char_body", (account or {}).get("char_race", 1))) or 1
+        head = int((account or {}).get("char_head", 1))
+        equipment = await self.player_repo.redis.hgetall(RedisKeys.player_equipment(user_id))
+        inventory = await self.player_repo.redis.hgetall(RedisKeys.player_inventory(user_id))
+        appearance = {"weapon": 0, "shield": 0, "helmet": 0}
+        for slot, field in (
+            ("weapon", "WeaponAnim"),
+            ("shield", "ShieldAnim"),
+            ("helmet", "CascoAnim"),
+            ("armor", "Ropaje"),
+        ):
+            stack = InventorySlot.parse(inventory.get(f"slot_{equipment.get(slot, '0')}", ""))
+            definition = (
+                self.item_catalog.get_item_data(stack.item_id)
+                if stack and self.item_catalog
+                else None
+            )
+            graphic = definition.get(field, definition.get("Anim", 0)) if definition else 0
+            if isinstance(graphic, int) and alive:
+                if slot == "armor" and graphic > 0:
+                    body = graphic
+                elif slot in appearance:
+                    appearance[slot] = graphic
+        if not alive:
+            body, head = GHOST_BODY_MALE, GHOST_HEAD
+        elif float(stats.get("morphed_until", 0)) > time.time():
+            body, head = int(stats.get("morphed_body", body)), int(stats.get("morphed_head", head))
+        for sender in self.map_manager.get_all_message_senders_in_map(position["map"]):
+            await sender.send_character_change(
+                user_id, body=body, head=head, heading=position.get("heading", 3), **appearance
+            )
+            await sender.send_set_invisible(
+                user_id, invisible=not (float(stats.get("invisible_until", 0)) > time.time())
+            )
+        owner_sender = self.map_manager.get_player_message_sender(user_id)
+        if owner_sender:
+            await owner_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
+            await owner_sender.sync_status(user_id, self.player_repo)
+            if self.inventory_repo:
+                await notify_inventory(owner_sender, self.inventory_repo, user_id)
 
-        # Si cambió de mapa, hacer el proceso de cambio de mapa
-        if old_map != DEFAULT_RESPAWN_MAP:
-            # Remover del mapa anterior
-            self.map_manager.remove_player(old_map, user_id)
-
-            # Nota: add_player requiere message_sender, pero no lo tenemos aquí
-            # El jugador será agregado al nuevo mapa cuando envíe su primer packet
-
-        logger.info(
-            "Jugador %d teletransportado a spawn (%d, %d, %d)",
-            user_id,
-            DEFAULT_RESPAWN_MAP,
-            DEFAULT_RESPAWN_X,
-            DEFAULT_RESPAWN_Y,
-        )
+    async def close(self, deadline_seconds: float = 10) -> None:
+        """Drena tareas propias antes de cerrar Redis; se puede repetir sin nuevos trabajos."""
+        self._closing = True
+        if not self._jobs:
+            return
+        tasks = tuple(self._jobs.values())
+        _, pending = await asyncio.wait(tasks, timeout=deadline_seconds)
+        for task in pending:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)

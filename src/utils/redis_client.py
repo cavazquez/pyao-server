@@ -6,6 +6,7 @@ from typing import Any, Self, cast
 
 import redis.asyncio as redis
 
+from src.config.config_manager import ConfigManager, config_manager
 from src.utils.redis_config import (
     DEFAULT_EFFECTS_CONFIG,
     DEFAULT_SERVER_CONFIG,
@@ -34,11 +35,14 @@ class RedisClient:
             cls._instance = cast("RedisClient", super().__new__(cls))
         return cast("Self", cls._instance)
 
-    async def connect(self, config: RedisConfig | None = None) -> None:
+    async def connect(
+        self, config: RedisConfig | None = None, *, seed_defaults: bool = True
+    ) -> None:
         """Conecta al servidor Redis.
 
         Args:
-            config: Configuración de Redis. Si es None, usa valores por defecto.
+            config: Configuración validada. Si es None, usa la configuración central.
+            seed_defaults: Inicializa defaults; el arranque valida el esquema antes de hacerlo.
 
         Raises:
             ConnectionError: Si no se puede conectar a Redis (puerto cerrado, host inaccesible).
@@ -49,13 +53,15 @@ class RedisClient:
             return
 
         if config is None:
-            config = RedisConfig()
+            config = RedisConfig.model_validate(config_manager.get_section("redis"))
 
         try:
             self._redis = redis.Redis(
                 host=config.host,
+                password=config.read_password(),
                 port=config.port,
                 db=config.db,
+                max_connections=config.max_connections,
                 decode_responses=config.decode_responses,
                 socket_timeout=config.socket_timeout,
                 socket_connect_timeout=config.socket_connect_timeout,
@@ -68,7 +74,8 @@ class RedisClient:
                 _ensure_ping_success(awaited_result)
             logger.info("Conectado a Redis en %s:%d", config.host, config.port)
 
-            await self._initialize_default_config()
+            if seed_defaults:
+                await self._initialize_default_config()
 
         except redis.ConnectionError as e:
             logger.warning("No se pudo conectar a Redis en %s:%d - %s", config.host, config.port, e)
@@ -79,22 +86,27 @@ class RedisClient:
             self._redis = None
             raise
 
+    async def initialize_defaults(self) -> None:
+        """Inicializa los defaults después de validar el esquema persistido."""
+        await self._initialize_default_config()
+
     async def _initialize_default_config(self) -> None:
         """Inicializa la configuración por defecto en Redis si no existe."""
         if self._redis is None:
             return
 
         for key, value in DEFAULT_SERVER_CONFIG.items():
-            exists = await self._redis.exists(key)
-            if not exists:
-                await self._redis.set(key, value)
-                logger.info("Configuración inicializada: %s = %s", key, value)
-
-        for key, value in DEFAULT_EFFECTS_CONFIG.items():
-            exists = await self._redis.exists(key)
-            if not exists:
-                await self._redis.set(key, value)
-                logger.info("Configuración de efecto inicializada: %s = %s", key, value)
+            await self._redis.set(key, value, nx=True)
+        effects = dict(DEFAULT_EFFECTS_CONFIG)
+        config = config_manager
+        effects[RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_SED] = str(
+            ConfigManager.as_int(config.get("game.hunger_thirst.interval_sed", 180))
+        )
+        effects[RedisKeys.CONFIG_HUNGER_THIRST_INTERVAL_HAMBRE] = str(
+            ConfigManager.as_int(config.get("game.hunger_thirst.interval_hambre", 180))
+        )
+        for key, value in effects.items():
+            await self._redis.set(key, value, nx=True)
 
     async def disconnect(self) -> None:
         """Desconecta del servidor Redis."""

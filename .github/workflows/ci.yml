@@ -4,80 +4,163 @@ permissions:
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v6
-    
-    - name: Install uv
-      uses: astral-sh/setup-uv@v7
-      with:
-        version: "0.13.1"
-        enable-cache: true
-    
-    - name: Set up Python
-      run: uv python install 3.14
-    
-    - name: Cache uv dependencies
-      uses: actions/cache@v5
-      with:
-        path: |
-          ~/.cache/uv
-          .venv
-        key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-uv-
-    
-    - name: Install dependencies
-      run: uv sync --locked --dev
+defaults:
+  run:
+    shell: bash
 
-    - name: Validate versioned game dataset (no Redis)
-      run: |
-        uv run --locked python -m tools.compression.decompress_map_data --target map_data
-        uv run --locked python -m src.validation.dataset
-    
-    - name: Print tool versions
-      run: |
-        echo "📦 Tool versions:"
-        echo "  Python: $(uv run python --version)"
-        echo "  uv: $(uv --version)"
-        echo "  ruff: $(uv run ruff --version)"
-        echo "  mypy: $(uv run mypy --version)"
-        echo "  pytest: $(uv run pytest --version)"
-    
-    - name: Run ruff linter
-      run: uv run ruff check src tests
-    
-    - name: Run ruff formatter
-      run: uv run ruff format --check .
-    
-    - name: Run mypy type checker
-      run: uv run mypy src tests
-    
-    - name: Run tests with coverage
-      run: uv run pytest -v -n auto --cov=src --cov-report=xml --cov-report=term-missing tests
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v6
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+env:
+  UV_VERSION: "0.13.1"
+  UV_PYTHON: "3.14"
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --dev
+      - name: Ruff lint and format
+        run: |
+          uv run --locked ruff check src tests
+          uv run --locked ruff format --check .
+      - name: Type checking
+        run: uv run --locked mypy src tests
+
+  fast-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --dev
+      - name: Validate versioned dataset without Redis
+        run: |
+          uv run --locked python -m tools.compression.decompress_map_data --target map_data
+          uv run --locked python -m src.validation.dataset
+      - name: Full fast suite with coverage
+        run: |
+          mkdir -p artifacts
+          uv run --locked pytest -q -n 4 --cov=src --cov-report=xml --cov-report=term-missing --junitxml=artifacts/tests.xml tests 2>&1 | tee artifacts/tests.log
+      - name: Preserve test logs and coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fast-test-results
+          path: |
+            artifacts/
+            coverage.xml
+          retention-days: 7
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  redis-integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --no-dev
+      - name: Docker preflight
+        run: docker version
+      - name: Two real clients and disposable authenticated Redis
+        timeout-minutes: 3
+        run: |
+          mkdir -p artifacts
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.two_client_smoke > artifacts/redis-smoke.json 2> artifacts/redis-smoke.log
+          cat artifacts/redis-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.gold_atomic_smoke > artifacts/gold-smoke.json 2> artifacts/gold-smoke.log
+          cat artifacts/gold-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.trade_atomic_smoke > artifacts/trade-smoke.json 2> artifacts/trade-smoke.log
+          timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.trade_protocol_smoke > artifacts/trade-protocol-smoke.json 2> artifacts/trade-protocol-smoke.log
+          cat artifacts/trade-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.bank_items_smoke > artifacts/bank-items-smoke.json 2> artifacts/bank-items-smoke.log
+          cat artifacts/bank-items-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.npc_commerce_smoke > artifacts/npc-commerce-smoke.json 2> artifacts/npc-commerce-smoke.log
+          cat artifacts/npc-commerce-smoke.json
+          timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.ground_atomic_smoke > artifacts/ground-smoke.json 2> artifacts/ground-smoke.log
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.skill_allocation_smoke > artifacts/skill-allocation-smoke.json 2> artifacts/skill-allocation-smoke.log
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.password_change_smoke > artifacts/password-change-smoke.json 2> artifacts/password-change-smoke.log
+          timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.scroll_learning_smoke > artifacts/scroll-learning-smoke.json 2> artifacts/scroll-learning-smoke.log
+          timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.spell_lifecycle_smoke > artifacts/spell-lifecycle-smoke.json 2> artifacts/spell-lifecycle-smoke.log
+          cat artifacts/ground-smoke.json
+      - name: Preserve integration evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: redis-integration-results
+          path: artifacts/
+          retention-days: 7
+
+  distribution:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --group build
+      - run: uv build
+      - name: Install wheel without checkout imports
+        run: uv run --locked --group build python -m src.operations.distribution validate --directory dist --platform ubuntu-24.04
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: validated-python-distribution
+          path: dist/
+          retention-days: 7
+
+  # Mantiene el nombre del check previo: nunca pasa si algún grupo falló o se omitió.
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    if: ${{ always() }}
+    needs: [quality, fast-tests, redis-integration, distribution]
+    steps:
+      - name: Require every validation group
+        env:
+          QUALITY: ${{ needs.quality.result }}
+          FAST_TESTS: ${{ needs.fast-tests.result }}
+          INTEGRATION: ${{ needs.redis-integration.result }}
+          DISTRIBUTION: ${{ needs.distribution.result }}
+        run: |
+          test "$QUALITY" = success
+          test "$FAST_TESTS" = success
+          test "$INTEGRATION" = success
+          test "$DISTRIBUTION" = success
 
   markdown-links:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6

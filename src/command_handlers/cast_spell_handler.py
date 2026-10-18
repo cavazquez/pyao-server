@@ -7,6 +7,7 @@ from src.command_handlers.cast_spell_execution_handler import CastSpellExecution
 from src.command_handlers.cast_spell_validation_handler import CastSpellValidationHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.cast_spell_command import CastSpellCommand
+from src.services.action_cadence import ActionCadence
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -28,6 +29,7 @@ class CastSpellCommandHandler(CommandHandler):
         spellbook_repo: SpellbookRepository,
         stamina_service: StaminaService | None,
         message_sender: MessageSender,
+        action_cadence: ActionCadence | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -36,12 +38,14 @@ class CastSpellCommandHandler(CommandHandler):
             spell_service: Servicio de hechizos.
             spellbook_repo: Repositorio de libro de hechizos.
             stamina_service: Servicio de stamina.
+            action_cadence: Presupuesto compartido entre handlers del servidor.
             message_sender: Enviador de mensajes.
         """
         self.player_repo = player_repo
         self.spell_service = spell_service
         self.spellbook_repo = spellbook_repo
         self.stamina_service = stamina_service
+        self.action_cadence = action_cadence or ActionCadence()
         self.message_sender = message_sender
 
         # Inicializar handlers especializados
@@ -58,7 +62,7 @@ class CastSpellCommandHandler(CommandHandler):
             message_sender=message_sender,
         )
 
-    async def handle(self, command: Command) -> CommandResult:
+    async def _handle_accepted(self, command: Command) -> CommandResult:
         """Ejecuta el comando de lanzar hechizo (solo lógica de negocio).
 
         Args:
@@ -88,11 +92,6 @@ class CastSpellCommandHandler(CommandHandler):
             is_valid, error_msg = await self.validation_handler.validate_dependencies()
             if not is_valid:
                 return CommandResult.error(error_msg or "Error interno")
-
-            # Validar stamina
-            is_valid, error_msg = await self.validation_handler.validate_stamina(user_id)
-            if not is_valid:
-                return CommandResult.error(error_msg or "No tienes suficiente stamina")
 
             # Validar coordenadas
             is_valid, error_msg = self.validation_handler.validate_coordinates(target_x, target_y)
@@ -148,7 +147,12 @@ class CastSpellCommandHandler(CommandHandler):
 
             # Ejecutar hechizo
             success, error_msg = await self.execution_handler.execute_spell(
-                user_id, spell_id, final_target_x, final_target_y
+                user_id,
+                spell_id,
+                final_target_x,
+                final_target_y,
+                identity=command.operation_id,
+                slot=slot,
             )
             if not success:
                 return CommandResult.error(error_msg or "Fallo al lanzar el hechizo.")
@@ -165,3 +169,18 @@ class CastSpellCommandHandler(CommandHandler):
         except Exception as e:
             logger.exception("Error al lanzar hechizo")
             return CommandResult.error(f"Error al lanzar hechizo: {e!s}")
+
+    async def handle(self, command: Command) -> CommandResult:
+        """Reserva la cadencia antes de leer estado o consumir recursos.
+
+        Returns:
+            Resultado o rechazo sin efectos cuando no hay presupuesto.
+        """
+        if not isinstance(command, CastSpellCommand):
+            return CommandResult.error("Comando inválido: se esperaba CastSpellCommand")
+        if not self.action_cadence.claim(command.user_id, "cast"):
+            return CommandResult.error("Acción demasiado frecuente")
+        try:
+            return await self._handle_accepted(command)
+        finally:
+            self.action_cadence.release(command.user_id, "cast")
