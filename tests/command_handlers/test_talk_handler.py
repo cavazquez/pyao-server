@@ -191,6 +191,9 @@ async def test_handle_metrics_command(
         message_sender=mock_message_sender,
     )
 
+    handler.session_data["user_id"] = 1
+    mock_message_sender.connection.is_authenticated = True
+    mock_account_repo.is_gm_by_user_id = AsyncMock(return_value=True)
     command = TalkCommand(user_id=1, message="/METRICS")
     result = await handler.handle(command)
 
@@ -215,6 +218,9 @@ async def test_handle_metrics_no_game_tick(
         message_sender=mock_message_sender,
     )
 
+    handler.session_data["user_id"] = 1
+    mock_message_sender.connection.is_authenticated = True
+    mock_account_repo.is_gm_by_user_id = AsyncMock(return_value=True)
     command = TalkCommand(user_id=1, message="/METRICS")
     result = await handler.handle(command)
 

@@ -72,12 +72,14 @@ class TalkCommandHandler(CommandHandler):
         self.trade_service = trade_service
         self.npc_service = npc_service
         self.summon_service = summon_service
-        self.session_data = session_data or {}
+        self.session_data = session_data if session_data is not None else {}
 
         # Inicializar handlers especializados
         self.metrics_handler = TalkMetricsHandler(
             game_tick=game_tick,
             message_sender=message_sender,
+            account_repo=account_repo,
+            session_data=self.session_data,
         )
 
         self.trade_handler = TalkTradeHandler(
