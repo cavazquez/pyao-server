@@ -30,7 +30,7 @@ def mock_player_repo() -> MagicMock:
         )
     )
     repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
-    repo.update_gold = AsyncMock()
+    repo.remove_gold = AsyncMock(return_value=True)
     return repo
 
 
@@ -87,7 +87,7 @@ async def test_handle_drop_gold_success(
     result = await handler.handle(command)
 
     assert result.success is True
-    mock_player_repo.update_gold.assert_called_once_with(1, 500)
+    mock_player_repo.remove_gold.assert_called_once_with(1, 500)
     mock_map_manager.add_ground_item.assert_called_once()
     mock_broadcast_service.broadcast_object_create.assert_called_once()
     assert result.data["quantity"] == 500
@@ -115,7 +115,7 @@ async def test_handle_drop_gold_insufficient(
 
     # Debe ajustar a lo que tiene (1000)
     assert result.success is True
-    mock_player_repo.update_gold.assert_called_once_with(1, 0)
+    mock_player_repo.remove_gold.assert_called_once_with(1, 1000)
     assert result.data["quantity"] == 1000
 
 
@@ -293,6 +293,6 @@ async def test_handle_drop_gold_godot_flagoro(
     assert result.success is True
     assert result.data["type"] == "gold"
     assert result.data["quantity"] == 500
-    mock_player_repo.update_gold.assert_called_once_with(1, 500)
+    mock_player_repo.remove_gold.assert_called_once_with(1, 500)
     mock_map_manager.add_ground_item.assert_called_once()
     mock_broadcast_service.broadcast_object_create.assert_called_once()

@@ -76,11 +76,10 @@ class DropGoldHandler:
         y = position["y"]
 
         # Reducir oro del jugador
-        new_gold = current_gold - actual_quantity
-        await self.player_repo.update_gold(user_id, new_gold)
+        if not await self.player_repo.remove_gold(user_id, actual_quantity):
+            return False, "El saldo cambió; intentá nuevamente.", None
 
         # Enviar UPDATE_USER_STATS al cliente para actualizar GUI
-        # Nota: new_gold ya está actualizado en el repositorio
         await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
 
         # Crear ground item

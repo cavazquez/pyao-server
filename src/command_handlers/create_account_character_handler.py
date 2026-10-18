@@ -134,7 +134,7 @@ class CreateAccountCharacterHandler:
             "elu": INITIAL_ELU,
             "experience": 0,
         }
-        await self.player_repo.set_stats(user_id=user_id, **initial_stats)
+        await self.player_repo.set_stats(user_id=user_id, preserve_gold=False, **initial_stats)
         logger.info(
             "Estadísticas iniciales creadas para user_id %d: HP=%d MANA=%d",
             user_id,

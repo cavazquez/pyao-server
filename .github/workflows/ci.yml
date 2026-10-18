@@ -95,6 +95,8 @@ jobs:
           mkdir -p artifacts
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.two_client_smoke > artifacts/redis-smoke.json 2> artifacts/redis-smoke.log
           cat artifacts/redis-smoke.json
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.gold_atomic_smoke > artifacts/gold-smoke.json 2> artifacts/gold-smoke.log
+          cat artifacts/gold-smoke.json
       - name: Preserve integration evidence even on failure
         if: always()
         uses: actions/upload-artifact@v7

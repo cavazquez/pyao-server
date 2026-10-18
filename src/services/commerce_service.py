@@ -3,8 +3,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.models.item_constants import MAX_PLAYER_GOLD
-
 if TYPE_CHECKING:
     from src.models.item import Item
     from src.repositories.inventory_repository import InventoryRepository
@@ -100,8 +98,8 @@ class CommerceService:
         # Realizar transacción
         try:
             # Restar oro
-            new_gold = player_gold - total_price
-            await self.player_repo.update_gold(user_id, new_gold)
+            if not await self.player_repo.remove_gold(user_id, total_price):
+                return False, "El saldo cambió; intentá nuevamente."
 
             # Agregar item al inventario del jugador
             modified_slots = await self.inventory_repo.add_item(
@@ -110,7 +108,7 @@ class CommerceService:
 
             if not modified_slots:
                 # Rollback: devolver oro
-                await self.player_repo.update_gold(user_id, player_gold)
+                await self.player_repo.add_gold(user_id, total_price)
                 logger.error(
                     "No se pudo agregar item %d al inventario de user_id %d",
                     merchant_item.item_id,
@@ -122,7 +120,7 @@ class CommerceService:
             success = await self.merchant_repo.remove_item(npc_id, slot, quantity)
             if not success:
                 # Rollback: devolver oro y remover items
-                await self.player_repo.update_gold(user_id, player_gold)
+                await self.player_repo.add_gold(user_id, total_price)
                 for mod_slot, _ in modified_slots:
                     await self.inventory_repo.remove_item(user_id, mod_slot, quantity)
                 logger.error(
@@ -206,9 +204,7 @@ class CommerceService:
                 return False, "No se pudo remover el item"
 
             # Sumar oro al jugador (respetando el tope global)
-            player_gold = await self.player_repo.get_gold(user_id)
-            new_gold = min(player_gold + total_price, MAX_PLAYER_GOLD)
-            await self.player_repo.update_gold(user_id, new_gold)
+            await self.player_repo.add_gold_capped(user_id, total_price)
 
             # Agregar item al inventario del mercader
             merchant_success = await self.merchant_repo.add_item(npc_id, item_id, quantity)

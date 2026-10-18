@@ -39,7 +39,7 @@ def mock_player_repo() -> MagicMock:
             experience=0,
         )
     )
-    repo.update_gold = AsyncMock()
+    repo.add_gold_capped = AsyncMock(return_value=(500, 1500))
     return repo
 
 
@@ -195,7 +195,7 @@ async def test_handle_pickup_gold(
     assert result.success is True
     assert result.data["item_id"] == GOLD_ITEM_ID
     assert result.data["quantity"] == 500
-    mock_player_repo.update_gold.assert_called_once_with(1, 1500)
+    mock_player_repo.add_gold_capped.assert_called_once_with(1, 500)
     mock_map_manager.remove_ground_item.assert_called_once()
     assert mock_map_manager._state.get_ground_items(1, 50, 50) == []
 
@@ -360,7 +360,7 @@ async def test_concurrent_pickup_does_not_duplicate_item(
     player_repo = MagicMock()
     player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
     player_repo.get_gold = AsyncMock(return_value=0)
-    player_repo.update_gold = AsyncMock()
+    player_repo.add_gold_capped = AsyncMock(return_value=(500, 500))
 
     async def slow_add_item(_user_id: int, _item_id: int, _quantity: int) -> list[tuple[int, int]]:
         # Cede el control para maximizar el interleaving de coroutines.
@@ -410,7 +410,7 @@ async def test_gold_cap_when_already_at_max(
     player_repo = MagicMock()
     player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
     player_repo.get_gold = AsyncMock(return_value=MAX_PLAYER_GOLD)
-    player_repo.update_gold = AsyncMock()
+    player_repo.add_gold_capped = AsyncMock(return_value=(0, MAX_PLAYER_GOLD))
 
     mock_map_manager._state.put(1, 50, 50, {"item_id": GOLD_ITEM_ID, "quantity": 500})
 
@@ -427,7 +427,7 @@ async def test_gold_cap_when_already_at_max(
     result = await handler.handle(PickupCommand(user_id=1))
 
     assert result.success is False
-    player_repo.update_gold.assert_not_called()
+    player_repo.add_gold_capped.assert_called_once_with(1, 500)
     ground = mock_map_manager._state.get_ground_items(1, 50, 50)
     assert ground == [{"item_id": GOLD_ITEM_ID, "quantity": 500}]
 
@@ -445,7 +445,7 @@ async def test_gold_cap_partial_pickup_leaves_remainder(
     player_repo = MagicMock()
     player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
     player_repo.get_gold = AsyncMock(return_value=current_gold)
-    player_repo.update_gold = AsyncMock()
+    player_repo.add_gold_capped = AsyncMock(return_value=(100, MAX_PLAYER_GOLD))
 
     mock_map_manager._state.put(1, 50, 50, {"item_id": GOLD_ITEM_ID, "quantity": 500})
 
@@ -463,7 +463,7 @@ async def test_gold_cap_partial_pickup_leaves_remainder(
 
     assert result.success is True
     assert result.data["quantity"] == 100
-    player_repo.update_gold.assert_called_once_with(1, MAX_PLAYER_GOLD)
+    player_repo.add_gold_capped.assert_called_once_with(1, 500)
     # Quedan 400 monedas en el suelo.
     ground = mock_map_manager._state.get_ground_items(1, 50, 50)
     assert len(ground) == 1

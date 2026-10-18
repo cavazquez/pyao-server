@@ -64,10 +64,11 @@ class GoldDecayEffect(TickEffect):
 
             # Calcular reducción
             reduction = max(1, int(current_gold * (percentage / 100.0)))
-            new_gold = max(0, current_gold - reduction)
 
             # Actualizar oro
-            await player_repo.update_gold(user_id, new_gold)
+            if not await player_repo.remove_gold(user_id, reduction):
+                return
+            new_gold = await player_repo.get_gold(user_id)
 
             # Obtener stats actualizados para enviar al cliente
             stats = await player_repo.get_stats(user_id)

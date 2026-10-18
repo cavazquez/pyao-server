@@ -64,7 +64,9 @@ def mock_player_repo() -> MagicMock:
     """Crea un mock de PlayerRepository."""
     repo = MagicMock(spec=PlayerRepository)
     repo.get_gold = AsyncMock(return_value=1000)  # 1000 oro
-    repo.update_gold = AsyncMock()
+    repo.remove_gold = AsyncMock(return_value=True)
+    repo.add_gold = AsyncMock()
+    repo.add_gold_capped = AsyncMock()
     return repo
 
 
@@ -98,7 +100,7 @@ class TestCommerceServiceBuyItem:
 
         assert success is True
         assert "Has comprado 5x Poción de Vida por 500 oro" in message
-        commerce_service.player_repo.update_gold.assert_called_once_with(1, 500)  # 1000 - 500
+        commerce_service.player_repo.remove_gold.assert_called_once_with(1, 500)  # 1000 - 500
         commerce_service.inventory_repo.add_item.assert_called_once_with(1, 1, 5)
         commerce_service.merchant_repo.remove_item.assert_called_once_with(2, 1, 5)
 
@@ -215,15 +217,14 @@ class TestCommerceServiceBuyItem:
     ) -> None:
         """Test cuando falla agregar item al inventario (rollback de oro)."""
         mock_inventory_repo.add_item = AsyncMock(return_value=None)  # Falla
-        initial_gold = 1000
 
         success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
 
         assert success is False
         assert "No se pudo agregar el item al inventario" in message
         # Verificar rollback: se devuelve el oro original
-        assert mock_player_repo.update_gold.call_count == 2  # Resta y luego rollback
-        mock_player_repo.update_gold.assert_any_call(1, initial_gold)  # Rollback
+        mock_player_repo.remove_gold.assert_called_once_with(1, 500)
+        mock_player_repo.add_gold.assert_called_once_with(1, 500)
 
     async def test_buy_item_remove_merchant_item_fails(
         self,
@@ -234,15 +235,14 @@ class TestCommerceServiceBuyItem:
     ) -> None:
         """Test cuando falla remover item del mercader (rollback completo)."""
         mock_merchant_repo.remove_item = AsyncMock(return_value=False)  # Falla
-        initial_gold = 1000
 
         success, message = await commerce_service.buy_item(user_id=1, npc_id=2, slot=1, quantity=5)
 
         assert success is False
         assert "Error al procesar la compra" in message
         # Verificar rollback: oro y items
-        assert mock_player_repo.update_gold.call_count == 2  # Resta y luego rollback
-        mock_player_repo.update_gold.assert_any_call(1, initial_gold)  # Rollback
+        mock_player_repo.remove_gold.assert_called_once_with(1, 500)
+        mock_player_repo.add_gold.assert_called_once_with(1, 500)
         mock_inventory_repo.remove_item.assert_called_once_with(1, 1, 5)  # Rollback items
 
     async def test_buy_item_exception_handling(
@@ -275,7 +275,7 @@ class TestCommerceServiceSellItem:
         assert success is True
         assert "Has vendido 5x Poción de Vida por 250 oro" in message  # 50% de 100 * 5
         commerce_service.inventory_repo.remove_item.assert_called_once_with(1, 1, 5)
-        commerce_service.player_repo.update_gold.assert_called_once_with(1, 1250)  # 1000 + 250
+        commerce_service.player_repo.add_gold_capped.assert_called_once_with(1, 250)  # 1000 + 250
         commerce_service.merchant_repo.add_item.assert_called_once_with(2, 1, 5)
 
     async def test_sell_item_invalid_quantity(
@@ -367,7 +367,6 @@ class TestCommerceServiceSellItem:
     ) -> None:
         """Test cuando el inventario del mercader está lleno (no hace rollback)."""
         mock_merchant_repo.add_item = AsyncMock(return_value=False)  # Mercader lleno
-        initial_gold = 1000
 
         success, message = await commerce_service.sell_item(user_id=1, npc_id=2, slot=1, quantity=5)
 
@@ -375,7 +374,7 @@ class TestCommerceServiceSellItem:
         assert success is True
         assert "Has vendido 5x Poción de Vida por 250 oro" in message
         # El jugador recibió el oro (no hay rollback)
-        commerce_service.player_repo.update_gold.assert_called_once_with(1, initial_gold + 250)
+        commerce_service.player_repo.add_gold_capped.assert_called_once_with(1, 250)
 
     async def test_sell_item_exception_handling(
         self,
@@ -409,4 +408,4 @@ class TestCommerceServiceSellItem:
 
         assert success is True
         # El oro final debe estar capaado en MAX_PLAYER_GOLD
-        mock_player_repo.update_gold.assert_called_once_with(1, MAX_PLAYER_GOLD)
+        mock_player_repo.add_gold_capped.assert_called_once_with(1, 250)

@@ -123,7 +123,7 @@ class PlayerService:
                 "elu": 300,
                 "experience": 0,
             }
-            await self.player_repo.set_stats(user_id=user_id, **user_stats)
+            await self.player_repo.set_stats(user_id=user_id, preserve_gold=False, **user_stats)
             logger.info("Estadísticas por defecto creadas en Redis para user_id %d", user_id)
 
         # Enviar stats al cliente

@@ -505,6 +505,7 @@ class NPCDeathService:
 
             # Actualizar stats
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=new_max_hp,
                 min_hp=new_min_hp,
@@ -534,6 +535,7 @@ class NPCDeathService:
         else:
             # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
             await self.player_repo.set_stats(
+                preserve_gold=True,
                 user_id=user_id,
                 max_hp=stats.max_hp,
                 min_hp=stats.min_hp,

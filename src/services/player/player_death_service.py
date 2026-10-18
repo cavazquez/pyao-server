@@ -242,8 +242,8 @@ class PlayerDeathService:
             return
 
         # Reducir oro del jugador
-        new_gold = current_gold - gold_to_drop
-        await self.player_repo.update_gold(user_id, new_gold)
+        if not await self.player_repo.remove_gold(user_id, gold_to_drop):
+            return
 
         # Crear ground item de oro
         gold_item: dict[str, int | str | None] = {

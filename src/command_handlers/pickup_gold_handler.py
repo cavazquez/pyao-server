@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from src.models.item_constants import GOLD_ITEM_ID, MAX_PLAYER_GOLD
+from src.models.item_constants import GOLD_ITEM_ID
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -67,21 +67,14 @@ class PickupGoldHandler:
             logger.warning("Cantidad de oro no positiva: %d (user_id=%d)", gold, user_id)
             return False, "Cantidad de oro inválida", None
 
-        current_gold = await self.player_repo.get_gold(user_id)
-
-        if current_gold >= MAX_PLAYER_GOLD:
+        accepted, _balance = await self.player_repo.add_gold_capped(user_id, gold)
+        if accepted == 0:
             await self.message_sender.send_console_msg(
                 "No podés cargar más oro, tu bolsa está al tope."
             )
             return False, "Tope de oro alcanzado", None
 
-        new_gold = current_gold + gold
-        if new_gold > MAX_PLAYER_GOLD:
-            # Capeamos la cantidad aceptada y devolvemos el remanente al suelo
-            # vía el caller (success=False con remanente en el mensaje).
-            accepted = MAX_PLAYER_GOLD - current_gold
-            new_gold = MAX_PLAYER_GOLD
-            await self.player_repo.update_gold(user_id, new_gold)
+        if accepted < gold:
             await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
             await self.broadcast_deletion(map_id, x, y)
             remainder = gold - accepted
@@ -110,7 +103,6 @@ class PickupGoldHandler:
                 {"item_id": GOLD_ITEM_ID, "quantity": accepted, "type": "gold"},
             )
 
-        await self.player_repo.update_gold(user_id, new_gold)
         await self.message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
         await self.broadcast_deletion(map_id, x, y)
         await self.message_sender.send_console_msg(f"Recogiste {gold} monedas de oro.")
