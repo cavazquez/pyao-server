@@ -1,10 +1,11 @@
 """Tests para el sistema de configuración centralizada."""
 
-import math
 import os
 import tempfile
 import unittest
 from pathlib import Path
+
+import pytest
 
 from src.config.config_manager import ConfigManager
 
@@ -244,16 +245,10 @@ melee_range = -1  # Rango inválido (< 0)
             ConfigManager._initialized = False
             # No limpiar _config para que cargue el archivo inválido
 
-            # El ConfigManager debe manejar el error y usar defaults
-            # Verificamos que se creó correctamente (con defaults)
-            config = ConfigManager()
-
-            # Verificar que usa los valores por defecto, no los inválidos
-            assert config.get("server.port") == 7666  # Default, no 100
-            assert math.isclose(
-                config.get("game.combat.base_critical_chance"), 0.15
-            )  # Default, no 1.5
-            assert config.get("game.combat.melee_range") == 1  # Default, no -1
+            # La configuración inválida impide arrancar; nunca cambia de endpoint.
+            with pytest.raises(ValueError, match="Error validando configuración"):
+                ConfigManager()
+            assert not getattr(ConfigManager._instance, "_initialized", False)
 
         finally:
             # Restaurar variables de entorno

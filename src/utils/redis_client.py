@@ -6,6 +6,7 @@ from typing import Any, Self, cast
 
 import redis.asyncio as redis
 
+from src.config.config_manager import config_manager
 from src.utils.redis_config import (
     DEFAULT_EFFECTS_CONFIG,
     DEFAULT_SERVER_CONFIG,
@@ -38,7 +39,7 @@ class RedisClient:
         """Conecta al servidor Redis.
 
         Args:
-            config: Configuración de Redis. Si es None, usa valores por defecto.
+            config: Configuración validada. Si es None, usa la configuración central.
 
         Raises:
             ConnectionError: Si no se puede conectar a Redis (puerto cerrado, host inaccesible).
@@ -49,13 +50,14 @@ class RedisClient:
             return
 
         if config is None:
-            config = RedisConfig()
+            config = RedisConfig.model_validate(config_manager.get_section("redis"))
 
         try:
             self._redis = redis.Redis(
                 host=config.host,
                 port=config.port,
                 db=config.db,
+                max_connections=config.max_connections,
                 decode_responses=config.decode_responses,
                 socket_timeout=config.socket_timeout,
                 socket_connect_timeout=config.socket_connect_timeout,

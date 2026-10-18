@@ -178,10 +178,13 @@ class LoggingConfig(BaseModel):
 class RedisConfig(BaseModel):
     """Configuración de Redis."""
 
-    host: str = Field(default="localhost", description="Host de Redis")
+    host: str = Field(default="localhost", min_length=1, description="Host de Redis")
     port: int = Field(default=6379, ge=1, le=65535, description="Puerto de Redis")
     db: int = Field(default=0, ge=0, description="Base de datos de Redis")
     max_connections: int = Field(default=20, ge=1, description="Máximo de conexiones a Redis")
+    decode_responses: bool = True
+    socket_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
+    socket_connect_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
 
 
 class GameConfig(BaseSettings):
@@ -410,9 +413,6 @@ class _ConfigSingleton:
                 logger.info("Configuración cargada desde %s", toml_path)
             except FileNotFoundError:
                 logger.info("Archivo de configuración no encontrado, usando defaults")
-                cls._instance = GameConfig()
-            except Exception:
-                logger.exception("Error cargando configuración, usando defaults")
                 cls._instance = GameConfig()
 
         return cls._instance

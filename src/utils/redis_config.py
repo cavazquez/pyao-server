@@ -1,18 +1,9 @@
 """Configuración y constantes para Redis."""
 
-from dataclasses import dataclass
+# Reexport compatible: una única definición validada y una sola fuente de defaults.
+from src.config.game_config import RedisConfig
 
-
-@dataclass(frozen=True)
-class RedisConfig:
-    """Configuración de conexión a Redis."""
-
-    host: str = "localhost"
-    port: int = 6379
-    db: int = 0
-    decode_responses: bool = True
-    socket_timeout: float = 5.0
-    socket_connect_timeout: float = 5.0
+__all__ = ["DEFAULT_EFFECTS_CONFIG", "DEFAULT_SERVER_CONFIG", "RedisConfig", "RedisKeys"]
 
 
 class RedisKeys:

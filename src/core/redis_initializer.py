@@ -3,10 +3,11 @@
 import logging
 import time
 
+from src.config.config_manager import config_manager
 from src.core.data_initializer import DataInitializer
 from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
-from src.utils.redis_config import RedisKeys
+from src.utils.redis_config import RedisConfig, RedisKeys
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,8 @@ class RedisInitializer:
             Cliente de Redis conectado y configurado.
         """
         redis_client = RedisClient()
-        await redis_client.connect()
+        effective_config = RedisConfig.model_validate(config_manager.get_section("redis"))
+        await redis_client.connect(effective_config)
         logger.info("✓ Conectado a Redis")
 
         data_initializer = DataInitializer(redis_client)

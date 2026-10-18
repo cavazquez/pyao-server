@@ -282,3 +282,15 @@ PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1
 PYAO_SERVER__PORT=8000 uv run --locked pyao-server --host 127.0.0.1 --port 7777
 # 127.0.0.1:7777.
 ```
+
+### Conexión Redis
+
+El arranque utiliza la sección `[redis]` de `config/server.toml`. El entorno
+prevalece por campo: `PYAO_REDIS__HOST`, `PYAO_REDIS__PORT`, `PYAO_REDIS__DB`,
+`PYAO_REDIS__MAX_CONNECTIONS`, `PYAO_REDIS__SOCKET_TIMEOUT` y
+`PYAO_REDIS__SOCKET_CONNECT_TIMEOUT` (timeouts positivos, en segundos). Los nombres
+legados `PYAO_REDIS_HOST`, `PYAO_REDIS_PORT` y `PYAO_REDIS_DB` siguen admitidos,
+con menor prioridad que los nombres con doble guion bajo. El pool de redis-py
+recibe el límite configurado. Un TOML o entorno inválido aborta el arranque antes
+de abrir el socket del juego; corregí el valor y volvé a iniciar. No hay sustitución
+silenciosa por otra base ni por localhost.

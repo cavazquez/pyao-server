@@ -46,8 +46,6 @@ class ConfigManager:
         if getattr(self, "_initialized", False):
             return
 
-        self._initialized = True
-
         # Usar paths configurados o defaults.
         # En snap usa SNAP_USER_COMMON; en desarrollo usa path relativo a __file__.
         if not hasattr(self, "_config_dir"):
@@ -68,43 +66,18 @@ class ConfigManager:
 
         # Mantener _config para compatibilidad
         self._sync_to_legacy_dict()
+        self._initialized = True
 
     def _load_config_with_pydantic(self) -> None:
         """Carga la configuración usando el nuevo sistema Pydantic."""
-        try:
-            # Crear directorio config si no existe
-            self._config_dir.mkdir(exist_ok=True)
-
-            # Mapear variables de entorno antiguas a nuevas (compatibilidad)
-            # Debe hacerse ANTES de crear GameConfig
-            ConfigManager._map_legacy_env_vars()
-
-            # Cargar usando GameConfig (con validación Pydantic)
-            # Las variables de entorno se cargan automáticamente por Pydantic Settings
-            if self._config_file.exists():
-                # Cargar desde TOML
-                # Nota: Pydantic Settings carga variables de entorno automáticamente
-                # y las sobrescribe sobre los valores del TOML cuando se crea la instancia
-                self._game_config = GameConfig.from_toml(self._config_file)
-                logger.info(
-                    "Configuración cargada desde %s (con validación Pydantic)", self._config_file
-                )
-            else:
-                logger.info("Archivo de configuración no encontrado: %s", self._config_file)
-                # Crear instancia que carga variables de entorno automáticamente
-                self._game_config = GameConfig()  # Usar defaults + env vars
-                logger.info("Usando configuración por defecto (con validación Pydantic)")
-
-        except Exception:
-            logger.exception("Error cargando configuración con Pydantic, usando defaults")
-            # En caso de error, intentar crear con defaults
-            try:
-                self._map_legacy_env_vars()
-                self._game_config = GameConfig()
-            except Exception:
-                logger.exception("Error crítico cargando configuración")
-                # Último recurso: crear sin validación
-                self._game_config = None
+        # Un archivo o entorno inválido debe impedir el arranque, sin cambiar de DB.
+        self._map_legacy_env_vars()
+        if self._config_file.exists():
+            self._game_config = GameConfig.from_toml(self._config_file)
+            logger.info("Configuración validada desde %s", self._config_file)
+        else:
+            self._game_config = GameConfig()
+            logger.info("Configuración validada desde entorno y valores por defecto")
 
     @staticmethod
     def _map_legacy_env_vars() -> None:
@@ -215,6 +188,9 @@ class ConfigManager:
                 "port": self._game_config.redis.port,
                 "db": self._game_config.redis.db,
                 "max_connections": self._game_config.redis.max_connections,
+                "decode_responses": self._game_config.redis.decode_responses,
+                "socket_timeout": self._game_config.redis.socket_timeout,
+                "socket_connect_timeout": self._game_config.redis.socket_connect_timeout,
             },
         }
 
