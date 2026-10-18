@@ -118,22 +118,45 @@ jobs:
           path: artifacts/
           retention-days: 7
 
+  distribution:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --group build
+      - run: uv build
+      - name: Install wheel without checkout imports
+        run: uv run --locked --group build python -m src.operations.distribution validate --directory dist --platform ubuntu-24.04
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: validated-python-distribution
+          path: dist/
+          retention-days: 7
+
   # Mantiene el nombre del check previo: nunca pasa si algún grupo falló o se omitió.
   test:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     if: ${{ always() }}
-    needs: [quality, fast-tests, redis-integration]
+    needs: [quality, fast-tests, redis-integration, distribution]
     steps:
       - name: Require every validation group
         env:
           QUALITY: ${{ needs.quality.result }}
           FAST_TESTS: ${{ needs.fast-tests.result }}
           INTEGRATION: ${{ needs.redis-integration.result }}
+          DISTRIBUTION: ${{ needs.distribution.result }}
         run: |
           test "$QUALITY" = success
           test "$FAST_TESTS" = success
           test "$INTEGRATION" = success
+          test "$DISTRIBUTION" = success
 
   markdown-links:
     runs-on: ubuntu-24.04

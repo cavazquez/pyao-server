@@ -17,7 +17,7 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v7
       with:
-        version: "latest"
+        version: "0.13.1"
         enable-cache: true
     
     - name: Set up Python
@@ -34,7 +34,7 @@ jobs:
           ${{ runner.os }}-uv-
     
     - name: Install dependencies
-      run: uv sync --dev
+      run: uv sync --locked --dev
     
     - name: Print tool versions
       run: |
@@ -65,7 +65,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-latest, macos-latest]
     
     steps:
     - uses: actions/checkout@v6
@@ -73,7 +73,7 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v7
       with:
-        version: "latest"
+        version: "0.13.1"
         enable-cache: true
     
     - name: Set up Python
@@ -90,7 +90,7 @@ jobs:
           ${{ matrix.os }}-uv-
     
     - name: Install dependencies
-      run: uv sync --all-groups
+      run: uv sync --locked --all-groups
     
     - name: Print tool versions
       run: |
@@ -101,18 +101,9 @@ jobs:
     - name: Build package
       run: uv build
     
-    - name: Rename artifacts with OS suffix
-      shell: bash
-      run: |
-        for f in dist/pyao_server-*.whl; do
-          base=$(basename "$f" .whl)
-          mv "$f" "dist/${base}-${{ matrix.os }}.whl"
-        done
-        for f in dist/pyao_server-*.tar.gz; do
-          base=$(basename "$f" .tar.gz)
-          mv "$f" "dist/${base}-${{ matrix.os }}.tar.gz"
-        done
-    
+    - name: Install the original wheel in a clean environment
+      run: uv run --locked --group build python -m src.operations.distribution validate --directory dist --platform ${{ matrix.os }}
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v7
       with:
@@ -150,13 +141,20 @@ jobs:
       with:
         pattern: dist-*
         path: dist-all
-        merge-multiple: true
-        if-no-files-found: error
+        merge-multiple: false
     
+    - uses: astral-sh/setup-uv@v7
+      with:
+        version: "0.13.1"
+    - run: uv python install 3.14
+    - run: uv sync --locked --group build
+    - name: Assemble validated assets without filename collisions
+      run: uv run --locked --group build python -m src.operations.distribution assemble --directory dist-all --output release-dist --canonical ubuntu-24.04
+
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
-        files: dist-all/*
+        files: release-dist/*
         generate_release_notes: true
         make_latest: false
         prerelease: true

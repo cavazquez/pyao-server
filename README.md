@@ -170,6 +170,7 @@ pyao-server/
 │   ├── command_handlers/     # Ejecución de comandos
 │   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
 │   ├── repositories/         # Persistencia
+│   ├── operations/           # Redis, smoke y distribution: validación y ensamblado de releases
 │   ├── models/               # Entidades y catálogos
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
@@ -507,3 +508,5 @@ Ver [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) para guía completa y [docs/CLA
 ## 📄 Licencia
 
 Apache License 2.0 - ver [LICENSE](LICENSE) para más detalles.
+
+La release conserva los nombres originales del wheel y sdist. `uv run --group build python -m src.operations.distribution validate --platform ubuntu-24.04` instala el wheel sin dependencias en un entorno nuevo, después de instalar el runtime fijado por `uv.lock`; comprueba metadata, entry point y `--help` fuera del checkout. El ensamblador exige esos manifiestos y hashes y guarda los builds por OS en ZIP independientes.
