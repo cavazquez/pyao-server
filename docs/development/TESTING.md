@@ -1,6 +1,27 @@
-> **Última consolidación:** 2026-05
+# Pruebas y diagnóstico del entorno
 
-# Análisis de Cobertura de Tests
+## Bloqueo de asyncio durante la carga de mercaderes
+
+Diagnóstico del 18/10/2026, [issue #110](https://github.com/cavazquez/pyao-server/issues/110): en un entorno que permite crear `socket.socketpair()` pero rechaza su envío con `EPERM`, el worker de `asyncio.to_thread()` termina y su resultado queda encolado sin despertar el event loop. El test de `DataInitializer` espera en `selectors.select()`; la traza muestra el worker inactivo. La misma prueba fuera de esa restricción termina normalmente. No requiere Redis real: usa mocks del cliente y los datos TOML del repositorio.
+
+Entorno de reproducción: Python 3.14.0 free-threaded (`.python-version`: `3.14t`), uv 0.13.1, pytest 9.0.3, pytest-asyncio 1.3.0, redis 7.4.0 y fakeredis 2.35.1, con las dependencias de `uv.lock`.
+
+```bash
+uv sync --locked --dev
+uv run pytest tests/core/test_data_initializer.py::test_data_initializer_with_real_merchant_loader -vv -o faulthandler_timeout=5
+```
+
+El hook `pytest_sessionstart` comprueba envío y recepción por un socketpair, con un segundo de timeout en cada socket. Un fallo aborta antes de ejecutar la suite, con el error del sistema y un diagnóstico explícito. No se omite el test ni se reemplaza el loader real; las pruebas deben ejecutarse en un entorno que permita esa comunicación local. La comprobación usa sockets propios y no conecta a servicios externos.
+
+Para obtener una traza previa al hook en una revisión anterior, ejecutar el comando de pytest bajo un límite externo de tiempo (`timeout 20s` en Linux). `faulthandler_timeout` imprime la espera, pero por sí solo no cancela un test bloqueado.
+
+Si el repositorio se movió de directorio y los scripts de `.venv/bin` conservan el shebang anterior, regenerarlos con `uv sync --locked --dev --reinstall`. Esto conserva las versiones del lockfile.
+
+## Histórico de cobertura
+
+Las cifras siguientes provienen de la consolidación de mayo de 2026 y del análisis fechado en octubre de 2025. No acreditan el estado de la revisión actual; para publicar se usa la evidencia exigida por el [alcance de la 1.0, issue #123](https://github.com/cavazquez/pyao-server/issues/123).
+
+### Análisis de cobertura de tests de octubre de 2025
 
 **Fecha:** 2025-10-13  
 **Cobertura Total:** 56% (489/879 líneas)  
