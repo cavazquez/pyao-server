@@ -3,10 +3,12 @@
 # Parchear FakeRedisMixin para no usar argumentos deprecados de redis-py
 # (retry_on_timeout; lib_name/lib_version → driver_info). Así se resuelven
 # los warnings sin tocar Redis/ConnectionPool y sin romper decode_responses.
+import socket
 import warnings
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
 import pytest_asyncio
 import redis.asyncio as redis_async
 from fakeredis import aioredis
@@ -16,6 +18,33 @@ from fakeredis.aioredis import FakeAsyncRedisConnection, FakeRedisMixin, FakeSer
 from redis.driver_info import DriverInfo
 
 from src.utils.redis_client import RedisClient
+
+
+def pytest_sessionstart() -> None:
+    """Comprueba que el entorno permite despertar el event loop desde otro hilo.
+
+    Raises:
+        pytest.UsageError: Si el canal local de asyncio no funciona en este entorno.
+    """
+    diagnostic = (
+        "El entorno no permite el canal local de asyncio (socketpair). "
+        "Las pruebas requieren enviar y recibir por ese canal; sin él, "
+        "asyncio.to_thread() puede quedar esperando indefinidamente. "
+        "Ejecute las pruebas en un entorno con esa comunicación local habilitada."
+    )
+    try:
+        reader, writer = socket.socketpair()
+        with reader, writer:
+            reader.settimeout(1)
+            writer.settimeout(1)
+            writer.sendall(b"\x00")
+            response = reader.recv(1)
+    except OSError as error:
+        msg = f"{diagnostic} Error del sistema: {error}"
+        raise pytest.UsageError(msg) from error
+    if response != b"\x00":
+        msg = f"{diagnostic} No se recibió la señal de prueba."
+        raise pytest.UsageError(msg)
 
 
 def _patched_fake_redis_mixin_init(
