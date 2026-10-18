@@ -140,6 +140,7 @@ class ClientPacketID(IntEnum):
     # STOP_SHARING_NPC = 127
     # CONSULTATION = 128
     MOVE_ITEM = 129  # Reordenar slots del inventario
+    TRADE_ACTION = 252  # Acción con sesión y revisión explícitas
     CAPABILITIES = 250  # Negociación optativa después del login
 
 
@@ -253,5 +254,6 @@ class ServerPacketID(IntEnum):
     MULTI_MESSAGE = 104  # Mensaje multipropósito con subtipos
     STOP_WORKING = 105
     CANCEL_OFFER_ITEM = 106
+    TRADE_STATE = 252  # Snapshot optativo de ambas ofertas
     CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
     SKILL_CATALOG = 251  # Catálogo v1 negociado con 22 habilidades

@@ -51,3 +51,39 @@ Cada stack tiene una identidad opcional versionada `g1.<nonce>`. Los JSON legacy
 El índice espera commit y AOF, recarga la caché desde Redis y publica el tile dentro de la misma exclusión por mapa. Un replay recarga el estado actual; no repone una caché antigua ni repite publicaciones exitosas dentro de la ventana de recibos. La API síncrona queda para tests en memoria y rechaza mutaciones persistidas; reemplazar un snapshot completo exige que no haya sesiones activas. NPCs y muerte usan las APIs esperables en lugar de guardar snapshots en segundo plano. Las actualizaciones de slots y moneda se envían tras el resultado confirmado.
 
 `uv run python -m src.operations.ground_atomic_smoke` disputa un stack entre dos jugadores, verifica el remanente de oro y el slot 30, mata el Redis propio con SIGKILL y repite todas las transferencias al reiniciar. Inventarios, saldos, suelo y caché deben coincidir exactamente. Las pruebas rápidas inyectan fallas antes/después de EXEC y validan que ni un tile ni un inventario parcialmente disponibles consumen recursos.
+
+
+## Intercambio versionado y ciclo de vida (#130, #152)
+
+El bit optativo `TRADE_STATE=128` habilita `252` en ambas direcciones. El cliente
+manda versión `u8=1`, sesión `str16` de 32 hexadecimales, revisión `i32`, acción
+`u8` (0 aceptar, 1 ítem, 2 oro, 3 confirmar, 4 cancelar, 5 rechazar), slot `u8`
+y cantidad `i32`. El servidor responde versión `u8=1` y JSON ASCII `str16`
+(max. 3072 bytes); los participantes son arrays `[id,nombre,oro,confirmado,ítems]`
+y cada ítem `[slot,id,cantidad]`. Se conservan los 30 slots. Una revisión cambia
+al aceptar/editar y borra ambas confirmaciones. Una secuencia independiente y
+monótona ordena también publicaciones de la misma revisión. Ambos snapshots se
+congelan antes de cualquier envío; Godot descarta publicaciones antiguas.
+
+Sólo el invitado puede aceptar. Invitación: 30 s; inactividad: 300 s; rango:
+Chebyshev de dos tiles en el mismo mapa. Un monitor propio cada 500 ms comprueba
+vida, posición y la identidad del `MessageSender`; una reconexión no hereda
+la sesión. Desconectar cancela antes de retirar al jugador y el monitor se
+cierra antes de Redis. Cada confirmación revalida esos requisitos.
+
+Si ya comenzó la liquidación, cancelar intenta escribir un resultado inmutable
+en el mismo journal que el commit. `WATCH/MULTI` elige un único ganador: si
+el commit ganó se informa completado; si ganó cancelar, ningún recurso se mueve.
+No se devuelve oro ni ítems mediante operaciones compensatorias. Un fallo de
+fsync mantiene el ID congelado hasta recuperar el resultado.
+
+Dos clientes clásicos conservan su flujo previo y la liquidación atómica;
+no reciben el paquete 252. Se rechazan sesiones mixtas clásico/versionado con
+un mensaje explícito. Godot sólo pide bits implementados (1 y 128) y ofrece
+`/comerciar <usuario>`; `/comerciar` conserva el comercio NPC.
+
+`uv run --locked --no-dev python -m src.operations.trade_protocol_smoke` ensaya
+negociación, fragmentación/concatenación, rechazo de confirmación vieja, commit,
+nueva sesión y cierre real de socket con Redis AOF aislado. Los tests rápidos
+cubren ambos ganadores del arbitraje y reloj simulado para expiración/muerte/
+rango/mapa/reconexión, sin sustituir la persistencia de recursos por mocks.

@@ -98,6 +98,7 @@ jobs:
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.gold_atomic_smoke > artifacts/gold-smoke.json 2> artifacts/gold-smoke.log
           cat artifacts/gold-smoke.json
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.trade_atomic_smoke > artifacts/trade-smoke.json 2> artifacts/trade-smoke.log
+          timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.trade_protocol_smoke > artifacts/trade-protocol-smoke.json 2> artifacts/trade-protocol-smoke.log
           cat artifacts/trade-smoke.json
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.bank_items_smoke > artifacts/bank-items-smoke.json 2> artifacts/bank-items-smoke.log
           cat artifacts/bank-items-smoke.json

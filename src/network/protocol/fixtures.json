@@ -280,5 +280,27 @@
       "level_22": 3,
       "percentage_22": 0
     }
+  },
+  {
+    "name": "trade_action",
+    "direction": "client",
+    "hex": "fc012000616161616161616161616161616161616161616161616161616161616161616101000000030000000000",
+    "values": {
+      "version": 1,
+      "session_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "revision": 1,
+      "action": 3,
+      "slot": 0,
+      "quantity": 0
+    }
+  },
+  {
+    "name": "trade_state",
+    "direction": "server",
+    "hex": "fc01ae007b226964223a226161616161616161616161616161616161616161616161616161616161616161222c227265766973696f6e223a312c227374617465223a22616374697665222c22766965776572223a312c22706c6179657273223a5b5b312c22416c696365222c302c66616c73652c5b5b33302c3130312c325d5d5d2c5b322c22426f62222c31302c66616c73652c5b5d5d5d2c22726561736f6e223a22222c2273657175656e6365223a317d",
+    "values": {
+      "version": 1,
+      "snapshot": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"revision\":1,\"state\":\"active\",\"viewer\":1,\"players\":[[1,\"Alice\",0,false,[[30,101,2]]],[2,\"Bob\",10,false,[]]],\"reason\":\"\",\"sequence\":1}"
+    }
   }
 ]

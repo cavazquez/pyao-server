@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.utils.durability import require_durable
-from src.utils.gold_atomic import validate_operation_id
+from src.utils.gold_atomic import operation_id, validate_operation_id
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -171,3 +171,56 @@ async def get_trade_result(redis: Redis, identity: str, user_id: int) -> dict[st
         return None
     await require_durable(redis)
     return cast("dict[str, Any]", json.loads(journal["result"]))
+
+
+async def cancel_settlement(
+    redis: Redis,
+    identity: str,
+    offers: tuple[ParticipantOffer, ParticipantOffer],
+    capacity: int,
+    max_stack: int,
+    reason: str,
+) -> dict[str, Any]:
+    """Arbitra cancelación versus commit mediante el mismo journal inmutable.
+
+    Returns:
+        El resultado ganador; nunca compensa un intercambio ya confirmado.
+    """
+    validate_operation_id(identity)
+    request = {
+        "offers": [asdict(offer) for offer in offers],
+        "capacity": capacity,
+        "max_stack": max_stack,
+    }
+    fingerprint = sha256(json.dumps(request, sort_keys=True).encode()).hexdigest()
+    key = f"trade:settlement:{identity}"
+
+    def decide(snapshot: Snapshot) -> Decision:
+        saved = cast("dict[str, str]", snapshot[key])
+        if saved:
+            if saved["request"] != fingerprint:
+                message = "Identificador reutilizado para otra oferta"
+                raise ValueError(message)
+            return Decision(cast("dict[str, Any]", json.loads(saved["result"])), {})
+        result = {"applied": False, "cancelled": True, "message": reason}
+        return Decision(
+            result,
+            {
+                key: {
+                    "request": fingerprint,
+                    "result": json.dumps(result),
+                    "participants": json.dumps([offer.user_id for offer in offers]),
+                }
+            },
+        )
+
+    await require_durable(redis)
+    result = await transact(
+        redis,
+        (Resource(key, "hash"),),
+        operation_id(),
+        {"cancel": identity, "request": fingerprint},
+        decide,
+    )
+    await require_durable(redis)
+    return result

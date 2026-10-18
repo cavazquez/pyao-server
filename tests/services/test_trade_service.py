@@ -2,6 +2,8 @@
 """Tests para TradeService."""
 
 import asyncio
+import json
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -76,7 +78,11 @@ async def setup_trade(redis_client):
     await player.update_gold(2, 200)
     await inventory.set_slot(1, 1, 101, 5)
     await inventory.set_slot(2, 2, 202, 3)
-    service = TradeService(player, inventory, manager)
+    await player.set_position(1, 50, 50, 1)
+    await player.set_position(2, 51, 50, 1)
+    for user in [1, 2]:
+        await player.redis.hset(f"player:{user}:user_stats", mapping={"min_hp": "100"})
+    service = TradeService(player, inventory, manager, monitor=False)
     with patch("src.services.trade_settlement.require_durable", new=AsyncMock()):
         yield service, manager, player, inventory
 
@@ -176,8 +182,8 @@ async def test_unknown_durability_result_is_retried_without_reapplying(setup_tra
     assert await player.get_gold(1) == 80
     assert await player.get_gold(2) == 220
     assert not (await service.update_offer(1, 0, 1))[0]
-    assert not (await service.cancel_trade(1))[0]
-    assert (await service.confirm_trade(1))[0]
+    assert (await service.cancel_trade(1))[0]  # El commit ya ganó; informa éxito, sin reembolsar.
+    assert not (await service.confirm_trade(1))[0]
     assert await player.get_gold(1) == 80
     assert await player.get_gold(2) == 220
 
@@ -217,3 +223,123 @@ async def test_offer_read_racing_with_commit_cannot_change_frozen_offer(setup_tr
         assert (await commit)[0]
     assert await inventory.get_slot(1, 1) == (101, 5)
     assert await player.get_gold(1) == 80
+
+
+def modern(service, manager):
+    for user in (1, 2):
+        sender = manager.get_player_message_sender(user)
+        sender.connection = SimpleNamespace(
+            capabilities=SimpleNamespace(enabled=128), send=AsyncMock()
+        )
+    service.clock = lambda: 100.0
+
+
+@pytest.mark.asyncio
+async def test_revision_snapshots_stale_confirmation_and_acceptance(setup_trade):
+    service, manager, _player, _inventory = setup_trade
+    modern(service, manager)
+    await service.request_trade(1, "Bob")
+    session = service.get_session(1)
+    identity = session.session_id
+    assert not (await service.confirm_trade(1, revision=0))[0]
+    assert (await service.apply_action(2, identity, 0, 0, 0, 0))[0]
+    assert session.revision == 1
+    assert (await service.apply_action(1, identity, 1, 3, 0, 0))[0]
+    assert session.initiator_confirmed
+    assert (await service.apply_action(2, identity, 1, 2, 0, 20))[0]
+    assert session.revision == 2
+    assert not session.initiator_confirmed
+    assert not session.target_confirmed
+    assert not (await service.apply_action(1, identity, 1, 3, 0, 0))[0]
+
+    snapshots = []
+    for user in (1, 2):
+        packet = manager.get_player_message_sender(user).connection.send.call_args.args[0]
+        assert packet[:2] == bytes([252, 1])
+        snapshot = json.loads(packet[4:])
+        assert snapshot["viewer"] == user
+        assert snapshot["revision"] == 2
+        snapshots.append(snapshot["players"])
+    assert snapshots[0] == snapshots[1]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("event", ["disconnect", "reconnect", "map", "range", "death", "timeout"])
+async def test_lifecycle_cancels_once_and_releases_both_users(setup_trade, event):
+    service, manager, player, _inventory = setup_trade
+    modern(service, manager)
+    await service.request_trade(1, "Bob")
+    session = service.get_session(1)
+    old_sender = manager.get_player_message_sender(1)
+    other = manager.get_player_message_sender(2)
+    if event == "disconnect":
+        del manager._users[1]
+    elif event == "reconnect":
+        manager.add_player(1, "Alice")
+    elif event == "map":
+        await player.set_position(1, 50, 50, 2)
+    elif event == "range":
+        await player.set_position(1, 70, 70, 1)
+    elif event == "death":
+        await player.redis.hset("player:1:user_stats", mapping={"min_hp": "0"})
+    else:
+        service.clock = lambda: 131.0
+    await service.sweep()
+    await service.sweep()
+    assert service.get_session(1) is None
+    assert service.get_session(2) is None
+    assert other.connection.send.await_count == 2  # Invitación + un resultado terminal.
+    assert not (await service.apply_action(1, session.session_id, 0, 3, 0, 0))[0]
+    if event == "reconnect":
+        assert old_sender.connection.send.await_count == 1
+        assert manager.get_player_message_sender(1).init_payloads == []
+    # Pueden volver a comerciar después de recuperar sus condiciones.
+    manager._users[1] = (old_sender, "Alice")
+    await player.set_position(1, 50, 50, 1)
+    await player.redis.hset("player:1:user_stats", mapping={"min_hp": "100"})
+    assert (await service.request_trade(1, "Bob"))[0]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("commit_first", [False, True])
+async def test_cancel_races_commit_without_compensation(setup_trade, commit_first):
+    service, manager, player, _inventory = setup_trade
+    modern(service, manager)
+    await service.request_trade(1, "Bob")
+    session = service.get_session(1)
+    await service.apply_action(2, session.session_id, 0, 0, 0, 0)
+    await service.apply_action(1, session.session_id, 1, 2, 0, 20)
+    await service.apply_action(1, session.session_id, 2, 3, 0, 0)
+    entered, resume = asyncio.Event(), asyncio.Event()
+    original = service._perform_trade
+
+    async def delayed(current):
+        if commit_first:
+            result = await original(current)
+        entered.set()
+        await resume.wait()
+        return result if commit_first else await original(current)
+
+    with patch.object(service, "_perform_trade", delayed):
+        task = asyncio.create_task(service.apply_action(2, session.session_id, 2, 3, 0, 0))
+        await asyncio.wait_for(entered.wait(), 2)
+        assert (await service.cancel_trade(1, "Desconectado"))[0]
+        resume.set()
+        result = await task
+    assert result[0] is commit_first
+    assert await player.get_gold(1) == (80 if commit_first else 100)
+    assert await player.get_gold(2) == (220 if commit_first else 200)
+    assert not service.is_user_in_trade(1)
+    assert not service.is_user_in_trade(2)
+    for user in (1, 2):
+        packets = [
+            call.args[0]
+            for call in manager.get_player_message_sender(user).connection.send.call_args_list
+        ]
+        assert (
+            sum(
+                b'"state":"completed"' in packet or b'"state":"cancelled"' in packet
+                for packet in packets
+            )
+            == 1
+        )

@@ -198,6 +198,8 @@ class ArgentumServer:
             current = self.deps.map_manager.get_player_message_sender(user_id)
             if current is not message_sender:
                 return
+        if self.deps.trade_service:
+            await self.deps.trade_service.cancel_trade(user_id, "Un participante se desconectó.")
         # Obtener el mapa del jugador antes de removerlo
         position = await self.deps.player_repo.get_position(user_id)
         if position:
@@ -312,6 +314,8 @@ class ArgentumServer:
             await self.server.wait_closed()
             logger.info("Servidor detenido")
 
+        if self.deps and self.deps.trade_service:
+            await self.deps.trade_service.close()
         await close_password_executor()
 
         # Desconectar de Redis

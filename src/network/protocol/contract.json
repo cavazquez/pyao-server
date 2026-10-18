@@ -977,6 +977,39 @@
             "type": "i32"
           }
         ]
+      },
+      "252": {
+        "name": "TRADE_ACTION",
+        "status": "supported",
+        "requires_capability": 128,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "session_id",
+            "type": "str16",
+            "min_bytes": 32,
+            "max_bytes": 32
+          },
+          {
+            "name": "revision",
+            "type": "i32"
+          },
+          {
+            "name": "action",
+            "type": "u8"
+          },
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i32"
+          }
+        ]
       }
     },
     "server": {
@@ -2486,6 +2519,23 @@
           {
             "name": "percentage_22",
             "type": "u8"
+          }
+        ]
+      },
+      "252": {
+        "name": "TRADE_STATE",
+        "status": "supported",
+        "requires_capability": 128,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "snapshot",
+            "type": "str16",
+            "min_bytes": 1,
+            "max_bytes": 3072
           }
         ]
       }
