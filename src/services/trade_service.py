@@ -8,7 +8,10 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
-from src.models.item_constants import MAX_PLAYER_GOLD
+from src.config.config_manager import ConfigManager
+from src.services.inventory_notifications import notify_inventory
+from src.services.trade_settlement import OfferedItem, ParticipantOffer, settle_trade
+from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -65,6 +68,8 @@ class TradeSession:
     # confirm_trade. Al ser asyncio de un solo hilo, no hay race entre el
     # check y el set, ya que no hay punto de cesión entre ellos.
     _trade_executing: bool = False
+    _settlement_uncertain: bool = False
+    settlement_id: str | None = None
 
 
 class TradeService:
@@ -140,9 +145,13 @@ class TradeService:
         if not session:
             return False, "No tienes una sesión de comercio activa."
 
+        if session._trade_executing or session._settlement_uncertain:  # noqa: SLF001
+            return False, "Esperá la confirmación del intercambio antes de cancelar."
+
         message = reason or "La sesión de comercio fue cancelada."
-        await self._send_trade_end(session, message)
+        session.state = TradeState.CANCELLED
         self.clear_session(user_id)
+        await self._send_trade_end(session, message)
         return True, message
 
     async def confirm_trade(self, user_id: int) -> tuple[bool, str]:
@@ -183,7 +192,12 @@ class TradeService:
         await self._notify_console(user_id, "Marcaste listo para el intercambio.", font_color=7)
 
         if should_execute:
-            success, message = await self._perform_trade(session)
+            session._settlement_uncertain = True  # noqa: SLF001
+            try:
+                success, message = await self._perform_trade(session)
+            finally:
+                session._trade_executing = False  # noqa: SLF001
+            session._settlement_uncertain = False  # noqa: SLF001
             if success:
                 await self._notify_console(
                     session.initiator_id, "Intercambio completado.", font_color=7
@@ -191,12 +205,14 @@ class TradeService:
                 await self._notify_console(
                     session.target_id, "Intercambio completado.", font_color=7
                 )
+                await self._send_trade_end(session, "Intercambio completado.")
                 self.clear_session(user_id)
                 return True, "Intercambio completado."
 
             session._trade_executing = False  # noqa: SLF001
             session.initiator_confirmed = False
             session.target_confirmed = False
+            session.settlement_id = None
             await self._notify_console(session.initiator_id, message, font_color=1)
             await self._notify_console(session.target_id, message, font_color=1)
             return False, message
@@ -228,6 +244,9 @@ class TradeService:
         session = self.get_session(user_id)
         if not session:
             return False, "No tienes una sesión de comercio activa."
+
+        if session._trade_executing or session._settlement_uncertain:  # noqa: SLF001
+            return False, "La oferta está siendo confirmada; esperá el resultado."
 
         if quantity < 0:
             return False, "La cantidad debe ser positiva."
@@ -362,6 +381,10 @@ class TradeService:
             return True, "Oferta actualizada."
 
         slot_content = await self.inventory_repo.get_slot(user_id, slot)
+        if session._trade_executing or session._settlement_uncertain:  # noqa: SLF001
+            return False, "La oferta está siendo confirmada; esperá el resultado."
+        if self.get_session(user_id) is not session:
+            return False, "La sesión de comercio cambió."
         if not slot_content:
             return False, "El slot seleccionado está vacío."
 
@@ -375,11 +398,11 @@ class TradeService:
             return False, "Ese slot ya contiene otra oferta."
 
         offer.items[slot] = TradeOfferItem(slot=slot, item_id=item_id, quantity=quantity)
+        self._reset_confirmations(session)
         await self._notify_console(
             user_id, f"Ofreces {quantity} unidad(es) del item en slot {slot}."
         )
         partner_id = self._get_partner_id(session, user_id)
-        self._reset_confirmations(session)
         await self._notify_console(
             partner_id, f"{self._resolve_username(user_id)} actualizó su oferta."
         )
@@ -389,6 +412,10 @@ class TradeService:
         self, session: TradeSession, user_id: int, quantity: int
     ) -> tuple[bool, str]:
         current_gold = await self.player_repo.get_gold(user_id)
+        if session._trade_executing or session._settlement_uncertain:  # noqa: SLF001
+            return False, "La oferta está siendo confirmada; esperá el resultado."
+        if self.get_session(user_id) is not session:
+            return False, "La sesión de comercio cambió."
         if quantity > current_gold:
             return False, "No tienes tanto oro."
 
@@ -407,119 +434,38 @@ class TradeService:
         return True, "Oferta de oro actualizada."
 
     async def _perform_trade(self, session: TradeSession) -> tuple[bool, str]:
-        participants = [
-            (session.initiator_id, session.initiator_offer, session.target_id),
-            (session.target_id, session.target_offer, session.initiator_id),
-        ]
-
-        validation = await self._validate_offers(participants)
-        if validation is not None:
-            return False, validation
-
-        removed_items: list[tuple[int, TradeOfferItem]] = []
-        removed_gold: list[tuple[int, int]] = []
-
-        for user_id, offer, _ in participants:
-            for item in offer.items.values():
-                success = await self.inventory_repo.remove_item(user_id, item.slot, item.quantity)
-                if not success:
-                    await self._refund_removed_resources(removed_items, removed_gold)
-                    return False, "No se pudo reservar un item del comercio."
-                removed_items.append((user_id, item))
-
-            if offer.gold:
-                success = await self.player_repo.remove_gold(user_id, offer.gold)
-                if not success:
-                    await self._refund_removed_resources(removed_items, removed_gold)
-                    return False, "No tienes suficiente oro para completar el intercambio."
-                removed_gold.append((user_id, offer.gold))
-
-        delivered_items: list[tuple[int, int, int]] = []
-        delivered_gold: list[tuple[int, int]] = []
-
-        for _source_id, offer, target_id in participants:
-            for item in offer.items.values():
-                slots_modified = await self.inventory_repo.add_item(
-                    target_id, item.item_id, item.quantity
-                )
-                if not slots_modified:
-                    await self._rollback_trade(
-                        removed_items, removed_gold, delivered_items, delivered_gold
-                    )
-                    return (
-                        False,
-                        f"{self._resolve_username(target_id)} no tiene espacio suficiente.",
-                    )
-                delivered_items.append((target_id, item.item_id, item.quantity))
-
-            if offer.gold:
-                current = await self.player_repo.get_gold(target_id)
-                safe_amount = min(offer.gold, MAX_PLAYER_GOLD - current)
-                if safe_amount > 0:
-                    await self.player_repo.add_gold(target_id, safe_amount)
-                    delivered_gold.append((target_id, safe_amount))
-
-        return True, "Intercambio completado."
-
-    async def _validate_offers(self, participants: list[tuple[int, TradeOffer, int]]) -> str | None:
-        """Verifica que los recursos ofrecidos aún estén disponibles.
-
-        También controla que el receptor de oro no supere ``MAX_PLAYER_GOLD``.
+        """Confirma recursos y journal antes de sincronizar los clientes.
 
         Returns:
-            Mensaje de error si la validación falla, ``None`` si todo está en orden.
+            Éxito y mensaje de la liquidación durable.
         """
-        for user_id, offer, target_id in participants:
-            for item in offer.items.values():
-                slot_content = await self.inventory_repo.get_slot(user_id, item.slot)
-                if not slot_content:
-                    username = self._resolve_username(user_id)
-                    return f"{username} ya no tiene el item del slot {item.slot}."
-                item_id, quantity = slot_content
-                if item_id != item.item_id or quantity < item.quantity:
-                    return f"{self._resolve_username(user_id)} modificó el slot {item.slot}."
-
-            gold_available = await self.player_repo.get_gold(user_id)
-            if offer.gold > gold_available:
-                return f"{self._resolve_username(user_id)} ya no tiene ese oro disponible."
-
-            # Verificar que el receptor de oro no supere el tope
-            if offer.gold > 0:
-                target_gold = await self.player_repo.get_gold(target_id)
-                if target_gold + offer.gold > MAX_PLAYER_GOLD:
-                    return (
-                        f"{self._resolve_username(target_id)} no puede recibir tanto oro "
-                        f"(tope: {MAX_PLAYER_GOLD})."
-                    )
-
-        return None
-
-    async def _refund_removed_resources(
-        self, removed_items: list[tuple[int, TradeOfferItem]], removed_gold: list[tuple[int, int]]
-    ) -> None:
-        for user_id, item in removed_items:
-            added = await self.inventory_repo.add_item(user_id, item.item_id, item.quantity)
-            if not added:
-                logger.error("No se pudo devolver item %s al jugador %d", item, user_id)
-
-        for user_id, amount in removed_gold:
-            await self.player_repo.add_gold(user_id, amount)
-
-    async def _rollback_trade(
-        self,
-        removed_items: list[tuple[int, TradeOfferItem]],
-        removed_gold: list[tuple[int, int]],
-        delivered_items: list[tuple[int, int, int]],
-        delivered_gold: list[tuple[int, int]],
-    ) -> None:
-        for user_id, item_id, quantity in delivered_items:
-            success = await self.inventory_repo.remove_item_by_item_id(user_id, item_id, quantity)
-            if not success:
-                logger.error("No se pudo revertir item %d en inventario de %d", item_id, user_id)
-
-        for user_id, amount in delivered_gold:
-            removed = await self.player_repo.remove_gold(user_id, amount)
-            if not removed:
-                logger.error("No se pudo revertir oro entregado a %d", user_id)
-
-        await self._refund_removed_resources(removed_items, removed_gold)
+        if session.settlement_id is None:
+            session.settlement_id = operation_id()
+        offers = tuple(
+            ParticipantOffer(
+                user_id,
+                offer.gold,
+                tuple(
+                    OfferedItem(item.slot, item.item_id, item.quantity)
+                    for item in sorted(offer.items.values(), key=lambda item: item.slot)
+                ),
+            )
+            for user_id, offer in (
+                (session.initiator_id, session.initiator_offer),
+                (session.target_id, session.target_offer),
+            )
+        )
+        result = await settle_trade(
+            self.player_repo.redis.redis,
+            session.settlement_id,
+            (offers[0], offers[1]),
+            ConfigManager.as_int(self.inventory_repo.MAX_SLOTS),
+            self.inventory_repo.stacking.max_stack,
+        )
+        if result["applied"]:
+            for offer in offers:
+                sender = self._get_sender(offer.user_id)
+                if sender:
+                    await notify_inventory(sender, self.inventory_repo, offer.user_id)
+                    await sender.send_update_gold(await self.player_repo.get_gold(offer.user_id))
+        return bool(result["applied"]), str(result["message"])

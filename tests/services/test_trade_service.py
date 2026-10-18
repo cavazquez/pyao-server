@@ -2,12 +2,14 @@
 """Tests para TradeService."""
 
 import asyncio
-from collections import defaultdict
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 
 import pytest
+import pytest_asyncio
 
 from src.models.item_constants import MAX_PLAYER_GOLD
+from src.repositories.inventory_repository import InventoryRepository
+from src.repositories.player_repository import PlayerRepository
 from src.services.trade_service import TradeService
 
 
@@ -17,6 +19,8 @@ class DummySender:
     def __init__(self) -> None:
         self.init_payloads: list[str] = []
         self.end_calls = 0
+        self.send_change_inventory_slot = AsyncMock()
+        self.send_update_gold = AsyncMock()
         self.console_messages: list[tuple[str, int]] = []
 
     async def send_user_commerce_init(self, partner_username: str) -> None:
@@ -56,355 +60,160 @@ class DummyMapManager:
         return entry[0] if entry else None
 
 
-@pytest.fixture
-def map_manager() -> DummyMapManager:
-    return DummyMapManager()
+@pytest_asyncio.fixture
+async def setup_trade(redis_client):
+    """Usa recursos concretos y sustituye I/O de mensajería/fsync en tests rápidos.
 
-
-@pytest.fixture
-def inventory_repo() -> AsyncMock:
-    repo = AsyncMock()
-    repo.get_slot = AsyncMock(return_value=(1, 10))
-    repo.remove_item = AsyncMock(return_value=True)
-    repo.add_item = AsyncMock(return_value=[(1, 1)])
-    repo.remove_item_by_item_id = AsyncMock(return_value=True)
-    return repo
-
-
-@pytest.fixture
-def player_repo() -> AsyncMock:
-    repo = AsyncMock()
-    repo.get_gold = AsyncMock(return_value=0)
-    repo.remove_gold = AsyncMock(return_value=True)
-    repo.add_gold = AsyncMock()
-    return repo
-
-
-def make_service(
-    player_repo: AsyncMock, inventory_repo: AsyncMock, map_manager: DummyMapManager
-) -> TradeService:
-    return TradeService(
-        player_repo=player_repo,
-        inventory_repo=inventory_repo,
-        map_manager=map_manager,
-    )
-
-
-@pytest.mark.asyncio
-async def test_request_trade_creates_session(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Acepta solicitud cuando ambos jugadores están libres."""
-    alice_sender = map_manager.add_player(1, "Alice")
-    bob_sender = map_manager.add_player(2, "Bob")
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-
-    success, message = await service.request_trade(1, "bob")
-
-    assert success
-    assert "Bob" in message
-    session = service.get_session(1)
-    assert session is not None
-    assert session.target_id == 2
-    assert service.is_user_in_trade(2)
-    assert alice_sender.init_payloads == ["Bob"]
-    assert bob_sender.init_payloads == ["Alice"]
-
-
-@pytest.mark.asyncio
-async def test_request_trade_fails_when_user_busy(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Rechaza solicitudes si alguno ya está comerciando."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-
-    success, message = await service.request_trade(2, "Alice")
-
-    assert not success
-    assert "sesión de comercio" in message
-
-
-@pytest.mark.asyncio
-async def test_update_offer_item_validates_slot(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """No permite ofrecer más items de los disponibles."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-
-    inventory_repo.get_slot = AsyncMock(return_value=(42, 2))
-    success, message = await service.update_offer(1, slot=1, quantity=5)
-
-    assert not success
-    assert "cantidad" in message
-
-
-@pytest.mark.asyncio
-async def test_cancel_trade_sends_end_packets(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Cancelar informa a ambos jugadores."""
-    alice_sender = map_manager.add_player(1, "Alice")
-    bob_sender = map_manager.add_player(2, "Bob")
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-
-    await service.cancel_trade(1)
-
-    assert alice_sender.end_calls == 1
-    assert bob_sender.end_calls == 1
-
-
-@pytest.mark.asyncio
-async def test_confirm_trade_moves_items(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Confirma intercambio moviendo items entre jugadores."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    slots = defaultdict(dict)
-    slots[1, 1] = (101, 5)
-    slots[2, 2] = (202, 3)
-
-    async def get_slot(user_id: int, slot: int):
-        return slots.get((user_id, slot))
-
-    inventory_repo.get_slot = AsyncMock(side_effect=get_slot)
-    inventory_repo.remove_item = AsyncMock(return_value=True)
-    inventory_repo.add_item = AsyncMock(return_value=[(5, 3)])
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-    await service.update_offer(1, slot=1, quantity=2)
-    await service.update_offer(2, slot=2, quantity=1)
-
-    result_one = await service.confirm_trade(1)
-    result_two = await service.confirm_trade(2)
-
-    assert result_one[0] is True
-    assert result_two[0] is True
-    inventory_repo.remove_item.assert_any_await(1, 1, 2)
-    inventory_repo.remove_item.assert_any_await(2, 2, 1)
-    inventory_repo.add_item.assert_any_await(2, 101, 2)
-    inventory_repo.add_item.assert_any_await(1, 202, 1)
-
-
-@pytest.mark.asyncio
-async def test_update_offer_gold_validates_balance(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Rechaza ofertas de oro superiores al disponible."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-    player_repo.get_gold = AsyncMock(return_value=10)
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-
-    success, message = await service.update_offer(1, slot=0, quantity=15)
-
-    assert success is False
-    assert "oro" in message.lower()
-
-
-@pytest.mark.asyncio
-async def test_confirm_trade_transfers_gold(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Transfiere oro entre jugadores cuando ambos confirman."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    gold = {1: 100, 2: 50}
-
-    async def get_gold(user_id: int) -> int:
-        return gold[user_id]
-
-    async def add_gold(user_id: int, amount: int) -> int:
-        gold[user_id] += amount
-        return gold[user_id]
-
-    async def remove_gold(user_id: int, amount: int) -> bool:
-        if gold[user_id] < amount:
-            return False
-        gold[user_id] -= amount
-        return True
-
-    player_repo.get_gold = AsyncMock(side_effect=get_gold)
-    player_repo.add_gold = AsyncMock(side_effect=add_gold)
-    player_repo.remove_gold = AsyncMock(side_effect=remove_gold)
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-    await service.update_offer(1, slot=0, quantity=40)
-    await service.update_offer(2, slot=0, quantity=10)
-
-    await service.confirm_trade(1)
-    await service.confirm_trade(2)
-
-    assert gold[1] == 100 - 40 + 10
-    assert gold[2] == 50 - 10 + 40
-
-
-@pytest.mark.asyncio
-async def test_concurrent_confirm_does_not_double_execute(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Reproductores del bug de doble-ejecución de _perform_trade.
-
-    Escenario: Alice y Bob mandan USER_COMMERCE_CONFIRM al mismo tiempo.
-    Ambas coroutines setean su flag y luego ceden control (await) antes de
-    chequear si ambos están listos. Sin la guarda ``_trade_executing``, las
-    dos llamarían ``_perform_trade`` sobre la misma sesión.
-
-    Con el patrón claim-first, solo la primera en alcanzar el chequeo
-    síncrono gana la ejecución; la segunda ve ``_trade_executing=True`` y
-    no hace nada.
+    Yields:
+        Servicio, mapa y repositorios con Redis fake compartido.
     """
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    slots = defaultdict(dict)
-    slots[1, 1] = (101, 5)
-
-    async def get_slot(user_id: int, slot: int):
-        await asyncio.sleep(0)  # cede control para maximizar interleaving
-        return slots.get((user_id, slot))
-
-    async def remove_item(user_id: int, slot: int, qty: int) -> bool:
-        await asyncio.sleep(0)
-        key = (user_id, slot)
-        if key not in slots or slots[key][1] < qty:
-            return False
-        remaining = slots[key][1] - qty
-        if remaining == 0:
-            del slots[key]
-        else:
-            slots[key] = (slots[key][0], remaining)
-        return True
-
-    inventory_repo.get_slot = AsyncMock(side_effect=get_slot)
-    inventory_repo.remove_item = AsyncMock(side_effect=remove_item)
-    inventory_repo.add_item = AsyncMock(return_value=[(3, 5)])
-    inventory_repo.remove_item_by_item_id = AsyncMock(return_value=True)
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-    await service.update_offer(1, slot=1, quantity=2)
-
-    # Lanzamos ambas confirmaciones simultáneamente
-    results = await asyncio.gather(
-        service.confirm_trade(1),
-        service.confirm_trade(2),
-    )
-
-    successes = [r for r in results if r[0] is True]
-    # _perform_trade debe haberse llamado exactamente UNA vez (vía add_item)
-    assert inventory_repo.add_item.call_count == 1, (
-        f"_perform_trade ejecutado {inventory_repo.add_item.call_count} veces "
-        f"(esperado: 1). Resultados: {results}"
-    )
-    assert len(successes) >= 1
+    manager = DummyMapManager()
+    manager.add_player(1, "Alice")
+    manager.add_player(2, "Bob")
+    player = PlayerRepository(redis_client)
+    inventory = InventoryRepository(redis_client)
+    await player.update_gold(1, 100)
+    await player.update_gold(2, 200)
+    await inventory.set_slot(1, 1, 101, 5)
+    await inventory.set_slot(2, 2, 202, 3)
+    service = TradeService(player, inventory, manager)
+    with patch("src.services.trade_settlement.require_durable", new=AsyncMock()):
+        yield service, manager, player, inventory
 
 
 @pytest.mark.asyncio
-async def test_confirm_trade_blocked_by_gold_cap(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """El intercambio falla si el receptor de oro superaría MAX_PLAYER_GOLD."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
+async def test_request_validation_and_cancel(setup_trade):
+    service, manager, _player, _inventory = setup_trade
+    assert not (await service.request_trade(1, "Missing"))[0]
+    assert not (await service.request_trade(1, "Alice"))[0]
+    assert (await service.request_trade(1, "bob"))[0]
+    assert service.get_session(1) is service.get_session(2)
+    assert manager.get_player_message_sender(1).init_payloads == ["Bob"]
+    assert not (await service.request_trade(2, "Alice"))[0]
+    assert (await service.cancel_trade(1))[0]
+    assert not (await service.cancel_trade(2))[0]
+    assert manager.get_player_message_sender(1).end_calls == 1
+    assert manager.get_player_message_sender(2).end_calls == 1
+    assert not (await service.confirm_trade(1))[0]
 
-    gold = {1: 500, 2: MAX_PLAYER_GOLD - 100}
 
-    async def get_gold(user_id: int) -> int:
-        return gold[user_id]
+@pytest.mark.asyncio
+async def test_offer_preconditions(setup_trade):
+    service, _manager, _player, _inventory = setup_trade
+    assert (await service.request_trade(1, "Bob"))[0]
+    assert not (await service.update_offer(1, 1, 6))[0]
+    assert not (await service.update_offer(1, 0, 101))[0]
+    assert not (await service.update_offer(1, 31, 1))[0]
+    assert not (await service.update_offer(1, 1, -1))[0]
 
-    async def add_gold(user_id: int, amount: int) -> None:
-        gold[user_id] += amount
 
-    async def remove_gold(user_id: int, amount: int) -> bool:
-        if gold[user_id] < amount:
-            return False
-        gold[user_id] -= amount
-        return True
-
-    player_repo.get_gold = AsyncMock(side_effect=get_gold)
-    player_repo.add_gold = AsyncMock(side_effect=add_gold)
-    player_repo.remove_gold = AsyncMock(side_effect=remove_gold)
-
-    service = make_service(player_repo, inventory_repo, map_manager)
+@pytest.mark.asyncio
+async def test_concurrent_confirm_moves_both_resources_once(setup_trade):
+    service, manager, player, inventory = setup_trade
     await service.request_trade(1, "Bob")
-    # Alice ofrece 500 de oro; Bob tiene casi el tope → excedería MAX_PLAYER_GOLD
-    await service.update_offer(1, slot=0, quantity=500)
+    await service.update_offer(1, 1, 2)
+    await service.update_offer(2, 2, 1)
+    await service.update_offer(1, 0, 20)
+    await service.update_offer(2, 0, 60)
+    session = service.get_session(1)
+    await asyncio.gather(
+        service.confirm_trade(1), service.confirm_trade(2), service.confirm_trade(2)
+    )
+    assert await inventory.get_slot(1, 1) == (101, 3)
+    assert await inventory.get_slot(1, 2) == (202, 1)
+    assert await inventory.get_slot(2, 1) == (101, 2)
+    assert await inventory.get_slot(2, 2) == (202, 2)
+    assert await player.get_gold(1) == 140
+    assert await player.get_gold(2) == 160
+    assert not service.is_user_in_trade(1)
+    assert not service.is_user_in_trade(2)
+    assert session.settlement_id
+    for user_id in [1, 2]:
+        sender = manager.get_player_message_sender(user_id)
+        assert sender.end_calls == 1
+        assert sender.send_change_inventory_slot.await_count == 30
 
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("reason", ["source_changed", "full", "overflow", "equipped"])
+async def test_rejected_settlement_preserves_every_resource(setup_trade, reason):
+    service, _manager, player, inventory = setup_trade
+    await service.request_trade(1, "Bob")
+    await service.update_offer(1, 1, 2)
+    await service.update_offer(1, 0, 20)
+    if reason == "source_changed":
+        await inventory.set_slot(1, 1, 101, 1)
+    elif reason == "full":
+        for slot in range(1, 31):
+            await inventory.set_slot(2, slot, 202, 20)
+    elif reason == "overflow":
+        await player.update_gold(2, MAX_PLAYER_GOLD)
+    else:
+        await player.redis.hset("player:1:equipment", mapping={"weapon": "1"})
+    before = [await inventory.get_inventory(i) for i in [1, 2]]
+    balances = [await player.get_gold(i) for i in [1, 2]]
     await service.confirm_trade(1)
-    result = await service.confirm_trade(2)
-
-    assert result[0] is False
-    assert "tope" in result[1].lower() or "oro" in result[1].lower()
-    # El oro de Bob no debe haberse modificado
-    assert gold[2] == MAX_PLAYER_GOLD - 100
+    assert not (await service.confirm_trade(2))[0]
+    assert [await inventory.get_inventory(i) for i in [1, 2]] == before
+    assert [await player.get_gold(i) for i in [1, 2]] == balances
 
 
 @pytest.mark.asyncio
-async def test_cannot_offer_negative_quantity(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Cantidad negativa en oferta debe rechazarse."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    service = make_service(player_repo, inventory_repo, map_manager)
+async def test_unknown_durability_result_is_retried_without_reapplying(setup_trade):
+    service, _manager, player, _inventory = setup_trade
     await service.request_trade(1, "Bob")
-
-    success, message = await service.update_offer(1, slot=1, quantity=-1)
-
-    assert success is False
-    assert "positiva" in message.lower() or "inválida" in message.lower()
+    await service.update_offer(1, 0, 20)
+    await service.confirm_trade(1)
+    failure = RuntimeError("fsync acknowledgment lost")
+    with (
+        patch(
+            "src.services.trade_settlement.require_durable",
+            new=AsyncMock(side_effect=[None, failure]),
+        ),
+        pytest.raises(RuntimeError, match="fsync"),
+    ):
+        await service.confirm_trade(2)
+    assert await player.get_gold(1) == 80
+    assert await player.get_gold(2) == 220
+    assert not (await service.update_offer(1, 0, 1))[0]
+    assert not (await service.cancel_trade(1))[0]
+    assert (await service.confirm_trade(1))[0]
+    assert await player.get_gold(1) == 80
+    assert await player.get_gold(2) == 220
 
 
 @pytest.mark.asyncio
-async def test_cannot_offer_more_gold_than_owned(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """No se puede ofrecer más oro del que tiene el jugador."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-    player_repo.get_gold = AsyncMock(return_value=100)
-
-    service = make_service(player_repo, inventory_repo, map_manager)
+async def test_offer_read_racing_with_commit_cannot_change_frozen_offer(setup_trade):
+    """Una lectura de slot que empezó antes no edita una oferta ya en confirmación."""
+    service, _manager, player, inventory = setup_trade
     await service.request_trade(1, "Bob")
+    await service.update_offer(1, 0, 20)
+    entered_read, resume_read = asyncio.Event(), asyncio.Event()
+    entered_commit, resume_commit = asyncio.Event(), asyncio.Event()
+    original = inventory.get_slot
 
-    success, message = await service.update_offer(1, slot=0, quantity=999)
+    async def slow_read(user_id: int, slot: int):
+        value = await original(user_id, slot)
+        entered_read.set()
+        await resume_read.wait()
+        return value
 
-    assert success is False
-    assert "oro" in message.lower()
+    async def slow_durability(_redis: object) -> None:
+        entered_commit.set()
+        await resume_commit.wait()
 
-
-@pytest.mark.asyncio
-async def test_confirm_after_cancel_does_nothing(
-    map_manager: DummyMapManager, player_repo: AsyncMock, inventory_repo: AsyncMock
-) -> None:
-    """Confirmar tras cancelar no modifica inventarios."""
-    map_manager.add_player(1, "Alice")
-    map_manager.add_player(2, "Bob")
-
-    service = make_service(player_repo, inventory_repo, map_manager)
-    await service.request_trade(1, "Bob")
-    await service.cancel_trade(1)
-
-    result = await service.confirm_trade(1)
-
-    assert result[0] is False
-    inventory_repo.remove_item.assert_not_called()
-    inventory_repo.add_item.assert_not_called()
+    with (
+        patch.object(inventory, "get_slot", slow_read),
+        patch("src.services.trade_settlement.require_durable", slow_durability),
+    ):
+        edit = asyncio.create_task(service.update_offer(1, 1, 2))
+        await asyncio.wait_for(entered_read.wait(), 2)
+        await service.confirm_trade(1)
+        commit = asyncio.create_task(service.confirm_trade(2))
+        await asyncio.wait_for(entered_commit.wait(), 2)
+        resume_read.set()
+        assert not (await edit)[0]
+        resume_commit.set()
+        assert (await commit)[0]
+    assert await inventory.get_slot(1, 1) == (101, 5)
+    assert await player.get_gold(1) == 80
