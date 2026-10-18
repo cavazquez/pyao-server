@@ -26,3 +26,18 @@ La lógica y el contrato comprobados corresponden a servidor `5b3c35e` y cliente
 30 slots, habilidades legacy de 19 bytes y catálogo negociado de 70 bytes.
 Godot verifica esos readers y los cambios de pantalla en su propia CI. Este smoke
 TCP complementa esa evidencia y no reemplaza una sesión conjunta de juego Godot.
+
+## CI hermética
+
+CI conserva uv 0.13.1 y exige el lock en instalación y ejecución. Cada grupo crea
+su entorno sin restaurar `.venv` ni depender de la caché de otro job. `quality`
+verifica lint/formato/tipos; `fast-tests` ejecuta toda la suite y valida el dataset
+sin un Redis externo; `redis-integration` ejecuta este escenario con imagen fijada,
+ACL y puerto/volumen propios. No se omiten tests al separar los grupos.
+
+El check `test` conserva el nombre anterior y depende de los tres resultados:
+sólo pasa si todos terminaron en success; un job omitido, cancelado o fallido lo
+hace fallar. La revisión de links y CodeQL conservan sus checks independientes.
+Logs, JUnit, cobertura y el recibo del smoke se guardan siete días; Codecov mantiene
+su integración previa. Las esperas y jobs tienen timeouts y los fallos conservan
+la evidencia para diagnóstico.
