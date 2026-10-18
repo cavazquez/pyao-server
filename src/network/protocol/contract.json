@@ -1,0 +1,2196 @@
+{
+  "version": "pyao-1.0-draft.1",
+  "byte_order": "little",
+  "string_encoding": "iso-8859-1",
+  "string_length": "u16_bytes",
+  "inventory_slots": 30,
+  "max_packet_bytes": 4096,
+  "directions": {
+    "client": {
+      "0": {
+        "name": "LOGIN",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "username",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          },
+          {
+            "name": "password",
+            "type": "str16",
+            "max_bytes": 32,
+            "min_bytes": 6
+          },
+          {
+            "name": "major",
+            "type": "u8"
+          },
+          {
+            "name": "minor",
+            "type": "u8"
+          },
+          {
+            "name": "patch",
+            "type": "u8"
+          }
+        ]
+      },
+      "1": {
+        "name": "THROW_DICES",
+        "status": "supported",
+        "fields": []
+      },
+      "2": {
+        "name": "CREATE_ACCOUNT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "username",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          },
+          {
+            "name": "password",
+            "type": "str16",
+            "max_bytes": 32,
+            "min_bytes": 6
+          },
+          {
+            "name": "major",
+            "type": "u8"
+          },
+          {
+            "name": "minor",
+            "type": "u8"
+          },
+          {
+            "name": "patch",
+            "type": "u8"
+          },
+          {
+            "name": "race",
+            "type": "u8"
+          },
+          {
+            "name": "gender",
+            "type": "u8"
+          },
+          {
+            "name": "job",
+            "type": "u8"
+          },
+          {
+            "name": "head",
+            "type": "i16"
+          },
+          {
+            "name": "email",
+            "type": "str16",
+            "max_bytes": 254
+          },
+          {
+            "name": "home",
+            "type": "u8"
+          }
+        ]
+      },
+      "3": {
+        "name": "TALK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "4": {
+        "name": "YELL",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "5": {
+        "name": "WHISPER",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "receiver",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          },
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "6": {
+        "name": "WALK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "heading",
+            "type": "u8"
+          }
+        ]
+      },
+      "7": {
+        "name": "REQUEST_POSITION_UPDATE",
+        "status": "supported",
+        "fields": []
+      },
+      "8": {
+        "name": "ATTACK",
+        "status": "supported",
+        "fields": []
+      },
+      "9": {
+        "name": "PICK_UP",
+        "status": "supported",
+        "fields": []
+      },
+      "10": {
+        "name": "SAFE_TOGGLE",
+        "status": "supported",
+        "fields": []
+      },
+      "11": {
+        "name": "ResuscitationSafeToggle",
+        "status": "unsupported",
+        "fields": []
+      },
+      "12": {
+        "name": "RequestGuildLeaderInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "13": {
+        "name": "REQUEST_ATTRIBUTES",
+        "status": "supported",
+        "fields": []
+      },
+      "14": {
+        "name": "RequestFame",
+        "status": "unsupported",
+        "fields": []
+      },
+      "15": {
+        "name": "REQUEST_SKILLS",
+        "status": "supported",
+        "fields": []
+      },
+      "16": {
+        "name": "RequestMiniStats",
+        "status": "unsupported",
+        "fields": []
+      },
+      "17": {
+        "name": "COMMERCE_END",
+        "status": "supported",
+        "fields": []
+      },
+      "18": {
+        "name": "USER_COMMERCE_END",
+        "status": "supported",
+        "fields": []
+      },
+      "19": {
+        "name": "USER_COMMERCE_CONFIRM",
+        "status": "supported",
+        "fields": []
+      },
+      "20": {
+        "name": "CommerceChat",
+        "status": "unsupported",
+        "fields": []
+      },
+      "21": {
+        "name": "BANK_END",
+        "status": "supported",
+        "fields": []
+      },
+      "22": {
+        "name": "USER_COMMERCE_OK",
+        "status": "supported",
+        "fields": []
+      },
+      "23": {
+        "name": "USER_COMMERCE_REJECT",
+        "status": "supported",
+        "fields": []
+      },
+      "24": {
+        "name": "DROP",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "25": {
+        "name": "CAST_SPELL",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          }
+        ]
+      },
+      "26": {
+        "name": "LEFT_CLICK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "27": {
+        "name": "DOUBLE_CLICK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "28": {
+        "name": "WORK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "skill",
+            "type": "u8"
+          }
+        ]
+      },
+      "29": {
+        "name": "UseSpellMacro",
+        "status": "unsupported",
+        "fields": []
+      },
+      "30": {
+        "name": "USE_ITEM",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          }
+        ]
+      },
+      "31": {
+        "name": "CraftBlacksmith",
+        "status": "unsupported",
+        "fields": []
+      },
+      "32": {
+        "name": "CraftCarpenter",
+        "status": "unsupported",
+        "fields": []
+      },
+      "33": {
+        "name": "WORK_LEFT_CLICK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "skill",
+            "type": "u8"
+          }
+        ]
+      },
+      "34": {
+        "name": "CreateNewGuild",
+        "status": "unsupported",
+        "fields": []
+      },
+      "35": {
+        "name": "SPELL_INFO",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          }
+        ]
+      },
+      "36": {
+        "name": "EQUIP_ITEM",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          }
+        ]
+      },
+      "37": {
+        "name": "CHANGE_HEADING",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "heading",
+            "type": "u8"
+          }
+        ]
+      },
+      "38": {
+        "name": "ModifySkills",
+        "status": "unsupported",
+        "fields": []
+      },
+      "39": {
+        "name": "Train",
+        "status": "unsupported",
+        "fields": []
+      },
+      "40": {
+        "name": "COMMERCE_BUY",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "41": {
+        "name": "BANK_EXTRACT_ITEM",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "42": {
+        "name": "COMMERCE_SELL",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "43": {
+        "name": "BANK_DEPOSIT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "44": {
+        "name": "ForumPost",
+        "status": "unsupported",
+        "fields": []
+      },
+      "45": {
+        "name": "MOVE_SPELL",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "upwards",
+            "type": "u8"
+          },
+          {
+            "name": "slot",
+            "type": "u8"
+          }
+        ]
+      },
+      "46": {
+        "name": "MoveBank",
+        "status": "unsupported",
+        "fields": []
+      },
+      "47": {
+        "name": "ClanCodexUpdate",
+        "status": "unsupported",
+        "fields": []
+      },
+      "48": {
+        "name": "USER_COMMERCE_OFFER",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "quantity",
+            "type": "i16"
+          }
+        ]
+      },
+      "49": {
+        "name": "GuildAcceptPeace",
+        "status": "unsupported",
+        "fields": []
+      },
+      "50": {
+        "name": "GuildRejectAlliance",
+        "status": "unsupported",
+        "fields": []
+      },
+      "51": {
+        "name": "GuildRejectPeace",
+        "status": "unsupported",
+        "fields": []
+      },
+      "52": {
+        "name": "GuildAcceptAlliance",
+        "status": "unsupported",
+        "fields": []
+      },
+      "53": {
+        "name": "GuildOfferPeace",
+        "status": "unsupported",
+        "fields": []
+      },
+      "54": {
+        "name": "GuildOfferAlliance",
+        "status": "unsupported",
+        "fields": []
+      },
+      "55": {
+        "name": "GuildAllianceDetails",
+        "status": "unsupported",
+        "fields": []
+      },
+      "56": {
+        "name": "GuildPeaceDetails",
+        "status": "unsupported",
+        "fields": []
+      },
+      "57": {
+        "name": "GuildRequestJoinerInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "58": {
+        "name": "GuildAlliancePropList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "59": {
+        "name": "GuildPeacePropList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "60": {
+        "name": "GuildDeclareWar",
+        "status": "unsupported",
+        "fields": []
+      },
+      "61": {
+        "name": "GuildNewWebsite",
+        "status": "unsupported",
+        "fields": []
+      },
+      "62": {
+        "name": "GuildAcceptNewMember",
+        "status": "unsupported",
+        "fields": []
+      },
+      "63": {
+        "name": "GuildRejectNewMember",
+        "status": "unsupported",
+        "fields": []
+      },
+      "64": {
+        "name": "GuildKickMember",
+        "status": "unsupported",
+        "fields": []
+      },
+      "65": {
+        "name": "GuildUpdateNews",
+        "status": "unsupported",
+        "fields": []
+      },
+      "66": {
+        "name": "GuildMemberInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "67": {
+        "name": "GuildOpenElections",
+        "status": "unsupported",
+        "fields": []
+      },
+      "68": {
+        "name": "GuildRequestMembership",
+        "status": "unsupported",
+        "fields": []
+      },
+      "69": {
+        "name": "CLAN_REQUEST_DETAILS",
+        "status": "supported",
+        "fields": []
+      },
+      "70": {
+        "name": "ONLINE",
+        "status": "supported",
+        "fields": []
+      },
+      "71": {
+        "name": "QUIT",
+        "status": "supported",
+        "fields": []
+      },
+      "72": {
+        "name": "CLAN_LEAVE",
+        "status": "supported",
+        "fields": []
+      },
+      "73": {
+        "name": "RequestAccountState",
+        "status": "unsupported",
+        "fields": []
+      },
+      "74": {
+        "name": "PetStand",
+        "status": "unsupported",
+        "fields": []
+      },
+      "75": {
+        "name": "PetFollow",
+        "status": "unsupported",
+        "fields": []
+      },
+      "76": {
+        "name": "ReleasePet",
+        "status": "unsupported",
+        "fields": []
+      },
+      "77": {
+        "name": "TrainList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "78": {
+        "name": "Rest",
+        "status": "unsupported",
+        "fields": []
+      },
+      "79": {
+        "name": "MEDITATE",
+        "status": "supported",
+        "fields": []
+      },
+      "80": {
+        "name": "Resucitate",
+        "status": "unsupported",
+        "fields": []
+      },
+      "81": {
+        "name": "Heal",
+        "status": "unsupported",
+        "fields": []
+      },
+      "82": {
+        "name": "AYUDA",
+        "status": "supported",
+        "fields": []
+      },
+      "83": {
+        "name": "REQUEST_STATS",
+        "status": "supported",
+        "fields": []
+      },
+      "84": {
+        "name": "COMMERCE_START",
+        "status": "supported",
+        "fields": []
+      },
+      "85": {
+        "name": "BANK_START",
+        "status": "unsupported",
+        "fields": []
+      },
+      "86": {
+        "name": "Enlist",
+        "status": "unsupported",
+        "fields": []
+      },
+      "87": {
+        "name": "INFORMATION",
+        "status": "supported",
+        "fields": []
+      },
+      "88": {
+        "name": "Reward",
+        "status": "unsupported",
+        "fields": []
+      },
+      "89": {
+        "name": "REQUEST_MOTD",
+        "status": "supported",
+        "fields": []
+      },
+      "90": {
+        "name": "UPTIME",
+        "status": "supported",
+        "fields": []
+      },
+      "91": {
+        "name": "PARTY_LEAVE",
+        "status": "supported",
+        "fields": []
+      },
+      "92": {
+        "name": "PARTY_CREATE",
+        "status": "supported",
+        "fields": []
+      },
+      "93": {
+        "name": "PARTY_JOIN",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "nickname",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          }
+        ]
+      },
+      "94": {
+        "name": "Inquiry",
+        "status": "unsupported",
+        "fields": []
+      },
+      "95": {
+        "name": "GuildMessage",
+        "status": "unsupported",
+        "fields": []
+      },
+      "96": {
+        "name": "PARTY_MESSAGE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "97": {
+        "name": "CentinelReport",
+        "status": "unsupported",
+        "fields": []
+      },
+      "98": {
+        "name": "GuildOnline",
+        "status": "unsupported",
+        "fields": []
+      },
+      "99": {
+        "name": "PartyOnline",
+        "status": "unsupported",
+        "fields": []
+      },
+      "100": {
+        "name": "CouncilMessage",
+        "status": "unsupported",
+        "fields": []
+      },
+      "101": {
+        "name": "RoleMasterRequest",
+        "status": "unsupported",
+        "fields": []
+      },
+      "102": {
+        "name": "GMRequest",
+        "status": "unsupported",
+        "fields": []
+      },
+      "103": {
+        "name": "BugReport",
+        "status": "unsupported",
+        "fields": []
+      },
+      "104": {
+        "name": "ChangeDescription",
+        "status": "unsupported",
+        "fields": []
+      },
+      "105": {
+        "name": "GuildVote",
+        "status": "unsupported",
+        "fields": []
+      },
+      "106": {
+        "name": "Punishments",
+        "status": "unsupported",
+        "fields": []
+      },
+      "107": {
+        "name": "ChangePassword",
+        "status": "unsupported",
+        "fields": []
+      },
+      "108": {
+        "name": "Gamble",
+        "status": "unsupported",
+        "fields": []
+      },
+      "109": {
+        "name": "InquiryVote",
+        "status": "unsupported",
+        "fields": []
+      },
+      "110": {
+        "name": "LeaveFaction",
+        "status": "unsupported",
+        "fields": []
+      },
+      "111": {
+        "name": "BANK_EXTRACT_GOLD",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "i32"
+          }
+        ]
+      },
+      "112": {
+        "name": "BANK_DEPOSIT_GOLD",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "i32"
+          }
+        ]
+      },
+      "113": {
+        "name": "Denounce",
+        "status": "unsupported",
+        "fields": []
+      },
+      "114": {
+        "name": "GuildFundate",
+        "status": "unsupported",
+        "fields": []
+      },
+      "115": {
+        "name": "GuildFundation",
+        "status": "unsupported",
+        "fields": []
+      },
+      "116": {
+        "name": "PARTY_KICK",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "nickname",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          }
+        ]
+      },
+      "117": {
+        "name": "PARTY_SET_LEADER",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "nickname",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          }
+        ]
+      },
+      "118": {
+        "name": "PARTY_ACCEPT_MEMBER",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "nickname",
+            "type": "str16",
+            "max_bytes": 20,
+            "min_bytes": 3
+          }
+        ]
+      },
+      "119": {
+        "name": "PING",
+        "status": "supported",
+        "fields": []
+      },
+      "120": {
+        "name": "RequestPartyForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "121": {
+        "name": "ItemUpgrade",
+        "status": "unsupported",
+        "fields": []
+      },
+      "122": {
+        "name": "GM_COMMANDS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "subcommand",
+            "type": "u8"
+          }
+        ],
+        "variants": {
+          "11": [
+            {
+              "name": "username",
+              "type": "str16",
+              "max_bytes": 20
+            },
+            {
+              "name": "map",
+              "type": "i16"
+            },
+            {
+              "name": "x",
+              "type": "u8"
+            },
+            {
+              "name": "y",
+              "type": "u8"
+            }
+          ]
+        }
+      },
+      "123": {
+        "name": "InitCrafting",
+        "status": "unsupported",
+        "fields": []
+      },
+      "124": {
+        "name": "Home",
+        "status": "unsupported",
+        "fields": []
+      },
+      "125": {
+        "name": "ShowGuildNews",
+        "status": "unsupported",
+        "fields": []
+      },
+      "126": {
+        "name": "ShareNpc",
+        "status": "unsupported",
+        "fields": []
+      },
+      "127": {
+        "name": "StopSharingNpc",
+        "status": "unsupported",
+        "fields": []
+      },
+      "128": {
+        "name": "Consultation",
+        "status": "unsupported",
+        "fields": []
+      },
+      "129": {
+        "name": "MOVE_ITEM",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "source",
+            "type": "u8"
+          },
+          {
+            "name": "destination",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    "server": {
+      "0": {
+        "name": "LOGGED",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "class",
+            "type": "u8"
+          }
+        ]
+      },
+      "1": {
+        "name": "RemoveDialogs",
+        "status": "unsupported",
+        "fields": []
+      },
+      "2": {
+        "name": "RemoveCharDialog",
+        "status": "unsupported",
+        "fields": []
+      },
+      "3": {
+        "name": "NAVIGATE_TOGGLE",
+        "status": "supported",
+        "fields": []
+      },
+      "4": {
+        "name": "Disconnect",
+        "status": "unsupported",
+        "fields": []
+      },
+      "5": {
+        "name": "COMMERCE_END",
+        "status": "supported",
+        "fields": []
+      },
+      "6": {
+        "name": "BANK_END",
+        "status": "supported",
+        "fields": []
+      },
+      "7": {
+        "name": "COMMERCE_INIT",
+        "status": "supported",
+        "fields": []
+      },
+      "8": {
+        "name": "BANK_INIT",
+        "status": "supported",
+        "fields": []
+      },
+      "9": {
+        "name": "USER_COMMERCE_INIT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "partner",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "10": {
+        "name": "USER_COMMERCE_END",
+        "status": "supported",
+        "fields": []
+      },
+      "11": {
+        "name": "UserOfferConfirm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "12": {
+        "name": "CommerceChat",
+        "status": "unsupported",
+        "fields": []
+      },
+      "13": {
+        "name": "ShowBlacksmithForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "14": {
+        "name": "ShowCarpenterForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "15": {
+        "name": "UPDATE_STA",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i16"
+          }
+        ]
+      },
+      "16": {
+        "name": "UPDATE_MANA",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i16"
+          }
+        ]
+      },
+      "17": {
+        "name": "UPDATE_HP",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i16"
+          }
+        ]
+      },
+      "18": {
+        "name": "UPDATE_GOLD",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i32"
+          }
+        ]
+      },
+      "19": {
+        "name": "UPDATE_BANK_GOLD",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i32"
+          }
+        ]
+      },
+      "20": {
+        "name": "UPDATE_EXP",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "value",
+            "type": "i32"
+          }
+        ]
+      },
+      "21": {
+        "name": "CHANGE_MAP",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "map",
+            "type": "i16"
+          },
+          {
+            "name": "version",
+            "type": "i16"
+          }
+        ]
+      },
+      "22": {
+        "name": "POS_UPDATE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "23": {
+        "name": "ChatOverHead",
+        "status": "unsupported",
+        "fields": []
+      },
+      "24": {
+        "name": "CONSOLE_MSG",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "color",
+            "type": "u8"
+          }
+        ]
+      },
+      "25": {
+        "name": "GuildChat",
+        "status": "unsupported",
+        "fields": []
+      },
+      "26": {
+        "name": "ShowMessageBox",
+        "status": "unsupported",
+        "fields": []
+      },
+      "27": {
+        "name": "UserIndexInServer",
+        "status": "unsupported",
+        "fields": []
+      },
+      "28": {
+        "name": "USER_CHAR_INDEX_IN_SERVER",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          }
+        ]
+      },
+      "29": {
+        "name": "CHARACTER_CREATE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "body",
+            "type": "i16"
+          },
+          {
+            "name": "head",
+            "type": "i16"
+          },
+          {
+            "name": "heading",
+            "type": "u8"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "weapon",
+            "type": "i16"
+          },
+          {
+            "name": "shield",
+            "type": "i16"
+          },
+          {
+            "name": "helmet",
+            "type": "i16"
+          },
+          {
+            "name": "fx",
+            "type": "i16"
+          },
+          {
+            "name": "loops",
+            "type": "i16"
+          },
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "nick_color",
+            "type": "u8"
+          },
+          {
+            "name": "privileges",
+            "type": "u8"
+          }
+        ]
+      },
+      "30": {
+        "name": "CHARACTER_REMOVE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          }
+        ]
+      },
+      "31": {
+        "name": "CharacterChangeNick",
+        "status": "unsupported",
+        "fields": []
+      },
+      "32": {
+        "name": "CHARACTER_MOVE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "33": {
+        "name": "ForceCharMove",
+        "status": "unsupported",
+        "fields": []
+      },
+      "34": {
+        "name": "CHARACTER_CHANGE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "body",
+            "type": "i16"
+          },
+          {
+            "name": "head",
+            "type": "i16"
+          },
+          {
+            "name": "heading",
+            "type": "u8"
+          },
+          {
+            "name": "weapon",
+            "type": "i16"
+          },
+          {
+            "name": "shield",
+            "type": "i16"
+          },
+          {
+            "name": "helmet",
+            "type": "i16"
+          },
+          {
+            "name": "fx",
+            "type": "i16"
+          },
+          {
+            "name": "loops",
+            "type": "i16"
+          }
+        ]
+      },
+      "35": {
+        "name": "OBJECT_CREATE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "grh",
+            "type": "i16"
+          }
+        ]
+      },
+      "36": {
+        "name": "OBJECT_DELETE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "37": {
+        "name": "BLOCK_POSITION",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "blocked",
+            "type": "u8"
+          }
+        ]
+      },
+      "38": {
+        "name": "PLAY_MIDI",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "midi",
+            "type": "u8"
+          }
+        ]
+      },
+      "39": {
+        "name": "PLAY_WAVE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "wave",
+            "type": "u8"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          }
+        ]
+      },
+      "40": {
+        "name": "GuildList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "41": {
+        "name": "AreaChanged",
+        "status": "unsupported",
+        "fields": []
+      },
+      "42": {
+        "name": "PauseToggle",
+        "status": "unsupported",
+        "fields": []
+      },
+      "43": {
+        "name": "RainToggle",
+        "status": "unsupported",
+        "fields": []
+      },
+      "44": {
+        "name": "CREATE_FX",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "fx",
+            "type": "i16"
+          },
+          {
+            "name": "loops",
+            "type": "i16"
+          }
+        ]
+      },
+      "45": {
+        "name": "UPDATE_USER_STATS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "max_hp",
+            "type": "i16"
+          },
+          {
+            "name": "hp",
+            "type": "i16"
+          },
+          {
+            "name": "max_mana",
+            "type": "i16"
+          },
+          {
+            "name": "mana",
+            "type": "i16"
+          },
+          {
+            "name": "max_stamina",
+            "type": "i16"
+          },
+          {
+            "name": "stamina",
+            "type": "i16"
+          },
+          {
+            "name": "gold",
+            "type": "i32"
+          },
+          {
+            "name": "level",
+            "type": "u8"
+          },
+          {
+            "name": "next_level",
+            "type": "i32"
+          },
+          {
+            "name": "experience",
+            "type": "i32"
+          }
+        ]
+      },
+      "46": {
+        "name": "WorkRequestTarget",
+        "status": "unsupported",
+        "fields": []
+      },
+      "47": {
+        "name": "CHANGE_INVENTORY_SLOT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "item",
+            "type": "i16"
+          },
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "amount",
+            "type": "i16"
+          },
+          {
+            "name": "equipped",
+            "type": "u8"
+          },
+          {
+            "name": "grh",
+            "type": "i16"
+          },
+          {
+            "name": "item_type",
+            "type": "u8"
+          },
+          {
+            "name": "max_hit",
+            "type": "i16"
+          },
+          {
+            "name": "min_hit",
+            "type": "i16"
+          },
+          {
+            "name": "max_def",
+            "type": "i16"
+          },
+          {
+            "name": "min_def",
+            "type": "i16"
+          },
+          {
+            "name": "price",
+            "type": "f32"
+          }
+        ]
+      },
+      "48": {
+        "name": "CHANGE_BANK_SLOT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "item",
+            "type": "i16"
+          },
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "amount",
+            "type": "i16"
+          },
+          {
+            "name": "grh",
+            "type": "i16"
+          },
+          {
+            "name": "item_type",
+            "type": "u8"
+          },
+          {
+            "name": "max_hit",
+            "type": "i16"
+          },
+          {
+            "name": "min_hit",
+            "type": "i16"
+          },
+          {
+            "name": "max_def",
+            "type": "i16"
+          },
+          {
+            "name": "min_def",
+            "type": "i16"
+          }
+        ]
+      },
+      "49": {
+        "name": "CHANGE_SPELL_SLOT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "spell",
+            "type": "i16"
+          },
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "50": {
+        "name": "ATTRIBUTES",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "strength",
+            "type": "u8"
+          },
+          {
+            "name": "agility",
+            "type": "u8"
+          },
+          {
+            "name": "intelligence",
+            "type": "u8"
+          },
+          {
+            "name": "charisma",
+            "type": "u8"
+          },
+          {
+            "name": "constitution",
+            "type": "u8"
+          }
+        ]
+      },
+      "51": {
+        "name": "BlacksmithWeapons",
+        "status": "unsupported",
+        "fields": []
+      },
+      "52": {
+        "name": "BlacksmithArmors",
+        "status": "unsupported",
+        "fields": []
+      },
+      "53": {
+        "name": "CarpenterObjects",
+        "status": "unsupported",
+        "fields": []
+      },
+      "54": {
+        "name": "REST_OK",
+        "status": "supported",
+        "fields": []
+      },
+      "55": {
+        "name": "ERROR_MSG",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "message",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "56": {
+        "name": "BLIND",
+        "status": "supported",
+        "fields": []
+      },
+      "57": {
+        "name": "DUMB",
+        "status": "supported",
+        "fields": []
+      },
+      "58": {
+        "name": "ShowSignal",
+        "status": "unsupported",
+        "fields": []
+      },
+      "59": {
+        "name": "CHANGE_NPC_INVENTORY_SLOT",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "slot",
+            "type": "u8"
+          },
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "amount",
+            "type": "i16"
+          },
+          {
+            "name": "price",
+            "type": "f32"
+          },
+          {
+            "name": "grh",
+            "type": "i16"
+          },
+          {
+            "name": "item",
+            "type": "i16"
+          },
+          {
+            "name": "item_type",
+            "type": "u8"
+          },
+          {
+            "name": "max_hit",
+            "type": "i16"
+          },
+          {
+            "name": "min_hit",
+            "type": "i16"
+          },
+          {
+            "name": "max_def",
+            "type": "i16"
+          },
+          {
+            "name": "min_def",
+            "type": "i16"
+          }
+        ]
+      },
+      "60": {
+        "name": "UPDATE_HUNGER_AND_THIRST",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "max_water",
+            "type": "u8"
+          },
+          {
+            "name": "water",
+            "type": "u8"
+          },
+          {
+            "name": "max_hunger",
+            "type": "u8"
+          },
+          {
+            "name": "hunger",
+            "type": "u8"
+          }
+        ]
+      },
+      "61": {
+        "name": "Fame",
+        "status": "unsupported",
+        "fields": []
+      },
+      "62": {
+        "name": "MiniStats",
+        "status": "unsupported",
+        "fields": []
+      },
+      "63": {
+        "name": "LevelUp",
+        "status": "unsupported",
+        "fields": []
+      },
+      "64": {
+        "name": "AddForumMsg",
+        "status": "unsupported",
+        "fields": []
+      },
+      "65": {
+        "name": "ShowForumForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "66": {
+        "name": "SET_INVISIBLE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "invisible",
+            "type": "u8"
+          }
+        ]
+      },
+      "67": {
+        "name": "DICE_ROLL",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "strength",
+            "type": "u8"
+          },
+          {
+            "name": "agility",
+            "type": "u8"
+          },
+          {
+            "name": "intelligence",
+            "type": "u8"
+          },
+          {
+            "name": "charisma",
+            "type": "u8"
+          },
+          {
+            "name": "constitution",
+            "type": "u8"
+          }
+        ]
+      },
+      "68": {
+        "name": "MEDITATE_TOGGLE",
+        "status": "supported",
+        "fields": []
+      },
+      "69": {
+        "name": "BLIND_NO_MORE",
+        "status": "supported",
+        "fields": []
+      },
+      "70": {
+        "name": "DUMB_NO_MORE",
+        "status": "supported",
+        "fields": []
+      },
+      "71": {
+        "name": "SEND_SKILLS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "magic",
+            "type": "i16"
+          },
+          {
+            "name": "robustness",
+            "type": "i16"
+          },
+          {
+            "name": "woodcutting",
+            "type": "i16"
+          },
+          {
+            "name": "agility",
+            "type": "i16"
+          },
+          {
+            "name": "fishing",
+            "type": "i16"
+          },
+          {
+            "name": "mining",
+            "type": "i16"
+          },
+          {
+            "name": "blacksmithing",
+            "type": "i16"
+          },
+          {
+            "name": "carpentry",
+            "type": "i16"
+          },
+          {
+            "name": "survival",
+            "type": "i16"
+          }
+        ]
+      },
+      "72": {
+        "name": "TrainerCreatureList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "73": {
+        "name": "GuildNews",
+        "status": "unsupported",
+        "fields": []
+      },
+      "74": {
+        "name": "OfferDetails",
+        "status": "unsupported",
+        "fields": []
+      },
+      "75": {
+        "name": "AlianceProposalsList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "76": {
+        "name": "PeaceProposalsList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "77": {
+        "name": "CharacterInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "78": {
+        "name": "GuildLeaderInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "79": {
+        "name": "GuildMemberInfo",
+        "status": "unsupported",
+        "fields": []
+      },
+      "80": {
+        "name": "CLAN_DETAILS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "name",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "founder",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "foundation_date",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "leader",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "website",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "members",
+            "type": "i32"
+          },
+          {
+            "name": "elections",
+            "type": "u8"
+          },
+          {
+            "name": "alignment",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "enemies",
+            "type": "i32"
+          },
+          {
+            "name": "allies",
+            "type": "i32"
+          },
+          {
+            "name": "antifaction_points",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "codex",
+            "type": "str16",
+            "max_bytes": 1024
+          },
+          {
+            "name": "description",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "81": {
+        "name": "ShowGuildFundationForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "82": {
+        "name": "PARALIZE_OK",
+        "status": "supported",
+        "fields": []
+      },
+      "83": {
+        "name": "ShowUserRequest",
+        "status": "unsupported",
+        "fields": []
+      },
+      "84": {
+        "name": "TradeOK",
+        "status": "unsupported",
+        "fields": []
+      },
+      "85": {
+        "name": "BANK_OK",
+        "status": "supported",
+        "fields": []
+      },
+      "86": {
+        "name": "ChangeUserTradeSlot",
+        "status": "unsupported",
+        "fields": []
+      },
+      "87": {
+        "name": "SendNight",
+        "status": "unsupported",
+        "fields": []
+      },
+      "88": {
+        "name": "PONG",
+        "status": "supported",
+        "fields": []
+      },
+      "89": {
+        "name": "UPDATE_TAG_AND_STATUS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "index",
+            "type": "i16"
+          },
+          {
+            "name": "nick_color",
+            "type": "u8"
+          },
+          {
+            "name": "tag",
+            "type": "str16",
+            "max_bytes": 1024
+          }
+        ]
+      },
+      "90": {
+        "name": "SpawnList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "91": {
+        "name": "ShowSOSForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "92": {
+        "name": "ShowMOTDEditionForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "93": {
+        "name": "ShowGMPanelForm",
+        "status": "unsupported",
+        "fields": []
+      },
+      "94": {
+        "name": "UserNameList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "95": {
+        "name": "ShowDenounces",
+        "status": "unsupported",
+        "fields": []
+      },
+      "96": {
+        "name": "RecordList",
+        "status": "unsupported",
+        "fields": []
+      },
+      "97": {
+        "name": "RecordDetails",
+        "status": "unsupported",
+        "fields": []
+      },
+      "98": {
+        "name": "SHOW_GUILD_ALIGN",
+        "status": "unsupported",
+        "fields": []
+      },
+      "99": {
+        "name": "SHOW_PARTY_FORM",
+        "status": "supported",
+        "fields": []
+      },
+      "100": {
+        "name": "UPDATE_STRENGTH_AND_DEXTERITY",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "strength",
+            "type": "u8"
+          },
+          {
+            "name": "dexterity",
+            "type": "u8"
+          }
+        ]
+      },
+      "101": {
+        "name": "UPDATE_STRENGTH",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "strength",
+            "type": "u8"
+          }
+        ]
+      },
+      "102": {
+        "name": "UPDATE_DEXTERITY",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "dexterity",
+            "type": "u8"
+          }
+        ]
+      },
+      "103": {
+        "name": "ADD_SLOTS",
+        "status": "unsupported",
+        "fields": []
+      },
+      "104": {
+        "name": "MULTI_MESSAGE",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "subtype",
+            "type": "u8"
+          }
+        ],
+        "variants": {
+          "12": [
+            {
+              "name": "body_part",
+              "type": "u8"
+            },
+            {
+              "name": "damage",
+              "type": "i16"
+            }
+          ],
+          "13": [
+            {
+              "name": "damage",
+              "type": "i32"
+            }
+          ],
+          "17": [
+            {
+              "name": "skill",
+              "type": "u8"
+            }
+          ]
+        }
+      },
+      "105": {
+        "name": "STOP_WORKING",
+        "status": "unsupported",
+        "fields": []
+      },
+      "106": {
+        "name": "CANCEL_OFFER_ITEM",
+        "status": "unsupported",
+        "fields": []
+      }
+    }
+  },
+  "compatibility": {
+    "baseline_server": "37a8b22",
+    "baseline_client": "e911af34",
+    "state": "implementations_pending",
+    "party_join": "ID 93 + nickname str16; replace both endpoints together, never infer old short payload",
+    "commerce_init": "ID 7 opens window, inventory follows in ID 59. The unused extended builder is not a supported layout.",
+    "skills": "ID 71 documents legacy nine signed int16 values. Catalog/progress alignment is tracked in server #126.",
+    "extensions": "Opt-in negotiation AFTER successful login only (server #117); unnegotiated clients keep the legacy stream."
+  }
+}

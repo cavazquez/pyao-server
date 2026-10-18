@@ -1,0 +1,175 @@
+[
+  {
+    "name": "login_latin1",
+    "direction": "client",
+    "hex": "0004005065f1610600636ce1766531000d00",
+    "values": {
+      "username": "Peña",
+      "password": "cláve1",
+      "version": [
+        0,
+        13,
+        0
+      ]
+    }
+  },
+  {
+    "name": "create_latin1",
+    "direction": "client",
+    "hex": "0204005065f1610600636ce1766531000d000101010100140074657374406578616d706c652e696e76616c696401",
+    "values": {
+      "username": "Peña",
+      "password": "cláve1",
+      "race": 1,
+      "gender": 1,
+      "job": 1,
+      "head": 1,
+      "email": "test@example.invalid",
+      "home": 1
+    }
+  },
+  {
+    "name": "walk",
+    "direction": "client",
+    "hex": "0601",
+    "values": {
+      "heading": 1
+    }
+  },
+  {
+    "name": "talk_latin1",
+    "direction": "client",
+    "hex": "031300a1486f6c612c207365f16f722120e1e9edf3fa",
+    "values": {
+      "message": "¡Hola, señor! áéíóú"
+    }
+  },
+  {
+    "name": "party_join",
+    "direction": "client",
+    "hex": "5d0300416e61",
+    "values": {
+      "nickname": "Ana"
+    }
+  },
+  {
+    "name": "double_click",
+    "direction": "client",
+    "hex": "1b3233",
+    "values": {
+      "x": 50,
+      "y": 51
+    }
+  },
+  {
+    "name": "move_item",
+    "direction": "client",
+    "hex": "81191e",
+    "values": {
+      "source": 25,
+      "destination": 30
+    }
+  },
+  {
+    "name": "logged",
+    "direction": "server",
+    "hex": "0001",
+    "values": {
+      "class": 1
+    }
+  },
+  {
+    "name": "change_map",
+    "direction": "server",
+    "hex": "1501000000",
+    "values": {
+      "map": 1,
+      "version": 0
+    }
+  },
+  {
+    "name": "negative_mana",
+    "direction": "server",
+    "hex": "10ffff",
+    "values": {
+      "value": -1
+    }
+  },
+  {
+    "name": "inventory_25",
+    "direction": "server",
+    "hex": "2f1901000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 25,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "inventory_26",
+    "direction": "server",
+    "hex": "2f1a01000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 26,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "inventory_30",
+    "direction": "server",
+    "hex": "2f1e01000600506f6369f36e020000010001000000000000000000002040",
+    "values": {
+      "slot": 30,
+      "item": 1,
+      "name": "Poción",
+      "amount": 2,
+      "equipped": 0,
+      "grh": 1,
+      "item_type": 1,
+      "max_hit": 0,
+      "min_hit": 0,
+      "max_def": 0,
+      "min_def": 0,
+      "price": 2.5
+    }
+  },
+  {
+    "name": "clan_large_counts",
+    "direction": "server",
+    "hex": "500400436c616e04005065f1610a00323032362d31302d313804005065f1610000008000000007004e65757472616c0180000002800000010030030050617a0b00446573637269706369f36e",
+    "values": {
+      "name": "Clan",
+      "founder": "Peña",
+      "foundation_date": "2026-10-18",
+      "leader": "Peña",
+      "website": "",
+      "members": 32768,
+      "elections": 0,
+      "alignment": "Neutral",
+      "enemies": 32769,
+      "allies": 32770,
+      "antifaction_points": "0",
+      "codex": "Paz",
+      "description": "Descripción"
+    }
+  }
+]
