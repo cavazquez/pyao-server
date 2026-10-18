@@ -209,19 +209,9 @@ class PlayerMapService:
         Returns:
             Número de items enviados.
         """
-        items_sent = 0
-
-        # Acceder a ground items del MapManager
-        for (item_map_id, x, y), items in self.map_manager._ground_items.items():  # noqa: SLF001
-            if item_map_id != map_id:
-                continue
-
-            for item in items:
-                grh_index = item.get("grh_index")
-                if grh_index and isinstance(grh_index, int):
-                    await message_sender.send_object_create(x, y, grh_index)
-                    items_sent += 1
-                    await asyncio.sleep(0.01)
+        items_sent = await self.map_manager.send_ground_items_snapshot(
+            map_id, message_sender.send_object_create
+        )
 
         if items_sent > 0:
             logger.debug("Enviados %d ground items del mapa %d", items_sent, map_id)

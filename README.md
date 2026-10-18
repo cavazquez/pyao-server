@@ -151,6 +151,10 @@ El servidor utiliza una **arquitectura modular** con patrones de diseño moderno
 - **Logs coloreados** - Usa `LOG_COLOR=1` para forzar color aun sin TTY; `NO_COLOR=1` para desactivar
 - **Índices especializados** - MapManager delega en PlayerIndex, NpcIndex, GroundItemIndex, TileOccupation, DoorState, ExitIndex
 
+`GroundItemIndex` ordena el envío inicial de objetos del suelo con sus cargas,
+commits y notificaciones en la misma exclusión por mapa. El login utiliza la
+apariencia del primer stack visible y libera esa exclusión incluso si se cancela.
+
 Ver **[ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)** para documentación completa de la arquitectura.
 
 ### Estado y validación
