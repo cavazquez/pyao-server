@@ -4,6 +4,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -16,7 +17,18 @@ class TestConfigManager(unittest.TestCase):
     def setUp(self) -> None:
         """Configura entorno de prueba."""
         # Crear directorio temporal
-        self.temp_dir = Path(tempfile.mkdtemp())
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.temp_dir = Path(temporary.name)
+        self._config_class_state = {
+            name: ConfigManager.__dict__[name]
+            for name in ("_instance", "_config", "_initialized", "_config_dir", "_config_file")
+            if name in ConfigManager.__dict__
+        }
+        self.addCleanup(self._restore_configuration)
+        environment = patch.dict(os.environ)
+        environment.start()
+        self.addCleanup(environment.stop)
         self.config_file = self.temp_dir / "test_server.toml"
 
         # Configurar variables de entorno para pruebas (notación nueva con __)
@@ -28,6 +40,14 @@ class TestConfigManager(unittest.TestCase):
         ConfigManager._config = {}
         if hasattr(ConfigManager, "_initialized"):
             del ConfigManager._initialized
+
+    def _restore_configuration(self) -> None:
+        """Restaura rutas y singleton originales incluso tras validar un TOML inválido."""
+        for name in ("_instance", "_config", "_initialized", "_config_dir", "_config_file"):
+            if name in self._config_class_state:
+                setattr(ConfigManager, name, self._config_class_state[name])
+            elif name in ConfigManager.__dict__:
+                delattr(ConfigManager, name)
 
     def tearDown(self) -> None:
         """Limpia entorno de prueba."""

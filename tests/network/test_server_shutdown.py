@@ -1,12 +1,43 @@
 """Cierre con sockets reales, operaciones activas y dependencias todavía disponibles."""
 
 import asyncio
+import ssl
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from src.server import ArgentumServer
+
+
+@pytest.mark.asyncio
+async def test_stop_closes_tls_handshake_before_handler_is_created() -> None:
+    """Un peer que no envía ClientHello no deja sockets ajenos al registro de handlers."""
+    server = ArgentumServer(host="127.0.0.1", port=7777)
+    server.outgoing_config.shutdown_timeout_seconds = 2
+    server.server = await asyncio.start_server(
+        server.handle_client,
+        "127.0.0.1",
+        0,
+        ssl=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER),
+        ssl_handshake_timeout=30,
+    )
+    reader, writer = await asyncio.open_connection(
+        "127.0.0.1", server.server.sockets[0].getsockname()[1]
+    )
+    try:
+        await asyncio.sleep(0.01)
+        assert not server._client_tasks
+        assert len(server.server._clients) == 1
+        with patch("src.server.close_password_executor", new=AsyncMock()):
+            await asyncio.wait_for(server.stop(), 2.2)
+        assert not server.server._clients
+        assert await asyncio.wait_for(reader.read(), 0.2) == b""
+    finally:
+        server.server.abort_clients()
+        writer.close()
+        await writer.wait_closed()
+        await server.stop()
 
 
 @pytest.mark.asyncio
