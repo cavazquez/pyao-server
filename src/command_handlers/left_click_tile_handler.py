@@ -31,18 +31,25 @@ WOODEN_DOOR_CLOSED_ID = 8
 _SIGNS_CATALOG: dict[int, dict[str, str]] = {}
 
 
-def _load_signs_catalog() -> dict[int, dict[str, str]]:
+def load_signs_catalog(data_root: Path | None = None) -> dict[int, dict[str, str]]:
     """Carga el catálogo de carteles desde signs.toml.
+
+    Args:
+        data_root: Raíz explícita de datos; SNAP_USER_COMMON tiene precedencia.
 
     Returns:
         Diccionario con GrhIndex como key y datos del cartel como value.
     """
     snap_common = os.environ.get("SNAP_USER_COMMON")
-    signs_path = (
-        Path(snap_common) / "data/items/world_objects/signs.toml"
+    root = (
+        Path(snap_common) / "data"
         if snap_common
-        else Path(__file__).parent.parent.parent.parent / "data/items/world_objects/signs.toml"
+        else data_root
+        if data_root is not None
+        else Path(__file__).resolve().parents[2] / "data"
     )
+    signs_path = root / "items/world_objects/signs.toml"
+    logger.info("Catálogo de carteles efectivo: %s", signs_path)
 
     if not signs_path.exists():
         msg = (
@@ -74,7 +81,7 @@ def _load_signs_catalog() -> dict[int, dict[str, str]]:
 
 
 # Cargar catálogo al importar el módulo
-_SIGNS_CATALOG = _load_signs_catalog()
+_SIGNS_CATALOG = load_signs_catalog()
 
 
 class LeftClickTileHandler:
