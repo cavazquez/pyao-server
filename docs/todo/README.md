@@ -1,37 +1,26 @@
-# TODO - Tareas Pendientes
+# Planificación de PyAO Server y cliente Godot
 
-Esta carpeta contiene documentos de tareas pendientes, ideas y refactorizaciones planificadas para el proyecto.
+El [alcance de la 1.0](../development/ALCANCE_1_0.md) define los requisitos, issues y pruebas necesarios para publicar el servidor y el cliente funcionando juntos. Está seguido en el [issue #123](https://github.com/cavazquez/pyao-server/issues/123).
 
-## 📚 Documentos Principales
+## Referencias activas
 
-### ⭐ Documentos Maestros (Leer Primero)
-- **TODO_CONSOLIDADO.md** - **⭐ DOCUMENTO PRINCIPAL** - Todos los TODOs activos consolidados
-- **ROADMAP_VERSIONES.md** - **⭐ ROADMAP MAESTRO** - Roadmap completo 0.6.0 → 0.20.0
-- **TODOS_COMPLETADOS.md** - Histórico de TODOs completados exitosamente
+- [Alcance de la 1.0](../development/ALCANCE_1_0.md): fuente de requisitos, orden y comprobaciones de salida.
+- [Estado observado](../development/ESTADO_ACTUAL.md): versiones y bloqueos conocidos.
+- [Roadmap](ROADMAP_VERSIONES.md): objetivo de versión y acceso al alcance vigente.
+- [Backlog](TODO_CONSOLIDADO.md): cómo trabajar los issues y conservar funciones existentes.
+- [Servidor en GitHub](https://github.com/cavazquez/pyao-server/issues) y [cliente en GitHub](https://github.com/cavazquez/ArgentumOnlineGodot/issues): criterios y estado de cada tarea.
 
-### 📋 Documentos de Planificación
-- **TODO_CARACTERISTICAS_VB6.md** - Características faltantes del servidor VB6 original (detalles técnicos)
-- **TODO_ARQUITECTURA.md** - Mejoras arquitectónicas y patrones de diseño
-- **TODO_POST_REORGANIZACION.md** - Mejoras post-reorganización
+## Detalles e ideas de dominio
 
-### 💻 Documentos Específicos
-- **TODO_SPELL_CLICK_TARGETING.md** - Sistema de targeting de hechizos
-- **TODO_CLIENTE.md** - Tareas relacionadas con el cliente Godot
-- **ITEMS_SYSTEM_TODO.md** - Tareas del sistema de items
-- **TODO_PARTY_FINDER.md** - Sistema de búsqueda de parties (documentado, sin versión asignada - más adelante)
+Los documentos específicos conservan propuestas técnicas. No asignan por sí solos una versión, fecha o condición de cierre.
 
-## 🎯 Cómo Usar
+- [Características de VB6](TODO_CARACTERISTICAS_VB6.md).
+- [Arquitectura](TODO_ARQUITECTURA.md).
+- [Trabajo posterior a reorganización](TODO_POST_REORGANIZACION.md).
+- [Targeting de magia](TODO_SPELL_CLICK_TARGETING.md).
+- [Cliente](TODO_CLIENTE.md).
+- [Items](ITEMS_SYSTEM_TODO.md).
+- [Party Finder](TODO_PARTY_FINDER.md).
+- [Completados históricos](TODOS_COMPLETADOS.md).
 
-1. **Para ver TODOs activos:** Lee `TODO_CONSOLIDADO.md`
-2. **Para ver roadmap:** Lee `ROADMAP_VERSIONES.md`
-3. **Para ver completados:** Lee `TODOS_COMPLETADOS.md`
-4. **Para detalles técnicos:** Consulta los documentos específicos
-
-## 📝 Convención
-
-Todos los archivos TODO deben:
-- Estar en esta carpeta (`docs/todo/`)
-- Seguir el formato `TODO_<TEMA>.md`
-- Incluir prioridad, esfuerzo estimado y beneficios
-- Actualizarse cuando se completen tareas
-- Cuando se complete, mover información a `TODOS_COMPLETADOS.md` y marcar como histórico
+Para cambiar el alcance de la 1.0 hay que actualizar explícitamente su documento y volver a comprobar dependencias y pruebas. Resolver un TODO histórico no acredita integración con el cliente actual.

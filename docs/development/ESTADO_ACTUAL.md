@@ -1,193 +1,39 @@
-# Estado Actual del Proyecto - PyAO Server
+# Estado de PyAO Server y cliente Godot
 
-**Fecha:** 2026-05-26  
-**Versión en pyproject.toml:** 0.9.4-alpha  
-**Versión real completada:** 0.9.4-alpha (Refactor Arquitectura + modularización 2026-05)
+Inspección del **18 de octubre de 2026**. Alcance y orden vigentes: [Versión 1.0 de ProyectoAO](ALCANCE_1_0.md), seguimiento en [servidor #123](https://github.com/cavazquez/pyao-server/issues/123).
 
----
+## Versiones observadas
 
-## ✅ Sistemas Completados
+- Servidor: `pyproject.toml` declara **0.10.0-alpha**, Python `>=3.14` y dependencias gestionadas con **uv**.
+- Revisión del servidor inspeccionada: `8204c732e517b598f14ce89a2983934c12fa2e39`.
+- Revisión del cliente inspeccionada: `5e6181e88f42e8b13c2328d5a958cff017f58071`.
+- Cliente: `project.godot` declara **4.5 / GL Compatibility**. La versión mantenida exacta del motor y sus templates se valida en [cliente #10](https://github.com/cavazquez/ArgentumOnlineGodot/issues/10).
 
-### Versión 0.6.x (COMPLETADA)
-- ✅ 0.6.0-alpha - IA de NPCs y Sistema de Trabajo
-- ✅ 0.6.1-alpha - Tests faltantes
-- ✅ 0.6.2-alpha - Refactor MapTransitionService
-- ✅ 0.6.3-alpha - Validación de longitud de packets
-- ✅ 0.6.4-alpha - Configuration Management
+La versión declarada del paquete o del proyecto Godot no acredita compatibilidad de extremo a extremo. La 1.0 se aprueba con las comprobaciones del documento de alcance.
 
-### Versión 0.7.0-alpha - Sistema de Clases ✅ COMPLETADO
-**Estado:** Completado según `todo/TODO_CLASS_SYSTEM.md`
-- ✅ Modelo CharacterClass
-- ✅ ClassService con métodos de consulta
-- ✅ Integración en creación de personaje
-- ✅ 26 tests pasando
+## Sistemas presentes en el código
 
-### Versión 0.8.0-alpha - Sistema de Parties ✅ COMPLETADO
-**Estado:** Completado según `docs/systems/PARTY_SYSTEM.md`
-- ✅ Modelos de datos (Party, PartyMember, PartyInvitation)
-- ✅ Persistencia en Redis
-- ✅ Lógica de negocio completa
-- ✅ 7 handlers de packets
-- ✅ Experiencia compartida automática
-- ✅ Loot compartido
-- ✅ Sincronización de level up
-- ✅ 60 tests pasando
+El servidor contiene alta y autenticación, mapas/NPCs, clases, inventario, banco, comercio, combate, magia, habilidades, mascotas, tala/minería/pesca, party y clanes. Party y clan tienen operaciones disponibles mediante comandos; sus paneles nuevos no son condición para conservar esas funciones.
 
-### Versión 0.9.0-alpha - Sistema de Clanes/Guilds ✅ COMPLETADO
-**Estado:** Completado según `docs/systems/CLAN_SYSTEM.md`
-- ✅ Modelos de datos (Clan, ClanMember, ClanInvitation)
-- ✅ Persistencia en Redis
-- ✅ Lógica de negocio completa
-- ✅ 10 comandos implementados vía chat
-- ✅ Sistema de rangos jerárquicos (MEMBER, OFFICER, VICE_LEADER, LEADER)
-- ✅ Chat interno del clan (`/CLAN mensaje`)
-- ✅ Gestión completa de miembros (invitar, expulsar, promover, degradar)
-- ✅ Transferencia de liderazgo
-- ✅ Tests básicos del servicio
+El cliente contiene las pantallas y lectores/writers de base. La integración requiere las correcciones de protocolo, seguridad, inventario y UI seleccionadas en el alcance. Los ports de Hide Zone se adaptan al contrato y los datos propios de pyao.
 
-### Versión 0.9.1-alpha - Mejoras del Sistema de Clanes ✅ COMPLETADO
-- ✅ Notificaciones completas para todos los eventos
-- ✅ Broadcast automático a todos los miembros del clan
-- ✅ Tests ampliados (11 → 24 tests)
-- ✅ Documentación completa (`docs/systems/CLAN_SYSTEM.md`)
+## Bloqueos conocidos
 
-### Versión 0.9.1-alpha - Sistema de Pociones ✅ COMPLETADO
-- ✅ 6 tipos de pociones funcionando (HP, Mana, buffs, veneno, invisibilidad)
-- ✅ Modificadores temporales con duración configurable
-- ✅ Integración completa con inventario
+- [Servidor #109](https://github.com/cavazquez/pyao-server/issues/109) y [#110](https://github.com/cavazquez/pyao-server/issues/110): recuperar tipos y aislar el bloqueo de inicialización en pruebas.
+- [Servidor #86](https://github.com/cavazquez/pyao-server/issues/86): aislamiento de handlers y sesión por conexión.
+- [Servidor #94](https://github.com/cavazquez/pyao-server/issues/94), [#95](https://github.com/cavazquez/pyao-server/issues/95), [#96](https://github.com/cavazquez/pyao-server/issues/96) y [cliente #4](https://github.com/cavazquez/ArgentumOnlineGodot/issues/4): contrato y reconstrucción de mensajes TCP.
+- [Servidor #126](https://github.com/cavazquez/pyao-server/issues/126): el builder de habilidades y el reader del cliente consumen tamaños y semánticas diferentes.
+- [Cliente #1](https://github.com/cavazquez/ArgentumOnlineGodot/issues/1), [#2](https://github.com/cavazquez/ArgentumOnlineGodot/issues/2) y [#3](https://github.com/cavazquez/ArgentumOnlineGodot/issues/3): secretos en logs/disco y verificación TLS.
+- [Servidor #124](https://github.com/cavazquez/pyao-server/issues/124) y [cliente #54](https://github.com/cavazquez/ArgentumOnlineGodot/issues/54): el targeting requiere un formato inequívoco; no está resuelto sólo por tener coordenadas en el parser.
 
-### Versión 0.9.1-alpha - Mejoras de NPCs ✅ COMPLETADO
-- ✅ Extracción de NPCs desde mapas VB6 (1,604 NPCs en 99 mapas)
-- ✅ Sistema de mascotas/invocación (`/PET`)
-- ✅ Scripts de extracción y limpieza de spawns
+La lista completa de bloqueantes y su orden está en `ALCANCE_1_0.md`.
 
-### Versión 0.9.2-alpha - Random Spawns y Sonidos ✅ COMPLETADO
-- ✅ `RandomSpawnService` con límites multijugador y cooldowns
-- ✅ Sonidos de NPCs (ataque, daño, muerte)
-- ✅ Hechizo Mimetismo
+## Calidad y aprobación
 
-### Versión 0.9.3-alpha - Refactor Stats y Tests ✅ COMPLETADO
-- ✅ Dataclasses `PlayerStats` y `PlayerAttributes`
-- ✅ Métodos tipados en `PlayerRepository`
-- ✅ Ampliación de tests (clan tasks, cast spell handler)
-- ✅ `scripts/checks.sh` con opciones CLI
+No se declara aquí una suite completa aprobada ni una cobertura vigente. Para el candidato se guardan fecha, commits, versiones, comandos y resultados de lint, formato, tipos, pruebas e integración real. Los resultados históricos no sustituyen esa ejecución.
 
-### Versión 0.9.4-alpha - Refactor Arquitectura ✅ COMPLETADO
-- ✅ `TaskFactory` → `HandlerRegistry` (-66%)
-- ✅ `SpellService` → `spell_effects/` (-75%)
+El cierre exige los requisitos R01 a R10 del alcance, incluidos dos clientes Godot reales, persistencia/restauración y ejecución desde los paquetes instalados. Los tests de protocolo con dos scripts cubren una capa distinta del recorrido del cliente.
 
-### Refactors adicionales (2026-05) ✅ COMPLETADO
-- ✅ **`stats.get()`:** 0 usos en `src/` (migración completa)
-- ✅ **`attributes.get()`:** migrado a helpers de `PlayerRepository`
-- ✅ **`map_resources_service.py`:** submódulos en `src/services/map/`
-- ✅ **`player_repository.py`:** mixins en `src/repositories/player_mixins/`
-- ✅ **`clan_service.py`:** mixins en `src/services/clan/`
-- ✅ **`packet_validator.py`:** fachada delgada (~274 líneas)
-- ✅ **`message_sender.py`:** commerce/navigate en `InventoryMessageSender`
-- ✅ **Documentación:** reorganización en subcarpetas (`guides/`, `systems/`, `development/`, etc.)
+## Historial
 
----
-
-## 📋 Próximos Pasos (Según Prioridad)
-
-### 🔴 ALTA PRIORIDAD - Próxima Versión (0.10.0-alpha)
-
-#### Targeting por Click para Hechizos
-**Esfuerzo:** ~1 semana  
-**Nota:** Servidor ya acepta coordenadas en `CAST_SPELL`; el trabajo principal es en el cliente Godot.
-
-**Features:**
-- [ ] Click para seleccionar target en hechizos
-- [ ] Cursor visual en modo targeting
-- [ ] Cliente envía `CAST_SPELL` con coordenadas (x, y)
-- [ ] Validación de rango antes de lanzar
-- [ ] Cancelar targeting (ESC o click derecho)
-
-**Archivos cliente Godot:**
-- `ui/hub/spell_list_panel.gd`
-- `screens/game_screen.gd`
-- `engine/autoload/game_protocol.gd`
-
----
-
-### 🟡 MEDIA PRIORIDAD - Refactoring restante
-
-Ver [`REFACTORING.md`](REFACTORING.md) para detalle.
-
-- [ ] `party_service.py` (~707 líneas) — split por dominio
-- [ ] `npc_death_service.py` (~630 líneas) — death / exp / level up
-- [ ] `use_item_handler.py` — handlers especializados adicionales si crece
-
-**Ya completado (no repetir):**
-- [x] `packet_validator.py`, `map_resources_service`, `player_repository`, `clan_service`, `message_sender`
-- [x] `MapManager` ya delega en índices especializados (afinado futuro, no split inicial)
-
----
-
-### 🟡 MEDIA PRIORIDAD - Clanes avanzados
-
-- [ ] Almacén/depósito del clan
-- [ ] Alianzas entre clanes
-- [ ] Guerras de clanes
-- [ ] Edificio del clan con NPCs
-
----
-
-### 🟡 MEDIA PRIORIDAD - Calidad
-
-#### Cobertura de tests
-**Objetivo:** 80%+
-
-**Progreso reciente:**
-- [x] `tests/command_handlers/test_bank_item_handlers.py` — deposit/extract (éxito, vacío, rollback, inventario lleno)
-- [x] `tests/services/test_commerce_service.py` — suite existente amplia
-
-**Pendiente revisar:**
-- [ ] Ramas sin cubrir en `commerce_service.py` (ejecutar `pytest --cov=src/services/commerce_service.py`)
-
-#### Antipatrón stats/attributes
-- [x] `stats.get()` — 0 usos en `src/`
-- [x] `attributes.get()` — migrado (solo `.get()` residual en dict local de dados en `class_service.py`)
-
----
-
-### 🟢 BAJA PRIORIDAD
-
-- Helper `send_update_user_stats_from_repo` en `MessageSender`
-- Reorganización de `tasks/` en subcarpetas (propuesta archivada)
-- Roadmap 0.11+ (hechizos avanzados, facciones, quests, etc.)
-
----
-
-## 📊 Resumen de Estado
-
-### Versiones
-- **Versión actual:** 0.9.4-alpha ✅
-- **Próxima versión:** 0.10.0-alpha (Targeting por Click)
-
-### Tests
-- **Total:** 2154 tests
-- **Pasando:** 100% ✅
-- **Cobertura:** ~75% (objetivo 80%+)
-
-### Calidad
-- **Linting:** 0 errores ✅
-- **Type checking:** 0 errores ✅
-- **Documentación:** reorganizada en `docs/` con índice en `docs/README.md`
-
-### Observabilidad
-- Logs de login con mensajes destacados y colores por nivel (TTY)
-- `LOG_COLOR=1` fuerza color; `NO_COLOR=1` lo desactiva
-
----
-
-## 🎯 Recomendación Inmediata
-
-1. **v0.10.0-alpha** — targeting por click (cliente Godot)
-2. **Cobertura** — medir gaps en `commerce_service` tras suite de banco
-3. **Refactor opcional** — `party_service` o `npc_death_service` si hay tiempo
-
----
-
-**Última actualización:** 2026-05-26  
-**Estado:** ✅ 0.9.4-alpha + refactors mayo 2026 completados; docs al día
+El [estado del 26/05/2026 conservado en 8204c732](https://github.com/cavazquez/pyao-server/blob/8204c732e517b598f14ce89a2983934c12fa2e39/docs/development/ESTADO_ACTUAL.md) documenta refactors y avances anteriores. Sus números de tests, cobertura y afirmaciones de completitud son históricos.
