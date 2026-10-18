@@ -38,7 +38,7 @@ class TaskLogin(Task):
         """
         super().__init__(data, message_sender)
         self.login_handler = login_handler
-        self.session_data = session_data or {}
+        self.session_data = {} if session_data is None else session_data
 
     def _parse_packet(self) -> tuple[str, str] | None:
         """Parsea el paquete de login.

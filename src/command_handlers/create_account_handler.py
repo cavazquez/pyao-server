@@ -65,7 +65,7 @@ class CreateAccountCommandHandler(CommandHandler):
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.message_sender = message_sender
-        self.session_data = session_data or {}
+        self.session_data = {} if session_data is None else session_data
 
         # Inicializar handlers especializados
         self.validation_handler = CreateAccountValidationHandler(
