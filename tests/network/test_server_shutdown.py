@@ -10,6 +10,43 @@ from src.server import ArgentumServer
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("cause", ["transport", "cancellation"])
+async def test_disconnect_cleanup_always_releases_lease(cause: str) -> None:
+    """Un RST o una cancelación durante la limpieza no retiene la reserva de sesión."""
+    server = ArgentumServer()
+    reader = asyncio.StreamReader()
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.wait_closed = AsyncMock()
+    lease = AsyncMock()
+    completed = []
+
+    async def cleanup(*_: object) -> None:
+        connection = next(iter(server._connections))
+        if cause == "transport":
+            connection.close(abort=True)
+        else:
+            owner = asyncio.current_task()
+            assert owner is not None
+            owner.cancel()
+        await asyncio.sleep(0)
+        completed.append(True)
+
+    with patch.object(server, "_cleanup_player", side_effect=cleanup):
+        handling = asyncio.create_task(server.handle_client(reader, writer))
+        await asyncio.sleep(0)
+        assert server._connections
+        next(iter(server._connections))._session_lease = lease
+        reader.feed_eof()
+        await asyncio.gather(handling, return_exceptions=True)
+    lease.release.assert_awaited_once()
+    assert completed == ([True] if cause == "transport" else [])
+    assert not server._client_tasks
+    assert not server._connections
+    assert server._active_connections == 0
+
+
+@pytest.mark.asyncio
 async def test_stop_drains_active_operation_and_cleanup_before_redis() -> None:  # noqa: PLR0915
     """Stop concurrente conserva el ACK y espera las sesiones antes de cerrar Redis."""
     server = ArgentumServer(host="127.0.0.1", port=7777)

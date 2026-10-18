@@ -168,44 +168,58 @@ class ArgentumServer:
         except Exception:
             logger.exception("Error manejando conexión")
         finally:
+            if connection is not None:
+                # Un escritor que detecta RST ya no debe cancelar la limpieza de su dueño.
+                connection.owner_task = None
             try:
                 try:
                     await self._cleanup_player(session_data, message_sender)
                 except Exception:
                     logger.exception("Error limpiando jugador desconectado")
-                if connection is not None:
-                    try:
-                        await connection.release_session()
-                    except Exception:
-                        logger.exception("No se pudo liberar la reserva; vencerá por TTL")
-                    if self._stopping:
-                        try:
-                            await connection.flush()
-                        except ConnectionError:
-                            logger.debug("La salida de la sesión ya estaba cerrada")
+                finally:
+                    if connection is not None:
+                        await self._release_connection(connection)
             finally:
-                # Incluso si falla el login, Redis o el cierre lógico, liberar exactamente una vez.
                 self._active_connections -= 1
                 try:
-                    if connection is not None:
-                        connection.close()
-                        await connection.wait_closed()
-                    else:
-                        writer.close()
-                        await writer.wait_closed()
-                except ConnectionError:
-                    logger.debug("El transporte ya estaba cerrado")
+                    await self._close_transport(connection, writer, counted_in_redis)
                 finally:
-                    try:
-                        if counted_in_redis and self.deps and self.deps.redis_client:
-                            await self.deps.redis_client.decrement_connections()
-                    except Exception:
-                        logger.exception("No se pudo actualizar la métrica de conexiones")
-                    finally:
-                        if connection is not None:
-                            self._connections.discard(connection)
-                        if owner is not None:
-                            self._client_tasks.discard(owner)
+                    if connection is not None:
+                        self._connections.discard(connection)
+                    if owner is not None:
+                        self._client_tasks.discard(owner)
+
+    async def _release_connection(self, connection: ClientConnection) -> None:
+        """Libera la reserva incluso si se canceló la limpieza del personaje."""
+        try:
+            await connection.release_session()
+        except Exception:
+            logger.exception("No se pudo liberar la reserva; vencerá por TTL")
+        if self._stopping:
+            try:
+                await connection.flush()
+            except ConnectionError:
+                logger.debug("La salida de la sesión ya estaba cerrada")
+
+    async def _close_transport(
+        self, connection: ClientConnection | None, writer: asyncio.StreamWriter, counted: bool
+    ) -> None:
+        """Cierra siempre el socket y ajusta métricas antes de retirar al dueño."""
+        try:
+            if connection is not None:
+                connection.close()
+                await connection.wait_closed()
+            else:
+                writer.close()
+                await writer.wait_closed()
+        except ConnectionError:
+            logger.debug("El transporte ya estaba cerrado")
+        finally:
+            try:
+                if counted and self.deps and self.deps.redis_client:
+                    await self.deps.redis_client.decrement_connections()
+            except Exception:
+                logger.exception("No se pudo actualizar la métrica de conexiones")
 
     async def _receive(self, connection: ClientConnection) -> bytes:
         """Permite despertar lectores ociosos sin cancelar una operación en curso.
