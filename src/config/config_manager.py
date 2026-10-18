@@ -92,6 +92,7 @@ class ConfigManager:
             "PYAO_REDIS_HOST": "PYAO_REDIS__HOST",
             "PYAO_REDIS_PORT": "PYAO_REDIS__PORT",
             "PYAO_REDIS_DB": "PYAO_REDIS__DB",
+            "PYAO_REDIS_PASSWORD_FILE": "PYAO_REDIS__PASSWORD_FILE",
             "PYAO_LOG_LEVEL": "PYAO_LOGGING__LEVEL",
         }
 
@@ -188,6 +189,9 @@ class ConfigManager:
                 "host": self._game_config.redis.host,
                 "port": self._game_config.redis.port,
                 "db": self._game_config.redis.db,
+                "password_file": str(self._game_config.redis.password_file)
+                if self._game_config.redis.password_file is not None
+                else None,
                 "max_connections": self._game_config.redis.max_connections,
                 "decode_responses": self._game_config.redis.decode_responses,
                 "socket_timeout": self._game_config.redis.socket_timeout,

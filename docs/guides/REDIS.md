@@ -221,3 +221,56 @@ Para producción, considera:
 ## 📝 Versión
 
 Este Dockerfile usa **Redis 8 Alpine**, la última versión estable de Redis con una imagen ligera basada en Alpine Linux.
+
+## Perfil persistente y red de desarrollo
+
+Compose publica Redis y Redis Insight exclusivamente en `127.0.0.1`; Insight
+sigue siendo optativo con `--profile tools`. Para otro puerto local usar
+`PYAO_REDIS_PORT` / `PYAO_REDIS_INSIGHT_PORT`. Desde otra máquina utilizar un túnel
+SSH hacia loopback. La red interna de Compose conserva el servicio `redis:6379`.
+
+El perfil conserva `protected-mode yes` y exige una credencial mediante Docker
+secret. Para prepararla, sin imprimirla ni incorporarla a Git:
+
+```bash
+uv run --locked python -m src.operations.redis_secret --output .local/redis-password
+export PYAO_REDIS_PASSWORD_FILE="$PWD/.local/redis-password"
+docker compose up -d --build redis
+uv run --locked pyao-server
+```
+
+El generador usa creación exclusiva y permisos 0600; no sobrescribe un archivo
+existente. El servidor admite esa variable legado o `PYAO_REDIS__PASSWORD_FILE`
+y la opción `redis.password_file` del TOML. El entrypoint convierte el secreto en
+un hash ACL privado, sin poner la contraseña en argumentos ni logs. Redis Insight
+se configura manualmente con la misma credencial y el servicio interno `redis`.
+Para una instalación externa sin autenticación, dejar password_file ausente.
+
+La imagen de Redis fija versión 8.10.2 y digest. `redis/redis.conf` habilita AOF
+con `appendfsync everysec`, sin desactivar fsync durante rewrite, y snapshots RDB
+a los 900 s/1 cambio, 300 s/10 cambios o 60 s/10000 cambios. Se persiste **todo**
+`/data`, incluido `appendonlydir` y su manifiesto; no copiar sólo un archivo AOF.
+El cierre limpio guarda el trabajo pendiente. Ante caída abrupta, everysec puede
+perder aproximadamente el último segundo de escrituras; discos, controlador y
+filesystem deben cumplir fsync. Un reinicio de proceso no equivale a un corte
+eléctrico. Los snapshots son puntos de recuperación adicionales y el volumen
+local no sustituye un backup externo.
+
+Ensayo aislado, sin acceder al Redis del operador:
+
+```bash
+uv run --locked python -m src.operations.redis_persistence
+```
+
+El comando crea contenedor/volumen con UUID y puerto aleatorio sólo en loopback,
+comprueba CONFIG GET, persiste cuenta/oro/inventario sintéticos y prueba reinicio
+limpio y SIGKILL después de WAITAOF local confirmado. Retira únicamente sus
+recursos. Este último caso demuestra persistencia confirmada, no ausencia de
+pérdida para escrituras todavía no sincronizadas.
+
+Antes de aplicar esta configuración sobre un volumen existente, hacer y verificar
+un backup. Activar AOF sobre una instancia que ya contiene sólo RDB exige cargar
+primero ese RDB y habilitar AOF en memoria; iniciar directamente con un AOF vacío
+puede seleccionar un estado vacío. El procedimiento de restauración utiliza un
+volumen nuevo y deja intacta la instancia activa. Referencia: [persistencia de
+Redis](https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/).

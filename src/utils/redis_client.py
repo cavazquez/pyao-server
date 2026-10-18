@@ -55,6 +55,7 @@ class RedisClient:
         try:
             self._redis = redis.Redis(
                 host=config.host,
+                password=config.read_password(),
                 port=config.port,
                 db=config.db,
                 max_connections=config.max_connections,

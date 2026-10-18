@@ -37,6 +37,7 @@ async def test_file_and_environment_reach_redis_constructor(tmp_path, monkeypatc
         await client.connect(effective)
         constructor.assert_called_once_with(
             host="cache-env" if override else "cache-file",
+            password=None,
             port=6382 if override else 6381,
             db=4 if override else 3,
             max_connections=9 if override else 7,

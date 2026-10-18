@@ -182,9 +182,27 @@ class RedisConfig(BaseModel):
     port: int = Field(default=6379, ge=1, le=65535, description="Puerto de Redis")
     db: int = Field(default=0, ge=0, description="Base de datos de Redis")
     max_connections: int = Field(default=20, ge=1, description="Máximo de conexiones a Redis")
+    password_file: Path | None = None
     decode_responses: bool = True
     socket_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
     socket_connect_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
+
+    def read_password(self) -> str | None:
+        """Lee el secreto al conectar, sin incorporarlo al modelo ni a los logs.
+
+        Returns:
+            Contraseña o None para una instancia externa sin autenticación.
+
+        Raises:
+            ValueError: Si el archivo está vacío o contiene más de una línea.
+        """
+        if self.password_file is None:
+            return None
+        value = self.password_file.read_text(encoding="utf-8").rstrip("\r\n")
+        if not value or "\n" in value or "\r" in value:
+            msg = "El archivo de secreto Redis debe contener una sola línea no vacía"
+            raise ValueError(msg)
+        return value
 
 
 class SecurityConfig(BaseModel):

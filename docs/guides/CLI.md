@@ -360,3 +360,9 @@ pérdida/error de renovación cierra y cancela la sesión propietaria. Fallar du
 el login termina en la limpieza de la conexión y su reserva; una caída de proceso
 permite reingresar al vencer el TTL sin editar Redis. En un cierre limpio se
 libera después de retirar al jugador del mundo.
+
+El perfil Docker Redis persistente requiere `PYAO_REDIS_PASSWORD_FILE` (alias
+`PYAO_REDIS__PASSWORD_FILE`, o `redis.password_file` en TOML). Se lee al conectar
+y su contenido no se incluye en ConfigManager ni se imprime. Generarlo con
+`uv run --locked python -m src.operations.redis_secret --output .local/redis-password`.
+Una instancia externa sin autenticación puede dejar esa opción sin definir.
