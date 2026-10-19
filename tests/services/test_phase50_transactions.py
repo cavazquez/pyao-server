@@ -19,6 +19,9 @@ from src.services.combat.periodic import tick_periodic
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat.spell_plan import CastRequest, SpellPlan, commit_spell
 from src.services.expansion.pages import bounded_pages
+from src.services.map.pathfinding_service import PathfindingService
+from src.services.npc.npc_ai_service import NPCAIService
+from src.services.npc.npc_service import NPCService
 from src.services.personal_skills import tame
 from src.services.player.lifecycle import apply_player_damage
 from src.utils.gold_atomic import operation_id
@@ -26,6 +29,33 @@ from src.utils.redis_config import RedisKeys
 from tests.services.test_world_state import world
 
 __all__ = ["world"]
+
+
+@pytest.mark.asyncio
+async def test_chase_keeps_redis_live_actor_and_tile_index_in_sync(world):
+    """El siguiente cast consulta Redis y debe encontrar al NPC donde se dibujó."""
+    _, deps, _ = world
+    npc = await quest_giver(deps)
+    broadcast = AsyncMock()
+    NPCService.reset_instance()
+    try:
+        service = NPCService(deps.npc_repo, None, deps.map_manager, broadcast)
+        ai = NPCAIService(
+            service,
+            deps.map_manager,
+            deps.player_repo,
+            None,
+            broadcast,
+            PathfindingService(deps.map_manager),
+        )
+        assert await ai.try_move_towards(npc, 53, 51)
+        saved = await deps.npc_repo.redis.hgetall(RedisKeys.npc_instance(npc.instance_id))
+        assert (int(saved["x"]), int(saved["y"])) == (npc.x, npc.y) != (51, 50)
+        assert deps.map_manager.is_tile_occupied(npc.map_id, npc.x, npc.y)
+        assert not deps.map_manager.is_tile_occupied(npc.map_id, 51, 50)
+        broadcast.broadcast_character_move.assert_awaited_once()
+    finally:
+        NPCService.reset_instance()
 
 
 def test_unicode_pages_obey_serialized_byte_limits():

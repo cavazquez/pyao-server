@@ -406,36 +406,10 @@ class NPCAIService:
         ):
             return False
 
-        # Mover el NPC
-        old_x, old_y = npc.x, npc.y
-        npc.x = new_x
-        npc.y = new_y
-        npc.heading = direction
-
-        # Actualizar en MapManager
-        self.map_manager.move_npc(npc.map_id, npc.char_index, old_x, old_y, new_x, new_y)
-
-        # Broadcast CHARACTER_MOVE
-        await self.broadcast_service.broadcast_character_move(
-            map_id=npc.map_id,
-            char_index=npc.char_index,
-            new_x=new_x,
-            new_y=new_y,
-            new_heading=direction,
-            old_x=old_x,
-            old_y=old_y,
-        )
-
-        logger.debug(
-            "NPC %s se movió de (%d,%d) a (%d,%d) persiguiendo objetivo",
-            npc.name,
-            old_x,
-            old_y,
-            new_x,
-            new_y,
-        )
-
-        return True
+        # El mismo camino persiste Redis, actualiza la ocupación y publica el
+        # movimiento. Mover sólo el actor en memoria invalida los casts visibles.
+        await self.npc_service.move_npc(npc, new_x, new_y, direction)
+        return (npc.x, npc.y) == (new_x, new_y)
 
     async def process_hostile_npc(self, npc: NPC) -> None:
         """Procesa el comportamiento de un NPC hostil.

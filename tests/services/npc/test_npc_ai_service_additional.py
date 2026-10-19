@@ -40,7 +40,13 @@ def sample_npc() -> NPC:
 @pytest.fixture
 def mock_npc_service() -> MagicMock:
     """Crea un mock de NPCService."""
-    return MagicMock()
+    service = MagicMock()
+
+    async def move(npc, x, y, heading):
+        npc.x, npc.y, npc.heading = x, y, heading
+
+    service.move_npc = AsyncMock(side_effect=move)
+    return service
 
 
 @pytest.fixture
@@ -450,7 +456,6 @@ class TestTryMoveTowards:
         ai_service: NPCAIService,
         sample_npc: NPC,
         mock_map_manager: MagicMock,
-        mock_broadcast_service: MagicMock,
     ) -> None:
         """Test movimiento con pathfinding."""
         pathfinding_service = MagicMock()
@@ -465,8 +470,7 @@ class TestTryMoveTowards:
         assert result is True
         assert sample_npc.x == 51
         assert sample_npc.y == 50
-        mock_map_manager.move_npc.assert_called_once()
-        mock_broadcast_service.broadcast_character_move.assert_called_once()
+        ai_service.npc_service.move_npc.assert_awaited_once_with(sample_npc, 51, 50, 2)
 
     @pytest.mark.asyncio
     async def test_try_move_towards_pathfinding_tile_occupied(
@@ -520,7 +524,7 @@ class TestTryMoveTowards:
         assert result is True
         assert sample_npc.x == 51  # Se movi? al Este
         assert sample_npc.y == 50
-        mock_map_manager.move_npc.assert_called_once()
+        ai_service.npc_service.move_npc.assert_awaited_once_with(sample_npc, 51, 50, 2)
 
     @pytest.mark.asyncio
     async def test_try_move_towards_simple_movement_blocked(
