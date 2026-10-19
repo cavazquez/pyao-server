@@ -1,0 +1,14 @@
+{
+  "issue": 119,
+  "stash": "64410a9d5aad98070c5afccb06eab9f81908b192",
+  "recipe_sha256": "d6913d9831844901f35ba0374730ba8d1213a7f45c41e0d811f7e79ea8627f65",
+  "supported": [
+    "amd64",
+    "arm64"
+  ],
+  "excluded": [
+    "armhf",
+    "riscv64"
+  ],
+  "decision": "Preserve current uv recipe; require native build and install evidence per declared architecture."
+}
