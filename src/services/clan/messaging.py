@@ -2,6 +2,7 @@
 
 import logging
 
+from src.network.chat_channel import deliver_chat
 from src.services.clan._helpers import ClanServiceHelpersMixin
 
 logger = logging.getLogger(__name__)
@@ -31,13 +32,7 @@ class ClanMessagingMixin(ClanServiceHelpersMixin):
             return "Error: no se encontró tu información en el clan"
 
         sender_username = sender_member.username
-        logger.info(
-            "Clan message from %s (ID:%s) in clan '%s': '%s'",
-            sender_username,
-            sender_id,
-            clan.name,
-            message,
-        )
+        logger.debug("Chat de clan enviado por user_id=%d", sender_id)
 
         # Send message to all clan members
         if self.map_manager:
@@ -45,10 +40,15 @@ class ClanMessagingMixin(ClanServiceHelpersMixin):
                 member_sender = self._get_player_message_sender(member_id)
                 if member_sender:
                     full_message = f"[Clan] {sender_username}: {message}"
-                    logger.debug("Sending clan message to member %s: '%s'", member_id, full_message)
-                    await member_sender.send_console_msg(
-                        full_message,
-                        font_color=7,  # FONTTYPE_PARTY (verde para clan)
+                    await deliver_chat(
+                        member_sender,
+                        "clan",
+                        sender_id,
+                        sender_username,
+                        message,
+                        legacy=full_message,
+                        context=str(clan.clan_id),
+                        font=7,
                     )
 
         return ""

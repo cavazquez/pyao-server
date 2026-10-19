@@ -10,6 +10,7 @@ from src.command_handlers.talk_public_handler import TalkPublicHandler
 from src.command_handlers.talk_trade_handler import TalkTradeHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.talk_command import TalkCommand
+from src.services.account_moderation import AccountModeration
 
 if TYPE_CHECKING:
     from src.game.game_tick import GameTick
@@ -65,6 +66,7 @@ class TalkCommandHandler(CommandHandler):
         """
         self.player_repo = player_repo
         self.account_repo = account_repo
+        self.moderation = AccountModeration(account_repo)
         self.map_manager = map_manager
         self.game_tick = game_tick
         self.message_sender = message_sender
@@ -121,7 +123,11 @@ class TalkCommandHandler(CommandHandler):
         user_id = command.user_id
         message = command.message
 
-        logger.info("TalkCommandHandler: mensaje de chat de user_id %d: %s", user_id, message)
+        logger.debug("Comando de chat de user_id %d", user_id)
+        if message.split(maxsplit=1) and message.split(maxsplit=1)[0].upper() in {"/BAN", "/UNBAN"}:
+            result = await self.moderation.handle_text(user_id, message)
+            await self.message_sender.send_console_msg(str(result["message"]))
+            return CommandResult.ok(data={"command": "moderation", "applied": result["applied"]})
 
         # Comando /METRICS - delegar a handler especializado
         if command.is_metrics_command():

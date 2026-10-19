@@ -47,6 +47,7 @@ class Item:
     consumable: bool = False
     equippable: bool = False
     value: int = 0  # Valor en oro
+    obj_type: int = 0  # Tipo original para especialidades de los comerciantes.
 
     # Efectos al usar (para pociones/comida)
     restore_hp: int = 0

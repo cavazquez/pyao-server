@@ -229,9 +229,12 @@ class MerchantRepository(BaseSlotRepository):
         return f"merchant:{npc_id}:items"
 
     async def clear_merchant(self, npc_id: int) -> None:
-        """Elimina inventario y set auxiliar de un mercader."""
-        await self.redis_client.delete(RedisKeys.merchant_inventory(npc_id))
-        await self.redis_client.delete(self._merchant_items_key(npc_id))
+        """Restablece explícitamente inventario, índice y política de un mercader."""
+        await self.redis_client.delete(
+            RedisKeys.merchant_inventory(npc_id),
+            self._merchant_items_key(npc_id),
+            f"merchant:{npc_id}:catalog",
+        )
 
     async def load_inventory_slots(
         self,

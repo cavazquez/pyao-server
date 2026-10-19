@@ -302,6 +302,7 @@ class TestPartyAcceptance:
         mock_invitation = MagicMock()
         mock_invitation.is_expired = False
         mock_invitation.party_id = 1
+        mock_invitation.inviter_id = 1
 
         mock_party_repo.get_invitation = AsyncMock(return_value=mock_invitation)
         # Ensure get_attributes returns a valid dict for username lookup
@@ -309,6 +310,7 @@ class TestPartyAcceptance:
 
         # Mock party exists and can accept
         mock_party = MagicMock()
+        mock_party.leader_id = 1
         mock_party.is_full = False
         mock_party.add_member.return_value = True
         mock_party.member_ids = {1, 2}

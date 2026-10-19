@@ -51,6 +51,10 @@ async def action_world(mechanics_world):
             address="prueba-local",
             is_authenticated=True,
             capabilities=SimpleNamespace(enabled=SUPPORTED_CAPABILITIES),
+            state_epoch=f"{uid:032x}",
+            state_sequence=0,
+            session_redis=None,
+            session_user_id=uid,
         )
         sender = MessageSender(connection)
         world.senders[uid] = sender

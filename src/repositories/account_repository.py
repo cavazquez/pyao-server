@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.repositories.account_creation import create_indexed_account
 from src.security.password_executor import get_password_executor
 from src.utils.password_utils import verify_password as verify_password_hash
 from src.utils.redis_config import RedisKeys
@@ -13,6 +14,8 @@ else:
     RedisClient = object
 
 logger = logging.getLogger(__name__)
+USER_ACCOUNT_INDEX = "account:index:user_id"
+USER_ACCOUNT_INDEX_STATE = "account:index:progress"
 
 
 class AccountRepository:
@@ -40,32 +43,8 @@ class AccountRepository:
         Returns:
             ID del usuario creado.
 
-        Raises:
-            ValueError: Si la cuenta ya existe.
         """
-        # Verificar si el usuario ya existe
-        username_key = RedisKeys.account_id_by_username(username)
-        existing_id = await self.redis.get(username_key)
-
-        if existing_id is not None:
-            msg = f"La cuenta '{username}' ya existe"
-            raise ValueError(msg)
-
-        # Generar nuevo user_id
-        user_id = int(await self.redis.incr(RedisKeys.ACCOUNTS_COUNTER))
-
-        # Guardar mapeo username -> user_id
-        await self.redis.set(username_key, str(user_id))
-
-        # Guardar datos de la cuenta
-        account_key = RedisKeys.account_data(username)
-        account_data = {
-            "user_id": str(user_id),
-            "username": username,
-            "password_hash": password_hash,
-            "email": email,
-            "is_gm": "0",  # Por defecto no es GM
-        }
+        account_data = {"password_hash": password_hash, "email": email}
 
         # Agregar datos del personaje si existen
         if char_data:
@@ -79,7 +58,7 @@ class AccountRepository:
                 }
             )
 
-        await self.redis.hset(account_key, mapping=account_data)
+        user_id = await create_indexed_account(self.redis.redis, username, account_data)
         logger.info("Cuenta creada: %s (ID: %d)", username, user_id)
 
         return user_id
@@ -159,24 +138,49 @@ class AccountRepository:
         Returns:
             Diccionario con los datos de la cuenta o None si no existe.
         """
-        # Buscar en todas las cuentas (esto es ineficiente, pero funcional por ahora)
-        # En el futuro, podríamos mantener un índice user_id -> username en Redis
-        # Por ahora, iteramos sobre las claves de cuentas
-        pattern = "account:*:data"
-        keys = await self.redis.keys(pattern)
-        logger.debug("Buscando cuenta para user_id=%d, encontradas %d claves", user_id, len(keys))
+        username = await self.redis.hget(USER_ACCOUNT_INDEX, str(user_id))
+        if not username:
+            return None
+        account = await self.get_account(str(username))
+        if not account or account.get("user_id") != str(user_id):
+            return None
+        return account
 
-        for key in keys:
-            account_data: dict[str, str] = await self.redis.hgetall(key)
-            account_user_id_str = account_data.get("user_id")
-            if account_user_id_str == str(user_id):
-                logger.debug("Cuenta encontrada para user_id=%d en key=%s", user_id, key)
-                return account_data
+    async def backfill_user_index(self, batch_size: int = 128) -> None:
+        """Completa el índice por lotes reanudables.
 
-        logger.warning(
-            "No se encontró cuenta para user_id=%d después de revisar %d claves", user_id, len(keys)
-        )
-        return None
+        Raises:
+            ValueError: Si los mapeos existentes contienen identidades contradictorias.
+        """
+        state = await self.redis.hgetall(USER_ACCOUNT_INDEX_STATE)
+        if state.get("complete") == "1":
+            return
+        cursor = int(state.get("cursor", 0))
+        while True:
+            cursor, keys = await self.redis.redis.scan(
+                cursor, match="account:*:data", count=batch_size
+            )
+            for key in keys:
+                name = key.decode() if isinstance(key, bytes) else key
+                account = await self.redis.hgetall(name)
+                user_id, username = account.get("user_id", ""), account.get("username", "")
+                if not user_id.isdigit() or int(user_id) < 1 or not username:
+                    message = "Cuenta heredada sin identidad válida; se conserva para revisión"
+                    raise ValueError(message)
+                reverse = await self.redis.get(RedisKeys.account_id_by_username(username))
+                if name != RedisKeys.account_data(username) or str(reverse) != user_id:
+                    message = "Mapeos de cuenta contradictorios; el índice no se sobrescribe"
+                    raise ValueError(message)
+                await self.redis.redis.hsetnx(USER_ACCOUNT_INDEX, user_id, username)
+                if await self.redis.hget(USER_ACCOUNT_INDEX, user_id) != username:
+                    message = "Dos cuentas declaran el mismo user_id"
+                    raise ValueError(message)
+            await self.redis.hset(
+                USER_ACCOUNT_INDEX_STATE,
+                mapping={"cursor": str(cursor), "complete": "1" if cursor == 0 else "0"},
+            )
+            if cursor == 0:
+                return
 
     async def is_gm_by_user_id(self, user_id: int) -> bool:
         """Verifica si un usuario es Game Master por user_id.

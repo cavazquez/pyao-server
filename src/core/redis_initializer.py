@@ -6,6 +6,8 @@ import time
 from src.config.config_manager import ConfigManager, config_manager
 from src.core.data_initializer import DataInitializer
 from src.core.schema_manager import ensure_schema_ready
+from src.economy.tax_migration import initialize_tax_policy
+from src.repositories.account_repository import AccountRepository
 from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisConfig, RedisKeys
@@ -28,6 +30,12 @@ class RedisInitializer:
         await redis_client.connect(effective_config, seed_defaults=False)
         await ensure_schema_ready(redis_client.redis)
         await redis_client.initialize_defaults()
+        await initialize_tax_policy(
+            redis_client.redis,
+            enabled=bool(config_manager.get("game.tax.enabled", True)),
+            percentage=float(str(config_manager.get("game.tax.daily_percentage", 1.0))),
+        )
+        await AccountRepository(redis_client).backfill_user_index()
         logger.info("✓ Conectado a Redis")
 
         data_initializer = DataInitializer(redis_client)

@@ -320,6 +320,12 @@ class ArgentumServer:
 
             # Iniciar el sistema de tick
             self.deps.game_tick.start()
+            from src.economy.maintenance import EconomyMaintenance  # ruff: ignore[import-outside-top-level]
+
+            self._economy = EconomyMaintenance(self.deps.redis_client.redis)
+            self._economy.start()
+            if self.deps.world_state:
+                self.deps.world_state.start()
             logger.info("✓ Sistema de tick del juego iniciado")
 
         except redis.ConnectionError as e:
@@ -394,6 +400,13 @@ class ArgentumServer:
         loop = asyncio.get_running_loop()
         deadline = loop.time() + self.outgoing_config.shutdown_timeout_seconds
         work_deadline = deadline - 1
+        if self.deps and self.deps.world_state:
+            await self._shutdown_step(
+                self.deps.world_state.close(), "estado de interfaz", work_deadline
+            )
+        economy = getattr(self, "_economy", None)
+        if economy is not None:
+            await self._shutdown_step(economy.close(), "economía", work_deadline)
         if self.deps and self.deps.game_tick:
             await self._shutdown_step(self.deps.game_tick.stop(), "tick", work_deadline)
         tasks = tuple(self._client_tasks)

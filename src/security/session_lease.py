@@ -2,9 +2,11 @@
 
 import asyncio
 from secrets import token_urlsafe
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from redis.exceptions import WatchError
+
+from src.security.account_bans import account_is_blocked, ban_key, is_blocked
 
 if TYPE_CHECKING:
     from redis.asyncio import Redis
@@ -16,6 +18,7 @@ class SessionLease:
     def __init__(self, redis: Redis, user_id: int, ttl: int = 90) -> None:
         """Crea un token privado para reservar una cuenta autenticada."""
         self.redis = redis
+        self.user_id = user_id
         self.key = f"session:{user_id}:owner"
         self.token = token_urlsafe(32)
         self.ttl = ttl
@@ -29,21 +32,31 @@ class SessionLease:
         Raises:
             CancelledError: Tras resolver y retirar una reserva cuyo SET seguía en vuelo.
         """
+        if await account_is_blocked(self.redis, self.user_id):
+            return False
         pending = asyncio.ensure_future(self.redis.set(self.key, self.token, nx=True, ex=self.ttl))
         try:
-            return bool(await asyncio.shield(pending))
+            acquired = bool(await asyncio.shield(pending))
+            if acquired and await account_is_blocked(self.redis, self.user_id):
+                await self.release()
+                return False
         except asyncio.CancelledError:
             try:
                 await pending
             finally:
                 await self.release()
             raise
+        return acquired
 
     async def _mutate_owned(self, *, release: bool) -> bool:
         for _ in range(3):
             async with self.redis.pipeline(transaction=True) as pipe:
                 try:
-                    await pipe.watch(self.key)
+                    await pipe.watch(self.key, ban_key(self.user_id))
+                    if not release and is_blocked(
+                        cast("dict[str, str]", await pipe.hgetall(ban_key(self.user_id)))
+                    ):
+                        return False
                     if await pipe.get(self.key) != self.token:
                         return False
                     pipe.multi()  # type: ignore[no-untyped-call]  # redis-py no anota multi.

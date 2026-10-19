@@ -84,7 +84,7 @@ async def read_resource_receipt(
     return cast("dict[str, Any]", receipt["result"])
 
 
-async def transact(
+async def transact(  # ruff: ignore[too-many-statements] - un solo límite de commit para negocio, impuesto y recibo.
     redis: Redis,
     resources: tuple[Resource, ...],
     identity: str,
@@ -112,7 +112,15 @@ async def transact(
     ):
         msg = "Retención del recibo insuficiente para la ventana de reintento"
         raise ValueError(msg)
+    # La importación diferida evita un ciclo con Resource/Snapshot, definidos aquí.
+    from src.economy.tax_transactions import tax_resources, taxed_decision  # ruff: ignore[import-outside-top-level]
+    from src.economy.taxes import utc_day  # ruff: ignore[import-outside-top-level]
+
     created_at = validate_operation_id(identity)
+    fingerprint = _request_fingerprint(resources, request)
+    tax_day = utc_day()
+    original_resources = resources
+    resources = tax_resources(resources, tax_day)
     if any(
         resource.ttl_seconds is not None
         and (type(resource.ttl_seconds) is not int or resource.ttl_seconds < 1)
@@ -125,7 +133,6 @@ async def transact(
     if len(by_key) != len(resources) or receipt_key in by_key:
         msg = "Recursos duplicados o reservados"
         raise ValueError(msg)
-    fingerprint = _request_fingerprint(resources, request)
     for attempt in range(MAX_TRANSACTION_ATTEMPTS):
         async with redis.pipeline() as pipe:
             try:
@@ -156,7 +163,7 @@ async def transact(
                         snapshot[resource.key] = (
                             value.decode() if isinstance(value, bytes) else value
                         )
-                decision = decide(snapshot)
+                decision = taxed_decision(snapshot, original_resources, tax_day, decide)
                 _validate_writes(by_key, decision.writes)
                 receipt_json = json.dumps({"request": fingerprint, "result": decision.result})
                 pipe.multi()  # type: ignore[no-untyped-call]

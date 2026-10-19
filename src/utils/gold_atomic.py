@@ -17,8 +17,6 @@ from redis.exceptions import WatchError
 from src.models.item_constants import MAX_PLAYER_GOLD
 
 if TYPE_CHECKING:
-    from collections.abc import Awaitable
-
     from redis.asyncio import Redis
 
 RECEIPT_TTL_SECONDS = 600
@@ -110,13 +108,19 @@ async def change_gold(
         msg = "Cantidad de oro fuera de rango"
         raise ValueError(msg)
     identity = identity or operation_id()
+    from src.economy.tax_transactions import stamp_money_revision, tax_resources, tax_snapshot  # ruff: ignore[import-outside-top-level]
+    from src.economy.taxes import utc_day  # ruff: ignore[import-outside-top-level]
+    from src.utils.resource_transaction import Resource, Snapshot, _enqueue_writes  # ruff: ignore[import-outside-top-level]
+
+    today = utc_day()
+    resources = tax_resources((Resource(key, "hash"),), today)
     created_at = validate_operation_id(identity)
     receipt_key = f"operation:gold:{key}:{identity}"
     fingerprint = sha256(f"{key}\0{mode}\0{amount}".encode()).hexdigest()
     for attempt in range(MAX_TRANSACTION_ATTEMPTS):
         async with redis.pipeline() as pipe:
             try:
-                await pipe.watch(key, receipt_key)
+                await pipe.watch(*(resource.key for resource in resources), receipt_key)
                 saved = await pipe.get(receipt_key)
                 if saved is not None:
                     receipt = json.loads(saved)
@@ -128,11 +132,27 @@ async def change_gold(
                 if age < -MAX_CLOCK_SKEW_SECONDS or age > RETRY_WINDOW_SECONDS:
                     msg = "Operación vencida; consultar el saldo antes de iniciar otra"
                     raise ValueError(msg)
-                current = int(await cast("Awaitable[str | None]", pipe.hget(key, "gold")) or 0)
+                snapshot: Snapshot = {}
+                for resource in resources:
+                    snapshot[resource.key] = (
+                        cast("dict[str, str]", await pipe.hgetall(resource.key))
+                        if resource.kind == "hash"
+                        else cast("str | None", await pipe.get(resource.key))
+                    )
+                projected, writes = tax_snapshot(snapshot, (Resource(key, "hash"),), today)
+                current = int(cast("dict[str, str]", projected[key]).get("gold", 0))
                 result = calculate_gold(current, amount, mode)
-                pipe.multi()  # type: ignore[no-untyped-call]
                 if result.applied and result.balance != current:
-                    pipe.hset(key, "gold", str(result.balance))
+                    writes[key] = {
+                        **cast("dict[str, str]", writes.get(key, {})),
+                        "gold": str(result.balance),
+                    }
+                pipe.multi()  # type: ignore[no-untyped-call]
+                _enqueue_writes(
+                    pipe,
+                    {resource.key: resource for resource in resources},
+                    stamp_money_revision(snapshot, (Resource(key, "hash"),), writes),
+                )
                 pipe.set(
                     receipt_key,
                     json.dumps({"request": fingerprint, "result": asdict(result)}),

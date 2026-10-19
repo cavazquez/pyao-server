@@ -477,6 +477,14 @@ class MapManager(SpatialIndexMixin):
             result.exit_count,
         )
 
+    def has_map(self, map_id: int) -> bool:
+        """Comprueba un ID del catálogo cargado antes de una transición administrativa.
+
+        Returns:
+            Si sus metadatos y dimensiones están cargados.
+        """
+        return map_id in self._map_sizes
+
     def get_map_size(self, map_id: int) -> tuple[int, int]:
         """Obtiene el tamaño de un mapa.
 

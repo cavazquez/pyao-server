@@ -53,10 +53,11 @@ class TestMerchantRepository:
         repo = MerchantRepository(redis_client)
         await repo.clear_merchant(npc_id=7)
 
-        assert redis_client.delete.await_count == 2
-        deleted_keys = {call.args[0] for call in redis_client.delete.await_args_list}
-        assert RedisKeys.merchant_inventory(7) in deleted_keys
-        assert MerchantRepository._merchant_items_key(7) in deleted_keys
+        redis_client.delete.assert_awaited_once_with(
+            RedisKeys.merchant_inventory(7),
+            MerchantRepository._merchant_items_key(7),
+            "merchant:7:catalog",
+        )
 
     async def test_load_inventory_slots(self) -> None:
         """Test de carga slot a slot desde TOML."""

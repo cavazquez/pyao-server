@@ -167,6 +167,7 @@ class ConfigManager:
                     "percentage": self._game_config.game.gold_decay.percentage,
                     "interval_seconds": self._game_config.game.gold_decay.interval_seconds,
                 },
+                "tax": self._game_config.game.tax.model_dump(),
                 "inventory": {
                     "max_slots": self._game_config.game.inventory.max_slots,
                 },

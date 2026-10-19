@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.network.chat_channel import deliver_chat
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
@@ -69,7 +71,15 @@ class TalkPublicHandler:
         # Enviar a todos los jugadores en el mapa (incluyendo el emisor)
         all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
         for sender in all_senders:
-            await sender.send_console_msg(formatted_message)
+            await deliver_chat(
+                sender,
+                "public",
+                user_id,
+                username,
+                message,
+                legacy=formatted_message,
+                context=f"map:{map_id}",
+            )
 
         logger.debug(
             "Mensaje de chat de user %d enviado a %d jugadores en mapa %d",

@@ -144,6 +144,7 @@ class ClientPacketID(IntEnum):
     CAST_TARGET = 253  # ID distinto, versión y coordenadas; capacidad 2
     TRADE_ACTION = 252  # Acción con sesión y revisión explícitas
     SKILL_ACTION = 251  # Acciones de habilidades, capacidad 256
+    WORLD_ACTION = 248  # Interfaz estructurada, capacidad 512
     CAPABILITIES = 250  # Negociación optativa después del login
 
 
@@ -259,6 +260,7 @@ class ServerPacketID(IntEnum):
     TRADE_STATE = 252  # Snapshot optativo de ambas ofertas
     VISUAL_DAMAGE = 246  # Extensión visual negociada, posterior al commit
     PROJECTILE = 247  # Origen/destino explícitos; sólo representación
+    WORLD_STATE = 248  # Estado estructurado, capacidad 512
     CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
     PASSWORD_CHANGE_RESULT = 253  # Resultado optativo sin secretos
     SKILL_ACTION_STATE = 255  # Respuestas acotadas, capacidad 256

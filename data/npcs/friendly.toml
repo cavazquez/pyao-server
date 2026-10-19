@@ -8,6 +8,7 @@ descripcion = "Un comerciante amigable que vende pociones y equipamiento básico
 body_id = 501
 head_id = 1
 es_mercader = true
+accepted_obj_types = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37]
 es_hostil = false
 es_atacable = false
 nivel = 0
@@ -78,6 +79,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 26
 nombre = "Sastre"
@@ -93,6 +95,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 27
 nombre = "Sastre"
@@ -108,6 +111,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 28
 nombre = "Sastre"
@@ -123,6 +127,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 29
 nombre = "Sastre"
@@ -138,6 +143,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 30
 nombre = "Sastre"
@@ -153,6 +159,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 31
 nombre = "Sastre"
@@ -168,6 +175,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 32
 nombre = "Sastre"
@@ -183,6 +191,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 33
 nombre = "Leñador"
@@ -198,6 +207,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [14, 31]
 [[npc]]
 id = 34
 nombre = "Cullighan"
@@ -213,6 +223,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [9]
 [[npc]]
 id = 35
 nombre = "Moraday"
@@ -228,6 +239,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [9]
 [[npc]]
 id = 36
 nombre = "Astor"
@@ -257,6 +269,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 38
 nombre = "Herrero"
@@ -272,6 +285,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 39
 nombre = "Sastre"
@@ -287,6 +301,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 40
 nombre = "Tolloz"
@@ -302,6 +317,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 41
 nombre = "Pescador"
@@ -317,6 +333,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 42
 nombre = "Antogne"
@@ -332,6 +349,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 43
 nombre = "Sorks"
@@ -347,6 +365,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 44
 nombre = "Carpintero"
@@ -362,6 +381,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [20]
 [[npc]]
 id = 45
 nombre = "Espíritu"
@@ -391,6 +411,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 47
 nombre = "Mago"
@@ -406,6 +427,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 48
 nombre = "Minero"
@@ -421,6 +443,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [23]
 [[npc]]
 id = 49
 nombre = "Guardia Imperial"
@@ -450,6 +473,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 51
 nombre = "Mago"
@@ -465,6 +489,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 52
 nombre = "Rantarisk"
@@ -480,6 +505,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [9]
 [[npc]]
 id = 53
 nombre = "Roksar"
@@ -495,6 +521,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 54
 nombre = "Armaduras"
@@ -510,6 +537,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 55
 nombre = "Herrero"
@@ -525,6 +553,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 56
 nombre = "Herrero"
@@ -540,6 +569,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 57
 nombre = "Bhoemond"
@@ -555,6 +585,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 58
 nombre = "Pescador"
@@ -570,6 +601,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 59
 nombre = "Mago"
@@ -585,6 +617,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 60
 nombre = "O'Riley de Banderbill"
@@ -614,6 +647,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 62
 nombre = "Guldorf"
@@ -629,6 +663,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [9]
 [[npc]]
 id = 63
 nombre = "Steve"
@@ -644,6 +679,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 64
 nombre = "Virgin"
@@ -659,6 +695,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 65
 nombre = "Gallo"
@@ -716,6 +753,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 69
 nombre = "Mago"
@@ -731,6 +769,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 70
 nombre = "Armaduras"
@@ -746,6 +785,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 71
 nombre = "Herrero"
@@ -761,6 +801,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 72
 nombre = "Tancredo de Hauteville, soberano de Banderbill"
@@ -790,6 +831,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 74
 nombre = "Armaduras"
@@ -805,6 +847,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 75
 nombre = "Cuervo"
@@ -890,6 +933,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37]
 [[npc]]
 id = 81
 nombre = "Sacerdote Imperial"
@@ -1157,6 +1201,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 100
 nombre = "Guardia Imperial"
@@ -1186,6 +1231,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [9]
 [[npc]]
 id = 102
 nombre = "Guardia Imperial"
@@ -1215,6 +1261,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 104
 nombre = "Timbero"
@@ -1300,6 +1347,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 110
 nombre = "Sastre"
@@ -1315,6 +1363,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 111
 nombre = "Armaduras"
@@ -1330,6 +1379,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 112
 nombre = "Herrero"
@@ -1345,6 +1395,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 113
 nombre = "Armaduras"
@@ -1360,6 +1411,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 114
 nombre = "SR"
@@ -1375,6 +1427,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 115
 nombre = "SC"
@@ -1390,6 +1443,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 116
 nombre = "Armaduras"
@@ -1405,6 +1459,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 117
 nombre = "Sastre"
@@ -1420,6 +1475,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 118
 nombre = "Alarnick, antiguo soberano de Banderbill"
@@ -1463,6 +1519,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 121
 nombre = "Isaac"
@@ -1478,6 +1535,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 122
 nombre = "Nelvi"
@@ -1493,6 +1551,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 123
 nombre = "Aile"
@@ -1508,6 +1567,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 124
 nombre = "Varinya"
@@ -1523,6 +1583,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 125
 nombre = "Torke"
@@ -1538,6 +1599,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 126
 nombre = "Gourk"
@@ -1553,6 +1615,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 127
 nombre = "Guardia Infernal"
@@ -1834,6 +1897,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [13]
 [[npc]]
 id = 147
 nombre = "Dugh Dhail"
@@ -1947,6 +2011,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [11]
 [[npc]]
 id = 155
 nombre = "Armaduras Newbie"
@@ -1962,6 +2027,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 156
 nombre = "Armas Newbie"
@@ -1977,6 +2043,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 157
 nombre = "Magia Newbie"
@@ -1992,6 +2059,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [24]
 [[npc]]
 id = 158
 nombre = "Gobernador"
@@ -2021,6 +2089,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 160
 nombre = "SC"
@@ -2036,6 +2105,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 629
 nombre = "Guerrero tutor I"
@@ -2487,6 +2557,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [2]
 [[npc]]
 id = 8
 nombre = "Thorkis"
@@ -2502,6 +2573,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 9
 nombre = "Ralph"
@@ -2517,6 +2589,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 10
 nombre = "Bardo"
@@ -2560,6 +2633,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 13
 nombre = "Gobernador"
@@ -2589,6 +2663,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [11]
 [[npc]]
 id = 15
 nombre = "Thorkis"
@@ -2604,6 +2679,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [1]
 [[npc]]
 id = 16
 nombre = "Centinela"
@@ -2661,6 +2737,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 20
 nombre = "Sastre"
@@ -2676,6 +2753,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 21
 nombre = "Sastre"
@@ -2691,6 +2769,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 22
 nombre = "Sastre"
@@ -2706,6 +2785,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 23
 nombre = "Sastre"
@@ -2721,6 +2801,7 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_mercader = true
+accepted_obj_types = [3]
 [[npc]]
 id = 24
 nombre = "Banquero"

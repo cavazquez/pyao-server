@@ -13,6 +13,7 @@ from src.game.map_manager import MapManager
 from src.network.session_manager import SessionManager
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.runtime_paths import maps_dir
+from src.services.world.world_state import WorldStateService
 
 logger = logging.getLogger(__name__)
 
@@ -167,6 +168,7 @@ class ServerInitializer:
         )
 
         logger.info("=" * 60)
+        container.world_state = WorldStateService(container)
         logger.info("✓ SERVIDOR INICIALIZADO CORRECTAMENTE")
         logger.info("=" * 60)
 

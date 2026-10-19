@@ -1,8 +1,10 @@
 """Tests para DataInitializer."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
+import pytest_asyncio
+from fakeredis.aioredis import FakeRedis
 
 from src.core.data_initializer import DataInitializer
 from src.utils.base_data_loader import BaseDataLoader
@@ -37,12 +39,22 @@ class MockLoader(BaseDataLoader):
         self.clear_called = True
 
 
-@pytest.fixture
-def redis_client() -> RedisClient:
-    """Fixture para crear un cliente Redis mockeado."""
+@pytest_asyncio.fixture
+async def redis_client():
+    """Proporciona un Redis simulado con transacciones para los loaders reales.
+
+    Yields:
+        Wrapper sobre un Redis exclusivo de la prueba, cerrado al terminar.
+    """
     client = MagicMock(spec=RedisClient)
-    client.redis = MagicMock()
-    return client
+    client.redis = FakeRedis(decode_responses=True)
+    client.hset = client.redis.hset
+    client.set = client.redis.set
+    client.delete = client.redis.delete
+    try:
+        yield client
+    finally:
+        await client.redis.aclose()
 
 
 @pytest.mark.asyncio
@@ -206,13 +218,11 @@ async def test_data_initializer_with_real_merchant_loader(
     redis_client: RedisClient,
 ) -> None:
     """Verifica que DataInitializer funciona con el MerchantDataLoader real."""
-    redis_client.hset = AsyncMock()
-    redis_client.delete = AsyncMock()
-
     initializer = DataInitializer(redis_client)
 
     # No debe lanzar excepción
     await initializer.initialize_all(force_clear=False)
 
     # Debe haber cargado datos
-    assert redis_client.hset.called
+    assert await redis_client.redis.exists("merchant:7:inventory")
+    assert await redis_client.redis.exists("merchant:7:catalog")

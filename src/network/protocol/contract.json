@@ -1258,6 +1258,23 @@
             "max_bytes": 1020
           }
         ]
+      },
+      "248": {
+        "name": "WORLD_ACTION",
+        "status": "supported",
+        "requires_capability": 512,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "payload",
+            "type": "str16",
+            "min_bytes": 1,
+            "max_bytes": 1020
+          }
+        ]
       }
     },
     "server": {
@@ -3220,6 +3237,23 @@
             "type": "i16"
           }
         ]
+      },
+      "248": {
+        "name": "WORLD_STATE",
+        "status": "supported",
+        "requires_capability": 512,
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "payload",
+            "type": "str16",
+            "min_bytes": 1,
+            "max_bytes": 3800
+          }
+        ]
       }
     }
   },
@@ -3247,7 +3281,8 @@
       "projectiles": 32,
       "weather": 64,
       "trade_state": 128,
-      "skill_actions": 256
+      "skill_actions": 256,
+      "world_state": 512
     }
   }
 }

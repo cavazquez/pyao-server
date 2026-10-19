@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.yell_command import YellCommand
+from src.network.chat_channel import deliver_chat
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -77,14 +78,17 @@ class YellCommandHandler(CommandHandler):
 
         all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
         for sender in all_senders:
-            await sender.send_console_msg(formatted_message, font_color=4)
+            await deliver_chat(
+                sender,
+                "public",
+                user_id,
+                username,
+                message,
+                legacy=formatted_message,
+                context=f"map:{map_id}:yell",
+                font=4,
+            )
 
-        logger.info(
-            "YELL de user_id %d: '%s' enviado a %d jugadores en mapa %d",
-            user_id,
-            message,
-            len(all_senders),
-            map_id,
-        )
+        logger.debug("Grito de user_id=%d entregado en mapa=%d", user_id, map_id)
 
         return CommandResult.ok(data={"user_id": user_id, "message": message, "map_id": map_id})

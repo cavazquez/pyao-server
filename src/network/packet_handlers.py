@@ -64,6 +64,7 @@ from src.tasks.task_safe_toggle import TaskSafeToggle
 from src.tasks.task_skill_action import TaskSkillAction
 from src.tasks.task_trade_action import TaskTradeAction
 from src.tasks.task_uptime import TaskUptime
+from src.tasks.task_world_state import TaskWorldState
 from src.tasks.work.task_work import TaskWork
 from src.tasks.work.task_work_left_click import TaskWorkLeftClick
 
@@ -74,6 +75,7 @@ if TYPE_CHECKING:
 TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CAPABILITIES: TaskCapabilities,
     ClientPacketID.SKILL_ACTION: TaskSkillAction,
+    ClientPacketID.WORLD_ACTION: TaskWorldState,
     ClientPacketID.CHANGE_PASSWORD: TaskChangePassword,
     ClientPacketID.MODIFY_SKILLS: TaskModifySkills,
     ClientPacketID.TRADE_ACTION: TaskTradeAction,

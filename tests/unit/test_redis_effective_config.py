@@ -66,6 +66,8 @@ async def test_initializer_injects_central_settings():
     client.connect = AsyncMock()
     client.initialize_defaults = AsyncMock()
     client.redis = FakeRedis(decode_responses=True)
+    client.hgetall = client.redis.hgetall
+    client.hset = client.redis.hset
     repo = MagicMock()
     repo.reset_connections_count = AsyncMock()
     repo.set_uptime_start = AsyncMock()

@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
+from src.services.npc.rewards.experience import ExperienceComponent
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -60,6 +61,7 @@ class NPCDeathService:
         self.npc_respawn_service = npc_respawn_service
         self.party_service = party_service
         self.random_spawn_service = random_spawn_service
+        self._experience = ExperienceComponent(self)
 
     async def handle_npc_death(
         self,
@@ -135,15 +137,7 @@ class NPCDeathService:
             message_sender: MessageSender del jugador.
             npc: NPC que fue matado (para obtener posición).
         """
-        # Verificar si el jugador está en party
-        if self.party_service:
-            party = await self.party_service.get_party_info(user_id)
-            if party:
-                await self._distribute_party_experience(user_id, experience, npc, party)
-                return
-
-        # Si no está en party, dar experiencia directamente
-        await self._give_solo_experience(user_id, experience, message_sender)
+        return await self._experience.give_experience(user_id, experience, message_sender, npc)
 
     async def _distribute_party_experience(
         self, user_id: int, experience: int, npc: NPC, party: Party
@@ -156,29 +150,7 @@ class NPCDeathService:
             npc: NPC que fue matado.
             party: Objeto Party con los miembros.
         """
-        # Distribuir experiencia a party
-        if not self.party_service:
-            return
-        distributed_exp = await self.party_service.distribute_experience(
-            earner_id=user_id,
-            exp_amount=experience,
-            map_id=npc.map_id,
-            x=npc.x,
-            y=npc.y,
-        )
-
-        # Actualizar experiencia de cada miembro que recibió exp
-        for member_id, exp_amount in distributed_exp.items():
-            await self._update_member_experience(member_id, exp_amount, user_id, npc, experience)
-
-        # Notificar a todos los miembros de party sobre el kill
-        await self._notify_party_kill(party, user_id, npc)
-
-        logger.info(
-            "Experiencia distribuida en party: %d EXP total, %d miembros recibieron",
-            experience,
-            len(distributed_exp),
-        )
+        return await self._experience.distribute_party_experience(user_id, experience, npc, party)
 
     async def _update_member_experience(
         self, member_id: int, exp_amount: float, killer_id: int, npc: NPC, total_exp: int
@@ -192,41 +164,9 @@ class NPCDeathService:
             npc: NPC que fue matado.
             total_exp: Experiencia total ganada.
         """
-        experience_data = await self.player_repo.get_experience(member_id)
-        current_exp = experience_data[0]
-        current_level = await self.player_repo.get_level(member_id)
-        new_exp = current_exp + int(exp_amount)
-
-        await self.player_repo.update_experience(member_id, new_exp)
-
-        # Enviar actualización al miembro
-        member_sender = self.map_manager.get_player_message_sender(member_id)
-        if member_sender:
-            await member_sender.send_update_exp(new_exp)
-            if member_id == killer_id:
-                # Mensaje especial para el killer
-                msg = (
-                    f"¡Has matado a {npc.name}! "
-                    f"Tu party ganó {total_exp} EXP "
-                    f"(tú recibiste {int(exp_amount)})."
-                )
-                await member_sender.send_console_msg(msg)
-            else:
-                # Mensaje para otros miembros
-                await member_sender.send_console_msg(
-                    f"Tu party mató a {npc.name}. Ganaste {int(exp_amount)} EXP."
-                )
-
-        logger.info(
-            "Miembro de party %d ganó %d de experiencia (total: %d)",
-            member_id,
-            int(exp_amount),
-            new_exp,
+        return await self._experience.update_member_experience(
+            member_id, exp_amount, killer_id, npc, total_exp
         )
-
-        # Verificar y manejar level up
-        if member_sender:
-            await self._check_and_handle_level_up(member_id, current_level, new_exp, member_sender)
 
     async def _notify_party_kill(self, party: Party, killer_id: int, npc: NPC) -> None:
         """Notifica a todos los miembros de party sobre un kill.
@@ -236,18 +176,7 @@ class NPCDeathService:
             killer_id: ID del jugador que mató al NPC.
             npc: NPC que fue matado.
         """
-        if not self.map_manager:
-            return
-
-        for member_id in party.member_ids:
-            if member_id != killer_id:  # El killer ya recibió su mensaje
-                member_sender = self.map_manager.get_player_message_sender(member_id)
-                if member_sender:
-                    # Notificar que la party mató al NPC
-                    await member_sender.send_console_msg(
-                        f"Tu party mató a {npc.name}.",
-                        font_color=7,  # FONTTYPE_PARTY
-                    )
+        return await self._experience.notify_party_kill(party, killer_id, npc)
 
     async def _give_solo_experience(
         self, user_id: int, experience: int, message_sender: MessageSender
@@ -259,18 +188,7 @@ class NPCDeathService:
             experience: Cantidad de experiencia.
             message_sender: MessageSender del jugador.
         """
-        experience_data = await self.player_repo.get_experience(user_id)
-        current_exp = experience_data[0]
-        current_level = await self.player_repo.get_level(user_id)
-        new_exp = current_exp + experience
-
-        await self.player_repo.update_experience(user_id, new_exp)
-        await message_sender.send_update_exp(new_exp)
-
-        logger.info("Jugador %d ganó %d de experiencia (total: %d)", user_id, experience, new_exp)
-
-        # Verificar y manejar level up
-        await self._check_and_handle_level_up(user_id, current_level, new_exp, message_sender)
+        return await self._experience.give_solo_experience(user_id, experience, message_sender)
 
     async def _drop_gold(self, npc: NPC) -> None:
         """Dropea oro del NPC en el suelo.
@@ -417,11 +335,9 @@ class NPCDeathService:
         message_sender: MessageSender,
     ) -> None:
         """Confirma crecimiento y puntos desde el estado Redis más reciente."""
-        from src.services.player_progression import advance_player_level  # ruff: ignore[import-outside-top-level]
-
-        result = await advance_player_level(self.player_repo, user_id, message_sender)
-        if self.party_service and result["level"] > result["previous_level"]:
-            await self.party_service.update_member_level(user_id, int(result["level"]))
+        return await self._experience.check_and_handle_level_up(
+            user_id, _current_level, _new_experience, message_sender
+        )
 
     def _find_free_position_for_drop(
         self, map_id: int, center_x: int, center_y: int, radius: int = 4, max_attempts: int = 40

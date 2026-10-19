@@ -399,7 +399,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "gm_command": HandlerConfig(
         GMCommandHandler,
-        deps_keys=["player_repo", "account_repo", "player_map_service"],
+        deps_keys=["player_repo", "account_repo", "player_map_service", "action_cadence"],
     ),
 }
 

@@ -3,6 +3,8 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.economy.tax_service import tax_status
+from src.network.capabilities import Capability
 from src.network.msg_player_stats import (
     build_update_bank_gold_response,
     build_update_dexterity_response,
@@ -17,6 +19,7 @@ from src.network.msg_player_stats import (
     build_update_user_stats_response,
 )
 from src.network.msg_skills import build_update_skills_response
+from src.network.state_channel import send_state
 
 if TYPE_CHECKING:
     from src.network.client_connection import ClientConnection
@@ -35,6 +38,19 @@ class PlayerStatsMessageSender:
             connection: Conexión con el cliente.
         """
         self.connection = connection
+
+    async def sync_money_state(self) -> None:
+        """Acompaña el mensaje legacy con saldos conjuntos y revisión negociada."""
+        connection = self.connection
+        if (
+            not connection.is_authenticated
+            or not connection.capabilities.enabled & Capability.WORLD_STATE
+            or connection.session_redis is None
+            or connection.session_user_id is None
+        ):
+            return
+        state = await tax_status(connection.session_redis, connection.session_user_id)
+        await send_state(self, "tax", state, revision=str(state["money_revision"]))
 
     async def send_update_hp(self, hp: int) -> None:
         """Envía paquete UpdateHP del protocolo AO estándar.
@@ -114,6 +130,7 @@ class PlayerStatsMessageSender:
         response = build_update_gold_response(gold=gold)
         logger.info("[%s] Enviando UPDATE_GOLD: %d", self.connection.address, gold)
         await self.connection.send(response)
+        await self.sync_money_state()
 
     async def send_update_bank_gold(self, bank_gold: int) -> None:
         """Envía paquete UpdateBankGold del protocolo AO estándar.
@@ -129,6 +146,7 @@ class PlayerStatsMessageSender:
             response.hex(),
         )
         await self.connection.send(response)
+        await self.sync_money_state()
 
     async def send_update_hunger_and_thirst(
         self, max_water: int, min_water: int, max_hunger: int, min_hunger: int
@@ -212,6 +230,7 @@ class PlayerStatsMessageSender:
             experience,
         )
         await self.connection.send(response)
+        await self.sync_money_state()
 
     async def send_update_user_stats_from_repo(
         self,

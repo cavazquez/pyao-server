@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.network.chat_channel import emit_chat, supports_chat
 from src.network.msg_console import build_console_msg_response, build_error_msg_response
 
 if TYPE_CHECKING:
@@ -29,6 +30,9 @@ class ConsoleMessageSender:
             message: Mensaje a enviar.
             font_color: Color de la fuente (0-15). Por defecto 7 (gris claro).
         """
+        if supports_chat(self.connection):
+            await emit_chat(self, "system", 0, "Servidor", message, font=font_color)
+            return
         response = build_console_msg_response(message, font_color)
         logger.debug(
             "[%s] Enviando CONSOLE_MSG (color=%d)",

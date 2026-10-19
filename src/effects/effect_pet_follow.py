@@ -81,6 +81,8 @@ class PetFollowEffect(TickEffect):
 
             # Procesar cada mascota
             for pet in pets:
+                if pet.pet_order == "wait":
+                    continue
                 owner_id = pet.summoned_by_user_id
 
                 if not self.npc_service.map_manager.get_player_message_sender(owner_id):

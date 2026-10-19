@@ -46,6 +46,7 @@ if TYPE_CHECKING:
     from src.services.player.stamina_service import StaminaService
     from src.services.skill_action_service import SkillActionService
     from src.services.trade_service import TradeService
+    from src.services.world.world_state import WorldStateService
     from src.utils.redis_client import RedisClient
 
 
@@ -107,6 +108,7 @@ class DependencyContainer:
 
     player_death_service: PlayerDeathService | None = None
     skill_actions: SkillActionService | None = None
+    world_state: WorldStateService | None = None
 
     action_cadence: ActionCadence = field(default_factory=ActionCadence)
 

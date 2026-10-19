@@ -4,7 +4,6 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.effects.effect_attribute_modifiers import AttributeModifiersEffect
-from src.effects.effect_gold_decay import GoldDecayEffect
 from src.effects.effect_hunger_thirst import HungerThirstEffect
 from src.effects.effect_lifecycle import LifecycleEffect
 from src.effects.effect_morph_expiry import MorphExpiryEffect
@@ -95,12 +94,8 @@ class GameTickInitializer:
             logger.info("✓ Efecto de hambre/sed habilitado")
 
         # Efecto de reducción de oro
-        gold_decay_enabled = await self.server_repo.get_effect_config_bool(
-            RedisKeys.CONFIG_GOLD_DECAY_ENABLED, default=True
-        )
-        if gold_decay_enabled:
-            game_tick.add_effect(GoldDecayEffect(self.server_repo))
-            logger.info("✓ Efecto de reducción de oro habilitado")
+        # El impuesto diario pertenece al mantenimiento global y cubre también offline.
+        # Nunca se vuelve a registrar el cobrador por minuto, aunque sobreviva su flag.
 
         # Efecto de meditación (siempre habilitado)
         game_tick.add_effect(MeditationEffect(interval_seconds=3.0))
