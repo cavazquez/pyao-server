@@ -39,6 +39,7 @@ from src.operations.redis_sandbox import RedisSandbox
 from src.operations.skill_migration import skill_repairs
 from src.runtime_paths import resource_root
 from src.utils.password_utils import hash_password, verify_password
+from tools.compression.decompress_map_data import decompress_map_data
 
 
 def connection(settings: RedisConfig, *, binary: bool = False) -> Redis:
@@ -200,6 +201,8 @@ def migrate(settings: RedisConfig, backup: Path) -> dict[str, Any]:
 def legacy_config_check(directory: Path) -> None:
     """Ensaya consulta sin Redis y reparación explícita respaldada de un TOML propio."""
     path = directory / "server.toml"
+    maps = directory / "maps"
+    decompress_map_data(resource_root() / "archives/map_data.xz", maps, overwrite=False)
     legacy = "[game.character]\nmana_per_int = 50000\n[server]\nport = 17777\n"
     path.write_text(legacy)
     environment = {k: v for k, v in os.environ.items() if not k.startswith("PYAO_")}
@@ -207,6 +210,9 @@ def legacy_config_check(directory: Path) -> None:
         PYAO_CONFIG_FILE=str(path),
         PYAO_REDIS__HOST="unreachable.invalid",
         PYAO_REDIS__PASSWORD_FILE=str(directory / "missing-secret"),
+        PYAO_MAPS_DIR=str(maps),
+        PYAO_DATA_DIR=str(resource_root() / "data"),
+        PYAO_STATE_DIR=str(directory / "state"),
     )
     for flag in ("--version", "--help", None):
         result = subprocess.run(  # noqa: S603 - intérprete actual y argumentos propios.
