@@ -278,7 +278,7 @@ class NPCDeathService:
         Args:
             npc: NPC que murió.
         """
-        import random  # noqa: PLC0415
+        import random  # ruff: ignore[import-outside-top-level]
 
         gold_amount = random.randint(npc.gold_min, npc.gold_max)
         if gold_amount <= 0:
@@ -417,7 +417,7 @@ class NPCDeathService:
         message_sender: MessageSender,
     ) -> None:
         """Confirma crecimiento y puntos desde el estado Redis más reciente."""
-        from src.services.player_progression import advance_player_level  # noqa: PLC0415
+        from src.services.player_progression import advance_player_level  # ruff: ignore[import-outside-top-level]
 
         result = await advance_player_level(self.player_repo, user_id, message_sender)
         if self.party_service and result["level"] > result["previous_level"]:
@@ -438,7 +438,7 @@ class NPCDeathService:
         Returns:
             Tupla (x, y) con una posición libre y no bloqueada, o None si no encuentra.
         """
-        import random  # noqa: PLC0415
+        import random  # ruff: ignore[import-outside-top-level]
 
         # Intentar primero la posición central
         if self._is_valid_drop_position(map_id, center_x, center_y):

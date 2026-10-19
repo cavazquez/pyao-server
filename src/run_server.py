@@ -61,7 +61,7 @@ async def run_until_stopped(server: ArgentumServer) -> None:
 
 def _run_diagnostic(args: argparse.Namespace) -> None:
     """Ejecuta el diagnóstico sin importar el servidor ni sus inicializadores."""
-    from src.diagnostics import diagnose  # noqa: PLC0415 - preservar CLI sin configuración
+    from src.diagnostics import diagnose  # ruff: ignore[import-outside-top-level] - preservar CLI sin configuración
 
     result = asyncio.run(diagnose(args))
     print(json.dumps(result, ensure_ascii=False))
@@ -84,7 +84,7 @@ def main() -> None:
     if args.diagnose:
         _run_diagnostic(args)
     # Las dependencias y sus singletons leen las rutas después de parsear el CLI.
-    from src.validation.dataset import DatasetValidator  # noqa: PLC0415
+    from src.validation.dataset import DatasetValidator  # ruff: ignore[import-outside-top-level]
 
     report = DatasetValidator(data_dir(), maps_dir()).validate()
     if args.check_resources:
@@ -94,9 +94,9 @@ def main() -> None:
         logger.error("Dataset inválido; ejecutar --check-resources para ver el diagnóstico")
         sys.exit(1)
 
-    from src.server import ArgentumServer  # noqa: PLC0415
-    from tools.compression.map_binary import ensure_binary_maps  # noqa: PLC0415
-    from tools.compression.map_sync import check_map_sync_on_startup  # noqa: PLC0415
+    from src.server import ArgentumServer  # ruff: ignore[import-outside-top-level]
+    from tools.compression.map_binary import ensure_binary_maps  # ruff: ignore[import-outside-top-level]
+    from tools.compression.map_sync import check_map_sync_on_startup  # ruff: ignore[import-outside-top-level]
 
     # Configurar logging
     cli.configure_logging(args.debug)

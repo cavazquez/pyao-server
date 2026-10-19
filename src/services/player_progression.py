@@ -118,8 +118,8 @@ async def advance_player_level(
 
 async def publish_progress(player: PlayerRepository, user_id: int, sender: MessageSender) -> None:
     """Actualiza stats y catálogo sólo cuando la conexión negoció esa capacidad."""
-    from src.network.capabilities import Capability  # noqa: PLC0415
-    from src.network.msg_skills import build_skill_catalog_response  # noqa: PLC0415
+    from src.network.capabilities import Capability  # ruff: ignore[import-outside-top-level]
+    from src.network.msg_skills import build_skill_catalog_response  # ruff: ignore[import-outside-top-level]
 
     await sender.send_update_user_stats_from_repo(user_id, player)
     if sender.connection.capabilities.enabled & Capability.SKILLS_CATALOG:

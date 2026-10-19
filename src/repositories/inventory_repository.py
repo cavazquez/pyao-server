@@ -12,7 +12,7 @@ from src.utils.inventory_atomic import change_inventory
 from src.utils.inventory_slot import InventorySlot
 from src.utils.inventory_stacking_strategy import InventoryStackingStrategy
 from src.utils.inventory_storage import InventoryStorage
-from src.utils.redis_client import RedisClient  # noqa: TC001
+from src.utils.redis_client import RedisClient  # ruff: ignore[typing-only-first-party-import]
 
 logger = logging.getLogger(__name__)
 

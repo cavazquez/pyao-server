@@ -92,7 +92,7 @@ class ArgentumServer:
 
         return self.task_factory.create_task(data, message_sender, session_data)  # type: ignore[arg-type]
 
-    async def handle_client(  # noqa: PLR0915
+    async def handle_client(  # ruff: ignore[too-many-statements]
         self,
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
@@ -323,12 +323,12 @@ class ArgentumServer:
             logger.info("✓ Sistema de tick del juego iniciado")
 
         except redis.ConnectionError as e:
-            logger.error("No se pudo conectar a Redis: %s", e)  # noqa: TRY400
-            logger.error(  # noqa: TRY400
+            logger.error("No se pudo conectar a Redis: %s", e)  # ruff: ignore[error-instead-of-exception]
+            logger.error(  # ruff: ignore[error-instead-of-exception]
                 "El servidor requiere Redis para funcionar. "
                 "Asegúrate de que Redis esté ejecutándose."
             )
-            logger.error(  # noqa: TRY400
+            logger.error(  # ruff: ignore[error-instead-of-exception]
                 "Podés iniciar Redis con:\n"
                 "  snap:  sudo snap install redis && sudo snap start redis\n"
                 "  deb:   sudo apt install redis-server && sudo systemctl start redis"
@@ -355,10 +355,10 @@ class ArgentumServer:
                 ssl_handshake_timeout=self.auth_timeout_seconds if ssl_context else None,
             )
         except OSError:
-            logger.error(  # noqa: TRY400
+            logger.error(  # ruff: ignore[error-instead-of-exception]
                 "No se pudo bindear al puerto %d en %s. Puerto ocupado.", self.port, self.host
             )
-            logger.error("Cambiá el puerto con --port <número> o liberá el puerto %d.", self.port)  # noqa: TRY400
+            logger.error("Cambiá el puerto con --port <número> o liberá el puerto %d.", self.port)  # ruff: ignore[error-instead-of-exception]
             sys.exit(1)
 
         addrs = ", ".join(str(sock.getsockname()) for sock in self.server.sockets)

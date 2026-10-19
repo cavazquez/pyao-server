@@ -78,7 +78,7 @@ async def test_disconnect_cleanup_always_releases_lease(cause: str) -> None:
 
 
 @pytest.mark.asyncio
-async def test_stop_drains_active_operation_and_cleanup_before_redis() -> None:  # noqa: PLR0915
+async def test_stop_drains_active_operation_and_cleanup_before_redis() -> None:  # ruff: ignore[too-many-statements]
     """Stop concurrente conserva el ACK y espera las sesiones antes de cerrar Redis."""
     server = ArgentumServer(host="127.0.0.1", port=7777)
     events = []

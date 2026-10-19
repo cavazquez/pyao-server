@@ -230,7 +230,7 @@ class TaskFactory:
                 return None
 
             # Obtener nombre del packet para logging
-            from src.network.packet_id import ClientPacketID  # noqa: PLC0415
+            from src.network.packet_id import ClientPacketID  # ruff: ignore[import-outside-top-level]
 
             try:
                 packet_name = ClientPacketID(packet_id).name
@@ -245,7 +245,7 @@ class TaskFactory:
             if not validation_result.success and validation_result.error_message:
                 # Crear una tarea asíncrona para enviar el mensaje
                 # (no podemos await aquí porque create_task no es async)
-                import asyncio  # noqa: PLC0415
+                import asyncio  # ruff: ignore[import-outside-top-level]
 
                 task = asyncio.create_task(
                     message_sender.send_console_msg(validation_result.error_message)
@@ -254,7 +254,7 @@ class TaskFactory:
                 task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
 
             # Validación exitosa o fallida, retornar resultado
-            return validation_result  # noqa: TRY300 - Return necesario aquí para claridad
+            return validation_result  # ruff: ignore[try-consider-else] - Return necesario aquí para claridad
 
         except Exception:
             # Si hay algún error en la validación, loguear y continuar sin validar

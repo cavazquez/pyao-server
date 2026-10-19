@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
     from redis.asyncio import Redis
     from redis.asyncio.client import Pipeline
+    from redis.typing import EncodableT
 
 ResourceValue = str | dict[str, str] | set[str] | None
 Snapshot = dict[str, ResourceValue]
@@ -151,7 +152,10 @@ async def transact(
                             "Awaitable[set[str]]", pipe.smembers(resource.key)
                         )
                     else:
-                        snapshot[resource.key] = await pipe.get(resource.key)
+                        value = await pipe.get(resource.key)
+                        snapshot[resource.key] = (
+                            value.decode() if isinstance(value, bytes) else value
+                        )
                 decision = decide(snapshot)
                 _validate_writes(by_key, decision.writes)
                 receipt_json = json.dumps({"request": fingerprint, "result": decision.result})
@@ -205,7 +209,7 @@ def _enqueue_writes(
     """Encola sólo valores previamente validados y sin hacer I/O antes de EXEC."""
     for key, value in writes.items():
         if isinstance(value, dict) and value:
-            pipe.hset(key, mapping=value)
+            pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", value))
         elif isinstance(value, set):
             pipe.delete(key)
             if value:

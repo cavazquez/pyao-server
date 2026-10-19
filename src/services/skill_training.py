@@ -46,7 +46,7 @@ def training_resources(user_id: int) -> tuple[Resource, ...]:
     )
 
 
-def trained_decision(  # noqa: PLR0914 - combina overlays del mismo commit, sin I/O
+def trained_decision(  # ruff: ignore[too-many-locals] - combina overlays del mismo commit, sin I/O
     decision: Decision, snapshot: Snapshot, user_id: int, events: tuple[TrainingEvent, ...]
 ) -> Decision:
     """Añade progreso a una decisión válida antes del EXEC, nunca después del coste.

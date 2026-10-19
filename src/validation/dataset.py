@@ -603,7 +603,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         Cero si los datos son válidos; uno ante errores bloqueantes.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    from src.runtime_paths import data_dir, maps_dir  # noqa: PLC0415
+    from src.runtime_paths import data_dir, maps_dir  # ruff: ignore[import-outside-top-level]
 
     parser.add_argument("--data-dir", type=Path, default=data_dir())
     parser.add_argument("--maps-dir", type=Path, default=maps_dir())

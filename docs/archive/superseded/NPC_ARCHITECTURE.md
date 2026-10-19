@@ -69,14 +69,15 @@ npc = NPCFactory.create_hostile(
     body_id=14,
     hp=110,
     level=5,
-    x=50, y=50,
+    x=50,
+    y=50,
     map_id=1,
     char_index=10001,
     attack_damage=8,
     attack_cooldown=2.5,
     aggro_range=6,
     fx=5,
-    fx_loop=0
+    fx_loop=0,
 )
 
 # Métodos helper (conveniencia)
@@ -102,36 +103,37 @@ npc = NPCFactory.create_goblin(x=50, y=50, map_id=1, char_index=10001)
 async def spawn_npc(self, npc_id: int, map_id: int, x: int, y: int) -> NPC | None:
     # 1. Obtener datos del catálogo (TOML)
     npc_data = self.npc_catalog.get_npc_data(npc_id)
-    
+
     # 2. Asignar CharIndex único
     char_index = self._next_char_index
     self._next_char_index += 1
-    
+
     # 3. Crear instancia via Repository (usa TOML data)
     npc = await self.npc_repository.create_npc_instance(
         npc_id=npc_id,
         char_index=char_index,
         map_id=map_id,
-        x=x, y=y,
+        x=x,
+        y=y,
         name=npc_data.get("nombre"),
         body_id=npc_data.get("body_id"),
         hp=npc_data.get("hp_max"),
         # ... TODOS los parámetros del TOML
         attack_damage=npc_data.get("ataque", 10),
         attack_cooldown=npc_data.get("cooldown_ataque", 3.0),
-        aggro_range=npc_data.get("rango_agresion", 8)
+        aggro_range=npc_data.get("rango_agresion", 8),
     )
-    
+
     # 4. Agregar al mapa
     self.map_manager.add_npc(map_id, npc)
-    
+
     # 5. Broadcast a jugadores
     await self.broadcast_service.broadcast_character_create(...)
-    
+
     # 6. Enviar FX si tiene aura
     if npc.fx_loop > 0:
         await self.broadcast_service.broadcast_create_fx(...)
-    
+
     return npc
 ```
 
@@ -259,12 +261,7 @@ npc_data = {
     # ...
 }
 
-npc = NPCFactory.create_hostile(
-    **npc_data,
-    x=50, y=50,
-    map_id=1,
-    char_index=10001
-)
+npc = NPCFactory.create_hostile(**npc_data, x=50, y=50, map_id=1, char_index=10001)
 
 assert npc.name == "Test NPC"
 assert npc.hp == 100

@@ -242,11 +242,7 @@ await self.player_repo.update_hp(user_id, new_hp)
 ```python
 # TaskFactory resuelve dependencias automáticamente por introspección del constructor.
 # No requiere mapeo manual de dependencias.
-task = TaskFactory.create_task(
-    packet_id=PacketID.LOGIN,
-    data=data,
-    message_sender=sender
-)
+task = TaskFactory.create_task(packet_id=PacketID.LOGIN, data=data, message_sender=sender)
 # Task ya tiene todas sus dependencias inyectadas
 ```
 
@@ -565,10 +561,10 @@ docker compose --profile tools up -d      # Redis + Redis Insight
 
 ```python
 # Helpers que centralizan lectura/escritura de campos Redis con manejo de errores
-await self._hget_float(key, "poisoned_until")   # Lee float, default 0.0
+await self._hget_float(key, "poisoned_until")  # Lee float, default 0.0
 await self._hget_int(key, "strength_modifier")  # Lee int, default 0
-await self._hget_bool(key, "meditating")        # Lee bool (1/0)
-await self._hset_field(key, "gold", new_gold)   # Escribe campo
+await self._hget_bool(key, "meditating")  # Lee bool (1/0)
+await self._hset_field(key, "gold", new_gold)  # Escribe campo
 ```
 
 Estos 4 helpers reemplazan código repetido en 20+ métodos de status effects, modifiers y estados booleanos.

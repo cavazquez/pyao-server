@@ -6,7 +6,7 @@ import json
 import os
 import re
 import shutil
-import subprocess  # noqa: S404 - comandos uv de la herramienta de release, sin shell.
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - comandos uv de la herramienta de release, sin shell.
 import sys
 import tarfile
 import zipfile
@@ -40,7 +40,7 @@ def _run(
     environment: dict[str, str] | None = None,
     input_text: str | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(  # noqa: S603 - argv construido aquí; nunca se invoca un shell.
+    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - argv construido aquí; nunca se invoca un shell.
         arguments,
         cwd=cwd,
         env=environment,
@@ -75,7 +75,7 @@ def distribution_identity(path: Path) -> tuple[str, str]:
     return str(name), str(version)
 
 
-def validate(directory: Path, platform: str, *, project_root: Path = ROOT) -> dict[str, Any]:  # noqa: PLR0914
+def validate(directory: Path, platform: str, *, project_root: Path = ROOT) -> dict[str, Any]:  # ruff: ignore[too-many-locals]
     """Instala runtime fijado y wheel sin deps en un venv nuevo fuera del checkout.
 
     Returns:

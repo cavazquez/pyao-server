@@ -21,7 +21,7 @@ async def diagnose(args: argparse.Namespace) -> dict[str, object]:
     """
     checks: list[dict[str, object]] = []
     try:
-        from src.config.game_config import (  # noqa: PLC0415 - frontera de diagnóstico
+        from src.config.game_config import (  # ruff: ignore[import-outside-top-level] - frontera de diagnóstico
             get_game_config,
         )
 
@@ -37,7 +37,7 @@ async def diagnose(args: argparse.Namespace) -> dict[str, object]:
         )
         config = None
     try:
-        from src.validation.dataset import (  # noqa: PLC0415 - frontera de diagnóstico
+        from src.validation.dataset import (  # ruff: ignore[import-outside-top-level] - frontera de diagnóstico
             DatasetValidator,
         )
 

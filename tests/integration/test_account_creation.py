@@ -16,7 +16,7 @@ from src.utils.password_utils import hash_password
 
 
 @pytest.mark.asyncio
-async def test_task_create_account_success(redis_client) -> None:  # noqa: PLR0914, PLR0915
+async def test_task_create_account_success(redis_client) -> None:  # ruff: ignore[too-many-locals, too-many-statements]
     """Verifica que TaskCreateAccount cree una cuenta exitosamente."""
     # Mock del writer
     writer = MagicMock()

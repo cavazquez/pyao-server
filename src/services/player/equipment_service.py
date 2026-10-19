@@ -19,8 +19,8 @@ class EquipmentService:
 
     def __init__(
         self,
-        equipment_repo: "EquipmentRepository",  # noqa: UP037
-        inventory_repo: "InventoryRepository",  # noqa: UP037
+        equipment_repo: "EquipmentRepository",  # ruff: ignore[quoted-annotation]
+        inventory_repo: "InventoryRepository",  # ruff: ignore[quoted-annotation]
     ) -> None:
         """Inicializa el servicio de equipamiento.
 

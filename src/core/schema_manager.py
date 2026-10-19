@@ -56,7 +56,7 @@ async def ensure_schema_ready(redis: Redis) -> None:
     if await redis.exists(MIGRATION_LOCK_KEY):
         msg = "Hay una migración Redis en curso; esperar su finalización"
         raise SchemaMigrationError(msg)
-    value = await cast("Awaitable[str | bytes | None]", redis.hget(SCHEMA_KEY, "version"))
+    value = await redis.hget(SCHEMA_KEY, "version")
     version = parse_version(value)
     if version == CURRENT_SCHEMA_VERSION:
         return
@@ -69,9 +69,7 @@ async def ensure_schema_ready(redis: Redis) -> None:
             await cast(
                 "Awaitable[bool]", redis.hsetnx(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION))
             )
-            parse_version(
-                await cast("Awaitable[str | bytes | None]", redis.hget(SCHEMA_KEY, "version"))
-            )
+            parse_version(await redis.hget(SCHEMA_KEY, "version"))
             return
     msg = (
         "Estado Redis legado: crear/verificar backup y ejecutar "

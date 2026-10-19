@@ -59,7 +59,7 @@ data/
 from src.models.npc_catalog import NPCCatalog
 
 catalog = NPCCatalog()
-print(f'{len(catalog.get_all_npc_ids())} NPCs cargados')
+print(f"{len(catalog.get_all_npc_ids())} NPCs cargados")
 ```
 
 ### Cargar Items

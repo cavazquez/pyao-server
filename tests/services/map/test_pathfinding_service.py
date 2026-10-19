@@ -107,7 +107,7 @@ class TestPathfindingService:
         service = PathfindingService(mock_map_manager)
 
         # Crear un muro vertical en x=51
-        def can_move_to_mock(map_id, x, y):  # noqa: ARG001
+        def can_move_to_mock(map_id, x, y):  # ruff: ignore[unused-function-argument]
             # Muro en x=51, y entre 48 y 52
             return not (x == 51 and 48 <= y <= 52)
 
@@ -130,7 +130,7 @@ class TestPathfindingService:
         service = PathfindingService(mock_map_manager)
 
         # Crear un muro que rodea completamente el objetivo
-        def can_move_to_mock(map_id, x, y):  # noqa: ARG001
+        def can_move_to_mock(map_id, x, y):  # ruff: ignore[unused-function-argument]
             # Objetivo en (55, 55), rodeado por muros
             if x == 55 and y == 55:
                 return True  # El objetivo es válido
@@ -244,7 +244,7 @@ class TestPathfindingService:
             (53, 51),  # Muro horizontal
         }
 
-        def can_move_to_mock(map_id, x, y):  # noqa: ARG001
+        def can_move_to_mock(map_id, x, y):  # ruff: ignore[unused-function-argument]
             return (x, y) not in blocked_tiles
 
         mock_map_manager.can_move_to.side_effect = can_move_to_mock

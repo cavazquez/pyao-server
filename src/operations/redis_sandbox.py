@@ -2,7 +2,7 @@
 
 import json
 import shutil
-import subprocess  # noqa: S404 - CLI local de operación sin shell.
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - CLI local de operación sin shell.
 import sys
 import time
 from pathlib import Path
@@ -31,7 +31,7 @@ def docker(*arguments: str) -> str:
     if executable is None:
         msg = "Se requiere Docker para el ensayo aislado"
         raise RuntimeError(msg)
-    return subprocess.run(  # noqa: S603 - argumentos separados, sin shell.
+    return subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - argumentos separados, sin shell.
         [executable, *arguments], check=True, capture_output=True, text=True, timeout=60
     ).stdout.strip()
 

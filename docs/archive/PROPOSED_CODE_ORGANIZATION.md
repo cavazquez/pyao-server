@@ -310,48 +310,42 @@ TASK_MAPPING = {
     "task_meditate.py": "player",
     "task_safe_toggle.py": "player",
     "task_request_pos_update.py": "player",
-    
     # inventory/
     "task_inventory_click.py": "inventory",
     "task_equip_item.py": "inventory",
     "task_drop.py": "inventory",
     "task_double_click.py": "inventory",
-    
     # commerce/
     "task_commerce_buy.py": "commerce",
     "task_commerce_sell.py": "commerce",
     "task_commerce_end.py": "commerce",
-    
     # banking/
     "task_bank_deposit.py": "banking",
     "task_bank_extract.py": "banking",
-    
     # spells/
     "task_cast_spell.py": "spells",
     "task_spell_info.py": "spells",
     "task_move_spell.py": "spells",
-    
     # interaction/
     "task_left_click.py": "interaction",
     "task_information.py": "interaction",
-    
     # work/
     "task_work.py": "work",
     "task_work_left_click.py": "work",
-    
     # admin/
     "task_gm_commands.py": "admin",
 }
 
+
 def reorganize_tasks():
     src_dir = Path("src")
     tasks_dir = src_dir / "tasks"
-    
+
     # Crear estructura de carpetas
     for category in set(TASK_MAPPING.values()):
         (tasks_dir / category).mkdir(parents=True, exist_ok=True)
         (tasks_dir / category / "__init__.py").touch()
-    
+
     # Mover archivos
     for file, category in TASK_MAPPING.items():
         src_file = src_dir / file
@@ -359,13 +353,12 @@ def reorganize_tasks():
             dest_file = tasks_dir / category / file
             shutil.move(str(src_file), str(dest_file))
             print(f"✓ Moved {file} → tasks/{category}/")
-    
+
     # Crear __init__.py principal
-    (tasks_dir / "__init__.py").write_text(
-        '"""Package de tasks del servidor."""\n'
-    )
-    
+    (tasks_dir / "__init__.py").write_text('"""Package de tasks del servidor."""\n')
+
     print(f"\n✅ Reorganización completada")
+
 
 if __name__ == "__main__":
     reorganize_tasks()

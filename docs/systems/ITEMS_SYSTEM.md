@@ -105,10 +105,10 @@ Según `src/models/item_types.py`:
 
 ```python
 class TipoPocion(IntEnum):
-    AGILIDAD = 1   # Modifica la Agilidad
-    FUERZA = 2     # Modifica la Fuerza
-    HP = 3         # Repone HP
-    MANA = 4       # Repone Mana
+    AGILIDAD = 1  # Modifica la Agilidad
+    FUERZA = 2  # Modifica la Fuerza
+    HP = 3  # Repone HP
+    MANA = 4  # Repone Mana
     CURA_VENENO = 5  # Cura Envenenamiento
     INVISIBLE = 6  # Invisibilidad
 ```

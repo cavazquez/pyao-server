@@ -162,7 +162,7 @@ class AttackLootHandler:
             return False
 
         # Verificar límites del mapa
-        if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+        if x < 1 or x > 100 or y < 1 or y > 100:  # ruff: ignore[magic-value-comparison]
             return False
 
         # Verificar que no haya items en esa posición

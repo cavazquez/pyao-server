@@ -37,7 +37,7 @@ class InventorySlot:
 
         try:
             parts = value.split(":")
-            if len(parts) != 2:  # noqa: PLR2004
+            if len(parts) != 2:  # ruff: ignore[magic-value-comparison]
                 return None
 
             item_id = int(parts[0])

@@ -376,11 +376,11 @@ class NPCAIService:
 
             if direction == 1:  # Norte
                 new_y -= 1
-            elif direction == 2:  # Este  # noqa: PLR2004
+            elif direction == 2:  # Este  # ruff: ignore[magic-value-comparison]
                 new_x += 1
-            elif direction == 3:  # Sur  # noqa: PLR2004
+            elif direction == 3:  # Sur  # ruff: ignore[magic-value-comparison]
                 new_y += 1
-            elif direction == 4:  # Oeste  # noqa: PLR2004
+            elif direction == 4:  # Oeste  # ruff: ignore[magic-value-comparison]
                 new_x -= 1
 
             # Verificar que la nueva posición es válida
@@ -448,7 +448,7 @@ class NPCAIService:
 
         # Desincronización: 30% probabilidad de skip para evitar spam
         # Esto distribuye los ataques en el tiempo en lugar de todos a la vez
-        if random.random() < 0.3:  # noqa: PLR2004
+        if random.random() < 0.3:  # ruff: ignore[magic-value-comparison]
             return
 
         # Buscar jugador más cercano (usa aggro_range del NPC)
@@ -468,6 +468,6 @@ class NPCAIService:
         if distance == 1:
             await self.try_attack_player(npc, target_user_id)
         # Si está cerca pero no adyacente, perseguir
-        elif distance <= 8 and random.random() < 0.5:  # noqa: PLR2004
+        elif distance <= 8 and random.random() < 0.5:  # ruff: ignore[magic-value-comparison]
             # 50% de probabilidad de moverse (para no ser demasiado agresivo)
             await self.try_move_towards(npc, target_x, target_y)
