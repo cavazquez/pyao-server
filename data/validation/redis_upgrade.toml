@@ -1,0 +1,42 @@
+# Fixture representativo del esquema legado, sin una partida ni credenciales reales.
+# Las claves siguen RedisKeys y los repositorios; no acredita ejecutar el binario 0.9.4.
+[strings]
+"accounts:counter" = "1"
+"account:username:MigrationTest" = "1"
+"bank:1:gold" = "9876"
+
+[hashes."account:MigrationTest:data"]
+user_id = "1"
+username = "MigrationTest"
+email = "fixture@example.invalid"
+char_race = "1"
+char_job = "1"
+
+[hashes."player:1:stats"]
+gold = "1234"
+level = "7"
+experience = "431"
+
+[hashes."player:1:user_stats"]
+max_mana = "500000"
+min_mana = "400000"
+gold = "1234"
+
+[hashes."player:1:inventory"]
+slot_30 = "1:2"
+slot_1 = "38:10"
+
+[hashes."bank:1:vault"]
+slot_1 = "37:3"
+slot_40 = "15:1"
+
+[hashes."player:1:spellbook"]
+"1" = "33"
+"2" = "3"
+"35" = "11"
+
+[hashes."player:1:skills"]
+points = "4"
+skill_1 = "37"
+magia = "10"
+talar = "275"

@@ -1,5 +1,6 @@
 """Versiones, conservación y recuperación de una confirmación de migración perdida."""
 
+import tomllib
 from secrets import token_urlsafe
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -17,7 +18,9 @@ from src.core.schema_manager import (
     SchemaMigrationError,
     ensure_schema_ready,
 )
-from src.operations.redis_schema import apply_ordered_steps, release_lock
+from src.operations.redis_schema import apply_ordered_steps, check_legacy_progress, release_lock
+from src.runtime_paths import resource_root
+from src.utils.password_utils import hash_password
 
 
 @pytest.mark.asyncio
@@ -108,3 +111,35 @@ def test_releasing_an_expired_owner_does_not_remove_new_migration():
         assert raw.hget(SCHEMA_KEY, "version") is None
     finally:
         raw.close()
+
+
+@pytest.mark.parametrize(
+    ("key", "field", "corrupt"),
+    [
+        ("bank:1:gold", None, "0"),
+        ("bank:1:vault", "slot_40", "15:2"),
+        ("player:1:spellbook", "1", "3"),
+        ("player:1:skills", "points", "0"),
+        ("player:1:inventory", "slot_30", "1:1"),
+        ("account:MigrationTest:data", "password_hash", "broken-hash"),
+    ],
+)
+def test_upgrade_acceptance_rejects_lost_progress_even_with_current_schema(key, field, corrupt):
+    """Un número de esquema correcto no acredita conservación de una partida."""
+    fixture = tomllib.loads((resource_root() / "data/validation/redis_upgrade.toml").read_text())
+    password = token_urlsafe(16)
+    with FakeRedis(decode_responses=True) as client:
+        for name, value in fixture["strings"].items():
+            client.set(name, value)
+        for name, values in fixture["hashes"].items():
+            client.hset(name, mapping=values)
+        client.hset("account:MigrationTest:data", "password_hash", hash_password(password))
+        client.hset("player:1:user_stats", mapping={"min_mana": "32767", "max_mana": "32767"})
+        client.hset(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION))
+        check_legacy_progress(client, fixture, password)
+        if field is None:
+            client.set(key, corrupt)
+        else:
+            client.hset(key, field, corrupt)
+        with pytest.raises(RuntimeError):
+            check_legacy_progress(client, fixture, password)
