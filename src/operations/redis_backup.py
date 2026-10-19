@@ -52,9 +52,7 @@ def persistent_snapshot(client: Redis) -> dict[str, Any]:
     Raises:
         ValueError: Si hay tipos ajenos al contrato de datos de pyao.
     """
-    databases = sorted(
-        int(name.removeprefix("db")) for name in cast("dict[str, Any]", client.info("keyspace"))
-    )
+    databases = sorted(int(name.removeprefix("db")) for name in client.info("keyspace"))
     result: dict[str, Any] = {}
     for database in databases:
         client.select(database)

@@ -11,7 +11,7 @@ import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 from secrets import token_urlsafe
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from redis.exceptions import WatchError
 
@@ -41,6 +41,11 @@ from src.runtime_paths import resource_root
 from src.utils.password_utils import hash_password, verify_password
 from tools.compression.decompress_map_data import decompress_map_data
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from redis.typing import EncodableT
+
 
 def connection(settings: RedisConfig, *, binary: bool = False) -> Redis:
     """Construye un cliente administrativo con endpoint, secreto y timeouts centrales.
@@ -65,7 +70,7 @@ def version_of(client: Redis) -> int:
     Returns:
         Versión validada del esquema.
     """
-    return parse_version(cast("str | bytes | None", client.hget(SCHEMA_KEY, "version")))
+    return parse_version(client.hget(SCHEMA_KEY, "version"))
 
 
 def release_lock(client: Redis, token: str) -> None:
@@ -117,9 +122,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                 if pipe.get(MIGRATION_LOCK_KEY) != token:
                     msg = "La migración perdió su reserva; no se modifica el estado"
                     raise SchemaMigrationError(msg)
-                current = parse_version(
-                    cast("str | bytes | None", pipe.hget(SCHEMA_KEY, "version"))
-                )
+                current = parse_version(pipe.hget(SCHEMA_KEY, "version"))
                 pending = [
                     (target, name)
                     for target, name in sorted(MIGRATIONS.items())
@@ -136,7 +139,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                     repairs = revalidated
                 pipe.multi()
                 for key, fields in repairs.items():
-                    pipe.hset(key, mapping=fields)
+                    pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", fields))
                 for target, name in pending:
                     require(current == target - 1, "orden de migraciones")
                     entry = json.dumps(
