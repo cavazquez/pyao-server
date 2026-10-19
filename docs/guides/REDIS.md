@@ -211,6 +211,28 @@ nivel 2 con 75% usando el umbral 100. Robustez y agilidad mantienen sus IDs prop
 El umbral efectivo se guarda en cada perfil. No se repara ni se migra durante envíos.
 
 Usar el procedimiento anterior con el servidor detenido y backup verificado;
-`redis_schema migrate` aplica los pasos pendientes hasta v3 en una transacción.
+`redis_schema migrate` aplica los pasos pendientes hasta la versión actual en una transacción.
 Repetir no convierte otra vez los valores históricos. `redis_schema selftest`
 comprueba también que XP, niveles, puntos, oro e inventario sobreviven a la migración.
+
+### Migración v4: entrenamiento clásico y puntos por nivel
+
+El formato `progress_version=2` conserva los niveles, la XP total y los campos
+históricos. Agrega `partial:<habilidad>` para el avance hacia el siguiente nivel
+con umbral creciente `round(200 * 1.05 ** nivel)`. La conversión conserva el
+porcentaje previo; no vuelve a interpretar XP total como nivel ni elimina las
+habilidades propias Robustez y Agilidad, IDs 21 y 22.
+
+El personaje nace con diez puntos. El nivel 2 concede diez nuevos y cada nivel
+posterior concede cinco. `points_granted_through` registra hasta qué nivel fueron
+otorgados; la migración recupera los puntos de niveles históricos que no los
+habían concedido. Repetir la migración, una acción o el chequeo de nivel no los
+duplica. No se alteran oro, inventario, atributos iniciales ni grupos existentes.
+
+Usar el mismo procedimiento de backup verificado y migración con el servidor
+detenido. El arranque rechaza un esquema v3 pendiente de migrar. Las reglas y
+recetas se cargan a `config:skills:rules` y `config:crafting:recipes` al iniciar;
+durante una partida las acciones leen esos datos desde Redis. Los hashes
+`player:<id>:skills`, `player:<id>:user_stats`, inventario, propiedad de mascotas
+y `world:campfire:<mapa>:<x>:<y>` contienen el estado guardado. Las fogatas tienen
+vencimiento y las mascotas domadas no se eliminan al desconectar o reiniciar.

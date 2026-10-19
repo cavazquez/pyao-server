@@ -23,9 +23,10 @@ class TestCraftingService:
         """Configuración para cada test."""
         # Crear directorio temporal con datos de crafting
         self.temp_dir = Path(tempfile.mkdtemp())
-        self.weapons_file = self.temp_dir / "weapons_crafting.toml"
-        self.armor_file = self.temp_dir / "armor_crafting.toml"
-        self.materials_file = self.temp_dir / "crafting_materials.toml"
+        (self.temp_dir / "crafting").mkdir()
+        self.weapons_file = self.temp_dir / "crafting" / "weapons.toml"
+        self.armor_file = self.temp_dir / "crafting" / "armor.toml"
+        self.materials_file = self.temp_dir / "crafting" / "materials.toml"
 
         # Datos de prueba para armas
         test_weapons_data = """# Recetas de crafting - weapons

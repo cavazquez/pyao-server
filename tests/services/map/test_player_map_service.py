@@ -16,6 +16,7 @@ def mock_player_repo():
     repo.get_position.return_value = {"x": 50, "y": 50, "map": 1, "heading": 3}
     repo.set_position = AsyncMock()
     repo.get_morphed_appearance = AsyncMock(return_value=None)
+    repo.redis.hgetall = AsyncMock(return_value={})
     return repo
 
 
@@ -36,6 +37,7 @@ def mock_map_manager():
     """Mock de MapManager."""
     manager = MagicMock()
     manager.get_players_in_map.return_value = []
+    manager.get_player_message_sender.return_value = AsyncMock()
     manager.get_npcs_in_map.return_value = []
     manager._ground_items = {}
     manager.send_ground_items_snapshot = AsyncMock(return_value=0)

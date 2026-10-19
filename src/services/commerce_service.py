@@ -4,7 +4,8 @@ from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
-from src.services.npc_trade_plan import NpcTradePlan, NpcTradeRequest
+from src.services.npc_trade_plan import NpcTradePlan, NpcTradeRequest, commerce_price
+from src.services.skill_training import trained_decision, training_resources
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id as new_operation_id
 from src.utils.inventory_slot import InventorySlot
@@ -100,7 +101,12 @@ class CommerceService:
                 return Decision({"applied": False, "message": str(error)}, {})
             if expected_item is None:
                 expected_item = plan.source_item_id()
-            return plan.decide(self.items_catalog, expected_item)
+            decision = plan.decide(self.items_catalog, expected_item)
+            return (
+                trained_decision(decision, snapshot, request.user_id, (("comerciar", True),))
+                if decision.result["applied"]
+                else decision
+            )
 
         resources = tuple(
             Resource(key, "hash")
@@ -111,6 +117,9 @@ class CommerceService:
                 RedisKeys.merchant_inventory(request.npc_id),
             )
         )
+        resources = tuple(
+            {r.key: r for r in (*resources, *training_resources(request.user_id))}.values()
+        )
         redis = self.player_repo.redis.redis
         await require_durable(redis)
         result = await transact(
@@ -119,9 +128,11 @@ class CommerceService:
         await require_durable(redis)
         return bool(result["applied"]), str(result["message"])
 
-    async def notify_merchant(self, sender: MessageSender, npc_id: int) -> None:
+    async def notify_merchant(self, sender: MessageSender, npc_id: int, user_id: int = 0) -> None:
         """Actualiza el stock confirmado también cuando la compra fue rechazada."""
         inventory = await self.merchant_repo.get_inventory(npc_id)
+        skills = await self.player_repo.get_skills(user_id) if user_id else None
+        level = skills.get("comerciar", 0) if skills else 0
         for slot in range(1, self.merchant_repo.MAX_SLOTS + 1):
             raw = inventory.get(f"slot_{slot}", "")
             stack = InventorySlot.parse(str(raw))
@@ -130,7 +141,7 @@ class CommerceService:
                 slot=slot,
                 name=item.name if item else "",
                 amount=stack.quantity if stack and item else 0,
-                sale_price=float(item.value) if item else 0.0,
+                sale_price=float(commerce_price(item.value, level, "buy")) if item else 0.0,
                 grh_id=item.graphic_id if item else 0,
                 item_id=item.item_id if item else 0,
                 item_type=item.item_type.to_client_type() if item else 0,

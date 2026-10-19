@@ -1,6 +1,6 @@
 """Tests adicionales para NPCDeathService - métodos no cubiertos."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -8,6 +8,20 @@ from src.models.npc import NPC
 from src.models.party import Party
 from src.models.player_stats import PlayerStats
 from src.services.npc.npc_death_service import NPCDeathService
+
+
+@pytest.fixture(autouse=True)
+def authoritative_progression():
+    """Aísla la liquidación de botín/party del progreso, probado con Redis en test_skill_training.
+
+    Yields:
+        Servicio externo de crecimiento para las pruebas de distribución.
+    """
+    with patch(
+        "src.services.player_progression.advance_player_level",
+        new=AsyncMock(return_value={"level": 1, "previous_level": 1, "points_gained": 0}),
+    ) as progress:
+        yield progress
 
 
 @pytest.fixture
@@ -47,6 +61,8 @@ class TestPartyExperience:
         map_manager = MagicMock()
         map_manager.remove_npc = MagicMock()
         member_sender = MagicMock()
+        member_sender.connection.capabilities.enabled = 0
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
@@ -92,6 +108,10 @@ class TestPartyExperience:
         )
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
@@ -201,6 +221,8 @@ class TestPartyExperience:
         # Setup
         map_manager = MagicMock()
         member_sender = MagicMock()
+        member_sender.connection.capabilities.enabled = 0
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
@@ -251,6 +273,8 @@ class TestPartyExperience:
         # Setup
         map_manager = MagicMock()
         member_sender = MagicMock()
+        member_sender.connection.capabilities.enabled = 0
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats = AsyncMock()
@@ -300,6 +324,8 @@ class TestPartyExperience:
         # Setup
         map_manager = MagicMock()
         member_sender = MagicMock()
+        member_sender.connection.capabilities.enabled = 0
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         member_sender.send_console_msg = AsyncMock()
         member_sender.send_update_exp = AsyncMock()
         member_sender.send_update_user_stats_from_repo = AsyncMock()
@@ -328,6 +354,8 @@ class TestPartyExperience:
         # Setup
         map_manager = MagicMock()
         member_sender = MagicMock()
+        member_sender.connection.capabilities.enabled = 0
+        member_sender.send_update_user_stats_from_repo = AsyncMock()
         member_sender.send_console_msg = AsyncMock()
         map_manager.get_player_message_sender = MagicMock(return_value=member_sender)
 
@@ -371,7 +399,7 @@ class TestLevelUp:
     """Tests para manejo de level up."""
 
     @pytest.mark.asyncio
-    async def test_check_and_handle_level_up_no_level_up(self) -> None:
+    async def test_check_and_handle_level_up_no_level_up(self, authoritative_progression) -> None:
         """Test cuando no hay level up."""
         # Setup
         player_repo = MagicMock()
@@ -394,6 +422,10 @@ class TestLevelUp:
         player_repo.update_level_and_elu = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
         message_sender.send_update_user_stats_from_repo = AsyncMock()
 
@@ -408,7 +440,7 @@ class TestLevelUp:
         await service._check_and_handle_level_up(1, 1, 100, message_sender)
 
         # Assert - Solo actualiza ELU, no sube de nivel
-        player_repo.update_level_and_elu.assert_called_once()
+        authoritative_progression.assert_awaited_once_with(player_repo, 1, message_sender)
 
     @pytest.mark.asyncio
     async def test_give_solo_experience_no_stats(self) -> None:
@@ -429,6 +461,10 @@ class TestLevelUp:
         )
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats_from_repo = AsyncMock()
 
@@ -844,6 +880,10 @@ class TestRespawn:
         respawn_service.schedule_respawn = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()

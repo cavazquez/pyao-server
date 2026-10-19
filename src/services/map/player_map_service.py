@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.map_resources_service import MapResourcesService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.random_spawn_service import RandomSpawnService
 
@@ -20,6 +21,7 @@ from src.services.map.map_transition_steps import (
     MapTransitionContext,
     MapTransitionOrchestrator,
 )
+from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +52,7 @@ class PlayerMapService:
         map_manager: MapManager,
         broadcast_service: MultiplayerBroadcastService,
         random_spawn_service: RandomSpawnService | None = None,
+        map_resources: MapResourcesService | None = None,
     ) -> None:
         """Inicializa el servicio de mapas de jugador.
 
@@ -59,12 +62,14 @@ class PlayerMapService:
             map_manager: Gestor de mapas.
             broadcast_service: Servicio de broadcast multijugador.
             random_spawn_service: Servicio de spawns aleatorios (opcional).
+            map_resources: Talleres estáticos que se muestran al entrar (opcional).
         """
         self.player_repo = player_repo
         self.account_repo = account_repo
         self.map_manager = map_manager
         self.broadcast_service = broadcast_service
         self.random_spawn_service = random_spawn_service
+        self.map_resources = map_resources
 
         # Crear orquestador de transición con la secuencia predeterminada
         self.transition_orchestrator = MapTransitionOrchestrator.create_default_orchestrator(
@@ -110,6 +115,9 @@ class PlayerMapService:
                 char_body = int(morphed.get("morphed_body", char_body))
                 char_head = int(morphed.get("morphed_head", char_head))
 
+        stats = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
+        if int(stats.get("min_hp", 1)) > 0 and stats.get("sailing") == "1":
+            char_body, char_head = 84, 0
         return PlayerVisualData(
             user_id=user_id,
             username=username,
@@ -212,6 +220,11 @@ class PlayerMapService:
         items_sent = await self.map_manager.send_ground_items_snapshot(
             map_id, message_sender.send_object_create
         )
+        if self.map_resources is not None:
+            for x, y, graphic in self.map_resources.workshops.get(map_id, []):
+                await message_sender.send_object_create(x, y, graphic)
+                await message_sender.send_block_position(x, y, blocked=True)
+                items_sent += 1
 
         if items_sent > 0:
             logger.debug("Enviados %d ground items del mapa %d", items_sent, map_id)
@@ -318,6 +331,7 @@ class PlayerMapService:
             name=visual_data.username,
         )
 
+        await self._sync_map_states(map_id)
         logger.info(
             "Jugador %s (ID:%d) spawneado en mapa %d pos (%d,%d)",
             visual_data.username,
@@ -379,6 +393,7 @@ class PlayerMapService:
 
         # Spawneear NPCs aleatorios después de la transición (si hay áreas configuradas)
         await self._spawn_random_npcs_for_player(new_map, new_x, new_y, message_sender)
+        await self._sync_map_states(new_map)
 
     async def teleport_in_same_map(
         self,
@@ -433,6 +448,7 @@ class PlayerMapService:
             name=visual_data.username,
         )
 
+        await self._sync_map_states(map_id)
         logger.info(
             "Jugador %s (ID:%d) teletransportado en mapa %d: (%d,%d) -> (%d,%d)",
             visual_data.username,
@@ -494,3 +510,13 @@ class PlayerMapService:
             )
 
         return len(spawned_npcs)
+
+    async def _sync_map_states(self, map_id: int) -> None:
+        for viewer in self.map_manager.get_players_in_map(map_id):
+            sender = self.map_manager.get_player_message_sender(viewer)
+            if sender:
+                await sender.status_effects.sync_visibility(
+                    viewer, self.player_repo, self.map_manager
+                )
+                await sender.status_effects.sync_campfires(viewer, self.player_repo)
+                await sender.sync_status(viewer, self.player_repo)

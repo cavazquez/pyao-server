@@ -1,23 +1,27 @@
-"""Handler para comando de trabajo (talar, minar, pescar)."""
+"""Trabajo frontal y solicitud de objetivo con el mismo motor de recolección."""
 
-import logging
 from typing import TYPE_CHECKING
 
+from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.work_command import WorkCommand
-from src.constants.items import ResourceItemID, ToolID
+from src.commands.work_left_click_command import WorkLeftClickCommand
+from src.services.action_cadence import ActionCadence
+from src.services.gathering import GATHERING
+
+HIDE_SKILL = 7
+
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.map_resources_service import MapResourcesService
-
-logger = logging.getLogger(__name__)
+    from src.services.skill_action_service import SkillActionService
 
 
 class WorkCommandHandler(CommandHandler):
-    """Handler para comando de trabajo (solo lógica de negocio)."""
+    """Reutiliza la acción con objetivo y mantiene el trabajo de frente."""
 
     def __init__(
         self,
@@ -25,120 +29,65 @@ class WorkCommandHandler(CommandHandler):
         inventory_repo: InventoryRepository,
         map_resources: MapResourcesService | None,
         message_sender: MessageSender,
+        action_cadence: ActionCadence | None = None,
+        skill_actions: SkillActionService | None = None,
     ) -> None:
-        """Inicializa el handler.
-
-        Args:
-            player_repo: Repositorio de jugadores.
-            inventory_repo: Repositorio de inventario.
-            map_resources: Servicio de recursos del mapa.
-            message_sender: Enviador de mensajes.
-        """
+        """Recibe las dependencias del jugador autenticado y su emisor."""
+        self.skill_actions = skill_actions
         self.player_repo = player_repo
         self.inventory_repo = inventory_repo
         self.map_resources = map_resources
         self.message_sender = message_sender
+        self.action_cadence = action_cadence or ActionCadence()
 
     async def handle(self, command: Command) -> CommandResult:
-        """Ejecuta el comando de trabajo (solo lógica de negocio).
-
-        Args:
-            command: Comando de trabajo.
+        """Recolecta delante del personaje o solicita una casilla para la habilidad.
 
         Returns:
-            Resultado de la ejecución.
+            Resultado de la acción o rechazo autoritativo.
         """
-        if not isinstance(command, WorkCommand):
-            return CommandResult.error("Comando inválido: se esperaba WorkCommand")
-
-        user_id = command.user_id
-        map_id = command.map_id
-        target_x = command.target_x
-        target_y = command.target_y
-
-        logger.info(
-            "WorkCommandHandler: user_id=%d intenta trabajar en mapa=%d, posición=(%d, %d)",
-            user_id,
-            map_id,
-            target_x,
-            target_y,
-        )
-
-        try:
-            # Intentar trabajar en la posición objetivo
-            work_result = await self._try_work_at_position(user_id, map_id, target_x, target_y)
-
-            if work_result:
-                resource_name, item_id, quantity = work_result
-                await self.message_sender.console.send_console_msg(
-                    f"Has obtenido {quantity} {resource_name}"
+        if not isinstance(command, WorkCommand) or self.map_resources is None:
+            return CommandResult.error("Servicio de trabajo no disponible")
+        if self.skill_actions is not None:
+            if command.skill_type == HIDE_SKILL:
+                result = await self.skill_actions.execute(
+                    command.user_id, "hide", {}, self.message_sender
                 )
-                logger.info(
-                    "Usuario %d obtuvo %d %s (item_id=%d)",
-                    user_id,
-                    quantity,
-                    resource_name,
-                    item_id,
+                return (
+                    CommandResult.ok(result)
+                    if result["applied"]
+                    else CommandResult.error(str(result.get("message", "Acción rechazada")))
                 )
-                return CommandResult.ok(
-                    data={
-                        "resource_name": resource_name,
-                        "item_id": item_id,
-                        "quantity": quantity,
-                    }
+            if command.skill_type in {2, 8, 17, 18}:
+                await self.message_sender.send_work_request_target(command.skill_type)
+                return CommandResult.ok({"target_requested": command.skill_type})
+        queries = {
+            9: self.map_resources.has_tree,
+            13: self.map_resources.has_mine,
+            12: self.map_resources.has_water,
+        }
+        for skill in GATHERING:
+            if command.skill_type in {0, skill} and queries[skill](
+                command.map_id, command.target_x, command.target_y
+            ):
+                handler = WorkLeftClickCommandHandler(
+                    self.player_repo,
+                    self.inventory_repo,
+                    self.map_resources,
+                    self.message_sender,
+                    self.action_cadence,
+                    self.skill_actions,
                 )
-            await self.message_sender.console.send_console_msg(
-                "No hay nada para trabajar en esa dirección"
-            )
-            return CommandResult.error("No hay nada para trabajar en esa dirección")
-
-        except Exception as e:
-            logger.exception("Error al trabajar")
-            return CommandResult.error(f"Error al trabajar: {e!s}")
-
-    async def _try_work_at_position(
-        self, user_id: int, map_id: int, target_x: int, target_y: int
-    ) -> tuple[str, int, int] | None:
-        """Intenta trabajar en una posición específica.
-
-        Args:
-            user_id: ID del usuario.
-            map_id: ID del mapa.
-            target_x: Coordenada X objetivo.
-            target_y: Coordenada Y objetivo.
-
-        Returns:
-            Tupla (nombre_recurso, item_id, cantidad) si se pudo trabajar, None si no.
-        """
-        # Verificar herramienta equipada o en inventario
-        inventory = await self.inventory_repo.get_inventory_slots(user_id)
-
-        has_hacha = any(slot.item_id == ToolID.HACHA_LENADOR for slot in inventory.values())
-        has_pico = any(slot.item_id == ToolID.PIQUETE_MINERO for slot in inventory.values())
-        has_cana = any(slot.item_id == ToolID.CANA_PESCAR for slot in inventory.values())
-
-        # Verificar recursos usando MapResourcesService
-        if self.map_resources:
-            if has_hacha and self.map_resources.has_tree(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(user_id, item_id=ResourceItemID.LENA, quantity=5)
-                return ("Leña", ResourceItemID.LENA, 5)
-
-            if has_pico and self.map_resources.has_mine(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(
-                    user_id, item_id=ResourceItemID.MINERAL_HIERRO, quantity=3
+                return await handler.handle(
+                    WorkLeftClickCommand(
+                        user_id=command.user_id,
+                        map_id=command.map_id,
+                        target_x=command.target_x,
+                        target_y=command.target_y,
+                        skill_type=skill,
+                    )
                 )
-                return ("Mineral de Hierro", ResourceItemID.MINERAL_HIERRO, 3)
-
-            if has_cana and self.map_resources.has_water(map_id, target_x, target_y):
-                await self.inventory_repo.add_item(
-                    user_id, item_id=ResourceItemID.PESCADO, quantity=2
-                )
-                return ("Pescado", ResourceItemID.PESCADO, 2)
-
-        # Si no tiene herramienta
-        if not (has_hacha or has_pico or has_cana):
-            await self.message_sender.console.send_console_msg(
-                "Necesitas una herramienta (hacha, pico o caña de pescar)"
-            )
-
-        return None
+        if command.skill_type in GATHERING:
+            await self.message_sender.send_work_request_target(command.skill_type)
+            return CommandResult.ok({"target_requested": command.skill_type})
+        return CommandResult.error("No hay un recurso apropiado en esa dirección")

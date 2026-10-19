@@ -13,6 +13,7 @@ from src.models.party import (
     Party,
     PartyInvitation,
 )
+from src.services.skill_training import read_rules
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -113,11 +114,14 @@ class PartyService:
 
         # Verify leadership requirement (charisma * leadership >= MIN_LEADERSHIP_SCORE)
         leadership_score = charisma * leadership
-        if leadership_score < MIN_LEADERSHIP_SCORE:
+        required = int(
+            (await read_rules(self.player_repo)).get("leadership_party_score", MIN_LEADERSHIP_SCORE)
+        )
+        if leadership_score < required:
             return (
                 False,
                 (
-                    f"Necesitas Carisma * Liderazgo >= {MIN_LEADERSHIP_SCORE} "
+                    f"Necesitas Carisma * Liderazgo >= {required} "
                     f"(tienes {charisma} * {leadership} = {leadership_score})"
                 ),
             )

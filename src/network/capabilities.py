@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 CAPABILITIES_VERSION = 1
-NEGOTIATION_WINDOW_SECONDS = 10.0
+NEGOTIATION_WINDOW_SECONDS = 30.0
 
 
 class Capability(IntFlag):
@@ -24,6 +24,7 @@ class Capability(IntFlag):
     PROJECTILES = 32
     WEATHER = 64
     TRADE_STATE = 128
+    SKILL_ACTIONS = 256
 
 
 # Se habilitan sólo al integrar la implementación y sus pruebas de cada feature.
@@ -33,6 +34,7 @@ SUPPORTED_CAPABILITIES = (
     | Capability.SKILL_ALLOCATION
     | Capability.PASSWORD_CHANGE
     | Capability.TARGETED_CAST
+    | Capability.SKILL_ACTIONS
 )
 
 

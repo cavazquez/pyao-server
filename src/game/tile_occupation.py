@@ -43,6 +43,8 @@ class TileOccupation:
             ValueError: si el tile ya está ocupado.
         """
         key = (map_id, x, y)
+        if self._data.get(key) == f"npc:{instance_id}":
+            return
         if key in self._data:
             occupant = self._data[key]
             msg = f"tile ya ocupado por {occupant}"

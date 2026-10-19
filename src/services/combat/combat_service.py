@@ -14,14 +14,16 @@ from src.combat.combat_damage_calculator import DamageCalculator
 from src.combat.combat_reward_calculator import RewardCalculator
 from src.combat.combat_validator import CombatValidator
 from src.config.config_manager import ConfigManager
-from src.models.mana import calculate_mana
 from src.services.combat.combat_weapon_service import WeaponService
-from src.services.player.lifecycle import apply_player_damage
-from src.utils.gold_atomic import operation_id
-from src.utils.level_calculator import (
-    calculate_level_from_experience,
-    calculate_remaining_elu,
+from src.services.combat.physical_plan import (
+    PhysicalPlan,
+    PhysicalRequest,
+    commit_physical,
+    defend_npc,
 )
+from src.services.player.lifecycle import apply_player_damage
+from src.services.player_progression import publish_progress
+from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -99,6 +101,27 @@ class CombatService:
             - experience: Experiencia ganada (si murió)
             None si el ataque falló por validaciones.
         """
+        if self.inventory_repo is not None and self.item_catalog is not None:
+            plan = PhysicalPlan(
+                PhysicalRequest(user_id, target_npc=npc.instance_id),
+                self.item_catalog,
+                self.inventory_repo.MAX_SLOTS,
+                self.inventory_repo.stacking.max_stack,
+            )
+            result = await commit_physical(self.player_repo.redis.redis, plan, operation_id())
+            if not result.get("applied"):
+                return None
+            npc.hp = int(result["new_hp"])
+            if result.get("npc_died"):
+                result["experience"] = self.reward_calculator.calculate_experience(npc.level)
+                result["gold"] = self.reward_calculator.calculate_gold_drop(npc.level)
+                if not defer_rewards:
+                    await self._give_experience(user_id, int(result["experience"]), message_sender)
+            if message_sender:
+                await message_sender.send_user_hit_npc(int(result["damage"]))
+                await publish_progress(self.player_repo, user_id, message_sender)
+            return result
+
         # Validar que el NPC sea atacable
         if not npc.is_attackable:
             logger.warning("Intento de atacar NPC no atacable: %s", npc.name)
@@ -170,7 +193,7 @@ class CombatService:
             npc_died,
         )
 
-        result: dict[str, int | bool] = {
+        result = {
             "damage": damage,
             "critical": is_critical,
             "dodged": False,
@@ -237,160 +260,17 @@ class CombatService:
         if message_sender:
             await self._check_and_handle_level_up(user_id, current_level, new_exp, message_sender)
 
-    async def _check_and_handle_level_up(  # noqa: PLR0914
+    async def _check_and_handle_level_up(
         self,
         user_id: int,
-        current_level: int,
-        new_experience: int,
+        _current_level: int,
+        _new_experience: int,
         message_sender: MessageSender,
     ) -> None:
-        """Verifica si el jugador subió de nivel y maneja el proceso completo.
+        """Confirma crecimiento y puntos desde el estado Redis más reciente."""
+        from src.services.player_progression import advance_player_level  # noqa: PLC0415
 
-        Args:
-            user_id: ID del jugador.
-            current_level: Nivel actual del jugador.
-            new_experience: Nueva experiencia total.
-            message_sender: MessageSender del jugador.
-        """
-        # Calcular nuevo nivel basado en experiencia
-        new_level = calculate_level_from_experience(new_experience, config_manager)
-
-        # Si no subió de nivel, solo actualizar ELU
-        if new_level <= current_level:
-            # Actualizar ELU restante
-            remaining_elu = calculate_remaining_elu(new_experience, current_level, config_manager)
-            await self.player_repo.update_level_and_elu(user_id, current_level, remaining_elu)
-
-            # Enviar actualización de stats
-            if message_sender:
-                await message_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
-            return
-
-        # El jugador subió de nivel
-        logger.info(
-            "¡Jugador %d subió de nivel! %d → %d",
-            user_id,
-            current_level,
-            new_level,
-        )
-
-        # Calcular nuevo ELU
-        remaining_elu = calculate_remaining_elu(new_experience, new_level, config_manager)
-
-        # Actualizar nivel y ELU
-        await self.player_repo.update_level_and_elu(user_id, new_level, remaining_elu)
-
-        # Obtener stats y atributos actuales para actualizar
-        stats = await self.player_repo.get_player_stats(user_id)
-        if not stats:
-            return
-
-        # Calcular nuevos valores de HP, Mana y Stamina basados en nivel
-        # Obtener atributos para calcular stats
-        attributes = await self.player_repo.get_player_attributes(user_id)
-        if attributes:
-            constitution = attributes.constitution
-            intelligence = attributes.intelligence
-
-            # Calcular nuevos máximos basados en atributos y nivel
-            hp_per_con = config_manager.as_int("game.character.hp_per_con", 10)
-            mana_per_int = config_manager.as_int(
-                config_manager.get("game.character.mana_per_int", 10)
-            )
-
-            # HP = constitution * hp_per_con * nivel (con mínimo)
-            new_max_hp = max(constitution * hp_per_con * new_level, 100)
-            # Mana = intelligence * mana_per_int * nivel (con mínimo)
-            new_max_mana = max(calculate_mana(intelligence, mana_per_int, new_level), 100)
-            # Stamina aumenta con nivel (base 100 + 10 por nivel)
-            new_max_sta = 100 + (new_level * 10)
-
-            # Mantener el porcentaje actual de HP/Mana/Stamina
-            old_max_hp = stats.max_hp
-            old_max_mana = stats.max_mana
-            old_max_sta = stats.max_sta
-
-            old_min_hp = stats.min_hp
-            old_min_mana = stats.min_mana
-            old_min_sta = stats.min_sta
-
-            # Calcular nuevos valores actuales manteniendo el porcentaje
-            hp_percentage = old_min_hp / old_max_hp if old_max_hp > 0 else 1.0
-            mana_percentage = old_min_mana / old_max_mana if old_max_mana > 0 else 1.0
-            sta_percentage = old_min_sta / old_max_sta if old_max_sta > 0 else 1.0
-
-            new_min_hp = int(new_max_hp * hp_percentage)
-            new_min_mana = int(new_max_mana * mana_percentage)
-            new_min_sta = int(new_max_sta * sta_percentage)
-
-            # Actualizar stats
-            await self.player_repo.set_stats(
-                preserve_gold=True,
-                user_id=user_id,
-                max_hp=new_max_hp,
-                min_hp=new_min_hp,
-                max_mana=new_max_mana,
-                min_mana=new_min_mana,
-                max_sta=new_max_sta,
-                min_sta=new_min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-            # Enviar actualización completa de stats
-            await message_sender.send_update_user_stats(
-                max_hp=new_max_hp,
-                min_hp=new_min_hp,
-                max_mana=new_max_mana,
-                min_mana=new_min_mana,
-                max_sta=new_max_sta,
-                min_sta=new_min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-        else:
-            # Si no hay atributos, solo actualizar nivel y ELU en stats existentes
-            await self.player_repo.set_stats(
-                preserve_gold=True,
-                user_id=user_id,
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-            # Enviar actualización
-            await message_sender.send_update_user_stats(
-                max_hp=stats.max_hp,
-                min_hp=stats.min_hp,
-                max_mana=stats.max_mana,
-                min_mana=stats.min_mana,
-                max_sta=stats.max_sta,
-                min_sta=stats.min_sta,
-                gold=stats.gold,
-                level=new_level,
-                elu=remaining_elu,
-                experience=new_experience,
-            )
-
-        # Reproducir sonido de level up
-        await message_sender.play_sound_level_up()
-
-        # Enviar mensaje de felicitación
-        await message_sender.send_console_msg(
-            f"¡Felicidades! Has subido al nivel {new_level}!",
-            font_color=14,  # Color dorado/amarillo para level up
-        )
+        await advance_player_level(self.player_repo, user_id, message_sender)
 
     def can_attack(self, attacker_pos: dict[str, int], target_pos: dict[str, int]) -> bool:
         """Verifica si un atacante puede atacar a un objetivo (rango).
@@ -418,6 +298,19 @@ class CombatService:
             - damage: Daño infligido
             - player_died: Si el jugador murió
         """
+        if self.item_catalog is not None:
+            raw_damage = self.damage_calculator.calculate_npc_damage(
+                npc_level=npc.level, armor_reduction=0.0
+            )
+            return await defend_npc(
+                self.player_repo.redis.redis,
+                target_user_id,
+                npc.instance_id,
+                self.item_catalog,
+                raw_damage,
+                operation_id(),
+            )
+
         # Obtener stats del jugador
         player_stats = await self.player_repo.get_player_stats(target_user_id)
         if not player_stats:

@@ -5,12 +5,23 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal, cast
 
 from src.models.item_constants import MAX_PLAYER_GOLD
+from src.models.skills import skill_progress
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Snapshot
 from src.utils.slot_plan import MAX_SLOT_QUANTITY, SlotPlan
 
 if TYPE_CHECKING:
     from src.models.item import Item
+
+
+def commerce_price(value: int, level: int, action: str) -> int:
+    """Aplica regateo a la compra y conserva la venta al 50% del valor propio.
+
+    Returns:
+        Precio unitario entero: nunca se vende al NPC por más de lo que cuesta comprar.
+    """
+    level = max(0, min(100, level))
+    return (value * 100 + 99 + level) // (100 + level) if action == "buy" else value // 2
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +61,10 @@ class NpcTradePlan:
             "dict[str, str]", snapshot[RedisKeys.player_equipment(request.user_id)]
         )
         self.gold = int(cast("dict[str, str]", snapshot[self.stats_key]).get("gold", 0))
+        skills = cast("dict[str, str]", snapshot.get(RedisKeys.player_skills(request.user_id), {}))
+        self.commerce_level = next(
+            p.level for p in skill_progress(skills) if p.definition.key == "comerciar"
+        )
 
     def source_item_id(self) -> int:
         """Obtiene la identidad actual del slot fuente.
@@ -78,9 +93,8 @@ class NpcTradePlan:
             return Decision({"applied": False, "message": "Saldo persistido fuera de rango"}, {})
         try:
             total = (
-                item.value * self.request.quantity
-                if self.request.action == "buy"
-                else (item.value // 2) * self.request.quantity
+                commerce_price(item.value, self.commerce_level, self.request.action)
+                * self.request.quantity
             )
             if self.request.action == "buy":
                 self._buy(item.item_id, total)

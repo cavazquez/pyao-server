@@ -48,18 +48,19 @@ Solicitud y respuesta ocupan 6 bytes: `id u8, versión u8 (=1), máscara i32 LE`
 La máscara es no negativa. Las fixtures `capabilities_request_v1` y
 `capabilities_response_none` fijan los bytes. Los bits se registran en el JSON:
 catálogo de habilidades=1, cast dirigido=2, asignación=4, cambio de contraseña=8,
-daño visual=16, proyectiles=32, clima=64 y estado de intercambio=128. Registrar un
+daño visual=16, proyectiles=32, clima=64 y estado de intercambio=128 y acciones de habilidades=256. Registrar un
 bit no implementa una feature: el servidor sólo responde con bits implementados
 solicitados por ese cliente. El registro inicial anuncia cero capacidades.
 
 El cliente puede solicitar después de **Logged**, nunca antes del login directo.
-El servidor acepta dentro de 10 segundos desde la autenticación completa. Un
+El servidor acepta dentro de 30 segundos desde la autenticación completa para
+tolerar la carga inicial del mapa en equipos lentos. Un
 pedido previo, tardío, de versión distinta o máscara negativa se ignora; no altera
 el login ni sus permisos. La primera negociación aceptada fija la intersección
 por conexión. Repetir no amplía permisos. Sin solicitud no se emite nada y el
 stream legacy permanece idéntico. Cerrar limpia todo el estado.
 
-El cliente espera como máximo 2 segundos por la respuesta; ante ausencia, versión
+El cliente espera como máximo 30 segundos por la respuesta; ante ausencia, versión
 inválida o bits no solicitados conserva las funciones base y cero extensiones.
 Esta negociación no sustituye TLS ni importa el flujo cuenta/hash de AO Libre.
 Una extensión nueva debe definir su propio layout, fixtures y bit antes de activarse.

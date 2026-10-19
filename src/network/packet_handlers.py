@@ -61,6 +61,7 @@ from src.tasks.task_ping import TaskPing
 from src.tasks.task_quit import TaskQuit
 from src.tasks.task_request_skills import TaskRequestSkills
 from src.tasks.task_safe_toggle import TaskSafeToggle
+from src.tasks.task_skill_action import TaskSkillAction
 from src.tasks.task_trade_action import TaskTradeAction
 from src.tasks.task_uptime import TaskUptime
 from src.tasks.work.task_work import TaskWork
@@ -72,6 +73,7 @@ if TYPE_CHECKING:
 # Mapeo de PacketID a clase de Task
 TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.CAPABILITIES: TaskCapabilities,
+    ClientPacketID.SKILL_ACTION: TaskSkillAction,
     ClientPacketID.CHANGE_PASSWORD: TaskChangePassword,
     ClientPacketID.MODIFY_SKILLS: TaskModifySkills,
     ClientPacketID.TRADE_ACTION: TaskTradeAction,

@@ -8,7 +8,13 @@ from src.models.clan import (
     MIN_LEVEL_TO_CREATE,
     Clan,
 )
+from src.models.skills import skill_progress
 from src.services.clan._base import ClanServiceMixinBase
+from src.services.skill_training import read_rules
+from src.utils.redis_config import RedisKeys
+
+CLAN_LEADERSHIP_REQUIRED = 90
+
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +68,17 @@ class ClanCreationMixin(ClanServiceMixinBase):
         if level < MIN_LEVEL_TO_CREATE:
             return False, f"Debes ser nivel {MIN_LEVEL_TO_CREATE} o superior para crear un clan"
 
+        skills = await self.player_repo.redis.hgetall(RedisKeys.player_skills(user_id))
+        leadership = next(
+            p.level for p in skill_progress(skills) if p.definition.key == "liderazgo"
+        )
+        required = int(
+            (await read_rules(self.player_repo)).get(
+                "leadership_clan_required", CLAN_LEADERSHIP_REQUIRED
+            )
+        )
+        if leadership < required:
+            return False, f"Necesitas {required} puntos de Liderazgo para fundar un clan."
         return True, ""
 
     async def create_clan(

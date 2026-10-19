@@ -330,7 +330,9 @@ async def test_summoning_and_warp_confirm_pet_and_cost_together(world):
     await world.client.hset(RedisKeys.player_spellbook(1), "1", "46")
     assert await world.service.cast_spell(1, 46, 50, 50, world.senders[1], slot=1)
     pet = await world.npcs.get_npc(pets[0])
-    assert (pet.map_id, pet.x, pet.y) == (2, 50, 50)
+    assert pet.map_id == 2
+    assert max(abs(pet.x - 50), abs(pet.y - 50)) == 1
+    assert (pet.x, pet.y) != (51, 50)
 
 
 @pytest.mark.asyncio
@@ -380,11 +382,15 @@ async def test_unknown_spell_and_visual_effects(world):
     assert not await cast(world, 254)
     assert (await world.player.get_mana(1))[0] == 5000
     assert await cast(world)
-    world.senders[1].send_create_fx_at_position.assert_awaited_once()
+    for sender in world.senders.values():
+        sender.send_create_fx.assert_awaited_once_with(2, 15, 2)
+        sender.send_play_wave.assert_awaited_once_with(114, 51, 50)
     world.catalog.spells[2] = dict(world.catalog.spells[2], fx_grh=0)
-    world.senders[1].send_create_fx_at_position.reset_mock()
+    for sender in world.senders.values():
+        sender.send_create_fx.reset_mock()
     assert await cast(world)
-    world.senders[1].send_create_fx_at_position.assert_not_awaited()
+    for sender in world.senders.values():
+        sender.send_create_fx.assert_not_awaited()
 
 
 @pytest.mark.asyncio

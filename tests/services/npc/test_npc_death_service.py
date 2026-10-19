@@ -1,12 +1,26 @@
 """Tests para NPCDeathService."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from src.models.npc import NPC
 from src.models.player_stats import PlayerStats
 from src.services.npc.npc_death_service import NPCDeathService
+
+
+@pytest.fixture(autouse=True)
+def authoritative_progression():
+    """Aísla la liquidación de botín/party del progreso, probado con Redis en test_skill_training.
+
+    Yields:
+        Servicio externo de crecimiento para las pruebas de distribución.
+    """
+    with patch(
+        "src.services.player_progression.advance_player_level",
+        new=AsyncMock(return_value={"level": 1, "previous_level": 1, "points_gained": 0}),
+    ) as progress:
+        yield progress
 
 
 @pytest.mark.asyncio
@@ -49,6 +63,10 @@ class TestNPCDeathService:
         broadcast_service.broadcast_character_remove = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
@@ -134,6 +152,10 @@ class TestNPCDeathService:
         broadcast_service.broadcast_character_remove = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
@@ -230,6 +252,10 @@ class TestNPCDeathService:
         broadcast_service.broadcast_object_create = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
@@ -323,6 +349,10 @@ class TestNPCDeathService:
         broadcast_service.broadcast_object_create = AsyncMock()
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()
@@ -423,6 +453,10 @@ class TestNPCDeathService:
         item_catalog.get_item_name = MagicMock(return_value="Espada")
 
         message_sender = MagicMock()
+
+        message_sender.connection.capabilities.enabled = 0
+
+        message_sender.send_update_user_stats_from_repo = AsyncMock()
         message_sender.send_console_msg = AsyncMock()
         message_sender.send_update_exp = AsyncMock()
         message_sender.send_update_user_stats = AsyncMock()

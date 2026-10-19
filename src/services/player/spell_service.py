@@ -12,6 +12,7 @@ from src.constants.gameplay import MAX_PETS
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat.spell_plan import MAX_COORD, CastRequest, SpellPlan, commit_spell
 from src.services.combat.summon_plan import SummonPlan
+from src.services.player_progression import publish_progress
 from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
@@ -152,13 +153,16 @@ class SpellService:
                 plan.world_guard = lambda: (
                     (session_guard is None or session_guard())
                     and all(
-                        self.map_manager.can_move_to(pet.map_id, pet.x, pet.y)
-                        for pet in plan.spawned
+                        self.map_manager.can_move_to(
+                            plan.map_id, x, y, reservation=plan.reservation_id
+                        )
+                        for x, y in plan.positions
                     )
                 )
             self._plans[identity] = plan
             if len(self._plans) > MAX_CACHED_CASTS:
                 oldest = next(iter(self._plans))
+                self.map_manager.release_positions(oldest)
                 del self._plans[oldest]
                 self._published.discard(oldest)
                 self._publish_locks.pop(oldest, None)
@@ -180,11 +184,13 @@ class SpellService:
             logger.warning("Cast %s sin confirmar", identity)
             return False
         if not result["applied"]:
+            self.map_manager.release_positions(identity)
             await message_sender.send_console_msg(result["message"])
             return False
         async with self._publish_locks.setdefault(identity, asyncio.Lock()):
             if identity not in self._published:
                 await self._publish_committed(plan, result, message_sender)
+                self.map_manager.release_positions(identity)
                 self._published.add(identity)
         return True
 
@@ -208,29 +214,34 @@ class SpellService:
             if player_position and player_position["map"] == map_id:
                 occupied_players.add((player_position["x"], player_position["y"]))
         positions = []
-        if not spell.get("warps_pet"):
-            for dx, dy in (
-                (0, 0),
-                (-1, 0),
-                (1, 0),
-                (0, -1),
-                (0, 1),
-                (-1, -1),
-                (1, 1),
-                (-1, 1),
-                (1, -1),
+        center_x, center_y = request.x, request.y
+        if spell.get("warps_pet"):
+            owner = await self.player_repo.get_position(request.user_id)
+            if not pets or not owner:
+                return None
+            center_x, center_y = owner["x"], owner["y"]
+        for dx, dy in (
+            (0, 0),
+            (-1, 0),
+            (1, 0),
+            (0, -1),
+            (0, 1),
+            (-1, -1),
+            (1, 1),
+            (-1, 1),
+            (1, -1),
+        ):
+            x, y = center_x + dx, center_y + dy
+            if (
+                1 <= x <= MAX_COORD
+                and 1 <= y <= MAX_COORD
+                and (x, y) not in occupied_players
+                and self.map_manager.can_move_to(map_id, x, y)
+                and all((npc.x, npc.y) != (x, y) for npc in occupants)
             ):
-                x, y = request.x + dx, request.y + dy
-                if (
-                    1 <= x <= MAX_COORD
-                    and 1 <= y <= MAX_COORD
-                    and (x, y) not in occupied_players
-                    and self.map_manager.can_move_to(map_id, x, y)
-                    and all((npc.x, npc.y) != (x, y) for npc in occupants)
-                ):
-                    positions.append((x, y))
-            positions = positions[: max(0, count)]
-        elif not pets:
+                positions.append((x, y))
+        positions = positions[: 1 if spell.get("warps_pet") else max(0, count)]
+        if not positions:
             return None
         plan = SummonPlan(request, spell, PvpPolicy.configured())
         plan.prepare(
@@ -244,19 +255,32 @@ class SpellService:
             occupants,
             list(self.map_manager.get_players_in_map(map_id)),
         )
+        try:
+            self.map_manager.reserve_positions(identity, map_id, positions)
+        except ValueError:
+            return None
         return plan
 
-    async def _publish_committed(
+    async def _publish_committed(  # noqa: PLR0915 - publicación de un único recibo de magia
         self, plan: SpellPlan, result: dict[str, Any], sender: MessageSender
     ) -> None:
         """Publica estado confirmado y repara caché desde Redis, sin repetir efectos."""
         request, spell = plan.request, plan.spell
-        await sender.send_update_user_stats_from_repo(request.user_id, self.player_repo)
-        await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
+        await sender.sync_status(request.user_id, self.player_repo)
+        await publish_progress(self.player_repo, request.user_id, sender)
+        actors = []
+        if request.target_player:
+            actors.append((request.target_player, request.x, request.y))
+        elif request.target_npc:
+            target = await self.npc_repo.get_npc(request.target_npc)
+            if target:
+                actors.append((target.char_index, target.x, target.y))
         if result.get("pets"):
+            actors = []
             for pet_id in result["pets"]:
                 pet = await self.npc_repo.get_npc(pet_id)
                 if pet:
+                    actors.append((pet.char_index, pet.x, pet.y))
                     old_map = int(result.get("old_maps", {}).get(pet_id, pet.map_id))
                     if result.get("warped"):
                         self.map_manager.remove_npc(old_map, pet_id)
@@ -264,6 +288,10 @@ class SpellService:
                             await self.broadcast_service.broadcast_character_remove(
                                 old_map, pet.char_index
                             )
+                    if isinstance(plan, SummonPlan):
+                        self.map_manager.release_positions(
+                            plan.reservation_id, (pet.map_id, pet.x, pet.y)
+                        )
                     self.map_manager.add_npc(pet.map_id, pet)
                     if self.broadcast_service:
                         await self.broadcast_service.broadcast_character_create(
@@ -276,6 +304,8 @@ class SpellService:
                             y=pet.y,
                             name=pet.name,
                         )
+            await self._publish_spell_media(request.user_id, spell, actors, sender)
+            await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
             return
         if request.target_player:
             target_sender = self.map_manager.get_player_message_sender(request.target_player)
@@ -286,7 +316,7 @@ class SpellService:
                 await target_sender.sync_status(request.target_player, self.player_repo)
                 if spell.get("makes_invisible") or spell.get("removes_invisibility"):
                     await target_sender.send_set_invisible(
-                        request.target_player, invisible=bool(spell.get("removes_invisibility"))
+                        request.target_player, invisible=bool(spell.get("makes_invisible"))
                     )
                 if any(
                     spell.get(flag)
@@ -351,11 +381,28 @@ class SpellService:
                     await self.npc_death_service.handle_npc_death(
                         npc, request.user_id, npc.level * 10, sender, death_reason="hechizo"
                     )
-        fx = int(spell.get("fx_grh", 0))
-        if fx > 0:
-            await sender.send_create_fx_at_position(
-                request.x, request.y, fx, int(spell.get("loops", 1))
-            )
+        await self._publish_spell_media(request.user_id, spell, actors, sender)
+        await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
+
+    async def _publish_spell_media(
+        self,
+        user_id: int,
+        spell: dict[str, Any],
+        actors: list[tuple[int, int, int]],
+        sender: MessageSender,
+    ) -> None:
+        """Publica FX del actor real y sonido una vez por lanzamiento en su mapa."""
+        position = await self.player_repo.get_position(user_id)
+        if not position or not actors:
+            return
+        observers = self.map_manager.get_all_message_senders_in_map(position["map"]) or [sender]
+        fx, wave = int(spell.get("fx_grh", 0)), int(spell.get("wav", 0))
+        for observer in observers:
+            if fx > 0:
+                for char_index, _x, _y in actors:
+                    await observer.send_create_fx(char_index, fx, int(spell.get("loops", 0)))
+            if wave > 0:
+                await observer.send_play_wave(wave, actors[0][1], actors[0][2])
 
     async def _find_target(
         self,

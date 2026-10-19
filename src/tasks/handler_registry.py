@@ -161,11 +161,23 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     # Handlers de trabajo
     "work": HandlerConfig(
         WorkCommandHandler,
-        deps_keys=["player_repo", "inventory_repo", "map_resources_service"],
+        deps_keys=[
+            "player_repo",
+            "inventory_repo",
+            "map_resources_service",
+            "action_cadence",
+            "skill_actions",
+        ],
     ),
     "work_left_click": HandlerConfig(
         WorkLeftClickCommandHandler,
-        deps_keys=["player_repo", "inventory_repo", "map_resources_service"],
+        deps_keys=[
+            "player_repo",
+            "inventory_repo",
+            "map_resources_service",
+            "action_cadence",
+            "skill_actions",
+        ],
     ),
     # Handlers de banco
     "bank_deposit": HandlerConfig(
@@ -219,6 +231,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         UseItemCommandHandler,
         deps_keys=[
             "player_repo",
+            "skill_actions",
             "map_resources_service",
             "account_repo",
             "item_catalog",
@@ -245,6 +258,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         AttackCommandHandler,
         deps_keys=[
             "action_cadence",
+            "skill_actions",
             "player_repo",
             "combat_service",
             "map_manager",

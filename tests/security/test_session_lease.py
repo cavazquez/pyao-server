@@ -32,6 +32,8 @@ def login_handler(sender, session):
     handler = LoginCommandHandler(
         MagicMock(), MagicMock(), None, None, None, None, None, None, sender, session
     )
+    handler.player_repo.redis.hset = AsyncMock()
+    handler.player_repo.is_sailing = AsyncMock(return_value=False)
     handler.auth_handler.authenticate_user = AsyncMock(return_value=(41, 1))
     position = {"map": 1, "x": 50, "y": 50, "heading": 3}
     handler.init_handler.send_login_packets = AsyncMock(return_value=position)

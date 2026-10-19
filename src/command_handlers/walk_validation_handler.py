@@ -83,6 +83,7 @@ class WalkValidationHandler:
         if is_meditating:
             await self.player_repo.set_meditating(user_id, is_meditating=False)
             await self.message_sender.send_meditate_toggle()
+            await self.message_sender.send_create_fx(char_index=user_id, fx=0, loops=0)
             await self.message_sender.send_console_msg("Dejas de meditar al moverte.")
             logger.info("user_id %d dejó de meditar al moverse", user_id)
 

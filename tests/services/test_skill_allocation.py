@@ -46,7 +46,7 @@ async def test_two_concurrent_requests_cannot_overspend_and_replay_is_once(redis
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "changes",
-    [deltas(amount=-1), deltas(amount=9), deltas(2, 1), deltas(amount=100), deltas(amount=5)],
+    [deltas(amount=-1), deltas(amount=9), deltas(23, 1), deltas(amount=100), deltas(amount=5)],
 )
 async def test_invalid_budget_delta_pending_skill_or_overflow_has_no_partial_write(
     redis_client, changes
@@ -123,4 +123,8 @@ async def test_lost_exec_ack_recovers_without_double_spending(redis_client, afte
     ):
         assert (await allocate_skill_points(redis_client.redis, 1, identity, deltas()))["applied"]
         assert (await allocate_skill_points(redis_client.redis, 1, identity, deltas()))["applied"]
-    assert await redis_client.hgetall(key) == {"points": "3", "level:magia": "15"}
+    assert await redis_client.hgetall(key) == {
+        "points": "3",
+        "level:magia": "15",
+        "assigned_points": "5",
+    }

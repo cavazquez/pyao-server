@@ -138,6 +138,8 @@ class ServerInitializer:
             combat_service=services["combat_service"],
             commerce_service=services["commerce_service"],
             spell_service=services["spell_service"],
+            skill_actions=services["skill_actions"],
+            action_cadence=services["action_cadence"],
             player_death_service=services["player_death_service"],
             npc_service=services["npc_service"],
             npc_ai_service=services["npc_ai_service"],

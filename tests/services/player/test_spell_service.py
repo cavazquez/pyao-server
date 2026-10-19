@@ -111,7 +111,12 @@ def test_success_uses_catalog_cost_and_intelligence_bonus(planned_cast):
     result = plan.decide(snapshot)
     assert result.result["applied"]
     assert result.result["amount"] == 6
-    assert result.writes[RedisKeys.player_user_stats(1)] == {"min_mana": "90", "min_sta": "99"}
+    assert result.writes[RedisKeys.player_user_stats(1)] == {
+        "min_mana": "90",
+        "min_sta": "99",
+        "hidden_until": "0",
+        "meditating": "0",
+    }
     assert result.writes[RedisKeys.player_user_stats(2)]["min_hp"] == "94"
     assert snapshot[RedisKeys.player_user_stats(1)]["gold"] == "123"
 

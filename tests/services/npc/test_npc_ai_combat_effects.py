@@ -101,6 +101,8 @@ async def test_npc_attack_sends_damage_message(npc_ai_service, mock_services, te
 
     # Mock message_sender
     message_sender = MagicMock()
+    message_sender.connection.capabilities.enabled = 0
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
@@ -147,6 +149,10 @@ async def test_npc_attack_sends_sound_effect(npc_ai_service, mock_services, test
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
+
+    message_sender.connection.capabilities.enabled = 0
+
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
@@ -192,6 +198,10 @@ async def test_npc_attack_sends_visual_effect(npc_ai_service, mock_services, tes
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
+
+    message_sender.connection.capabilities.enabled = 0
+
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
@@ -240,6 +250,10 @@ async def test_npc_attack_no_effects_if_no_damage(npc_ai_service, mock_services,
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
+
+    message_sender.connection.capabilities.enabled = 0
+
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()
@@ -285,6 +299,10 @@ async def test_npc_attack_complete_sequence(npc_ai_service, mock_services, test_
     mock_services["player_repo"].get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
 
     message_sender = MagicMock()
+
+    message_sender.connection.capabilities.enabled = 0
+
+    message_sender.send_update_user_stats_from_repo = AsyncMock()
     message_sender.send_npc_hit_user = AsyncMock()
     message_sender.send_play_wave = AsyncMock()
     message_sender.send_create_fx = AsyncMock()

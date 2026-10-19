@@ -129,6 +129,7 @@ class CreateAccountCharacterHandler:
         )
 
         await self.player_repo.set_attributes(user_id=user_id, **final_attributes)
+        await self.player_repo.redis.hset(f"player:{user_id}:user_stats", "class_id", str(class_id))
         logger.info(
             "Atributos guardados en Redis para user_id %d (base=%s, final=%s)",
             user_id,
@@ -162,8 +163,8 @@ class CreateAccountCharacterHandler:
 
         # Aplicar skills iniciales por clase
         initial_skills = class_service.get_initial_skills(class_id)
+        await self.player_repo.set_skills(user_id=user_id, **initial_skills)
         if initial_skills:
-            await self.player_repo.set_skills(user_id=user_id, **initial_skills)
             logger.info(
                 "Skills iniciales asignadas para user_id %d (clase %s): %s",
                 user_id,

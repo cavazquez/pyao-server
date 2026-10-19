@@ -109,4 +109,5 @@ async def test_service_initializer_returns_dict(
         # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service,
         # +1 door_service, +1 trade_service, +1 summon_service, +1 random_spawn_service,
         # +1 player_death_service)
-        assert len(services) == 23
+        assert len(services) == 25
+        assert services["skill_actions"].cadence is services["action_cadence"]

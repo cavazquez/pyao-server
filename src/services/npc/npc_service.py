@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 from src.runtime_paths import data_dir
+from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
 MAX_CHARACTER_INDEX = 32767
@@ -95,7 +96,36 @@ class NPCService:
 
         # Limpiar NPCs existentes (reinicio limpio)
         logger.info("Limpiando NPCs existentes en Redis...")
-        await self.npc_repository.clear_all_npcs()
+        await self.npc_repository.clear_all_npcs(preserve_tamed=True)
+        for pet in await self.npc_repository.get_all_npcs():
+            if not pet.is_tamed or pet.hp <= 0:
+                continue
+            self._next_char_index = max(self._next_char_index, pet.char_index + 1)
+            if not self.map_manager.can_move_to(pet.map_id, pet.x, pet.y):
+                candidates = [
+                    (pet.x + dx, pet.y + dy)
+                    for radius in range(1, 4)
+                    for dx in range(-radius, radius + 1)
+                    for dy in range(-radius, radius + 1)
+                ]
+                destination = next(
+                    (
+                        (x, y)
+                        for x, y in candidates
+                        if self.map_manager.can_move_to(pet.map_id, x, y)
+                    ),
+                    None,
+                )
+                if destination is not None:
+                    pet.x, pet.y = destination
+                    await self.npc_repository.update_npc_position(
+                        pet.instance_id, pet.x, pet.y, pet.heading
+                    )
+            if self.map_manager.can_move_to(pet.map_id, pet.x, pet.y):
+                self.map_manager.add_npc(pet.map_id, pet)
+                await self.npc_repository.redis.sadd(
+                    RedisKeys.npc_map_index(pet.map_id), pet.instance_id
+                )
         logger.info("NPCs limpiados. Cargando nuevos spawns...")
 
         # Cargar configuración de spawns
@@ -292,6 +322,9 @@ class NPCService:
             attack_damage=cast("int", npc_data.get("ataque", 10)),
             attack_cooldown=cast("float", npc_data.get("cooldown_ataque", 3.0)),
             aggro_range=cast("int", npc_data.get("rango_agresion", 8)),
+            domable=int(
+                str(cast("dict[str, object]", npc_data.get("flags") or {}).get("domable", 0))
+            ),
             snd1=snd1,
             snd2=snd2,
             snd3=snd3,

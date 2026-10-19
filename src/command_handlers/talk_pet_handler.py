@@ -62,7 +62,9 @@ class TalkPetHandler:
         # Obtener todas las mascotas del jugador
         all_npcs = await self.npc_service.npc_repository.get_all_npcs()
         player_pets = [
-            npc for npc in all_npcs if npc.summoned_by_user_id == user_id and npc.summoned_until > 0
+            npc
+            for npc in all_npcs
+            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
         ]
 
         # Comando sin argumentos o con "INFO" - mostrar información

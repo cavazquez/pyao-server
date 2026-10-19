@@ -43,7 +43,9 @@ class SummonService:
         # Por ahora, iteramos todos los NPCs (puede optimizarse con un índice)
         all_npcs = await self.npc_repository.get_all_npcs()
         return sum(
-            1 for npc in all_npcs if npc.summoned_by_user_id == user_id and npc.summoned_until > 0
+            1
+            for npc in all_npcs
+            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
         )
 
     async def can_summon(self, user_id: int, count: int = 1) -> tuple[bool, str]:
@@ -82,7 +84,7 @@ class SummonService:
         return [
             npc.instance_id
             for npc in all_npcs
-            if npc.summoned_by_user_id == user_id and npc.summoned_until > 0
+            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
         ]
 
     async def register_pet(self, user_id: int, npc_instance_id: str) -> bool:

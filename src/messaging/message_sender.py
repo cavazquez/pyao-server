@@ -324,6 +324,7 @@ class MessageSender:
             nick_color: Color del nick (byte), por defecto 0.
             privileges: Privilegios del personaje (byte), por defecto 0.
         """
+        self.status_effects.invalidate_character(char_index)
         await self.character.send_character_create(
             char_index,
             body,
@@ -645,6 +646,7 @@ class MessageSender:
     async def send_meditate_toggle(self) -> None:
         """Envía paquete MEDITATE_TOGGLE para confirmar meditación."""
         await self.inventory.send_meditate_toggle()
+        self.status_effects.record_meditation_toggle()
 
     async def send_navigate_toggle(self) -> None:
         """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""

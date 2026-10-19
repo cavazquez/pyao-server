@@ -7,6 +7,7 @@ from uuid import NAMESPACE_URL, uuid5
 from src.constants.gameplay import MAX_PETS
 from src.models.npc import NPC
 from src.services.combat.spell_plan import SpellPlan
+from src.services.skill_training import trained_decision
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot
 
@@ -36,6 +37,8 @@ class SummonPlan(SpellPlan):
         self.players = players
         self.pets = pets
         self.map_id = map_id
+        self.positions = positions
+        self.reservation_id = identity
         self.spawned: list[NPC] = []
         template = catalog.get_npc_data(template_id) if catalog else None
         for index, ((x, y), char_index) in enumerate(
@@ -66,8 +69,11 @@ class SummonPlan(SpellPlan):
                 )
             )
         extra = [
-            Resource(RedisKeys.npc_instance(npc.instance_id), "hash")
-            for npc in pets + self.spawned + occupants
+            Resource(f"player:{self.request.user_id}:pets", "set"),
+            *(
+                Resource(RedisKeys.npc_instance(npc.instance_id), "hash")
+                for npc in pets + self.spawned + occupants
+            ),
         ]
         extra.extend(
             Resource(RedisKeys.npc_map_index(number), "set")
@@ -105,12 +111,44 @@ class SummonPlan(SpellPlan):
                 cast("dict[str, str]", snapshot[RedisKeys.npc_instance(pet.instance_id)])
             )
         ]
+        members = set(cast("set[str]", snapshot[f"player:{request.user_id}:pets"]))
+        if members - {pet.instance_id for pet in self.pets}:
+            return Decision(
+                {"applied": False, "message": "Tus mascotas cambiaron; vuelve a intentarlo."}, {}
+            )
         writes: dict[str, str | dict[str, str] | set[str]] = {}
         spawned: list[str] = []
         if self.spell.get("warps_pet"):
             if not pets:
                 return Decision({"applied": False, "message": "No tienes mascotas invocadas."}, {})
             pet = pets[0]
+            occupied = {
+                (int(row.get("x", -1)), int(row.get("y", -1)))
+                for row in (
+                    cast("dict[str, str]", snapshot[RedisKeys.player_position(player)])
+                    for player in self.players
+                )
+                if int(row.get("map", 0)) == self.map_id
+            }
+            occupied.update(
+                (int(row.get("x", -1)), int(row.get("y", -1)))
+                for row in (
+                    cast("dict[str, str]", snapshot[RedisKeys.npc_instance(npc.instance_id)])
+                    for npc in self.occupants
+                )
+                if int(row.get("map_id", 0)) == self.map_id
+            )
+            available = [
+                (x, y)
+                for x, y in self.positions
+                if (x, y) not in occupied
+                and max(abs(x - int(position["x"])), abs(y - int(position["y"]))) == 1
+            ]
+            if not available:
+                return Decision(
+                    {"applied": False, "message": "No hay una casilla libre junto al dueño."}, {}
+                )
+            x, y = available[0]
             source_key, target_key = (
                 RedisKeys.npc_map_index(pet.map_id),
                 RedisKeys.npc_map_index(self.map_id),
@@ -127,8 +165,8 @@ class SummonPlan(SpellPlan):
                     target_key: target_index,
                     RedisKeys.npc_instance(pet.instance_id): {
                         "map_id": str(self.map_id),
-                        "x": position["x"],
-                        "y": position["y"],
+                        "x": str(x),
+                        "y": str(y),
                         "heading": position.get("heading", "3"),
                     },
                 }
@@ -169,24 +207,35 @@ class SummonPlan(SpellPlan):
                 members.add(npc.instance_id)
                 spawned.append(npc.instance_id)
             writes[index_key] = members
+        writes[f"player:{request.user_id}:pets"] = {pet.instance_id for pet in pets} | set(spawned)
         writes[stats_key] = {
+            "hidden_until": "0",
+            "meditating": "0",
             "min_mana": str(int(stats.get("min_mana", 0)) - int(self.spell.get("mana_cost", 0))),
             "min_sta": str(int(stats.get("min_sta", 0)) - int(self.spell.get("stamina_cost", 3))),
         }
-        return Decision(
-            {
-                "applied": True,
-                "message": "Invocación confirmada.",
-                "pets": spawned,
-                "warped": bool(self.spell.get("warps_pet")),
-                "old_maps": {pet.instance_id: pet.map_id for pet in pets},
-            },
-            writes,
+        return trained_decision(
+            Decision(
+                {
+                    "applied": True,
+                    "message": "Invocación confirmada.",
+                    "pets": spawned,
+                    "warped": bool(self.spell.get("warps_pet")),
+                    "old_maps": {pet.instance_id: pet.map_id for pet in pets},
+                },
+                writes,
+            ),
+            snapshot,
+            request.user_id,
+            (("magia", True),),
         )
 
     def _active(self, npc: dict[str, str]) -> bool:
         return (
             int(npc.get("summoned_by_user_id", 0)) == self.request.user_id
-            and float(npc.get("summoned_until", 0)) > self.now
+            and (
+                float(npc.get("summoned_until", 0)) > self.now
+                or npc.get("is_tamed", "False").lower() == "true"
+            )
             and int(npc.get("hp", 0)) > 0
         )

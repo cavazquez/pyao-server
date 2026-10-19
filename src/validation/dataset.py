@@ -358,7 +358,7 @@ class DatasetValidator:
                     self.problem(entry, "materials", "Una receta requiere materiales")
                 for ingredient in ingredients:
                     self.integer(ingredient, "quantity", 1)
-                    if name == "carpentry":
+                    if name == "carpentry" or "item_id" in ingredient.data:
                         self.reference(ingredient, "item_id", self.items)
                     elif (
                         not isinstance(ingredient.data.get("item"), str)

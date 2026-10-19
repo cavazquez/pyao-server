@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.commerce_buy_command import CommerceBuyCommand
 from src.services.inventory_notifications import notify_inventory
+from src.services.player_progression import publish_progress
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -74,12 +75,13 @@ class CommerceBuyCommandHandler(CommandHandler):
             user_id, npc_id, slot, quantity, operation_id=command.operation_id
         )
 
-        await self.commerce_service.notify_merchant(self.message_sender, npc_id)
+        await self.commerce_service.notify_merchant(self.message_sender, npc_id, user_id)
 
         # Enviar mensaje de resultado
         await self.message_sender.send_console_msg(message)
 
         if success:
+            await publish_progress(self.player_repo, user_id, self.message_sender)
             # Actualizar oro del jugador
             await self._update_player_gold(user_id)
 

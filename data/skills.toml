@@ -1,0 +1,21 @@
+# AO 0.13.3: entrenamiento clásico, conservando las extensiones de ProyectoAO.
+version = 1
+xp_base = 200
+success_xp = 50
+failure_xp = 20
+character_xp = 50
+initial_assignment = 10
+natural_caps = [3, 5, 7, 10, 13, 15, 17, 20, 23, 25, 27, 30, 33, 35, 37, 40, 43, 45, 47, 50, 53, 55, 57, 60, 63, 65, 67, 70, 73, 75, 77, 80, 83, 85, 87, 90, 93, 95, 97, 100]
+manual_only = ["liderazgo", "navegacion", "robustez", "agilidad"]
+hide_max_seconds = 60
+campfire_seconds = 120
+leadership_party_score = 100
+leadership_clan_required = 90
+# Política propia: las doce clases pueden equipar. No se activan las
+# ClasesProhibidas del dataset VB6 ni se pierden las habilidades adicionales.
+playable_classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+robustness_max_mitigation = 0.10
+agility_max_evasion = 0.10
+
+[hiding_duration_modifiers]
+"8" = 0.5 # Bandido, duración reducida de AO 0.13.3.

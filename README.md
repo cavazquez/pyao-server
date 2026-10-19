@@ -173,13 +173,21 @@ pyao-server/
 │   ├── network/              # Protocolo y conexiones
 │   ├── tasks/                # Parsing y despacho
 │   ├── command_handlers/     # Ejecución de comandos
-│   ├── services/             # Reglas de juego; scroll_learning confirma pergamino y libro; combat/pvp_policy, spell_plan y player/lifecycle confirman magia y vidas
+│   ├── services/             # Reglas y commits de juego
+│   │   ├── skill_training.py # Entrenamiento natural, topes y XP general en el commit de la acción
+│   │   ├── player_progression.py # Crecimiento y puntos por nivel con watermark persistente
+│   │   ├── skill_action_service.py # Acciones compartidas por comandos clásicos y RPC negociado
+│   │   ├── gathering.py, crafting.py, meditation.py # Recolección, recetas y recuperación
+│   │   ├── personal_skills.py, navigation.py # Robo, ocultamiento, fogatas, doma y barcos
+│   │   ├── combat/           # PvP, planes físicos, magia e invocaciones con recibos
+│   │   ├── map/map_workshops.py # Talleres reales de .inf, terreno y gráficos para el cliente
+│   │   └── player/lifecycle.py # Generaciones vitales y liquidación de muertes
 │   ├── repositories/         # Persistencia
 │   ├── operations/           # Redis, smoke y distribution: validación y ensamblado de releases
-│   ├── models/               # Entidades y catálogos; city_data_loader.py carga los seis spawns
+│   ├── models/               # Entidades y loaders de ciudades, reglas y recetas a Redis
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
-├── data/                     # Dataset propio versionado
+├── data/                     # Dataset propio versionado; skills.toml y crafting/*.toml
 ├── config/                   # Configuración de ejemplo
 ├── docs/
 │   ├── development/
@@ -308,6 +316,41 @@ if not validation_result.success:
 ```
 
 ### Integración con Redis
+
+Las 22 habilidades separan nivel, XP acumulada y porcentaje de entrenamiento.
+Las 18 habilidades clásicas entrenables conceden 50 XP por éxito y 20 por fallo
+válido, respetan el tope natural por nivel y requieren haber asignado los diez
+puntos iniciales y no sufrir hambre/sed. Mejorar una habilidad concede 50 XP
+general. Liderazgo, Navegación, Robustez y Agilidad se asignan manualmente.
+Los puntos de nivel mejoran habilidades; los cinco atributos proceden de la
+creación, raza y clase, además de sus modificadores temporales.
+
+Se conservan las doce clases y su política propia de equipamiento. Robustez
+reduce hasta un 10% el daño físico y Agilidad (habilidad) agrega hasta diez puntos
+porcentuales de evasión; el atributo Agilidad y los críticos propios conservan
+su función. Los requisitos de Liderazgo vienen de `data/skills.toml`: Carisma
+por Liderazgo para parties, y Liderazgo mínimo para crear clanes. Las reglas de
+navegación consideran barco, clase y Pesca experta del Trabajador.
+
+Recolección, fabricación, comercio y combate confirman costes, resultado y
+entrenamiento en la misma transacción Redis. Los reintentos conservan identidad
+y recibo. El cliente negocia acciones mediante capacidad 256, pedido 251 y
+respuesta 255; los comandos clásicos comparten el servicio y la cadencia.
+Las recetas usan IDs reales: 26 armas, 61 armaduras y 34 recetas propias de
+carpintería, más fundición de los tres minerales. Materiales apilables admiten
+hasta 10.000 por stack para poder pagar los costes del catálogo. El cliente
+permite consultar recetas, cantidades, materiales y rechazos del servidor.
+
+Los 11 yunques y 9 fraguas originales se importan de los objetos `.inf`, mediante
+`tools/extraction/extract_map_workshops.py`, a `data/world/map_workshops.toml`.
+Se añaden después de cargar la caché de mapas para reparar instalaciones
+existentes; el login y las transiciones envían su gráfico y bloqueo al cliente.
+Las reglas, diferencias propias y validación están en
+[MECANICAS_AO.md](docs/development/MECANICAS_AO.md).
+
+La actualización requiere [migrar Redis a esquema v4](docs/guides/REDIS.md#esquema-y-migraciones)
+con backup verificado. No publicar un cliente actualizado sin el servidor
+correspondiente y la misma versión.
 
 Redis se utiliza para:
 

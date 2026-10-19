@@ -50,6 +50,8 @@ def mock_redis_client() -> MagicMock:
 def mock_message_sender() -> MagicMock:
     """Mock de MessageSender."""
     sender = MagicMock()
+    sender.connection.capabilities.enabled = 0
+    sender.send_update_user_stats_from_repo = AsyncMock()
     sender.send_console_msg = AsyncMock()
     sender.send_update_gold = AsyncMock()
     sender.send_change_inventory_slot = AsyncMock()
