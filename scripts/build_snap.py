@@ -29,6 +29,7 @@ def main() -> None:
         "dirty": False,
         "architecture": args.arch,
         "snapcraft": "9.1.4",
+        "snapcraft_revision": {"amd64": 19274, "arm64": 19281}[args.arch],
         "uv": "0.13.1",
         "uv_lock_sha256": hashlib.sha256((ROOT / "uv.lock").read_bytes()).hexdigest(),
     }

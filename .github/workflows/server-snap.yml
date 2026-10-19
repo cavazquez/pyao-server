@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {arch: amd64, runner: ubuntu-24.04}
-          - {arch: arm64, runner: ubuntu-24.04-arm}
+          - {arch: amd64, runner: ubuntu-24.04, snapcraft_revision: 19274}
+          - {arch: arm64, runner: ubuntu-24.04-arm, snapcraft_revision: 19281}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 35
     steps:
@@ -32,9 +32,9 @@ jobs:
       - name: Instalar Snapcraft fijado
         run: |
           if snap list snapcraft >/dev/null 2>&1; then
-            sudo snap refresh snapcraft --revision=19274
+            sudo snap refresh snapcraft --revision='${{ matrix.snapcraft_revision }}'
           else
-            sudo snap install snapcraft --classic --revision=19274
+            sudo snap install snapcraft --classic --revision='${{ matrix.snapcraft_revision }}'
           fi
       - name: Compilar con uv.lock y registrar hashes
         run: |

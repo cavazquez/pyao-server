@@ -6,7 +6,8 @@ no instala ni migra una partida de producción.
 
 ## Construcción y validación
 
-Desde un commit limpio, con Snapcraft 9.1.4 (revisión 19274) y LXD:
+Desde un commit limpio, con Snapcraft 9.1.4 (revisión 19274 en amd64,
+19281 en arm64) y LXD:
 
 ```bash
 python3 scripts/build_snap.py --arch amd64
