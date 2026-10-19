@@ -30,11 +30,9 @@ class ConsoleMessageSender:
             font_color: Color de la fuente (0-15). Por defecto 7 (gris claro).
         """
         response = build_console_msg_response(message, font_color)
-        max_log_length = 50
         logger.debug(
-            "[%s] Enviando CONSOLE_MSG: %s (color=%d)",
+            "[%s] Enviando CONSOLE_MSG (color=%d)",
             self.connection.address,
-            message[:max_log_length] + "..." if len(message) > max_log_length else message,
             font_color,
         )
         await self.connection.send(response)
@@ -60,5 +58,5 @@ class ConsoleMessageSender:
             error_message: Mensaje de error a enviar.
         """
         response = build_error_msg_response(error_message)
-        logger.info("[%s] Enviando ERROR_MSG: %s", self.connection.address, error_message)
+        logger.info("[%s] Enviando ERROR_MSG", self.connection.address)
         await self.connection.send(response)
