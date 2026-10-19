@@ -1,20 +1,25 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
 version: 2
 updates:
-  # Tu configuración existente para "uv"
-  - package-ecosystem: "uv"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "cron"
-      # Sábados 01:00 UTC solo en diciembre (campo mes = 12)
-      cronjob: "0 1 * 12 6"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      interval: weekly
+      day: monday
+      time: "10:00"
+      timezone: America/Argentina/Buenos_Aires
+    open-pull-requests-limit: 10
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: uv
+    directory: /
     schedule:
-      interval: "cron"
-      # 1 y 15 de diciembre 01:00 UTC (dos pasadas al año, solo en diciembre)
-      cronjob: "0 1 1,15 12 *"
+      interval: weekly
+      day: monday
+      time: "10:00"
+      timezone: America/Argentina/Buenos_Aires
+    open-pull-requests-limit: 20
+    groups:
+      development:
+        dependency-type: development
+        update-types: [minor, patch]
