@@ -112,20 +112,9 @@ jobs:
   
   snap:
     needs: test
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/server-snap.yml
     permissions:
       contents: read
-    
-    steps:
-    - uses: actions/checkout@v6
-    
-    - name: Install Snapcraft
-      run: sudo snap install snapcraft --classic
-    
-    - name: Build for amd64 + arm64 via Launchpad
-      env:
-        SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-      run: snapcraft remote-build --launchpad-accept-public-upload
 
   release:
     needs: build

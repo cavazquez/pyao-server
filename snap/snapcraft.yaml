@@ -1,89 +1,80 @@
 name: pyao
 base: core26
-build-base: devel
 summary: Servidor de Argentum Online en Python
 description: |
-  PyAO es un servidor de juego de rol multijugador online (MMORPG)
-  implementado en Python 3.14+. Compatible con clientes de Argentum Online.
-
-  Requiere Redis. Instala el snap de Redis o apunta a una instancia externa
-  mediante la variable de entorno REDIS_HOST.
-
-  Variables de entorno principales:
-    SERVER_HOST      (default: 0.0.0.0)
-    SERVER_PORT      (default: 7666)
-    REDIS_HOST       (default: localhost)
-    REDIS_PORT       (default: 6379)
-    REDIS_DB         (default: 0)
-
-  Los datos del juego (mapas, items, NPCs, etc.) se copian automáticamente
-  a $SNAP_COMMON la primera vez que se ejecuta el servidor.
-
+  Servidor de ProyectoAO con Python 3.14 y los recursos completos del juego.
+  Requiere Redis con autenticación y persistencia AOF. Configure el endpoint
+  con PYAO_REDIS__HOST, PYAO_REDIS__PORT y PYAO_REDIS__PASSWORD_FILE.
+  La configuración y los respaldos permanecen en SNAP_USER_COMMON.
+  Las partidas se conservan en Redis; sus migraciones requieren respaldo
+  verificado y una orden explícita del operador con el servidor detenido.
+license: Apache-2.0
 grade: devel
 confinement: strict
-adopt-info: snap-version
-architectures:
-  - amd64
-  - arm64
+adopt-info: pyao
+platforms:
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
+  arm64:
+    build-on: [arm64]
+    build-for: [arm64]
 
 apps:
   pyao-server:
     command: bin/wrapper
-    plugs:
-      - network
-      - network-bind
+    plugs: [network, network-bind]
 
 parts:
-  pyao:
-    plugin: python
-    source: .
-    build-packages:
-      - gcc
-      - libffi-dev
-      - libssl-dev
-      - python3-dev
-    stage-packages:
-      - libffi8
-      - libssl3
-      - python3
-      - python3-venv
-    stage:
-      - -usr/lib/x86_64-linux-gnu/libBrokenLocale*
-      - -usr/lib/x86_64-linux-gnu/libanl*
-      - -usr/lib/x86_64-linux-gnu/libc_malloc_debug*
-      - -usr/lib/x86_64-linux-gnu/libexpatw*
-      - -usr/lib/x86_64-linux-gnu/libformw*
-      - -usr/lib/x86_64-linux-gnu/libhistory*
-      - -usr/lib/x86_64-linux-gnu/libmemusage*
-      - -usr/lib/x86_64-linux-gnu/libmenuw*
-      - -usr/lib/x86_64-linux-gnu/libmvec*
-      - -usr/lib/x86_64-linux-gnu/libnsl*
-      - -usr/lib/x86_64-linux-gnu/libnss_*
-      - -usr/lib/x86_64-linux-gnu/libpcprofile*
-      - -usr/lib/x86_64-linux-gnu/libthread_db*
-      - -usr/lib/x86_64-linux-gnu/libtic.*
-      - -usr/lib/x86_64-linux-gnu/libutil*
-
-  game-data:
+  python-runtime:
     plugin: nil
-    source: .
+    stage-packages:
+      - libpython3.14-minimal
+      - libpython3.14-stdlib
+      - python3-minimal
+      - python3.14-minimal
+      - python3.14-venv
+
+  uv-deps:
+    plugin: nil
+    build-packages: [curl, ca-certificates]
     override-build: |
-      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/data"
-      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data"
-      mkdir -p "${SNAPCRAFT_PART_INSTALL}/share/pyao/config"
-      cp -r "${SNAPCRAFT_PART_SRC}/data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/data/"
-      cp -r "${SNAPCRAFT_PART_SRC}/map_data/." "${SNAPCRAFT_PART_INSTALL}/share/pyao/map_data/"
-      cp "${SNAPCRAFT_PART_SRC}/config/server.toml" "${SNAPCRAFT_PART_INSTALL}/share/pyao/config/server.toml"
+      set -eu
+      case "$CRAFT_ARCH_BUILD_FOR" in
+        amd64)
+          target=x86_64-unknown-linux-gnu
+          digest=eadd9d27c134ab5ac1ffd4473b97a741407f3ea238288f03121fc4deddf90220
+          ;;
+        arm64)
+          target=aarch64-unknown-linux-gnu
+          digest=9041c73c99fdc5892cf128140beb354eca9231d502068cc36e6cb53a8e59ad14
+          ;;
+        *) exit 1 ;;
+      esac
+      curl --fail --location --retry 3 --output uv.tar.gz "https://github.com/astral-sh/uv/releases/download/0.13.1/uv-$target.tar.gz"
+      printf '%s  uv.tar.gz\n' "$digest" | sha256sum --check
+      tar -xzf uv.tar.gz --strip-components=1
+      install -Dm755 uv "$CRAFT_PART_INSTALL/bin/uv"
+    stage: [bin/uv]
+    prime: ['-*']
+
+  pyao:
+    after: [python-runtime, uv-deps]
+    plugin: uv
+    source: .
+    build-packages: [gcc, libffi-dev, libssl-dev]
+    override-build: |
+      set -eu
+      craftctl default
+      install -Dm644 "$CRAFT_PROJECT_DIR/snap/pyao-source.json" "$CRAFT_PART_INSTALL/share/doc/pyao/provenance.json"
+      install -Dm644 LICENSE "$CRAFT_PART_INSTALL/share/doc/pyao/LICENSE"
+      install -Dm644 docs/guides/REDIS.md "$CRAFT_PART_INSTALL/share/doc/pyao/REDIS.md"
+      install -Dm644 docs/guides/SNAP.md "$CRAFT_PART_INSTALL/share/doc/pyao/SNAP.md"
+      version=$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')
+      craftctl set version="$version"
 
   wrapper:
     plugin: dump
     source: snap/local/
     organize:
       wrapper: bin/wrapper
-
-  snap-version:
-    plugin: nil
-    source: .
-    override-pull: |
-      VERSION=$(grep '^version' pyproject.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
-      craftctl set version="$VERSION"

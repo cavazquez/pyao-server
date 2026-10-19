@@ -217,6 +217,7 @@ map_binary/
 
 # Snap
 *.snap
+snap/pyao-source.json
 parts/
 prime/
 stage/

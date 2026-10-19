@@ -194,13 +194,17 @@ pyao-server/
 │   │   ├── ALCANCE_1_0.md    # Requisitos, issues y pruebas de servidor/cliente
 │   │   └── ESTADO_ACTUAL.md  # Versiones y bloqueos observados
 │   ├── todo/                # Acceso al roadmap y backlog
-│   ├── guides/              # Configuración y operación
+│   ├── guides/              # Configuración y operación; SNAP.md para publicación instalada
 │   ├── architecture/        # Diseño
 │   ├── systems/             # Sistemas de juego
 │   └── archive/             # Histórico
 ├── tools/                    # Herramientas de datos
-├── scripts/checks.sh         # Verificaciones del proyecto
-├── .github/workflows/        # CI y releases
+├── scripts/
+│   ├── checks.sh            # Verificaciones del proyecto
+│   ├── build_snap.py        # Build Snap limpio, uv fijado y procedencia
+│   └── smoke_installed_snap.py # TLS y reinicio del paquete instalado con Redis descartable
+├── snap/                    # Receta core26 amd64/arm64 y wrapper sin catálogos obsoletos
+├── .github/workflows/        # CI, releases y server-snap.yml con instalación real
 ├── pyproject.toml            # Metadatos, dependencias y herramientas
 ├── uv.lock                   # Lock de dependencias
 └── README.md
@@ -575,3 +579,5 @@ El wheel incluye el dataset TOML, configuración por defecto y archive de mapas 
 El cierre por SIGTERM/SIGINT deja de aceptar conexiones, despierta lectores ociosos y concede `server.shutdown_drain_seconds` a los handlers activos. Luego cancela los restantes, drena o descarta salida acotada, libera sesiones/mascotas y cierra trades y tareas de muerte antes de Redis. `server.shutdown_timeout_seconds` limita el cierre completo (20 s por defecto, 5 s de drenaje). `stop()` es compartido e idempotente. Un commit de resultado incierto conserva su recibo/journal y su identificador; el cierre no aplica compensaciones que puedan duplicar recursos.
 
 El candidato de la versión 1.0 se identifica como `1.0.0rc1` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.
+
+El [Snap del servidor `pyao`](docs/guides/SNAP.md) incluye Python 3.14, instala las dependencias con uv desde el lock y usa recursos del wheel actual. CI prueba el paquete instalado con TLS y Redis descartable en amd64 y arm64. La publicación en `latest/edge` y la migración explícita de partidas se verifican por separado.
