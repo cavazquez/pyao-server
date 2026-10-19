@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 CAPABILITIES_VERSION = 1
-NEGOTIATION_WINDOW_SECONDS = 10.0
+NEGOTIATION_WINDOW_SECONDS = 30.0
 
 
 class Capability(IntFlag):

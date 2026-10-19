@@ -40,9 +40,27 @@ def test_only_requested_supported_bits_are_enabled_after_authentication() -> Non
     state.clear()
     assert state.enabled == 0
     state.after_login()
-    now[0] += 11
+    now[0] += 31
     assert state.negotiate(1, 255) is None
     assert state.enabled == 0
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("elapsed", [12, 29, 31])
+async def test_slow_login_keeps_opt_in_bounded_and_authenticated(elapsed) -> None:
+    """Una carga lenta conserva negociación, sin aceptar solicitudes fuera del plazo."""
+    now = [100.0]
+    peer = connection()
+    peer.capabilities.clock = lambda: now[0]
+    peer.mark_authenticated()
+    now[0] += elapsed
+    await TaskCapabilities(struct.pack("<BBi", 250, 1, 3), MagicMock(connection=peer)).execute()
+    await peer.flush()
+    expected = struct.pack("<BBi", 250, 1, 3) if elapsed < 30 else b""
+    assert b"".join(call.args[0] for call in peer.writer.write.call_args_list) == expected
+    assert peer.capabilities.enabled == (3 if elapsed < 30 else 0)
+    peer.close()
+    await peer.wait_closed()
 
 
 @pytest.mark.asyncio
