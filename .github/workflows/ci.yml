@@ -229,10 +229,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "22"
+          node-version: "24"
       - name: Verify Markdown links (entry points)
         run: |
-          npm install -g markdown-link-check@3.12.2
+          npm ci --ignore-scripts --prefix .github/link-check
+          npm audit --audit-level=high --prefix .github/link-check
           for f in README.md Claude.md docs/README.md; do
-            markdown-link-check -q -c .markdown-link-check.json "$f"
+            .github/link-check/node_modules/.bin/markdown-link-check -q -c .markdown-link-check.json "$f"
           done
