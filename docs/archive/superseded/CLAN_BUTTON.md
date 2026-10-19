@@ -131,7 +131,7 @@ En `src/command_handlers/login_handler.py`, agregar `clan_service` al constructo
 
 ```python
 # En el constructor, agregar:
-clan_service: "ClanService | None" = None,
+clan_service: "ClanService | None" = (None,)
 
 # Y guardar:
 self.clan_service = clan_service
@@ -157,7 +157,7 @@ if self.clan_service:
 En `src/tasks/task_factory.py`, en `_get_login_handler()`, agregar `clan_service`:
 
 ```python
-clan_service=self.deps.clan_service,
+clan_service = (self.deps.clan_service,)
 ```
 
 ### Paso 3: Verificar

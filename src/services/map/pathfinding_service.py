@@ -63,7 +63,7 @@ class PathfindingService:
         path = self._astar(map_id, start_x, start_y, target_x, target_y, max_depth)
 
         # Si no hay camino, retornar None
-        if not path or len(path) < 2:  # noqa: PLR2004
+        if not path or len(path) < 2:  # ruff: ignore[magic-value-comparison]
             return None
 
         # Retornar el primer paso de la ruta (después del punto inicial)

@@ -89,8 +89,8 @@ El sistema de comercio permite a los jugadores:
 **Formato:**
 ```python
 packet_id: u8 = 26  # LEFT_CLICK
-x: u8               # Posición X del NPC
-y: u8               # Posición Y del NPC
+x: u8  # Posición X del NPC
+y: u8  # Posición Y del NPC
 ```
 
 **Ejemplo (GDScript):**
@@ -109,8 +109,8 @@ static func WriteLeftClick(x:int, y:int) -> void:
 **Formato:**
 ```python
 packet_id: u8 = 40  # COMMERCE_BUY
-slot: u8            # Slot del inventario del mercader (1-based)
-quantity: u16       # Cantidad a comprar
+slot: u8  # Slot del inventario del mercader (1-based)
+quantity: u16  # Cantidad a comprar
 ```
 
 **Ejemplo (GDScript):**
@@ -129,8 +129,8 @@ static func WriteCommerceBuy(slot:int, quantity:int) -> void:
 **Formato:**
 ```python
 packet_id: u8 = 42  # COMMERCE_SELL
-slot: u8            # Slot del inventario del jugador (1-based)
-quantity: u16       # Cantidad a vender
+slot: u8  # Slot del inventario del jugador (1-based)
+quantity: u16  # Cantidad a vender
 ```
 
 **Ejemplo (GDScript):**
@@ -166,23 +166,23 @@ static func WriteCommerceEnd() -> void:
 
 **Formato:**
 ```python
-packet_id: u8 = 7           # COMMERCE_INIT
-npc_id: u16                 # ID del NPC mercader
-num_items: u8               # Número de items en inventario del mercader
+packet_id: u8 = 7  # COMMERCE_INIT
+npc_id: u16  # ID del NPC mercader
+num_items: u8  # Número de items en inventario del mercader
 
 # Por cada item:
 for i in range(num_items):
-    slot: u8                # Número de slot (1-20)
-    item_id: u16            # ID del item
-    name: unicode_string    # Nombre del item
-    quantity: u16           # Cantidad disponible
-    price: u32              # Precio de venta (oro)
-    grh_index: u16          # Índice gráfico
-    obj_type: u8            # Tipo de objeto
-    max_hit: u16            # Daño máximo (armas)
-    min_hit: u16            # Daño mínimo (armas)
-    max_def: u16            # Defensa máxima (armaduras)
-    min_def: u16            # Defensa mínima (armaduras)
+    slot: u8  # Número de slot (1-20)
+    item_id: u16  # ID del item
+    name: unicode_string  # Nombre del item
+    quantity: u16  # Cantidad disponible
+    price: u32  # Precio de venta (oro)
+    grh_index: u16  # Índice gráfico
+    obj_type: u8  # Tipo de objeto
+    max_hit: u16  # Daño máximo (armas)
+    min_hit: u16  # Daño mínimo (armas)
+    max_def: u16  # Defensa máxima (armaduras)
+    min_def: u16  # Defensa mínima (armaduras)
 ```
 
 ---
@@ -202,19 +202,19 @@ packet_id: u8 = 5  # COMMERCE_END
 
 **Formato:**
 ```python
-packet_id: u8 = 47          # CHANGE_INVENTORY_SLOT
-slot: u8                    # Número de slot (1-20)
-item_id: u16                # ID del item (0 si está vacío)
-name: unicode_string        # Nombre del item
-quantity: u16               # Cantidad
-grh_index: u16              # Índice gráfico
-obj_type: u8                # Tipo de objeto
-equipped: u8                # 1 si está equipado, 0 si no
-max_hit: u16                # Daño máximo (armas)
-min_hit: u16                # Daño mínimo (armas)
-max_def: u16                # Defensa máxima (armaduras)
-min_def: u16                # Defensa mínima (armaduras)
-sale_price: u32             # Precio de venta
+packet_id: u8 = 47  # CHANGE_INVENTORY_SLOT
+slot: u8  # Número de slot (1-20)
+item_id: u16  # ID del item (0 si está vacío)
+name: unicode_string  # Nombre del item
+quantity: u16  # Cantidad
+grh_index: u16  # Índice gráfico
+obj_type: u8  # Tipo de objeto
+equipped: u8  # 1 si está equipado, 0 si no
+max_hit: u16  # Daño máximo (armas)
+min_hit: u16  # Daño mínimo (armas)
+max_def: u16  # Defensa máxima (armaduras)
+min_def: u16  # Defensa mínima (armaduras)
+sale_price: u32  # Precio de venta
 ```
 
 ---
@@ -225,7 +225,7 @@ sale_price: u32             # Precio de venta
 **Formato:**
 ```python
 packet_id: u8 = 18  # UPDATE_GOLD
-gold: u32           # Cantidad de oro actual
+gold: u32  # Cantidad de oro actual
 ```
 
 ---
@@ -235,9 +235,9 @@ gold: u32           # Cantidad de oro actual
 
 **Formato:**
 ```python
-packet_id: u8 = 24          # CONSOLE_MSG
-message: unicode_string     # Mensaje a mostrar
-font_index: u8              # Índice de fuente (color)
+packet_id: u8 = 24  # CONSOLE_MSG
+message: unicode_string  # Mensaje a mostrar
+font_index: u8  # Índice de fuente (color)
 ```
 
 ---

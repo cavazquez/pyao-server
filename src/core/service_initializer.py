@@ -53,7 +53,7 @@ class ServiceInitializer:
         self.repositories = repositories
         self.map_manager = map_manager
 
-    async def initialize_all(self) -> dict[str, Any]:  # noqa: PLR0914, PLR0915
+    async def initialize_all(self) -> dict[str, Any]:  # ruff: ignore[too-many-locals, too-many-statements]
         """Crea e inicializa todos los servicios.
 
         Returns:

@@ -122,10 +122,10 @@ async def test_handle_error_handling(
 @pytest.mark.asyncio
 async def test_negotiated_skills_send_catalog_and_authoritative_budget(redis_client) -> None:
     """El catálogo sólo reemplaza legacy para una conexión que solicitó su bit."""
-    from src.network.capabilities import Capability  # noqa: PLC0415
-    from src.network.packet_framer import packet_length  # noqa: PLC0415
-    from src.repositories.player_repository import PlayerRepository  # noqa: PLC0415
-    from src.utils.redis_config import RedisKeys  # noqa: PLC0415
+    from src.network.capabilities import Capability  # ruff: ignore[import-outside-top-level]
+    from src.network.packet_framer import packet_length  # ruff: ignore[import-outside-top-level]
+    from src.repositories.player_repository import PlayerRepository  # ruff: ignore[import-outside-top-level]
+    from src.utils.redis_config import RedisKeys  # ruff: ignore[import-outside-top-level]
 
     repository = PlayerRepository(redis_client)
     await repository.set_skills(123, magia=10)

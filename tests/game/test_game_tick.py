@@ -61,7 +61,7 @@ def game_tick(mock_player_repo: AsyncMock, mock_map_manager: MagicMock) -> GameT
 @pytest.mark.asyncio
 async def test_gold_decay_effect_reduces_gold(
     mock_player_repo: AsyncMock,
-    mock_map_manager: MagicMock,  # noqa: ARG001
+    mock_map_manager: MagicMock,  # ruff: ignore[unused-function-argument]
 ) -> None:
     """Test que verifica la reducción de oro (1%)."""
     user_id = 1
@@ -105,7 +105,7 @@ async def test_gold_decay_effect_reduces_gold(
 @pytest.mark.asyncio
 async def test_gold_decay_effect_no_gold(
     mock_player_repo: AsyncMock,
-    mock_map_manager: MagicMock,  # noqa: ARG001
+    mock_map_manager: MagicMock,  # ruff: ignore[unused-function-argument]
 ) -> None:
     """Test que verifica que no se reduce oro si el jugador no tiene."""
     user_id = 1
@@ -129,7 +129,7 @@ async def test_gold_decay_effect_no_gold(
 @pytest.mark.asyncio
 async def test_hunger_thirst_effect_reduces_water(
     mock_player_repo: AsyncMock,
-    mock_map_manager: MagicMock,  # noqa: ARG001
+    mock_map_manager: MagicMock,  # ruff: ignore[unused-function-argument]
 ) -> None:
     """Test que verifica la reducción de agua."""
     user_id = 1
@@ -246,7 +246,7 @@ async def test_game_tick_start_and_stop(
 @pytest.mark.asyncio
 async def test_gold_decay_custom_percentage(
     mock_player_repo: AsyncMock,
-    mock_map_manager: MagicMock,  # noqa: ARG001
+    mock_map_manager: MagicMock,  # ruff: ignore[unused-function-argument]
 ) -> None:
     """Test que verifica reducción de oro con porcentaje personalizado."""
     user_id = 1
@@ -285,7 +285,7 @@ async def test_gold_decay_custom_percentage(
 @pytest.mark.asyncio
 async def test_hunger_thirst_flags_activated(
     mock_player_repo: AsyncMock,
-    mock_map_manager: MagicMock,  # noqa: ARG001
+    mock_map_manager: MagicMock,  # ruff: ignore[unused-function-argument]
 ) -> None:
     """Test que verifica que los flags se activan cuando llegan a 0."""
     user_id = 1

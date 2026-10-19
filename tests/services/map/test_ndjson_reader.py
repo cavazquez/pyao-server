@@ -1,5 +1,5 @@
 """Tests para ndjson_reader."""
-# ruff: noqa: D103
+# ruff: file-ignore[undocumented-public-function]
 
 import json
 from pathlib import Path

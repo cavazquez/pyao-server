@@ -26,8 +26,8 @@ if TYPE_CHECKING:
     from src.config.game_config import RedisConfig
 
 USERNAME = "PwdSmoke"
-OLD_PASSWORD = "Synthetic-Old-P127"  # noqa: S105 - sólo cuenta sintética del contenedor propio.
-NEW_PASSWORD = "Synthetic-New-P127"  # noqa: S105 - sólo cuenta sintética del contenedor propio.
+OLD_PASSWORD = "Synthetic-Old-P127"  # ruff: ignore[hardcoded-password-string] - sólo cuenta sintética del contenedor propio.
+NEW_PASSWORD = "Synthetic-New-P127"  # ruff: ignore[hardcoded-password-string] - sólo cuenta sintética del contenedor propio.
 RESULT_ID = 253
 CAPABILITIES_ID = 250
 CHANGE_ID = 107

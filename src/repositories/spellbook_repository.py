@@ -52,7 +52,7 @@ class SpellbookRepository:
         Returns:
             True si se agregó correctamente, False en caso contrario.
         """
-        if not 1 <= slot <= 35:  # noqa: PLR2004
+        if not 1 <= slot <= 35:  # ruff: ignore[magic-value-comparison]
             logger.warning("Slot inválido: %d (debe estar entre 1 y 35)", slot)
             return False
 
@@ -266,7 +266,7 @@ class SpellbookRepository:
         else:
             return True
 
-    async def initialize_default_spells(  # noqa: PLR0915
+    async def initialize_default_spells(  # ruff: ignore[too-many-statements]
         self, user_id: int, spell_catalog: SpellCatalog | None = None
     ) -> bool:
         """Inicializa el libro de hechizos con hechizos por defecto.
@@ -282,7 +282,7 @@ class SpellbookRepository:
         Returns:
             True si se inicializó correctamente, False en caso contrario.
         """
-        try:  # noqa: PLR1702
+        try:  # ruff: ignore[too-many-nested-blocks]
             # Verificar si ya tiene hechizos
             existing_spells: dict[int, int] = await self.get_all_spells(user_id)
             has_existing = bool(existing_spells)
@@ -411,7 +411,7 @@ class SpellbookRepository:
                     )
                 return success
             # Si ya hay hechizos y no hay catálogo, no hacer nada
-            return True  # noqa: TRY300
+            return True  # ruff: ignore[try-consider-else]
         except Exception:
             logger.exception("Error al inicializar libro de hechizos")
             return False

@@ -177,16 +177,17 @@ Para crear un nuevo efecto, implementa la clase abstracta `TickEffect`:
 ```python
 from src.tick_effect import TickEffect
 
+
 class MyCustomEffect(TickEffect):
     """Descripción de tu efecto."""
-    
+
     def __init__(self, param1: int, param2: float) -> None:
         """Inicializa el efecto con parámetros configurables."""
         self.param1 = param1
         self.param2 = param2
         # Contadores por jugador si es necesario
         self._counters: dict[int, int] = {}
-    
+
     async def apply(
         self,
         user_id: int,
@@ -198,26 +199,26 @@ class MyCustomEffect(TickEffect):
         stats = await player_repo.get_stats(user_id)
         if not stats:
             return
-        
+
         # 2. Aplicar tu lógica
         # ... modificar stats ...
-        
+
         # 3. Guardar cambios
         await player_repo.set_stats(user_id=user_id, **stats)
-        
+
         # 4. Notificar al cliente (opcional)
         if message_sender:
             await message_sender.send_update_user_stats(**stats)
             await message_sender.send_console_msg("Mensaje al jugador")
-    
+
     def get_interval_seconds(self) -> float:
         """Retorna el intervalo en segundos."""
         return 1.0  # Se ejecuta cada segundo
-    
+
     def get_name(self) -> str:
         """Retorna el nombre del efecto para logging."""
         return "MyCustomEffect"
-    
+
     def cleanup_player(self, user_id: int) -> None:
         """Limpia datos del jugador desconectado (opcional)."""
         if user_id in self._counters:

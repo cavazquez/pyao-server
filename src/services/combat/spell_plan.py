@@ -92,7 +92,7 @@ class SpellPlan:
             }.values()
         )
 
-    def decide(self, snapshot: Snapshot) -> Decision:  # noqa: PLR0914, PLR0915 - plan puro de un commit
+    def decide(self, snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals, too-many-statements] - plan puro de un commit
         """Rechaza antes del coste; un EXEC confirma maná, stamina y todos los efectos.
 
         Returns:
@@ -291,7 +291,7 @@ class SpellPlan:
             equipped = values[RedisKeys.player_equipment(request.user_id)]
             inventory = values[RedisKeys.player_inventory(request.user_id)]
             weapon = inventory.get(f"slot_{equipped.get('weapon', '0')}", "")
-            from src.utils.inventory_slot import InventorySlot  # noqa: PLC0415
+            from src.utils.inventory_slot import InventorySlot  # ruff: ignore[import-outside-top-level]
 
             item = InventorySlot.parse(weapon)
             if item is None or item.item_id not in self.staff_items:

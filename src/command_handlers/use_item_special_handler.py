@@ -92,7 +92,7 @@ class UseItemSpecialHandler:
     async def handle_boat(
         self,
         user_id: int,
-        slot: int,  # noqa: ARG002
+        slot: int,  # ruff: ignore[unused-method-argument]
         username: str | None,
     ) -> CommandResult:
         """Maneja el uso de la barca.

@@ -77,7 +77,7 @@ class MapBinaryCache:
             logger.debug("msgpack no disponible; se omite binario")
             return
         try:
-            from tools.compression.map_binary import convert_json_to_binary  # noqa: PLC0415
+            from tools.compression.map_binary import convert_json_to_binary  # ruff: ignore[import-outside-top-level]
 
             logger.info("Generando caché binario de mapas (esto solo ocurre una vez)...")
             start_time = time.time()

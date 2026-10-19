@@ -34,6 +34,7 @@ Secuencia centralizada en componentes modulares:
 @dataclass
 class MapTransitionContext:
     """Contexto para la transición de mapa."""
+
     user_id: int
     username: str
     char_body: int
@@ -200,7 +201,7 @@ await self.transition_orchestrator.execute_transition(context)
 vip_steps = [
     SendChangeMapStep(),
     ClientLoadDelayStep(0.2),  # Delay más largo
-    SendVIPWelcomeEffect(),    # Paso custom
+    SendVIPWelcomeEffect(),  # Paso custom
     UpdatePositionStep(player_repo),
     # ... otros pasos
 ]

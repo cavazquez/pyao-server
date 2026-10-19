@@ -81,6 +81,7 @@ Facilitar la formación de parties en servidores con muchos jugadores, permitien
 @dataclass
 class PartyFinderListing:
     """Anuncio de party en el Party Finder."""
+
     party_id: int
     leader_id: int
     leader_username: str
@@ -92,9 +93,11 @@ class PartyFinderListing:
     created_at: float
     expires_at: float  # Auto-expira si no se actualiza
 
+
 @dataclass
 class PartyFinderSeeker:
     """Jugador buscando party."""
+
     user_id: int
     username: str
     level: int

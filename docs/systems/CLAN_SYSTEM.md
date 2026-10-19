@@ -87,10 +87,10 @@ class ClanInvitation:
 #### ClanRank (Enum)
 ```python
 class ClanRank(IntEnum):
-    MEMBER = 1          # Miembro regular (permisos básicos)
-    OFFICER = 2         # Oficial (puede invitar/expulsar)
-    VICE_LEADER = 3     # Vice líder (puede promover/degradar)
-    LEADER = 4          # Líder (control total)
+    MEMBER = 1  # Miembro regular (permisos básicos)
+    OFFICER = 2  # Oficial (puede invitar/expulsar)
+    VICE_LEADER = 3  # Vice líder (puede promover/degradar)
+    LEADER = 4  # Líder (control total)
 ```
 
 ### Constantes del Sistema
@@ -778,7 +778,7 @@ En `src/command_handlers/login_handler.py`, agregar `clan_service` al constructo
 
 ```python
 # En el constructor, agregar:
-clan_service: "ClanService | None" = None,
+clan_service: "ClanService | None" = (None,)
 
 # Y guardar:
 self.clan_service = clan_service
@@ -804,7 +804,7 @@ if self.clan_service:
 En `src/tasks/task_factory.py`, en `_get_login_handler()`, agregar `clan_service`:
 
 ```python
-clan_service=self.deps.clan_service,
+clan_service = (self.deps.clan_service,)
 ```
 
 ### Paso 3: Verificar

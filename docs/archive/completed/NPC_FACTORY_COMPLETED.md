@@ -22,9 +22,9 @@ Sistema de factory methods para crear NPCs con configuraciones predefinidas, eli
 ```python
 class NPCFactory:
     # Factory methods base
-    create_hostile()    # Base para NPCs hostiles
-    create_friendly()   # Base para NPCs amigables
-    
+    create_hostile()  # Base para NPCs hostiles
+    create_friendly()  # Base para NPCs amigables
+
     # NPCs hostiles específicos (11 total)
     create_goblin()
     create_lobo()
@@ -38,7 +38,7 @@ class NPCFactory:
     create_ogro()
     create_demonio()
     create_murcielago()
-    
+
     # NPCs amigables específicos (3 total)
     create_comerciante()
     create_banquero()

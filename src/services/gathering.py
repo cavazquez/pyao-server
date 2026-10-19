@@ -57,7 +57,7 @@ async def gather(
         RedisKeys.player_position(user_id),
     )
 
-    def decide(snapshot: Snapshot) -> Decision:  # noqa: PLR0914 - recurso, pesca y XP atómicos
+    def decide(snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals] - recurso, pesca y XP atómicos
         nonlocal fish_choice
         position = cast("dict[str, str]", snapshot[position_key])
         stats = cast("dict[str, str]", snapshot[RedisKeys.player_user_stats(user_id)])

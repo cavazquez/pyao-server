@@ -76,7 +76,7 @@ def maps_dir() -> Path:
     if destination.is_dir():
         return destination
     # La extracción existente valida rutas y límites antes de escribir cada entrada.
-    from tools.compression.decompress_map_data import decompress_map_data  # noqa: PLC0415
+    from tools.compression.decompress_map_data import decompress_map_data  # ruff: ignore[import-outside-top-level]
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix="extract-", dir=destination.parent) as temporary:

@@ -41,7 +41,7 @@ class MapManager(SpatialIndexMixin):
 
     MAX_ITEMS_PER_TILE = 10  # Límite de items por tile
 
-    def __init__(self, ground_items_repo: "GroundItemsRepository | None" = None) -> None:  # noqa: UP037
+    def __init__(self, ground_items_repo: "GroundItemsRepository | None" = None) -> None:  # ruff: ignore[quoted-annotation]
         """Inicializa el gestor de mapas.
 
         Args:
@@ -436,12 +436,12 @@ class MapManager(SpatialIndexMixin):
         return self._ground_index.get_ground_items_count(map_id)
 
     @property
-    def ground_items_repo(self) -> "GroundItemsRepository | None":  # noqa: UP037
+    def ground_items_repo(self) -> "GroundItemsRepository | None":  # ruff: ignore[quoted-annotation]
         """Repositorio de ground items (getter/setter para propagar al índice)."""
         return self._ground_items_repo
 
     @ground_items_repo.setter
-    def ground_items_repo(self, repo: "GroundItemsRepository | None") -> None:  # noqa: UP037
+    def ground_items_repo(self, repo: "GroundItemsRepository | None") -> None:  # ruff: ignore[quoted-annotation]
         self._ground_items_repo = repo
         self._ground_index.ground_items_repo = repo
 

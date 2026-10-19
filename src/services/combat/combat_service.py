@@ -46,11 +46,11 @@ class CombatService:
 
     def __init__(
         self,
-        player_repo: "PlayerRepository",  # noqa: UP037
-        npc_repository: "NPCRepository",  # noqa: UP037
-        equipment_repo: "EquipmentRepository | None" = None,  # noqa: UP037
-        inventory_repo: "InventoryRepository | None" = None,  # noqa: UP037
-        item_catalog: "ItemCatalog | None" = None,  # noqa: UP037
+        player_repo: "PlayerRepository",  # ruff: ignore[quoted-annotation]
+        npc_repository: "NPCRepository",  # ruff: ignore[quoted-annotation]
+        equipment_repo: "EquipmentRepository | None" = None,  # ruff: ignore[quoted-annotation]
+        inventory_repo: "InventoryRepository | None" = None,  # ruff: ignore[quoted-annotation]
+        item_catalog: "ItemCatalog | None" = None,  # ruff: ignore[quoted-annotation]
     ) -> None:
         """Inicializa el servicio de combate.
 
@@ -268,7 +268,7 @@ class CombatService:
         message_sender: MessageSender,
     ) -> None:
         """Confirma crecimiento y puntos desde el estado Redis más reciente."""
-        from src.services.player_progression import advance_player_level  # noqa: PLC0415
+        from src.services.player_progression import advance_player_level  # ruff: ignore[import-outside-top-level]
 
         await advance_player_level(self.player_repo, user_id, message_sender)
 

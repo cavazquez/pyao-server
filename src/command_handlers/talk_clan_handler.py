@@ -52,7 +52,7 @@ class TalkClanHandler:
         self.message_sender = message_sender
         self.session_data = session_data if session_data is not None else {}
 
-    async def handle_clan_command(self, user_id: int, command: TalkCommand) -> None:  # noqa: PLR0915, PLR0914
+    async def handle_clan_command(self, user_id: int, command: TalkCommand) -> None:  # ruff: ignore[too-many-statements, too-many-locals]
         """Maneja comandos de clan desde el chat.
 
         Args:

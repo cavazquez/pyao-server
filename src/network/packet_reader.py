@@ -87,7 +87,7 @@ class PacketReader:
         Returns:
             String decodificado.
         """
-        import logging  # noqa: PLC0415
+        import logging  # ruff: ignore[import-outside-top-level]
 
         logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ class PacketReader:
         Returns:
             String decodificado.
         """
-        import logging  # noqa: PLC0415
+        import logging  # ruff: ignore[import-outside-top-level]
 
         logger = logging.getLogger(__name__)
 

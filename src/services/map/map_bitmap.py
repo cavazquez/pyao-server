@@ -1,4 +1,4 @@
-# ruff: noqa: DOC201, DOC402
+# ruff: file-ignore[docstring-missing-returns, docstring-missing-yields]
 """Representación eficiente de mapas usando bitmaps.
 
 Reduce el uso de memoria de ~297 MB a <1 MB para datos de tiles.
