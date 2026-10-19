@@ -1,10 +1,81 @@
 """Tests para ServerCLI."""
 
+import os
+import subprocess  # noqa: S404 - procesos nuevos del propio intérprete, sin shell.
+import sys
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from src.server_cli import ServerCLI
+
+
+@pytest.mark.parametrize("flag", ["--version", "--help"])
+@pytest.mark.parametrize("configuration", ["[game.character]\nmana_per_int = 50000\n", "[invalid"])
+def test_informational_cli_does_not_initialize_game(
+    tmp_path: Path, flag: str, configuration: str
+) -> None:
+    """Un proceso nuevo consulta ayuda/versión con TOML roto, sin cargar Redis."""
+    invalid = tmp_path / "server.toml"
+    invalid.write_text(configuration)
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("PYAO_")}
+    environment.update(
+        PYTHONPATH=str(Path(__file__).resolve().parents[2]),
+        PYAO_CONFIG_FILE=str(invalid),
+        PYAO_REDIS__HOST="unreachable.invalid",
+        PYAO_REDIS__PASSWORD_FILE=str(tmp_path / "missing-redis-secret"),
+    )
+    code = """import sys
+from src.run_server import main
+try:
+    main()
+finally:
+    assert 'src.config.game_config' not in sys.modules
+    assert 'src.utils.redis_client' not in sys.modules
+"""
+    result = subprocess.run(  # noqa: S603 - intérprete actual y argumentos propios.
+        [sys.executable, "-c", code, flag],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert ("PyAO Server" if flag == "--version" else "--config-file") in result.stdout
+    assert invalid.read_text() == configuration
+
+
+def test_config_file_override_precedes_singleton_initialization(tmp_path: Path) -> None:
+    """La ruta CLI reemplaza un TOML inválido heredado antes de inicializarlo."""
+    invalid, selected = tmp_path / "invalid.toml", tmp_path / "selected.toml"
+    invalid.write_text("[game.character]\nmana_per_int = 50000\n")
+    selected.write_text("[game.character]\nmana_per_int = 11\n")
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("PYAO_")}
+    environment.update(
+        PYTHONPATH=str(Path(__file__).resolve().parents[2]), PYAO_CONFIG_FILE=str(invalid)
+    )
+    code = """from src.run_server import main
+try:
+    main()
+except SystemExit as result:
+    if result.code:
+        raise
+from src.config.game_config import game_config
+assert game_config.game.character.mana_per_int == 11
+"""
+    result = subprocess.run(  # noqa: S603 - intérprete actual y rutas temporales propias.
+        [sys.executable, "-c", code, "--config-file", str(selected), "--check-resources"],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 class TestServerCLI:

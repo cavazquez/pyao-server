@@ -62,6 +62,13 @@ de versiones anteriores. Para elegir un dataset personalizado, indicar
 explícitamente `PYAO_DATA_DIR`/`PYAO_MAPS_DIR`; debe incluir el esquema actual.
 Las cachés de mapas se regeneran por hash del archive.
 
+`--version` y `--help` funcionan sin Redis y sin cargar el TOML del operador.
+El arranque normal valida la configuración conservada. Si un archivo antiguo
+contiene `game.character.mana_per_int = 50000`, respaldar
+`common/config/server.toml` y reemplazar ese valor por el predeterminado actual
+`10`; el protocolo admite hasta `32767`. La actualización no cambia ese archivo
+automáticamente ni sustituye los valores personalizados del operador.
+
 Todo lo guardado de la partida permanece en Redis. Una base antigua requiere
 detener el servidor, crear y verificar un respaldo y migrar al esquema 4 antes
 de iniciar; la actualización del Snap no ejecuta la migración por su cuenta.
