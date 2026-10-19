@@ -1,0 +1,6378 @@
+{
+  "schema": 1,
+  "seed": 307,
+  "audit_executed": true,
+  "world_checks_passed": false,
+  "maps_checked": 290,
+  "fixed_npcs": 1602,
+  "maps_without_npc_configuration": [
+    8,
+    9,
+    13,
+    15,
+    16,
+    17,
+    18,
+    20,
+    21,
+    22,
+    23,
+    28,
+    30,
+    31,
+    33,
+    35,
+    37,
+    41,
+    42,
+    43,
+    44,
+    45,
+    49,
+    50,
+    51,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    75,
+    76,
+    78,
+    79,
+    80,
+    81,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    143,
+    147,
+    148,
+    149,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    164,
+    169,
+    170,
+    180,
+    181,
+    182,
+    183,
+    185,
+    191,
+    192,
+    193,
+    194,
+    198,
+    199,
+    200,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    260,
+    261,
+    262,
+    263,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    286,
+    287,
+    288,
+    289,
+    290
+  ],
+  "restart": {
+    "fixed_population_unchanged": true,
+    "pet_preserved": true,
+    "normal_instances_rebuilt": true,
+    "aof_recreated": true
+  },
+  "summary": {
+    "runtime_field_mismatch": 6,
+    "blocked_spawn": 12,
+    "no_adjacent_walkable_tile": 3,
+    "historical_sound_difference": 55,
+    "random_area_count_mismatch": 5,
+    "respawn_policy_unmapped": 33
+  },
+  "gameplay_campaign_executed": false,
+  "audited_runtime_commits": {
+    "server": "5015e3bafbd36460b3400c61f24d20ef777a56a4",
+    "client": "f19d183117e438f6898a3882fdc37d5f67c865fc"
+  },
+  "source_test_harness_included": true,
+  "normal_respawn_policy": {
+    "removed_from_redis_and_map": true,
+    "removal_packets_per_client": [
+      1,
+      1
+    ],
+    "controlled_respawn_seconds": 1,
+    "controlled_respawn_count": 1,
+    "control_does_not_prove_catalog_respawns": true,
+    "normal_npcs_with_timer": 0,
+    "normal_npcs_without_timer": 1640
+  },
+  "random_areas": [
+    {
+      "map_id": 1,
+      "area": {
+        "x1": 70,
+        "y1": 70,
+        "x2": 90,
+        "y2": 90
+      },
+      "expected_count": 5,
+      "observed_count": 10,
+      "instances": [
+        "e61d62b5-e09d-40fb-845b-f0b4c3e35f85",
+        "eb5ed037-bff8-458b-8639-6cc2b7992a89",
+        "193c1382-fd8c-4047-918e-1e791ceab2af",
+        "4a0ab765-c6dc-4392-ac74-97a79570c6f6",
+        "2630c39c-5055-4f50-96d8-303df11ae99b",
+        "d42488a5-51ac-4027-ae9a-d9bc7822c69f",
+        "ac6c140d-6ccd-44aa-b561-c66cfdd7a270",
+        "3bc7fd1c-09a2-4479-9751-82d253b342a5",
+        "72e195cf-de11-428a-8b55-ab2bb6724d09",
+        "9c70facf-f7bd-471e-9a2e-75368a4a60f1"
+      ],
+      "immediate_refill": 0,
+      "after_cooldown_count": 9
+    },
+    {
+      "map_id": 1,
+      "area": {
+        "x1": 10,
+        "y1": 10,
+        "x2": 30,
+        "y2": 30
+      },
+      "expected_count": 3,
+      "observed_count": 6,
+      "instances": [
+        "6c8b6618-d8d4-4cea-a1ee-fe47d45cda57",
+        "0b5d0557-af70-48a5-b9b6-37fed04a690c",
+        "4a62efdc-af09-4b6f-9dd6-7eab7e939a1d",
+        "18b99145-43d8-4308-bcb4-7ded3d4689eb",
+        "a248caae-688c-4a2c-9ab4-bd7c89daa81f",
+        "b0349a96-d447-45ab-9853-12361dc646bb"
+      ],
+      "immediate_refill": 0,
+      "after_cooldown_count": 5
+    },
+    {
+      "map_id": 46,
+      "area": {
+        "x1": 60,
+        "y1": 60,
+        "x2": 80,
+        "y2": 80
+      },
+      "expected_count": 2,
+      "observed_count": 4,
+      "instances": [
+        "c0b672e0-6db6-4b48-aef8-c7bf3393eb97",
+        "51430ab8-2448-4eba-a29a-596930ad0d29",
+        "1bb37baf-f35b-48a4-9c40-8bf999363377",
+        "2edc7fdd-6c76-4fc0-9d40-1193f77e797d"
+      ],
+      "immediate_refill": 0,
+      "after_cooldown_count": 3
+    },
+    {
+      "map_id": 259,
+      "area": {
+        "x1": 20,
+        "y1": 20,
+        "x2": 80,
+        "y2": 80
+      },
+      "expected_count": 8,
+      "observed_count": 16,
+      "instances": [
+        "1ebc1c8f-602b-4c5d-bd20-569f6ea0df17",
+        "e8c473e6-56f7-45c5-bc6d-b67f247f4c6b",
+        "b79bc399-96f6-4062-a9df-d7eb4a9140e6",
+        "11648798-41c7-4654-b08e-23991fcc64b1",
+        "229cb45e-e512-4dcc-a93d-2cd7f655a317",
+        "17bd0393-c587-471d-be90-7e2aa90370ef",
+        "7024bc18-75a3-4134-b5fb-5cdac8a10bb7",
+        "aa78ea2e-485c-4f91-99c7-7c6c93f34496",
+        "c51e216c-8696-4176-b32a-b241da0c2755",
+        "ea6f9894-dff2-4de1-bd07-779a008fbba0",
+        "3ae039ee-d631-4e16-b369-15e1d421690e",
+        "e08d3cf8-569f-4358-9e1e-edcceac59ea0",
+        "7fd58f37-b9e9-42ff-a757-e1d5549276ea",
+        "8ad69723-63ba-4a6d-9fee-73ccf6ed41d1",
+        "498dc4b7-6ad6-41b8-b445-5c29198b5e03",
+        "545ed5ef-0c0b-4b47-b626-d7addc4e67cf"
+      ],
+      "immediate_refill": 0,
+      "after_cooldown_count": 15
+    },
+    {
+      "map_id": 259,
+      "area": {
+        "x1": 40,
+        "y1": 40,
+        "x2": 60,
+        "y2": 60
+      },
+      "expected_count": 3,
+      "observed_count": 6,
+      "instances": [
+        "c0edc72c-7ced-460d-84fa-9a38add60aa9",
+        "8ef7982f-f878-447b-9079-80d1d47993f1",
+        "3c0e7193-c977-4d16-9e55-06924c0ec716",
+        "a8bac0d0-0165-40ed-bcee-9ea767b73db7",
+        "136d60bc-a135-4c9e-ae31-a277a2310a79",
+        "3195ab5b-1dd0-4f13-be7f-be8e8b6c5f00"
+      ],
+      "immediate_refill": 0,
+      "after_cooldown_count": 5
+    }
+  ],
+  "wire_samples": [
+    {
+      "map_id": 1,
+      "same_packets": true,
+      "count": 40,
+      "expected": 40
+    },
+    {
+      "map_id": 34,
+      "same_packets": true,
+      "count": 34,
+      "expected": 34
+    },
+    {
+      "map_id": 290,
+      "same_packets": true,
+      "count": 1,
+      "expected": 1
+    }
+  ],
+  "sound_inventory": {
+    "catalog": [
+      {
+        "npc_id": 1,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 2,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 3,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "npc_id": 4,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          8,
+          0
+        ]
+      },
+      {
+        "npc_id": 5,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 6,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 7,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 8,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 9,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 10,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 11,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 12,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 13,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 14,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 15,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 16,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 17,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 18,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 19,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 20,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 21,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 22,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 23,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 24,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 25,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 26,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 27,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 28,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 29,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 30,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 31,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 32,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 33,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 34,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 35,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 36,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 37,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 38,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 39,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 40,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 41,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 42,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 43,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 44,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 45,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 46,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 47,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 48,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 49,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 50,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 51,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 52,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 53,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 54,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 55,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 56,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 57,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 58,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 59,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 60,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 61,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 62,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 63,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 64,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 65,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 66,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 67,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 68,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 69,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 70,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 71,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 72,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 73,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 74,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 75,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 76,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 77,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          47,
+          47,
+          0
+        ]
+      },
+      {
+        "npc_id": 78,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 79,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 80,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 81,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 82,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 83,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 84,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 85,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 86,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 87,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 88,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 89,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 90,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 91,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 92,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 93,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 94,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 95,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 96,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 97,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          96
+        ]
+      },
+      {
+        "npc_id": 98,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 99,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 100,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 101,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 102,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 103,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 104,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 105,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 106,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 107,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 108,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 109,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 110,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 111,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 112,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 113,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 114,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 115,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 116,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 117,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 118,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 119,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 120,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 121,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 122,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 123,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 124,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 125,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 126,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 127,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 128,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 129,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 130,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 131,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 132,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 133,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 134,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 135,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 136,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 137,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 138,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 139,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 140,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 141,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 142,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 143,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 144,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 145,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 146,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 147,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 148,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 149,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 150,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 151,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 152,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 153,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 154,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 155,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 156,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 157,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 158,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 159,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 160,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 500,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 501,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          35,
+          9,
+          0
+        ]
+      },
+      {
+        "npc_id": 502,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          164
+        ]
+      },
+      {
+        "npc_id": 503,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 504,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "npc_id": 505,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          142
+        ]
+      },
+      {
+        "npc_id": 506,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          67
+        ]
+      },
+      {
+        "npc_id": 507,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          164
+        ]
+      },
+      {
+        "npc_id": 508,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 509,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          160
+        ]
+      },
+      {
+        "npc_id": 510,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 511,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "npc_id": 512,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          35,
+          9,
+          0
+        ]
+      },
+      {
+        "npc_id": 513,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "npc_id": 514,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "npc_id": 515,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 516,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 517,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 518,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          89
+        ]
+      },
+      {
+        "npc_id": 519,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 520,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 521,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 522,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 523,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 524,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 525,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          62
+        ]
+      },
+      {
+        "npc_id": 526,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 527,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 528,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "npc_id": 529,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 530,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          157
+        ]
+      },
+      {
+        "npc_id": 531,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          155
+        ]
+      },
+      {
+        "npc_id": 532,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 533,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          63
+        ]
+      },
+      {
+        "npc_id": 534,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 535,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 536,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 537,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 538,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 539,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 540,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          161
+        ]
+      },
+      {
+        "npc_id": 541,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "npc_id": 542,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "npc_id": 543,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          159
+        ]
+      },
+      {
+        "npc_id": 544,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 545,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 546,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          0
+        ]
+      },
+      {
+        "npc_id": 547,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 548,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          59,
+          0
+        ]
+      },
+      {
+        "npc_id": 549,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          171
+        ]
+      },
+      {
+        "npc_id": 550,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          118,
+          158
+        ]
+      },
+      {
+        "npc_id": 551,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 552,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          79,
+          89
+        ]
+      },
+      {
+        "npc_id": 553,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          169
+        ]
+      },
+      {
+        "npc_id": 554,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          168
+        ]
+      },
+      {
+        "npc_id": 555,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 556,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 557,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          98,
+          0
+        ]
+      },
+      {
+        "npc_id": 558,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 559,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 560,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 561,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 562,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 564,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 565,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "npc_id": 566,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 567,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 568,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          172
+        ]
+      },
+      {
+        "npc_id": 569,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 573,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 574,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          13,
+          13,
+          0
+        ]
+      },
+      {
+        "npc_id": 575,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          13,
+          13,
+          0
+        ]
+      },
+      {
+        "npc_id": 576,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 577,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "npc_id": 578,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 579,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          8,
+          0
+        ]
+      },
+      {
+        "npc_id": 582,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 583,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 584,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          100
+        ]
+      },
+      {
+        "npc_id": 585,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 586,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          79,
+          89
+        ]
+      },
+      {
+        "npc_id": 587,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          156
+        ]
+      },
+      {
+        "npc_id": 588,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 589,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          118,
+          1
+        ]
+      },
+      {
+        "npc_id": 590,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 591,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 592,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 593,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 594,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 595,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 596,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          163
+        ]
+      },
+      {
+        "npc_id": 597,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 598,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          166
+        ]
+      },
+      {
+        "npc_id": 599,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          162
+        ]
+      },
+      {
+        "npc_id": 600,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 601,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          167
+        ]
+      },
+      {
+        "npc_id": 602,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 603,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 604,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 605,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 606,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 607,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 608,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          210
+        ]
+      },
+      {
+        "npc_id": 609,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 610,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          174,
+          175
+        ]
+      },
+      {
+        "npc_id": 611,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 612,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 613,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 614,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 615,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          173
+        ]
+      },
+      {
+        "npc_id": 616,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 617,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 618,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 619,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          166
+        ]
+      },
+      {
+        "npc_id": 620,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 621,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 622,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          89
+        ]
+      },
+      {
+        "npc_id": 623,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 624,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          160
+        ]
+      },
+      {
+        "npc_id": 625,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "npc_id": 626,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          142
+        ]
+      },
+      {
+        "npc_id": 627,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 628,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 629,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 630,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 631,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 632,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 633,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 634,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 635,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 636,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 637,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 638,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 639,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 640,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 641,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 642,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 643,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 644,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 645,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 646,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 647,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 648,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 649,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 650,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 651,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 652,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 653,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 654,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 655,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 656,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 657,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 900,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 901,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 902,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 903,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 904,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 905,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 906,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 907,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 908,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 909,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 910,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 911,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 912,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 913,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 914,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 915,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 916,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 917,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 918,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 919,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 920,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 921,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 922,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "npc_id": 923,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "npcs_with_configured_sound": 0,
+    "npcs_without_sound_configuration": 336,
+    "historical_npcs_with_sound": 55,
+    "historical_missing_assets": [
+      174
+    ],
+    "findings": [
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 3,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          4,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 4,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          8,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 77,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          47,
+          47,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 97,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          96
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 501,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          35,
+          9,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 502,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          164
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 504,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 505,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          142
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 506,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          67
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 507,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          164
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 509,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          160
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 511,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 512,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          35,
+          9,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 513,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 514,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 518,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          89
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 525,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          62
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 528,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 530,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          157
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 531,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          155
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 533,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          63
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 540,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          161
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 541,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          78,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 542,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 543,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          159
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 546,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          33,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 548,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          59,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 549,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          171
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 550,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          118,
+          158
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 552,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          79,
+          89
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 553,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          169
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 554,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          168
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 557,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          98,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 565,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 568,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          172
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 574,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          13,
+          13,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 575,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          13,
+          13,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 577,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 579,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          8,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 584,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          100
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 586,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          79,
+          89
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 587,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          156
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 589,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          118,
+          1
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 596,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          163
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 598,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          166
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 599,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          162
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 601,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          167
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 608,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          210
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 610,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          174,
+          175
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 615,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          173
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 619,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          166
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 622,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          89
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 624,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          160
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 625,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          103,
+          0
+        ]
+      },
+      {
+        "code": "historical_sound_difference",
+        "npc_id": 626,
+        "configured": false,
+        "waves": [
+          0,
+          0,
+          0
+        ],
+        "historical_waves": [
+          0,
+          0,
+          142
+        ]
+      }
+    ],
+    "historical_reference_is_not_runtime_contract": true,
+    "periodic_ambient_sounds": "not_configured",
+    "client_resources_checked": true
+  },
+  "source_client_sample": {
+    "clients": 2,
+    "seconds": 49.67,
+    "started_at": "2026-10-19T22:22:58.890718+00:00",
+    "completed_at": "2026-10-19T22:24:03.157782+00:00",
+    "long_acceptance": false,
+    "tls": true,
+    "installed_wheel": false,
+    "source_checkout": true,
+    "server_commit": "5015e3bafbd36460b3400c61f24d20ef777a56a4",
+    "client_commit": "f19d183117e438f6898a3882fdc37d5f67c865fc",
+    "wheel_sha256": null,
+    "redis": "8.10.2",
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "graceful_sigterm": true,
+    "live_tls_sessions_drained": 2,
+    "release_version": "1.0.0rc2",
+    "installed_snap_ui": false,
+    "snap_install_source": null,
+    "godot_measured_seconds": [
+      13.0,
+      13.0
+    ],
+    "reconnect_states": [
+      {
+        "capabilities": 959,
+        "exact_inventory_and_spell_order": true,
+        "hunger_after": [
+          100.0,
+          100.0
+        ],
+        "hunger_before": [
+          100.0,
+          100.0
+        ],
+        "inventory": {
+          "1": [
+            36,
+            10,
+            false
+          ],
+          "2": [
+            37,
+            20,
+            false
+          ],
+          "3": [
+            37,
+            10,
+            false
+          ],
+          "4": [
+            38,
+            20,
+            false
+          ],
+          "5": [
+            38,
+            10,
+            false
+          ],
+          "6": [
+            39,
+            20,
+            false
+          ],
+          "7": [
+            39,
+            10,
+            false
+          ],
+          "8": [
+            166,
+            20,
+            false
+          ],
+          "9": [
+            166,
+            10,
+            false
+          ],
+          "10": [
+            645,
+            20,
+            false
+          ],
+          "11": [
+            645,
+            10,
+            false
+          ],
+          "12": [
+            3,
+            10,
+            false
+          ],
+          "13": [
+            4,
+            10,
+            false
+          ],
+          "14": [
+            11,
+            1,
+            false
+          ],
+          "15": [
+            1073,
+            1,
+            false
+          ],
+          "16": [
+            474,
+            1,
+            false
+          ],
+          "17": [
+            561,
+            1,
+            false
+          ],
+          "18": [
+            562,
+            1,
+            false
+          ],
+          "19": [
+            563,
+            1,
+            false
+          ],
+          "29": [
+            36,
+            20,
+            false
+          ]
+        },
+        "spells": [
+          2,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "capabilities": 959,
+        "exact_inventory_and_spell_order": true,
+        "hunger_after": [
+          100.0,
+          100.0
+        ],
+        "hunger_before": [
+          100.0,
+          100.0
+        ],
+        "inventory": {
+          "1": [
+            36,
+            10,
+            false
+          ],
+          "2": [
+            37,
+            20,
+            false
+          ],
+          "3": [
+            37,
+            10,
+            false
+          ],
+          "4": [
+            38,
+            20,
+            false
+          ],
+          "5": [
+            38,
+            10,
+            false
+          ],
+          "6": [
+            39,
+            20,
+            false
+          ],
+          "7": [
+            39,
+            10,
+            false
+          ],
+          "8": [
+            166,
+            20,
+            false
+          ],
+          "9": [
+            166,
+            10,
+            false
+          ],
+          "10": [
+            645,
+            20,
+            false
+          ],
+          "11": [
+            645,
+            10,
+            false
+          ],
+          "12": [
+            3,
+            10,
+            false
+          ],
+          "13": [
+            4,
+            10,
+            false
+          ],
+          "14": [
+            11,
+            1,
+            false
+          ],
+          "15": [
+            1073,
+            1,
+            false
+          ],
+          "16": [
+            474,
+            1,
+            false
+          ],
+          "17": [
+            561,
+            1,
+            false
+          ],
+          "18": [
+            562,
+            1,
+            false
+          ],
+          "19": [
+            563,
+            1,
+            false
+          ],
+          "29": [
+            36,
+            20,
+            false
+          ]
+        },
+        "spells": [
+          2,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "native_export": false,
+    "acceptance": {
+      "required": [
+        "npc-hostile-visual",
+        "npc-identities",
+        "npc-map-transition",
+        "npc-reconnect",
+        "npc-service-interaction"
+      ],
+      "missing": [],
+      "test_execution_passed": true,
+      "r10_gameplay_passed": false,
+      "npc_sounds_in_live_catalog_proven": false
+    },
+    "scenario": "npcs",
+    "regression_passed": true
+  },
+  "issues": [
+    {
+      "key": "server-sounds",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P1] Recuperar los sonidos Snd1/Snd2/Snd3 perdidos del catálogo de NPC",
+      "url": "https://github.com/cavazquez/pyao-server/issues/311"
+    },
+    {
+      "key": "client-sound174",
+      "repo": "cavazquez/ArgentumOnlineGodot",
+      "title": "[P2] Resolver la referencia de audio NPC 174 ausente del cliente",
+      "url": "https://github.com/cavazquez/ArgentumOnlineGodot/issues/136"
+    },
+    {
+      "key": "blocked-spawns",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P1] Corregir los 12 spawns fijos sobre tiles bloqueados y documentar sus excepciones",
+      "url": "https://github.com/cavazquez/pyao-server/issues/312"
+    },
+    {
+      "key": "spawn-heading",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P2] Respetar direction al inicializar el heading de los NPC fijos",
+      "url": "https://github.com/cavazquez/pyao-server/issues/313"
+    },
+    {
+      "key": "random-cap",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P1] Aplicar el cupo de generación aleatoria con entradas concurrentes por zona",
+      "url": "https://github.com/cavazquez/pyao-server/issues/314"
+    },
+    {
+      "key": "respawn-policy",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P1] Traducir la política de reaparición del catálogo a timers efectivos de NPC",
+      "url": "https://github.com/cavazquez/pyao-server/issues/315"
+    },
+    {
+      "key": "spell-hurt-sound",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P2] Emitir la voz de daño del NPC también al recibir daño mágico confirmado",
+      "url": "https://github.com/cavazquez/pyao-server/issues/316"
+    },
+    {
+      "key": "guard-role",
+      "repo": "cavazquez/pyao-server",
+      "title": "[P2] Conectar un rol explícito de guardia con su conducta de defensa",
+      "url": "https://github.com/cavazquez/pyao-server/issues/317"
+    },
+    {
+      "key": "npc-authoritative-position",
+      "repo": "cavazquez/ArgentumOnlineGodot",
+      "title": "[P1] Respetar la posición autoritativa de NPC y personajes en CharacterMove",
+      "url": "https://github.com/cavazquez/ArgentumOnlineGodot/issues/137",
+      "implemented_in_current_client_branch": true
+    }
+  ],
+  "source_sha256": {
+    "data/world/map_index.json": "71b0d7673dbd1c5c0d6d05440fd324a40cff0edaaf8bbe6b41af944bf60977eb",
+    "data/world/map_npcs.toml": "c8d409be433ff81445d34b01e630256767883c4411f278aae9062467c762a928",
+    "data/npcs/friendly.toml": "0bc229ca92cd9e32bae62fb53adf548292544472301daf3c6b4375351eb82936",
+    "data/npcs/hostiles.toml": "1d17de71431e2ca32e56c474462b7d600744cd0ac04868ccfb646ec36b8af9c2",
+    "src/services/npc/npc_service.py": "e25d75f1d479aeb5d1e9da64294cfa27f598dc20ebf37c3c1e136da5fd5102c1",
+    "src/services/npc/random_spawn_service.py": "99ae08c2555c73bee8892db382a84ea2cd8d20fde9822bd9a35516f3810164ac",
+    "src/services/npc/npc_respawn_service.py": "e787285dddb9d54dbfec5436174ac86cf5b0491a15d935278cac8f475315e5fd",
+    "src/services/npc/npc_ai_service.py": "f73dc212f89400016b149485915fc4d01d568493a7e1bd98740c7d2e571d827c",
+    "src/services/npc/npc_death_service.py": "e6e4e246316fb66aa276d34a1eb57d30025705a29b9bf0f5840624c5eb47f1a8",
+    "client/screens/game_screen.gd": "f8d6cd2b21fab63b5fe8392f39985f9689925c95c6032240b26efea50c3f5888"
+  },
+  "historical_npcs_dat_sha256": "0ca925ff66dc23d9e60064664b3d8324a2f607510536975affddd1d9e62e1b09",
+  "test_results": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "211",
+    "time": "7.269",
+    "timestamp": "2026-10-19T19:18:41.817962-03:00",
+    "hostname": "arriba"
+  },
+  "new_binaries_or_snap": false,
+  "evidence_sha256": {
+    "world-audit.json": "0290814ad6a45c501455ae8f8e08de3e3fd5e2463a8f8fa2dec9c47353cbf754",
+    "two-client-npc-corrected/result.json": "e70a93613da6cf65fbc1e8028ed251bef2f80fbc9449d879eab97eb45ae2377e",
+    "two-client-npc-corrected/r10-scenarios.json": "058bc0cc49883f402fccccda6022f93e058dbdc790904ae1a5b9afaf1f0e9531",
+    "two-client-npc-corrected/server-source.json": "8fae7debf220b88585bfc536fbc44f2944cdacee6d2e0160a401284f212f5600",
+    "two-client-npc-corrected/client-source.json": "0543de59e9b4037a5289a42149989de55eb41b5236ecaea9c076c863be5f1441",
+    "client-movement-before-fix.log": "14fde3c0300cf0a64b0853b1a8896bb83d618dc27001048a471d402e741cb83a",
+    "client-source-smokes.log": "6b1d98293592b8198a8e799a062af7c7523ea0ceb6ba5ff468dfa5e066b249c1",
+    "client-tool-tests.log": "6417958d1201ed447b1cb5cb9903aec122d6879d43e3febc6b1ab7d0eb616345",
+    "client-tls-smoke.log": "36bce7e3283b6d5fcead89c44e33cadab4be7c6131fa1d651b077aab09aa2508"
+  },
+  "random_indices_agree": true,
+  "client_tool_tests_passed": 57,
+  "mypy_source_files": 569,
+  "client_position_fix": {
+    "issue": "https://github.com/cavazquez/ArgentumOnlineGodot/issues/137",
+    "included_in_tested_working_tree": true,
+    "regression_fails_before_fix": true,
+    "regression_passes_after_fix": true,
+    "visible_position_differences": [
+      {
+        "map_id": 1,
+        "expected_count": 48,
+        "actual_count": 48,
+        "update_range": 15,
+        "differences": [],
+        "offscreen_positions_follow_last_received_packet": true
+      },
+      {
+        "map_id": 1,
+        "expected_count": 48,
+        "actual_count": 48,
+        "update_range": 15,
+        "differences": [],
+        "offscreen_positions_follow_last_received_packet": true
+      }
+    ]
+  }
+}
