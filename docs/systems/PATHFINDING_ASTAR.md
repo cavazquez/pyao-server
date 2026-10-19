@@ -71,7 +71,7 @@ result = pathfinding.get_next_step(
     start_y=50,
     target_x=60,
     target_y=60,
-    max_depth=20  # Opcional, default=20
+    max_depth=20,  # Opcional, default=20
 )
 
 if result:
@@ -238,10 +238,10 @@ result = pathfinding.get_next_step(
     start_y=4,
     target_x=1,  # Jugador posición
     target_y=1,
-    max_depth=20
+    max_depth=20,
 )
 
-# Resultado: (3, 4, 2) 
+# Resultado: (3, 4, 2)
 # - next_x=3 (moverse al Este)
 # - next_y=4
 # - heading=2 (Este)

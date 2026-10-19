@@ -58,7 +58,7 @@ class TaskWalk(Task):
 
             if validator.has_errors() or heading is None:
                 return None
-            return heading  # noqa: TRY300
+            return heading  # ruff: ignore[try-consider-else]
         except ValueError:
             # Packet truncado o inválido
             return None

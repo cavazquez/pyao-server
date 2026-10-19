@@ -63,7 +63,7 @@ class ColorFormatter(logging.Formatter):
         super().__init__(fmt=fmt, datefmt=datefmt)
         self.use_color = use_color
 
-    def formatException(  # noqa: N802 - API de logging.Formatter
+    def formatException(  # ruff: ignore[invalid-function-name] - API de logging.Formatter
         self,
         ei: tuple[type[BaseException], BaseException, TracebackType | None]
         | tuple[None, None, None],

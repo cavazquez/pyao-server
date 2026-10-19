@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 import shutil
-import subprocess  # noqa: S404 - intérprete propio sin shell y con configuración temporal.
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - intérprete propio sin shell y con configuración temporal.
 import sys
 import tempfile
 import tomllib
@@ -215,7 +215,7 @@ def legacy_config_check(directory: Path) -> None:
         PYAO_STATE_DIR=str(directory / "state"),
     )
     for flag in ("--version", "--help", None):
-        result = subprocess.run(  # noqa: S603 - intérprete actual y argumentos propios.
+        result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - intérprete actual y argumentos propios.
             [sys.executable, "-m", "src.run_server", *([flag] if flag else [])],
             env=environment,
             capture_output=True,
@@ -231,7 +231,7 @@ def legacy_config_check(directory: Path) -> None:
     backup = path.with_suffix(".toml.bak")
     shutil.copyfile(path, backup)
     path.write_text(legacy.replace("mana_per_int = 50000", "mana_per_int = 10"))
-    from src.config.game_config import GameConfig  # noqa: PLC0415
+    from src.config.game_config import GameConfig  # ruff: ignore[import-outside-top-level]
 
     repaired_mana = 10
     require(

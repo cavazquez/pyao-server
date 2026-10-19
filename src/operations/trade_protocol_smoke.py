@@ -129,7 +129,7 @@ async def open_peer(player: PlayerRepository, user: int, port: int) -> ProtocolP
     return peer
 
 
-async def run(sandbox: RedisSandbox) -> None:  # noqa: PLR0915 - escenario lineal con limpieza propia.
+async def run(sandbox: RedisSandbox) -> None:  # ruff: ignore[too-many-statements] - escenario lineal con limpieza propia.
     """Ensaya revisión obsoleta, commit, cierre de socket y arbitraje en Redis nativo."""
     client = RedisClient()
     await client.connect(settings(sandbox), seed_defaults=False)

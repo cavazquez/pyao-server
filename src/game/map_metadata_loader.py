@@ -227,7 +227,7 @@ class MapMetadataLoader:
         height = 100
         blocked_tiles: list[dict[str, object]] | None = None
 
-        if metadata_path.exists():  # noqa: PLR1702
+        if metadata_path.exists():  # ruff: ignore[too-many-nested-blocks]
             with metadata_path.open("r", encoding="utf-8") as f:
                 try:
                     metadata = json.load(f)

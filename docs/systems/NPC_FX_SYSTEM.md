@@ -16,9 +16,9 @@ Sistema completo de efectos visuales para NPCs que soporta dos tipos de efectos:
 @dataclass
 class NPC:
     # ... otros campos ...
-    
-    fx: int = 0          # FX ID al morir (one-shot)
-    fx_loop: int = 0     # FX ID continuo (aura, loop infinito)
+
+    fx: int = 0  # FX ID al morir (one-shot)
+    fx_loop: int = 0  # FX ID continuo (aura, loop infinito)
 ```
 
 ### NPCFactory
@@ -124,7 +124,7 @@ class NPCFactory:
             fx=fx,
             fx_loop=fx_loop,
         )
-    
+
     @staticmethod
     def create_goblin(x: int, y: int, map_id: int, char_index: int) -> NPC:
         return NPCFactory._create_hostile_base(
@@ -133,14 +133,14 @@ class NPCFactory:
             # ... otros parámetros ...
             fx=5,  # Sangre al morir
         )
-    
+
     @staticmethod
     def create_arana(x: int, y: int, map_id: int, char_index: int) -> NPC:
         return NPCFactory._create_hostile_base(
             npc_id=8,
             name="Araña Gigante",
             # ... otros parámetros ...
-            fx=10,      # Veneno al morir
+            fx=10,  # Veneno al morir
             fx_loop=15,  # Aura venenosa
         )
 ```
@@ -148,11 +148,9 @@ class NPCFactory:
 ### MultiplayerBroadcastService
 
 ```python
-async def broadcast_create_fx(
-    self, map_id: int, char_index: int, fx: int, loops: int
-) -> None:
+async def broadcast_create_fx(self, map_id: int, char_index: int, fx: int, loops: int) -> None:
     """Envía CREATE_FX a todos los jugadores en un mapa.
-    
+
     Args:
         map_id: ID del mapa.
         char_index: CharIndex del personaje/NPC.
@@ -161,7 +159,7 @@ async def broadcast_create_fx(
     """
     if not self.map_manager:
         return
-    
+
     players = self.map_manager.get_all_message_senders_in_map(map_id)
     for message_sender in players:
         await message_sender.send_create_fx(char_index, fx, loops)
@@ -240,7 +238,7 @@ def create_dragon(x: int, y: int, map_id: int, char_index: int) -> NPC:
         description="Un dragón ancestral y devastador",
         gold_min=500,
         gold_max=2000,
-        fx=25,      # Explosión de fuego al morir 🔥
+        fx=25,  # Explosión de fuego al morir 🔥
         fx_loop=20,  # Aura de fuego 🔥✨
     )
 ```

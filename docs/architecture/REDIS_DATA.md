@@ -190,11 +190,7 @@ count = await client.get_connections_count()
 print(f"Conexiones activas: {count}")
 
 # Gestionar sesión de jugador
-await client.set_player_session(123, {
-    "username": "player1",
-    "level": "10",
-    "class": "warrior"
-})
+await client.set_player_session(123, {"username": "player1", "level": "10", "class": "warrior"})
 ```
 
 ## Testing
@@ -416,11 +412,7 @@ count = await client.get_connections_count()
 print(f"Conexiones activas: {count}")
 
 # Gestionar sesión de jugador
-await client.set_player_session(123, {
-    "username": "player1",
-    "level": "10",
-    "class": "warrior"
-})
+await client.set_player_session(123, {"username": "player1", "level": "10", "class": "warrior"})
 ```
 
 ## Testing

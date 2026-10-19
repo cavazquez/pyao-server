@@ -63,12 +63,12 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
             defense=item_data.get("MinDef"),
             restore_hp=(
                 int(item_data.get("MaxModificador", 0))
-                if item_data.get("TipoPocion") == 3  # noqa: PLR2004
+                if item_data.get("TipoPocion") == 3  # ruff: ignore[magic-value-comparison]
                 else 0
             ),
             restore_mana=(
                 int(item_data.get("MaxModificador", 0))
-                if item_data.get("TipoPocion") == 4  # noqa: PLR2004
+                if item_data.get("TipoPocion") == 4  # ruff: ignore[magic-value-comparison]
                 else 0
             ),
             restore_hunger=item_data.get("MinHAM"),

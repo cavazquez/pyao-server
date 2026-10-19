@@ -24,9 +24,9 @@ class MultiplayerBroadcastService:
 
     def __init__(
         self,
-        map_manager: "MapManager",  # noqa: UP037
-        player_repo: "PlayerRepository",  # noqa: UP037
-        account_repo: "AccountRepository",  # noqa: UP037
+        map_manager: "MapManager",  # ruff: ignore[quoted-annotation]
+        player_repo: "PlayerRepository",  # ruff: ignore[quoted-annotation]
+        account_repo: "AccountRepository",  # ruff: ignore[quoted-annotation]
     ) -> None:
         """Inicializa el servicio de broadcast multijugador.
 

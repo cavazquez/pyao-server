@@ -118,28 +118,22 @@ if npc_died:
 # TaskAttack.execute() - después de matar NPC
 if npc_died:
     gold = result.get("gold", 0)
-    
+
     # Crear item de oro en el suelo
     ground_item = {
         "item_id": GOLD_ITEM_ID,  # ID del item oro (ej: 12)
         "quantity": gold,
         "grh_index": GOLD_GRH_INDEX,  # Gráfico del oro
     }
-    
+
     # Agregar a MapManager
     self.map_manager.add_ground_item(
-        map_id=target_npc.map_id,
-        x=target_npc.x,
-        y=target_npc.y,
-        item=ground_item
+        map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, item=ground_item
     )
-    
+
     # Broadcast OBJECT_CREATE
     await self.broadcast_service.broadcast_object_create(
-        map_id=target_npc.map_id,
-        x=target_npc.x,
-        y=target_npc.y,
-        grh_index=GOLD_GRH_INDEX
+        map_id=target_npc.map_id, x=target_npc.x, y=target_npc.y, grh_index=GOLD_GRH_INDEX
     )
 ```
 
@@ -153,11 +147,7 @@ if npc_died:
 position = await self.player_repo.get_position(user_id)
 
 # Buscar items en ese tile
-items = self.map_manager.get_ground_items(
-    map_id=position["map"],
-    x=position["x"],
-    y=position["y"]
-)
+items = self.map_manager.get_ground_items(map_id=position["map"], x=position["x"], y=position["y"])
 
 if not items:
     await self.message_sender.send_console_msg("No hay nada aquí.")
@@ -176,17 +166,12 @@ await self.inventory_repo.add_item(user_id, item["item_id"], item["quantity"])
 
 # Remover del suelo
 self.map_manager.remove_ground_item(
-    map_id=position["map"],
-    x=position["x"],
-    y=position["y"],
-    item_index=0
+    map_id=position["map"], x=position["x"], y=position["y"], item_index=0
 )
 
 # Broadcast OBJECT_DELETE
 await self.broadcast_service.broadcast_object_delete(
-    map_id=position["map"],
-    x=position["x"],
-    y=position["y"]
+    map_id=position["map"], x=position["x"], y=position["y"]
 )
 
 # Notificar al jugador
@@ -209,11 +194,11 @@ class MapManager:
 
 ```python
 {
-    "item_id": int,        # ID del item en el catálogo
-    "quantity": int,       # Cantidad (oro, flechas, etc.)
-    "grh_index": int,      # Índice gráfico para mostrar
+    "item_id": int,  # ID del item en el catálogo
+    "quantity": int,  # Cantidad (oro, flechas, etc.)
+    "grh_index": int,  # Índice gráfico para mostrar
     "owner_id": int | None,  # Dueño temporal (anti-loot steal)
-    "spawn_time": float,   # Timestamp de cuando se dropeó
+    "spawn_time": float,  # Timestamp de cuando se dropeó
 }
 ```
 
@@ -221,48 +206,39 @@ class MapManager:
 
 ```python
 class MapManager:
-    def add_ground_item(
-        self, map_id: int, x: int, y: int, item: dict
-    ) -> None:
+    def add_ground_item(self, map_id: int, x: int, y: int, item: dict) -> None:
         """Agrega un item al suelo."""
         key = (map_id, x, y)
         if key not in self._ground_items:
             self._ground_items[key] = []
         self._ground_items[key].append(item)
-    
-    def get_ground_items(
-        self, map_id: int, x: int, y: int
-    ) -> list[dict]:
+
+    def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict]:
         """Obtiene items en un tile."""
         key = (map_id, x, y)
         return self._ground_items.get(key, [])
-    
-    def remove_ground_item(
-        self, map_id: int, x: int, y: int, item_index: int = 0
-    ) -> dict | None:
+
+    def remove_ground_item(self, map_id: int, x: int, y: int, item_index: int = 0) -> dict | None:
         """Remueve un item del suelo."""
         key = (map_id, x, y)
         if key not in self._ground_items:
             return None
-        
+
         items = self._ground_items[key]
         if item_index >= len(items):
             return None
-        
+
         item = items.pop(item_index)
-        
+
         # Limpiar si no quedan items
         if not items:
             del self._ground_items[key]
-        
+
         return item
-    
+
     def clear_ground_items(self, map_id: int) -> None:
         """Limpia todos los items de un mapa."""
-        keys_to_remove = [
-            key for key in self._ground_items.keys()
-            if key[0] == map_id
-        ]
+        keys_to_remove = [key for key in self._ground_items.keys() if key[0] == map_id]
         for key in keys_to_remove:
             del self._ground_items[key]
 ```
@@ -282,8 +258,8 @@ packet.add_byte(316)
 ```python
 # Tirar item del inventario al suelo
 packet.add_byte(331)
-packet.add_byte(slot)        # Slot del inventario
-packet.add_int16(quantity)   # Cantidad a tirar
+packet.add_byte(slot)  # Slot del inventario
+packet.add_int16(quantity)  # Cantidad a tirar
 ```
 
 ### Servidor → Cliente
@@ -432,20 +408,20 @@ gold = base_gold + bonus
         "gold": {
             "min": 10,
             "max": 50,
-            "chance": 100  # 100% de dropear oro
+            "chance": 100,  # 100% de dropear oro
         },
         "items": [
             {
                 "item_id": 2,  # Espada Larga
                 "quantity": 1,
-                "chance": 5    # 5% de drop
+                "chance": 5,  # 5% de drop
             },
             {
                 "item_id": 1,  # Manzana
                 "quantity": [1, 3],  # 1-3 manzanas
-                "chance": 30   # 30% de drop
-            }
-        ]
+                "chance": 30,  # 30% de drop
+            },
+        ],
     }
 }
 ```

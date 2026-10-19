@@ -193,7 +193,7 @@ class ClientConnection:
                     self._outbox.task_done()
         except asyncio.CancelledError:
             raise
-        except Exception as error:  # noqa: BLE001 - frontera de transporte, sin payload en log.
+        except Exception as error:  # ruff: ignore[blind-except] - frontera de transporte, sin payload en log.
             # No imprimir argumentos de excepciones que puedan contener payloads.
             logger.warning("Escritor de %s cerrado: %s", self.address, type(error).__name__)
             self._write_failed = True

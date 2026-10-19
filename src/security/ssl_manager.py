@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import ssl
-import subprocess  # noqa: S404
+import subprocess  # ruff: ignore[suspicious-subprocess-import]
 from collections.abc import Callable
 from pathlib import Path
 
@@ -170,7 +170,7 @@ class SSLManager:
         ]
 
         try:
-            subprocess.run(command, check=True, capture_output=True)  # noqa: S603
+            subprocess.run(command, check=True, capture_output=True)  # ruff: ignore[subprocess-without-shell-equals-true]
         except FileNotFoundError as exc:
             message = (
                 "No se encontró 'openssl'. Instálalo o proporciona tus propios certificados SSL."

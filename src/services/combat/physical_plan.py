@@ -173,7 +173,7 @@ class PhysicalPlan:
             resources.append(Resource(RedisKeys.npc_instance(request.target_npc), "hash"))
         self.resources = tuple({r.key: r for r in resources}.values())
 
-    def decide(self, snapshot: Snapshot) -> Decision:  # noqa: PLR0914, PLR0915 - un único commit de combate
+    def decide(self, snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals, too-many-statements] - un único commit de combate
         """Confirma una acción válida con daño, munición, stamina y entrenamiento.
 
         Returns:

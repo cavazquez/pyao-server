@@ -149,9 +149,7 @@ password_hash = hash_password(password)
 
 # Crear cuenta
 user_id = await redis_client.create_account(
-    username=username,
-    password_hash=password_hash,
-    email=email
+    username=username, password_hash=password_hash, email=email
 )
 
 print(f"Cuenta creada con ID: {user_id}")

@@ -82,8 +82,8 @@ MULTI_MESSAGE = 104
 WORK_REQUEST_TARGET_MSG = 17  # NO 18!
 
 # Skills (según cliente)
-SKILL_TALAR = 9     # NO 1
-SKILL_PESCA = 12    # NO 3
+SKILL_TALAR = 9  # NO 1
+SKILL_PESCA = 12  # NO 3
 SKILL_MINERIA = 13  # NO 2
 
 # Herramientas
@@ -108,8 +108,8 @@ MINERAL = 70
 packet = struct.pack(
     "<BBB",
     ServerPacketID.MULTI_MESSAGE,  # 104
-    WORK_REQUEST_TARGET_MSG,        # 17
-    skill_type,                     # 9, 12 o 13
+    WORK_REQUEST_TARGET_MSG,  # 17
+    skill_type,  # 9, 12 o 13
 )
 
 # ❌ INCORRECTO (crashea el cliente)

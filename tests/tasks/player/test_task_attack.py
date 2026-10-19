@@ -643,7 +643,7 @@ class TestTaskAttackFindFreePosition:
         # Primera llamada: ocupada, todas las demás: libres
         call_count = {"count": 0}
 
-        def side_effect(*args):  # noqa: ANN002, ARG001
+        def side_effect(*args):  # ruff: ignore[missing-type-args, unused-function-argument]
             call_count["count"] += 1
             if call_count["count"] == 1:
                 return [{"item_id": 1}]  # Primera llamada (central): ocupada

@@ -238,8 +238,8 @@ def test_double_click_and_safe_toggle_preserve_following_packet() -> None:
 
 def test_every_supported_handler_at_every_boundary() -> None:
     """Ningún handler queda sin regla y ningún split roba bytes del PING siguiente."""
-    from src.network.packet_framer import CONTRACT  # noqa: PLC0415
-    from src.network.packet_handlers import TASK_HANDLERS  # noqa: PLC0415
+    from src.network.packet_framer import CONTRACT  # ruff: ignore[import-outside-top-level]
+    from src.network.packet_handlers import TASK_HANDLERS  # ruff: ignore[import-outside-top-level]
 
     for packet_id in TASK_HANDLERS:
         entry = CONTRACT["directions"]["client"][str(packet_id)]
@@ -267,7 +267,7 @@ def test_every_supported_handler_at_every_boundary() -> None:
 @pytest.mark.parametrize("data", [b"\x7a\x01", b"\x7a\xff"])
 def test_unknown_gm_subcommand_fails_without_waiting(data: bytes) -> None:
     """Un subcomando no declarado corta inmediatamente."""
-    from src.network.packet_framer import InvalidVariantError  # noqa: PLC0415
+    from src.network.packet_framer import InvalidVariantError  # ruff: ignore[import-outside-top-level]
 
     framer = PacketFramer()
     framer.feed(data)

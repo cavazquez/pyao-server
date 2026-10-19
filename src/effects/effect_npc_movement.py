@@ -71,9 +71,9 @@ class NPCMovementEffect(TickEffect):
 
     async def apply(
         self,
-        user_id: int,  # noqa: ARG002
+        user_id: int,  # ruff: ignore[unused-method-argument]
         player_repo: PlayerRepository,
-        message_sender: MessageSender | None,  # noqa: ARG002
+        message_sender: MessageSender | None,  # ruff: ignore[unused-method-argument]
     ) -> None:
         """Aplica el efecto de movimiento aleatorio a los NPCs.
 
@@ -231,10 +231,10 @@ class NPCMovementEffect(TickEffect):
                     distance,
                 )
 
-                if distance < min_distance and distance <= 10:  # noqa: PLR2004
+                if distance < min_distance and distance <= 10:  # ruff: ignore[magic-value-comparison]
                     min_distance = distance
                     closest_player = (player_x, player_y)
-            except Exception:  # noqa: BLE001
+            except Exception:  # ruff: ignore[blind-except]
                 logger.debug("Error obteniendo posición de user_id %d", user_id)
                 continue
 
@@ -336,11 +336,11 @@ class NPCMovementEffect(TickEffect):
         # Calcular nueva posición según dirección
         if direction == 1:  # Norte
             new_y -= 1
-        elif direction == 2:  # Este  # noqa: PLR2004
+        elif direction == 2:  # Este  # ruff: ignore[magic-value-comparison]
             new_x += 1
-        elif direction == 3:  # Sur  # noqa: PLR2004
+        elif direction == 3:  # Sur  # ruff: ignore[magic-value-comparison]
             new_y += 1
-        elif direction == 4:  # Oeste  # noqa: PLR2004
+        elif direction == 4:  # Oeste  # ruff: ignore[magic-value-comparison]
             new_x -= 1
 
         # Validar colisiones con MapManager
@@ -352,7 +352,7 @@ class NPCMovementEffect(TickEffect):
         spawn_y = npc.y
         distance_from_spawn = abs(new_x - spawn_x) + abs(new_y - spawn_y)
 
-        if distance_from_spawn > 5:  # noqa: PLR2004
+        if distance_from_spawn > 5:  # ruff: ignore[magic-value-comparison]
             return
 
         # Mover el NPC

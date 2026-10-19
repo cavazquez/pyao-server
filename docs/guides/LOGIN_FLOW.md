@@ -242,8 +242,8 @@ session_data = {
         "agility": 12,
         "intelligence": 14,
         "charisma": 10,
-        "constitution": 13
-    }
+        "constitution": 13,
+    },
 }
 ```
 

@@ -1,7 +1,7 @@
 """Tests para ServerCLI."""
 
 import os
-import subprocess  # noqa: S404 - procesos nuevos del propio intérprete, sin shell.
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - procesos nuevos del propio intérprete, sin shell.
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -34,7 +34,7 @@ finally:
     assert 'src.config.game_config' not in sys.modules
     assert 'src.utils.redis_client' not in sys.modules
 """
-    result = subprocess.run(  # noqa: S603 - intérprete actual y argumentos propios.
+    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - intérprete actual y argumentos propios.
         [sys.executable, "-c", code, flag],
         cwd=tmp_path,
         env=environment,
@@ -66,7 +66,7 @@ except SystemExit as result:
 from src.config.game_config import game_config
 assert game_config.game.character.mana_per_int == 11
 """
-    result = subprocess.run(  # noqa: S603 - intérprete actual y rutas temporales propias.
+    result = subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - intérprete actual y rutas temporales propias.
         [sys.executable, "-c", code, "--config-file", str(selected), "--check-resources"],
         cwd=tmp_path,
         env=environment,

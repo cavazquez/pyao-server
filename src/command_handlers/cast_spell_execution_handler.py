@@ -66,11 +66,11 @@ class CastSpellExecutionHandler:
 
         if heading == 1:  # Norte
             target_y -= 1
-        elif heading == 2:  # Este  # noqa: PLR2004
+        elif heading == 2:  # Este  # ruff: ignore[magic-value-comparison]
             target_x += 1
-        elif heading == 3:  # Sur  # noqa: PLR2004
+        elif heading == 3:  # Sur  # ruff: ignore[magic-value-comparison]
             target_y += 1
-        elif heading == 4:  # Oeste  # noqa: PLR2004
+        elif heading == 4:  # Oeste  # ruff: ignore[magic-value-comparison]
             target_x -= 1
 
         logger.debug("Target calculado según heading %d: (%d, %d)", heading, target_x, target_y)

@@ -13,7 +13,7 @@ from src.repositories.party_repository import PartyRepository
 @pytest.fixture
 def mock_redis():
     """Create a mock Redis client."""
-    from unittest.mock import MagicMock  # noqa: PLC0415
+    from unittest.mock import MagicMock  # ruff: ignore[import-outside-top-level]
 
     mock = AsyncMock()
     # Configure pipeline to return a synchronous mock with async execute
