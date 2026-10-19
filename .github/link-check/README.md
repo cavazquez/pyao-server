@@ -1,7 +1,7 @@
 # Herramientas de enlaces de CI
 
 `npm ci --ignore-scripts` instala exclusivamente el lockfile. `npm audit` rechaza
-vulnerabilidades altas y críticas; Dependabot revisa este manifiesto semanalmente.
+vulnerabilidades altas y críticas; Dependabot revisa este manifiesto el 1 de diciembre de cada año.
 
 Se fuerza basic-ftp 6.2.3 mediante una dependencia directa y un override que la
 referencia. get-uri todavía solicita la serie 5, vulnerable a
