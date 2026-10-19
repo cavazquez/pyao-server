@@ -4,6 +4,7 @@
 import argparse
 import hashlib
 import json
+import platform
 import subprocess
 import tomllib
 from pathlib import Path
@@ -16,6 +17,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arch", choices=["amd64", "arm64"], required=True)
     args = parser.parse_args()
+    native_arch = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}.get(platform.machine().lower())
+    if native_arch != args.arch:
+        raise SystemExit("La verificación requiere construir cada arquitectura en su runner nativo")
     version = subprocess.check_output(["snapcraft", "--version"], text=True).strip()
     if version != "snapcraft 9.1.4":
         raise SystemExit(f"Se requiere snapcraft 9.1.4; se encontró {version}")
