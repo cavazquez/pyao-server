@@ -16,6 +16,12 @@
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
+Descarga de pruebas vigente: **[servidor 1.0.0rc2](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc2)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc2)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
+
+Los PR ejecutan validaciones, pruebas y controles de dependencias sin construir
+distribuciones. Compilar y publicar son operaciones manuales separadas; ver
+[CI y releases](docs/development/CI_RELEASES.md).
+
 > Implementación moderna y eficiente del servidor de Argentum Online.
 
 Índice de toda la documentación interna: **[docs/README.md](docs/README.md)**.
@@ -82,7 +88,7 @@ uv run pyao-server --ssl --ssl-cert certs/server.crt --ssl-key certs/server.key
 La configuración efectiva de CLI y Redis debe quedar comprobada mediante [#87](https://github.com/cavazquez/pyao-server/issues/87) y [#88](https://github.com/cavazquez/pyao-server/issues/88). El [alcance de la 1.0](docs/development/ALCANCE_1_0.md) incluye las pruebas de arranque, persistencia y restauración.
 
 **Nota:** Redis es obligatorio. El servidor no iniciará sin una conexión activa a Redis.
-El checkbox SSL del cliente no acredita verificación de certificado y nombre: esa corrección está en [cliente #3](https://github.com/cavazquez/ArgentumOnlineGodot/issues/3) y bloquea la distribución pública.
+El cliente verifica certificado y hostname por TLS; sus pruebas rechazan certificados vencidos, de otro nombre o sin confianza y nunca retroceden automáticamente a TCP.
 
 ### 🎒 Inventario inicial
 

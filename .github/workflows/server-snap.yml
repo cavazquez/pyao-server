@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # v1
@@ -36,8 +36,8 @@ jobs:
           set -o pipefail
           mkdir -p artifacts
           python3 scripts/build_snap.py --arch '${{ matrix.arch }}' 2>&1 | tee artifacts/snap-build.log
-          sha256sum pyao_1.0.0rc2_${{ matrix.arch }}.snap > artifacts/SHA256SUMS
-      - uses: astral-sh/setup-uv@v7
+          sha256sum pyao_*_${{ matrix.arch }}.snap > artifacts/SHA256SUMS
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "0.13.1"
           enable-cache: false
@@ -45,10 +45,10 @@ jobs:
         env:
           UV_PYTHON: "3.14"
         run: |
-          sudo snap install ./pyao_1.0.0rc2_${{ matrix.arch }}.snap --dangerous
+          sudo snap install ./pyao_*_${{ matrix.arch }}.snap --dangerous
           uv sync --locked --no-dev
           uv run --locked --no-dev python scripts/smoke_installed_snap.py --output artifacts
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: pyao-server-snap-${{ matrix.arch }}-${{ github.event.pull_request.head.sha || github.sha }}
