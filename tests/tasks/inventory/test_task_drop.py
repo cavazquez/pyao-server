@@ -257,3 +257,22 @@ class TestTaskDrop:
 
         # Assert
         drop_handler.handle.assert_called_once()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("slot", [0, 31])
+async def test_gold_marker_reaches_handler(slot):
+    """Ambos marcadores de oro atraviesan la tarea sin convertirse en slots de objetos."""
+    sender = MagicMock()
+    sender.send_console_msg = AsyncMock()
+    handler = create_mock_drop_handler()
+    handler.handle.return_value = CommandResult.ok()
+    task = TaskDrop(
+        bytes([24, slot, 232, 3]), sender, drop_handler=handler, session_data={"user_id": 1}
+    )
+    await task.execute()
+    handler.handle.assert_awaited_once()
+    command = handler.handle.call_args.args[0]
+    assert command.slot == slot
+    assert command.quantity == 1000
+    sender.send_console_msg.assert_not_awaited()

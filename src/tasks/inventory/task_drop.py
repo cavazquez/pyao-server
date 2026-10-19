@@ -57,7 +57,7 @@ class TaskDrop(Task):
             return
 
         # Parsear datos: slot (u8) + quantity (u16)
-        # slot=0 significa oro, slot=1-30 significa item del inventario
+        # 0 (clásico) y 31 (Godot) son oro; 1-30 son objetos.
         reader = PacketReader(self.data)
         validator = PacketValidator(reader)
 
@@ -69,7 +69,7 @@ class TaskDrop(Task):
 
         # Validar rango: 0 para oro, 1-max para items
         max_slots = ConfigManager.as_int(config.get("game.inventory.max_slots", 30))
-        if slot > max_slots:
+        if slot not in {0, 31} and slot > max_slots:
             await self.message_sender.send_console_msg(f"Slot inválido: {slot}")
             return
 

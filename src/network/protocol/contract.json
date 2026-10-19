@@ -243,6 +243,10 @@
             "name": "quantity",
             "type": "i16"
           }
+        ],
+        "gold_slots": [
+          0,
+          31
         ]
       },
       "25": {
