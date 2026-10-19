@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from src import __version__
 from src.operations.redis_sandbox import RedisSandbox
 
 
@@ -74,14 +75,14 @@ done
             check=True,
             timeout=30,
         )
-        assert run_snap("pyao.pyao-server", ["--version"], env, work).strip().endswith("1.0.0rc1")
+        assert run_snap("pyao.pyao-server", ["--version"], env, work).strip().endswith(__version__)
         invalid = work / "invalid-server.toml"
         invalid.write_text("[game.character]\nmana_per_int = 50000\n")
         informational_env = dict(env, PYAO_CONFIG_FILE=str(invalid))
         assert (
             run_snap("pyao.pyao-server", ["--version"], informational_env, work)
             .strip()
-            .endswith("1.0.0rc1")
+            .endswith(__version__)
         )
         assert "--config-file" in run_snap("pyao.pyao-server", ["--help"], informational_env, work)
         run_snap("pyao.pyao-server", ["--check-resources"], env, work)
@@ -168,7 +169,7 @@ done
                     assert process.returncode == 0, f"Salida de Snap: {process.returncode}"
                 assert hashlib.sha256(config.read_bytes()).hexdigest() == config_hash
         result = {
-            "version": "1.0.0rc1",
+            "version": __version__,
             "installed_snap": True,
             "resources_valid": True,
             "python_aliases_inside_snap": True,
