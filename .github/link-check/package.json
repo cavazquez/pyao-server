@@ -1,0 +1,12 @@
+{
+  "name": "pyao-ci-link-check",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "markdown-link-check": "3.15.0",
+    "basic-ftp": "6.2.3"
+  },
+  "overrides": {
+    "basic-ftp": "$basic-ftp"
+  }
+}

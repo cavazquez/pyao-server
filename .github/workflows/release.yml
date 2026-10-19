@@ -1,150 +1,76 @@
-name: Release
-
+name: Release GitHub
 on:
-  push:
-    tags:
-      - 'v*'
-
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag ya existente, fusionado en main y con la misma versión en ambos repositorios
+        type: string
+        required: true
+      distribution_run:
+        description: ID de CI ejecutado manualmente con build_packages=true
+        type: string
+        required: true
+      snap_run:
+        description: ID de Server Snap completado para ambas arquitecturas
+        type: string
+        required: true
+      publish:
+        description: Hacer pública la release tras verificar todos los archivos del borrador
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: github-release-${{ inputs.tag }}
+  cancel-in-progress: false
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    
-    steps:
-    - uses: actions/checkout@v7
-    
-    - name: Install uv
-      uses: astral-sh/setup-uv@v7
-      with:
-        version: "0.13.1"
-        enable-cache: true
-    
-    - name: Set up Python
-      run: uv python install 3.14
-    
-    - name: Cache uv dependencies
-      uses: actions/cache@v6
-      with:
-        path: |
-          ~/.cache/uv
-          .venv
-        key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-uv-
-    
-    - name: Install dependencies
-      run: uv sync --locked --dev
-    
-    - name: Print tool versions
-      run: |
-        echo "📦 Tool versions:"
-        echo "  Python: $(uv run python --version)"
-        echo "  uv: $(uv --version)"
-        echo "  ruff: $(uv run ruff --version)"
-        echo "  mypy: $(uv run mypy --version)"
-        echo "  pytest: $(uv run pytest --version)"
-    
-    - name: Run ruff linter
-      run: uv run ruff check src tests
-    
-    - name: Run ruff formatter
-      run: uv run ruff format --check .
-    
-    - name: Run mypy type checker
-      run: uv run mypy src tests
-    
-    - name: Run tests with coverage
-      run: uv run pytest -v -n auto --cov=src --cov-report=xml --cov-report=term-missing
-  
-  build:
-    needs: test
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-24.04, windows-latest, macos-latest]
-    
-    steps:
-    - uses: actions/checkout@v7
-    
-    - name: Install uv
-      uses: astral-sh/setup-uv@v7
-      with:
-        version: "0.13.1"
-        enable-cache: true
-    
-    - name: Set up Python
-      run: uv python install 3.14
-    
-    - name: Cache uv dependencies
-      uses: actions/cache@v6
-      with:
-        path: |
-          ~/.cache/uv
-          .venv
-        key: ${{ matrix.os }}-uv-${{ hashFiles('uv.lock') }}
-        restore-keys: |
-          ${{ matrix.os }}-uv-
-    
-    - name: Install dependencies
-      run: uv sync --locked --all-groups
-    
-    - name: Print tool versions
-      run: |
-        echo "📦 Tool versions:"
-        echo "  Python: $(uv run python --version)"
-        echo "  uv: $(uv --version)"
-    
-    - name: Build package
-      run: uv build
-    
-    - name: Install the original wheel in a clean environment
-      run: uv run --locked --group build python -m src.operations.distribution validate --directory dist --platform ${{ matrix.os }}
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: dist-${{ matrix.os }}
-        path: dist/*
-  
-  snap:
-    needs: test
-    uses: ./.github/workflows/server-snap.yml
-    permissions:
-      contents: read
-
   release:
-    needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
+      actions: read
       contents: write
-    
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ inputs.tag }}
+      DISTRIBUTION_RUN: ${{ inputs.distribution_run }}
+      SNAP_RUN: ${{ inputs.snap_run }}
     steps:
-    - uses: actions/checkout@v7
-    
-    - name: Download all artifacts
-      uses: actions/download-artifact@v8
-      with:
-        pattern: dist-*
-        path: dist-all
-        merge-multiple: false
-    
-    - uses: astral-sh/setup-uv@v7
-      with:
-        version: "0.13.1"
-    - run: uv python install 3.14
-    - run: uv sync --locked --group build
-    - name: Assemble validated assets without filename collisions
-      run: uv run --locked --group build python -m src.operations.distribution assemble --directory dist-all --output release-dist --canonical ubuntu-24.04
-
-    - name: Create Release
-      uses: softprops/action-gh-release@v3
-      with:
-        files: release-dist/*
-        generate_release_notes: true
-        make_latest: false
-        prerelease: true
-        fail_on_unmatched_files: true
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verificar tag, commit fusionado y versión del servidor y cliente
+        run: python3 tools/github_release.py preflight --tag "$TAG" --role server
+      - name: Descargar sólo artefactos del commit exacto y de ejecuciones completas
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$DISTRIBUTION_RUN" > run.json
+          gh api "repos/$GH_REPO/actions/runs/$DISTRIBUTION_RUN/jobs?per_page=100" > jobs.json
+          python3 tools/github_release.py check-run --run run.json --jobs jobs.json --commit "$RELEASE_COMMIT" --workflow ci.yml --required test --required build-distribution
+          gh run download "$DISTRIBUTION_RUN" --repo "$GH_REPO" --name validated-python-distribution --dir incoming/distribution
+          gh api "repos/$GH_REPO/actions/runs/$SNAP_RUN" > run.json
+          gh api "repos/$GH_REPO/actions/runs/$SNAP_RUN/jobs?per_page=100" > jobs.json
+          python3 tools/github_release.py check-run --run run.json --jobs jobs.json --commit "$RELEASE_COMMIT" --workflow server-snap.yml --required 'package-and-smoke (amd64,*)' --required 'package-and-smoke (arm64,*)'
+          for arch in amd64 arm64; do
+            gh run download "$SNAP_RUN" --repo "$GH_REPO" --name "pyao-server-snap-$arch-$RELEASE_COMMIT" --dir "incoming/$arch"
+          done
+      - name: Preparar hashes y procedencia sin recompilar
+        run: python3 tools/github_release.py prepare --directory incoming --output release-dist --version "$RELEASE_VERSION" --commit "$RELEASE_COMMIT" --role server
+      - name: Crear borrador completo sin sobreescribir una release existente
+        run: |
+          prerelease=()
+          if [ "$RELEASE_PRERELEASE" = true ]; then prerelease=(--prerelease); fi
+          gh release create "$TAG" release-dist/* --repo "$GH_REPO" --verify-tag --draft --latest=false "${prerelease[@]}" --title "${GH_REPO##*/} $RELEASE_VERSION" --notes "Artefactos verificados de $RELEASE_COMMIT. Versión común de servidor y cliente: $RELEASE_VERSION. SHA256SUMS y release-manifest.json documentan los archivos publicados."
+      - name: Verificar los archivos descargados del borrador
+        run: |
+          gh release download "$TAG" --repo "$GH_REPO" --dir verified
+          cd verified
+          sha256sum --check ../release-dist/SHA256SUMS
+          cmp SHA256SUMS ../release-dist/SHA256SUMS
+      - name: Publicar el borrador verificado
+        if: inputs.publish
+        run: |
+          latest=false
+          if [ "$RELEASE_PRERELEASE" = false ]; then latest=true; fi
+          gh release edit "$TAG" --repo "$GH_REPO" --draft=false --prerelease="$RELEASE_PRERELEASE" --latest="$latest"
