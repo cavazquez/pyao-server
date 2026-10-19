@@ -3,8 +3,8 @@
 El impuesto cobra el 1% del saldo conjunto de bolsillo y banco por cada corte a
 las 00:00 UTC, conectado o desconectado. Los días durante un apagado se liquidan
 antes de la siguiente operación de dinero. Se acumulan fracciones enteras de
-1/10000 de moneda: no existe mínimo diario de una moneda ni obligación de llegar
-a cero a los 90 días. La migración al esquema Redis 5 inicia el reloj sin cobrar
+1/10000 de moneda: no existe mínimo diario de una moneda. El impuesto es siempre
+el 1% del saldo de cada día. La migración al esquema Redis 5 inicia el reloj sin cobrar
 períodos anteriores y desactiva el efecto antiguo de descuento por minuto.
 
 WATCH/EXEC confirma el impuesto con la operación comercial, bancaria, de loot,

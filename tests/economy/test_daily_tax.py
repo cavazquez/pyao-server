@@ -21,11 +21,12 @@ DAY = 20_000
     ("wallet", "bank"),
     [(0, 0), (1, 0), (99, 1), (10_000, 20_000), (MAX_PLAYER_GOLD, MAX_BANK_GOLD)],
 )
-def test_offline_equals_ninety_daily_settlements(wallet, bank):
-    """El mismo capital paga lo mismo conectado o noventa días ausente."""
-    offline = assess_tax(wallet, bank, DAY, DAY + 90)
+@pytest.mark.parametrize("days", [1, 2, 7, 31])
+def test_offline_equals_daily_settlements(wallet, bank, days):
+    """El mismo capital paga lo mismo conectado o ausente entre cortes."""
+    offline = assess_tax(wallet, bank, DAY, DAY + days)
     remainder = 0
-    for day in range(DAY + 1, DAY + 91):
+    for day in range(DAY + 1, DAY + days + 1):
         daily = assess_tax(wallet, bank, day - 1, day, remainder=remainder)
         wallet, bank, remainder = daily.wallet, daily.bank, daily.remainder
     assert (offline.wallet, offline.bank, offline.remainder) == (wallet, bank, remainder)
@@ -35,8 +36,8 @@ def test_small_balance_has_no_one_coin_daily_minimum():
     """Una moneda no paga el 100% en un día: sus fracciones se acumulan."""
     first = assess_tax(1, 0, DAY, DAY + 1)
     assert (first.wallet, first.charged, first.remainder) == (1, 0, 100)
-    ninety = assess_tax(1, 0, DAY, DAY + 90)
-    assert ninety.wallet == 1
+    second = assess_tax(first.wallet, first.bank, DAY + 1, DAY + 2, remainder=first.remainder)
+    assert (second.wallet, second.charged, second.remainder) == (1, 0, 200)
     assert assess_tax(1, 0, DAY, DAY + 100).wallet == 0
 
 

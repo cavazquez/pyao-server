@@ -51,14 +51,14 @@ async def scenario(
                     "version": "1",
                     "enabled": "1",
                     "rate_bps": "100",
-                    "activation_day": str(DAY - 90),
+                    "activation_day": str(DAY - 1),
                 },
             )
             await redis.hset(
                 tax_key(USER),
                 mapping={
                     "version": "1",
-                    "last_day": str(DAY - 90),
+                    "last_day": str(DAY - 1),
                     "remainder": "0",
                     "total_paid": "0",
                 },
@@ -67,11 +67,11 @@ async def scenario(
             patch("src.economy.taxes.utc_day", return_value=DAY),
             patch("src.economy.tax_service.utc_day", return_value=DAY),
         ):
-            # El ingreso nuevo primero liquida los 90 días anteriores.
+            # El ingreso nuevo primero liquida el impuesto del día anterior.
             credit = await change_gold(redis, stats, 100, "credit", identity=identities[0])
             deposit = await transfer_gold(redis, USER, 100, "deposit", identities[1])
             status = await tax_status(redis, USER)
-        expected = assess_tax(1000, 2000, DAY - 90, DAY)
+        expected = assess_tax(1000, 2000, DAY - 1, DAY)
         require(status["total_paid"] == expected.charged, "Un solo impuesto sobre el saldo previo")
         require(
             int(str(status["wallet"])) + int(str(status["bank"]))
@@ -146,7 +146,7 @@ def main() -> None:
     print(
         json.dumps(
             {
-                "offline_ninety_days": True,
+                "daily_tax_one_percent_offline": True,
                 "credit_not_retroactive": True,
                 "wallet_and_bank": True,
                 "aof_recovery": True,

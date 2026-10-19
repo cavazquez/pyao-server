@@ -135,7 +135,6 @@ class WorldStateService:
             if int(data["last_charge"]) > 0:
                 await sender.send_console_msg(
                     f"Impuesto diario: se cobraron {data['last_charge']} oro "
-                    f"por {int(data['last_day']) - int(data['from_day'])} días "
                     "sobre el oro transportado y del banco, incluso desconectado."
                 )
             self.legacy_receipts[epoch] = receipt
