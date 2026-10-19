@@ -219,6 +219,10 @@ def verbose_mode() -> None:
     Usado cuando se inicia el servidor con la opción --debug para mostrar
     logs detallados de todos los módulos/features.
     """
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+    for handler in root.handlers:
+        handler.setLevel(logging.DEBUG)
     logger = logging.getLogger(__name__)
     for feature in FEATURE_LOG_LEVELS:
         set_feature_log_level(feature, "DEBUG")

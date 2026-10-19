@@ -2,8 +2,12 @@
 
 import json
 import logging
+from io import StringIO
+
+import pytest
 
 from src.log_context import JSONFormatter, SafeLogFilter, connection_id, operation
+from src.logging_config import FEATURE_LOG_LEVELS, configure_logging, verbose_mode
 
 
 def test_sensitive_fields_and_exception_arguments_are_not_serialized():
@@ -36,3 +40,33 @@ def test_nested_operation_context_is_restored():
         assert not json.loads(JSONFormatter().format(record))["operation_id"]
     finally:
         connection_id.reset(token)
+
+
+@pytest.mark.parametrize("format_name", ["json", "text"])
+def test_verbose_output_is_reachable_and_redacted_in_both_formats(monkeypatch, format_name):
+    """--debug atraviesa el handler y nunca publica el secreto de un error."""
+    root = logging.getLogger()
+    handlers, level = root.handlers[:], root.level
+    levels = {f"src.{name}": logging.getLogger(f"src.{name}").level for name in FEATURE_LOG_LEVELS}
+    stream = StringIO()
+    monkeypatch.setenv("PYAO_LOG_FORMAT", format_name)
+    monkeypatch.setattr("sys.stderr", stream)
+    secret = "SYNTHETIC VERBOSE PRIVATE"
+    try:
+        configure_logging()
+        verbose_mode()
+        component = logging.getLogger("src.command_handlers.walk_handler")
+        component.debug('password="%s"', secret)
+        component.error("Operación fallida", exc_info=(ValueError, ValueError(secret), None))
+        output = stream.getvalue()
+        assert secret not in output
+        assert "[REDACTED]" in output
+        assert "DEBUG" in output
+        assert "ValueError" in output
+        if format_name == "json":
+            assert all(isinstance(json.loads(line), dict) for line in output.splitlines())
+    finally:
+        root.handlers = handlers
+        root.setLevel(level)
+        for name, previous in levels.items():
+            logging.getLogger(name).setLevel(previous)

@@ -1,5 +1,6 @@
 """Presupuestos monotónicos compartidos, independientes por jugador y acción."""
 
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass
 from time import monotonic
@@ -10,6 +11,7 @@ from src.config.config_manager import ConfigManager, config_manager
 Action = Literal["walk", "attack", "cast", "work"]
 DEFAULT_INTERVALS: dict[Action, float] = {"walk": 0.2, "attack": 0.5, "cast": 1.0, "work": 0.5}
 PRUNE_SECONDS = 60.0
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -46,6 +48,13 @@ class ActionCadence:
         key = user_id, action
         previous = self._reservations.get(key)
         if previous and (previous.busy or now < previous.next_at):
+            logger.debug(
+                "Cadencia rechazada user_id=%d action=%s busy=%s remaining_ms=%.1f",
+                user_id,
+                action,
+                previous.busy,
+                max(0.0, (previous.next_at - now) * 1000),
+            )
             return False
         interval = ConfigManager.as_float(
             config_manager.get(f"game.cadence.{action}_seconds", DEFAULT_INTERVALS[action]),
