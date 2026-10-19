@@ -8,8 +8,8 @@ todos esos grupos. No produce wheels, sdists ni Snaps en esos eventos.
 `Seguridad y workflows` añade actionlint/ShellCheck y tests de las puertas de
 release; revisa nuevas dependencias vulnerables en los PR y audita todas las
 versiones de uv.lock, incluidas herramientas de desarrollo, con pip-audit.
-También corre semanalmente. CodeQL y secret scanning siguen activos.
-Dependabot revisa uv, Actions y el validador de enlaces npm todos los lunes, durante todo el año. Los enlaces usan Node 24 y npm ci con lockfile; npm audit rechaza vulnerabilidades altas y críticas.
+Las revisiones programadas corren el 1 de diciembre de cada año a las 10:00 de Argentina (13:00 UTC). CodeQL y secret scanning siguen activos.
+Dependabot revisa uv, Actions y el validador de enlaces npm sólo ese día. Los enlaces usan Node 24 y npm ci con lockfile; npm audit rechaza vulnerabilidades altas y críticas.
 
 ## Crear una nueva entrega, cuando esté autorizada
 
