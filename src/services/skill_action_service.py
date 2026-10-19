@@ -96,6 +96,11 @@ class SkillActionService:
                 await notify_inventory(sender, self.inventory, user)
                 await publish_progress(self.player, user, sender)
                 await sender.status_effects.sync_visibility(user, self.player, self.maps)
+                if action == "navigate":
+                    await self.player_death.publish_state(user)
+                    # El cliente habilita pasos sobre agua con este toggle.
+                    # Debe ser la última publicación, después de durabilidad.
+                    await sender.send_navigate_toggle()
             return result
         finally:
             self.cadence.release(user, budget)
@@ -355,18 +360,13 @@ class SkillActionService:
         return True
 
     async def navigate(
-        self, user: int, slot: int, sender: MessageSender, identity: str
+        self, user: int, slot: int, _sender: MessageSender, identity: str
     ) -> dict[str, Any]:
-        """Publica el estado de navegación confirmado, incluida la apariencia compartida.
+        """Confirma el cambio; execute publica sólo tras completar durabilidad.
 
         Returns:
             Resultado de embarcar/desembarcar sin entrenar habilidades manuales.
         """
-        result = await navigate(
+        return await navigate(
             self.player, self.inventory, self.catalog, self.terrain, user, slot, identity
         )
-        if not result.get("applied"):
-            return result
-        await sender.send_navigate_toggle()
-        await self.player_death.publish_state(user)
-        return result

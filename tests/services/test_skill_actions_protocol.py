@@ -1,5 +1,6 @@
 """Protocolo real y publicaciones de habilidades sobre repositorios Redis reales."""
 
+import asyncio
 import json
 import struct
 from types import SimpleNamespace
@@ -71,6 +72,41 @@ async def action_world(mechanics_world):
     world.maps, world.actions, world.clock = maps, service, clock
     with patch("src.services.skill_action_service.require_durable", new=AsyncMock()):
         yield world
+
+
+@pytest.mark.asyncio
+async def test_boat_confirmation_waits_for_durability_before_enabling_walk(action_world):
+    """La apariencia y el toggle no adelantan al cliente durante WAITAOF."""
+    world = action_world
+    world.terrain.has_water = lambda _map, x, _y: x > 50
+    await world.redis.hset(RedisKeys.player_inventory(1), "slot_1", "474:1")
+    await world.redis.hset(RedisKeys.player_skills(1), "level:navegacion", "100")
+    entered, release = asyncio.Event(), asyncio.Event()
+    calls = 0
+
+    async def durable(_redis):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            entered.set()
+            await release.wait()
+
+    with patch("src.services.skill_action_service.require_durable", new=durable):
+        task = asyncio.create_task(
+            world.actions.execute(1, "navigate", {"slot": 1}, world.senders[1])
+        )
+        await asyncio.wait_for(entered.wait(), 1)
+        try:
+            assert await world.redis.hget(RedisKeys.player_user_stats(1), "sailing") == "1"
+            world.actions.player_death.publish_state.assert_not_awaited()
+            assert not world.senders[1].connection.send.await_args_list
+        finally:
+            release.set()
+            result = await task
+    assert result["sailing"] is True
+    world.actions.player_death.publish_state.assert_awaited_once_with(1)
+    frames = [call.args[0] for call in world.senders[1].connection.send.await_args_list]
+    assert frames[-1] == bytes([ServerPacketID.NAVIGATE_TOGGLE])
 
 
 @pytest.mark.asyncio
