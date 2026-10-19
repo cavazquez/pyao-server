@@ -17,8 +17,6 @@ from typing import TYPE_CHECKING
 from src.runtime_paths import BUNDLED_ROOT, data_dir, maps_dir, resource_root, state_dir
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.server_cli import ServerCLI
-from tools.compression.map_binary import ensure_binary_maps
-from tools.compression.map_sync import check_map_sync_on_startup
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +82,8 @@ def main() -> None:
         sys.exit(1)
 
     from src.server import ArgentumServer  # noqa: PLC0415
+    from tools.compression.map_binary import ensure_binary_maps  # noqa: PLC0415
+    from tools.compression.map_sync import check_map_sync_on_startup  # noqa: PLC0415
 
     # Configurar logging
     cli.configure_logging(args.debug)

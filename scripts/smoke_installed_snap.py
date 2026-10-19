@@ -75,6 +75,15 @@ done
             timeout=30,
         )
         assert run_snap("pyao.pyao-server", ["--version"], env, work).strip().endswith("1.0.0rc1")
+        invalid = work / "invalid-server.toml"
+        invalid.write_text("[game.character]\nmana_per_int = 50000\n")
+        informational_env = dict(env, PYAO_CONFIG_FILE=str(invalid))
+        assert (
+            run_snap("pyao.pyao-server", ["--version"], informational_env, work)
+            .strip()
+            .endswith("1.0.0rc1")
+        )
+        assert "--config-file" in run_snap("pyao.pyao-server", ["--help"], informational_env, work)
         run_snap("pyao.pyao-server", ["--check-resources"], env, work)
         config = work / "config/server.toml"
         config.write_text(config.read_text() + "\n# Configuración conservada por smoke Snap\n")
@@ -163,6 +172,7 @@ done
             "installed_snap": True,
             "resources_valid": True,
             "python_aliases_inside_snap": True,
+            "informational_cli_ignores_invalid_config": True,
             "tls_ping": True,
             "restarted": True,
             "redis_state_preserved": True,
