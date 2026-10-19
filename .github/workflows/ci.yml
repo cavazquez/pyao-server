@@ -6,6 +6,12 @@ on:
   push:
     branches: [main, develop]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      build_packages:
+        description: Construir y validar la distribución Python explícitamente
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -153,7 +159,8 @@ jobs:
           path: artifacts/
           retention-days: 7
 
-  distribution:
+  build-distribution:
+    if: github.event_name == 'workflow_dispatch' && inputs.build_packages
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -175,6 +182,20 @@ jobs:
           name: validated-python-distribution
           path: dist/
           retention-days: 7
+
+  distribution:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - run: uv python install "$UV_PYTHON"
+      - run: uv sync --locked --dev
+      - name: Validar metadatos y contrato de distribución sin compilar
+        run: uv run --locked pytest -q tests/operations/test_distribution.py
 
   # Mantiene el nombre del check previo: nunca pasa si algún grupo falló o se omitió.
   test:

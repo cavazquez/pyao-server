@@ -3,11 +3,6 @@ name: Server Snap
 on:
   workflow_dispatch:
   workflow_call:
-  pull_request:
-    paths: ['snap/**', 'scripts/build_snap.py', 'scripts/smoke_installed_snap.py', 'docs/guides/SNAP.md', '.github/workflows/server-snap.yml']
-  push:
-    branches: [main]
-    paths: ['snap/**', 'scripts/build_snap.py', 'scripts/smoke_installed_snap.py', 'docs/guides/SNAP.md', '.github/workflows/server-snap.yml']
 
 permissions:
   contents: read
