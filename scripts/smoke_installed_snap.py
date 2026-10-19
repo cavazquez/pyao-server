@@ -57,6 +57,23 @@ def main() -> None:
     with TemporaryDirectory(prefix="package-smoke-", dir=common) as directory:
         work = Path(directory)
         env["PYAO_STATE_DIR"] = str(work)
+        interpreter_probe = """set -eu
+for name in python python3 python3.14; do
+    executable="$SNAP/bin/$name"
+    resolved=$(readlink -f "$executable")
+    case "$resolved" in "$SNAP"/*) ;; *) exit 1 ;; esac
+    "$executable" -c 'import sys; assert sys.version_info[:2] == (3, 14)'
+done
+"""
+        subprocess.run(
+            ["snap", "run", "--shell", "pyao.pyao-server", "-c", interpreter_probe],
+            env=env,
+            cwd=work,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
         assert run_snap("pyao.pyao-server", ["--version"], env, work).strip().endswith("1.0.0rc1")
         run_snap("pyao.pyao-server", ["--check-resources"], env, work)
         config = work / "config/server.toml"
@@ -145,6 +162,7 @@ def main() -> None:
             "version": "1.0.0rc1",
             "installed_snap": True,
             "resources_valid": True,
+            "python_aliases_inside_snap": True,
             "tls_ping": True,
             "restarted": True,
             "redis_state_preserved": True,
