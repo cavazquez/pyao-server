@@ -92,7 +92,7 @@ class NPCCatalog:
 
             logger.info("NPCs %s cargados: %d NPCs desde %s", file_type, count, file_path)
 
-        except Exception:
+        except OSError:
             logger.exception("Error al cargar NPCs %s desde %s", file_type, file_path)
 
     @staticmethod
@@ -101,8 +101,20 @@ class NPCCatalog:
 
         Returns:
             Datos originales más aliases; los campos legacy explícitos prevalecen.
+
+        Raises:
+            ValueError: Si el intervalo de reaparición es inválido.
         """
         result = dict(row)
+        behavior = row.get("behavior", {})
+        if isinstance(behavior, dict) and behavior.get("respawn"):
+            minimum = int(behavior.get("respawn_min_seconds", 60))
+            maximum = int(behavior.get("respawn_max_seconds", 120))
+            if not 1 <= minimum <= maximum:
+                message = f"Intervalo de reaparición inválido para NPC {row.get('id')}"
+                raise ValueError(message)
+            result.setdefault("respawn_time", minimum)
+            result.setdefault("respawn_time_max", maximum)
         for target, source in (("nombre", "name"), ("descripcion", "description")):
             if source in row:
                 result.setdefault(target, row[source])

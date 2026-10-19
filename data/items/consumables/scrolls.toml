@@ -412,3 +412,43 @@ AllowedClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 HechizoIndex = 43
 Valor = 6000000
 
+
+[[item]]
+id = 1074
+Name = "Onda arcana"
+GrhIndex = 609
+ObjType = 24
+HechizoIndex = 47
+Valor = 3000
+
+[[item]]
+id = 1075
+Name = "Quemadura arcana"
+GrhIndex = 609
+ObjType = 24
+HechizoIndex = 48
+Valor = 2500
+
+[[item]]
+id = 1076
+Name = "Renovación"
+GrhIndex = 609
+ObjType = 24
+HechizoIndex = 49
+Valor = 2500
+
+[[item]]
+id = 1077
+Name = "Barrera arcana"
+GrhIndex = 609
+ObjType = 24
+HechizoIndex = 50
+Valor = 3000
+
+[[item]]
+id = 1078
+Name = "Disipar magia"
+GrhIndex = 609
+ObjType = 24
+HechizoIndex = 51
+Valor = 1800

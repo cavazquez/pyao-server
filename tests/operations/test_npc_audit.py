@@ -311,9 +311,9 @@ async def test_overlapping_areas_use_origin_instead_of_geometric_double_count(
             }
         }
         result = await random_areas(service, spawns, 307)
-        # Carrera reproducida, atribuida correctamente: no reportar 10 y 0.
-        assert [row["observed_count"] for row in result["areas"]] == [4, 6]
-        assert len(result["findings"]) == 2
+        # Las entradas concurrentes respetan el cupo y conservan el origen.
+        assert [row["observed_count"] for row in result["areas"]] == [2, 3]
+        assert result["findings"] == []
         assert result["indices_agree"]
     finally:
         NPCService.reset_instance()

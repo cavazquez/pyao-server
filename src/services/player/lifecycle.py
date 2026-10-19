@@ -9,6 +9,7 @@ from src.economy.ground_devaluation import split_remainder
 from src.economy.tax_transactions import tax_key
 from src.models.item_constants import GOLD_ITEM_ID
 from src.models.items_catalog import ITEMS_CATALOG
+from src.services.combat.barriers import absorb_damage, clear_barrier
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GROUND_TTL_SECONDS, GroundState, stack_identity
@@ -49,6 +50,8 @@ def hp_changes(
                 "poisoned_until": "0",
                 "hidden_until": "0",
                 "invisible_until": "0",
+                "periodic_effects": "[]",
+                **clear_barrier(),
                 "death_event": event,
                 "death_map": position.get("map", "1"),
                 "death_x": position.get("x", "50"),
@@ -84,6 +87,8 @@ def revive_changes(stats: dict[str, str]) -> dict[str, str]:
         "dumb_until": "0",
         "blinded_until": "0",
         "invisible_until": "0",
+        "periodic_effects": "[]",
+        **clear_barrier(),
     }
 
 
@@ -116,9 +121,14 @@ async def apply_player_damage(
             or (require_poison and float(stats.get("poisoned_until", 0)) <= time.time())
         ):
             return Decision(result, {})
-        new_hp = max(0, hp - damage)
+        remaining, barrier = absorb_damage(
+            stats, damage, "poison" if require_poison else "physical"
+        )
+        new_hp = max(0, hp - remaining)
         result.update({"new_hp": new_hp, "player_died": new_hp <= 0, "applied": True})
-        return Decision(result, {stats_key: hp_changes(stats, position, new_hp, identity)})
+        return Decision(
+            result, {stats_key: {**barrier, **hp_changes(stats, position, new_hp, identity)}}
+        )
 
     return await transact(
         redis,

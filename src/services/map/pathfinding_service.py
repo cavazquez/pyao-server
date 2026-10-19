@@ -37,6 +37,8 @@ class PathfindingService:
         target_x: int,
         target_y: int,
         max_depth: int = 20,
+        *,
+        stop_adjacent: bool = False,
     ) -> tuple[int, int, int] | None:
         """Calcula el siguiente paso hacia el objetivo usando A*.
 
@@ -47,6 +49,7 @@ class PathfindingService:
             target_x: Posición X objetivo.
             target_y: Posición Y objetivo.
             max_depth: Profundidad máxima de búsqueda (evita cálculos excesivos).
+            stop_adjacent: Termina junto al objetivo sin ocupar su tile.
 
         Returns:
             Tupla (next_x, next_y, heading) con el siguiente paso, o None si no hay camino.
@@ -56,11 +59,19 @@ class PathfindingService:
             return None
 
         # Si el objetivo está bloqueado, no tiene sentido buscar camino
-        if not self.map_manager.can_move_to(map_id, target_x, target_y):
+        if not stop_adjacent and not self.map_manager.can_move_to(map_id, target_x, target_y):
             return None
 
         # Ejecutar A*
-        path = self._astar(map_id, start_x, start_y, target_x, target_y, max_depth)
+        path = self._astar(
+            map_id,
+            start_x,
+            start_y,
+            target_x,
+            target_y,
+            max_depth,
+            stop_adjacent=stop_adjacent,
+        )
 
         # Si no hay camino, retornar None
         if not path or len(path) < 2:  # ruff: ignore[magic-value-comparison]
@@ -94,6 +105,8 @@ class PathfindingService:
         target_x: int,
         target_y: int,
         max_depth: int,
+        *,
+        stop_adjacent: bool = False,
     ) -> list[tuple[int, int]] | None:
         """Implementación del algoritmo A*.
 
@@ -104,6 +117,7 @@ class PathfindingService:
             target_x: Posición X objetivo.
             target_y: Posición Y objetivo.
             max_depth: Profundidad máxima de búsqueda.
+            stop_adjacent: Acepta un destino adyacente al objetivo ocupado.
 
         Returns:
             Lista de posiciones (x, y) desde start hasta target, o None si no hay camino.
@@ -135,7 +149,9 @@ class PathfindingService:
             _, _, current = heapq.heappop(open_set)
 
             # Si llegamos al objetivo, reconstruir camino
-            if current == (target_x, target_y):
+            if current == (target_x, target_y) or (
+                stop_adjacent and self._heuristic(*current, target_x, target_y) == 1
+            ):
                 return self._reconstruct_path(came_from, current)
 
             # Marcar como visitado

@@ -892,3 +892,91 @@ loops = 0
 caster_msg = "Has invocado una mascota contra"
 target_msg = "ha invocado una mascota sobre ti."
 warps_pet = true
+
+# Extensiones de pyao: componentes, área y efectos persistidos en el GameTick.
+[[spell]]
+id = 47
+name = "Onda arcana"
+description = "Daña objetivos hostiles en un rombo de dos tiles. Consume una gema lunar."
+magic_words = "Lux Arcanum"
+type = 1
+target = 3
+mana_cost = 45
+stamina_cost = 6
+min_skill = 35
+min_damage = 25
+max_damage = 40
+wav = 165
+fx_grh = 35
+loops = 1
+components = [{item = 406, quantity = 1}]
+area = {radius = 2, shape = "diamond", max_targets = 8, targets = "both"}
+
+[[spell]]
+id = 48
+name = "Quemadura arcana"
+description = "Daña a un jugador cada tres segundos durante quince segundos."
+magic_words = "Ignis Persist"
+type = 1
+target = 1
+mana_cost = 30
+stamina_cost = 4
+min_skill = 30
+min_damage = 0
+max_damage = 0
+wav = 165
+fx_grh = 35
+loops = 1
+periodic = {mode = "damage", interval_seconds = 3, duration_seconds = 15, amount = 8, stacking = "replace"}
+
+[[spell]]
+id = 49
+name = "Renovación"
+description = "Recupera vida cada tres segundos durante quince segundos."
+magic_words = "Vita Persist"
+type = 1
+target = 1
+mana_cost = 30
+stamina_cost = 4
+min_skill = 25
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 1
+periodic = {mode = "heal", interval_seconds = 3, duration_seconds = 15, amount = 10, stacking = "replace"}
+
+[[spell]]
+id = 50
+name = "Barrera arcana"
+description = "Absorbe hasta cien puntos de daño durante treinta segundos. Consume una gema azul."
+magic_words = "Scutum Arcanum"
+type = 1
+target = 1
+mana_cost = 40
+stamina_cost = 5
+min_skill = 35
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 1
+components = [{item = 407, quantity = 1}]
+barrier = {capacity = 100, duration_seconds = 30, damage_types = ["physical", "magic", "periodic", "poison"], stacking = "replace"}
+
+[[spell]]
+id = 51
+name = "Disipar magia"
+description = "Elimina barreras y efectos periódicos mágicos del objetivo."
+magic_words = "Anul Arcanum"
+type = 1
+target = 1
+mana_cost = 20
+stamina_cost = 3
+min_skill = 20
+min_damage = 0
+max_damage = 0
+wav = 17
+fx_grh = 7
+loops = 1
+dispels_magic = true

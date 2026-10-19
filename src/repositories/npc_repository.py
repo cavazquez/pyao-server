@@ -60,11 +60,15 @@ class NPCRepository:
         snd3: int = 0,
         domable: int = 0,
         is_tamed: bool = False,
+        role: str = "inhabitant",
+        guard_faction: str = "neutral",
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
         Args:
             npc_id: ID del tipo de NPC (del catálogo).
+            role: Rol explícito de comportamiento.
+            guard_faction: Facción defendida por un guardia.
             char_index: CharIndex único en el mapa.
             map_id: ID del mapa.
             x: Posición X.
@@ -99,6 +103,7 @@ class NPCRepository:
 
         Returns:
             Instancia de NPC creada.
+
         """
         instance_id = str(uuid.uuid4())
 
@@ -136,6 +141,10 @@ class NPCRepository:
             snd3=snd3,
             domable=domable,
             is_tamed=is_tamed,
+            role=role,
+            guard_faction=guard_faction,
+            home_x=x,
+            home_y=y,
         )
 
         # Guardar en Redis
@@ -178,6 +187,11 @@ class NPCRepository:
             "snd1": str(snd1),
             "snd2": str(snd2),
             "snd3": str(snd3),
+            "role": role,
+            "guard_faction": guard_faction,
+            "home_x": str(x),
+            "home_y": str(y),
+            "random_spawn_area": "",
         }
 
         await self.redis.hset(key, mapping=npc_data)
@@ -251,6 +265,11 @@ class NPCRepository:
             domable=int(result.get("domable", "0")),
             is_tamed=result.get("is_tamed", "False").lower() == "true",
             pet_order=result.get("pet_order", "follow"),
+            role=result.get("role", "inhabitant"),
+            guard_faction=result.get("guard_faction", "neutral"),
+            home_x=int(result.get("home_x", result["x"])),
+            home_y=int(result.get("home_y", result["y"])),
+            random_spawn_area=result.get("random_spawn_area", ""),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:

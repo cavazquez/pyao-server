@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.yell_command import YellCommand
 from src.network.chat_channel import deliver_chat
+from src.security.chat_mutes import chat_rejection
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -58,6 +59,11 @@ class YellCommandHandler(CommandHandler):
 
         user_id = command.user_id
         message = command.message
+
+        rejection = await chat_rejection(self.player_repo.redis.redis, user_id, "public")
+        if rejection:
+            await self.message_sender.send_console_msg(rejection)
+            return CommandResult.error(rejection)
 
         if not self.map_manager:
             return CommandResult.error("MapManager no disponible")

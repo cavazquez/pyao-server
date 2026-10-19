@@ -1,0 +1,197 @@
+[
+  {
+    "map": 1,
+    "npc": 504,
+    "before": [
+      49,
+      50
+    ],
+    "after": [
+      50,
+      49
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 1,
+    "npc": 34,
+    "before": [
+      44,
+      76
+    ],
+    "after": [
+      44,
+      74
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 11,
+    "npc": 500,
+    "before": [
+      81,
+      36
+    ],
+    "after": [
+      81,
+      37
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 34,
+    "npc": 2,
+    "before": [
+      40,
+      35
+    ],
+    "after": [
+      41,
+      35
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 34,
+    "npc": 144,
+    "before": [
+      32,
+      72
+    ],
+    "after": [
+      32,
+      71
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 59,
+    "npc": 140,
+    "before": [
+      75,
+      43
+    ],
+    "after": [
+      74,
+      43
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 59,
+    "npc": 142,
+    "before": [
+      68,
+      53
+    ],
+    "after": [
+      68,
+      52
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 59,
+    "npc": 141,
+    "before": [
+      79,
+      60
+    ],
+    "after": [
+      79,
+      59
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 145,
+    "npc": 517,
+    "before": [
+      48,
+      55
+    ],
+    "after": [
+      48,
+      54
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 145,
+    "npc": 517,
+    "before": [
+      30,
+      67
+    ],
+    "after": [
+      30,
+      66
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 162,
+    "npc": 549,
+    "before": [
+      57,
+      32
+    ],
+    "after": [
+      55,
+      31
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 162,
+    "npc": 549,
+    "before": [
+      57,
+      34
+    ],
+    "after": [
+      55,
+      34
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 172,
+    "npc": 500,
+    "before": [
+      27,
+      66
+    ],
+    "after": [
+      26,
+      66
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 172,
+    "npc": 500,
+    "before": [
+      27,
+      69
+    ],
+    "after": [
+      26,
+      69
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  },
+  {
+    "map": 196,
+    "npc": 24,
+    "before": [
+      29,
+      52
+    ],
+    "after": [
+      29,
+      51
+    ],
+    "reason": "Revisado sobre tiles reales: punto con acceso cardinal y sin cambiar población ni mapa."
+  }
+]

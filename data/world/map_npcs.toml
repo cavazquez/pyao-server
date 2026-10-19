@@ -35,8 +35,8 @@ direction = 3
 
 [[map_npcs.1.spawn_points]]
 npc_id = 504
-x = 49
-y = 50
+x = 50
+y = 49
 direction = 3
 
 [[map_npcs.1.spawn_points]]
@@ -198,7 +198,7 @@ direction = 3
 [[map_npcs.1.spawn_points]]
 npc_id = 34
 x = 44
-y = 76
+y = 74
 direction = 3
 
 [[map_npcs.1.spawn_points]]
@@ -1134,7 +1134,7 @@ direction = 3
 [[map_npcs.11.spawn_points]]
 npc_id = 500
 x = 81
-y = 36
+y = 37
 direction = 3
 
 [[map_npcs.11.spawn_points]]
@@ -2595,7 +2595,7 @@ direction = 2
 
 [[map_npcs.34.spawn_points]]
 npc_id = 2
-x = 40
+x = 41
 y = 35
 direction = 4
 
@@ -2758,7 +2758,7 @@ direction = 3
 [[map_npcs.34.spawn_points]]
 npc_id = 144
 x = 32
-y = 72
+y = 71
 direction = 3
 
 [[map_npcs.34.spawn_points]]
@@ -4343,7 +4343,7 @@ direction = 3
 
 [[map_npcs.59.spawn_points]]
 npc_id = 140
-x = 75
+x = 74
 y = 43
 direction = 3
 
@@ -4362,7 +4362,7 @@ direction = 3
 [[map_npcs.59.spawn_points]]
 npc_id = 142
 x = 68
-y = 53
+y = 52
 direction = 3
 
 [[map_npcs.59.spawn_points]]
@@ -4374,7 +4374,7 @@ direction = 3
 [[map_npcs.59.spawn_points]]
 npc_id = 141
 x = 79
-y = 60
+y = 59
 direction = 3
 
 [[map_npcs.59.spawn_points]]
@@ -6804,13 +6804,13 @@ direction = 3
 [[map_npcs.145.spawn_points]]
 npc_id = 517
 x = 48
-y = 55
+y = 54
 direction = 3
 
 [[map_npcs.145.spawn_points]]
 npc_id = 517
 x = 30
-y = 67
+y = 66
 direction = 3
 
 
@@ -7131,13 +7131,13 @@ direction = 3
 
 [[map_npcs.162.spawn_points]]
 npc_id = 549
-x = 57
-y = 32
+x = 55
+y = 31
 direction = 3
 
 [[map_npcs.162.spawn_points]]
 npc_id = 549
-x = 57
+x = 55
 y = 34
 direction = 3
 
@@ -7912,7 +7912,7 @@ direction = 3
 
 [[map_npcs.172.spawn_points]]
 npc_id = 500
-x = 27
+x = 26
 y = 66
 direction = 3
 
@@ -7942,7 +7942,7 @@ direction = 3
 
 [[map_npcs.172.spawn_points]]
 npc_id = 500
-x = 27
+x = 26
 y = 69
 direction = 3
 
@@ -9518,7 +9518,7 @@ direction = 3
 [[map_npcs.196.spawn_points]]
 npc_id = 24
 x = 29
-y = 52
+y = 51
 direction = 3
 
 [[map_npcs.196.spawn_points]]

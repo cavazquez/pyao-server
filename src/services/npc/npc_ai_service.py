@@ -5,6 +5,7 @@ import random
 import time
 from typing import TYPE_CHECKING
 
+from src.services.npc.guard_ai import GUARD_RADIUS, defend
 from src.services.player_progression import publish_progress
 from src.services.visual_events import VisualEvents
 from src.utils.gold_atomic import operation_id
@@ -18,6 +19,7 @@ if TYPE_CHECKING:
     from src.services.combat.combat_service import CombatService
     from src.services.map.pathfinding_service import PathfindingService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
+    from src.services.npc.npc_death_service import NPCDeathService
     from src.services.npc.npc_service import NPCService
     from src.services.player.player_death_service import PlayerDeathService
 
@@ -36,6 +38,7 @@ class NPCAIService:
         broadcast_service: MultiplayerBroadcastService,
         pathfinding_service: PathfindingService | None = None,
         player_death_service: PlayerDeathService | None = None,
+        npc_death_service: NPCDeathService | None = None,
     ) -> None:
         """Inicializa el servicio de IA.
 
@@ -47,6 +50,7 @@ class NPCAIService:
             broadcast_service: Servicio de broadcast.
             pathfinding_service: Servicio de pathfinding (opcional).
             player_death_service: Servicio de muerte de jugadores (opcional).
+            npc_death_service: Servicio común de muerte de criaturas (opcional).
         """
         self.npc_service = npc_service
         self.map_manager = map_manager
@@ -55,6 +59,7 @@ class NPCAIService:
         self.broadcast_service = broadcast_service
         self.pathfinding_service = pathfinding_service
         self.player_death_service = player_death_service
+        self.npc_death_service = npc_death_service
         self.visual_events = VisualEvents(map_manager)
 
     async def find_nearest_player(self, npc: NPC) -> tuple[int, int, int] | None:
@@ -334,7 +339,12 @@ class NPCAIService:
         # Intentar usar pathfinding si está disponible
         if self.pathfinding_service:
             result = self.pathfinding_service.get_next_step(
-                npc.map_id, npc.x, npc.y, target_x, target_y
+                npc.map_id,
+                npc.x,
+                npc.y,
+                target_x,
+                target_y,
+                stop_adjacent=self.map_manager.is_tile_occupied(npc.map_id, target_x, target_y),
             )
             if result:
                 new_x, new_y, direction = result
@@ -391,6 +401,11 @@ class NPCAIService:
             if self.map_manager.is_tile_occupied(npc.map_id, new_x, new_y):
                 return False
 
+        if npc.role == "guard" and (
+            abs(new_x - (npc.home_x or npc.x)) + abs(new_y - (npc.home_y or npc.y)) > GUARD_RADIUS
+        ):
+            return False
+
         # Mover el NPC
         old_x, old_y = npc.x, npc.y
         npc.x = new_x
@@ -428,6 +443,9 @@ class NPCAIService:
         Args:
             npc: NPC a procesar.
         """
+        if npc.role == "guard":
+            await defend(self, npc)
+            return
         if not npc.is_hostile:
             return
 

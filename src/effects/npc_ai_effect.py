@@ -68,7 +68,9 @@ class NPCAIEffect(TickEffect):
         all_npcs = self.npc_service.map_manager.get_all_npcs()
 
         # Filtrar solo NPCs hostiles vivos
-        hostile_npcs = [npc for npc in all_npcs if npc.is_hostile and npc.hp > 0]
+        hostile_npcs = [
+            npc for npc in all_npcs if (npc.is_hostile or npc.role == "guard") and npc.hp > 0
+        ]
 
         if not hostile_npcs:
             return

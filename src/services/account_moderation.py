@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any, cast
 from src.network.client_connection import ClientConnection
 from src.repositories.account_repository import USER_ACCOUNT_INDEX
 from src.security.account_bans import ban_key, is_blocked
+from src.security.chat_mutes import moderate_chat
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
@@ -162,6 +163,8 @@ class AccountModeration:
             Resultado o sintaxis corregible por el operador.
         """
         command = text.split(maxsplit=1)[0].upper()
+        if command in {"/MUTE", "/UNMUTE"}:
+            return await moderate_chat(self.accounts, actor, text)
         parts = text.split(maxsplit=3 if command == "/BAN" else 2)
         try:
             if command == "/BAN" and len(parts) == len(("command", "user", "days", "reason")):

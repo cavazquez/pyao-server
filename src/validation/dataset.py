@@ -13,6 +13,10 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
+from src.models.potion_duration import normalize_potion_duration
+from src.models.spell_extensions import validate_extensions
+from src.services.expansion.catalog import ExpansionCatalog
+
 MAX_ID = 65535
 MAX_SKILL = 100
 Record = dict[str, Any]
@@ -273,6 +277,10 @@ class DatasetValidator:
             if entry.data.get("HechizoIndex", 0) != 0:
                 self.reference(entry, "HechizoIndex", self.spells)
         for entry in self.spells.values():
+            try:
+                validate_extensions(entry.data, set(self.items))
+            except (ValueError, TypeError) as exc:
+                self.problem(entry, "extensions", str(exc))
             for key in ("mana_cost", "stamina_cost", "min_damage", "max_damage"):
                 self.integer(entry, key)
             # 101 es el centinela del dataset VB6 para magia inaccesible por skill normal.
@@ -288,6 +296,11 @@ class DatasetValidator:
 
     def inventories(self) -> None:
         """Comprueba mercaderes, tablas de loot e invocaciones."""
+        for entry in self.items.values():
+            try:
+                normalize_potion_duration(entry.data)
+            except (ValueError, TypeError) as exc:
+                self.problem(entry, "EffectDurationSeconds", str(exc))
         merchants = self.rows(self.read(self.data_dir / "npcs/merchants.toml"), "merchant")
         self.unique(merchants, "npc_id")
         for entry in merchants:
@@ -541,6 +554,15 @@ class DatasetValidator:
         self.report = Report()
         self.catalogs()
         self.inventories()
+        if any(
+            (self.data_dir / "world" / name).exists() for name in ("quests.toml", "factions.toml")
+        ):
+            try:
+                ExpansionCatalog(self.data_dir)
+            except (OSError, ValueError, TypeError) as exc:
+                self.problem(
+                    Entry(self.data_dir / "world/quests.toml", "", {}), "catalog", str(exc)
+                )
         self.recipes()
         self.world()
         self.spawns()

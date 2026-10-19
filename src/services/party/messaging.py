@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.chat_channel import deliver_chat
+from src.security.chat_mutes import chat_rejection
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,9 @@ class MessagingComponent:
         Returns:
             Result message to send to sender
         """
+        rejection = await chat_rejection(self.owner.party_repo.redis.redis, sender_id, "party")
+        if rejection:
+            return rejection
         # Get sender's party
         party = await self.owner.party_repo.get_user_party(sender_id)
         if not party or not party.is_member(sender_id):

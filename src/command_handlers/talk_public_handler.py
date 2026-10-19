@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.network.chat_channel import deliver_chat
+from src.security.chat_mutes import chat_rejection
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -48,6 +49,10 @@ class TalkPublicHandler:
         Returns:
             Tupla (success, error_message, data).
         """
+        rejection = await chat_rejection(self.player_repo.redis.redis, user_id, "public")
+        if rejection:
+            await self.message_sender.send_console_msg(rejection)
+            return False, rejection, None
         if not self.map_manager:
             return False, "MapManager no disponible", None
 

@@ -23,6 +23,8 @@ from src.tasks.task_factory import TaskFactory
 from src.tasks.task_null import TaskNull
 
 if TYPE_CHECKING:
+    from websockets.asyncio.server import Server as WebSocketServer
+
     from src.core.dependency_container import DependencyContainer
     from src.tasks.task import Task
 
@@ -67,6 +69,7 @@ class ArgentumServer:
         self._connections: set[ClientConnection] = set()
         self.ssl_manager = ssl_manager or SSLManager.disabled()
         self.server: asyncio.Server | None = None
+        self.websocket_server: WebSocketServer | None = None
         self.deps: DependencyContainer | None = None  # Contenedor de dependencias
         self.task_factory: TaskFactory | None = None  # Factory para crear tasks
 
@@ -372,6 +375,17 @@ class ArgentumServer:
             logger.error("Cambiá el puerto con --port <número> o liberá el puerto %d.", self.port)  # ruff: ignore[error-instead-of-exception]
             sys.exit(1)
 
+        if self.outgoing_config.wss_port:
+            from src.network.websocket_transport import start_websocket  # ruff: ignore[import-outside-top-level] - transporte optativo.
+
+            self.websocket_server = await start_websocket(
+                self.handle_client,
+                self.outgoing_config.wss_host,
+                self.outgoing_config.wss_port,
+                self.outgoing_config.wss_origins,
+                ssl_context,
+                tls_proxy=self.outgoing_config.wss_tls_proxy,
+            )
         addrs = ", ".join(str(sock.getsockname()) for sock in self.server.sockets)
         logger.info("Servidor escuchando en %s", addrs)
 
@@ -384,6 +398,8 @@ class ArgentumServer:
             self._stopping = True
             if self.server:
                 self.server.close()
+            if self.websocket_server:
+                self.websocket_server.close()
             for reader in tuple(self._receivers):
                 reader.cancel()
             self._stop_task = asyncio.create_task(self._shutdown(), name="pyao-shutdown")
@@ -405,6 +421,8 @@ class ArgentumServer:
         loop = asyncio.get_running_loop()
         deadline = loop.time() + self.outgoing_config.shutdown_timeout_seconds
         work_deadline = deadline - 1
+        if self.websocket_server:
+            await self._shutdown_step(self.websocket_server.wait_closed(), "WSS", work_deadline)
         if self.deps and self.deps.world_state:
             await self._shutdown_step(
                 self.deps.world_state.close(), "estado de interfaz", work_deadline

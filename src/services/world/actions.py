@@ -2,6 +2,8 @@
 
 from typing import TYPE_CHECKING, Any
 
+from src.services.expansion.service import EXPANSION_FIELDS, EXPANSION_TOPICS
+
 if TYPE_CHECKING:
     from src.core.dependency_container import DependencyContainer
 
@@ -35,6 +37,8 @@ ACTION_FIELDS: dict[str, dict[str, type]] = {
     "trade.read": {"session": str, "revision": int, "page": int},
 }
 TOPICS = frozenset({"tax", "party", "clan", "pets", "weather", "commands"})
+ACTION_FIELDS.update(EXPANSION_FIELDS)
+TOPICS |= EXPANSION_TOPICS
 
 
 async def party_action(

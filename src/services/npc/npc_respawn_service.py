@@ -68,14 +68,21 @@ class NPCRespawnService:
         Args:
             npc: NPC que murió y debe respawnear.
         """
-        if npc.respawn_time <= 0:
+        if (
+            npc.respawn_time <= 0
+            or npc.random_spawn_area
+            or npc.is_tamed
+            or npc.summoned_by_user_id
+        ):
             logger.debug(
                 "NPC %s no tiene respawn configurado (respawn_time=%d)", npc.name, npc.respawn_time
             )
             return
 
         # Calcular tiempo aleatorio de respawn entre min y max
-        respawn_delay = random.randint(npc.respawn_time, npc.respawn_time_max)
+        respawn_delay = random.randint(
+            npc.respawn_time, max(npc.respawn_time, npc.respawn_time_max)
+        )
 
         # Cancelar respawn anterior si existe
         if npc.instance_id in self._respawn_tasks:
@@ -113,7 +120,9 @@ class NPCRespawnService:
                 attempt += 1
 
                 # Buscar posición libre aleatoria cercana a la posición original
-                spawn_pos = self._find_random_free_position(npc.map_id, npc.x, npc.y, radius=5)
+                spawn_pos = self._find_random_free_position(
+                    npc.map_id, npc.home_x or npc.x, npc.home_y or npc.y, radius=5
+                )
 
                 if spawn_pos:
                     spawn_x, spawn_y = spawn_pos

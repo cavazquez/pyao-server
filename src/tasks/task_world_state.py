@@ -8,6 +8,7 @@ from src.network.capabilities import Capability
 from src.network.packet_reader import PacketReader
 from src.network.session_manager import SessionManager
 from src.network.state_channel import send_state
+from src.services.expansion.service import EXPANSION_TOPICS
 from src.services.world.actions import ACTION_FIELDS
 from src.tasks.task import Task
 from src.utils.gold_atomic import validate_operation_id
@@ -85,6 +86,12 @@ class TaskWorldState(Task):
                 return
             validate_operation_id(identity)
             action, params = request["action"], request["params"]
+            if (
+                type(action) is str
+                and action.split(".")[0] in EXPANSION_TOPICS
+                and not connection.capabilities.enabled & Capability.EXPANSION
+            ):
+                return
             if action not in ACTION_FIELDS or type(params) is not dict:
                 return
             fields = ACTION_FIELDS[action]

@@ -124,7 +124,12 @@ class TalkCommandHandler(CommandHandler):
         message = command.message
 
         logger.debug("Comando de chat de user_id %d", user_id)
-        if message.split(maxsplit=1) and message.split(maxsplit=1)[0].upper() in {"/BAN", "/UNBAN"}:
+        if message.split(maxsplit=1) and message.split(maxsplit=1)[0].upper() in {
+            "/BAN",
+            "/UNBAN",
+            "/MUTE",
+            "/UNMUTE",
+        }:
             result = await self.moderation.handle_text(user_id, message)
             await self.message_sender.send_console_msg(str(result["message"]))
             return CommandResult.ok(data={"command": "moderation", "applied": result["applied"]})

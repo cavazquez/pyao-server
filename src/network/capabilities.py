@@ -26,11 +26,13 @@ class Capability(IntFlag):
     TRADE_STATE = 128
     SKILL_ACTIONS = 256
     WORLD_STATE = 512
+    EXPANSION = 1024
 
 
 # Se habilitan sólo al integrar la implementación y sus pruebas de cada feature.
 SUPPORTED_CAPABILITIES = (
     Capability.SKILLS_CATALOG
+    | Capability.EXPANSION
     | Capability.WORLD_STATE
     | Capability.TRADE_STATE
     | Capability.SKILL_ALLOCATION

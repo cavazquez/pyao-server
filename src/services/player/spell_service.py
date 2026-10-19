@@ -4,14 +4,18 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 
 from redis.exceptions import RedisError
 
 from src.constants.gameplay import MAX_PETS
+from src.repositories.inventory_repository import InventoryRepository
+from src.services.combat.area_spell import AreaSpellPlan
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat.spell_plan import MAX_COORD, CastRequest, SpellPlan, commit_spell
 from src.services.combat.summon_plan import SummonPlan
+from src.services.inventory_notifications import notify_inventory
 from src.services.player_progression import publish_progress
 from src.services.visual_events import VisualEvents
 from src.utils.gold_atomic import operation_id
@@ -113,10 +117,14 @@ class SpellService:
             position = await self.player_repo.get_position(user_id)
             if not position:
                 return False
-            npc, player = await self._find_target(
-                position["map"], target_x, target_y, user_id, spell, message_sender
+            npc, player = (
+                (None, None)
+                if spell.get("area")
+                else await self._find_target(
+                    position["map"], target_x, target_y, user_id, spell, message_sender
+                )
             )
-            if npc is None and player is None:
+            if npc is None and player is None and not spell.get("area"):
                 return False
             request = CastRequest(
                 user_id,
@@ -128,7 +136,12 @@ class SpellService:
                 npc.instance_id if npc else "",
                 self.map_manager.get_player_username(player) or "" if player else "",
             )
-            if spell.get("invokes") or spell.get("warps_pet"):
+            if spell.get("area"):
+                targets = await self._area_targets(request, spell, position["map"])
+                plan = AreaSpellPlan(
+                    request, dict(spell, id=spell_id), PvpPolicy.configured(), targets
+                )
+            elif spell.get("invokes") or spell.get("warps_pet"):
                 plan = await self._prepare_summon(
                     identity, request, dict(spell, id=spell_id), position["map"]
                 )
@@ -162,13 +175,7 @@ class SpellService:
                     )
                 )
             plan.event_id = identity
-            self._plans[identity] = plan
-            if len(self._plans) > MAX_CACHED_CASTS:
-                oldest = next(iter(self._plans))
-                self.map_manager.release_positions(oldest)
-                del self._plans[oldest]
-                self._published.discard(oldest)
-                self._publish_locks.pop(oldest, None)
+            self._remember_plan(identity, plan)
         elif (
             plan.request.user_id != user_id
             or plan.request.spell_id != spell_id
@@ -196,6 +203,57 @@ class SpellService:
                 self.map_manager.release_positions(identity)
                 self._published.add(identity)
         return True
+
+    def _remember_plan(self, identity: str, plan: SpellPlan) -> None:
+        """Mantiene el cache acotado y libera reservas de un plan desalojado."""
+        self._plans[identity] = plan
+        if len(self._plans) > MAX_CACHED_CASTS:
+            oldest = next(iter(self._plans))
+            self.map_manager.release_positions(oldest)
+            del self._plans[oldest]
+            self._published.discard(oldest)
+            self._publish_locks.pop(oldest, None)
+
+    async def _area_targets(
+        self, request: CastRequest, spell: dict[str, Any], map_id: int
+    ) -> list[CastRequest]:
+        """Selecciona una lista única y estable desde entidades reales del mapa.
+
+        Returns:
+            Candidatos dentro de la forma; vida/posición/PvP se revalidan en EXEC.
+        """
+        area = spell["area"]
+        rows = []
+
+        def inside(x: int, y: int) -> bool:
+            dx, dy = abs(x - request.x), abs(y - request.y)
+            return bool(
+                (max(dx, dy) if area.get("shape", "diamond") == "square" else dx + dy)
+                <= area["radius"]
+            )
+
+        if area["targets"] in {"players", "both"}:
+            for user in sorted(set(self.map_manager.get_players_in_map(map_id))):
+                pos = await self.player_repo.get_position(user)
+                if pos and pos["map"] == map_id and inside(pos["x"], pos["y"]):
+                    rows.append(
+                        replace(
+                            request,
+                            x=pos["x"],
+                            y=pos["y"],
+                            target_player=user,
+                            target_username=self.map_manager.get_player_username(user) or "",
+                        )
+                    )
+        if area["targets"] in {"npcs", "both"}:
+            rows.extend(
+                replace(request, x=npc.x, y=npc.y, target_npc=npc.instance_id)
+                for npc in sorted(
+                    self.map_manager.get_npcs_in_map(map_id), key=lambda npc: npc.instance_id
+                )
+                if inside(npc.x, npc.y)
+            )
+        return rows
 
     async def _prepare_summon(
         self, identity: str, request: CastRequest, spell: dict[str, Any], map_id: int
@@ -265,15 +323,47 @@ class SpellService:
         return plan
 
     async def _publish_committed(  # ruff: ignore[too-many-locals, too-many-statements] - publicación de un único recibo de magia
-        self, plan: SpellPlan, result: dict[str, Any], sender: MessageSender
+        self,
+        plan: SpellPlan,
+        result: dict[str, Any],
+        sender: MessageSender,
+        *,
+        announce: bool = True,
+        sync_caster: bool = True,
     ) -> None:
         """Publica estado confirmado y repara caché desde Redis, sin repetir efectos."""
         request, spell = plan.request, plan.spell
+        if isinstance(plan, AreaSpellPlan):
+            for outcome in result.get("area_results", []):
+                child_request = CastRequest(**outcome["request"])
+                child = next(target for target in plan.targets if target.request == child_request)
+                child.event_id = (
+                    f"{plan.event_id}:{child_request.target_player or child_request.target_npc}"
+                )
+                await self._publish_committed(
+                    child, outcome["result"], sender, announce=False, sync_caster=False
+                )
+            await sender.sync_status(request.user_id, self.player_repo)
+            await publish_progress(self.player_repo, request.user_id, sender)
+            await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
+            return
+        if spell.get("components") and plan.charge_cost:
+            # El inventario publicado proviene del mismo commit que cobró el cast.
+            await notify_inventory(
+                sender, InventoryRepository(self.player_repo.redis), request.user_id
+            )
         delta = int(result.get("hp_delta", 0))
         actor = request.target_player
         if request.target_npc:
             target_npc = await self.npc_repo.get_npc(request.target_npc)
             actor = target_npc.char_index if target_npc else 0
+            if delta < 0 and target_npc and target_npc.snd2 and self.broadcast_service:
+                await self.broadcast_service.broadcast_play_wave(
+                    map_id=target_npc.map_id,
+                    wave_id=target_npc.snd2,
+                    x=target_npc.x,
+                    y=target_npc.y,
+                )
         if actor and result.get("map_id"):
             identity = plan.event_id or operation_id()
             map_id = int(result["map_id"])
@@ -294,8 +384,9 @@ class SpellService:
                 int(spell.get("fx_grh", 0)),
                 request.spell_id,
             )
-        await sender.sync_status(request.user_id, self.player_repo)
-        await publish_progress(self.player_repo, request.user_id, sender)
+        if sync_caster:
+            await sender.sync_status(request.user_id, self.player_repo)
+            await publish_progress(self.player_repo, request.user_id, sender)
         actors = []
         if request.target_player:
             actors.append((request.target_player, request.x, request.y))
@@ -410,7 +501,8 @@ class SpellService:
                         npc, request.user_id, npc.level * 10, sender, death_reason="hechizo"
                     )
         await self._publish_spell_media(request.user_id, spell, actors, sender)
-        await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
+        if announce:
+            await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
 
     async def _publish_spell_media(
         self,

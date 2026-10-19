@@ -1,0 +1,21 @@
+schema = 1
+
+[[faction]]
+id = "royal"
+name = "Armada Real"
+min_level = 12
+change_cooldown_seconds = 86400
+thresholds = [0, 25, 100, 300]
+ranks = ["Recluta", "Soldado", "Capitán", "Comandante"]
+kill_prestige = 1
+quest_prestige = 5
+
+[[faction]]
+id = "chaos"
+name = "Legión del Caos"
+min_level = 12
+change_cooldown_seconds = 86400
+thresholds = [0, 25, 100, 300]
+ranks = ["Iniciado", "Legionario", "Teniente", "Señor del Caos"]
+kill_prestige = 1
+quest_prestige = 5

@@ -19,6 +19,8 @@ def mock_npc_service() -> MagicMock:
     service.npc_catalog = MagicMock()
     service.npc_catalog.get_all_npc_ids = MagicMock(return_value=[1, 2, 3])
     service.npc_catalog.get_npc_data = MagicMock(return_value={"es_hostil": True})
+    service.npc_repository.redis.hset = AsyncMock()
+    service.remove_npc = AsyncMock()
     service.spawn_npc = AsyncMock()
     return service
 

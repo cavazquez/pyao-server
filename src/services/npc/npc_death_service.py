@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from src.models.party import Party
     from src.repositories.npc_repository import NPCRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.expansion.quests import QuestService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.loot_table_service import LootTableService
     from src.services.npc.npc_respawn_service import NPCRespawnService
@@ -62,13 +63,14 @@ class NPCDeathService:
         self.party_service = party_service
         self.random_spawn_service = random_spawn_service
         self._experience = ExperienceComponent(self)
+        self.quest_service: QuestService | None = None
 
     async def handle_npc_death(
         self,
         npc: NPC,
         killer_user_id: int,
         experience: int,
-        message_sender: MessageSender,
+        message_sender: MessageSender | None,
         death_reason: str = "combate",
     ) -> None:
         """Maneja completamente la muerte de un NPC.
@@ -80,15 +82,25 @@ class NPCDeathService:
             message_sender: MessageSender del jugador.
             death_reason: Razón de la muerte ("combate", "hechizo", etc).
         """
+        if self.quest_service and killer_user_id > 0:
+            await self.quest_service.record_kill(npc, killer_user_id)
         # Mensaje de muerte (solo si no está en party,
         # el mensaje de party se envía en _give_experience)
-        if not self.party_service or not await self.party_service.get_party_info(killer_user_id):
+        if (
+            killer_user_id > 0
+            and message_sender
+            and (
+                not self.party_service
+                or not await self.party_service.get_party_info(killer_user_id)
+            )
+        ):
             await message_sender.send_console_msg(
                 f"¡Has matado a {npc.name}! Ganaste {experience} EXP."
             )
 
         # Dar experiencia al jugador o distribuir a party
-        await self._give_experience(killer_user_id, experience, message_sender, npc)
+        if killer_user_id > 0 and message_sender:
+            await self._give_experience(killer_user_id, experience, message_sender, npc)
 
         # Reproducir sonido de muerte del NPC (Snd3) si está disponible
         if npc.snd3 > 0:

@@ -4,6 +4,7 @@ import logging
 import tomllib
 from pathlib import Path
 
+from src.models.potion_duration import normalize_potion_duration
 from src.runtime_paths import data_dir
 
 logger = logging.getLogger(__name__)
@@ -64,7 +65,7 @@ class ItemCatalog:
                             )
                             continue
 
-                        self._items[item_id] = item_data
+                        self._items[item_id] = normalize_potion_duration(item_data)
                         items_loaded += 1
 
                 if items_loaded:
@@ -93,7 +94,7 @@ class ItemCatalog:
                     logger.warning("Item sin ID encontrado, ignorando: %s", item_data)
                     continue
 
-                self._items[item_id] = item_data
+                self._items[item_id] = normalize_potion_duration(item_data)
                 items_loaded += 1
 
             logger.info(
