@@ -84,7 +84,7 @@ class SummonPlan(SpellPlan):
             {resource.key: resource for resource in (*self.resources, *extra)}.values()
         )
 
-    def decide(self, snapshot: Snapshot) -> Decision:  # noqa: PLR0914 - recursos del único commit de invocación
+    def decide(self, snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals] - recursos del único commit de invocación
         """No publica criaturas ni cobra hasta confirmar juntas sus instancias e índices.
 
         Returns:

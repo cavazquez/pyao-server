@@ -200,7 +200,7 @@ async def verify_own_session(peer: ProtocolPeer, job: int, gold: int, user_id: i
     )
 
 
-async def scenario(settings: RedisConfig) -> dict[str, Any]:  # noqa: PLR0914, PLR0915 - escenario secuencial de integración
+async def scenario(settings: RedisConfig) -> dict[str, Any]:  # ruff: ignore[too-many-locals, too-many-statements] - escenario secuencial de integración
     """Comprueba login aislado, framing, movimiento y desconexión de A con B activo.
 
     Returns:

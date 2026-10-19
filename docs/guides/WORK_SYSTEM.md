@@ -103,7 +103,7 @@ enum Skill {
 **Mapeo de Herramientas a Skills:**
 ```python
 work_tools = {
-    561: 9,   # Hacha de Leñador → Talar (Skill.Talar)
+    561: 9,  # Hacha de Leñador → Talar (Skill.Talar)
     562: 13,  # Piquete de Minero → Minería (Skill.Mineria)
     563: 12,  # Caña de pescar → Pesca (Skill.Pesca)
 }
@@ -149,6 +149,7 @@ Byte 3: Skill Type (9, 12 o 13)
 ```python
 # Éxito
 "Has obtenido {cantidad} {recurso}"
+
 # Ejemplos:
 "Has obtenido 2 Pescado"
 "Has obtenido 5 Leña"
@@ -169,10 +170,10 @@ Byte 3: Skill Type (9, 12 o 13)
 ```python
 struct.pack(
     "<BBHH",
-    47,                    # PacketID
-    slot,                  # Slot del inventario (1-20)
-    item.item_id,          # ID del item
-    len(item.name) * 2,    # Longitud del nombre (UTF-16)
+    47,  # PacketID
+    slot,  # Slot del inventario (1-20)
+    item.item_id,  # ID del item
+    len(item.name) * 2,  # Longitud del nombre (UTF-16)
 )
 # ... + nombre (UTF-16LE)
 # ... + cantidad, equipped, grh_id, etc.
@@ -266,7 +267,7 @@ WORK_REQUEST_TARGET_MSG = 17  # No 18!
 **Solución:**
 ```python
 work_tools = {
-    561: 9,   # Talar (no 1)
+    561: 9,  # Talar (no 1)
     562: 13,  # Minería (no 2)
     563: 12,  # Pesca (no 3)
 }
@@ -611,7 +612,7 @@ enum Skill {
 **Mapeo de Herramientas a Skills:**
 ```python
 work_tools = {
-    561: 9,   # Hacha de Leñador → Talar (Skill.Talar)
+    561: 9,  # Hacha de Leñador → Talar (Skill.Talar)
     562: 13,  # Piquete de Minero → Minería (Skill.Mineria)
     563: 12,  # Caña de pescar → Pesca (Skill.Pesca)
 }
@@ -657,6 +658,7 @@ Byte 3: Skill Type (9, 12 o 13)
 ```python
 # Éxito
 "Has obtenido {cantidad} {recurso}"
+
 # Ejemplos:
 "Has obtenido 2 Pescado"
 "Has obtenido 5 Leña"
@@ -677,10 +679,10 @@ Byte 3: Skill Type (9, 12 o 13)
 ```python
 struct.pack(
     "<BBHH",
-    47,                    # PacketID
-    slot,                  # Slot del inventario (1-20)
-    item.item_id,          # ID del item
-    len(item.name) * 2,    # Longitud del nombre (UTF-16)
+    47,  # PacketID
+    slot,  # Slot del inventario (1-20)
+    item.item_id,  # ID del item
+    len(item.name) * 2,  # Longitud del nombre (UTF-16)
 )
 # ... + nombre (UTF-16LE)
 # ... + cantidad, equipped, grh_id, etc.
@@ -774,7 +776,7 @@ WORK_REQUEST_TARGET_MSG = 17  # No 18!
 **Solución:**
 ```python
 work_tools = {
-    561: 9,   # Talar (no 1)
+    561: 9,  # Talar (no 1)
     562: 13,  # Minería (no 2)
     563: 12,  # Pesca (no 3)
 }
@@ -1098,8 +1100,8 @@ MULTI_MESSAGE = 104
 WORK_REQUEST_TARGET_MSG = 17  # NO 18!
 
 # Skills (según cliente)
-SKILL_TALAR = 9     # NO 1
-SKILL_PESCA = 12    # NO 3
+SKILL_TALAR = 9  # NO 1
+SKILL_PESCA = 12  # NO 3
 SKILL_MINERIA = 13  # NO 2
 
 # Herramientas
@@ -1124,8 +1126,8 @@ MINERAL = 70
 packet = struct.pack(
     "<BBB",
     ServerPacketID.MULTI_MESSAGE,  # 104
-    WORK_REQUEST_TARGET_MSG,        # 17
-    skill_type,                     # 9, 12 o 13
+    WORK_REQUEST_TARGET_MSG,  # 17
+    skill_type,  # 9, 12 o 13
 )
 
 # ❌ INCORRECTO (crashea el cliente)

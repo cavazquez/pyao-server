@@ -86,7 +86,7 @@ class DoubleClickItemHandler:
         self,
         user_id: int,
         slot: int,
-        item,  # noqa: ANN001 - Item from items_catalog
+        item,  # ruff: ignore[missing-type-function-argument] - Item from items_catalog
         inventory_repo: InventoryRepository,
     ) -> tuple[bool, str | None, dict[str, Any] | None]:
         """Usa un item consumible.

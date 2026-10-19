@@ -752,7 +752,7 @@ class TestMapResourcesService:
         # Este test verifica que el método funciona correctamente en ambos casos
         assert final_door_count >= initial_door_count
 
-    def test_load_manual_doors_with_valid_toml_file(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+    def test_load_manual_doors_with_valid_toml_file(self, temp_map_dir, monkeypatch):  # ruff: ignore[unused-method-argument]
         """Test _load_manual_doors con archivo TOML válido."""
         # Crear archivo TOML temporal con puertas válidas
         toml_content = """[[door]]
@@ -811,7 +811,7 @@ is_open = false
             if temp_toml_path.exists():
                 temp_toml_path.unlink()
 
-    def test_load_manual_doors_with_incomplete_data(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+    def test_load_manual_doors_with_incomplete_data(self, temp_map_dir, monkeypatch):  # ruff: ignore[unused-method-argument]
         """Test _load_manual_doors con datos incompletos."""
         # Crear archivo TOML con datos incompletos
         toml_content = """[[door]]
@@ -866,7 +866,7 @@ grh_index = 5003
             if temp_toml_path.exists():
                 temp_toml_path.unlink()
 
-    def test_load_manual_doors_with_exception(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+    def test_load_manual_doors_with_exception(self, temp_map_dir, monkeypatch):  # ruff: ignore[unused-method-argument]
         """Test _load_manual_doors cuando hay una excepción al leer el archivo."""
         service = MapResourcesService(maps_dir=temp_map_dir)
 
@@ -882,7 +882,7 @@ grh_index = 5003
             # No debe lanzar excepción, solo debe loguear el error
             service._load_manual_doors()
 
-    def test_load_manual_doors_with_map_manager_closed_doors(self, temp_map_dir, monkeypatch):  # noqa: ARG002
+    def test_load_manual_doors_with_map_manager_closed_doors(self, temp_map_dir, monkeypatch):  # ruff: ignore[unused-method-argument]
         """Test _load_manual_doors con MapManager para bloquear tiles de puertas cerradas."""
         # Crear archivo TOML temporal
         toml_content = """[[door]]

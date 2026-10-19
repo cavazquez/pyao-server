@@ -363,11 +363,9 @@ FEATURE_LOG_LEVELS: dict[str, LogLevel] = {
     # Core
     "core": "INFO",
     "server": "INFO",
-    
     # Tasks
     "tasks.party": "DEBUG",  # ← Cambiar a DEBUG para ver logs de party
     "tasks.combat": "WARNING",
-    
     # Services
     "services.party": "DEBUG",  # ← Cambiar a DEBUG para ver logs de party service
     "services.npc": "WARNING",
@@ -469,8 +467,8 @@ disable_debug_for_feature("services.party")
 ```python
 FEATURE_LOG_LEVELS = {
     # ... otros ...
-    "tasks.party": "DEBUG",      # ← Cambiar a DEBUG
-    "services.party": "DEBUG",   # ← Cambiar a DEBUG
+    "tasks.party": "DEBUG",  # ← Cambiar a DEBUG
+    "services.party": "DEBUG",  # ← Cambiar a DEBUG
     # ... otros ...
 }
 ```

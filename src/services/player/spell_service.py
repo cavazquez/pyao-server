@@ -264,7 +264,7 @@ class SpellService:
             return None
         return plan
 
-    async def _publish_committed(  # noqa: PLR0914, PLR0915 - publicación de un único recibo de magia
+    async def _publish_committed(  # ruff: ignore[too-many-locals, too-many-statements] - publicación de un único recibo de magia
         self, plan: SpellPlan, result: dict[str, Any], sender: MessageSender
     ) -> None:
         """Publica estado confirmado y repara caché desde Redis, sin repetir efectos."""

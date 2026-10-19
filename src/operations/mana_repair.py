@@ -1,6 +1,6 @@
 """Plan idempotente de reparación de maná legado, usado sólo por la migración v2."""
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from src.models.mana import MAX_MANA
 
@@ -17,7 +17,7 @@ def mana_repairs(client: Redis) -> dict[str, dict[str, str]]:
     """
     repairs = {}
     for key in client.scan_iter(match="player:*:user_stats"):
-        values = cast("list[str | bytes | None]", client.hmget(key, ["min_mana", "max_mana"]))
+        values = client.hmget(key, ["min_mana", "max_mana"])
         current, maximum = (int(value) if value is not None else 100 for value in values)
         normalized_max = min(MAX_MANA, max(0, maximum))
         normalized_current = min(normalized_max, max(0, current))

@@ -519,10 +519,10 @@ GOLD_DECAY_INTERVAL_SECONDS=60.0
 from src.config import config
 
 # Acceder a configuraciones
-print(config.server.host)           # "0.0.0.0"
-print(config.redis.port)            # 6379
-print(config.game.max_level)        # 50
-print(config.hunger_thirst.enabled) # True
+print(config.server.host)  # "0.0.0.0"
+print(config.redis.port)  # 6379
+print(config.game.max_level)  # 50
+print(config.hunger_thirst.enabled)  # True
 ```
 
 **Beneficios:**

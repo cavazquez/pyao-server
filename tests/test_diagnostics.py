@@ -15,8 +15,8 @@ from src.diagnostics import diagnose
 @pytest.mark.parametrize("failure", [None, "redis", "dataset", "configuration", "tls"])
 async def test_read_only_diagnostic_reports_missing_dependencies(monkeypatch, tmp_path, failure):
     """La salida es accionable, no filtra secretos y sólo permite PING/cierre."""
-    from src.config import game_config  # noqa: PLC0415
-    from src.validation.dataset import DatasetValidator  # noqa: PLC0415
+    from src.config import game_config  # ruff: ignore[import-outside-top-level]
+    from src.validation.dataset import DatasetValidator  # ruff: ignore[import-outside-top-level]
 
     secret = "SYNTHETIC_DIAGNOSTIC_PRIVATE"
     config = SimpleNamespace(

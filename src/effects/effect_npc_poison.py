@@ -40,9 +40,9 @@ class NPCPoisonEffect(TickEffect):
 
     async def apply(
         self,
-        user_id: int,  # noqa: ARG002
-        player_repo: PlayerRepository,  # noqa: ARG002
-        message_sender: MessageSender | None,  # noqa: ARG002
+        user_id: int,  # ruff: ignore[unused-method-argument]
+        player_repo: PlayerRepository,  # ruff: ignore[unused-method-argument]
+        message_sender: MessageSender | None,  # ruff: ignore[unused-method-argument]
     ) -> None:
         """Aplica el daño de envenenamiento a NPCs envenenados.
 
@@ -61,7 +61,7 @@ class NPCPoisonEffect(TickEffect):
         self._already_executed_this_tick = True
 
         # Resetear el flag después de un breve delay para el próximo tick
-        asyncio.create_task(self._reset_execution_flag())  # noqa: RUF006
+        asyncio.create_task(self._reset_execution_flag())  # ruff: ignore[asyncio-dangling-task]
 
         current_time = time.time()
 

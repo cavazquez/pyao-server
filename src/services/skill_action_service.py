@@ -302,7 +302,7 @@ class SkillActionService:
         if npc:
             npc.hp = int(result["new_hp"])
             if result["npc_died"]:
-                from src.combat.combat_reward_calculator import RewardCalculator  # noqa: PLC0415
+                from src.combat.combat_reward_calculator import RewardCalculator  # ruff: ignore[import-outside-top-level]
 
                 await self.npc_death.handle_npc_death(
                     npc,

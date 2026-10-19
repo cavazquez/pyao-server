@@ -60,7 +60,7 @@ from src.command_handlers.whisper_handler import WhisperCommandHandler
 from src.command_handlers.work_handler import WorkCommandHandler
 from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
 from src.command_handlers.yell_handler import YellCommandHandler
-from src.commands.base import CommandHandler  # noqa: TC001 - usado en runtime
+from src.commands.base import CommandHandler  # ruff: ignore[typing-only-first-party-import] - usado en runtime
 from src.network.request_context import RequestContext, SessionState
 
 if TYPE_CHECKING:

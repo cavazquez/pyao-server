@@ -82,18 +82,18 @@ Desde cualquier lugar donde tengas acceso a `DependencyContainer`:
 if self.deps and self.deps.game_tick:
     # Métricas generales del GameTick
     metrics = self.deps.game_tick.get_metrics()
-    
+
     print(f"Total ticks: {metrics['total_ticks']}")
     print(f"Avg tick time: {metrics['avg_tick_time_ms']:.2f}ms")
     print(f"Max tick time: {metrics['max_tick_time_ms']:.2f}ms")
-    
+
     # Métricas por efecto
-    for effect_name, effect_metrics in metrics['effects'].items():
+    for effect_name, effect_metrics in metrics["effects"].items():
         print(f"\n{effect_name}:")
         print(f"  Calls: {effect_metrics['count']}")
         print(f"  Avg time: {effect_metrics['avg_time_ms']:.2f}ms")
         print(f"  Max time: {effect_metrics['max_time_ms']:.2f}ms")
-    
+
     # Métricas específicas de NPCMovementEffect
     for effect in self.deps.game_tick.effects:
         if effect.get_name() == "NPCMovement":

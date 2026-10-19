@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 import shutil
-import subprocess  # noqa: S404 - redis-cli local, sin shell ni secretos en argumentos.
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - redis-cli local, sin shell ni secretos en argumentos.
 import tempfile
 import time
 from base64 import b64encode
@@ -52,9 +52,7 @@ def persistent_snapshot(client: Redis) -> dict[str, Any]:
     Raises:
         ValueError: Si hay tipos ajenos al contrato de datos de pyao.
     """
-    databases = sorted(
-        int(name.removeprefix("db")) for name in cast("dict[str, Any]", client.info("keyspace"))
-    )
+    databases = sorted(int(name.removeprefix("db")) for name in client.info("keyspace"))
     result: dict[str, Any] = {}
     for database in databases:
         client.select(database)
@@ -174,7 +172,7 @@ def create_backup(settings: RedisConfig, destination: Path) -> dict[str, Any]:
             host=settings.host, port=settings.port, password=password, decode_responses=True
         ) as source:
             version = source.info("server")["redis_version"]
-        subprocess.run(  # noqa: S603 - ejecutable resuelto, auth por entorno y argumentos separados.
+        subprocess.run(  # ruff: ignore[subprocess-without-shell-equals-true] - ejecutable resuelto, auth por entorno y argumentos separados.
             [executable, "-h", settings.host, "-p", str(settings.port), "--rdb", str(temporary)],
             env=environment,
             check=True,

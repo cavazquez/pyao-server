@@ -27,12 +27,12 @@ Cuando un NPC golpea al jugador.
 **Partes del Cuerpo:**
 ```python
 class BodyPart(IntEnum):
-    HEAD = 1         # Cabeza
-    LEFT_LEG = 2     # Pierna izquierda
-    RIGHT_LEG = 3    # Pierna derecha
-    RIGHT_ARM = 4    # Brazo derecho
-    LEFT_ARM = 5     # Brazo izquierdo
-    TORSO = 6        # Torso
+    HEAD = 1  # Cabeza
+    LEFT_LEG = 2  # Pierna izquierda
+    RIGHT_LEG = 3  # Pierna derecha
+    RIGHT_ARM = 4  # Brazo derecho
+    LEFT_ARM = 5  # Brazo izquierdo
+    TORSO = 6  # Torso
 ```
 
 **Cliente Godot muestra:**
@@ -98,6 +98,7 @@ await message_sender.send_npc_hit_user(damage=25)
 
 # Parte del cuerpo específica
 from src.models.body_part import BodyPart
+
 await message_sender.send_npc_hit_user(damage=25, body_part=BodyPart.HEAD)
 
 # Métodos de conveniencia

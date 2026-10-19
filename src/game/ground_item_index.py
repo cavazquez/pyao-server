@@ -239,7 +239,8 @@ class GroundItemIndex:
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             result = await operation()
             raw = await redis.get(RedisKeys.ground_items(map_id))
-            self._replace_map(map_id, GroundState(map_id, raw).positions())
+            text = raw.decode() if isinstance(raw, bytes) else raw
+            self._replace_map(map_id, GroundState(map_id, text).positions())
             now = asyncio.get_running_loop().time()
             self._published = {
                 key: expiry for key, expiry in self._published.items() if expiry > now

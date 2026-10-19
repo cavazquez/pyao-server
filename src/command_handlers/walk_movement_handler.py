@@ -104,7 +104,7 @@ class WalkMovementHandler:
         # Verificar si realmente se movió
         moved = new_x != current_x or new_y != current_y
 
-        if not moved:  # noqa: SIM102
+        if not moved:  # ruff: ignore[collapsible-if]
             # No se movió (límite del mapa sin transición)
             # Solo actualizar heading si cambió
             if self.player_repo:

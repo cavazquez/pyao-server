@@ -48,7 +48,7 @@ class PlayerStatsMessageSender:
 
     async def send_update_strength_and_dexterity(self, strength: int, dexterity: int) -> None:
         """Envía paquete UpdateStrengthAndDexterity del protocolo AO estándar."""
-        from src.network.packet_id import ServerPacketID  # noqa: PLC0415
+        from src.network.packet_id import ServerPacketID  # ruff: ignore[import-outside-top-level]
 
         response = build_update_strength_and_dexterity_response(
             strength=strength, dexterity=dexterity
@@ -216,7 +216,7 @@ class PlayerStatsMessageSender:
     async def send_update_user_stats_from_repo(
         self,
         user_id: int,
-        player_repo: "PlayerRepository",  # noqa: UP037
+        player_repo: "PlayerRepository",  # ruff: ignore[quoted-annotation]
         *,
         min_hp: int | None = None,
         min_mana: int | None = None,
