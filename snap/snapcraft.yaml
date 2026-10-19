@@ -66,6 +66,10 @@ parts:
     override-build: |
       set -eu
       craftctl default
+      # uv conserva alias al intérprete staged; todos deben apuntar al payload.
+      for interpreter in python python3 python3.14; do
+        ln -sfn ../usr/bin/python3.14 "$CRAFT_PART_INSTALL/bin/$interpreter"
+      done
       install -Dm644 "$CRAFT_PROJECT_DIR/snap/pyao-source.json" "$CRAFT_PART_INSTALL/share/doc/pyao/provenance.json"
       install -Dm644 LICENSE "$CRAFT_PART_INSTALL/share/doc/pyao/LICENSE"
       install -Dm644 docs/guides/REDIS.md "$CRAFT_PART_INSTALL/share/doc/pyao/REDIS.md"

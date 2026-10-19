@@ -22,6 +22,10 @@ de mapas; no se requiere una copia local de `map_data/`. uv queda fuera del Snap
 La [guía oficial de core26](https://ubuntu.com/docs/snapcraft/9/how-to/change-bases/change-from-core24-to-core26/)
 documenta el runtime Python incluido.
 
+Se normalizan `bin/python`, `bin/python3` y `bin/python3.14` a enlaces relativos
+al intérprete incluido. El plugin uv puede conservar alias a `/root/stage`;
+CI resuelve y ejecuta los tres desde el Snap instalado antes de publicar.
+
 `Server Snap` construye en runners nativos amd64/arm64, instala el paquete y
 verifica versión, recursos, PING/PONG con TLS, esquema 4, catálogos de habilidades
 y recetas, cierre SIGTERM y reinicio con estado Redis y configuración intactos.
