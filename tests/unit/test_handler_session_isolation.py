@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.network.request_context import RequestContext
 from src.tasks.handler_registry import HANDLER_CONFIGS, HandlerConfig, HandlerRegistry
 from src.tasks.player.task_account import TaskCreateAccount
 from src.tasks.player.task_login import TaskLogin
@@ -82,6 +83,24 @@ def test_walk_subhandlers_keep_their_own_sender():
         assert handler.message_sender is sender
         assert handler.validation_handler.message_sender is sender
         assert handler.movement_handler.message_sender is sender
+
+
+def test_context_observes_authentication_without_copying_the_session():
+    """El contexto previo a login consulta la misma sesión después de autenticar."""
+    sender, session = Mock(), {}
+    context = RequestContext(sender, session)
+    assert context.user_id is None
+    session["user_id"] = 42
+    assert context.user_id == 42
+    assert context.sender is sender
+    assert context.session is session
+
+
+def test_registry_rejects_a_missing_dependency_before_execution():
+    """Un wiring incompleto nombra el handler y la dependencia ausente."""
+    deps = SimpleNamespace()
+    with pytest.raises(ValueError, match=r"WalkCommandHandler\.action_cadence"):
+        HandlerRegistry(deps).get("walk", Mock(), {})
 
 
 def test_real_login_subhandlers_and_session_identity():

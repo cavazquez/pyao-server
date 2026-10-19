@@ -21,6 +21,8 @@ from src.server_cli import ServerCLI
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
+    import argparse
+
     from src.server import ArgentumServer
 
 DEFAULT_CERT_PATH = state_dir() / "certs/server.crt"
@@ -57,6 +59,15 @@ async def run_until_stopped(server: ArgentumServer) -> None:
                 loop.remove_signal_handler(number)
 
 
+def _run_diagnostic(args: argparse.Namespace) -> None:
+    """Ejecuta el diagnóstico sin importar el servidor ni sus inicializadores."""
+    from src.diagnostics import diagnose  # noqa: PLC0415 - preservar CLI sin configuración
+
+    result = asyncio.run(diagnose(args))
+    print(json.dumps(result, ensure_ascii=False))
+    sys.exit(0 if result["ok"] else 1)
+
+
 def main() -> None:
     """Punto de entrada principal del servidor."""
     cli = ServerCLI()
@@ -70,6 +81,8 @@ def main() -> None:
     ):
         if value := getattr(args, option):
             os.environ[environment] = str(Path(value).expanduser().resolve())
+    if args.diagnose:
+        _run_diagnostic(args)
     # Las dependencias y sus singletons leen las rutas después de parsear el CLI.
     from src.validation.dataset import DatasetValidator  # noqa: PLC0415
 

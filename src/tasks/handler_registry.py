@@ -1,7 +1,7 @@
 """Registry para creación de command handlers con inyección de dependencias."""
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, cast
 
 from src.command_handlers.attack_handler import AttackCommandHandler
 from src.command_handlers.ayuda_handler import AyudaCommandHandler
@@ -61,10 +61,13 @@ from src.command_handlers.work_handler import WorkCommandHandler
 from src.command_handlers.work_left_click_handler import WorkLeftClickCommandHandler
 from src.command_handlers.yell_handler import YellCommandHandler
 from src.commands.base import CommandHandler  # noqa: TC001 - usado en runtime
+from src.network.request_context import RequestContext, SessionState
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from src.core.dependency_container import DependencyContainer
     from src.messaging.message_sender import MessageSender
-    from src.tasks.dependencies import TaskDependencies
 
 
 @dataclass
@@ -75,7 +78,7 @@ class HandlerConfig:
     deps_keys: list[str] = field(default_factory=list)
     needs_session_data: bool = False
     needs_message_sender: bool = True
-    initial_kwargs: dict[str, Any] = field(default_factory=dict)
+    initial_kwargs: dict[str, object] = field(default_factory=dict)
 
 
 # Mapeo de nombres de handler a su configuración
@@ -404,7 +407,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
 class HandlerRegistry:
     """Crea handlers por petición con dependencias de sesión estables."""
 
-    def __init__(self, deps: TaskDependencies) -> None:
+    def __init__(self, deps: DependencyContainer) -> None:
         """Inicializa el registry.
 
         Args:
@@ -416,8 +419,8 @@ class HandlerRegistry:
         self,
         name: str,
         message_sender: MessageSender,
-        session_data: dict[str, Any] | None = None,
-    ) -> Any:  # noqa: ANN401 - retorna handler específico, tipo exacto no inferible
+        session_data: SessionState | None = None,
+    ) -> CommandHandler:
         """Crea un handler que pertenece exclusivamente a esta petición.
 
         Args:
@@ -438,14 +441,16 @@ class HandlerRegistry:
 
         # Los subhandlers capturan el emisor y la sesión en su constructor.
         # Mutar una instancia compartida cruza conexiones al suspenderse un await.
-        return config.handler_class(**self._build_kwargs(config, message_sender, session_data))
+        context = RequestContext(message_sender, session_data)
+        constructor = cast("Callable[..., CommandHandler]", config.handler_class)
+        return constructor(**self._build_kwargs(config, context.sender, context.session))
 
     def _build_kwargs(
         self,
         config: HandlerConfig,
         message_sender: MessageSender,
-        session_data: dict[str, Any] | None,
-    ) -> dict[str, Any]:
+        session_data: SessionState | None,
+    ) -> dict[str, object]:
         """Construye los kwargs para instanciar un handler.
 
         Args:
@@ -455,18 +460,26 @@ class HandlerRegistry:
 
         Returns:
             Diccionario de kwargs para el constructor.
+
+        Raises:
+            ValueError: Si falta una dependencia requerida del handler.
         """
         # Los tasks de clan asignan el usuario autenticado antes de ejecutar el
         # handler. Cada petición recibe su propio diccionario y su propia instancia.
-        kwargs: dict[str, Any] = dict(config.initial_kwargs)
+        kwargs: dict[str, object] = dict(config.initial_kwargs)
         if config.needs_message_sender:
             kwargs["message_sender"] = message_sender
 
         # Agregar dependencias desde deps
         for key in config.deps_keys:
+            if not hasattr(self.deps, key):
+                msg = f"Dependencia requerida ausente: {config.handler_class.__name__}.{key}"
+                raise ValueError(msg)
             value = getattr(self.deps, key, None)
             # Mapear nombres de atributo a nombres de parámetro si difieren
             param_name = self._get_param_name(key)
+            # Un parámetro obligatorio puede aceptar None (por ejemplo, los
+            # servicios opcionales de ataque). Ausencia y nulabilidad difieren.
             kwargs[param_name] = value
 
         # Agregar session_data si es necesario

@@ -23,6 +23,7 @@ from src.services.map.map_workshops import load_workshops
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
+    from src.services.fishing_zones import FishingZones
 
 from src.runtime_paths import data_dir, state_dir
 from src.runtime_paths import maps_dir as default_maps_dir
@@ -58,6 +59,7 @@ class MapResourcesService:
         self.doors: dict[str, dict[tuple[int, int], int]] = {}
 
         self.map_manager = map_manager
+        self.fishing_zones: FishingZones | None = None
 
         self._cache_loader = MapCacheLoader(self.maps_dir, self.cache_dir)
         binary_loader = MapBinaryCache(self.maps_dir, self.resources, self.signs, self.doors)

@@ -2,7 +2,11 @@
 
 import logging
 import os
+import traceback
+from types import TracebackType
 from typing import ClassVar, Literal
+
+from src.log_context import JSONFormatter, SafeLogFilter
 
 # Niveles de logging disponibles
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -59,6 +63,18 @@ class ColorFormatter(logging.Formatter):
         super().__init__(fmt=fmt, datefmt=datefmt)
         self.use_color = use_color
 
+    def formatException(  # noqa: N802 - API de logging.Formatter
+        self,
+        ei: tuple[type[BaseException], BaseException, TracebackType | None]
+        | tuple[None, None, None],
+    ) -> str:
+        """Muestra la pila sin imprimir argumentos de excepciones potencialmente secretos.
+
+        Returns:
+            Pila y tipo de excepción, sin sus argumentos.
+        """
+        return "".join(traceback.format_tb(ei[2], limit=8)) + ei[0].__name__ if ei[0] else ""
+
     def format(self, record: logging.LogRecord) -> str:
         """Devuelve el mensaje formateado aplicando color al nivel si corresponde.
 
@@ -81,6 +97,7 @@ def configure_logging() -> None:
 
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
+    handler.addFilter(SafeLogFilter())
 
     # Habilitar color cuando hay TTY o si se fuerza vía LOG_COLOR=1/true/yes
     handler_use_color = use_color and (
@@ -88,7 +105,9 @@ def configure_logging() -> None:
     )
 
     handler.setFormatter(
-        ColorFormatter(
+        JSONFormatter()
+        if os.getenv("PYAO_LOG_FORMAT", "text") == "json"
+        else ColorFormatter(
             fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
             use_color=handler_use_color,

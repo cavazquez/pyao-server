@@ -50,6 +50,7 @@ class SpellPlan:
         """Congela azar y política antes de los reintentos, sin cobrar recursos."""
         self.staff_items: frozenset[int] = frozenset()
         self.world_guard: Callable[[], bool] | None = None
+        self.event_id = ""
         self.request = request
         self.spell = spell
         self.policy = policy
@@ -234,6 +235,10 @@ class SpellPlan:
                     "applied": True,
                     "message": "Hechizo confirmado.",
                     "amount": amount,
+                    "hp_delta": int(target_changes.get(hp_field, hp)) - hp,
+                    "map_id": int(position["map"]),
+                    "source_x": int(position["x"]),
+                    "source_y": int(position["y"]),
                     "target_hp": int(target_changes.get(hp_field, hp)),
                     "revived": bool(self.spell.get("revives")),
                     "target_life_id": int(target_changes.get("life_id", target.get("life_id", 0))),

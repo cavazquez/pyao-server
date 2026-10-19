@@ -35,6 +35,8 @@ SUPPORTED_CAPABILITIES = (
     | Capability.PASSWORD_CHANGE
     | Capability.TARGETED_CAST
     | Capability.SKILL_ACTIONS
+    | Capability.VISUAL_DAMAGE
+    | Capability.PROJECTILES
 )
 
 

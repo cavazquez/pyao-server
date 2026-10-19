@@ -1,0 +1,22 @@
+# Distancia mínima de Manhattan desde una casilla de agua junto a tierra.
+# marine_maps vacío usa los mapas declarados water en world/map_metadata.toml.
+# Lagos que no conectan con un mapa marino conservan la banda costa.
+marine_maps = []
+
+[[band]]
+name = "costa"
+min_distance = 0
+items = [139]
+weights = [100]
+
+[[band]]
+name = "mar intermedio"
+min_distance = 4
+items = [139, 545, 546]
+weights = [45, 35, 20]
+
+[[band]]
+name = "mar adentro"
+min_distance = 12
+items = [139, 545, 546, 544]
+weights = [10, 25, 25, 40]

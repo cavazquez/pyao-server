@@ -5,6 +5,7 @@ import random
 from typing import TYPE_CHECKING, Any, cast
 
 from src.models.skills import skill_progress
+from src.services.fishing_zones import FishingZones
 from src.services.skill_training import trained_decision, training_resources
 from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
@@ -12,6 +13,7 @@ from src.utils.resource_transaction import Decision, Resource, Snapshot, transac
 from src.utils.slot_plan import SlotPlan
 
 MAX_COORD = 100
+FISHING_SKILL = 12
 
 
 if TYPE_CHECKING:
@@ -49,12 +51,14 @@ async def gather(
         return {"applied": False, "message": "Habilidad de recolección inválida."}
     key, _tool, item, quantity, name, winning_rolls = GATHERING[skill_id]
     sample = random.random()
+    fish_choice: tuple[int, str, int] | None = None
     inventory_key, position_key = (
         RedisKeys.player_inventory(user_id),
         RedisKeys.player_position(user_id),
     )
 
-    def decide(snapshot: Snapshot) -> Decision:
+    def decide(snapshot: Snapshot) -> Decision:  # noqa: PLR0914 - recurso, pesca y XP atómicos
+        nonlocal fish_choice
         position = cast("dict[str, str]", snapshot[position_key])
         stats = cast("dict[str, str]", snapshot[RedisKeys.player_user_stats(user_id)])
         if (
@@ -84,12 +88,25 @@ async def gather(
                 {"applied": False, "message": "No tienes la herramienta necesaria."}, {}
             )
         skills = cast("dict[str, str]", snapshot[RedisKeys.player_skills(user_id)])
+        catch_item, catch_name = item, name
+        band, coast_distance = "", 0
+        if skill_id == FISHING_SKILL:
+            zones = getattr(resources, "fishing_zones", None)
+            if not isinstance(zones, FishingZones):
+                zones = FishingZones(resources)
+                resources.fishing_zones = zones
+            if fish_choice is None:
+                fish_choice = zones.catch((map_id, x, y))
+            catch_item, band, coast_distance = fish_choice
+            catch_name = {139: "Pescado", 544: "Pez Dorado", 545: "Pez Espada", 546: "Merluza"}.get(
+                catch_item, "Pescado"
+            )
         level = next(p.level for p in skill_progress(skills) if p.definition.key == key)
         luck = max(1, math.floor(-0.00125 * level * level - 0.3 * level + 49))
         successful = sample < min(1.0, winning_rolls / luck)
         try:
             # También comprueba capacidad en un fallo válido: no entrenar con bolsa llena.
-            slots.give(item, quantity)
+            slots.give(catch_item, quantity)
         except ValueError as error:
             return Decision({"applied": False, "message": str(error)}, {})
         decision = Decision(
@@ -97,11 +114,13 @@ async def gather(
                 "applied": True,
                 "successful": successful,
                 "quantity": quantity if successful else 0,
-                "item_id": item,
+                "item_id": catch_item,
+                "fishing_band": band,
+                "coast_distance": coast_distance,
                 "skill": key,
-                "message": f"Has obtenido {quantity} {name}."
+                "message": f"Has obtenido {quantity} {catch_name}."
                 if successful
-                else f"No has obtenido {name}; sigues practicando.",
+                else f"No has obtenido {catch_name}; sigues practicando.",
             },
             {inventory_key: slots.fields()} if successful else {},
         )

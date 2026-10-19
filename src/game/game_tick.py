@@ -6,8 +6,11 @@ a los jugadores conectados (hambre, sed, reducción de oro, etc.).
 
 import asyncio
 import contextlib
+import json
 import logging
+import os
 import time
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 from src.effects.effect_gold_decay import GoldDecayEffect
@@ -114,6 +117,11 @@ class GameTick:
                 if cast("int", self._metrics["total_ticks"]) % 50 == 0:
                     self._log_metrics()
 
+                if metrics_path := os.environ.get("PYAO_METRICS_FILE"):
+                    target = Path(metrics_path)
+                    temporary = target.with_suffix(".pending")
+                    temporary.write_text(json.dumps(self._metrics))
+                    temporary.replace(target)
                 # Esperar hasta el próximo tick
                 await asyncio.sleep(self.tick_interval)
 

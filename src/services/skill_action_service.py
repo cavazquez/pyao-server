@@ -11,6 +11,7 @@ from src.services.inventory_notifications import notify_inventory
 from src.services.navigation import navigate
 from src.services.personal_skills import hide, steal, survival, tame
 from src.services.player_progression import publish_progress
+from src.services.visual_events import VisualEvents
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
@@ -58,6 +59,7 @@ class SkillActionService:
         self.player, self.inventory, self.terrain = player, inventory, terrain
         self.maps, self.catalog, self.npcs = maps, catalog, npcs
         self.npc_death, self.player_death, self.cadence = npc_death, player_death, cadence
+        self.visual_events = VisualEvents(maps)
 
     async def execute(
         self,
@@ -263,6 +265,21 @@ class SkillActionService:
         amount = int(result["damage"])
         x, y = int(result["target_x"]), int(result["target_y"])
         actor = npc.char_index if npc else target
+        kind = 4 if result["critical"] else 0 if amount else 3 if result["blocked"] else 2
+        await self.visual_events.damage(identity, map_id, actor, x, y, amount, kind)
+        if ranged:
+            await self.visual_events.projectile(
+                identity,
+                map_id,
+                user,
+                actor,
+                int(position["x"]),
+                int(position["y"]),
+                x,
+                y,
+                2,
+                int(result["projectile_asset"]),
+            )
         for uid in self.maps.get_players_in_map(map_id):
             observer = self.maps.get_player_message_sender(uid)
             if observer:

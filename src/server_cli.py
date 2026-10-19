@@ -100,6 +100,17 @@ Ejemplos:
             action="store_true",
             help="Validar el dataset efectivo sin conectar a Redis ni abrir el listener",
         )
+        parser.add_argument(
+            "--diagnose",
+            action="store_true",
+            help="Comprobar configuración, Redis, dataset y TLS sin modificar el mundo",
+        )
+        parser.add_argument(
+            "--log-format",
+            choices=("text", "json"),
+            default=None,
+            help="Formato de registros (o PYAO_LOG_FORMAT)",
+        )
         return parser
 
     def _configure_logging(self, debug: bool) -> None:
@@ -124,7 +135,10 @@ Ejemplos:
         Returns:
             Namespace con los argumentos parseados.
         """
-        return self.parser.parse_args()
+        args = self.parser.parse_args()
+        if args.log_format:
+            os.environ["PYAO_LOG_FORMAT"] = args.log_format
+        return args
 
     def configure_logging(self, debug: bool) -> None:
         """Configura el sistema de logging (método público).

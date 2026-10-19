@@ -268,6 +268,7 @@ class PhysicalPlan:
                 "meditating": "0",
             }
         }
+        projectile_asset = 0
         if bow:
             slots = SlotPlan(
                 cast("dict[str, str]", snapshot[RedisKeys.player_inventory(user)]),
@@ -288,6 +289,7 @@ class PhysicalPlan:
                     {"applied": False, "message": "No tienes munición para el arco."}, {}
                 )
             slots.take(ammo[0], ammo[1].item_id, 1)
+            projectile_asset = self.catalog.get_grh_index(ammo[1].item_id) or 0
             writes[RedisKeys.player_inventory(user)] = slots.fields()
         rules = json.loads(str(snapshot.get(SKILL_RULES_KEY) or "{}"))
         blocked = False
@@ -339,6 +341,7 @@ class PhysicalPlan:
         result = {
             "applied": True,
             "damage": amount,
+            "projectile_asset": projectile_asset,
             "critical": successful and (critical or stabbed),
             "backstab": stabbed,
             "dodged": dodged,

@@ -1,6 +1,6 @@
 [project]
 name = "pyao-server"
-version = "1.0.0rc1"
+version = "1.0.0rc2"
 description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -112,14 +112,6 @@ ignore_errors = true
 [[tool.mypy.overrides]]
 module = "tools.*"
 ignore_errors = true  # parsers y herramientas auxiliares usan tipos dinámicos
-
-[[tool.mypy.overrides]]
-module = "src.tasks.task_factory"
-ignore_errors = true  # session_data tiene tipos inconsistentes entre tasks
-
-[[tool.mypy.overrides]]
-module = "src.tasks.handler_registry"
-ignore_errors = true  # registry retorna tipos dinámicos
 
 [[tool.mypy.overrides]]
 module = "src.utils.redis_client"

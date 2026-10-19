@@ -13,6 +13,7 @@ from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat.spell_plan import MAX_COORD, CastRequest, SpellPlan, commit_spell
 from src.services.combat.summon_plan import SummonPlan
 from src.services.player_progression import publish_progress
+from src.services.visual_events import VisualEvents
 from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
@@ -69,6 +70,7 @@ class SpellService:
             item_catalog: Requisitos de equipo del catálogo propio.
         """
         self.item_catalog = item_catalog
+        self.visual_events = VisualEvents(map_manager)
         self.player_death_service = player_death_service
         self._plans: dict[str, SpellPlan] = {}
         self._publish_locks: dict[str, asyncio.Lock] = {}
@@ -159,6 +161,7 @@ class SpellService:
                         for x, y in plan.positions
                     )
                 )
+            plan.event_id = identity
             self._plans[identity] = plan
             if len(self._plans) > MAX_CACHED_CASTS:
                 oldest = next(iter(self._plans))
@@ -261,11 +264,36 @@ class SpellService:
             return None
         return plan
 
-    async def _publish_committed(  # noqa: PLR0915 - publicación de un único recibo de magia
+    async def _publish_committed(  # noqa: PLR0914, PLR0915 - publicación de un único recibo de magia
         self, plan: SpellPlan, result: dict[str, Any], sender: MessageSender
     ) -> None:
         """Publica estado confirmado y repara caché desde Redis, sin repetir efectos."""
         request, spell = plan.request, plan.spell
+        delta = int(result.get("hp_delta", 0))
+        actor = request.target_player
+        if request.target_npc:
+            target_npc = await self.npc_repo.get_npc(request.target_npc)
+            actor = target_npc.char_index if target_npc else 0
+        if actor and result.get("map_id"):
+            identity = plan.event_id or operation_id()
+            map_id = int(result["map_id"])
+            if delta:
+                await self.visual_events.damage(
+                    identity, map_id, actor, request.x, request.y, abs(delta), 1 if delta > 0 else 0
+                )
+            await self.visual_events.projectile(
+                identity,
+                map_id,
+                request.user_id,
+                actor,
+                int(result["source_x"]),
+                int(result["source_y"]),
+                request.x,
+                request.y,
+                1,
+                int(spell.get("fx_grh", 0)),
+                request.spell_id,
+            )
         await sender.sync_status(request.user_id, self.player_repo)
         await publish_progress(self.player_repo, request.user_id, sender)
         actors = []

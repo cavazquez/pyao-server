@@ -6,6 +6,8 @@ import time
 from typing import TYPE_CHECKING
 
 from src.services.player_progression import publish_progress
+from src.services.visual_events import VisualEvents
+from src.utils.gold_atomic import operation_id
 from src.utils.sounds import SoundID
 from src.utils.visual_effects import VisualEffectID
 
@@ -53,6 +55,7 @@ class NPCAIService:
         self.broadcast_service = broadcast_service
         self.pathfinding_service = pathfinding_service
         self.player_death_service = player_death_service
+        self.visual_events = VisualEvents(map_manager)
 
     async def find_nearest_player(self, npc: NPC) -> tuple[int, int, int] | None:
         """Encuentra el jugador más cercano al NPC.
@@ -242,6 +245,19 @@ class NPCAIService:
         if not result:
             return False
         observer = self.map_manager.get_message_sender(target_user_id)
+        if result.get("applied", True):
+            position = await self.player_repo.get_position(target_user_id)
+            if position:
+                amount = max(0, int(result.get("damage", 0)))
+                await self.visual_events.damage(
+                    operation_id(),
+                    npc.map_id,
+                    target_user_id,
+                    int(position["x"]),
+                    int(position["y"]),
+                    amount,
+                    0 if amount else 3 if result.get("blocked") else 2,
+                )
         # Un esquive o bloqueo válido también consume el turno del NPC y entrena.
         if result.get("applied", True):
             npc.last_attack_time = current_time

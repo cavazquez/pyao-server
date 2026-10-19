@@ -5,12 +5,14 @@ import logging
 import sys
 from collections.abc import Awaitable
 from typing import TYPE_CHECKING
+from uuid import uuid4
 
 import redis.asyncio as redis
 
 from src.config.config_manager import config_manager
 from src.config.game_config import SecurityConfig, ServerConfig
 from src.core.server_initializer import ServerInitializer
+from src.log_context import connection_id, operation
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_framer import FramingError, PacketFramer
@@ -117,6 +119,7 @@ class ArgentumServer:
         owner = asyncio.current_task()
         if owner is not None:
             self._client_tasks.add(owner)
+        context_token = connection_id.set(uuid4().hex)
         counted_in_redis = False
         session_data: dict[str, dict[str, int]] = {}
         connection: ClientConnection | None = None
@@ -157,7 +160,8 @@ class ArgentumServer:
                         if self._stopping:
                             break
                         task = self.create_task(packet, message_sender, session_data)
-                        await task.execute()
+                        with operation(uuid4().hex):
+                            await task.execute()
         except FramingError as error:
             logger.info("Conexión cerrada por framing inválido: %s", error)
         except TimeoutError:
@@ -188,6 +192,7 @@ class ArgentumServer:
                         self._connections.discard(connection)
                     if owner is not None:
                         self._client_tasks.discard(owner)
+                    connection_id.reset(context_token)
 
     async def _release_connection(self, connection: ClientConnection) -> None:
         """Libera la reserva incluso si se canceló la limpieza del personaje."""

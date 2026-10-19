@@ -257,6 +257,8 @@ class ServerPacketID(IntEnum):
     STOP_WORKING = 105
     CANCEL_OFFER_ITEM = 106
     TRADE_STATE = 252  # Snapshot optativo de ambas ofertas
+    VISUAL_DAMAGE = 246  # Extensión visual negociada, posterior al commit
+    PROJECTILE = 247  # Origen/destino explícitos; sólo representación
     CAPABILITIES = 250  # Respuesta optativa; nunca se emite sin solicitud
     PASSWORD_CHANGE_RESULT = 253  # Resultado optativo sin secretos
     SKILL_ACTION_STATE = 255  # Respuestas acotadas, capacidad 256

@@ -41,7 +41,7 @@ jobs:
           set -o pipefail
           mkdir -p artifacts
           python3 scripts/build_snap.py --arch '${{ matrix.arch }}' 2>&1 | tee artifacts/snap-build.log
-          sha256sum pyao_1.0.0rc1_${{ matrix.arch }}.snap > artifacts/SHA256SUMS
+          sha256sum pyao_1.0.0rc2_${{ matrix.arch }}.snap > artifacts/SHA256SUMS
       - uses: astral-sh/setup-uv@v7
         with:
           version: "0.13.1"
@@ -50,7 +50,7 @@ jobs:
         env:
           UV_PYTHON: "3.14"
         run: |
-          sudo snap install ./pyao_1.0.0rc1_${{ matrix.arch }}.snap --dangerous
+          sudo snap install ./pyao_1.0.0rc2_${{ matrix.arch }}.snap --dangerous
           uv sync --locked --no-dev
           uv run --locked --no-dev python scripts/smoke_installed_snap.py --output artifacts
       - uses: actions/upload-artifact@v7

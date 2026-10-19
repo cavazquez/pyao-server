@@ -12,12 +12,12 @@ Las dependencias se resuelven en este orden de prioridad:
 
 import logging
 from functools import cache
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, cast
 
 from src.network.packet_handlers import TASK_HANDLERS
 from src.network.packet_reader import PacketReader
 from src.network.packet_validator import PacketValidator
-from src.network.session_manager import SessionManager
+from src.network.request_context import RequestContext
 from src.services.chat_budget import ChatBudget
 from src.tasks.handler_registry import HandlerRegistry
 from src.tasks.task_chat_limited import TaskChatLimited
@@ -25,8 +25,11 @@ from src.tasks.task_null import TaskNull
 from src.tasks.task_tls_handshake import TaskTLSHandshake
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from src.core.dependency_container import DependencyContainer
     from src.messaging.message_sender import MessageSender
+    from src.network.validation_result import ValidationResult
     from src.tasks.task import Task
 
 logger = logging.getLogger(__name__)
@@ -95,7 +98,7 @@ class TaskFactory:
             return TaskNull(data, message_sender)
 
         # Pre-validar packet si está habilitado
-        parsed_data: dict[str, Any] = {}
+        parsed_data: dict[str, object] = {}
         if self.enable_prevalidation:
             validation_result = self._prevalidate_packet(data, packet_id, message_sender)
             if validation_result is not None:
@@ -105,7 +108,8 @@ class TaskFactory:
                 # Si validación fue exitosa, extraer datos parseados
                 parsed_data = validation_result.data or {}
 
-        user_id = SessionManager.get_user_id(session_data)
+        context = RequestContext(message_sender, session_data)
+        user_id = context.user_id
         budget = getattr(self.deps, "chat_budget", None)
         if user_id and isinstance(budget, ChatBudget):
             verdict = budget.gate(user_id, data)
@@ -119,7 +123,7 @@ class TaskFactory:
 
     @staticmethod
     @cache
-    def _get_init_params(task_class: type) -> tuple[str, ...]:
+    def _get_init_params(task_class: type[Task]) -> tuple[str, ...]:
         """Retorna los nombres de parámetros del constructor (sin self), cacheados.
 
         Usa ``__code__.co_varnames`` en lugar de ``inspect.signature()`` para
@@ -142,7 +146,7 @@ class TaskFactory:
         data: bytes,
         message_sender: MessageSender,
         session_data: dict[str, dict[str, int] | int | str] | None,
-        parsed_data: dict[str, Any],
+        parsed_data: dict[str, object],
     ) -> Task:
         """Crea una task inyectando dependencias via introspección del constructor.
 
@@ -162,11 +166,14 @@ class TaskFactory:
 
         Returns:
             Instancia de la task con dependencias inyectadas.
+
+        Raises:
+            ValueError: Si faltan argumentos requeridos del constructor.
         """
         h = self.handlers
         params = self._get_init_params(task_class)
 
-        kwargs: dict[str, Any] = {}
+        kwargs: dict[str, object] = {}
         for name in params:
             if name == "data":
                 kwargs["data"] = data
@@ -182,10 +189,24 @@ class TaskFactory:
             elif hasattr(self.deps, name):
                 kwargs[name] = getattr(self.deps, name)
 
-        return task_class(**kwargs)
+        code = task_class.__init__.__code__
+        positional = code.co_varnames[1 : code.co_argcount]
+        defaults = task_class.__init__.__defaults__ or ()
+        required = positional[: len(positional) - len(defaults)]
+        keyword_names = code.co_varnames[
+            code.co_argcount : code.co_argcount + code.co_kwonlyargcount
+        ]
+        required_keywords = set(keyword_names) - (task_class.__init__.__kwdefaults__ or {}).keys()
+        missing = (set(required) | required_keywords) - kwargs.keys()
+        if missing:
+            msg = f"Dependencias requeridas de {task_class.__name__}: {sorted(missing)}"
+            raise ValueError(msg)
+        return cast("Callable[..., Task]", task_class)(**kwargs)
 
     @staticmethod
-    def _prevalidate_packet(data: bytes, packet_id: int, message_sender: MessageSender) -> Any:  # noqa: ANN401 - ValidationResult es genérico, Any es apropiado aquí
+    def _prevalidate_packet(
+        data: bytes, packet_id: int, message_sender: MessageSender
+    ) -> ValidationResult[dict[str, object]] | None:
         """Pre-valida un packet antes de crear la task.
 
         Args:
@@ -218,7 +239,7 @@ class TaskFactory:
 
             # Log del resultado
             client_address = message_sender.address
-            validation_result.log_validation(packet_name, packet_id, client_address)
+            validation_result.log_validation(packet_name, packet_id, str(client_address))
 
             # Si la validación falló, enviar error al cliente
             if not validation_result.success and validation_result.error_message:

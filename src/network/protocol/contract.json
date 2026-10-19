@@ -3132,6 +3132,94 @@
             "max_bytes": 3800
           }
         ]
+      },
+      "246": {
+        "name": "VISUAL_DAMAGE",
+        "status": "supported",
+        "requires_capability": 16,
+        "fields": [
+          {
+            "name": "event",
+            "type": "str16",
+            "max_bytes": 64
+          },
+          {
+            "name": "map",
+            "type": "i16"
+          },
+          {
+            "name": "actor",
+            "type": "i32"
+          },
+          {
+            "name": "x",
+            "type": "u8"
+          },
+          {
+            "name": "y",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "i32"
+          },
+          {
+            "name": "kind",
+            "type": "u8"
+          }
+        ]
+      },
+      "247": {
+        "name": "PROJECTILE",
+        "status": "supported",
+        "requires_capability": 32,
+        "fields": [
+          {
+            "name": "event",
+            "type": "str16",
+            "max_bytes": 64
+          },
+          {
+            "name": "map",
+            "type": "i16"
+          },
+          {
+            "name": "source",
+            "type": "i32"
+          },
+          {
+            "name": "target",
+            "type": "i32"
+          },
+          {
+            "name": "sx",
+            "type": "u8"
+          },
+          {
+            "name": "sy",
+            "type": "u8"
+          },
+          {
+            "name": "tx",
+            "type": "u8"
+          },
+          {
+            "name": "ty",
+            "type": "u8"
+          },
+          {
+            "name": "kind",
+            "type": "u8"
+          },
+          {
+            "name": "asset",
+            "type": "i16"
+          },
+          {
+            "name": "spell",
+            "type": "i16"
+          }
+        ]
       }
     }
   },

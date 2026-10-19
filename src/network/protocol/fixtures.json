@@ -476,5 +476,37 @@
       "x": 55,
       "y": 50
     }
+  },
+  {
+    "name": "visual_damage",
+    "direction": "server",
+    "hex": "f60e00666978747572652d76697375616c02000700000032331400000004",
+    "values": {
+      "event": "fixture-visual",
+      "map": 2,
+      "actor": 7,
+      "x": 50,
+      "y": 51,
+      "amount": 20,
+      "kind": 4
+    }
+  },
+  {
+    "name": "projectile_explicit_endpoints",
+    "direction": "server",
+    "hex": "f70e00666978747572652d76697375616c02000700000008000000323334330107000200",
+    "values": {
+      "event": "fixture-visual",
+      "map": 2,
+      "source": 7,
+      "target": 8,
+      "sx": 50,
+      "sy": 51,
+      "tx": 52,
+      "ty": 51,
+      "kind": 1,
+      "asset": 7,
+      "spell": 2
+    }
   }
 ]
