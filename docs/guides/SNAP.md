@@ -34,11 +34,22 @@ El release de servidor reutiliza ese mismo workflow, sin credenciales Launchpad.
 
 ## Publicación e instalación
 
-Después de fusionar el commit probado y comprobar procedencia y SHA256:
+Servidor y cliente se entregan juntos, con la misma versión pública. Después
+de fusionar ambos commits, construir y probar sus paquetes, el mantenedor usa
+`tools/release-pair.py` del repositorio del cliente, siguiendo su
+[procedimiento conjunto](https://github.com/cavazquez/ArgentumOnlineGodot/blob/main/docs/SNAP.md).
+Exige CI, R01–R09, R10 de dos clientes nativos durante 30 minutos y el ensayo
+descartable de actualización. Primero carga **los tres paquetes sin `--release`**
+(servidor amd64/arm64 y cliente amd64); sólo después promueve el par revisado.
+El recibo conserva los hashes y las revisiones anteriores para recuperación.
+
+La Store cambia cada revisión por separado. El publicador registra el intervalo
+real y, si falla una promoción, recupera todas las revisiones anteriores y verifica
+el resultado. No hay una transacción atómica entre ambos nombres de Snap.
+
+Instalación de la entrega ya publicada:
 
 ```bash
-snapcraft upload pyao_1.0.0rc1_amd64.snap --release=latest/edge
-snapcraft upload pyao_1.0.0rc1_arm64.snap --release=latest/edge
 snapcraft status pyao
 sudo snap install pyao --edge
 pyao.pyao-server --version
@@ -77,3 +88,12 @@ con uv fuera del Snap, en el host del operador con Docker y `redis-cli`, según
 el [procedimiento Redis](REDIS.md). Usar el checkout del tag `v1.0.0rc1` o la
 distribución de esa misma versión y el endpoint elegido para la partida.
 El paquete de juego conserva su confinamiento estricto y acceso de red.
+
+El ensayo repetible `uv run python -m src.operations.redis_schema selftest`
+usa `data/validation/redis_upgrade.toml`, Redis propio autenticado y un RDB
+restaurado realmente en otro volumen. Comprueba cuenta/contraseña, oro, banco,
+inventario, orden de hechizos, habilidades, migración idempotente, reinicio y
+recuperación al estado anterior. También ensaya el TOML inválido y su ajuste
+explícito con respaldo previo. El fixture representa el esquema legado; no
+acredita ejecutar el binario 0.9.4 ni usar una partida real. CI guarda los
+recibos en `redis-recovery-results/schema.json`.

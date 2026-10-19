@@ -2,7 +2,12 @@
 
 import argparse
 import json
+import os
+import shutil
+import subprocess  # noqa: S404 - intérprete propio sin shell y con configuración temporal.
+import sys
 import tempfile
+import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
 from secrets import token_urlsafe
@@ -24,6 +29,7 @@ from src.core.schema_manager import (
 from src.operations.mana_repair import mana_repairs
 from src.operations.redis_backup import (
     create_backup,
+    load_snapshot,
     manifest_for,
     persistent_snapshot,
     verify_backup,
@@ -31,6 +37,9 @@ from src.operations.redis_backup import (
 from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox
 from src.operations.skill_migration import skill_repairs
+from src.runtime_paths import resource_root
+from src.utils.password_utils import hash_password, verify_password
+from tools.compression.decompress_map_data import decompress_map_data
 
 
 def connection(settings: RedisConfig, *, binary: bool = False) -> Redis:
@@ -189,6 +198,67 @@ def migrate(settings: RedisConfig, backup: Path) -> dict[str, Any]:
             release_lock(client, token)
 
 
+def legacy_config_check(directory: Path) -> None:
+    """Ensaya consulta sin Redis y reparación explícita respaldada de un TOML propio."""
+    path = directory / "server.toml"
+    maps = directory / "maps"
+    decompress_map_data(resource_root() / "archives/map_data.xz", maps, overwrite=False)
+    legacy = "[game.character]\nmana_per_int = 50000\n[server]\nport = 17777\n"
+    path.write_text(legacy)
+    environment = {k: v for k, v in os.environ.items() if not k.startswith("PYAO_")}
+    environment.update(
+        PYAO_CONFIG_FILE=str(path),
+        PYAO_REDIS__HOST="unreachable.invalid",
+        PYAO_REDIS__PASSWORD_FILE=str(directory / "missing-secret"),
+        PYAO_MAPS_DIR=str(maps),
+        PYAO_DATA_DIR=str(resource_root() / "data"),
+        PYAO_STATE_DIR=str(directory / "state"),
+    )
+    for flag in ("--version", "--help", None):
+        result = subprocess.run(  # noqa: S603 - intérprete actual y argumentos propios.
+            [sys.executable, "-m", "src.run_server", *([flag] if flag else [])],
+            env=environment,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if flag is None:
+            require(result.returncode != 0 and "mana_per_int" in result.stderr, "rechazo TOML")
+        else:
+            require(result.returncode == 0, "consulta CLI sin Redis ni TOML válido")
+        require(path.read_text() == legacy, "configuración conservada")
+    backup = path.with_suffix(".toml.bak")
+    shutil.copyfile(path, backup)
+    path.write_text(legacy.replace("mana_per_int = 50000", "mana_per_int = 10"))
+    from src.config.game_config import GameConfig  # noqa: PLC0415
+
+    repaired_mana = 10
+    require(
+        GameConfig.from_toml(path).game.character.mana_per_int == repaired_mana,
+        "reparación explícita",
+    )
+    require(backup.read_text() == legacy, "respaldo anterior a reparación")
+    require(
+        GameConfig.from_toml(path).server.port
+        == tomllib.loads(backup.read_text())["server"]["port"],
+        "opciones propias conservadas",
+    )
+
+
+def check_legacy_progress(client: Redis, fixture: dict[str, Any], password: str) -> None:
+    """Comprueba todos los campos heredados salvo la reparación de maná documentada."""
+    for key, value in fixture["strings"].items():
+        require(client.get(key) == value, "índices y oro bancario preservados")
+    for key, values in fixture["hashes"].items():
+        for field, value in values.items():
+            if key.endswith(":user_stats") and field in {"min_mana", "max_mana"}:
+                continue
+            require(client.hget(key, field) == value, "cuenta y progreso heredados preservados")
+    stored = cast("str", client.hget("account:MigrationTest:data", "password_hash"))
+    require(verify_password(password, stored), "contraseña válida tras migración/restauración")
+
+
 def selftest() -> dict[str, Any]:
     """Adopta un fixture legado con respaldo real sin alterar su progreso.
 
@@ -202,30 +272,25 @@ def selftest() -> dict[str, Any]:
         RedisSandbox() as sandbox,
         tempfile.TemporaryDirectory(prefix="pyao-migration-") as directory,
     ):
+        legacy_config_check(Path(directory))
+        fixture_path = resource_root() / "data/validation/redis_upgrade.toml"
+        fixture = tomllib.loads(fixture_path.read_text())
+        password = token_urlsafe(32)
         settings = RedisConfig(
             host="127.0.0.1", port=sandbox.port, password_file=sandbox.password_file
         )
         with sandbox.client() as client:
-            client.hset(
-                "account:migration:data", mapping={"user_id": "1", "username": "MigrationTest"}
-            )
-            client.hset(
-                "player:1:stats", mapping={"gold": "1234", "level": "7", "experience": "431"}
-            )
-            client.hset(
-                "player:1:user_stats",
-                mapping={"max_mana": "500000", "min_mana": "400000", "gold": "1234"},
-            )
-            client.hset("player:1:inventory", mapping={"slot_30": "1:2"})
-            client.hset(
-                "player:1:skills",
-                mapping={"points": "4", "skill_1": "37", "magia": "10", "talar": "275"},
-            )
+            for key, value in fixture["strings"].items():
+                client.set(key, value)
+            for key, values in fixture["hashes"].items():
+                client.hset(key, mapping=values)
+            client.hset("account:MigrationTest:data", "password_hash", hash_password(password))
         path = Path(directory) / "before.rdb"
-        create_backup(settings, path)
+        backup = create_backup(settings, path)
         require(migrate(settings, path)["applied"] == list(MIGRATIONS.values()), "pasos ordenados")
         require(migrate(settings, path)["applied"] == [], "reintento idempotente")
         with sandbox.client() as client:
+            check_legacy_progress(client, fixture, password)
             require(client.hget("player:1:stats", "gold") == "1234", "oro preservado")
             require(
                 client.hmget("player:1:user_stats", "min_mana", "max_mana") == ["32767", "32767"],
@@ -242,6 +307,27 @@ def selftest() -> dict[str, Any]:
                 == ["10", "2", "275", "275"],
                 "XP/nivel separados sin borrar legado",
             )
+        with sandbox.client(decode_responses=False) as client:
+            migrated = persistent_snapshot(client)
+        sandbox.recreate(appendonly=True)
+        settings = settings.model_copy(update={"port": sandbox.port})
+        require(migrate(settings, path)["applied"] == [], "idempotencia tras reinicio")
+        with sandbox.client(decode_responses=False) as client:
+            require(persistent_snapshot(client) == migrated, "reinicio tras migración")
+        with load_snapshot(path) as restored:
+            with restored.client(decode_responses=False) as client:
+                require(
+                    persistent_snapshot(client) == backup["persistent_state"], "rollback íntegro"
+                )
+            with restored.client() as client:
+                check_legacy_progress(client, fixture, password)
+                require(not client.exists(SCHEMA_KEY), "rollback al esquema legado")
+                require(
+                    client.hget("player:1:user_stats", "max_mana") == "500000",
+                    "rollback conserva valores previos a reparación",
+                )
+        with sandbox.client() as client:
+            check_legacy_progress(client, fixture, password)
             client.hset(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION + 1))
         try:
             migrate(settings, path)
@@ -256,6 +342,14 @@ def selftest() -> dict[str, Any]:
             "mana_repaired_with_audit": True,
             "skill_progress_preserved": True,
             "idempotent": True,
+            "restart_preserved": True,
+            "rollback_verified": True,
+            "legacy_config_checked": True,
+            "bank_and_spell_order_preserved": True,
+            "account_password_verified": True,
+            "fixture": "data/validation/redis_upgrade.toml",
+            "fixture_kind": "representative-legacy-schema-not-running-0.9.4",
+            "backup_sha256": backup["sha256"],
             "future_rejected": True,
             "production_data_used": False,
         }

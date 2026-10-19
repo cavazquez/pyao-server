@@ -188,6 +188,7 @@ pyao-server/
 │   └── messaging/            # Respuestas al cliente
 ├── tests/                    # Pruebas unitarias e integración
 ├── data/                     # Dataset propio versionado; skills.toml y crafting/*.toml
+│   └── validation/redis_upgrade.toml # Fixture descartable de actualización/recuperación
 ├── config/                   # Configuración de ejemplo
 ├── docs/
 │   ├── development/
