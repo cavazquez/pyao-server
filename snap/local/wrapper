@@ -1,40 +1,19 @@
 #!/bin/bash
 # Wrapper de inicio para PyAO Server.
-# Prepara el directorio de trabajo en $SNAP_COMMON con los datos del juego
-# antes de lanzar el servidor.
-set -e
-
-WORKDIR="${SNAP_USER_COMMON}"
-
-# Crear directorios de escritura necesarios en el primer arranque
-mkdir -p "${WORKDIR}/certs"
-mkdir -p "${WORKDIR}/map_binary"
-mkdir -p "${WORKDIR}/map_cache"
-mkdir -p "${WORKDIR}/config"
-mkdir -p "${WORKDIR}/logs"
-mkdir -p "${WORKDIR}/archives"
-
-# Copiar datos del juego desde el snap (solo si no existen en SNAP_USER_COMMON)
-if [ ! -d "${WORKDIR}/data" ]; then
-    echo "PyAO: Inicializando datos del juego en ${WORKDIR}/data ..."
-    cp -r "${SNAP}/share/pyao/data" "${WORKDIR}/data"
-fi
-
-if [ ! -d "${WORKDIR}/map_data" ]; then
-    echo "PyAO: Inicializando datos de mapas en ${WORKDIR}/map_data ..."
-    cp -r "${SNAP}/share/pyao/map_data" "${WORKDIR}/map_data"
-fi
-
-if [ ! -f "${WORKDIR}/config/server.toml" ]; then
-    echo "PyAO: Inicializando configuración en ${WORKDIR}/config/server.toml ..."
-    cp "${SNAP}/share/pyao/config/server.toml" "${WORKDIR}/config/server.toml"
-fi
-
-# Resolver la versión de Python del snap para PYTHONPATH
+# Usa catálogos del wheel actual y conserva sólo la configuración editable.
+set -eu
+WORKDIR="${PYAO_STATE_DIR:-${SNAP_USER_COMMON}}"
 PYTHON_BIN="${SNAP}/bin/python3"
 PYTHON_VERSION=$("${PYTHON_BIN}" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
 export PYTHONPATH="${SNAP}/lib/python${PYTHON_VERSION}/site-packages"
-
-# Ejecutar el servidor desde el directorio de trabajo
+RESOURCES="${PYTHONPATH}/src/runtime_data"
+mkdir -p "${WORKDIR}/certs" "${WORKDIR}/config" "${WORKDIR}/logs"
+if [ ! -f "${WORKDIR}/config/server.toml" ]; then
+    cp "${RESOURCES}/config/server.toml" "${WORKDIR}/config/server.toml"
+fi
+export PYAO_STATE_DIR="${WORKDIR}"
+export PYAO_CONFIG_FILE="${PYAO_CONFIG_FILE:-${WORKDIR}/config/server.toml}"
+# No sobrescribir ni seleccionar automáticamente los catálogos de snaps viejos.
+export PYAO_DATA_DIR="${PYAO_DATA_DIR:-${RESOURCES}/data}"
 cd "${WORKDIR}"
 exec "${PYTHON_BIN}" "${SNAP}/bin/pyao-server" "$@"

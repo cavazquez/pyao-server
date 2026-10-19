@@ -1,0 +1,64 @@
+name: Server Snap
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+    paths: ['snap/**', 'scripts/build_snap.py', 'scripts/smoke_installed_snap.py', 'docs/guides/SNAP.md', '.github/workflows/server-snap.yml']
+  push:
+    branches: [main]
+    paths: ['snap/**', 'scripts/build_snap.py', 'scripts/smoke_installed_snap.py', 'docs/guides/SNAP.md', '.github/workflows/server-snap.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  package-and-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: amd64, runner: ubuntu-24.04}
+          - {arch: arm64, runner: ubuntu-24.04-arm}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # v1
+        with:
+          channel: 5.21/stable
+      - name: Instalar Snapcraft fijado
+        run: |
+          if snap list snapcraft >/dev/null 2>&1; then
+            sudo snap refresh snapcraft --revision=19274
+          else
+            sudo snap install snapcraft --classic --revision=19274
+          fi
+      - name: Compilar con uv.lock y registrar hashes
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          python3 scripts/build_snap.py --arch '${{ matrix.arch }}' 2>&1 | tee artifacts/snap-build.log
+          sha256sum pyao_1.0.0rc1_${{ matrix.arch }}.snap > artifacts/SHA256SUMS
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.1"
+          enable-cache: false
+      - name: Instalar el paquete y probar recursos, TLS y reinicio con Redis descartable
+        env:
+          UV_PYTHON: "3.14"
+        run: |
+          sudo snap install ./pyao_1.0.0rc1_${{ matrix.arch }}.snap --dangerous
+          uv sync --locked --no-dev
+          uv run --locked --no-dev python scripts/smoke_installed_snap.py --output artifacts
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: pyao-server-snap-${{ matrix.arch }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            pyao_*.snap
+            snap/pyao-source.json
+            artifacts/
+          retention-days: 7
