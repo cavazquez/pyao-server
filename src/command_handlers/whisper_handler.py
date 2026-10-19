@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.whisper_command import WhisperCommand
+from src.network.chat_channel import deliver_chat
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -81,16 +82,31 @@ class WhisperCommandHandler(CommandHandler):
             return CommandResult.error(f"Sender no disponible para {receiver_name}")
 
         formatted_message = f"{sender_username} susurra: {message}"
-        await target_sender.send_console_msg(formatted_message, font_color=3)
-
-        await self.message_sender.send_console_msg(f"A {receiver_name}: {message}", font_color=3)
-
-        logger.info(
-            "WHISPER de user_id %d a '%s': '%s'",
+        await deliver_chat(
+            target_sender,
+            "whisper",
             user_id,
-            receiver_name,
+            sender_username,
             message,
+            legacy=formatted_message,
+            font=3,
+            context=f"user:{user_id}",
+            recipient=target_user_id,
+            recipient_name=self.map_manager.get_player_username(target_user_id) or receiver_name,
         )
+        await deliver_chat(
+            self.message_sender,
+            "whisper",
+            user_id,
+            sender_username,
+            message,
+            legacy=f"A {receiver_name}: {message}",
+            font=3,
+            context=f"user:{target_user_id}",
+            recipient=target_user_id,
+            recipient_name=self.map_manager.get_player_username(target_user_id) or receiver_name,
+        )
+        logger.debug("Susurro de user_id=%d entregado a user_id=%d", user_id, target_user_id)
 
         return CommandResult.ok(
             data={"user_id": user_id, "receiver": receiver_name, "message": message}

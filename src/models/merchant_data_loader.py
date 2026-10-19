@@ -6,6 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from src.economy.merchant_stock import StockEntry, seed_merchant
 from src.repositories.merchant_repository import MerchantRepository
 from src.utils.base_data_loader import BaseDataLoader
 
@@ -40,7 +41,15 @@ class MerchantDataLoader(BaseDataLoader):
         return "Merchant Inventories"
 
     async def load(self) -> None:
-        """Carga los inventarios de mercaderes desde TOML a Redis."""
+        """Siembra mercaderes nuevos; Redis conserva los existentes y su política."""
+        await self._load_merchants(replace_catalog=False)
+
+    async def migrate_catalogs(self) -> None:
+        """Actualiza explícitamente políticas desde TOML sin cambiar existencias."""
+        await self._load_merchants(replace_catalog=True)
+
+    async def _load_merchants(self, *, replace_catalog: bool) -> None:
+        """Comparte el lector entre la siembra inicial y la migración administrativa."""
         merchants = await self._load_inventory_data()
         if not merchants:
             logger.warning("No se encontraron inventarios de mercaderes para cargar")
@@ -59,19 +68,22 @@ class MerchantDataLoader(BaseDataLoader):
                 continue
 
             formatted_items: list[tuple[int, int]] = []
-            item_ids: list[str] = []
             for item in items:
                 formatted_item = self._format_item(item, npc_id)
                 if formatted_item is None:
                     continue
                 item_id, quantity = formatted_item
                 formatted_items.append((item_id, quantity))
-                item_ids.append(str(item_id))
 
-            await self._merchant_repo.clear_merchant(npc_id)
-            loaded = await self._merchant_repo.load_inventory_slots(npc_id, formatted_items)
-            if item_ids:
-                await self._merchant_repo.set_item_id_index(npc_id, item_ids)
+            loaded = await seed_merchant(
+                self.redis_client.redis,
+                npc_id,
+                tuple(
+                    StockEntry(item_id, quantity, 0 if quantity <= 1 else max(1, quantity // 10))
+                    for item_id, quantity in formatted_items
+                ),
+                replace_catalog=replace_catalog,
+            )
 
             total_items += loaded
             merchants_loaded += 1

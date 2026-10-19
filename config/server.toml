@@ -74,9 +74,13 @@ reduccion_agua = 10
 reduccion_hambre = 10
 
 [game.gold_decay]
-enabled = true
+enabled = false
 percentage = 1.0
 interval_seconds = 60.0
+
+[game.tax]
+enabled = true
+daily_percentage = 1.0
 
 [game.inventory]
 max_slots = 30

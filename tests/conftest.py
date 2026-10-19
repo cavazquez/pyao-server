@@ -76,6 +76,9 @@ def create_mock_redis_client(**overrides: object) -> MagicMock:
     mock = MagicMock()
     for method in _REDIS_WRAPPER_METHODS:
         setattr(mock, method, AsyncMock())
+    mock.hget.return_value = None
+    mock.redis.hget = AsyncMock(return_value=None)
+    mock.redis.exists = AsyncMock(return_value=False)
     mock.pipeline = MagicMock()
     for key, value in overrides.items():
         setattr(mock, key, value)

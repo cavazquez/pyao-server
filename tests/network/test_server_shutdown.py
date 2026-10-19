@@ -116,7 +116,11 @@ async def test_stop_drains_active_operation_and_cleanup_before_redis() -> None: 
     trades.close.side_effect = trade_close
     deaths.close.side_effect = death_close
     server.deps = SimpleNamespace(
-        redis_client=database, game_tick=tick, trade_service=trades, player_death_service=deaths
+        redis_client=database,
+        game_tick=tick,
+        trade_service=trades,
+        player_death_service=deaths,
+        world_state=None,
     )
 
     def create(_packet, sender, _session):

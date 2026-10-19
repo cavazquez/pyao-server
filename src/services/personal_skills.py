@@ -6,6 +6,7 @@ import time
 from typing import TYPE_CHECKING, Any, cast
 
 from src.constants.gameplay import MAX_PETS
+from src.economy.devaluation_fractions import move_gold_remainder
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.models.skill_data_loader import SKILL_RULES_KEY
 from src.services.combat.physical_plan import levels
@@ -221,6 +222,7 @@ async def steal(
                 int(stats.get("gold", 0)) + stolen_gold
             )
             writes[target_key] = {"gold": str(int(victim.get("gold", 0)) - stolen_gold)}
+            move_gold_remainder(snapshot, target, user, stolen_gold, writes)
         return trained_decision(
             Decision(
                 {

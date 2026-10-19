@@ -6,7 +6,7 @@ import asyncio
 import json
 import logging
 import struct
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
 from time import monotonic
@@ -128,6 +128,7 @@ class TradeService:
         self.map_manager = map_manager
         self.clock = clock
         self.monitor = monitor
+        self.metadata_publisher: Callable[[int], Awaitable[None]] | None = None
         self._sessions_by_user: dict[int, TradeSession] = {}
         self._monitor_task: asyncio.Task[None] | None = None
 
@@ -289,6 +290,8 @@ class TradeService:
             sender = self._sender(session, user)
             if sender:
                 await sender.connection.send(packet)
+                if self.metadata_publisher:
+                    await self.metadata_publisher(user)
 
     async def apply_action(
         self, user_id: int, session_id: str, revision: int, action: int, slot: int, quantity: int

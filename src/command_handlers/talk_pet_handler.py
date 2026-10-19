@@ -5,6 +5,9 @@ import time
 from typing import TYPE_CHECKING
 
 from src.constants.gameplay import MAX_PETS
+from src.services.world.pets import PetOrders
+from src.utils.durability import require_durable
+from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.commands.talk_command import TalkCommand
@@ -34,6 +37,7 @@ class TalkPetHandler:
         self.npc_service = npc_service
         self.summon_service = summon_service
         self.message_sender = message_sender
+        self.pet_orders = PetOrders(npc_service) if npc_service is not None else None
 
     async def handle_pet_command(self, user_id: int, command: TalkCommand) -> None:
         """Maneja los comandos relacionados con mascotas.
@@ -52,7 +56,7 @@ class TalkPetHandler:
         parsed = command.parse_pet_command()
         if not parsed:
             await self.message_sender.send_console_msg(
-                "Uso: /PET [LIBERAR|INFO]",
+                "Uso: /PET [LIBERAR|INFO|SEGUIR|ESPERAR]",
                 font_color=1,
             )
             return
@@ -89,6 +93,19 @@ class TalkPetHandler:
                 )
 
             await self.message_sender.send_multiline_console_msg("\n".join(pet_info_lines))
+            return
+
+        if args and args[0].upper() in {"SEGUIR", "ESPERAR"} and self.pet_orders:
+            order = "follow" if args[0].upper() == "SEGUIR" else "wait"
+            changed = 0
+            for pet in player_pets:
+                result = await self.pet_orders.command(
+                    user_id, pet.instance_id, order, operation_id()
+                )
+                changed += int(bool(result["applied"]))
+            if changed:
+                await require_durable(self.npc_service.npc_repository.redis.redis)
+            await self.message_sender.send_console_msg(f"Orden aplicada a {changed} mascota(s).")
             return
 
         # Comando "LIBERAR" - liberar todas las mascotas
@@ -131,6 +148,6 @@ class TalkPetHandler:
 
         # Comando desconocido
         await self.message_sender.send_console_msg(
-            "Uso: /PET [LIBERAR|INFO]",
+            "Uso: /PET [LIBERAR|INFO|SEGUIR|ESPERAR]",
             font_color=1,
         )

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
+from src.economy.merchant_rules import merchant_rules
 from src.messaging.message_sender import MessageSender
 from src.models.item_catalog import ItemCatalog
 from src.models.items_catalog import ITEMS_CATALOG
@@ -179,6 +180,7 @@ class ServiceInitializer:
             self.repositories["merchant_repo"],
             ITEMS_CATALOG,
             self.repositories["player_repo"],
+            accepted_types=merchant_rules(),
         )
         logger.info("✓ Servicio de comercio inicializado")
 

@@ -3,6 +3,7 @@
 import json
 from typing import TYPE_CHECKING, Any, cast
 
+from src.economy.ground_devaluation import settle_ground_gold
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id as new_operation_id
 from src.utils.ground_state import GROUND_TTL_SECONDS, GroundItem, GroundState, stack_identity
@@ -50,6 +51,7 @@ class GroundItemsRepository:
         Returns:
             Stacks con identidad g1, conservando cantidad y metadatos.
         """
+        await settle_ground_gold(self.redis_client.redis, map_id)
         raw = await self.redis_client.get(RedisKeys.ground_items(map_id))
         return GroundState(map_id, raw).positions()
 

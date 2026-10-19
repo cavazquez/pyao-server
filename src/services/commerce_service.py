@@ -4,8 +4,9 @@ from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager
+from src.economy.commerce_training import train_commerce
 from src.services.npc_trade_plan import NpcTradePlan, NpcTradeRequest, commerce_price
-from src.services.skill_training import trained_decision, training_resources
+from src.services.skill_training import training_resources
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id as new_operation_id
 from src.utils.inventory_slot import InventorySlot
@@ -30,12 +31,14 @@ class CommerceService:
         merchant_repo: MerchantRepository,
         item_catalog: dict[int, Item],
         player_repo: PlayerRepository,
+        accepted_types: dict[int, frozenset[int]] | None = None,
     ) -> None:
         """Conserva repositorios concretos y el catálogo autoritativo del servidor."""
         self.inventory_repo = inventory_repo
         self.merchant_repo = merchant_repo
         self.items_catalog = item_catalog
         self.player_repo = player_repo
+        self.accepted_types = accepted_types
 
     async def buy_item(
         self,
@@ -96,6 +99,11 @@ class CommerceService:
                     capacity,
                     self.inventory_repo.stacking.max_stack,
                     self.merchant_repo.MAX_SLOTS,
+                    allowed_types=(
+                        self.accepted_types.get(request.npc_id, frozenset())
+                        if self.accepted_types is not None
+                        else None
+                    ),
                 )
             except ValueError as error:
                 return Decision({"applied": False, "message": str(error)}, {})
@@ -103,7 +111,9 @@ class CommerceService:
                 expected_item = plan.source_item_id()
             decision = plan.decide(self.items_catalog, expected_item)
             return (
-                trained_decision(decision, snapshot, request.user_id, (("comerciar", True),))
+                train_commerce(
+                    decision, snapshot, request.user_id, plan.source_item_id(), request.action
+                )
                 if decision.result["applied"]
                 else decision
             )
@@ -120,6 +130,7 @@ class CommerceService:
         resources = tuple(
             {r.key: r for r in (*resources, *training_resources(request.user_id))}.values()
         )
+        resources = (*resources, Resource(f"merchant:{request.npc_id}:items", "set"))
         redis = self.player_repo.redis.redis
         await require_durable(redis)
         result = await transact(

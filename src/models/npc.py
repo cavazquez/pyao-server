@@ -73,3 +73,4 @@ class NPC:
 
     domable: int = 0  # Umbral clásico Carisma por habilidad; cero impide domar.
     is_tamed: bool = False  # Mascota permanente, independiente de invocaciones temporales.
+    pet_order: str = "follow"

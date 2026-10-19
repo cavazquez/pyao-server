@@ -174,6 +174,7 @@ class NPCRepository:
             "summoned_until": str(summoned_until),
             "domable": str(domable),
             "is_tamed": str(is_tamed),
+            "pet_order": "follow",
             "snd1": str(snd1),
             "snd2": str(snd2),
             "snd3": str(snd3),
@@ -249,6 +250,7 @@ class NPCRepository:
             snd3=int(result.get("snd3", "0")),
             domable=int(result.get("domable", "0")),
             is_tamed=result.get("is_tamed", "False").lower() == "true",
+            pet_order=result.get("pet_order", "follow"),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:

@@ -58,6 +58,7 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
             equippable=obj_type
             in {ObjType.ARMAS, ObjType.ARMADURAS, ObjType.ESCUDOS, ObjType.CASCOS, ObjType.ANILLOS},
             value=item_data.get("Valor", 0),
+            obj_type=obj_type,
             min_damage=item_data.get("MinHit"),
             max_damage=item_data.get("MaxHit"),
             defense=item_data.get("MinDef"),

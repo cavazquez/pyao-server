@@ -116,11 +116,18 @@ class HungerThirstConfig(BaseModel):
 class GoldDecayConfig(BaseModel):
     """Configuración de decaimiento de oro."""
 
-    enabled: bool = Field(default=True, description="Habilitar decaimiento de oro")
+    enabled: bool = Field(default=False, description="Legado: sustituido por la devaluación diaria")
     percentage: float = Field(
         default=1.0, ge=0.0, le=100.0, description="Porcentaje de oro a perder"
     )
     interval_seconds: float = Field(default=60.0, ge=1.0, description="Intervalo en segundos")
+
+
+class GoldTaxConfig(BaseModel):
+    """Devaluación diaria del oro; conectarse no reinicia el calendario."""
+
+    enabled: bool = True
+    daily_percentage: float = Field(default=1.0, ge=0.0, le=100.0)
 
 
 class InventoryConfig(BaseModel):
@@ -195,6 +202,7 @@ class GameConfigSection(BaseModel):
     stamina: StaminaConfig = Field(default_factory=StaminaConfig)
     hunger_thirst: HungerThirstConfig = Field(default_factory=HungerThirstConfig)
     gold_decay: GoldDecayConfig = Field(default_factory=GoldDecayConfig)
+    tax: GoldTaxConfig = Field(default_factory=GoldTaxConfig)
     inventory: InventoryConfig = Field(default_factory=InventoryConfig)
     bank: BankConfig = Field(default_factory=BankConfig)
     character: CharacterConfig = Field(default_factory=CharacterConfig)
@@ -356,6 +364,7 @@ class GameConfig(BaseSettings):
                 "stamina": game_data.get("stamina", {}),
                 "hunger_thirst": game_data.get("hunger_thirst", {}),
                 "gold_decay": game_data.get("gold_decay", {}),
+                "tax": game_data.get("tax", {}),
                 "inventory": game_data.get("inventory", {}),
                 "bank": game_data.get("bank", {}),
                 "character": game_data.get("character", {}),

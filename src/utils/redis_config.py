@@ -248,7 +248,7 @@ DEFAULT_EFFECTS_CONFIG = {
     RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA: "10",  # puntos
     RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE: "10",  # puntos
     # Reducción de Oro
-    RedisKeys.CONFIG_GOLD_DECAY_ENABLED: "1",
+    RedisKeys.CONFIG_GOLD_DECAY_ENABLED: "0",
     RedisKeys.CONFIG_GOLD_DECAY_PERCENTAGE: "1.0",  # porcentaje
     RedisKeys.CONFIG_GOLD_DECAY_INTERVAL: "60.0",  # segundos
 }

@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.security.account_bans import is_blocked
 from src.security.password_executor import PasswordQueueFullError
 
 if TYPE_CHECKING:
@@ -80,6 +81,12 @@ class AuthenticationService:
         if not valid_password:
             logger.warning("Contraseña incorrecta para usuario: %s", username)
             await self.message_sender.send_error_msg("Usuario o contraseña incorrectos")
+            return None
+
+        if is_blocked(account_data, prefix="ban_"):
+            await self.message_sender.send_error_msg(
+                "La cuenta está bloqueada. Contactá a un moderador."
+            )
             return None
 
         # Autenticación exitosa

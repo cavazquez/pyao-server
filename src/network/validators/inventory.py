@@ -19,11 +19,10 @@ class DropPacketValidator:
         Returns:
             ValidationResult con slot y cantidad o error.
         """
-        slot = ValidationHelpers.read_slot(
-            context,
-            min_slot=1,
-            max_slot=ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30)),
-        )
+        max_slot = ConfigManager.as_int(config_manager.get("game.inventory.max_slots", 30))
+        slot = ValidationHelpers.read_slot(context, min_slot=0, max_slot=max(31, max_slot))
+        if slot is not None and slot not in {0, 31} and not 1 <= slot <= max_slot:
+            context.add_error(f"Slot inválido: {slot}")
         if context.has_errors():
             return ValidationResult(
                 success=False, data=None, error_message=context.get_error_message()

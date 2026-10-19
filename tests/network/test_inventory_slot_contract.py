@@ -32,13 +32,16 @@ def test_all_inventory_validators_follow_canonical_configuration(limit: int, slo
         cases = [
             (UseItemPacketValidator(), bytes([30, slot])),
             (EquipItemPacketValidator(), bytes([36, slot])),
-            (DropPacketValidator(), bytes([24, slot, 1, 0])),
             (MoveItemPacketValidator(), bytes([129, slot, 2])),
             (BankDepositPacketValidator(), bytes([43, slot, 1, 0])),
         ]
         for validator, packet in cases:
             result = validator.validate(ValidationContext(PacketReader(packet), []))
             assert result.success == (1 <= slot <= limit), (limit, slot, type(validator))
+        drop_result = DropPacketValidator().validate(
+            ValidationContext(PacketReader(bytes([24, slot, 1, 0])), [])
+        )
+        assert drop_result.success == (slot in {0, 31} or 1 <= slot <= limit)
         # El origen de una extracción es el banco, cuyo límite sigue siendo independiente.
         result = BankExtractItemPacketValidator().validate(
             ValidationContext(PacketReader(bytes([41, 31, 1, 0])), [])

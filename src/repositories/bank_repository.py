@@ -249,6 +249,9 @@ class BankRepository(BaseSlotRepository):
         Returns:
             Cantidad de oro en el banco (0 si no hay).
         """
+        from src.economy.tax_service import settle_user_taxes  # ruff: ignore[import-outside-top-level]
+
+        await settle_user_taxes(self.redis_client.redis, user_id)
         key = RedisKeys.bank_gold(user_id)
         gold = await self.redis_client.get(key)
         if gold is None:
@@ -273,8 +276,7 @@ class BankRepository(BaseSlotRepository):
             logger.warning("Intento de agregar cantidad inválida de oro: %d", amount)
             return await self.get_gold(user_id)
 
-        key = RedisKeys.bank_gold(user_id)
-        new_gold = await self.redis_client.incrby(key, amount)
+        new_gold = await self._change_bank_gold(user_id, amount)
         logger.info("user_id %d depositó %d oro en banco. Total: %d", user_id, amount, new_gold)
         return int(new_gold)
 
@@ -292,20 +294,41 @@ class BankRepository(BaseSlotRepository):
             logger.warning("Intento de retirar cantidad inválida de oro: %d", amount)
             return False
 
-        current_gold = await self.get_gold(user_id)
-        if current_gold < amount:
-            logger.debug(
-                "user_id %d no tiene suficiente oro en banco: tiene %d, intenta retirar %d",
-                user_id,
-                current_gold,
-                amount,
-            )
+        new_gold = await self._change_bank_gold(user_id, -amount)
+        if new_gold < 0:
             return False
-
-        key = RedisKeys.bank_gold(user_id)
-        new_gold = await self.redis_client.decrby(key, amount)
         logger.info("user_id %d retiró %d oro del banco. Restante: %d", user_id, amount, new_gold)
         return True
+
+    async def _change_bank_gold(self, user_id: int, delta: int) -> int:
+        """Confirma saldo e impuestos sin la carrera de leer y luego decrementar.
+
+        Returns:
+            Saldo confirmado, o -1 si el débito/ingreso excede sus límites.
+        """
+        from src.economy.taxes import MAX_BANK_GOLD  # ruff: ignore[import-outside-top-level]
+        from src.utils.gold_atomic import operation_id  # ruff: ignore[import-outside-top-level]
+        from src.utils.resource_transaction import Decision, Resource, Snapshot, transact  # ruff: ignore[import-outside-top-level]
+
+        key = RedisKeys.bank_gold(user_id)
+
+        def decide(snapshot: Snapshot) -> Decision:
+            value = snapshot[key]
+            current = int(str(value or 0))
+            balance = current + delta
+            allowed = 0 <= balance <= MAX_BANK_GOLD
+            return Decision(
+                {"balance": balance if allowed else -1}, {key: str(balance)} if allowed else {}
+            )
+
+        result = await transact(
+            self.redis_client.redis,
+            (Resource(key, "string"),),
+            operation_id(),
+            {"bank_delta": delta, "user": user_id},
+            decide,
+        )
+        return int(result["balance"])
 
     async def transfer_gold(
         self,

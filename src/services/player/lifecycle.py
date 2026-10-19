@@ -5,6 +5,8 @@ import time
 from typing import TYPE_CHECKING, Any, cast
 
 from src.config.config_manager import config_manager
+from src.economy.ground_devaluation import split_remainder
+from src.economy.tax_transactions import tax_key
 from src.models.item_constants import GOLD_ITEM_ID
 from src.models.items_catalog import ITEMS_CATALOG
 from src.utils.durability import require_durable
@@ -166,6 +168,11 @@ async def settle_death(
             experience // EXP_PENALTY_DIVISOR if pending and experience >= MIN_PENALIZED_EXP else 0
         )
         dropped_gold = gold // GOLD_DROP_DIVISOR if pending else 0
+        fraction = split_remainder(
+            int(cast("dict[str, str]", snapshot.get(tax_key(user_id)) or {}).get("remainder", 0)),
+            dropped_gold,
+            gold + int(str(snapshot.get(RedisKeys.bank_gold(user_id)) or 0)),
+        )
         event = stats.get("death_event", f"legacy:{user_id}:{life_id}")
         if pending and dropped_gold:
             try:
@@ -177,6 +184,7 @@ async def settle_death(
                         "quantity": dropped_gold,
                         "grh_index": 511,
                         "stack_id": stack_identity(event + ":gold"),
+                        "devaluation_remainder": fraction.moved,
                     },
                 )
             except ValueError:
@@ -230,6 +238,11 @@ async def settle_death(
                 inv_key: inventory.fields(),
                 equip_key: equipment,
                 ground_key: ground.encode(),
+                **(
+                    {tax_key(user_id): {"remainder": str(fraction.remaining)}}
+                    if dropped_gold and fraction.moved
+                    else {}
+                ),
             },
         )
 

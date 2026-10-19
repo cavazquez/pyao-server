@@ -26,6 +26,8 @@ from src.core.schema_manager import (
     SchemaMigrationError,
     parse_version,
 )
+from src.economy.tax_migration import tax_repairs
+from src.economy.taxes import utc_day
 from src.operations.mana_repair import mana_repairs
 from src.operations.redis_backup import (
     create_backup,
@@ -92,9 +94,12 @@ def release_lock(client: Redis, token: str) -> None:
 
 MANA_SCHEMA_VERSION = 2
 SKILL_SCHEMA_VERSION = 4
+TAX_SCHEMA_VERSION = 5
 
 
-def migration_fields(client: Redis, current: int) -> dict[str, dict[str, str]]:
+def migration_fields(
+    client: Redis, current: int, *, day: int | None = None
+) -> dict[str, dict[str, str]]:
     """Calcula todos los campos que se van a confirmar juntos.
 
     Returns:
@@ -103,6 +108,8 @@ def migration_fields(client: Redis, current: int) -> dict[str, dict[str, str]]:
     result = mana_repairs(client) if current < MANA_SCHEMA_VERSION else {}
     if current < SKILL_SCHEMA_VERSION:
         result.update(skill_repairs(client))
+    if current < TAX_SCHEMA_VERSION:
+        result.update(tax_repairs(client, utc_day() if day is None else day))
     return result
 
 
@@ -115,6 +122,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
     Raises:
         SchemaMigrationError: Si se pierde la reserva o hay una carrera persistente.
     """
+    migration_day = utc_day()
     for _ in range(3):
         with client.pipeline() as pipe:
             try:
@@ -130,14 +138,16 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                 ]
                 if not pending:
                     return []
-                repairs = migration_fields(client, current)
+                repairs = migration_fields(client, current, day=migration_day)
                 if repairs:
                     pipe.watch(*repairs)  # type: ignore[no-untyped-call]
-                    revalidated = migration_fields(client, current)
+                    revalidated = migration_fields(client, current, day=migration_day)
                     if revalidated.keys() != repairs.keys():
                         continue
                     repairs = revalidated
                 pipe.multi()
+                if current < TAX_SCHEMA_VERSION:
+                    pipe.set("config:effects:gold_decay:enabled", "0")
                 for key, fields in repairs.items():
                     pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", fields))
                 for target, name in pending:

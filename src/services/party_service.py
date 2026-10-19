@@ -4,21 +4,22 @@ Based on AO VB6 server implementation (mdParty.bas)
 """
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from src.models.party import (
-    MAX_LEVEL_DIFFERENCE,
-    MIN_LEADERSHIP_SCORE,
-    MIN_LEVEL_TO_CREATE,
-    Party,
-    PartyInvitation,
-)
-from src.services.skill_training import read_rules
+from src.services.party.creation import CreationComponent
+from src.services.party.experience import ExperienceComponent
+from src.services.party.invitations import InvitationsComponent
+from src.services.party.membership import MembershipComponent
+from src.services.party.messaging import MessagingComponent
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.broadcast_service import BroadcastService
     from src.messaging.message_sender import MessageSender
+    from src.models.party import (
+        Party,
+        PartyInvitation,
+    )
     from src.repositories.account_repository import AccountRepository
     from src.repositories.party_repository import PartyRepository
     from src.repositories.player_repository import PlayerRepository
@@ -45,6 +46,11 @@ class PartyService:
         self.broadcast_service = broadcast_service
         self.map_manager = map_manager
         self.account_repo = account_repo
+        self._creation = CreationComponent(self)
+        self._invitations = InvitationsComponent(self)
+        self._membership = MembershipComponent(self)
+        self._messaging = MessagingComponent(self)
+        self._experience = ExperienceComponent(self)
 
     def _get_player_message_sender(self, user_id: int) -> MessageSender | None:
         """Get MessageSender for a specific player from MapManager.
@@ -76,57 +82,29 @@ class PartyService:
             logger.warning("Player '%s' not found in any map", username)
         return user_id
 
+    def get_player_message_sender(self, user_id: int) -> MessageSender | None:
+        """Expone la conexión vigente a los componentes de membresía.
+
+        Returns:
+            Emisor vigente, si el jugador está conectado.
+        """
+        return self._get_player_message_sender(user_id)
+
+    def find_player_by_username(self, username: str) -> int | None:
+        """Expone la resolución de jugadores a los componentes de membresía.
+
+        Returns:
+            Identidad conectada o None.
+        """
+        return self._find_player_by_username(username)
+
     async def can_create_party(self, user_id: int) -> tuple[bool, str]:
         """Check if user can create a party.
 
         Returns:
             Tuple of (can_create, error_message)
         """
-        # Get player stats
-        stats = await self.player_repo.get_stats(user_id)
-        if not stats:
-            return False, "Usuario no encontrado"
-
-        logger.debug("Party creation check - user %s stats: %s", user_id, stats)
-
-        # Check if user is already in a party
-        existing_party = await self.party_repo.get_user_party(user_id)
-        if existing_party:
-            return False, "Ya perteneces a una party. Escribe /SALIRPARTY para abandonarla"
-
-        # Check if user is alive
-        if not await self.player_repo.is_alive(user_id):
-            return False, "¡¡Estás muerto!!"
-
-        # Check minimum level requirement
-        level = await self.player_repo.get_level(user_id)
-        if level < MIN_LEVEL_TO_CREATE:
-            return False, f"Debes ser nivel {MIN_LEVEL_TO_CREATE} o superior para crear una party"
-
-        # Get attributes for charisma check
-        # Check leadership skill (carisma * liderazgo >= 100)
-        # This is from VB6: Carisma * Liderazgo >= 100
-        charisma = await self.player_repo.get_charisma(user_id)
-
-        # Get leadership skill
-        skills = await self.player_repo.get_skills(user_id)
-        leadership = skills.get("liderazgo", 0) if skills else 0
-
-        # Verify leadership requirement (charisma * leadership >= MIN_LEADERSHIP_SCORE)
-        leadership_score = charisma * leadership
-        required = int(
-            (await read_rules(self.player_repo)).get("leadership_party_score", MIN_LEADERSHIP_SCORE)
-        )
-        if leadership_score < required:
-            return (
-                False,
-                (
-                    f"Necesitas Carisma * Liderazgo >= {required} "
-                    f"(tienes {charisma} * {leadership} = {leadership_score})"
-                ),
-            )
-
-        return True, ""
+        return await self._creation.can_create_party(user_id)
 
     async def create_party(self, user_id: int, username: str = "") -> tuple[Party | None, str]:
         """Create a new party with user as leader.
@@ -138,30 +116,7 @@ class PartyService:
         Returns:
             Tuple of (party, error_message)
         """
-        can_create, error_msg = await self.can_create_party(user_id)
-        if not can_create:
-            return None, error_msg
-
-        # Use provided username or generate one
-        if not username:
-            username = f"Player{user_id}"
-
-        # Get next party ID
-        party_id = await self.party_repo.get_next_party_id()
-
-        # Create party
-        party = Party(party_id=party_id, leader_id=user_id, leader_username=username)
-
-        # Update leader's level in party
-        level = await self.player_repo.get_level(user_id)
-        party.update_member_level(user_id, level)
-
-        # Save to repository
-        await self.party_repo.save_party(party)
-
-        logger.info("Party %s created by user %s (%s)", party_id, user_id, username)
-
-        return party, "¡Has formado una party!"
+        return await self._creation.create_party(user_id, username)
 
     async def can_invite_to_party(
         self, inviter_id: int, target_id: int
@@ -171,41 +126,7 @@ class PartyService:
         Returns:
             Tuple of (can_invite, error_message, party)
         """
-        # Get inviter's party
-        party = await self.party_repo.get_user_party(inviter_id)
-        if not party:
-            return False, "No eres miembro de ninguna party", None
-
-        # Check if inviter is leader
-        if not party.is_leader(inviter_id):
-            return False, "Solo el líder de la party puede invitar miembros", party
-
-        # Check if party is full
-        if party.is_full:
-            return False, "La party está llena", party
-
-        # Check if target is already in a party
-        target_party = await self.party_repo.get_user_party(target_id)
-        if target_party:
-            return False, "El usuario ya pertenece a una party", party
-
-        # Check if target exists and is alive
-        if not await self.player_repo.is_alive(target_id):
-            return False, "Usuario objetivo no encontrado o está muerto", party
-
-        # Check if target meets level requirements
-        target_level = await self.player_repo.get_level(target_id)
-        if not party.can_join_by_level(target_level):
-            return (
-                False,
-                f"La diferencia de niveles es muy grande (máximo {MAX_LEVEL_DIFFERENCE} niveles)",
-                party,
-            )
-
-        # Check distance (leaders must be close to invite)
-        # This would require position data - for now we'll skip distance check
-
-        return True, "", party
+        return await self._invitations.can_invite_to_party(inviter_id, target_id)
 
     async def invite_to_party(self, inviter_id: int, target_username: str) -> str:
         """Invite a user to the inviter's party.
@@ -213,110 +134,7 @@ class PartyService:
         Returns:
             Result message to send to inviter
         """
-        # Find target player by username in online players
-        if not self.map_manager:
-            return "Sistema de invitaciones no disponible"
-
-        # Search for player in all maps
-        target_id: int | None = None
-        target_map_id: int | None = None
-        target_message_sender: MessageSender | None = None
-
-        # Get all online players for debugging
-        online_players = self.map_manager.get_all_online_players()
-        all_players = [
-            f"{username} (ID:{user_id}, Map:{map_id})"
-            for user_id, username, map_id in online_players
-        ]
-
-        logger.info(
-            "Searching for player '%s' in %s maps",
-            target_username,
-            len(self.map_manager.get_maps_with_players()),
-        )
-
-        # Find target player by username
-        target_id = self.map_manager.find_player_by_username(target_username)
-        target_map_id = None
-        target_message_sender = None
-
-        if target_id:
-            # Get target's map and message sender
-            for user_id, username, map_id in online_players:
-                if user_id == target_id:
-                    target_map_id = map_id
-                    target_message_sender = self.map_manager.get_player_message_sender(target_id)
-                    logger.info(
-                        "✓ Found target player: %s (ID: %s) in map %s",
-                        username,
-                        target_id,
-                        target_map_id,
-                    )
-                    break
-
-        logger.info("Online players: %s", ", ".join(all_players) if all_players else "NONE")
-
-        if not target_id:
-            available_list = ", ".join(all_players) if all_players else "Ninguno"
-            error_msg = (
-                f"Jugador '{target_username}' no encontrado o no está online. "
-                f"Jugadores disponibles: {available_list}"
-            )
-            logger.warning(
-                "Player '%s' not found. Available: %s",
-                target_username,
-                available_list,
-            )
-            return error_msg
-
-        # Check if can invite
-        can_invite, error_msg, party = await self.can_invite_to_party(inviter_id, target_id)
-        if not can_invite or not party:
-            return error_msg
-
-        # Get inviter username from MapManager (the account username, not character name)
-        inviter_username = self.map_manager.get_player_username(inviter_id)
-        if not inviter_username:
-            inviter_username = f"Player{inviter_id}"
-
-        logger.info("Inviter username: '%s' (ID: %s)", inviter_username, inviter_id)
-
-        # Create invitation
-        invitation = PartyInvitation(
-            party_id=party.party_id,
-            inviter_id=inviter_id,
-            inviter_username=inviter_username,
-            target_id=target_id,
-            target_username=target_username,
-        )
-
-        # Save invitation
-        await self.party_repo.save_invitation(invitation)
-
-        # Send invitation message to target
-        if target_message_sender:
-            logger.info("Sending invitation message to %s (ID: %s)", target_username, target_id)
-            try:
-                await target_message_sender.send_console_msg(
-                    f"{inviter_username} te ha invitado a su party. Usa /ACCEPTPARTY para aceptar.",
-                    font_color=7,
-                )
-                logger.info("✓ Invitation message sent successfully to %s", target_username)
-            except Exception:
-                logger.exception("Failed to send invitation message")
-        else:
-            logger.warning("Could not find MessageSender for player %s", target_id)
-
-        logger.info(
-            "User %s invited %s (ID: %s) to party %s",
-            inviter_id,
-            target_username,
-            target_id,
-            party.party_id,
-        )
-
-        # Send confirmation to inviter
-        return f"Has invitado a {target_username} a tu party"
+        return await self._invitations.invite_to_party(inviter_id, target_username)
 
     async def can_accept_invitation(
         self, user_id: int, party_id: int
@@ -326,38 +144,7 @@ class PartyService:
         Returns:
             Tuple of (can_accept, error_message, party)
         """
-        # Get invitation
-        invitation = await self.party_repo.get_invitation(user_id, party_id)
-        if not invitation:
-            return False, "No tienes una invitación para esa party", None
-
-        # Check if invitation is expired
-        if invitation.is_expired:
-            await self.party_repo.remove_invitation(user_id, party_id)
-            return False, "La invitación ha expirado", None
-
-        # Get party
-        party = await self.party_repo.get_party(party_id)
-        if not party:
-            await self.party_repo.remove_invitation(user_id, party_id)
-            return False, "La party ya no existe", None
-
-        # Check if party is full
-        if party.is_full:
-            await self.party_repo.remove_invitation(user_id, party_id)
-            return False, "La party está llena", None
-
-        # Check if user is already in a party
-        user_party = await self.party_repo.get_user_party(user_id)
-        if user_party:
-            await self.party_repo.remove_invitation(user_id, party_id)
-            return False, "Ya perteneces a una party", None
-
-        # Check if user is dead
-        if not await self.player_repo.is_alive(user_id):
-            return False, "¡¡Estás muerto!!", party
-
-        return True, "", party
+        return await self._invitations.can_accept_invitation(user_id, party_id)
 
     async def accept_invitation(self, user_id: int, party_id: int) -> str:
         """Accept a party invitation.
@@ -365,44 +152,7 @@ class PartyService:
         Returns:
             Result message to send to user
         """
-        can_accept, error_msg, party = await self.can_accept_invitation(user_id, party_id)
-        if not can_accept:
-            return error_msg
-
-        # Get player attributes for username
-        player_attrs = await self.player_repo.get_attributes(user_id)
-        if not player_attrs:
-            return "Usuario no encontrado"
-
-        # Get username and level
-        username = player_attrs.get("username", f"Player{user_id}")
-        level = await self.player_repo.get_level(user_id)
-
-        # Add member to party
-        success = party.add_member(user_id, username, level)  # type: ignore[union-attr,arg-type]
-        if not success:
-            return "No puedes unirte a la party"
-
-        # Save updated party
-        await self.party_repo.save_party(party)  # type: ignore[arg-type]
-
-        # Remove invitation
-        await self.party_repo.remove_invitation(user_id, party_id)
-
-        # Send messages to all party members
-        if self.map_manager:
-            for member_id in party.member_ids:  # type: ignore[union-attr]
-                # Get member's MessageSender from MapManager
-                member_sender = self._get_player_message_sender(member_id)
-                if member_sender:
-                    await member_sender.send_console_msg(
-                        f"¡{username} se ha unido a la party!",
-                        font_color=7,  # FONTTYPE_PARTY
-                    )
-
-        logger.info("User %s (%s) joined party %s", user_id, username, party_id)
-
-        return f"¡Te has unido a la party de {party.leader_username}!"  # type: ignore[union-attr]
+        return await self._invitations.accept_invitation(user_id, party_id)
 
     async def leave_party(self, user_id: int) -> str:
         """Leave current party.
@@ -410,57 +160,7 @@ class PartyService:
         Returns:
             Result message to send to user
         """
-        # Get user's party
-        party = await self.party_repo.get_user_party(user_id)
-        logger.debug("leave_party: user %s party = %s", user_id, party)
-        if not party:
-            return "No eres miembro de ninguna party"
-
-        # Get username from party member data
-        member = party.get_member(user_id)
-        username = member.username if member else f"Player{user_id}"
-
-        # Check if user is leader
-        if party.is_leader(user_id):
-            # If leader leaves, disband party
-            # Notify all other members that party was disbanded
-            for member_id in party.member_ids:
-                if member_id != user_id:
-                    member_sender = self._get_player_message_sender(member_id)
-                    if member_sender:
-                        await member_sender.send_console_msg(
-                            f"{username} ha abandonado la party. La party se ha disuelto.",
-                            font_color=7,  # FONTTYPE_PARTY
-                        )
-
-            await self.party_repo.delete_party(party.party_id)
-            logger.info("Party %s disbanded by leader %s", party.party_id, user_id)
-
-            return "Has abandonado la party y se ha disuelto"
-
-        # Regular member leaves
-        party.remove_member(user_id)
-
-        # Notify remaining members that someone left
-        for member_id in party.member_ids:
-            member_sender = self._get_player_message_sender(member_id)
-            if member_sender:
-                await member_sender.send_console_msg(
-                    f"{username} ha abandonado la party.",
-                    font_color=7,  # FONTTYPE_PARTY
-                )
-
-        # Save updated party
-        if party.member_count > 0:
-            await self.party_repo.save_party(party)
-        else:
-            # Disband if empty
-            await self.party_repo.delete_party(party.party_id)
-
-        await self.party_repo.remove_member_from_party(party.party_id, user_id)
-        logger.info("User %s (%s) left party %s", user_id, username, party.party_id)
-
-        return "Has abandonado la party"
+        return await self._membership.leave_party(user_id)
 
     async def kick_member(self, leader_id: int, target_username: str) -> str:
         """Kick a member from party (leader only).
@@ -468,63 +168,7 @@ class PartyService:
         Returns:
             Result message to send to leader
         """
-        # Get leader's party
-        party = await self.party_repo.get_user_party(leader_id)
-        if not party:
-            return "No eres miembro de ninguna party"
-
-        # Check if user is leader
-        if not party.is_leader(leader_id):
-            return "Solo el líder puede expulsar miembros"
-
-        # Get target user ID
-        target_user_id = self._find_player_by_username(target_username)
-        if not target_user_id:
-            return f"Usuario '{target_username}' no encontrado o no está online"
-
-        # Check if target is in party
-        if not party.is_member(target_user_id):
-            return f"{target_username} no es miembro de tu party"
-
-        # Cannot kick yourself
-        if target_user_id == leader_id:
-            return "No puedes expulsarte a ti mismo. Usa /SALIRPARTY"
-
-        # Remove member
-        party.remove_member(target_user_id)
-
-        # Send message to kicked member
-        if self.map_manager:
-            kicked_sender = self._get_player_message_sender(target_user_id)
-            if kicked_sender:
-                await kicked_sender.send_console_msg(
-                    f"Has sido expulsado de la party por {party.leader_username}.",
-                    font_color=7,  # FONTTYPE_PARTY
-                )
-
-        # Send messages to remaining members
-        if self.map_manager:
-            for member_id in party.member_ids:
-                member_sender = self._get_player_message_sender(member_id)
-                if member_sender:
-                    await member_sender.send_console_msg(
-                        f"{target_username} ha sido expulsado de la party.",
-                        font_color=7,  # FONTTYPE_PARTY
-                    )
-
-        # Save updated party
-        if party.member_count > 0:
-            await self.party_repo.save_party(party)
-        else:
-            # Disband if empty
-            await self.party_repo.delete_party(party.party_id)
-
-        await self.party_repo.remove_member_from_party(party.party_id, target_user_id)
-        logger.info(
-            "User %s (%s) kicked from party %s", target_user_id, target_username, party.party_id
-        )
-
-        return f"Has expulsado a {target_username} de la party"
+        return await self._membership.kick_member(leader_id, target_username)
 
     async def transfer_leadership(self, leader_id: int, target_username: str) -> str:
         """Transfer party leadership to another member.
@@ -532,49 +176,7 @@ class PartyService:
         Returns:
             Result message to send to leader
         """
-        # Get leader's party
-        party = await self.party_repo.get_user_party(leader_id)
-        if not party:
-            return "No eres miembro de ninguna party"
-
-        # Check if user is leader
-        if not party.is_leader(leader_id):
-            return "Solo el líder puede transferir el liderazgo"
-
-        # Get target user ID
-        target_user_id = self._find_player_by_username(target_username)
-        if not target_user_id:
-            return f"Usuario '{target_username}' no encontrado o no está online"
-
-        # Check if target is in party
-        if not party.is_member(target_user_id):
-            return f"{target_username} no es miembro de tu party"
-
-        # Transfer leadership
-        old_leader_username = party.leader_username
-        party.transfer_leadership(target_user_id)
-
-        # Save updated party
-        await self.party_repo.save_party(party)
-
-        # Send messages to all members
-        if self.map_manager:
-            for member_id in party.member_ids:
-                member_sender = self._get_player_message_sender(member_id)
-                if member_sender:
-                    await member_sender.send_console_msg(
-                        f"¡{target_username} es el nuevo líder de la party!",
-                        font_color=7,  # FONTTYPE_PARTY
-                    )
-
-        logger.info(
-            "Leadership of party %s transferred from %s to %s",
-            party.party_id,
-            old_leader_username,
-            target_username,
-        )
-
-        return f"Has transferido el liderazgo a {target_username}"
+        return await self._membership.transfer_leadership(leader_id, target_username)
 
     async def send_party_message(self, sender_id: int, message: str) -> str:
         """Send message to all party members.
@@ -582,32 +184,7 @@ class PartyService:
         Returns:
             Result message to send to sender
         """
-        # Get sender's party
-        party = await self.party_repo.get_user_party(sender_id)
-        if not party:
-            return "No eres miembro de ninguna party"
-
-        # Get sender username from account
-        sender_username = f"Usuario#{sender_id}"
-        if self.account_repo:
-            account_data = await self.account_repo.get_account_by_user_id(sender_id)
-            if account_data:
-                sender_username = account_data.get("username", sender_username)
-        logger.info("Party message from %s (ID:%s): '%s'", sender_username, sender_id, message)
-
-        # Send message to all members
-        if self.map_manager:
-            for member_id in party.member_ids:
-                member_sender = self._get_player_message_sender(member_id)
-                if member_sender:
-                    full_message = f"[Party] {sender_username}: {message}"
-                    logger.debug("Sending to member %s: '%s'", member_id, full_message)
-                    await member_sender.send_console_msg(
-                        full_message,
-                        font_color=7,  # FONTTYPE_PARTY (verde para party)
-                    )
-
-        return ""
+        return await self._messaging.send_party_message(sender_id, message)
 
     async def get_party_info(self, user_id: int) -> Party | None:
         """Get party information for user.
@@ -615,7 +192,7 @@ class PartyService:
         Returns:
             Party object if user is in party, None otherwise
         """
-        return await self.party_repo.get_user_party(user_id)
+        return await self._membership.get_party_info(user_id)
 
     async def get_user_invitations(self, user_id: int) -> list[PartyInvitation]:
         """Get all pending invitations for user.
@@ -623,7 +200,7 @@ class PartyService:
         Returns:
             List of pending party invitations.
         """
-        return await self.party_repo.get_user_invitations(user_id)
+        return await self._invitations.get_user_invitations(user_id)
 
     async def distribute_experience(
         self, earner_id: int, exp_amount: int, map_id: int, x: int, y: int
@@ -640,36 +217,7 @@ class PartyService:
         Returns:
             Dictionary mapping user_id -> experience_amount
         """
-        party = await self.party_repo.get_user_party(earner_id)
-        if not party:
-            return {}
-
-        # Helper functions to get player data
-        async def get_user_level(user_id: int) -> int | None:
-            return await self.player_repo.get_level(user_id)
-
-        async def get_user_position(user_id: int) -> dict[str, Any] | None:
-            position = await self.player_repo.get_position(user_id)
-            return position or None
-
-        async def is_user_alive(user_id: int) -> bool:
-            return await self.player_repo.is_alive(user_id)
-
-        # Distribute experience
-        distributed_exp = await party.distribute_experience(
-            exp_amount, map_id, x, y, get_user_level, get_user_position, is_user_alive
-        )
-
-        # Save updated party data
-        await self.party_repo.update_party_metadata(party)
-
-        # Update individual members
-        for user_id in distributed_exp:
-            member = party.get_member(user_id)
-            if member:
-                await self.party_repo.update_member(party.party_id, member)
-
-        return distributed_exp
+        return await self._experience.distribute_experience(earner_id, exp_amount, map_id, x, y)
 
     async def update_member_level(self, user_id: int, new_level: int) -> bool:
         """Update member's level in their party.
@@ -677,20 +225,7 @@ class PartyService:
         Returns:
             True if updated successfully, False if not in party
         """
-        party = await self.party_repo.get_user_party(user_id)
-        if not party:
-            return False
-
-        success = party.update_member_level(user_id, new_level)
-        if success:
-            await self.party_repo.update_party_metadata(party)
-
-            # Update member data
-            member = party.get_member(user_id)
-            if member:
-                await self.party_repo.update_member(party.party_id, member)
-
-        return success
+        return await self._experience.update_member_level(user_id, new_level)
 
     async def set_member_online_status(self, user_id: int, is_online: bool) -> bool:
         """Set online status of party member.
@@ -698,14 +233,4 @@ class PartyService:
         Returns:
             True if updated successfully, False if not in party
         """
-        party = await self.party_repo.get_user_party(user_id)
-        if not party:
-            return False
-
-        success = party.set_member_online_status(user_id, is_online)
-        if success:
-            member = party.get_member(user_id)
-            if member:
-                await self.party_repo.update_member(party.party_id, member)
-
-        return success
+        return await self._experience.set_member_online_status(user_id, is_online)

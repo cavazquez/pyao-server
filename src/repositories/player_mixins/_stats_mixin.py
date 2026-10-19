@@ -45,6 +45,9 @@ class PlayerStatsMixin:
         Returns:
             PlayerStats con las estadísticas o None si no existe.
         """
+        from src.economy.tax_service import settle_user_taxes  # ruff: ignore[import-outside-top-level]
+
+        await settle_user_taxes(self.redis.redis, user_id)
         key = RedisKeys.player_user_stats(user_id)
         result: dict[str, str] = await self.redis.hgetall(key)
 

@@ -43,6 +43,13 @@ def validate_item(item: GroundItem) -> None:
     if not isinstance(item.get("stack_id"), str) or not _STACK_ID.fullmatch(str(item["stack_id"])):
         msg = "Identidad del stack inválida"
         raise ValueError(msg)
+    if item_id == GOLD_ITEM_ID:
+        for field, maximum in (("devaluation_day", None), ("devaluation_remainder", 9999)):
+            if field in item:
+                value = item[field]
+                if type(value) is not int or value < 0 or (maximum is not None and value > maximum):
+                    msg = "Estado de devaluación del suelo inválido"
+                    raise ValueError(msg)
 
 
 class GroundState:

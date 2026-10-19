@@ -2,7 +2,9 @@
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
+from uuid import uuid4
+from weakref import WeakSet
 
 from src.network.capabilities import ConnectionCapabilities
 from src.security.auth_limits import AuthLimiter, ConnectionAttempts
@@ -16,6 +18,15 @@ logger = logging.getLogger(__name__)
 
 class ClientConnection:
     """Encapsula la conexión con un cliente y provee métodos para comunicación."""
+
+    _reserved_connections: ClassVar[WeakSet[ClientConnection]] = WeakSet()
+
+    @classmethod
+    def revoke_user(cls, user_id: int, redis: Redis) -> None:
+        """Cierra sólo conexiones de esta cuenta y de esta instancia de Redis."""
+        for connection in list(cls._reserved_connections):
+            if connection.session_user_id == user_id and connection.session_redis is redis:
+                connection.close(abort=True)
 
     def __init__(
         self,
@@ -55,9 +66,16 @@ class ClientConnection:
         self.auth_attempts = ConnectionAttempts()
         self.password_status_after = 0.0
         self.session_redis: Redis | None = None
+        self.session_user_id: int | None = None
         self.session_lease_seconds = 90
         self._session_lease: SessionLease | None = None
         self._lease_heartbeat: asyncio.Task[None] | None = None
+        self.state_epoch = uuid4().hex
+        self.state_sequence = 0
+        self.state_pages: dict[str, int] = {}
+        self.state_tokens = 8.0
+        self.state_budget_at = 0.0
+        self.state_topics: set[str] = set()
         self.is_authenticated = False
         self.capabilities = ConnectionCapabilities()
         self.reader = reader
@@ -107,12 +125,21 @@ class ClientConnection:
         if self._session_lease is not None:
             return False
         if self.session_redis is None:
+            self.session_user_id = user_id
             return True  # Conexiones de prueba sin persistencia.
+        self.session_user_id = user_id
+        self._reserved_connections.add(self)
         lease = SessionLease(self.session_redis, user_id, self.session_lease_seconds)
         self._session_lease = lease
         if not await lease.acquire():
             self._session_lease = None
+            self.session_user_id = None
+            self._reserved_connections.discard(self)
             return False
+        if self._closed:
+            await self.release_session()
+            return False
+        self.session_user_id = user_id
         owner_task = asyncio.current_task()
         self._lease_heartbeat = asyncio.create_task(self._renew_session(lease, owner_task))
         return True
@@ -122,7 +149,7 @@ class ClientConnection:
     ) -> None:
         try:
             while True:
-                await asyncio.sleep(lease.ttl / 3)
+                await asyncio.sleep(min(lease.ttl / 3, 5.0))
                 if not await lease.renew():
                     break
         except asyncio.CancelledError:
@@ -139,9 +166,13 @@ class ClientConnection:
             self._lease_heartbeat.cancel()
             await asyncio.gather(self._lease_heartbeat, return_exceptions=True)
             self._lease_heartbeat = None
-        if self._session_lease is not None:
-            lease, self._session_lease = self._session_lease, None
-            await lease.release()
+        try:
+            if self._session_lease is not None:
+                lease, self._session_lease = self._session_lease, None
+                await lease.release()
+        finally:
+            self.session_user_id = None
+            self._reserved_connections.discard(self)
 
     @property
     def pending_packets(self) -> int:

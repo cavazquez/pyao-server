@@ -45,11 +45,15 @@ class NpcTradePlan:
         capacity: int,
         inventory_stack: int,
         merchant_capacity: int,
+        allowed_types: frozenset[int] | None = None,
     ) -> None:
         """Carga valores observados bajo WATCH sin hacer I/O."""
         self.request = request
+        self.allowed_types = allowed_types
         self.inventory_key = RedisKeys.player_inventory(request.user_id)
         self.stock_key = RedisKeys.merchant_inventory(request.npc_id)
+        self.index_key = f"merchant:{request.npc_id}:items"
+        self.item_index = cast("set[str]", snapshot.get(self.index_key) or set())
         self.stats_key = RedisKeys.player_user_stats(request.user_id)
         self.inventory = SlotPlan(
             cast("dict[str, str]", snapshot[self.inventory_key]), capacity, inventory_stack
@@ -89,6 +93,14 @@ class NpcTradePlan:
             )
         if type(item.value) is not int or item.value <= 0:
             return Decision({"applied": False, "message": "Este objeto no se puede comerciar"}, {})
+        if (
+            self.request.action == "sell"
+            and self.allowed_types is not None
+            and item.obj_type not in self.allowed_types
+        ):
+            return Decision(
+                {"applied": False, "message": "Este comerciante no compra ese tipo de objeto."}, {}
+            )
         if not 0 <= self.gold <= MAX_PLAYER_GOLD:
             return Decision({"applied": False, "message": "Saldo persistido fuera de rango"}, {})
         try:
@@ -114,6 +126,8 @@ class NpcTradePlan:
             {
                 self.inventory_key: self.inventory.fields(),
                 self.stock_key: self.stock.fields(),
+                self.index_key: self.item_index
+                | {str(stack.item_id) for stack in self.stock.slots.values()},
                 self.stats_key: {"gold": str(self.gold)},
             },
         )
