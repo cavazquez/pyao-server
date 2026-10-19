@@ -27,6 +27,7 @@ def run_snap(app: str, arguments: list[str], env: dict[str, str], cwd: Path) -> 
 def wait_for_tls(process: subprocess.Popen, port: int, cert: Path) -> None:
     """Espera un PONG del servidor instalado mediante una conexión TLS verificada."""
     context = ssl.create_default_context(cafile=cert)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
     deadline = time.monotonic() + 90
     while time.monotonic() < deadline:
         if process.poll() is not None:
