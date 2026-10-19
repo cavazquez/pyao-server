@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from hashlib import sha256
 from typing import TYPE_CHECKING, Any, cast
 
+from src.economy.devaluation_fractions import move_gold_remainder
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id, validate_operation_id
@@ -41,7 +42,7 @@ def _plan(
     offers: tuple[ParticipantOffer, ParticipantOffer],
     capacity: int,
     max_stack: int,
-) -> dict[str, str | dict[str, str]]:
+) -> dict[str, str | dict[str, str] | set[str]]:
     """Valida ambos propietarios y calcula el intercambio completo.
 
     Returns:
@@ -78,10 +79,18 @@ def _plan(
             raise ValueError(msg)
         for item in offer.items:
             inventories[target].give(item.item_id, item.quantity)
-    writes: dict[str, str | dict[str, str]] = {}
+    writes: dict[str, str | dict[str, str] | set[str]] = {}
     for user_id, planned_inventory in inventories.items():
         writes[RedisKeys.player_inventory(user_id)] = planned_inventory.fields()
         writes[RedisKeys.player_user_stats(user_id)] = {"gold": str(balances[user_id])}
+    if offers[0].gold > offers[1].gold:
+        move_gold_remainder(
+            snapshot, offers[0].user_id, offers[1].user_id, offers[0].gold - offers[1].gold, writes
+        )
+    elif offers[1].gold > offers[0].gold:
+        move_gold_remainder(
+            snapshot, offers[1].user_id, offers[0].user_id, offers[1].gold - offers[0].gold, writes
+        )
     return writes
 
 

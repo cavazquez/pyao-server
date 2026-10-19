@@ -108,6 +108,11 @@ class PickupCommandHandler(CommandHandler):
                     else "objeto"
                 )
             await self.message_sender.send_console_msg(f"Recogiste {result['quantity']} {label}.")
+            if result.get("devaluation_loss", 0):
+                await self.message_sender.send_console_msg(
+                    f"Devaluación acumulada: desaparecieron {result['devaluation_loss']} "
+                    "monedas de oro."
+                )
             command.notified = True
             return CommandResult.ok(data=result)
         except Exception:

@@ -3,6 +3,9 @@
 from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING, Any, Literal, cast
 
+from src.economy.ground_devaluation import split_remainder
+from src.economy.tax_transactions import tax_key
+from src.economy.taxes import BASIS_POINTS
 from src.models.item_constants import GOLD_ITEM_ID, MAX_PLAYER_GOLD
 from src.utils.durability import require_durable
 from src.utils.ground_state import (
@@ -64,6 +67,10 @@ class GroundTransferPlan:
         self.equipment = cast("dict[str, str]", snapshot[self.equipment_key]).copy()
         self.position = cast("dict[str, str]", snapshot[RedisKeys.player_position(request.user_id)])
         self.gold = int(self.stats.get("gold", 0))
+        self.tax_state = cast("dict[str, str]", snapshot.get(tax_key(request.user_id)) or {})
+        self.bank_gold = int(str(snapshot.get(RedisKeys.bank_gold(request.user_id)) or 0))
+        self.devaluation_fields: dict[str, str] = {}
+        self.devaluation_loss = 0
 
     def apply(self) -> Decision:
         """Calcula la transferencia conservando todos los campos ajenos.
@@ -101,6 +108,8 @@ class GroundTransferPlan:
             self.stats_key: {"gold": str(self.gold)},
             self.equipment_key: self.equipment,
         }
+        if self.devaluation_fields:
+            writes[tax_key(self.request.user_id)] = self.devaluation_fields
         return Decision(
             {
                 "applied": True,
@@ -108,6 +117,7 @@ class GroundTransferPlan:
                 "quantity": item["quantity"],
                 "type": "gold" if item["item_id"] == GOLD_ITEM_ID else "item",
                 "item_id": item["item_id"],
+                "devaluation_loss": self.devaluation_loss,
             },
             writes,
         )
@@ -133,7 +143,21 @@ class GroundTransferPlan:
             if accepted < 1:
                 msg = "No podés cargar más oro"
                 raise ValueError(msg)
-            self.gold += accepted
+            if self.tax_state:
+                split = split_remainder(
+                    cast("int", item.get("devaluation_remainder", 0)), accepted, amount
+                )
+                self.devaluation_loss, remainder = divmod(
+                    int(self.tax_state.get("remainder", 0)) + split.moved, BASIS_POINTS
+                )
+                self.devaluation_fields = {"remainder": str(remainder)}
+                if self.devaluation_loss:
+                    self.devaluation_fields["total_paid"] = str(
+                        int(self.tax_state.get("total_paid", 0)) + self.devaluation_loss
+                    )
+                item["devaluation_remainder"] = split.remaining
+                transferred["devaluation_remainder"] = split.moved
+            self.gold += accepted - self.devaluation_loss
             transferred["quantity"] = accepted
             if accepted < amount:
                 item["quantity"] = amount - accepted
@@ -155,11 +179,17 @@ class GroundTransferPlan:
         if type(self.request.quantity) is not int or self.request.quantity < 1:
             msg = "Cantidad inválida"
             raise ValueError(msg)
+        fraction = 0
         if self.request.action == "drop_gold":
             amount = min(self.request.quantity, self.gold)
             if amount < 1:
                 msg = "No tienes oro para tirar"
                 raise ValueError(msg)
+            if self.tax_state:
+                remainder = int(self.tax_state.get("remainder", 0))
+                split = split_remainder(remainder, amount, self.gold + self.bank_gold)
+                fraction = split.moved
+                self.devaluation_fields = {"remainder": str(split.remaining)}
             self.gold -= amount
             item_id = GOLD_ITEM_ID
         else:
@@ -186,6 +216,8 @@ class GroundTransferPlan:
             "spawn_time": None,
             "grh_index": self.request.graphic_id,
         }
+        if item_id == GOLD_ITEM_ID and self.tax_state:
+            item["devaluation_remainder"] = fraction
         self.ground.append(self.request.x, self.request.y, item)
         return item
 

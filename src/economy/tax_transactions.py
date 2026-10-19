@@ -4,6 +4,7 @@ import json
 from collections.abc import Callable, Mapping
 from typing import cast
 
+from src.economy.ground_devaluation import ground_map_id, ground_projection, stamp_ground_gold
 from src.economy.taxes import TAX_POLICY_KEY, assess_tax
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot
@@ -64,7 +65,7 @@ def tax_resources(resources: tuple[Resource, ...], today: int) -> tuple[Resource
         ValueError: Si un recurso monetario declaró un tipo incompatible.
     """
     users = resource_users(resources)
-    if not users:
+    if not users and not any(ground_map_id(resource) for resource in resources):
         return resources
     expanded = {resource.key: resource for resource in resources}
     expanded.setdefault(TAX_POLICY_KEY, Resource(TAX_POLICY_KEY, "hash"))
@@ -98,7 +99,7 @@ def tax_snapshot(
     if not policy:
         return snapshot, {}
     if policy.get("version") != "1":
-        message = "Versión fiscal incompatible"
+        message = "Versión de devaluación incompatible"
         raise ValueError(message)
     projected = dict(snapshot)
     writes: dict[str, str | dict[str, str]] = {}
@@ -112,14 +113,13 @@ def tax_snapshot(
         if state and previous >= today:
             continue
         wallet, bank = int(stats.get("gold", 0)), int(str(snapshot.get(bank_key) or 0))
-        rate = int(policy["rate_bps"]) if policy.get("enabled") == "1" else 0
         result = assess_tax(
             wallet,
             bank,
             previous,
             today,
             remainder=int(state.get("remainder", 0)),
-            rate_bps=rate,
+            rate_bps=int(policy["rate_bps"]) if policy.get("enabled") == "1" else 0,
         )
         fields = {
             "version": "1",
@@ -130,7 +130,7 @@ def tax_snapshot(
         if result.days:
             journal_key = receipt_key(user_id, today)
             if snapshot.get(journal_key) is not None:
-                message = "Recibo fiscal existente con estado atrasado"
+                message = "Registro de devaluación existente con estado atrasado"
                 raise ValueError(message)
             fields.update(
                 last_charge=str(result.charged),
@@ -143,7 +143,7 @@ def tax_snapshot(
                     "user_id": user_id,
                     "from_day": previous,
                     "to_day": today,
-                    "rate_bps": rate,
+                    "rate_bps": int(policy["rate_bps"]) if policy.get("enabled") == "1" else 0,
                     "charged": result.charged,
                     "wallet_before": wallet,
                     "bank_before": bank,
@@ -159,7 +159,8 @@ def tax_snapshot(
         if result.charged:
             writes[player_key] = {"gold": str(result.wallet)}
             writes[bank_key] = str(result.bank)
-    return projected, writes
+    projected, ground_writes = ground_projection(projected, resources, today)
+    return projected, {**writes, **ground_writes}
 
 
 def taxed_decision(
@@ -181,6 +182,8 @@ def taxed_decision(
         combined[key] = (
             {**prior, **value} if isinstance(prior, dict) and isinstance(value, dict) else value
         )
+    if projected.get(TAX_POLICY_KEY):
+        combined = stamp_ground_gold(combined, resources, today)
     return Decision(decision.result, stamp_money_revision(snapshot, resources, combined))
 
 

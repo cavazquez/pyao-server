@@ -7,8 +7,8 @@ y admiten hasta 3800 bytes. Ningún mensaje legacy cambia de longitud. El bit 64
 reservado de clima sigue sin anunciarse: el clima usa el canal de estado 512.
 
 Cada conexión tiene un `epoch` nuevo y una `sequence` creciente. Los tópicos son
-impuestos, grupo, clan, mascotas, clima, comandos y metadatos del intercambio.
-El servidor publica únicamente cambios en tópicos suscritos; impuestos y clima
+devaluación, grupo, clan, mascotas, clima, comandos y metadatos del intercambio.
+El servidor publica únicamente cambios en tópicos suscritos; devaluación y clima
 se mantienen activos. Los demás se suscriben al abrir su ventana y se liberan al
 cerrarla. La cadencia de publicación es un segundo y cada conexión dispone de
 una ráfaga de ocho solicitudes, recargada a cuatro por segundo.
@@ -31,9 +31,9 @@ nombre canónico de su conexión, además de su ID persistido.
 La revisión de permisos cambia ante cambios de rol, miembros y conexión. La vida
 de los miembros se actualiza sin invalidar continuamente los menús de gestión.
 Los saldos usan además `money_revision`, incrementada en la misma transacción
-Redis que el movimiento: un resumen fiscal viejo no puede reemplazar oro nuevo.
+Redis que el movimiento: un resumen de devaluación viejo no puede reemplazar oro nuevo.
 Los clientes legacy reciben los paquetes nativos de bolsillo y banco y un aviso
-por recibo fiscal en la conexión.
+por registro de devaluación en la conexión.
 
 ## Clima, mascotas y moderación
 
@@ -61,7 +61,7 @@ un proceso que borre el historial.
 
 `tests/services/test_world_state.py` cubre autorización, revisiones, privacidad,
 órdenes de mascotas, clima, límites binarios y catálogo de intercambio.
-`src.operations.economy_smoke` verifica impuestos y bloqueos tras SIGKILL con AOF;
+`src.operations.economy_smoke` verifica devaluación y bloqueos tras SIGKILL con AOF;
 `src.operations.merchant_stock_smoke` verifica stock y reposición en Redis propio.
 El cliente dispone de smokes de interfaz y `tools/integration-world.py --source`
 para dos Godot reales sin construir wheel, ejecutables ni Snap.

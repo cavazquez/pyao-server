@@ -461,6 +461,12 @@ class MapManager(SpatialIndexMixin):
         """
         await self._ground_index.load_ground_items(map_id)
 
+    async def settle_ground_devaluation(
+        self, map_id: int, broadcast: MultiplayerBroadcastService | None
+    ) -> None:
+        """Mantiene el suelo visible y persistido bajo el mismo bloqueo de mapa."""
+        await self._ground_index.settle_devaluation(map_id, broadcast)
+
     def load_map_data(self, map_id: int, map_file_path: str | Path) -> None:
         """Carga metadatos y tiles bloqueados de un mapa delegando en el loader."""
         result = self._metadata_loader.load_map_data(map_id, map_file_path)

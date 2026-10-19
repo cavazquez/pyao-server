@@ -322,7 +322,12 @@ class ArgentumServer:
             self.deps.game_tick.start()
             from src.economy.maintenance import EconomyMaintenance  # ruff: ignore[import-outside-top-level]
 
-            self._economy = EconomyMaintenance(self.deps.redis_client.redis)
+            deps = self.deps
+
+            async def devalue_ground(_redis: object, map_id: int) -> None:
+                await deps.map_manager.settle_ground_devaluation(map_id, deps.broadcast_service)
+
+            self._economy = EconomyMaintenance(self.deps.redis_client.redis, devalue_ground)
             self._economy.start()
             if self.deps.world_state:
                 self.deps.world_state.start()

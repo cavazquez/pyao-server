@@ -102,7 +102,7 @@ class WorldStateService:
                     try:
                         await self.publish_legacy_tax(user, sender)
                     except RedisError, ValueError, RuntimeError, ConnectionError:
-                        logger.exception("Resumen fiscal pendiente user_id=%d", user)
+                        logger.exception("Resumen de devaluación pendiente user_id=%d", user)
                     continue
                 for topic in sorted(sender.connection.state_topics & TOPICS):
                     try:
@@ -134,8 +134,8 @@ class WorldStateService:
         if receipt and self.legacy_receipts.get(epoch) != receipt:
             if int(data["last_charge"]) > 0:
                 await sender.send_console_msg(
-                    f"Impuesto diario: se cobraron {data['last_charge']} oro "
-                    "sobre el oro transportado y del banco, incluso desconectado."
+                    f"Devaluación diaria: desaparecieron {data['last_charge']} oro "
+                    "de tu bolsillo y banco, incluso desconectado."
                 )
             self.legacy_receipts[epoch] = receipt
 

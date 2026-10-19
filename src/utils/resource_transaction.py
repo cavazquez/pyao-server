@@ -39,6 +39,7 @@ class Resource:
     key: str
     kind: Literal["hash", "string", "set"]
     ttl_seconds: int | None = None
+    keep_ttl: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -122,8 +123,11 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
     original_resources = resources
     resources = tax_resources(resources, tax_day)
     if any(
-        resource.ttl_seconds is not None
-        and (type(resource.ttl_seconds) is not int or resource.ttl_seconds < 1)
+        (
+            resource.ttl_seconds is not None
+            and (type(resource.ttl_seconds) is not int or resource.ttl_seconds < 1)
+        )
+        or (resource.keep_ttl and resource.ttl_seconds is not None)
         for resource in resources
     ):
         msg = "TTL de recurso inválido"
@@ -222,7 +226,10 @@ def _enqueue_writes(
             if value:
                 pipe.sadd(key, *sorted(value))
         elif isinstance(value, str):
-            pipe.set(key, value, ex=resources[key].ttl_seconds)
+            if resources[key].keep_ttl:
+                pipe.set(key, value, keepttl=True)
+            else:
+                pipe.set(key, value, ex=resources[key].ttl_seconds)
         ttl = resources[key].ttl_seconds
         if not isinstance(value, str) and ttl is not None:
             pipe.expire(key, ttl)

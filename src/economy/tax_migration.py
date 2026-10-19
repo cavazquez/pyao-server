@@ -24,6 +24,7 @@ def tax_repairs(client: Redis, day: int) -> dict[str, dict[str, str]]:
         TAX_POLICY_KEY: {
             "version": "1",
             "activation_day": str(day),
+            "ground_activation_day": str(day),
             "enabled": "1",
             "rate_bps": str(DEFAULT_RATE_BPS),
         }
@@ -48,12 +49,13 @@ async def initialize_tax_policy(redis: AsyncRedis, *, enabled: bool, percentage:
     """
     rate = Decimal(str(percentage)) * 100
     if rate != rate.to_integral_value():
-        message = "El impuesto admite como máximo dos decimales porcentuales"
+        message = "La devaluación admite como máximo dos decimales porcentuales"
         raise ValueError(message)
     rate_bps = int(rate)
     fields = {
         "version": "1",
         "activation_day": str(utc_day()),
+        "ground_activation_day": str(utc_day()),
         "enabled": "1" if enabled else "0",
         "rate_bps": str(rate_bps),
     }
@@ -70,10 +72,16 @@ async def initialize_tax_policy(redis: AsyncRedis, *, enabled: bool, percentage:
                         existing.get(k) != fields[k] for k in ("version", "enabled", "rate_bps")
                     ):
                         message = (
-                            "La política fiscal persistida difiere del TOML; "
+                            "La política de devaluación persistida difiere del TOML; "
                             "requiere migración explícita"
                         )
                         raise ValueError(message)
+                    if "ground_activation_day" not in existing:
+                        pipe.multi()  # type: ignore[no-untyped-call]
+                        pipe.hset(
+                            TAX_POLICY_KEY, "ground_activation_day", fields["ground_activation_day"]
+                        )
+                        await pipe.execute()
                     return
                 pipe.multi()  # type: ignore[no-untyped-call]
                 pipe.hset(TAX_POLICY_KEY, mapping=cast("Mapping[EncodableT, EncodableT]", fields))

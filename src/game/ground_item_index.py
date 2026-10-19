@@ -40,6 +40,7 @@ class GroundItemIndex:
         """
         self._published: dict[str, float] = {}
         self._locks: dict[int, asyncio.Lock] = {}
+        self._devaluation_pending: dict[int, set[tuple[int, int]]] = {}
         self.max_items_per_tile = max_items_per_tile
         self.ground_items_repo = ground_items_repo
         self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
@@ -207,6 +208,29 @@ class GroundItemIndex:
             return
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             self._replace_map(map_id, await self.ground_items_repo.load_ground_items(map_id))
+
+    async def settle_devaluation(
+        self, map_id: int, broadcast: MultiplayerBroadcastService | None
+    ) -> None:
+        """Recarga el suelo liquidado y retira visualmente montones agotados."""
+        if self.ground_items_repo is None:
+            return
+        async with self._locks.setdefault(map_id, asyncio.Lock()):
+            before = {
+                (x, y): values[0].copy()
+                for (current, x, y), values in self._ground_items.items()
+                if current == map_id and values
+            }
+            positions = await self.ground_items_repo.load_ground_items(map_id)
+            self._replace_map(map_id, positions)
+            after = {position: values[0] for position, values in positions.items() if values}
+            pending = self._devaluation_pending.setdefault(map_id, set())
+            for x, y in before.keys() | after.keys():
+                if before.get((x, y)) != after.get((x, y)):
+                    pending.add((x, y))
+            for x, y in pending.copy():
+                await self._publish(map_id, x, y, broadcast)
+                pending.discard((x, y))
 
     async def _publish(
         self, map_id: int, x: int, y: int, broadcast: MultiplayerBroadcastService | None

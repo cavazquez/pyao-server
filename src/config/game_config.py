@@ -116,7 +116,7 @@ class HungerThirstConfig(BaseModel):
 class GoldDecayConfig(BaseModel):
     """Configuración de decaimiento de oro."""
 
-    enabled: bool = Field(default=False, description="Legado: sustituido por el impuesto diario")
+    enabled: bool = Field(default=False, description="Legado: sustituido por la devaluación diaria")
     percentage: float = Field(
         default=1.0, ge=0.0, le=100.0, description="Porcentaje de oro a perder"
     )
@@ -124,7 +124,7 @@ class GoldDecayConfig(BaseModel):
 
 
 class GoldTaxConfig(BaseModel):
-    """Impuesto diario de calendario; el plazo no se reinicia al conectarse."""
+    """Devaluación diaria del oro; conectarse no reinicia el calendario."""
 
     enabled: bool = True
     daily_percentage: float = Field(default=1.0, ge=0.0, le=100.0)

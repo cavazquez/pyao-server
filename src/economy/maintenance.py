@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from redis.exceptions import RedisError
 
+from src.economy.ground_devaluation import settle_ground_gold
 from src.economy.merchant_stock import restock_merchant
 from src.economy.tax_service import settle_user_taxes
 
@@ -21,9 +22,14 @@ logger = logging.getLogger(__name__)
 class EconomyMaintenance:
     """Recorre perfiles con SCAN sin detener el tick, y se drena antes de Redis."""
 
-    def __init__(self, redis: Redis) -> None:
+    def __init__(
+        self,
+        redis: Redis,
+        ground_action: Callable[[Redis, int], Awaitable[object]] = settle_ground_gold,
+    ) -> None:
         """Conserva la conexión y la propiedad de la tarea de mantenimiento."""
         self.redis = redis
+        self.ground_action = ground_action
         self.task: asyncio.Task[None] | None = None
 
     def start(self) -> None:
@@ -36,7 +42,8 @@ class EconomyMaintenance:
             try:
                 await self._sweep("player:*:user_stats", settle_user_taxes)
                 await self._sweep("merchant:*:catalog", restock_merchant)
-            except RedisError, RuntimeError, ValueError:
+                await self._sweep("ground_items:*", self.ground_action)
+            except RedisError, RuntimeError, ValueError, TypeError:
                 logger.exception("Mantenimiento económico pendiente; se reintentará")
             await asyncio.sleep(60)
 
@@ -46,7 +53,7 @@ class EconomyMaintenance:
             name = key.decode() if isinstance(key, bytes) else key
             try:
                 await action(self.redis, int(name.split(":")[1]))
-            except RedisError, RuntimeError, ValueError:
+            except RedisError, RuntimeError, ValueError, TypeError:
                 logger.exception("Recurso económico pendiente: %s", name)
             await asyncio.sleep(0)
 

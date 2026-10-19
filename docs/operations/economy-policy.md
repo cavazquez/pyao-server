@@ -1,19 +1,31 @@
 # Política económica 1
 
-El impuesto cobra el 1% del saldo conjunto de bolsillo y banco por cada corte a
-las 00:00 UTC, conectado o desconectado. Los días durante un apagado se liquidan
-antes de la siguiente operación de dinero. Se acumulan fracciones enteras de
-1/10000 de moneda: no existe mínimo diario de una moneda. El impuesto es siempre
-el 1% del saldo de cada día. La migración al esquema Redis 5 inicia el reloj sin cobrar
-períodos anteriores y desactiva el efecto antiguo de descuento por minuto.
+La devaluación hace desaparecer el 1% del oro por cada corte a las 00:00 UTC,
+conectado o desconectado. Afecta al oro en bolsillo, banco y montones del suelo.
+Los días durante un apagado se aplican antes de la siguiente operación de dinero.
+Se acumulan fracciones enteras de 1/10000 de moneda: no existe mínimo diario de
+una moneda. La migración al esquema Redis 5 inicia el reloj sin reducir saldos
+por períodos anteriores y desactiva el descuento antiguo por minuto.
 
-WATCH/EXEC confirma el impuesto con la operación comercial, bancaria, de loot,
+WATCH/EXEC confirma la devaluación con la operación comercial, bancaria, de loot,
 transferencia o gasto. Depositar o retirar no reinicia períodos. El crédito de oro
-nuevo ocurre después de liquidar los días previos, por lo que no paga impuestos
+nuevo ocurre después de liquidar los días previos, por lo que no se devalúa
 por días anteriores a su obtención. Redis conserva el último corte, el resto
 fraccionario, el total pagado y los recibos de cada período materializado. El
 mantenimiento recorre perfiles sin exigir conexiones activas. Una cuenta dañada
 no bloquea a los demás personajes ni a los mercaderes.
+
+Cada montón de oro guarda `devaluation_day` y `devaluation_remainder` en el JSON
+del suelo en Redis. Tirar, recoger y morir transfieren las fracciones pendientes;
+recoger un montón parcial deja el resto en el suelo. El oro generado como loot
+empieza en el corte siguiente a su creación. Un montón que llega a cero se retira
+de Redis y de los clientes que lo ven. El mantenimiento usa SCAN incluso sin
+jugadores y conserva el vencimiento original de los objetos del suelo.
+
+La adopción usa `ground_activation_day`; reiniciar no lo mueve ni inventa deuda
+anterior. Las claves internas `config:economy:daily_tax`, `tax:*` y el tópico
+`tax` se conservan para compatibilidad. La presentación se llama devaluación y
+reduce monedas, en lugar de modificar los precios del catálogo.
 
 ## Comercio y fabricación
 

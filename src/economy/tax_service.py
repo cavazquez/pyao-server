@@ -53,6 +53,7 @@ async def tax_status(redis: Redis, user_id: int) -> dict[str, object]:
         "rate_bps": int(policy.get("rate_bps", 0)),
         "enabled": policy.get("enabled") == "1",
         "scope": "wallet_and_bank",
+        "currency_scope": "all_gold",
         "wallet": wallet,
         "bank": bank,
         "last_day": int(state.get("last_day", utc_day())),

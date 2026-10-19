@@ -1,4 +1,4 @@
-"""Impuesto diario sobre bolsillo y banco con fracciones enteras acumuladas."""
+"""Devaluación diaria del oro en bolsillo y banco con fracciones enteras acumuladas."""
 
 import time
 from dataclasses import dataclass
@@ -42,7 +42,7 @@ def assess_tax(
     remainder: int = 0,
     rate_bps: int = DEFAULT_RATE_BPS,
 ) -> TaxAssessment:
-    """Liquida 1% del saldo de cada día; dividir el saldo no evita impuestos.
+    """Liquida 1% del saldo de cada día; dividir el saldo no evita la devaluación.
 
     Las fracciones se acumulan sobre el conjunto de ambas cuentas. El cargo se
     distribuye proporcionalmente y nunca se impone una moneda mínima diaria.
@@ -61,10 +61,10 @@ def assess_tax(
         or not 0 <= bank <= MAX_BANK_GOLD
         or min(last_day, today) < 0
     ):
-        message = "Estado fiscal fuera de rango"
+        message = "Estado de devaluación fuera de rango"
         raise ValueError(message)
     if not 0 <= remainder < BASIS_POINTS or not 0 <= rate_bps <= BASIS_POINTS:
-        message = "Estado fiscal fuera de rango"
+        message = "Estado de devaluación fuera de rango"
         raise ValueError(message)
     days = max(0, today - last_day)
     charged = 0
