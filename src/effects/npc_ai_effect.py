@@ -53,9 +53,9 @@ class NPCAIEffect(TickEffect):
 
     async def apply(
         self,
-        user_id: int,  # noqa: ARG002
-        player_repo: PlayerRepository,  # noqa: ARG002
-        message_sender: MessageSender | None,  # noqa: ARG002
+        user_id: int,  # ruff: ignore[unused-method-argument]
+        player_repo: PlayerRepository,  # ruff: ignore[unused-method-argument]
+        message_sender: MessageSender | None,  # ruff: ignore[unused-method-argument]
     ) -> None:
         """Ejecuta la IA para todos los NPCs hostiles.
 

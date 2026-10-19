@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 class CombatMessageSender:
     """Sender para mensajes de combate."""
 
-    def __init__(self, connection: "ClientConnection") -> None:  # noqa: UP037
+    def __init__(self, connection: "ClientConnection") -> None:  # ruff: ignore[quoted-annotation]
         """Inicializa el sender de mensajes de combate.
 
         Args:

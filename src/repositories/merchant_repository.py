@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 from src.repositories.base_slot_repository import BaseSlotRepository
 from src.utils.item_slot_parser import ItemSlotParser
-from src.utils.redis_client import RedisClient  # noqa: TC001
+from src.utils.redis_client import RedisClient  # ruff: ignore[typing-only-first-party-import]
 from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)

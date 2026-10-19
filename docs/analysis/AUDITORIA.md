@@ -160,7 +160,7 @@ Nuevo campo `_trade_executing: bool` en `TradeSession`. En `confirm_trade`, la d
 both_ready = session.initiator_confirmed and session.target_confirmed
 should_execute = both_ready and not session._trade_executing  # sin await aquí
 if should_execute:
-    session._trade_executing = True                           # ni aquí
+    session._trade_executing = True  # ni aquí
 await self._notify_console(...)  # ahora sí se puede ceder control
 ```
 

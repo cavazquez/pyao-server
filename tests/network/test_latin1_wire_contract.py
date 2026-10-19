@@ -98,7 +98,7 @@ async def test_party_join_invalid_payload_never_invites(payload: bytes) -> None:
 )
 def test_shared_credential_boundary_vectors(vector: dict) -> None:
     """Login y alta comparten límites por bytes y representación estricta."""
-    from src.network.validators.auth import (  # noqa: PLC0415
+    from src.network.validators.auth import (  # ruff: ignore[import-outside-top-level]
         CreateAccountPacketValidator,
         LoginPacketValidator,
     )

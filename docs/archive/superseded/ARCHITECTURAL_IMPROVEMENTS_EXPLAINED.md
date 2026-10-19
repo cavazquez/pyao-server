@@ -150,8 +150,10 @@ from dataclasses import dataclass
 from typing import Callable, Any
 from enum import Enum
 
+
 class GameEvent(Enum):
     """Eventos del juego."""
+
     NPC_DIED = "npc_died"
     PLAYER_LEVELED_UP = "player_leveled_up"
     ITEM_DROPPED = "item_dropped"
@@ -160,25 +162,28 @@ class GameEvent(Enum):
     PARTY_CREATED = "party_created"
     PLAYER_JOINED_MAP = "player_joined_map"
 
+
 @dataclass
 class Event:
     """Evento del juego."""
+
     type: GameEvent
     data: dict[str, Any]
     timestamp: float = field(default_factory=time.time)
 
+
 class EventBus:
     """Bus de eventos para desacoplar lógica del juego."""
-    
+
     def __init__(self):
         self._handlers: dict[GameEvent, list[Callable]] = {}
-    
+
     def subscribe(self, event_type: GameEvent, handler: Callable) -> None:
         """Suscribe un handler a un evento."""
         if event_type not in self._handlers:
             self._handlers[event_type] = []
         self._handlers[event_type].append(handler)
-    
+
     async def publish(self, event: Event) -> None:
         """Publica un evento a todos los handlers suscritos."""
         handlers = self._handlers.get(event.type, [])
@@ -195,26 +200,30 @@ class EventBus:
 # task_attack.py - Versión con eventos (desacoplado)
 async def _handle_npc_death(self, npc: NPC) -> None:
     # Solo publicar evento, no hacer nada más
-    await self.event_bus.publish(Event(
-        type=GameEvent.NPC_DIED,
-        data={
-            "npc": npc,
-            "killer_id": self.user_id,
-            "map_id": npc.map_id,
-            "position": (npc.x, npc.y),
-        },
-    ))
+    await self.event_bus.publish(
+        Event(
+            type=GameEvent.NPC_DIED,
+            data={
+                "npc": npc,
+                "killer_id": self.user_id,
+                "map_id": npc.map_id,
+                "position": (npc.x, npc.y),
+            },
+        )
+    )
+
 
 # loot_handler.py - Handler de loot (separado)
 class LootHandler:
     def __init__(self, loot_service, map_manager):
         self.loot_service = loot_service
         self.map_manager = map_manager
-    
+
     async def on_npc_died(self, data: dict) -> None:
         """Maneja la muerte de NPCs para dropear loot."""
         npc = data["npc"]
         await self.loot_service.drop_loot(npc)
+
 
 # achievement_handler.py - Handler de logros (separado)
 class AchievementHandler:
@@ -224,6 +233,7 @@ class AchievementHandler:
         npc = data["npc"]
         await self._check_kill_achievements(killer_id, npc)
 
+
 # quest_handler.py - Handler de quests (separado)
 class QuestHandler:
     async def on_npc_died(self, data: dict) -> None:
@@ -231,6 +241,7 @@ class QuestHandler:
         killer_id = data["killer_id"]
         npc = data["npc"]
         await self._update_quest_progress(killer_id, npc)
+
 
 # Registro de handlers (en server initialization)
 event_bus.subscribe(GameEvent.NPC_DIED, loot_handler.on_npc_died)
@@ -391,6 +402,7 @@ class TaskAttack(Task):
 command = AttackCommand(user_id=1, target_x=50, target_y=50)
 result = await attack_handler.handle(command)
 
+
 # API REST (futuro)
 @app.post("/api/attack")
 async def attack_endpoint(data: AttackRequest):
@@ -398,11 +410,13 @@ async def attack_endpoint(data: AttackRequest):
     result = await attack_handler.handle(command)
     return result
 
+
 # Undo/Redo (futuro)
 class UndoableAttackCommand(AttackCommand):
     async def undo(self) -> None:
         # Restaurar HP del NPC, etc.
         pass
+
 
 # Cola de comandos (futuro)
 command_queue.add(AttackCommand(...))
@@ -480,43 +494,45 @@ class PlayerRepository:
 # src/data_access/player_data_access.py
 class PlayerDataAccess:
     """Acceso a datos de jugadores (solo Redis, sin lógica)."""
-    
+
     async def get_raw(self, user_id: int) -> dict | None:
         """Obtiene datos raw de Redis (sin procesar)."""
         key = f"player:{user_id}:stats"
         return await self.redis.hgetall(key)
-    
+
     async def save_raw(self, user_id: int, data: dict) -> None:
         """Guarda datos raw en Redis (sin validar)."""
         key = f"player:{user_id}:stats"
         await self.redis.hset(key, mapping=data)
 
+
 # src/domain/player.py
 @dataclass
 class Player:
     """Entidad de dominio del jugador (lógica de negocio)."""
+
     user_id: int
     hp: int
     max_hp: int
     mana: int
     max_mana: int
-    
+
     def take_damage(self, damage: int) -> None:
         """Lógica de negocio: recibir daño."""
         self.hp = max(0, self.hp - damage)
-    
+
     def heal(self, amount: int) -> None:
         """Lógica de negocio: curarse."""
         self.hp = min(self.max_hp, self.hp + amount)
-    
+
     def is_alive(self) -> bool:
         """Lógica de negocio: está vivo."""
         return self.hp > 0
-    
+
     def is_dead(self) -> bool:
         """Lógica de negocio: está muerto."""
         return self.hp <= 0
-    
+
     def to_dict(self) -> dict:
         """Serializa a dict para guardar en Redis."""
         return {
@@ -525,7 +541,7 @@ class Player:
             "mana": self.mana,
             "max_mana": self.max_mana,
         }
-    
+
     @classmethod
     def from_dict(cls, user_id: int, data: dict) -> "Player":
         """Crea entidad desde dict de Redis."""
@@ -537,35 +553,36 @@ class Player:
             max_mana=int(data.get("max_mana", 50)),
         )
 
+
 # src/repositories/player_repository.py - Versión mejorada
 class PlayerRepository:
     """Repository que combina data access y domain."""
-    
+
     def __init__(self, data_access: PlayerDataAccess):
         self.data_access = data_access
-    
+
     async def get_player(self, user_id: int) -> Player | None:
         """Obtiene entidad de dominio (con lógica de negocio)."""
         data = await self.data_access.get_raw(user_id)
         if not data:
             return None
         return Player.from_dict(user_id, data)
-    
+
     async def save_player(self, player: Player) -> None:
         """Guarda entidad de dominio (con validación)."""
         await self.data_access.save_raw(player.user_id, player.to_dict())
-    
+
     async def update_hp(self, user_id: int, new_hp: int) -> None:
         """Actualiza HP usando entidad de dominio."""
         player = await self.get_player(user_id)
         if not player:
             raise ValueError(f"Player {user_id} not found")
-        
+
         # Usar lógica de dominio
         player.hp = new_hp
         if player.hp > player.max_hp:
             player.hp = player.max_hp  # Validación en dominio
-        
+
         await self.save_player(player)
 ```
 
@@ -582,11 +599,10 @@ class PlayerRepository:
 # Cambiar de Redis a PostgreSQL = solo cambiar data_access
 class PlayerDataAccessPostgreSQL:
     async def get_raw(self, user_id: int) -> dict | None:
-        async with self.db.execute(
-            "SELECT * FROM players WHERE user_id = ?", (user_id,)
-        ) as cursor:
+        async with self.db.execute("SELECT * FROM players WHERE user_id = ?", (user_id,)) as cursor:
             row = await cursor.fetchone()
             return dict(row) if row else None
+
 
 # El resto del código NO cambia
 # PlayerRepository sigue igual
@@ -634,41 +650,43 @@ await redis.set("config:npc:aggro_range", "5")
 # src/config/game_config.py
 from pydantic import BaseSettings, Field, validator
 
+
 class GameConfig(BaseSettings):
     """Configuración centralizada del juego."""
-    
+
     # Combat
     base_attack_damage: int = Field(default=10, ge=1, le=100)
     critical_hit_chance: float = Field(default=0.1, ge=0.0, le=1.0)
     max_damage: int = Field(default=999, ge=1)
-    
+
     # NPCs
     npc_aggro_range: int = Field(default=5, ge=1, le=20)
     npc_respawn_time: int = Field(default=60, ge=1, le=3600)
     max_npcs_per_map: int = Field(default=50, ge=1, le=200)
-    
+
     # Inventory
     max_inventory_slots: int = Field(default=20, ge=1, le=100)
     max_bank_slots: int = Field(default=20, ge=1, le=100)
-    
+
     # Experience
     base_exp_per_level: int = Field(default=100, ge=1)
     exp_multiplier: float = Field(default=1.5, ge=1.0, le=10.0)
-    
+
     # Party
     max_party_members: int = Field(default=5, ge=2, le=10)
     party_exp_share_range: int = Field(default=18, ge=1, le=50)
-    
+
     @validator("critical_hit_chance")
     def validate_crit_chance(cls, v):
         if v < 0 or v > 1:
             raise ValueError("Critical hit chance must be between 0 and 1")
         return v
-    
+
     class Config:
         env_prefix = "PYAO_"
         env_file = ".env"
         env_file_encoding = "utf-8"
+
 
 # Uso
 config = GameConfig()
@@ -801,21 +819,21 @@ def __init__(self):
 # src/core/server_builder.py
 class ServerBuilder:
     """Builder para crear servidor completamente inicializado."""
-    
+
     async def build(self) -> Server:
         # 1. Redis (base de todo)
         redis = RedisClient()
         await redis.connect()
-        
+
         # 2. Repositorios (dependen de Redis)
         repos = await self._build_repositories(redis)
-        
+
         # 3. Managers (estado en memoria)
         managers = await self._build_managers(repos)
-        
+
         # 4. Services (lógica de negocio)
         services = await self._build_services(repos, managers)
-        
+
         # 5. Server (completamente inicializado, sin None)
         return Server(
             redis=redis,
@@ -823,6 +841,7 @@ class ServerBuilder:
             managers=managers,
             services=services,
         )
+
 
 # server.py - Versión mejorada
 class Server:

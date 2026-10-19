@@ -62,12 +62,12 @@ String: Name (nombre del personaje/NPC)
 for npc in map_npcs:
     await message_sender.send_character_create(
         char_index=npc.char_index,  # 10001+
-        body=npc.body_id,            # ID del sprite del NPC
-        head=npc.head_id,            # Cabeza del NPC (0 si no tiene)
+        body=npc.body_id,  # ID del sprite del NPC
+        head=npc.head_id,  # Cabeza del NPC (0 si no tiene)
         heading=npc.heading,
         x=npc.x,
         y=npc.y,
-        name=npc.name,               # "Goblin", "Comerciante", etc.
+        name=npc.name,  # "Goblin", "Comerciante", etc.
     )
 ```
 
@@ -216,31 +216,31 @@ async def move_npc(self, npc, new_x, new_y, new_heading):
 @dataclass
 class NPC:
     # Identificación
-    npc_id: int              # ID único del NPC en el mundo
-    char_index: int          # CharIndex en el mapa (10001+)
-    name: str                # Nombre del NPC
-    
+    npc_id: int  # ID único del NPC en el mundo
+    char_index: int  # CharIndex en el mapa (10001+)
+    name: str  # Nombre del NPC
+
     # Posición
     map_id: int
     x: int
     y: int
-    heading: int             # 1=Norte, 2=Este, 3=Sur, 4=Oeste
-    
+    heading: int  # 1=Norte, 2=Este, 3=Sur, 4=Oeste
+
     # Apariencia
-    body_id: int             # ID del sprite del cuerpo
-    head_id: int             # ID del sprite de la cabeza (0 si no tiene)
-    
+    body_id: int  # ID del sprite del cuerpo
+    head_id: int  # ID del sprite de la cabeza (0 si no tiene)
+
     # Stats
     hp: int
     max_hp: int
     level: int
-    
+
     # Comportamiento
-    is_hostile: bool         # ¿Ataca a jugadores?
-    is_attackable: bool      # ¿Puede ser atacado?
-    movement_type: str       # "static", "patrol", "random"
-    respawn_time: int        # Segundos para respawn
-    
+    is_hostile: bool  # ¿Ataca a jugadores?
+    is_attackable: bool  # ¿Puede ser atacado?
+    movement_type: str  # "static", "patrol", "random"
+    respawn_time: int  # Segundos para respawn
+
     # Loot
     gold_min: int
     gold_max: int
@@ -334,11 +334,12 @@ Se creó un sistema para extraer todos los NPCs desde los archivos de mapas orig
 # 1. Todos los jugadores en el mapa
 # 2. Todos los NPCs en el mapa
 
+
 async def notify_player_enter_map(player_id, map_id):
     # Enviar jugadores existentes
     for player in map_manager.get_players(map_id):
         await send_character_create(player)
-    
+
     # Enviar NPCs del mapa
     for npc in map_manager.get_npcs(map_id):
         await send_character_create(npc)
@@ -561,12 +562,12 @@ print(f"{goblin['nombre']}: {goblin['descripcion']}")
 # El servidor solo envía el NPC ID
 await message_sender.send_character_create(
     char_index=10001,
-    body=500,      # ID del sprite
+    body=500,  # ID del sprite
     head=0,
     heading=3,
     x=50,
     y=50,
-    name="",       # Vacío! El cliente lo lee de localindex.dat
+    name="",  # Vacío! El cliente lo lee de localindex.dat
 )
 
 # El cliente busca en localindex.dat:
@@ -726,14 +727,15 @@ npc = NPCFactory.create_hostile(
     body_id=14,
     hp=110,
     level=5,
-    x=50, y=50,
+    x=50,
+    y=50,
     map_id=1,
     char_index=10001,
     attack_damage=8,
     attack_cooldown=2.5,
     aggro_range=6,
     fx=5,
-    fx_loop=0
+    fx_loop=0,
 )
 
 # Métodos helper (conveniencia)
@@ -759,36 +761,37 @@ npc = NPCFactory.create_goblin(x=50, y=50, map_id=1, char_index=10001)
 async def spawn_npc(self, npc_id: int, map_id: int, x: int, y: int) -> NPC | None:
     # 1. Obtener datos del catálogo (TOML)
     npc_data = self.npc_catalog.get_npc_data(npc_id)
-    
+
     # 2. Asignar CharIndex único
     char_index = self._next_char_index
     self._next_char_index += 1
-    
+
     # 3. Crear instancia via Repository (usa TOML data)
     npc = await self.npc_repository.create_npc_instance(
         npc_id=npc_id,
         char_index=char_index,
         map_id=map_id,
-        x=x, y=y,
+        x=x,
+        y=y,
         name=npc_data.get("nombre"),
         body_id=npc_data.get("body_id"),
         hp=npc_data.get("hp_max"),
         # ... TODOS los parámetros del TOML
         attack_damage=npc_data.get("ataque", 10),
         attack_cooldown=npc_data.get("cooldown_ataque", 3.0),
-        aggro_range=npc_data.get("rango_agresion", 8)
+        aggro_range=npc_data.get("rango_agresion", 8),
     )
-    
+
     # 4. Agregar al mapa
     self.map_manager.add_npc(map_id, npc)
-    
+
     # 5. Broadcast a jugadores
     await self.broadcast_service.broadcast_character_create(...)
-    
+
     # 6. Enviar FX si tiene aura
     if npc.fx_loop > 0:
         await self.broadcast_service.broadcast_create_fx(...)
-    
+
     return npc
 ```
 
@@ -916,12 +919,7 @@ npc_data = {
     # ...
 }
 
-npc = NPCFactory.create_hostile(
-    **npc_data,
-    x=50, y=50,
-    map_id=1,
-    char_index=10001
-)
+npc = NPCFactory.create_hostile(**npc_data, x=50, y=50, map_id=1, char_index=10001)
 
 assert npc.name == "Test NPC"
 assert npc.hp == 100

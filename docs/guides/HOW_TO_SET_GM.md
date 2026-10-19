@@ -53,30 +53,33 @@ import asyncio
 from src.utils.redis_client import RedisClient
 from src.repositories.account_repository import AccountRepository
 
+
 async def set_gm(username: str, is_gm: bool):
     """Establece el estado de GM de un usuario."""
     redis_client = await RedisClient.create()
     account_repo = AccountRepository(redis_client)
-    
+
     await account_repo.set_gm_status(username, is_gm)
     status = "GM" if is_gm else "No GM"
     print(f"Usuario '{username}' ahora es {status}")
-    
+
     # Verificar
     result = await account_repo.is_gm(username)
     print(f"Verificación: is_gm = {result}")
 
+
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 3:
         print("Uso: python set_gm.py <username> <1|0>")
         print("  1 = Hacer GM")
         print("  0 = Quitar GM")
         sys.exit(1)
-    
+
     username = sys.argv[1]
     is_gm = sys.argv[2] == "1"
-    
+
     asyncio.run(set_gm(username, is_gm))
 ```
 
@@ -125,23 +128,25 @@ O usando un script Python:
 import asyncio
 from src.utils.redis_client import RedisClient
 
+
 async def list_gms():
     redis_client = await RedisClient.create()
     keys = await redis_client.redis.keys("account:*:data")
-    
+
     gms = []
     for key in keys:
         account_data = await redis_client.redis.hgetall(key)
         if account_data.get("is_gm") == "1":
             username = account_data.get("username", "Unknown")
             gms.append(username)
-    
+
     if gms:
         print("Usuarios GM:")
         for gm in gms:
             print(f"  - {gm}")
     else:
         print("No hay usuarios GM configurados")
+
 
 asyncio.run(list_gms())
 ```

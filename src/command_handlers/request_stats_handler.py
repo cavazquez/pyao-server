@@ -30,7 +30,7 @@ class RequestStatsCommandHandler(CommandHandler):
         self.player_repo = player_repo
         self.message_sender = message_sender
 
-    async def handle(self, command: Command) -> CommandResult:  # noqa: PLR0914
+    async def handle(self, command: Command) -> CommandResult:  # ruff: ignore[too-many-locals]
         """Ejecuta el comando de solicitud de estadísticas (solo lógica de negocio).
 
         Args:

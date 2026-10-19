@@ -254,7 +254,7 @@ class MessageSender:
     async def send_update_user_stats_from_repo(
         self,
         user_id: int,
-        player_repo: "PlayerRepository",  # noqa: UP037
+        player_repo: "PlayerRepository",  # ruff: ignore[quoted-annotation]
         *,
         min_hp: int | None = None,
         min_mana: int | None = None,
@@ -789,7 +789,7 @@ class MessageSender:
         await self.map.send_object_delete(x, y)
 
     # Métodos de combate
-    async def send_npc_hit_user(self, damage: int, body_part: "BodyPart | None" = None) -> None:  # noqa: UP037
+    async def send_npc_hit_user(self, damage: int, body_part: "BodyPart | None" = None) -> None:  # ruff: ignore[quoted-annotation]
         """Envía mensaje cuando un NPC golpea al jugador.
 
         Args:

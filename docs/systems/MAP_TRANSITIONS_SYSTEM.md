@@ -203,7 +203,7 @@ Ullathorpe (1) → Pradera (5) → Lago (16)
 ```python
 # Verificar transiciones cargadas
 manager = MapManager()
-manager.load_map_data(1, 'map_data/metadata_001-064.json')
+manager.load_map_data(1, "map_data/metadata_001-064.json")
 
 exit_tile = manager.get_exit_tile(1, 50, 1)
 # Returns: {"to_map": 2, "to_x": 50, "to_y": 99}

@@ -139,7 +139,7 @@ async def steal(
         {r.key: r for uid in sorted({user, target}) for r in player_action_resources(uid)}.values()
     )
 
-    def decide(snapshot: Snapshot) -> Decision:  # noqa: PLR0914 - dos inventarios y saldos en un commit
+    def decide(snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals] - dos inventarios y saldos en un commit
         stats, victim = (
             cast("dict[str, str]", snapshot[source_key]),
             cast("dict[str, str]", snapshot[target_key]),

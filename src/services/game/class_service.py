@@ -178,7 +178,7 @@ def get_class_service(data_dir: Path | None = None) -> ClassService:
     Returns:
         Instancia del servicio de clases.
     """
-    global _class_service  # noqa: PLW0603
+    global _class_service  # ruff: ignore[global-statement]
     if _class_service is None:
         _class_service = ClassService(data_dir)
     return _class_service

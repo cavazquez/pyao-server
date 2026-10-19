@@ -295,7 +295,7 @@ class GameConfig(BaseSettings):
     @classmethod
     def settings_customise_sources(
         cls,
-        settings_cls: type[BaseSettings],  # noqa: ARG003 - firma requerida por Pydantic
+        settings_cls: type[BaseSettings],  # ruff: ignore[unused-class-method-argument] - firma requerida por Pydantic
         init_settings: PydanticBaseSettingsSource,
         env_settings: PydanticBaseSettingsSource,
         dotenv_settings: PydanticBaseSettingsSource,

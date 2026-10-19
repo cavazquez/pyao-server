@@ -8,7 +8,7 @@ from src.config.config_manager import ConfigManager, config_manager
 from src.repositories.base_slot_repository import BaseSlotRepository
 from src.services.bank_gold_transfer import transfer_gold
 from src.utils.item_slot_parser import ItemSlotParser
-from src.utils.redis_client import RedisClient  # noqa: TC001
+from src.utils.redis_client import RedisClient  # ruff: ignore[typing-only-first-party-import]
 from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)

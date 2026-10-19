@@ -60,27 +60,28 @@ Crear un contenedor de servicios que gestione las dependencias:
 from dataclasses import dataclass
 from typing import Any
 
+
 @dataclass
 class ServiceContainer:
     """Contenedor de servicios para dependency injection."""
-    
+
     # Core services
     redis_client: RedisClient
     session_manager: SessionManager
     map_manager: MapManager
-    
+
     # Repositories
     player_repository: PlayerRepository
     bank_repository: BankRepository
     merchant_repository: MerchantRepository
     npc_repository: NPCRepository
-    
+
     # Services
     combat_service: CombatService
     equipment_service: EquipmentService
     npc_service: NPCService
     magic_service: MagicService
-    
+
     def create_task(
         self,
         task_class: type[Task],
@@ -96,7 +97,7 @@ class ServiceContainer:
             connection=connection,
             **self._get_task_dependencies(task_class),
         )
-    
+
     def _get_task_dependencies(self, task_class: type[Task]) -> dict[str, Any]:
         """Obtiene las dependencias necesarias para una task."""
         # Usar inspect para determinar parámetros del __init__
@@ -110,12 +111,8 @@ class ServiceContainer:
 # packet_handlers.py - Versión simplificada
 def create_task_handlers(container: ServiceContainer) -> dict[int, type[Task]]:
     return {
-        PacketID.ATTACK: lambda data, uid, conn: container.create_task(
-            TaskAttack, data, uid, conn
-        ),
-        PacketID.WALK: lambda data, uid, conn: container.create_task(
-            TaskWalk, data, uid, conn
-        ),
+        PacketID.ATTACK: lambda data, uid, conn: container.create_task(TaskAttack, data, uid, conn),
+        PacketID.WALK: lambda data, uid, conn: container.create_task(TaskWalk, data, uid, conn),
         # ... mucho más simple
     }
 ```
@@ -165,32 +162,37 @@ from dataclasses import dataclass
 from typing import Callable, Any
 from enum import Enum
 
+
 class GameEvent(Enum):
     """Eventos del juego."""
+
     NPC_DIED = "npc_died"
     PLAYER_LEVELED_UP = "player_leveled_up"
     ITEM_DROPPED = "item_dropped"
     PLAYER_ATTACKED = "player_attacked"
     SPELL_CAST = "spell_cast"
 
+
 @dataclass
 class Event:
     """Evento del juego."""
+
     type: GameEvent
     data: dict[str, Any]
 
+
 class EventBus:
     """Bus de eventos para desacoplar lógica del juego."""
-    
+
     def __init__(self):
         self._handlers: dict[GameEvent, list[Callable]] = {}
-    
+
     def subscribe(self, event_type: GameEvent, handler: Callable) -> None:
         """Suscribe un handler a un evento."""
         if event_type not in self._handlers:
             self._handlers[event_type] = []
         self._handlers[event_type].append(handler)
-    
+
     async def publish(self, event: Event) -> None:
         """Publica un evento a todos los handlers suscritos."""
         handlers = self._handlers.get(event.type, [])
@@ -204,10 +206,13 @@ class EventBus:
 # task_attack.py - Versión con eventos
 async def _handle_npc_death(self, npc: NPC) -> None:
     # Publicar evento
-    await self.event_bus.publish(Event(
-        type=GameEvent.NPC_DIED,
-        data={"npc": npc, "killer_id": self.user_id},
-    ))
+    await self.event_bus.publish(
+        Event(
+            type=GameEvent.NPC_DIED,
+            data={"npc": npc, "killer_id": self.user_id},
+        )
+    )
+
 
 # loot_handler.py - Handler de loot
 class LootHandler:
@@ -215,12 +220,14 @@ class LootHandler:
         npc = data["npc"]
         await self._drop_loot(npc)
 
+
 # achievement_handler.py - Handler de logros
 class AchievementHandler:
     async def on_npc_died(self, data: dict) -> None:
         killer_id = data["killer_id"]
         npc = data["npc"]
         await self._check_kill_achievements(killer_id, npc)
+
 
 # Registro de handlers
 event_bus.subscribe(GameEvent.NPC_DIED, loot_handler.on_npc_died)
@@ -264,17 +271,20 @@ class TaskAttack(Task):
 @dataclass
 class AttackCommand:
     """Comando de ataque."""
+
     user_id: int
     target_x: int
     target_y: int
 
+
 # src/command_handlers.py
 class AttackCommandHandler:
     """Handler para comando de ataque."""
-    
+
     async def handle(self, command: AttackCommand) -> None:
         # Solo lógica de negocio, sin parsing
         pass
+
 
 # src/task_attack.py
 class TaskAttack(Task):
@@ -282,14 +292,14 @@ class TaskAttack(Task):
         # Solo parsing
         reader = PacketReader(self.data)
         # ... parsear datos
-        
+
         # Crear comando
         command = AttackCommand(
             user_id=self.user_id,
             target_x=x,
             target_y=y,
         )
-        
+
         # Delegar a handler
         await self.attack_handler.handle(command)
 ```
@@ -329,45 +339,48 @@ class PlayerRepository:
 # src/repositories/player_data_access.py
 class PlayerDataAccess:
     """Acceso a datos de jugadores (solo Redis)."""
-    
+
     async def get(self, user_id: int) -> dict | None:
         """Obtiene datos raw de Redis."""
         pass
-    
+
     async def save(self, user_id: int, data: dict) -> None:
         """Guarda datos raw en Redis."""
         pass
+
 
 # src/domain/player.py
 @dataclass
 class Player:
     """Entidad de dominio del jugador."""
+
     user_id: int
     hp: int
     max_hp: int
-    
+
     def take_damage(self, damage: int) -> None:
         """Lógica de negocio: recibir daño."""
         self.hp = max(0, self.hp - damage)
-    
+
     def is_alive(self) -> bool:
         """Lógica de negocio: está vivo."""
         return self.hp > 0
 
+
 # src/repositories/player_repository.py
 class PlayerRepository:
     """Repository que combina data access y domain."""
-    
+
     def __init__(self, data_access: PlayerDataAccess):
         self.data_access = data_access
-    
+
     async def get_player(self, user_id: int) -> Player | None:
         """Obtiene entidad de dominio."""
         data = await self.data_access.get(user_id)
         if not data:
             return None
         return Player(**data)
-    
+
     async def save_player(self, player: Player) -> None:
         """Guarda entidad de dominio."""
         await self.data_access.save(player.user_id, asdict(player))
@@ -406,28 +419,30 @@ RESPAWN_TIME = 60
 # config/game_config.py
 from pydantic import BaseSettings
 
+
 class GameConfig(BaseSettings):
     """Configuración del juego."""
-    
+
     # Combat
     base_attack_damage: int = 10
     critical_hit_chance: float = 0.1
-    
+
     # NPCs
     npc_aggro_range: int = 5
     npc_respawn_time: int = 60
-    
+
     # Inventory
     max_inventory_slots: int = 20
     max_bank_slots: int = 20
-    
+
     # Experience
     base_exp_per_level: int = 100
     exp_multiplier: float = 1.5
-    
+
     class Config:
         env_prefix = "PYAO_"
         env_file = ".env"
+
 
 # Uso
 config = GameConfig()
@@ -604,21 +619,21 @@ class ServerBuilder:
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
-    
+
     async def build(self) -> Server:
         # 1. Redis (base de todo)
         redis = RedisClient()
         await redis.connect()
-        
+
         # 2. Repositorios (dependen de Redis)
         repos = await self._build_repositories(redis)
-        
+
         # 3. Managers (estado en memoria)
         managers = await self._build_managers(repos)
-        
+
         # 4. Services (lógica de negocio)
         services = await self._build_services(repos, managers)
-        
+
         # 5. Server (completamente inicializado)
         return Server(
             redis=redis,
@@ -626,7 +641,7 @@ class ServerBuilder:
             managers=managers,
             services=services,
             host=self.host,
-            port=self.port
+            port=self.port,
         )
 ```
 

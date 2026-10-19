@@ -1,3 +1,5 @@
+# ruff: file-ignore[ERA001]
+# Las entradas comentadas documentan IDs reservados del protocolo original.
 """Definición de IDs de paquetes del protocolo Argentum Online.
 
 Basado en: brian-christopher/ArgentumOnlineGodot
@@ -9,7 +11,6 @@ from enum import IntEnum
 class ClientPacketID(IntEnum):
     """IDs de paquetes enviados por el cliente según protocolo AO."""
 
-    # ruff: noqa: ERA001
     LOGIN = 0  # LoginExistingChar
     THROW_DICES = 1  # ThrowDices
     CREATE_ACCOUNT = 2  # LoginNewChar
@@ -149,7 +150,6 @@ class ClientPacketID(IntEnum):
 class ServerPacketID(IntEnum):
     """IDs de paquetes enviados por el servidor según protocolo AO."""
 
-    # ruff: noqa: ERA001
     LOGGED = 0  # Login exitoso
     # REMOVE_DIALOGS = 1
     # REMOVE_CHAR_DIALOG = 2

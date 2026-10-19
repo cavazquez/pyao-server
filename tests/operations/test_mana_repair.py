@@ -41,7 +41,7 @@ def test_mana_migration_preserves_other_progress_and_is_idempotent() -> None:
 
 def test_new_affected_key_is_watched_before_any_repair() -> None:
     """Un segundo personaje descubierto al revalidar obliga a reservar todo de nuevo."""
-    from unittest.mock import patch  # noqa: PLC0415
+    from unittest.mock import patch  # ruff: ignore[import-outside-top-level]
 
     with FakeRedis(decode_responses=True) as raw:
         raw.set(MIGRATION_LOCK_KEY, "synthetic-owner", ex=60)

@@ -94,9 +94,9 @@ assert retrieved_npc.aggro_range == 6
 
 **Asserts:**
 ```python
-assert npc.attack_damage == 10   # Default
+assert npc.attack_damage == 10  # Default
 assert npc.attack_cooldown == 3.0  # Default
-assert npc.aggro_range == 8        # Default
+assert npc.aggro_range == 8  # Default
 ```
 
 **Importancia:** Asegura retrocompatibilidad con código existente.
@@ -276,20 +276,26 @@ npc = await repo.create_npc_instance(
     npc_id=1,
     char_index=10001,
     map_id=1,
-    x=50, y=50, heading=3,
+    x=50,
+    y=50,
+    heading=3,
     name="Goblin Test",
     description="Goblin balanceado",
-    body_id=58, head_id=0,
-    hp=100, max_hp=100, level=5,
+    body_id=58,
+    head_id=0,
+    hp=100,
+    max_hp=100,
+    level=5,
     is_hostile=True,
     is_attackable=True,
     respawn_time=30,
     respawn_time_max=60,
-    gold_min=10, gold_max=50,
+    gold_min=10,
+    gold_max=50,
     # Parámetros configurables
-    attack_damage=8,      # Daño moderado
+    attack_damage=8,  # Daño moderado
     attack_cooldown=2.5,  # Velocidad media
-    aggro_range=6,        # Rango corto-medio
+    aggro_range=6,  # Rango corto-medio
 )
 
 # Verificar configuración

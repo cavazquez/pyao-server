@@ -76,7 +76,7 @@ def test_prepare_with_input_paths_skips_generation(tmp_path: Path) -> None:
     cert_path.write_text("certificate", encoding="utf-8")
     key_path.write_text("key", encoding="utf-8")
 
-    def failing_generator(cert_path: Path, key_path: Path) -> None:  # noqa: ARG001
+    def failing_generator(cert_path: Path, key_path: Path) -> None:  # ruff: ignore[unused-function-argument]
         message = "Generator should not be invoked when paths are provided"
         raise AssertionError(message)
 

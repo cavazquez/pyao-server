@@ -1,4 +1,4 @@
-# ruff: noqa: D103, D107
+# ruff: file-ignore[undocumented-public-function, undocumented-public-init]
 """Tests para TradeService."""
 
 import asyncio

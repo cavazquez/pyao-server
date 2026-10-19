@@ -56,6 +56,7 @@ Implementar un sistema robusto de clases que:
 @dataclass
 class CharacterClass:
     """Representa una clase de personaje."""
+
     class_id: int  # ID del protocolo (1-12)
     name: str  # Nombre de la clase
     base_attributes: dict[str, int]  # Atributos base

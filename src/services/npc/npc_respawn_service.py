@@ -46,7 +46,7 @@ class NPCRespawnService:
         y = center_y + offset_y
 
         # Verificar límites del mapa (1-100)
-        if x < 1 or x > 100 or y < 1 or y > 100:  # noqa: PLR2004
+        if x < 1 or x > 100 or y < 1 or y > 100:  # ruff: ignore[magic-value-comparison]
             return None
 
         # Verificar si la posición está libre
