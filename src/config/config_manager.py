@@ -104,17 +104,7 @@ class ConfigManager:
 
         # Convertir GameConfig a estructura de dict anidada
         ConfigManager._config = {
-            "server": {
-                "host": self._game_config.server.host,
-                "port": self._game_config.server.port,
-                "max_connections": self._game_config.server.max_connections,
-                "buffer_size": self._game_config.server.buffer_size,
-                "outgoing_max_packets": self._game_config.server.outgoing_max_packets,
-                "outgoing_max_bytes": self._game_config.server.outgoing_max_bytes,
-                "shutdown_timeout_seconds": self._game_config.server.shutdown_timeout_seconds,
-                "shutdown_drain_seconds": self._game_config.server.shutdown_drain_seconds,
-                "outgoing_drain_timeout": self._game_config.server.outgoing_drain_timeout,
-            },
+            "server": self._game_config.server.model_dump(),
             "game": {
                 "spells": self._game_config.game.spells.model_dump(mode="json"),
                 "cadence": self._game_config.game.cadence.model_dump(),
