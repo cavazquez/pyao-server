@@ -24,12 +24,6 @@ apps:
   pyao-server:
     command: bin/wrapper
     plugs: [network, network-bind]
-  redis-schema:
-    command: bin/python3 -m src.operations.redis_schema
-    plugs: [network]
-  redis-backup:
-    command: bin/python3 -m src.operations.redis_backup
-    plugs: [network]
 
 parts:
   python-runtime:

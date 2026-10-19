@@ -59,8 +59,6 @@ def main() -> None:
         env["PYAO_STATE_DIR"] = str(work)
         assert run_snap("pyao.pyao-server", ["--version"], env, work).strip().endswith("1.0.0rc1")
         run_snap("pyao.pyao-server", ["--check-resources"], env, work)
-        run_snap("pyao.redis-schema", ["--help"], env, work)
-        run_snap("pyao.redis-backup", ["--help"], env, work)
         config = work / "config/server.toml"
         config.write_text(config.read_text() + "\n# Configuración conservada por smoke Snap\n")
         config_hash = hashlib.sha256(config.read_bytes()).hexdigest()

@@ -61,5 +61,8 @@ Las cachés de mapas se regeneran por hash del archive.
 Todo lo guardado de la partida permanece en Redis. Una base antigua requiere
 detener el servidor, crear y verificar un respaldo y migrar al esquema 4 antes
 de iniciar; la actualización del Snap no ejecuta la migración por su cuenta.
-`pyao.redis-schema` y `pyao.redis-backup` exponen las herramientas incluidas;
-consultar `--help` y el [procedimiento Redis](REDIS.md).
+El respaldo, su verificación mediante restauración y la migración se ejecutan
+con uv fuera del Snap, en el host del operador con Docker y `redis-cli`, según
+el [procedimiento Redis](REDIS.md). Usar el checkout del tag `v1.0.0rc1` o la
+distribución de esa misma versión y el endpoint elegido para la partida.
+El paquete de juego conserva su confinamiento estricto y acceso de red.
