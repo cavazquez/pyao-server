@@ -25,7 +25,7 @@ dev = [
 ]
 build = [
     "hatchling==1.32.4",
-    "packaging==25.0",
+    "packaging==26.3",
 ]
 
 [build-system]
