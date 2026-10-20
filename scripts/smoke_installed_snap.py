@@ -182,10 +182,9 @@ done
             "tls_ping": True,
             "restarted": True,
             "redis_state_preserved": True,
-            "schema_version": CURRENT_SCHEMA_VERSION,
             "daily_devaluation_policy": True,
             "configuration_preserved": True,
-            "schema": 4,
+            "schema": CURRENT_SCHEMA_VERSION,
             "graceful_sigterm": True,
             "production_data_used": False,
         }
