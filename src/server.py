@@ -169,6 +169,8 @@ class ArgentumServer:
             logger.info("Conexión cerrada por framing inválido: %s", error)
         except TimeoutError:
             logger.info("Conexión cerrada por plazo de autenticación agotado")
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError) as error:
+            logger.info("Conexión terminada por el cliente: %s", type(error).__name__)
         except asyncio.CancelledError:
             logger.debug("Conexión cancelada por shutdown")
             raise
