@@ -197,6 +197,16 @@ async def lifecycle(service: NPCService, client: RedisClient) -> dict[str, Any]:
         raise RuntimeError(message)
     # El único override es sobre una instancia de diagnóstico; el catálogo permanece intacto.
     control = replace(control, respawn_time=1, respawn_time_max=1)
+    await client.hset(
+        f"npc:instance:{control.instance_id}",
+        mapping={
+            "hp": "0",
+            "respawn_time": "1",
+            "respawn_time_max": "1",
+            "death_state": "pending",
+            "death_killer": "1",
+        },
+    )
     before = {npc.instance_id for npc in manager.get_npcs_in_map(290)}
     first.packets.clear()
     second.packets.clear()

@@ -208,7 +208,7 @@ def test_versioned_dataset(tmp_path: Path):
     report = DatasetValidator(root / "data", maps).validate()
     assert report.errors == 0, report.to_dict()
     assert report.counts["maps"] == 290
-    assert report.counts["items"] == 1075
+    assert report.counts["items"] == 1078
 
 
 def test_bad_dimensions_produce_diagnostics_instead_of_crashing(dataset):

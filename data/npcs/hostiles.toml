@@ -7,6 +7,11 @@
 [[npcs_hostiles.npcs]]
 id = 500
 name = "Murciélago"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -18,6 +23,11 @@ combat = { max_hp = 15, min_hp = 15, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 501
 name = "Lobo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 414
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -29,6 +39,11 @@ combat = { max_hp = 75, min_hp = 75, defense = 8 }
 [[npcs_hostiles.npcs]]
 id = 502
 name = "Zombie"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -40,6 +55,11 @@ combat = { max_hp = 250, min_hp = 250, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 503
 name = "Esqueleto"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -51,6 +71,11 @@ combat = { max_hp = 50, min_hp = 50, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 504
 name = "Serpiente"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -62,6 +87,11 @@ combat = { max_hp = 22, min_hp = 22, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 505
 name = "Goblin"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -73,6 +103,11 @@ combat = { max_hp = 110, min_hp = 110, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 506
 name = "Gallo Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -84,6 +119,11 @@ combat = { max_hp = 15, min_hp = 15, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 507
 name = "Lord Zombie"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -95,6 +135,11 @@ combat = { max_hp = 350, min_hp = 350, defense = 34 }
 [[npcs_hostiles.npcs]]
 id = 508
 name = "Esqueleto Guerrero"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -106,6 +151,11 @@ combat = { max_hp = 150, min_hp = 150, defense = 19 }
 [[npcs_hostiles.npcs]]
 id = 509
 name = "Dragón Rojo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -117,6 +167,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
 [[npcs_hostiles.npcs]]
 id = 510
 name = "Araña Gigante"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -128,6 +183,11 @@ combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 511
 name = "Ogro Esclavo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -139,6 +199,11 @@ combat = { max_hp = 2750, min_hp = 2750, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 512
 name = "Lobo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 414
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -150,6 +215,11 @@ combat = { max_hp = 75, min_hp = 75, defense = 8, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 513
 name = "Cíclope Guardián"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -161,6 +231,11 @@ combat = { max_hp = 4500, min_hp = 4500, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 514
 name = "Serpiente de Anthares"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -172,6 +247,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 515
 name = "Gorila Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -183,6 +263,11 @@ combat = { max_hp = 1300, min_hp = 1300, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 516
 name = "Goblin"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -194,6 +279,11 @@ combat = { max_hp = 90, min_hp = 90, defense = 15, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 517
 name = "Djinn de Viento"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -205,6 +295,11 @@ combat = { max_hp = 4200, min_hp = 4200, defense = 45 }
 [[npcs_hostiles.npcs]]
 id = 518
 name = "Dragón de las Profundidades"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -216,6 +311,11 @@ combat = { max_hp = 2000, min_hp = 2000, defense = 50 }
 [[npcs_hostiles.npcs]]
 id = 519
 name = "Gusano de Arena"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -227,6 +327,11 @@ combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 520
 name = "Esqueleto Guerrero"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -238,6 +343,11 @@ combat = { max_hp = 320, min_hp = 320, defense = 25, gold_min = 0, gold_max = 0 
 [[npcs_hostiles.npcs]]
 id = 521
 name = "Tigre Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -249,6 +359,11 @@ combat = { max_hp = 800, min_hp = 800, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 522
 name = "Orco"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -260,6 +375,11 @@ combat = { max_hp = 350, min_hp = 350, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 523
 name = "Orco"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -271,6 +391,11 @@ combat = { max_hp = 350, min_hp = 350, defense = 30, gold_min = 0, gold_max = 0 
 [[npcs_hostiles.npcs]]
 id = 524
 name = "Jefe Orco"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -282,6 +407,11 @@ combat = { max_hp = 1000, min_hp = 1000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 525
 name = "Águila"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -293,6 +423,11 @@ combat = { max_hp = 40, min_hp = 40, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 526
 name = "Araña Malaheing"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -304,6 +439,11 @@ combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 527
 name = "Dragón Rojo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -315,6 +455,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 528
 name = "Anfisbena"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -326,6 +471,11 @@ combat = { max_hp = 75, min_hp = 75, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 529
 name = "Escorpión"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -337,6 +487,11 @@ combat = { max_hp = 32, min_hp = 32, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 530
 name = "Bandido"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -348,6 +503,11 @@ combat = { max_hp = 200, min_hp = 200, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 531
 name = "Asesino"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -359,6 +519,11 @@ combat = { max_hp = 850, min_hp = 850, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 532
 name = "Osezno"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -370,6 +535,11 @@ combat = { max_hp = 400, min_hp = 400, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 533
 name = "Cuervo Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -381,6 +551,11 @@ combat = { max_hp = 50, min_hp = 50, defense = 2, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 534
 name = "Hormiga Gigante"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -392,6 +567,11 @@ combat = { max_hp = 400, min_hp = 400, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 535
 name = "Hormiga Marabunta"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -403,6 +583,11 @@ combat = { max_hp = 5, min_hp = 5, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 536
 name = "Rata Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -414,6 +599,11 @@ combat = { max_hp = 15, min_hp = 15, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 537
 name = "Beholder"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -425,6 +615,11 @@ combat = { max_hp = 1400, min_hp = 1400, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 538
 name = "Oso Pardo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 415
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -436,6 +631,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 539
 name = "Tortuga Gigante"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -447,6 +647,11 @@ combat = { max_hp = 550, min_hp = 550, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 540
 name = "Duende"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -458,6 +663,11 @@ combat = { max_hp = 210, min_hp = 210, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 541
 name = "Ogro"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -469,6 +679,11 @@ combat = { max_hp = 2250, min_hp = 2250, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 542
 name = "Gran Dragón Rojo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 100
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 6
 tags = ["hostil"]
@@ -480,6 +695,11 @@ combat = { max_hp = 200000, min_hp = 200000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 543
 name = "Demonio"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -491,6 +711,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 544
 name = "Unicornio"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -502,6 +727,11 @@ combat = { max_hp = 500, min_hp = 500, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 545
 name = "Licántropo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -513,6 +743,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 546
 name = "Zombie"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -524,6 +759,11 @@ combat = { max_hp = 250, min_hp = 250, defense = 20, gold_min = 0, gold_max = 0 
 [[npcs_hostiles.npcs]]
 id = 547
 name = "Tarántula"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -535,6 +775,11 @@ combat = { max_hp = 1000, min_hp = 1000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 548
 name = "Leviathan"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -546,6 +791,11 @@ combat = { max_hp = 6000, min_hp = 6000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 549
 name = "Orco Brujo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -557,6 +807,11 @@ combat = { max_hp = 1900, min_hp = 1900, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 550
 name = "Bruja"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -568,6 +823,11 @@ combat = { max_hp = 4200, min_hp = 4200, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 551
 name = "Mago Malvado"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -579,6 +839,11 @@ combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 552
 name = "Golem"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -590,6 +855,11 @@ combat = { max_hp = 35000, min_hp = 35000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 553
 name = "Medusa"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -601,6 +871,11 @@ combat = { max_hp = 6500, min_hp = 6500, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 554
 name = "Liche"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -612,6 +887,11 @@ combat = { max_hp = 2000, min_hp = 2000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 555
 name = "Lord Orco"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -623,6 +903,11 @@ combat = { max_hp = 1750, min_hp = 1750, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 556
 name = "Quark"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -634,6 +919,11 @@ combat = { max_hp = 50, min_hp = 50, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 557
 name = "Jabalí Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -645,6 +935,11 @@ combat = { max_hp = 515, min_hp = 515, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 558
 name = "Dark mOrGoLoCk"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -656,6 +951,11 @@ combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 559
 name = "Dark NuKeR"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -667,6 +967,11 @@ combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 560
 name = "Dark Valkira"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -678,6 +983,11 @@ combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 561
 name = "Dark Chatillon"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -689,6 +999,11 @@ combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 562
 name = "Dark Jennifer"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -700,6 +1015,11 @@ combat = { max_hp = 45000, min_hp = 45000, defense = 10, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 564
 name = "Escorpión"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -711,6 +1031,11 @@ combat = { max_hp = 32, min_hp = 32, defense = 0, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 565
 name = "Serpiente"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -722,6 +1047,11 @@ combat = { max_hp = 22, min_hp = 22, defense = 0, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 566
 name = "Murciélago"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -733,6 +1063,11 @@ combat = { max_hp = 10, min_hp = 10, defense = 0, gold_min = 0, gold_max = 0 }
 [[npcs_hostiles.npcs]]
 id = 567
 name = "Duende Mágico"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -744,6 +1079,11 @@ combat = { max_hp = 310, min_hp = 310, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 568
 name = "Galeón Pirata"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -755,6 +1095,11 @@ combat = { max_hp = 4000, min_hp = 4000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 569
 name = "Galeón Fantasmal"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -766,6 +1111,11 @@ combat = { max_hp = 7000, min_hp = 7000, defense = 50 }
 [[npcs_hostiles.npcs]]
 id = 573
 name = "Árbol Encantado"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -778,6 +1128,11 @@ combat = { max_hp = 10, min_hp = 10, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 574
 name = "Ucorno"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -789,6 +1144,11 @@ combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 575
 name = "Árbol de Jungla"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -800,6 +1160,11 @@ combat = { max_hp = 1500, min_hp = 1500, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 576
 name = "Árbol de Jungla"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -811,6 +1176,11 @@ combat = { max_hp = 10, min_hp = 10, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 577
 name = "Alma Putrefacta"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -823,6 +1193,11 @@ combat = { max_hp = 700, min_hp = 700, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 578
 name = "Cerdo Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -835,6 +1210,11 @@ combat = { max_hp = 35, min_hp = 35, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 579
 name = "Vaca Salvaje"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -847,6 +1227,11 @@ combat = { max_hp = 65, min_hp = 65, defense = 2 }
 [[npcs_hostiles.npcs]]
 id = 582
 name = "Enano de las Profundidades"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -858,6 +1243,11 @@ combat = { max_hp = 3000, min_hp = 3000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 583
 name = "Liche Infernal"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -869,6 +1259,11 @@ combat = { max_hp = 10000, min_hp = 10000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 584
 name = "Demonio Infernal"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -880,6 +1275,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 585
 name = "Dragón Rojo Infernal"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -891,6 +1291,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 50 }
 [[npcs_hostiles.npcs]]
 id = 586
 name = "Golem Infernal"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 80
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -902,6 +1307,11 @@ combat = { max_hp = 49000, min_hp = 49000, defense = 40 }
 [[npcs_hostiles.npcs]]
 id = 587
 name = "Astaroth"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -913,6 +1323,11 @@ combat = { max_hp = 3500, min_hp = 3500, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 588
 name = "Elemental de Fuego"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -924,6 +1339,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 589
 name = "Elemental de Fuego Anciano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -935,6 +1355,11 @@ combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 590
 name = "Blattodea"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -946,6 +1371,11 @@ combat = { max_hp = 435, min_hp = 435, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 591
 name = "Artopleura"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -957,6 +1387,11 @@ combat = { max_hp = 700, min_hp = 700, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 592
 name = "Araña de los Rincones"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -968,6 +1403,11 @@ combat = { max_hp = 650, min_hp = 650, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 593
 name = "Pirata"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -979,6 +1419,11 @@ combat = { max_hp = 700, min_hp = 700, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 594
 name = "Escarabajo Gigante"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -990,6 +1435,11 @@ combat = { max_hp = 550, min_hp = 550, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 595
 name = "Tentáculo Putrefacto"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1001,6 +1451,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 596
 name = "Espíritu chocarrero"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1012,6 +1467,11 @@ combat = { max_hp = 400, min_hp = 400, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 597
 name = "Protector de los muertos"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1023,6 +1483,11 @@ combat = { max_hp = 435, min_hp = 435, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 598
 name = "Hada Oscura"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1034,6 +1499,11 @@ combat = { max_hp = 650, min_hp = 650, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 599
 name = "Engendro de las profundidades"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1045,6 +1515,11 @@ combat = { max_hp = 550, min_hp = 550, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 600
 name = "Ave de las profundidades"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1056,6 +1531,11 @@ combat = { max_hp = 700, min_hp = 700, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 601
 name = "Licántropo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1067,6 +1547,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 602
 name = "Piraña"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1078,6 +1563,11 @@ combat = { max_hp = 800, min_hp = 800, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 603
 name = "Sirena"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1089,6 +1579,11 @@ combat = { max_hp = 1300, min_hp = 1300, defense = 25 }
 [[npcs_hostiles.npcs]]
 id = 604
 name = "Manta raya"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1100,6 +1595,11 @@ combat = { max_hp = 600, min_hp = 600, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 605
 name = "Lutra"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1111,6 +1611,11 @@ combat = { max_hp = 2100, min_hp = 2100, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 606
 name = "Tiburón"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1122,6 +1627,11 @@ combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 607
 name = "Capitán Pirata"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1133,6 +1643,11 @@ combat = { max_hp = 2700, min_hp = 2700, defense = 35 }
 [[npcs_hostiles.npcs]]
 id = 608
 name = "Guardián de las Profundidades"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1144,6 +1659,11 @@ combat = { max_hp = 2000, min_hp = 2000, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 609
 name = "Elemental de Agua Anciano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1155,6 +1675,11 @@ combat = { max_hp = 7000, min_hp = 7000, defense = 30 }
 [[npcs_hostiles.npcs]]
 id = 610
 name = "Kraken"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1166,6 +1691,11 @@ combat = { max_hp = 6250, min_hp = 6250, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 611
 name = "Fango"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1177,6 +1707,11 @@ combat = { max_hp = 750, min_hp = 750, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 612
 name = "Cocodrilo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 28
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1188,6 +1723,11 @@ combat = { max_hp = 550, min_hp = 550, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 613
 name = "Unicornio"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1199,6 +1739,11 @@ combat = { max_hp = 1350, min_hp = 1350, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 614
 name = "Elfo Guardián"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1210,6 +1755,11 @@ combat = { max_hp = 1500, min_hp = 1500, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 615
 name = "Árbol capturador de Almas"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1221,6 +1771,11 @@ combat = { max_hp = 2500, min_hp = 2500, defense = 15 }
 [[npcs_hostiles.npcs]]
 id = 616
 name = "Sapo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1232,6 +1787,11 @@ combat = { max_hp = 35, min_hp = 35, defense = 0 }
 [[npcs_hostiles.npcs]]
 id = 617
 name = "Pequeño Escarabajo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1243,6 +1803,11 @@ combat = { max_hp = 200, min_hp = 200, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 618
 name = "Pequeño Duende"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1254,6 +1819,11 @@ combat = { max_hp = 100, min_hp = 100, defense = 8 }
 [[npcs_hostiles.npcs]]
 id = 619
 name = "Hada del Bosque"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1265,6 +1835,11 @@ combat = { max_hp = 278, min_hp = 278, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 620
 name = "Pequeña Araña"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1276,6 +1851,11 @@ combat = { max_hp = 125, min_hp = 125, defense = 4 }
 [[npcs_hostiles.npcs]]
 id = 621
 name = "Piraña"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1287,6 +1867,11 @@ combat = { max_hp = 150, min_hp = 150, defense = 4 }
 [[npcs_hostiles.npcs]]
 id = 622
 name = "Pequeño Dragón Mágico"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1298,6 +1883,11 @@ combat = { max_hp = 200, min_hp = 200, defense = 5 }
 [[npcs_hostiles.npcs]]
 id = 623
 name = "Mini Elemental de Fuego"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1309,6 +1899,11 @@ combat = { max_hp = 210, min_hp = 210, defense = 3 }
 [[npcs_hostiles.npcs]]
 id = 624
 name = "Pequeño Dragón Rojo"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 18
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1320,6 +1915,11 @@ combat = { max_hp = 300, min_hp = 300, defense = 7 }
 [[npcs_hostiles.npcs]]
 id = 625
 name = "Víbora"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 2
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1331,6 +1931,11 @@ combat = { max_hp = 22, min_hp = 22, defense = 3 }
 [[npcs_hostiles.npcs]]
 id = 626
 name = "Goblin Travieso"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1342,6 +1947,11 @@ combat = { max_hp = 75, min_hp = 75, defense = 2 }
 [[npcs_hostiles.npcs]]
 id = 627
 name = "Protector de almas"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 10
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1353,6 +1963,11 @@ combat = { max_hp = 130, min_hp = 130, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 628
 name = "Tarántula venenosa"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 5
+loot_profile = "beast"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 0
 tags = ["hostil"]
@@ -1364,6 +1979,11 @@ combat = { max_hp = 95, min_hp = 95, defense = 2 }
 [[npcs_hostiles.npcs]]
 id = 900
 name = "Rey Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1375,6 +1995,11 @@ combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 901
 name = "Rey Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1386,6 +2011,11 @@ combat = { max_hp = 12000, min_hp = 12000, defense = 30, gold_min = 0, gold_max 
 [[npcs_hostiles.npcs]]
 id = 902
 name = "Clerigo Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1397,6 +2027,11 @@ combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 903
 name = "Clerigo Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1408,6 +2043,11 @@ combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 904
 name = "Bardo Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1419,6 +2059,11 @@ combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 905
 name = "Bardo Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1430,6 +2075,11 @@ combat = { max_hp = 8000, min_hp = 8000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 906
 name = "Mago Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1441,6 +2091,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 907
 name = "Mago Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1452,6 +2107,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 908
 name = "Druida Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1463,6 +2123,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 909
 name = "Druida Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 50
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1474,6 +2139,11 @@ combat = { max_hp = 5000, min_hp = 5000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 910
 name = "Cazador Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1485,6 +2155,11 @@ combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 911
 name = "Cazador Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1496,6 +2171,11 @@ combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 912
 name = "Pirata Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1507,6 +2187,11 @@ combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 913
 name = "Pirata Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1518,6 +2203,11 @@ combat = { max_hp = 10000, min_hp = 10000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 914
 name = "Guerrero Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1529,6 +2219,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 915
 name = "Guerrero Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1540,6 +2235,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 916
 name = "Paladin Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1551,6 +2251,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 917
 name = "Paladin Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1562,6 +2267,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 918
 name = "Asesino Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1573,6 +2283,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 919
 name = "Asesino Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1584,6 +2299,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 920
 name = "Bandido Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1595,6 +2315,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 921
 name = "Bandido Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 65
+loot_profile = "humanoid"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1606,6 +2331,11 @@ combat = { max_hp = 15000, min_hp = 15000, defense = 20 }
 [[npcs_hostiles.npcs]]
 id = 922
 name = "Ladrón Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]
@@ -1617,6 +2347,11 @@ combat = { max_hp = 3000, min_hp = 3000, defense = 10 }
 [[npcs_hostiles.npcs]]
 id = 923
 name = "Ladrón Pretoriano"
+
+# Nivel de balance PyAO por resistencia del catálogo; no cambia HP/daño.
+nivel = 38
+loot_profile = "boss"
+loot_material = 0
 category = "NPCS HOSTILES"
 npc_type = 10
 tags = ["hostil"]

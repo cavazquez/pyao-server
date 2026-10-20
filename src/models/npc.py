@@ -79,3 +79,5 @@ class NPC:
     home_x: int = 0
     home_y: int = 0
     random_spawn_area: str = ""
+    loot_profile: str = "none"
+    loot_material: int = 0

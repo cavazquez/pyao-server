@@ -1,116 +1,347 @@
-# Loot Tables para NPCs
-# Define qué items dropean los NPCs al morir y con qué probabilidad
+# Una sola fuente de oro; la calidad depende del nivel del NPC, nunca del jugador.
+version = 2
+loot_table = [] # Retira los diez IDs erróneos del catálogo anterior.
+family_weights = [0.25, 0.35, 0.20, 0.20] # daga, espada, escudo, armadura
+current_band_probability = 0.70
 
-# Goblin (npc_id=1) - Criatura débil pero común
-[[loot_table]]
-id = 1
-name = "Goblin"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 50 },   # Oro (siempre)
-    { item_id = 1, probability = 0.4, min_quantity = 1, max_quantity = 3 },      # Manzana Roja (40%)
-    { item_id = 15, probability = 0.15, min_quantity = 1, max_quantity = 1 },    # Daga (15%)
-    { item_id = 38, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Poción Roja - HP (25%)
-]
+[profiles.humanoid]
+gold_probability = 0.85
+equipment_multiplier = 1.0
+consumable_probability = 0.25
+misc_probability = 0.08
 
-# Lobo (npc_id=7) - Criatura rápida y agresiva
-[[loot_table]]
-id = 7
-name = "Lobo"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 5, max_quantity = 20 },   # Oro (siempre)
-    { item_id = 1, probability = 0.2, min_quantity = 1, max_quantity = 1 },     # Manzana Roja (20%)
-    { item_id = 58, probability = 0.1, min_quantity = 1, max_quantity = 3 },    # Leña (10%)
-]
+[profiles.boss]
+gold_probability = 0.95
+equipment_multiplier = 1.7
+consumable_probability = 0.50
+misc_probability = 0.18
 
-# Orco (npc_id=4) - Guerrero fuerte con buen equipo
-[[loot_table]]
-id = 4
-name = "Orco"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 20, max_quantity = 100 },  # Oro (siempre)
-    { item_id = 3, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Hacha (25%)
-    { item_id = 2, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Espada Larga (20%)
-    { item_id = 38, probability = 0.30, min_quantity = 2, max_quantity = 5 },    # Poción Roja - HP (30%)
-    { item_id = 37, probability = 0.15, min_quantity = 1, max_quantity = 2 },    # Poción Azul - Maná (15%)
-]
+[profiles.beast]
+gold_probability = 0.0
+equipment_multiplier = 0.0
+consumable_probability = 0.0
+misc_probability = 0.0
+material_probability = 0.65
 
-# Araña Gigante (npc_id=8) - Criatura venenosa peligrosa
-[[loot_table]]
-id = 8
-name = "Araña Gigante"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 15, max_quantity = 75 },  # Oro (siempre)
-    { item_id = 1, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Manzana Roja (25%)
-    { item_id = 39, probability = 0.20, min_quantity = 1, max_quantity = 3 },   # Poción Verde - Veneno (20%)
-    { item_id = 38, probability = 0.15, min_quantity = 1, max_quantity = 2 },   # Poción Roja - HP (15%)
-]
+[profiles.none]
+gold_probability = 0.0
+equipment_multiplier = 0.0
+consumable_probability = 0.0
+misc_probability = 0.0
 
-# Serpiente (npc_id=9) - Criatura ágil y esquiva
-[[loot_table]]
-id = 9
-name = "Serpiente"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 3, max_quantity = 15 },   # Oro (siempre)
-    { item_id = 1, probability = 0.20, min_quantity = 1, max_quantity = 1 },    # Manzana Roja (20%)
-    { item_id = 39, probability = 0.15, min_quantity = 1, max_quantity = 1 },   # Poción Verde - Veneno (15%)
-]
+[[bands]]
+min_level = 1
+max_level = 9
+gold_min = 2
+gold_max = 15
+equipment_probability = 0.12
+dagger = 15
+sword = 164
+shield = 404
+armor = 30
 
-# Dragón (npc_id=10) - BOSS legendario con loot épico
-[[loot_table]]
-id = 10
-name = "Dragón"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 500, max_quantity = 1000 },  # Oro (siempre - mucho)
-    { item_id = 123, probability = 0.50, min_quantity = 1, max_quantity = 1 },     # Espada Vikinga (50%)
-    { item_id = 126, probability = 0.40, min_quantity = 1, max_quantity = 1 },     # Hacha Larga de Guerra (40%)
-    { item_id = 38, probability = 0.80, min_quantity = 5, max_quantity = 10 },     # Poción Roja - HP (80%)
-    { item_id = 37, probability = 0.60, min_quantity = 3, max_quantity = 8 },      # Poción Azul - Maná (60%)
-    { item_id = 128, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Escudo de Hierro (20%)
-]
+[[bands]]
+min_level = 10
+max_level = 24
+gold_min = 20
+gold_max = 80
+equipment_probability = 0.16
+dagger = 165
+sword = 19
+shield = 128
+armor = 359
 
-# Esqueleto (npc_id=11) - Guerrero no-muerto
-[[loot_table]]
-id = 11
-name = "Esqueleto"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 10, max_quantity = 40 },   # Oro (siempre)
-    { item_id = 2, probability = 0.25, min_quantity = 1, max_quantity = 1 },     # Espada Larga (25%)
-    { item_id = 3, probability = 0.20, min_quantity = 1, max_quantity = 1 },     # Hacha (20%)
-    { item_id = 1, probability = 0.15, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (15%)
-    { item_id = 58, probability = 0.30, min_quantity = 1, max_quantity = 3 },    # Leña (30%)
-]
+[[bands]]
+min_level = 25
+max_level = 44
+gold_min = 100
+gold_max = 300
+equipment_probability = 0.20
+dagger = 365
+sword = 123
+shield = 130
+armor = 195
 
-# Zombie (npc_id=12) - Muerto viviente putrefacto
-[[loot_table]]
-id = 12
-name = "Zombie"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 8, max_quantity = 30 },    # Oro (siempre)
-    { item_id = 1, probability = 0.30, min_quantity = 1, max_quantity = 2 },     # Manzana Roja (30%)
-    { item_id = 38, probability = 0.20, min_quantity = 1, max_quantity = 2 },    # Poción Roja - HP (20%)
-    { item_id = 58, probability = 0.25, min_quantity = 1, max_quantity = 2 },    # Leña (25%)
-]
+[[bands]]
+min_level = 45
+max_level = 69
+gold_min = 350
+gold_max = 800
+equipment_probability = 0.24
+dagger = 366
+sword = 403
+shield = 1081
+armor = 390
 
-# Troll (npc_id=13) - Gigante brutal
-[[loot_table]]
-id = 13
-name = "Troll"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 30, max_quantity = 120 },  # Oro (siempre)
-    { item_id = 2, probability = 0.30, min_quantity = 1, max_quantity = 1 },     # Espada Larga (30%)
-    { item_id = 3, probability = 0.35, min_quantity = 1, max_quantity = 1 },     # Hacha (35%)
-    { item_id = 38, probability = 0.40, min_quantity = 2, max_quantity = 5 },    # Poción Roja - HP (40%)
-    { item_id = 58, probability = 0.25, min_quantity = 2, max_quantity = 4 },    # Leña (25%)
-]
+[[bands]]
+min_level = 70
+max_level = 255
+gold_min = 1000
+gold_max = 3000
+equipment_probability = 0.28
+dagger = 559
+sword = 1083
+shield = 1082
+armor = 481
 
-# Ogro (npc_id=14) - Bestia poderosa
-[[loot_table]]
-id = 14
-name = "Ogro"
-items = [
-    { item_id = 12, probability = 1.0, min_quantity = 50, max_quantity = 150 },  # Oro (siempre)
-    { item_id = 2, probability = 0.40, min_quantity = 1, max_quantity = 1 },     # Espada Larga (40%)
-    { item_id = 3, probability = 0.45, min_quantity = 1, max_quantity = 1 },     # Hacha (45%)
-    { item_id = 38, probability = 0.50, min_quantity = 3, max_quantity = 7 },    # Poción Roja - HP (50%)
-    { item_id = 37, probability = 0.30, min_quantity = 2, max_quantity = 5 },    # Poción Azul - Maná (30%)
-]
+# Las categorías cubren todos los tipos transportables; los nuevos tipos sin regla son un error.
+[catalog]
+tool_ids = [127, 138, 187, 198, 389, 543, 561, 562, 563, 564, 565]
+
+[catalog.excluded_types]
+"4" = "Árbol del mapa"
+"6" = "Puerta del mapa"
+"7" = "Contenedor fijo del mapa"
+"8" = "Cartel del mapa"
+"9" = "Llave con Clave ligada a una casa, bóveda o dungeon; requiere entrega específica"
+"10" = "Foro del mapa"
+"15" = "Fogata del mundo"
+"19" = "Teletransporte fijo del mapa"
+"22" = "Yacimiento del mapa"
+"25" = "Aura fija"
+"27" = "Yunque de trabajo fijo"
+"28" = "Fragua de trabajo fija"
+"35" = "Mancha o reja del mapa"
+
+[catalog.excluded_items]
+"402" = "Arma especial de 100 de daño, fuera del balance normal"
+"556" = "Arma administrativa de 1000 de daño"
+"625" = "Escudo administrativo con SkHerreria=6500"
+"700" = "Anillo especial con defensa mágica 200–210 y habilidad inalcanzable 101"
+"560" = "Gema de evento con entrega específica"
+"613" = "Gema sagrada de evento"
+"652" = "Piedra de evento con entrega específica"
+"618" = "Representación ornamental de monedas; el dinero real es exclusivamente el ID 12"
+
+[catalog.type_categories]
+"1" = "food"
+"3" = "armor"
+"11" = "potion"
+"12" = "book"
+"13" = "drink"
+"14" = "wood"
+"16" = "shield"
+"17" = "helmet"
+"18" = "accessory"
+"20" = "furniture"
+"21" = "jewel"
+"23" = "ore"
+"24" = "scroll"
+"26" = "instrument"
+"29" = "gem"
+"30" = "material"
+"31" = "boat"
+"32" = "ammo"
+"33" = "vessel"
+"34" = "drink"
+"37" = "bag"
+
+[catalog.category_overrides]
+"1055" = "boot"
+"1059" = "boot"
+"1063" = "boot"
+"1067" = "boot"
+"1071" = "boot"
+
+[categories.dagger]
+slot = "equipment"
+weight = 8
+quantity = [1, 1]
+metric = "damage"
+thresholds = [2, 4, 5, 6]
+
+[categories.sword]
+slot = "equipment"
+weight = 12
+quantity = [1, 1]
+metric = "damage"
+thresholds = [5, 10, 14, 18]
+
+[categories.axe]
+slot = "equipment"
+weight = 6
+quantity = [1, 1]
+metric = "damage"
+thresholds = [5, 9, 12, 14]
+
+[categories.blunt]
+slot = "equipment"
+weight = 6
+quantity = [1, 1]
+metric = "damage"
+thresholds = [3, 6, 9, 11]
+
+[categories.bow]
+slot = "equipment"
+weight = 7
+quantity = [1, 1]
+metric = "damage"
+thresholds = [3, 5, 7, 8]
+
+[categories.staff]
+slot = "equipment"
+weight = 7
+quantity = [1, 1]
+metric = "staff"
+thresholds = [25, 32, 36, 40]
+
+[categories.armor]
+slot = "equipment"
+weight = 14
+quantity = [1, 1]
+metric = "defense"
+thresholds = [15, 25, 40, 50]
+
+[categories.shield]
+slot = "equipment"
+weight = 9
+quantity = [1, 1]
+metric = "defense"
+thresholds = [2, 3, 5, 8]
+
+[categories.helmet]
+slot = "equipment"
+weight = 6
+quantity = [1, 1]
+metric = "defense"
+thresholds = [3, 6, 9, 12]
+
+[categories.accessory]
+slot = "equipment"
+weight = 5
+quantity = [1, 1]
+metric = "magic"
+thresholds = [2, 5, 10, 15]
+
+[categories.glove]
+slot = "equipment"
+weight = 4
+quantity = [1, 1]
+metric = "value"
+thresholds = [1000, 4000, 8000, 12000]
+
+[categories.boot]
+slot = "equipment"
+weight = 4
+quantity = [1, 1]
+metric = "defense"
+thresholds = [5, 10, 15, 20]
+
+[categories.food]
+slot = "consumable"
+weight = 18
+quantity = [1, 3]
+metric = "value"
+thresholds = [5, 15, 40, 100]
+
+[categories.drink]
+slot = "consumable"
+weight = 12
+quantity = [1, 3]
+metric = "value"
+thresholds = [5, 15, 40, 100]
+
+[categories.potion]
+slot = "consumable"
+weight = 50
+quantity = [1, 3]
+metric = "value"
+thresholds = [30, 100, 200, 800]
+
+[categories.ammo]
+slot = "consumable"
+weight = 15
+quantity = [5, 20]
+metric = "damage"
+thresholds = [1.5, 2.5, 3.5, 4.5]
+
+[categories.scroll]
+slot = "consumable"
+weight = 5
+quantity = [1, 1]
+metric = "value"
+thresholds = [1000, 10000, 50000, 250000]
+
+[categories.tool]
+slot = "misc"
+weight = 18
+quantity = [1, 1]
+metric = "value"
+thresholds = [200, 500, 1500, 5000]
+
+[categories.wood]
+slot = "misc"
+weight = 10
+quantity = [1, 5]
+metric = "value"
+thresholds = [5, 20, 100, 500]
+
+[categories.ore]
+slot = "misc"
+weight = 10
+quantity = [1, 5]
+metric = "value"
+thresholds = [10, 15, 30, 100]
+
+[categories.gem]
+slot = "misc"
+weight = 8
+quantity = [1, 2]
+metric = "value"
+thresholds = [50, 100, 200, 500]
+
+[categories.material]
+slot = "misc"
+weight = 10
+quantity = [1, 3]
+metric = "value"
+thresholds = [20, 40, 80, 150]
+
+[categories.instrument]
+slot = "misc"
+weight = 5
+quantity = [1, 1]
+metric = "value"
+thresholds = [500, 2000, 5000, 10000]
+
+[categories.boat]
+slot = "misc"
+weight = 1
+quantity = [1, 1]
+metric = "value"
+thresholds = [1000, 20000, 50000, 80000]
+
+[categories.bag]
+slot = "misc"
+weight = 4
+quantity = [1, 1]
+metric = "value"
+thresholds = [500, 2000, 8000, 12000]
+
+[categories.jewel]
+slot = "misc"
+weight = 3
+quantity = [1, 1]
+metric = "value"
+thresholds = [100, 1000, 3000, 10000]
+
+[categories.book]
+slot = "misc"
+weight = 3
+quantity = [1, 1]
+metric = "value"
+thresholds = [100, 1000, 5000, 10000]
+
+[categories.vessel]
+slot = "misc"
+weight = 8
+quantity = [1, 1]
+metric = "value"
+thresholds = [20, 100, 500, 1000]
+
+[categories.furniture]
+slot = "misc"
+weight = 1
+quantity = [1, 1]
+metric = "value"
+thresholds = [100, 500, 2000, 10000]

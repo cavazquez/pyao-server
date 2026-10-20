@@ -14,6 +14,7 @@ from src.services.combat.barriers import absorb_damage
 from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
+from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes
 from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import TrainingEvent, trained_decision, training_resources
@@ -356,7 +357,7 @@ class PhysicalPlan:
         writes[target_key] = (
             {**barrier, **hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")}
             if request.target_player
-            else {"hp": str(hp)}
+            else death_changes(hp, user, now=self.now)
         )
         result = {
             "applied": True,

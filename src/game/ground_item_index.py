@@ -270,7 +270,10 @@ class GroundItemIndex:
                 key: expiry for key, expiry in self._published.items() if expiry > now
             }
             if identity is None or identity not in self._published:
-                await self._publish(map_id, x, y, broadcast)
+                positions = {(x, y)}
+                positions.update(tuple(position) for position in result.get("ground_positions", []))
+                for position in sorted(positions):
+                    await self._publish(map_id, *position, broadcast)
                 if identity is not None:
                     self._published[identity] = now + RECEIPT_TTL_SECONDS
             return result

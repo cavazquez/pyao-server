@@ -11,6 +11,7 @@ from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.periodic import periodic_changes
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
 from src.services.combat.spell_components import take_materials
+from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes, revive_changes
 from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import trained_decision, training_resources
@@ -185,6 +186,8 @@ class SpellPlan:
                 )
             )
         effects = self._effects(target_changes, bool(request.target_player))
+        if not request.target_player and hp > 0 and int(target_changes.get("hp", hp)) <= 0:
+            target_changes.update(death_changes(0, request.user_id, now=self.now))
         if hp > 0 and int(target_changes.get(hp_field, hp)) <= 0 and source_key != target_key:
             source_changes.update(kill_changes(source, target, player=bool(request.target_player)))
         if self.spell.get("poisons") and request.target_player:
@@ -446,6 +449,7 @@ class SpellPlan:
                 changes[field] = str(self.now + duration)
                 if flag == "poisons" and not player:
                     changes["poisoned_by_user_id"] = str(self.request.user_id)
+                    changes["poison_next_tick"] = str(self.now + 2)
                 effects = True
         for flag, fields in {
             "cures_poison": ("poisoned_until",),
