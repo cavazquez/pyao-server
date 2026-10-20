@@ -5,7 +5,10 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import cast
+from typing import TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from src.game.coordinate_mask import Coordinates
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +36,7 @@ class SpatialIndexMixin:
             return False
 
         # Verificar tiles bloqueados (paredes, agua, etc.)
-        blocked_tiles = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_blocked_tiles", {}))
+        blocked_tiles = cast("dict[int, Coordinates]", getattr(self, "_blocked_tiles", {}))
         if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
             return False
 
@@ -123,7 +126,7 @@ class SpatialIndexMixin:
         if x < 1 or x > width or y < 1 or y > height:
             return "fuera de límites del mapa"
 
-        blocked_tiles = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_blocked_tiles", {}))
+        blocked_tiles = cast("dict[int, Coordinates]", getattr(self, "_blocked_tiles", {}))
         if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
             return "tile bloqueado del mapa (map_data)"
 

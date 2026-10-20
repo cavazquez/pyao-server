@@ -7,7 +7,8 @@ y del ciclo de vida del servicio. Tipado alineado con `MapResourcesService.resou
 
 from __future__ import annotations
 
-ResourcesMap = dict[str, dict[str, set[tuple[int, int]]]]
+from src.game.coordinate_mask import CoordinateMask, ResourcesMap
+
 SignsMap = dict[str, dict[tuple[int, int], int]]
 DoorsMap = dict[str, dict[tuple[int, int], int]]
 
@@ -27,7 +28,8 @@ def tile_in_required_layer(
     mk = map_key(map_id)
     if mk not in resources:
         return False
-    return (x, y) in resources[mk][layer]
+    values = resources[mk][layer]
+    return values.contains_xy(x, y) if isinstance(values, CoordinateMask) else (x, y) in values
 
 
 def tile_in_optional_layer(
@@ -41,7 +43,10 @@ def tile_in_optional_layer(
     mk = map_key(map_id)
     if mk not in resources:
         return False
-    return (x, y) in resources[mk].get(layer, set())
+    values = resources[mk].get(layer)
+    if values is None:
+        return False
+    return values.contains_xy(x, y) if isinstance(values, CoordinateMask) else (x, y) in values
 
 
 def get_resource_counts(

@@ -12,9 +12,11 @@ import time
 from pathlib import Path
 from typing import Any, cast
 
+from src.game.coordinate_mask import CoordinateMask, ResourcesMap
+
 logger = logging.getLogger(__name__)
 
-MAP_RESOURCES_CACHE_VERSION = 2
+MAP_RESOURCES_CACHE_VERSION = 3
 
 
 def build_mtimes(files: list[Path]) -> tuple[list[str], dict[str, float]]:
@@ -63,7 +65,7 @@ def is_cache_source_valid_lists(
 
 
 def serialize_resources_to_maps_dict(
-    resources: dict[str, dict[str, set[tuple[int, int]]]],
+    resources: ResourcesMap,
     signs: dict[str, dict[tuple[int, int], int]],
     doors: dict[str, dict[tuple[int, int], int]],
 ) -> dict[str, Any]:
@@ -85,7 +87,7 @@ def serialize_resources_to_maps_dict(
 
 def rebuild_resources_from_maps_data(
     maps_data: dict[str, Any],
-    resources: dict[str, dict[str, set[tuple[int, int]]]],
+    resources: ResourcesMap,
     signs: dict[str, dict[tuple[int, int], int]],
     doors: dict[str, dict[tuple[int, int], int]],
 ) -> None:
@@ -114,12 +116,12 @@ def rebuild_resources_from_maps_data(
         doors_list = res.get("doors", [])
 
         resources[map_key] = {
-            "blocked": {tuple(c) for c in blocked},
-            "water": {tuple(c) for c in water},
-            "trees": {tuple(c) for c in trees},
-            "mines": {tuple(c) for c in mines},
-            "anvils": {tuple(c) for c in anvils},
-            "forges": {tuple(c) for c in forges},
+            "blocked": CoordinateMask(tuple(c) for c in blocked),
+            "water": CoordinateMask(tuple(c) for c in water),
+            "trees": CoordinateMask(tuple(c) for c in trees),
+            "mines": CoordinateMask(tuple(c) for c in mines),
+            "anvils": CoordinateMask(tuple(c) for c in anvils),
+            "forges": CoordinateMask(tuple(c) for c in forges),
         }
 
         if signs_list:
@@ -144,7 +146,7 @@ class MapCacheLoader:
 
     def try_load_from_cache(
         self,
-        resources: dict[str, dict[str, set[tuple[int, int]]]],
+        resources: ResourcesMap,
         signs: dict[str, dict[tuple[int, int], int]],
         doors: dict[str, dict[tuple[int, int], int]],
     ) -> bool:
@@ -210,7 +212,7 @@ class MapCacheLoader:
 
     def save_cache(
         self,
-        resources: dict[str, dict[str, set[tuple[int, int]]]],
+        resources: ResourcesMap,
         signs: dict[str, dict[tuple[int, int], int]],
         doors: dict[str, dict[tuple[int, int], int]],
     ) -> None:

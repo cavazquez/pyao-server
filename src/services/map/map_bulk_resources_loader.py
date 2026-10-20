@@ -7,6 +7,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
+from src.game.coordinate_mask import CoordinateMask, Coordinates, ResourcesMap
 from src.services.map.blocked_loader import process_blocked_file
 from src.services.map.objects_loader import process_objects_file
 
@@ -31,21 +32,21 @@ def load_map_resources(
     blocked_files: list[Path],
     objects_files: list[Path],
 ) -> tuple[
-    dict[int, set[tuple[int, int]]],
-    dict[int, set[tuple[int, int]]],
-    dict[int, set[tuple[int, int]]],
-    dict[int, set[tuple[int, int]]],
-    dict[int, set[tuple[int, int]]],
-    dict[int, set[tuple[int, int]]],
+    dict[int, Coordinates],
+    dict[int, Coordinates],
+    dict[int, Coordinates],
+    dict[int, Coordinates],
+    dict[int, Coordinates],
+    dict[int, Coordinates],
     dict[int, dict[tuple[int, int], int]],
     dict[int, dict[tuple[int, int], int]],
 ]:
-    blocked_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    water_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    anvils_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    forges_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    blocked_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    water_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    trees_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    mines_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    anvils_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    forges_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
     signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
     doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
 
@@ -84,12 +85,12 @@ def load_map_resources(
 
 
 def collect_map_ids(
-    blocked_by_map: dict[int, set[tuple[int, int]]],
-    water_by_map: dict[int, set[tuple[int, int]]],
-    trees_by_map: dict[int, set[tuple[int, int]]],
-    mines_by_map: dict[int, set[tuple[int, int]]],
-    anvils_by_map: dict[int, set[tuple[int, int]]],
-    forges_by_map: dict[int, set[tuple[int, int]]],
+    blocked_by_map: dict[int, Coordinates],
+    water_by_map: dict[int, Coordinates],
+    trees_by_map: dict[int, Coordinates],
+    mines_by_map: dict[int, Coordinates],
+    anvils_by_map: dict[int, Coordinates],
+    forges_by_map: dict[int, Coordinates],
     signs_by_map: dict[int, dict[tuple[int, int], int]],
     doors_by_map: dict[int, dict[tuple[int, int], int]],
 ) -> set[int]:
@@ -105,16 +106,16 @@ def collect_map_ids(
 
 
 def build_public_structures(
-    resources: dict[str, dict[str, set[tuple[int, int]]]],
+    resources: ResourcesMap,
     signs: dict[str, dict[tuple[int, int], int]],
     doors: dict[str, dict[tuple[int, int], int]],
     map_ids: set[int],
-    blocked_by_map: dict[int, set[tuple[int, int]]],
-    water_by_map: dict[int, set[tuple[int, int]]],
-    trees_by_map: dict[int, set[tuple[int, int]]],
-    mines_by_map: dict[int, set[tuple[int, int]]],
-    anvils_by_map: dict[int, set[tuple[int, int]]],
-    forges_by_map: dict[int, set[tuple[int, int]]],
+    blocked_by_map: dict[int, Coordinates],
+    water_by_map: dict[int, Coordinates],
+    trees_by_map: dict[int, Coordinates],
+    mines_by_map: dict[int, Coordinates],
+    anvils_by_map: dict[int, Coordinates],
+    forges_by_map: dict[int, Coordinates],
     signs_by_map: dict[int, dict[tuple[int, int], int]],
     doors_by_map: dict[int, dict[tuple[int, int], int]],
     *,
@@ -123,12 +124,12 @@ def build_public_structures(
     for map_id in sorted(map_ids):
         map_key = f"map_{map_id}"
 
-        blocked = blocked_by_map.get(map_id, set())
-        water = water_by_map.get(map_id, set())
-        trees = trees_by_map.get(map_id, set())
-        mines = mines_by_map.get(map_id, set())
-        anvils = anvils_by_map.get(map_id, set())
-        forges = forges_by_map.get(map_id, set())
+        blocked = blocked_by_map.get(map_id, CoordinateMask())
+        water = water_by_map.get(map_id, CoordinateMask())
+        trees = trees_by_map.get(map_id, CoordinateMask())
+        mines = mines_by_map.get(map_id, CoordinateMask())
+        anvils = anvils_by_map.get(map_id, CoordinateMask())
+        forges = forges_by_map.get(map_id, CoordinateMask())
 
         resources[map_key] = {
             "blocked": blocked,
@@ -165,7 +166,7 @@ def build_public_structures(
 
 def run_load_all_maps(
     maps_dir: Path,
-    resources: dict[str, dict[str, set[tuple[int, int]]]],
+    resources: ResourcesMap,
     signs: dict[str, dict[tuple[int, int], int]],
     doors: dict[str, dict[tuple[int, int], int]],
     *,

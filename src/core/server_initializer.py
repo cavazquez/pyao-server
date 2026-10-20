@@ -55,6 +55,7 @@ class ServerInitializer:
                 map_manager.load_map_data(map_id, metadata_path)
                 loaded_maps += 1
 
+        map_manager.release_map_source_cache()
         elapsed_time = time.perf_counter() - start_time
         logger.info(
             "✓ %d mapas cargados con tiles bloqueados en %.3f segundos",

@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from src.game.coordinate_mask import CoordinateMask
 from src.game.map_metadata_loader import MapMetadataLoader
 
 
@@ -79,3 +80,36 @@ def test_load_map_uses_blocked_file_and_transitions(
     assert (1, 1) not in result.blocked_tiles  # de otro mapa
     assert result.exit_tiles[1, 20, 21] == {"to_map": 3, "to_x": 5, "to_y": 6}
     assert result.exit_count == 1
+
+
+def test_compact_source_cache_does_not_alias_dynamic_flags_or_released_maps(
+    tmp_path: Path, loader: MapMetadataLoader
+) -> None:
+    """Descartar fuentes no borra colisiones/salidas y mutarlas no altera otras cargas."""
+    metadata = tmp_path / "metadata_001-050.json"
+    metadata.write_text('{"w":100,"h":100}')
+    blocked = tmp_path / "blocked_001-050.json"
+    blocked.write_text(
+        "\n".join(
+            json.dumps(row)
+            for row in [
+                {"m": 1, "x": 1, "y": 1, "t": "wall"},
+                {"m": 1, "x": 100, "y": 100, "t": "exit", "to_map": 2, "to_x": 1, "to_y": 1},
+                {"m": 2, "x": 2, "y": 2, "t": "wall"},
+            ]
+        )
+    )
+    first = loader.load_map_data(1, metadata)
+    assert isinstance(first.blocked_tiles, CoordinateMask)
+    first.blocked_tiles.discard((1, 1))
+    first.exit_tiles.clear()
+    again = loader.load_map_data(1, metadata)
+    assert (1, 1) in again.blocked_tiles
+    assert again.exit_tiles[1, 100, 100] == {"to_map": 2, "to_x": 1, "to_y": 1}
+    assert (2, 2) in loader.load_map_data(2, metadata).blocked_tiles
+    loader.release_source_cache()
+    assert not loader._compact_blocked_cache
+    assert not loader._compact_exits
+    assert (100, 100) in again.blocked_tiles
+    assert again.exit_count == 1
+    assert loader.load_map_data(1, metadata).blocked_tiles == again.blocked_tiles

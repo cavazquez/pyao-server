@@ -24,6 +24,10 @@ class NpcIndex:
         """
         self._tile_occupation = tile_occupation
         self._npcs_by_map: dict[int, dict[str, NPC]] = {}
+        self._by_character: dict[tuple[int, int], NPC] = {}
+        self._map_by_instance: dict[str, int] = {}
+        self._character_by_instance: dict[str, int] = {}
+        self._registered_position: dict[str, tuple[int, int]] = {}
 
     @property
     def npcs_by_map(self) -> dict[int, dict[str, NPC]]:
@@ -31,25 +35,42 @@ class NpcIndex:
         return self._npcs_by_map
 
     def add_npc(self, map_id: int, npc: NPC) -> None:
-        """Agrega un NPC al mapa y marca ocupación."""
+        """Agrega un NPC al mapa y marca ocupación.
+
+        Raises:
+            ValueError: Si otro actor ocupa el tile o usa ese CharIndex en el mapa.
+        """
+        owner = self._by_character.get((map_id, npc.char_index))
+        if owner is not None and owner.instance_id != npc.instance_id:
+            msg = f"CharIndex {npc.char_index} ya pertenece a {owner.instance_id} en mapa {map_id}"
+            raise ValueError(msg)
+        occupant = self._tile_occupation.get_occupant(map_id, npc.x, npc.y)
+        if occupant is not None and occupant != f"npc:{npc.instance_id}":
+            msg = f"tile ya ocupado por {occupant}"
+            raise ValueError(msg)
+        old_map = self._map_by_instance.get(npc.instance_id)
+        if old_map is not None:
+            self.remove_npc(old_map, npc.instance_id)
         if map_id not in self._npcs_by_map:
             self._npcs_by_map[map_id] = {}
 
         self._tile_occupation.occupy_npc(map_id, npc.x, npc.y, npc.instance_id)
         self._npcs_by_map[map_id][npc.instance_id] = npc
+        self._by_character[map_id, npc.char_index] = npc
+        self._map_by_instance[npc.instance_id] = map_id
+        self._character_by_instance[npc.instance_id] = npc.char_index
+        self._registered_position[npc.instance_id] = npc.x, npc.y
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
     def move_npc(
         self, map_id: int, char_index: int, old_x: int, old_y: int, new_x: int, new_y: int
     ) -> None:
         """Mueve un NPC liberando y reasignando ocupación."""
-        if map_id not in self._npcs_by_map:
-            return
-
-        for npc in self._npcs_by_map[map_id].values():
-            if getattr(npc, "char_index", None) == char_index:
-                self._tile_occupation.move_npc(map_id, old_x, old_y, new_x, new_y, npc.instance_id)
-                break
+        npc = self._by_character.get((map_id, char_index))
+        if npc is not None:
+            self._tile_occupation.move_npc(map_id, old_x, old_y, new_x, new_y, npc.instance_id)
+            npc.x, npc.y = new_x, new_y
+            self._registered_position[npc.instance_id] = new_x, new_y
 
     def remove_npc(self, map_id: int, instance_id: str) -> None:
         """Remueve un NPC y libera su tile."""
@@ -60,12 +81,17 @@ class NpcIndex:
         if npc is None:
             return
 
-        tile_key = (map_id, npc.x, npc.y)
-        if self._tile_occupation.get_occupant(*tile_key) == f"npc:{instance_id}":
-            self._tile_occupation.remove_npc(map_id, npc.x, npc.y)
-            logger.debug("Tile (%d,%d) liberado al remover NPC %s", npc.x, npc.y, npc.name)
+        # El servicio puede haber mutado el modelo antes de volver a registrarlo.
+        # También acepta movimientos que ya actualizaron TileOccupation directamente.
+        positions = {self._registered_position.pop(instance_id), (npc.x, npc.y)}
+        for x, y in positions:
+            if self._tile_occupation.get_occupant(map_id, x, y) == f"npc:{instance_id}":
+                self._tile_occupation.remove_npc(map_id, x, y)
 
         del self._npcs_by_map[map_id][instance_id]
+        old_character = self._character_by_instance.pop(instance_id)
+        self._by_character.pop((map_id, old_character), None)
+        self._map_by_instance.pop(instance_id, None)
         logger.debug("NPC %s removido del mapa %d", npc.name, map_id)
 
         if not self._npcs_by_map[map_id]:
@@ -99,10 +125,4 @@ class NpcIndex:
         Returns:
             NPC | SimpleNamespace | None: NPC encontrado o None si no existe.
         """
-        if map_id not in self._npcs_by_map:
-            return None
-
-        for npc in self._npcs_by_map[map_id].values():
-            if getattr(npc, "char_index", None) == char_index:
-                return npc
-        return None
+        return self._by_character.get((map_id, char_index))

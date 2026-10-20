@@ -18,6 +18,7 @@ from pathlib import Path
 import msgpack
 
 from src.services.map.blocked_loader import process_blocked_file
+from src.game.coordinate_mask import CoordinateMask, Coordinates
 from src.services.map.objects_loader import process_objects_file
 
 logger = logging.getLogger(__name__)
@@ -43,12 +44,12 @@ def convert_json_to_binary(  # noqa: PLR0914
     map_binary_dir.mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
-    blocked_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    water_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    trees_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    mines_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    anvils_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
-    forges_by_map: dict[int, set[tuple[int, int]]] = defaultdict(set)
+    blocked_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    water_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    trees_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    mines_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    anvils_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
+    forges_by_map: dict[int, Coordinates] = defaultdict(CoordinateMask)
     signs_by_map: dict[int, dict[tuple[int, int], int]] = {}
     doors_by_map: dict[int, dict[tuple[int, int], int]] = {}
     generic_objects_by_map: dict[int, list[dict]] = {}
@@ -123,10 +124,7 @@ def convert_json_to_binary(  # noqa: PLR0914
     elapsed = time.time() - start_time
     file_size = output_file.stat().st_size / 1024 / 1024
 
-    logger.info(
-        "Conversion completada en %.2fs: %s (%.2f MB)",
-        elapsed, output_file, file_size
-    )
+    logger.info("Conversion completada en %.2fs: %s (%.2f MB)", elapsed, output_file, file_size)
     return True
 
 
@@ -189,7 +187,7 @@ def check_binary_needs_rebuild(
     try:
         with metadata_file.open() as f:
             metadata = json.load(f)
-    except (json.JSONDecodeError, OSError):
+    except json.JSONDecodeError, OSError:
         return True
 
     binary_created = metadata.get("created_at", 0)
@@ -268,9 +266,9 @@ def cmd_status(args: argparse.Namespace) -> int:
     if metadata_file.exists():
         with metadata_file.open() as f:
             metadata = json.load(f)
-        created = datetime.fromtimestamp(
-            metadata.get("created_at", 0), tz=UTC
-        ).strftime("%Y-%m-%d %H:%M:%S")
+        created = datetime.fromtimestamp(metadata.get("created_at", 0), tz=UTC).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
         print(f"  Creado:  {created}")
         print(f"  Mapas:   {metadata.get('map_count', '?')}")
 

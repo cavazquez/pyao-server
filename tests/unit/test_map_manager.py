@@ -331,14 +331,14 @@ def test_get_player_username(map_manager: MapManager, message_sender: MessageSen
 
 
 def test_get_username_with_map_id(map_manager: MapManager, message_sender: MessageSender) -> None:
-    """Verifica get_username con map_id especificado."""
+    """La identidad del usuario se actualiza también durante una transición de mapa."""
     map_manager.add_player(1, 100, message_sender, username="User1")
     map_manager.add_player(
         2, 100, message_sender, username="User2"
     )  # Mismo user_id, diferente mapa
 
     username = map_manager.get_username(100, map_id=1)
-    assert username == "User1"
+    assert username == "User2"
 
     username = map_manager.get_username(100, map_id=2)
     assert username == "User2"
@@ -363,7 +363,7 @@ def test_get_username_without_map_id(
 def test_get_message_sender_with_map_id(
     map_manager: MapManager, message_sender: MessageSender
 ) -> None:
-    """Verifica get_message_sender con map_id especificado."""
+    """Una reconexión reemplaza el sender y elimina pertenencias de la conexión vieja."""
     sender1 = MessageSender(message_sender.connection)
     sender2 = MessageSender(message_sender.connection)
 
@@ -371,7 +371,7 @@ def test_get_message_sender_with_map_id(
     map_manager.add_player(2, 100, sender2, username="User2")  # Mismo user_id, diferente mapa
 
     sender = map_manager.get_message_sender(100, map_id=1)
-    assert sender is sender1
+    assert sender is None
 
     sender = map_manager.get_message_sender(100, map_id=2)
     assert sender is sender2

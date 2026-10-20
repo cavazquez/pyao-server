@@ -22,6 +22,7 @@ from src.services.map.map_single_map_loader import load_single_map_into
 from src.services.map.map_workshops import load_workshops
 
 if TYPE_CHECKING:
+    from src.game.coordinate_mask import ResourcesMap
     from src.game.map_manager import MapManager
     from src.services.fishing_zones import FishingZones
 
@@ -54,7 +55,7 @@ class MapResourcesService:
         self.cache_dir = state_dir() / "map_cache"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-        self.resources: dict[str, dict[str, set[tuple[int, int]]]] = {}
+        self.resources: ResourcesMap = {}
         self.signs: dict[str, dict[tuple[int, int], int]] = {}
         self.doors: dict[str, dict[tuple[int, int], int]] = {}
 
@@ -72,8 +73,8 @@ class MapResourcesService:
         if not loaded:
             self._load_all_maps()
             if self.resources:
-                self._cache_loader.save_cache(self.resources, self.signs, self.doors)
-                binary_loader.generate_binary_cache()
+                if not binary_loader.generate_binary_cache():
+                    self._cache_loader.save_cache(self.resources, self.signs, self.doors)
             else:
                 msg = (
                     "MapResourcesService: no se encontraron recursos en %s; "

@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
     from redis.asyncio import Redis
 
+    from src.game.coordinate_mask import Coordinates
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.repositories.ground_items_repository import GroundItemsRepository
@@ -64,7 +65,7 @@ class MapManager(SpatialIndexMixin):
         self._npcs_by_map = self._npc_index.npcs_by_map
 
         # Tiles bloqueados por mapa (paredes, agua, etc.)
-        self._blocked_tiles: dict[int, set[tuple[int, int]]] = {}
+        self._blocked_tiles: dict[int, Coordinates] = {}
 
         # Puertas cerradas
         self._door_state = DoorState()
@@ -105,14 +106,17 @@ class MapManager(SpatialIndexMixin):
         """
         self._player_index.add_player(map_id, user_id, message_sender, username)
 
-    def remove_player(self, map_id: int, user_id: int) -> None:
+    def remove_player(
+        self, map_id: int, user_id: int, expected_sender: MessageSender | None = None
+    ) -> None:
         """Remueve un jugador de un mapa.
 
         Args:
             map_id: ID del mapa.
             user_id: ID del usuario.
+            expected_sender: Sesión esperada; una limpieza vieja no retira una nueva.
         """
-        self._player_index.remove_player(map_id, user_id)
+        self._player_index.remove_player(map_id, user_id, expected_sender)
 
     def get_players_in_map(self, map_id: int, exclude_user_id: int | None = None) -> list[int]:
         """Obtiene la lista de user_ids en un mapa.
@@ -224,13 +228,16 @@ class MapManager(SpatialIndexMixin):
         """
         return self._player_index.get_player_count_in_map(map_id)
 
-    def remove_player_from_all_maps(self, user_id: int) -> None:
+    def remove_player_from_all_maps(
+        self, user_id: int, expected_sender: MessageSender | None = None
+    ) -> None:
         """Remueve un jugador de todos los mapas.
 
         Args:
             user_id: ID del usuario.
+            expected_sender: Sesión que solicita la retirada, si está disponible.
         """
-        self._player_index.remove_player_from_all_maps(user_id)
+        self._player_index.remove_player_from_all_maps(user_id, expected_sender)
 
     def get_all_connected_players(self) -> list[str]:
         """Obtiene la lista de nombres de todos los jugadores conectados.
@@ -490,6 +497,10 @@ class MapManager(SpatialIndexMixin):
             Si sus metadatos y dimensiones están cargados.
         """
         return map_id in self._map_sizes
+
+    def release_map_source_cache(self) -> None:
+        """Descarta las copias de lectura una vez cargado el mundo en sus índices."""
+        self._metadata_loader.release_source_cache()
 
     def get_map_size(self, map_id: int) -> tuple[int, int]:
         """Obtiene el tamaño de un mapa.
