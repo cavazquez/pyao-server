@@ -64,6 +64,9 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
             max_damage=item_data.get("MaxHit", 0),
             defense=item_data.get("MinDef", 0),
             max_defense=item_data.get("MaxDef", 0),
+            animation=int(item_data.get("Anim", 0)),
+            body_animation=int(item_data.get("NumRopaje", 0)),
+            dwarf_animation=int(item_data.get("RazaEnanaAnim", 0)),
             restore_hp=(
                 int(item_data.get("MaxModificador", 0))
                 if item_data.get("TipoPocion") == 3  # ruff: ignore[magic-value-comparison]

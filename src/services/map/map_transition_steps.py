@@ -34,6 +34,9 @@ class MapTransitionContext:
     new_y: int
     heading: int
     message_sender: MessageSender
+    weapon: int = 0
+    shield: int = 0
+    helmet: int = 0
 
 
 class MapTransitionStep(ABC):
@@ -174,6 +177,9 @@ class SendSelfCharacterCreateStep(MapTransitionStep):
             char_index=context.user_id,
             body=context.char_body,
             head=context.char_head,
+            weapon=context.weapon,
+            shield=context.shield,
+            helmet=context.helmet,
             heading=context.heading,
             x=context.new_x,
             y=context.new_y,
@@ -248,6 +254,9 @@ class BroadcastCreateInNewMapStep(MapTransitionStep):
             char_index=context.user_id,
             body=context.char_body,
             head=context.char_head,
+            weapon=context.weapon,
+            shield=context.shield,
+            helmet=context.helmet,
             heading=context.heading,
             x=context.new_x,
             y=context.new_y,

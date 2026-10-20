@@ -63,6 +63,9 @@ class Item:
     max_damage: int = 0
     defense: int = 0
     max_defense: int | None = None
+    animation: int = 0
+    body_animation: int = 0
+    dwarf_animation: int = 0
 
     def to_client_type(self) -> int:
         """Conserva el ObjType real sin colapsar barcos, pergaminos o equipo en MISC.

@@ -87,8 +87,8 @@ class ChangeHeadingCommandHandler(CommandHandler):
         # Enviar CHARACTER_CHANGE de vuelta al cliente para confirmar
         await self.message_sender.send_character_change(
             char_index=user_id,
-            body=char_body,
-            head=char_head,
+            body=0,
+            head=0,
             heading=heading,
         )
 
@@ -106,8 +106,8 @@ class ChangeHeadingCommandHandler(CommandHandler):
                 for sender in other_senders:
                     await sender.send_character_change(
                         char_index=user_id,
-                        body=char_body,
-                        head=char_head,
+                        body=0,
+                        head=0,
                         heading=heading,
                     )
 

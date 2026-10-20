@@ -218,7 +218,6 @@ class MultiplayerBroadcastService:
         # Obtener todos los jugadores en el mapa (excluyendo el que se movió para evitar saltos)
         all_player_ids = self.map_manager.get_players_in_map(map_id, exclude_user_id=char_index)
         positions = await self.player_repo.get_positions(all_player_ids)
-        appearance: tuple[int, int] | None = None
 
         notified = 0
         for player_id in all_player_ids:
@@ -245,13 +244,7 @@ class MultiplayerBroadcastService:
             # (CHARACTER_MOVE no incluye heading para compatibilidad con cliente Godot)
             if old_heading is None or new_heading != old_heading:
                 # Obtener body_id y head_id según si es NPC o jugador
-                if appearance is None:
-                    appearance = await self._get_character_appearance(char_index, map_id)
-                char_body, char_head = appearance
-
-                await sender.send_character_change(
-                    char_index, body=char_body, head=char_head, heading=new_heading
-                )
+                await sender.send_character_change(char_index, body=0, head=0, heading=new_heading)
             notified += 1
 
         if notified > 0:
@@ -321,6 +314,9 @@ class MultiplayerBroadcastService:
         x: int,
         y: int,
         name: str,
+        weapon: int = 0,
+        shield: int = 0,
+        helmet: int = 0,
     ) -> int:
         """Broadcast de CHARACTER_CREATE a todos los jugadores en un mapa.
 
@@ -333,6 +329,9 @@ class MultiplayerBroadcastService:
             x: Posición X.
             y: Posición Y.
             name: Nombre del personaje.
+            weapon: Animación del arma o herramienta equipada.
+            shield: Animación del escudo equipado.
+            helmet: Animación del casco equipado.
 
         Returns:
             Número de jugadores notificados.
@@ -350,6 +349,9 @@ class MultiplayerBroadcastService:
                 x=x,
                 y=y,
                 name=name,
+                weapon=weapon,
+                shield=shield,
+                helmet=helmet,
             )
             notified += 1
 
