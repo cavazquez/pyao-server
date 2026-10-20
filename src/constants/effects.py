@@ -2,6 +2,9 @@
 
 from enum import IntEnum
 
+# Recurso que usa el cliente Godot para la meditación continua.
+MEDITATION_FX_ID = 16
+
 
 class FXType(IntEnum):
     """Tipos de efectos visuales del juego.

@@ -537,6 +537,7 @@ class MessageSender:
             loops: Número de loops. -1 = infinito, 0 = una vez, >0 = número específico.
         """
         await self.visual_effects.send_create_fx(char_index, fx, loops)
+        self.status_effects.record_visual_effect(char_index, fx, loops)
 
     # Métodos de conveniencia para sonidos comunes
     async def play_sound_login(self) -> None:

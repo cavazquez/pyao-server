@@ -20,9 +20,104 @@ from src.services.player.lifecycle import settle_death
 from src.services.trade_settlement import ParticipantOffer, settle_trade
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GroundState, stack_identity
+from src.utils.ground_storage import encode_fields, read_ground
 from src.utils.redis_config import RedisKeys
+from src.utils.resource_transaction import Decision, Resource, transact
 
 DAY = 20_000
+
+
+@pytest.mark.asyncio
+async def test_large_map_maintenance_bounds_tile_reads_and_preserves_expiry(redis_client, clock):
+    """El barrido conserva el 1% diario sin serializar el mapa en cada commit."""
+    redis = redis_client.redis
+    await prepare(redis)
+    key = RedisKeys.ground_items(1)
+    state = GroundState(1, None)
+    for number in range(129):
+        state.append(
+            number % 100 + 1,
+            number // 100 + 1,
+            {
+                "item_id": GOLD_ITEM_ID,
+                "quantity": 1000,
+                "devaluation_day": DAY,
+                "devaluation_remainder": 0,
+                "stack_id": stack_identity(f"daily:{number}"),
+            },
+        )
+    await redis.hset(key, mapping=encode_fields(state))
+    await redis.pexpire(key, 500000)
+    expiry = await redis.pexpiretime(key)
+    sizes = []
+    hmget = redis.hmget
+
+    async def bounded(name, fields, *args: object):
+        if name == key:
+            sizes.append(len(fields))
+        return await hmget(name, fields, *args)
+
+    clock[0] += 1
+    with patch.object(redis, "hmget", bounded):
+        await settle_ground_gold(redis, 1)
+    assert len(sizes) >= 3
+    assert max(sizes) <= 64
+    assert len((await read_ground(redis, 1)).tiles) == 129
+    assert all(
+        item["quantity"] == 990
+        for values in (await read_ground(redis, 1)).tiles.values()
+        for item in values
+    )
+    assert await redis.pexpiretime(key) == expiry
+
+
+@pytest.mark.asyncio
+async def test_multi_tile_commit_retries_notifications_for_devalued_neighbour(redis_client, clock):
+    """El botín puede liquidar otro tile; un fallo de envío no deja oro fantasma."""
+    redis = redis_client.redis
+    await prepare(redis)
+    key = RedisKeys.ground_items(1)
+    state = GroundState(1, None)
+    state.append(
+        2,
+        2,
+        {
+            "item_id": GOLD_ITEM_ID,
+            "quantity": 1,
+            "devaluation_day": DAY,
+            "devaluation_remainder": 9900,
+            "stack_id": stack_identity("last-neighbour"),
+        },
+    )
+    await redis.hset(key, mapping=encode_fields(state))
+    index = GroundItemIndex(10, GroundItemsRepository(redis_client))
+    await index.load_ground_items(1)
+    clock[0] += 1
+    identity = operation_id()
+
+    async def commit():
+        return await transact(
+            redis,
+            (Resource(key, "ground", keep_ttl=True, fields=("1,1", "2,2")),),
+            identity,
+            {"neighbour": True},
+            lambda _s: Decision({"applied": True}, {}),
+        )
+
+    broadcast = AsyncMock()
+
+    async def interrupted(_map_id, x, y):
+        if (x, y) == (2, 2):
+            raise ConnectionError
+
+    broadcast.broadcast_object_delete.side_effect = interrupted
+    with pytest.raises(ConnectionError):
+        await index.run_committed(1, 1, 1, redis, commit, broadcast, identity, ((1, 1), (2, 2)))
+    broadcast.broadcast_object_delete.side_effect = None
+    await index.run_committed(1, 1, 1, redis, commit, broadcast, identity, ((1, 1), (2, 2)))
+    assert broadcast.broadcast_object_delete.await_args.args == (1, 2, 2)
+    assert not index.get_ground_items(1, 2, 2)
+    assert not (await read_ground(redis, 1)).positions()
 
 
 @pytest.fixture(autouse=True)
@@ -106,7 +201,7 @@ async def rows(redis):
     Returns:
         Lista de montones del tile de prueba.
     """
-    return GroundState(1, await redis.get(RedisKeys.ground_items(1))).tile(50, 50)
+    return (await read_ground(redis, 1)).tile(50, 50)
 
 
 @pytest.mark.asyncio
@@ -163,7 +258,7 @@ async def test_partial_pickup_keeps_fraction_and_finalizes_accumulated_coin(redi
         "devaluation_day": DAY,
         "devaluation_remainder": 9000,
     }
-    await redis.set(RedisKeys.ground_items(1), json.dumps({"50,50": [item]}))
+    await redis.hset(RedisKeys.ground_items(1), "50,50", json.dumps([item]))
     result = await pickup(redis, item["stack_id"])
     assert result["quantity"] == 5
     assert result["devaluation_loss"] == 1
@@ -195,9 +290,10 @@ async def test_legacy_gold_adopts_activation_without_retroactive_loss(redis_clie
     """Los montones anteriores empiezan en la activación; lo nuevo empieza al generarse."""
     redis = redis_client.redis
     await prepare(redis)
-    await redis.set(
+    await redis.hset(
         RedisKeys.ground_items(1),
-        json.dumps({"50,50": [{"item_id": GOLD_ITEM_ID, "quantity": 1000}]}),
+        "50,50",
+        json.dumps([{"item_id": GOLD_ITEM_ID, "quantity": 1000}]),
     )
     await settle_ground_gold(redis, 1)
     assert (await rows(redis))[0]["quantity"] == 1000
@@ -304,12 +400,13 @@ async def test_multiple_missed_days_match_consecutive_daily_settlements(redis_cl
     redis = redis_client.redis
     await prepare(redis)
     await drop(redis)
-    original = await redis.get(RedisKeys.ground_items(1))
+    original = await redis.hgetall(RedisKeys.ground_items(1))
     clock[0] += 3
     await settle_ground_gold(redis, 1)
     offline = await rows(redis)
     assert (offline[0]["quantity"], offline[0]["devaluation_remainder"]) == (971, 7100)
-    await redis.set(RedisKeys.ground_items(1), original)
+    await redis.delete(RedisKeys.ground_items(1))
+    await redis.hset(RedisKeys.ground_items(1), mapping=original)
     for day in range(DAY + 1, DAY + 4):
         clock[0] = day
         await settle_ground_gold(redis, 1)
@@ -322,12 +419,12 @@ async def test_worker_isolates_corrupt_map(redis_client, clock):
     redis = redis_client.redis
     await prepare(redis)
     await drop(redis)
-    await redis.set(RedisKeys.ground_items(2), "[]")
+    await redis.hset(RedisKeys.ground_items(2), "50,50", "{}")
     clock[0] += 1
     worker = EconomyMaintenance(redis)
     await worker._sweep("ground_items:*", worker.ground_action)
     assert (await rows(redis))[0]["quantity"] == 990
-    assert await redis.get(RedisKeys.ground_items(2)) == "[]"
+    assert await redis.hget(RedisKeys.ground_items(2), "50,50") == "{}"
 
 
 @pytest.mark.asyncio

@@ -9,13 +9,14 @@ if TYPE_CHECKING:
 
 SCHEMA_KEY = "schema:state"
 MIGRATION_LOCK_KEY = "schema:migration:lock"
-CURRENT_SCHEMA_VERSION = 5
+CURRENT_SCHEMA_VERSION = 6
 MIGRATIONS = {
     1: "adopt-legacy-layout",
     2: "normalize-mana-int16",
     3: "separate-skill-progress",
     4: "classic-skill-training-and-level-points",
     5: "daily-wallet-and-bank-tax",
+    6: "ground-hash-per-tile",
 }
 
 

@@ -13,10 +13,11 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.game.coordinate_mask import CoordinateMask, ResourcesMap
+from src.services.map.binary_cache import terrain_source_info
 
 logger = logging.getLogger(__name__)
 
-MAP_RESOURCES_CACHE_VERSION = 3
+MAP_RESOURCES_CACHE_VERSION = 4
 
 
 def build_mtimes(files: list[Path]) -> tuple[list[str], dict[str, float]]:
@@ -169,6 +170,13 @@ class MapCacheLoader:
         if data.get("version") != MAP_RESOURCES_CACHE_VERSION:
             return False
 
+        try:
+            if data.get("source_digest") != terrain_source_info(self.maps_dir):
+                return False
+        except OSError:
+            logger.warning("No se pudieron comprobar las fuentes de mapas", exc_info=True)
+            return False
+
         source = data.get("source") or {}
         if not isinstance(source, dict):
             return False
@@ -221,6 +229,7 @@ class MapCacheLoader:
         try:
             data = {
                 "version": MAP_RESOURCES_CACHE_VERSION,
+                "source_digest": terrain_source_info(self.maps_dir),
                 "source": self._build_source_info(),
                 "maps": serialize_resources_to_maps_dict(resources, signs, doors),
             }

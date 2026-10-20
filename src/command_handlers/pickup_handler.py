@@ -60,7 +60,7 @@ class PickupCommandHandler(CommandHandler):
                 command.origin = position["map"], position["x"], position["y"]
             map_id, x, y = command.origin
             if command.expected_stack_id is None:
-                await self.map_manager.load_ground_items(map_id)
+                await self.map_manager.load_ground_tile(map_id, x, y)
                 tile = self.map_manager.get_ground_items(map_id, x, y)
                 command.expected_stack_id = str(tile[0].get("stack_id", "")) if tile else ""
                 command.expected_item_id = int(tile[0].get("item_id") or 0) if tile else 0

@@ -8,7 +8,8 @@ from src.economy.taxes import TAX_POLICY_KEY, assess_tax, utc_day
 from src.models.item_constants import GOLD_ITEM_ID
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
-from src.utils.ground_state import MAX_GROUND_MAP_ID, GroundState
+from src.utils.ground_state import GroundState
+from src.utils.ground_storage import GROUND_BATCH_SIZE, map_id_from_key, read_ground
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
@@ -22,15 +23,7 @@ def ground_map_id(resource: Resource) -> int:
     Returns:
         Mapa válido o cero para otro tipo de recurso.
     """
-    parts = resource.key.split(":")
-    if (
-        len(parts) != len(("ground_items", "map"))
-        or parts[0] != "ground_items"
-        or not parts[1].isdigit()
-    ):
-        return 0
-    map_id = int(parts[1])
-    return map_id if 1 <= map_id <= MAX_GROUND_MAP_ID else 0
+    return map_id_from_key(resource.key) if resource.kind == "ground" else 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -125,14 +118,44 @@ def stamp_ground_gold(
     return result
 
 
-async def settle_ground_gold(redis: Redis, map_id: int) -> None:
-    """Liquida mapas sin jugadores conservando el vencimiento original del suelo."""
-    key = RedisKeys.ground_items(map_id)
-    raw = await redis.get(key)
-    if not raw or not await redis.exists(TAX_POLICY_KEY):
+async def settle_ground_gold(
+    redis: Redis, map_id: int, fields: tuple[str, ...] | None = None
+) -> None:
+    """Liquida casillas en lotes acotados conservando el vencimiento del mapa."""
+    if not await redis.exists(TAX_POLICY_KEY):
         return
-    text = raw.decode() if isinstance(raw, bytes) else raw
-    ground = GroundState(map_id, text)
+    if fields is not None:
+        await _settle_fields(redis, map_id, fields)
+        return
+    cursor = 0
+    while True:
+        cursor, names = cast(
+            "tuple[int, list[str | bytes]]",
+            await redis.hscan(
+                RedisKeys.ground_items(map_id),
+                cursor=cursor,
+                count=GROUND_BATCH_SIZE,
+                no_values=True,
+            ),
+        )
+        for offset in range(0, len(names), GROUND_BATCH_SIZE):
+            batch = tuple(
+                sorted(
+                    name.decode() if isinstance(name, bytes) else name
+                    for name in names[offset : offset + GROUND_BATCH_SIZE]
+                )
+            )
+            await _settle_fields(redis, map_id, batch)
+        if cursor == 0:
+            return
+
+
+async def _settle_fields(redis: Redis, map_id: int, fields: tuple[str, ...]) -> None:
+    """Revalida fecha y fracciones dentro del WATCH, sin renovar el TTL."""
+    if not fields:
+        return
+    key = RedisKeys.ground_items(map_id)
+    ground = await read_ground(redis, map_id, fields)
     today = utc_day()
     pending = any(
         item["item_id"] == GOLD_ITEM_ID
@@ -145,7 +168,7 @@ async def settle_ground_gold(redis: Redis, map_id: int) -> None:
     await require_durable(redis)
     await transact(
         redis,
-        (Resource(key, "string", keep_ttl=True),),
+        (Resource(key, "ground", keep_ttl=True, fields=fields),),
         operation_id(),
         {"ground_devaluation": map_id},
         lambda _snapshot: Decision({"applied": True}, {}),

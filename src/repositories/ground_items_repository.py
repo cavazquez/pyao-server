@@ -7,11 +7,14 @@ from src.economy.ground_devaluation import settle_ground_gold
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id as new_operation_id
 from src.utils.ground_state import GROUND_TTL_SECONDS, GroundItem, GroundState, stack_identity
+from src.utils.ground_storage import encode_fields, position_fields, read_ground
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Mapping
+
+    from redis.typing import EncodableT
 
     from src.utils.redis_client import RedisClient
 
@@ -40,10 +43,17 @@ class GroundItemsRepository:
         raw = json.dumps({f"{x},{y}": values for (x, y), values in items.items()})
         state = GroundState(map_id, raw)
         key = RedisKeys.ground_items(map_id)
-        if items:
-            await self.redis_client.set(key, state.encode(), ex=self.GROUND_ITEMS_TTL)
-        else:
-            await self.redis_client.delete(key)
+        fields = {
+            field: value for field, value in encode_fields(state).items() if state.tiles[field]
+        }
+        await require_durable(self.redis_client.redis)
+        async with self.redis_client.redis.pipeline() as pipe:
+            pipe.delete(key)
+            if fields:
+                pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", fields))
+                pipe.expire(key, self.GROUND_ITEMS_TTL)
+            await pipe.execute()
+        await require_durable(self.redis_client.redis)
 
     async def load_ground_items(self, map_id: int) -> dict[tuple[int, int], list[GroundItem]]:
         """Deriva IDs legacy deterministas sin reescribir datos ni esconder fallas de Redis.
@@ -52,8 +62,17 @@ class GroundItemsRepository:
             Stacks con identidad g1, conservando cantidad y metadatos.
         """
         await settle_ground_gold(self.redis_client.redis, map_id)
-        raw = await self.redis_client.get(RedisKeys.ground_items(map_id))
-        return GroundState(map_id, raw).positions()
+        return (await read_ground(self.redis_client.redis, map_id)).positions()
+
+    async def load_ground_tile(self, map_id: int, x: int, y: int) -> list[GroundItem]:
+        """Lee y liquida sólo la casilla que el jugador intenta recoger.
+
+        Returns:
+            Stacks actuales, con su fecha e identidad autoritativas.
+        """
+        fields = position_fields(((x, y),))
+        await settle_ground_gold(self.redis_client.redis, map_id, fields)
+        return (await read_ground(self.redis_client.redis, map_id, fields)).tile(x, y)
 
     async def _mutate(
         self,
@@ -61,6 +80,7 @@ class GroundItemsRepository:
         identity: str,
         request: dict[str, Any],
         change: Callable[[GroundState], dict[str, Any]],
+        fields: tuple[str, ...] | None = None,
     ) -> dict[str, Any]:
         """Confirma suelo y recibo en un EXEC y exige AOF.
 
@@ -80,7 +100,11 @@ class GroundItemsRepository:
         redis = self.redis_client.redis
         await require_durable(redis)
         result = await transact(
-            redis, (Resource(key, "string", self.GROUND_ITEMS_TTL),), identity, request, decide
+            redis,
+            (Resource(key, "ground", self.GROUND_ITEMS_TTL, fields=fields),),
+            identity,
+            request,
+            decide,
         )
         await require_durable(redis)
         return result
@@ -101,7 +125,11 @@ class GroundItemsRepository:
             return {"applied": True, "item": identified}
 
         return await self._mutate(
-            map_id, identity, {"action": "spawn", "x": x, "y": y, "item": identified}, add
+            map_id,
+            identity,
+            {"action": "spawn", "x": x, "y": y, "item": identified},
+            add,
+            position_fields(((x, y),)),
         )
 
     async def remove_ground_item(
@@ -130,6 +158,7 @@ class GroundItemsRepository:
             operation_id or new_operation_id(),
             {"action": "remove", "x": x, "y": y, "index": item_index},
             remove,
+            position_fields(((x, y),)),
         )
         return cast("GroundItem", result["item"]) if result["applied"] else None
 
@@ -142,7 +171,7 @@ class GroundItemsRepository:
 
         def clear(state: GroundState) -> dict[str, Any]:
             count = sum(len(items) for items in state.tiles.values())
-            state.tiles.clear()
+            state.tiles = {coordinate: [] for coordinate in state.tiles}
             return {"applied": True, "count": count}
 
         result = await self._mutate(map_id, new_operation_id(), {"action": "clear"}, clear)

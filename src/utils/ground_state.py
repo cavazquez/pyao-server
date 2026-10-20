@@ -3,7 +3,7 @@
 import json
 import re
 from hashlib import sha256
-from typing import cast
+from typing import Self, cast
 
 from src.models.item_constants import GOLD_ITEM_ID, MAX_PLAYER_GOLD
 from src.utils.slot_plan import MAX_SLOT_QUANTITY
@@ -56,16 +56,30 @@ class GroundState:
     """Copia de un mapa; derive IDs legacy al leer sin hacer escrituras de migración."""
 
     def __init__(self, map_id: int, raw: str | None) -> None:
-        """Carga JSON y preserva campos; no modifica Redis al adoptar IDs legacy.
+        """Carga JSON y propaga validaciones, sin escribir al adoptar IDs legacy."""
+        self._load(map_id, json.loads(raw) if raw else {})
+
+    @classmethod
+    def from_tiles(cls, map_id: int, data: object) -> Self:
+        """Valida datos ya decodificados sin serializarlos para volver a leerlos.
+
+        Returns:
+            Estado independiente con las mismas validaciones que el lector legado.
+        """
+        state = cls.__new__(cls)
+        cls._load(state, map_id, data)
+        return state
+
+    def _load(self, map_id: int, data: object) -> None:
+        """Valida y copia campos sin permitir cantidades o identidades corruptas.
 
         Raises:
-            ValueError: Ante JSON, coordenadas, identidad o cantidades corruptos.
-            TypeError: Si la estructura persistida no es un mapa de listas de objetos.
+            ValueError: Ante mapa, coordenadas, identidades o cantidades inválidos.
+            TypeError: Si los datos no son un mapa de listas de objetos.
         """
         if type(map_id) is not int or not 1 <= map_id <= MAX_GROUND_MAP_ID:
             msg = "Mapa del suelo inválido"
             raise ValueError(msg)
-        data = json.loads(raw) if raw else {}
         if not isinstance(data, dict):
             msg = "Estado del suelo inválido"
             raise TypeError(msg)

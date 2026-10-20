@@ -22,6 +22,7 @@ from src.utils.ground_state import (
     GroundState,
     stack_identity,
 )
+from src.utils.ground_storage import position_fields
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
@@ -121,7 +122,7 @@ async def settle_rewards(
         )
         resources = (
             Resource(npc_key, "hash"),
-            Resource(ground_key, "string", GROUND_TTL_SECONDS),
+            Resource(ground_key, "ground", GROUND_TTL_SECONDS, fields=position_fields(positions)),
             Resource(receipt_key, "string", REWARD_RECEIPT_SECONDS),
             *context.resources,
         )

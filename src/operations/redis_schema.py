@@ -28,6 +28,12 @@ from src.core.schema_manager import (
 )
 from src.economy.tax_migration import tax_repairs
 from src.economy.taxes import utc_day
+from src.operations.ground_migration import (
+    active_ground_fingerprint,
+    enqueue_ground_rewrites,
+    ground_fingerprint,
+    ground_rewrites,
+)
 from src.operations.mana_repair import mana_repairs
 from src.operations.redis_backup import (
     create_backup,
@@ -40,6 +46,8 @@ from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox
 from src.operations.skill_migration import skill_repairs
 from src.runtime_paths import resource_root
+from src.utils.ground_state import GroundState
+from src.utils.ground_storage import decode_fields
 from src.utils.password_utils import hash_password, verify_password
 from tools.compression.decompress_map_data import decompress_map_data
 
@@ -95,6 +103,7 @@ def release_lock(client: Redis, token: str) -> None:
 MANA_SCHEMA_VERSION = 2
 SKILL_SCHEMA_VERSION = 4
 TAX_SCHEMA_VERSION = 5
+GROUND_SCHEMA_VERSION = 6
 
 
 def migration_fields(
@@ -139,6 +148,11 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                 if not pending:
                     return []
                 repairs = migration_fields(client, current, day=migration_day)
+                ground = ground_rewrites(client) if current < GROUND_SCHEMA_VERSION else {}
+                if ground:
+                    pipe.watch(*ground)  # type: ignore[no-untyped-call]
+                    if ground_rewrites(client) != ground:
+                        continue
                 if repairs:
                     pipe.watch(*repairs)  # type: ignore[no-untyped-call]
                     revalidated = migration_fields(client, current, day=migration_day)
@@ -150,6 +164,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                     pipe.set("config:effects:gold_decay:enabled", "0")
                 for key, fields in repairs.items():
                     pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", fields))
+                enqueue_ground_rewrites(pipe, ground)
                 for target, name in pending:
                     require(current == target - 1, "orden de migraciones")
                     entry = json.dumps(
@@ -160,6 +175,7 @@ def apply_ordered_steps(client: Redis, token: str, backup_digest: str) -> list[s
                             "backup_sha256": backup_digest,
                             "applied_at": datetime.now(UTC).isoformat(),
                             "changed_hashes": len(repairs),
+                            "ground_maps": len(ground),
                         }
                     )
                     pipe.hset(
@@ -193,7 +209,7 @@ def migrate(settings: RedisConfig, backup: Path) -> dict[str, Any]:
             msg = "Detener el juego y esperar la liberación/expiración de sesiones antes de migrar"
             raise SchemaMigrationError(msg)
         manifest = manifest_for(backup)
-        verify_backup(backup)
+        verification = verify_backup(backup)
         token = token_urlsafe(32)
         if not client.set(MIGRATION_LOCK_KEY, token, nx=True, ex=300):
             msg = "Otro proceso está migrando Redis"
@@ -203,6 +219,11 @@ def migrate(settings: RedisConfig, backup: Path) -> dict[str, Any]:
                 require(
                     persistent_snapshot(binary) == manifest["persistent_state"],
                     "origen cambiado desde el backup",
+                )
+                require(
+                    ground_fingerprint(binary)
+                    == active_ground_fingerprint(verification["ground_state"]),
+                    "suelo con TTL cambiado desde el backup",
                 )
             applied = apply_ordered_steps(client, token, manifest["sha256"])
             require(client.execute_command("WAITAOF", 1, 0, 5000)[0] == 1, "fsync de migración")
@@ -272,7 +293,7 @@ def check_legacy_progress(client: Redis, fixture: dict[str, Any], password: str)
     require(verify_password(password, stored), "contraseña válida tras migración/restauración")
 
 
-def selftest() -> dict[str, Any]:
+def selftest() -> dict[str, Any]:  # ruff: ignore[too-many-statements] - Ensayo secuencial de backup, migración, AOF y reversión.
     """Adopta un fixture legado con respaldo real sin alterar su progreso.
 
     Returns:
@@ -298,12 +319,48 @@ def selftest() -> dict[str, Any]:
             for key, values in fixture["hashes"].items():
                 client.hset(key, mapping=values)
             client.hset("account:MigrationTest:data", "password_hash", hash_password(password))
+            legacy_ground = json.dumps(
+                {
+                    "50,50": [
+                        {"item_id": 1, "quantity": 2, "owner_id": None, "grh_index": 3},
+                        {
+                            "item_id": 12,
+                            "quantity": 1000,
+                            "devaluation_day": 20000,
+                            "devaluation_remainder": 9000,
+                        },
+                    ]
+                }
+            )
+            expected_ground = GroundState(1, legacy_ground)
+            client.set("ground_items:1", legacy_ground, px=500000)
+            ground_expiry = client.pexpiretime("ground_items:1")
         path = Path(directory) / "before.rdb"
         backup = create_backup(settings, path)
+        with sandbox.client() as client:
+            client.set("ground_items:1", "{}", keepttl=True)
+        try:
+            migrate(settings, path)
+        except RuntimeError as error:
+            require("suelo con TTL" in str(error), "rechazo del suelo modificado tras backup")
+        else:
+            message = "Se migró suelo con TTL distinto al respaldo"
+            raise RuntimeError(message)
+        with sandbox.client() as client:
+            require(not client.exists(SCHEMA_KEY), "rechazo antes de cambiar esquema")
+            client.set("ground_items:1", legacy_ground, keepttl=True)
         require(migrate(settings, path)["applied"] == list(MIGRATIONS.values()), "pasos ordenados")
         require(migrate(settings, path)["applied"] == [], "reintento idempotente")
         with sandbox.client() as client:
             check_legacy_progress(client, fixture, password)
+            require(
+                decode_fields(1, client.hgetall("ground_items:1")).tiles == expected_ground.tiles,
+                "suelo e identidades conservados",
+            )
+            require(
+                client.pexpiretime("ground_items:1") == ground_expiry, "TTL absoluto conservado"
+            )
+            migrated_ground = ground_fingerprint(client)
             require(client.hget("player:1:stats", "gold") == "1234", "oro preservado")
             require(
                 client.hmget("player:1:user_stats", "min_mana", "max_mana") == ["32767", "32767"],
@@ -327,6 +384,7 @@ def selftest() -> dict[str, Any]:
         require(migrate(settings, path)["applied"] == [], "idempotencia tras reinicio")
         with sandbox.client(decode_responses=False) as client:
             require(persistent_snapshot(client) == migrated, "reinicio tras migración")
+            require(ground_fingerprint(client) == migrated_ground, "suelo con TTL tras reinicio")
         with load_snapshot(path) as restored:
             with restored.client(decode_responses=False) as client:
                 require(
@@ -334,6 +392,8 @@ def selftest() -> dict[str, Any]:
                 )
             with restored.client() as client:
                 check_legacy_progress(client, fixture, password)
+                require(client.get("ground_items:1") == legacy_ground, "rollback de suelo completo")
+                require(client.pexpiretime("ground_items:1") == ground_expiry, "TTL del rollback")
                 require(not client.exists(SCHEMA_KEY), "rollback al esquema legado")
                 require(
                     client.hget("player:1:user_stats", "max_mana") == "500000",
@@ -353,6 +413,10 @@ def selftest() -> dict[str, Any]:
             "legacy_migrated": True,
             "progress_preserved": True,
             "mana_repaired_with_audit": True,
+            "ground_hash_preserved": True,
+            "ground_expiry_preserved": True,
+            "ground_rollback_preserved": True,
+            "backup_checks_expiring_ground": True,
             "skill_progress_preserved": True,
             "idempotent": True,
             "restart_preserved": True,

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.meditate_command import MeditateCommand
+from src.constants.effects import MEDITATION_FX_ID
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -70,11 +71,10 @@ class MeditateCommandHandler(CommandHandler):
                     "Comienzas a meditar. Recuperaras mana automaticamente."
                 )
                 # Enviar FX de meditación con loop infinito (loops=-1)
-                # FX 16 es el efecto de meditación en Argentum Online
                 # Para jugadores, char_index = user_id (NPCs usan char_index >= 10001)
                 await self.message_sender.send_create_fx(
                     char_index=user_id,
-                    fx=16,
+                    fx=MEDITATION_FX_ID,
                     loops=-1,  # loops=-1 = infinito
                 )
                 logger.info("user_id %d comenzó a meditar", user_id)
