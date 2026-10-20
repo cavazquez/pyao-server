@@ -192,8 +192,8 @@
         "fields": []
       },
       "16": {
-        "name": "RequestMiniStats",
-        "status": "unsupported",
+        "name": "REQUEST_MINI_STATS",
+        "status": "supported",
         "fields": []
       },
       "17": {
@@ -2083,9 +2083,38 @@
         "fields": []
       },
       "62": {
-        "name": "MiniStats",
-        "status": "unsupported",
-        "fields": []
+        "name": "MINI_STATS",
+        "status": "supported",
+        "fields": [
+          {
+            "name": "citizen_kills",
+            "type": "u32"
+          },
+          {
+            "name": "criminal_kills",
+            "type": "u32"
+          },
+          {
+            "name": "player_kills",
+            "type": "u32"
+          },
+          {
+            "name": "npc_kills",
+            "type": "u32"
+          },
+          {
+            "name": "deaths",
+            "type": "u32"
+          },
+          {
+            "name": "class",
+            "type": "u8"
+          },
+          {
+            "name": "jail_remaining_days",
+            "type": "u32"
+          }
+        ]
       },
       "63": {
         "name": "LevelUp",

@@ -13,7 +13,7 @@ from typing import Any, ClassVar
 CONTRACT: dict[str, Any] = json.loads(
     (Path(__file__).parent / "protocol/contract.json").read_text(encoding="utf-8")
 )
-WIDTHS = {"u8": 1, "i16": 2, "i32": 4, "f32": 4}
+WIDTHS = {"u8": 1, "i16": 2, "i32": 4, "u32": 4, "f32": 4}
 
 
 class FramingError(Exception):

@@ -10,6 +10,7 @@ from src.economy.tax_transactions import tax_key
 from src.models.item_constants import GOLD_ITEM_ID
 from src.models.items_catalog import ITEMS_CATALOG
 from src.services.combat.barriers import absorb_damage, clear_barrier
+from src.services.player.lifetime_stats import increment, kill_changes
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GROUND_TTL_SECONDS, GroundState, stack_identity
@@ -47,6 +48,7 @@ def hp_changes(
             {
                 "life_id": stats.get("life_id", "0"),
                 "death_state": "pending",
+                "deaths": increment(stats, "deaths"),
                 "poisoned_until": "0",
                 "hidden_until": "0",
                 "invisible_until": "0",
@@ -104,6 +106,11 @@ async def apply_player_damage(
         RedisKeys.player_user_stats(user_id),
         RedisKeys.player_position(user_id),
     )
+    poisoner = int(await redis.hget(stats_key, "poisoned_by") or 0) if require_poison else 0
+    killer_key = RedisKeys.player_user_stats(poisoner) if poisoner and poisoner != user_id else ""
+    resources: tuple[Resource, ...] = (Resource(stats_key, "hash"), Resource(position_key, "hash"))
+    if killer_key:
+        resources += (Resource(killer_key, "hash"),)
 
     def decide(snapshot: Snapshot) -> Decision:
         stats = cast("dict[str, str]", snapshot[stats_key])
@@ -115,24 +122,27 @@ async def apply_player_damage(
             "player_died": False,
             "applied": False,
         }
-        if (
-            hp <= 0
-            or damage < 1
-            or (require_poison and float(stats.get("poisoned_until", 0)) <= time.time())
-        ):
+        poison_invalid = require_poison and (
+            int(stats.get("poisoned_by", 0)) != poisoner
+            or float(stats.get("poisoned_until", 0)) <= time.time()
+        )
+        if hp <= 0 or damage < 1 or poison_invalid:
             return Decision(result, {})
         remaining, barrier = absorb_damage(
             stats, damage, "poison" if require_poison else "physical"
         )
         new_hp = max(0, hp - remaining)
         result.update({"new_hp": new_hp, "player_died": new_hp <= 0, "applied": True})
-        return Decision(
-            result, {stats_key: {**barrier, **hp_changes(stats, position, new_hp, identity)}}
-        )
+        writes = {stats_key: {**barrier, **hp_changes(stats, position, new_hp, identity)}}
+        if new_hp == 0 and killer_key and snapshot[killer_key]:
+            writes[killer_key] = kill_changes(
+                cast("dict[str, str]", snapshot[killer_key]), stats, player=True
+            )
+        return Decision(result, writes)
 
     return await transact(
         redis,
-        (Resource(stats_key, "hash"), Resource(position_key, "hash")),
+        resources,
         identity,
         {"damage": user_id, "amount": damage, "poison": require_poison},
         decide,

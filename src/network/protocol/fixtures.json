@@ -544,5 +544,19 @@
       "version": 1,
       "payload": "{\"epoch\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"sequence\":1,\"kind\":\"weather\",\"id\":\"\",\"revision\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"data\":{\"map\":42,\"outdoor\":false,\"raining\":false,\"intensity\":0}}"
     }
+  },
+  {
+    "name": "mini_stats",
+    "direction": "server",
+    "hex": "3e03000000040000000700000070110100090000000c02000000",
+    "values": {
+      "citizen_kills": 3,
+      "criminal_kills": 4,
+      "player_kills": 7,
+      "npc_kills": 70000,
+      "deaths": 9,
+      "class": 12,
+      "jail_remaining_days": 2
+    }
   }
 ]

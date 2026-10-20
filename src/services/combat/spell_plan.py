@@ -12,6 +12,7 @@ from src.services.combat.periodic import periodic_changes
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
 from src.services.combat.spell_components import take_materials
 from src.services.player.lifecycle import hp_changes, revive_changes
+from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import trained_decision, training_resources
 from src.utils.durability import require_durable
 from src.utils.redis_config import RedisKeys
@@ -184,6 +185,10 @@ class SpellPlan:
                 )
             )
         effects = self._effects(target_changes, bool(request.target_player))
+        if hp > 0 and int(target_changes.get(hp_field, hp)) <= 0 and source_key != target_key:
+            source_changes.update(kill_changes(source, target, player=bool(request.target_player)))
+        if self.spell.get("poisons") and request.target_player:
+            target_changes["poisoned_by"] = str(request.user_id)
         if request.target_player:
             if rule := self.spell.get("periodic"):
                 target_changes.update(

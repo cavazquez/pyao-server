@@ -15,6 +15,7 @@ from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
 from src.services.player.lifecycle import hp_changes
+from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import TrainingEvent, trained_decision, training_resources
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
@@ -348,6 +349,10 @@ class PhysicalPlan:
             else (amount, {})
         )
         hp = max(0, int(target.get("min_hp", target.get("hp", 0))) - amount)
+        if hp == 0:
+            cast("dict[str, str]", writes[source_key]).update(
+                kill_changes(source, target, player=bool(request.target_player))
+            )
         writes[target_key] = (
             {**barrier, **hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")}
             if request.target_player

@@ -27,7 +27,7 @@ class ClientPacketID(IntEnum):
     REQUEST_ATTRIBUTES = 13  # RequestAtributes
     # REQUEST_FAME = 14
     REQUEST_SKILLS = 15  # Solicitar habilidades del jugador
-    # REQUEST_MINI_STATS = 16
+    REQUEST_MINI_STATS = 16
     COMMERCE_END = 17  # Cerrar ventana de comercio
     USER_COMMERCE_END = 18  # Cancelar comercio entre jugadores
     USER_COMMERCE_CONFIRM = 19  # Confirmar invitación de comercio
@@ -212,7 +212,7 @@ class ServerPacketID(IntEnum):
     CHANGE_NPC_INVENTORY_SLOT = 59  # Actualizar slot del inventario del mercader
     UPDATE_HUNGER_AND_THIRST = 60  # Actualizar hambre y sed
     # FAME = 61
-    # MINI_STATS = 62
+    MINI_STATS = 62
     # LEVEL_UP = 63
     # ADD_FORUM_MSG = 64
     # SHOW_FORUM_FORM = 65
