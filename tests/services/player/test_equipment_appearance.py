@@ -10,7 +10,9 @@ from src.commands.equip_item_command import EquipItemCommand
 from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
 from src.network.msg_character import build_character_change_response
+from src.network.packet_id import ServerPacketID
 from src.repositories.equipment_repository import EquipmentRepository
+from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.appearance import PlayerAppearance, resolve_appearance
 from src.services.player.player_death_service import PlayerDeathService
 
@@ -76,7 +78,9 @@ async def test_equipping_replacing_and_removing_publishes_both_observers(mechani
     await world.redis.hset(
         "player:1:inventory", mapping={"slot_1": "30:1", "slot_2": "15:1", "slot_3": "563:1"}
     )
-    lifecycle = PlayerDeathService(world.maps, world.player, MagicMock())
+    lifecycle = PlayerDeathService(
+        world.maps, world.player, MagicMock(), inventory_repo=InventoryRepository(world.redis)
+    )
     handler = EquipItemCommandHandler(
         world.player, EquipmentRepository(world.redis), world.senders[1], lifecycle
     )
@@ -90,3 +94,13 @@ async def test_equipping_replacing_and_removing_publishes_both_observers(mechani
         )
         for sender in world.senders.values():
             assert expected in [call.args[0] for call in sender.connection.send.await_args_list]
+        for user, sender in world.senders.items():
+            inventory_packets = [
+                call.args[0]
+                for call in sender.connection.send.await_args_list
+                if call.args[0][0] == ServerPacketID.CHANGE_INVENTORY_SLOT
+            ]
+            assert len(inventory_packets) == (3 if user == 1 else 0)
+            assert {packet[1] for packet in inventory_packets} == (
+                {1, 2, 3} if user == 1 else set()
+            )

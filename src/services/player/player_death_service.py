@@ -165,8 +165,13 @@ class PlayerDeathService:
         await message_sender.send_console_msg("Has resucitado con la mitad de tu vida.")
         return True
 
-    async def publish_state(self, user_id: int) -> None:
-        """Restaura apariencia/equipo/flags en todos los observadores y en el dueño actual."""
+    async def publish_state(self, user_id: int, *, refresh_inventory: bool = True) -> None:
+        """Restaura apariencia/equipo/flags en todos los observadores y en el dueño actual.
+
+        Args:
+            user_id: Jugador cuyo estado confirmado se publica.
+            refresh_inventory: Reenvía los slots salvo que el comando ya los haya enviado.
+        """
         position = await self.player_repo.get_position(user_id)
         if not position:
             return
@@ -199,7 +204,7 @@ class PlayerDeathService:
         if owner_sender:
             await owner_sender.send_update_user_stats_from_repo(user_id, self.player_repo)
             await owner_sender.sync_status(user_id, self.player_repo)
-            if self.inventory_repo:
+            if self.inventory_repo and refresh_inventory:
                 await notify_inventory(owner_sender, self.inventory_repo, user_id)
 
     async def close(self, deadline_seconds: float = 10) -> None:

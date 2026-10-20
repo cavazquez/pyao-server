@@ -77,7 +77,7 @@ class EquipItemCommandHandler(CommandHandler):
             player_service = PlayerService(self.player_repo, self.message_sender)
             await player_service.send_inventory(user_id, self.equipment_repo)
             if self.player_death_service:
-                await self.player_death_service.publish_state(user_id)
+                await self.player_death_service.publish_state(user_id, refresh_inventory=False)
 
             return CommandResult.ok(data={"slot": slot, "success": True})
 
