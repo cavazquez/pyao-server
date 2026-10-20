@@ -94,6 +94,15 @@ def effective_attribute(snapshot: Snapshot, user: int, name: str, now: float) ->
     return max(1, min(50, base * 2, base + modifier))
 
 
+def mean_defense(item: dict[str, object]) -> float:
+    """Obtiene la defensa media real del objeto equipado.
+
+    Returns:
+        Media de MinDef/MaxDef; cero si el slot está vacío.
+    """
+    return (int(str(item.get("MinDef", 0))) + int(str(item.get("MaxDef", 0)))) / 2
+
+
 def defense(
     snapshot: Snapshot,
     user: int,
@@ -123,11 +132,12 @@ def defense(
     shield = equipped(snapshot, user, "shield", catalog)
     if int(stats.get("class_id", 0)) not in rules.get("playable_classes", list(range(1, 13))):
         shield = {}
-    blocked = bool(shield) and not dodged and shield_roll < skills["defensa"] / 300
-    armor = equipped(snapshot, user, "armor", catalog)
-    reduction = min(
-        0.5, 0.1 + (int(str(armor.get("MinDef", 0))) + int(str(armor.get("MaxDef", 0)))) / 200
+    block_chance = min(0.75, skills["defensa"] / 300 + mean_defense(shield) / 100)
+    blocked = bool(shield) and not dodged and shield_roll < block_chance
+    protection = sum(
+        mean_defense(equipped(snapshot, user, slot, catalog)) for slot in ("armor", "helmet")
     )
+    reduction = min(0.5, 0.1 + protection / 100)
     robustness = (
         skills["robustez"] / MAX_SKILL * float(rules.get("robustness_max_mitigation", 0.10))
     )

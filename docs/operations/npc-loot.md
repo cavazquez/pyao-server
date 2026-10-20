@@ -63,6 +63,10 @@ Los mensajes de inventario, banco y comercio conservan el `ObjType` real y los
 límites distintos `MinDef`/`MaxDef`. Se corrigió el mapeo que enviaba escudos como
 tipo 5/dinero y cascos como tipo 4/árbol, y la pérdida de defensa máxima al copiar
 dos veces `MinDef`. El cliente usa los tipos canónicos 16/17 para mostrar su equipo.
+La defensa media del escudo también aumenta la probabilidad de bloqueo (sumada a
+la habilidad Defensa y limitada a 75%). La defensa del casco se suma a la de la
+armadura para mitigar golpes, con el límite conjunto de 50% vigente. Hay pruebas
+con el mismo golpe y tirada que contrastan equipo débil y fuerte del catálogo real.
 
 Los alimentos y bebidas recogidos se consumen por tipo y por los valores del
 catálogo, incluidos peces y los dos nombres históricos `MinHam`/`MinHAM`. Se

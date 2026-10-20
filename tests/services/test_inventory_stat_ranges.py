@@ -73,3 +73,25 @@ def test_looted_armor_reduces_actual_physical_damage(item_id, expected):
     assert not dodged
     assert not blocked
     assert damage == expected
+
+
+def test_better_shield_and_equipped_helmet_change_real_defense():
+    """Los stats no se limitan a la etiqueta: mejor escudo bloquea y el casco mitiga."""
+    snapshot = {
+        RedisKeys.player_equipment(1): {"shield": "1"},
+        RedisKeys.player_inventory(1): {"slot_1": "404:1", "slot_2": "405:1"},
+        RedisKeys.player_skills(1): {},
+        RedisKeys.player_stats(1): {},
+        RedisKeys.player_user_stats(1): {"class_id": "3"},
+    }
+    catalog = ItemCatalog()
+    weak = defense(snapshot, 1, catalog, 100, 1.0, 0.05, {})
+    snapshot[RedisKeys.player_inventory(1)]["slot_1"] = "1082:1"
+    strong = defense(snapshot, 1, catalog, 100, 1.0, 0.05, {})
+    assert not weak[2]
+    assert strong[2]
+    assert strong[0] == 0 < weak[0]
+    snapshot[RedisKeys.player_equipment(1)] = {"helmet": "2"}
+    helmet = defense(snapshot, 1, catalog, 100, 1.0, 1.0, {})
+    assert helmet[0] < weak[0]
+    assert not helmet[2]
