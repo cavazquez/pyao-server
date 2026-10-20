@@ -61,13 +61,8 @@ class RedisInitializer:
         dice_min_key = "server:dice:min_value"
         dice_max_key = "server:dice:max_value"
 
-        if await server_repo.get_config(dice_min_key) is None:
-            await server_repo.set_dice_min_value(6)
-            logger.info("Valor mínimo de dados inicializado: 6")
-
-        if await server_repo.get_config(dice_max_key) is None:
-            await server_repo.set_dice_max_value(18)
-            logger.info("Valor máximo de dados inicializado: 18")
+        await server_repo.set_config_if_absent(dice_min_key, "6")
+        await server_repo.set_config_if_absent(dice_max_key, "18")
 
         dice_min = await server_repo.get_dice_min_value()
         dice_max = await server_repo.get_dice_max_value()
@@ -76,15 +71,13 @@ class RedisInitializer:
     @staticmethod
     async def _initialize_motd(server_repo: ServerRepository) -> None:
         """Inicializa el MOTD (Message of the Day) si es necesario."""
-        motd = await server_repo.get_motd()
-        if motd == "Bienvenido a Argentum Online!\nServidor en desarrollo.":
-            initial_motd = (
-                "» Bienvenido a Argentum Online! «\n"
-                "• Servidor en desarrollo.\n"
-                "• Usa /AYUDA para ver los comandos disponibles.\n"
-                "¡Buena suerte en tu aventura!"
-            )
-            await server_repo.set_motd(initial_motd)
+        initial_motd = (
+            "» Bienvenido a Argentum Online! «\n"
+            "• Servidor en desarrollo.\n"
+            "• Usa /AYUDA para ver los comandos disponibles.\n"
+            "¡Buena suerte en tu aventura!"
+        )
+        if await server_repo.set_config_if_absent("server:motd", initial_motd):
             logger.info("MOTD inicializado")
 
     @staticmethod
@@ -99,14 +92,9 @@ class RedisInitializer:
             )
             await server_repo.set_config_if_absent(key, str(effective))
 
-        if await server_repo.get_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA) is None:
-            await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10")
-            logger.info("Reducción de agua inicializada: 10 puntos")
-
-        if await server_repo.get_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE) is None:
-            await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10")
-            logger.info("Reducción de hambre inicializada: 10 puntos")
-
-        if await server_repo.get_config(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED) is None:
-            await server_repo.set_config(RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1")
-            logger.info("Sistema de hambre/sed habilitado por defecto")
+        for key, value in (
+            (RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_AGUA, "10"),
+            (RedisKeys.CONFIG_HUNGER_THIRST_REDUCCION_HAMBRE, "10"),
+            (RedisKeys.CONFIG_HUNGER_THIRST_ENABLED, "1"),
+        ):
+            await server_repo.set_config_if_absent(key, value)

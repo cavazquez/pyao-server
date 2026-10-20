@@ -93,4 +93,6 @@ class CraftingDataLoader(BaseDataLoader):
 
     async def load(self) -> None:
         """Carga recetas verificadas, sin modificar inventarios ni progreso."""
-        await self.redis_client.set(CRAFTING_KEY, json.dumps(load_recipes(), ensure_ascii=False))
+        await self.redis_client.redis.set(
+            CRAFTING_KEY, json.dumps(load_recipes(), ensure_ascii=False), nx=True
+        )

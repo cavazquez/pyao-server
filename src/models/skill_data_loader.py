@@ -42,4 +42,4 @@ class SkillDataLoader(BaseDataLoader):
         ):
             message = "Reglas de habilidades inválidas"
             raise ValueError(message)
-        await self.redis_client.set(SKILL_RULES_KEY, json.dumps(rules))
+        await self.redis_client.redis.set(SKILL_RULES_KEY, json.dumps(rules), nx=True)
