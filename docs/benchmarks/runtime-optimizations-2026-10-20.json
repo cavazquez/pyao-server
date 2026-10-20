@@ -1,0 +1,5334 @@
+{
+  "recorded_date": "2026-10-20",
+  "paired_version": "1.0.0rc3",
+  "baseline_commits": {
+    "server": "f8261ad56163f569f62a4fdd3ee7054c445b4698",
+    "client": "4d4c74e214cbed1aa76398ffd12021bc9d9d846d"
+  },
+  "sources_are_working_tree_hashes": true,
+  "measured_server_hashes": {
+    "src/game/player_index.py": "1994db9f1ec73d5b55df7de7d55fd136de7ff9bd04a9b4abce85c44e9348666b",
+    "src/game/npc_index.py": "c78e38dd316e4ef2b320153bdf7f64a4b56b78050e34707ff6bbcafc95550a90",
+    "src/game/ground_item_index.py": "621922e25dbbb0aa873c78c1f7025086bf4de9c97eec7dd33991ecc87ed837f7",
+    "src/game/tile_occupation.py": "2bd6409dd6f12f3dc1ddc6626542bbd4e980d37a5d2959c4539041fefeddd5b1"
+  },
+  "server_repository_after": {
+    "src/command_handlers/login_authentication_handler.py": "561b74cc33def9f8189b35cb0dae5715966a5cf7c72df19af0d4c059683dc665",
+    "src/command_handlers/login_finalization_handler.py": "e9a1485255676fc7e30084479d4d89772549ae5aacdf737eb6e9bc5cf18b0966",
+    "src/command_handlers/login_handler.py": "ae4a2c2066b9be423fe548b3c5ee3fc46718e12e281eb3d730d033b31b0d6d89",
+    "src/command_handlers/login_initialization_handler.py": "2c7eab9a7b4af11507dbf0ede1f39c50f84f28a8ff46a99b917e1ae2ab6b5b8b",
+    "src/command_handlers/login_spawn_handler.py": "a779adde3730c2c68cc246c8b1073a7a3a170ac998bf431c90cc6fe621522656",
+    "src/core/server_initializer.py": "40aab13431b48e493a74cf0232f25602e827712dd0d36eef8f45b60f3b8e0494",
+    "src/effects/__init__.py": "bc824bddfd7927c470aa700936cd726f7580b18a23ae6f4a8033dbd6ff85d552",
+    "src/effects/effect_attribute_modifiers.py": "5f9ae3e577a6b258b9ce699dd9bf858f47e5db1b5ec6f85daa4cdbb19de17066",
+    "src/effects/effect_gold_decay.py": "656aa6dab937e43729d3623768d57bfd97f9055e38dcd71d5bb384ae191555a7",
+    "src/effects/effect_hunger_thirst.py": "a73cb74d1e76f637428329d39881b863876189cfbc51e6dca6122f9ed3d1d0b0",
+    "src/effects/effect_lifecycle.py": "a00c46ca2047d1d7fadd4ff102b9e8493e266985a26922bde40ea76ef7a450f3",
+    "src/effects/effect_morph_expiry.py": "c9881e6e3fa6e0bb744a944611500c96a959f252eb697ff6a8e2c59c7772d8bb",
+    "src/effects/effect_npc_movement.py": "f1336065a055aa7461eaf6d6d9900ad3b93004fb77dfd8ca85193f5697b655dd",
+    "src/effects/effect_npc_poison.py": "77c3afa8592c12a481ef77689f4c6ad6f7ff7bfb4476ba9b9bc017fccd45d2d7",
+    "src/effects/effect_npc_rewards.py": "5fa8282330b3a83fe8ff43c86b635d9d7f081903ad8b267dbe432bb950161eb8",
+    "src/effects/effect_pet_follow.py": "ca16bf8676209b81dcfba4cf45456e20ea87c5aa3815e12cab8fc42435d3fd03",
+    "src/effects/effect_poison.py": "ff3cfa16009ec56e142b65d044d8e6dd8cec69675aaa33b5845dd6f5896307ec",
+    "src/effects/effect_stamina_regen.py": "76cf5d7a394e82fba12ec799b5b74408648942b5b42e6fc43d3db335f2415fb3",
+    "src/effects/effect_summon_expiry.py": "7932d1ada239e02840976493ae15243a0de4f6731e73f4513a173a9ecff7ec37",
+    "src/effects/meditation_effect.py": "d324224ccace28e0db0b9c900d08fc872ba999e0c51121651b615b1beba5a400",
+    "src/effects/npc_ai_effect.py": "bede3b82412649739abf9d03b787071ca021f794a74b77e0b2b9dd68ee1c7c74",
+    "src/effects/tick_effect.py": "49ef565d41ae9783083224f770290208991e0a6f4add2a4bb648b8803dfbdc18",
+    "src/game/__init__.py": "37627f4245a2faf43c5b652178e33f469edc1589e2fdc592860f33f1eeaa026c",
+    "src/game/character_constants.py": "43b9e3e7a4d82404a8e0cca035158408ee67a77fa221949c245ee4f87b4582e8",
+    "src/game/coordinate_mask.py": "f9cbc351ce08cef90d968d5243ad6d1f7da6d3a66e04b21b255c5bda5103a2e3",
+    "src/game/door_state.py": "395cdf862f7151c3dd7b799ac88f4d7d45f987384304dd6c4a362f67d3a64214",
+    "src/game/exit_index.py": "b8c6adb120b15de33d1c5b57da61ae38b174a9c62e73c4a696dd003a787064f3",
+    "src/game/game_tick.py": "d33757c33529724c06e416c66e80ee2b711991ffab317934714e653cdc9a701b",
+    "src/game/ground_item_index.py": "621922e25dbbb0aa873c78c1f7025086bf4de9c97eec7dd33991ecc87ed837f7",
+    "src/game/map_manager.py": "1e512a85e592771ef7c5783eef79714269d1f2dc9326e3dcf10655a412600784",
+    "src/game/map_manager_spatial.py": "5ae3e2924a90acb3ab4ab4a8cabd88348d593b7dd61b7346c4375a54ccc2c4b2",
+    "src/game/map_metadata_loader.py": "dc30db5e844c953c9a1d3b430c3833136c9d65588729ecf7949cfeb0bd1d65fd",
+    "src/game/map_tile_index.py": "c15681a72356331c4b02ab166cacd54ac55465b0f1c237c70768f8682b2fef3a",
+    "src/game/npc_index.py": "c78e38dd316e4ef2b320153bdf7f64a4b56b78050e34707ff6bbcafc95550a90",
+    "src/game/player_index.py": "1994db9f1ec73d5b55df7de7d55fd136de7ff9bd04a9b4abce85c44e9348666b",
+    "src/game/tile_occupation.py": "2bd6409dd6f12f3dc1ddc6626542bbd4e980d37a5d2959c4539041fefeddd5b1",
+    "src/repositories/player_mixins/_position_mixin.py": "776ae418cd53be4c4ff33212bdb66222c734473876915c38ffa1fc0a57b79118",
+    "src/server.py": "5f7ffcfe52d0a63bfdb682c671611d349b65f54f8656991cb3c82a1563d498e3",
+    "src/services/map/__init__.py": "c2e87eca464b763d52e50bb9ff7cbaf29d20df14a58b9bf1b192ee79d7df388b",
+    "src/services/map/binary_cache.py": "abbac602f49c3465760a89b7000861f09110de084b19f4d477fcc950475f8f9e",
+    "src/services/map/blocked_loader.py": "72e11f671089097fd3904f83254d54854e3cf28ac2093fe0ff560cf66c66fd09",
+    "src/services/map/cache.py": "5c399c1f2241139fed7f6c965b1b05d1b66c03963b71d516a8f48ed2ccd23f79",
+    "src/services/map/door_service.py": "fb9e6370a611c733fbe49c0abc4d16eea4343eea4ebf136a6bf55e876bb27dbd",
+    "src/services/map/map_bitmap.py": "e345d6ed9ce56d0212400f25125384f783c9e8b7e25af98aa0c7777b3c7924ca",
+    "src/services/map/map_bulk_resources_loader.py": "49d9befe4e921c66c4240220de6bb70d5c35763fd054063f822e9f5ad5b0d0b0",
+    "src/services/map/map_manual_doors.py": "0d2aab2e60ec18bf737584a34d11f8a976540a2fd16ed101686e68bcbfd0736c",
+    "src/services/map/map_resource_queries.py": "ef3d619d22ac89ee6a7d9e436a26ab4eb6816503f41dff41bed0d171ace3b5ad",
+    "src/services/map/map_resources_service.py": "00b1ee69504f4c081df6d20ee44db9b184e36e613808ec4f8917646443126dde",
+    "src/services/map/map_single_map_loader.py": "bea633e0dbda08317d75bcc7fdf106add80f3cf6f41a0741d93250d4e588644b",
+    "src/services/map/map_transition_service.py": "92ce8ee6269e3454f0d002795818184a7fa7997a5e74de41110c3a8a43468abe",
+    "src/services/map/map_transition_steps.py": "9b3c2703863df7822eaf1c3a13ca552ab96c86442453d8d81fe957c06ace569b",
+    "src/services/map/map_workshops.py": "00bde530bcf963c20f6ca00d3870541a79a426e1dbce8c0e277fd6d383687ca0",
+    "src/services/map/ndjson_reader.py": "7f528896692ef2bbf82547b0c9a8ba1a663d22c80370ad3689309ca7bfe5bdf9",
+    "src/services/map/objects_loader.py": "244d09c517cd5851412ebe8bd59dab50d192e5cdca7f879c11a1a9b3dc1ac2f1",
+    "src/services/map/pathfinding_service.py": "2980fb76afd897dbc123d24923076c2c40742813279392d2b7ccdbe45b3d6eb1",
+    "src/services/map/player_map_service.py": "effffa1cb45d6693d2f7eed497a362b54c7583aba484baba3a9c879524938f61",
+    "src/services/multiplayer_broadcast_service.py": "78f5c03774b2dff57436b1abe9f5cd5b0def548610b1025ed4dc8e12f723dd7e",
+    "src/services/npc/npc_ai_service.py": "01fb276fb924bdd8ee2e59dfc1d69f62c003170c35e905afb3ace3319f74b9bd"
+  },
+  "client_repository_after": {
+    "engine/character/character.gd": "367200eee07d6cab26597fd1fad798d202ec56229af482670126a41c7687b731",
+    "engine/character/character.gd.uid": "19a9a2dd52be34ee62f7bf4e2cf96551ce6a76c6e88f416bd409ea4ed57e9a12",
+    "engine/game_world.gd": "0773604fb10a7963b822a8d0106a017f0e00c6bb51ef0d3c528c41d67acd8710",
+    "engine/game_world.gd.uid": "ae361c8421dafbcca5520fbac9639e8129fc0a66b5d4fcb1fbdf23fddaad1c9c",
+    "engine/map_container.gd": "b9708476c6c55d43bbbf9fa2037a12352e8e905274d8a19b6feac6de34780951",
+    "engine/map_container.gd.uid": "f6b25b782e466f28fc711084394f459aad2fbc6252867bdaf69316d9af3efa3f",
+    "tests/entity_indexes.gd": "d4adba37ae637736bb0010755b664d276ffbb2526ce0d0791ac7705f3693cae3",
+    "tests/entity_indexes.gd.uid": "4a4d82b340e9dd6c61fdde84dbf611f27c9f23bafb5472c67482c5f10d1494c9",
+    "tests/structure_benchmark.gd": "ca79e5c21a681c9c840129a743720305eb1d910e3ecc583408b70f0bdd15bb4a",
+    "tests/structure_benchmark.gd.uid": "9ea65044d8e2314732ec8f26b718f231bb2eef7368f1c5a8dc66c65bc4ce0430"
+  },
+  "world_load_before": {
+    "python": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+    "resources_load_seconds": 0.43522428600044805,
+    "collision_load_seconds": 1.2351164290012093,
+    "owned_bytes": {
+      "resources": 292671468,
+      "map_manager": 384078387
+    },
+    "retained_rss_kib": 745980,
+    "peak_rss_kib": 1125188,
+    "queries": {
+      "p50_us": 0.16297681660899652,
+      "p95_us": 0.1692271626297578,
+      "p99_us": 0.25951730103806225,
+      "matches": 2694
+    },
+    "collision_sha256": "28e14ccf00e33a02eb00a3dcfc8739cfa5bbef1ca667b51572844c7323f41c88",
+    "exits_sha256": "ef3c4d465cdd93402bf46ee53eda04a944c4046dfab4b805659a9511041cc1ee",
+    "limitations": [
+      "Linux process RSS after GC; peak includes imports and hash preparation",
+      "Microbenchmark of point queries, not whole-server RTT",
+      "Use identical input hashes before comparing results"
+    ],
+    "sources_sha256": "32fdd1848037457e2b22bafc85d5e3e7366d6214b27e39a0273cafad6d4162e6",
+    "layers_sha256": "b8fc99a6caad5e88f2fb85a63911f914ecce5e8790385dc0a9a215a02ad2ce3b",
+    "maps": 290,
+    "layers_checked": 1740
+  },
+  "world_load_after": {
+    "python": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+    "resources_load_seconds": 0.04322785600015777,
+    "collision_load_seconds": 1.4520351649989607,
+    "owned_bytes": {
+      "resources": 2669205,
+      "map_manager": 18585242
+    },
+    "retained_rss_kib": 116944,
+    "peak_rss_kib": 196960,
+    "queries": {
+      "p50_us": 0.2710768166089965,
+      "p95_us": 0.277580276816609,
+      "p99_us": 0.2785873702422145,
+      "matches": 2694
+    },
+    "collision_sha256": "28e14ccf00e33a02eb00a3dcfc8739cfa5bbef1ca667b51572844c7323f41c88",
+    "exits_sha256": "ef3c4d465cdd93402bf46ee53eda04a944c4046dfab4b805659a9511041cc1ee",
+    "limitations": [
+      "Linux process RSS after GC; peak includes imports and hash preparation",
+      "Microbenchmark of point queries, not whole-server RTT",
+      "Use identical input hashes before comparing results"
+    ],
+    "sources_sha256": "32fdd1848037457e2b22bafc85d5e3e7366d6214b27e39a0273cafad6d4162e6",
+    "layers_sha256": "b8fc99a6caad5e88f2fb85a63911f914ecce5e8790385dc0a9a215a02ad2ce3b",
+    "maps": 290,
+    "layers_checked": 1740
+  },
+  "all_world_layers_collision_exits_equivalent": true,
+  "server_indexes_before": [
+    {
+      "entities": 100,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.5096999999999996,
+          "p95": 2.5918,
+          "p99": 2.693,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.5256999999999996,
+          "p95": 2.5838,
+          "p99": 2.9905,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 4.3842,
+          "p95": 4.5345,
+          "p99": 4.7067,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1002,
+          "p95": 0.1092,
+          "p99": 0.1102,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.8293000000000004,
+          "p95": 2.8603,
+          "p99": 3.0126,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.056100000000000004,
+          "p95": 0.06520000000000001,
+          "p99": 0.0682,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.9154,
+          "p95": 2.9544,
+          "p99": 2.9645,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.7933,
+          "p95": 1.8184,
+          "p99": 1.9647000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.06420000000000001,
+          "p95": 0.0752,
+          "p99": 0.07709999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 41707,
+        "npc_index_including_synthetic_records_and_tiles": 67014,
+        "tile_index": 23384,
+        "ground_index": 44611,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 11312
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 100,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.3101,
+          "p95": 3.4414000000000002,
+          "p99": 5.1515,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.2961,
+          "p95": 3.3771999999999998,
+          "p99": 3.4384,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 6.0792,
+          "p95": 6.2365,
+          "p99": 6.2637,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0862,
+          "p95": 0.11120000000000001,
+          "p99": 0.1162,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.13119999999999998,
+          "p95": 0.1463,
+          "p99": 0.15330000000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.049100000000000005,
+          "p95": 0.0541,
+          "p99": 0.0541,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.5799,
+          "p95": 1.594,
+          "p99": 1.5999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1492,
+          "p95": 0.1613,
+          "p99": 0.1633,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.0631,
+          "p99": 0.06420000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 50243,
+        "npc_index_including_synthetic_records_and_tiles": 72710,
+        "tile_index": 21176,
+        "ground_index": 42403,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 19864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 17.9723,
+          "p95": 18.5484,
+          "p99": 19.7136,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 17.9503,
+          "p95": 18.1948,
+          "p99": 18.2208,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 35.5419,
+          "p95": 35.679199999999994,
+          "p99": 35.706300000000006,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0772,
+          "p95": 0.0852,
+          "p99": 0.0852,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 22.658099999999997,
+          "p95": 22.9075,
+          "p99": 23.3504,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.048100000000000004,
+          "p95": 0.0531,
+          "p99": 0.0541,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 23.502599999999997,
+          "p95": 23.747,
+          "p99": 23.8532,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.572,
+          "p95": 14.8205,
+          "p99": 14.9006,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0571,
+          "p95": 0.0611,
+          "p99": 0.0621,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 388803,
+        "npc_index_including_synthetic_records_and_tiles": 603450,
+        "tile_index": 181632,
+        "ground_index": 386459,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 101176
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.9007,
+          "p95": 21.0891,
+          "p99": 21.1062,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.9038,
+          "p95": 21.024,
+          "p99": 21.080099999999998,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 39.1757,
+          "p95": 39.5133,
+          "p99": 39.5223,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.07809999999999999,
+          "p95": 0.0902,
+          "p99": 0.0922,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.5751000000000001,
+          "p95": 0.6242000000000001,
+          "p99": 0.7002999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0501,
+          "p95": 0.0551,
+          "p99": 0.0581,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.043,
+          "p95": 14.2554,
+          "p99": 14.389700000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.42369999999999997,
+          "p95": 0.4358,
+          "p99": 0.44480000000000003,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0571,
+          "p95": 0.0632,
+          "p99": 0.06509999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 385475,
+        "npc_index_including_synthetic_records_and_tiles": 600442,
+        "tile_index": 179424,
+        "ground_index": 384251,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 97864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 92.4495,
+          "p95": 94.5715,
+          "p99": 95.0925,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 92.8493,
+          "p95": 95.1275,
+          "p99": 98.7923,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 190.0817,
+          "p95": 198.6005,
+          "p99": 240.1736,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0832,
+          "p95": 0.1172,
+          "p99": 0.1193,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 130.8347,
+          "p95": 137.00920000000002,
+          "p99": 138.0301,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.048100000000000004,
+          "p95": 0.0541,
+          "p99": 0.0591,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 118.64410000000001,
+          "p95": 121.4704,
+          "p99": 122.9381,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 73.43730000000001,
+          "p95": 75.0753,
+          "p99": 75.86880000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.06420000000000001,
+          "p99": 0.06609999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1873955,
+        "npc_index_including_synthetic_records_and_tiles": 2943834,
+        "tile_index": 856208,
+        "ground_index": 1873035,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 467768
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 111.6011,
+          "p95": 114.1909,
+          "p99": 116.2247,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 111.8315,
+          "p95": 113.2962,
+          "p99": 115.97919999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 222.43460000000002,
+          "p95": 226.0965,
+          "p99": 229.22729999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.12819999999999998,
+          "p95": 0.1683,
+          "p99": 0.1743,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.8583000000000003,
+          "p95": 2.9254000000000002,
+          "p99": 3.0456999999999996,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0501,
+          "p95": 0.06509999999999999,
+          "p99": 0.06609999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 71.4085,
+          "p95": 74.0153,
+          "p99": 75.4559,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.5739,
+          "p95": 1.608,
+          "p99": 1.609,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.06509999999999999,
+          "p99": 0.0832,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1962835,
+        "npc_index_including_synthetic_records_and_tiles": 3008402,
+        "tile_index": 856200,
+        "ground_index": 1873027,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 556664
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    }
+  ],
+  "server_indexes_after": [
+    {
+      "entities": 100,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.658,
+          "p95": 2.9515,
+          "p99": 2.9525,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.692,
+          "p95": 2.7460999999999998,
+          "p99": 3.6998,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.2435,
+          "p95": 0.2815,
+          "p99": 0.2876,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.09620000000000001,
+          "p95": 0.1062,
+          "p99": 0.1082,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.07909999999999999,
+          "p95": 0.0902,
+          "p99": 0.0942,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0611,
+          "p95": 0.0721,
+          "p99": 0.0751,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.0177,
+          "p95": 2.0508,
+          "p99": 2.0668,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.9627000000000001,
+          "p95": 1.9917,
+          "p99": 2.6479,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0751,
+          "p95": 0.0831,
+          "p99": 0.0842,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 105957,
+        "npc_index_including_synthetic_records_and_tiles": 94785,
+        "tile_index": 23384,
+        "ground_index": 44503,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 11312
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 100,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.9954,
+          "p95": 4.1427,
+          "p99": 22.5308,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.9944,
+          "p95": 4.0495,
+          "p99": 4.2439,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.2495,
+          "p95": 0.31360000000000005,
+          "p99": 0.3226,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1002,
+          "p95": 0.11220000000000001,
+          "p99": 0.1162,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0792,
+          "p95": 0.13119999999999998,
+          "p99": 0.2184,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0601,
+          "p95": 0.0722,
+          "p99": 0.0731,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.2415,
+          "p95": 0.2645,
+          "p99": 0.2775,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1923,
+          "p95": 0.2104,
+          "p99": 0.2174,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0741,
+          "p95": 0.0862,
+          "p99": 0.0882,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 114493,
+        "npc_index_including_synthetic_records_and_tiles": 100481,
+        "tile_index": 21176,
+        "ground_index": 50883,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 19864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.5992,
+          "p95": 22.3425,
+          "p99": 22.354400000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 18.6747,
+          "p95": 19.299799999999998,
+          "p99": 19.3108,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1994,
+          "p95": 0.2184,
+          "p99": 0.4208,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0792,
+          "p95": 0.0851,
+          "p99": 0.0862,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.060200000000000004,
+          "p95": 0.06609999999999999,
+          "p99": 0.0682,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.048,
+          "p95": 0.0521,
+          "p99": 0.0531,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.3636,
+          "p95": 14.9528,
+          "p99": 15.6911,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.9417,
+          "p95": 16.125899999999998,
+          "p99": 16.2371,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0592,
+          "p95": 0.0701,
+          "p99": 0.0712,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1013821,
+        "npc_index_including_synthetic_records_and_tiles": 846797,
+        "tile_index": 181632,
+        "ground_index": 379179,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 101176
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 21.6251,
+          "p95": 21.9897,
+          "p99": 23.7471,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 21.6932,
+          "p95": 21.929599999999997,
+          "p99": 23.8562,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.2104,
+          "p95": 0.2514,
+          "p99": 0.2535,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0842,
+          "p95": 0.15730000000000002,
+          "p99": 0.3947,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.060200000000000004,
+          "p95": 0.0631,
+          "p99": 0.0742,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0501,
+          "p95": 0.0541,
+          "p99": 0.0571,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.4618,
+          "p95": 0.4809,
+          "p99": 0.51,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.4268,
+          "p95": 0.4338,
+          "p99": 0.4398,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.0681,
+          "p99": 0.0702,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1010493,
+        "npc_index_including_synthetic_records_and_tiles": 843789,
+        "tile_index": 179424,
+        "ground_index": 373651,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 97864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 96.0261,
+          "p95": 98.0638,
+          "p99": 100.1988,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 95.6053,
+          "p95": 98.6008,
+          "p99": 98.99860000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.2094,
+          "p95": 0.22640000000000002,
+          "p99": 0.2364,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.08009999999999999,
+          "p95": 0.0952,
+          "p99": 0.09720000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0621,
+          "p95": 0.06620000000000001,
+          "p99": 0.0681,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.048100000000000004,
+          "p95": 0.0521,
+          "p99": 0.0531,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 72.0476,
+          "p95": 73.6535,
+          "p99": 74.3228,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 72.268,
+          "p95": 73.2028,
+          "p99": 73.32889999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.06609999999999999,
+          "p99": 0.06609999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 4939389,
+        "npc_index_including_synthetic_records_and_tiles": 4043245,
+        "tile_index": 856208,
+        "ground_index": 1833739,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 467768
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 115.9319,
+          "p95": 120.0987,
+          "p99": 121.7228,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 116.4219,
+          "p95": 119.228,
+          "p99": 119.53460000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.3317,
+          "p95": 0.3947,
+          "p99": 0.4218,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1102,
+          "p95": 0.15430000000000002,
+          "p99": 0.15730000000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0611,
+          "p95": 0.0701,
+          "p99": 0.0722,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0501,
+          "p95": 0.0541,
+          "p99": 0.0541,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.604,
+          "p95": 1.6511,
+          "p99": 1.6650999999999998,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.5497999999999998,
+          "p95": 1.5889000000000002,
+          "p99": 1.7572999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.0621,
+          "p99": 0.06409999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 5028269,
+        "npc_index_including_synthetic_records_and_tiles": 4107813,
+        "tile_index": 856200,
+        "ground_index": 1922619,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 556664
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    }
+  ],
+  "client_before": {
+    "engine": {
+      "build": "official",
+      "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hex": 263938,
+      "major": 4,
+      "minor": 7,
+      "patch": 2,
+      "status": "stable",
+      "string": "4.7.2-stable (official)",
+      "timestamp": 0
+    },
+    "entities": [
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.07,
+          "p99": 0.09,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_linear": {
+          "loops": 100,
+          "p50": 2.45,
+          "p95": 3.87,
+          "p99": 4.03,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_linear": {
+          "loops": 100,
+          "p50": 2.4,
+          "p95": 2.42,
+          "p99": 2.46,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 100,
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.07,
+          "p99": 0.08,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_linear": {
+          "loops": 100,
+          "p50": 2.81,
+          "p95": 4.22,
+          "p99": 4.77,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "static_memory_delta_bytes_including_prototypes": 389644.0
+      },
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.08,
+          "p99": 0.09,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_linear": {
+          "loops": 100,
+          "p50": 22.3,
+          "p95": 26.99,
+          "p99": 27.26,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_linear": {
+          "loops": 100,
+          "p50": 21.88,
+          "p95": 25.1,
+          "p99": 25.19,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 1000,
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.07,
+          "p99": 0.08,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_linear": {
+          "loops": 100,
+          "p50": 26.29,
+          "p95": 27.83,
+          "p99": 28.72,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "static_memory_delta_bytes_including_prototypes": 3735164.0
+      },
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.07,
+          "p99": 0.09,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_linear": {
+          "loops": 100,
+          "p50": 122.96,
+          "p95": 128.54,
+          "p99": 129.03,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_linear": {
+          "loops": 100,
+          "p50": 121.0,
+          "p95": 122.04,
+          "p99": 122.88,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 5000,
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.07,
+          "p99": 0.08,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_linear": {
+          "loops": 100,
+          "p50": 143.87,
+          "p95": 149.82,
+          "p99": 150.39,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "static_memory_delta_bytes_including_prototypes": 18351824.0
+      }
+    ],
+    "limitations": [
+      "Synthetic Character nodes exclude renderer children, textures and network",
+      "Memory monitors are process observations, not additive object sizes",
+      "Map cache estimated bytes are not measured RSS or VRAM",
+      "Wall clock samples are not CI capacity gates"
+    ],
+    "map_packed_payload_bytes": 90000,
+    "os": "Linux"
+  },
+  "client_after": {
+    "engine": {
+      "build": "official",
+      "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hex": 263938,
+      "major": 4,
+      "minor": 7,
+      "patch": 2,
+      "status": "stable",
+      "string": "4.7.2-stable (official)",
+      "timestamp": 0
+    },
+    "entities": [
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.1,
+          "p99": 0.12,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_current": {
+          "loops": 100,
+          "p50": 0.15,
+          "p95": 0.15,
+          "p99": 0.2,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_current": {
+          "loops": 100,
+          "p50": 0.12,
+          "p95": 0.13,
+          "p99": 0.13,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 100,
+        "move_to_other_cell_and_back": {
+          "loops": 100,
+          "p50": 1.58,
+          "p95": 1.69,
+          "p99": 1.73,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_current": {
+          "loops": 100,
+          "p50": 0.25,
+          "p95": 0.25,
+          "p99": 0.27,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.11,
+          "p99": 0.13,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "setup_usec_including_reference_dictionaries": 551,
+        "static_memory_delta_bytes_including_prototypes": 730068.0,
+        "unregister_and_register_current": {
+          "loops": 100,
+          "p50": 3.44,
+          "p95": 4.41,
+          "p99": 5.01,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        }
+      },
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.11,
+          "p99": 0.14,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_current": {
+          "loops": 100,
+          "p50": 0.15,
+          "p95": 0.27,
+          "p99": 0.32,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_current": {
+          "loops": 100,
+          "p50": 0.12,
+          "p95": 0.13,
+          "p99": 0.14,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 1000,
+        "move_to_other_cell_and_back": {
+          "loops": 100,
+          "p50": 1.65,
+          "p95": 1.78,
+          "p99": 1.84,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_current": {
+          "loops": 100,
+          "p50": 0.25,
+          "p95": 0.28,
+          "p99": 0.29,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.08,
+          "p99": 0.11,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "setup_usec_including_reference_dictionaries": 6088,
+        "static_memory_delta_bytes_including_prototypes": 7092596.0,
+        "unregister_and_register_current": {
+          "loops": 100,
+          "p50": 3.48,
+          "p95": 4.72,
+          "p99": 5.02,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        }
+      },
+      {
+        "character_id_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.08,
+          "p99": 0.09,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_last_current": {
+          "loops": 100,
+          "p50": 0.15,
+          "p95": 0.15,
+          "p99": 0.19,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "character_missing_current": {
+          "loops": 100,
+          "p50": 0.12,
+          "p95": 0.13,
+          "p99": 0.13,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "count": 5000,
+        "move_to_other_cell_and_back": {
+          "loops": 100,
+          "p50": 1.58,
+          "p95": 1.85,
+          "p99": 2.1,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_current": {
+          "loops": 100,
+          "p50": 0.25,
+          "p95": 0.26,
+          "p99": 0.27,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "position_dictionary": {
+          "loops": 100,
+          "p50": 0.07,
+          "p95": 0.11,
+          "p99": 0.11,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        },
+        "setup_usec_including_reference_dictionaries": 26207,
+        "static_memory_delta_bytes_including_prototypes": 35338864.0,
+        "unregister_and_register_current": {
+          "loops": 100,
+          "p50": 3.46,
+          "p95": 3.55,
+          "p99": 3.57,
+          "samples": 31,
+          "unit": "microseconds_per_operation"
+        }
+      }
+    ],
+    "limitations": [
+      "Synthetic Character nodes exclude renderer children, textures and network",
+      "Memory monitors are process observations, not additive object sizes",
+      "Map cache estimated bytes are not measured RSS or VRAM",
+      "Wall clock samples are not CI capacity gates"
+    ],
+    "map_packed_payload_bytes": 90000,
+    "os": "Linux"
+  },
+  "candidate_reads_without_graphical_load": {
+    "python": "3.14.0",
+    "cases": [
+      {
+        "candidate_players": 20,
+        "previous": {
+          "p50_us": 2120.412,
+          "p95_us": 2254.09,
+          "p99_us": 2388.349,
+          "samples": 31,
+          "commands_per_call": {
+            "HGET": 20,
+            "HGETALL": 40
+          }
+        },
+        "batched": {
+          "p50_us": 475.672,
+          "p95_us": 531.836,
+          "p99_us": 544.068,
+          "samples": 31,
+          "commands_per_call": {
+            "HGETALL": 40
+          }
+        },
+        "batch_size": 256,
+        "snapshots_retained_between_calls": false
+      },
+      {
+        "candidate_players": 50,
+        "previous": {
+          "p50_us": 5331.255,
+          "p95_us": 6190.629,
+          "p99_us": 6406.81,
+          "samples": 31,
+          "commands_per_call": {
+            "HGET": 50,
+            "HGETALL": 100
+          }
+        },
+        "batched": {
+          "p50_us": 1115.268,
+          "p95_us": 1171.372,
+          "p99_us": 1172.434,
+          "samples": 31,
+          "commands_per_call": {
+            "HGETALL": 100
+          }
+        },
+        "batch_size": 256,
+        "snapshots_retained_between_calls": false
+      },
+      {
+        "candidate_players": 500,
+        "previous": {
+          "p50_us": 55437.727,
+          "p95_us": 58774.976,
+          "p99_us": 86347.764,
+          "samples": 31,
+          "commands_per_call": {
+            "HGET": 500,
+            "HGETALL": 1000
+          }
+        },
+        "batched": {
+          "p50_us": 10917.695,
+          "p95_us": 11365.455,
+          "p99_us": 11636.527,
+          "samples": 31,
+          "commands_per_call": {
+            "HGETALL": 1000
+          }
+        },
+        "batch_size": 256,
+        "snapshots_retained_between_calls": false
+      }
+    ],
+    "source_hashes": {
+      "src/repositories/player_mixins/_position_mixin.py": "776ae418cd53be4c4ff33212bdb66222c734473876915c38ffa1fc0a57b79118",
+      "src/services/npc/npc_ai_service.py": "01fb276fb924bdd8ee2e59dfc1d69f62c003170c35e905afb3ace3319f74b9bd",
+      "src/effects/npc_ai_effect.py": "bede3b82412649739abf9d03b787071ca021f794a74b77e0b2b9dd68ee1c7c74"
+    },
+    "limitations": [
+      "Already-settled daily balances, live candidates, loopback Redis",
+      "Compares actual previous selection route and actual new batch method; no attack or transport",
+      "500 candidates span two bounded pipelines; not 500 connected clients"
+    ]
+  },
+  "generic_redis_reads": {
+    "redis": "8.10.2",
+    "sequential_50_hashes": {
+      "unit": "microseconds_per_operation",
+      "p50": 1192.621,
+      "p95": 1340.125,
+      "p99": 1481.567,
+      "repeats": 21,
+      "loops_per_sample": 1
+    },
+    "pipeline_50_hashes": {
+      "unit": "microseconds_per_operation",
+      "p50": 290.449,
+      "p95": 298.374,
+      "p99": 300.086,
+      "repeats": 21,
+      "loops_per_sample": 1
+    },
+    "commands_both": 50,
+    "application_round_trips": {
+      "sequential": 50,
+      "pipeline": 1
+    }
+  },
+  "live_login_trace_before": {
+    "counts": {
+      "writer-drain": 25569,
+      "redis:PING": 1,
+      "redis:EXISTS": 3,
+      "redis:HGET": 2309,
+      "redis:SCAN": 1890,
+      "redis:other": 38,
+      "redis:SET": 39,
+      "redis-watch:WATCH": 725,
+      "redis-watch:HGETALL": 3296,
+      "redis-pipeline": 1245,
+      "redis:HGETALL": 4161,
+      "redis:HSET": 1105,
+      "redis-watch:GET": 2630,
+      "redis-watch:SMEMBERS": 160,
+      "event-loop-lag": 2578,
+      "redis:GET": 1030,
+      "redis:KEYS": 66,
+      "redis:SADD": 7,
+      "packet:TaskDice": 3,
+      "password-executor": 17,
+      "redis-watch:EXISTS": 6,
+      "redis-watch:HGET": 3,
+      "redis:HMGET": 238,
+      "ClientLoadDelayStep.execute": 14,
+      "PlayerMapService._send_players_in_map": 28,
+      "PlayerMapService._send_npcs_in_map": 28,
+      "PlayerMapService._send_ground_items_in_map": 28,
+      "LoginSpawnHandler.spawn_player": 14,
+      "LoginSpawnHandler.send_map_data": 14,
+      "packet:TaskCreateAccount": 3,
+      "packet:TaskCapabilities": 9,
+      "packet:TaskMoveItem": 2,
+      "packet:TaskLogin": 11,
+      "packet:TaskPing": 468,
+      "packet:TaskWalk": 172,
+      "packet:TaskTalk": 16,
+      "packet:TaskWorldState": 4
+    },
+    "maximum_ms": {
+      "writer-drain": 0.44839099791715853,
+      "redis:PING": 1.1230420022911858,
+      "redis:EXISTS": 0.17599700004211627,
+      "redis:HGET": 10.096750997035997,
+      "redis:SCAN": 9.316463998402469,
+      "redis:other": 1.481146002333844,
+      "redis:SET": 0.4017249993921723,
+      "redis-watch:WATCH": 11.922014000447234,
+      "redis-watch:HGETALL": 3.318323000712553,
+      "redis-pipeline": 12.630498000362422,
+      "redis:HGETALL": 10.031798999989405,
+      "redis:HSET": 3.015270001924364,
+      "redis-watch:GET": 5.469661999086384,
+      "redis-watch:SMEMBERS": 0.09578800018061884,
+      "event-loop-lag": 2775.945290999516,
+      "redis:GET": 8.49097299942514,
+      "redis:KEYS": 7.961701998283388,
+      "redis:SADD": 0.04502299998421222,
+      "packet:TaskDice": 0.5832009992445819,
+      "password-executor": 67.41600800160086,
+      "redis-watch:EXISTS": 0.24221900093834847,
+      "redis-watch:HGET": 0.08836400229483843,
+      "redis:HMGET": 7.106286000635009,
+      "ClientLoadDelayStep.execute": 101.59309500158997,
+      "PlayerMapService._send_players_in_map": 11.076195998612093,
+      "PlayerMapService._send_npcs_in_map": 53.496347998589044,
+      "PlayerMapService._send_ground_items_in_map": 0.34638199940673076,
+      "LoginSpawnHandler.spawn_player": 166.2634979984432,
+      "LoginSpawnHandler.send_map_data": 483.5886020009639,
+      "packet:TaskCreateAccount": 784.911741000542,
+      "packet:TaskCapabilities": 2.404969000053825,
+      "packet:TaskMoveItem": 2.136490998964291,
+      "packet:TaskLogin": 690.8764489999157,
+      "packet:TaskPing": 0.4916220023005735,
+      "packet:TaskWalk": 12.054640999849653,
+      "packet:TaskTalk": 0.5961360002402216,
+      "packet:TaskWorldState": 2.151469001546502
+    },
+    "events": [
+      {
+        "stage": "event-loop-lag",
+        "packet": "background",
+        "started_monotonic": 30041.407534435002,
+        "elapsed_ms": 19.362471997737885
+      },
+      {
+        "stage": "event-loop-lag",
+        "packet": "background",
+        "started_monotonic": 30041.446901004,
+        "elapsed_ms": 1455.916504997731
+      },
+      {
+        "stage": "event-loop-lag",
+        "packet": "background",
+        "started_monotonic": 30042.922821867,
+        "elapsed_ms": 80.51594599965028
+      },
+      {
+        "stage": "event-loop-lag",
+        "packet": "background",
+        "started_monotonic": 30043.023340187,
+        "elapsed_ms": 2775.945290999516
+      },
+      {
+        "stage": "event-loop-lag",
+        "packet": "background",
+        "started_monotonic": 30045.819288123,
+        "elapsed_ms": 21.336091002012836
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.098447087,
+        "elapsed_ms": 56.79765800232417
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.099513183,
+        "elapsed_ms": 59.42979900282808
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.17649788,
+        "elapsed_ms": 62.87294300273061
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.179550811,
+        "elapsed_ms": 64.3625240008987
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.246051118,
+        "elapsed_ms": 100.11511400080053
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.247968954,
+        "elapsed_ms": 100.9017420001328
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.34922349,
+        "elapsed_ms": 10.666056001355173
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.346760583,
+        "elapsed_ms": 51.89031999907456
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.244901247,
+        "elapsed_ms": 155.83904999948572
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.359893403,
+        "elapsed_ms": 51.86385999695631
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.401169152,
+        "elapsed_ms": 10.729543999332236
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.247646386,
+        "elapsed_ms": 166.2634979984432
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.414316098,
+        "elapsed_ms": 10.553847001574468
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.411902663,
+        "elapsed_ms": 51.87371899955906
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.424872851,
+        "elapsed_ms": 52.121147000434576
+      },
+      {
+        "stage": "redis:GET",
+        "packet": "background",
+        "started_monotonic": 30047.842867944,
+        "elapsed_ms": 8.187258998077596
+      },
+      {
+        "stage": "redis:GET",
+        "packet": "background",
+        "started_monotonic": 30047.842688621,
+        "elapsed_ms": 8.49097299942514
+      },
+      {
+        "stage": "redis-watch:WATCH",
+        "packet": "background",
+        "started_monotonic": 30047.843050232,
+        "elapsed_ms": 11.922014000447234
+      },
+      {
+        "stage": "redis-watch:WATCH",
+        "packet": "background",
+        "started_monotonic": 30047.844029958,
+        "elapsed_ms": 10.99533600063296
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.845269126,
+        "elapsed_ms": 10.031798999989405
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.845755427,
+        "elapsed_ms": 9.7187000028498
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.84729968,
+        "elapsed_ms": 8.814382999844383
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.846918824,
+        "elapsed_ms": 9.31006199971307
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30047.846601867,
+        "elapsed_ms": 9.675468998466386
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30047.846199831,
+        "elapsed_ms": 10.096750997035997
+      },
+      {
+        "stage": "redis:HMGET",
+        "packet": "background",
+        "started_monotonic": 30047.849519356,
+        "elapsed_ms": 7.106286000635009
+      },
+      {
+        "stage": "redis:KEYS",
+        "packet": "background",
+        "started_monotonic": 30047.849199743,
+        "elapsed_ms": 7.505265999498079
+      },
+      {
+        "stage": "redis:KEYS",
+        "packet": "background",
+        "started_monotonic": 30047.848814459,
+        "elapsed_ms": 7.961701998283388
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30047.848450374,
+        "elapsed_ms": 8.424560001003556
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30047.848073004,
+        "elapsed_ms": 8.87945300200954
+      },
+      {
+        "stage": "redis:SCAN",
+        "packet": "background",
+        "started_monotonic": 30047.847719899,
+        "elapsed_ms": 9.316463998402469
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.850536231,
+        "elapsed_ms": 6.603333000384737
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30047.850112566,
+        "elapsed_ms": 7.128345998353325
+      },
+      {
+        "stage": "redis-pipeline",
+        "packet": "background",
+        "started_monotonic": 30047.844712423,
+        "elapsed_ms": 12.630498000362422
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.400790961,
+        "elapsed_ms": 470.36083299826714
+      },
+      {
+        "stage": "packet:TaskCreateAccount",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.096751463,
+        "elapsed_ms": 776.1985750003078
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.413956501,
+        "elapsed_ms": 468.4624139990774
+      },
+      {
+        "stage": "packet:TaskCreateAccount",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30047.098857117,
+        "elapsed_ms": 784.911741000542
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.125374708,
+        "elapsed_ms": 40.36342799736303
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.170622502,
+        "elapsed_ms": 100.92900200106669
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.272186271,
+        "elapsed_ms": 20.340964001661632
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.170018151,
+        "elapsed_ms": 124.13079000180005
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.29479003,
+        "elapsed_ms": 20.511049002379877
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.294258114,
+        "elapsed_ms": 425.2380119978625
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.12491188,
+        "elapsed_ms": 595.9140409977408
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.873372227,
+        "elapsed_ms": 44.78248099985649
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.922365164,
+        "elapsed_ms": 101.04431600120733
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30049.024111101,
+        "elapsed_ms": 10.935425001662225
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30049.035055744,
+        "elapsed_ms": 21.052042000519577
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.921973829,
+        "elapsed_ms": 137.06316800016793
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30049.059618365,
+        "elapsed_ms": 10.53145599871641
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30049.070158537,
+        "elapsed_ms": 21.3608550002391
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30049.059120542,
+        "elapsed_ms": 458.4259050025139
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30048.872920179,
+        "elapsed_ms": 646.047122998425
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30049.904403147,
+        "elapsed_ms": 46.517026999936206
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30049.965498033,
+        "elapsed_ms": 45.22437999912654
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30050.015328193,
+        "elapsed_ms": 100.13054099908913
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30050.116109511,
+        "elapsed_ms": 51.22256200047559
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30050.014770849,
+        "elapsed_ms": 154.6884780000255
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30050.170087562,
+        "elapsed_ms": 51.54210299951956
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30050.169554243,
+        "elapsed_ms": 467.9527690022951
+      },
+      {
+        "stage": "packet:TaskCreateAccount",
+        "packet": "TaskCreateAccount",
+        "started_monotonic": 30049.903326571,
+        "elapsed_ms": 735.398709999572
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.044656326,
+        "elapsed_ms": 38.035361998481676
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.089674515,
+        "elapsed_ms": 39.13573099998757
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.13462102,
+        "elapsed_ms": 39.18977099965559
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.089191229,
+        "elapsed_ms": 100.84116900179652
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.190444282,
+        "elapsed_ms": 20.60253899981035
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.088267646,
+        "elapsed_ms": 124.73595300252782
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.214188495,
+        "elapsed_ms": 20.396127001731656
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.134693805,
+        "elapsed_ms": 100.03162800057908
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.235148017,
+        "elapsed_ms": 11.076195998612093
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.246232779,
+        "elapsed_ms": 20.658131998061435
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.13332686,
+        "elapsed_ms": 137.2406980008236
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.178966,
+        "elapsed_ms": 100.68406800201046
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.271337425,
+        "elapsed_ms": 10.88605399854714
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.282228789,
+        "elapsed_ms": 20.808790999581106
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.279983075,
+        "elapsed_ms": 53.496347998589044
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.178164614,
+        "elapsed_ms": 157.18074799951864
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.336218862,
+        "elapsed_ms": 52.680503998999484
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30051.415750451,
+        "elapsed_ms": 7.769936000840971
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.21332231,
+        "elapsed_ms": 435.98567899971385
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.044108531,
+        "elapsed_ms": 606.0031889974198
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.270696687,
+        "elapsed_ms": 447.5856680001016
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.089389957,
+        "elapsed_ms": 629.7259130005841
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.335502564,
+        "elapsed_ms": 472.8053769977123
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30051.134100575,
+        "elapsed_ms": 675.4645170003641
+      },
+      {
+        "stage": "packet:TaskWalk",
+        "packet": "TaskWalk",
+        "started_monotonic": 30057.627163034,
+        "elapsed_ms": 5.514343996765092
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30060.728362032,
+        "elapsed_ms": 5.294395999953849
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30060.728480551,
+        "elapsed_ms": 5.614811001578346
+      },
+      {
+        "stage": "redis:HGET",
+        "packet": "background",
+        "started_monotonic": 30060.728594913,
+        "elapsed_ms": 5.595345002802787
+      },
+      {
+        "stage": "redis-watch:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728777321,
+        "elapsed_ms": 5.469661999086384
+      },
+      {
+        "stage": "redis-watch:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728818979,
+        "elapsed_ms": 5.467496997880517
+      },
+      {
+        "stage": "redis-watch:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728853553,
+        "elapsed_ms": 5.466455000714632
+      },
+      {
+        "stage": "redis:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728896422,
+        "elapsed_ms": 5.456958002469037
+      },
+      {
+        "stage": "redis:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728948429,
+        "elapsed_ms": 5.454502999782562
+      },
+      {
+        "stage": "redis-pipeline",
+        "packet": "background",
+        "started_monotonic": 30060.725497751,
+        "elapsed_ms": 8.95957200191333
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30060.726249515,
+        "elapsed_ms": 8.364368000911782
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30060.726233726,
+        "elapsed_ms": 8.508514998538885
+      },
+      {
+        "stage": "redis:GET",
+        "packet": "background",
+        "started_monotonic": 30060.728998111,
+        "elapsed_ms": 5.858623000676744
+      },
+      {
+        "stage": "redis:HGETALL",
+        "packet": "background",
+        "started_monotonic": 30060.729471268,
+        "elapsed_ms": 5.662879997544223
+      },
+      {
+        "stage": "packet:TaskWalk",
+        "packet": "TaskWalk",
+        "started_monotonic": 30066.415423044,
+        "elapsed_ms": 9.503469998890068
+      },
+      {
+        "stage": "packet:TaskWalk",
+        "packet": "TaskWalk",
+        "started_monotonic": 30075.201647071,
+        "elapsed_ms": 12.054640999849653
+      },
+      {
+        "stage": "redis:HMGET",
+        "packet": "background",
+        "started_monotonic": 30078.818643966,
+        "elapsed_ms": 5.016852002881933
+      },
+      {
+        "stage": "redis:KEYS",
+        "packet": "background",
+        "started_monotonic": 30078.818602079,
+        "elapsed_ms": 5.136664000019664
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.447567227,
+        "elapsed_ms": 43.15886200129171
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.495728855,
+        "elapsed_ms": 100.13335799885681
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.596503192,
+        "elapsed_ms": 20.396646999870427
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.495333802,
+        "elapsed_ms": 123.54865300221718
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.619601699,
+        "elapsed_ms": 20.35218500168412
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.618981789,
+        "elapsed_ms": 428.8565489987377
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30081.446957076,
+        "elapsed_ms": 601.7334919997666
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.186025353,
+        "elapsed_ms": 46.084546000201954
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.236588573,
+        "elapsed_ms": 101.59309500158997
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.338828748,
+        "elapsed_ms": 10.762794998299796
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.34960038,
+        "elapsed_ms": 20.444055000552908
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.236132016,
+        "elapsed_ms": 138.76597799753654
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.375553339,
+        "elapsed_ms": 10.721098999056267
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.386282843,
+        "elapsed_ms": 21.356688001105795
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.374987991,
+        "elapsed_ms": 456.61570800075424
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30082.185540053,
+        "elapsed_ms": 646.8283340000198
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.562711725,
+        "elapsed_ms": 56.46418199830805
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.561782733,
+        "elapsed_ms": 67.41600800160086
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.625618773,
+        "elapsed_ms": 100.60998300104984
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.632683492,
+        "elapsed_ms": 100.18000600030064
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.733168523,
+        "elapsed_ms": 10.702604002290173
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.72676473,
+        "elapsed_ms": 21.20320299945888
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.624726278,
+        "elapsed_ms": 126.07214299714542
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.751393655,
+        "elapsed_ms": 10.59674700081814
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.743875225,
+        "elapsed_ms": 21.30543300154386
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.632140996,
+        "elapsed_ms": 135.56328100094106
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.768142099,
+        "elapsed_ms": 10.605854000459658
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.761995953,
+        "elapsed_ms": 21.59225500145112
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.778750167,
+        "elapsed_ms": 21.228469999186927
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.750866838,
+        "elapsed_ms": 478.532017001271
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.561566362,
+        "elapsed_ms": 668.5710019992257
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.767758758,
+        "elapsed_ms": 483.5886020009639
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30096.561129682,
+        "elapsed_ms": 690.8764489999157
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.571097606,
+        "elapsed_ms": 27.94012400045176
+      },
+      {
+        "stage": "password-executor",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.602670847,
+        "elapsed_ms": 27.346823997504544
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.603349675,
+        "elapsed_ms": 100.27675600213115
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.703979075,
+        "elapsed_ms": 20.34776700020302
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.602929066,
+        "elapsed_ms": 122.48963999809348
+      },
+      {
+        "stage": "ClientLoadDelayStep.execute",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.633326586,
+        "elapsed_ms": 100.68189699813956
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.734267623,
+        "elapsed_ms": 10.506550999707542
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.72585783,
+        "elapsed_ms": 21.01960300205974
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.744778462,
+        "elapsed_ms": 21.300873999280157
+      },
+      {
+        "stage": "LoginSpawnHandler.spawn_player",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.632962261,
+        "elapsed_ms": 134.97618200199213
+      },
+      {
+        "stage": "PlayerMapService._send_players_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.76831957,
+        "elapsed_ms": 11.033748000045307
+      },
+      {
+        "stage": "PlayerMapService._send_npcs_in_map",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.77935461,
+        "elapsed_ms": 21.424763999675633
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.725469621,
+        "elapsed_ms": 391.0909400001401
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.570758688,
+        "elapsed_ms": 546.2753909996536
+      },
+      {
+        "stage": "LoginSpawnHandler.send_map_data",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.767980681,
+        "elapsed_ms": 402.3973539988219
+      },
+      {
+        "stage": "packet:TaskLogin",
+        "packet": "TaskLogin",
+        "started_monotonic": 30097.602333261,
+        "elapsed_ms": 568.4910220006714
+      }
+    ],
+    "threshold_ms": 5.0,
+    "dropped_events": 0
+  },
+  "live_after": {
+    "benchmark.json": {
+      "version": "1.0.0rc3",
+      "started_at": "2026-10-20T21:19:56.232870+00:00",
+      "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+      "cpu_count": 12,
+      "python": "3.14.0",
+      "connections": 2,
+      "slow_readers": 1,
+      "seconds": 30.242415415999858,
+      "login_ms": {
+        "p50": 56.70476900195354,
+        "p95": 59.066096000606194,
+        "max": 59.066096000606194
+      },
+      "rtt_ms": {
+        "samples": 172,
+        "sample_limit": 100000,
+        "p50": 0.6618680017709266,
+        "p95": 1.1174120008945465,
+        "p99": 1.4159050006128382,
+        "max": 1.5470389989786781
+      },
+      "errors": [],
+      "packets": {
+        "0": 2,
+        "28": 2,
+        "21": 4,
+        "100": 2,
+        "45": 2,
+        "60": 2,
+        "49": 6,
+        "39": 2,
+        "22": 2,
+        "29": 10,
+        "37": 676,
+        "66": 4,
+        "44": 2,
+        "99": 2,
+        "24": 40,
+        "88": 174,
+        "15": 290,
+        "32": 172,
+        "34": 172,
+        "18": 2,
+        "19": 2
+      },
+      "server_process": [
+        {
+          "time": 30721.366266641,
+          "cpu_seconds": 12.49,
+          "rss_bytes": 114774016
+        },
+        {
+          "time": 30721.867498631,
+          "cpu_seconds": 12.67,
+          "rss_bytes": 114814976
+        },
+        {
+          "time": 30722.369075651,
+          "cpu_seconds": 12.69,
+          "rss_bytes": 114814976
+        },
+        {
+          "time": 30722.87006447,
+          "cpu_seconds": 12.71,
+          "rss_bytes": 114814976
+        },
+        {
+          "time": 30723.370911176,
+          "cpu_seconds": 12.74,
+          "rss_bytes": 114814976
+        },
+        {
+          "time": 30723.871766708,
+          "cpu_seconds": 12.76,
+          "rss_bytes": 114946048
+        },
+        {
+          "time": 30724.372940511,
+          "cpu_seconds": 12.78,
+          "rss_bytes": 114946048
+        },
+        {
+          "time": 30724.873883505,
+          "cpu_seconds": 12.8,
+          "rss_bytes": 114946048
+        },
+        {
+          "time": 30725.375036409,
+          "cpu_seconds": 12.83,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30725.875504744,
+          "cpu_seconds": 12.85,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30726.377123481,
+          "cpu_seconds": 12.88,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30726.877763524,
+          "cpu_seconds": 12.9,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30727.378138907,
+          "cpu_seconds": 12.92,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30727.879389472,
+          "cpu_seconds": 12.94,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30728.379976366,
+          "cpu_seconds": 12.96,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30728.882035521,
+          "cpu_seconds": 12.99,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30729.383855161,
+          "cpu_seconds": 13.01,
+          "rss_bytes": 115077120
+        },
+        {
+          "time": 30729.884928297,
+          "cpu_seconds": 13.04,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30730.385690778,
+          "cpu_seconds": 13.06,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30730.88647594,
+          "cpu_seconds": 13.08,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30731.387436468,
+          "cpu_seconds": 13.09,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30731.888357863,
+          "cpu_seconds": 13.12,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30732.388942573,
+          "cpu_seconds": 13.13,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30732.889155054,
+          "cpu_seconds": 13.15,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30733.390192154,
+          "cpu_seconds": 13.17,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30733.891109812,
+          "cpu_seconds": 13.2,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30734.391999909,
+          "cpu_seconds": 13.22,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30734.892688453,
+          "cpu_seconds": 13.24,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30735.393221718,
+          "cpu_seconds": 13.26,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30735.894082822,
+          "cpu_seconds": 13.29,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30736.394588146,
+          "cpu_seconds": 13.31,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30736.895170072,
+          "cpu_seconds": 13.34,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30737.396175695,
+          "cpu_seconds": 13.36,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30737.897334811,
+          "cpu_seconds": 13.38,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30738.397951421,
+          "cpu_seconds": 13.4,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30738.898758184,
+          "cpu_seconds": 13.42,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30739.3991401,
+          "cpu_seconds": 13.44,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30739.899731704,
+          "cpu_seconds": 13.47,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30740.400379883,
+          "cpu_seconds": 13.49,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30740.901156199,
+          "cpu_seconds": 13.51,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30741.402170397,
+          "cpu_seconds": 13.54,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30741.904333165,
+          "cpu_seconds": 13.56,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30742.405078785,
+          "cpu_seconds": 13.58,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30742.905977168,
+          "cpu_seconds": 13.61,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30743.406720744,
+          "cpu_seconds": 13.63,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30743.907046245,
+          "cpu_seconds": 13.65,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30744.407765476,
+          "cpu_seconds": 13.68,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30744.908506949,
+          "cpu_seconds": 13.7,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30745.409356441,
+          "cpu_seconds": 13.72,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30745.909768543,
+          "cpu_seconds": 13.74,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30746.410653161,
+          "cpu_seconds": 13.76,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30746.911584095,
+          "cpu_seconds": 13.79,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30747.412353168,
+          "cpu_seconds": 13.81,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30747.913141137,
+          "cpu_seconds": 13.83,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30748.413800748,
+          "cpu_seconds": 13.84,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30748.914734568,
+          "cpu_seconds": 13.86,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30749.417017198,
+          "cpu_seconds": 13.89,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30749.918063446,
+          "cpu_seconds": 13.91,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30750.419173322,
+          "cpu_seconds": 13.93,
+          "rss_bytes": 115208192
+        },
+        {
+          "time": 30750.921239772,
+          "cpu_seconds": 13.96,
+          "rss_bytes": 115208192
+        }
+      ],
+      "tick_before": {
+        "total_ticks": 3,
+        "total_time_ms": 35.10322199872462,
+        "max_tick_time_ms": 16.971389999525854,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 18.09138699900359,
+            "count": 5,
+            "max_time_ms": 11.332784000842366
+          },
+          "NPCPoison": {
+            "total_time_ms": 0.029554994398495182,
+            "count": 5,
+            "max_time_ms": 0.011321000783937052
+          },
+          "NPCRewards": {
+            "total_time_ms": 5.48027200056822,
+            "count": 5,
+            "max_time_ms": 5.477216000144836
+          },
+          "SummonExpiry": {
+            "total_time_ms": 9.349817002657801,
+            "count": 5,
+            "max_time_ms": 9.343605997855775
+          },
+          "PetFollow": {
+            "total_time_ms": 9.24786800169386,
+            "count": 5,
+            "max_time_ms": 9.242889002052834
+          },
+          "MorphExpiry": {
+            "total_time_ms": 5.142966998391785,
+            "count": 5,
+            "max_time_ms": 5.138988999533467
+          },
+          "Poison": {
+            "total_time_ms": 15.192211998510174,
+            "count": 5,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 32.48366499974509,
+            "count": 5,
+            "max_time_ms": 9.284766998462146
+          },
+          "StaminaRegen": {
+            "total_time_ms": 24.677871995663736,
+            "count": 5,
+            "max_time_ms": 8.517193997249706
+          },
+          "NPCAI": {
+            "total_time_ms": 13.137841004208894,
+            "count": 3,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 25.025383994943695,
+            "count": 5,
+            "max_time_ms": 7.586506999359699
+          },
+          "Lifecycle": {
+            "total_time_ms": 39.551650999783305,
+            "count": 5,
+            "max_time_ms": 11.493062000226928
+          },
+          "Meditation": {
+            "total_time_ms": 60.24997199710924,
+            "count": 5,
+            "max_time_ms": 16.55467700038571
+          }
+        }
+      },
+      "tick_after": {
+        "total_ticks": 62,
+        "total_time_ms": 998.8104019903403,
+        "max_tick_time_ms": 24.346717000298668,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 501.08613102929667,
+            "count": 182,
+            "max_time_ms": 11.332784000842366
+          },
+          "NPCPoison": {
+            "total_time_ms": 0.6467329840234015,
+            "count": 182,
+            "max_time_ms": 0.01666100069996901
+          },
+          "NPCRewards": {
+            "total_time_ms": 28.494117028458277,
+            "count": 182,
+            "max_time_ms": 5.710289002308855
+          },
+          "SummonExpiry": {
+            "total_time_ms": 73.86432898783823,
+            "count": 182,
+            "max_time_ms": 11.26993799698539
+          },
+          "PetFollow": {
+            "total_time_ms": 159.56639003707096,
+            "count": 182,
+            "max_time_ms": 12.254884997673798
+          },
+          "MorphExpiry": {
+            "total_time_ms": 46.45821101075853,
+            "count": 182,
+            "max_time_ms": 7.3435580015939195
+          },
+          "Poison": {
+            "total_time_ms": 270.38320701467455,
+            "count": 182,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 1551.984662994073,
+            "count": 182,
+            "max_time_ms": 10.663323002518155
+          },
+          "StaminaRegen": {
+            "total_time_ms": 1082.135611999547,
+            "count": 182,
+            "max_time_ms": 8.517193997249706
+          },
+          "NPCAI": {
+            "total_time_ms": 324.51385000968,
+            "count": 62,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 1099.3750659763464,
+            "count": 182,
+            "max_time_ms": 8.029008000448812
+          },
+          "Lifecycle": {
+            "total_time_ms": 1984.9064920017554,
+            "count": 182,
+            "max_time_ms": 14.58108799852198
+          },
+          "Meditation": {
+            "total_time_ms": 2790.093513991451,
+            "count": 182,
+            "max_time_ms": 23.771150001266506
+          }
+        }
+      },
+      "budgets": {
+        "rtt_p95_ms": 1000.0,
+        "login_ms": 5000.0
+      },
+      "passed": true,
+      "outliers_ms": [],
+      "started_monotonic": 30721.366045721,
+      "login_first_stats_ms": {
+        "p50": 47.22645199944964,
+        "p95": 47.60680800245609,
+        "max": 47.60680800245609
+      },
+      "login_readiness": "PONG ordered after the complete LOGIN handler; first stats are reported separately",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 5 9600X 6-Core Processor",
+        "ram_bytes": 32197324800
+      },
+      "dataset": {
+        "full-fixture.json": "95c6ef5129420fc36b2bcea8fc590b8af1ed0f390eb851030c668ba635a39608",
+        "server-source.json": "30e2d89ce56d70097e77c87dd2ad5e7ce6a27bae0b6d177945640226e4a29924",
+        "client-source.json": "6b10b6dd6c4182d2dd1ff6f49d6954ee4b39c8817ea66bdf9cb57d69f6dfdfe2"
+      }
+    },
+    "benchmark-no-slow.json": {
+      "version": "1.0.0rc3",
+      "started_at": "2026-10-20T21:20:28.622144+00:00",
+      "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+      "cpu_count": 12,
+      "python": "3.14.0",
+      "connections": 2,
+      "slow_readers": 0,
+      "seconds": 30.24001451499862,
+      "login_ms": {
+        "p50": 58.32938199819182,
+        "p95": 63.44865299979574,
+        "max": 63.44865299979574
+      },
+      "rtt_ms": {
+        "samples": 172,
+        "sample_limit": 100000,
+        "p50": 0.6852909973531496,
+        "p95": 1.3026560009166133,
+        "p99": 2.234333001979394,
+        "max": 2.321384999959264
+      },
+      "errors": [],
+      "packets": {
+        "0": 2,
+        "28": 2,
+        "21": 4,
+        "100": 2,
+        "45": 2,
+        "60": 2,
+        "49": 6,
+        "39": 2,
+        "22": 2,
+        "29": 10,
+        "37": 676,
+        "66": 4,
+        "44": 2,
+        "99": 2,
+        "24": 40,
+        "88": 174,
+        "15": 290,
+        "32": 172,
+        "34": 172,
+        "18": 2,
+        "19": 2
+      },
+      "server_process": [
+        {
+          "time": 30753.757830217,
+          "cpu_seconds": 14.9,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30754.259131949,
+          "cpu_seconds": 14.92,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30754.760184859,
+          "cpu_seconds": 14.95,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30755.260589107,
+          "cpu_seconds": 14.97,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30755.761543114,
+          "cpu_seconds": 14.98,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30756.262156069,
+          "cpu_seconds": 15.0,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30756.762502229,
+          "cpu_seconds": 15.02,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30757.263987011,
+          "cpu_seconds": 15.03,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30757.765267574,
+          "cpu_seconds": 15.05,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30758.26641488,
+          "cpu_seconds": 15.06,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30758.766932138,
+          "cpu_seconds": 15.1,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30759.268569993,
+          "cpu_seconds": 15.11,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30759.769597938,
+          "cpu_seconds": 15.13,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30760.270761764,
+          "cpu_seconds": 15.15,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30760.771021775,
+          "cpu_seconds": 15.17,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30761.27204403,
+          "cpu_seconds": 15.18,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30761.77292421,
+          "cpu_seconds": 15.2,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30762.273675743,
+          "cpu_seconds": 15.21,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30762.775174651,
+          "cpu_seconds": 15.22,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30763.276126595,
+          "cpu_seconds": 15.24,
+          "rss_bytes": 114970624
+        },
+        {
+          "time": 30763.777196217,
+          "cpu_seconds": 15.26,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30764.2785088,
+          "cpu_seconds": 15.27,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30764.77941,
+          "cpu_seconds": 15.29,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30765.281140247,
+          "cpu_seconds": 15.31,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30765.781661593,
+          "cpu_seconds": 15.33,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30766.282695078,
+          "cpu_seconds": 15.35,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30766.783255947,
+          "cpu_seconds": 15.37,
+          "rss_bytes": 115101696
+        },
+        {
+          "time": 30767.284129547,
+          "cpu_seconds": 15.39,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30767.78504898,
+          "cpu_seconds": 15.41,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30768.285514262,
+          "cpu_seconds": 15.42,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30768.786179575,
+          "cpu_seconds": 15.44,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30769.287091645,
+          "cpu_seconds": 15.46,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30769.78797891,
+          "cpu_seconds": 15.47,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30770.290921516,
+          "cpu_seconds": 15.5,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30770.791719375,
+          "cpu_seconds": 15.52,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30771.292904592,
+          "cpu_seconds": 15.54,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30771.793900909,
+          "cpu_seconds": 15.56,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30772.294500961,
+          "cpu_seconds": 15.57,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30772.795689054,
+          "cpu_seconds": 15.59,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30773.296751703,
+          "cpu_seconds": 15.61,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30773.797712064,
+          "cpu_seconds": 15.63,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30774.299401105,
+          "cpu_seconds": 15.64,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30774.800631346,
+          "cpu_seconds": 15.66,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30775.302211055,
+          "cpu_seconds": 15.68,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30775.8031847,
+          "cpu_seconds": 15.7,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30776.304114324,
+          "cpu_seconds": 15.72,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30776.804487546,
+          "cpu_seconds": 15.73,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30777.305403814,
+          "cpu_seconds": 15.75,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30777.806686984,
+          "cpu_seconds": 15.82,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30778.307896216,
+          "cpu_seconds": 15.83,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30778.809133099,
+          "cpu_seconds": 15.85,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30779.309975591,
+          "cpu_seconds": 15.88,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30779.811087503,
+          "cpu_seconds": 15.89,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30780.311912193,
+          "cpu_seconds": 15.91,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30780.812805168,
+          "cpu_seconds": 15.93,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30781.314014691,
+          "cpu_seconds": 15.95,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30781.815367951,
+          "cpu_seconds": 15.96,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30782.315737216,
+          "cpu_seconds": 15.98,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30782.816549642,
+          "cpu_seconds": 15.99,
+          "rss_bytes": 115232768
+        },
+        {
+          "time": 30783.317742665,
+          "cpu_seconds": 16.02,
+          "rss_bytes": 115232768
+        }
+      ],
+      "tick_before": {
+        "total_ticks": 64,
+        "total_time_ms": 1017.5982589898922,
+        "max_tick_time_ms": 24.346717000298668,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 504.62564302870305,
+            "count": 185,
+            "max_time_ms": 11.332784000842366
+          },
+          "NPCPoison": {
+            "total_time_ms": 0.6670399816357531,
+            "count": 185,
+            "max_time_ms": 0.01666100069996901
+          },
+          "NPCRewards": {
+            "total_time_ms": 28.496821028966224,
+            "count": 185,
+            "max_time_ms": 5.710289002308855
+          },
+          "SummonExpiry": {
+            "total_time_ms": 73.86886699168826,
+            "count": 185,
+            "max_time_ms": 11.26993799698539
+          },
+          "PetFollow": {
+            "total_time_ms": 166.0068930395937,
+            "count": 185,
+            "max_time_ms": 12.254884997673798
+          },
+          "MorphExpiry": {
+            "total_time_ms": 46.46221901202807,
+            "count": 185,
+            "max_time_ms": 7.3435580015939195
+          },
+          "Poison": {
+            "total_time_ms": 273.8946670106088,
+            "count": 185,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 1569.437725989701,
+            "count": 185,
+            "max_time_ms": 10.663323002518155
+          },
+          "StaminaRegen": {
+            "total_time_ms": 1091.268306998245,
+            "count": 185,
+            "max_time_ms": 8.517193997249706
+          },
+          "NPCAI": {
+            "total_time_ms": 324.531594011205,
+            "count": 64,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 1109.9164429797383,
+            "count": 185,
+            "max_time_ms": 8.029008000448812
+          },
+          "Lifecycle": {
+            "total_time_ms": 2006.5927360046771,
+            "count": 185,
+            "max_time_ms": 14.58108799852198
+          },
+          "Meditation": {
+            "total_time_ms": 2819.3671649860335,
+            "count": 185,
+            "max_time_ms": 23.771150001266506
+          }
+        }
+      },
+      "tick_after": {
+        "total_ticks": 123,
+        "total_time_ms": 1721.2312359806674,
+        "max_tick_time_ms": 24.346717000298668,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 637.3976180366299,
+            "count": 303,
+            "max_time_ms": 11.332784000842366
+          },
+          "NPCPoison": {
+            "total_time_ms": 1.2092669603589457,
+            "count": 303,
+            "max_time_ms": 0.01666100069996901
+          },
+          "NPCRewards": {
+            "total_time_ms": 46.30799902588478,
+            "count": 303,
+            "max_time_ms": 5.710289002308855
+          },
+          "SummonExpiry": {
+            "total_time_ms": 121.46630800998537,
+            "count": 303,
+            "max_time_ms": 11.26993799698539
+          },
+          "PetFollow": {
+            "total_time_ms": 283.0030000550323,
+            "count": 303,
+            "max_time_ms": 12.254884997673798
+          },
+          "MorphExpiry": {
+            "total_time_ms": 63.4068809740711,
+            "count": 303,
+            "max_time_ms": 7.3435580015939195
+          },
+          "Poison": {
+            "total_time_ms": 402.28204203231144,
+            "count": 303,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 2306.819019962859,
+            "count": 303,
+            "max_time_ms": 10.663323002518155
+          },
+          "StaminaRegen": {
+            "total_time_ms": 1656.7803340185492,
+            "count": 303,
+            "max_time_ms": 8.517193997249706
+          },
+          "NPCAI": {
+            "total_time_ms": 324.99630601887475,
+            "count": 123,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 1616.2614410059177,
+            "count": 303,
+            "max_time_ms": 8.029008000448812
+          },
+          "Lifecycle": {
+            "total_time_ms": 3010.1695020348416,
+            "count": 303,
+            "max_time_ms": 14.58108799852198
+          },
+          "Meditation": {
+            "total_time_ms": 4154.645386977791,
+            "count": 303,
+            "max_time_ms": 23.771150001266506
+          }
+        }
+      },
+      "budgets": {
+        "rtt_p95_ms": 1000.0,
+        "login_ms": 5000.0
+      },
+      "passed": true,
+      "outliers_ms": [],
+      "started_monotonic": 30753.757614497,
+      "login_first_stats_ms": {
+        "p50": 47.96315899875481,
+        "p95": 50.780101999407634,
+        "max": 50.780101999407634
+      },
+      "login_readiness": "PONG ordered after the complete LOGIN handler; first stats are reported separately",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 5 9600X 6-Core Processor",
+        "ram_bytes": 32197324800
+      },
+      "dataset": {
+        "full-fixture.json": "95c6ef5129420fc36b2bcea8fc590b8af1ed0f390eb851030c668ba635a39608",
+        "server-source.json": "30e2d89ce56d70097e77c87dd2ad5e7ce6a27bae0b6d177945640226e4a29924",
+        "client-source.json": "6b10b6dd6c4182d2dd1ff6f49d6954ee4b39c8817ea66bdf9cb57d69f6dfdfe2"
+      }
+    },
+    "benchmark-distributed.json": {
+      "version": "1.0.0rc3",
+      "started_at": "2026-10-20T21:21:01.970130+00:00",
+      "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+      "cpu_count": 12,
+      "python": "3.14.0",
+      "connections": 2,
+      "slow_readers": 1,
+      "seconds": 30.24473926400242,
+      "login_ms": {
+        "p50": 55.88518899821793,
+        "p95": 57.69209999925806,
+        "max": 57.69209999925806
+      },
+      "rtt_ms": {
+        "samples": 172,
+        "sample_limit": 100000,
+        "p50": 0.6845789976068772,
+        "p95": 1.4779609991819598,
+        "p99": 2.2709610020683613,
+        "max": 2.5652869990153704
+      },
+      "errors": [],
+      "packets": {
+        "0": 2,
+        "28": 2,
+        "21": 4,
+        "100": 2,
+        "45": 2,
+        "60": 4,
+        "49": 6,
+        "39": 2,
+        "22": 2,
+        "29": 12,
+        "35": 2,
+        "37": 684,
+        "66": 3,
+        "44": 2,
+        "99": 2,
+        "24": 24,
+        "88": 174,
+        "15": 288,
+        "18": 2,
+        "19": 2,
+        "32": 14,
+        "34": 14
+      },
+      "server_process": [
+        {
+          "time": 30787.101030153,
+          "cpu_seconds": 17.25,
+          "rss_bytes": 115736576
+        },
+        {
+          "time": 30787.602562074,
+          "cpu_seconds": 17.42,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30788.104007375,
+          "cpu_seconds": 17.44,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30788.604623267,
+          "cpu_seconds": 17.46,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30789.105667264,
+          "cpu_seconds": 17.48,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30789.606160329,
+          "cpu_seconds": 17.5,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30790.107097347,
+          "cpu_seconds": 17.53,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30790.608987523,
+          "cpu_seconds": 17.55,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30791.110097933,
+          "cpu_seconds": 17.57,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30791.610416804,
+          "cpu_seconds": 17.59,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30792.111073954,
+          "cpu_seconds": 17.62,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30792.613043787,
+          "cpu_seconds": 17.64,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30793.113887994,
+          "cpu_seconds": 17.67,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30793.616045856,
+          "cpu_seconds": 17.69,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30794.117486819,
+          "cpu_seconds": 17.71,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30794.617952443,
+          "cpu_seconds": 17.73,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30795.119170984,
+          "cpu_seconds": 17.73,
+          "rss_bytes": 115904512
+        },
+        {
+          "time": 30795.620548398,
+          "cpu_seconds": 17.76,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30796.121175702,
+          "cpu_seconds": 17.78,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30796.621721155,
+          "cpu_seconds": 17.8,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30797.122180477,
+          "cpu_seconds": 17.82,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30797.623168971,
+          "cpu_seconds": 17.84,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30798.125204588,
+          "cpu_seconds": 17.88,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30798.626328072,
+          "cpu_seconds": 17.9,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30799.127437611,
+          "cpu_seconds": 17.92,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30799.628718447,
+          "cpu_seconds": 17.94,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30800.129249974,
+          "cpu_seconds": 17.96,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30800.630554194,
+          "cpu_seconds": 17.99,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30801.131157674,
+          "cpu_seconds": 18.01,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30801.632119129,
+          "cpu_seconds": 18.03,
+          "rss_bytes": 116035584
+        },
+        {
+          "time": 30802.133044215,
+          "cpu_seconds": 18.05,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30802.633653958,
+          "cpu_seconds": 18.07,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30803.134027662,
+          "cpu_seconds": 18.09,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30803.634687337,
+          "cpu_seconds": 18.12,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30804.13571295,
+          "cpu_seconds": 18.14,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30804.63611638,
+          "cpu_seconds": 18.17,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30805.137358074,
+          "cpu_seconds": 18.19,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30805.63815865,
+          "cpu_seconds": 18.2,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30806.139871328,
+          "cpu_seconds": 18.23,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30806.641374788,
+          "cpu_seconds": 18.26,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30807.142123628,
+          "cpu_seconds": 18.28,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30807.64250664,
+          "cpu_seconds": 18.31,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30808.143248598,
+          "cpu_seconds": 18.33,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30808.644754672,
+          "cpu_seconds": 18.35,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30809.146960104,
+          "cpu_seconds": 18.36,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30809.647671856,
+          "cpu_seconds": 18.39,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30810.148317505,
+          "cpu_seconds": 18.41,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30810.64954306,
+          "cpu_seconds": 18.42,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30811.151555333,
+          "cpu_seconds": 18.44,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30811.653599746,
+          "cpu_seconds": 18.46,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30812.153915844,
+          "cpu_seconds": 18.48,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30812.65516892,
+          "cpu_seconds": 18.5,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30813.156271176,
+          "cpu_seconds": 18.54,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30813.657416622,
+          "cpu_seconds": 18.56,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30814.157994937,
+          "cpu_seconds": 18.58,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30814.65911699,
+          "cpu_seconds": 18.6,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30815.160554257,
+          "cpu_seconds": 18.62,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30815.661801923,
+          "cpu_seconds": 18.64,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30816.163149535,
+          "cpu_seconds": 18.66,
+          "rss_bytes": 116166656
+        },
+        {
+          "time": 30816.66340462,
+          "cpu_seconds": 18.68,
+          "rss_bytes": 116166656
+        }
+      ],
+      "tick_before": {
+        "total_ticks": 126,
+        "total_time_ms": 1752.756222980679,
+        "max_tick_time_ms": 24.346717000298668,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 649.5363170361088,
+            "count": 308,
+            "max_time_ms": 11.332784000842366
+          },
+          "NPCPoison": {
+            "total_time_ms": 1.2363059577182867,
+            "count": 308,
+            "max_time_ms": 0.01666100069996901
+          },
+          "NPCRewards": {
+            "total_time_ms": 50.1439720246708,
+            "count": 308,
+            "max_time_ms": 5.710289002308855
+          },
+          "SummonExpiry": {
+            "total_time_ms": 132.39306000832585,
+            "count": 308,
+            "max_time_ms": 11.26993799698539
+          },
+          "PetFollow": {
+            "total_time_ms": 293.1721280619968,
+            "count": 308,
+            "max_time_ms": 12.254884997673798
+          },
+          "MorphExpiry": {
+            "total_time_ms": 66.9606209739868,
+            "count": 308,
+            "max_time_ms": 7.3435580015939195
+          },
+          "Poison": {
+            "total_time_ms": 407.16580003208946,
+            "count": 308,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 2341.5134549650247,
+            "count": 308,
+            "max_time_ms": 10.663323002518155
+          },
+          "StaminaRegen": {
+            "total_time_ms": 1674.8541000197292,
+            "count": 308,
+            "max_time_ms": 8.517193997249706
+          },
+          "NPCAI": {
+            "total_time_ms": 329.19900902197696,
+            "count": 126,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 1639.1816130053485,
+            "count": 308,
+            "max_time_ms": 8.029008000448812
+          },
+          "Lifecycle": {
+            "total_time_ms": 3054.8960390406137,
+            "count": 308,
+            "max_time_ms": 14.58108799852198
+          },
+          "Meditation": {
+            "total_time_ms": 4210.0879549798265,
+            "count": 308,
+            "max_time_ms": 23.771150001266506
+          }
+        }
+      },
+      "tick_after": {
+        "total_ticks": 184,
+        "total_time_ms": 2729.641041965806,
+        "max_tick_time_ms": 24.346717000298668,
+        "effect_metrics": {
+          "NPCMovement": {
+            "total_time_ms": 1156.4196940489637,
+            "count": 482,
+            "max_time_ms": 11.783891000959557
+          },
+          "NPCPoison": {
+            "total_time_ms": 1.8396579689579085,
+            "count": 482,
+            "max_time_ms": 0.01666100069996901
+          },
+          "NPCRewards": {
+            "total_time_ms": 73.20581202657195,
+            "count": 482,
+            "max_time_ms": 5.765630998212146
+          },
+          "SummonExpiry": {
+            "total_time_ms": 203.41308999923058,
+            "count": 482,
+            "max_time_ms": 12.970561998372432
+          },
+          "PetFollow": {
+            "total_time_ms": 451.50434205061174,
+            "count": 482,
+            "max_time_ms": 12.96403900050791
+          },
+          "MorphExpiry": {
+            "total_time_ms": 111.95708498416934,
+            "count": 482,
+            "max_time_ms": 9.170814999379218
+          },
+          "Poison": {
+            "total_time_ms": 690.8784370425565,
+            "count": 482,
+            "max_time_ms": 6.31168399922899
+          },
+          "HungerThirst": {
+            "total_time_ms": 3882.601724930282,
+            "count": 482,
+            "max_time_ms": 11.05502000064007
+          },
+          "StaminaRegen": {
+            "total_time_ms": 2769.306113055791,
+            "count": 482,
+            "max_time_ms": 8.98072299969499
+          },
+          "NPCAI": {
+            "total_time_ms": 628.4559740197437,
+            "count": 184,
+            "max_time_ms": 9.570006001013098
+          },
+          "AttributeModifiers": {
+            "total_time_ms": 2716.6147439893393,
+            "count": 482,
+            "max_time_ms": 9.291479000239633
+          },
+          "Lifecycle": {
+            "total_time_ms": 5266.216881056607,
+            "count": 482,
+            "max_time_ms": 18.47049999923911
+          },
+          "Meditation": {
+            "total_time_ms": 6997.726312969462,
+            "count": 482,
+            "max_time_ms": 23.771150001266506
+          }
+        }
+      },
+      "budgets": {
+        "rtt_p95_ms": 1000.0,
+        "login_ms": 5000.0
+      },
+      "passed": true,
+      "outliers_ms": [],
+      "started_monotonic": 30787.100816887,
+      "login_first_stats_ms": {
+        "p50": 46.10443199999281,
+        "p95": 47.765211998921586,
+        "max": 47.765211998921586
+      },
+      "login_readiness": "PONG ordered after the complete LOGIN handler; first stats are reported separately",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 5 9600X 6-Core Processor",
+        "ram_bytes": 32197324800
+      },
+      "dataset": {
+        "full-fixture.json": "95c6ef5129420fc36b2bcea8fc590b8af1ed0f390eb851030c668ba635a39608",
+        "server-source.json": "30e2d89ce56d70097e77c87dd2ad5e7ce6a27bae0b6d177945640226e4a29924",
+        "client-source.json": "6b10b6dd6c4182d2dd1ff6f49d6954ee4b39c8817ea66bdf9cb57d69f6dfdfe2"
+      }
+    },
+    "structure-profile.json": {
+      "tick_elapsed_ms": {
+        "p50": 15.353741000581067,
+        "p95": 19.39454300008947,
+        "p99": 23.514163000072585
+      },
+      "tick_measurement": "Elapsed wall time includes Redis waits, not isolated CPU",
+      "tick_publication_interval_ms": {
+        "p50": 513.5520470030315,
+        "p95": 524.2037149982934,
+        "p99": 1519.79842399669
+      },
+      "tick_samples": 190,
+      "missed_tick_groups": [],
+      "interval_poll_resolution_ms": 10,
+      "clients": {
+        "1": {
+          "frame_interval_p50": 5674.0,
+          "frame_interval_p95": 7106.0,
+          "frame_interval_p99": 7865.0,
+          "measurement": "Observed process_frame intervals; includes rendering and scheduling, not per-frame CPU",
+          "samples": 180,
+          "static_memory_bytes": 147537911.0,
+          "unit": "microseconds"
+        },
+        "2": {
+          "frame_interval_p50": 4675.0,
+          "frame_interval_p95": 5645.0,
+          "frame_interval_p99": 6039.0,
+          "measurement": "Observed process_frame intervals; includes rendering and scheduling, not per-frame CPU",
+          "samples": 180,
+          "static_memory_bytes": 147537059.0,
+          "unit": "microseconds"
+        }
+      },
+      "not_a_production_capacity_result": true
+    },
+    "result.json": {
+      "clients": 2,
+      "seconds": 116.31,
+      "started_at": "2026-10-20T21:19:03.731120+00:00",
+      "completed_at": "2026-10-20T21:21:18.453678+00:00",
+      "long_acceptance": false,
+      "tls": true,
+      "installed_wheel": false,
+      "source_checkout": true,
+      "server_commit": "f8261ad56163f569f62a4fdd3ee7054c445b4698",
+      "client_commit": "4d4c74e214cbed1aa76398ffd12021bc9d9d846d",
+      "wheel_sha256": null,
+      "redis": "8.10.2",
+      "godot": "4.7.2.stable.official.ed1daf0bf",
+      "graceful_sigterm": true,
+      "live_tls_sessions_drained": 2,
+      "release_version": "1.0.0rc3",
+      "installed_snap_ui": false,
+      "snap_install_source": null,
+      "godot_measured_seconds": [
+        10.0,
+        11.0
+      ],
+      "reconnect_states": [
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "native_export": false,
+      "acceptance": {
+        "kind": "Profile with two real clients and one slow reader",
+        "test_execution_passed": true,
+        "r10_gameplay_passed": false
+      },
+      "scenario": "structure-profile",
+      "regression_passed": true
+    }
+  },
+  "first_optimized_run": {
+    "version": "1.0.0rc3",
+    "started_at": "2026-10-20T21:09:43.683483+00:00",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "cpu_count": 12,
+    "python": "3.14.0",
+    "connections": 2,
+    "slow_readers": 1,
+    "seconds": 30.242325578998134,
+    "login_ms": {
+      "p50": 55.85684600009699,
+      "p95": 56.63995699796942,
+      "max": 56.63995699796942
+    },
+    "rtt_ms": {
+      "samples": 172,
+      "sample_limit": 100000,
+      "p50": 0.6965820030018222,
+      "p95": 1.634470001590671,
+      "p99": 2.7812870030174963,
+      "max": 3.403820999665186
+    },
+    "errors": [],
+    "packets": {
+      "0": 2,
+      "28": 2,
+      "21": 4,
+      "100": 2,
+      "45": 2,
+      "60": 2,
+      "49": 6,
+      "39": 2,
+      "22": 2,
+      "29": 10,
+      "37": 676,
+      "66": 4,
+      "44": 2,
+      "99": 2,
+      "24": 40,
+      "88": 174,
+      "15": 290,
+      "32": 172,
+      "34": 172,
+      "18": 2,
+      "19": 2
+    },
+    "server_process": [
+      {
+        "time": 30108.81679091,
+        "cpu_seconds": 13.99,
+        "rss_bytes": 114716672
+      },
+      {
+        "time": 30109.318011637,
+        "cpu_seconds": 14.16,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30109.819315639,
+        "cpu_seconds": 14.18,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30110.320063811,
+        "cpu_seconds": 14.2,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30110.821084358,
+        "cpu_seconds": 14.22,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30111.321398765,
+        "cpu_seconds": 14.25,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30111.822172695,
+        "cpu_seconds": 14.27,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30112.322715897,
+        "cpu_seconds": 14.3,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30112.823969276,
+        "cpu_seconds": 14.32,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30113.324923531,
+        "cpu_seconds": 14.34,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30113.825955289,
+        "cpu_seconds": 14.36,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30114.326511436,
+        "cpu_seconds": 14.38,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30114.82732514,
+        "cpu_seconds": 14.4,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30115.32805011,
+        "cpu_seconds": 14.43,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30115.82861355,
+        "cpu_seconds": 14.45,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30116.329592562,
+        "cpu_seconds": 14.47,
+        "rss_bytes": 115204096
+      },
+      {
+        "time": 30116.83055404,
+        "cpu_seconds": 14.49,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30117.33268107,
+        "cpu_seconds": 14.52,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30117.834937921,
+        "cpu_seconds": 14.54,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30118.335675135,
+        "cpu_seconds": 14.56,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30118.836693199,
+        "cpu_seconds": 14.58,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30119.337538202,
+        "cpu_seconds": 14.61,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30119.838771546,
+        "cpu_seconds": 14.63,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30120.340276994,
+        "cpu_seconds": 14.65,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30120.84085873,
+        "cpu_seconds": 14.67,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30121.341870423,
+        "cpu_seconds": 14.69,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30121.843023238,
+        "cpu_seconds": 14.71,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30122.343752217,
+        "cpu_seconds": 14.72,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30122.844544433,
+        "cpu_seconds": 14.74,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30123.345798105,
+        "cpu_seconds": 14.77,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30123.846629224,
+        "cpu_seconds": 14.79,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30124.347489658,
+        "cpu_seconds": 14.82,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30124.848819421,
+        "cpu_seconds": 14.83,
+        "rss_bytes": 115335168
+      },
+      {
+        "time": 30125.349988587,
+        "cpu_seconds": 14.87,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30125.85087529,
+        "cpu_seconds": 14.89,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30126.351504695,
+        "cpu_seconds": 14.91,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30126.852374867,
+        "cpu_seconds": 14.93,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30127.353383676,
+        "cpu_seconds": 14.95,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30127.853852855,
+        "cpu_seconds": 14.98,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30128.354872164,
+        "cpu_seconds": 14.99,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30128.856209784,
+        "cpu_seconds": 15.02,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30129.357499123,
+        "cpu_seconds": 15.05,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30129.858681575,
+        "cpu_seconds": 15.07,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30130.360152081,
+        "cpu_seconds": 15.09,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30130.860713912,
+        "cpu_seconds": 15.11,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30131.361556544,
+        "cpu_seconds": 15.13,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30131.862707197,
+        "cpu_seconds": 15.16,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30132.363124261,
+        "cpu_seconds": 15.18,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30132.863654073,
+        "cpu_seconds": 15.2,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30133.36497877,
+        "cpu_seconds": 15.22,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30133.866148398,
+        "cpu_seconds": 15.25,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30134.36743269,
+        "cpu_seconds": 15.28,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30134.868611006,
+        "cpu_seconds": 15.3,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30135.369619927,
+        "cpu_seconds": 15.31,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30135.87037091,
+        "cpu_seconds": 15.33,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30136.370895544,
+        "cpu_seconds": 15.36,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30136.871398447,
+        "cpu_seconds": 15.39,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30137.372157185,
+        "cpu_seconds": 15.41,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30137.872644951,
+        "cpu_seconds": 15.43,
+        "rss_bytes": 115466240
+      },
+      {
+        "time": 30138.373601015,
+        "cpu_seconds": 15.44,
+        "rss_bytes": 115466240
+      }
+    ],
+    "tick_before": {
+      "total_ticks": 3,
+      "total_time_ms": 34.94314000272425,
+      "max_tick_time_ms": 16.808676002256107,
+      "effect_metrics": {
+        "NPCMovement": {
+          "total_time_ms": 17.30661799592781,
+          "count": 5,
+          "max_time_ms": 11.476016999949934
+        },
+        "NPCPoison": {
+          "total_time_ms": 0.02415499693597667,
+          "count": 5,
+          "max_time_ms": 0.009326999133918434
+        },
+        "NPCRewards": {
+          "total_time_ms": 7.590422999783186,
+          "count": 5,
+          "max_time_ms": 7.587107000290416
+        },
+        "SummonExpiry": {
+          "total_time_ms": 9.430415004317183,
+          "count": 5,
+          "max_time_ms": 9.425325999472989
+        },
+        "PetFollow": {
+          "total_time_ms": 9.326611998403678,
+          "count": 5,
+          "max_time_ms": 9.32141300290823
+        },
+        "MorphExpiry": {
+          "total_time_ms": 5.3716379989054985,
+          "count": 5,
+          "max_time_ms": 5.366991001210408
+        },
+        "Poison": {
+          "total_time_ms": 14.915064006345347,
+          "count": 5,
+          "max_time_ms": 6.2364030018216
+        },
+        "HungerThirst": {
+          "total_time_ms": 30.692808999447152,
+          "count": 5,
+          "max_time_ms": 9.02796900118119
+        },
+        "StaminaRegen": {
+          "total_time_ms": 24.86251000300399,
+          "count": 5,
+          "max_time_ms": 8.623409001302207
+        },
+        "NPCAI": {
+          "total_time_ms": 12.73440099976142,
+          "count": 3,
+          "max_time_ms": 9.715192998555722
+        },
+        "AttributeModifiers": {
+          "total_time_ms": 24.866726002073847,
+          "count": 5,
+          "max_time_ms": 7.666515000892105
+        },
+        "Lifecycle": {
+          "total_time_ms": 38.947332999669015,
+          "count": 5,
+          "max_time_ms": 11.584488998778397
+        },
+        "Meditation": {
+          "total_time_ms": 59.63794700073777,
+          "count": 5,
+          "max_time_ms": 16.577556998527143
+        }
+      }
+    },
+    "tick_after": {
+      "total_ticks": 62,
+      "total_time_ms": 977.2736010017979,
+      "max_tick_time_ms": 20.005352998850867,
+      "effect_metrics": {
+        "NPCMovement": {
+          "total_time_ms": 500.83064898717566,
+          "count": 182,
+          "max_time_ms": 11.476016999949934
+        },
+        "NPCPoison": {
+          "total_time_ms": 0.6284740156843327,
+          "count": 182,
+          "max_time_ms": 0.014446999557549134
+        },
+        "NPCRewards": {
+          "total_time_ms": 39.779082992026815,
+          "count": 182,
+          "max_time_ms": 7.587107000290416
+        },
+        "SummonExpiry": {
+          "total_time_ms": 77.14045200918918,
+          "count": 182,
+          "max_time_ms": 12.265540997759672
+        },
+        "PetFollow": {
+          "total_time_ms": 160.71696404833347,
+          "count": 182,
+          "max_time_ms": 12.807225997676142
+        },
+        "MorphExpiry": {
+          "total_time_ms": 49.24460700567579,
+          "count": 182,
+          "max_time_ms": 7.9677129979245365
+        },
+        "Poison": {
+          "total_time_ms": 284.63071903024684,
+          "count": 182,
+          "max_time_ms": 6.2364030018216
+        },
+        "HungerThirst": {
+          "total_time_ms": 1546.9529230176704,
+          "count": 182,
+          "max_time_ms": 10.988944999553496
+        },
+        "StaminaRegen": {
+          "total_time_ms": 1097.3532179741596,
+          "count": 182,
+          "max_time_ms": 8.623409001302207
+        },
+        "NPCAI": {
+          "total_time_ms": 303.0800929918769,
+          "count": 62,
+          "max_time_ms": 9.715192998555722
+        },
+        "AttributeModifiers": {
+          "total_time_ms": 1131.947453970497,
+          "count": 182,
+          "max_time_ms": 8.197860002837842
+        },
+        "Lifecycle": {
+          "total_time_ms": 1987.833101014985,
+          "count": 182,
+          "max_time_ms": 14.678886996989604
+        },
+        "Meditation": {
+          "total_time_ms": 2735.5183779727668,
+          "count": 182,
+          "max_time_ms": 19.307759997900575
+        }
+      }
+    },
+    "budgets": {
+      "rtt_p95_ms": 1000.0,
+      "login_ms": 5000.0
+    },
+    "passed": true,
+    "outliers_ms": [],
+    "login_first_stats_ms": {
+      "p50": 44.68472100052168,
+      "p95": 45.5343060020823,
+      "max": 45.5343060020823
+    },
+    "login_readiness": "PONG ordered after the complete LOGIN handler; first stats are reported separately",
+    "hardware": {
+      "cpu_model": "AMD Ryzen 5 9600X 6-Core Processor",
+      "ram_bytes": 32197324800
+    },
+    "dataset": {
+      "full-fixture.json": "95c6ef5129420fc36b2bcea8fc590b8af1ed0f390eb851030c668ba635a39608",
+      "server-source.json": "6a950eb7a266eb476929c00f9f966fd0934225eb9372dce26bbf5895cba18cee",
+      "client-source.json": "f452573dce8a378bc6a62f78cae0e7d92084b8e6101de811a9e65cc869c89932"
+    }
+  },
+  "regressions": {
+    "server_suite": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "3012",
+      "time": "17.176",
+      "timestamp": "2026-10-20T18:16:40.349696-03:00",
+      "hostname": "arriba"
+    },
+    "server_coverage_percent": 79.61,
+    "client_tool_tests": 80,
+    "native_navigation": {
+      "clients": 2,
+      "seconds": 90.46,
+      "started_at": "2026-10-20T21:13:57.669670+00:00",
+      "completed_at": "2026-10-20T21:15:47.146470+00:00",
+      "long_acceptance": false,
+      "tls": true,
+      "installed_wheel": false,
+      "source_checkout": true,
+      "server_commit": "f8261ad56163f569f62a4fdd3ee7054c445b4698",
+      "client_commit": "4d4c74e214cbed1aa76398ffd12021bc9d9d846d",
+      "wheel_sha256": null,
+      "redis": "8.10.2",
+      "godot": "4.7.2.stable.official.ed1daf0bf",
+      "graceful_sigterm": true,
+      "live_tls_sessions_drained": 2,
+      "release_version": "1.0.0rc3",
+      "installed_snap_ui": false,
+      "snap_install_source": null,
+      "godot_measured_seconds": [
+        11.0,
+        12.0
+      ],
+      "reconnect_states": [
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "native_export": false,
+      "acceptance": {
+        "kind": "Navegaci\u00f3n de dos clientes; no sustituye la campa\u00f1a completa",
+        "test_execution_passed": true,
+        "missing": [],
+        "r10_gameplay_passed": false
+      },
+      "scenario": "navigation",
+      "regression_passed": true
+    },
+    "native_duel": {
+      "clients": 2,
+      "seconds": 31.43,
+      "started_at": "2026-10-20T21:13:59.038994+00:00",
+      "completed_at": "2026-10-20T21:14:44.499719+00:00",
+      "long_acceptance": false,
+      "tls": true,
+      "installed_wheel": false,
+      "source_checkout": true,
+      "server_commit": "f8261ad56163f569f62a4fdd3ee7054c445b4698",
+      "client_commit": "4d4c74e214cbed1aa76398ffd12021bc9d9d846d",
+      "wheel_sha256": null,
+      "redis": "8.10.2",
+      "godot": "4.7.2.stable.official.ed1daf0bf",
+      "graceful_sigterm": true,
+      "live_tls_sessions_drained": 2,
+      "release_version": "1.0.0rc3",
+      "installed_snap_ui": false,
+      "snap_install_source": null,
+      "godot_measured_seconds": [
+        11.0,
+        11.0
+      ],
+      "reconnect_states": [
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "capabilities": 1983,
+          "exact_inventory_and_spell_order": true,
+          "hunger_after": [
+            100.0,
+            100.0
+          ],
+          "hunger_before": [
+            100.0,
+            100.0
+          ],
+          "inventory": {},
+          "spells": [
+            3,
+            2,
+            46,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "native_export": false,
+      "acceptance": {
+        "kind": "Duelo de dos clientes; no sustituye la campa\u00f1a completa",
+        "test_execution_passed": true,
+        "death_and_revive": true,
+        "r10_gameplay_passed": false
+      },
+      "scenario": "duel",
+      "regression_passed": true
+    },
+    "ground_aof": {
+      "atomic_ground_inventory_gold": true,
+      "two_players_one_stack": true,
+      "gold_remainder": true,
+      "slot_30": true,
+      "sigkill_recovery": true,
+      "identified_retries_once": true,
+      "production_data_used": false
+    },
+    "npc_loot_aof": {
+      "pending_plan_recovered": true,
+      "single_roll_and_xp": true,
+      "two_competing_pickups_per_stack": true,
+      "two_aof_sigkill_recoveries": true,
+      "production_data_used": false,
+      "elapsed_seconds": 18.11,
+      "experience": "123",
+      "items": [
+        [
+          12,
+          2294
+        ],
+        [
+          1083,
+          1
+        ]
+      ]
+    }
+  },
+  "limitations": [
+    "Synthetic entity records are not concurrent connections or renderer load",
+    "Isolated world-loader RSS after GC is not production capacity",
+    "Point queries cost more CPU with compact terrain; actual index memory overhead is included",
+    "Live RTT uses two peers; baseline outliers were first pings while LOGIN was unfinished",
+    "Fixed waits and duplicate spawn were removed and readiness measurement corrected; login and RTT definitions are explicitly separated",
+    "Cold wall-clock samples were collected with concurrent measurement processes; comparisons use warm, separate runs",
+    "The durable ground JSON schema was not segmented; issue #343 remains open"
+  ]
+}
