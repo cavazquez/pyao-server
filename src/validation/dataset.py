@@ -14,10 +14,12 @@ from pathlib import Path
 from typing import Any, Literal
 
 from src.models.item_catalog import ItemCatalog
+from src.models.item_types import ObjType
 from src.models.potion_duration import normalize_potion_duration
 from src.models.spell_extensions import validate_extensions
 from src.services.expansion.catalog import ExpansionCatalog
 from src.services.npc.loot_table_service import LootTableService
+from src.services.nutrition import NutritionRule
 
 MAX_ID = 65535
 MAX_SKILL = 100
@@ -303,6 +305,15 @@ class DatasetValidator:
                 normalize_potion_duration(entry.data)
             except (ValueError, TypeError) as exc:
                 self.problem(entry, "EffectDurationSeconds", str(exc))
+            if entry.data.get("ObjType") in {
+                ObjType.COMIDA,
+                ObjType.BEBIDA,
+                ObjType.BOTELLAS_LLENAS,
+            }:
+                try:
+                    NutritionRule.from_item(int(entry.identity), entry.data)
+                except (ValueError, TypeError) as exc:
+                    self.problem(entry, "nutrition", str(exc))
         merchants = self.rows(self.read(self.data_dir / "npcs/merchants.toml"), "merchant")
         self.unique(merchants, "npc_id")
         for entry in merchants:

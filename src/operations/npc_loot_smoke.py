@@ -15,6 +15,7 @@ from src.repositories.player_repository import PlayerRepository
 from src.services.ground_transfer import GroundRequest, transfer_ground
 from src.services.npc.loot_table_service import LootTableService
 from src.services.npc.rewards.settlement import death_changes, settle_rewards
+from src.services.nutrition import NutritionRule, consume_nutrition
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GroundState, stack_identity
@@ -102,6 +103,14 @@ async def prepare(config: RedisConfig) -> str:
             )
             await PlayerRepository(client).set_position(user, *DROP_POSITION, MAP_ID, 3)
         npc = await candidate(NPCRepository(client), LootTableService())
+        await client.hset(
+            RedisKeys.npc_instance(npc.instance_id), "fixture_food_operation", operation_id()
+        )
+        await InventoryRepository(client).set_slot(1, 30, 139, 1)
+        await client.hset(
+            RedisKeys.player_hunger_thirst(1),
+            mapping={"min_hunger": "0", "max_hunger": "100", "min_water": "0", "max_water": "100"},
+        )
         full = GroundState(MAP_ID, None)
         for index in range(10):
             full.append(
@@ -182,6 +191,21 @@ async def recover(config: RedisConfig, identity: str) -> dict[str, Any]:
             )
             require(sum(row["applied"] for row in actions) == 1, "Una sola recogida por identidad")
         await settle_rewards(client.redis, npc, 1, EXPERIENCE, policy, (DROP_POSITION,))
+        food = NutritionRule.from_item(139, policy.catalog.get_item_data(139) or {})
+        consumed = await consume_nutrition(
+            client.redis,
+            1,
+            30,
+            await client.hget(RedisKeys.npc_instance(identity), "fixture_food_operation") or "",
+            food,
+            30,
+            20,
+        )
+        require(consumed["applied"], "Consumo real de pescado con su efecto")
+        require(
+            await client.hget(RedisKeys.player_hunger_thirst(1), "min_hunger") == "75",
+            "Hambre restaurada según catálogo",
+        )
         inventories = [await InventoryRepository(client).get_inventory(user) for user in (1, 2)]
         balances = [await PlayerRepository(client).get_gold(user) for user in (1, 2)]
         expected_gold = sum(q for i, q in saved["items"] if i == GOLD_ITEM_ID)
@@ -233,6 +257,20 @@ async def verify(config: RedisConfig, identity: str, before: dict[str, Any]) -> 
         require(
             result["settled"] and not result["applied"],
             "Recibo durable rechaza la segunda recompensa",
+        )
+        food = NutritionRule.from_item(139, LootTableService().catalog.get_item_data(139) or {})
+        await consume_nutrition(
+            client.redis,
+            1,
+            30,
+            await client.hget(RedisKeys.npc_instance(identity), "fixture_food_operation") or "",
+            food,
+            30,
+            20,
+        )
+        require(
+            await client.hget(RedisKeys.player_hunger_thirst(1), "min_hunger") == "75",
+            "Replay AOF no duplica el efecto de la comida",
         )
         require(
             [await InventoryRepository(client).get_inventory(u) for u in (1, 2)]

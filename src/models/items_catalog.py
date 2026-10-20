@@ -54,27 +54,29 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
                 ObjType.FLECHAS,
             },
             max_stack=99,
-            consumable=obj_type in {ObjType.COMIDA, ObjType.POCIONES, ObjType.BEBIDA},
+            consumable=obj_type
+            in {ObjType.COMIDA, ObjType.POCIONES, ObjType.BEBIDA, ObjType.BOTELLAS_LLENAS},
             equippable=obj_type
             in {ObjType.ARMAS, ObjType.ARMADURAS, ObjType.ESCUDOS, ObjType.CASCOS, ObjType.ANILLOS},
             value=item_data.get("Valor", 0),
             obj_type=obj_type,
-            min_damage=item_data.get("MinHit"),
-            max_damage=item_data.get("MaxHit"),
-            defense=item_data.get("MinDef"),
+            min_damage=item_data.get("MinHit", 0),
+            max_damage=item_data.get("MaxHit", 0),
+            defense=item_data.get("MinDef", 0),
             max_defense=item_data.get("MaxDef", 0),
             restore_hp=(
                 int(item_data.get("MaxModificador", 0))
                 if item_data.get("TipoPocion") == 3  # ruff: ignore[magic-value-comparison]
-                else 0
+                else int(item_data.get("MinHP", 0))
             ),
             restore_mana=(
                 int(item_data.get("MaxModificador", 0))
                 if item_data.get("TipoPocion") == 4  # ruff: ignore[magic-value-comparison]
                 else 0
             ),
-            restore_hunger=item_data.get("MinHAM"),
-            restore_thirst=item_data.get("MinAgu"),
+            restore_stamina=int(item_data.get("MinST", 0)),
+            restore_hunger=int(item_data.get("MinHam", item_data.get("MinHAM", 0))),
+            restore_thirst=int(item_data.get("MinAgu", 0)),
         )
 
     return items

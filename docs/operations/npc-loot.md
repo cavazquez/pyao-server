@@ -61,6 +61,12 @@ límites distintos `MinDef`/`MaxDef`. Se corrigió el mapeo que enviaba escudos 
 tipo 5/dinero y cascos como tipo 4/árbol, y la pérdida de defensa máxima al copiar
 dos veces `MinDef`. El cliente usa los tipos canónicos 16/17 para mostrar su equipo.
 
+Los alimentos y bebidas recogidos se consumen por tipo y por los valores del
+catálogo, incluidos peces y los dos nombres históricos `MinHam`/`MinHAM`. Se
+restauran hambre, sed y, cuando corresponda, HP y stamina. El objeto, el efecto
+y el envase vacío del odre se confirman juntos. Una acción repetida no vuelve a
+restaurar recursos, y un personaje muerto no puede resucitar comiendo.
+
 ## Confirmación y recuperación
 
 El golpe letal marca HP y `death_state=pending` juntos en Redis. Ataques físicos,
