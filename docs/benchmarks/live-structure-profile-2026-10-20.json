@@ -1,0 +1,37 @@
+{
+  "tick_publication_interval_ms": {
+    "p50": 521.5582929995435,
+    "p95": 523.9194969981327,
+    "p99": 1020.5742270009068
+  },
+  "tick_samples": 68,
+  "missed_tick_groups": [],
+  "interval_poll_resolution_ms": 10,
+  "clients": {
+    "1": {
+      "frame_interval_p50": 5149.0,
+      "frame_interval_p95": 5964.0,
+      "frame_interval_p99": 6556.0,
+      "measurement": "Observed process_frame intervals; includes rendering and scheduling, not per-frame CPU",
+      "samples": 180,
+      "static_memory_bytes": 147421218.0,
+      "unit": "microseconds"
+    },
+    "2": {
+      "frame_interval_p50": 5153.0,
+      "frame_interval_p95": 6142.0,
+      "frame_interval_p99": 7505.0,
+      "measurement": "Observed process_frame intervals; includes rendering and scheduling, not per-frame CPU",
+      "samples": 180,
+      "static_memory_bytes": 147418274.0,
+      "unit": "microseconds"
+    }
+  },
+  "not_a_production_capacity_result": true,
+  "tick_elapsed_ms": {
+    "p50": 17.03625899972394,
+    "p95": 20.19865900001605,
+    "p99": 20.969125998817617
+  },
+  "tick_measurement": "Elapsed wall time includes Redis waits, not isolated CPU"
+}

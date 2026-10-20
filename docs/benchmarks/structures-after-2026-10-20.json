@@ -1,0 +1,725 @@
+{
+  "recorded_at_utc": "2026-10-20T17:22:14Z",
+  "python": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "processor": "",
+  "source_commit": "92f02ab12dc3f3d9861cdd7a27a135ea8ca966c4",
+  "source_hashes": {
+    "src/game/player_index.py": "8464d9d68cc3f741817f756ef6f33f5142526d3a7ecafe9400165c2190e8afba",
+    "src/game/npc_index.py": "4f6f2c2fff6e0228cd7dde5f7be4cc06cb4456626a9a1abb5d9a04db200aeaaa",
+    "src/game/ground_item_index.py": "4ea4f4a68d678094d0c2e0e8eb7316f490bdf269876c681ac8cb22b3165f8a9b",
+    "src/game/tile_occupation.py": "2bd6409dd6f12f3dc1ddc6626542bbd4e980d37a5d2959c4539041fefeddd5b1"
+  },
+  "gc_enabled": true,
+  "limitations": [
+    "Microbenchmarks, not production capacity",
+    "Python sizes deduplicate owned objects; incremental index sizes exclude referents already owned by the original index, not allocator RSS",
+    "Synthetic NPC records exclude renderer/network/account overhead",
+    "No performance gates based on wall clock on shared CI"
+  ],
+  "entities": [
+    {
+      "entities": 100,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.5656999999999996,
+          "p95": 2.7891,
+          "p99": 3.1418000000000004,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.5918,
+          "p95": 2.661,
+          "p99": 2.7460999999999998,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 4.6085,
+          "p95": 4.6747,
+          "p99": 4.8731,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1002,
+          "p95": 0.1082,
+          "p99": 0.1082,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.0616999999999996,
+          "p95": 3.3061,
+          "p99": 3.3963,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0601,
+          "p95": 0.06609999999999999,
+          "p99": 0.0732,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.227,
+          "p95": 3.2861,
+          "p99": 3.4684,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.9265999999999999,
+          "p95": 1.9967000000000001,
+          "p99": 2.0898000000000003,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0731,
+          "p95": 0.08009999999999999,
+          "p99": 0.08120000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 41707,
+        "npc_index_including_synthetic_records_and_tiles": 67014,
+        "tile_index": 23384,
+        "ground_index": 44611,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 11312
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 100,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.9423000000000004,
+          "p95": 8.06,
+          "p99": 8.790299999999998,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 3.8771999999999998,
+          "p95": 3.9293,
+          "p99": 4.1307,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 7.3586,
+          "p95": 7.564,
+          "p99": 7.598,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1022,
+          "p95": 0.1273,
+          "p99": 0.1333,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1613,
+          "p95": 0.1743,
+          "p99": 0.1773,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0601,
+          "p95": 0.06509999999999999,
+          "p99": 0.0761,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.9775999999999998,
+          "p95": 2.0448,
+          "p99": 2.181,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.18730000000000002,
+          "p95": 0.2014,
+          "p99": 0.2084,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0721,
+          "p95": 0.0792,
+          "p99": 0.08020000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 50243,
+        "npc_index_including_synthetic_records_and_tiles": 72710,
+        "tile_index": 21176,
+        "ground_index": 42403,
+        "incremental_player_id_index": 11088,
+        "incremental_player_name_index": 9818,
+        "incremental_npc_character_index": 11088,
+        "incremental_ground_map_buckets": 19864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 1000,
+        "peak_bytes": 7488,
+        "result_length": 100
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.7935,
+          "p95": 22.2933,
+          "p99": 22.5027,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 18.309900000000003,
+          "p95": 19.5242,
+          "p99": 19.5482,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 34.7774,
+          "p95": 35.5619,
+          "p99": 38.243900000000004,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.08209999999999999,
+          "p95": 0.0902,
+          "p99": 0.0942,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 22.4176,
+          "p95": 22.564799999999998,
+          "p99": 23.5877,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0471,
+          "p95": 0.0521,
+          "p99": 0.0541,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 23.0998,
+          "p95": 24.455299999999998,
+          "p99": 25.020400000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.027,
+          "p95": 14.4007,
+          "p99": 15.575899999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.0631,
+          "p99": 0.0631,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 388803,
+        "npc_index_including_synthetic_records_and_tiles": 603450,
+        "tile_index": 181632,
+        "ground_index": 386459,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 101176
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 1000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.6693,
+          "p95": 21.2574,
+          "p99": 21.3997,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 20.6993,
+          "p95": 41.7924,
+          "p99": 45.1887,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 39.1475,
+          "p95": 39.470099999999995,
+          "p99": 39.6796,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0782,
+          "p95": 0.0932,
+          "p99": 0.1242,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.5671,
+          "p95": 0.5771000000000001,
+          "p99": 0.5881000000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.048100000000000004,
+          "p95": 0.0521,
+          "p99": 0.0531,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 14.0881,
+          "p95": 14.2815,
+          "p99": 14.489799999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.4067,
+          "p95": 0.4248,
+          "p99": 0.4298,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.062200000000000005,
+          "p99": 0.06509999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 385475,
+        "npc_index_including_synthetic_records_and_tiles": 600442,
+        "tile_index": 179424,
+        "ground_index": 384251,
+        "incremental_player_id_index": 100952,
+        "incremental_player_name_index": 91922,
+        "incremental_npc_character_index": 100952,
+        "incremental_ground_map_buckets": 97864
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 8200,
+        "peak_bytes": 56000,
+        "result_length": 1000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 1,
+      "layout": "concentrated",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 91.3924,
+          "p95": 92.3331,
+          "p99": 93.6986,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 91.742,
+          "p95": 92.3091,
+          "p99": 92.59960000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 189.3879,
+          "p95": 221.251,
+          "p99": 278.52,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0841,
+          "p95": 0.09720000000000001,
+          "p99": 0.19640000000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 128.7726,
+          "p95": 129.8055,
+          "p99": 129.9979,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0471,
+          "p95": 0.0531,
+          "p99": 0.056100000000000004,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 116.8535,
+          "p95": 122.7435,
+          "p99": 123.7804,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 70.1871,
+          "p95": 71.1579,
+          "p99": 71.4975,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.0631,
+          "p99": 0.1002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1873955,
+        "npc_index_including_synthetic_records_and_tiles": 2943834,
+        "tile_index": 856208,
+        "ground_index": 1873035,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 467768
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    },
+    {
+      "entities": 5000,
+      "maps": 50,
+      "layout": "distributed",
+      "operations": {
+        "player_unique_ids_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 114.76960000000001,
+          "p95": 125.00760000000001,
+          "p99": 154.11960000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_unique_ids_ordered_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 115.11030000000001,
+          "p95": 116.5419,
+          "p99": 116.71130000000001,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 226.86329999999998,
+          "p95": 228.5044,
+          "p99": 229.5203,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "player_find_name_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.1052,
+          "p95": 0.15230000000000002,
+          "p99": 0.1683,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 2.8983000000000003,
+          "p95": 2.9324,
+          "p99": 3.1148000000000002,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "npc_find_character_hash": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.049100000000000005,
+          "p95": 0.0582,
+          "p99": 0.062200000000000005,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_current": {
+          "unit": "microseconds_per_operation",
+          "p50": 72.3792,
+          "p95": 74.6003,
+          "p99": 74.9468,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "ground_count_map_bucket": {
+          "unit": "microseconds_per_operation",
+          "p50": 1.5328,
+          "p95": 1.5599,
+          "p99": 1.5719,
+          "repeats": 31,
+          "loops_per_sample": 10
+        },
+        "tile_lookup": {
+          "unit": "microseconds_per_operation",
+          "p50": 0.0581,
+          "p95": 0.06620000000000001,
+          "p99": 0.06709999999999999,
+          "repeats": 31,
+          "loops_per_sample": 10
+        }
+      },
+      "owned_bytes": {
+        "player_index": 1962835,
+        "npc_index_including_synthetic_records_and_tiles": 3008402,
+        "tile_index": 856200,
+        "ground_index": 1873027,
+        "incremental_player_id_index": 467544,
+        "incremental_player_name_index": 437746,
+        "incremental_npc_character_index": 467544,
+        "incremental_ground_map_buckets": 556664
+      },
+      "unique_ids_allocations": {
+        "retained_bytes": 40200,
+        "peak_bytes": 221888,
+        "result_length": 5000
+      }
+    }
+  ],
+  "terrain": {
+    "maps": 290,
+    "coordinates_across_six_layers": 2486941,
+    "load_seconds": 0.42700982200040016,
+    "resource_python_bytes": 292671468,
+    "six_bit_planes_python_bytes": 2316380,
+    "six_bit_planes_payload_bytes": 2175000,
+    "one_byte_flags_python_bytes": 2923690,
+    "one_byte_flags_payload_bytes": 2900000,
+    "bitmap_requires_1_based_to_0_based_adapter": true,
+    "baseline_bitmap_drops_100_100_without_adapter": true
+  },
+  "npc_model": {
+    "records": 1000,
+    "owned_python_bytes": 1756778,
+    "bytes_per_record_including_list": 1756.778,
+    "excludes": "Redis, network, maps and renderer"
+  },
+  "ground_documents": [
+    {
+      "positions": 100,
+      "json_bytes": 8593,
+      "read_validate_modify_encode": {
+        "unit": "microseconds_per_operation",
+        "p50": 149.898,
+        "p95": 158.634,
+        "p99": 171.748,
+        "repeats": 21,
+        "loops_per_sample": 1
+      },
+      "allocations": {
+        "retained_bytes": 28735,
+        "peak_bytes": 88604,
+        "result_length": 8682
+      },
+      "bytes_read_plus_written_per_commit_lower_bound": 17186
+    },
+    {
+      "positions": 1000,
+      "json_bytes": 86021,
+      "read_validate_modify_encode": {
+        "unit": "microseconds_per_operation",
+        "p50": 1561.132,
+        "p95": 1610.004,
+        "p99": 1648.715,
+        "repeats": 21,
+        "loops_per_sample": 1
+      },
+      "allocations": {
+        "retained_bytes": 106163,
+        "peak_bytes": 800351,
+        "result_length": 86110
+      },
+      "bytes_read_plus_written_per_commit_lower_bound": 172042
+    },
+    {
+      "positions": 5000,
+      "json_bytes": 433701,
+      "read_validate_modify_encode": {
+        "unit": "microseconds_per_operation",
+        "p50": 7672.447,
+        "p95": 7742.256,
+        "p99": 7745.782,
+        "repeats": 21,
+        "loops_per_sample": 1
+      },
+      "allocations": {
+        "retained_bytes": 453843,
+        "peak_bytes": 4409248,
+        "result_length": 433790
+      },
+      "bytes_read_plus_written_per_commit_lower_bound": 867402
+    }
+  ],
+  "redis": {
+    "redis": "8.10.2",
+    "sequential_50_hashes": {
+      "unit": "microseconds_per_operation",
+      "p50": 1154.469,
+      "p95": 1288.106,
+      "p99": 1699.87,
+      "repeats": 21,
+      "loops_per_sample": 1
+    },
+    "pipeline_50_hashes": {
+      "unit": "microseconds_per_operation",
+      "p50": 294.085,
+      "p95": 315.194,
+      "p99": 331.444,
+      "repeats": 21,
+      "loops_per_sample": 1
+    },
+    "commands_both": 50,
+    "application_round_trips": {
+      "sequential": 50,
+      "pipeline": 1
+    },
+    "ground": [
+      {
+        "positions": 100,
+        "watch_get_validate_set_exec": {
+          "unit": "microseconds_per_operation",
+          "p50": 239.935,
+          "p95": 265.632,
+          "p99": 266.283,
+          "repeats": 21,
+          "loops_per_sample": 1
+        },
+        "excludes_gameplay_aof_ack_and_receipt": true
+      },
+      {
+        "positions": 1000,
+        "watch_get_validate_set_exec": {
+          "unit": "microseconds_per_operation",
+          "p50": 1715.519,
+          "p95": 1842.635,
+          "p99": 2127.062,
+          "repeats": 21,
+          "loops_per_sample": 1
+        },
+        "excludes_gameplay_aof_ack_and_receipt": true
+      },
+      {
+        "positions": 5000,
+        "watch_get_validate_set_exec": {
+          "unit": "microseconds_per_operation",
+          "p50": 8115.327,
+          "p95": 8343.149,
+          "p99": 8853.966,
+          "repeats": 21,
+          "loops_per_sample": 1
+        },
+        "excludes_gameplay_aof_ack_and_receipt": true
+      }
+    ],
+    "minimal_player_hash_count": 1000,
+    "minimal_player_hash_used_memory_delta": 130672
+  },
+  "peak_rss_kib": 607932
+}
