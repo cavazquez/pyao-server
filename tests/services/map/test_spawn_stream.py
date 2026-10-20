@@ -24,10 +24,11 @@ async def test_login_loads_ground_and_sends_one_complete_spawn_in_order() -> Non
     parent.attach_mock(sender.send_change_map, "map")
     parent.attach_mock(sender.send_pos_update, "position")
     parent.attach_mock(service.spawn_in_map, "spawn")
+    parent.attach_mock(sender.play_sound_login, "sound")
     handler = LoginSpawnHandler(MagicMock(), MagicMock(), maps, service, sender)
     position = {"map": 1, "x": 100, "y": 1, "heading": 2}
     await handler.spawn_player(7, "Fixture", position)
-    assert [call[0] for call in parent.mock_calls] == ["load", "map", "position", "spawn"]
+    assert [call[0] for call in parent.mock_calls] == ["load", "map", "position", "spawn", "sound"]
     maps.load_ground_items.assert_awaited_once_with(1)
     service.spawn_in_map.assert_awaited_once_with(
         user_id=7, map_id=1, x=100, y=1, heading=2, message_sender=sender

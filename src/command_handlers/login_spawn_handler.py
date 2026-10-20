@@ -127,9 +127,6 @@ class LoginSpawnHandler:
             username: Nombre de usuario.
             position: Posición del jugador.
         """
-        # Reproducir sonido de login
-        await self.message_sender.play_sound_login()
-
         # El login entra desde ningún mapa: un único snapshot completo, incluyendo
         # suelo, NPCs aleatorios y desbloqueo de portales. Una transición seguida
         # de otro spawn enviaba las mismas entidades dos veces.
@@ -153,7 +150,9 @@ class LoginSpawnHandler:
             await player_service.spawn_character(user_id, username, position)
             await self.message_sender.send_pos_update(position["x"], position["y"])
 
-        # Mostrar efecto visual de spawn
+        # CHANGE_MAP detiene el audio anterior en el cliente. El sonido de login
+        # debe empezar después de cargar el mapa y crear al actor.
+        await self.message_sender.play_sound_login()
         await self.message_sender.play_effect_spawn(char_index=user_id)
         if self.map_manager:
             for observer in self.map_manager.get_all_message_senders_in_map(position["map"]):
