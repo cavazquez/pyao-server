@@ -4,19 +4,41 @@
   <img src="assets/icon.png" alt="Icono de PyAO Server" width="160" height="160">
 </p>
 
-[![CI](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml)
-[![Release](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml)
-[![codecov](https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg)](https://codecov.io/gh/cavazquez/pyao-server)
-[![Downloads](https://img.shields.io/github/downloads/cavazquez/pyao-server/total.svg)](https://github.com/cavazquez/pyao-server/releases)
-[![Python](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Snapcraft](https://snapcraft.io/pyao/badge.svg)](https://snapcraft.io/pyao)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/cavazquez/pyao-server)
+<p align="center">
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/cavazquez/pyao-server/ci.yml?branch=main&amp;label=CI&amp;logo=github" alt="CI del servidor"></a>
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/cavazquez/pyao-server/release.yml?label=Release&amp;logo=github" alt="Workflow de Release"></a>
+  <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/v/release/cavazquez/pyao-server?include_prereleases&amp;sort=date&amp;label=release" alt="Última release, incluidas versiones de prueba"></a>
+  <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/downloads/cavazquez/pyao-server/total" alt="Descargas de GitHub Releases"></a>
+  <a href="docs/README.md"><img src="https://img.shields.io/badge/docs-referencia-007ec6?logo=readthedocs&amp;logoColor=white" alt="Documentación del servidor"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.14%2B-3776AB?logo=python&amp;logoColor=white" alt="Python 3.14 o superior"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/cavazquez/pyao-server" alt="Licencia Apache 2.0"></a>
+</p>
+
+<p align="center">
+  <a href="https://snapcraft.io/pyao"><img src="https://img.shields.io/snapcraft/v/pyao/latest/edge?arch=amd64&amp;label=snap%20edge&amp;logo=snapcraft" alt="Versión de pyao en Snap latest/edge para amd64"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/363"><img src="https://img.shields.io/badge/homebrew-pendiente-lightgrey?logo=homebrew" alt="Homebrew pendiente: issue 363"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/364"><img src="https://img.shields.io/badge/apt-pendiente-lightgrey?logo=debian" alt="APT pendiente: issue 364"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/366"><img src="https://img.shields.io/badge/Microsoft%20Store-pendiente-lightgrey" alt="Microsoft Store pendiente de evaluación: issue 366"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/365"><img src="https://img.shields.io/badge/winget-pendiente-lightgrey" alt="WinGet pendiente: issue 365"></a>
+</p>
+
+<p align="center">
+  <a href="https://codecov.io/gh/cavazquez/pyao-server"><img src="https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg" alt="Cobertura de tests"></a>
+  <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
+  <a href="https://deepwiki.com/cavazquez/pyao-server"><img src="https://img.shields.io/badge/DeepWiki-consultar-blue" alt="Consultar DeepWiki"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/cavazquez/pyao-server">Proyecto</a> ·
+  <a href="docs/README.md">Documentación</a> ·
+  <a href="https://github.com/cavazquez/pyao-server/releases">Releases</a>
+</p>
+
+Los canales marcados como pendientes enlazan sus issues de implementación.
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
-Descarga de pruebas vigente: **[servidor 1.0.0rc2](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc2)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc2)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
+Descarga de pruebas vigente: **[servidor 1.0.0rc3](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc3)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc3)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
 
 Los PR ejecutan validaciones, pruebas y controles de dependencias sin construir
 distribuciones. Compilar y publicar son operaciones manuales separadas; ver
@@ -585,6 +607,6 @@ El wheel incluye el dataset TOML, configuración por defecto y archive de mapas 
 
 El cierre por SIGTERM/SIGINT deja de aceptar conexiones, despierta lectores ociosos y concede `server.shutdown_drain_seconds` a los handlers activos. Luego cancela los restantes, drena o descarta salida acotada, libera sesiones/mascotas y cierra trades y tareas de muerte antes de Redis. `server.shutdown_timeout_seconds` limita el cierre completo (20 s por defecto, 5 s de drenaje). `stop()` es compartido e idempotente. Un commit de resultado incierto conserva su recibo/journal y su identificador; el cierre no aplica compensaciones que puedan duplicar recursos.
 
-El candidato de la versión 1.0 se identifica como `1.0.0rc1` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.
+El candidato de la versión 1.0 se identifica como `1.0.0rc3` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.
 
 El [Snap del servidor `pyao`](docs/guides/SNAP.md) incluye Python 3.14, instala las dependencias con uv desde el lock y usa recursos del wheel actual. CI prueba el paquete instalado con TLS y Redis descartable en amd64 y arm64. La publicación en `latest/edge` y la migración explícita de partidas se verifican por separado.
