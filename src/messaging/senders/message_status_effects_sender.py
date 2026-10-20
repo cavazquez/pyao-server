@@ -5,6 +5,7 @@ import logging
 import time
 from typing import TYPE_CHECKING
 
+from src.constants.effects import MEDITATION_FX_ID
 from src.network.msg_status_effects import (
     build_blind_no_more_response,
     build_blind_response,
@@ -15,6 +16,7 @@ from src.network.msg_status_effects import (
     build_set_invisible_response,
     build_update_tag_and_status_response,
 )
+from src.network.msg_visual_effects import build_create_fx_response
 from src.network.packet_builder import PacketBuilder
 from src.network.packet_id import ServerPacketID
 from src.utils.redis_config import RedisKeys
@@ -42,6 +44,8 @@ class StatusEffectsMessageSender:
         self._blind = False
         self._dumb = False
         self._visibility: dict[int, bool] = {}
+        self._visibility_lock = asyncio.Lock()
+        self._meditation_fx: set[int] = set()
         self._meditating = False
         self._campfire_map = 0
         self._campfires: set[tuple[int, int]] = set()
@@ -85,18 +89,33 @@ class StatusEffectsMessageSender:
         self._campfires = fires
 
     def invalidate_character(self, char_index: int) -> None:
-        """Obliga a reenviar visibilidad cuando un actor se vuelve a crear."""
+        """Reconstruye los estados visibles cuando un actor se vuelve a crear."""
         self._visibility.pop(char_index, None)
+        self._meditation_fx.discard(char_index)
+
+    def record_visual_effect(self, char_index: int, fx: int, loops: int) -> None:
+        """Recuerda el aura ya enviada al dueño para evitar reiniciarla en el tick."""
+        if fx == MEDITATION_FX_ID and loops == -1:
+            self._meditation_fx.add(char_index)
+        elif fx == 0:
+            self._meditation_fx.discard(char_index)
 
     async def sync_visibility(
         self, user_id: int, repository: PlayerRepository, maps: MapManager
     ) -> None:
-        """Publica transiciones a cada observador y recupera expiraciones/reconexiones."""
+        """Sincroniza invisibilidad y meditación sin duplicar lecturas ni reiniciar FX."""
+        async with self._visibility_lock:
+            await self._sync_visible_states(user_id, repository, maps)
+
+    async def _sync_visible_states(
+        self, user_id: int, repository: PlayerRepository, maps: MapManager
+    ) -> None:
         position = await repository.get_position(user_id)
         if position is None:
             return
         users = set(maps.get_players_in_map(position["map"])) | {user_id}
         self._visibility = {uid: hidden for uid, hidden in self._visibility.items() if uid in users}
+        self._meditation_fx.intersection_update(users)
         now = time.time()
         for uid in users:
             stats = await repository.redis.hgetall(RedisKeys.player_user_stats(uid))
@@ -108,6 +127,11 @@ class StatusEffectsMessageSender:
             if self._visibility.get(uid) != hidden:
                 await self.send_set_invisible(uid, hidden)
                 self._visibility[uid] = hidden
+            meditating = int(stats.get("min_hp", 0)) > 0 and stats.get("meditating") == "1"
+            if meditating != (uid in self._meditation_fx):
+                fx, loops = (MEDITATION_FX_ID, -1) if meditating else (0, 0)
+                await self.connection.send(build_create_fx_response(uid, fx, loops))
+                self.record_visual_effect(uid, fx, loops)
 
     async def send_blind(self) -> None:
         """Envía paquete BLIND para activar efecto de ceguera."""

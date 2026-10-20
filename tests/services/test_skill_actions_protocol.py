@@ -10,12 +10,17 @@ import pytest
 import pytest_asyncio
 
 from src.combat.combat_critical_calculator import CriticalCalculator
+from src.command_handlers.meditate_handler import MeditateCommandHandler
+from src.command_handlers.walk_validation_handler import WalkValidationHandler
 from src.command_handlers.work_handler import WorkCommandHandler
+from src.commands.meditate_command import MeditateCommand
 from src.commands.work_command import WorkCommand
+from src.effects.meditation_effect import MeditationEffect
 from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
 from src.models.spell_catalog import SpellCatalog
 from src.network.capabilities import SUPPORTED_CAPABILITIES
+from src.network.msg_visual_effects import build_create_fx_response
 from src.network.packet_builder import PacketBuilder
 from src.network.packet_id import ServerPacketID
 from src.services.action_cadence import ActionCadence
@@ -402,3 +407,85 @@ async def test_campfire_is_visible_to_peers_and_removed_when_expired(action_worl
             assert sender.connection.send.await_args.args[0] == bytes(
                 [ServerPacketID.OBJECT_DELETE, 49, 50]
             )
+
+
+@pytest.mark.asyncio
+async def test_meditation_reaches_peer_and_recreated_actor_without_restarting(action_world):
+    """El actor, su observador y una conexión nueva ven el mismo efecto continuo."""
+    world = action_world
+    handler = MeditateCommandHandler(world.player, world.senders[1])
+    result = await handler.handle(MeditateCommand(user_id=1))
+    assert result.success
+    start = build_create_fx_response(1, 16, -1)
+    for viewer, sender in world.senders.items():
+        await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+        packets = [call.args[0] for call in sender.connection.send.await_args_list]
+        assert packets.count(start) == 1
+        assert packets.count(bytes([ServerPacketID.MEDITATE_TOGGLE])) == (viewer == 1)
+        sender.connection.send.reset_mock()
+        await asyncio.gather(
+            sender.status_effects.sync_visibility(viewer, world.player, world.maps),
+            sender.status_effects.sync_visibility(viewer, world.player, world.maps),
+        )
+        sender.connection.send.assert_not_awaited()
+    observer = world.senders[2]
+    await observer.send_character_create(1, 1, 1, 1, 50, 50)
+    await observer.status_effects.sync_visibility(2, world.player, world.maps)
+    assert observer.connection.send.await_args.args[0] == start
+    observer.connection.send.reset_mock()
+    reconnected = MessageSender(observer.connection)
+    await reconnected.status_effects.sync_visibility(2, world.player, world.maps)
+    assert start in [call.args[0] for call in observer.connection.send.await_args_list]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("reason", ["manual", "movement", "full_mana", "death"])
+async def test_meditation_stops_for_every_observer(action_world, reason):
+    """Las cancelaciones y estados vitales retiran el aura sin togglear al observador."""
+    world = action_world
+    key = RedisKeys.player_user_stats(1)
+    handler = MeditateCommandHandler(world.player, world.senders[1])
+    await handler.handle(MeditateCommand(user_id=1))
+    for viewer, sender in world.senders.items():
+        await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+        sender.connection.send.reset_mock()
+    if reason == "manual":
+        await handler.handle(MeditateCommand(user_id=1))
+    elif reason == "movement":
+        walk = WalkValidationHandler(world.player, None, world.senders[1])
+        await walk._cancel_meditation_if_active(1)
+    elif reason == "full_mana":
+        await world.redis.hset(key, mapping={"min_mana": "100", "max_mana": "100"})
+        await MeditationEffect().apply(1, world.player, world.senders[1])
+    else:
+        await world.redis.hset(key, "min_hp", "0")
+    for viewer, sender in world.senders.items():
+        await sender.sync_status(viewer, world.player)
+        await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+        packets = [call.args[0] for call in sender.connection.send.await_args_list]
+        assert packets.count(build_create_fx_response(1, 0, 0)) == 1
+        if viewer == 2:
+            assert bytes([ServerPacketID.MEDITATE_TOGGLE]) not in packets
+        sender.connection.send.reset_mock()
+        await sender.status_effects.sync_visibility(viewer, world.player, world.maps)
+        sender.connection.send.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_meditation_retries_failed_send_and_ignores_another_map(action_world):
+    """Sólo recuerda envíos exitosos y no difunde el aura fuera del mapa actual."""
+    world = action_world
+    observer = world.senders[2]
+    await observer.status_effects.sync_visibility(2, world.player, world.maps)
+    await world.redis.hset(RedisKeys.player_user_stats(1), "meditating", "1")
+    observer.connection.send.side_effect = ConnectionError("envío interrumpido")
+    with pytest.raises(ConnectionError):
+        await observer.status_effects.sync_visibility(2, world.player, world.maps)
+    observer.connection.send.side_effect = None
+    await observer.status_effects.sync_visibility(2, world.player, world.maps)
+    assert observer.connection.send.await_args.args[0] == build_create_fx_response(1, 16, -1)
+    world.maps.remove_player(2, 1)
+    observer.connection.send.reset_mock()
+    await observer.status_effects.sync_visibility(2, world.player, world.maps)
+    observer.connection.send.assert_not_awaited()
+    assert 1 not in observer.status_effects._meditation_fx
