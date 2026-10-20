@@ -43,7 +43,10 @@ perfil `none`. Las mascotas e invocaciones no emiten botín ni experiencia.
 Los niveles de los 147 hostiles se hicieron explícitos a partir de sus HP máximos:
 2/5/10/18/28/38/50/65/80/100 para HP hasta
 30/100/200/500/1200/3000/8000/20000/50000 y superiores. Es una propuesta de balance
-de PyAO, no un dato del Argentum original. No se alteraron sus HP ni daño.
+de PyAO, no un dato del Argentum original. Se conservan los campos de HP y daño
+del catálogo. El nuevo nivel también interviene en las fórmulas de combate
+existentes, incluido el ataque de NPC basado en nivel; por ello cambia la dificultad.
+El recorrido de botín usa HP controlados y no certifica el balance completo de encuentros.
 
 ## Exclusiones
 
