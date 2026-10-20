@@ -1,6 +1,7 @@
 """Cierre con sockets reales, operaciones activas y dependencias todavía disponibles."""
 
 import asyncio
+import logging
 import ssl
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -8,6 +9,54 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.server import ArgentumServer
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("error", "internal"),
+    [
+        (ConnectionResetError, False),
+        (ConnectionAbortedError, False),
+        (BrokenPipeError, False),
+        (ValueError, True),
+    ],
+)
+async def test_reader_failure_releases_session_and_classifies_error(
+    error: type[Exception], internal: bool, caplog: pytest.LogCaptureFixture
+) -> None:
+    """Cierres del peer liberan la reserva; un error inesperado conserva su traceback."""
+    server = ArgentumServer()
+    reader = asyncio.StreamReader()
+    writer = MagicMock()
+    writer.get_extra_info.return_value = ("127.0.0.1", 12345)
+    writer.wait_closed = AsyncMock()
+    lease = AsyncMock()
+    database = SimpleNamespace(
+        redis=MagicMock(), increment_connections=AsyncMock(), decrement_connections=AsyncMock()
+    )
+    server.deps = SimpleNamespace(redis_client=database)
+    caplog.set_level(logging.INFO, logger="src.server")
+    with patch.object(server, "_cleanup_player", new_callable=AsyncMock) as cleanup:
+        handling = asyncio.create_task(server.handle_client(reader, writer))
+        await asyncio.sleep(0)
+        assert server._connections
+        next(iter(server._connections))._session_lease = lease
+        reader.set_exception(error("synthetic peer failure"))
+        await asyncio.wait_for(handling, timeout=1)
+    cleanup.assert_awaited_once()
+    lease.release.assert_awaited_once()
+    database.increment_connections.assert_awaited_once()
+    database.decrement_connections.assert_awaited_once()
+    writer.close.assert_called_once()
+    assert not server._connections
+    assert not server._client_tasks
+    assert server._active_connections == 0
+    errors = [
+        row for row in caplog.records if row.name == "src.server" and row.levelno >= logging.ERROR
+    ]
+    assert len(errors) == int(internal)
+    if internal:
+        assert errors[0].exc_info is not None
 
 
 @pytest.mark.asyncio
