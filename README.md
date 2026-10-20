@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml"><img src="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI del servidor"></a>
-  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml"><img src="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg" alt="Workflow de Release"></a>
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/cavazquez/pyao-server/ci.yml?branch=main&amp;label=CI&amp;logo=github" alt="CI del servidor"></a>
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/cavazquez/pyao-server/release.yml?label=Release&amp;logo=github" alt="Workflow de Release"></a>
   <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/v/release/cavazquez/pyao-server?include_prereleases&amp;sort=date&amp;label=release" alt="Última release, incluidas versiones de prueba"></a>
   <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/downloads/cavazquez/pyao-server/total" alt="Descargas de GitHub Releases"></a>
   <a href="docs/README.md"><img src="https://img.shields.io/badge/docs-referencia-007ec6?logo=readthedocs&amp;logoColor=white" alt="Documentación del servidor"></a>
