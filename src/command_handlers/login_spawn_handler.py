@@ -130,17 +130,19 @@ class LoginSpawnHandler:
         # Reproducir sonido de login
         await self.message_sender.play_sound_login()
 
-        # Usar PlayerMapService para spawn (maneja toda la secuencia de 12 pasos)
+        # El login entra desde ningún mapa: un único snapshot completo, incluyendo
+        # suelo, NPCs aleatorios y desbloqueo de portales. Una transición seguida
+        # de otro spawn enviaba las mismas entidades dos veces.
         if self.player_map_service:
-            # Para login, el jugador viene de "ningún mapa" (map 0)
-            await self.player_map_service.transition_to_map(
+            if self.map_manager:
+                await self.map_manager.load_ground_items(position["map"])
+            await self.message_sender.send_change_map(position["map"])
+            await self.message_sender.send_pos_update(position["x"], position["y"])
+            await self.player_map_service.spawn_in_map(
                 user_id=user_id,
-                current_map=0,  # No viene de ningún mapa
-                current_x=0,  # Posición inválida (no importa)
-                current_y=0,  # Posición inválida (no importa)
-                new_map=position["map"],
-                new_x=position["x"],
-                new_y=position["y"],
+                map_id=position["map"],
+                x=position["x"],
+                y=position["y"],
                 heading=position.get("heading", 3),
                 message_sender=self.message_sender,
             )

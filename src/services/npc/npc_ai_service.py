@@ -62,11 +62,14 @@ class NPCAIService:
         self.npc_death_service = npc_death_service
         self.visual_events = VisualEvents(map_manager)
 
-    async def find_nearest_player(self, npc: NPC) -> tuple[int, int, int] | None:
+    async def find_nearest_player(
+        self, npc: NPC, *, candidate_positions: dict[int, dict[str, int]] | None = None
+    ) -> tuple[int, int, int] | None:
         """Encuentra el jugador más cercano al NPC.
 
         Args:
             npc: NPC que busca jugadores.
+            candidate_positions: Snapshot de este tick; None solicita una lectura nueva.
 
         Returns:
             Tupla (user_id, x, y) del jugador más cercano, o None si no hay ninguno.
@@ -82,13 +85,13 @@ class NPCAIService:
         nearest_player = None
         min_distance = float("inf")
 
+        candidates = (
+            await self.player_repo.get_positions(user_ids, alive_only=True)
+            if candidate_positions is None
+            else candidate_positions
+        )
         for user_id in user_ids:
-            # Verificar que el jugador esté vivo
-            if not await self.player_repo.is_alive(user_id):
-                continue  # Jugador muerto, ignorar
-
-            # Obtener posición del jugador
-            player_pos = await self.player_repo.get_position(user_id)
+            player_pos = candidates.get(user_id)
             if not player_pos or player_pos["map"] != npc.map_id:
                 continue
 
@@ -411,11 +414,14 @@ class NPCAIService:
         await self.npc_service.move_npc(npc, new_x, new_y, direction)
         return (npc.x, npc.y) == (new_x, new_y)
 
-    async def process_hostile_npc(self, npc: NPC) -> None:
+    async def process_hostile_npc(
+        self, npc: NPC, *, candidate_positions: dict[int, dict[str, int]] | None = None
+    ) -> None:
         """Procesa el comportamiento de un NPC hostil.
 
         Args:
             npc: NPC a procesar.
+            candidate_positions: Candidatos compartidos sólo en esta ejecución del tick.
         """
         if npc.role == "guard":
             await defend(self, npc)
@@ -444,7 +450,7 @@ class NPCAIService:
             return
 
         # Buscar jugador más cercano (usa aggro_range del NPC)
-        nearest = await self.find_nearest_player(npc)
+        nearest = await self.find_nearest_player(npc, candidate_positions=candidate_positions)
 
         if not nearest:
             # No hay jugadores cerca, comportamiento idle

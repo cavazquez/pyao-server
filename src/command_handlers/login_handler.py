@@ -193,9 +193,6 @@ class LoginCommandHandler(CommandHandler):
         if await self.player_repo.is_sailing(user_id):
             await self.message_sender.send_navigate_toggle()
 
-        # Enviar datos del mapa y finalizar login
-        await self.spawn_handler.send_map_data(user_id, position)
-
         # Enviar inventario y MOTD
         await self.finalization_handler.finalize_login(user_id)
 
