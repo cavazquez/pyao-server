@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from src.game.coordinate_mask import CoordinateMask, Coordinates, ResourcesMap
 from src.services.map.ndjson_reader import iter_ndjson_entries
 
 logger = logging.getLogger(__name__)
@@ -29,16 +30,16 @@ def find_file_for_map(maps_dir: Path, pattern: str, map_id: int) -> Path | None:
 def parse_blocked_for_map(
     blocked_path: Path | None, map_id: int
 ) -> tuple[
-    set[tuple[int, int]],
-    set[tuple[int, int]],
-    set[tuple[int, int]],
-    set[tuple[int, int]],
+    Coordinates,
+    Coordinates,
+    Coordinates,
+    Coordinates,
 ]:
     """Procesa un archivo blocked para un único map_id."""
-    blocked: set[tuple[int, int]] = set()
-    water: set[tuple[int, int]] = set()
-    trees: set[tuple[int, int]] = set()
-    mines: set[tuple[int, int]] = set()
+    blocked: Coordinates = CoordinateMask()
+    water: Coordinates = CoordinateMask()
+    trees: Coordinates = CoordinateMask()
+    mines: Coordinates = CoordinateMask()
 
     if not blocked_path or not blocked_path.exists():
         return blocked, water, trees, mines
@@ -72,12 +73,12 @@ def parse_blocked_for_map(
 def parse_objects_for_map(
     objects_path: Path | None,
     map_id: int,
-    trees: set[tuple[int, int]],
-    mines: set[tuple[int, int]],
-    blocked: set[tuple[int, int]],
-    water: set[tuple[int, int]],
-    anvils: set[tuple[int, int]],
-    forges: set[tuple[int, int]],
+    trees: Coordinates,
+    mines: Coordinates,
+    blocked: Coordinates,
+    water: Coordinates,
+    anvils: Coordinates,
+    forges: Coordinates,
 ) -> None:
     """Procesa objects NDJSON para un único map_id."""
     if not objects_path or not objects_path.exists():
@@ -161,7 +162,7 @@ def load_doors_from_objects(objects_path: Path | None, map_id: int) -> dict[tupl
 
 
 def load_single_map_into(
-    resources: dict[str, dict[str, set[tuple[int, int]]]],
+    resources: ResourcesMap,
     signs: dict[str, dict[tuple[int, int], int]],
     doors: dict[str, dict[tuple[int, int], int]],
     maps_dir: Path,
@@ -182,8 +183,8 @@ def load_single_map_into(
     try:
         blocked, water, trees, mines = parse_blocked_for_map(blocked_path, map_id)
 
-        anvils: set[tuple[int, int]] = set()
-        forges: set[tuple[int, int]] = set()
+        anvils: Coordinates = CoordinateMask()
+        forges: Coordinates = CoordinateMask()
 
         parse_objects_for_map(
             objects_path,

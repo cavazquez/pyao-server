@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import MutableMapping
 from typing import TYPE_CHECKING, Any
 
+from src.game.map_tile_index import MapTileIndex
 from src.models.items_catalog import ITEMS_CATALOG
 from src.utils.gold_atomic import RECEIPT_TTL_SECONDS
 from src.utils.gold_atomic import operation_id as new_operation_id
@@ -43,10 +45,12 @@ class GroundItemIndex:
         self._devaluation_pending: dict[int, set[tuple[int, int]]] = {}
         self.max_items_per_tile = max_items_per_tile
         self.ground_items_repo = ground_items_repo
-        self._ground_items: dict[tuple[int, int, int], list[dict[str, int | str | None]]] = {}
+        self._ground_items: MapTileIndex[list[dict[str, int | str | None]]] = MapTileIndex()
 
     @property
-    def ground_items(self) -> dict[tuple[int, int, int], list[dict[str, int | str | None]]]:
+    def ground_items(
+        self,
+    ) -> MutableMapping[tuple[int, int, int], list[dict[str, int | str | None]]]:
         """Storage interno (compatibilidad con MapManager)."""
         return self._ground_items
 
@@ -106,8 +110,8 @@ class GroundItemIndex:
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             entries = [
                 (x, y, self._graphic_for(items[0]))
-                for (current_map, x, y), items in self._ground_items.items()
-                if current_map == map_id and items
+                for (x, y), items in self._ground_items.in_map(map_id).items()
+                if items
             ]
             sent = 0
             for x, y, graphic in entries:
@@ -163,11 +167,7 @@ class GroundItemIndex:
             int: Cantidad de items removidos.
         """
         self._require_memory_mode()
-        keys_to_remove = [key for key in self._ground_items if key[0] == map_id]
-        total_items = sum(len(self._ground_items[key]) for key in keys_to_remove)
-
-        for key in keys_to_remove:
-            del self._ground_items[key]
+        total_items = sum(len(items) for items in self._ground_items.pop_map(map_id).values())
 
         if total_items > 0:
             logger.info("Limpiados %d items del mapa %d", total_items, map_id)
@@ -180,7 +180,7 @@ class GroundItemIndex:
         Returns:
             int: Total de items.
         """
-        return sum(len(items) for key, items in self._ground_items.items() if key[0] == map_id)
+        return sum(len(items) for items in self._ground_items.in_map(map_id).values())
 
     def _require_memory_mode(self) -> None:
         """Impide reintroducir snapshots ciegos desde la API síncrona de tests.
@@ -197,10 +197,10 @@ class GroundItemIndex:
         self._require_memory_mode()
 
     def _replace_map(self, map_id: int, positions: dict[tuple[int, int], list[GroundItem]]) -> None:
-        for key in [key for key in self._ground_items if key[0] == map_id]:
-            del self._ground_items[key]
-        for (x, y), values in positions.items():
-            self._ground_items[map_id, x, y] = [item.copy() for item in values]
+        self._ground_items.replace_map(
+            map_id,
+            {position: [item.copy() for item in values] for position, values in positions.items()},
+        )
 
     async def load_ground_items(self, map_id: int) -> None:
         """Carga el mapa en la misma exclusión que sus commits y notificaciones."""
@@ -218,8 +218,8 @@ class GroundItemIndex:
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             before = {
                 (x, y): values[0].copy()
-                for (current, x, y), values in self._ground_items.items()
-                if current == map_id and values
+                for (x, y), values in self._ground_items.in_map(map_id).items()
+                if values
             }
             positions = await self.ground_items_repo.load_ground_items(map_id)
             self._replace_map(map_id, positions)

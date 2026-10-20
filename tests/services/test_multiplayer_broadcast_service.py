@@ -333,7 +333,7 @@ class TestBroadcastCharacterMove:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_map_manager.get_message_sender.return_value = sender
         mock_map_manager.get_username.return_value = "testuser"
-        mock_player_repo.get_position = AsyncMock(return_value={"x": 50, "y": 50, "map": 1})
+        mock_player_repo.get_positions = AsyncMock(return_value={1: {"x": 50, "y": 50, "map": 1}})
         mock_account_repo.get_account = AsyncMock(return_value={"char_race": 1, "char_head": 1})
 
         # Execute
@@ -370,7 +370,7 @@ class TestBroadcastCharacterMove:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_map_manager.get_message_sender.return_value = sender
         mock_map_manager.get_username.return_value = "testuser"
-        mock_player_repo.get_position = AsyncMock(return_value={"x": 50, "y": 50, "map": 1})
+        mock_player_repo.get_positions = AsyncMock(return_value={1: {"x": 50, "y": 50, "map": 1}})
         mock_account_repo.get_account = AsyncMock(return_value={"char_race": 1, "char_head": 1})
 
         # Execute
@@ -400,8 +400,8 @@ class TestBroadcastCharacterMove:
         """Test broadcast de movimiento fuera de rango visible."""
         # Setup
         mock_map_manager.get_players_in_map.return_value = [1]
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"x": 100, "y": 100, "map": 1}  # Fuera de rango (15 tiles)
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={1: {"x": 100, "y": 100, "map": 1}}  # Fuera de rango (15 tiles)
         )
 
         # Execute
@@ -417,6 +417,34 @@ class TestBroadcastCharacterMove:
 
         # Assert
         assert notified == 0  # No debe notificar jugadores fuera de rango
+
+
+@pytest.mark.asyncio
+async def test_move_batches_positions_and_reads_appearance_once(
+    broadcast_service, mock_map_manager, mock_player_repo
+) -> None:
+    """No relee apariencia por observador y no envía a un mapa ajeno durante un traslado."""
+    mock_map_manager.get_players_in_map.return_value = [1, 2, 3, 4, 5]
+    mock_player_repo.get_positions = AsyncMock(
+        return_value={
+            1: {"x": 50, "y": 50, "map": 1},
+            2: {"x": 51, "y": 50, "map": 1},
+            3: {"x": 51, "y": 50, "map": 2},
+            4: {"x": 100, "y": 100, "map": 1},
+        }
+    )
+    broadcast_service._get_character_appearance = AsyncMock(return_value=(9, 0))
+    senders = {
+        user: MagicMock(send_character_move=AsyncMock(), send_character_change=AsyncMock())
+        for user in (1, 2)
+    }
+    mock_map_manager.get_message_sender.side_effect = lambda user, _map: senders[user]
+    assert await broadcast_service.broadcast_character_move(1, 10001, 51, 50, 2, 50, 50, 1) == 2
+    mock_player_repo.get_positions.assert_awaited_once_with([1, 2, 3, 4, 5])
+    broadcast_service._get_character_appearance.assert_awaited_once_with(10001, 1)
+    for sender in senders.values():
+        sender.send_character_move.assert_awaited_once_with(10001, 51, 50)
+        sender.send_character_change.assert_awaited_once_with(10001, body=9, head=0, heading=2)
 
 
 class TestGetCharacterAppearance:

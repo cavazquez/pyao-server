@@ -311,7 +311,12 @@ class ArgentumServer:
                 logger.exception("Error al limpiar mascotas del jugador %d al desconectar", user_id)
 
         # Remover jugador de todos los mapas
-        self.deps.map_manager.remove_player_from_all_maps(user_id)
+        if message_sender is None:
+            self.deps.map_manager.remove_player_from_all_maps(user_id)
+        else:
+            self.deps.map_manager.remove_player_from_all_maps(
+                user_id, expected_sender=message_sender
+            )
 
     async def start(self) -> None:
         """Inicia el servidor TCP."""

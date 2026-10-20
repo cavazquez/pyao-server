@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from src.effects.tick_effect import TickEffect
 
@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 class NPCAIEffect(TickEffect):
     """Efecto que procesa la IA de NPCs hostiles cada tick."""
+
+    runs_once_per_tick: ClassVar[bool] = True
 
     def __init__(
         self,
@@ -88,9 +90,29 @@ class NPCAIEffect(TickEffect):
             )
             return
 
+        # Un snapshot de candidatos por mapa y por ejecución. No se conserva
+        # entre ticks y nunca reemplaza la validación viva del ataque.
+        positions = {}
+        failed_maps: set[int] = set()
+        for map_id in dict.fromkeys(npc.map_id for npc in active_npcs if npc.is_hostile):
+            users = self.npc_service.map_manager.get_players_in_map(map_id)
+            try:
+                positions[map_id] = await self.npc_ai_service.player_repo.get_positions(
+                    users, alive_only=True
+                )
+            except Exception:
+                failed_maps.add(map_id)
+                logger.exception("No se pudieron leer candidatos de IA del mapa %d", map_id)
+
         # Procesar NPCs en paralelo usando asyncio.gather
         # Esto permite que múltiples NPCs procesen su IA simultáneamente
-        tasks = [self.npc_ai_service.process_hostile_npc(npc) for npc in active_npcs]
+        tasks = [
+            self.npc_ai_service.process_hostile_npc(
+                npc, candidate_positions=positions.get(npc.map_id)
+            )
+            for npc in active_npcs
+            if npc.map_id not in failed_maps
+        ]
 
         # gather con return_exceptions=True para que un error en un NPC no afecte a los demás
         results = await asyncio.gather(*tasks, return_exceptions=True)

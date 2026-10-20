@@ -1,7 +1,7 @@
 """Clase base abstracta para efectos de tick del juego."""
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 class TickEffect(ABC):
     """Clase base abstracta para efectos de tick."""
+
+    runs_once_per_tick: ClassVar[bool] = False
 
     @abstractmethod
     async def apply(

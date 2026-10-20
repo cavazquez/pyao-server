@@ -24,6 +24,7 @@ from src.services.map.map_transition_steps import (
 from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
+ENTITY_SEND_BATCH = 16
 
 
 @dataclass
@@ -167,8 +168,9 @@ class PlayerMapService:
                 y=other_position["y"],
                 name=other_visual.username,
             )
-            await asyncio.sleep(0.01)
             players_sent += 1
+            if players_sent % ENTITY_SEND_BATCH == 0:
+                await asyncio.sleep(0)
 
         logger.debug("Enviados %d jugadores del mapa %d", players_sent, map_id)
         return players_sent
@@ -201,8 +203,9 @@ class PlayerMapService:
                 loops=0,
                 name=npc.name,
             )
-            await asyncio.sleep(0.01)
             npcs_sent += 1
+            if npcs_sent % ENTITY_SEND_BATCH == 0:
+                await asyncio.sleep(0)
 
         logger.debug("Enviados %d NPCs del mapa %d", npcs_sent, map_id)
         return npcs_sent
@@ -254,7 +257,8 @@ class PlayerMapService:
                 # Enviar BLOCK_POSITION(false) para desbloquear el tile
                 await message_sender.send_block_position(x, y, blocked=False)
                 unblocked += 1
-                await asyncio.sleep(0.001)  # Pequeño delay para no saturar
+                if unblocked % ENTITY_SEND_BATCH == 0:
+                    await asyncio.sleep(0)
 
         if unblocked > 0:
             logger.debug("Desbloqueados %d tiles de exit en mapa %d", unblocked, map_id)
@@ -483,7 +487,7 @@ class PlayerMapService:
         )
 
         # Enviar CHARACTER_CREATE de los NPCs spawneados al jugador
-        for npc in spawned_npcs:
+        for index, npc in enumerate(spawned_npcs, start=1):
             await message_sender.send_character_create(
                 char_index=npc.char_index,
                 body=npc.body_id,
@@ -498,7 +502,8 @@ class PlayerMapService:
                 loops=-1 if hasattr(npc, "fx_loop") and npc.fx_loop > 0 else 0,
                 name=npc.name,
             )
-            await asyncio.sleep(0.01)
+            if index % ENTITY_SEND_BATCH == 0:
+                await asyncio.sleep(0)
 
         if spawned_npcs:
             logger.debug(

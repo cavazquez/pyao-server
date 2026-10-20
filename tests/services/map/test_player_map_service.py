@@ -351,7 +351,9 @@ class TestPlayerMapService:
         mock_message_sender.send_pos_update.assert_called_once_with(60, 60)
 
         # 5. Debe remover del mapa anterior
-        player_map_service.map_manager.remove_player.assert_called_once_with(1, 1)
+        player_map_service.map_manager.remove_player.assert_called_once_with(
+            1, 1, expected_sender=mock_message_sender
+        )
 
         # 6. Debe broadcast CHARACTER_REMOVE en mapa anterior
         player_map_service.broadcast_service.broadcast_character_remove.assert_called_once_with(
@@ -471,7 +473,9 @@ class TestPlayerMapService:
         mock_message_sender.send_change_map.assert_called_once_with(1)
 
         # Debe remover y agregar del mismo mapa
-        player_map_service.map_manager.remove_player.assert_called_once_with(1, 1)
+        player_map_service.map_manager.remove_player.assert_called_once_with(
+            1, 1, expected_sender=mock_message_sender
+        )
         player_map_service.map_manager.add_player.assert_called_once()
 
     @pytest.mark.asyncio

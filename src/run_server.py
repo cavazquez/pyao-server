@@ -100,7 +100,6 @@ def main() -> None:
         sys.exit(1)
 
     from src.server import ArgentumServer  # ruff: ignore[import-outside-top-level]
-    from tools.compression.map_binary import ensure_binary_maps  # ruff: ignore[import-outside-top-level]
     from tools.compression.map_sync import check_map_sync_on_startup  # ruff: ignore[import-outside-top-level]
 
     # Configurar logging
@@ -135,12 +134,7 @@ def main() -> None:
         )
         sys.exit(1)
 
-    # Generar/actualizar mapas binarios si es necesario
-    logger.info("Verificando mapas binarios...")
-    if ensure_binary_maps(maps_dir(), state_dir() / "map_binary"):
-        logger.info("✓ Mapas binarios listos")
-    else:
-        logger.warning("No se pudieron generar mapas binarios, usando JSON")
+    # MapResourcesService valida y construye su caché compacta al inicializar.
 
     # Mostrar información de inicio
     logger.info("Iniciando PyAO Server v%s...", cli.VERSION)

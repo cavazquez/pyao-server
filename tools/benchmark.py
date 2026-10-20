@@ -60,7 +60,7 @@ async def benchmark(args):
     profiles=json.loads(args.accounts.read_text())
     if len(profiles)<args.connections+args.slow_readers:raise ValueError('Faltan cuentas únicas del fixture')
     context=ssl.create_default_context(cafile=str(args.ca)) if args.ca else None
-    peers=[];slow=[];latencies=deque(maxlen=100000);logins=[];errors=[]
+    peers=[];slow=[];latencies=deque(maxlen=100000);logins=[];first_stats=[];errors=[];outliers=deque(maxlen=1000)
     ticks_before=json.loads(args.metrics.read_text()) if args.metrics and args.metrics.exists() else None
     samples=[]
     def proc_sample():
@@ -77,6 +77,13 @@ async def benchmark(args):
             writer.write(login_packet(profile['username'],profile['password']));await writer.drain()
             await asyncio.wait_for(peer.ready.wait(),10)
             if peer.error:raise ConnectionError(peer.error)
+            first_stats.append((time.perf_counter()-start)*1000)
+            # UPDATE_USER_STATS llega antes del spawn. Un PONG detrás del LOGIN
+            # confirma que el handler completo terminó, sin ocultar esa espera
+            # dentro de la primera muestra de latencia durante el juego.
+            peer.pong=asyncio.get_running_loop().create_future()
+            writer.write(bytes([ClientPacketID.PING]));await writer.drain()
+            await asyncio.wait_for(peer.pong,5)
             logins.append((time.perf_counter()-start)*1000)
         for profile in profiles[args.connections:args.connections+args.slow_readers]:
             reader,writer=await asyncio.open_connection(args.host,args.port,ssl=context,server_hostname=args.tls_name if context else None)
@@ -97,7 +104,9 @@ async def benchmark(args):
                         peer.writer.write(bytes([ClientPacketID.TALK])+struct.pack('<H',len(text))+text)
                     await peer.writer.drain()
                     end=await asyncio.wait_for(peer.pong,5)
-                    latencies.append((end-before)*1000)
+                    elapsed=(end-before)*1000
+                    latencies.append(elapsed)
+                    if elapsed>=10:outliers.append({'peer':index,'iteration':iteration,'started_monotonic':before,'elapsed_ms':elapsed})
                     iteration+=1
                     await asyncio.sleep(args.cadence)
                 except (TimeoutError,ConnectionError,OSError) as error:
@@ -115,6 +124,10 @@ async def benchmark(args):
         await asyncio.gather(*(exercise(i,p) for i,p in enumerate(peers)),measure())
         ticks_after=json.loads(args.metrics.read_text()) if args.metrics and args.metrics.exists() else None
         metrics={'version':__version__,'started_at':datetime.now(UTC).isoformat(),'platform':platform.platform(),'cpu_count':os.cpu_count(),'python':platform.python_version(),'connections':len(peers),'slow_readers':len(slow),'seconds':time.monotonic()-started,'login_ms':{'p50':percentile(logins,.5),'p95':percentile(logins,.95),'max':max(logins,default=None)},'rtt_ms':{'samples':len(latencies),'sample_limit':100000,'p50':percentile(latencies,.5),'p95':percentile(latencies,.95),'p99':percentile(latencies,.99),'max':max(latencies,default=None)},'errors':errors,'packets':dict(sum((p.counts for p in peers),Counter())),'server_process':samples,'tick_before':ticks_before,'tick_after':ticks_after,'budgets':{'rtt_p95_ms':args.max_p95_ms,'login_ms':args.max_login_ms},'passed':bool(latencies) and not errors and (args.max_p95_ms is None or percentile(latencies,.95)<=args.max_p95_ms) and (args.max_login_ms is None or max(logins)<=args.max_login_ms)}
+        metrics['outliers_ms']=list(outliers)
+        metrics['started_monotonic']=started
+        metrics['login_first_stats_ms']={'p50':percentile(first_stats,.5),'p95':percentile(first_stats,.95),'max':max(first_stats,default=None)}
+        metrics['login_readiness']='PONG ordered after the complete LOGIN handler; first stats are reported separately'
         args.output.write_text(json.dumps(metrics,indent=2)+'\n')
         return metrics
     finally:

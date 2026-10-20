@@ -7,6 +7,9 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.game.coordinate_mask import MAP_SIDE, CoordinateMask, Coordinates, coordinates_for
+from src.services.map.ndjson_reader import iter_ndjson_entries
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,7 +19,7 @@ class MapMetadataResult:
 
     width: int
     height: int
-    blocked_tiles: set[tuple[int, int]]
+    blocked_tiles: Coordinates
     exit_tiles: dict[tuple[int, int, int], dict[str, int]]
     exit_count: int
 
@@ -40,6 +43,9 @@ class MapMetadataLoader:
 
         self._blocked_cache: dict[Path, dict[int, list[dict[str, object]]]] = {}
         self._missing_blocked_files: set[Path] = set()
+        self._compact_blocked_cache: dict[Path, dict[int, Coordinates]] = {}
+        self._compact_exits: dict[Path, dict[int, dict[tuple[int, int, int], dict[str, int]]]] = {}
+        self._compact_exit_counts: dict[Path, dict[int, int]] = {}
 
     def load_map_data(self, map_id: int, metadata_path: str | Path) -> MapMetadataResult:
         """Carga metadatos y tiles bloqueados de un mapa.
@@ -54,11 +60,20 @@ class MapMetadataLoader:
             width, height, blocked_tiles = self._load_metadata_file(metadata_path)
 
             if blocked_tiles is None:
-                blocked_tiles = self._get_blocked_tiles_for_map(map_id, blocked_path)
-                if blocked_tiles is None:
-                    return MapMetadataResult(width, height, set(), {}, 0)
-
-            blocked_set, exit_count, exit_tiles = self._build_blocked_data(map_id, blocked_tiles)
+                compact = self._compact_blocked_for_map(map_id, blocked_path)
+                if compact is not None:
+                    blocked_set, exit_count, exit_tiles = compact
+                else:
+                    blocked_tiles = self._get_blocked_tiles_for_map(map_id, blocked_path)
+                    if blocked_tiles is None:
+                        return MapMetadataResult(width, height, CoordinateMask(), {}, 0)
+                    blocked_set, exit_count, exit_tiles = self._build_blocked_data(
+                        map_id, blocked_tiles
+                    )
+            else:
+                blocked_set, exit_count, exit_tiles = self._build_blocked_data(
+                    map_id, blocked_tiles
+                )
             transitions_loaded = self._load_map_transitions(
                 map_id, metadata_path.parent / self._transitions_file_for_map(map_id), exit_tiles
             )
@@ -66,7 +81,13 @@ class MapMetadataLoader:
             return MapMetadataResult(
                 width=width,
                 height=height,
-                blocked_tiles=blocked_set,
+                blocked_tiles=(
+                    blocked_set.copy()
+                    if isinstance(blocked_set, CoordinateMask)
+                    else CoordinateMask(
+                        (x, y) for x, y in blocked_set if 1 <= x <= MAP_SIDE and 1 <= y <= MAP_SIDE
+                    )
+                ),
                 exit_tiles=exit_tiles,
                 exit_count=exit_count + transitions_loaded,
             )
@@ -74,8 +95,67 @@ class MapMetadataLoader:
         except OSError, json.JSONDecodeError:
             logger.exception("Error cargando mapa %d desde %s", map_id, metadata_path)
             return MapMetadataResult(
-                width=100, height=100, blocked_tiles=set(), exit_tiles={}, exit_count=0
+                width=100, height=100, blocked_tiles=CoordinateMask(), exit_tiles={}, exit_count=0
             )
+
+    def _compact_blocked_for_map(
+        self, map_id: int, path: Path
+    ) -> tuple[Coordinates, int, dict[tuple[int, int, int], dict[str, int]]] | None:
+        """Lee NDJSON en streaming y retiene sólo bits y salidas.
+
+        Returns:
+            Capa, conteo y salidas; None para usar el lector de fixtures JSON.
+        """
+        if not path.is_file():
+            return None
+        if path not in self._compact_blocked_cache:
+            with path.open(encoding="utf-8") as source:
+                if source.read(4096).lstrip().startswith("["):
+                    return None  # Soporte de fixtures JSON antiguas mediante la API existente.
+            masks: dict[int, Coordinates] = {}
+            exits: dict[int, dict[tuple[int, int, int], dict[str, int]]] = {}
+            counts: dict[int, int] = {}
+            for _, tile in iter_ndjson_entries(path, log=logger):
+                mid = self._coerce_int(tile.get("m"))
+                x, y = self._coerce_int(tile.get("x")), self._coerce_int(tile.get("y"))
+                if (
+                    mid is None
+                    or x is None
+                    or y is None
+                    or not 1 <= x <= MAP_SIDE
+                    or not 1 <= y <= MAP_SIDE
+                ):
+                    continue
+                coordinates_for(masks, mid).add((x, y))
+                if tile.get("t", tile.get("type")) == "exit":
+                    to_map = self._coerce_int(tile.get("to_map"))
+                    to_x, to_y = (
+                        self._coerce_int(tile.get("to_x")),
+                        self._coerce_int(tile.get("to_y")),
+                    )
+                    if to_map is not None and to_map > 0 and to_x is not None and to_y is not None:
+                        exits.setdefault(mid, {})[mid, x, y] = {
+                            "to_map": to_map,
+                            "to_x": to_x,
+                            "to_y": to_y,
+                        }
+                        counts[mid] = counts.get(mid, 0) + 1
+            self._compact_blocked_cache[path] = masks
+            self._compact_exits[path] = exits
+            self._compact_exit_counts[path] = counts
+        return (
+            self._compact_blocked_cache[path].get(map_id, CoordinateMask()),
+            self._compact_exit_counts[path].get(map_id, 0),
+            self._compact_exits[path].get(map_id, {}).copy(),
+        )
+
+    def release_source_cache(self) -> None:
+        """Descarta entradas de lectura; los flags y salidas publicados son propios."""
+        self._blocked_cache.clear()
+        self._transitions_cache.clear()
+        self._compact_blocked_cache.clear()
+        self._compact_exits.clear()
+        self._compact_exit_counts.clear()
 
     # Métodos públicos para soporte y compatibilidad
     def load_metadata_file(

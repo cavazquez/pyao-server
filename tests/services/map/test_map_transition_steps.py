@@ -109,7 +109,9 @@ class TestRemoveFromOldMapStep:
 
         await step.execute(mock_context)
 
-        map_manager.remove_player.assert_called_once_with(1, 1)
+        map_manager.remove_player.assert_called_once_with(
+            1, 1, expected_sender=mock_context.message_sender
+        )
 
 
 class TestBroadcastRemoveFromOldMapStep:
@@ -274,14 +276,13 @@ class TestMapTransitionOrchestrator:
             send_ground_items,
         )
 
-        # Verificar que tiene 13 pasos (incluyendo actualización de tile en nuevo mapa)
-        assert len(orchestrator.steps) == 13
+        # TCP preserva CHANGE_MAP antes de las entidades; no necesita una espera fija.
+        assert len(orchestrator.steps) == 12
 
         # Verificar tipos de pasos
         step_types = [type(step).__name__ for step in orchestrator.steps]
         expected_types = [
             "SendChangeMapStep",
-            "ClientLoadDelayStep",
             "UpdatePositionStep",
             "SendPositionUpdateStep",
             "RemoveFromOldMapStep",

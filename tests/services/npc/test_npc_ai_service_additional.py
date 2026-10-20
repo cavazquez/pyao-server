@@ -62,6 +62,7 @@ def mock_player_repo() -> MagicMock:
     repo.is_alive = AsyncMock(return_value=True)
     repo.get_player_stats = AsyncMock()
     repo.get_position = AsyncMock()
+    repo.get_positions = AsyncMock(return_value={})
     repo.update_hp = AsyncMock()
     return repo
 
@@ -146,8 +147,8 @@ class TestFindNearestPlayer:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_player_repo.is_alive = AsyncMock(return_value=True)
         mock_player_repo.get_player_stats = AsyncMock()
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"map": 2, "x": 50, "y": 50}
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={1: {"map": 2, "x": 50, "y": 50}}
         )  # Mapa diferente
 
         result = await ai_service.find_nearest_player(sample_npc)
@@ -167,8 +168,8 @@ class TestFindNearestPlayer:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_player_repo.is_alive = AsyncMock(return_value=True)
         mock_player_repo.get_player_stats = AsyncMock()
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"map": 1, "x": 100, "y": 100}
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={1: {"map": 1, "x": 100, "y": 100}}
         )  # Muy lejos
 
         result = await ai_service.find_nearest_player(sample_npc)
@@ -189,11 +190,11 @@ class TestFindNearestPlayer:
         mock_player_repo.is_alive = AsyncMock(return_value=True)
         mock_player_repo.get_player_stats = AsyncMock()
         # Jugador 1 m?s cerca, jugador 2 m?s lejos
-        mock_player_repo.get_position = AsyncMock(
-            side_effect=[
-                {"map": 1, "x": 51, "y": 50},  # Distancia 1
-                {"map": 1, "x": 55, "y": 50},  # Distancia 5
-            ]
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={
+                1: {"map": 1, "x": 51, "y": 50},
+                2: {"map": 1, "x": 55, "y": 50},
+            }
         )
 
         result = await ai_service.find_nearest_player(sample_npc)
@@ -203,6 +204,28 @@ class TestFindNearestPlayer:
         assert user_id == 1  # Jugador m?s cercano
         assert x == 51
         assert y == 50
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(("alive", "current_map"), [(False, 1), (True, 2)])
+async def test_candidate_snapshot_does_not_authorize_attack(
+    ai_service,
+    sample_npc,
+    mock_map_manager,
+    mock_player_repo,
+    mock_combat_service,
+    alive,
+    current_map,
+) -> None:
+    """Morir o cambiar de mapa después de elegir candidato invalida el ataque."""
+    mock_map_manager.get_players_in_map.return_value = [7]
+    mock_player_repo.get_positions = AsyncMock(return_value={7: {"map": 1, "x": 51, "y": 50}})
+    assert await ai_service.find_nearest_player(sample_npc) == (7, 51, 50)
+    mock_player_repo.get_positions.assert_awaited_once_with([7], alive_only=True)
+    mock_player_repo.is_alive = AsyncMock(return_value=alive)
+    mock_player_repo.get_position = AsyncMock(return_value={"map": current_map, "x": 51, "y": 50})
+    assert not await ai_service.try_attack_player(sample_npc, 7)
+    mock_combat_service.npc_attack_player.assert_not_awaited()
 
 
 class TestGetDirectionToTarget:
@@ -602,8 +625,9 @@ class TestProcessHostileNPC:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_player_repo.is_alive = AsyncMock(return_value=True)
         mock_player_repo.get_player_stats = AsyncMock()
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"map": 1, "x": 51, "y": 50}
+        mock_player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 51, "y": 50})
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={1: {"map": 1, "x": 51, "y": 50}}
         )  # Adyacente
         mock_combat_service.npc_attack_player = AsyncMock(return_value={"damage": 10})
 
@@ -638,8 +662,9 @@ class TestProcessHostileNPC:
         mock_map_manager.get_players_in_map.return_value = [1]
         mock_player_repo.is_alive = AsyncMock(return_value=True)
         mock_player_repo.get_player_stats = AsyncMock()
-        mock_player_repo.get_position = AsyncMock(
-            return_value={"map": 1, "x": 55, "y": 50}
+        mock_player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 55, "y": 50})
+        mock_player_repo.get_positions = AsyncMock(
+            return_value={1: {"map": 1, "x": 55, "y": 50}}
         )  # Lejos pero en rango
         mock_map_manager.can_move_to = MagicMock(return_value=True)
         mock_map_manager.is_tile_occupied = MagicMock(return_value=False)

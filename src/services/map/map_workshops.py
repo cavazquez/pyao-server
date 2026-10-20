@@ -4,13 +4,15 @@ import logging
 import tomllib
 from pathlib import Path
 
+from src.game.coordinate_mask import CoordinateMask, ResourcesMap
+
 logger = logging.getLogger(__name__)
 Workshops = dict[int, list[tuple[int, int, int]]]
 MAP_SIZE = 100
 MAX_GRAPHIC = 32767
 
 
-def load_workshops(path: Path, resources: dict[str, dict[str, set[tuple[int, int]]]]) -> Workshops:
+def load_workshops(path: Path, resources: ResourcesMap) -> Workshops:
     """Añade talleres al terreno después de cargar cualquier caché de mapas.
 
     Returns:
@@ -42,7 +44,7 @@ def load_workshops(path: Path, resources: dict[str, dict[str, set[tuple[int, int
         terrain = resources.get(f"map_{map_id}")
         if terrain is None:
             continue
-        terrain.setdefault(layer, set()).add((x, y))
+        terrain.setdefault(layer, CoordinateMask()).add((x, y))
         terrain["blocked"].add((x, y))
         result.setdefault(map_id, []).append((x, y, graphic))
     logger.info("✓ Cargados %d talleres estáticos", sum(map(len, result.values())))

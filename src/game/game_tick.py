@@ -92,7 +92,12 @@ class GameTick:
                 # se procesen simultáneamente
                 tasks = []
                 for effect in self.effects:
-                    for user_id in connected_user_ids:
+                    effect_users = (
+                        connected_user_ids[:1]
+                        if effect.runs_once_per_tick is True
+                        else connected_user_ids
+                    )
+                    for user_id in effect_users:
                         message_sender = self.map_manager.get_message_sender(user_id)
                         # Crear tarea con manejo de excepciones incluido y profiling
                         task = self._apply_effect_safe_with_metrics(effect, user_id, message_sender)

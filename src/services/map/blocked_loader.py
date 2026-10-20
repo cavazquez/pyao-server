@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+from src.game.coordinate_mask import Coordinates, coordinates_for
 from src.services.map.ndjson_reader import iter_ndjson_entries
 
 logger = logging.getLogger(__name__)
@@ -12,10 +13,10 @@ logger = logging.getLogger(__name__)
 
 def process_blocked_file(
     blocked_path: Path,
-    blocked_by_map: dict[int, set[tuple[int, int]]],
-    water_by_map: dict[int, set[tuple[int, int]]],
-    trees_by_map: dict[int, set[tuple[int, int]]],
-    mines_by_map: dict[int, set[tuple[int, int]]],
+    blocked_by_map: dict[int, Coordinates],
+    water_by_map: dict[int, Coordinates],
+    trees_by_map: dict[int, Coordinates],
+    mines_by_map: dict[int, Coordinates],
 ) -> None:
     """Procesa un archivo blocked_*.json y acumula por map_id."""
     if not blocked_path.exists():
@@ -34,13 +35,13 @@ def process_blocked_file(
             continue
 
         if tile_type == "b":  # blocked
-            blocked_by_map.setdefault(map_id, set()).add((x, y))
+            coordinates_for(blocked_by_map, map_id).add((x, y))
         elif tile_type == "w":  # water
-            water_by_map.setdefault(map_id, set()).add((x, y))
-            blocked_by_map.setdefault(map_id, set()).add((x, y))
+            coordinates_for(water_by_map, map_id).add((x, y))
+            coordinates_for(blocked_by_map, map_id).add((x, y))
         elif tile_type == "t":  # tree
-            trees_by_map.setdefault(map_id, set()).add((x, y))
-            blocked_by_map.setdefault(map_id, set()).add((x, y))
+            coordinates_for(trees_by_map, map_id).add((x, y))
+            coordinates_for(blocked_by_map, map_id).add((x, y))
         elif tile_type == "m":  # mine
-            mines_by_map.setdefault(map_id, set()).add((x, y))
-            blocked_by_map.setdefault(map_id, set()).add((x, y))
+            coordinates_for(mines_by_map, map_id).add((x, y))
+            coordinates_for(blocked_by_map, map_id).add((x, y))

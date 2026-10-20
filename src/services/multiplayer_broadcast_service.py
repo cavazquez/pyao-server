@@ -217,12 +217,14 @@ class MultiplayerBroadcastService:
         """
         # Obtener todos los jugadores en el mapa (excluyendo el que se movió para evitar saltos)
         all_player_ids = self.map_manager.get_players_in_map(map_id, exclude_user_id=char_index)
+        positions = await self.player_repo.get_positions(all_player_ids)
+        appearance: tuple[int, int] | None = None
 
         notified = 0
         for player_id in all_player_ids:
             # Obtener posición del jugador para verificar si está en rango visible
-            player_position = await self.player_repo.get_position(player_id)
-            if not player_position:
+            player_position = positions.get(player_id)
+            if not player_position or player_position["map"] != map_id:
                 continue
 
             # Filtrar por rango visible
@@ -243,7 +245,9 @@ class MultiplayerBroadcastService:
             # (CHARACTER_MOVE no incluye heading para compatibilidad con cliente Godot)
             if old_heading is None or new_heading != old_heading:
                 # Obtener body_id y head_id según si es NPC o jugador
-                char_body, char_head = await self._get_character_appearance(char_index, map_id)
+                if appearance is None:
+                    appearance = await self._get_character_appearance(char_index, map_id)
+                char_body, char_head = appearance
 
                 await sender.send_character_change(
                     char_index, body=char_body, head=char_head, heading=new_heading

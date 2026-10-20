@@ -1,5 +1,10 @@
 # Estructuras del mundo: diagnóstico medido del 20/10/2026
 
+Este documento conserva el diagnóstico inicial de #333. La implementación
+posterior, sus complejidades y mediciones se describen en
+[optimización aplicada](runtime-performance.md). Los índices permanentes y las
+máscaras que aquí se proponían ya están implementados allí.
+
 Se revisaron servidor y cliente para el issue #333. Se corrigió la enumeración
 cuadrática de jugadores conectados y se dejaron tareas independientes para las
 optimizaciones que requieren mantener índices o cambiar representaciones.

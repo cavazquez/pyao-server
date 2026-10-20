@@ -2,7 +2,7 @@
 """Reproducible structure audit; synthetic entities and optional disposable Redis only."""
 
 import argparse
-import array
+import dataclasses
 import gc
 import hashlib
 import json
@@ -39,6 +39,10 @@ def deep_bytes(value, seen=None):
         size += sum(deep_bytes(v, seen) for v in value)
     elif hasattr(value, "__dict__"):
         size += deep_bytes(vars(value), seen)
+    elif dataclasses.is_dataclass(value) and not isinstance(value, type):
+        size += sum(
+            deep_bytes(getattr(value, field.name), seen) for field in dataclasses.fields(value)
+        )
     return size
 
 

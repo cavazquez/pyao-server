@@ -100,7 +100,9 @@ class RemoveFromOldMapStep(MapTransitionStep):
     async def execute(self, context: MapTransitionContext) -> None:
         """Remueve al jugador del mapa anterior."""
         logger.debug("Paso 5: Removiendo jugador del mapa %d", context.current_map)
-        self.map_manager.remove_player(context.current_map, context.user_id)
+        self.map_manager.remove_player(
+            context.current_map, context.user_id, expected_sender=context.message_sender
+        )
 
 
 class BroadcastRemoveFromOldMapStep(MapTransitionStep):
@@ -305,7 +307,6 @@ class MapTransitionOrchestrator:
         """
         steps = [
             SendChangeMapStep(),
-            ClientLoadDelayStep(),
             UpdatePositionStep(player_repo),
             SendPositionUpdateStep(),
             RemoveFromOldMapStep(map_manager),
