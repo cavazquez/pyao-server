@@ -4,19 +4,41 @@
   <img src="assets/icon.png" alt="Icono de PyAO Server" width="160" height="160">
 </p>
 
-[![CI](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml)
-[![Release](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg)](https://github.com/cavazquez/pyao-server/actions/workflows/release.yml)
-[![codecov](https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg)](https://codecov.io/gh/cavazquez/pyao-server)
-[![Downloads](https://img.shields.io/github/downloads/cavazquez/pyao-server/total.svg)](https://github.com/cavazquez/pyao-server/releases)
-[![Python](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Snapcraft](https://snapcraft.io/pyao/badge.svg)](https://snapcraft.io/pyao)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/cavazquez/pyao-server)
+<p align="center">
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml"><img src="https://github.com/cavazquez/pyao-server/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI del servidor"></a>
+  <a href="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml"><img src="https://github.com/cavazquez/pyao-server/actions/workflows/release.yml/badge.svg" alt="Workflow de Release"></a>
+  <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/v/release/cavazquez/pyao-server?include_prereleases&amp;sort=date&amp;label=release" alt="Última release, incluidas versiones de prueba"></a>
+  <a href="https://github.com/cavazquez/pyao-server/releases"><img src="https://img.shields.io/github/downloads/cavazquez/pyao-server/total" alt="Descargas de GitHub Releases"></a>
+  <a href="docs/README.md"><img src="https://img.shields.io/badge/docs-referencia-007ec6?logo=readthedocs&amp;logoColor=white" alt="Documentación del servidor"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.14%2B-3776AB?logo=python&amp;logoColor=white" alt="Python 3.14 o superior"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/cavazquez/pyao-server" alt="Licencia Apache 2.0"></a>
+</p>
+
+<p align="center">
+  <a href="https://snapcraft.io/pyao"><img src="https://img.shields.io/snapcraft/v/pyao/latest/edge?arch=amd64&amp;label=snap%20edge&amp;logo=snapcraft" alt="Versión de pyao en Snap latest/edge para amd64"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/363"><img src="https://img.shields.io/badge/homebrew-pendiente-lightgrey?logo=homebrew" alt="Homebrew pendiente: issue 363"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/364"><img src="https://img.shields.io/badge/apt-pendiente-lightgrey?logo=debian" alt="APT pendiente: issue 364"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/366"><img src="https://img.shields.io/badge/Microsoft%20Store-pendiente-lightgrey" alt="Microsoft Store pendiente de evaluación: issue 366"></a>
+  <a href="https://github.com/cavazquez/pyao-server/issues/365"><img src="https://img.shields.io/badge/winget-pendiente-lightgrey" alt="WinGet pendiente: issue 365"></a>
+</p>
+
+<p align="center">
+  <a href="https://codecov.io/gh/cavazquez/pyao-server"><img src="https://codecov.io/gh/cavazquez/pyao-server/branch/main/graph/badge.svg" alt="Cobertura de tests"></a>
+  <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
+  <a href="https://deepwiki.com/cavazquez/pyao-server"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/cavazquez/pyao-server">Proyecto</a> ·
+  <a href="docs/README.md">Documentación</a> ·
+  <a href="https://github.com/cavazquez/pyao-server/releases">Releases</a>
+</p>
+
+Los canales marcados como pendientes enlazan sus issues de implementación.
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
-Descarga de pruebas vigente: **[servidor 1.0.0rc2](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc2)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc2)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
+Descarga de pruebas vigente: **[servidor 1.0.0rc3](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc3)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc3)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
 
 Los PR ejecutan validaciones, pruebas y controles de dependencias sin construir
 distribuciones. Compilar y publicar son operaciones manuales separadas; ver
