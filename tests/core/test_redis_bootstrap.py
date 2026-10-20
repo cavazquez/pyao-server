@@ -10,7 +10,7 @@ from fakeredis.aioredis import FakeRedis
 
 from src.core.data_initializer import DataInitializer
 from src.core.redis_initializer import RedisInitializer
-from src.core.schema_manager import SCHEMA_KEY, SchemaMigrationError
+from src.core.schema_manager import CURRENT_SCHEMA_VERSION, SCHEMA_KEY, SchemaMigrationError
 from src.models.crafting_data_loader import CRAFTING_KEY
 from src.models.skill_data_loader import SKILL_RULES_KEY
 from src.utils.redis_client import RedisClient
@@ -38,7 +38,7 @@ async def test_empty_bootstrap_and_repeated_boot_preserve_custom_state(client):
     """Cuentas, IDs, oro, inventario y configuración no son semillas descartables."""
     await RedisInitializer.initialize()
     redis = client.redis
-    assert await redis.hget(SCHEMA_KEY, "version") == "5"
+    assert await redis.hget(SCHEMA_KEY, "version") == str(CURRENT_SCHEMA_VERSION)
     assert len(json.loads(await redis.get(CRAFTING_KEY))) > 0
     assert json.loads(await redis.get(SKILL_RULES_KEY))["version"] == 1
     assert await redis.hget("world:home:6", "map") == "151"
@@ -107,7 +107,7 @@ async def test_concurrent_loaders_preserve_committed_updates(client):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("version", ["0", "4", "6", "corrupto"])
+@pytest.mark.parametrize("version", ["0", "4", "5", str(CURRENT_SCHEMA_VERSION + 1), "corrupto"])
 async def test_incompatible_schema_is_rejected_before_any_seed(client, version):
     """Ni siquiera defaults o metadatos se escriben ante un esquema incompatible."""
     redis = client.redis

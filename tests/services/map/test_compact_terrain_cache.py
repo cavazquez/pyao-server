@@ -1,8 +1,27 @@
 """La caché compacta es descartable, atómica y está ligada a su fuente real."""
 
+import os
+
 from src.game.coordinate_mask import TERRAIN_LAYERS, CoordinateMask
 from src.services.map import binary_cache
 from src.services.map.binary_cache import COMPACT_CACHE_NAME, MapBinaryCache
+from src.services.map.cache import MapCacheLoader
+
+
+def test_json_fallback_cannot_resurrect_stale_terrain_with_unchanged_mtime(tmp_path):
+    """Una caché compacta invalidada no puede caer en un JSON con fuentes distintas."""
+    source = tmp_path / "maps"
+    source.mkdir()
+    path = source / "blocked_1-50.json"
+    path.write_text('{"m":1,"x":1,"y":1,"t":"b"}\n')
+    resources = {"map_1": {layer: CoordinateMask({(1, 1)}) for layer in TERRAIN_LAYERS}}
+    loader = MapCacheLoader(source, tmp_path / "fallback")
+    loader.save_cache(resources, {}, {})
+    assert loader.try_load_from_cache({}, {}, {})
+    before = path.stat()
+    path.write_text(path.read_text().replace('"x":1', '"x":2'))
+    os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+    assert not loader.try_load_from_cache({}, {}, {})
 
 
 def test_compact_cache_preserves_flags_and_rejects_changed_source(tmp_path, monkeypatch) -> None:

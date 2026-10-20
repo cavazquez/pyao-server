@@ -18,6 +18,7 @@ from typing import Any, Literal, cast
 from redis import Redis
 from src.config.config_manager import config_manager
 from src.config.game_config import RedisConfig
+from src.operations.ground_migration import ground_fingerprint
 from src.operations.redis_persistence import require
 from src.operations.redis_sandbox import RedisSandbox, docker
 from src.utils.password_utils import hash_password, verify_password
@@ -215,10 +216,12 @@ def verify_backup(
             require(
                 persistent_snapshot(client) == manifest["persistent_state"], "estado restaurado"
             )
+            ground_state = ground_fingerprint(client)
         result = {
             "verified": True,
             "persistent_state": manifest["persistent_state"],
             "source_modified": False,
+            "ground_state": ground_state,
         }
         if retain:
             result.update(

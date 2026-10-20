@@ -59,6 +59,11 @@ Herramientas para comprimir y descomprimir datos de mapas.
 
 - **`compress_map_data.py`** - Comprime la carpeta `map_data` usando LZMA (.xz)
 - **`decompress_map_data.py`** - Descomprime archivos `map_data.xz`
+- **`map_sync.py`** - Sincroniza el comprimido y sus fuentes mediante `status`, `pull` y `push`
+- **`map_binary.py`** - Genera o valida `terrain-v1.msgpack` con el mismo código del runtime;
+  `convert` y `status` admiten `--map-data` y `--map-binary` antes del subcomando.
+  La caché conserva propiedades de terreno, puertas y carteles. Las fuentes
+  completas, transiciones y catálogos permanecen en el comprimido y repositorio.
 
 ### 5. Desarrollo (`dev/`)
 

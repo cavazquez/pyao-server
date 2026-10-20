@@ -9,12 +9,13 @@ import pytest
 from src.models.party import Party
 from src.repositories.party_repository import PartyRepository
 from src.utils.ground_state import GroundState, stack_identity
+from src.utils.ground_storage import encode_fields, read_ground
 from src.utils.redis_config import RedisKeys
 
 
 async def ground(world):
     """Lee el formato durable sin depender de la caché del servicio."""
-    state = GroundState(2, await world.client.get(RedisKeys.ground_items(2)))
+    state = await read_ground(world.client.redis, 2)
     return [item for rows in state.tiles.values() for item in rows]
 
 
@@ -94,9 +95,9 @@ async def test_pending_full_ground_rolls_back_every_drop_and_xp(rewards, monkeyp
             49, 49, {"item_id": 1, "quantity": 1, "stack_id": stack_identity(f"occupied:{index}")}
         )
     original = state.encode()
-    await rewards.client.set(RedisKeys.ground_items(2), original)
+    await rewards.client.redis.hset(RedisKeys.ground_items(2), mapping=encode_fields(state))
     await rewards.service.handle_npc_death(npc, 1, 50, None)
-    assert await rewards.client.get(RedisKeys.ground_items(2)) == original
+    assert (await read_ground(rewards.client.redis, 2)).encode() == original
     assert (await rewards.player.get_experience(1))[0] == 100
     raw = await rewards.client.hgetall(RedisKeys.npc_instance(npc.instance_id))
     assert raw["death_state"] == "pending"
@@ -187,7 +188,7 @@ async def test_ground_notifications_cover_actual_drop_positions(rewards):
     """Los clientes reciben las casillas reales que ocupan los objetos."""
     npc = await rewards.spawn()
     await rewards.service.handle_npc_death(npc, 1, 50, None)
-    raw = GroundState(2, await rewards.client.get(RedisKeys.ground_items(2)))
+    raw = await read_ground(rewards.client.redis, 2)
     assert set(raw.positions()) - {(npc.x, npc.y)}
     called = {
         (c.kwargs["x"], c.kwargs["y"])

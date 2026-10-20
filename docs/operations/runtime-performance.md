@@ -181,7 +181,17 @@ Godot, herramientas del cliente, TLS con dos clientes gráficos, reconexión,
 combate y navegación. Las pruebas de suelo/botín con Redis real conservan
 recibos, carreras y recuperación tras SIGKILL/AOF.
 
-El suelo durable todavía usa el documento JSON por mapa. Su segmentación
-[#343](https://github.com/cavazquez/pyao-server/issues/343) continúa como migración
-independiente: la optimización de buckets de memoria no cambia las garantías ni
-la complejidad del commit persistido.
+La continuación [#343](https://github.com/cavazquez/pyao-server/issues/343) cambia
+el suelo durable a un hash por mapa, con campos por casilla, en el esquema 6. La migración,
+recuperación y mediciones posteriores están en
+[suelo segmentado](redis-ground-layout.md); son independientes de las cifras
+iniciales de esta página y requieren actualizar explícitamente bases existentes.
+
+El conversor `tools.compression.map_binary` ahora prepara y valida directamente
+`terrain-v1.msgpack` con `MapBinaryCache`. `convert` y `status` aceptan
+`--map-data` y `--map-binary`; por defecto usan las rutas del runtime. Ya no
+genera `maps.msgpack` ni `metadata.json` anteriores y no elimina archivos locales.
+El comprimido `archives/map_data.xz`, la extracción y `map_sync` conservan las
+fuentes completas: esta caché no sustituye transiciones, objetos ni catálogos.
+El fallback JSON también valida directorio y hashes de contenido (formato 4),
+para que no reactive terreno viejo cuando sólo se conservó la fecha del archivo.

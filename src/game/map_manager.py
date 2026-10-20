@@ -371,6 +371,7 @@ class MapManager(SpatialIndexMixin):
         *,
         broadcast_service: MultiplayerBroadcastService | None = None,
         operation_id: str | None = None,
+        ground_positions: tuple[tuple[int, int], ...] | None = None,
     ) -> dict[str, Any]:
         """Ordena cambios persistidos y sus mensajes por mapa.
 
@@ -378,7 +379,7 @@ class MapManager(SpatialIndexMixin):
             Resultado confirmado sin dejar notificaciones pendientes de otra operación.
         """
         return await self._ground_index.run_committed(
-            map_id, x, y, redis, operation, broadcast_service, operation_id
+            map_id, x, y, redis, operation, broadcast_service, operation_id, ground_positions
         )
 
     def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
@@ -467,6 +468,10 @@ class MapManager(SpatialIndexMixin):
             map_id: ID del mapa.
         """
         await self._ground_index.load_ground_items(map_id)
+
+    async def load_ground_tile(self, map_id: int, x: int, y: int) -> None:
+        """Recarga sólo la casilla usada por pickup desde Redis."""
+        await self._ground_index.load_ground_tile(map_id, x, y)
 
     async def settle_ground_devaluation(
         self, map_id: int, broadcast: MultiplayerBroadcastService | None

@@ -1,0 +1,332 @@
+{
+  "recorded_date": "2026-10-20",
+  "production_data_used": false,
+  "limitations": [
+    "Synthetic positions, one sequential actor; not 5000 connected players",
+    "Timings include authoritative transaction, AOF barriers and local cache refresh",
+    "Payload bytes count ground JSON values, excluding RESP framing and other resources",
+    "WATCH remains scoped to the whole map hash; unrelated writes may cause retries"
+  ],
+  "runs": {
+    "legacy": {
+      "layout": "legacy",
+      "python": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+      "source_hashes": {
+        "src/utils/resource_transaction.py": "06d40d462864d67ce2fef808b3d0bf57246edd18be0e60c7848510d3d22a8058",
+        "src/game/ground_item_index.py": "621922e25dbbb0aa873c78c1f7025086bf4de9c97eec7dd33991ecc87ed837f7",
+        "src/services/ground_transfer.py": "343503c46edee8f007622e151a2c0fcbe5e84a806cc78c44c0c6abb40715ed2f",
+        "src/utils/ground_state.py": "0269f229b2c1d3e114b00eb41b1ca64025fed9f1c621bb82088cba40363dce77",
+        "src/repositories/ground_items_repository.py": "7be173646d47a6d34faa24d73c64893a7168a914cb133e2730d189c9d985ce52",
+        "src/economy/ground_devaluation.py": "fde7a64f31027a568559e9e7454b0a2cec760dad35b2967eed4bf01f70eb4f53",
+        "src/economy/tax_transactions.py": "cdbccaa688502ca15583399680634fc8735d1a131a1018752cf31137aff66ad9",
+        "src/utils/durability.py": "d2c602f6ac0fedccb9798cc52c8980deddfdc4ef7244a59eea7d597c8a9e02a4"
+      },
+      "redis_version": "8.10.2",
+      "appendfsync": "always",
+      "cases": [
+        {
+          "positions": 100,
+          "memory_usage_bytes": 10281,
+          "legacy_json_bytes": 8593,
+          "drop": {
+            "p50_ms": 4.657587,
+            "p95_ms": 5.001647,
+            "p99_ms": 5.024089,
+            "max_ms": 5.024089,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 17339,
+            "ground_write_payload_bytes_p50": 8733
+          },
+          "pickup": {
+            "p50_ms": 4.65895,
+            "p95_ms": 4.921055,
+            "p99_ms": 5.181025,
+            "max_ms": 5.181025,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 17339,
+            "ground_write_payload_bytes_p50": 8606
+          }
+        },
+        {
+          "positions": 1000,
+          "memory_usage_bytes": 98345,
+          "legacy_json_bytes": 86021,
+          "drop": {
+            "p50_ms": 10.27295,
+            "p95_ms": 11.028705,
+            "p99_ms": 11.230908,
+            "max_ms": 11.230908,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 172195,
+            "ground_write_payload_bytes_p50": 86161
+          },
+          "pickup": {
+            "p50_ms": 10.296906,
+            "p95_ms": 10.921204,
+            "p99_ms": 12.532783,
+            "max_ms": 12.532783,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 172195,
+            "ground_write_payload_bytes_p50": 86034
+          }
+        },
+        {
+          "positions": 5000,
+          "memory_usage_bytes": 458793,
+          "legacy_json_bytes": 433701,
+          "drop": {
+            "p50_ms": 37.151722,
+            "p95_ms": 40.099606,
+            "p99_ms": 40.992541,
+            "max_ms": 40.992541,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 867555,
+            "ground_write_payload_bytes_p50": 433841
+          },
+          "pickup": {
+            "p50_ms": 36.729399,
+            "p95_ms": 39.215468,
+            "p99_ms": 39.510194,
+            "max_ms": 39.510194,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 867555,
+            "ground_write_payload_bytes_p50": 433714
+          }
+        }
+      ]
+    },
+    "hash": {
+      "layout": "hash",
+      "python": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+      "source_hashes": {
+        "src/utils/resource_transaction.py": "fe99b6a382a2442dc2fc0ced1ab902d77f4f304c2881858dc3d98cb494638d14",
+        "src/game/ground_item_index.py": "e7a7b1605aafeb026fcab27d5b513a71b78a3889d831b24a027ccf29c6b8ad75",
+        "src/services/ground_transfer.py": "8e004aba4b709141747defec8abcdd4ee386d2fcb430bfcd635066665b9bdc22",
+        "src/utils/ground_state.py": "3f7e97c1426df98b484f23075cb6d857b3af880f075d4f3b65b02a3ff7e1a937",
+        "src/utils/ground_storage.py": "d2e94e2b68f8b8c322455d29e198f23328ca41783b1c33964ff8581621c2d1b1",
+        "src/repositories/ground_items_repository.py": "e64a3acce674f11b53de24b5cc9665b6206e771afda133e6685c30ecdf99bdf2",
+        "src/economy/ground_devaluation.py": "806a7b7d478eab8f859eac2ed9242627cf81a3b37e10a37142f75747a1083c66",
+        "src/economy/tax_transactions.py": "cdbccaa688502ca15583399680634fc8735d1a131a1018752cf31137aff66ad9",
+        "src/utils/durability.py": "d2c602f6ac0fedccb9798cc52c8980deddfdc4ef7244a59eea7d597c8a9e02a4"
+      },
+      "redis_version": "8.10.2",
+      "appendfsync": "always",
+      "cases": [
+        {
+          "positions": 100,
+          "memory_usage_bytes": 11513,
+          "legacy_json_bytes": 8593,
+          "drop": {
+            "p50_ms": 4.039669,
+            "p95_ms": 4.372597,
+            "p99_ms": 4.476893,
+            "max_ms": 4.476893,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 129
+          },
+          "pickup": {
+            "p50_ms": 4.060608,
+            "p95_ms": 4.302094,
+            "p99_ms": 4.430946,
+            "max_ms": 4.430946,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 0
+          }
+        },
+        {
+          "positions": 1000,
+          "memory_usage_bytes": 112309,
+          "legacy_json_bytes": 86021,
+          "drop": {
+            "p50_ms": 4.038677,
+            "p95_ms": 4.32703,
+            "p99_ms": 4.44323,
+            "max_ms": 4.44323,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 129
+          },
+          "pickup": {
+            "p50_ms": 4.044237,
+            "p95_ms": 4.293717,
+            "p99_ms": 4.49085,
+            "max_ms": 4.49085,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 0
+          }
+        },
+        {
+          "positions": 5000,
+          "memory_usage_bytes": 589333,
+          "legacy_json_bytes": 433701,
+          "drop": {
+            "p50_ms": 4.182527,
+            "p95_ms": 4.639991,
+            "p99_ms": 8.114092,
+            "max_ms": 8.114092,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 129
+          },
+          "pickup": {
+            "p50_ms": 4.190072,
+            "p95_ms": 4.693782,
+            "p99_ms": 5.216828,
+            "max_ms": 5.216828,
+            "samples": 51,
+            "ground_read_payload_bytes_p50": 129,
+            "ground_write_payload_bytes_p50": 0
+          }
+        }
+      ]
+    }
+  },
+  "validation": {
+    "unit_suite_before_meditation": {
+      "passed": 3031,
+      "coverage_percent": 79.71
+    },
+    "real_redis": {
+      "ground": {
+        "atomic_ground_inventory_gold": true,
+        "two_players_one_stack": true,
+        "gold_remainder": true,
+        "slot_30": true,
+        "sigkill_recovery": true,
+        "identified_retries_once": true,
+        "production_data_used": false
+      },
+      "npc-loot": {
+        "pending_plan_recovered": true,
+        "single_roll_and_xp": true,
+        "two_competing_pickups_per_stack": true,
+        "two_aof_sigkill_recoveries": true,
+        "production_data_used": false,
+        "elapsed_seconds": 17.81,
+        "inventories": [
+          {
+            "slot_1": "1062:1",
+            "slot_2": "",
+            "slot_3": "",
+            "slot_4": "",
+            "slot_5": "",
+            "slot_6": "",
+            "slot_7": "",
+            "slot_8": "",
+            "slot_9": "",
+            "slot_10": "",
+            "slot_11": "",
+            "slot_12": "",
+            "slot_13": "",
+            "slot_14": "",
+            "slot_15": "",
+            "slot_16": "",
+            "slot_17": "",
+            "slot_18": "",
+            "slot_19": "",
+            "slot_20": "",
+            "slot_21": "",
+            "slot_22": "",
+            "slot_23": "",
+            "slot_24": "",
+            "slot_25": "",
+            "slot_26": "",
+            "slot_27": "",
+            "slot_28": "",
+            "slot_29": "",
+            "slot_30": ""
+          },
+          {
+            "slot_1": "",
+            "slot_2": "",
+            "slot_3": "",
+            "slot_4": "",
+            "slot_5": "",
+            "slot_6": "",
+            "slot_7": "",
+            "slot_8": "",
+            "slot_9": "",
+            "slot_10": "",
+            "slot_11": "",
+            "slot_12": "",
+            "slot_13": "",
+            "slot_14": "",
+            "slot_15": "",
+            "slot_16": "",
+            "slot_17": "",
+            "slot_18": "",
+            "slot_19": "",
+            "slot_20": "",
+            "slot_21": "",
+            "slot_22": "",
+            "slot_23": "",
+            "slot_24": "",
+            "slot_25": "",
+            "slot_26": "",
+            "slot_27": "",
+            "slot_28": "",
+            "slot_29": "",
+            "slot_30": ""
+          }
+        ],
+        "balances": [
+          1814,
+          0
+        ],
+        "experience": "123",
+        "items": [
+          [
+            12,
+            1814
+          ],
+          [
+            1062,
+            1
+          ]
+        ]
+      },
+      "economy": {
+        "daily_devaluation_one_percent_offline": true,
+        "credit_not_retroactive": true,
+        "wallet_and_bank": true,
+        "aof_recovery": true,
+        "identified_retries_once": true,
+        "moderation_aof_recovery": true,
+        "ground_gold_aof_recovery": true,
+        "production_data_used": false
+      },
+      "schema": {
+        "legacy_migrated": true,
+        "progress_preserved": true,
+        "mana_repaired_with_audit": true,
+        "ground_hash_preserved": true,
+        "ground_expiry_preserved": true,
+        "ground_rollback_preserved": true,
+        "backup_checks_expiring_ground": true,
+        "skill_progress_preserved": true,
+        "idempotent": true,
+        "restart_preserved": true,
+        "rollback_verified": true,
+        "legacy_config_checked": true,
+        "bank_and_spell_order_preserved": true,
+        "account_password_verified": true,
+        "fixture": "data/validation/redis_upgrade.toml",
+        "fixture_kind": "representative-legacy-schema-not-running-0.9.4",
+        "backup_sha256": "9f20f4062b0bec726c77e4186746cd0fabbb155a8b9a77c7f22ed07129f7b995",
+        "future_rejected": true,
+        "production_data_used": false
+      }
+    },
+    "terrain_sources_preserved": true,
+    "operator_database_migrated": false,
+    "unit_suite": {
+      "passed": 3037,
+      "coverage_percent": 79.73,
+      "ruff": true,
+      "mypy": true
+    }
+  }
+}

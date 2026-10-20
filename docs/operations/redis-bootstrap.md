@@ -5,6 +5,10 @@ versión actual; un esquema legado, futuro, inválido o una migración activa im
 iniciar. Migrar exige la operación explícita documentada en la guía de Redis y
 un respaldo verificado. El arranque normal nunca usa `force_clear`.
 
+La versión actual es 6. La migración de suelo JSON a hash por casilla está
+documentada en [suelo y recuperación](redis-ground-layout.md); una base existente
+no se convierte automáticamente durante el arranque.
+
 Las semillas se aplican individualmente, incluso después de una interrupción:
 
 - `config:server:*` y `config:effects:*`: `SET NX` por clave.

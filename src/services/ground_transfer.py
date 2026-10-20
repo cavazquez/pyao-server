@@ -16,6 +16,7 @@ from src.utils.ground_state import (
     GroundState,
     stack_identity,
 )
+from src.utils.ground_storage import position_fields
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -259,7 +260,12 @@ async def transfer_ground(
     )
     resources = (
         *tuple(Resource(key, "hash") for key in keys),
-        Resource(RedisKeys.ground_items(request.map_id), "string", GROUND_TTL_SECONDS),
+        Resource(
+            RedisKeys.ground_items(request.map_id),
+            "ground",
+            GROUND_TTL_SECONDS,
+            fields=position_fields(((request.x, request.y),)),
+        ),
     )
     await require_durable(redis)
     result = await transact(redis, resources, identity, asdict(request), decide)

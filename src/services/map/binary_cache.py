@@ -26,6 +26,20 @@ COMPACT_CACHE_VERSION = 1
 COMPACT_CACHE_NAME = "terrain-v1.msgpack"
 
 
+def terrain_source_info(maps_dir: Path) -> dict[str, Any]:
+    """Identifica fuentes para todos los formatos de caché descartable.
+
+    Returns:
+        Directorio canónico y hashes de contenido de terreno y objetos.
+    """
+    files = sorted([*maps_dir.glob("blocked_*.json"), *maps_dir.glob("objects_*.json")])
+    hashes = {}
+    for path in files:
+        with path.open("rb") as source:
+            hashes[path.name] = hashlib.file_digest(source, "sha256").hexdigest()
+    return {"directory": str(maps_dir.resolve()), "files": hashes}
+
+
 class MapBinaryCache:
     """Carga planos de bits directamente, sin reconstruir millones de tuplas."""
 
@@ -35,12 +49,15 @@ class MapBinaryCache:
         resources: ResourcesMap,
         signs: dict[str, dict[tuple[int, int], int]],
         doors: dict[str, dict[tuple[int, int], int]],
+        *,
+        cache_dir: Path | None = None,
     ) -> None:
         """Inicializa el manejador de caché binario."""
         self.maps_dir = maps_dir
         self.resources = resources
         self.signs = signs
         self.doors = doors
+        self.cache_dir = MAP_BINARY_DIR if cache_dir is None else cache_dir
 
     def _source_info(self) -> dict[str, Any]:
         """Identifica contenido y directorio; dos fixtures nunca comparten datos.
@@ -48,14 +65,7 @@ class MapBinaryCache:
         Returns:
             Ruta canónica y SHA256 de cada archivo de terreno/objetos.
         """
-        files = sorted(
-            [*self.maps_dir.glob("blocked_*.json"), *self.maps_dir.glob("objects_*.json")]
-        )
-        hashes = {}
-        for path in files:
-            with path.open("rb") as source:
-                hashes[path.name] = hashlib.file_digest(source, "sha256").hexdigest()
-        return {"directory": str(self.maps_dir.resolve()), "files": hashes}
+        return terrain_source_info(self.maps_dir)
 
     def try_load_from_binary(self) -> bool:
         """Carga sólo la caché compacta vigente; una caché antigua se reconstruye.
@@ -63,7 +73,7 @@ class MapBinaryCache:
         Returns:
             Si todos los planos y las huellas de origen son válidos.
         """
-        binary_file = MAP_BINARY_DIR / COMPACT_CACHE_NAME
+        binary_file = self.cache_dir / COMPACT_CACHE_NAME
         if not MSGPACK_AVAILABLE or not binary_file.exists():
             return False
         started = time.perf_counter()
@@ -109,13 +119,13 @@ class MapBinaryCache:
                     for key, rows in self.doors.items()
                 },
             }
-            MAP_BINARY_DIR.mkdir(parents=True, exist_ok=True)
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
             with tempfile.NamedTemporaryFile(
-                dir=MAP_BINARY_DIR, prefix=COMPACT_CACHE_NAME, delete=False
+                dir=self.cache_dir, prefix=COMPACT_CACHE_NAME, delete=False
             ) as output:
                 temporary = Path(output.name)
                 msgpack.pack(data, output, use_bin_type=True)
-            Path(temporary).replace(MAP_BINARY_DIR / COMPACT_CACHE_NAME)
+            Path(temporary).replace(self.cache_dir / COMPACT_CACHE_NAME)
         except OSError, ValueError, TypeError:
             logger.warning("No se pudo guardar la caché compacta", exc_info=True)
             return False

@@ -14,6 +14,7 @@ from src.services.player.lifetime_stats import increment, kill_changes
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GROUND_TTL_SECONDS, GroundState, stack_identity
+from src.utils.ground_storage import position_fields
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -167,7 +168,7 @@ async def settle_death(
         Resource(stats_key, "hash"),
         Resource(inv_key, "hash"),
         Resource(equip_key, "hash"),
-        Resource(ground_key, "string", GROUND_TTL_SECONDS),
+        Resource(ground_key, "ground", GROUND_TTL_SECONDS, fields=position_fields(((x, y),))),
     )
 
     def decide(snapshot: Snapshot) -> Decision:

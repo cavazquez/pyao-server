@@ -3,7 +3,7 @@
 import asyncio
 import json
 import time
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from src.models.item_constants import GOLD_ITEM_ID
 from src.operations.npc_commerce_smoke import settings
@@ -19,10 +19,15 @@ from src.services.nutrition import NutritionRule, consume_nutrition
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GroundState, stack_identity
+from src.utils.ground_storage import encode_fields, read_ground
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from redis.typing import EncodableT
+
     from src.config.game_config import RedisConfig
     from src.models.npc import NPC
 
@@ -117,7 +122,10 @@ async def prepare(config: RedisConfig) -> str:
                 *DROP_POSITION,
                 {"item_id": 1, "quantity": 1, "stack_id": stack_identity(f"occupied:{index}")},
             )
-        await client.set(RedisKeys.ground_items(MAP_ID), full.encode())
+        await client.redis.hset(
+            RedisKeys.ground_items(MAP_ID),
+            mapping=cast("Mapping[EncodableT, EncodableT]", encode_fields(full)),
+        )
         result = await settle_rewards(
             client.redis, npc, 1, EXPERIENCE, LootTableService(), (DROP_POSITION,)
         )
@@ -126,7 +134,7 @@ async def prepare(config: RedisConfig) -> str:
             await client.hget(RedisKeys.player_user_stats(1), "experience") == "0", "Sin XP parcial"
         )
         require(
-            await client.get(RedisKeys.ground_items(MAP_ID)) == full.encode(), "Sin botín parcial"
+            (await read_ground(client.redis, MAP_ID)).encode() == full.encode(), "Sin botín parcial"
         )
         require(
             bool(await client.hget(RedisKeys.npc_instance(npc.instance_id), "reward_plan")),
@@ -162,7 +170,7 @@ async def recover(config: RedisConfig, identity: str) -> dict[str, Any]:
             )
         )
         require(sum(row["applied"] for row in results) == 1, "Una liquidación concurrente")
-        ground = GroundState(MAP_ID, await client.get(RedisKeys.ground_items(MAP_ID)))
+        ground = await read_ground(client.redis, MAP_ID)
         actual = ground.tile(*DROP_POSITION)
         require(
             sorted((r["item_id"], r["quantity"]) for r in actual)
@@ -227,9 +235,7 @@ async def recover(config: RedisConfig, identity: str) -> dict[str, Any]:
         xp = await client.hget(RedisKeys.player_user_stats(1), "experience")
         require(xp == str(EXPERIENCE), "XP acreditada una sola vez")
         require(
-            not GroundState(MAP_ID, await client.get(RedisKeys.ground_items(MAP_ID))).tile(
-                *DROP_POSITION
-            ),
+            not (await read_ground(client.redis, MAP_ID)).tile(*DROP_POSITION),
             "Replay no regenera pilas recogidas",
         )
         await require_durable(client.redis)
@@ -286,9 +292,7 @@ async def verify(config: RedisConfig, identity: str, before: dict[str, Any]) -> 
             "XP conservada tras AOF",
         )
         require(
-            not GroundState(MAP_ID, await client.get(RedisKeys.ground_items(MAP_ID))).tile(
-                *DROP_POSITION
-            ),
+            not (await read_ground(client.redis, MAP_ID)).tile(*DROP_POSITION),
             "Suelo sin duplicados tras AOF",
         )
     finally:

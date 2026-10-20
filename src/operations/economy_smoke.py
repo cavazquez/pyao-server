@@ -19,7 +19,7 @@ from src.services.bank_gold_transfer import transfer_gold
 from src.services.ground_transfer import GroundRequest, transfer_ground
 from src.utils.durability import require_durable
 from src.utils.gold_atomic import change_gold, operation_id
-from src.utils.ground_state import GroundState
+from src.utils.ground_storage import read_ground
 from src.utils.redis_client import RedisClient
 from src.utils.redis_config import RedisKeys
 
@@ -163,8 +163,7 @@ async def ground_scenario(config: RedisConfig, identity: str, *, seed: bool) -> 
             patch("src.economy.ground_devaluation.utc_day", return_value=DAY),
         ):
             await settle_ground_gold(redis, 2)
-        raw = await redis.get(RedisKeys.ground_items(2))
-        items = GroundState(2, raw.decode() if isinstance(raw, bytes) else raw).tile(50, 50)
+        items = (await read_ground(redis, 2)).tile(50, 50)
         require(
             len(items) == 1 and items[0]["quantity"] == EXPECTED_GROUND_GOLD,
             "1000 a 990 en el suelo",

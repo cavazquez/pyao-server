@@ -10,6 +10,7 @@ from src.repositories.player_repository import PlayerRepository
 from src.services.ground_transfer import GroundRequest, transfer_ground
 from src.utils.gold_atomic import operation_id
 from src.utils.ground_state import GroundState
+from src.utils.ground_storage import encode_fields, read_ground
 from src.utils.redis_config import RedisKeys
 
 
@@ -25,7 +26,9 @@ async def test_fault_at_exec_and_identified_retry_keep_resources_together(
     await player.update_gold(1, 100)
     await inventory.set_slot(1, 30, 1, 5)
     raw = '{"50,50":[{"item_id":1,"quantity":2}]}'
-    await redis_client.set(RedisKeys.ground_items(1), raw)
+    await redis_client.redis.hset(
+        RedisKeys.ground_items(1), mapping=encode_fields(GroundState(1, raw))
+    )
     stack_id = GroundState(1, raw).tile(50, 50)[0]["stack_id"]
     request = GroundRequest(
         1, 1, 50, 50, action, slot=30, quantity=2, expected_stack=stack_id, expected_item_id=1
@@ -57,7 +60,7 @@ async def test_fault_at_exec_and_identified_retry_keep_resources_together(
         7 if action == "pickup" else 3 if action == "drop_item" else 5,
     )
     assert await player.get_gold(1) == (98 if action == "drop_gold" else 100)
-    rows = GroundState(1, await redis_client.get(RedisKeys.ground_items(1))).tile(50, 50)
+    rows = (await read_ground(redis_client.redis, 1)).tile(50, 50)
     assert sum(item["quantity"] for item in rows) == (0 if action == "pickup" else 4)
 
 

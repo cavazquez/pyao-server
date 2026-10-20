@@ -11,8 +11,8 @@ from src.game.map_tile_index import MapTileIndex
 from src.models.items_catalog import ITEMS_CATALOG
 from src.utils.gold_atomic import RECEIPT_TTL_SECONDS
 from src.utils.gold_atomic import operation_id as new_operation_id
-from src.utils.ground_state import GroundItem, GroundState, stack_identity
-from src.utils.redis_config import RedisKeys
+from src.utils.ground_state import GroundItem, stack_identity
+from src.utils.ground_storage import position_fields, read_ground
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -209,6 +209,17 @@ class GroundItemIndex:
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             self._replace_map(map_id, await self.ground_items_repo.load_ground_items(map_id))
 
+    async def load_ground_tile(self, map_id: int, x: int, y: int) -> None:
+        """Actualiza una sola casilla sin volver a cargar el mapa completo."""
+        if self.ground_items_repo is None:
+            return
+        async with self._locks.setdefault(map_id, asyncio.Lock()):
+            items = await self.ground_items_repo.load_ground_tile(map_id, x, y)
+            if items:
+                self._ground_items[map_id, x, y] = [item.copy() for item in items]
+            else:
+                self._ground_items.pop((map_id, x, y), None)
+
     async def settle_devaluation(
         self, map_id: int, broadcast: MultiplayerBroadcastService | None
     ) -> None:
@@ -254,6 +265,7 @@ class GroundItemIndex:
         operation: Callable[[], Awaitable[dict[str, Any]]],
         broadcast: MultiplayerBroadcastService | None,
         identity: str | None = None,
+        ground_positions: tuple[tuple[int, int], ...] | None = None,
     ) -> dict[str, Any]:
         """Ordena commit, caché y notificación; un replay nunca repone una caché vieja.
 
@@ -262,20 +274,33 @@ class GroundItemIndex:
         """
         async with self._locks.setdefault(map_id, asyncio.Lock()):
             result = await operation()
-            raw = await redis.get(RedisKeys.ground_items(map_id))
-            text = raw.decode() if isinstance(raw, bytes) else raw
-            self._replace_map(map_id, GroundState(map_id, text).positions())
+            scope = ground_positions if ground_positions is not None else ((x, y),)
+            state = await read_ground(redis, map_id, position_fields(scope))
+            positions_now = state.positions()
+            pending = self._devaluation_pending.setdefault(map_id, set())
+            for px, py in scope:
+                previous = self.get_ground_items(map_id, px, py)
+                before = previous[0] if previous else None
+                current = positions_now.get((px, py), [])
+                after = current[0] if current else None
+                if before != after:
+                    pending.add((px, py))
+                if items := positions_now.get((px, py)):
+                    self._ground_items[map_id, px, py] = [item.copy() for item in items]
+                else:
+                    self._ground_items.pop((map_id, px, py), None)
             now = asyncio.get_running_loop().time()
             self._published = {
                 key: expiry for key, expiry in self._published.items() if expiry > now
             }
             if identity is None or identity not in self._published:
-                positions = {(x, y)}
-                positions.update(tuple(position) for position in result.get("ground_positions", []))
-                for position in sorted(positions):
-                    await self._publish(map_id, *position, broadcast)
-                if identity is not None:
-                    self._published[identity] = now + RECEIPT_TTL_SECONDS
+                pending.add((x, y))
+                pending.update(tuple(position) for position in result.get("ground_positions", []))
+            for position in sorted(pending.copy()):
+                await self._publish(map_id, *position, broadcast)
+                pending.discard(position)
+            if identity is not None:
+                self._published[identity] = now + RECEIPT_TTL_SECONDS
             return result
 
     async def add_committed(

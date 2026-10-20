@@ -15,8 +15,9 @@ fraccionario, el total pagado y los recibos de cada período materializado. El
 mantenimiento recorre perfiles sin exigir conexiones activas. Una cuenta dañada
 no bloquea a los demás personajes ni a los mercaderes.
 
-Cada montón de oro guarda `devaluation_day` y `devaluation_remainder` en el JSON
-del suelo en Redis. Tirar, recoger y morir transfieren las fracciones pendientes;
+Cada montón de oro guarda `devaluation_day` y `devaluation_remainder` en su lista
+JSON por casilla del hash de suelo en Redis. El [esquema 6](redis-ground-layout.md)
+conserva esas fechas y fracciones al migrar. Tirar, recoger y morir transfieren las fracciones pendientes;
 recoger un montón parcial deja el resto en el suelo. El oro generado como loot
 empieza en el corte siguiente a su creación. Un montón que llega a cero se retira
 de Redis y de los clientes que lo ven. El mantenimiento usa SCAN incluso sin

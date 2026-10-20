@@ -81,6 +81,7 @@ class NPCDeathService:
                 return
             state = await self.npc_repo.redis.hgetall(f"npc:instance:{npc.instance_id}")
             killer = int(state.get("death_killer", killer_user_id))
+            positions = self._drop_positions(current)
             result = await self.map_manager.apply_ground_operation(
                 current.map_id,
                 current.x,
@@ -92,9 +93,10 @@ class NPCDeathService:
                     killer,
                     experience,
                     self.loot_table_service,
-                    self._drop_positions(current),
+                    positions,
                 ),
                 broadcast_service=self.broadcast_service,
+                ground_positions=positions,
             )
             if not result.get("settled"):
                 return
