@@ -56,6 +56,11 @@ daño y equipos administrativos quedan excluidos explícitamente. El campo
 Los objetos newbie y las variantes de raza, sexo, clase y facción se conservan;
 ser elegible como botín no elimina sus restricciones de uso.
 
+Los mensajes de inventario, banco y comercio conservan el `ObjType` real y los
+límites distintos `MinDef`/`MaxDef`. Se corrigió el mapeo que enviaba escudos como
+tipo 5/dinero y cascos como tipo 4/árbol, y la pérdida de defensa máxima al copiar
+dos veces `MinDef`. El cliente usa los tipos canónicos 16/17 para mostrar su equipo.
+
 ## Confirmación y recuperación
 
 El golpe letal marca HP y `death_state=pending` juntos en Redis. Ataques físicos,
@@ -77,6 +82,8 @@ casos retenidos por falta de espacio. El veneno valida la dosis y el intervalo
 de dos segundos de forma atómica, y acredita la baja al envenenador una sola vez.
 Las notificaciones de quests se envían después del commit de la recompensa;
 este cambio no introduce una transacción conjunta con el progreso de quests.
+Un cadáver retenido durante el arranque no emite después un retiro de personaje
+con un CharIndex que el mundo regenerado pudo haber asignado a otro NPC.
 
 ## Validación
 

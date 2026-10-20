@@ -78,8 +78,6 @@ class LootTableService:
             and self.bands
             and self.bands[0].min_level == 1
             and self.bands[-1].max_level == MAX_NPC_LEVEL
-            and len(self.rules["family_weights"]) == len(FAMILIES)
-            and all(weight > 0 for weight in self.rules["family_weights"])
             and 0 <= self.rules["current_band_probability"] <= 1
         )
         previous = 0

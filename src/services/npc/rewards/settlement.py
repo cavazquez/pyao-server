@@ -104,10 +104,18 @@ async def settle_rewards(
         RedisKeys.ground_items(npc.map_id),
     )
     receipt_key = f"npc:death:{npc.instance_id}"
-    proposed = loot.roll(npc)
+    proposed: list[tuple[int, int]] | None = None
     for _ in range(MAX_REWARD_CONTEXT_ATTEMPTS):
         preview = await redis.hgetall(npc_key)
         saved = preview.get("reward_plan")
+        if (
+            proposed is None
+            and not saved
+            and preview
+            and int(preview.get("hp", 1)) <= 0
+            and preview.get("death_state") != "complete"
+        ):
+            proposed = loot.roll(npc)
         context = await reward_context(
             redis, killer, saved.decode() if isinstance(saved, bytes) else saved
         )
@@ -118,7 +126,11 @@ async def settle_rewards(
             *context.resources,
         )
 
-        def decide(snapshot: Snapshot, context: RewardContext = context) -> Decision:
+        def decide(
+            snapshot: Snapshot,
+            context: RewardContext = context,
+            proposed: list[tuple[int, int]] | None = proposed,
+        ) -> Decision:
             state = cast("dict[str, str]", snapshot[npc_key])
             if not state or int(state.get("hp", 1)) > 0:
                 return Decision({"applied": False, "settled": False}, {})
@@ -136,7 +148,7 @@ async def settle_rewards(
                         npc.x,
                         npc.y,
                     ),
-                    "items": proposed,
+                    "items": proposed or [],
                     "version": 2,
                     "created_day": utc_day(float(state.get("death_at", time.time()))),
                 }

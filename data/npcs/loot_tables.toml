@@ -1,7 +1,6 @@
 # Una sola fuente de oro; la calidad depende del nivel del NPC, nunca del jugador.
 version = 2
 loot_table = [] # Retira los diez IDs erróneos del catálogo anterior.
-family_weights = [0.25, 0.35, 0.20, 0.20] # daga, espada, escudo, armadura
 current_band_probability = 0.70
 
 [profiles.humanoid]

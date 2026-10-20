@@ -103,6 +103,12 @@ async def test_pending_full_ground_rolls_back_every_drop_and_xp(rewards, monkeyp
     frozen = json.loads(raw["reward_plan"])
     await rewards.npcs.clear_all_npcs(preserve_tamed=True)
     assert await rewards.npcs.get_npc(npc.instance_id) is not None
+    rewards.maps.remove_npc(npc.map_id, npc.instance_id)
+    replacement = await rewards.spawn(hp=1)
+    assert replacement.char_index == npc.char_index
+    monkeypatch.setattr(
+        rewards.service.loot_table_service, "roll", lambda _npc: pytest.fail("Se repitió el sorteo")
+    )
     await rewards.client.delete(RedisKeys.ground_items(2))
     rewards.maps.remove_player(2, 1)  # El atacante se desconectó; no se pierde su recompensa.
     await rewards.service.recover_pending(all_records=True, bootstrap=True)
@@ -111,6 +117,8 @@ async def test_pending_full_ground_rolls_back_every_drop_and_xp(rewards, monkeyp
     )
     assert (await rewards.player.get_experience(1))[0] == 150
     rewards.respawn.schedule_respawn.assert_not_awaited()
+    assert await rewards.npcs.get_npc(replacement.instance_id) is not None
+    rewards.broadcast.broadcast_character_remove.assert_not_awaited()
 
 
 @pytest.mark.asyncio

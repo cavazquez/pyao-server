@@ -155,9 +155,9 @@ class CommerceService:
                 sale_price=float(commerce_price(item.value, level, "buy")) if item else 0.0,
                 grh_id=item.graphic_id if item else 0,
                 item_id=item.item_id if item else 0,
-                item_type=item.item_type.to_client_type() if item else 0,
+                item_type=item.to_client_type() if item else 0,
                 max_hit=(item.max_damage or 0) if item else 0,
                 min_hit=(item.min_damage or 0) if item else 0,
-                max_def=(item.defense or 0) if item else 0,
+                max_def=(item.max_defense or 0) if item else 0,
                 min_def=(item.defense or 0) if item else 0,
             )

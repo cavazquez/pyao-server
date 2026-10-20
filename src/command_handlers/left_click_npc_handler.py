@@ -118,10 +118,10 @@ class LeftClickNPCHandler:
                     merchant_item.quantity,
                     commerce_price(item.value, commerce_level, "buy"),
                     item.graphic_id,
-                    item.item_type.to_client_type(),
+                    item.to_client_type(),
                     item.max_damage or 0,
                     item.min_damage or 0,
-                    item.defense or 0,
+                    item.max_defense or 0,
                     item.defense or 0,
                 )
             )
@@ -202,10 +202,10 @@ class LeftClickNPCHandler:
                 name=item.name,
                 amount=bank_item.quantity,
                 grh_id=item.graphic_id,
-                item_type=item.item_type.to_client_type(),
+                item_type=item.to_client_type(),
                 max_hit=item.max_damage or 0,
                 min_hit=item.min_damage or 0,
-                max_def=item.defense or 0,
+                max_def=item.max_defense or 0,
                 min_def=item.defense or 0,
             )
 

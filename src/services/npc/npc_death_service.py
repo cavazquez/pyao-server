@@ -28,7 +28,7 @@ RECOVERY_BATCH = 128
 
 
 class NPCDeathService:
-    """Oro, objetos, experiencia y progreso se confirman juntos; la UI se publica después."""
+    """Oro, objetos, XP, niveles y puntos se confirman juntos; la UI se publica después."""
 
     def __init__(
         self,
@@ -102,7 +102,12 @@ class NPCDeathService:
                 await self._experience.publish(current, killer, result, message_sender)
                 if self.quest_service and killer > 0:
                     await self.quest_service.record_kill(current, killer)
-            await self._remove_npc_from_game(current)
+            if state.get("skip_respawn") == "1":
+                # Un cadáver retenido al iniciar ya no pertenece al mundo regenerado.
+                # Su CharIndex puede haber sido reutilizado por un NPC vivo.
+                self.map_manager.remove_npc(current.map_id, current.instance_id)
+            else:
+                await self._remove_npc_from_game(current)
             await self.npc_repo.remove_npc(current.instance_id)
             if self.random_spawn_service and state.get("skip_respawn") != "1":
                 await self.random_spawn_service.on_random_npc_death(current.instance_id)

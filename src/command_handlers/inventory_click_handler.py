@@ -106,10 +106,10 @@ class InventoryClickCommandHandler(CommandHandler):
                 amount=quantity,
                 equipped=is_equipped,
                 grh_id=item.graphic_id,
-                item_type=item.item_type.to_client_type(),
+                item_type=item.to_client_type(),
                 max_hit=item.max_damage or 0,
                 min_hit=item.min_damage or 0,
-                max_def=item.defense or 0,
+                max_def=item.max_defense or 0,
                 min_def=item.defense or 0,
                 sale_price=float(item.value),
             )
