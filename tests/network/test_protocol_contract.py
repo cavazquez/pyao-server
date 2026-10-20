@@ -47,7 +47,7 @@ def test_golden_fields_consume_exactly_the_packet(fixture: dict) -> None:
             value = data[offset : offset + length].decode("latin-1")
             offset += length
         else:
-            fmt = {"u8": "B", "i16": "h", "i32": "i", "f32": "f"}[kind]
+            fmt = {"u8": "B", "i16": "h", "i32": "i", "u32": "I", "f32": "f"}[kind]
             value = struct.unpack_from("<" + fmt, data, offset)[0]
             offset += struct.calcsize(fmt)
         decoded[field["name"]] = value

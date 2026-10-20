@@ -1,6 +1,8 @@
 """Magia real sobre Redis: autoridad, costes y efectos sin mocks de saldos."""
 
 import asyncio
+import json
+import struct
 import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
@@ -16,16 +18,19 @@ from src.models.item_catalog import ItemCatalog
 from src.models.npc import NPC
 from src.models.npc_catalog import NPCCatalog
 from src.models.spell_catalog import SpellCatalog
+from src.operations.player_jail import sentence
 from src.repositories.account_repository import AccountRepository
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.repositories.inventory_repository import InventoryRepository
 from src.repositories.npc_repository import NPCRepository
 from src.repositories.player_repository import PlayerRepository
+from src.services.combat.periodic import tick_periodic
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat.spell_plan import CastRequest, SpellPlan, commit_spell
 from src.services.npc.npc_service import NPCService
 from src.services.npc.summon_service import SummonService
 from src.services.player.lifecycle import apply_player_damage, resurrect, settle_death
+from src.services.player.lifetime_stats import DAY_SECONDS, mini_stats_packet, remaining_days
 from src.services.player.player_death_service import PlayerDeathService
 from src.services.player.spell_service import SpellService
 from src.utils.gold_atomic import operation_id
@@ -146,6 +151,97 @@ async def test_cost_and_damage_once_and_replay(world):
     assert await cast(world, identity=identity)
     assert await world.client.hgetall(RedisKeys.player_user_stats(1)) == after
     assert await world.client.hgetall(RedisKeys.player_user_stats(2)) == target
+
+
+@pytest.mark.asyncio
+async def test_kill_and_death_counters_belong_to_the_lethal_commit(world):
+    """Un replay o dos liquidaciones no cuentan otra muerte; una nueva vida sí."""
+    redis = world.client.redis
+    target = RedisKeys.player_user_stats(2)
+    source = RedisKeys.player_user_stats(1)
+    await redis.hset(target, "min_hp", "1")
+    identity = operation_id()
+    assert await cast(world, identity=identity)
+    assert await cast(world, identity=identity)
+    await asyncio.gather(*(world.death.handle_player_death(2, "usr1") for _ in range(2)))
+    assert await redis.hget(target, "deaths") == "1"
+    assert await redis.hmget(
+        source, ["player_kills", "citizen_kills", "criminal_kills", "deaths"]
+    ) == ["1", "1", None, None]
+    assert (await resurrect(redis, 2, operation_id()))["applied"]
+    await redis.hset(target, mapping={"min_hp": "1", "criminal": "1"})
+    assert await cast(world)
+    assert await redis.hget(target, "deaths") == "2"
+    assert await redis.hmget(source, ["player_kills", "citizen_kills", "criminal_kills"]) == [
+        "2",
+        "1",
+        "1",
+    ]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("periodic", [False, True])
+async def test_delayed_lethal_damage_counts_once_for_its_source(world, periodic):
+    """Veneno y DoT atribuyen la baja al atacante también después de desconectarse."""
+    redis = world.client.redis
+    target = RedisKeys.player_user_stats(2)
+    await redis.hset(
+        target,
+        mapping={"min_hp": "1", "poisoned_until": str(time.time() + 100), "poisoned_by": "1"},
+    )
+    if periodic:
+        await redis.hset(
+            target,
+            "periodic_effects",
+            json.dumps(
+                [
+                    {
+                        "mode": "damage",
+                        "amount": 2,
+                        "until": time.time() + 100,
+                        "next": time.time() - 1,
+                        "interval_seconds": 1,
+                        "source": 1,
+                    }
+                ]
+            ),
+        )
+        await asyncio.gather(*(tick_periodic(redis, 2) for _ in range(2)))
+    else:
+        await asyncio.gather(
+            *(
+                apply_player_damage(redis, 2, 2, operation_id(), require_poison=True)
+                for _ in range(2)
+            )
+        )
+    assert await redis.hget(target, "deaths") == "1"
+    assert await redis.hget(RedisKeys.player_user_stats(1), "player_kills") == "1"
+
+
+@pytest.mark.asyncio
+async def test_sentence_days_and_u32_stats_contract(world, monkeypatch):
+    """El reloj avanza sin esperar días, y el protocolo no trunca NPCs a int16."""
+    monkeypatch.setattr("src.operations.player_jail.require_durable", AsyncMock())
+    redis = world.client.redis
+    now = time.time()
+    identity = operation_id()
+    result = await sentence(redis, 1, 2, "Prueba administrativa", identity, now=now)
+    assert (
+        await sentence(redis, 1, 2, "Prueba administrativa", identity, now=now + DAY_SECONDS)
+        == result
+    )
+    stats = await redis.hgetall(RedisKeys.player_user_stats(1))
+    assert remaining_days(stats, now=now) == 2
+    assert remaining_days(stats, now=now + DAY_SECONDS) == 1
+    assert remaining_days(stats, now=now + 2 * DAY_SECONDS) == 0
+    await redis.hset(RedisKeys.player_user_stats(1), mapping={"npc_kills": "70000", "deaths": "9"})
+    packet = await mini_stats_packet(world.player, AccountRepository(world.client), 1)
+    assert len(packet) == 26
+    values = struct.unpack("<BIIIIIBI", packet)
+    assert values[4:6] == (70000, 9)
+    assert values[-1] == 2
+    await sentence(redis, 1, 0, "Liberación", operation_id())
+    assert remaining_days(await redis.hgetall(RedisKeys.player_user_stats(1))) == 0
 
 
 @pytest.mark.asyncio
@@ -364,6 +460,11 @@ async def test_real_npc_effects_and_intelligence(world, spell, initial_hp):
     world.maps.add_npc(2, npc)
     assert await cast(world, spell)
     saved = await world.npcs.get_npc(npc.instance_id)
+    if spell == 2 and initial_hp == 1:
+        assert await world.client.hget(RedisKeys.player_user_stats(1), "npc_kills") == "1"
+    else:
+        assert await world.client.hget(RedisKeys.player_user_stats(1), "npc_kills") is None
+    assert await world.client.hget(RedisKeys.player_user_stats(1), "player_kills") is None
     if spell == 2:
         assert saved.hp < initial_hp
         assert saved.hp == npc.hp

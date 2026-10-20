@@ -37,6 +37,7 @@ from src.tasks.player.task_attributes import TaskRequestAttributes
 from src.tasks.player.task_change_heading import TaskChangeHeading
 from src.tasks.player.task_login import TaskLogin
 from src.tasks.player.task_meditate import TaskMeditate
+from src.tasks.player.task_mini_stats import TaskMiniStats
 from src.tasks.player.task_request_position_update import TaskRequestPositionUpdate
 from src.tasks.player.task_request_stats import TaskRequestStats
 from src.tasks.player.task_walk import TaskWalk
@@ -119,6 +120,7 @@ TASK_HANDLERS: dict[int, type[Task]] = {
     ClientPacketID.AYUDA: TaskAyuda,
     ClientPacketID.MEDITATE: TaskMeditate,  # Meditar
     ClientPacketID.REQUEST_STATS: TaskRequestStats,
+    ClientPacketID.REQUEST_MINI_STATS: TaskMiniStats,
     ClientPacketID.INFORMATION: TaskInformation,
     ClientPacketID.REQUEST_MOTD: TaskMotd,
     ClientPacketID.UPTIME: TaskUptime,
