@@ -15,6 +15,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from src import __version__
+from src.core.schema_manager import CURRENT_SCHEMA_VERSION, SCHEMA_KEY
+from src.economy.taxes import DEFAULT_RATE_BPS, TAX_POLICY_KEY
 from src.operations.redis_sandbox import RedisSandbox
 
 
@@ -150,9 +152,12 @@ done
                     try:
                         wait_for_tls(process, port, cert)
                         with sandbox.client() as client:
-                            assert client.hget("schema:state", "version") == "4"
+                            assert client.hget(SCHEMA_KEY, "version") == str(CURRENT_SCHEMA_VERSION)
                             assert client.exists("config:skills:rules")
                             assert client.exists("config:crafting:recipes")
+                            assert client.hget(TAX_POLICY_KEY, "enabled") == "1"
+                            assert client.hget(TAX_POLICY_KEY, "rate_bps") == str(DEFAULT_RATE_BPS)
+                            assert client.hget(TAX_POLICY_KEY, "ground_activation_day")
                             if attempt == 1:
                                 client.set("validation:snap-marker", "preserved")
                             else:
@@ -177,6 +182,8 @@ done
             "tls_ping": True,
             "restarted": True,
             "redis_state_preserved": True,
+            "schema_version": CURRENT_SCHEMA_VERSION,
+            "daily_devaluation_policy": True,
             "configuration_preserved": True,
             "schema": 4,
             "graceful_sigterm": True,
