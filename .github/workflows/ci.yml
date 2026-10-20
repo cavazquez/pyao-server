@@ -63,6 +63,8 @@ jobs:
         run: |
           uv run --locked python -m tools.compression.decompress_map_data --target map_data
           uv run --locked python -m src.validation.dataset
+      - name: Audit every map route and verify the reviewed inventory
+        run: uv run --locked python -m tools.analysis.audit_world_routes --output artifacts/world-routes --check docs/catalogs/world-routes.json
       - name: Record reproducible structure samples without unstable time thresholds
         run: |
           mkdir -p artifacts
