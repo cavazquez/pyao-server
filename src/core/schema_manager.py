@@ -70,8 +70,8 @@ async def ensure_schema_ready(redis: Redis) -> None:
             await cast(
                 "Awaitable[bool]", redis.hsetnx(SCHEMA_KEY, "version", str(CURRENT_SCHEMA_VERSION))
             )
-            parse_version(await redis.hget(SCHEMA_KEY, "version"))
-            return
+            if parse_version(await redis.hget(SCHEMA_KEY, "version")) == CURRENT_SCHEMA_VERSION:
+                return
     msg = (
         "Estado Redis legado: crear/verificar backup y ejecutar "
         "uv run python -m src.operations.redis_schema migrate --backup <archivo.rdb>"

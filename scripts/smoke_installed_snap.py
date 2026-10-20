@@ -119,6 +119,21 @@ done
             reservation.bind(("127.0.0.1", 0))
             port = reservation.getsockname()[1]
         with RedisSandbox() as sandbox:
+            preserved = {}
+            preserved_strings = {
+                "config:crafting:recipes": "[]",
+                "server:motd": "Bienvenido a Argentum Online!\nServidor en desarrollo.",
+                "server:dice:min_value": "0",
+                "config:effects:hunger_thirst:enabled": "0",
+            }
+            preserved_hashes = {
+                "world:home:1": {"map": "34", "x": "0"},
+                "player:812:user_stats": {"gold": "0", "level": "35", "experience": "1234"},
+                "player:812:inventory": {"slot_30": "15:2"},
+                "player:812:equipment": {"weapon": "30"},
+                "player:812:bank_inventory": {"slot_1": "38:3"},
+                "merchant:7:inventory": {"slot_1": "", "slot_20": "139:3"},
+            }
             secret = work / "redis-password"
             shutil.copyfile(sandbox.password_file, secret)
             secret.chmod(0o600)
@@ -160,8 +175,25 @@ done
                             assert client.hget(TAX_POLICY_KEY, "ground_activation_day")
                             if attempt == 1:
                                 client.set("validation:snap-marker", "preserved")
+                                for name, value in preserved_strings.items():
+                                    client.set(name, value)
+                                for name, value in preserved_hashes.items():
+                                    client.hset(name, mapping=value)
+                                client.expire("server:motd", 3600)
+                                preserved = {
+                                    name: client.hgetall(name)
+                                    for name in (*preserved_hashes, "merchant:7:catalog")
+                                }
+                                client.delete("world:home:6", "server:dice:max_value")
                             else:
                                 assert client.get("validation:snap-marker") == "preserved"
+                                for name, value in preserved_strings.items():
+                                    assert client.get(name) == value, name
+                                for name, value in preserved.items():
+                                    assert client.hgetall(name) == value, name
+                                assert 3500 <= client.ttl("server:motd") <= 3600
+                                assert client.hget("world:home:6", "map") == "151"
+                                assert client.get("server:dice:max_value") == "18"
                     finally:
                         if process.poll() is None:
                             process.send_signal(signal.SIGTERM)
@@ -182,6 +214,9 @@ done
             "tls_ping": True,
             "restarted": True,
             "redis_state_preserved": True,
+            "bootstrap_preserves_custom_values_and_ttl": True,
+            "bootstrap_completes_missing_defaults": True,
+            "bootstrap_preserves_depleted_merchant_stock": True,
             "daily_devaluation_policy": True,
             "configuration_preserved": True,
             "schema": CURRENT_SCHEMA_VERSION,

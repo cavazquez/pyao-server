@@ -151,6 +151,7 @@ jobs:
           timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.redis_persistence > artifacts/persistence.json 2> artifacts/persistence.log
           timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.redis_backup selftest > artifacts/backup.json 2> artifacts/backup.log
           timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.redis_schema selftest > artifacts/schema.json 2> artifacts/schema.log
+          timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.bootstrap_smoke > artifacts/bootstrap.json 2> artifacts/bootstrap.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.economy_smoke > artifacts/economy.json 2> artifacts/economy.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.merchant_stock_smoke > artifacts/merchant-stock.json 2> artifacts/merchant-stock.log
       - name: Conservar evidencia de recuperación

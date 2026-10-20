@@ -10,7 +10,7 @@ from src.utils.redis_config import RedisKeys
 
 
 class CityDataLoader(BaseDataLoader):
-    """Publica spawns inmutables sin modificar posiciones de personajes existentes."""
+    """Completa spawns ausentes sin modificar la configuración del administrador."""
 
     def get_name(self) -> str:
         """Devuelve el nombre del catálogo.
@@ -41,6 +41,9 @@ class CityDataLoader(BaseDataLoader):
         }
 
     async def load(self) -> None:
-        """Carga sólo el catálogo de spawns, nunca estado editable de jugadores."""
+        """Completa cada campo ausente atómicamente, incluso tras un arranque interrumpido."""
         for home, spawn in (await asyncio.to_thread(self._read)).items():
-            await self.redis_client.hset(RedisKeys.home_spawn(home), mapping=spawn)
+            async with self.redis_client.redis.pipeline(transaction=True) as pipe:
+                for field, value in spawn.items():
+                    pipe.hsetnx(RedisKeys.home_spawn(home), field, value)
+                await pipe.execute()
