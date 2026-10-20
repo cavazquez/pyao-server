@@ -155,6 +155,14 @@ class LoginSpawnHandler:
 
         # Mostrar efecto visual de spawn
         await self.message_sender.play_effect_spawn(char_index=user_id)
+        if self.map_manager:
+            for observer in self.map_manager.get_all_message_senders_in_map(position["map"]):
+                if observer is self.message_sender:
+                    continue
+                try:
+                    await observer.play_effect_spawn(char_index=user_id)
+                except OSError:
+                    logger.warning("No se pudo enviar el FX de login al observador", exc_info=True)
 
     async def send_map_data(self, user_id: int, position: dict[str, int]) -> None:
         """Envía los datos del mapa al jugador.

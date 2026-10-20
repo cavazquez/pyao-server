@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from src.command_handlers.login_spawn_handler import LoginSpawnHandler
+from src.game.map_manager import MapManager
 from src.services.map.player_map_service import ENTITY_SEND_BATCH, PlayerMapService
 
 
@@ -32,6 +33,31 @@ async def test_login_loads_ground_and_sends_one_complete_spawn_in_order() -> Non
         user_id=7, map_id=1, x=100, y=1, heading=2, message_sender=sender
     )
     service.transition_to_map.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_login_effect_reaches_current_map_once_after_character_creation() -> None:
+    """El efecto llega después del actor; un peer cerrado no corta el resto del mapa."""
+    maps = MapManager()
+    owner, broken, peer, other_map = (MagicMock() for _ in range(4))
+    for user, sender in enumerate((owner, broken, peer, other_map), start=1):
+        sender.play_effect_spawn = AsyncMock()
+        maps.add_player(2 if sender is other_map else 1, user, sender)
+    owner.play_sound_login = AsyncMock()
+    owner.send_change_map = AsyncMock()
+    owner.send_pos_update = AsyncMock()
+    broken.play_effect_spawn.side_effect = ConnectionError("peer cerrado")
+    calls = MagicMock()
+    calls.attach_mock(owner.play_effect_spawn, "owner")
+    calls.attach_mock(peer.play_effect_spawn, "peer")
+    service = MagicMock(spawn_in_map=AsyncMock())
+    calls.attach_mock(service.spawn_in_map, "character_creation")
+    handler = LoginSpawnHandler(MagicMock(), MagicMock(), maps, service, owner)
+    await handler.spawn_player(1, "Fixture", {"map": 1, "x": 50, "y": 50})
+    assert [call[0] for call in calls.mock_calls] == ["character_creation", "owner", "peer"]
+    for sender in (owner, broken, peer):
+        sender.play_effect_spawn.assert_awaited_once_with(char_index=1)
+    other_map.play_effect_spawn.assert_not_awaited()
 
 
 @pytest.mark.asyncio
