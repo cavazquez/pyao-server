@@ -5,6 +5,8 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+from src.models.items_catalog import ITEMS_CATALOG
+from src.models.spell_extensions import validate_extensions
 from src.runtime_paths import data_dir
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,10 @@ class SpellCatalog:
 
         Args:
             spells_path: Ruta al archivo de hechizos.
+
+        Raises:
+            ValueError: Si una referencia o regla de magia es inválida.
+            TypeError: Si el catálogo contiene tipos inválidos.
         """
         path = Path(spells_path)
         if not path.exists():
@@ -47,6 +53,8 @@ class SpellCatalog:
                     logger.warning("Hechizo sin ID, ignorando")
                     continue
 
+                validate_extensions(spell_data, set(ITEMS_CATALOG))
+
                 self.spells[spell_id] = spell_data
                 spell_name = spell_data.get("name", "Unknown")
                 logger.info(
@@ -63,7 +71,9 @@ class SpellCatalog:
                 len(self.spells),
             )
 
-        except Exception:
+        except ValueError, TypeError:
+            raise
+        except OSError:
             logger.exception("Error al cargar catálogo de hechizos")
 
     def spell_exists(self, spell_id: int) -> bool:

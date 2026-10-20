@@ -12,6 +12,7 @@ def mock_party_repo():
     """Create a mock party repository."""
     # Use MagicMock as base, then configure async methods
     repo = MagicMock()
+    repo.redis.redis.hgetall = AsyncMock(return_value={})
     repo.get_user_party = AsyncMock(return_value=None)
     repo.get_next_party_id = AsyncMock(return_value=1)
     repo.save_party = AsyncMock(return_value=None)

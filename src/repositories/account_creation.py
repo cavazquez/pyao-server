@@ -52,6 +52,12 @@ async def create_indexed_account(redis: Redis, username: str, fields: dict[str, 
                     or await pipe.hget(ACCOUNT_INDEX, str(user_id)) is not None
                     or await pipe.exists(fiscal_key, stats_key)
                 ):
+                    # WATCH sólo informa cambios en EXEC. Validar la lectura
+                    # antes de diagnosticar corrupción: otro alta pudo confirmar
+                    # después de leer el contador y antes de consultar el índice.
+                    pipe.multi()  # type: ignore[no-untyped-call]
+                    pipe.get(RedisKeys.ACCOUNTS_COUNTER)
+                    await pipe.execute()
                     message = "El contador de cuentas intenta reutilizar una identidad existente"
                     raise ValueError(message)
                 account = {**fields, "username": username, "user_id": str(user_id), "is_gm": "0"}

@@ -7,6 +7,16 @@ import pytest
 from src.services.map.pathfinding_service import PathfindingService
 
 
+def test_chase_reaches_adjacent_tile_without_entering_occupied_goal():
+    """Un jugador ocupa su tile: el NPC debe acercarse para atacar sin superponerlo."""
+    manager = MagicMock()
+    manager.can_move_to.side_effect = lambda _map, x, y: (x, y) != (52, 50)
+    service = PathfindingService(manager)
+    assert service.get_next_step(1, 50, 50, 52, 50, stop_adjacent=True) == (51, 50, 2)
+    assert service.get_next_step(1, 51, 50, 52, 50, stop_adjacent=True) is None
+    assert service.get_next_step(1, 50, 50, 52, 50) is None
+
+
 @pytest.fixture
 def mock_map_manager():
     """Mock de MapManager."""

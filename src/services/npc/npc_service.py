@@ -90,6 +90,9 @@ class NPCService:
 
         Args:
             spawns_path: Ruta al archivo de configuración de spawns.
+
+        Raises:
+            ValueError: Si la orientación de un spawn no es cardinal.
         """
         spawns_path = spawns_path or str(data_dir() / "world/map_npcs.toml")
         logger.info("Inicializando NPCs del mundo desde %s...", spawns_path)
@@ -140,7 +143,10 @@ class NPCService:
             npc_id = spawn_data.get("npc_id")
             x = spawn_data.get("x")
             y = spawn_data.get("y")
-            heading = spawn_data.get("heading", 3)  # Sur por defecto
+            heading = spawn_data.get("heading", spawn_data.get("direction", 3))
+            if type(heading) is not int or heading not in {1, 2, 3, 4}:
+                message = f"Dirección de NPC inválida: {spawn_data}"
+                raise ValueError(message)
 
             if map_id is None or npc_id is None or x is None or y is None:
                 logger.warning("Spawn incompleto, ignorando: %s", spawn_data)
@@ -317,6 +323,8 @@ class NPCService:
             movement_type="static",  # Por ahora todos estáticos
             respawn_time=cast("int", npc_data.get("respawn_time", 0)),
             respawn_time_max=cast("int", npc_data.get("respawn_time_max", 0)),
+            role=str(npc_data.get("role", "inhabitant")),
+            guard_faction=str(npc_data.get("guard_faction", "neutral")),
             gold_min=cast("int", npc_data.get("oro_min", 0)),
             gold_max=cast("int", npc_data.get("oro_max", 0)),
             attack_damage=cast("int", npc_data.get("ataque", 10)),

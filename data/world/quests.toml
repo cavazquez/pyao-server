@@ -1,0 +1,38 @@
+schema = 1
+enabled = true
+
+[[quest]]
+id = "primeros-suministros"
+title = "Suministros para la ciudad"
+description = "El comerciante necesita cinco leños. Consíguelos talando y tráelos para recibir provisiones."
+start_npc = 2
+finish_npc = 2
+min_level = 1
+objectives = [{ kind = "deliver", target = 58, quantity = 5 }]
+gold = 25
+experience = 100
+rewards = [{ item_id = 38, quantity = 3 }]
+
+[[quest]]
+id = "senderos-seguros"
+title = "Senderos seguros"
+description = "Derrota tres murciélagos y regresa al comerciante. Sólo cuentan las bajas posteriores a aceptar la misión."
+start_npc = 2
+finish_npc = 2
+min_level = 1
+objectives = [{ kind = "kill", target = 500, quantity = 3 }]
+gold = 40
+experience = 200
+rewards = [{ item_id = 37, quantity = 3 }]
+
+[[quest]]
+id = "reserva-del-bosque"
+title = "La reserva del bosque"
+description = "Tras ayudar con los primeros suministros, entrega diez leños para sostener la reserva de la ciudad."
+start_npc = 2
+finish_npc = 2
+min_level = 3
+prerequisites = ["primeros-suministros"]
+objectives = [{ kind = "deliver", target = 58, quantity = 10 }]
+gold = 75
+experience = 250

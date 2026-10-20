@@ -14,6 +14,22 @@ from src.config.config_manager import ConfigManager
 class TestConfigManager(unittest.TestCase):
     """Tests para ConfigManager."""
 
+    def test_wss_settings_reach_the_server_configuration(self) -> None:
+        """La fachada no puede perder los campos nuevos al convertir el modelo."""
+        ConfigManager._config_file = self.config_file
+        ConfigManager._config_dir = self.temp_dir
+        with patch.dict(
+            os.environ,
+            {
+                "PYAO_SERVER__WSS_PORT": "7668",
+                "PYAO_SERVER__WSS_ORIGINS": '["https://example.invalid"]',
+            },
+        ):
+            config = ConfigManager()
+        section = config.get_section("server")
+        assert section["wss_port"] == 7668
+        assert section["wss_origins"] == ["https://example.invalid"]
+
     def setUp(self) -> None:
         """Configura entorno de prueba."""
         # Crear directorio temporal

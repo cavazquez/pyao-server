@@ -17,6 +17,7 @@ from src.network.msg_player_stats import (
     build_update_gold_response,
 )
 from src.network.state_channel import send_state
+from src.services.expansion.service import EXPANSION_TOPICS, ExpansionService
 from src.services.world.actions import TOPICS, clan_action, party_action
 from src.services.world.commands import command_snapshot
 from src.services.world.pets import PetOrders
@@ -68,6 +69,7 @@ class WorldStateService:
         bind_groups(deps.party_service, deps.clan_service, self.lock)
         self.pets = PetOrders(deps.npc_service)
         self.weather = WeatherState(deps)
+        self.expansion = ExpansionService(deps)
         self.cache: dict[tuple[str, str], str] = {}
         self.legacy_revisions: dict[str, int] = {}
         self.legacy_receipts: dict[str, str] = {}
@@ -89,6 +91,7 @@ class WorldStateService:
         self.cache.clear()
         self.legacy_revisions.clear()
         self.legacy_receipts.clear()
+        self.expansion.queries.clear()
 
     async def _run(self) -> None:
         while True:
@@ -141,6 +144,9 @@ class WorldStateService:
 
     async def initial(self, user: int, sender: MessageSender) -> None:
         """Publica información inicial sólo después de negociar la capacidad."""
+        await self.expansion.factions.initialize_user(user)
+        for key in [key for key in self.expansion.queries if key[0] == user]:
+            del self.expansion.queries[key]
         if not sender.connection.capabilities.enabled & Capability.WORLD_STATE:
             return
         sender.connection.state_topics.update({"tax", "weather"})
@@ -158,6 +164,8 @@ class WorldStateService:
         """
         if topic == "tax":
             return await tax_status(self.deps.redis_client.redis, user)
+        if topic in EXPANSION_TOPICS:
+            return await self.expansion.snapshot(user, topic)
         if topic == "party":
             return await party_snapshot(self.deps, user)
         if topic == "clan":
@@ -177,6 +185,11 @@ class WorldStateService:
         """Emite sólo cambios; cada frame conserva revisión y generación de conexión."""
         sender = self.deps.map_manager.get_player_message_sender(user)
         if sender is None or not sender.connection.capabilities.enabled & Capability.WORLD_STATE:
+            return
+        if (
+            topic in EXPANSION_TOPICS
+            and not sender.connection.capabilities.enabled & Capability.EXPANSION
+        ):
             return
         async with self.lock:
             data = await self.snapshot(user, topic, sender.connection.state_pages.get(topic, 0))
@@ -243,6 +256,8 @@ class WorldStateService:
                 )
                 return
             if action.endswith(".read"):
+                if topic in EXPANSION_TOPICS:
+                    self.expansion.queries[user, topic] = params.copy()
                 if topic == "clan":
                     sender.connection.state_pages[topic] = params["page"]
                 await self.publish(user, topic, force=True, identity=identity)
@@ -291,7 +306,9 @@ class WorldStateService:
             }
         try:
             await require_durable(redis)
-            if action.startswith("party."):
+            if action.split(".")[0] in EXPANSION_TOPICS:
+                result = await self.expansion.command(user, action, params, identity)
+            elif action.startswith("party."):
                 result = await party_action(self.deps, user, action.split(".")[1], params)
             elif action.startswith("clan."):
                 result = await clan_action(self.deps, user, action.split(".")[1], params)

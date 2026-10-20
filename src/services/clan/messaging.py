@@ -3,6 +3,7 @@
 import logging
 
 from src.network.chat_channel import deliver_chat
+from src.security.chat_mutes import chat_rejection
 from src.services.clan._helpers import ClanServiceHelpersMixin
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,9 @@ class ClanMessagingMixin(ClanServiceHelpersMixin):
         Returns:
             Error message if failed, empty string if successful.
         """
+        rejection = await chat_rejection(self.clan_repo.redis.redis, sender_id, "clan")
+        if rejection:
+            return rejection
         # Get sender's clan
         clan = await self.clan_repo.get_user_clan(sender_id)
         if not clan:

@@ -28,7 +28,9 @@ def is_hostile(spell: Mapping[str, Any]) -> bool:
         True si el efecto requiere consentimiento y zona habilitada para PvP.
     """
     return bool(
-        (
+        spell.get("dispels_magic")
+        or spell.get("periodic", {}).get("mode") == "damage"
+        or (
             not spell.get("heals_hp")
             and not spell.get("invokes")
             and (spell.get("min_damage", 0) > 0 or spell.get("max_damage", 0) > 0)
@@ -66,6 +68,7 @@ class PvpPolicy:
         target_position: Mapping[str, str | int],
         source_stats: Mapping[str, str | int],
         target_stats: Mapping[str, str | int],
+        relationship: str = "neutral",
     ) -> str | None:
         """Valida sin I/O y permite revalidar exactamente los recursos observados por WATCH.
 
@@ -84,12 +87,18 @@ class PvpPolicy:
             return "El objetivo está en otro mapa."
         if source_map in self.safe_maps:
             return "No puedes atacar en una zona segura."
+        if relationship == "changed":
+            return "La pertenencia al clan cambió; vuelve a seleccionar el objetivo."
+        if relationship in {"same", "alliance"}:
+            return "No puedes atacar a un miembro de tu clan ni de un clan aliado."
         if any(
             int(stats.get("min_hp", stats.get("hp", 0))) <= 0
             for stats in (source_stats, target_stats)
         ):
             return "No puedes atacar a un muerto ni estando muerto."
-        if any(str(stats.get("safe_mode", "1")) != "0" for stats in (source_stats, target_stats)):
+        if relationship != "war" and any(
+            str(stats.get("safe_mode", "1")) != "0" for stats in (source_stats, target_stats)
+        ):
             return "Ambos jugadores deben desactivar el modo seguro para combatir."
         return None
 

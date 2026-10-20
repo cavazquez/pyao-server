@@ -12,7 +12,9 @@ from src.commands.whisper_command import WhisperCommand
 @pytest.fixture
 def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
-    return MagicMock()
+    repo = MagicMock()
+    repo.redis.redis.hgetall = AsyncMock(return_value={})
+    return repo
 
 
 @pytest.fixture

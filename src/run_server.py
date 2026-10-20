@@ -34,7 +34,12 @@ async def run_until_stopped(server: ArgentumServer) -> None:
     requested = asyncio.Event()
     loop = asyncio.get_running_loop()
     previous = {}
-    for number in (signal.SIGTERM, signal.SIGINT):
+    signals = (
+        (signal.SIGTERM, signal.SIGINT, signal.SIGBREAK)
+        if hasattr(signal, "SIGBREAK")
+        else (signal.SIGTERM, signal.SIGINT)
+    )
+    for number in signals:
         try:
             loop.add_signal_handler(number, requested.set)
         except NotImplementedError:
@@ -52,7 +57,7 @@ async def run_until_stopped(server: ArgentumServer) -> None:
         serving.cancel()
         stopping.cancel()
         await asyncio.gather(serving, stopping, return_exceptions=True)
-        for number in (signal.SIGTERM, signal.SIGINT):
+        for number in signals:
             if number in previous:
                 signal.signal(number, previous[number])
             else:

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from src.commands.base import CommandResult
 from src.models.item_types import TipoPocion
 from src.models.items_catalog import get_item
+from src.models.potion_duration import DEFAULT_DURATION_SECONDS
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -359,10 +360,13 @@ class UseItemConsumableHandler:
         max_mod = int(max_mod_val) if isinstance(max_mod_val, (int, str)) else default_max_mod
         modifier_value = random.randint(min_mod, max_mod)
 
-        # Duración en segundos (DuracionEfecto está en milisegundos)
-        duration_ms_val = item_data.get("DuracionEfecto", 1000)
-        duration_ms = int(duration_ms_val) if isinstance(duration_ms_val, (int, str)) else 1000
-        duration_seconds = duration_ms / 1000.0
+        # El catálogo normaliza el contador histórico; el runtime usa segundos.
+        duration_value = item_data.get("EffectDurationSeconds", DEFAULT_DURATION_SECONDS)
+        duration_seconds = (
+            float(duration_value)
+            if isinstance(duration_value, (int, float, str))
+            else DEFAULT_DURATION_SECONDS
+        )
         expires_at = time.time() + duration_seconds
 
         # Aplicar modificador
@@ -419,7 +423,7 @@ class UseItemConsumableHandler:
 
     async def _handle_invisibility_potion(self, user_id: int) -> None:
         """Maneja poción de Invisibilidad (Tipo 6)."""
-        if not self.player_repo or not self.map_manager or not self.account_repo:
+        if not self.player_repo:
             return
 
         # Duración por defecto (5 minutos como en el hechizo)
@@ -434,18 +438,19 @@ class UseItemConsumableHandler:
             invisibility_duration_seconds,
         )
 
-        # Enviar CHARACTER_REMOVE a otros jugadores
+        # Conservar el actor: la expiración publica SET_INVISIBLE(False), que
+        # no puede recuperar un personaje eliminado por CHARACTER_REMOVE.
+        await self.message_sender.send_set_invisible(user_id, invisible=True)
         position = await self.player_repo.get_position(user_id)
-        if position:
+        if position and self.map_manager:
             map_id = position["map"]
-            # Broadcast CHARACTER_REMOVE excluyendo al propio jugador
             other_senders = self.map_manager.get_all_message_senders_in_map(
                 map_id, exclude_user_id=user_id
             )
             for other_sender in other_senders:
-                await other_sender.send_character_remove(user_id)
+                await other_sender.send_set_invisible(user_id, invisible=True)
             logger.info(
-                "user_id %d invisible por poción - CHARACTER_REMOVE a %d jugadores",
+                "user_id %d invisible por poción - SET_INVISIBLE a %d jugadores",
                 user_id,
                 len(other_senders),
             )

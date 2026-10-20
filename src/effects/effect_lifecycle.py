@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING
 
 from src.effects.tick_effect import TickEffect
+from src.services.combat.periodic import tick_periodic
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -40,6 +41,9 @@ class LifecycleEffect(TickEffect):
         """Recupera la liquidación de un muerto pendiente sin esperar sus barreras AOF."""
         if message_sender is None:
             return
+        result = await tick_periodic(player_repo.redis.redis, user_id)
+        if result.get("applied"):
+            await message_sender.send_update_user_stats_from_repo(user_id, player_repo)
         await message_sender.sync_status(user_id, player_repo)
         await message_sender.status_effects.sync_campfires(user_id, player_repo)
         await message_sender.status_effects.sync_visibility(

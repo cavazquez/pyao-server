@@ -29,13 +29,15 @@ def roles(row: dict[str, Any]) -> list[str]:
         Roles independientes del flag de hostilidad.
     """
     result = []
+    if row.get("role") == "guard":
+        result.append("guard")
     for field, role in (("es_mercader", "merchant"), ("es_banquero", "banker")):
         if row.get(field):
             result.append(role)
     name = str(row.get("nombre", row.get("name", ""))).lower()
     if "sacerdote" in name or row.get("npc_type") in {1, 9}:
         result.append("priest_hint")
-    if "guardia" in name or row.get("npc_type") in {2, 8}:
+    if row.get("role") != "guard" and ("guardia" in name or row.get("npc_type") in {2, 8}):
         result.append("guard_hint")
     return result or ["inhabitant"]
 
@@ -84,7 +86,15 @@ def sound_inventory(
             "historical_waves": historical.get(npc_id),
         }
         if historical.get(npc_id) and historical[npc_id] != waves:
-            findings.append({"code": "historical_sound_difference", **row})
+            exception = (
+                appearance.get("historical_sound_exception")
+                if isinstance(appearance, dict)
+                else None
+            )
+            if exception:
+                row["historical_exception"] = exception
+            else:
+                findings.append({"code": "historical_sound_difference", **row})
         for slot, wave in enumerate(waves, 1):
             if not isinstance(wave, int) or not 0 <= wave <= MAX_SOUND_ID:
                 findings.append({"code": "invalid_sound_id", "npc_id": npc_id, "slot": slot})

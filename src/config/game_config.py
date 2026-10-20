@@ -28,6 +28,10 @@ class ServerConfig(BaseModel):
     shutdown_timeout_seconds: float = Field(default=20.0, ge=2, le=120)
     shutdown_drain_seconds: float = Field(default=5.0, ge=0.1, le=30)
     outgoing_drain_timeout: float = Field(default=5.0, gt=0, allow_inf_nan=False)
+    wss_port: int = Field(default=0, ge=0, le=65535)
+    wss_host: str = "127.0.0.1"
+    wss_origins: list[str] = Field(default_factory=list, max_length=20)
+    wss_tls_proxy: bool = False
 
 
 class CombatConfig(BaseModel):

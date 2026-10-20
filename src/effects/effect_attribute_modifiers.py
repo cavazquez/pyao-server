@@ -16,11 +16,11 @@ logger = logging.getLogger(__name__)
 class AttributeModifiersEffect(TickEffect):
     """Efecto que verifica y limpia modificadores de atributos expirados."""
 
-    def __init__(self, interval_seconds: float = 10.0) -> None:
+    def __init__(self, interval_seconds: float = 1.0) -> None:
         """Inicializa el efecto de limpieza de modificadores.
 
         Args:
-            interval_seconds: Intervalo en segundos entre verificaciones (default: 10s).
+            interval_seconds: Intervalo en segundos entre verificaciones (default: 1s).
         """
         self.interval_seconds = interval_seconds
 

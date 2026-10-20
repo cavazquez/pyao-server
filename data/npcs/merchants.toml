@@ -1241,6 +1241,43 @@ nombre = "Item #659"
 
 
 # === Mago (ID: 47) - from npcs_traders_extended.toml ===
+
+# Extensiones propias de pyao: pergaminos y componentes mágicos.
+[[merchant.item]]
+item_id = 1074
+quantity = 100
+nombre = "Onda arcana"
+
+[[merchant.item]]
+item_id = 1075
+quantity = 100
+nombre = "Quemadura arcana"
+
+[[merchant.item]]
+item_id = 1076
+quantity = 100
+nombre = "Renovación"
+
+[[merchant.item]]
+item_id = 1077
+quantity = 100
+nombre = "Barrera arcana"
+
+[[merchant.item]]
+item_id = 1078
+quantity = 100
+nombre = "Disipar magia"
+
+[[merchant.item]]
+item_id = 406
+quantity = 100
+nombre = "Gema Lunar"
+
+[[merchant.item]]
+item_id = 407
+quantity = 100
+nombre = "Gema Azul"
+
 [[merchant]]
 npc_id = 47
 nombre = "Mago"

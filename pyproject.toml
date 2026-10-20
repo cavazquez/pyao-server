@@ -1,6 +1,6 @@
 [project]
 name = "pyao-server"
-version = "1.0.0rc2"
+version = "1.0.0rc3"
 description = "Servidor de Argentum Online en Python"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -10,6 +10,7 @@ dependencies = [
     "pydantic>=2.13.3",
     "pydantic-settings>=2.14.2",
     "msgpack>=1.2.1",
+    "websockets==17.2",
 ]
 
 [dependency-groups]

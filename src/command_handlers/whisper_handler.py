@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.whisper_command import WhisperCommand
 from src.network.chat_channel import deliver_chat
+from src.security.chat_mutes import chat_rejection
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -56,6 +57,11 @@ class WhisperCommandHandler(CommandHandler):
         user_id = command.user_id
         receiver_name = command.receiver
         message = command.message
+
+        rejection = await chat_rejection(self.player_repo.redis.redis, user_id, "whisper")
+        if rejection:
+            await self.message_sender.send_console_msg(rejection)
+            return CommandResult.error(rejection)
 
         sender_username = "Desconocido"
         if "username" in self.session_data:

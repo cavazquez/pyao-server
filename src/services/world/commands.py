@@ -70,4 +70,12 @@ async def command_snapshot(deps: DependencyContainer, user: int) -> dict[str, An
             )
         if actor.rank == ClanRank.LEADER:
             commands.append(("/TRANSFERIRLIDERAZGO", "/TRANSFERIRLIDERAZGO nombre"))
+    account = await deps.account_repo.get_account_by_user_id(user)
+    if account and account.get("is_gm") == "1":
+        commands.extend(
+            (
+                ("/MUTE", "/MUTE nombre minutos all|canales motivo"),
+                ("/UNMUTE", "/UNMUTE nombre motivo"),
+            )
+        )
     return {"commands": [{"text": command, "syntax": syntax} for command, syntax in commands]}

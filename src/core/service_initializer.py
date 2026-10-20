@@ -219,6 +219,7 @@ class ServiceInitializer:
             broadcast_service,
             pathfinding_service,
             player_death_service,
+            npc_death_service,
         )
         logger.info("✓ Servicio de IA de NPCs inicializado (con pathfinding A*)")
 

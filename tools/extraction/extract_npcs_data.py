@@ -266,12 +266,12 @@ class NPCsDataExtractor:
 
     def parse_sounds(self, content: str) -> List[int]:
         """Extrae sonidos del NPC (Snd1, Snd2, etc.)."""
-        sounds = []
-        sound_pattern = r'Snd(\d+)=(\d+)'
+        sounds = [0, 0, 0]
+        sound_pattern = r'^\s*Snd([123])\s*=\s*(\d+)'
         
-        for match in re.finditer(sound_pattern, content, re.IGNORECASE):
+        for match in re.finditer(sound_pattern, content, re.IGNORECASE | re.MULTILINE):
             sound_id = int(match.group(2))
-            sounds.append(sound_id)
+            sounds[int(match.group(1)) - 1] = sound_id
         
         return sounds
 

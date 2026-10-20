@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 TAME_CHANCE = 0.20
 THEFT_STAMINA = 15
 GOLD_LIMIT = MAX_PLAYER_GOLD
+TAME_COOLDOWN_SECONDS = 3
 SAME_PET_LIMIT = 2
 
 
@@ -386,6 +387,10 @@ async def tame(
             )
         rules = json.loads(str(snapshot.get(SKILL_RULES_KEY) or "{}"))
         stats = cast("dict[str, str]", snapshot[RedisKeys.player_user_stats(user)])
+        if now - float(stats.get("last_tame_at", 0)) < TAME_COOLDOWN_SECONDS:
+            return Decision(
+                {"applied": False, "message": "Espera tres segundos antes de volver a domar."}, {}
+            )
         if int(stats.get("class_id", 0)) not in rules.get("playable_classes", list(range(1, 13))):
             return Decision({"applied": False, "message": "Clase de personaje inválida."}, {})
         members = set(cast("set[str]", snapshot[pets_key]))
@@ -426,7 +431,9 @@ async def tame(
         attributes = cast("dict[str, str]", snapshot[RedisKeys.player_stats(user)])
         power = int(attributes.get("charisma", 10)) * levels(snapshot, user)["domar"]
         success = power >= int(npc["domable"]) and sample < TAME_CHANCE
-        writes: dict[str, str | dict[str, str] | set[str]] = {}
+        writes: dict[str, str | dict[str, str] | set[str]] = {
+            RedisKeys.player_user_stats(user): {"last_tame_at": str(now)}
+        }
         if success:
             writes[npc_key] = {
                 "summoned_by_user_id": str(user),

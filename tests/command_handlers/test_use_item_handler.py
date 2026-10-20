@@ -605,6 +605,7 @@ async def test_handle_invisibility_potion(
         mock_player_repo.update_invisible_until = AsyncMock()
         mock_player_repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
         mock_message_sender.send_console_msg = AsyncMock()
+        mock_message_sender.send_set_invisible = AsyncMock()
         mock_message_sender.send_change_inventory_slot = AsyncMock()
 
         handler = UseItemCommandHandler(

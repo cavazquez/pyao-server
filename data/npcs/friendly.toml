@@ -3,6 +3,7 @@
 
 [[npc]]
 id = 2
+appearance = { sounds = [0, 0, 0], sounds_source = "PyAO: plantilla propia, silencio explícito", silent_intentionally = true }
 nombre = "Comerciante"
 descripcion = "Un comerciante amigable que vende pociones y equipamiento básico."
 body_id = 501
@@ -20,6 +21,9 @@ respawn_time_max = 0
 
 [[npc]]
 id = 3
+role = "guard"
+guard_faction = "royal"
+appearance = { sounds = [0, 0, 0], sounds_source = "PyAO: plantilla propia, silencio explícito", silent_intentionally = true, historical_sound_exception = "ID reutilizado: Guardia Real no es Cerdo; no heredar su voz" }
 nombre = "Guardia Real"
 descripcion = "Un guardia que protege la ciudad de criminales y monstruos."
 body_id = 502
@@ -35,6 +39,7 @@ respawn_time_max = 0
 
 [[npc]]
 id = 5
+appearance = { sounds = [0, 0, 0], sounds_source = "PyAO: plantilla propia, silencio explícito", silent_intentionally = true }
 nombre = "Banquero"
 descripcion = "Gestiona tu banco personal de forma segura."
 body_id = 504
@@ -51,6 +56,7 @@ respawn_time_max = 0
 
 [[npc]]
 id = 6
+appearance = { sounds = [0, 0, 0], sounds_source = "PyAO: plantilla propia, silencio explícito", silent_intentionally = true }
 nombre = "Entrenador"
 descripcion = "Te ayuda a mejorar tus habilidades mediante entrenamiento."
 body_id = 505
@@ -66,6 +72,7 @@ respawn_time_max = 0
 
 [[npc]]
 id = 25
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Bienvenido a la Sastrería de Banderbill! ¿En qué lo puedo ayudar?"
 body_id = 56
@@ -82,6 +89,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 26
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Adelante hermosa niña! En mi tienda encontrarás vestidos hechos para tí!"
 body_id = 121
@@ -98,6 +106,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 27
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Ven y mira estas prendas que he confeccionado para nuestra raza!"
 body_id = 159
@@ -114,6 +123,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 28
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Entrad Valiente Viajero! En la Sastrería de Arkhein están las mejores ropas del continente."
 body_id = 56
@@ -130,6 +140,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 29
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Ven y mira estas vestimentas, seguro te encantarán!"
 body_id = 80
@@ -146,6 +157,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 30
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "Aquí encontrarás las mejores prendas para enanos ¡Y a muy buen precio!"
 body_id = 159
@@ -162,6 +174,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 31
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Ven aquí! Te puedo ofrecer las mejores ropas de la isla..."
 body_id = 46
@@ -178,6 +191,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 32
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Ven y mira estas vestimentas, seguro te encantarán!"
 body_id = 118
@@ -194,6 +208,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 33
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Leñador"
 descripcion = "¡Hola muchacho!, si deseas vender o comprar madera escribe /COMERCIAR."
 body_id = 1
@@ -210,6 +225,7 @@ es_mercader = true
 accepted_obj_types = [14, 31]
 [[npc]]
 id = 34
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cullighan"
 descripcion = "Usted sabe que no hay persona noble o respetable en estas tierras que no tenga su propia vivienda. ¡acérquese y sea dueño de una de las exclusivas casas de Ullathorpe. ¡Será admirado por toda la población!"
 body_id = 240
@@ -226,6 +242,7 @@ es_mercader = true
 accepted_obj_types = [9]
 [[npc]]
 id = 35
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Moraday"
 descripcion = "¿Ha descubierto que la ciudad de Nix es la más hermosa de todo Argentum, verdad? ¡Pues qué mejor que ser un terrateniente de este paraíso! ¡Acércate que haremos negocios!"
 body_id = 239
@@ -242,6 +259,7 @@ es_mercader = true
 accepted_obj_types = [9]
 [[npc]]
 id = 36
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Astor"
 descripcion = "orcoszhh zson todsh orcshhh..hip.."
 body_id = 285
@@ -256,6 +274,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 37
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "Bienvenido, rata de alcantarilla, soy el Herrero de Nix, tengo algunas armas que pueden ayudarte en tus viajes."
 body_id = 199
@@ -272,6 +291,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 38
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "¡Ven, pasa, que he fabricado las más poderosas armas de Banderbill para tí!"
 body_id = 199
@@ -288,6 +308,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 39
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Hola forastero! confeccionamos las mejores ropas de la zona."
 body_id = 135
@@ -304,6 +325,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 40
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tolloz"
 descripcion = "¡Hola! Bienvenido a la Taberna de Arkhein, ¿Qué desea que le sirva?"
 body_id = 202
@@ -320,6 +342,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 41
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pescador"
 descripcion = "¡Bienvenido al gremio de pescadores!"
 body_id = 3
@@ -336,6 +359,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 42
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Antogne"
 descripcion = "¡Hola aventurero! Si estais hambriento habeis venido al lugar apropiador, tengo todo tipo de frutas."
 body_id = 202
@@ -352,6 +376,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 43
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sorks"
 descripcion = "¿¡Estáis sediento y hambriento!?"
 body_id = 202
@@ -368,6 +393,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 44
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Carpintero"
 descripcion = "¡Hola muchacho!, bienvenido a mi humilde Carpintería."
 body_id = 1
@@ -384,6 +410,7 @@ es_mercader = true
 accepted_obj_types = [20]
 [[npc]]
 id = 45
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Espíritu"
 descripcion = "¡Huye de aquí mientras puedas!"
 body_id = 8
@@ -398,6 +425,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 46
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Bienvenido a mi pequeña tienda de Ullathorpe... Tengo algunos hechizos que podrían interesarte."
 body_id = 46
@@ -414,6 +442,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 47
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Bienvenido a mi pequeña tienda de Nix... Tengo algunos hechizos que podrían interesarte."
 body_id = 46
@@ -430,6 +459,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 48
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Minero"
 descripcion = "Tengo los mejores utensillos para mineros de todo Argentum."
 body_id = 1
@@ -446,6 +476,9 @@ es_mercader = true
 accepted_obj_types = [23]
 [[npc]]
 id = 49
+role = "guard"
+guard_faction = "royal"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Imperial"
 descripcion = "¡Daré cárcel a todos los criminales!"
 body_id = 15
@@ -460,6 +493,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 50
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tellez"
 descripcion = "¡Hola! Bienvenido al \"Mesón Hostigado\", ¿Qué desea que le sirva?"
 body_id = 202
@@ -476,6 +510,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 51
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Bienvenido a mi pequeña Tienda de Banderbill... Tengo algunos hechizos que podrían interesarte."
 body_id = 46
@@ -492,6 +527,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 52
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Rantarisk"
 descripcion = "De lejos pude ver vuestro blazón, seguro busca una de las moradas más lujosas de todo el Argentum. En la ciudad real de Banderbill es donde deben habitar la flor y la nata de la nobleza ¡Venga y hagamos negocios!"
 body_id = 241
@@ -508,6 +544,7 @@ es_mercader = true
 accepted_obj_types = [9]
 [[npc]]
 id = 53
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Roksar"
 descripcion = "¡Hola, buen viajero! Dispongo de todo tipo de provisiones... ¿Qué deseas?"
 body_id = 202
@@ -524,6 +561,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 54
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Acércate, tengo algunas armaduras que podrían protegerte."
 body_id = 93
@@ -540,6 +578,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 55
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "¡Ven, pasa, que he fabricado las más poderosas armas de Arkhein para tí!"
 body_id = 199
@@ -556,6 +595,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 56
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "¡Ven, pasa, que he fabricado, aquí en Lindos, poderosas armas para tí!"
 body_id = 199
@@ -572,6 +612,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 57
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bhoemond"
 descripcion = "¡Sea bienvenido a la famosa Taberna de Arghal!, Aquí podrá saciarse con la mejor comida y la mejor bebida de toda la zona."
 body_id = 100
@@ -588,6 +629,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 58
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pescador"
 descripcion = "¡Bienvenido al gremio de pescadores!"
 body_id = 3
@@ -604,6 +646,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 59
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Bienvenido, neófito a ésta, a mi pequeña escuela de Magia, ubicada en el corazón mismo de la ciudad de Arghal."
 body_id = 34
@@ -620,6 +663,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 60
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "O'Riley de Banderbill"
 descripcion = "¡Hola amigo! Soy el Maestro de armas de la Milicia de Banderbill, si deseas que traiga una criatura sólo debes pedirmelo. (Escribe /ENTRENAR)"
 body_id = 57
@@ -634,6 +678,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 61
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Bienvenido a mi pequeña tienda de Arkhein... Tengo algunos hechizos que podrían interesarte."
 body_id = 46
@@ -650,6 +695,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 62
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guldorf"
 descripcion = "Si está buscando la paz y la tranquilidad en estas tierras ha llegado al lugar indicado... adquiera una de nuestras exclusivas residencias, y cambie su vida para siempre."
 body_id = 234
@@ -666,6 +712,7 @@ es_mercader = true
 accepted_obj_types = [9]
 [[npc]]
 id = 63
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Steve"
 descripcion = "Ven, acércate, que tengo para ofrecerte las mejores prendas masculinas de todo Arghal..."
 body_id = 342
@@ -682,6 +729,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 64
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Virgin"
 descripcion = "¡Bienvenida jovencita! Soy quien hace los mejores atuendos femeninos de todo Arghal, ven y prueba mi mercadería."
 body_id = 80
@@ -698,6 +746,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 65
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gallo"
 descripcion = "Un gallo."
 body_id = 5
@@ -712,6 +761,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 66
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cerdo"
 descripcion = "Un cerdo."
 body_id = 6
@@ -726,6 +776,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 67
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Vaca"
 descripcion = "Un vaca."
 body_id = 7
@@ -740,6 +791,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 68
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Odkon"
 descripcion = "¡Acérquese pequeño vistante de Arghal... Tengo prendas a su medida."
 body_id = 371
@@ -756,6 +808,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 69
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "Ven por aquí joven, las artes mágicas superiores te están llamando..."
 body_id = 46
@@ -772,6 +825,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 70
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Acércate, tengo algunas armaduras que podrían protegerte."
 body_id = 93
@@ -788,6 +842,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 71
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "Tened aquí las armas más poderosas de estas tierras... ¡Pasad y ved!"
 body_id = 199
@@ -804,6 +859,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 72
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tancredo de Hauteville, soberano de Banderbill"
 descripcion = "Saludos ciudadano, soy Tancredo de Hauteville, nuevo soberano de Banderbill. Mi deber es mantener el nuevo orden del Imperio. Si deseas unirte a mis filas y ayudarme di /ENLISTAR."
 body_id = 409
@@ -818,6 +874,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 73
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Si tienes agallas como para abandonar la ciudad y enfrentar el peligro de los bosques, deberás comprar una de las armaduras que he fabricado."
 body_id = 93
@@ -834,6 +891,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 74
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Ven, tengo resistentes armaduras para ofrecerte."
 body_id = 93
@@ -850,6 +908,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 75
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cuervo"
 descripcion = "Un cuervo."
 body_id = 68
@@ -864,6 +923,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 76
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Hormiga"
 descripcion = "Un hormiga."
 body_id = 70
@@ -878,6 +938,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 77
+appearance = { sounds = [47, 47, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Rata"
 descripcion = "Un rata."
 body_id = 71
@@ -892,6 +953,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 78
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Oso Pardo Domesticado"
 descripcion = "Un oso pardo domesticado."
 body_id = 73
@@ -906,6 +968,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 79
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tortuga de Mar"
 descripcion = "Un tortuga de mar."
 body_id = 74
@@ -920,6 +983,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 80
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mercader"
 descripcion = "¡¡Hola buen amigo, compro y vendo todo tipo de mercancías!!"
 body_id = 3
@@ -936,6 +1000,7 @@ es_mercader = true
 accepted_obj_types = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37]
 [[npc]]
 id = 81
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sacerdote Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 101
@@ -950,6 +1015,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 82
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sacerdote Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 101
@@ -964,6 +1030,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 83
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Druida Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 56
@@ -978,6 +1045,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 84
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Druida Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 56
@@ -992,6 +1060,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 85
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Druida Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 56
@@ -1006,6 +1075,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 86
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 130
@@ -1020,6 +1090,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 87
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago Imperial"
 descripcion = "Ohhh hijo mío!! que la llama de la virtud arda en tu corazón!!!"
 body_id = 128
@@ -1034,6 +1105,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 88
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Ely"
 descripcion = "Un ely."
 body_id = 143
@@ -1048,6 +1120,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 89
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Fuego Fatuo"
 descripcion = "Un fuego fatuo."
 body_id = 144
@@ -1062,6 +1135,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 90
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Morgolock's Soul"
 descripcion = "Un morgolock's soul."
 body_id = 144
@@ -1076,6 +1150,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 91
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gran Águila"
 descripcion = "Un gran águila."
 body_id = 59
@@ -1090,6 +1165,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 92
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Agua"
 descripcion = "Un elemental de agua."
 body_id = 541
@@ -1104,6 +1180,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 93
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Fuego"
 descripcion = "Un elemental de fuego."
 body_id = 153
@@ -1118,6 +1195,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 94
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Tierra"
 descripcion = "Un elemental de tierra."
 body_id = 543
@@ -1132,6 +1210,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 95
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Jabalí"
 descripcion = "Un jabalí."
 body_id = 150
@@ -1146,6 +1225,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 96
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tigre de Bengala"
 descripcion = "Un tigre de bengala."
 body_id = 147
@@ -1160,6 +1240,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 97
+appearance = { sounds = [0, 0, 96], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Pato"
 descripcion = "Un pato."
 body_id = 88
@@ -1174,6 +1255,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 98
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Demonio Legionario"
 descripcion = "Si deseas unirte a la Legión Oscura escribe /ENLISTAR"
 body_id = 405
@@ -1188,6 +1270,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 99
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago"
 descripcion = "¿Estás buscando los hechizos más poderosos? A buen puerto has llegado..."
 body_id = 46
@@ -1204,6 +1287,9 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 100
+role = "guard"
+guard_faction = "royal"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Imperial"
 descripcion = "¡Daré cárcel a todos los criminales y los perseguiré hasta el fin!"
 body_id = 15
@@ -1218,6 +1304,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 101
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Vendedor de propiedades."
 descripcion = "En estas tierras demoníacas están las mejores residencias para los miembros de la Legión Oscura... Si no eres legionario puedes también vivir acá, ¡pero os aseguro que los augura un infierno! jajaja!"
 body_id = 170
@@ -1234,6 +1321,9 @@ es_mercader = true
 accepted_obj_types = [9]
 [[npc]]
 id = 102
+role = "guard"
+guard_faction = "royal"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Imperial"
 descripcion = "¡Daré cárcel a todos los criminales!"
 body_id = 15
@@ -1248,6 +1338,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 103
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Carahuel"
 descripcion = "¡Hola, pequeño amigo! ¿Estás buscando algo para llenar tu estómago? Creo que puedo ayudarte..."
 body_id = 309
@@ -1264,6 +1355,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 104
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Timbero"
 descripcion = "Hola joven! Si deseas apostar escribe /APOSTAR X"
 body_id = 47
@@ -1278,6 +1370,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 105
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago del Caos"
 descripcion = "¡El mal prevalecerá sobre estas tierras!"
 body_id = 129
@@ -1292,6 +1385,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 106
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Arquera Real"
 descripcion = "Ningún criminal escapará de mi puntería."
 body_id = 131
@@ -1306,6 +1400,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 107
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Golem Oscuro"
 descripcion = "Un golem oscuro."
 body_id = 141
@@ -1320,6 +1415,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 108
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "O'Riley de Arkhein"
 descripcion = "¡Hola amigo! Escribe /ENTRENAR para divertirte con estas almas malvadas que hemos domado para tu diversión en estos festejos."
 body_id = 57
@@ -1334,6 +1430,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 109
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Bienvenidos a la Gran Sastrería de la Ciudad Perdida! Aquí encontrarán las ropas más exóticas del mundo..."
 body_id = 130
@@ -1350,6 +1447,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 110
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Entra! Jamás verás prendas más bellas que las que tengo para ofrecerte..."
 body_id = 124
@@ -1366,6 +1464,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 111
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Ven, tengo resistentes armaduras para ofrecerte."
 body_id = 93
@@ -1382,6 +1481,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 112
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "Con estas manos he construído algunas armas que te podrán servir en tus aventuras... ¡paga por ellas y serán tuyas!"
 body_id = 199
@@ -1398,6 +1498,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 113
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "¡Tengo a la venta las mejores armaduras de la isla!"
 body_id = 93
@@ -1414,6 +1515,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 114
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "SR"
 descripcion = "Bienvenido a la Sastrería Real."
 body_id = 174
@@ -1430,6 +1532,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 115
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "SC"
 descripcion = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
 body_id = 69
@@ -1446,6 +1549,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 116
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras"
 descripcion = "Si estás buscando las mejores armaduras de estas tierras, has llegado al lugar correcto..."
 body_id = 93
@@ -1462,6 +1566,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 117
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Aquí en la Ciudad Perdida encontrarán las mejores ropas pequeñas de todo el mundo!"
 body_id = 136
@@ -1478,6 +1583,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 118
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Alarnick, antiguo soberano de Banderbill"
 descripcion = "¡Esto no es digno de un soberano! ¡Exijo me devuelvan mi trono y me saquen de esta pocilga!...¡Maldito Tancredo, me las pagarás!"
 body_id = 348
@@ -1492,6 +1598,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 119
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sacerdote"
 descripcion = "¡Hola, hijo mío! Soy el sacerdote de estas tierras. Si eres newbie te podré resucitar, sólo necesitas tipear /RESUCITAR o hacer doble click sobre mi cabeza."
 body_id = 49
@@ -1506,6 +1613,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 120
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Ireth"
 descripcion = "Bienvenido amigo, vendo ropajes para MUJERES HUMANAS."
 body_id = 254
@@ -1522,6 +1630,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 121
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Isaac"
 descripcion = "¿Buscas ropas para HOMBRES HUMANOS? Entonces has hecho bien en acudir a mí."
 body_id = 240
@@ -1538,6 +1647,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 122
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Nelvi"
 descripcion = "Poseo una gran cantidad de ropajes para los astutos GNOMOS, ¿Deseas algo en particular?"
 body_id = 294
@@ -1554,6 +1664,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 123
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Aile"
 descripcion = "Bienvenido, vendo ropas para los hermosos GNOMOS de estas tierras."
 body_id = 288
@@ -1570,6 +1681,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 124
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Varinya"
 descripcion = "Tengo para ofrecerte los mejores ropajes para ELFOS."
 body_id = 234
@@ -1586,6 +1698,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 125
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Torke"
 descripcion = "Solo tengo ropajes para ENANOS, si no las puedes usar, ¡vete de aqui!"
 body_id = 306
@@ -1602,6 +1715,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 126
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gourk"
 descripcion = "Vendo ropas para DROWS, de hermosas telas y refinados detalles."
 body_id = 264
@@ -1618,6 +1732,9 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 127
+role = "guard"
+guard_faction = "chaos"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Infernal"
 descripcion = "¡Por el Señor Oscuro, aniquilaré a quienes lo deshonran!"
 body_id = 170
@@ -1632,6 +1749,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 128
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Nelmasil"
 descripcion = "El pueblo de Ullathorpe en contra del alcalde... ¡Todos aquellos que estén en contra se presenten en el castillo del rey en Banderbill!"
 body_id = 410
@@ -1646,6 +1764,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 129
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gael Azrraed"
 descripcion = "¡Todos arderán! arderán en el infierno y luciernagas saldrán de sus ojos!"
 body_id = 75
@@ -1660,6 +1779,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 130
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Altair de Oteren"
 descripcion = "Aprovechad que la pesca es buena a estas horas... Si deseas pescar, puedes comprarle una caña al comerciante que se encuentra al oeste del muelle."
 body_id = 75
@@ -1674,6 +1794,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 131
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Linderoth"
 descripcion = "Hey tú, ¿qué me andas mirando? He matado Medusas en peligrosos Dungeons desde que era un niño..."
 body_id = 285
@@ -1688,6 +1809,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 132
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sebastien"
 descripcion = "¡¡¿EH, EH?!! ¡no! ¡Yo no he hecho nada! ¡Vete si no quieres problemas!"
 body_id = 31
@@ -1702,6 +1824,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 133
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Anthares"
 descripcion = "Shhh, ten cuidado, planeo raptar al Demonio. Buscaré refuerzos y la ciudad será asediada."
 body_id = 378
@@ -1716,6 +1839,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 134
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Vuragon"
 descripcion = "Estoy hasta la coronilla de que se escape mi vaca! ya recibirá su merecido cuando la encuentre."
 body_id = 501
@@ -1730,6 +1854,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 135
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Belial"
 descripcion = "¡Maldito seas Tancredo de Hauteville! Me obligan limpiar esta mugrosa ciudad por haber hecho algo que ¡¡¡no hice!!!"
 body_id = 641
@@ -1744,6 +1869,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 136
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Efral"
 descripcion = "¿Qué miras tú? ¿Acaso quieres sufrir?"
 body_id = 442
@@ -1758,6 +1884,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 137
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Manrique"
 descripcion = "El Rey es avaro y sus terratenientes también, dame algo por favor, no seas como él..."
 body_id = 411
@@ -1772,6 +1899,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 138
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Abel, el monje pensador"
 descripcion = "Cuando hayas caido en combate, puedes acercarte al sacerdote de la ciudad para que te devuelva a la vida."
 body_id = 381
@@ -1786,6 +1914,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 139
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Clipsa"
 descripcion = "Que la Diosa naturaleza te guíe."
 body_id = 357
@@ -1800,6 +1929,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 140
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Astor"
 descripcion = "orcoszhh zson todsh orcshhh..hip.."
 body_id = 412
@@ -1814,6 +1944,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 141
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Zairot"
 descripcion = "Podrash caminar de norte a shur, *hip* podrash encontrar sherveza de la mejor *hip* pero ninguna como la del meshon *hip*"
 body_id = 416
@@ -1828,6 +1959,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 142
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Onkin"
 descripcion = "Déjenme tarnquilo... hip hip... descargaré lo que he... hip hip... bebido"
 body_id = 424
@@ -1842,6 +1974,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 143
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Fethresor"
 descripcion = "En las batallas más escalofriantes, más sangrientas... Un bardo siempre está presente."
 body_id = 418
@@ -1856,6 +1989,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 144
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Whyx"
 descripcion = "Mis melodías podrían hacer que hasta el más hábil guerrero, caiga a mis pies..."
 body_id = 419
@@ -1870,6 +2004,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 145
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Iklot"
 descripcion = "Cuando te encuentres solo, perdido, sin saber para dónde correr... Respira profundo y susurra mi melodía."
 body_id = 420
@@ -1884,6 +2019,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 146
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Unurbar Gorog"
 descripcion = "¡Hola! Poseo las mejores y más extrañas bebidas de estas tierras, ¿Qué desea que le sirva?"
 body_id = 372
@@ -1900,6 +2036,7 @@ es_mercader = true
 accepted_obj_types = [13]
 [[npc]]
 id = 147
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Dugh Dhail"
 descripcion = "¡Hola forastero! Pronto se celebrará un nuevo aniversario de la creación de la Cerveza. ¿Acudirás a los festejos?"
 body_id = 410
@@ -1914,6 +2051,9 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 148
+role = "guard"
+guard_faction = "royal"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Imperial"
 descripcion = "¡Atención! Si eres criminal e ingresas aquí seras atacado por los guardias reales."
 body_id = 15
@@ -1928,6 +2068,9 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 149
+role = "guard"
+guard_faction = "chaos"
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guardia Infernal"
 descripcion = "¡Atención! Si eres ciudadano e ingresas aquí seras atacado por los guardias de la Legión."
 body_id = 170
@@ -1942,6 +2085,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 150
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Nix ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -1956,6 +2100,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 151
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Banderbill ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -1970,6 +2115,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 152
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Lindos ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -1984,6 +2130,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 153
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Arghal ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -1998,6 +2145,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 154
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Lilith"
 descripcion = "Hola, tengo las mejores Pociones de la Alquimia para principiantes."
 body_id = 200
@@ -2014,6 +2162,7 @@ es_mercader = true
 accepted_obj_types = [11]
 [[npc]]
 id = 155
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armaduras Newbie"
 descripcion = "Si estás buscando túnicas y armaduras para principiantes, has llegado al lugar indicado."
 body_id = 93
@@ -2030,6 +2179,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 156
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Armas Newbie"
 descripcion = "Hola novato, tengo algunas armas que pueden ayudarte en tus aventuras."
 body_id = 199
@@ -2046,6 +2196,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 157
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Magia Newbie"
 descripcion = "Bienvenido a mi pequeña tienda. Tengo algunos hechizos que podrían interesarte."
 body_id = 46
@@ -2062,6 +2213,7 @@ es_mercader = true
 accepted_obj_types = [24]
 [[npc]]
 id = 158
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Arkhein ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -2076,6 +2228,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 159
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "SR"
 descripcion = "Bienvenido a la Sastrería Real."
 body_id = 175
@@ -2092,6 +2245,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 160
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "SC"
 descripcion = "¡AQUÍ OBTENDRÁS TU ARMADURA LEGIONARIA!"
 body_id = 177
@@ -2108,6 +2262,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 629
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guerrero tutor I"
 descripcion = "Los guerreros se especializan en el combate cuerpo a cuerpo por lo que las criaturas más adecuadas para ellos son aquellas que no poseen demasiada evasión y poder de ataque."
 body_id = 54
@@ -2122,6 +2277,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 630
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Guerrero tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los guerreros prefieren entrenar en el desierto al este de la ciudad."
 body_id = 54
@@ -2136,6 +2292,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 631
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cazador tutor I"
 descripcion = "Los cazadores se especializan en el combate a distancia, por lo que las criaturas más indicadas para ellos, son las que no tengan un gran poder de evasión."
 body_id = 155
@@ -2150,6 +2307,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 632
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cazador tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los cazadores, prefieren entrenar en el bosque, al oeste de la ciudad"
 body_id = 58
@@ -2164,6 +2322,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 633
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pirata tutor I"
 descripcion = "Los piratas pueden combatir tanto cuerpo a cuerpo como a distancia, por lo tanto, las criaturas más adecuadas para ellos, son aquellas que no posean gran poder de evasión ni de ataque."
 body_id = 161
@@ -2178,6 +2337,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 634
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pirata tutor II"
 descripcion = "Por sus características, dentro de esta isla, los piratas, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (a distancia), al este u oeste de la ciudad."
 body_id = 161
@@ -2192,6 +2352,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 635
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bandido tutor I"
 descripcion = "Los bandidos se especializan en el combate cuerpo a cuerpo, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
 body_id = 321
@@ -2206,6 +2367,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 636
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bandido tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los bandidos, prefieren entrenar en el desierto, al este de la ciudad."
 body_id = 321
@@ -2220,6 +2382,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 637
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Ladron tutor I"
 descripcion = "Los ladrones se destacan en el arte de ocultarse y el combate a distancia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean gran poder de evasión."
 body_id = 337
@@ -2234,6 +2397,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 638
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Ladron tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los ladrones, prefieren entrenar en el bosque, al oeste de la ciudad"
 body_id = 337
@@ -2248,6 +2412,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 639
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago tutor I"
 descripcion = "Los magos se especializan en ataques mágicos, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean defensa mágica."
 body_id = 159
@@ -2262,6 +2427,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 640
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Mago tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los magos, prefieren entrenar en el bosque, al norte de la ciudad"
 body_id = 353
@@ -2276,6 +2442,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 641
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bardo Tutor I"
 descripcion = "Los bardos se especializan en conjurar hechizos y evadir golpes, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean defensa mágica."
 body_id = 130
@@ -2290,6 +2457,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 642
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bardo Tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los bardos, prefieren entrenar en el bosque, al norte de la ciudad"
 body_id = 319
@@ -2304,6 +2472,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 643
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Clérigo Tutor I"
 descripcion = "Los clérigos combinan la magia con el combate cuerpo a cuerpo, por lo tanto, las criaturas más adecuadas para ellos, son las que no posean defensa mágica o posean bajo ataque y evasión."
 body_id = 314
@@ -2318,6 +2487,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 644
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Clérigo Tutor II"
 descripcion = "Por sus características, dentro de esta isla, los clérigos, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (magia), al este o norte de la ciudad."
 body_id = 314
@@ -2332,6 +2502,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 645
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Druida Tutor I"
 descripcion = "Los druidas se especializan en ataques mágicos, por lo tanto, las criaturas más adecuadas para esta clase, son las que no posean defensa mágica. También pueden entrenar con mascotas al domar"
 body_id = 56
@@ -2346,6 +2517,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 646
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Druida Tutor II"
 descripcion = "Debido a sus características, dentro de esta isla, los druidas, prefieren entrenar en el bosque, al norte de la ciudad"
 body_id = 56
@@ -2360,6 +2532,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 647
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Paladín Tutor I"
 descripcion = "Los paladines combinan el golpe cuerpo a cuerpo con la magia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
 body_id = 45
@@ -2374,6 +2547,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 648
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Paladín Tutor II"
 descripcion = "Debido a sus características, dentro de esta isla los paladines prefieren entrenar en el desierto al este de la ciudad."
 body_id = 54
@@ -2388,6 +2562,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 649
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Asesino Tutor I"
 descripcion = "Los asesinos combinan el golpe cuerpo a cuerpo con la magia, por lo tanto, las criaturas más adecuadas para esta clase, son aquellas que no posean un gran poder de evasión ni de ataque."
 body_id = 48
@@ -2402,6 +2577,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 650
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Asesino Tutor II"
 descripcion = "Debido a sus características, dentro de esta isla los asesinos prefieren entrenar en el desierto al este de la ciudad."
 body_id = 539
@@ -2416,6 +2592,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 651
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero Tutor"
 descripcion = "Se considera Herrero al trabajador que tenga 100 skills en la habilidad Herrería. Los mismos se encargan de construir armas y armaduras para los aventureros de estas tierras."
 body_id = 93
@@ -2430,6 +2607,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 652
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Minero Tutor"
 descripcion = "Se considera Minero al trabajador que tenga 100 skills en la habilidad Minería. Los mismos se encargan de extraer minerales y transformarlos en lingotes para el uso de los herreros."
 body_id = 100
@@ -2444,6 +2622,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 653
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Carpintero Tutor"
 descripcion = "Se considera Carpintero al trabajador que tenga 100 skills en la habilidad Carpintería. Los mismos se encargan de construir todo tipo de objetos que requieran madera."
 body_id = 373
@@ -2458,6 +2637,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 654
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Leñador Tutor"
 descripcion = "Se considera Leñador al trabajador que tenga 100 skills en la habilidad Tala. Los mismos se encargan de extraer leña común y leña élfica para el uso de los carpinteros."
 body_id = 382
@@ -2472,6 +2652,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 655
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pescador Tutor"
 descripcion = "Se considera Pescador al trabajador que tenga 100 skills en la habilidad Pesca. Los mismos se encargan de extraer peces de los ríos y mares para el venderselos al mejor postor."
 body_id = 301
@@ -2486,6 +2667,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 656
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Trabajador Tutor I"
 descripcion = "Los trabajadores pueden combatir tanto cuerpo a cuerpo como a distancia, por lo tanto, las criaturas más adecuadas para ellos, son aquellas que no posean gran poder de evasión ni de ataque."
 body_id = 348
@@ -2500,6 +2682,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 657
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Trabajador Tutor II"
 descripcion = "Por sus características, dentro de esta isla, los trabajadores, pueden entrenar tanto en el desierto (cuerpo a cuerpo) como en el bosque (a distancia), al este u oeste de la ciudad."
 body_id = 376
@@ -2516,6 +2699,7 @@ respawn_time_max = 0
 # NPCs agregados desde NPCs.dat
 [[npc]]
 id = 1
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Aldeano"
 descripcion = "¡Hola forastero! Bienvenido a nuestra humilde aldea."
 body_id = 18
@@ -2530,6 +2714,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 4
+appearance = { sounds = [0, 8, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Vaca"
 descripcion = "Un vaca."
 body_id = 7
@@ -2544,6 +2729,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 7
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Herrero"
 descripcion = "Bienvenido, rata de alcantarilla, soy el Herrero de Ullathorpe...tengo algunas armas que pueden ayudarte en tus viajes."
 body_id = 199
@@ -2560,6 +2746,7 @@ es_mercader = true
 accepted_obj_types = [2]
 [[npc]]
 id = 8
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Thorkis"
 descripcion = "Hooooola jovencito, tengo las mejores provisiones de Ullathorpe!!"
 body_id = 202
@@ -2576,6 +2763,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 9
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Ralph"
 descripcion = "¡Hola, pequeño aventurero, tengo aquí unas mercaderías para saciar tu hambre y sed!."
 body_id = 202
@@ -2592,6 +2780,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 10
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Bardo"
 descripcion = "¡¿Hola, os gustaria oír una hermosa melodía?!."
 body_id = 17
@@ -2606,6 +2795,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 11
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Aldeana"
 descripcion = "¡Hola forastero! Bienvenido a nuestra humilde aldea."
 body_id = 19
@@ -2620,6 +2810,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 12
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Hola forastero! Soy el Sastre de Ullathorpe, Bienvenido!"
 body_id = 50
@@ -2636,6 +2827,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 13
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gobernador"
 descripcion = "Hola, soy el gobernador de Ullathorpe ¡Bienvenido a nuestra pequeña aldea! Escribe /Hogar para obtener la ciudadanía."
 body_id = 4
@@ -2650,6 +2842,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 14
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Lilith"
 descripcion = "Hola, tengo las mejores Pociones de la Alquimia."
 body_id = 200
@@ -2666,6 +2859,7 @@ es_mercader = true
 accepted_obj_types = [11]
 [[npc]]
 id = 15
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Thorkis"
 descripcion = "¡Qué tal amigo! Entra, pues tengo las mejores provisiones de Nix!"
 body_id = 202
@@ -2682,6 +2876,7 @@ es_mercader = true
 accepted_obj_types = [1]
 [[npc]]
 id = 16
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Centinela"
 descripcion = "Un centinela."
 body_id = 540
@@ -2696,6 +2891,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 17
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Conejo"
 descripcion = "Un conejo."
 body_id = 11
@@ -2710,6 +2906,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 18
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pavo Real"
 descripcion = "Un pavo real."
 body_id = 20
@@ -2724,6 +2921,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 19
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Bienvenida Viajera! Tengo hermosas vestimentas para ofrecerte..."
 body_id = 80
@@ -2740,6 +2938,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 20
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
 body_id = 180
@@ -2756,6 +2955,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 21
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Hola forastero! Soy el Sastre de Nix, Bienvenido!"
 body_id = 50
@@ -2772,6 +2972,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 22
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Bienvenida Viajera! Entra a mi tienda, ¡Tengo las mejores prendas de Nix!"
 body_id = 80
@@ -2788,6 +2989,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 23
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Sastre"
 descripcion = "¡Acérquese! Tengo pequeñas prendas que serán de su agrado..."
 body_id = 180
@@ -2804,6 +3006,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 24
+appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Banquero"
 descripcion = "Hola, bienvenido a la cadena de finanzas Goliath. Somos la cadena más grande en Argentum, contamos con bancos en las ciudades más importantes."
 body_id = 201

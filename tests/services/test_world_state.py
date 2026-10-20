@@ -91,6 +91,8 @@ async def world(redis_client):
         map_manager=maps,
         npc_repo=NPCRepository(redis_client),
         item_catalog=ItemCatalog(),
+        inventory_repo=InventoryRepository(redis_client),
+        npc_death_service=SimpleNamespace(quest_service=None),
     )
     deps.npc_service = SimpleNamespace(map_manager=maps, npc_repository=deps.npc_repo)
     deps.trade_service = TradeService(

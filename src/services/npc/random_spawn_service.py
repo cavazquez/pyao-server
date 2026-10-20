@@ -9,6 +9,7 @@ configurado, independientemente de cuántos jugadores estén presentes.
 Los NPCs solo desaparecen cuando mueren en combate.
 """
 
+import asyncio
 import logging
 import random
 import time
@@ -49,6 +50,7 @@ class RandomSpawnService:
 
         # Tracking de cooldowns de respawn por área: {(map_id, area_key): last_spawn_time}
         self._respawn_cooldowns: dict[tuple[int, str], float] = {}
+        self._area_locks: dict[tuple[int, str], asyncio.Lock] = {}
 
     def load_random_spawn_configs(self, spawns_path: Path | str) -> None:
         """Carga la configuración de random spawns desde map_npcs.toml.
@@ -126,22 +128,17 @@ class RandomSpawnService:
 
             # Obtener NPCs ya spawneados en esta área (todos los NPCs, no solo de este jugador)
             area_key = RandomSpawnService._get_area_key(area)
-            active_npcs = self._get_active_npcs_in_area(map_id, area_key)
-            target_count = spawn_config.get("count", 0)
-
-            # Verificar cooldown de respawn para esta área
             cooldown_key = (map_id, area_key)
-            last_spawn_time = self._respawn_cooldowns.get(cooldown_key, 0.0)
-            current_time = time.time()
-
-            # Si aún no hay suficientes NPCs (límite global por área) y no hay cooldown, spawneamos
-            if (
-                len(active_npcs) < target_count
-                and current_time - last_spawn_time >= RANDOM_SPAWN_RESPAWN_COOLDOWN
-            ):
-                # Intentar spawnear NPCs faltantes (hasta el límite)
-                to_spawn = target_count - len(active_npcs)
-                for _ in range(to_spawn):
+            async with self._area_locks.setdefault(cooldown_key, asyncio.Lock()):
+                # El dueño del mundo es único; serializar toda la zona incluye
+                # los awaits de creación y la publicación de su origen en Redis.
+                active_npcs = self._get_active_npcs_in_area(map_id, area_key)
+                target_count = int(spawn_config.get("count", 0))
+                last_spawn_time = self._respawn_cooldowns.get(cooldown_key, 0.0)
+                current_time = time.time()
+                if current_time - last_spawn_time < RANDOM_SPAWN_RESPAWN_COOLDOWN:
+                    continue
+                for _ in range(max(0, target_count - len(active_npcs))):
                     npc = await self._try_spawn_random_npc(spawn_config, map_id, area, area_key)
                     if npc:
                         spawned.append(npc)
@@ -160,7 +157,8 @@ class RandomSpawnService:
             instance_id: ID de instancia del NPC que murió.
         """
         if instance_id in self._random_spawned_npcs:
-            del self._random_spawned_npcs[instance_id]
+            origin = self._random_spawned_npcs.pop(instance_id)
+            self._respawn_cooldowns[origin["map_id"], origin["area_key"]] = time.time()
             logger.debug("NPC random removido del tracking tras muerte: %s", instance_id)
 
     async def _try_spawn_random_npc(
@@ -198,6 +196,15 @@ class RandomSpawnService:
                 try:
                     npc = await self.npc_service.spawn_npc(npc_id, map_id, npc_x, npc_y, heading)
                     if npc:
+                        npc.random_spawn_area = area_key
+                        try:
+                            await self.npc_service.npc_repository.redis.hset(
+                                f"npc:instance:{npc.instance_id}",
+                                mapping={"random_spawn_area": area_key},
+                            )
+                        except Exception:
+                            await self.npc_service.remove_npc(npc)
+                            raise
                         # Trackear este NPC como random spawn
                         self._random_spawned_npcs[npc.instance_id] = {
                             "map_id": map_id,
@@ -271,8 +278,8 @@ class RandomSpawnService:
 
             if hostile_ids:
                 return random.choice(hostile_ids)
-            # Si no hay hostiles, usar cualquier NPC como fallback
-            return random.choice(all_npc_ids)
+            # Una zona hostil no puede crear un comerciante como fallback.
+            return None
 
         # NPC común o cualquier otro tipo - seleccionar aleatoriamente
         return random.choice(all_npc_ids)

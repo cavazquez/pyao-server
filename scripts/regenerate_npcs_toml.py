@@ -84,6 +84,7 @@ def parse_npcs_dat(filepath: Path) -> list[dict]:
             'head': int(data.get('Head', 0)),
             'body': int(data.get('Body', 0)),
             'heading': int(data.get('Heading', 3)),
+            'sounds': [int(next((v for k, v in data.items() if k.casefold() == f'snd{slot}'), 0)) for slot in (1, 2, 3)],
             'movement': int(data.get('Movement', 0)),
             'hostile': hostile,
             'attackable': int(data.get('Attackable', 0)),
@@ -163,7 +164,7 @@ def generate_toml(npcs: list[dict], section_name: str) -> str:
             lines.append(f'description = "{desc}"')
         
         # Appearance inline
-        lines.append(f"appearance = {{ head = {npc['head']}, body = {npc['body']}, heading = {npc['heading']} }}")
+        lines.append(f"appearance = {{ head = {npc['head']}, body = {npc['body']}, heading = {npc['heading']}, sounds = {npc['sounds']} }}")
         
         # Behavior inline
         lines.append(f"behavior = {{ movement = {npc['movement']}, hostile = {npc['hostile']}, respawn = {npc['respawn']} }}")

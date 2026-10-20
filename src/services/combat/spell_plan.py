@@ -6,7 +6,11 @@ from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING, Any, cast
 
 from src.models.skills import skill_progress
+from src.services.combat.barriers import absorb_damage, clear_barrier
+from src.services.combat.clan_policy import ClanCombat
+from src.services.combat.periodic import periodic_changes
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
+from src.services.combat.spell_components import take_materials
 from src.services.player.lifecycle import hp_changes, revive_changes
 from src.services.skill_training import trained_decision, training_resources
 from src.utils.durability import require_durable
@@ -51,6 +55,10 @@ class SpellPlan:
         self.staff_items: frozenset[int] = frozenset()
         self.world_guard: Callable[[], bool] | None = None
         self.event_id = ""
+        self.clan_policy: ClanCombat | None = None
+        self._relationship = "neutral"
+        self.charge_cost = True
+        self.train = True
         self.request = request
         self.spell = spell
         self.policy = policy
@@ -100,6 +108,9 @@ class SpellPlan:
         """
         values = {key: cast("dict[str, str]", value) for key, value in snapshot.items()}
         request = self.request
+        self._relationship = (
+            self.clan_policy.relationship(snapshot) if self.clan_policy else "neutral"
+        )
         if self.world_guard is not None and not self.world_guard():
             return Decision({"applied": False, "message": "El objetivo o la sesión cambió."}, {})
         source_key = RedisKeys.player_user_stats(request.user_id)
@@ -135,6 +146,8 @@ class SpellPlan:
             "min_mana": str(int(source.get("min_mana", 0)) - int(self.spell.get("mana_cost", 0))),
             "min_sta": str(int(source.get("min_sta", 0)) - int(self.spell.get("stamina_cost", 3))),
         }
+        if not self.charge_cost:
+            source_changes = {}
         attributes = values[RedisKeys.player_stats(request.user_id)]
         amount = (
             self.base_amount + self.base_amount * int(attributes.get("intelligence", 10)) // 100
@@ -152,7 +165,13 @@ class SpellPlan:
         elif self.spell.get("heals_hp"):
             target_changes[hp_field] = str(min(maximum, hp + amount))
         elif amount > 0:
-            target_changes[hp_field] = str(max(0, hp - amount))
+            remaining, barrier = (
+                absorb_damage(target, amount, "magic", self.now)
+                if request.target_player
+                else (amount, {})
+            )
+            target_changes.update(barrier)
+            target_changes[hp_field] = str(max(0, hp - remaining))
         if request.target_player and "hp" in target and hp_field in target_changes:
             target_changes["hp"] = target_changes[hp_field]
         if request.target_player and int(target_changes.get("min_hp", hp)) <= 0:
@@ -165,6 +184,24 @@ class SpellPlan:
                 )
             )
         effects = self._effects(target_changes, bool(request.target_player))
+        if request.target_player:
+            if rule := self.spell.get("periodic"):
+                target_changes.update(
+                    periodic_changes(target, rule, self.now, self.event_id, request.user_id)
+                )
+                effects = True
+            if rule := self.spell.get("barrier"):
+                target_changes.update(
+                    {
+                        "barrier_capacity": str(rule["capacity"]),
+                        "barrier_until": str(self.now + rule["duration_seconds"]),
+                        "barrier_types": ",".join(sorted(set(rule["damage_types"]))),
+                    }
+                )
+                effects = True
+            if self.spell.get("dispels_magic"):
+                target_changes.update({**clear_barrier(), "periodic_effects": "[]"})
+                effects = True
         if self.spell.get("morphs") or request.spell_id == MORPH_SPELL:
             account = values.get(RedisKeys.account_data(request.target_username), {})
             if not account or int(account.get("user_id", 0)) != request.target_player:
@@ -224,31 +261,54 @@ class SpellPlan:
                 },
                 {},
             )
+        if self.charge_cost and self.spell.get("components"):
+            bag_key = RedisKeys.player_inventory(request.user_id)
+            gear = values[RedisKeys.player_equipment(request.user_id)]
+            try:
+                writes[bag_key] = take_materials(
+                    values[bag_key],
+                    gear,
+                    ((int(row["item"]), int(row["quantity"])) for row in self.spell["components"]),
+                )
+            except ValueError as exc:
+                return Decision({"applied": False, "message": str(exc)}, {})
+        if request.target_player and int(target_changes.get("min_hp", hp)) <= 0:
+            target_changes.update({"periodic_effects": "[]", **clear_barrier()})
         writes[target_key] = target_changes
         if source_key == target_key:
             target_changes.update(source_changes)
         else:
             writes[source_key] = source_changes
-        return trained_decision(
-            Decision(
-                {
-                    "applied": True,
-                    "message": "Hechizo confirmado.",
-                    "amount": amount,
-                    "hp_delta": int(target_changes.get(hp_field, hp)) - hp,
-                    "map_id": int(position["map"]),
-                    "source_x": int(position["x"]),
-                    "source_y": int(position["y"]),
-                    "target_hp": int(target_changes.get(hp_field, hp)),
-                    "revived": bool(self.spell.get("revives")),
-                    "target_life_id": int(target_changes.get("life_id", target.get("life_id", 0))),
-                },
-                writes,
-            ),
-            snapshot,
-            request.user_id,
-            (("magia", True),),
+        decision = Decision(
+            {
+                "applied": True,
+                "message": "Hechizo confirmado.",
+                "amount": amount,
+                "hp_delta": int(target_changes.get(hp_field, hp)) - hp,
+                "map_id": int(position["map"]),
+                "source_x": int(position["x"]),
+                "source_y": int(position["y"]),
+                "target_hp": int(target_changes.get(hp_field, hp)),
+                "revived": bool(self.spell.get("revives")),
+                "target_life_id": int(target_changes.get("life_id", target.get("life_id", 0))),
+            },
+            writes,
         )
+        return (
+            trained_decision(decision, snapshot, request.user_id, (("magia", True),))
+            if self.train
+            else decision
+        )
+
+    async def prepare_relations(self, redis: Redis) -> None:
+        """Incluye afiliación y relación en el mismo WATCH que aplica el efecto."""
+        if self.request.target_player and self.clan_policy is None:
+            self.clan_policy = await ClanCombat.prepare(
+                redis, self.request.user_id, self.request.target_player
+            )
+            self.resources = tuple(
+                {r.key: r for r in (*self.resources, *self.clan_policy.resources)}.values()
+            )
 
     def _validate_caster(
         self,
@@ -318,7 +378,10 @@ class SpellPlan:
         if request.target_player:
             if int(self.spell.get("target", 3)) == NPC_ONLY_TARGET:
                 return "Ese hechizo requiere un NPC."
-            if is_hostile(self.spell):
+            self_dispel = (
+                self.spell.get("dispels_magic") and request.target_player == request.user_id
+            )
+            if is_hostile(self.spell) and not self_dispel:
                 return self.policy.rejection(
                     request.user_id,
                     request.target_player,
@@ -326,6 +389,7 @@ class SpellPlan:
                     target_position,
                     source,
                     target,
+                    self._relationship,
                 )
             if self.spell.get("revives"):
                 if (
@@ -397,6 +461,7 @@ async def commit_spell(redis: Redis, identity: str, plan: SpellPlan) -> dict[str
         Resultado original de la intención congelada, sin compensaciones.
     """
     await require_durable(redis)
+    await plan.prepare_relations(redis)
     result = await transact(
         redis,
         plan.resources,

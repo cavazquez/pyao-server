@@ -127,7 +127,7 @@ class GameTickInitializer:
         logger.info("✓ Efecto de envenenamiento (NPCs) habilitado")
 
         # Efecto de limpieza de modificadores de atributos (siempre habilitado)
-        game_tick.add_effect(AttributeModifiersEffect(interval_seconds=10.0))
+        game_tick.add_effect(AttributeModifiersEffect(interval_seconds=1.0))
         logger.info("✓ Efecto de limpieza de modificadores de atributos habilitado")
 
         # Efecto de expiración de invocaciones (siempre habilitado)

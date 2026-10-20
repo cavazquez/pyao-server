@@ -10,7 +10,10 @@ from typing import TYPE_CHECKING, Any, cast
 from src.combat.combat_critical_calculator import CriticalCalculator
 from src.models.skill_data_loader import SKILL_RULES_KEY
 from src.models.skills import skill_progress
+from src.services.combat.barriers import absorb_damage
+from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.pvp_policy import PvpPolicy
+from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
 from src.services.player.lifecycle import hp_changes
 from src.services.skill_training import TrainingEvent, trained_decision, training_resources
 from src.utils.redis_config import RedisKeys
@@ -158,6 +161,7 @@ class PhysicalPlan:
         self.critical_roll = random.random()
         self.now = time.time()
         self.world_guard: Callable[[Snapshot], bool] | None = None
+        self.clan_policy: ClanCombat | None = None
         users = {request.user_id, request.target_player} - {0}
         resources = [
             r
@@ -209,7 +213,13 @@ class PhysicalPlan:
         if request.target_player:
             rejection = (
                 PvpPolicy.configured().rejection(
-                    user, request.target_player, position, target_position, source, target
+                    user,
+                    request.target_player,
+                    position,
+                    target_position,
+                    source,
+                    target,
+                    self.clan_policy.relationship(snapshot) if self.clan_policy else "neutral",
                 )
                 or ""
             )
@@ -332,9 +342,14 @@ class PhysicalPlan:
                 if request.target_player
                 else amount * 2
             )
+        amount, barrier = (
+            absorb_damage(target, amount, "physical", self.now)
+            if request.target_player
+            else (amount, {})
+        )
         hp = max(0, int(target.get("min_hp", target.get("hp", 0))) - amount)
         writes[target_key] = (
-            hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")
+            {**barrier, **hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")}
             if request.target_player
             else {"hp": str(hp)}
         )
@@ -368,6 +383,11 @@ async def commit_physical(redis: Redis, plan: PhysicalPlan, identity: str) -> di
         Recibo del golpe validado sobre Redis.
     """
     request = plan.request
+    if request.target_player and plan.clan_policy is None:
+        plan.clan_policy = await ClanCombat.prepare(redis, request.user_id, request.target_player)
+        plan.resources = tuple(
+            {r.key: r for r in (*plan.resources, *plan.clan_policy.resources)}.values()
+        )
     return await transact(
         redis,
         plan.resources,
@@ -421,6 +441,14 @@ async def defend_npc(
             or npc.get("map_id") != position.get("map")
         ):
             return Decision(base, {})
+        if npc.get("role") == "guard" and (
+            not guard_enemy(stats, npc.get("guard_faction", "neutral"))
+            or abs(int(position.get("x", 0)) - int(npc.get("home_x", npc.get("x", 0))))
+            + abs(int(position.get("y", 0)) - int(npc.get("home_y", npc.get("y", 0))))
+            > GUARD_RADIUS
+            or float(npc.get("paralyzed_until", 0)) > now
+        ):
+            return Decision(base, {})
         if (
             max(
                 abs(int(position.get("x", 0)) - int(npc.get("x", 0))),
@@ -435,6 +463,7 @@ async def defend_npc(
         actual, dodged, blocked, events = defense(
             snapshot, user, catalog, damage, hit_roll, shield_roll, rules
         )
+        actual, barrier = absorb_damage(stats, actual, "physical", now)
         new_hp = max(0, hp - actual)
         return trained_decision(
             Decision(
@@ -448,7 +477,7 @@ async def defend_npc(
                     "player_died": new_hp <= 0,
                 },
                 {
-                    stats_key: hp_changes(stats, position, new_hp, identity),
+                    stats_key: {**barrier, **hp_changes(stats, position, new_hp, identity)},
                     npc_key: {"last_attack_time": str(now)},
                 },
             ),
