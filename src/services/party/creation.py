@@ -86,7 +86,7 @@ class CreationComponent:
 
         Args:
             user_id: User ID creating the party
-            username: Username of the leader (optional, will use "Player{user_id}" if not provided)
+            username: Leader name, resolved from the connected player when omitted.
 
         Returns:
             Tuple of (party, error_message)
@@ -95,7 +95,11 @@ class CreationComponent:
         if not can_create:
             return None, error_msg
 
-        # Use provided username or generate one
+        # The chat command omits the name; use the same connected identity as invitations.
+        if not username and self.owner.map_manager:
+            connected_name = self.owner.map_manager.get_player_username(user_id)
+            if isinstance(connected_name, str) and connected_name:
+                username = connected_name
         if not username:
             username = f"Player{user_id}"
 

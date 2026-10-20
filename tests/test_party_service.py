@@ -233,6 +233,51 @@ class TestPartyCreation:
         mock_party_repo.get_next_party_id.assert_called_once()
         mock_party_repo.save_party.assert_called_once()
 
+    @pytest.mark.asyncio
+    async def test_create_party_without_name_persists_connected_leader(
+        self, party_service, mock_party_repo, mock_map_manager
+    ):
+        """The command route must preserve the real character name in party state."""
+        mock_map_manager.get_player_username.return_value = "NombreReal"
+
+        party, _ = await party_service.create_party(1)
+
+        assert party.leader_username == "NombreReal"
+        assert party.members[1].username == "NombreReal"
+        mock_party_repo.save_party.assert_awaited_once_with(party)
+
+    @pytest.mark.asyncio
+    async def test_create_party_preserves_explicit_leader_name(
+        self, party_service, mock_map_manager
+    ):
+        """The world interface's explicit identity takes precedence."""
+        party, _ = await party_service.create_party(1, "NombreExplicito")
+
+        assert party.leader_username == "NombreExplicito"
+        mock_map_manager.get_player_username.assert_not_called()
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("connected_name", [None, "", MagicMock()])
+    async def test_create_party_with_unavailable_name_uses_safe_fallback(
+        self, party_service, mock_map_manager, connected_name
+    ):
+        """Absent or invalid map identities must never enter persisted party state."""
+        mock_map_manager.get_player_username.return_value = connected_name
+
+        party, _ = await party_service.create_party(1)
+
+        assert party.leader_username == "Player1"
+        assert party.members[1].username == "Player1"
+
+    @pytest.mark.asyncio
+    async def test_create_party_without_map_manager_uses_safe_fallback(self, party_service):
+        """An optional map manager must remain optional for service consumers."""
+        party_service.map_manager = None
+
+        party, _ = await party_service.create_party(1)
+
+        assert party.leader_username == "Player1"
+
 
 class TestPartyInvitation:
     """Test party invitation functionality."""
