@@ -205,12 +205,14 @@ class PlayerIndex:
         Returns:
             list[str]: usernames conectados.
         """
-        usernames: list[str] = []
-        for players in self._players_by_map.values():
-            for _sender, username in players.values():
-                if username and username not in usernames:
-                    usernames.append(username)
-        return usernames
+        return list(
+            dict.fromkeys(
+                username
+                for players in self._players_by_map.values()
+                for _sender, username in players.values()
+                if username
+            )
+        )
 
     def get_all_connected_user_ids(self) -> list[int]:
         """user_ids de todos los jugadores conectados (únicos).
@@ -218,9 +220,8 @@ class PlayerIndex:
         Returns:
             list[int]: user_ids conectados.
         """
-        user_ids: list[int] = []
-        for players in self._players_by_map.values():
-            for user_id in players:
-                if user_id not in user_ids:
-                    user_ids.append(user_id)
-        return user_ids
+        return list(
+            dict.fromkeys(
+                user_id for players in self._players_by_map.values() for user_id in players
+            )
+        )

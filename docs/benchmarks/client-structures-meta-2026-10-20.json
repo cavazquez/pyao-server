@@ -1,0 +1,13 @@
+{
+  "client_commit": "84d67d3a96546fcf5cb01c3ce2910ef6fbef8a2b",
+  "cpu": "AMD Ryzen 5 9600X; 6 cores / 12 threads",
+  "source_hashes": {
+    "engine/map_container.gd": "5c3c1c68a6f9e9f1470fead58cd624c4aba98b0eeafb514f39899163d6b5a8eb",
+    "engine/map_view_cache.gd": "9458643b790805bdc0f0966f78d77133fbdc918542322f639c30f452ffa1b973",
+    "tests/structure_benchmark.gd": "fe5625c4ad136ba79fa335949d190c142ac176195a748f8b02cfc31f4ae0e11b"
+  },
+  "graphical": true,
+  "renderer": "llvmpipe / Mesa 26.0.8; Xvfb; gl_compatibility",
+  "host": "Ubuntu Linux 7.0.0-38; x86_64",
+  "fixture_only": true
+}

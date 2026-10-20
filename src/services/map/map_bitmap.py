@@ -1,8 +1,10 @@
 # ruff: file-ignore[docstring-missing-returns, docstring-missing-yields]
 """Representación eficiente de mapas usando bitmaps.
 
-Reduce el uso de memoria de ~297 MB a <1 MB para datos de tiles.
-Cada mapa de 100x100 tiles usa solo ~1.25 KB en vez de ~1 MB.
+Cada plano de 100x100 tiles tiene un payload de 1.250 bytes, sin contar objetos
+Python. Seis planos para 290 mapas requieren 2.175.000 bytes de payload.
+Es una representación alternativa: MapResourcesService aún utiliza conjuntos.
+Estas coordenadas son 0..99; el mundo 1..100 requiere un adaptador explícito.
 """
 
 from __future__ import annotations
