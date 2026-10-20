@@ -38,6 +38,9 @@ def mock_context():
         new_y=100,
         heading=3,
         message_sender=MagicMock(),
+        weapon=12,
+        shield=4,
+        helmet=6,
     )
 
 
@@ -163,6 +166,9 @@ class TestSendSelfCharacterCreateStep:
             x=100,
             y=100,
             name="TestPlayer",
+            weapon=12,
+            shield=4,
+            helmet=6,
         )
 
 
@@ -216,6 +222,9 @@ class TestBroadcastCreateInNewMapStep:
             x=100,
             y=100,
             name="TestPlayer",
+            weapon=12,
+            shield=4,
+            helmet=6,
         )
 
 

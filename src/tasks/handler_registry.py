@@ -151,7 +151,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
     ),
     "equip_item": HandlerConfig(
         EquipItemCommandHandler,
-        deps_keys=["player_repo", "equipment_repo"],
+        deps_keys=["player_repo", "equipment_repo", "player_death_service"],
     ),
     "inventory_click": HandlerConfig(
         InventoryClickCommandHandler,

@@ -420,10 +420,10 @@ class TestBroadcastCharacterMove:
 
 
 @pytest.mark.asyncio
-async def test_move_batches_positions_and_reads_appearance_once(
+async def test_move_batches_positions_and_preserves_appearance_without_rereading(
     broadcast_service, mock_map_manager, mock_player_repo
 ) -> None:
-    """No relee apariencia por observador y no envía a un mapa ajeno durante un traslado."""
+    """La orientación conserva las capas y excluye mapas ajenos sin releer inventarios."""
     mock_map_manager.get_players_in_map.return_value = [1, 2, 3, 4, 5]
     mock_player_repo.get_positions = AsyncMock(
         return_value={
@@ -441,10 +441,10 @@ async def test_move_batches_positions_and_reads_appearance_once(
     mock_map_manager.get_message_sender.side_effect = lambda user, _map: senders[user]
     assert await broadcast_service.broadcast_character_move(1, 10001, 51, 50, 2, 50, 50, 1) == 2
     mock_player_repo.get_positions.assert_awaited_once_with([1, 2, 3, 4, 5])
-    broadcast_service._get_character_appearance.assert_awaited_once_with(10001, 1)
+    broadcast_service._get_character_appearance.assert_not_awaited()
     for sender in senders.values():
         sender.send_character_move.assert_awaited_once_with(10001, 51, 50)
-        sender.send_character_change.assert_awaited_once_with(10001, body=9, head=0, heading=2)
+        sender.send_character_change.assert_awaited_once_with(10001, body=0, head=0, heading=2)
 
 
 class TestGetCharacterAppearance:

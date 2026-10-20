@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING
 from redis.exceptions import RedisError
 
 from src.services.inventory_notifications import notify_inventory
+from src.services.player.appearance import resolve_appearance
 from src.services.player.lifecycle import resurrect, settle_death
 from src.utils.gold_atomic import operation_id
-from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -178,39 +178,16 @@ class PlayerDeathService:
             else None
         )
         alive = int(stats.get("min_hp", stats.get("hp", 0))) > 0
-        body = int((account or {}).get("char_body", (account or {}).get("char_race", 1))) or 1
-        head = int((account or {}).get("char_head", 1))
         equipment = await self.player_repo.redis.hgetall(RedisKeys.player_equipment(user_id))
         inventory = await self.player_repo.redis.hgetall(RedisKeys.player_inventory(user_id))
-        appearance = {"weapon": 0, "shield": 0, "helmet": 0}
-        for slot, field in (
-            ("weapon", "WeaponAnim"),
-            ("shield", "ShieldAnim"),
-            ("helmet", "CascoAnim"),
-            ("armor", "Ropaje"),
-        ):
-            stack = InventorySlot.parse(inventory.get(f"slot_{equipment.get(slot, '0')}", ""))
-            definition = (
-                self.item_catalog.get_item_data(stack.item_id)
-                if stack and self.item_catalog
-                else None
-            )
-            graphic = definition.get(field, definition.get("Anim", 0)) if definition else 0
-            if isinstance(graphic, int) and alive:
-                if slot == "armor" and graphic > 0:
-                    body = graphic
-                elif slot in appearance:
-                    appearance[slot] = graphic
-        if not alive:
-            body, head = GHOST_BODY_MALE, GHOST_HEAD
-        elif float(stats.get("morphed_until", 0)) > time.time():
-            body, head = int(stats.get("morphed_body", body)), int(stats.get("morphed_head", head))
-        if alive and stats.get("sailing") == "1":
-            body, head = 84, 0
-            appearance = {"weapon": 0, "shield": 0, "helmet": 0}
+        visual = resolve_appearance(account or {}, stats, equipment, inventory)
         for sender in self.map_manager.get_all_message_senders_in_map(position["map"]):
             await sender.send_character_change(
-                user_id, body=body, head=head, heading=position.get("heading", 3), **appearance
+                user_id,
+                body=visual.body,
+                head=visual.head,
+                heading=position.get("heading", 3),
+                **visual.equipment(),
             )
             await sender.send_set_invisible(
                 user_id,

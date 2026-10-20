@@ -48,6 +48,7 @@ Setup, protocolo, datos y herramientas.
 - [BANK_SYSTEM.md](systems/BANK_SYSTEM.md) — Banco
 - [PLAYER_TRADE_SYSTEM.md](systems/PLAYER_TRADE_SYSTEM.md) — Comercio entre jugadores
 - [ITEMS_SYSTEM.md](systems/ITEMS_SYSTEM.md) — Ítems e inventario
+- [player-appearance.md](operations/player-appearance.md) — Equipo visible, estados del personaje y sincronización entre clientes
 - [LOOT_SYSTEM.md](systems/LOOT_SYSTEM.md) — Botín
 - [CLAN_SYSTEM.md](systems/CLAN_SYSTEM.md) — Clanes/guilds
 - [PARTY_SYSTEM.md](systems/PARTY_SYSTEM.md) — Parties/grupos

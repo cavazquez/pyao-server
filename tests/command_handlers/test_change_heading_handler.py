@@ -5,7 +5,6 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from src.command_handlers.change_heading_handler import (
-    SHIP_BODY_ID,
     ChangeHeadingCommandHandler,
 )
 from src.commands.change_heading_command import ChangeHeadingCommand
@@ -110,9 +109,9 @@ async def test_handle_with_sailing(
     result = await handler.handle(command)
 
     assert result.success is True
-    # Debe usar el body de barco
+    # El giro conserva la barca y todas las capas ya mostradas.
     call_args = mock_message_sender.send_character_change.call_args
-    assert call_args[1]["body"] == SHIP_BODY_ID
+    assert call_args[1]["body"] == 0
     assert call_args[1]["head"] == 0
 
 
@@ -137,10 +136,10 @@ async def test_handle_with_account_data(
 
     assert result.success is True
     mock_account_repo.get_account.assert_called_once_with("testuser")
-    # Debe usar los datos de la cuenta
+    # El giro no sustituye la ropa/equipo por la apariencia de la cuenta.
     call_args = mock_message_sender.send_character_change.call_args
-    assert call_args[1]["body"] == 2  # char_race
-    assert call_args[1]["head"] == 16  # char_head
+    assert call_args[1]["body"] == 0
+    assert call_args[1]["head"] == 0
 
 
 @pytest.mark.asyncio
@@ -193,7 +192,7 @@ async def test_handle_with_zero_body_id(
     assert result.success is True
     # Debe usar valor por defecto si body es 0
     call_args = mock_message_sender.send_character_change.call_args
-    assert call_args[1]["body"] == 1  # Valor por defecto
+    assert call_args[1]["body"] == 0  # El giro no reemplaza la apariencia.
 
 
 @pytest.mark.asyncio

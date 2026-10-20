@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.equipment_repository import EquipmentRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.player.player_death_service import PlayerDeathService
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class EquipItemCommandHandler(CommandHandler):
         player_repo: PlayerRepository,
         equipment_repo: EquipmentRepository,
         message_sender: MessageSender,
+        player_death_service: PlayerDeathService | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -32,10 +34,12 @@ class EquipItemCommandHandler(CommandHandler):
             player_repo: Repositorio de jugadores.
             equipment_repo: Repositorio de equipamiento.
             message_sender: Enviador de mensajes.
+            player_death_service: Publicador común de apariencia y estado confirmado.
         """
         self.player_repo = player_repo
         self.equipment_repo = equipment_repo
         self.message_sender = message_sender
+        self.player_death_service = player_death_service
 
     async def handle(self, command: Command) -> CommandResult:
         """Ejecuta el comando de equipar/desequipar item (solo lógica de negocio).
@@ -72,6 +76,8 @@ class EquipItemCommandHandler(CommandHandler):
             # Reenviar el inventario completo para actualizar el estado de equipamiento
             player_service = PlayerService(self.player_repo, self.message_sender)
             await player_service.send_inventory(user_id, self.equipment_repo)
+            if self.player_death_service:
+                await self.player_death_service.publish_state(user_id)
 
             return CommandResult.ok(data={"slot": slot, "success": True})
 

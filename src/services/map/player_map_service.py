@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import time
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -21,6 +20,7 @@ from src.services.map.map_transition_steps import (
     MapTransitionContext,
     MapTransitionOrchestrator,
 )
+from src.services.player.appearance import resolve_appearance
 from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
@@ -35,6 +35,9 @@ class PlayerVisualData:
     username: str
     char_body: int
     char_head: int
+    weapon: int = 0
+    shield: int = 0
+    helmet: int = 0
 
 
 class PlayerMapService:
@@ -91,39 +94,17 @@ class PlayerMapService:
         Returns:
             PlayerVisualData con los datos del jugador.
         """
-        # Valores por defecto
-        char_body = 1
-        char_head = 1
-        username = f"Player{user_id}"
-
-        # Obtener datos de la cuenta
-        account_data = await self.account_repo.get_account_by_user_id(user_id)
-        if account_data:
-            char_body = int(account_data.get("char_race", 1))
-            char_head = int(account_data.get("char_head", 1))
-            username = account_data.get("username", f"Player{user_id}")
-
-            # Validar body (no puede ser 0)
-            if char_body == 0:
-                char_body = 1
-
-        # Verificar si el jugador tiene apariencia morfeada activa
-        morphed = await self.player_repo.get_morphed_appearance(user_id)
-        if morphed:
-            morphed_until = morphed.get("morphed_until", 0.0)
-            if time.time() < morphed_until:
-                # Usar apariencia morfeada
-                char_body = int(morphed.get("morphed_body", char_body))
-                char_head = int(morphed.get("morphed_head", char_head))
-
+        account = await self.account_repo.get_account_by_user_id(user_id) or {}
         stats = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
-        if int(stats.get("min_hp", 1)) > 0 and stats.get("sailing") == "1":
-            char_body, char_head = 84, 0
+        equipment = await self.player_repo.redis.hgetall(RedisKeys.player_equipment(user_id))
+        inventory = await self.player_repo.redis.hgetall(RedisKeys.player_inventory(user_id))
+        visual = resolve_appearance(account, stats, equipment, inventory)
         return PlayerVisualData(
-            user_id=user_id,
-            username=username,
-            char_body=char_body,
-            char_head=char_head,
+            user_id,
+            account.get("username", f"Player{user_id}"),
+            visual.body,
+            visual.head,
+            **visual.equipment(),
         )
 
     async def _send_players_in_map(
@@ -163,6 +144,9 @@ class PlayerMapService:
                 char_index=other_user_id,
                 body=other_visual.char_body,
                 head=other_visual.char_head,
+                weapon=other_visual.weapon,
+                shield=other_visual.shield,
+                helmet=other_visual.helmet,
                 heading=other_position.get("heading", 3),
                 x=other_position["x"],
                 y=other_position["y"],
@@ -302,6 +286,9 @@ class PlayerMapService:
             char_index=user_id,
             body=visual_data.char_body,
             head=visual_data.char_head,
+            weapon=visual_data.weapon,
+            shield=visual_data.shield,
+            helmet=visual_data.helmet,
             heading=heading,
             x=x,
             y=y,
@@ -329,6 +316,9 @@ class PlayerMapService:
             char_index=user_id,
             body=visual_data.char_body,
             head=visual_data.char_head,
+            weapon=visual_data.weapon,
+            shield=visual_data.shield,
+            helmet=visual_data.helmet,
             heading=heading,
             x=x,
             y=y,
@@ -382,6 +372,9 @@ class PlayerMapService:
             username=visual_data.username,
             char_body=visual_data.char_body,
             char_head=visual_data.char_head,
+            weapon=visual_data.weapon,
+            shield=visual_data.shield,
+            helmet=visual_data.helmet,
             current_map=current_map,
             current_x=current_x,
             current_y=current_y,
@@ -446,6 +439,9 @@ class PlayerMapService:
             char_index=user_id,
             body=visual_data.char_body,
             head=visual_data.char_head,
+            weapon=visual_data.weapon,
+            shield=visual_data.shield,
+            helmet=visual_data.helmet,
             heading=heading,
             x=new_x,
             y=new_y,
