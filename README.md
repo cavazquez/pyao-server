@@ -38,7 +38,7 @@ Los canales marcados como pendientes enlazan sus issues de implementación.
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
-Descarga de pruebas vigente: **[servidor 1.0.0rc3](https://github.com/cavazquez/pyao-server/releases/tag/v1.0.0rc3)** y **[cliente de la misma versión](https://github.com/cavazquez/ArgentumOnlineGodot/releases/tag/v1.0.0rc3)**. GitHub excluye las prereleases de `/releases/latest`, que todavía muestra una versión estable antigua.
+Descargas de pruebas: **[releases del servidor](https://github.com/cavazquez/pyao-server/releases)** y **[releases del cliente](https://github.com/cavazquez/ArgentumOnlineGodot/releases)**. Instalar la misma versión en ambos. GitHub excluye las prereleases de `/releases/latest`; los indicadores superiores incluyen las RC publicadas.
 
 Los PR ejecutan validaciones, pruebas y controles de dependencias sin construir
 distribuciones. Compilar y publicar son operaciones manuales separadas; ver
@@ -607,6 +607,6 @@ El wheel incluye el dataset TOML, configuración por defecto y archive de mapas 
 
 El cierre por SIGTERM/SIGINT deja de aceptar conexiones, despierta lectores ociosos y concede `server.shutdown_drain_seconds` a los handlers activos. Luego cancela los restantes, drena o descarta salida acotada, libera sesiones/mascotas y cierra trades y tareas de muerte antes de Redis. `server.shutdown_timeout_seconds` limita el cierre completo (20 s por defecto, 5 s de drenaje). `stop()` es compartido e idempotente. Un commit de resultado incierto conserva su recibo/journal y su identificador; el cierre no aplica compensaciones que puedan duplicar recursos.
 
-El candidato de la versión 1.0 se identifica como `1.0.0rc3` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.
+El candidato de la versión 1.0 se identifica como `1.0.0rc4` tanto en servidor como en cliente. Usar la misma versión en ambos; el servidor la informa con `pyao-server --version` y los paquetes Snap la muestran en `snap list`. Los commits exactos y SHA256 se conservan como procedencia, sin reemplazar ese número común.
 
 El [Snap del servidor `pyao`](docs/guides/SNAP.md) incluye Python 3.14, instala las dependencias con uv desde el lock y usa recursos del wheel actual. CI prueba el paquete instalado con TLS y Redis descartable en amd64 y arm64. La publicación en `latest/edge` y la migración explícita de partidas se verifican por separado.

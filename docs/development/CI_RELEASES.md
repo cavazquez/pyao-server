@@ -41,3 +41,22 @@ entregas estables sí actualizan latest al publicarse.
 
 La Store se publica por el proceso coordinado de aceptación de ambos repositorios;
 ninguno de estos workflows promueve automáticamente canales Snap.
+
+## Reintentos de carga y verificación
+
+`tools/github_release_upload.py stage` crea el borrador sin subir archivos en
+bloque, carga cada asset por separado y descarga el conjunto final para verificar
+tamaño y SHA256. Si ya existe un borrador parcial, verifica los archivos presentes
+y sólo carga los faltantes. Un archivo diferente o extra bloquea la operación,
+sin sobrescribirlo. Una release publicada sólo admite verificar sus bytes.
+
+`--dry-run` valida las fuentes y describe los faltantes sin crear ni publicar.
+`verify` comprueba una release existente; `publish` vuelve a verificarla antes de
+hacerla pública. Los tres comandos usan `--directory`, `--tag`, `--version`,
+`--commit`, `--repository` y admiten `--receipt`. Los workflows conservan sus
+recibos JSON y no promueven canales Snap.
+
+Es posible validar un candidato manualmente sobre main antes de crear el tag
+final. Se registra y exige el SHA exacto de cada ejecución; ambos tags finales
+deben apuntar a esos mismos commits fusionados antes de preparar los borradores.
+Un reintento fallido de CI no requiere mover un tag ya publicado.

@@ -57,20 +57,15 @@ jobs:
           done
       - name: Preparar hashes y procedencia sin recompilar
         run: python3 tools/github_release.py prepare --directory incoming --output release-dist --version "$RELEASE_VERSION" --commit "$RELEASE_COMMIT" --role server
-      - name: Crear borrador completo sin sobreescribir una release existente
-        run: |
-          prerelease=()
-          if [ "$RELEASE_PRERELEASE" = true ]; then prerelease=(--prerelease); fi
-          gh release create "$TAG" release-dist/* --repo "$GH_REPO" --verify-tag --draft --latest=false "${prerelease[@]}" --title "${GH_REPO##*/} $RELEASE_VERSION" --notes "Artefactos verificados de $RELEASE_COMMIT. Versión común de servidor y cliente: $RELEASE_VERSION. SHA256SUMS y release-manifest.json documentan los archivos publicados."
-      - name: Verificar los archivos descargados del borrador
-        run: |
-          gh release download "$TAG" --repo "$GH_REPO" --dir verified
-          cd verified
-          sha256sum --check ../release-dist/SHA256SUMS
-          cmp SHA256SUMS ../release-dist/SHA256SUMS
+      - name: Crear o completar el borrador sin sobrescribir archivos
+        run: python3 tools/github_release_upload.py stage --directory release-dist --tag "$TAG" --version "$RELEASE_VERSION" --commit "$RELEASE_COMMIT" --repository "$GH_REPO" --receipt release-stage.json
       - name: Publicar el borrador verificado
         if: inputs.publish
-        run: |
-          latest=false
-          if [ "$RELEASE_PRERELEASE" = false ]; then latest=true; fi
-          gh release edit "$TAG" --repo "$GH_REPO" --draft=false --prerelease="$RELEASE_PRERELEASE" --latest="$latest"
+        run: python3 tools/github_release_upload.py publish --directory release-dist --tag "$TAG" --version "$RELEASE_VERSION" --commit "$RELEASE_COMMIT" --repository "$GH_REPO" --receipt release-publish.json
+      - name: Conservar recibos de publicación
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: github-release-receipts-${{ inputs.tag }}
+          path: release-*.json
+          retention-days: 7
