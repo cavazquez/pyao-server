@@ -62,6 +62,8 @@ class NPCRepository:
         is_tamed: bool = False,
         role: str = "inhabitant",
         guard_faction: str = "neutral",
+        loot_profile: str = "none",
+        loot_material: int = 0,
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -69,6 +71,8 @@ class NPCRepository:
             npc_id: ID del tipo de NPC (del catálogo).
             role: Rol explícito de comportamiento.
             guard_faction: Facción defendida por un guardia.
+            loot_profile: Política de botín, independiente del nivel del jugador.
+            loot_material: Piel específica de la especie, si corresponde.
             char_index: CharIndex único en el mapa.
             map_id: ID del mapa.
             x: Posición X.
@@ -145,11 +149,15 @@ class NPCRepository:
             guard_faction=guard_faction,
             home_x=x,
             home_y=y,
+            loot_profile=loot_profile,
+            loot_material=loot_material,
         )
 
         # Guardar en Redis
         key = RedisKeys.npc_instance(instance_id)
         npc_data = {
+            "loot_profile": loot_profile,
+            "loot_material": str(loot_material),
             "npc_id": str(npc_id),
             "char_index": str(char_index),
             "instance_id": instance_id,
@@ -270,6 +278,8 @@ class NPCRepository:
             home_x=int(result.get("home_x", result["x"])),
             home_y=int(result.get("home_y", result["y"])),
             random_spawn_area=result.get("random_spawn_area", ""),
+            loot_profile=result.get("loot_profile", "none"),
+            loot_material=int(result.get("loot_material", "0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
@@ -436,6 +446,9 @@ class NPCRepository:
         """
         if preserve_tamed:
             for npc in await self.get_all_npcs():
+                state = await self.redis.hget(f"npc:instance:{npc.instance_id}", "death_state")
+                if state == "pending":
+                    continue
                 if not npc.is_tamed or npc.hp <= 0:
                     await self.remove_npc(npc.instance_id)
             keys = await self.redis.keys("npc:map:*")

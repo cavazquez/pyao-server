@@ -214,7 +214,7 @@ async def test_real_serializers_send_identical_world_to_two_receivers(catalog, r
 @pytest.mark.asyncio
 @pytest.mark.parametrize(("event", "wave"), [("attack", 47), ("hurt", 103), ("death", 62)])
 async def test_specific_npc_voice_reaches_both_real_packet_serializers(
-    catalog, redis_client, event, wave
+    catalog, redis_client, event, wave, monkeypatch
 ):
     """Control de enrutamiento: no confunde SwordHit con la voz del NPC.
 
@@ -255,6 +255,8 @@ async def test_specific_npc_voice_reaches_both_real_packet_serializers(
             await redis_client.hset(
                 "player:1:user_stats", mapping={"level": "1", "experience": "0", "elu": "300"}
             )
+            await redis_client.hset(f"npc:instance:{npc.instance_id}", "hp", "0")
+            monkeypatch.setattr("src.services.npc.rewards.settlement.require_durable", AsyncMock())
             death = NPCDeathService(manager, service.npc_repository, player, broadcast)
             await death.handle_npc_death(npc, 1, 0, recorders[0].sender())
         assert all(bytes([39, wave, 50, 50]) in recorder.packets for recorder in recorders)

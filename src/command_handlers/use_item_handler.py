@@ -13,6 +13,7 @@ from src.models.item_constants import BOAT_ITEM_ID
 from src.models.item_types import ObjType
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.inventory_notifications import notify_inventory
+from src.services.nutrition import NutritionRule, consume_nutrition
 from src.services.scroll_learning import ScrollRule, learn_scroll
 
 BOAT_TYPE = 31
@@ -158,7 +159,16 @@ class UseItemCommandHandler(CommandHandler):
         if item_id == BOAT_ITEM_ID:
             return await self.special_handler.handle_boat(user_id, slot, username)
 
-        # Caso especial para manzanas (ID 1): delegar a handler de consumibles
+        if self.item_catalog:
+            item_data = self.item_catalog.get_item_data(item_id)
+            if item_data and item_data.get("ObjType") in {
+                ObjType.COMIDA,
+                ObjType.BEBIDA,
+                ObjType.BOTELLAS_LLENAS,
+            }:
+                return await self._consume_nutrition(command, item_id, item_data, inventory_repo)
+
+        # Adaptador para servicios de diagnóstico sin un catálogo concreto.
         if item_id == 1:
             return await self.consumable_handler.handle_apple(
                 user_id, item_id, quantity, slot, inventory_repo
@@ -187,6 +197,46 @@ class UseItemCommandHandler(CommandHandler):
         # Si llegamos aquí, el ítem no tiene un comportamiento definido
         logger.info("El ítem %d no tiene un comportamiento de uso definido", item_id)
         return CommandResult.ok(data={"item_id": item_id, "handled": False})
+
+    async def _consume_nutrition(
+        self,
+        command: UseItemCommand,
+        item_id: int,
+        item_data: dict[str, object],
+        inventory_repo: InventoryRepository,
+    ) -> CommandResult:
+        """Publica únicamente el consumo y los efectos ya confirmados por Redis.
+
+        Returns:
+            Consumo real del catálogo o rechazo sin pérdida del objeto.
+        """
+        rule = NutritionRule.from_item(item_id, item_data)
+        result = await consume_nutrition(
+            self.player_repo.redis.redis,
+            command.user_id,
+            command.slot,
+            command.operation_id,
+            rule,
+            int(inventory_repo.MAX_SLOTS),
+            inventory_repo.stacking.max_stack,
+        )
+        if not result["applied"]:
+            return CommandResult.error(result["message"])
+        await notify_inventory(self.message_sender, inventory_repo, command.user_id)
+        needs = await self.player_repo.get_hunger_thirst(command.user_id) or {}
+        await self.message_sender.send_update_hunger_and_thirst(
+            max_water=needs.get("max_water", 100),
+            min_water=needs.get("min_water", 0),
+            max_hunger=needs.get("max_hunger", 100),
+            min_hunger=needs.get("min_hunger", 0),
+        )
+        await self.message_sender.send_update_user_stats_from_repo(
+            command.user_id, self.player_repo
+        )
+        verb = "comido" if item_data["ObjType"] == ObjType.COMIDA else "bebido"
+        label = "una manzana" if item_id == 1 else str(item_data["Name"])
+        await self.message_sender.send_console_msg(f"¡Has {verb} {label}!")
+        return CommandResult.ok({**result, "handled": True})
 
     async def _learn_scroll(
         self,

@@ -126,6 +126,11 @@ jobs:
           timeout -k 10s 120s uv run --locked --no-dev python -m src.operations.scroll_learning_smoke > artifacts/scroll-learning-smoke.json 2> artifacts/scroll-learning-smoke.log
           timeout -k 10s 180s uv run --locked --no-dev python -m src.operations.spell_lifecycle_smoke > artifacts/spell-lifecycle-smoke.json 2> artifacts/spell-lifecycle-smoke.log
           cat artifacts/ground-smoke.json
+      - name: Botín recuperable de NPC y dos recogidas competidoras
+        timeout-minutes: 2
+        run: |
+          timeout -k 10s 90s uv run --locked --no-dev python -m src.operations.npc_loot_smoke > artifacts/npc-loot-smoke.json 2> artifacts/npc-loot-smoke.log
+          cat artifacts/npc-loot-smoke.json
       - name: Preserve integration evidence even on failure
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

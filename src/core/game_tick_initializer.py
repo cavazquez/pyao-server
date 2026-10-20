@@ -9,6 +9,7 @@ from src.effects.effect_lifecycle import LifecycleEffect
 from src.effects.effect_morph_expiry import MorphExpiryEffect
 from src.effects.effect_npc_movement import NPCMovementEffect
 from src.effects.effect_npc_poison import NPCPoisonEffect
+from src.effects.effect_npc_rewards import NPCRewardsEffect
 from src.effects.effect_pet_follow import PetFollowEffect
 from src.effects.effect_poison import PoisonEffect
 from src.effects.effect_stamina_regen import StaminaRegenEffect
@@ -123,7 +124,15 @@ class GameTickInitializer:
         logger.info("✓ Efecto de envenenamiento (jugadores) habilitado")
 
         # Efecto de envenenamiento para NPCs (siempre habilitado)
-        game_tick.add_effect(NPCPoisonEffect(self.npc_service, interval_seconds=2.0))
+        game_tick.add_effect(
+            NPCPoisonEffect(
+                self.npc_service,
+                interval_seconds=2.0,
+                npc_death_service=self.npc_ai_service.npc_death_service,
+            )
+        )
+        if self.npc_ai_service.npc_death_service:
+            game_tick.add_effect(NPCRewardsEffect(self.npc_ai_service.npc_death_service))
         logger.info("✓ Efecto de envenenamiento (NPCs) habilitado")
 
         # Efecto de limpieza de modificadores de atributos (siempre habilitado)

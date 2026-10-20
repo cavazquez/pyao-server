@@ -11,11 +11,19 @@ logger = logging.getLogger(__name__)
 
 # ObjType constants from Argentum Online
 OBJTYPE_WEAPON = 2
-OBJTYPE_ARMOR = 4
+OBJTYPE_ARMOR = 3
 
 
 class ItemCatalog:
     """Gestiona el catálogo de items desde el archivo data/items.toml."""
+
+    def get_all_item_ids(self) -> tuple[int, ...]:
+        """Obtiene todos los IDs en orden estable sin exponer el diccionario mutable.
+
+        Returns:
+            IDs del catálogo efectivo, incluidos objetos fijos y administrativos.
+        """
+        return tuple(sorted(self._items))
 
     def staff_item_ids(self) -> frozenset[int]:
         """Obtiene bastones del catálogo por sus propiedades, sin deducirlos del nombre.

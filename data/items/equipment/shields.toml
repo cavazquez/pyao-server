@@ -192,3 +192,41 @@ Newbie = 1
 NumRopaje = 2
 Valor = 100
 
+
+# Equipo de botín progresivo PyAO; reutiliza recursos gráficos existentes.
+[[item]]
+id = 1081
+Name = "Escudo de Acero"
+GrhIndex = 557
+ObjType = 16
+Agarrable = 0
+Anim = 4
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO", "PIRATA", "ASESINO", "CAZADOR", "TRABAJADOR"]
+Crucial = 0
+LingH = 60
+LingO = 0
+LingP = 0
+MaxDef = 7
+MinDef = 4
+NumRopaje = 2
+SkHerreria = 90
+Valor = 22000
+
+# Equipo de botín progresivo PyAO; reutiliza recursos gráficos existentes.
+[[item]]
+id = 1082
+Name = "Escudo Dracónico"
+GrhIndex = 4860
+ObjType = 16
+Agarrable = 0
+Anim = 6
+ClasesProhibidas = ["MAGO", "DRUIDA", "LADRON", "BARDO", "PIRATA", "ASESINO", "CAZADOR", "TRABAJADOR"]
+Crucial = 0
+LingH = 100
+LingO = 0
+LingP = 50
+MaxDef = 11
+MinDef = 7
+NumRopaje = 2
+SkHerreria = 100
+Valor = 38000

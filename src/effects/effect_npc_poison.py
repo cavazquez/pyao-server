@@ -6,11 +6,13 @@ import time
 from typing import TYPE_CHECKING
 
 from src.effects.tick_effect import TickEffect
+from src.services.npc.rewards.poison import poison_tick
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.repositories.player_repository import PlayerRepository
+    from src.services.npc.npc_death_service import NPCDeathService
     from src.services.npc.npc_service import NPCService
 
 logger = logging.getLogger(__name__)
@@ -27,15 +29,18 @@ class NPCPoisonEffect(TickEffect):
         self,
         npc_service: NPCService,
         interval_seconds: float = NPC_POISON_TICK_INTERVAL,
+        npc_death_service: NPCDeathService | None = None,
     ) -> None:
         """Inicializa el efecto de envenenamiento de NPCs.
 
         Args:
             npc_service: Servicio de NPCs.
             interval_seconds: Intervalo en segundos entre aplicaciones del efecto.
+            npc_death_service: Liquidador común de recompensas, también para veneno.
         """
         self.npc_service = npc_service
         self.interval_seconds = interval_seconds
+        self.npc_death_service = npc_death_service
         self._already_executed_this_tick = False
 
     async def apply(
@@ -102,60 +107,13 @@ class NPCPoisonEffect(TickEffect):
             npc: NPC envenenado.
             current_time: Timestamp actual.
         """
-        # Verificar si el envenenamiento expiró
-        if current_time >= npc.poisoned_until:
-            # Limpiar el estado
-            await self.npc_service.npc_repository.update_npc_poisoned_until(
-                npc.instance_id, 0.0, poisoned_by_user_id=0
-            )
-            npc.poisoned_until = 0.0
-            npc.poisoned_by_user_id = 0
-            logger.debug("Envenenamiento expirado para NPC %s", npc.name)
-            return
-
-        # Verificar que el NPC esté vivo
-        if npc.hp <= 0:
-            # Limpiar envenenamiento si el NPC murió
-            await self.npc_service.npc_repository.update_npc_poisoned_until(
-                npc.instance_id, 0.0, poisoned_by_user_id=0
-            )
-            npc.poisoned_until = 0.0
-            npc.poisoned_by_user_id = 0
-            return
-
-        # Aplicar daño de envenenamiento
-        new_hp = max(0, npc.hp - NPC_POISON_DAMAGE_PER_TICK)
-
-        # Actualizar HP en Redis
-        await self.npc_service.npc_repository.update_npc_hp(npc.instance_id, new_hp)
-        npc.hp = new_hp
-
-        # Verificar si el NPC murió
-        if new_hp <= 0:
-            logger.info(
-                "NPC %s murió por envenenamiento (HP: %d/%d, envenenado por user_id %d)",
-                npc.name,
-                new_hp,
-                npc.max_hp,
-                npc.poisoned_by_user_id,
-            )
-            # Limpiar envenenamiento al morir
-            await self.npc_service.npc_repository.update_npc_poisoned_until(
-                npc.instance_id, 0.0, poisoned_by_user_id=0
-            )
-            npc.poisoned_until = 0.0
-            npc.poisoned_by_user_id = 0
-
-            # Remover el NPC del juego usando el servicio de NPCs
-            # Esto hará el broadcast CHARACTER_REMOVE a todos los jugadores
-            await self.npc_service.remove_npc(npc)
-        else:
-            logger.debug(
-                "NPC %s recibió daño de envenenamiento: %d -> %d HP (expira en %.1fs)",
-                npc.name,
-                npc.hp + NPC_POISON_DAMAGE_PER_TICK,
-                new_hp,
-                npc.poisoned_until - current_time,
+        result = await poison_tick(
+            self.npc_service.npc_repository.redis.redis, npc, current_time, self.interval_seconds
+        )
+        npc.hp = int(result["new_hp"])
+        if result["died"] and self.npc_death_service:
+            await self.npc_death_service.handle_npc_death(
+                npc, int(result["killer"]), npc.level * 10, None, death_reason="veneno"
             )
 
     async def _reset_execution_flag(self) -> None:

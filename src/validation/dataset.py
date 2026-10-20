@@ -13,9 +13,13 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
+from src.models.item_catalog import ItemCatalog
+from src.models.item_types import ObjType
 from src.models.potion_duration import normalize_potion_duration
 from src.models.spell_extensions import validate_extensions
 from src.services.expansion.catalog import ExpansionCatalog
+from src.services.npc.loot_table_service import LootTableService
+from src.services.nutrition import NutritionRule
 
 MAX_ID = 65535
 MAX_SKILL = 100
@@ -301,6 +305,15 @@ class DatasetValidator:
                 normalize_potion_duration(entry.data)
             except (ValueError, TypeError) as exc:
                 self.problem(entry, "EffectDurationSeconds", str(exc))
+            if entry.data.get("ObjType") in {
+                ObjType.COMIDA,
+                ObjType.BEBIDA,
+                ObjType.BOTELLAS_LLENAS,
+            }:
+                try:
+                    NutritionRule.from_item(int(entry.identity), entry.data)
+                except (ValueError, TypeError) as exc:
+                    self.problem(entry, "nutrition", str(exc))
         merchants = self.rows(self.read(self.data_dir / "npcs/merchants.toml"), "merchant")
         self.unique(merchants, "npc_id")
         for entry in merchants:
@@ -310,7 +323,10 @@ class DatasetValidator:
             for item in stock:
                 self.reference(item, "item_id", self.items)
                 self.integer(item, "quantity", 1, 2147483647)
-        loot = self.rows(self.read(self.data_dir / "npcs/loot_tables.toml"), "loot_table")
+        loot_file = self.read(self.data_dir / "npcs/loot_tables.toml")
+        if "version" in loot_file.data:
+            self.loot_policy(loot_file)
+        loot = self.rows(loot_file, "loot_table")
         self.unique(loot)
         for entry in loot:
             self.reference(entry, "id", self.npcs)
@@ -330,6 +346,31 @@ class DatasetValidator:
         self.unique(entries)
         for entry in entries:
             self.reference(entry, "id", self.npcs)
+
+    def loot_policy(self, entry: Entry) -> None:
+        """Valida las bandas y clasifica cada objeto y cada NPC del dataset efectivo."""
+        try:
+            service = LootTableService(
+                str(entry.file), catalog=ItemCatalog(str(self.data_dir / "items.toml"))
+            )
+        except (ValueError, KeyError, TypeError, IndexError) as exc:
+            self.problem(entry, "bands", f"Política de botín inválida: {exc}")
+            return
+        self.report.counts["loot_eligible"] = sum(
+            not rule.reason for rule in service.item_rules.items.values()
+        )
+        self.report.counts["loot_excluded"] = sum(
+            bool(rule.reason) for rule in service.item_rules.items.values()
+        )
+        for npc in self.npcs.values():
+            profile = npc.data.get("loot_profile", "none")
+            if profile not in service.rules["profiles"]:
+                self.problem(npc, "loot_profile", "Perfil de botín inexistente")
+            if profile != "none":
+                self.integer(npc, "nivel", 1, 255)
+            material = npc.data.get("loot_material", 0)
+            if material and material not in service.catalog.get_all_item_ids():
+                self.problem(npc, "loot_material", "Material de especie inexistente")
 
     def recipes(self) -> None:
         """Valida recetas, sus productos y materiales sin ejecutar crafting."""

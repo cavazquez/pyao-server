@@ -316,6 +316,8 @@ class NPCService:
             hp=cast("int", npc_data.get("hp_max", 100)),
             max_hp=cast("int", npc_data.get("hp_max", 100)),
             level=cast("int", npc_data.get("nivel", 1)),
+            loot_profile=str(npc_data.get("loot_profile", "none")),
+            loot_material=int(str(npc_data.get("loot_material", 0))),
             is_hostile=cast("bool", npc_data.get("es_hostil", False)),
             is_attackable=cast("bool", npc_data.get("es_atacable", True)),
             is_merchant=cast("bool", npc_data.get("es_mercader", False)),

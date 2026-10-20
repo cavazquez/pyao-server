@@ -11,6 +11,18 @@ from src.models.spell_catalog import SpellCatalog
 from src.services.npc.loot_table_service import LootTableService
 
 
+@pytest.fixture(autouse=True)
+def reward_recovery(monkeypatch):
+    """El test de cableado no conecta Redis; la recuperación real se prueba aparte.
+
+    Returns:
+        Observador de la barrera que precede a la regeneración del mundo.
+    """
+    recovery = AsyncMock()
+    monkeypatch.setattr("src.core.service_initializer.NPCDeathService.recover_pending", recovery)
+    return recovery
+
+
 @pytest.fixture
 def mock_repositories() -> dict:
     """Crea un diccionario con mocks de repositorios."""
@@ -38,7 +50,7 @@ def mock_map_manager() -> Mock:
 
 @pytest.mark.asyncio
 async def test_service_initializer_creates_all_services(
-    mock_repositories: dict, mock_map_manager: Mock
+    mock_repositories: dict, mock_map_manager: Mock, reward_recovery
 ) -> None:
     """Verifica que ServiceInitializer crea todos los servicios."""
     # Mock para initialize_world_npcs
@@ -61,6 +73,7 @@ async def test_service_initializer_creates_all_services(
         )
         services = await initializer.initialize_all()
 
+    reward_recovery.assert_awaited_once_with(all_records=True, bootstrap=True)
     # Verificar que se crearon todos los servicios
     assert "broadcast_service" in services
     assert "npc_service" in services
@@ -86,7 +99,7 @@ async def test_service_initializer_creates_all_services(
 
 @pytest.mark.asyncio
 async def test_service_initializer_returns_dict(
-    mock_repositories: dict, mock_map_manager: Mock
+    mock_repositories: dict, mock_map_manager: Mock, reward_recovery
 ) -> None:
     """Verifica que ServiceInitializer retorna un diccionario."""
     mock_npc_service = Mock()
@@ -105,6 +118,7 @@ async def test_service_initializer_returns_dict(
         )
         services = await initializer.initialize_all()
 
+        reward_recovery.assert_awaited_once_with(all_records=True, bootstrap=True)
         assert isinstance(services, dict)
         # Servicios/catálogos (+1 npc_world_manager, +1 party_service, +1 clan_service,
         # +1 door_service, +1 trade_service, +1 summon_service, +1 random_spawn_service,

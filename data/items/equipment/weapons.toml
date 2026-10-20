@@ -847,3 +847,22 @@ MinHit = 5
 RazaEnanaAnim = 68
 Valor = 4100
 
+
+# Equipo de botín progresivo PyAO; reutiliza recursos gráficos existentes.
+[[item]]
+id = 1083
+Name = "Espada Rúnica"
+GrhIndex = 713
+ObjType = 2
+Agarrable = 0
+Anim = 13
+ClasesProhibidas = ["MAGO", "CLERIGO", "DRUIDA", "LADRON", "BARDO", "PIRATA", "CAZADOR", "ASESINO", "BANDIDO", "TRABAJADOR"]
+Crucial = 0
+LingH = 140
+LingO = 0
+LingP = 220
+MaxHit = 24
+MinHit = 16
+RazaEnanaAnim = 63
+SkHerreria = 100
+Valor = 45000

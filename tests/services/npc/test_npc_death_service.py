@@ -1,511 +1,196 @@
-"""Tests para NPCDeathService."""
+"""Recompensas reales sobre Redis: un commit por muerte, no mocks de oro o experiencia."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+import asyncio
+import json
+from unittest.mock import AsyncMock
 
 import pytest
 
-from src.models.npc import NPC
-from src.models.player_stats import PlayerStats
-from src.services.npc.npc_death_service import NPCDeathService
+from src.models.party import Party
+from src.repositories.party_repository import PartyRepository
+from src.utils.ground_state import GroundState, stack_identity
+from src.utils.redis_config import RedisKeys
 
 
-@pytest.fixture(autouse=True)
-def authoritative_progression():
-    """Aísla la liquidación de botín/party del progreso, probado con Redis en test_skill_training.
-
-    Yields:
-        Servicio externo de crecimiento para las pruebas de distribución.
-    """
-    with patch(
-        "src.services.player_progression.advance_player_level",
-        new=AsyncMock(return_value={"level": 1, "previous_level": 1, "points_gained": 0}),
-    ) as progress:
-        yield progress
+async def ground(world):
+    """Lee el formato durable sin depender de la caché del servicio."""
+    state = GroundState(2, await world.client.get(RedisKeys.ground_items(2)))
+    return [item for rows in state.tiles.values() for item in rows]
 
 
 @pytest.mark.asyncio
-class TestNPCDeathService:
-    """Tests para el servicio de muerte de NPCs."""
+async def test_concurrent_duplicate_death_does_not_duplicate_rewards(rewards):
+    """Tres avisos de una muerte emiten una sola recompensa y un solo respawn."""
+    npc = await rewards.spawn()
+    await asyncio.gather(
+        *(rewards.service.handle_npc_death(npc, 1, 50, rewards.senders[1]) for _ in range(3))
+    )
+    assert await rewards.player.get_experience(1) == (
+        150,
+        int(await rewards.client.hget(RedisKeys.player_user_stats(1), "elu")),
+    )
+    assert sorted((r["item_id"], r["quantity"]) for r in await ground(rewards)) == [
+        (12, 20),
+        (15, 1),
+    ]
+    assert await rewards.npcs.get_npc(npc.instance_id) is None
+    rewards.respawn.schedule_respawn.assert_awaited_once()
+    rewards.random_spawn.on_random_npc_death.assert_awaited_once_with(npc.instance_id)
+    assert await rewards.client.redis.ttl(f"npc:death:{npc.instance_id}") > 0
+    # Ni el oro del viejo campo del NPC ni el saldo del atacante se acreditan aparte.
+    assert await rewards.player.get_gold(1) == 0
 
-    async def test_handle_npc_death_gives_experience(self) -> None:
-        """Test que el jugador recibe experiencia al matar un NPC."""
-        # Setup
-        map_manager = MagicMock()
-        map_manager.remove_npc = MagicMock()
 
-        npc_repo = MagicMock()
-        npc_repo.remove_npc = AsyncMock()
+@pytest.mark.asyncio
+async def test_two_npcs_award_relative_experience_without_lost_update(rewards):
+    """Muertes concurrentes conservan ambas sumas de experiencia y botín."""
+    first, second = await rewards.spawn(), await rewards.spawn(x=55)
+    await asyncio.gather(
+        *(rewards.service.handle_npc_death(npc, 1, 50, None) for npc in (first, second))
+    )
+    assert (await rewards.player.get_experience(1))[0] == 200
+    items = await ground(rewards)
+    assert sum(int(r["quantity"]) for r in items if r["item_id"] == 12) == 40
+    assert len({r["stack_id"] for r in items}) == 4
 
-        player_repo = MagicMock()
-        player_repo.get_experience = AsyncMock(return_value=(100, 300))
-        player_repo.get_level = AsyncMock(return_value=1)
-        player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(
-                min_hp=100,
-                max_hp=100,
-                min_mana=100,
-                max_mana=100,
-                min_sta=100,
-                max_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=100,
-            )
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("excluded", ["far", "offline", "dead", "other_map"])
+async def test_party_formula_and_accounting_share_the_commit(rewards, excluded):
+    """La distancia y el estado filtran miembros sin duplicar el libro de la party."""
+    party = Party(1, 1, "user1")
+    party.update_member_level(1, 10)
+    for user in (2, 3):
+        party.add_member(user, f"user{user}", 10)
+    if excluded == "offline":
+        party.members[3].is_online = False
+    elif excluded == "dead":
+        await rewards.client.hset(RedisKeys.player_user_stats(3), "min_hp", "0")
+    else:
+        await rewards.player.set_position(3, 90, 90, 3 if excluded == "other_map" else 2, 3)
+    await PartyRepository(rewards.client).save_party(party)
+    npc = await rewards.spawn()
+    await rewards.service.handle_npc_death(npc, 1, 50, rewards.senders[1])
+    for user in (1, 2):
+        assert (await rewards.player.get_experience(user))[0] == 116
+    assert (await rewards.player.get_experience(3))[0] == 100
+    saved = await PartyRepository(rewards.client).get_party(1)
+    assert saved.total_exp_earned == 50
+    assert saved.members[1].accumulated_exp == 16
+    assert saved.members[2].accumulated_exp == 16
+    assert saved.members[3].accumulated_exp == 0
+    await rewards.service.handle_npc_death(npc, 1, 50, None)
+    assert (await PartyRepository(rewards.client).get_party(1)).total_exp_earned == 50
+
+
+@pytest.mark.asyncio
+async def test_pending_full_ground_rolls_back_every_drop_and_xp(rewards, monkeypatch):
+    """Un suelo lleno conserva el plan hasta poder publicarlo completo."""
+    npc = await rewards.spawn()
+    monkeypatch.setattr(rewards.service, "_drop_positions", lambda _npc: ((49, 49),))
+    state = GroundState(2, None)
+    for index in range(9):
+        state.append(
+            49, 49, {"item_id": 1, "quantity": 1, "stack_id": stack_identity(f"occupied:{index}")}
         )
-        player_repo.update_experience = AsyncMock()
-        player_repo.update_level_and_elu = AsyncMock()
-        player_repo.update_max_hp = AsyncMock()
-        player_repo.update_max_mana = AsyncMock()
-        player_repo.update_max_stamina = AsyncMock()
+    original = state.encode()
+    await rewards.client.set(RedisKeys.ground_items(2), original)
+    await rewards.service.handle_npc_death(npc, 1, 50, None)
+    assert await rewards.client.get(RedisKeys.ground_items(2)) == original
+    assert (await rewards.player.get_experience(1))[0] == 100
+    raw = await rewards.client.hgetall(RedisKeys.npc_instance(npc.instance_id))
+    assert raw["death_state"] == "pending"
+    frozen = json.loads(raw["reward_plan"])
+    await rewards.npcs.clear_all_npcs(preserve_tamed=True)
+    assert await rewards.npcs.get_npc(npc.instance_id) is not None
+    rewards.maps.remove_npc(npc.map_id, npc.instance_id)
+    replacement = await rewards.spawn(hp=1)
+    assert replacement.char_index == npc.char_index
+    monkeypatch.setattr(
+        rewards.service.loot_table_service, "roll", lambda _npc: pytest.fail("Se repitió el sorteo")
+    )
+    await rewards.client.delete(RedisKeys.ground_items(2))
+    rewards.maps.remove_player(2, 1)  # El atacante se desconectó; no se pierde su recompensa.
+    await rewards.service.recover_pending(all_records=True, bootstrap=True)
+    assert sorted((r["item_id"], r["quantity"]) for r in await ground(rewards)) == sorted(
+        map(tuple, frozen["items"])
+    )
+    assert (await rewards.player.get_experience(1))[0] == 150
+    rewards.respawn.schedule_respawn.assert_not_awaited()
+    assert await rewards.npcs.get_npc(replacement.instance_id) is not None
+    rewards.broadcast.broadcast_character_remove.assert_not_awaited()
 
-        broadcast_service = MagicMock()
-        broadcast_service.broadcast_character_remove = AsyncMock()
 
-        message_sender = MagicMock()
+@pytest.mark.asyncio
+async def test_crash_after_commit_recovers_without_second_reward(rewards, monkeypatch):
+    """Recuperar un cadáver confirmado no vuelve a pagar aunque falte el recibo."""
+    npc = await rewards.spawn()
+    remove = rewards.service._remove_npc_from_game
+    monkeypatch.setattr(
+        rewards.service, "_remove_npc_from_game", AsyncMock(side_effect=ConnectionError("fixture"))
+    )
+    with pytest.raises(ConnectionError):
+        await rewards.service.handle_npc_death(npc, 1, 50, None)
+    before = await ground(rewards)
+    assert (await rewards.player.get_experience(1))[0] == 150
+    monkeypatch.setattr(rewards.service, "_remove_npc_from_game", remove)
+    await rewards.service.recover_pending(all_records=True)
+    assert await ground(rewards) == before
+    assert (await rewards.player.get_experience(1))[0] == 150
+    # Aun sin recibo temporal o suelo, una referencia vieja no representa una nueva vida.
+    await rewards.client.delete(f"npc:death:{npc.instance_id}", RedisKeys.ground_items(2))
+    await rewards.service.handle_npc_death(npc, 1, 50, None)
+    assert await ground(rewards) == []
+    assert (await rewards.player.get_experience(1))[0] == 150
 
-        message_sender.connection.capabilities.enabled = 0
 
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-        message_sender.send_console_msg = AsyncMock()
-        message_sender.send_update_exp = AsyncMock()
-        message_sender.send_update_user_stats = AsyncMock()
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
+@pytest.mark.asyncio
+async def test_live_npc_cannot_be_settled(rewards):
+    """Un objeto NPC obsoleto no permite cobrar una instancia que sigue viva."""
+    npc = await rewards.spawn(hp=1)
+    await rewards.service.handle_npc_death(npc, 1, 50, None)
+    assert await rewards.npcs.get_npc(npc.instance_id) is not None
+    assert await ground(rewards) == []
+    assert (await rewards.player.get_experience(1))[0] == 100
 
-        service = NPCDeathService(
-            map_manager=map_manager,
-            npc_repo=npc_repo,
-            player_repo=player_repo,
-            broadcast_service=broadcast_service,
-        )
 
-        npc = NPC(
-            instance_id="npc_123",
-            npc_id=1,
-            char_index=100,
-            name="Goblin",
-            description="Un goblin hostil",
-            x=50,
-            y=50,
-            map_id=1,
-            heading=1,
-            body_id=58,
-            head_id=0,
-            hp=0,
-            max_hp=100,
-            level=5,
-            is_hostile=True,
-            is_attackable=True,
-            respawn_time=30,
-            respawn_time_max=60,
-            gold_min=10,
-            gold_max=50,
-        )
+@pytest.mark.asyncio
+@pytest.mark.parametrize("kind", ["tamed", "summoned"])
+async def test_owned_creatures_cannot_farm_loot_or_experience(rewards, kind):
+    """Las mascotas e invocaciones no producen recompensas de combate."""
+    npc = await rewards.spawn(tamed=kind == "tamed", summoned=1 if kind == "summoned" else 0)
+    await rewards.service.handle_npc_death(npc, 1, 500, None)
+    assert await ground(rewards) == []
+    assert (await rewards.player.get_experience(1))[0] == 100
 
-        # Execute
-        await service.handle_npc_death(
-            npc=npc,
-            killer_user_id=1,
-            experience=50,
-            message_sender=message_sender,
-            death_reason="combate",
-        )
 
-        # Assert
-        player_repo.update_experience.assert_called_once_with(1, 150)  # 100 + 50
-        message_sender.send_update_exp.assert_called_once_with(150)
-        message_sender.send_console_msg.assert_called()
+@pytest.mark.asyncio
+async def test_level_points_are_awarded_with_xp_once(rewards):
+    """El mismo commit acredita experiencia, niveles y puntos una sola vez."""
+    await rewards.client.hset(
+        RedisKeys.player_user_stats(1), mapping={"experience": "0", "level": "1"}
+    )
+    await rewards.client.hset(
+        RedisKeys.player_skills(1), mapping={"points": "0", "points_granted_through": "1"}
+    )
+    npc = await rewards.spawn()
+    await rewards.service.handle_npc_death(npc, 1, 5000, None)
+    after = await rewards.client.hgetall(RedisKeys.player_skills(1))
+    assert int(after["points"]) > 0
+    assert await rewards.player.get_level(1) > 1
+    await rewards.service.handle_npc_death(npc, 1, 5000, None)
+    assert await rewards.client.hgetall(RedisKeys.player_skills(1)) == after
 
-    async def test_handle_npc_death_removes_npc(self) -> None:
-        """Test que el NPC es removido del juego al morir."""
-        # Setup
-        map_manager = MagicMock()
-        map_manager.remove_npc = MagicMock()
 
-        npc_repo = MagicMock()
-        npc_repo.remove_npc = AsyncMock()
-
-        player_repo = MagicMock()
-        player_repo.get_experience = AsyncMock(return_value=(100, 300))
-        player_repo.get_level = AsyncMock(return_value=1)
-        player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(
-                min_hp=100,
-                max_hp=100,
-                min_mana=100,
-                max_mana=100,
-                min_sta=100,
-                max_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=100,
-            )
-        )
-        player_repo.update_experience = AsyncMock()
-        player_repo.update_level_and_elu = AsyncMock()
-        player_repo.update_max_hp = AsyncMock()
-        player_repo.update_max_mana = AsyncMock()
-        player_repo.update_max_stamina = AsyncMock()
-
-        broadcast_service = MagicMock()
-        broadcast_service.broadcast_character_remove = AsyncMock()
-
-        message_sender = MagicMock()
-
-        message_sender.connection.capabilities.enabled = 0
-
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-        message_sender.send_console_msg = AsyncMock()
-        message_sender.send_update_exp = AsyncMock()
-        message_sender.send_update_user_stats = AsyncMock()
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-
-        service = NPCDeathService(
-            map_manager=map_manager,
-            npc_repo=npc_repo,
-            player_repo=player_repo,
-            broadcast_service=broadcast_service,
-        )
-
-        npc = NPC(
-            instance_id="npc_123",
-            npc_id=1,
-            char_index=100,
-            name="Goblin",
-            description="Un goblin hostil",
-            x=50,
-            y=50,
-            map_id=1,
-            heading=1,
-            body_id=58,
-            head_id=0,
-            hp=0,
-            max_hp=100,
-            level=5,
-            is_hostile=True,
-            is_attackable=True,
-            respawn_time=30,
-            respawn_time_max=60,
-            gold_min=0,
-            gold_max=0,
-        )
-
-        # Execute
-        await service.handle_npc_death(
-            npc=npc,
-            killer_user_id=1,
-            experience=50,
-            message_sender=message_sender,
-            death_reason="hechizo",
-        )
-
-        # Assert - NPC removido del MapManager usando instance_id
-        map_manager.remove_npc.assert_called_once_with(1, "npc_123")
-
-        # Assert - Broadcast CHARACTER_REMOVE
-        broadcast_service.broadcast_character_remove.assert_called_once_with(
-            map_id=1, char_index=100
-        )
-
-        # Assert - NPC eliminado de Redis
-        npc_repo.remove_npc.assert_called_once_with("npc_123")
-
-    async def test_handle_npc_death_drops_gold(self) -> None:
-        """Test que el NPC dropea oro al morir."""
-        # Setup
-        map_manager = MagicMock()
-        map_manager.remove_npc = MagicMock()
-        map_manager.get_ground_items = MagicMock(return_value=[])
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
-
-        npc_repo = MagicMock()
-        npc_repo.remove_npc = AsyncMock()
-
-        player_repo = MagicMock()
-        player_repo.get_experience = AsyncMock(return_value=(100, 300))
-        player_repo.get_level = AsyncMock(return_value=1)
-        player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(
-                min_hp=100,
-                max_hp=100,
-                min_mana=100,
-                max_mana=100,
-                min_sta=100,
-                max_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=100,
-            )
-        )
-        player_repo.update_experience = AsyncMock()
-        player_repo.update_level_and_elu = AsyncMock()
-        player_repo.update_max_hp = AsyncMock()
-        player_repo.update_max_mana = AsyncMock()
-        player_repo.update_max_stamina = AsyncMock()
-
-        broadcast_service = MagicMock()
-        broadcast_service.broadcast_character_remove = AsyncMock()
-        broadcast_service.broadcast_object_create = AsyncMock()
-
-        message_sender = MagicMock()
-
-        message_sender.connection.capabilities.enabled = 0
-
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-        message_sender.send_console_msg = AsyncMock()
-        message_sender.send_update_exp = AsyncMock()
-        message_sender.send_update_user_stats = AsyncMock()
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-
-        service = NPCDeathService(
-            map_manager=map_manager,
-            npc_repo=npc_repo,
-            player_repo=player_repo,
-            broadcast_service=broadcast_service,
-        )
-
-        npc = NPC(
-            instance_id="npc_123",
-            npc_id=1,
-            char_index=100,
-            name="Goblin",
-            description="Un goblin hostil",
-            x=50,
-            y=50,
-            map_id=1,
-            heading=1,
-            body_id=58,
-            head_id=0,
-            hp=0,
-            max_hp=100,
-            level=5,
-            is_hostile=True,
-            is_attackable=True,
-            respawn_time=30,
-            respawn_time_max=60,
-            gold_min=10,
-            gold_max=50,
-        )
-
-        # Execute
-        await service.handle_npc_death(
-            npc=npc,
-            killer_user_id=1,
-            experience=50,
-            message_sender=message_sender,
-            death_reason="combate",
-        )
-
-        # Assert - Oro dropeado
-        map_manager.add_ground_item_committed.assert_called_once()
-        assert (
-            map_manager.add_ground_item_committed.await_args.kwargs["broadcast_service"]
-            is broadcast_service
-        )
-
-    async def test_drop_position_avoids_blocked_tiles(self) -> None:
-        """Test que los drops no caen en tiles bloqueados."""
-        # Setup
-        map_manager = MagicMock()
-        map_manager.remove_npc = MagicMock()
-        map_manager.get_ground_items = MagicMock(return_value=[])
-        # Primera posición bloqueada, segunda libre
-        map_manager.can_move_to = MagicMock(side_effect=[False, True])
-        map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
-
-        npc_repo = MagicMock()
-        npc_repo.remove_npc = AsyncMock()
-
-        player_repo = MagicMock()
-        player_repo.get_experience = AsyncMock(return_value=(100, 300))
-        player_repo.get_level = AsyncMock(return_value=1)
-        player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(
-                min_hp=100,
-                max_hp=100,
-                min_mana=100,
-                max_mana=100,
-                min_sta=100,
-                max_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=100,
-            )
-        )
-        player_repo.update_experience = AsyncMock()
-        player_repo.update_level_and_elu = AsyncMock()
-        player_repo.update_max_hp = AsyncMock()
-        player_repo.update_max_mana = AsyncMock()
-        player_repo.update_max_stamina = AsyncMock()
-
-        broadcast_service = MagicMock()
-        broadcast_service.broadcast_character_remove = AsyncMock()
-        broadcast_service.broadcast_object_create = AsyncMock()
-
-        message_sender = MagicMock()
-
-        message_sender.connection.capabilities.enabled = 0
-
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-        message_sender.send_console_msg = AsyncMock()
-        message_sender.send_update_exp = AsyncMock()
-        message_sender.send_update_user_stats = AsyncMock()
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-
-        service = NPCDeathService(
-            map_manager=map_manager,
-            npc_repo=npc_repo,
-            player_repo=player_repo,
-            broadcast_service=broadcast_service,
-        )
-
-        npc = NPC(
-            instance_id="npc_123",
-            npc_id=1,
-            char_index=100,
-            name="Goblin",
-            description="Un goblin hostil",
-            x=50,
-            y=50,
-            map_id=1,
-            heading=1,
-            body_id=58,
-            head_id=0,
-            hp=0,
-            max_hp=100,
-            level=5,
-            is_hostile=True,
-            is_attackable=True,
-            respawn_time=30,
-            respawn_time_max=60,
-            gold_min=10,
-            gold_max=50,
-        )
-
-        # Execute
-        await service.handle_npc_death(
-            npc=npc,
-            killer_user_id=1,
-            experience=50,
-            message_sender=message_sender,
-            death_reason="combate",
-        )
-
-        # Assert - can_move_to llamado al menos 2 veces (primera bloqueada, segunda libre)
-        assert map_manager.can_move_to.call_count >= 2
-
-        # Assert - Oro dropeado en posición válida
-        map_manager.add_ground_item_committed.assert_called_once()
-
-    async def test_handle_npc_death_with_loot_table(self) -> None:
-        """Test que el NPC dropea items según su loot table."""
-        # Setup
-        map_manager = MagicMock()
-        map_manager.remove_npc = MagicMock()
-        map_manager.get_ground_items = MagicMock(return_value=[])
-        map_manager.can_move_to = MagicMock(return_value=True)
-        map_manager.is_tile_occupied = MagicMock(return_value=False)
-        map_manager.add_ground_item_committed = AsyncMock(return_value=True)
-
-        npc_repo = MagicMock()
-        npc_repo.remove_npc = AsyncMock()
-
-        player_repo = MagicMock()
-        player_repo.get_experience = AsyncMock(return_value=(100, 300))
-        player_repo.get_level = AsyncMock(return_value=1)
-        player_repo.get_player_stats = AsyncMock(
-            return_value=PlayerStats(
-                min_hp=100,
-                max_hp=100,
-                min_mana=100,
-                max_mana=100,
-                min_sta=100,
-                max_sta=100,
-                gold=0,
-                level=1,
-                elu=300,
-                experience=100,
-            )
-        )
-        player_repo.update_experience = AsyncMock()
-        player_repo.update_level_and_elu = AsyncMock()
-        player_repo.update_max_hp = AsyncMock()
-        player_repo.update_max_mana = AsyncMock()
-        player_repo.update_max_stamina = AsyncMock()
-
-        broadcast_service = MagicMock()
-        broadcast_service.broadcast_character_remove = AsyncMock()
-        broadcast_service.broadcast_object_create = AsyncMock()
-
-        loot_table_service = MagicMock()
-        loot_table_service.get_loot_for_npc = MagicMock(
-            return_value=[(1, 1), (2, 2)]  # item_id, quantity
-        )
-
-        item_catalog = MagicMock()
-        item_catalog.get_grh_index = MagicMock(return_value=100)
-        item_catalog.get_item_name = MagicMock(return_value="Espada")
-
-        message_sender = MagicMock()
-
-        message_sender.connection.capabilities.enabled = 0
-
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-        message_sender.send_console_msg = AsyncMock()
-        message_sender.send_update_exp = AsyncMock()
-        message_sender.send_update_user_stats = AsyncMock()
-        message_sender.send_update_user_stats_from_repo = AsyncMock()
-
-        service = NPCDeathService(
-            map_manager=map_manager,
-            npc_repo=npc_repo,
-            player_repo=player_repo,
-            broadcast_service=broadcast_service,
-            loot_table_service=loot_table_service,
-            item_catalog=item_catalog,
-        )
-
-        npc = NPC(
-            instance_id="npc_123",
-            npc_id=1,
-            char_index=100,
-            name="Goblin",
-            description="Un goblin hostil",
-            x=50,
-            y=50,
-            map_id=1,
-            heading=1,
-            body_id=58,
-            head_id=0,
-            hp=0,
-            max_hp=100,
-            level=5,
-            is_hostile=True,
-            is_attackable=True,
-            respawn_time=30,
-            respawn_time_max=60,
-            gold_min=0,
-            gold_max=0,
-        )
-
-        # Execute
-        await service.handle_npc_death(
-            npc=npc,
-            killer_user_id=1,
-            experience=50,
-            message_sender=message_sender,
-            death_reason="combate",
-        )
-
-        # Assert - Items dropeados (2 items)
-        assert map_manager.add_ground_item_committed.call_count == 2
-        assert all(
-            call.kwargs["broadcast_service"] is broadcast_service
-            for call in map_manager.add_ground_item_committed.await_args_list
-        )
+@pytest.mark.asyncio
+async def test_ground_notifications_cover_actual_drop_positions(rewards):
+    """Los clientes reciben las casillas reales que ocupan los objetos."""
+    npc = await rewards.spawn()
+    await rewards.service.handle_npc_death(npc, 1, 50, None)
+    raw = GroundState(2, await rewards.client.get(RedisKeys.ground_items(2)))
+    assert set(raw.positions()) - {(npc.x, npc.y)}
+    called = {
+        (c.kwargs["x"], c.kwargs["y"])
+        for c in rewards.broadcast.broadcast_object_create.await_args_list
+    }
+    assert set(raw.positions()).issubset(called)

@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from src.models.item_types import ObjType
+
 
 class ItemType(Enum):
     """Tipos de items."""
@@ -23,13 +25,13 @@ class ItemType(Enum):
         """
         # Mapeo de tipos a números del protocolo AO
         type_map = {
-            ItemType.WEAPON: 2,  # otWeapon
-            ItemType.ARMOR: 3,  # otArmadura
-            ItemType.HELMET: 4,  # otCASCO
-            ItemType.SHIELD: 5,  # otESCUDO
-            ItemType.POTION: 6,  # otPociones
-            ItemType.FOOD: 7,  # otBebidas
-            ItemType.MISC: 1,  # otUseOnce o genérico
+            ItemType.WEAPON: ObjType.ARMAS,
+            ItemType.ARMOR: ObjType.ARMADURAS,
+            ItemType.HELMET: ObjType.CASCOS,
+            ItemType.SHIELD: ObjType.ESCUDOS,
+            ItemType.POTION: ObjType.POCIONES,
+            ItemType.FOOD: ObjType.COMIDA,
+            ItemType.MISC: ObjType.COMIDA,  # Uso genérico si no existe un ObjType de catálogo.
         }
         return type_map.get(self, 1)
 
@@ -60,11 +62,22 @@ class Item:
     min_damage: int = 0
     max_damage: int = 0
     defense: int = 0
+    max_defense: int | None = None
+
+    def to_client_type(self) -> int:
+        """Conserva el ObjType real sin colapsar barcos, pergaminos o equipo en MISC.
+
+        Returns:
+            Tipo canónico del protocolo AO, o el tipo básico para objetos construidos a mano.
+        """
+        return self.obj_type or self.item_type.to_client_type()
 
     def __post_init__(self) -> None:
         """Validaciones después de inicialización."""
         if self.stackable and self.max_stack < 1:
             self.max_stack = 99  # Default para stackables
+        if self.max_defense is None:
+            self.max_defense = self.defense
 
     def can_use(self) -> bool:
         """Verifica si el item se puede usar.

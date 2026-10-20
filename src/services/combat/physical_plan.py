@@ -14,6 +14,7 @@ from src.services.combat.barriers import absorb_damage
 from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
+from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes
 from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import TrainingEvent, trained_decision, training_resources
@@ -93,6 +94,15 @@ def effective_attribute(snapshot: Snapshot, user: int, name: str, now: float) ->
     return max(1, min(50, base * 2, base + modifier))
 
 
+def mean_defense(item: dict[str, object]) -> float:
+    """Obtiene la defensa media real del objeto equipado.
+
+    Returns:
+        Media de MinDef/MaxDef; cero si el slot está vacío.
+    """
+    return (int(str(item.get("MinDef", 0))) + int(str(item.get("MaxDef", 0)))) / 2
+
+
 def defense(
     snapshot: Snapshot,
     user: int,
@@ -122,11 +132,12 @@ def defense(
     shield = equipped(snapshot, user, "shield", catalog)
     if int(stats.get("class_id", 0)) not in rules.get("playable_classes", list(range(1, 13))):
         shield = {}
-    blocked = bool(shield) and not dodged and shield_roll < skills["defensa"] / 300
-    armor = equipped(snapshot, user, "armor", catalog)
-    reduction = min(
-        0.5, 0.1 + (int(str(armor.get("MinDef", 0))) + int(str(armor.get("MaxDef", 0)))) / 200
+    block_chance = min(0.75, skills["defensa"] / 300 + mean_defense(shield) / 100)
+    blocked = bool(shield) and not dodged and shield_roll < block_chance
+    protection = sum(
+        mean_defense(equipped(snapshot, user, slot, catalog)) for slot in ("armor", "helmet")
     )
+    reduction = min(0.5, 0.1 + protection / 100)
     robustness = (
         skills["robustez"] / MAX_SKILL * float(rules.get("robustness_max_mitigation", 0.10))
     )
@@ -356,7 +367,7 @@ class PhysicalPlan:
         writes[target_key] = (
             {**barrier, **hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")}
             if request.target_player
-            else {"hp": str(hp)}
+            else death_changes(hp, user, now=self.now)
         )
         result = {
             "applied": True,

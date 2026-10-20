@@ -82,8 +82,6 @@ class ServiceInitializer:
             self.map_manager,
             broadcast_service,
         )
-        await npc_service.initialize_world_npcs()
-        logger.info("✓ Sistema de NPCs inicializado")
 
         # Servicio de respawn de NPCs
         npc_respawn_service = NPCRespawnService(npc_service)
@@ -148,6 +146,10 @@ class ServiceInitializer:
             party_service,  # Agregar party_service para distribución de experiencia
             random_spawn_service,  # Para notificar muerte de NPCs random
         )
+        # Recuperar muertes antes de limpiar/regenerar las instancias del mundo.
+        await npc_death_service.recover_pending(all_records=True, bootstrap=True)
+        await npc_service.initialize_world_npcs()
+        logger.info("✓ Sistema de NPCs inicializado")
         logger.info("✓ Sistema de muerte de NPCs inicializado (con distribución de exp a party)")
 
         # Servicio de invocación (mascotas)

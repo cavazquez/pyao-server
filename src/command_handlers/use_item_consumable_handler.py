@@ -239,10 +239,10 @@ class UseItemConsumableHandler:
                 amount=remaining_quantity,
                 equipped=False,
                 grh_id=catalog_item.graphic_id if catalog_item else item_id,
-                item_type=catalog_item.item_type.to_client_type() if catalog_item else 1,
+                item_type=catalog_item.to_client_type() if catalog_item else 1,
                 max_hit=catalog_item.max_damage if catalog_item and catalog_item.max_damage else 0,
                 min_hit=catalog_item.min_damage if catalog_item and catalog_item.min_damage else 0,
-                max_def=catalog_item.defense if catalog_item and catalog_item.defense else 0,
+                max_def=(catalog_item.max_defense or 0) if catalog_item else 0,
                 min_def=catalog_item.defense if catalog_item and catalog_item.defense else 0,
                 sale_price=float(catalog_item.value) if catalog_item else 0.0,
             )
