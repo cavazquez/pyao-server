@@ -9,15 +9,17 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-from collections import Counter
-from dataclasses import dataclass
 import hashlib
 import json
 import logging
 import os
-from pathlib import Path
+import secrets
+import shutil
 import struct
-import subprocess
+import subprocess  # noqa: S404 -- Git se ejecuta sin shell y con argumentos fijos.
+from collections import Counter
+from dataclasses import dataclass
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from time import perf_counter
 from typing import TYPE_CHECKING, Any
@@ -47,21 +49,51 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
 
 Position = tuple[int, int, int]
+MAX_SHARDS = 16
+BOAT_OBJECT_TYPE = 31
+MAX_FIXTURE_BOAT_SKILL = 50
+PARTIAL_CONTROL_PAIRS = 10
+
+
+def git_output(*arguments: str) -> str:
+    """Consulta el checkout con el ejecutable Git resuelto, sin shell.
+
+    Returns:
+        Salida de Git sin espacios externos.
+    """
+    git = shutil.which("git")
+    require(git is not None, "Git no está disponible para registrar la procedencia")
+    assert git is not None  # noqa: S101 -- Estrechamiento de tipo tras require.
+    return subprocess.check_output(  # noqa: S603 -- Sólo argumentos Git fijos en este módulo.
+        [git, *arguments], cwd=Path(__file__).resolve().parents[2], text=True
+    ).strip()
 
 
 @dataclass(frozen=True)
 class Route:
+    """Una salida concreta y su destino del inventario versionado."""
+
     source: Position
     destination: Position
 
     @classmethod
     def read(cls, row: dict[str, Any]) -> Route:
+        """Convierte una fila ya validada por el auditor estático.
+
+        Returns:
+            Salida con coordenadas de origen y destino.
+        """
         return cls(
             tuple(row[k] for k in ("from_map", "x", "y")),
             tuple(row[k] for k in ("to_map", "to_x", "to_y")),
         )
 
     def approaches(self, width: int = 100, height: int = 100) -> list[tuple[int, Position]]:
+        """Enumera aproximaciones cardinales dentro del mapa de origen.
+
+        Returns:
+            Rumbos y posiciones iniciales válidos.
+        """
         mid, x, y = self.source
         return [
             (heading, (mid, x - dx, y - dy))
@@ -71,12 +103,15 @@ class Route:
 
 
 class Audit:
+    """Prepara fixtures aisladas y comprueba los efectos de WALK real."""
+
     def __init__(self, client: RedisClient, output: Path) -> None:
+        """Conecta servicios concretos a la instancia Redis descartable."""
         self.client = client
         self.output = output
         self.deps = minimum_dependencies(client)
         self.maps = self.deps.map_manager
-        ServerInitializer._load_map_tiles(self.maps)
+        ServerInitializer._load_map_tiles(self.maps)  # noqa: SLF001 -- Carga real de inicio.
         self.terrain = MapResourcesService(map_manager=self.maps)
         self.deps.map_resources_service = self.terrain
         self.deps.player_map_service = PlayerMapService(
@@ -98,12 +133,9 @@ class Audit:
         self.listener: asyncio.Server | None = None
         self.counts: Counter[str] = Counter()
         self.digest = hashlib.sha256()
-        root = Path(__file__).resolve().parents[2]
         self.provenance = {
-            "server_commit": subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], cwd=root, text=True
-            ).strip(),
-            "dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=root)),
+            "server_commit": git_output("rev-parse", "HEAD"),
+            "dirty": bool(git_output("status", "--porcelain")),
             "runtime_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         }
         catalog = ItemCatalog()
@@ -111,12 +143,13 @@ class Audit:
             identity
             for identity in catalog.get_all_item_ids()
             if (data := catalog.get_item_data(identity))
-            and data.get("ObjType") == 31
-            and int(str(data.get("MinSkill", 35))) <= 50
+            and data.get("ObjType") == BOAT_OBJECT_TYPE
+            and int(str(data.get("MinSkill", 35))) <= MAX_FIXTURE_BOAT_SKILL
         )
         self.started = perf_counter()
 
     async def handle(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        """Delega cada socket al servidor y conserva sus tareas para cerrarlas."""
         task = asyncio.current_task()
         if task is not None:
             self.handling.add(task)
@@ -127,9 +160,14 @@ class Audit:
                 self.handling.discard(task)
 
     async def start(self) -> None:
+        """Autentica dos usuarios efímeros mediante el protocolo real.
+
+        Raises:
+            RuntimeError: El login no registró el emisor del usuario.
+        """
         self.listener = await asyncio.start_server(self.handle, "127.0.0.1", 0)
         port = self.listener.sockets[0].getsockname()[1]
-        password = "Synthetic-route-audit-1"
+        password = secrets.token_urlsafe(24)
         encoded = await get_password_executor().run(hash_password, password)
         for number in (1, 2):
             name = "RouteAudit" + str(number)
@@ -166,7 +204,8 @@ class Audit:
             await self.barrier(peer)
             sender = self.maps.get_player_message_sender(user)
             if sender is None:
-                raise RuntimeError("El login no registró su sender real")
+                msg = "El login no registró su sender real"
+                raise RuntimeError(msg)
             self.senders.append(sender)
         # The second authenticated socket is parked outside the spatial fixture
         # except when its actual player is the destination blocker.
@@ -174,6 +213,7 @@ class Audit:
 
     @staticmethod
     async def barrier(peer: ProtocolPeer) -> None:
+        """Drena respuestas previas usando PING/PONG como barrera de orden."""
         peer.frames.clear()
         await peer.send(b"\x77")
         await peer.wait(lambda frames: any(frame[0] == ServerPacketID.PONG for frame in frames))
@@ -188,6 +228,7 @@ class Audit:
         skill: int = 100,
         alive: bool = True,
     ) -> None:
+        """Prepara posición, navegación y recursos de un caso independiente."""
         user = self.users[index]
         sender = self.senders[index]
         self.maps.remove_player_from_all_maps(user)
@@ -210,7 +251,7 @@ class Audit:
         self.maps.add_player(mid, user, sender, "RouteAudit" + str(index + 1))
         self.maps.update_player_tile(user, mid, x, y, x, y)
 
-    async def check(
+    async def check(  # noqa: PLR0914, PLR0915 -- Preparación, aserciones y limpieza del mismo caso.
         self,
         route: Route,
         heading: int,
@@ -223,6 +264,7 @@ class Audit:
         alive: bool = True,
         blocker: str = "",
     ) -> None:
+        """Envía WALK y verifica persistencia, protocolo y ocupación del destino."""
         await self.place(0, origin, boat=boat, skill=skill, alive=alive)
         destination = route.destination
         occupant = None
@@ -247,8 +289,8 @@ class Audit:
                 100,
                 100,
                 1,
-                blocker == "npc-hostile",
-                True,
+                is_hostile=blocker == "npc-hostile",
+                is_attackable=True,
             )
             self.maps.add_npc(mid, npc)
             occupant = "npc:" + npc.instance_id
@@ -271,8 +313,8 @@ class Audit:
             await peer.wait(lambda frames: any(frame[0] == ServerPacketID.PONG for frame in frames))
             user = self.users[0]
             position = await self.deps.player_repo.get_position(user)
-            if position is None:
-                raise RuntimeError("Se perdió la posición")
+            require(position is not None, "Se perdió la posición")
+            assert position is not None  # noqa: S101 -- Estrechamiento tras require.
             actual = tuple(position.get(k, 0) for k in ("map", "x", "y"))
             expected = destination if accepted else origin
             require(actual == expected, f"{label}: destino {actual}, esperado {expected}")
@@ -355,6 +397,11 @@ class Audit:
     async def run(
         self, routes: list[Route], *, limit: int, shard: int, shards: int
     ) -> dict[str, Any]:
+        """Recorre las entradas y controles asignados a esta partición.
+
+        Returns:
+            Conteos esperados y alcance seleccionado.
+        """
         await self.start()
         representatives: dict[tuple[int, int], Route] = {}
         for route in routes:
@@ -369,7 +416,7 @@ class Audit:
                 if limit and self.counts["all-exit-directions"] >= limit:
                     break
         for number, route in enumerate(representatives.values()):
-            if limit and number >= 10:
+            if limit and number >= PARTIAL_CONTROL_PAIRS:
                 break
             if number % shards != shard:
                 continue
@@ -399,8 +446,8 @@ class Audit:
                 ("y-zero", (route.destination[0], 50, 0)),
                 ("y-over", (route.destination[0], 50, 101)),
             ):
-                original = self.maps._exit_tiles[route.source]
-                self.maps._exit_tiles[route.source] = dict(
+                original = self.maps._exit_tiles[route.source]  # noqa: SLF001 -- Fixture inválida.
+                self.maps._exit_tiles[route.source] = dict(  # noqa: SLF001
                     zip(("to_map", "to_x", "to_y"), bad, strict=True)
                 )
                 try:
@@ -408,7 +455,7 @@ class Audit:
                         Route(route.source, bad), heading, origin, label, accepted=False
                     )
                 finally:
-                    self.maps._exit_tiles[route.source] = original
+                    self.maps._exit_tiles[route.source] = original  # noqa: SLF001
         selected_routes = [route for i, route in enumerate(routes) if i % shards == shard]
         selected_pairs = [pair for i, pair in enumerate(representatives) if i % shards == shard]
         expected_inputs = sum(
@@ -449,6 +496,7 @@ class Audit:
         }
 
     async def close(self) -> None:
+        """Cierra ambos sockets, el listener y las tareas de conexión."""
         await asyncio.gather(*(peer.close() for peer in self.peers), return_exceptions=True)
         if self.listener:
             self.listener.close()
@@ -459,8 +507,22 @@ class Audit:
 
 
 async def scenario(
-    settings: RedisConfig, output: Path, *, limit: int, shard: int, shards: int
+    settings: RedisConfig,
+    output: Path,
+    *,
+    limit: int,
+    shard: int,
+    shards: int,
+    source: Position | None = None,
 ) -> dict[str, Any]:
+    """Ejecuta una partición y guarda su evidencia y procedencia.
+
+    Returns:
+        Evidencia del recorrido completado.
+
+    Raises:
+        ValueError: La reproducción no identifica una salida única.
+    """
     client = RedisClient()
     await client.connect(settings, seed_defaults=False)
     audit = None
@@ -468,10 +530,17 @@ async def scenario(
         await ensure_schema_ready(client.redis)
         await client.initialize_defaults()
         report, rows, _ = inspect_world(maps_dir())
+        routes = [Route.read(row) for row in rows]
+        if source is not None:
+            routes = [route for route in routes if route.source == source]
+            if len(routes) != 1:
+                msg = "La coordenada no identifica una salida única"
+                raise ValueError(msg)
         audit = Audit(client, output)
-        coverage = await audit.run(
-            [Route.read(row) for row in rows], limit=limit, shard=shard, shards=shards
-        )
+        coverage = await audit.run(routes, limit=limit, shard=shard, shards=shards)
+        if source is not None:
+            coverage["partial"] = True
+            coverage["selected_source"] = source
         result = {
             "passed": True,
             **coverage,
@@ -505,6 +574,14 @@ async def scenario(
 
 
 def combine(paths: list[Path], output: Path) -> dict[str, Any]:
+    """Exige una unión completa, limpia y coherente de todas las particiones.
+
+    Returns:
+        Evidencia conjunta de cobertura completa.
+
+    Raises:
+        ValueError: Faltan particiones o sus identidades y conteos no coinciden.
+    """
     records = [json.loads(path.read_text()) for path in paths]
     if not records or any(
         row.get("passed") is not True
@@ -512,13 +589,14 @@ def combine(paths: list[Path], output: Path) -> dict[str, Any]:
         or row.get("dirty") is not False
         for row in records
     ):
-        raise ValueError("Se requieren particiones completas, aprobadas y limpias")
+        msg = "Se requieren particiones completas, aprobadas y limpias"
+        raise ValueError(msg)
     first = records[0]
     shards = first["shards"]
     if len(records) != shards or {row["shard"] for row in records} != set(range(shards)):
-        raise ValueError("Faltan particiones o están repetidas")
-    root = Path(__file__).resolve().parents[2]
-    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+        msg = "Faltan particiones o están repetidas"
+        raise ValueError(msg)
+    commit = git_output("rev-parse", "HEAD")
     script = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     for row in records:
         if (
@@ -528,7 +606,8 @@ def combine(paths: list[Path], output: Path) -> dict[str, Any]:
                 row[key] != first[key] for key in ("shards", "source_hashes", "inventory_summary")
             )
         ):
-            raise ValueError("Particiones de otro código o dataset")
+            msg = "Particiones de otro código o dataset"
+            raise ValueError(msg)
     counts: Counter[str] = Counter()
     pairs: list[tuple[int, int]] = []
     for row in records:
@@ -541,7 +620,8 @@ def combine(paths: list[Path], output: Path) -> dict[str, Any]:
         or len(pairs) != len(set(pairs))
         or len(pairs) != inventory["directed_pairs"]
     ):
-        raise ValueError("La unión no cubre todas las salidas, direcciones y pares")
+        msg = "La unión no cubre todas las salidas, direcciones y pares"
+        raise ValueError(msg)
     labels = {
         "player",
         "npc-friendly",
@@ -560,7 +640,8 @@ def combine(paths: list[Path], output: Path) -> dict[str, Any]:
     if any(counts[label] != len(pairs) for label in labels) or counts["total"] != counts[
         "all-exit-directions"
     ] + len(labels) * len(pairs):
-        raise ValueError("Faltan controles de navegación, ocupación o límites")
+        msg = "Faltan controles de navegación, ocupación o límites"
+        raise ValueError(msg)
     result = {
         key: first[key]
         for key in ("server_commit", "runtime_source_sha256", "source_hashes", "inventory_summary")
@@ -585,6 +666,7 @@ def combine(paths: list[Path], output: Path) -> dict[str, Any]:
 
 
 def main() -> None:
+    """Ejecuta la auditoría completa, una reproducción o la unión de recibos."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
@@ -598,9 +680,18 @@ def main() -> None:
     )
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--shards", type=int, default=1)
+    parser.add_argument(
+        "--route",
+        type=int,
+        nargs=3,
+        metavar=("MAP", "X", "Y"),
+        help="Reproduce una salida concreta; el resultado queda marcado como parcial",
+    )
     args = parser.parse_args()
-    if args.limit < 0 or not 0 <= args.shard < args.shards <= 16:
+    if args.limit < 0 or not 0 <= args.shard < args.shards <= MAX_SHARDS:
         parser.error("Límite o partición inválidos")
+    if args.route and args.shards != 1:
+        parser.error("La reproducción puntual requiere una sola partición")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     if args.combine:
@@ -619,7 +710,14 @@ def main() -> None:
             json.dumps(
                 asyncio.run(
                     scenario(
-                        settings, output, limit=args.limit, shard=args.shard, shards=args.shards
+                        settings,
+                        output,
+                        limit=args.limit,
+                        shard=args.shard,
+                        shards=args.shards,
+                        source=(args.route[0], args.route[1], args.route[2])
+                        if args.route
+                        else None,
                     )
                 ),
                 indent=2,

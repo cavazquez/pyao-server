@@ -41,7 +41,7 @@ jobs:
       - run: uv sync --locked --dev
       - name: Ruff lint and format
         run: |
-          uv run --locked ruff check src tests
+          uv run --locked ruff check src tests tools/analysis/audit_world_routes_network.py
           uv run --locked ruff format --check .
       - name: Type checking
         run: |
@@ -181,12 +181,13 @@ jobs:
           retention-days: 7
 
   world-routes-tcp:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -199,7 +200,7 @@ jobs:
       - run: uv sync --locked --no-dev
       - run: uv run --locked --no-dev python -m tools.compression.decompress_map_data --target map_data
       - name: WALK por TCP y Redis real para cada salida y dirección de esta partición
-        run: uv run --locked --no-dev python -m tools.analysis.audit_world_routes_network --shard "${{ matrix.shard }}" --shards 4 --output artifacts/world-routes
+        run: uv run --locked --no-dev python -m tools.analysis.audit_world_routes_network --shard "${{ matrix.shard }}" --shards 16 --output artifacts/world-routes
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

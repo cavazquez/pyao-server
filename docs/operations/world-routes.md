@@ -54,7 +54,7 @@ de dos clientes usa las pruebas nativas del cliente por separado.
 
 `--limit N` produce una muestra marcada `partial: true`, que no acredita el
 issue completo. `--shard I --shards N` reparte salidas y pares sin duplicarlos.
-CI usa cuatro particiones y un job que verifica su unión:
+La ejecución manual de CI usa dieciséis particiones y un job que verifica su unión. La publicación exige ese job aprobado; los PR conservan el inventario estático y las regresiones rápidas automáticas:
 
 ```sh
 uv run --locked python -m tools.analysis.audit_world_routes_network \
@@ -62,9 +62,9 @@ uv run --locked python -m tools.analysis.audit_world_routes_network \
   --output artifacts/world-routes-complete
 ```
 
-La unión exige las cuatro particiones aprobadas del mismo commit limpio, script,
+La unión exige todas las particiones aprobadas del mismo commit limpio, script,
 hashes y dataset; rechaza faltantes, duplicados, muestras parciales y controles
-incompletos. Cada resultado conserva conteos, procedencia y hash de resultados.
+incompletos. `--route 96 9 91` reproduce solamente una salida y siempre se marca parcial. Cada resultado conserva conteos, procedencia y hash de resultados.
 Los recibos de CI son la evidencia de ejecución; documentar el comando no implica
 que una futura versión del dataset haya pasado sin volver a ejecutarlo.
 
@@ -75,7 +75,7 @@ Los hallazgos de #348–#353 y #169 del cliente ya tienen implementación y regr
 - Las llegadas validan terreno, puertas, límites y ocupación antes del commit.
   La posición y navegación se confirman juntas y la reserva se libera al terminar.
 - Los portales transmiten sus desbloqueos al entrar por login o por transición.
-  Las llegadas sólidas se corrigieron en los datos, conservando rutas deliberadas.
+  Las llegadas sólidas se corrigieron en los datos, conservando rutas deliberadas. El #395 añade la superposición árbol/agua: el agua tampoco exime una llegada sobre un recurso.
 - Los 420 cambios agua/tierra están clasificados en `data/world/water_routes.json`.
   Llegar al agua requiere estar vivo, barco real y habilidad suficiente; llegar a
   tierra actualiza navegación y apariencia del mismo estado confirmado.

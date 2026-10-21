@@ -112,7 +112,7 @@ def inspect_world(
                     routes.append(
                         (*key, *(integer(exit_row, k) for k in ("to_map", "to_x", "to_y")))
                     )
-    blocked, water, *_rest = load_map_resources(
+    blocked, water, trees, mines, *_rest = load_map_resources(
         sorted(source.glob("blocked_*.json")), sorted(source.glob("objects_*.json"))
     )
     if not metadata:
@@ -162,6 +162,8 @@ def inspect_world(
         ]
         if (tx, ty) in solid.get(target, set()):
             reasons.append("solid_destination")
+        if (tx, ty) in trees.get(target, set()) or (tx, ty) in mines.get(target, set()):
+            reasons.append("resource_destination")
         if (x, y) in solid.get(origin, set()):
             reasons.append("source_requires_portal_override")
         if not foot and not boat:
@@ -298,6 +300,7 @@ def main() -> int:
         report["summary"]["duplicate_sources"]
         or report["findings"].get("invalid_reference_or_coordinate")
         or report["findings"].get("solid_destination")
+        or report["findings"].get("resource_destination")
     )
     return 0 if matches and not hard_errors else 1
 

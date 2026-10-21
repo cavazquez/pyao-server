@@ -1,6 +1,7 @@
 """Regresiones del inventario completo de mapas y combinaciones dirigidas."""
 # ruff: noqa: INP001
 
+import hashlib
 import json
 import sys
 from collections.abc import Sequence
@@ -13,6 +14,8 @@ from src.command_handlers.walk_movement_handler import WalkMovementHandler
 from src.game.map_manager import MapManager
 from src.runtime_paths import maps_dir
 from tools.analysis import audit_world_routes as audit
+from tools.analysis.water_routes import classify
+from tools.analysis.world_roles import review_roles
 
 
 def dataset(root: Path, routes: Sequence[Sequence[int]] | None = None) -> Path:
@@ -100,6 +103,27 @@ def test_bad_ndjson_and_missing_inputs_are_errors(tmp_path: Path) -> None:
         audit.inspect_world(root)
 
 
+@pytest.mark.parametrize("resource", ["tree", "mine"])
+def test_water_does_not_exempt_a_resource_obstructing_an_arrival(
+    tmp_path: Path,
+    resource: str,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Una casilla acuática con árbol o mina impide publicar el inventario."""
+    root = dataset(tmp_path, [(1, 20, 20, 2, 30, 30)])
+    (root / "objects_001-050.json").write_text(
+        "\n".join(json.dumps({"m": 2, "x": 30, "y": 30, "t": kind}) for kind in ("water", resource))
+        + "\n"
+    )
+    report, _, _ = audit.inspect_world(root)
+    assert report["findings"]["resource_destination"] == [[1, 20, 20, 2, 30, 30]]
+    assert "solid_destination" not in report["findings"]
+    monkeypatch.setattr(sys, "argv", ["audit", "--source", str(root)])
+    assert audit.main() == 1
+    capsys.readouterr()
+
+
 @pytest.mark.parametrize("value", [True, 1.5, "1", None])
 def test_boolean_float_and_string_are_not_valid_coordinates(value: object) -> None:
     """No convierte silenciosamente valores que no representan enteros."""
@@ -151,14 +175,10 @@ def test_cli_rejects_duplicate_sources(
 @pytest.fixture(scope="module")
 def versioned_world() -> tuple[dict, list[dict], list[dict]]:
     """Audita una sola vez el conjunto versionado completo de 290 mapas."""
-    from tools.analysis.world_roles import review_roles
-    from tools.analysis.water_routes import classify
-    import hashlib
-
     report, exits, matrix = audit.inspect_world(maps_dir())
     report["roles"] = review_roles(maps_dir(), Path("data/world/map_roles.json"))
     path = Path("data/world/water_routes.json")
-    assert json.loads(path.read_text()) == classify(exits)
+    assert json.loads(path.read_text(encoding="utf-8")) == classify(exits)
     report["water_policy"] = {
         "candidates": len(classify(exits)["routes"]),
         "manifest_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
