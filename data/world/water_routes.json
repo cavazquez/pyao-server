@@ -1,0 +1,7147 @@
+{
+  "version": 1,
+  "note": "Geometric classification of authored data; interior portals do not waive boat requirements. No new reverse routes.",
+  "count": 420,
+  "routes": [
+    {
+      "source": [
+        9,
+        9,
+        8
+      ],
+      "destination": [
+        10,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        9,
+        10,
+        94
+      ],
+      "destination": [
+        38,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        9,
+        11,
+        94
+      ],
+      "destination": [
+        38,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        9,
+        12,
+        7
+      ],
+      "destination": [
+        75,
+        12,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        9,
+        12,
+        94
+      ],
+      "destination": [
+        38,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        10,
+        92,
+        8
+      ],
+      "destination": [
+        9,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        13,
+        89,
+        7
+      ],
+      "destination": [
+        82,
+        89,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        13,
+        90,
+        7
+      ],
+      "destination": [
+        82,
+        90,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        13,
+        91,
+        7
+      ],
+      "destination": [
+        82,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        13,
+        91,
+        94
+      ],
+      "destination": [
+        19,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        13,
+        92,
+        8
+      ],
+      "destination": [
+        15,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        13,
+        92,
+        93
+      ],
+      "destination": [
+        15,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        15,
+        9,
+        8
+      ],
+      "destination": [
+        13,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        15,
+        9,
+        93
+      ],
+      "destination": [
+        13,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        15,
+        92,
+        8
+      ],
+      "destination": [
+        16,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        16,
+        10,
+        7
+      ],
+      "destination": [
+        21,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        11,
+        7
+      ],
+      "destination": [
+        21,
+        11,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        11,
+        94
+      ],
+      "destination": [
+        20,
+        11,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        88,
+        7
+      ],
+      "destination": [
+        21,
+        88,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        89,
+        7
+      ],
+      "destination": [
+        21,
+        89,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        90,
+        7
+      ],
+      "destination": [
+        21,
+        90,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        90,
+        94
+      ],
+      "destination": [
+        20,
+        90,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        91,
+        7
+      ],
+      "destination": [
+        21,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        91,
+        94
+      ],
+      "destination": [
+        20,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        92,
+        8
+      ],
+      "destination": [
+        17,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        16,
+        92,
+        93
+      ],
+      "destination": [
+        17,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        17,
+        9,
+        8
+      ],
+      "destination": [
+        16,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        17,
+        9,
+        93
+      ],
+      "destination": [
+        16,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        19,
+        91,
+        7
+      ],
+      "destination": [
+        13,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        20,
+        11,
+        7
+      ],
+      "destination": [
+        16,
+        11,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        21,
+        10,
+        94
+      ],
+      "destination": [
+        16,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        21,
+        11,
+        94
+      ],
+      "destination": [
+        16,
+        11,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        27,
+        91,
+        7
+      ],
+      "destination": [
+        19,
+        90,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        28,
+        89,
+        94
+      ],
+      "destination": [
+        91,
+        89,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        28,
+        90,
+        94
+      ],
+      "destination": [
+        91,
+        90,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        28,
+        91,
+        94
+      ],
+      "destination": [
+        91,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        28,
+        92,
+        93
+      ],
+      "destination": [
+        94,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        34,
+        13,
+        7
+      ],
+      "destination": [
+        35,
+        14,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        36,
+        9,
+        93
+      ],
+      "destination": [
+        46,
+        91,
+        91
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        36,
+        32,
+        94
+      ],
+      "destination": [
+        35,
+        32,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        36,
+        33,
+        94
+      ],
+      "destination": [
+        35,
+        32,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        36,
+        40,
+        94
+      ],
+      "destination": [
+        35,
+        40,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        36,
+        41,
+        94
+      ],
+      "destination": [
+        35,
+        41,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        36,
+        60,
+        7
+      ],
+      "destination": [
+        39,
+        60,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        36,
+        67,
+        7
+      ],
+      "destination": [
+        39,
+        67,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        36,
+        68,
+        7
+      ],
+      "destination": [
+        39,
+        68,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        11,
+        94
+      ],
+      "destination": [
+        46,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        12,
+        7
+      ],
+      "destination": [
+        9,
+        12,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        38,
+        12,
+        94
+      ],
+      "destination": [
+        46,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        92,
+        73
+      ],
+      "destination": [
+        39,
+        10,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        92,
+        74
+      ],
+      "destination": [
+        39,
+        10,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        92,
+        75
+      ],
+      "destination": [
+        39,
+        10,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        92,
+        76
+      ],
+      "destination": [
+        39,
+        10,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        38,
+        92,
+        82
+      ],
+      "destination": [
+        39,
+        10,
+        82
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        39,
+        9,
+        73
+      ],
+      "destination": [
+        38,
+        91,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        39,
+        9,
+        81
+      ],
+      "destination": [
+        38,
+        91,
+        81
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        39,
+        9,
+        82
+      ],
+      "destination": [
+        38,
+        91,
+        82
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        46,
+        10,
+        7
+      ],
+      "destination": [
+        38,
+        11,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        46,
+        11,
+        7
+      ],
+      "destination": [
+        38,
+        11,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        46,
+        12,
+        7
+      ],
+      "destination": [
+        38,
+        12,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        37
+      ],
+      "destination": [
+        64,
+        9,
+        37
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        38
+      ],
+      "destination": [
+        64,
+        9,
+        38
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        39
+      ],
+      "destination": [
+        64,
+        9,
+        39
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        40
+      ],
+      "destination": [
+        64,
+        9,
+        40
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        41
+      ],
+      "destination": [
+        64,
+        9,
+        41
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        42
+      ],
+      "destination": [
+        64,
+        9,
+        42
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        43
+      ],
+      "destination": [
+        64,
+        9,
+        43
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        44
+      ],
+      "destination": [
+        64,
+        9,
+        44
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        49
+      ],
+      "destination": [
+        64,
+        9,
+        48
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        50
+      ],
+      "destination": [
+        64,
+        9,
+        50
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        51
+      ],
+      "destination": [
+        64,
+        9,
+        51
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        52
+      ],
+      "destination": [
+        64,
+        9,
+        52
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        53
+      ],
+      "destination": [
+        64,
+        9,
+        53
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        54
+      ],
+      "destination": [
+        64,
+        9,
+        54
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        55
+      ],
+      "destination": [
+        64,
+        9,
+        55
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        56
+      ],
+      "destination": [
+        64,
+        9,
+        56
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        69
+      ],
+      "destination": [
+        64,
+        9,
+        69
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        70
+      ],
+      "destination": [
+        64,
+        9,
+        70
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        71
+      ],
+      "destination": [
+        64,
+        9,
+        71
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        72
+      ],
+      "destination": [
+        64,
+        9,
+        72
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        73
+      ],
+      "destination": [
+        64,
+        9,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        74
+      ],
+      "destination": [
+        64,
+        9,
+        74
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        75
+      ],
+      "destination": [
+        64,
+        9,
+        75
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        76
+      ],
+      "destination": [
+        64,
+        9,
+        76
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        77
+      ],
+      "destination": [
+        64,
+        9,
+        77
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        78
+      ],
+      "destination": [
+        64,
+        9,
+        78
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        79
+      ],
+      "destination": [
+        64,
+        9,
+        79
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        80
+      ],
+      "destination": [
+        64,
+        9,
+        80
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        81
+      ],
+      "destination": [
+        64,
+        9,
+        81
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        82
+      ],
+      "destination": [
+        64,
+        9,
+        82
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        83
+      ],
+      "destination": [
+        64,
+        9,
+        83
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        84
+      ],
+      "destination": [
+        64,
+        9,
+        84
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        85
+      ],
+      "destination": [
+        64,
+        9,
+        85
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        86
+      ],
+      "destination": [
+        64,
+        9,
+        86
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        87
+      ],
+      "destination": [
+        64,
+        9,
+        87
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        88
+      ],
+      "destination": [
+        64,
+        9,
+        88
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        89
+      ],
+      "destination": [
+        64,
+        9,
+        89
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        90
+      ],
+      "destination": [
+        64,
+        9,
+        90
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        91
+      ],
+      "destination": [
+        64,
+        9,
+        91
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        62,
+        92,
+        92
+      ],
+      "destination": [
+        64,
+        9,
+        92
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        75,
+        12,
+        94
+      ],
+      "destination": [
+        9,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        13
+      ],
+      "destination": [
+        34,
+        11,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        14
+      ],
+      "destination": [
+        34,
+        10,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        15
+      ],
+      "destination": [
+        34,
+        10,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        16
+      ],
+      "destination": [
+        34,
+        10,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        17
+      ],
+      "destination": [
+        34,
+        10,
+        17
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        18
+      ],
+      "destination": [
+        34,
+        10,
+        18
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        19
+      ],
+      "destination": [
+        34,
+        10,
+        19
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        20
+      ],
+      "destination": [
+        34,
+        10,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        21
+      ],
+      "destination": [
+        34,
+        10,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        22
+      ],
+      "destination": [
+        34,
+        10,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        23
+      ],
+      "destination": [
+        34,
+        10,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        24
+      ],
+      "destination": [
+        34,
+        10,
+        24
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        25
+      ],
+      "destination": [
+        34,
+        10,
+        25
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        26
+      ],
+      "destination": [
+        34,
+        10,
+        26
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        27
+      ],
+      "destination": [
+        34,
+        10,
+        27
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        41
+      ],
+      "destination": [
+        34,
+        10,
+        41
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        42
+      ],
+      "destination": [
+        34,
+        10,
+        42
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        43
+      ],
+      "destination": [
+        34,
+        10,
+        43
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        44
+      ],
+      "destination": [
+        34,
+        10,
+        44
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        45
+      ],
+      "destination": [
+        34,
+        10,
+        45
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        46
+      ],
+      "destination": [
+        34,
+        10,
+        46
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        47
+      ],
+      "destination": [
+        34,
+        10,
+        47
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        48
+      ],
+      "destination": [
+        34,
+        10,
+        48
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        49
+      ],
+      "destination": [
+        34,
+        10,
+        49
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        50
+      ],
+      "destination": [
+        34,
+        10,
+        50
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        51
+      ],
+      "destination": [
+        34,
+        10,
+        51
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        52
+      ],
+      "destination": [
+        34,
+        10,
+        52
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        53
+      ],
+      "destination": [
+        34,
+        10,
+        53
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        54
+      ],
+      "destination": [
+        34,
+        10,
+        54
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        55
+      ],
+      "destination": [
+        34,
+        10,
+        55
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        56
+      ],
+      "destination": [
+        34,
+        10,
+        56
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        57
+      ],
+      "destination": [
+        34,
+        10,
+        57
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        58
+      ],
+      "destination": [
+        34,
+        10,
+        58
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        59
+      ],
+      "destination": [
+        34,
+        10,
+        59
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        60
+      ],
+      "destination": [
+        34,
+        10,
+        60
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        61
+      ],
+      "destination": [
+        34,
+        10,
+        61
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        62
+      ],
+      "destination": [
+        34,
+        10,
+        62
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        63
+      ],
+      "destination": [
+        34,
+        10,
+        63
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        64
+      ],
+      "destination": [
+        34,
+        10,
+        64
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        65
+      ],
+      "destination": [
+        34,
+        10,
+        65
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        66
+      ],
+      "destination": [
+        34,
+        10,
+        66
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        67
+      ],
+      "destination": [
+        34,
+        10,
+        67
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        68
+      ],
+      "destination": [
+        34,
+        10,
+        68
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        69
+      ],
+      "destination": [
+        34,
+        10,
+        69
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        70
+      ],
+      "destination": [
+        34,
+        10,
+        70
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        71
+      ],
+      "destination": [
+        34,
+        10,
+        71
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        78,
+        92,
+        72
+      ],
+      "destination": [
+        34,
+        10,
+        72
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        82,
+        89,
+        94
+      ],
+      "destination": [
+        13,
+        89,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        82,
+        90,
+        94
+      ],
+      "destination": [
+        13,
+        90,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        82,
+        91,
+        94
+      ],
+      "destination": [
+        13,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        91,
+        89,
+        7
+      ],
+      "destination": [
+        28,
+        89,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        91,
+        90,
+        7
+      ],
+      "destination": [
+        28,
+        90,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        91,
+        91,
+        94
+      ],
+      "destination": [
+        156,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        92,
+        10,
+        94
+      ],
+      "destination": [
+        150,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        92,
+        11,
+        94
+      ],
+      "destination": [
+        150,
+        11,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        92,
+        12,
+        94
+      ],
+      "destination": [
+        150,
+        12,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        93,
+        10,
+        94
+      ],
+      "destination": [
+        151,
+        10,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        93,
+        11,
+        94
+      ],
+      "destination": [
+        151,
+        11,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        93,
+        12,
+        94
+      ],
+      "destination": [
+        151,
+        12,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        93,
+        13,
+        94
+      ],
+      "destination": [
+        151,
+        13,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        93,
+        14,
+        94
+      ],
+      "destination": [
+        151,
+        14,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        94,
+        9,
+        93
+      ],
+      "destination": [
+        28,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        22,
+        94
+      ],
+      "destination": [
+        114,
+        22,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        23,
+        94
+      ],
+      "destination": [
+        114,
+        23,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        24,
+        94
+      ],
+      "destination": [
+        114,
+        24,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        25,
+        94
+      ],
+      "destination": [
+        114,
+        25,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        26,
+        94
+      ],
+      "destination": [
+        114,
+        26,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        27,
+        94
+      ],
+      "destination": [
+        114,
+        27,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        28,
+        94
+      ],
+      "destination": [
+        114,
+        28,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        29,
+        94
+      ],
+      "destination": [
+        114,
+        29,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        30,
+        94
+      ],
+      "destination": [
+        114,
+        30,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        31,
+        94
+      ],
+      "destination": [
+        114,
+        31,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        32,
+        94
+      ],
+      "destination": [
+        114,
+        32,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        33,
+        94
+      ],
+      "destination": [
+        114,
+        33,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        92,
+        12
+      ],
+      "destination": [
+        112,
+        10,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        92,
+        13
+      ],
+      "destination": [
+        112,
+        10,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        111,
+        92,
+        20
+      ],
+      "destination": [
+        112,
+        10,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        111,
+        92,
+        21
+      ],
+      "destination": [
+        112,
+        10,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        111,
+        92,
+        22
+      ],
+      "destination": [
+        112,
+        10,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        111,
+        92,
+        23
+      ],
+      "destination": [
+        112,
+        10,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        14
+      ],
+      "destination": [
+        111,
+        91,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        15
+      ],
+      "destination": [
+        111,
+        91,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        16
+      ],
+      "destination": [
+        111,
+        91,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        17
+      ],
+      "destination": [
+        111,
+        91,
+        17
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        18
+      ],
+      "destination": [
+        111,
+        91,
+        18
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        19
+      ],
+      "destination": [
+        111,
+        91,
+        19
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        20
+      ],
+      "destination": [
+        111,
+        91,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        21
+      ],
+      "destination": [
+        111,
+        91,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        22
+      ],
+      "destination": [
+        111,
+        91,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        112,
+        9,
+        23
+      ],
+      "destination": [
+        111,
+        91,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        16
+      ],
+      "destination": [
+        114,
+        91,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        17
+      ],
+      "destination": [
+        114,
+        91,
+        17
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        18
+      ],
+      "destination": [
+        114,
+        91,
+        18
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        19
+      ],
+      "destination": [
+        114,
+        91,
+        19
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        20
+      ],
+      "destination": [
+        114,
+        91,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        21
+      ],
+      "destination": [
+        114,
+        91,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        22
+      ],
+      "destination": [
+        114,
+        91,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        23
+      ],
+      "destination": [
+        114,
+        91,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        24
+      ],
+      "destination": [
+        114,
+        91,
+        24
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        25
+      ],
+      "destination": [
+        114,
+        91,
+        25
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        26
+      ],
+      "destination": [
+        114,
+        91,
+        26
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        27
+      ],
+      "destination": [
+        114,
+        91,
+        27
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        28
+      ],
+      "destination": [
+        114,
+        91,
+        28
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        113,
+        9,
+        29
+      ],
+      "destination": [
+        114,
+        91,
+        29
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        114,
+        34,
+        7
+      ],
+      "destination": [
+        111,
+        34,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        114,
+        35,
+        7
+      ],
+      "destination": [
+        111,
+        35,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        150,
+        9,
+        12
+      ],
+      "destination": [
+        151,
+        91,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        151,
+        9,
+        93
+      ],
+      "destination": [
+        156,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        151,
+        92,
+        9
+      ],
+      "destination": [
+        150,
+        10,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        151,
+        92,
+        10
+      ],
+      "destination": [
+        150,
+        11,
+        10
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        151,
+        92,
+        11
+      ],
+      "destination": [
+        150,
+        10,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        151,
+        92,
+        12
+      ],
+      "destination": [
+        150,
+        10,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        156,
+        91,
+        7
+      ],
+      "destination": [
+        91,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        156,
+        92,
+        8
+      ],
+      "destination": [
+        151,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        7
+      ],
+      "destination": [
+        160,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        8
+      ],
+      "destination": [
+        160,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        9
+      ],
+      "destination": [
+        160,
+        10,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        10
+      ],
+      "destination": [
+        160,
+        10,
+        10
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        11
+      ],
+      "destination": [
+        160,
+        10,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        12
+      ],
+      "destination": [
+        160,
+        10,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        13
+      ],
+      "destination": [
+        160,
+        10,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        14
+      ],
+      "destination": [
+        160,
+        10,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        15
+      ],
+      "destination": [
+        160,
+        10,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        159,
+        92,
+        16
+      ],
+      "destination": [
+        160,
+        10,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        160,
+        9,
+        8
+      ],
+      "destination": [
+        159,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        9
+      ],
+      "destination": [
+        159,
+        91,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        10
+      ],
+      "destination": [
+        159,
+        91,
+        10
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        11
+      ],
+      "destination": [
+        159,
+        91,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        12
+      ],
+      "destination": [
+        159,
+        91,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        13
+      ],
+      "destination": [
+        159,
+        91,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        14
+      ],
+      "destination": [
+        159,
+        91,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        15
+      ],
+      "destination": [
+        159,
+        91,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        160,
+        9,
+        16
+      ],
+      "destination": [
+        159,
+        91,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        161,
+        9,
+        7
+      ],
+      "destination": [
+        160,
+        9,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        280,
+        9,
+        8
+      ],
+      "destination": [
+        225,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        9
+      ],
+      "destination": [
+        225,
+        91,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        10
+      ],
+      "destination": [
+        225,
+        91,
+        10
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        11
+      ],
+      "destination": [
+        225,
+        91,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        12
+      ],
+      "destination": [
+        225,
+        91,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        13
+      ],
+      "destination": [
+        225,
+        91,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        14
+      ],
+      "destination": [
+        225,
+        91,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        15
+      ],
+      "destination": [
+        225,
+        91,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        16
+      ],
+      "destination": [
+        225,
+        91,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        17
+      ],
+      "destination": [
+        225,
+        91,
+        17
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        18
+      ],
+      "destination": [
+        225,
+        91,
+        18
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        19
+      ],
+      "destination": [
+        225,
+        91,
+        19
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        20
+      ],
+      "destination": [
+        225,
+        91,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        21
+      ],
+      "destination": [
+        225,
+        91,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        22
+      ],
+      "destination": [
+        225,
+        91,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        23
+      ],
+      "destination": [
+        225,
+        91,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        24
+      ],
+      "destination": [
+        225,
+        91,
+        24
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        25
+      ],
+      "destination": [
+        225,
+        91,
+        25
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        26
+      ],
+      "destination": [
+        225,
+        91,
+        26
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        27
+      ],
+      "destination": [
+        225,
+        91,
+        27
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        28
+      ],
+      "destination": [
+        225,
+        91,
+        28
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        29
+      ],
+      "destination": [
+        225,
+        91,
+        29
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        30
+      ],
+      "destination": [
+        225,
+        91,
+        30
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        31
+      ],
+      "destination": [
+        225,
+        91,
+        31
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        32
+      ],
+      "destination": [
+        225,
+        91,
+        32
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        33
+      ],
+      "destination": [
+        225,
+        91,
+        33
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        34
+      ],
+      "destination": [
+        225,
+        91,
+        34
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        35
+      ],
+      "destination": [
+        225,
+        91,
+        35
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        36
+      ],
+      "destination": [
+        225,
+        91,
+        36
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        37
+      ],
+      "destination": [
+        225,
+        91,
+        37
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        38
+      ],
+      "destination": [
+        225,
+        91,
+        38
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        39
+      ],
+      "destination": [
+        225,
+        91,
+        39
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        40
+      ],
+      "destination": [
+        225,
+        91,
+        40
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        41
+      ],
+      "destination": [
+        225,
+        91,
+        41
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        42
+      ],
+      "destination": [
+        225,
+        91,
+        42
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        43
+      ],
+      "destination": [
+        225,
+        91,
+        43
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        44
+      ],
+      "destination": [
+        225,
+        91,
+        44
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        45
+      ],
+      "destination": [
+        225,
+        91,
+        45
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        46
+      ],
+      "destination": [
+        225,
+        91,
+        46
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        47
+      ],
+      "destination": [
+        225,
+        91,
+        47
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        48
+      ],
+      "destination": [
+        225,
+        91,
+        48
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        49
+      ],
+      "destination": [
+        225,
+        91,
+        49
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        50
+      ],
+      "destination": [
+        225,
+        91,
+        50
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        51
+      ],
+      "destination": [
+        225,
+        91,
+        51
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        52
+      ],
+      "destination": [
+        225,
+        91,
+        52
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        53
+      ],
+      "destination": [
+        225,
+        91,
+        53
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        54
+      ],
+      "destination": [
+        225,
+        91,
+        54
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        55
+      ],
+      "destination": [
+        225,
+        91,
+        55
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        56
+      ],
+      "destination": [
+        225,
+        91,
+        56
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        57
+      ],
+      "destination": [
+        225,
+        91,
+        57
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        58
+      ],
+      "destination": [
+        225,
+        91,
+        58
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        59
+      ],
+      "destination": [
+        225,
+        91,
+        59
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        60
+      ],
+      "destination": [
+        225,
+        91,
+        60
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        61
+      ],
+      "destination": [
+        225,
+        91,
+        61
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        62
+      ],
+      "destination": [
+        225,
+        91,
+        62
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        63
+      ],
+      "destination": [
+        225,
+        91,
+        63
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        64
+      ],
+      "destination": [
+        225,
+        91,
+        64
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        65
+      ],
+      "destination": [
+        225,
+        91,
+        65
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        66
+      ],
+      "destination": [
+        225,
+        91,
+        66
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        67
+      ],
+      "destination": [
+        225,
+        91,
+        67
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        68
+      ],
+      "destination": [
+        225,
+        91,
+        68
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        69
+      ],
+      "destination": [
+        225,
+        91,
+        69
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        70
+      ],
+      "destination": [
+        225,
+        91,
+        70
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        71
+      ],
+      "destination": [
+        225,
+        91,
+        71
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        72
+      ],
+      "destination": [
+        225,
+        91,
+        72
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        73
+      ],
+      "destination": [
+        225,
+        91,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        74
+      ],
+      "destination": [
+        225,
+        91,
+        74
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        75
+      ],
+      "destination": [
+        225,
+        91,
+        75
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        76
+      ],
+      "destination": [
+        225,
+        91,
+        76
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        77
+      ],
+      "destination": [
+        225,
+        91,
+        77
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        78
+      ],
+      "destination": [
+        225,
+        91,
+        78
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        79
+      ],
+      "destination": [
+        225,
+        91,
+        79
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        80
+      ],
+      "destination": [
+        225,
+        91,
+        80
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        81
+      ],
+      "destination": [
+        225,
+        91,
+        81
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        82
+      ],
+      "destination": [
+        225,
+        91,
+        82
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        83
+      ],
+      "destination": [
+        225,
+        91,
+        83
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        84
+      ],
+      "destination": [
+        225,
+        91,
+        84
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        85
+      ],
+      "destination": [
+        225,
+        91,
+        85
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        86
+      ],
+      "destination": [
+        225,
+        91,
+        86
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        87
+      ],
+      "destination": [
+        225,
+        91,
+        87
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        88
+      ],
+      "destination": [
+        225,
+        91,
+        88
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        89
+      ],
+      "destination": [
+        225,
+        91,
+        89
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        90
+      ],
+      "destination": [
+        225,
+        91,
+        90
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        91
+      ],
+      "destination": [
+        225,
+        91,
+        91
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        92
+      ],
+      "destination": [
+        225,
+        91,
+        92
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        9,
+        93
+      ],
+      "destination": [
+        225,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        8
+      ],
+      "destination": [
+        223,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        9
+      ],
+      "destination": [
+        223,
+        10,
+        9
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        10
+      ],
+      "destination": [
+        223,
+        10,
+        10
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        11
+      ],
+      "destination": [
+        223,
+        10,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        12
+      ],
+      "destination": [
+        223,
+        10,
+        12
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        13
+      ],
+      "destination": [
+        223,
+        10,
+        13
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        14
+      ],
+      "destination": [
+        223,
+        10,
+        14
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        15
+      ],
+      "destination": [
+        223,
+        10,
+        15
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        16
+      ],
+      "destination": [
+        223,
+        10,
+        16
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        17
+      ],
+      "destination": [
+        223,
+        10,
+        17
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        18
+      ],
+      "destination": [
+        223,
+        10,
+        18
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        19
+      ],
+      "destination": [
+        223,
+        10,
+        19
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        20
+      ],
+      "destination": [
+        223,
+        10,
+        20
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        21
+      ],
+      "destination": [
+        223,
+        10,
+        21
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        22
+      ],
+      "destination": [
+        223,
+        10,
+        22
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        23
+      ],
+      "destination": [
+        223,
+        10,
+        23
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        24
+      ],
+      "destination": [
+        223,
+        10,
+        24
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        25
+      ],
+      "destination": [
+        223,
+        10,
+        25
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        26
+      ],
+      "destination": [
+        223,
+        10,
+        26
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        27
+      ],
+      "destination": [
+        223,
+        10,
+        27
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        28
+      ],
+      "destination": [
+        223,
+        10,
+        28
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        29
+      ],
+      "destination": [
+        223,
+        10,
+        29
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        30
+      ],
+      "destination": [
+        223,
+        10,
+        30
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        31
+      ],
+      "destination": [
+        223,
+        10,
+        31
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        32
+      ],
+      "destination": [
+        223,
+        10,
+        32
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        33
+      ],
+      "destination": [
+        223,
+        10,
+        33
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        34
+      ],
+      "destination": [
+        223,
+        10,
+        34
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        35
+      ],
+      "destination": [
+        223,
+        10,
+        35
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        36
+      ],
+      "destination": [
+        223,
+        10,
+        36
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        37
+      ],
+      "destination": [
+        223,
+        10,
+        37
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        38
+      ],
+      "destination": [
+        223,
+        10,
+        38
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        39
+      ],
+      "destination": [
+        223,
+        10,
+        39
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        40
+      ],
+      "destination": [
+        223,
+        10,
+        40
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        41
+      ],
+      "destination": [
+        223,
+        10,
+        41
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        42
+      ],
+      "destination": [
+        223,
+        10,
+        42
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        43
+      ],
+      "destination": [
+        223,
+        10,
+        43
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        44
+      ],
+      "destination": [
+        223,
+        10,
+        44
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        45
+      ],
+      "destination": [
+        223,
+        10,
+        45
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        46
+      ],
+      "destination": [
+        223,
+        10,
+        46
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        47
+      ],
+      "destination": [
+        223,
+        10,
+        47
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        48
+      ],
+      "destination": [
+        223,
+        10,
+        48
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        49
+      ],
+      "destination": [
+        223,
+        10,
+        49
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        50
+      ],
+      "destination": [
+        223,
+        10,
+        50
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        51
+      ],
+      "destination": [
+        223,
+        10,
+        51
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        52
+      ],
+      "destination": [
+        223,
+        10,
+        52
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        53
+      ],
+      "destination": [
+        223,
+        10,
+        53
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        54
+      ],
+      "destination": [
+        223,
+        10,
+        54
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        55
+      ],
+      "destination": [
+        223,
+        10,
+        55
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        56
+      ],
+      "destination": [
+        223,
+        10,
+        56
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        57
+      ],
+      "destination": [
+        223,
+        10,
+        57
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        58
+      ],
+      "destination": [
+        223,
+        10,
+        58
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        59
+      ],
+      "destination": [
+        223,
+        10,
+        59
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        60
+      ],
+      "destination": [
+        223,
+        10,
+        60
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        61
+      ],
+      "destination": [
+        223,
+        10,
+        61
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        62
+      ],
+      "destination": [
+        223,
+        10,
+        62
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        63
+      ],
+      "destination": [
+        223,
+        10,
+        63
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        64
+      ],
+      "destination": [
+        223,
+        10,
+        64
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        65
+      ],
+      "destination": [
+        223,
+        10,
+        65
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        66
+      ],
+      "destination": [
+        223,
+        10,
+        66
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        67
+      ],
+      "destination": [
+        223,
+        10,
+        67
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        68
+      ],
+      "destination": [
+        223,
+        10,
+        68
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        69
+      ],
+      "destination": [
+        223,
+        10,
+        69
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        70
+      ],
+      "destination": [
+        223,
+        10,
+        70
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        71
+      ],
+      "destination": [
+        223,
+        10,
+        71
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        72
+      ],
+      "destination": [
+        223,
+        10,
+        72
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        73
+      ],
+      "destination": [
+        223,
+        10,
+        73
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        74
+      ],
+      "destination": [
+        223,
+        10,
+        74
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        75
+      ],
+      "destination": [
+        223,
+        10,
+        75
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        76
+      ],
+      "destination": [
+        223,
+        10,
+        76
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        77
+      ],
+      "destination": [
+        223,
+        10,
+        77
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        78
+      ],
+      "destination": [
+        223,
+        10,
+        78
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        79
+      ],
+      "destination": [
+        223,
+        10,
+        79
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        80
+      ],
+      "destination": [
+        223,
+        10,
+        80
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        81
+      ],
+      "destination": [
+        223,
+        10,
+        81
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        82
+      ],
+      "destination": [
+        223,
+        10,
+        82
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        83
+      ],
+      "destination": [
+        223,
+        10,
+        83
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        84
+      ],
+      "destination": [
+        223,
+        10,
+        84
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        85
+      ],
+      "destination": [
+        223,
+        10,
+        85
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        86
+      ],
+      "destination": [
+        223,
+        10,
+        86
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        87
+      ],
+      "destination": [
+        223,
+        10,
+        87
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        88
+      ],
+      "destination": [
+        223,
+        10,
+        88
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        89
+      ],
+      "destination": [
+        223,
+        10,
+        89
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        90
+      ],
+      "destination": [
+        223,
+        10,
+        90
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        91
+      ],
+      "destination": [
+        223,
+        10,
+        91
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        92
+      ],
+      "destination": [
+        223,
+        10,
+        92
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        280,
+        92,
+        93
+      ],
+      "destination": [
+        223,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        284,
+        61,
+        94
+      ],
+      "destination": [
+        283,
+        61,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        287,
+        9,
+        90
+      ],
+      "destination": [
+        288,
+        90,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        287,
+        9,
+        91
+      ],
+      "destination": [
+        288,
+        91,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        287,
+        92,
+        90
+      ],
+      "destination": [
+        289,
+        11,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        287,
+        92,
+        91
+      ],
+      "destination": [
+        289,
+        10,
+        8
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        288,
+        90,
+        7
+      ],
+      "destination": [
+        287,
+        10,
+        90
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        288,
+        90,
+        94
+      ],
+      "destination": [
+        290,
+        10,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        289,
+        11,
+        7
+      ],
+      "destination": [
+        287,
+        91,
+        90
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        289,
+        11,
+        94
+      ],
+      "destination": [
+        290,
+        91,
+        11
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": true,
+      "destination_water": false,
+      "policy": "disembark_atomically_keep_boat_in_inventory"
+    },
+    {
+      "source": [
+        290,
+        9,
+        10
+      ],
+      "destination": [
+        288,
+        91,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        290,
+        9,
+        11
+      ],
+      "destination": [
+        288,
+        90,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        290,
+        92,
+        10
+      ],
+      "destination": [
+        289,
+        10,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    },
+    {
+      "source": [
+        290,
+        92,
+        11
+      ],
+      "destination": [
+        289,
+        11,
+        93
+      ],
+      "classification": "coast_boundary",
+      "basis": "authored edge coordinate",
+      "source_water": false,
+      "destination_water": true,
+      "policy": "require_living_character_valid_boat_and_navigation"
+    }
+  ]
+}

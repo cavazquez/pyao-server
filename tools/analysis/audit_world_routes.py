@@ -263,8 +263,23 @@ def main() -> int:
     parser.add_argument("--source", type=Path, default=maps_dir())
     parser.add_argument("--output", type=Path)
     parser.add_argument("--check", type=Path)
+    parser.add_argument("--roles", type=Path)
+    parser.add_argument("--water-routes", type=Path)
     args = parser.parse_args()
     report, exits, matrix = inspect_world(args.source)
+    if args.roles:
+        from tools.analysis.world_roles import review_roles
+
+        report["roles"] = review_roles(args.source, args.roles)
+    if args.water_routes:
+        from tools.analysis.water_routes import classify
+
+        if json.loads(args.water_routes.read_text()) != classify(exits):
+            raise ValueError("La clasificación de agua/tierra no coincide con las salidas actuales")
+        report["water_policy"] = {
+            "candidates": len(classify(exits)["routes"]),
+            "manifest_sha256": hashlib.sha256(args.water_routes.read_bytes()).hexdigest(),
+        }
     if args.output:
         args.output.mkdir(parents=True, exist_ok=True)
         (args.output / "audit.json").write_text(
@@ -282,6 +297,7 @@ def main() -> int:
     hard_errors = bool(
         report["summary"]["duplicate_sources"]
         or report["findings"].get("invalid_reference_or_coordinate")
+        or report["findings"].get("solid_destination")
     )
     return 0 if matches and not hard_errors else 1
 

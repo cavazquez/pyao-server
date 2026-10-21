@@ -86,9 +86,11 @@ class WalkMovementHandler:
 
         # Si cambió de mapa, manejar transición
         if changed_map:
-            await self._handle_map_transition(
+            transferred = await self._handle_map_transition(
                 user_id, heading, current_x, current_y, current_map, new_x, new_y, new_map
             )
+            if not transferred:
+                return True, None, {"moved": False, "blocked": True, "changed_map": False}
             return (
                 True,
                 None,
@@ -310,7 +312,7 @@ class WalkMovementHandler:
         new_x: int,
         new_y: int,
         new_map: int,
-    ) -> None:
+    ) -> bool:
         """Maneja la transición de un jugador a un nuevo mapa.
 
         Args:
@@ -322,10 +324,13 @@ class WalkMovementHandler:
             new_x: Nueva posición X.
             new_y: Nueva posición Y.
             new_map: ID del nuevo mapa.
+
+        Returns:
+            Si se confirmó la llegada.
         """
         # Usar PlayerMapService para manejar la transición
         if self.player_map_service:
-            await self.player_map_service.transition_to_map(
+            return await self.player_map_service.transition_to_map(
                 user_id=user_id,
                 current_map=current_map,
                 current_x=current_x,
@@ -336,8 +341,8 @@ class WalkMovementHandler:
                 heading=heading,
                 message_sender=self.message_sender,
             )
-        else:
-            logger.error("PlayerMapService no disponible para transición de mapa")
+        logger.error("PlayerMapService no disponible para transición de mapa")
+        return False
 
     async def _has_boat(self, user_id: int) -> bool:
         """Verifica si el jugador tiene una barca en su inventario.

@@ -15,6 +15,7 @@ from src.services.combat.combat_service import CombatService
 from src.services.commerce_service import CommerceService
 from src.services.game.npc_world_manager import NPCWorldManager
 from src.services.map.door_service import DoorService
+from src.services.map.door_world import DoorWorld
 from src.services.map.map_resources_service import MapResourcesService
 from src.services.map.pathfinding_service import PathfindingService
 from src.services.map.player_map_service import PlayerMapService
@@ -61,6 +62,15 @@ class ServiceInitializer:
             Diccionario con todos los servicios creados.
         """
         logger.info("Inicializando servicios...")
+
+        # Puertas listas antes de colocar NPCs o aceptar llegadas.
+        map_resources_service = MapResourcesService(map_manager=self.map_manager)
+        door_service = DoorService()
+        door_world = DoorWorld(
+            self.map_manager, map_resources_service, self.repositories["door_repo"], door_service
+        )
+        await door_world.restore()
+        self.map_manager.door_world = door_world
 
         # Catálogos
         npc_catalog = NPCCatalog()
@@ -230,7 +240,6 @@ class ServiceInitializer:
         logger.info("✓ Servicio de stamina inicializado")
 
         # Servicio de mapas de jugador (spawn y transiciones)
-        map_resources_service = MapResourcesService(map_manager=self.map_manager)
         player_map_service = PlayerMapService(
             self.repositories["player_repo"],
             self.repositories["account_repo"],
@@ -238,6 +247,7 @@ class ServiceInitializer:
             broadcast_service,
             random_spawn_service,
             map_resources_service,
+            door_world,
         )
         logger.info("✓ Servicio de mapas de jugador inicializado")
 
@@ -245,7 +255,6 @@ class ServiceInitializer:
         logger.info("✓ Servicio de recursos de mapas inicializado")
 
         # Servicio de puertas
-        door_service = DoorService()
         logger.info("✓ Servicio de puertas inicializado")
 
         action_cadence = ActionCadence()

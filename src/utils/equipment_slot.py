@@ -10,6 +10,7 @@ class EquipmentSlot(Enum):
     ARMOR = "armor"  # Armadura
     HELMET = "helmet"  # Casco
     SHIELD = "shield"  # Escudo
+    ACCESSORY = "accessory"  # Un anillo o foco musical; no tiene capa de avatar.
 
     @classmethod
     def from_item_type(cls, item_type: str) -> EquipmentSlot | None:
@@ -26,5 +27,6 @@ class EquipmentSlot(Enum):
             "armor": cls.ARMOR,
             "helmet": cls.HELMET,
             "shield": cls.SHIELD,
+            "accessory": cls.ACCESSORY,
         }
         return mapping.get(item_type)

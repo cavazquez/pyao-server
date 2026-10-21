@@ -43,6 +43,7 @@ class AreaSpellPlan(SpellPlan):
         """Observa las relaciones de todos los posibles jugadores afectados."""
         for target in self.targets:
             target.staff_items = self.staff_items
+            target.item_catalog = self.item_catalog
             target.event_id = self.event_id
             await target.prepare_relations(redis)
         self.resources = tuple(

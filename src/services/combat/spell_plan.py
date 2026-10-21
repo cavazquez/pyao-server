@@ -11,6 +11,7 @@ from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.periodic import periodic_changes
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
 from src.services.combat.spell_components import take_materials
+from src.services.combat_snapshot import equipped
 from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes, revive_changes
 from src.services.player.lifetime_stats import kill_changes
@@ -23,6 +24,8 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from redis.asyncio import Redis
+
+    from src.models.item_catalog import ItemCatalog
 
 NPC_ONLY_TARGET = 2
 MAX_RANGE = 10
@@ -55,6 +58,7 @@ class SpellPlan:
     def __init__(self, request: CastRequest, spell: dict[str, Any], policy: PvpPolicy) -> None:
         """Congela azar y política antes de los reintentos, sin cobrar recursos."""
         self.staff_items: frozenset[int] = frozenset()
+        self.item_catalog: ItemCatalog | None = None
         self.world_guard: Callable[[], bool] | None = None
         self.event_id = ""
         self.clan_policy: ClanCombat | None = None
@@ -78,6 +82,8 @@ class SpellPlan:
                 RedisKeys.player_position,
                 RedisKeys.player_stats,
                 RedisKeys.player_hunger_thirst,
+                RedisKeys.player_equipment,
+                RedisKeys.player_inventory,
             )
         }
         keys.update(
@@ -167,6 +173,15 @@ class SpellPlan:
         elif self.spell.get("heals_hp"):
             target_changes[hp_field] = str(min(maximum, hp + amount))
         elif amount > 0:
+            if request.target_player and self.item_catalog is not None:
+                accessory = equipped(
+                    snapshot, request.target_player, "accessory", self.item_catalog
+                )
+                resistance = (
+                    int(str(accessory.get("DefensaMagicaMin", 0)))
+                    + int(str(accessory.get("DefensaMagicaMax", 0)))
+                ) // 2
+                amount = max(0, amount - resistance)
             remaining, barrier = (
                 absorb_damage(target, amount, "magic", self.now)
                 if request.target_player
@@ -358,12 +373,14 @@ class SpellPlan:
         if self.spell.get("need_staff"):
             equipped = values[RedisKeys.player_equipment(request.user_id)]
             inventory = values[RedisKeys.player_inventory(request.user_id)]
-            weapon = inventory.get(f"slot_{equipped.get('weapon', '0')}", "")
             from src.utils.inventory_slot import InventorySlot  # ruff: ignore[import-outside-top-level]
 
-            item = InventorySlot.parse(weapon)
-            if item is None or item.item_id not in self.staff_items:
-                return "Necesitas un bastón equipado."
+            foci = [
+                InventorySlot.parse(inventory.get(f"slot_{equipped.get(slot, '0')}", ""))
+                for slot in ("weapon", "accessory")
+            ]
+            if not any(item is not None and item.item_id in self.staff_items for item in foci):
+                return "Necesitas un bastón o foco mágico equipado."
         return None
 
     def _validate_target(

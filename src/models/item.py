@@ -13,6 +13,7 @@ class ItemType(Enum):
     ARMOR = "armor"
     HELMET = "helmet"
     SHIELD = "shield"
+    ACCESSORY = "accessory"
     POTION = "potion"
     FOOD = "food"
     MISC = "misc"
@@ -29,6 +30,7 @@ class ItemType(Enum):
             ItemType.ARMOR: ObjType.ARMADURAS,
             ItemType.HELMET: ObjType.CASCOS,
             ItemType.SHIELD: ObjType.ESCUDOS,
+            ItemType.ACCESSORY: ObjType.ANILLOS,
             ItemType.POTION: ObjType.POCIONES,
             ItemType.FOOD: ObjType.COMIDA,
             ItemType.MISC: ObjType.COMIDA,  # Uso genérico si no existe un ObjType de catálogo.

@@ -154,6 +154,7 @@ class SpellService:
                 plan = SpellPlan(request, dict(spell, id=spell_id), PvpPolicy.configured())
             if self.item_catalog:
                 plan.staff_items = self.item_catalog.staff_item_ids()
+                plan.item_catalog = self.item_catalog
             target_sender = self.map_manager.get_player_message_sender(player) if player else None
             source_sender = self.map_manager.get_player_message_sender(user_id)
             plan.world_guard = lambda: (

@@ -44,7 +44,9 @@ jobs:
           uv run --locked ruff check src tests
           uv run --locked ruff format --check .
       - name: Type checking
-        run: uv run --locked mypy src tests
+        run: |
+          uv run --locked mypy src tests
+          uv run --locked mypy --config-file mypy-tools.ini
 
   fast-tests:
     runs-on: ubuntu-24.04
@@ -64,7 +66,7 @@ jobs:
           uv run --locked python -m tools.compression.decompress_map_data --target map_data
           uv run --locked python -m src.validation.dataset
       - name: Audit every map route and verify the reviewed inventory
-        run: uv run --locked python -m tools.analysis.audit_world_routes --output artifacts/world-routes --check docs/catalogs/world-routes.json
+        run: uv run --locked python -m tools.analysis.audit_world_routes --output artifacts/world-routes --check docs/catalogs/world-routes.json --roles data/world/map_roles.json --water-routes data/world/water_routes.json
       - name: Record reproducible structure samples without unstable time thresholds
         run: |
           mkdir -p artifacts

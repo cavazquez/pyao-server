@@ -1,0 +1,5322 @@
+{
+  "version": 1,
+  "original_exit_tiles": 59918,
+  "repairs": [
+    {
+      "source": [
+        1,
+        9,
+        91
+      ],
+      "original_destination": [
+        8,
+        91,
+        91
+      ],
+      "destination": [
+        8,
+        90,
+        91
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 8,
+        "x": 91,
+        "y": 91,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        3,
+        47,
+        7
+      ],
+      "original_destination": [
+        2,
+        47,
+        93
+      ],
+      "destination": [
+        2,
+        46,
+        93
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        3,
+        70,
+        7
+      ],
+      "original_destination": [
+        2,
+        70,
+        93
+      ],
+      "destination": [
+        2,
+        69,
+        93
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        12,
+        64,
+        7
+      ],
+      "original_destination": [
+        81,
+        64,
+        93
+      ],
+      "destination": [
+        81,
+        64,
+        92
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 81,
+        "x": 64,
+        "y": 93,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        13,
+        61,
+        7
+      ],
+      "original_destination": [
+        82,
+        61,
+        93
+      ],
+      "destination": [
+        82,
+        61,
+        92
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        22,
+        92,
+        22
+      ],
+      "original_destination": [
+        23,
+        10,
+        22
+      ],
+      "destination": [
+        23,
+        10,
+        21
+      ],
+      "reason": "Original border landing lies on a continuous wall. Use the reviewed open edge of that wall, one or two tiles along the same boundary; preserve terrain and map connectivity.",
+      "original_object": null
+    },
+    {
+      "source": [
+        22,
+        92,
+        23
+      ],
+      "original_destination": [
+        23,
+        10,
+        23
+      ],
+      "destination": [
+        23,
+        10,
+        21
+      ],
+      "reason": "Original border landing lies on a continuous wall. Use the reviewed open edge of that wall, one or two tiles along the same boundary; preserve terrain and map connectivity.",
+      "original_object": null
+    },
+    {
+      "source": [
+        22,
+        92,
+        24
+      ],
+      "original_destination": [
+        23,
+        10,
+        24
+      ],
+      "destination": [
+        23,
+        10,
+        25
+      ],
+      "reason": "Original border landing lies on a continuous wall. Use the reviewed open edge of that wall, one or two tiles along the same boundary; preserve terrain and map connectivity.",
+      "original_object": null
+    },
+    {
+      "source": [
+        24,
+        59,
+        94
+      ],
+      "original_destination": [
+        94,
+        59,
+        8
+      ],
+      "destination": [
+        94,
+        59,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 94,
+        "x": 59,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        24,
+        73,
+        94
+      ],
+      "original_destination": [
+        94,
+        73,
+        8
+      ],
+      "destination": [
+        94,
+        73,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 647; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 94,
+        "x": 73,
+        "y": 8,
+        "g": 647,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        26,
+        26,
+        94
+      ],
+      "original_destination": [
+        23,
+        26,
+        8
+      ],
+      "destination": [
+        23,
+        26,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 23,
+        "x": 26,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        54,
+        9,
+        45
+      ],
+      "original_destination": [
+        70,
+        91,
+        45
+      ],
+      "destination": [
+        70,
+        90,
+        45
+      ],
+      "reason": "Original landing overlaps existing tree graphic 647; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 70,
+        "x": 91,
+        "y": 45,
+        "g": 647,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        58,
+        9,
+        47
+      ],
+      "original_destination": [
+        65,
+        91,
+        47
+      ],
+      "destination": [
+        65,
+        90,
+        47
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 65,
+        "x": 91,
+        "y": 47,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        62,
+        92,
+        49
+      ],
+      "original_destination": [
+        64,
+        9,
+        49
+      ],
+      "destination": [
+        64,
+        9,
+        48
+      ],
+      "reason": "Original border landing lies on a continuous wall. Use the reviewed open edge of that wall, one or two tiles along the same boundary; preserve terrain and map connectivity.",
+      "original_object": null
+    },
+    {
+      "source": [
+        68,
+        92,
+        38
+      ],
+      "original_destination": [
+        56,
+        10,
+        38
+      ],
+      "destination": [
+        56,
+        11,
+        38
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 56,
+        "x": 10,
+        "y": 38,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        68,
+        92,
+        40
+      ],
+      "original_destination": [
+        56,
+        10,
+        40
+      ],
+      "destination": [
+        56,
+        11,
+        40
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 56,
+        "x": 10,
+        "y": 40,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        68,
+        92,
+        58
+      ],
+      "original_destination": [
+        56,
+        10,
+        58
+      ],
+      "destination": [
+        56,
+        11,
+        58
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 56,
+        "x": 10,
+        "y": 58,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        69,
+        92,
+        29
+      ],
+      "original_destination": [
+        55,
+        10,
+        29
+      ],
+      "destination": [
+        55,
+        11,
+        29
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 55,
+        "x": 10,
+        "y": 29,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        76,
+        92,
+        69
+      ],
+      "original_destination": [
+        70,
+        10,
+        69
+      ],
+      "destination": [
+        70,
+        11,
+        69
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 70,
+        "x": 10,
+        "y": 69,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        77,
+        9,
+        45
+      ],
+      "original_destination": [
+        5,
+        91,
+        45
+      ],
+      "destination": [
+        5,
+        91,
+        44
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7000; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 5,
+        "x": 91,
+        "y": 45,
+        "g": 7000,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        77,
+        62,
+        94
+      ],
+      "original_destination": [
+        11,
+        62,
+        8
+      ],
+      "destination": [
+        11,
+        62,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 11,
+        "x": 62,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        77,
+        85,
+        94
+      ],
+      "original_destination": [
+        11,
+        85,
+        8
+      ],
+      "destination": [
+        11,
+        85,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 11,
+        "x": 85,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        77,
+        92,
+        32
+      ],
+      "original_destination": [
+        81,
+        10,
+        32
+      ],
+      "destination": [
+        81,
+        11,
+        32
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 81,
+        "x": 10,
+        "y": 32,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        78,
+        92,
+        13
+      ],
+      "original_destination": [
+        34,
+        10,
+        13
+      ],
+      "destination": [
+        34,
+        11,
+        13
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 34,
+        "x": 10,
+        "y": 13,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        81,
+        14,
+        94
+      ],
+      "original_destination": [
+        12,
+        14,
+        8
+      ],
+      "destination": [
+        12,
+        14,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 12,
+        "x": 14,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        81,
+        20,
+        94
+      ],
+      "original_destination": [
+        12,
+        20,
+        8
+      ],
+      "destination": [
+        12,
+        20,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 12,
+        "x": 20,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        81,
+        77,
+        94
+      ],
+      "original_destination": [
+        12,
+        77,
+        8
+      ],
+      "destination": [
+        12,
+        77,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 12,
+        "x": 77,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        82,
+        9,
+        77
+      ],
+      "original_destination": [
+        81,
+        91,
+        77
+      ],
+      "destination": [
+        81,
+        90,
+        77
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 81,
+        "x": 91,
+        "y": 77,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        82,
+        74,
+        94
+      ],
+      "original_destination": [
+        13,
+        74,
+        8
+      ],
+      "destination": [
+        13,
+        74,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 13,
+        "x": 74,
+        "y": 8,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        84,
+        11,
+        94
+      ],
+      "original_destination": [
+        81,
+        11,
+        8
+      ],
+      "destination": [
+        81,
+        11,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 81,
+        "x": 11,
+        "y": 8,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        84,
+        57,
+        94
+      ],
+      "original_destination": [
+        81,
+        57,
+        8
+      ],
+      "destination": [
+        81,
+        57,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 81,
+        "x": 57,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        85,
+        9,
+        22
+      ],
+      "original_destination": [
+        7,
+        91,
+        22
+      ],
+      "destination": [
+        7,
+        90,
+        22
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 7,
+        "x": 91,
+        "y": 22,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        85,
+        9,
+        80
+      ],
+      "original_destination": [
+        7,
+        91,
+        80
+      ],
+      "destination": [
+        7,
+        90,
+        80
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 7,
+        "x": 91,
+        "y": 80,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        86,
+        9,
+        83
+      ],
+      "original_destination": [
+        53,
+        91,
+        83
+      ],
+      "destination": [
+        53,
+        90,
+        83
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 53,
+        "x": 91,
+        "y": 83,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        94,
+        9,
+        17
+      ],
+      "original_destination": [
+        28,
+        91,
+        17
+      ],
+      "destination": [
+        28,
+        90,
+        17
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        111,
+        36,
+        94
+      ],
+      "original_destination": [
+        114,
+        36,
+        8
+      ],
+      "destination": [
+        114,
+        36,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 114,
+        "x": 36,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        113,
+        9,
+        59
+      ],
+      "original_destination": [
+        114,
+        91,
+        59
+      ],
+      "destination": [
+        114,
+        90,
+        59
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 114,
+        "x": 91,
+        "y": 59,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        114,
+        92,
+        57
+      ],
+      "original_destination": [
+        113,
+        10,
+        57
+      ],
+      "destination": [
+        113,
+        11,
+        57
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 113,
+        "x": 10,
+        "y": 57,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        140,
+        9,
+        7
+      ],
+      "original_destination": [
+        141,
+        9,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        10,
+        7
+      ],
+      "original_destination": [
+        141,
+        10,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        11,
+        7
+      ],
+      "original_destination": [
+        141,
+        11,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        12,
+        7
+      ],
+      "original_destination": [
+        141,
+        12,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        13,
+        7
+      ],
+      "original_destination": [
+        141,
+        13,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        14,
+        7
+      ],
+      "original_destination": [
+        141,
+        14,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        15,
+        7
+      ],
+      "original_destination": [
+        141,
+        15,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        16,
+        7
+      ],
+      "original_destination": [
+        141,
+        16,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        17,
+        7
+      ],
+      "original_destination": [
+        141,
+        17,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        18,
+        7
+      ],
+      "original_destination": [
+        141,
+        18,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        19,
+        7
+      ],
+      "original_destination": [
+        141,
+        19,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        20,
+        7
+      ],
+      "original_destination": [
+        141,
+        20,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        21,
+        7
+      ],
+      "original_destination": [
+        141,
+        21,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        22,
+        7
+      ],
+      "original_destination": [
+        141,
+        22,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        23,
+        7
+      ],
+      "original_destination": [
+        141,
+        23,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        24,
+        7
+      ],
+      "original_destination": [
+        141,
+        24,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        25,
+        7
+      ],
+      "original_destination": [
+        141,
+        25,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        26,
+        7
+      ],
+      "original_destination": [
+        141,
+        26,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        27,
+        7
+      ],
+      "original_destination": [
+        141,
+        27,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        28,
+        7
+      ],
+      "original_destination": [
+        141,
+        28,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        29,
+        7
+      ],
+      "original_destination": [
+        141,
+        29,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        30,
+        7
+      ],
+      "original_destination": [
+        141,
+        30,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        31,
+        7
+      ],
+      "original_destination": [
+        141,
+        31,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        32,
+        7
+      ],
+      "original_destination": [
+        141,
+        32,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        33,
+        7
+      ],
+      "original_destination": [
+        141,
+        33,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        34,
+        7
+      ],
+      "original_destination": [
+        141,
+        34,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        35,
+        7
+      ],
+      "original_destination": [
+        141,
+        35,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        36,
+        7
+      ],
+      "original_destination": [
+        141,
+        36,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        37,
+        7
+      ],
+      "original_destination": [
+        141,
+        37,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        38,
+        7
+      ],
+      "original_destination": [
+        141,
+        38,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        39,
+        7
+      ],
+      "original_destination": [
+        141,
+        39,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        40,
+        7
+      ],
+      "original_destination": [
+        141,
+        40,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        41,
+        7
+      ],
+      "original_destination": [
+        141,
+        41,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        42,
+        7
+      ],
+      "original_destination": [
+        141,
+        42,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        43,
+        7
+      ],
+      "original_destination": [
+        141,
+        43,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        44,
+        7
+      ],
+      "original_destination": [
+        141,
+        44,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        45,
+        7
+      ],
+      "original_destination": [
+        141,
+        45,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        46,
+        7
+      ],
+      "original_destination": [
+        141,
+        46,
+        93
+      ],
+      "destination": [
+        141,
+        48,
+        93
+      ],
+      "reason": "Enter through the existing south corridor at x=48..57, at most two tiles from the blocked border cell.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        47,
+        7
+      ],
+      "original_destination": [
+        141,
+        47,
+        93
+      ],
+      "destination": [
+        141,
+        48,
+        93
+      ],
+      "reason": "Enter through the existing south corridor at x=48..57, at most two tiles from the blocked border cell.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        58,
+        7
+      ],
+      "original_destination": [
+        141,
+        58,
+        93
+      ],
+      "destination": [
+        141,
+        57,
+        93
+      ],
+      "reason": "Enter through the existing south corridor at x=48..57, at most two tiles from the blocked border cell.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        59,
+        7
+      ],
+      "original_destination": [
+        141,
+        59,
+        93
+      ],
+      "destination": [
+        141,
+        57,
+        93
+      ],
+      "reason": "Enter through the existing south corridor at x=48..57, at most two tiles from the blocked border cell.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        60,
+        7
+      ],
+      "original_destination": [
+        141,
+        60,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        61,
+        7
+      ],
+      "original_destination": [
+        141,
+        61,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        62,
+        7
+      ],
+      "original_destination": [
+        141,
+        62,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        63,
+        7
+      ],
+      "original_destination": [
+        141,
+        63,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        64,
+        7
+      ],
+      "original_destination": [
+        141,
+        64,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        65,
+        7
+      ],
+      "original_destination": [
+        141,
+        65,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        66,
+        7
+      ],
+      "original_destination": [
+        141,
+        66,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        67,
+        7
+      ],
+      "original_destination": [
+        141,
+        67,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        68,
+        7
+      ],
+      "original_destination": [
+        141,
+        68,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        69,
+        7
+      ],
+      "original_destination": [
+        141,
+        69,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        70,
+        7
+      ],
+      "original_destination": [
+        141,
+        70,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        71,
+        7
+      ],
+      "original_destination": [
+        141,
+        71,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        72,
+        7
+      ],
+      "original_destination": [
+        141,
+        72,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        73,
+        7
+      ],
+      "original_destination": [
+        141,
+        73,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        74,
+        7
+      ],
+      "original_destination": [
+        141,
+        74,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        75,
+        7
+      ],
+      "original_destination": [
+        141,
+        75,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        76,
+        7
+      ],
+      "original_destination": [
+        141,
+        76,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        77,
+        7
+      ],
+      "original_destination": [
+        141,
+        77,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        78,
+        7
+      ],
+      "original_destination": [
+        141,
+        78,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        79,
+        7
+      ],
+      "original_destination": [
+        141,
+        79,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        80,
+        7
+      ],
+      "original_destination": [
+        141,
+        80,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        81,
+        7
+      ],
+      "original_destination": [
+        141,
+        81,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        82,
+        7
+      ],
+      "original_destination": [
+        141,
+        82,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        83,
+        7
+      ],
+      "original_destination": [
+        141,
+        83,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        91,
+        7
+      ],
+      "original_destination": [
+        141,
+        91,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        140,
+        92,
+        7
+      ],
+      "original_destination": [
+        141,
+        92,
+        93
+      ],
+      "destination": null,
+      "reason": "The south border of map 141 is a continuous solid enclosure except x=48..57. Seal this invalid approach on map 140; retain the existing corridor and directed map pair.",
+      "original_object": null
+    },
+    {
+      "source": [
+        151,
+        92,
+        10
+      ],
+      "original_destination": [
+        150,
+        10,
+        10
+      ],
+      "destination": [
+        150,
+        11,
+        10
+      ],
+      "reason": "Original landing overlaps existing tree graphic 735; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 150,
+        "x": 10,
+        "y": 10,
+        "g": 735,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        151,
+        92,
+        39
+      ],
+      "original_destination": [
+        150,
+        10,
+        39
+      ],
+      "destination": [
+        150,
+        11,
+        39
+      ],
+      "reason": "Original landing overlaps existing tree graphic 735; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 150,
+        "x": 10,
+        "y": 39,
+        "g": 735,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        157,
+        16,
+        94
+      ],
+      "original_destination": [
+        194,
+        16,
+        8
+      ],
+      "destination": [
+        194,
+        16,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 194,
+        "x": 16,
+        "y": 8,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        158,
+        36,
+        7
+      ],
+      "original_destination": [
+        159,
+        36,
+        93
+      ],
+      "destination": [
+        159,
+        35,
+        93
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        158,
+        48,
+        7
+      ],
+      "original_destination": [
+        159,
+        48,
+        93
+      ],
+      "destination": [
+        159,
+        47,
+        93
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        166,
+        14,
+        87
+      ],
+      "original_destination": [
+        24,
+        80,
+        30
+      ],
+      "destination": [
+        24,
+        80,
+        31
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        185,
+        9,
+        9
+      ],
+      "original_destination": [
+        54,
+        91,
+        9
+      ],
+      "destination": [
+        54,
+        90,
+        9
+      ],
+      "reason": "Original landing overlaps existing tree graphic 647; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 54,
+        "x": 91,
+        "y": 9,
+        "g": 647,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        185,
+        9,
+        28
+      ],
+      "original_destination": [
+        54,
+        91,
+        28
+      ],
+      "destination": [
+        54,
+        90,
+        28
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 54,
+        "x": 91,
+        "y": 28,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        187,
+        9,
+        41
+      ],
+      "original_destination": [
+        186,
+        91,
+        41
+      ],
+      "destination": [
+        186,
+        91,
+        42
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        188,
+        65,
+        7
+      ],
+      "original_destination": [
+        191,
+        65,
+        93
+      ],
+      "destination": [
+        191,
+        65,
+        92
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 191,
+        "x": 65,
+        "y": 93,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        190,
+        9,
+        55
+      ],
+      "original_destination": [
+        189,
+        91,
+        55
+      ],
+      "destination": [
+        189,
+        91,
+        54
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        190,
+        9,
+        56
+      ],
+      "original_destination": [
+        189,
+        91,
+        56
+      ],
+      "destination": [
+        189,
+        91,
+        54
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        191,
+        9,
+        88
+      ],
+      "original_destination": [
+        56,
+        91,
+        88
+      ],
+      "destination": [
+        56,
+        90,
+        88
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 56,
+        "x": 91,
+        "y": 88,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        191,
+        60,
+        7
+      ],
+      "original_destination": [
+        193,
+        60,
+        93
+      ],
+      "destination": [
+        193,
+        59,
+        93
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        193,
+        9,
+        37
+      ],
+      "original_destination": [
+        57,
+        91,
+        37
+      ],
+      "destination": [
+        57,
+        90,
+        37
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 57,
+        "x": 91,
+        "y": 37,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        193,
+        9,
+        50
+      ],
+      "original_destination": [
+        57,
+        91,
+        50
+      ],
+      "destination": [
+        57,
+        90,
+        50
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 57,
+        "x": 91,
+        "y": 50,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        194,
+        42,
+        7
+      ],
+      "original_destination": [
+        157,
+        42,
+        93
+      ],
+      "destination": [
+        157,
+        42,
+        92
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7002; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 157,
+        "x": 42,
+        "y": 93,
+        "g": 7002,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        196,
+        9,
+        34
+      ],
+      "original_destination": [
+        195,
+        91,
+        34
+      ],
+      "destination": [
+        195,
+        90,
+        34
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 195,
+        "x": 91,
+        "y": 34,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        196,
+        92,
+        43
+      ],
+      "original_destination": [
+        197,
+        10,
+        43
+      ],
+      "destination": [
+        197,
+        11,
+        43
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 197,
+        "x": 10,
+        "y": 43,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        197,
+        9,
+        33
+      ],
+      "original_destination": [
+        196,
+        91,
+        33
+      ],
+      "destination": [
+        196,
+        90,
+        33
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7001; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 196,
+        "x": 91,
+        "y": 33,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        212,
+        58,
+        7
+      ],
+      "original_destination": [
+        211,
+        58,
+        93
+      ],
+      "destination": [
+        211,
+        58,
+        92
+      ],
+      "reason": "Original landing overlaps existing tree graphic 1532; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 211,
+        "x": 58,
+        "y": 93,
+        "g": 1532,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        213,
+        92,
+        32
+      ],
+      "original_destination": [
+        210,
+        10,
+        32
+      ],
+      "destination": [
+        210,
+        11,
+        32
+      ],
+      "reason": "Original landing overlaps existing tree graphic 1531; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 210,
+        "x": 10,
+        "y": 32,
+        "g": 1531,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        213,
+        92,
+        33
+      ],
+      "original_destination": [
+        210,
+        10,
+        33
+      ],
+      "destination": [
+        210,
+        11,
+        33
+      ],
+      "reason": "Original landing overlaps existing tree graphic 1531; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 210,
+        "x": 10,
+        "y": 33,
+        "g": 1531,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        213,
+        92,
+        49
+      ],
+      "original_destination": [
+        210,
+        10,
+        49
+      ],
+      "destination": [
+        210,
+        11,
+        49
+      ],
+      "reason": "Original landing overlaps existing tree graphic 1532; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 210,
+        "x": 10,
+        "y": 49,
+        "g": 1532,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
+        274,
+        37,
+        65
+      ],
+      "original_destination": [
+        62,
+        50,
+        50
+      ],
+      "destination": [
+        62,
+        49,
+        50
+      ],
+      "reason": "Original border landing intersects a solid terrain tile; move to the reviewed neighbouring entry cell without clearing terrain.",
+      "original_object": null
+    },
+    {
+      "source": [
+        286,
+        39,
+        41
+      ],
+      "original_destination": [
+        1,
+        25,
+        25
+      ],
+      "destination": [
+        1,
+        25,
+        26
+      ],
+      "reason": "Original landing overlaps existing tree graphic 7000; preserve the resource and move the entry one tile inward.",
+      "original_object": {
+        "m": 1,
+        "x": 25,
+        "y": 25,
+        "g": 7000,
+        "t": "tree"
+      }
+    }
+  ],
+  "collisions": [
+    {
+      "map": 1,
+      "x": 38,
+      "y": 33,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 48,
+      "y": 33,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 58,
+      "y": 33,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 70,
+      "y": 39,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 78,
+      "y": 39,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 42,
+      "y": 42,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 51,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 29,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 43,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 60,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 81,
+      "y": 80,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 39,
+      "y": 81,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 1,
+      "x": 70,
+      "y": 81,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 2,
+      "x": 43,
+      "y": 22,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 4,
+      "x": 63,
+      "y": 48,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 6,
+      "x": 92,
+      "y": 24,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 6,
+      "x": 92,
+      "y": 26,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 14,
+      "x": 52,
+      "y": 53,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 28,
+      "x": 36,
+      "y": 60,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 28,
+      "x": 24,
+      "y": 66,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 40,
+      "y": 13,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 15,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 26,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 40,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 50,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 60,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 73,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 23,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 27,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 37,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 48,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 63,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 73,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 48,
+      "y": 48,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 58,
+      "y": 48,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 14,
+      "y": 49,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 12,
+      "y": 55,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 51,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 61,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 72,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 14,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 29,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 39,
+      "y": 79,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 34,
+      "x": 23,
+      "y": 86,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 39,
+      "x": 82,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 58,
+      "x": 27,
+      "y": 16,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 58,
+      "x": 60,
+      "y": 17,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 10,
+      "y": 27,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 19,
+      "y": 27,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 46,
+      "y": 27,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 63,
+      "y": 34,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 72,
+      "y": 34,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 84,
+      "y": 34,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 10,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 24,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 85,
+      "y": 51,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 69,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 85,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 10,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 22,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 31,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 11,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 24,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 33,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 51,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 61,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 68,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 59,
+      "x": 39,
+      "y": 88,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 54,
+      "y": 13,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 11,
+      "y": 25,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 26,
+      "y": 25,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 32,
+      "y": 25,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 46,
+      "y": 25,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 71,
+      "y": 33,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 11,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 23,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 35,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 46,
+      "y": 65,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 12,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 60,
+      "x": 12,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 61,
+      "x": 20,
+      "y": 89,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 61,
+      "x": 80,
+      "y": 89,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 62,
+      "y": 44,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 98,
+      "y": 46,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 43,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 47,
+      "y": 86,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 59,
+      "y": 86,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 62,
+      "x": 68,
+      "y": 86,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 63,
+      "x": 50,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 14,
+      "y": 46,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 23,
+      "y": 54,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 46,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 58,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 66,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 64,
+      "x": 74,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 66,
+      "x": 95,
+      "y": 27,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 66,
+      "x": 95,
+      "y": 47,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 66,
+      "x": 78,
+      "y": 62,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 66,
+      "x": 95,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 66,
+      "x": 96,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 45,
+      "y": 11,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 36,
+      "y": 12,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 54,
+      "y": 12,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 17,
+      "y": 13,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 47,
+      "y": 14,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 41,
+      "y": 15,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 51,
+      "y": 17,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 37,
+      "y": 18,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 43,
+      "y": 20,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 20,
+      "y": 29,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 79,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 83,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 87,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 16,
+      "y": 72,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 91,
+      "x": 38,
+      "y": 77,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 110,
+      "x": 45,
+      "y": 52,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 82,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 94,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 97,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 100,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 94,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 97,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 100,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 94,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 97,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 100,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 111,
+      "x": 51,
+      "y": 80,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 111,
+      "x": 97,
+      "y": 82,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "door"
+    },
+    {
+      "map": 112,
+      "x": 61,
+      "y": 53,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 11,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 14,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 17,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 11,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 14,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 17,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 11,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 14,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 17,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 49,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 28,
+      "y": 65,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 66,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 61,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 41,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 31,
+      "y": 77,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 112,
+      "x": 72,
+      "y": 80,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 114,
+      "x": 57,
+      "y": 26,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 114,
+      "x": 54,
+      "y": 72,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 139,
+      "x": 44,
+      "y": 46,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 139,
+      "x": 49,
+      "y": 46,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 139,
+      "x": 50,
+      "y": 46,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 139,
+      "x": 54,
+      "y": 46,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 139,
+      "x": 59,
+      "y": 46,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 151,
+      "x": 55,
+      "y": 29,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 66,
+      "y": 29,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 88,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 16,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 36,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 43,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 49,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 52,
+      "y": 46,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 64,
+      "y": 46,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 73,
+      "y": 46,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 17,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 34,
+      "y": 61,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 42,
+      "y": 61,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 53,
+      "y": 61,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 63,
+      "y": 61,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 72,
+      "y": 61,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 53,
+      "y": 73,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 63,
+      "y": 73,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 151,
+      "x": 72,
+      "y": 73,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 18,
+      "y": 13,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 40,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 78,
+      "y": 43,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 83,
+      "y": 45,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 28,
+      "y": 48,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 17,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 60,
+      "y": 77,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 23,
+      "y": 80,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 73,
+      "y": 80,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 88,
+      "y": 85,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 156,
+      "x": 69,
+      "y": 89,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 27,
+      "y": 23,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 36,
+      "y": 23,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 159,
+      "x": 51,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 53,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 55,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 57,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 24,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 44,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 51,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 53,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 55,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 57,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 34,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 34,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 28,
+      "y": 35,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 36,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 38,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 38,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 40,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 61,
+      "y": 40,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 46,
+      "y": 43,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 62,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 65,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 68,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 75,
+      "y": 57,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 59,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 62,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 65,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 68,
+      "y": 59,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 27,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 25,
+      "y": 65,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 48,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 21,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 23,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 25,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 26,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 29,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 31,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 33,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 159,
+      "x": 34,
+      "y": 74,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 162,
+      "x": 88,
+      "y": 14,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 164,
+      "x": 72,
+      "y": 24,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 165,
+      "x": 50,
+      "y": 15,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 165,
+      "x": 88,
+      "y": 26,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 168,
+      "x": 41,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 168,
+      "x": 60,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 31,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 39,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 48,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 58,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 67,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 49,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 27,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 34,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 28,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 171,
+      "x": 33,
+      "y": 67,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 195,
+      "x": 38,
+      "y": 20,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 195,
+      "x": 64,
+      "y": 20,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 195,
+      "x": 50,
+      "y": 28,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 195,
+      "x": 88,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 195,
+      "x": 59,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 48,
+      "y": 31,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 27,
+      "y": 35,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 32,
+      "y": 35,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 66,
+      "y": 35,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 71,
+      "y": 35,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 73,
+      "y": 60,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 22,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 35,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 54,
+      "y": 66,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 33,
+      "y": 75,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 196,
+      "x": 44,
+      "y": 78,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 197,
+      "x": 51,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 197,
+      "x": 64,
+      "y": 63,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 197,
+      "x": 53,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 197,
+      "x": 60,
+      "y": 87,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 200,
+      "x": 44,
+      "y": 41,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 217,
+      "x": 38,
+      "y": 42,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 261,
+      "x": 48,
+      "y": 57,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 73,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 77,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 81,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 85,
+      "y": 50,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 73,
+      "y": 54,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 77,
+      "y": 54,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 81,
+      "y": 54,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 85,
+      "y": 54,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 73,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 77,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 81,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 85,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 265,
+      "x": 82,
+      "y": 78,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 37,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 38,
+      "y": 32,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 36,
+      "y": 60,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 71,
+      "y": 65,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 47,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 36,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 266,
+      "x": 67,
+      "y": 77,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 268,
+      "x": 38,
+      "y": 52,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 50,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 54,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 58,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 66,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 70,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 74,
+      "y": 64,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 50,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 55,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 69,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 74,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 62,
+      "y": 73,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 50,
+      "y": 75,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 274,
+      "x": 23,
+      "y": 90,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 276,
+      "x": 54,
+      "y": 56,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 278,
+      "x": 74,
+      "y": 29,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 48,
+      "y": 30,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 45,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 47,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 49,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 58,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 60,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 280,
+      "x": 62,
+      "y": 31,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 22,
+      "y": 20,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 24,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 33,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 41,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 63,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 72,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 81,
+      "y": 30,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 22,
+      "y": 37,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 18,
+      "y": 44,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 31,
+      "y": 44,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 70,
+      "y": 44,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 77,
+      "y": 44,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 44,
+      "y": 49,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 47,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 52,
+      "y": 58,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 19,
+      "y": 60,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 24,
+      "y": 60,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 286,
+      "x": 19,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 31,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 69,
+      "y": 68,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 58,
+      "y": 69,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 23,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 30,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 37,
+      "y": 71,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 63,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 68,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 81,
+      "y": 76,
+      "client_blocked": true,
+      "server_blocked": false,
+      "kind": "sign"
+    },
+    {
+      "map": 286,
+      "x": 28,
+      "y": 80,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 48,
+      "y": 44,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 59,
+      "y": 45,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 67,
+      "y": 47,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 53,
+      "y": 48,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 40,
+      "y": 59,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 49,
+      "y": 64,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 67,
+      "y": 64,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 43,
+      "y": 67,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    },
+    {
+      "map": 289,
+      "x": 59,
+      "y": 72,
+      "client_blocked": false,
+      "server_blocked": true,
+      "kind": "tree"
+    }
+  ],
+  "collision_policy": {
+    "sign": "Physical signs remain solid and interact from an adjacent cell. Add the missing server collision.",
+    "tree": "Retain every existing harvestable server tree and add its missing client collision; do not create resources from decoration.",
+    "door": "Graphic 9200 is item 246, an open door: clear the stale client blocked flag; runtime door state remains dynamic."
+  }
+}

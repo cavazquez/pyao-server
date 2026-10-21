@@ -37,6 +37,8 @@ class MapTransitionContext:
     weapon: int = 0
     shield: int = 0
     helmet: int = 0
+    position_committed: bool = False
+    navigation_changed: bool = False
 
 
 class MapTransitionStep(ABC):
@@ -79,6 +81,8 @@ class UpdatePositionStep(MapTransitionStep):
     async def execute(self, context: MapTransitionContext) -> None:
         """Actualiza la posición del jugador en Redis."""
         logger.debug("Paso 3: Actualizando posición en Redis")
+        if context.position_committed:
+            return
         await self.player_repo.set_position(
             context.user_id, context.new_x, context.new_y, context.new_map, context.heading
         )
@@ -91,6 +95,20 @@ class SendPositionUpdateStep(MapTransitionStep):
         """Envía la actualización de posición al cliente."""
         logger.debug("Paso 4: Enviando POS_UPDATE a (%d, %d)", context.new_x, context.new_y)
         await context.message_sender.send_pos_update(context.new_x, context.new_y)
+
+
+class SendPortalTilesStep(MapTransitionStep):
+    """Sincroniza portales antes de crear al actor y aceptar su siguiente input."""
+
+    def __init__(self, send_portals: Callable[[int, MessageSender], Awaitable[int]]) -> None:
+        """Recibe la política compartida con el login."""
+        self.send_portals = send_portals
+
+    async def execute(self, context: MapTransitionContext) -> None:
+        """Aplica las excepciones del mapa recién cargado y su estado de navegación."""
+        await self.send_portals(context.new_map, context.message_sender)
+        if context.navigation_changed:
+            await context.message_sender.send_navigate_toggle()
 
 
 class RemoveFromOldMapStep(MapTransitionStep):
@@ -308,24 +326,31 @@ class MapTransitionOrchestrator:
         send_players_in_map: Callable[[int, MessageSender, int | None], Awaitable[int]],
         send_npcs_in_map: Callable[[int, MessageSender], Awaitable[int]],
         send_ground_items_in_map: Callable[[int, MessageSender], Awaitable[int]],
+        send_portals: Callable[[int, MessageSender], Awaitable[int]] | None = None,
     ) -> MapTransitionOrchestrator:
         """Crea un orquestador con la secuencia predeterminada de 12 pasos.
 
         Returns:
             MapTransitionOrchestrator configurado con la secuencia estándar.
         """
-        steps = [
-            SendChangeMapStep(),
+        steps: list[MapTransitionStep] = [
             UpdatePositionStep(player_repo),
-            SendPositionUpdateStep(),
             RemoveFromOldMapStep(map_manager),
-            BroadcastRemoveFromOldMapStep(broadcast_service),
             AddToNewMapStep(map_manager),
             UpdateTileInNewMapStep(map_manager),
-            SendSelfCharacterCreateStep(),
-            SendExistingPlayersStep(send_players_in_map),
-            SendNPCsStep(send_npcs_in_map),
-            SendGroundItemsStep(send_ground_items_in_map),
-            BroadcastCreateInNewMapStep(broadcast_service),
+            SendChangeMapStep(),
         ]
+        if send_portals is not None:
+            steps.append(SendPortalTilesStep(send_portals))
+        steps.extend(
+            [
+                SendPositionUpdateStep(),
+                BroadcastRemoveFromOldMapStep(broadcast_service),
+                SendSelfCharacterCreateStep(),
+                SendExistingPlayersStep(send_players_in_map),
+                SendNPCsStep(send_npcs_in_map),
+                SendGroundItemsStep(send_ground_items_in_map),
+                BroadcastCreateInNewMapStep(broadcast_service),
+            ]
+        )
         return cls(steps)

@@ -439,7 +439,7 @@ LingO = 0
 LingP = 0
 MaxHit = 11
 MinHit = 6
-RazaEnanaAnim = 77
+RazaEnanaAnim = 28
 SkHerreria = 30
 Valor = 2310
 
@@ -537,6 +537,7 @@ id = 543
 Name = "Red de Pesca"
 GrhIndex = 844
 ObjType = 2
+Anim = 77
 Agarrable = 0
 Crucial = 0
 Valor = 5000

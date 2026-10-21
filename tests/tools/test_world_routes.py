@@ -151,7 +151,19 @@ def test_cli_rejects_duplicate_sources(
 @pytest.fixture(scope="module")
 def versioned_world() -> tuple[dict, list[dict], list[dict]]:
     """Audita una sola vez el conjunto versionado completo de 290 mapas."""
-    return audit.inspect_world(maps_dir())
+    from tools.analysis.world_roles import review_roles
+    from tools.analysis.water_routes import classify
+    import hashlib
+
+    report, exits, matrix = audit.inspect_world(maps_dir())
+    report["roles"] = review_roles(maps_dir(), Path("data/world/map_roles.json"))
+    path = Path("data/world/water_routes.json")
+    assert json.loads(path.read_text()) == classify(exits)
+    report["water_policy"] = {
+        "candidates": len(classify(exits)["routes"]),
+        "manifest_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    }
+    return report, exits, matrix
 
 
 def test_versioned_inventory_is_current(
@@ -162,7 +174,7 @@ def test_versioned_inventory_is_current(
     snapshot = Path(__file__).resolve().parents[2] / "docs/catalogs/world-routes.json"
     assert report == json.loads(snapshot.read_text())
     assert report["summary"]["maps"] == 290
-    assert len(exits) == 59918
+    assert len(exits) == 59855
     assert len(matrix) == 84100
     assert not report["findings"].get("invalid_reference_or_coordinate")
     assert not report["summary"]["duplicate_sources"]
@@ -200,4 +212,4 @@ async def test_every_exit_and_heading_matches_real_movement_calculation(
             actual = await handler._calculate_new_position(heading, x, y, row["from_map"])
             assert actual == (row["to_x"], row["to_y"], row["to_map"], True)
             checked += 1
-    assert checked == report["summary"]["cardinal_inputs"] == 239672
+    assert checked == report["summary"]["cardinal_inputs"] == 239420

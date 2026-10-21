@@ -119,7 +119,9 @@ class MapResourcesService:
 
     def is_blocked(self, map_id: int, x: int, y: int) -> bool:
         """Indica si un tile está marcado como bloqueado en el mapa."""
-        return tile_in_required_layer(self.resources, map_id, "blocked", x, y)
+        return bool(
+            self.map_manager and self.map_manager.is_door_closed(map_id, x, y) is True
+        ) or tile_in_required_layer(self.resources, map_id, "blocked", x, y)
 
     def has_water(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si una posición tiene agua."""

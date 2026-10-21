@@ -13,6 +13,9 @@ dependencies = [
     "websockets==17.2",
 ]
 
+[project.optional-dependencies]
+desktop = ["pystray==0.19.5; sys_platform != 'linux'"]
+
 [dependency-groups]
 dev = [
     "ruff==0.17.1",
@@ -44,6 +47,7 @@ packages = ["src", "tools"]
 
 [project.scripts]
 pyao-server = "src.run_server:main"
+pyao-server-indicator = "src.desktop.indicator:main"
 
 [tool.ruff]
 line-length = 100

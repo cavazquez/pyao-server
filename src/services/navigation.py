@@ -3,8 +3,8 @@
 import math
 from typing import TYPE_CHECKING, Any, cast
 
-from src.services.combat.physical_plan import levels
-from src.services.personal_skills import player_action_resources
+from src.services.action_resources import player_action_resources
+from src.services.combat_snapshot import levels
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -16,10 +16,31 @@ MAX_COORD = 100
 
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from src.models.item_catalog import ItemCatalog
     from src.repositories.inventory_repository import InventoryRepository
     from src.repositories.player_repository import PlayerRepository
     from src.services.map.map_resources_service import MapResourcesService
+
+
+def required_navigation(
+    boat: Mapping[str, object], stats: Mapping[str, str], skills: Mapping[str, int]
+) -> int:
+    """Comparte el requisito de embarcación entre uso manual y portales.
+
+    Returns:
+        Puntos de Navegación necesarios para esa clase y embarcación.
+    """
+    player_class = int(stats.get("class_id", 0))
+    modifier = (
+        1.0
+        if player_class == PIRATE_CLASS
+        else 1.71
+        if player_class == WORKER_CLASS and skills["pesca"] == MAX_COORD
+        else 2.0
+    )
+    return math.ceil(int(str(boat.get("MinSkill", 35))) * modifier)
 
 
 async def navigate(
@@ -53,15 +74,7 @@ async def navigate(
                 {},
             )
         skills = levels(snapshot, user)
-        player_class = int(stats.get("class_id", 0))
-        modifier = (
-            1.0
-            if player_class == PIRATE_CLASS
-            else 1.71
-            if player_class == WORKER_CLASS and skills["pesca"] == MAX_COORD
-            else 2.0
-        )
-        required = math.ceil(int(str(boat.get("MinSkill", 35))) * modifier)
+        required = required_navigation(boat, stats, skills)
         sailing = stats.get("sailing") == "1"
         if not sailing and skills["navegacion"] < required:
             return Decision(

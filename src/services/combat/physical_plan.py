@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING, Any, cast
 
 from src.combat.combat_critical_calculator import CriticalCalculator
 from src.models.skill_data_loader import SKILL_RULES_KEY
-from src.models.skills import skill_progress
 from src.services.combat.barriers import absorb_damage
 from src.services.combat.clan_policy import ClanCombat
 from src.services.combat.pvp_policy import PvpPolicy
+from src.services.combat_snapshot import equipped, levels
 from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
 from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes
@@ -38,31 +38,6 @@ if TYPE_CHECKING:
 MAX_SKILL = 100
 ATTACK_STAMINA = 2
 MAX_PHYSICAL_RANGE = 8
-
-
-def levels(snapshot: Snapshot, user: int) -> dict[str, int]:
-    """Obtiene niveles canónicos sin usar la XP acumulada como poder de combate.
-
-    Returns:
-        Niveles de todas las habilidades, incluidas las extensiones propias.
-    """
-    return {
-        p.definition.key: p.level
-        for p in skill_progress(cast("dict[str, str]", snapshot[RedisKeys.player_skills(user)]))
-        if p.definition.key is not None
-    }
-
-
-def equipped(snapshot: Snapshot, user: int, slot: str, catalog: ItemCatalog) -> dict[str, object]:
-    """Resuelve el objeto equipado desde inventario y equipo observados juntos.
-
-    Returns:
-        Datos del objeto real, o vacío para un slot sin equipar.
-    """
-    gear = cast("dict[str, str]", snapshot[RedisKeys.player_equipment(user)])
-    bag = cast("dict[str, str]", snapshot[RedisKeys.player_inventory(user)])
-    value = bag.get(f"slot_{gear.get(slot, '0')}", "")
-    return catalog.get_item_data(int(value.split(":")[0])) or {} if value else {}
 
 
 def backstab_chance(skill: int, player_class: int) -> int:
@@ -273,8 +248,10 @@ class PhysicalPlan:
             )
         skill = "proyectiles" if bow else "armas" if weapon else "wrestling"
         skills = levels(snapshot, user)
-        power = int(str(weapon.get("MinHit", 2))) + self.damage_roll * (
-            int(str(weapon.get("MaxHit", 2))) - int(str(weapon.get("MinHit", 2)))
+        accessory = equipped(snapshot, user, "accessory", self.catalog)
+        damage_item = weapon or (accessory if accessory.get("Guante") else {})
+        power = int(str(damage_item.get("MinHit", 2))) + self.damage_roll * (
+            int(str(damage_item.get("MaxHit", 2))) - int(str(damage_item.get("MinHit", 2)))
         )
         strength = effective_attribute(snapshot, user, "strength", self.now)
         agility = effective_attribute(snapshot, user, "agility", self.now)

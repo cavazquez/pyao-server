@@ -34,7 +34,8 @@ class ItemCatalog:
         return frozenset(
             item_id
             for item_id, data in self._items.items()
-            if data.get("ObjType") == OBJTYPE_WEAPON and int(str(data.get("StaffPower", 0))) > 0
+            if data.get("ObjType") in {OBJTYPE_WEAPON, 18}
+            and int(str(data.get("StaffPower", 0))) > 0
         )
 
     def __init__(self, data_path: str | None = None) -> None:

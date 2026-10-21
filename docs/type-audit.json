@@ -1,0 +1,861 @@
+{
+  "baseline_total": 145,
+  "baseline_source": "mypy .; main before this phase; 2026-10-20",
+  "files": [
+    {
+      "file": "scripts/analyze_redundant_tests.py",
+      "baseline_errors": [
+        {
+          "line": 125,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 162,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 191,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/analyze_redundant_tests.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/analyze_redundant_tests-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/378"
+    },
+    {
+      "file": "scripts/benchmark_candidate_reads.py",
+      "baseline_errors": [
+        {
+          "line": 28,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 30,
+          "message": "Argument 1 to \"PlayerRepository\" has incompatible type \"SimpleNamespace\"; expected \"RedisClient\"",
+          "category": "arg-type"
+        },
+        {
+          "line": 37,
+          "message": "Need type annotation for \"counts\"",
+          "category": "var-annotated"
+        },
+        {
+          "line": 40,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 42,
+          "message": "Call to untyped function (unknown) in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 44,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 48,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 51,
+          "message": "Cannot assign to a method",
+          "category": "method-assign"
+        },
+        {
+          "line": 54,
+          "message": "Cannot assign to a method",
+          "category": "method-assign"
+        },
+        {
+          "line": 56,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 65,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 80,
+          "message": "Call to untyped function \"previous\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 81,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 81,
+          "message": "Call to untyped function \"previous\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 85,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 91,
+          "message": "Call to untyped function \"run\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 99,
+          "message": "Call to untyped function \"main\" in typed context",
+          "category": "no-untyped-call"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/benchmark_candidate_reads.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_candidate_reads-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/379"
+    },
+    {
+      "file": "scripts/benchmark_ground_transactions.py",
+      "baseline_errors": [
+        {
+          "line": 24,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 34,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 60,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 63,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 65,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 67,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 72,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 73,
+          "message": "Call to untyped function \"selected\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 76,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 78,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 80,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 81,
+          "message": "Call to untyped function (unknown) in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 82,
+          "message": "Call to untyped function \"selected\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 83,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 84,
+          "message": "Call to untyped function \"record_write\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 87,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 89,
+          "message": "Call to untyped function \"record_write\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 90,
+          "message": "Call to untyped function \"selected\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 92,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 94,
+          "message": "Call to untyped function \"payload\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 97,
+          "message": "Call to untyped function \"read\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 153,
+          "message": "Need type annotation for \"samples\"",
+          "category": "var-annotated"
+        },
+        {
+          "line": 154,
+          "message": "Need type annotation for \"sizes\"",
+          "category": "var-annotated"
+        },
+        {
+          "line": 173,
+          "message": "Cannot determine type of \"stack\"",
+          "category": "has-type"
+        },
+        {
+          "line": 201,
+          "message": "Call to untyped function \"percentiles\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 241,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 255,
+          "message": "Call to untyped function \"worker\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 306,
+          "message": "Unsupported target for indexed assignment (\"object\")",
+          "category": "index"
+        },
+        {
+          "line": 315,
+          "message": "\"object\" has no attribute \"items\"",
+          "category": "attr-defined"
+        },
+        {
+          "line": 322,
+          "message": "Call to untyped function \"main\" in typed context",
+          "category": "no-untyped-call"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/benchmark_ground_transactions.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_ground_transactions-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/380"
+    },
+    {
+      "file": "scripts/benchmark_structures.py",
+      "baseline_errors": [
+        {
+          "line": 29,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 37,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 39,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 41,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 44,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 49,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 50,
+          "message": "Need type annotation for \"seen\" (hint: \"seen: set[<type>] = ...\")",
+          "category": "var-annotated"
+        },
+        {
+          "line": 51,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 52,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 55,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 77,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 86,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 106,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 115,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 124,
+          "message": "Argument 3 to \"add_player\" of \"PlayerIndex\" has incompatible type \"None\"; expected \"MessageSender\"",
+          "category": "arg-type"
+        },
+        {
+          "line": 132,
+          "message": "Argument 2 to \"add_npc\" of \"NpcIndex\" has incompatible type \"SimpleNamespace\"; expected \"NPC\"",
+          "category": "arg-type"
+        },
+        {
+          "line": 145,
+          "message": "Need type annotation for \"by_ground_map\" (hint: \"by_ground_map: dict[<type>, <type>] = ...\")",
+          "category": "var-annotated"
+        },
+        {
+          "line": 151,
+          "message": "Call to untyped function (unknown) in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 158,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 159,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 160,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 163,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 164,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 167,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 168,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 169,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 170,
+          "message": "Generator has incompatible item type \"int\"; expected \"bool\"",
+          "category": "misc"
+        },
+        {
+          "line": 172,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 175,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 176,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 177,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 178,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 179,
+          "message": "Call to untyped function \"extra_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 180,
+          "message": "Call to untyped function \"extra_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 181,
+          "message": "Call to untyped function \"extra_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 182,
+          "message": "Call to untyped function \"extra_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 184,
+          "message": "Call to untyped function \"allocations\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 188,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 197,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 205,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 206,
+          "message": "Call to untyped function \"allocations\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 212,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 229,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 230,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 232,
+          "message": "Call to untyped function \"deep_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 239,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 247,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 250,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 256,
+          "message": "Call to untyped function \"sequential\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 256,
+          "message": "Call to untyped function \"pipelined\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 259,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 260,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 272,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 283,
+          "message": "Call to untyped function \"measure\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 292,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 324,
+          "message": "Call to untyped function \"entities\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 325,
+          "message": "Call to untyped function \"terrain\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 326,
+          "message": "Call to untyped function \"npc_model_footprint\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 331,
+          "message": "Call to untyped function \"ground_document\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 335,
+          "message": "Call to untyped function \"redis_workloads\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 343,
+          "message": "Call to untyped function \"main\" in typed context",
+          "category": "no-untyped-call"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/benchmark_structures.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_structures-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/381"
+    },
+    {
+      "file": "scripts/benchmark_world_load.py",
+      "baseline_errors": [
+        {
+          "line": 24,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 32,
+          "message": "Call to untyped function \"owned_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 34,
+          "message": "Call to untyped function \"owned_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 36,
+          "message": "Call to untyped function \"owned_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 40,
+          "message": "Function is missing a type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 41,
+          "message": "Need type annotation for \"rows\" (hint: \"rows: dict[<type>, <type>] = ...\")",
+          "category": "var-annotated"
+        },
+        {
+          "line": 50,
+          "message": "Function is missing a return type annotation",
+          "category": "no-untyped-def"
+        },
+        {
+          "line": 65,
+          "message": "Call to untyped function \"owned_bytes\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 77,
+          "message": "Call to untyped function \"digest_layers\" in typed context",
+          "category": "no-untyped-call"
+        },
+        {
+          "line": 83,
+          "message": "Call to untyped function \"run\" in typed context",
+          "category": "no-untyped-call"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/benchmark_world_load.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_world_load-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/382"
+    },
+    {
+      "file": "scripts/check_class_skills.py",
+      "baseline_errors": [
+        {
+          "line": 22,
+          "message": "\"type[RedisClient]\" has no attribute \"create\"",
+          "category": "attr-defined"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/check_class_skills.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/check_class_skills-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/383"
+    },
+    {
+      "file": "scripts/find_real_redundant_tests.py",
+      "baseline_errors": [
+        {
+          "line": 63,
+          "message": "Returning Any from function declared to return \"int\"",
+          "category": "no-any-return"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/find_real_redundant_tests.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/find_real_redundant_tests-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/384"
+    },
+    {
+      "file": "scripts/fix_toml_format.py",
+      "baseline_errors": [
+        {
+          "line": 12,
+          "message": "Missing type arguments for generic type \"Match\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 39,
+          "message": "Missing type arguments for generic type \"Match\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 45,
+          "message": "Returning Any from function declared to return \"str\"",
+          "category": "no-any-return"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/fix_toml_format.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/fix_toml_format-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/385"
+    },
+    {
+      "file": "scripts/regenerate_npcs_toml.py",
+      "baseline_errors": [
+        {
+          "line": 13,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 30,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 140,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/regenerate_npcs_toml.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/regenerate_npcs_toml-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/386"
+    },
+    {
+      "file": "scripts/smoke_installed_snap.py",
+      "baseline_errors": [
+        {
+          "line": 30,
+          "message": "Missing type arguments for generic type \"Popen\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 180,
+          "message": "Incompatible types in assignment (expression has type \"dict[str, str]\", variable has type \"str\")",
+          "category": "assignment"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/smoke_installed_snap.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/smoke_installed_snap-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/387"
+    },
+    {
+      "file": "scripts/sync_merchant_inventories.py",
+      "baseline_errors": [
+        {
+          "line": 19,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 35,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 75,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 108,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 124,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        },
+        {
+          "line": 173,
+          "message": "Missing type arguments for generic type \"dict\"",
+          "category": "type-arg"
+        }
+      ],
+      "role": "maintained_utility",
+      "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
+      "followup_title": "Tipar scripts/sync_merchant_inventories.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/sync_merchant_inventories-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/388"
+    },
+    {
+      "file": "test_tree_detection.py",
+      "baseline_errors": [
+        {
+          "line": 10,
+          "message": "Cannot find implementation or library stub for module named \"services.map.map_resources_service\"",
+          "category": "import-not-found"
+        },
+        {
+          "line": 33,
+          "message": "No return value expected",
+          "category": "return-value"
+        },
+        {
+          "line": 75,
+          "message": "Returning Any from function declared to return \"None\"",
+          "category": "no-any-return"
+        },
+        {
+          "line": 79,
+          "message": "\"test_tree_detection\" does not return a value (it only ever returns None)",
+          "category": "func-returns-value"
+        }
+      ],
+      "role": "historical_manual_probe",
+      "decision": "port imports and use current isolated fixtures; retain useful assertions",
+      "followup_title": "Tipar test_tree_detection.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/test_tree_detection-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/389"
+    },
+    {
+      "file": "test_work_flow.py",
+      "baseline_errors": [
+        {
+          "line": 12,
+          "message": "Cannot find implementation or library stub for module named \"network.packet_id\"",
+          "category": "import-not-found"
+        },
+        {
+          "line": 13,
+          "message": "Cannot find implementation or library stub for module named \"services.map.map_resources_service\"",
+          "category": "import-not-found"
+        },
+        {
+          "line": 14,
+          "message": "Cannot find implementation or library stub for module named \"tasks.work.task_work_left_click\"",
+          "category": "import-not-found"
+        },
+        {
+          "line": 49,
+          "message": "Argument \"equipped\" to \"MockItemSlot\" has incompatible type \"int\"; expected \"bool\"",
+          "category": "arg-type"
+        }
+      ],
+      "role": "historical_manual_probe",
+      "decision": "port imports and use current isolated fixtures; retain useful assertions",
+      "followup_title": "Tipar test_work_flow.py",
+      "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/test_work_flow-issue.md",
+      "issue": "https://github.com/cavazquez/pyao-server/issues/390"
+    }
+  ]
+}

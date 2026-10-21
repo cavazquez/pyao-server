@@ -1,6 +1,6 @@
 """Tests para PlayerMapService."""
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -40,6 +40,8 @@ def mock_map_manager():
     manager.get_player_message_sender.return_value = AsyncMock()
     manager.get_npcs_in_map.return_value = []
     manager._ground_items = {}
+    manager.get_exit_positions.return_value = ()
+    manager.is_door_closed.return_value = False
     manager.send_ground_items_snapshot = AsyncMock(return_value=0)
     manager.add_player = MagicMock()
     manager.remove_player = MagicMock()
@@ -72,13 +74,25 @@ def mock_message_sender():
 def player_map_service(
     mock_player_repo, mock_account_repo, mock_map_manager, mock_broadcast_service
 ):
-    """Fixture de PlayerMapService."""
-    return PlayerMapService(
+    """Servicio con el límite transaccional controlado.
+
+    Yields:
+        Servicio para comprobar exclusivamente la secuencia de paquetes.
+    """
+    service = PlayerMapService(
         player_repo=mock_player_repo,
         account_repo=mock_account_repo,
         map_manager=mock_map_manager,
         broadcast_service=mock_broadcast_service,
     )
+    # Packet orchestration tests stub only the atomic boundary; real Redis and
+    # concurrent reservations are covered by test_safe_arrivals.py.
+    with patch(
+        "src.services.map.player_map_service.commit_transfer",
+        new=AsyncMock(return_value={"applied": True, "dead": False, "navigation_changed": False}),
+    ) as commit:
+        service.atomic_commit = commit
+        yield service
 
 
 class TestPlayerVisualData:
@@ -289,10 +303,7 @@ class TestPlayerMapService:
     ):
         """Debe enviar BLOCK_POSITION(false) solo para exit tiles del mapa indicado."""
         # Simular dos exit tiles, uno en el mapa 1 y otro en el mapa 2
-        player_map_service.map_manager._exit_tiles = {
-            (1, 10, 20): {"to_map": 2, "to_x": 50, "to_y": 99},
-            (2, 30, 40): {"to_map": 3, "to_x": 99, "to_y": 50},
-        }
+        player_map_service.map_manager.get_exit_positions.return_value = ((10, 20),)
 
         result = await player_map_service._unblock_exit_tiles(1, mock_message_sender)
 
@@ -345,7 +356,13 @@ class TestPlayerMapService:
         mock_message_sender.send_change_map.assert_called_once_with(2)
 
         # 3. Debe actualizar posición en Redis
-        player_map_service.player_repo.set_position.assert_called_once_with(1, 60, 60, 2, 3)
+        player_map_service.atomic_commit.assert_awaited_once()
+        assert player_map_service.atomic_commit.await_args.args[3:6] == (
+            (1, 50, 50),
+            (2, 60, 60),
+            3,
+        )
+        player_map_service.player_repo.set_position.assert_not_called()
 
         # 4. Debe enviar POS_UPDATE
         mock_message_sender.send_pos_update.assert_called_once_with(60, 60)
@@ -469,14 +486,11 @@ class TestPlayerMapService:
             message_sender=mock_message_sender,
         )
 
-        # Debe enviar CHANGE_MAP incluso si es el mismo mapa
-        mock_message_sender.send_change_map.assert_called_once_with(1)
-
-        # Debe remover y agregar del mismo mapa
-        player_map_service.map_manager.remove_player.assert_called_once_with(
-            1, 1, expected_sender=mock_message_sender
-        )
-        player_map_service.map_manager.add_player.assert_called_once()
+        # El commit es común; no se recarga un mapa que ya está activo.
+        mock_message_sender.send_change_map.assert_not_called()
+        player_map_service.map_manager.remove_player.assert_not_called()
+        player_map_service.map_manager.add_player.assert_not_called()
+        player_map_service.atomic_commit.assert_awaited_once()
 
     @pytest.mark.asyncio
     async def test_teleport_in_same_map_basic(self, player_map_service, mock_message_sender):
@@ -493,7 +507,13 @@ class TestPlayerMapService:
         )
 
         # Debe actualizar posición en Redis
-        player_map_service.player_repo.set_position.assert_called_once_with(1, 80, 80, 1, 2)
+        player_map_service.atomic_commit.assert_awaited_once()
+        assert player_map_service.atomic_commit.await_args.args[3:6] == (
+            (1, 50, 50),
+            (1, 80, 80),
+            2,
+        )
+        player_map_service.player_repo.set_position.assert_not_called()
 
         # Debe actualizar índice espacial
         player_map_service.map_manager.update_player_tile.assert_called_once_with(
