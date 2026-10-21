@@ -15,7 +15,7 @@ import threading
 from collections.abc import Iterator
 from typing import Any
 
-from tools.channel_repository import native_recipes
+from tools.channel_repository import native_recipes, read_winget_manifest, write_winget_manifest
 from tools.package_channels import sha
 
 
@@ -177,7 +177,7 @@ def verify(server_manifest: Path, client_manifest: Path, output: Path) -> dict[s
         with archive_server(downloads) as address:
             for fixture, version in (("baseline", "0.0.0"), ("current", record["version"])):
                 for source in (original / "winget").rglob("*.yaml"):
-                    value = json.loads(source.read_text())
+                    value = read_winget_manifest(source)
                     value["PackageVersion"] = version
                     for installer in value.get("Installers", []):
                         installer["InstallerUrl"] = (
@@ -185,7 +185,7 @@ def verify(server_manifest: Path, client_manifest: Path, output: Path) -> dict[s
                         )
                     path = output / fixture / value["PackageIdentifier"] / source.name
                     path.parent.mkdir(parents=True, exist_ok=True)
-                    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+                    write_winget_manifest(path, value)
             logs.append(
                 call(
                     [

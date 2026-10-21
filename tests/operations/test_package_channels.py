@@ -9,6 +9,7 @@ import pytest
 from tools.channel_repository import (
     prepare,
     read_artifact,
+    read_winget_manifest,
     verify_installation_checks,
     write_recipes,
 )
@@ -156,8 +157,14 @@ def test_brew_and_winget_recipes_use_immutable_pair_urls_and_correct_licenses(
         ("client", "Cavazquez.PyAOClient", "MIT"),
     ):
         folder = tmp_path / "winget" / identifier / "1.0.0rc5"
-        locale = json.loads((folder / f"{identifier}.locale.es-AR.yaml").read_text())
-        installer = json.loads((folder / f"{identifier}.installer.yaml").read_text())
+        for path in folder.glob("*.yaml"):
+            manifest = read_winget_manifest(path)
+            assert path.read_text().splitlines()[0] == (
+                "# yaml-language-server: $schema=https://aka.ms/winget-manifest."
+                f"{manifest['ManifestType']}.{manifest['ManifestVersion']}.schema.json"
+            )
+        locale = read_winget_manifest(folder / f"{identifier}.locale.es-AR.yaml")
+        installer = read_winget_manifest(folder / f"{identifier}.installer.yaml")
         assert locale["License"] == license_name
         assert installer["PackageVersion"] == "1.0.0rc5"
         assert (

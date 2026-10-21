@@ -137,6 +137,29 @@ def write_homebrew(
     (output / "Casks/pyao-client.rb").write_text("\n".join(cask))
 
 
+def winget_header(manifest: dict[str, Any]) -> str:
+    return (
+        "# yaml-language-server: $schema=https://aka.ms/winget-manifest."
+        f"{manifest['ManifestType']}.{manifest['ManifestVersion']}.schema.json"
+    )
+
+
+def write_winget_manifest(path: Path, manifest: dict[str, Any]) -> None:
+    # JSON is a YAML subset; the schema comment is also required by WinGet.
+    path.write_text(
+        winget_header(manifest) + "\n" + json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def read_winget_manifest(path: Path) -> dict[str, Any]:
+    header, _newline, payload = path.read_text(encoding="utf-8-sig").partition("\n")
+    manifest: dict[str, Any] = json.loads(payload)
+    if header != winget_header(manifest):
+        raise ValueError("La cabecera de esquema WinGet no coincide con el manifiesto")
+    return manifest
+
+
 def write_winget(output: Path, records: dict[str, dict[str, dict[str, Any]]], version: str) -> None:
     for role, identifier, title in (
         ("server", "Cavazquez.PyAOServer", "PyAO Server"),
@@ -146,7 +169,7 @@ def write_winget(output: Path, records: dict[str, dict[str, dict[str, Any]]], ve
         directory = output / "winget" / identifier / version
         directory.mkdir(parents=True)
         shared = {"PackageIdentifier": identifier, "PackageVersion": version}
-        manifests = {
+        manifests: dict[str, dict[str, Any]] = {
             identifier + ".yaml": {
                 **shared,
                 "DefaultLocale": "es-AR",
@@ -192,9 +215,8 @@ def write_winget(output: Path, records: dict[str, dict[str, dict[str, Any]]], ve
                 "ManifestVersion": SCHEMA_VERSION,
             },
         }
-        # JSON is a YAML subset. This avoids dependencies and quotes every scalar.
         for name, manifest in manifests.items():
-            (directory / name).write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+            write_winget_manifest(directory / name, manifest)
 
 
 def write_recipes(
