@@ -11,6 +11,7 @@ from src.game.map_manager import MapManager
 from src.repositories.door_repository import DoorRepository
 from src.services.map.door_service import DoorService
 from src.services.map.door_world import DoorWorld
+from src.utils.resource_transaction import transact
 
 
 async def make_world(redis):
@@ -108,3 +109,146 @@ async def test_arrival_during_durability_check_prevents_closing(redis_client):
     maps.release_positions("late-arrival", (111, 97, 82))
     assert maps.can_move_to(111, 97, 82)
     assert await redis_client.get("door:111:97:82") is None
+
+
+@pytest.mark.asyncio
+async def test_failed_transaction_releases_temporary_collision(redis_client):
+    """Un fallo anterior al EXEC conserva la puerta abierta y su gráfico."""
+    doors, maps, senders = await make_world(redis_client)
+    with (
+        patch("src.services.map.door_world.require_durable", new=AsyncMock()),
+        patch("src.services.map.door_world.transact", side_effect=RuntimeError("sin commit")),
+        pytest.raises(RuntimeError, match="sin commit"),
+    ):
+        await doors.toggle(111, 97, 82)
+    assert maps.can_move_to(111, 97, 82)
+    assert not doors.pending
+    assert await redis_client.get("door:111:97:82") is None
+    for sender in senders:
+        sender.send_block_position.assert_awaited_once_with(97, 82, blocked=False)
+
+
+@pytest.mark.asyncio
+async def test_uncertain_reply_recovers_committed_state_without_toggling_again(redis_client):
+    """Perder la respuesta del commit no reabre ni duplica la operación."""
+    doors, maps, senders = await make_world(redis_client)
+
+    async def lose_reply(raw, resources, identity, request, decide):
+        await transact(raw, resources, identity, request, decide)
+        message = "respuesta perdida"
+        raise RuntimeError(message)
+
+    with (
+        patch("src.services.map.door_world.require_durable", new=AsyncMock()),
+        patch("src.services.map.door_world.transact", side_effect=lose_reply) as transaction,
+        pytest.raises(RuntimeError, match="respuesta perdida"),
+    ):
+        await doors.toggle(111, 97, 82)
+    assert transaction.await_count == 1
+    assert not maps.can_move_to(111, 97, 82)
+    assert not doors.pending
+    assert await redis_client.get("door:111:97:82") == "247:0"
+    for sender in senders:
+        sender.send_block_position.assert_awaited_once_with(97, 82, blocked=True)
+
+
+@pytest.mark.asyncio
+async def test_disconnected_redis_reconciles_paired_door_on_next_snapshot(redis_client):
+    """Sin Redis se bloquea; al recuperar, ambas mitades vuelven al commit real."""
+    doors, maps, senders = await make_world(redis_client)
+
+    async def lose_reply(raw, resources, identity, request, decide):
+        await transact(raw, resources, identity, request, decide)
+        message = "respuesta perdida"
+        raise RuntimeError(message)
+
+    with (
+        patch("src.services.map.door_world.require_durable", new=AsyncMock()),
+        patch("src.services.map.door_world.transact", side_effect=lose_reply),
+        patch.object(redis_client.redis, "mget", side_effect=OSError("sin Redis")),
+        pytest.raises(RuntimeError, match="respuesta perdida"),
+    ):
+        await doors.toggle(1, 48, 65)
+    assert not maps.can_move_to(1, 48, 65)
+    assert not maps.can_move_to(1, 49, 65)
+    assert doors.pending[1] == {(48, 65), (49, 65)}
+    newcomer = AsyncMock()
+    await doors.snapshot(1, newcomer)
+    assert not doors.pending
+    for x in (48, 49):
+        assert maps.can_move_to(1, x, 65)
+        assert await redis_client.get(f"door:1:{x}:65") == "7:1"
+        newcomer.send_block_position.assert_any_await(x, 65, blocked=False)
+    assert not any(sender.send_block_position.await_count for sender in senders)
+
+
+@pytest.mark.asyncio
+async def test_cancellation_waits_for_commit_and_broadcast(redis_client):
+    """Cancelar el clic no deja la transacción o su colisión a medio aplicar."""
+    doors, maps, senders = await make_world(redis_client)
+    started, finish = asyncio.Event(), asyncio.Event()
+
+    async def paused_transaction(raw, resources, identity, request, decide):
+        started.set()
+        await finish.wait()
+        return await transact(raw, resources, identity, request, decide)
+
+    with (
+        patch("src.services.map.door_world.require_durable", new=AsyncMock()),
+        patch("src.services.map.door_world.transact", side_effect=paused_transaction),
+    ):
+        task = asyncio.create_task(doors.toggle(111, 97, 82))
+        await started.wait()
+        task.cancel()
+        await asyncio.sleep(0)
+        assert not task.done()
+        finish.set()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+    assert await redis_client.get("door:111:97:82") == "247:0"
+    assert not maps.can_move_to(111, 97, 82)
+    assert not doors.pending
+    for sender in senders:
+        sender.send_block_position.assert_awaited_once_with(97, 82, blocked=True)
+
+
+@pytest.mark.asyncio
+async def test_late_durability_error_still_publishes_confirmed_collision(redis_client):
+    """Una confirmación AOF tardía no deja los clientes con el estado anterior."""
+    doors, maps, senders = await make_world(redis_client)
+    with (
+        patch(
+            "src.services.map.door_world.require_durable", side_effect=[None, RuntimeError("AOF")]
+        ),
+        pytest.raises(RuntimeError, match="AOF"),
+    ):
+        await doors.toggle(111, 97, 82)
+    assert not maps.can_move_to(111, 97, 82)
+    assert not doors.pending
+    for sender in senders:
+        sender.send_block_position.assert_awaited_once_with(97, 82, blocked=True)
+
+
+@pytest.mark.asyncio
+async def test_lost_nondurable_commit_restores_catalogue_default(redis_client):
+    """Si se perdió el último commit, no se reutiliza su caché como valor inicial."""
+    doors, maps, senders = await make_world(redis_client)
+    calls = 0
+
+    async def lose_nondurable_commit(_raw):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            await redis_client.delete("door:111:97:82")
+            message = "AOF perdido"
+            raise RuntimeError(message)
+
+    with (
+        patch("src.services.map.door_world.require_durable", side_effect=lose_nondurable_commit),
+        pytest.raises(RuntimeError, match="AOF perdido"),
+    ):
+        await doors.toggle(111, 97, 82)
+    assert maps.can_move_to(111, 97, 82)
+    assert not doors.pending
+    for sender in senders:
+        sender.send_block_position.assert_awaited_once_with(97, 82, blocked=False)
