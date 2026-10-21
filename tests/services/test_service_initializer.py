@@ -37,6 +37,7 @@ def mock_repositories() -> dict:
         "inventory_repo": Mock(),
         "merchant_repo": Mock(),
         "equipment_repo": Mock(),
+        "door_repo": Mock(),
         "clan_repo": clan_repo,
         "party_repo": party_repo,
     }
@@ -59,6 +60,7 @@ async def test_service_initializer_creates_all_services(
 
     # Mock para MapResourcesService (evita cargar 290 mapas)
     mock_map_resources_service = Mock()
+    mock_map_resources_service.doors = {}
 
     initializer = ServiceInitializer(mock_repositories, mock_map_manager)
 
@@ -105,6 +107,7 @@ async def test_service_initializer_returns_dict(
     mock_npc_service = Mock()
     mock_npc_service.initialize_world_npcs = AsyncMock()
     mock_map_resources_service = Mock()
+    mock_map_resources_service.doors = {}
 
     initializer = ServiceInitializer(mock_repositories, mock_map_manager)
 

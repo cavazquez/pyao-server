@@ -162,7 +162,7 @@ class GMCommandHandler(CommandHandler):
 
         # Si es el mismo mapa, usar teleport_in_same_map
         if current_map == new_map:
-            await self.player_map_service.teleport_in_same_map(
+            applied = await self.player_map_service.teleport_in_same_map(
                 user_id=user_id,
                 map_id=current_map,
                 old_x=current_x,
@@ -174,7 +174,7 @@ class GMCommandHandler(CommandHandler):
             )
         # Cambio de mapa - usar transition_to_map
         else:
-            await self.player_map_service.transition_to_map(
+            applied = await self.player_map_service.transition_to_map(
                 user_id=user_id,
                 current_map=current_map,
                 current_x=current_x,
@@ -185,6 +185,9 @@ class GMCommandHandler(CommandHandler):
                 heading=current_heading,
                 message_sender=destination_sender,
             )
+
+        if not applied:
+            return CommandResult.error("La llegada fue rechazada; conservas tu posición.")
 
         logger.info(
             "Jugador %d teletransportado de (%d, %d, %d) a (%d, %d, %d)",

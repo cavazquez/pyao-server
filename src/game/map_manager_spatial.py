@@ -75,9 +75,40 @@ class SpatialIndexMixin:
     ) -> None:
         """Libera sólo casillas de la reserva propia, sin borrar jugadores ni NPCs."""
         occupied = cast("dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {}))
+        if position is not None:
+            if occupied.get(position) == f"reservation:{identity}":
+                del occupied[position]
+            return
         for key, occupant in list(occupied.items()):
             if occupant == f"reservation:{identity}" and (position is None or key == position):
                 del occupied[key]
+
+    def reserve_arrival(
+        self, identity: str, map_id: int, x: int, y: int, *, water: bool = False
+    ) -> bool:
+        """Reserva una llegada validada sin awaits ni sobreescribir otro ocupante.
+
+        Returns:
+            Si el destino conocido, dentro de límites y sin puerta cerrada se reservó.
+        """
+        sizes = cast("dict[int, tuple[int, int]]", getattr(self, "_map_sizes", {}))
+        if map_id not in sizes:
+            return False
+        width, height = sizes[map_id]
+        if not (1 <= x <= width and 1 <= y <= height):
+            return False
+        blocked = cast("dict[int, Coordinates]", getattr(self, "_blocked_tiles", {}))
+        doors = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_closed_doors", {}))
+        if (x, y) in doors.get(map_id, set()) or (
+            not water and (x, y) in blocked.get(map_id, set())
+        ):
+            return False
+        occupied = cast("dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {}))
+        key = (map_id, x, y)
+        if key in occupied:
+            return False
+        occupied[key] = f"reservation:{identity}"
+        return True
 
     def is_tile_occupied(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si un tile está ocupado por un jugador o NPC.

@@ -1,0 +1,31 @@
+name: Desktop indicator
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-indicator:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [windows-2025, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+        with:
+          version: "0.13.1"
+      - name: Install locked desktop extra
+        run: uv sync --locked --extra desktop --python 3.14
+      - name: Verify native indicator without Redis
+        run: uv run --locked --extra desktop python tools/smoke_indicator.py --output artifacts/desktop --capture
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: desktop-${{ matrix.runner }}
+          path: artifacts/desktop/

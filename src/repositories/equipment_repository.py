@@ -88,7 +88,7 @@ class EquipmentRepository:
         try:
             key = RedisKeys.player_equipment(user_id)
             inventory_slot_str = await self.redis_client.hget(key, slot.value)
-            if inventory_slot_str:
+            if inventory_slot_str and int(inventory_slot_str) > 0:
                 return int(inventory_slot_str)
         except Exception:
             logger.exception("Error al obtener item equipado del slot %s", slot.value)
@@ -115,7 +115,8 @@ class EquipmentRepository:
             for slot_name, inventory_slot_str in equipment_data.items():
                 try:
                     slot = EquipmentSlot(slot_name)
-                    result[slot] = int(inventory_slot_str)
+                    if int(inventory_slot_str) > 0:
+                        result[slot] = int(inventory_slot_str)
                 except ValueError, KeyError:
                     logger.warning("Slot de equipamiento inválido: %s", slot_name)
                     continue

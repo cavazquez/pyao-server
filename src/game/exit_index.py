@@ -11,6 +11,7 @@ class ExitIndex:
     def __init__(self) -> None:
         """Inicializa el storage interno."""
         self._exit_tiles: dict[tuple[int, int, int], dict[str, int]] = {}
+        self._by_map: dict[int, set[tuple[int, int]]] = {}
 
     @property
     def data(self) -> dict[tuple[int, int, int], dict[str, int]]:
@@ -20,6 +21,16 @@ class ExitIndex:
     def update(self, exits: dict[tuple[int, int, int], dict[str, int]]) -> None:
         """Agrega/actualiza exits."""
         self._exit_tiles.update(exits)
+        for map_id, x, y in exits:
+            self._by_map.setdefault(map_id, set()).add((x, y))
+
+    def positions(self, map_id: int) -> tuple[tuple[int, int], ...]:
+        """Obtiene las salidas del mapa sin recorrer todas las salidas del mundo.
+
+        Returns:
+            Coordenadas estables de ese mapa.
+        """
+        return tuple(sorted(self._by_map.get(map_id, ())))
 
     def get_exit_tile(self, map_id: int, x: int, y: int) -> dict[str, int] | None:
         """Retorna el destino de un exit si existe.
@@ -42,3 +53,4 @@ class ExitIndex:
         keys: Iterable[tuple[int, int, int]] = [k for k in self._exit_tiles if k[0] == map_id]
         for key in list(keys):
             self._exit_tiles.pop(key, None)
+        self._by_map.pop(map_id, None)

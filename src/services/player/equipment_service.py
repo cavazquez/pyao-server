@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.models.items_catalog import get_item
+from src.services.player.accessories import toggle_accessory
 from src.utils.equipment_slot import EquipmentSlot
 
 if TYPE_CHECKING:
@@ -70,6 +71,24 @@ class EquipmentService:
             return False
 
         # Verificar si el item es equipable y determinar slot
+        if item.item_type.value == "accessory":
+            result = await toggle_accessory(
+                self.equipment_repo.redis_client, user_id, inventory_slot
+            )
+            if not result["applied"]:
+                await message_sender.send_console_msg(str(result["message"]))
+                return False
+            message = (
+                ("Has equipado " if result["equipped"] else "Has desequipado ")
+                + str(result["name"])
+                + "."
+            )
+            if result["equipped"] and result["magic_max"]:
+                message += f" Resistencia mágica: {result['magic_min']}/{result['magic_max']}."
+            if result["equipped"] and result["focus_power"]:
+                message += f" Foco mágico de nivel {result['focus_power']}."
+            await message_sender.send_console_msg(message)
+            return True
         if not item.equippable:
             await message_sender.send_console_msg(f"{item.name} no se puede equipar.")
             return False

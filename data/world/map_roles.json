@@ -1,0 +1,2036 @@
+{
+  "version": 1,
+  "start_map": 1,
+  "maps": {
+    "1": {
+      "name": "Ullathorpe",
+      "terrain_kind": "city",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "2": {
+      "name": "Bosque",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "3": {
+      "name": "Desierto",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "4": {
+      "name": "Montañas",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "5": {
+      "name": "Pradera",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "6": {
+      "name": "Bosque Oscuro",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "7": {
+      "name": "Río",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "8": {
+      "name": "Montaña Norte",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "9": {
+      "name": "Cañón",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "10": {
+      "name": "Oasis",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "11": {
+      "name": "Ruinas",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "12": {
+      "name": "Pico Nevado",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "13": {
+      "name": "Minas",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "14": {
+      "name": "Costa",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "15": {
+      "name": "Granja",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "16": {
+      "name": "Lago",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "17": {
+      "name": "Cementerio",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "18": {
+      "name": "Cavernas",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "19": {
+      "name": "Cascada",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "20": {
+      "name": "Pantano",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "21": {
+      "name": "Cima Helada",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "22": {
+      "name": "Paso de Montaña",
+      "terrain_kind": "wilderness",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "23": {
+      "name": "Fortaleza",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "24": {
+      "name": "Volcán",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "25": {
+      "name": "Palmeral",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "26": {
+      "name": "Dunas",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "27": {
+      "name": "Templo Antiguo",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "28": {
+      "name": "Laberinto",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "29": {
+      "name": "Mapa 29",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "30": {
+      "name": "Nix",
+      "terrain_kind": "city",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "31": {
+      "name": "Lindos",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "32": {
+      "name": "Banderbill",
+      "terrain_kind": "city",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "33": {
+      "name": "Mapa 33",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "34": {
+      "name": "Arghal",
+      "terrain_kind": "city",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "35": {
+      "name": "Uthathorpe",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "36": {
+      "name": "Mapa 36",
+      "terrain_kind": "unknown",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "37": {
+      "name": "Mapa 37",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "38": {
+      "name": "Centauro",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "39": {
+      "name": "Mapa 39",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "40": {
+      "name": "Andarial",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "41": {
+      "name": "Khan",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "42": {
+      "name": "Dungeon",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "43": {
+      "name": "Piratas",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "44": {
+      "name": "Inferno",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "45": {
+      "name": "Titan",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "46": {
+      "name": "Nimrah",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "47": {
+      "name": "Hyron",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "48": {
+      "name": "Gladstone",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "49": {
+      "name": "Mapa 49",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "50": {
+      "name": "Buthon",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "51": {
+      "name": "Khalos",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "52": {
+      "name": "Khalos Dungeon",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "53": {
+      "name": "Khalos Castle",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "54": {
+      "name": "Khalos Underground",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "55": {
+      "name": "Khalos Throne",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "56": {
+      "name": "Khalos Treasury",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "57": {
+      "name": "Khalos Library",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "58": {
+      "name": "Khalos Laboratory",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "59": {
+      "name": "Khalos Barracks",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "60": {
+      "name": "Khalos Armory",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "61": {
+      "name": "Khalos Dungeons",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "62": {
+      "name": "Khalos Crypts",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "63": {
+      "name": "Khalos Catacombs",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "64": {
+      "name": "Khalos Sanctum",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "65": {
+      "name": "Khalos Spire",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "66": {
+      "name": "Khalos Peak",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "67": {
+      "name": "Khalos Summit",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "68": {
+      "name": "Khalos Apex",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "69": {
+      "name": "Khalos Zenith",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "70": {
+      "name": "Khalos Vertex",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "71": {
+      "name": "Khalos Pinnacle",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "72": {
+      "name": "Khalos Crest",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "73": {
+      "name": "Khalos Ridge",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "74": {
+      "name": "Khalos Summit",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "75": {
+      "name": "Khalos Peak",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "76": {
+      "name": "Khalos Spire",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "77": {
+      "name": "Khalos Tower",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "78": {
+      "name": "Khalos Keep",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "79": {
+      "name": "Khalos Fortress",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "80": {
+      "name": "Khalos Citadel",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "81": {
+      "name": "Khalos Stronghold",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "82": {
+      "name": "Khalos Bastion",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "83": {
+      "name": "Khalos Rampart",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "84": {
+      "name": "Khalos Bulwark",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "85": {
+      "name": "Khalos Redoubt",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "86": {
+      "name": "Khalos Outpost",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "87": {
+      "name": "Khalos Garrison",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "88": {
+      "name": "Khalos Command",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "89": {
+      "name": "Khalos HQ",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "90": {
+      "name": "Khalos Base",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "91": {
+      "name": "Khalos Camp",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "92": {
+      "name": "Khalos Station",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "93": {
+      "name": "Khalos Post",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "94": {
+      "name": "Khalos Fort",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "95": {
+      "name": "Khalos Castle",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "96": {
+      "name": "Khalos Palace",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "97": {
+      "name": "Khalos Temple",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "98": {
+      "name": "Khalos Shrine",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "99": {
+      "name": "Khalos Altar",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "100": {
+      "name": "Khalos Sanctum",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "101": {
+      "name": "Khalos Holy",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "102": {
+      "name": "Khalos Sacred",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "103": {
+      "name": "Khalos Divine",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "104": {
+      "name": "Khalos Celestial",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "105": {
+      "name": "Khalos Ethereal",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "106": {
+      "name": "Khalos Astral",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "107": {
+      "name": "Khalos Cosmic",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "108": {
+      "name": "Khalos Universal",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "109": {
+      "name": "Khalos Infinite",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "110": {
+      "name": "Khalos Eternal",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "111": {
+      "name": "Khalos Immortal",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "112": {
+      "name": "Khalos Legendary",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "113": {
+      "name": "Khalos Mythic",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "114": {
+      "name": "Khalos Epic",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "115": {
+      "name": "Khalos Fabled",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "116": {
+      "name": "Khalos Lore",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "117": {
+      "name": "Khalos Chronicle",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "118": {
+      "name": "Khalos Saga",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "119": {
+      "name": "Khalos Tale",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "120": {
+      "name": "Khalos Story",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "121": {
+      "name": "Mapa 121",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "122": {
+      "name": "Mapa 122",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "123": {
+      "name": "Mapa 123",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "124": {
+      "name": "Mapa 124",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "125": {
+      "name": "Mapa 125",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "126": {
+      "name": "Mapa 126",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "127": {
+      "name": "Mapa 127",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "128": {
+      "name": "Mapa 128",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "129": {
+      "name": "Mapa 129",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "130": {
+      "name": "Mapa 130",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "131": {
+      "name": "Mapa 131",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "132": {
+      "name": "Mapa 132",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "133": {
+      "name": "Mapa 133",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "134": {
+      "name": "Mapa 134",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "135": {
+      "name": "Mapa 135",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "136": {
+      "name": "Mapa 136",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "137": {
+      "name": "Mapa 137",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "138": {
+      "name": "Mapa 138",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "139": {
+      "name": "Mapa 139",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "140": {
+      "name": "Mapa 140",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "141": {
+      "name": "Mapa 141",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "142": {
+      "name": "Mapa 142",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "143": {
+      "name": "Mapa 143",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "144": {
+      "name": "Mapa 144",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "145": {
+      "name": "Mapa 145",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "146": {
+      "name": "Mapa 146",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "147": {
+      "name": "Mapa 147",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "148": {
+      "name": "Mapa 148",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "149": {
+      "name": "Mapa 149",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "150": {
+      "name": "Mapa 150",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "151": {
+      "name": "Mapa 151",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "152": {
+      "name": "Mapa 152",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "153": {
+      "name": "Mapa 153",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "154": {
+      "name": "Mapa 154",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "155": {
+      "name": "Mapa 155",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "156": {
+      "name": "Mapa 156",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "157": {
+      "name": "Mapa 157",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "158": {
+      "name": "Mapa 158",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "159": {
+      "name": "Mapa 159",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "160": {
+      "name": "Mapa 160",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "161": {
+      "name": "Mapa 161",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "162": {
+      "name": "Mapa 162",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "163": {
+      "name": "Mapa 163",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "164": {
+      "name": "Mapa 164",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "165": {
+      "name": "Mapa 165",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "166": {
+      "name": "Mapa 166",
+      "terrain_kind": "unknown",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "167": {
+      "name": "Mapa 167",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "168": {
+      "name": "Mapa 168",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "169": {
+      "name": "Mapa 169",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "170": {
+      "name": "Mapa 170",
+      "terrain_kind": "dungeon",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "171": {
+      "name": "Mapa 171",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "172": {
+      "name": "Mapa 172",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "173": {
+      "name": "Mapa 173",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "174": {
+      "name": "Mapa 174",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "175": {
+      "name": "Mapa 175",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "176": {
+      "name": "Mapa 176",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "177": {
+      "name": "Mapa 177",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "178": {
+      "name": "Mapa 178",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "179": {
+      "name": "Mapa 179",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "180": {
+      "name": "Mapa 180",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "181": {
+      "name": "Mapa 181",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "182": {
+      "name": "Mapa 182",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "183": {
+      "name": "Mapa 183",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "184": {
+      "name": "Mapa 184",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "185": {
+      "name": "Mapa 185",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "186": {
+      "name": "Mapa 186",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "187": {
+      "name": "Mapa 187",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "188": {
+      "name": "Mapa 188",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "189": {
+      "name": "Mapa 189",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "190": {
+      "name": "Mapa 190",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "191": {
+      "name": "Mapa 191",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "192": {
+      "name": "Mapa 192",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "193": {
+      "name": "Mapa 193",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "194": {
+      "name": "Mapa 194",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "195": {
+      "name": "Mapa 195",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "196": {
+      "name": "Mapa 196",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "197": {
+      "name": "Mapa 197",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "198": {
+      "name": "Mapa 198",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "199": {
+      "name": "Mapa 199",
+      "terrain_kind": "unknown",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "200": {
+      "name": "Mapa 200",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "201": {
+      "name": "Mapa 201",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "202": {
+      "name": "Mapa 202",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "203": {
+      "name": "Mapa 203",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "204": {
+      "name": "Mapa 204",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "205": {
+      "name": "Mapa 205",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "206": {
+      "name": "Mapa 206",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "207": {
+      "name": "Mapa 207",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "208": {
+      "name": "Mapa 208",
+      "terrain_kind": "dungeon",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "209": {
+      "name": "Mapa 209",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "210": {
+      "name": "Mapa 210",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "211": {
+      "name": "Mapa 211",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "212": {
+      "name": "Mapa 212",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "213": {
+      "name": "Mapa 213",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "214": {
+      "name": "Mapa 214",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "215": {
+      "name": "Mapa 215",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "216": {
+      "name": "Mapa 216",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "217": {
+      "name": "Mapa 217",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "218": {
+      "name": "Mapa 218",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "219": {
+      "name": "Mapa 219",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "220": {
+      "name": "Mapa 220",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "221": {
+      "name": "Mapa 221",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "222": {
+      "name": "Mapa 222",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "223": {
+      "name": "Mapa 223",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "224": {
+      "name": "Mapa 224",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "225": {
+      "name": "Mapa 225",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "226": {
+      "name": "Mapa 226",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "227": {
+      "name": "Mapa 227",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "228": {
+      "name": "Mapa 228",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "229": {
+      "name": "Mapa 229",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "230": {
+      "name": "Mapa 230",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "231": {
+      "name": "Mapa 231",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "232": {
+      "name": "Mapa 232",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "233": {
+      "name": "Mapa 233",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "234": {
+      "name": "Mapa 234",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "235": {
+      "name": "Mapa 235",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "236": {
+      "name": "Mapa 236",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "237": {
+      "name": "Mapa 237",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "238": {
+      "name": "Mapa 238",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "239": {
+      "name": "Mapa 239",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "240": {
+      "name": "Mapa 240",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "241": {
+      "name": "Mapa 241",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "242": {
+      "name": "Mapa 242",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "243": {
+      "name": "Mapa 243",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "244": {
+      "name": "Mapa 244",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "245": {
+      "name": "Mapa 245",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "246": {
+      "name": "Mapa 246",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "247": {
+      "name": "Mapa 247",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "248": {
+      "name": "Mapa 248",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "249": {
+      "name": "Mapa 249",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "250": {
+      "name": "Mapa 250",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "251": {
+      "name": "Mapa 251",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "252": {
+      "name": "Mapa 252",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "253": {
+      "name": "Mapa 253",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "254": {
+      "name": "Mapa 254",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "255": {
+      "name": "Mapa 255",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "256": {
+      "name": "Mapa 256",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "257": {
+      "name": "Mapa 257",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "258": {
+      "name": "Mapa 258",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "259": {
+      "name": "Mapa 259",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "260": {
+      "name": "Mapa 260",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "261": {
+      "name": "Mapa 261",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "262": {
+      "name": "Mapa 262",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "263": {
+      "name": "Mapa 263",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "264": {
+      "name": "Mapa 264",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "265": {
+      "name": "Mapa 265",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "266": {
+      "name": "Mapa 266",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "267": {
+      "name": "Mapa 267",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "268": {
+      "name": "Mapa 268",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "269": {
+      "name": "Mapa 269",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "270": {
+      "name": "Mapa 270",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "271": {
+      "name": "Mapa 271",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "272": {
+      "name": "Mapa 272",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "273": {
+      "name": "Mapa 273",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "274": {
+      "name": "Mapa 274",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "275": {
+      "name": "Mapa 275",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "276": {
+      "name": "Mapa 276",
+      "terrain_kind": "unknown",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "277": {
+      "name": "Mapa 277",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "278": {
+      "name": "Mapa 278",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "279": {
+      "name": "Mapa 279",
+      "terrain_kind": "water",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "280": {
+      "name": "Mapa 280",
+      "terrain_kind": "dungeon",
+      "role": "reserved",
+      "access": "administrative_only",
+      "reason": "Original layout has no access from the ordinary portal network; reserved for authored events or administration. It is excluded from normal navigation until an entrance and escape are authored."
+    },
+    "281": {
+      "name": "Mapa 281",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "282": {
+      "name": "Mapa 282",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "283": {
+      "name": "Mapa 283",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "284": {
+      "name": "Mapa 284",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "285": {
+      "name": "Mapa 285",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "286": {
+      "name": "Mapa 286",
+      "terrain_kind": "dungeon",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "287": {
+      "name": "Mapa 287",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "288": {
+      "name": "Mapa 288",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "289": {
+      "name": "Mapa 289",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    },
+    "290": {
+      "name": "Mapa 290",
+      "terrain_kind": "water",
+      "role": "playable",
+      "access": "authored_portal_network",
+      "reason": "Connected to Ullathorpe by the existing directed network, with a route back."
+    }
+  }
+}

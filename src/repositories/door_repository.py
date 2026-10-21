@@ -34,6 +34,15 @@ class DoorRepository:
         """
         return f"door:{map_id}:{x}:{y}"
 
+    @staticmethod
+    def state_key(map_id: int, x: int, y: int) -> str:
+        """Expone la clave estable a la transacción compartida.
+
+        Returns:
+            Clave escalar ya utilizada por las puertas persistidas.
+        """
+        return DoorRepository._get_door_key(map_id, x, y)
+
     async def get_door_state(self, map_id: int, x: int, y: int) -> tuple[int, bool] | None:
         """Obtiene el estado de una puerta.
 

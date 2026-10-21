@@ -1,0 +1,21 @@
+#!/bin/bash
+# Wrapper de inicio para PyAO Server.
+# Usa catálogos del wheel actual y conserva sólo la configuración editable.
+set -eu
+WORKDIR="${PYAO_STATE_DIR:-${SNAP_USER_COMMON}}"
+PYTHON_BIN="${SNAP}/bin/python3"
+PYTHON_VERSION=$("${PYTHON_BIN}" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+export PYTHONPATH="${SNAP}/lib/python${PYTHON_VERSION}/site-packages"
+RESOURCES="${PYTHONPATH}/src/runtime_data"
+mkdir -p "${WORKDIR}/certs" "${WORKDIR}/config" "${WORKDIR}/logs"
+if [ ! -f "${WORKDIR}/config/server.toml" ]; then
+    cp "${RESOURCES}/config/server.toml" "${WORKDIR}/config/server.toml"
+fi
+export PYAO_STATE_DIR="${WORKDIR}"
+export PYAO_CONFIG_FILE="${PYAO_CONFIG_FILE:-${WORKDIR}/config/server.toml}"
+# No sobrescribir ni seleccionar automáticamente los catálogos de snaps viejos.
+export PYAO_DATA_DIR="${PYAO_DATA_DIR:-${RESOURCES}/data}"
+pyao_multiarch=$("${PYTHON_BIN}" -c 'import sysconfig; print(sysconfig.get_config_var("MULTIARCH"))')
+export LD_LIBRARY_PATH="${SNAP}/usr/lib/${pyao_multiarch}:${SNAP}/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+cd "${WORKDIR}"
+exec "${PYTHON_BIN}" "${SNAP}/bin/pyao-server-indicator" "$@"

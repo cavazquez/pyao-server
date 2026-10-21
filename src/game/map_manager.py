@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.models.npc import NPC
     from src.repositories.ground_items_repository import GroundItemsRepository
+    from src.services.map.door_world import DoorWorld
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 
@@ -70,6 +71,7 @@ class MapManager(SpatialIndexMixin):
         # Puertas cerradas
         self._door_state = DoorState()
         self._closed_doors = self._door_state.data
+        self.door_world: DoorWorld | None = None
 
         # Exits
         self._exit_index = ExitIndex()
@@ -484,6 +486,7 @@ class MapManager(SpatialIndexMixin):
         result = self._metadata_loader.load_map_data(map_id, map_file_path)
         self._map_sizes[map_id] = (result.width, result.height)
         self._blocked_tiles[map_id] = result.blocked_tiles
+        self._exit_index.clear_map(map_id)
         self._exit_index.update(result.exit_tiles)
 
         logger.info(
@@ -502,6 +505,14 @@ class MapManager(SpatialIndexMixin):
             Si sus metadatos y dimensiones están cargados.
         """
         return map_id in self._map_sizes
+
+    def get_exit_positions(self, map_id: int) -> tuple[tuple[int, int], ...]:
+        """Obtiene sólo las salidas del mapa solicitado.
+
+        Returns:
+            Casillas de portal indexadas por mapa.
+        """
+        return self._exit_index.positions(map_id)
 
     def release_map_source_cache(self) -> None:
         """Descarta las copias de lectura una vez cargado el mundo en sus índices."""
@@ -550,6 +561,16 @@ class MapManager(SpatialIndexMixin):
             y: Coordenada Y.
         """
         self._door_state.unblock(map_id, x, y)
+
+    def register_door_state(self, map_id: int, x: int, y: int, *, closed: bool) -> None:
+        """Mantiene la puerta como superposición, sin convertirla en un sólido permanente."""
+        mask = self._blocked_tiles.get(map_id)
+        if mask is not None:
+            mask.discard((x, y))
+        if closed:
+            self.block_tile(map_id, x, y)
+        else:
+            self.unblock_tile(map_id, x, y)
 
     def is_door_closed(self, map_id: int, x: int, y: int) -> bool:
         """Verifica si hay una puerta cerrada en una posición.

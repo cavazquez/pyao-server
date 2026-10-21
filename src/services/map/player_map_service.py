@@ -12,15 +12,19 @@ if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
     from src.repositories.account_repository import AccountRepository
     from src.repositories.player_repository import PlayerRepository
+    from src.services.map.door_world import DoorWorld
     from src.services.map.map_resources_service import MapResourcesService
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
     from src.services.npc.random_spawn_service import RandomSpawnService
 
+from src.models.item_catalog import ItemCatalog
 from src.services.map.map_transition_steps import (
     MapTransitionContext,
     MapTransitionOrchestrator,
 )
+from src.services.map.transfer import commit_transfer
 from src.services.player.appearance import resolve_appearance
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 
 logger = logging.getLogger(__name__)
@@ -57,6 +61,7 @@ class PlayerMapService:
         broadcast_service: MultiplayerBroadcastService,
         random_spawn_service: RandomSpawnService | None = None,
         map_resources: MapResourcesService | None = None,
+        door_world: DoorWorld | None = None,
     ) -> None:
         """Inicializa el servicio de mapas de jugador.
 
@@ -67,6 +72,7 @@ class PlayerMapService:
             broadcast_service: Servicio de broadcast multijugador.
             random_spawn_service: Servicio de spawns aleatorios (opcional).
             map_resources: Talleres estáticos que se muestran al entrar (opcional).
+            door_world: Estado compartido de puertas dinámicas.
         """
         self.player_repo = player_repo
         self.account_repo = account_repo
@@ -74,6 +80,8 @@ class PlayerMapService:
         self.broadcast_service = broadcast_service
         self.random_spawn_service = random_spawn_service
         self.map_resources = map_resources
+        self.door_world = door_world
+        self._item_catalog = ItemCatalog()
 
         # Crear orquestador de transición con la secuencia predeterminada
         self.transition_orchestrator = MapTransitionOrchestrator.create_default_orchestrator(
@@ -83,19 +91,25 @@ class PlayerMapService:
             self._send_players_in_map,
             self._send_npcs_in_map,
             self._send_ground_items_in_map,
+            self._send_terrain_overrides,
         )
 
-    async def _get_player_visual_data(self, user_id: int) -> PlayerVisualData:
+    async def _get_player_visual_data(
+        self, user_id: int, *, sailing: bool | None = None
+    ) -> PlayerVisualData:
         """Obtiene los datos visuales de un jugador (body, head, username).
 
         Args:
             user_id: ID del jugador.
+            sailing: Medio confirmado para resolver la apariencia de llegada.
 
         Returns:
             PlayerVisualData con los datos del jugador.
         """
         account = await self.account_repo.get_account_by_user_id(user_id) or {}
         stats = await self.player_repo.redis.hgetall(RedisKeys.player_user_stats(user_id))
+        if sailing is not None:
+            stats["sailing"] = "1" if sailing else "0"
         equipment = await self.player_repo.redis.hgetall(RedisKeys.player_equipment(user_id))
         inventory = await self.player_repo.redis.hgetall(RedisKeys.player_inventory(user_id))
         visual = resolve_appearance(account, stats, equipment, inventory)
@@ -235,9 +249,10 @@ class PlayerMapService:
         unblocked = 0
 
         # Obtener todos los exit tiles del mapa desde MapManager
-        exit_tiles = getattr(self.map_manager, "_exit_tiles", {})
-        for exit_map_id, x, y in exit_tiles:
-            if exit_map_id == map_id:
+        for x, y in self.map_manager.get_exit_positions(map_id):
+            if not self.map_manager.is_door_closed(map_id, x, y) and (
+                self.map_resources is None or self.map_resources.is_blocked(map_id, x, y)
+            ):
                 # Enviar BLOCK_POSITION(false) para desbloquear el tile
                 await message_sender.send_block_position(x, y, blocked=False)
                 unblocked += 1
@@ -248,6 +263,17 @@ class PlayerMapService:
             logger.debug("Desbloqueados %d tiles de exit en mapa %d", unblocked, map_id)
 
         return unblocked
+
+    async def _send_terrain_overrides(self, map_id: int, sender: MessageSender) -> int:
+        """Sincroniza portales y puertas con la colisión efectiva del servidor.
+
+        Returns:
+            Cantidad de superposiciones enviadas.
+        """
+        count = await self._unblock_exit_tiles(map_id, sender)
+        if self.door_world is not None:
+            count += await self.door_world.snapshot(map_id, sender)
+        return count
 
     async def spawn_in_map(
         self,
@@ -281,6 +307,9 @@ class PlayerMapService:
         # Usamos old_x/old_y iguales a la posición inicial para centralizar la lógica
         self.map_manager.update_player_tile(user_id, map_id, x, y, x, y)
 
+        # Excepciones del terreno antes del primer actor/input del cliente.
+        await self._send_terrain_overrides(map_id, message_sender)
+
         # 2. Enviar CHARACTER_CREATE del propio jugador
         await message_sender.send_character_create(
             char_index=user_id,
@@ -306,9 +335,6 @@ class PlayerMapService:
 
         # 5. Enviar todos los ground items del mapa
         await self._send_ground_items_in_map(map_id, message_sender)
-
-        # 6. Desbloquear tiles de exit (workaround para mapas con tiles bloqueados incorrectamente)
-        await self._unblock_exit_tiles(map_id, message_sender)
 
         # 7. Broadcast CHARACTER_CREATE a otros jugadores
         await self.broadcast_service.broadcast_character_create(
@@ -346,7 +372,7 @@ class PlayerMapService:
         new_y: int,
         heading: int,
         message_sender: MessageSender,
-    ) -> None:
+    ) -> bool:
         """Transiciona un jugador de un mapa a otro (usado en cambios de mapa).
 
         Este método ahora usa el orquestador de transición para ejecutar la secuencia
@@ -362,9 +388,136 @@ class PlayerMapService:
             new_y: Nueva posición Y.
             heading: Dirección del jugador.
             message_sender: MessageSender del jugador.
+
+        Returns:
+            Si se confirmó el destino conservando las validaciones de llegada.
+
+        Raises:
+            asyncio.CancelledError: Si se cancela la conexión durante la publicación.
         """
-        # Obtener datos visuales del jugador
-        visual_data = await self._get_player_visual_data(user_id)
+        if not self.map_manager.has_map(new_map):
+            return await self._reject_arrival(
+                message_sender, current_x, current_y, "El mapa de destino no existe."
+            )
+        water = bool(self.map_resources and self.map_resources.has_water(new_map, new_x, new_y))
+        if self.map_resources and (
+            (self.map_resources.is_blocked(new_map, new_x, new_y) and not water)
+            or self.map_resources.has_tree(new_map, new_x, new_y)
+            or self.map_resources.has_mine(new_map, new_x, new_y)
+        ):
+            return await self._reject_arrival(
+                message_sender, current_x, current_y, "La llegada está bloqueada."
+            )
+        visual_data = await self._get_player_visual_data(user_id, sailing=water)
+        identity = operation_id()
+        if not self.map_manager.reserve_arrival(identity, new_map, new_x, new_y, water=water):
+            return await self._reject_arrival(
+                message_sender, current_x, current_y, "La llegada está ocupada o bloqueada."
+            )
+        try:
+            result = await commit_transfer(
+                self.player_repo,
+                self._item_catalog,
+                user_id,
+                (current_map, current_x, current_y),
+                (new_map, new_x, new_y),
+                heading,
+                water,
+                identity,
+            )
+            if not result["applied"]:
+                return await self._reject_arrival(
+                    message_sender, current_x, current_y, str(result["message"])
+                )
+            if result["dead"]:
+                visual_data.char_body, visual_data.char_head = 500, 500
+                visual_data.weapon = visual_data.shield = visual_data.helmet = 0
+            try:
+                await self._complete_transfer(
+                    user_id,
+                    current_map,
+                    current_x,
+                    current_y,
+                    new_map,
+                    new_x,
+                    new_y,
+                    heading,
+                    message_sender,
+                    visual_data,
+                    bool(result["navigation_changed"]),
+                )
+            except OSError:
+                # El commit ya tiene destino e índice coherentes. Una reconexión
+                # reconstruye ese snapshot; volver al origen podría pisar a otro.
+                logger.warning("Conexión interrumpida tras confirmar transición de %d", user_id)
+                await self._disconnect_committed_arrival(user_id, current_map, message_sender)
+            except asyncio.CancelledError:
+                await self._disconnect_committed_arrival(user_id, current_map, message_sender)
+                raise
+            return True
+        finally:
+            self.map_manager.release_positions(identity, (new_map, new_x, new_y))
+
+    async def _disconnect_committed_arrival(
+        self, user_id: int, old_map: int, sender: MessageSender
+    ) -> None:
+        """Retira la imagen anterior aunque falle el primer paquete del mapa nuevo."""
+        try:
+            await self.broadcast_service.broadcast_character_remove(old_map, user_id)
+        except OSError:
+            logger.warning("Un observador desconectado no recibió la retirada de %d", user_id)
+        finally:
+            sender.connection.close()
+
+    @staticmethod
+    async def _reject_arrival(message_sender: MessageSender, x: int, y: int, message: str) -> bool:
+        """Resincroniza la predicción local sin cambiar Redis ni la pertenencia al mapa.
+
+        Returns:
+            False para que WALK nunca informe una transición rechazada como exitosa.
+        """
+        await message_sender.send_console_msg(message)
+        await message_sender.send_pos_update(x, y)
+        return False
+
+    async def _complete_transfer(
+        self,
+        user_id: int,
+        current_map: int,
+        current_x: int,
+        current_y: int,
+        new_map: int,
+        new_x: int,
+        new_y: int,
+        heading: int,
+        message_sender: MessageSender,
+        visual_data: PlayerVisualData,
+        navigation_changed: bool,
+    ) -> None:
+        """Tras el commit, publica el destino autoritativo y los snapshots del mapa."""
+        if current_map == new_map:
+            self.map_manager.update_player_tile(
+                user_id, new_map, current_x, current_y, new_x, new_y
+            )
+            if navigation_changed:
+                await message_sender.send_navigate_toggle()
+            await message_sender.send_pos_update(new_x, new_y)
+            await self.broadcast_service.broadcast_character_remove(new_map, user_id)
+            await self.broadcast_service.broadcast_character_create(
+                map_id=new_map,
+                char_index=user_id,
+                body=visual_data.char_body,
+                head=visual_data.char_head,
+                weapon=visual_data.weapon,
+                shield=visual_data.shield,
+                helmet=visual_data.helmet,
+                heading=heading,
+                x=new_x,
+                y=new_y,
+                name=visual_data.username,
+            )
+            await self._sync_map_states(new_map)
+            return
 
         # Crear contexto de transición
         context = MapTransitionContext(
@@ -383,6 +536,8 @@ class PlayerMapService:
             new_y=new_y,
             heading=heading,
             message_sender=message_sender,
+            position_committed=True,
+            navigation_changed=navigation_changed,
         )
 
         # Ejecutar transición usando el orquestador
@@ -402,7 +557,7 @@ class PlayerMapService:
         new_y: int,
         heading: int,
         message_sender: MessageSender,
-    ) -> None:
+    ) -> bool:
         """Teletransporta un jugador dentro del mismo mapa.
 
         Este método maneja el teletransporte cuando el jugador se mueve
@@ -417,47 +572,12 @@ class PlayerMapService:
             new_y: Nueva posición Y.
             heading: Dirección del jugador.
             message_sender: MessageSender del jugador.
+
+        Returns:
+            Si se confirmó el destino conservando las validaciones de llegada.
         """
-        # Obtener datos visuales del jugador
-        visual_data = await self._get_player_visual_data(user_id)
-
-        # 1. Actualizar posición en Redis
-        await self.player_repo.set_position(user_id, new_x, new_y, map_id, heading)
-
-        # 2. Actualizar índice espacial en MapManager
-        self.map_manager.update_player_tile(user_id, map_id, old_x, old_y, new_x, new_y)
-
-        # 3. Enviar POS_UPDATE al cliente
-        await message_sender.send_pos_update(new_x, new_y)
-
-        # 4. Broadcast CHARACTER_REMOVE en posición anterior
-        await self.broadcast_service.broadcast_character_remove(map_id, user_id)
-
-        # 5. Broadcast CHARACTER_CREATE en nueva posición
-        await self.broadcast_service.broadcast_character_create(
-            map_id=map_id,
-            char_index=user_id,
-            body=visual_data.char_body,
-            head=visual_data.char_head,
-            weapon=visual_data.weapon,
-            shield=visual_data.shield,
-            helmet=visual_data.helmet,
-            heading=heading,
-            x=new_x,
-            y=new_y,
-            name=visual_data.username,
-        )
-
-        await self._sync_map_states(map_id)
-        logger.info(
-            "Jugador %s (ID:%d) teletransportado en mapa %d: (%d,%d) -> (%d,%d)",
-            visual_data.username,
-            user_id,
-            map_id,
-            old_x,
-            old_y,
-            new_x,
-            new_y,
+        return await self.transition_to_map(
+            user_id, map_id, old_x, old_y, map_id, new_x, new_y, heading, message_sender
         )
 
     async def _spawn_random_npcs_for_player(

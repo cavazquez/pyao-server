@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PyAO Server
+Comment=Servidor de Argentum Online con indicador opcional
+Exec=pyao.pyao-server-indicator
+Icon=${SNAP}/share/icons/hicolor/128x128/apps/pyao-server.png
+Terminal=false
+Categories=Game;RolePlaying;

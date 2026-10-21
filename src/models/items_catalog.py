@@ -62,8 +62,12 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
             obj_type=obj_type,
             min_damage=item_data.get("MinHit", 0),
             max_damage=item_data.get("MaxHit", 0),
-            defense=item_data.get("MinDef", 0),
-            max_defense=item_data.get("MaxDef", 0),
+            defense=item_data.get(
+                "DefensaMagicaMin" if obj_type == ObjType.ANILLOS else "MinDef", 0
+            ),
+            max_defense=item_data.get(
+                "DefensaMagicaMax" if obj_type == ObjType.ANILLOS else "MaxDef", 0
+            ),
             animation=int(item_data.get("Anim", 0)),
             body_animation=int(item_data.get("NumRopaje", 0)),
             dwarf_animation=int(item_data.get("RazaEnanaAnim", 0)),
@@ -137,7 +141,7 @@ def _map_obj_type_to_item_type(obj_type: int) -> ItemType:
         ObjType.BEBIDA: ItemType.FOOD,
         ObjType.ESCUDOS: ItemType.SHIELD,
         ObjType.CASCOS: ItemType.HELMET,
-        ObjType.ANILLOS: ItemType.MISC,  # Los anillos se mapean como MISC por ahora
+        ObjType.ANILLOS: ItemType.ACCESSORY,
     }
     return mapping.get(obj_type, ItemType.MISC)
 

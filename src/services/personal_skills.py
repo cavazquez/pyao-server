@@ -9,11 +9,12 @@ from src.constants.gameplay import MAX_PETS
 from src.economy.devaluation_fractions import move_gold_remainder
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.models.skill_data_loader import SKILL_RULES_KEY
-from src.services.combat.physical_plan import levels
+from src.services.action_resources import player_action_resources
 from src.services.combat.pvp_policy import PvpPolicy
+from src.services.combat_snapshot import levels
 from src.services.crafting import consume_materials
 from src.services.meditation import MEDITATION_LUCK
-from src.services.skill_training import trained_decision, training_resources
+from src.services.skill_training import trained_decision
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -36,20 +37,6 @@ THEFT_STAMINA = 15
 GOLD_LIMIT = MAX_PLAYER_GOLD
 TAME_COOLDOWN_SECONDS = 3
 SAME_PET_LIMIT = 2
-
-
-def player_action_resources(user: int) -> tuple[Resource, ...]:
-    """Incluye equipo e inventario para evitar actuar con objetos que ya cambiaron.
-
-    Returns:
-        Recursos del actor para una operación completa.
-    """
-    return (
-        *training_resources(user),
-        Resource(RedisKeys.player_position(user), "hash"),
-        Resource(RedisKeys.player_inventory(user), "hash"),
-        Resource(RedisKeys.player_equipment(user), "hash"),
-    )
 
 
 def valid_actor(

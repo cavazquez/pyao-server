@@ -291,13 +291,13 @@ class TestMapTransitionOrchestrator:
         # Verificar tipos de pasos
         step_types = [type(step).__name__ for step in orchestrator.steps]
         expected_types = [
-            "SendChangeMapStep",
             "UpdatePositionStep",
-            "SendPositionUpdateStep",
             "RemoveFromOldMapStep",
-            "BroadcastRemoveFromOldMapStep",
             "AddToNewMapStep",
             "UpdateTileInNewMapStep",
+            "SendChangeMapStep",
+            "SendPositionUpdateStep",
+            "BroadcastRemoveFromOldMapStep",
             "SendSelfCharacterCreateStep",
             "SendExistingPlayersStep",
             "SendNPCsStep",

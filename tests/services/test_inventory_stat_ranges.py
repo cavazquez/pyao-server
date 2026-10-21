@@ -22,8 +22,12 @@ def test_entire_catalog_preserves_distinct_defense_limits():
     for item_id in catalog.get_all_item_ids():
         raw = catalog.get_item_data(item_id)
         item = ITEMS_CATALOG[item_id]
-        assert (item.defense or 0) == raw.get("MinDef", 0), item_id
-        assert (item.max_defense or 0) == raw.get("MaxDef", 0), item_id
+        assert (item.defense or 0) == raw.get(
+            "DefensaMagicaMin" if raw["ObjType"] == 18 else "MinDef", 0
+        ), item_id
+        assert (item.max_defense or 0) == raw.get(
+            "DefensaMagicaMax" if raw["ObjType"] == 18 else "MaxDef", 0
+        ), item_id
         assert item.to_client_type() == raw["ObjType"], item_id
 
 

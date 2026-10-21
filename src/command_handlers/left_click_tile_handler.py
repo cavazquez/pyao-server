@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from src.models.items_catalog import ITEMS_CATALOG
+from src.services.map.door_world import DoorWorld
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -133,6 +134,24 @@ class LeftClickTileHandler:
         # No hay cartel, mostrar información del tile
         return await self._show_tile_info(map_id, x, y)
 
+    async def _shared_door_click(self, map_id: int, x: int, y: int) -> dict[str, Any] | None:
+        """Publica la mutación compartida cuando el runtime tiene su mundo inicializado.
+
+        Returns:
+            Resultado compartido o None para el componente aislado de compatibilidad interna.
+        """
+        world = self.map_manager.door_world if self.map_manager else None
+        if not isinstance(world, DoorWorld):
+            return None
+        result = await world.toggle(map_id, x, y)
+        message = (
+            ("Puerta abierta." if result.get("is_open") else "Puerta cerrada.")
+            if result["applied"]
+            else str(result["message"])
+        )
+        await self.message_sender.send_console_msg(message)
+        return result
+
     async def _handle_door_click(
         self, map_id: int, x: int, y: int
     ) -> tuple[bool, dict[str, Any] | None]:
@@ -156,6 +175,10 @@ class LeftClickTileHandler:
         if not door_grh:
             return False, None
 
+        synchronized = await self._shared_door_click(map_id, x, y)
+        if synchronized is not None:
+            return True, synchronized
+
         # Verificar si hay un estado guardado en Redis
         saved_state = await self.door_repo.get_door_state(map_id, x, y)
 
@@ -177,15 +200,6 @@ class LeftClickTileHandler:
             logger.warning("Puerta con GrhIndex=%d no encontrada en catálogo", door_grh)
             await self.message_sender.send_console_msg("No puedes interactuar con esto.")
             return True, {"type": "door", "map_id": map_id, "x": x, "y": y}
-
-        logger.info(
-            "Puerta detectada: item_id=%d, name=%s, is_open=%s, requires_key=%s, key_id=%s",
-            door_info.item_id,
-            door_info.name,
-            door_info.is_open,
-            door_info.requires_key,
-            door_info.key_id,
-        )
 
         # Verificar si la puerta requiere llave
         if door_info.requires_key:
@@ -219,10 +233,6 @@ class LeftClickTileHandler:
             if door_right:
                 tiles_to_update.append((x + 1, y))
                 logger.debug("Puerta adyacente encontrada en (%d, %d)", x + 1, y)
-
-            logger.info(
-                "Actualizando %d tiles de puerta: %s", len(tiles_to_update), tiles_to_update
-            )
 
             # Actualizar bloqueo de todos los tiles
             for tile_x, tile_y in tiles_to_update:
