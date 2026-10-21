@@ -157,7 +157,12 @@ jobs:
       - run: uv python install "$UV_PYTHON"
       - run: uv sync --locked --no-dev
       - name: Preparar cliente Redis para backups reales
-        run: sudo apt-get update && sudo apt-get install -y redis-tools
+        run: |
+          # El runner también trae repos de terceros; sólo necesitamos Ubuntu.
+          # Un 403 ajeno a Redis no debe impedir estas pruebas de recuperación.
+          apt_sources=(-o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=-)
+          sudo apt-get "${apt_sources[@]}" update
+          sudo apt-get "${apt_sources[@]}" install -y redis-tools
       - name: Reinicio, caída tras fsync, backup y restauración en otra instancia
         run: |
           mkdir -p artifacts
