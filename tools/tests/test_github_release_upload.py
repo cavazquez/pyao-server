@@ -5,12 +5,78 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+from subprocess import CompletedProcess
 
 spec = importlib.util.spec_from_file_location(
     "github_release_upload", Path(__file__).parents[1] / "github_release_upload.py"
 )
 release = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(release)
+
+
+class GitHubLookupTests(unittest.TestCase):
+    def backend(self):
+        return release.GitHub("owner/project", "v1.0.0rc4")
+
+    def missing(self):
+        return CompletedProcess([], 1, json.dumps({"status": "404"}), "not found")
+
+    def test_finds_draft_by_exact_tag_in_later_listing_page(self):
+        draft = {"tag_name": "v1.0.0rc4", "draft": True, "assets": []}
+        pages = [[{"tag_name": "v1.0.0rc40"}], [draft]]
+        with patch.object(
+            release.subprocess,
+            "run",
+            side_effect=[self.missing(), CompletedProcess([], 0, json.dumps(pages), "")],
+        ) as run:
+            self.assertEqual(self.backend().load(), draft)
+        self.assertIn("--paginate", run.call_args.args[0])
+        self.assertIn("--slurp", run.call_args.args[0])
+
+    def test_returns_none_only_after_successful_listing_without_the_tag(self):
+        with patch.object(
+            release.subprocess,
+            "run",
+            side_effect=[self.missing(), CompletedProcess([], 0, "[[]]", "")],
+        ):
+            self.assertIsNone(self.backend().load())
+
+    def test_preserves_permission_error_without_trying_a_listing(self):
+        with patch.object(
+            release.subprocess,
+            "run",
+            return_value=CompletedProcess([], 1, '{"status": "403"}', "forbidden"),
+        ) as run:
+            with self.assertRaisesRegex(RuntimeError, "Cannot inspect release"):
+                self.backend().load()
+        self.assertEqual(run.call_count, 1)
+
+    def test_does_not_treat_failed_listing_as_a_missing_release(self):
+        with patch.object(
+            release.subprocess,
+            "run",
+            side_effect=[self.missing(), CompletedProcess([], 1, "", "network failure")],
+        ):
+            with self.assertRaisesRegex(RuntimeError, "Cannot inspect release drafts"):
+                self.backend().load()
+
+    def test_refuses_duplicate_or_malformed_listings(self):
+        for pages in (
+            [[{"tag_name": "v1.0.0rc4"}, {"tag_name": "v1.0.0rc4"}]],
+            {"items": []},
+            [[None]],
+        ):
+            with (
+                self.subTest(pages=pages),
+                patch.object(
+                    release.subprocess,
+                    "run",
+                    side_effect=[self.missing(), CompletedProcess([], 0, json.dumps(pages), "")],
+                ),
+            ):
+                with self.assertRaises(ValueError):
+                    self.backend().load()
 
 
 class MemoryGitHub:
@@ -68,10 +134,7 @@ class ReleaseUploadTests(unittest.TestCase):
         self.version, self.commit, self.tag = "1.0.0rc4", "a" * 40, "v1.0.0rc4"
         (self.folder / "client.zip").write_bytes(b"candidate")
         (self.folder / "client.json").write_bytes(b"{}")
-        files = {
-            name: release.sha(self.folder / name)
-            for name in ("client.zip", "client.json")
-        }
+        files = {name: release.sha(self.folder / name) for name in ("client.zip", "client.json")}
         (self.folder / "release-manifest.json").write_text(
             json.dumps(
                 {
@@ -82,8 +145,7 @@ class ReleaseUploadTests(unittest.TestCase):
             )
         )
         sums = "".join(
-            f"{release.sha(path)}  {path.name}\n"
-            for path in sorted(self.folder.iterdir())
+            f"{release.sha(path)}  {path.name}\n" for path in sorted(self.folder.iterdir())
         )
         (self.folder / "SHA256SUMS").write_text(sums)
         self.backend = MemoryGitHub()
@@ -101,9 +163,7 @@ class ReleaseUploadTests(unittest.TestCase):
         result = self.stage()
         self.assertTrue(result["verified"])
         self.assertEqual(result["status"], "verified-draft")
-        self.assertEqual(
-            set(self.backend.uploads), {p.name for p in self.folder.iterdir()}
-        )
+        self.assertEqual(set(self.backend.uploads), {p.name for p in self.folder.iterdir()})
         self.assertEqual(self.backend.creates, 1)
         self.assertEqual(self.backend.publications, 0)
 
