@@ -6,13 +6,17 @@ conserva el comando manual, ejecutando parsing/delegación y recolección real
 sobre Redis falso, con éxito, fallo, rechazos y replay sin duplicar recursos.
 """
 
-import subprocess
+import subprocess  # ruff: ignore[suspicious-subprocess-import] -- argv fijo del diagnóstico
 import sys
 from pathlib import Path
 
 
 def main() -> int:
-    """Ejecuta las regresiones equivalentes y devuelve su resultado."""
+    """Ejecuta las regresiones equivalentes.
+
+    Returns:
+        Código de salida de pytest para conservar el resultado del diagnóstico.
+    """
     root = Path(__file__).resolve().parent
     result = subprocess.run(
         [
