@@ -57,10 +57,10 @@ def get_coverage_lines(base_dir: Path) -> int:
     try:
         with open(coverage_file) as f:
             coverage_data = json.load(f)
-    except (json.JSONDecodeError, FileNotFoundError):
+    except json.JSONDecodeError, FileNotFoundError:
         return -1
 
-    return coverage_data.get("totals", {}).get("covered_lines", 0)
+    return int(coverage_data.get("totals", {}).get("covered_lines", 0))
 
 
 def test_remove_single_file(base_dir: Path, test_file: str) -> tuple[bool, int]:
@@ -78,11 +78,11 @@ def test_remove_single_file(base_dir: Path, test_file: str) -> tuple[bool, int]:
     backup_path = base_dir / f"{test_file}.backup"
     file_path.rename(backup_path)
 
-    # Obtener cobertura después
-    coverage_after = get_coverage_lines(base_dir)
-
-    # Restaurar archivo
-    backup_path.rename(file_path)
+    try:
+        coverage_after = get_coverage_lines(base_dir)
+    finally:
+        # Restaurar también si falla el subproceso de cobertura.
+        backup_path.rename(file_path)
 
     if coverage_after == -1:
         return False, 0
@@ -131,7 +131,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-

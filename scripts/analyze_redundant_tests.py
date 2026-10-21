@@ -27,6 +27,17 @@ import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
+from typing import TypedDict
+
+
+class CoverageAnalysis(TypedDict):
+    """Cobertura y aporte exclusivo de un archivo de prueba."""
+
+    covered_lines: set[tuple[str, int]]
+    unique_lines: set[tuple[str, int]]
+    unique_count: int
+    total_covered: int
+
 
 # Agregar el directorio raíz al path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -106,7 +117,7 @@ def get_coverage_for_test_file(test_file: str, base_dir: Path) -> set[tuple[str,
     try:
         with open(coverage_file) as f:
             coverage_data = json.load(f)
-    except (json.JSONDecodeError, FileNotFoundError):
+    except json.JSONDecodeError, FileNotFoundError:
         return set()
 
     # Extraer líneas cubiertas (solo archivos en src/)
@@ -122,7 +133,7 @@ def get_coverage_for_test_file(test_file: str, base_dir: Path) -> set[tuple[str,
 
 def analyze_redundant_tests(
     test_files: list[str], base_dir: Path, sample_size: int | None = None
-) -> dict[str, dict]:
+) -> dict[str, CoverageAnalysis]:
     """Analiza archivos de test para identificar redundancias.
 
     Args:
@@ -159,7 +170,7 @@ def analyze_redundant_tests(
 
     # Paso 2: Calcular líneas únicas por test
     print("\n🔎 Calculando líneas únicas por archivo de test...")
-    test_analysis: dict[str, dict] = {}
+    test_analysis: dict[str, CoverageAnalysis] = {}
 
     # Obtener todas las líneas cubiertas por todos los tests
     all_covered_lines: set[tuple[str, int]] = set()
@@ -188,7 +199,7 @@ def analyze_redundant_tests(
     return test_analysis
 
 
-def generate_report(test_analysis: dict[str, dict], output_file: Path) -> None:
+def generate_report(test_analysis: dict[str, CoverageAnalysis], output_file: Path) -> None:
     """Genera un reporte markdown con el análisis de tests redundantes.
 
     Args:
@@ -248,8 +259,12 @@ def generate_report(test_analysis: dict[str, dict], output_file: Path) -> None:
     ]
 
     if completely_redundant:
-        report_lines.append("| Archivo de Test | Líneas Cubiertas | Líneas Únicas | Recomendación |")
-        report_lines.append("|-----------------|-------------------|---------------|---------------|")
+        report_lines.append(
+            "| Archivo de Test | Líneas Cubiertas | Líneas Únicas | Recomendación |"
+        )
+        report_lines.append(
+            "|-----------------|-------------------|---------------|---------------|"
+        )
         for test_file, analysis in completely_redundant:
             report_lines.append(
                 f"| `{test_file}` | {analysis['total_covered']} | {analysis['unique_count']} | ⚠️ **ELIMINAR** |"
@@ -258,19 +273,25 @@ def generate_report(test_analysis: dict[str, dict], output_file: Path) -> None:
         report_lines.append("✅ No se encontraron archivos de test completamente redundantes.")
         report_lines.append("")
 
-    report_lines.extend([
-        "",
-        "---",
-        "",
-        "## Archivos de Test Casi Redundantes (<10 líneas únicas)",
-        "",
-        "Estos archivos de test aportan muy poca cobertura única:",
-        "",
-    ])
+    report_lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## Archivos de Test Casi Redundantes (<10 líneas únicas)",
+            "",
+            "Estos archivos de test aportan muy poca cobertura única:",
+            "",
+        ]
+    )
 
     if nearly_redundant:
-        report_lines.append("| Archivo de Test | Líneas Cubiertas | Líneas Únicas | Recomendación |")
-        report_lines.append("|-----------------|-------------------|---------------|---------------|")
+        report_lines.append(
+            "| Archivo de Test | Líneas Cubiertas | Líneas Únicas | Recomendación |"
+        )
+        report_lines.append(
+            "|-----------------|-------------------|---------------|---------------|"
+        )
         for test_file, analysis in nearly_redundant[:30]:  # Limitar a 30 para no hacer muy largo
             # Mostrar algunas líneas únicas de ejemplo
             unique_lines_list = list(analysis["unique_lines"])[:3]
@@ -288,15 +309,17 @@ def generate_report(test_analysis: dict[str, dict], output_file: Path) -> None:
         report_lines.append("✅ No se encontraron archivos de test casi redundantes.")
         report_lines.append("")
 
-    report_lines.extend([
-        "",
-        "---",
-        "",
-        "## Archivos de Test con Baja Contribución (<50 líneas únicas)",
-        "",
-        f"Lista de archivos de test que aportan menos de 50 líneas únicas (mostrando primeros 50):",
-        "",
-    ])
+    report_lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## Archivos de Test con Baja Contribución (<50 líneas únicas)",
+            "",
+            f"Lista de archivos de test que aportan menos de 50 líneas únicas (mostrando primeros 50):",
+            "",
+        ]
+    )
 
     if low_contribution:
         report_lines.append("| Archivo de Test | Líneas Cubiertas | Líneas Únicas |")
@@ -310,37 +333,39 @@ def generate_report(test_analysis: dict[str, dict], output_file: Path) -> None:
     else:
         report_lines.append("✅ No se encontraron archivos de test con baja contribución.")
 
-    report_lines.extend([
-        "",
-        "---",
-        "",
-        "## Recomendaciones",
-        "",
-        "1. **Archivos completamente redundantes**: Pueden eliminarse inmediatamente si",
-        "   no aportan cobertura única.",
-        "2. **Archivos casi redundantes**: Revisar si las líneas únicas son críticas",
-        "   antes de eliminar.",
-        "3. **Este análisis es aproximado**: Dos archivos de test pueden cubrir las",
-        "   mismas líneas pero validar comportamientos diferentes (diferentes datos,",
-        "   casos edge, validaciones).",
-        "4. **Se recomienda revisión manual**: Antes de eliminar archivos de test,",
-        "   verificar que realmente validan lo mismo.",
-        "",
-        "## Metodología",
-        "",
-        "Este análisis compara qué líneas de código cubre cada archivo de test.",
-        "Un archivo de test que no aporta líneas únicas (todas sus líneas están",
-        "cubiertas por otros tests) es completamente redundante desde el punto de",
-        "vista de cobertura.",
-        "",
-        "**Limitaciones:**",
-        "- Este análisis no considera diferencias en datos de entrada o casos edge.",
-        "- Tests que cubren las mismas líneas pero validan comportamientos diferentes",
-        "  pueden aparecer como redundantes.",
-        "- El análisis es por archivo de test, no por test individual.",
-        "- Se recomienda revisión manual antes de eliminar archivos de test.",
-        "",
-    ])
+    report_lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## Recomendaciones",
+            "",
+            "1. **Archivos completamente redundantes**: Pueden eliminarse inmediatamente si",
+            "   no aportan cobertura única.",
+            "2. **Archivos casi redundantes**: Revisar si las líneas únicas son críticas",
+            "   antes de eliminar.",
+            "3. **Este análisis es aproximado**: Dos archivos de test pueden cubrir las",
+            "   mismas líneas pero validar comportamientos diferentes (diferentes datos,",
+            "   casos edge, validaciones).",
+            "4. **Se recomienda revisión manual**: Antes de eliminar archivos de test,",
+            "   verificar que realmente validan lo mismo.",
+            "",
+            "## Metodología",
+            "",
+            "Este análisis compara qué líneas de código cubre cada archivo de test.",
+            "Un archivo de test que no aporta líneas únicas (todas sus líneas están",
+            "cubiertas por otros tests) es completamente redundante desde el punto de",
+            "vista de cobertura.",
+            "",
+            "**Limitaciones:**",
+            "- Este análisis no considera diferencias en datos de entrada o casos edge.",
+            "- Tests que cubren las mismas líneas pero validan comportamientos diferentes",
+            "  pueden aparecer como redundantes.",
+            "- El análisis es por archivo de test, no por test individual.",
+            "- Se recomienda revisión manual antes de eliminar archivos de test.",
+            "",
+        ]
+    )
 
     # Escribir reporte
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -374,7 +399,7 @@ def main() -> None:
         sys.exit(1)
 
     if args.sample:
-        test_files = test_files[:args.sample]
+        test_files = test_files[: args.sample]
         print(f"⚠️  Modo muestra: analizando solo {len(test_files)} archivos de test")
 
     # Paso 2: Analizar redundancias

@@ -27,7 +27,7 @@ def run_snap(app: str, arguments: list[str], env: dict[str, str], cwd: Path) -> 
     )
 
 
-def wait_for_tls(process: subprocess.Popen, port: int, cert: Path) -> None:
+def wait_for_tls(process: subprocess.Popen[bytes], port: int, cert: Path) -> None:
     """Espera un PONG del servidor instalado mediante una conexión TLS verificada."""
     context = ssl.create_default_context(cafile=cert)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
@@ -45,6 +45,30 @@ def wait_for_tls(process: subprocess.Popen, port: int, cert: Path) -> None:
         except ConnectionError, TimeoutError:
             time.sleep(0.2)
     raise TimeoutError("El Snap no abrió TLS en 90 segundos")
+
+
+def signal_snap(process: subprocess.Popen[bytes], value: signal.Signals) -> None:
+    """Señaliza sólo el proceso propio, también desde un perfil AppArmor diferente."""
+    try:
+        process.send_signal(value)
+    except PermissionError:
+        # Snap admite señales del mismo perfil. Una sesión con un perfil propio
+        # puede lanzar la app pero no señalizarla directamente desde fuera.
+        subprocess.run(
+            [
+                "snap",
+                "run",
+                "--shell",
+                "pyao.pyao-server",
+                "-c",
+                'kill -s "$1" "$2"',
+                "pyao-smoke-stop",
+                value.name.removeprefix("SIG"),
+                str(process.pid),
+            ],
+            check=True,
+            timeout=15,
+        )
 
 
 def main() -> None:
@@ -177,8 +201,8 @@ done
                                 client.set("validation:snap-marker", "preserved")
                                 for name, value in preserved_strings.items():
                                     client.set(name, value)
-                                for name, value in preserved_hashes.items():
-                                    client.hset(name, mapping=value)
+                                for name, fields in preserved_hashes.items():
+                                    client.hset(name, mapping=fields)
                                 client.expire("server:motd", 3600)
                                 preserved = {
                                     name: client.hgetall(name)
@@ -189,18 +213,18 @@ done
                                 assert client.get("validation:snap-marker") == "preserved"
                                 for name, value in preserved_strings.items():
                                     assert client.get(name) == value, name
-                                for name, value in preserved.items():
-                                    assert client.hgetall(name) == value, name
+                                for name, fields in preserved.items():
+                                    assert client.hgetall(name) == fields, name
                                 assert 3500 <= client.ttl("server:motd") <= 3600
                                 assert client.hget("world:home:6", "map") == "151"
                                 assert client.get("server:dice:max_value") == "18"
                     finally:
                         if process.poll() is None:
-                            process.send_signal(signal.SIGTERM)
+                            signal_snap(process, signal.SIGTERM)
                         try:
                             process.wait(timeout=30)
                         except subprocess.TimeoutExpired:
-                            process.kill()
+                            signal_snap(process, signal.SIGKILL)
                             process.wait(timeout=5)
                             raise
                     assert process.returncode == 0, f"Salida de Snap: {process.returncode}"
