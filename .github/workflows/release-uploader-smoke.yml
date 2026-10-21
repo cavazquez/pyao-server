@@ -1,0 +1,32 @@
+name: Release uploader smoke
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-uploader-smoke
+  cancel-in-progress: false
+jobs:
+  fresh-draft:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Create once, upload, download and remove this run's temporary draft
+        run: python3 tools/github_release_smoke.py --repository "$GH_REPO" --commit "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT" --directory smoke-proof
+      - name: Preserve visibility, byte verification and cleanup receipts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-uploader-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: smoke-proof/
+          if-no-files-found: error
+          retention-days: 14
