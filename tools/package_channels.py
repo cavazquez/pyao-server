@@ -102,11 +102,23 @@ def compiler_environment() -> dict[str, str]:
     setup = Path(installation) / "VC/Auxiliary/Build/vcvars64.bat"
     if not setup.is_file():
         raise RuntimeError("Falta el compilador C de Visual Studio")
-    output = run(["cmd", "/d", "/s", "/c", f'call "{setup}" >nul && set'])
+    # A fixed batch filename avoids list2cmdline escaping quotes as \\" inside
+    # cmd.exe's command language. The working directory can still contain spaces.
+    with TemporaryDirectory(prefix="pyao-msvc-") as temporary:
+        bootstrap = Path(temporary) / "pyao-env.cmd"
+        bootstrap.write_text(
+            f'@echo off\ncall "{setup}" >nul\nif errorlevel 1 exit /b %errorlevel%\nset\n',
+            encoding="utf-8",
+        )
+        output = run(
+            [os.environ.get("COMSPEC", "cmd.exe"), "/d", "/u", "/c", bootstrap.name],
+            cwd=temporary,
+            encoding="utf-16-le",
+        )
     for line in output.splitlines():
         key, separator, value = line.partition("=")
         if separator and key:
-            environment[key] = value
+            environment[key.upper()] = value
     return environment
 
 
@@ -192,10 +204,13 @@ def build_server(wheel: Path, output: Path, tray: Path | None = None) -> dict[st
     )
     if os.name == "nt":
         compiler = compiler_environment()
+        executable_compiler = shutil.which("cl.exe", path=compiler.get("PATH"))
+        if executable_compiler is None:
+            raise RuntimeError("El entorno de Visual Studio no contiene cl.exe")
         with TemporaryDirectory(prefix="pyao-launcher-") as temporary:
             subprocess.run(
                 [
-                    "cl",
+                    executable_compiler,
                     "/nologo",
                     "/O2",
                     "/MT",
