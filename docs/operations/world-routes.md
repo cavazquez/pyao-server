@@ -1,88 +1,98 @@
 # Auditoría de mapas y salidas
 
-El inventario de `docs/catalogs/world-routes.json` cubre los 290 mapas, las
-59.918 coordenadas de salida y sus 852 pares dirigidos. De esos pares, 847
-cambian de mapa y cinco son teletransportes dentro del mismo mapa (10 casillas).
-Una coordenada define un destino; no se generan retornos artificiales.
+El inventario vigente de `docs/catalogs/world-routes.json` cubre 290 mapas,
+59.855 coordenadas de salida y 852 pares dirigidos: 847 entre mapas y cinco
+teletransportes dentro del mismo mapa. Después de corregir las llegadas sólidas
+se retiraron 63 coordenadas inválidas del inventario anterior de 59.918 salidas.
+Las 239.420 aproximaciones cardinales dentro de límites tienen un destino
+explícito; no se generan retornos artificiales.
 
-## Reproducir sin Redis
-
-Desde el repositorio y con los datos descomprimidos:
+## Inventario estático
 
 ```sh
 uv run --locked python -m tools.compression.decompress_map_data --target map_data
 uv run --locked python -m src.validation.dataset
 uv run --locked python -m tools.analysis.audit_world_routes --output artifacts/world-routes \
-  --check docs/catalogs/world-routes.json
+  --check docs/catalogs/world-routes.json --roles data/world/map_roles.json \
+  --water-routes data/world/water_routes.json
 uv run --locked pytest tests/tools/test_world_routes.py
 ```
 
-El directorio de salida contiene el informe, un registro por casilla en
-`exits.jsonl` y la matriz de los 84.100 pares ordenados en `map-pair-matrix.csv`.
-La matriz distingue enlaces directos y la cantidad mínima de saltos del grafo;
-no implica que un personaje pueda caminar entre dos puntos dentro de un mapa.
-Hay 76.741 pares alcanzables contando la diagonal (permanecer en el mismo mapa).
-Los hashes identifican todos los archivos de entrada. El comando no escribe en
-Redis ni modifica los mapas.
+La salida incluye `audit.json`, `exits.jsonl` y `map-pair-matrix.csv`: los 84.100
+pares ordenados, enlaces directos y saltos mínimos del grafo. Hay 76.741 pares
+alcanzables contando la diagonal. El grafo no acredita caminos transitables
+entre dos portales dentro de un mapa. Los hashes identifican todos los archivos.
 
-Los tests usan el cálculo real de `WalkMovementHandler` y `MapManager` para las
-239.672 posiciones de aproximación cardinal dentro de límites a las 59.918 salidas. Esto prueba el
-destino calculado; no sustituye transacciones Redis, colisiones, navegación,
-paquetes TCP ni el renderizado del cliente.
+## Cruces por TCP con Redis real
 
-## Hallazgos pendientes
+```sh
+uv run --locked python -m tools.analysis.audit_world_routes_network \
+  --output artifacts/world-routes-tcp
+```
 
-No hay fuentes duplicadas, destinos ausentes ni coordenadas fuera de los
-límites 1..100. Eso no certifica que todas las salidas sean jugables:
+El comprobador inicia una instancia Redis autenticada y descartable y un listener
+TCP en loopback con `ArgentumServer.handle_client`, framing, autenticación,
+`TaskFactory`, handlers, repositorios, transacciones e índices concretos. No
+reemplaza el handler ni el commit con mocks. Carga el dataset vigente y envía
+WALK seguido de PING en la misma conexión; PONG confirma que terminó el comando.
 
-- [#348](https://github.com/cavazquez/pyao-server/issues/348): la salida se ejecuta
-  antes de validar colisiones. Un control con el handler real aceptó llegadas
-  sólidas y ocupadas por jugador, NPC o reserva, además de un cambio tierra/agua
-  sin comprobar navegación. La transición de ese control usa un receptor en
-  memoria; no se atribuye una prueba TCP a esa reproducción.
-- [#349](https://github.com/cavazquez/pyao-server/issues/349): el desbloqueo de
-  portales se envía durante login y falta al cambiar de mapa. Hay 94 fuentes
-  sólidas que requieren la política de portal.
-- [#350](https://github.com/cavazquez/pyao-server/issues/350): 131 llegadas apuntan
-  a obstáculos sólidos, excluyendo el agua. Cada coordenada figura en el informe.
-- [#351](https://github.com/cavazquez/pyao-server/issues/351): 420 salidas cambian
-  entre agua y tierra. Se requiere distinguir puertos y teleports deliberados de
-  errores, y probar el estado de navegación al llegar.
-- [#352](https://github.com/cavazquez/pyao-server/issues/352): once mapas no tienen
-  salida y diez carecen también de entrada. Desde el mapa 1 se alcanzan 275 mapas
-  en el grafo. Los 15 restantes necesitan un rol explícito: mapa reservado,
-  evento con acceso especial o parte del mundo jugable. Hay 33 pares sin regreso
-  directo (966 casillas); no todos son errores.
-- Hay 137 llegadas sobre otra salida y 137 fuentes sin una aproximación cardinal
-  ordinaria en el análisis estático. Los bordes contiguos y portales especiales
-  requieren revisión; estas cifras no se presentan como 137 errores confirmados.
+Para cada salida y aproximación cardinal verifica posición persistida, paquetes
+CHANGE_MAP/POS_UPDATE, pertenencia al mapa, índice espacial y navegación al
+llegar. Usa un personaje vivo con embarcación válida y Navegación suficiente.
+En cada uno de los 852 pares dirigidos agrega trece controles: jugador, NPC
+amistoso, NPC hostil, reserva, puerta cerrada, ausencia de barco, habilidad
+insuficiente, personaje muerto, mapa ausente y coordenadas X/Y en 0 y 101. Los
+casos adversos deben conservar el origen cuando corresponde y no pisar ocupantes.
+El alcance completo esperado es 250.496 comandos WALK (239.420 + 852 × 13).
 
-La verificación del inventario en CI detecta cambios de datos y errores de
-referencias. Conserva los hallazgos abiertos: **un inventario actualizado no
-significa que se hayan corregido esos problemas**. Al modificar mapas hay que
-revisar y regenerar el informe con el mismo comando y actualizar las pruebas.
+Las posiciones de aproximación y los estados iniciales se preparan como fixture;
+no se presenta esa preparación como movimiento del jugador ni como prueba de
+accesibilidad desde otro punto del mapa. El reloj inyectable de cadencia avanza
+un segundo por caso independiente; esto evita esperar horas y no mide velocidad
+real de juego. No ejecuta IA de NPCs ni renderizado. La aceptación gráfica y TLS
+de dos clientes usa las pruebas nativas del cliente por separado.
+
+`--limit N` produce una muestra marcada `partial: true`, que no acredita el
+issue completo. `--shard I --shards N` reparte salidas y pares sin duplicarlos.
+La ejecución manual de CI usa dieciséis particiones y un job que verifica su unión. La publicación exige ese job aprobado; los PR conservan el inventario estático y las regresiones rápidas automáticas:
+
+```sh
+uv run --locked python -m tools.analysis.audit_world_routes_network \
+  --combine artifacts/routes/world-routes-tcp-*/result.json \
+  --output artifacts/world-routes-complete
+```
+
+La unión exige todas las particiones aprobadas del mismo commit limpio, script,
+hashes y dataset; rechaza faltantes, duplicados, muestras parciales y controles
+incompletos. `--route 96 9 91` reproduce solamente una salida y siempre se marca parcial. Cada resultado conserva conteos, procedencia y hash de resultados.
+Los recibos de CI son la evidencia de ejecución; documentar el comando no implica
+que una futura versión del dataset haya pasado sin volver a ejecutarlo.
+
+## Correcciones y políticas vigentes
+
+Los hallazgos de #348–#353 y #169 del cliente ya tienen implementación y regresiones:
+
+- Las llegadas validan terreno, puertas, límites y ocupación antes del commit.
+  La posición y navegación se confirman juntas y la reserva se libera al terminar.
+- Los portales transmiten sus desbloqueos al entrar por login o por transición.
+  Las llegadas sólidas se corrigieron en los datos, conservando rutas deliberadas. El #395 añade la superposición árbol/agua: el agua tampoco exime una llegada sobre un recurso.
+- Los 420 cambios agua/tierra están clasificados en `data/world/water_routes.json`.
+  Llegar al agua requiere estar vivo, barco real y habilidad suficiente; llegar a
+  tierra actualiza navegación y apariencia del mismo estado confirmado.
+- `data/world/map_roles.json` explicita el rol y acceso de los 290 mapas; los mapas
+  reservados o de acceso especial no se presentan como regiones de acceso ordinario.
+- Cliente y servidor sincronizan obstáculos estáticos y distinguen talleres y
+  puertas dinámicas. La topología trata los bordes horizontales como fronteras.
+
+Las salidas sobre otra salida, rutas sin regreso directo y aproximaciones
+estáticas bloqueadas siguen siendo propiedades visibles del inventario; esas
+cifras por sí solas no representan errores. Una ruta de un solo sentido no
+crea automáticamente una ruta de vuelta.
 
 ## Contraste gráfico
 
-El cliente tiene `tools/smoke-world-routes.py`. Carga y renderiza todos los mapas,
-y para cada par dirigido renderiza ambos extremos en las coordenadas de una
-salida representativa. Se ejecuta con OpenGL real y también sobre el ejecutable
-exportado; comprueba máscaras completas, caché acotada y cierre sin errores.
-El resultado indica `network_crossings: false`: no acredita 59.918 cruces TCP.
-
-El primer contraste de 2.900.000 casillas coincidió en toda la máscara acuática.
-Detectó 348 diferencias de bloqueo sólido entre escenas base y recursos del
-servidor, antes de superponer objetos dinámicos: 308 carteles y una puerta
-bloqueados sólo en el cliente, y 39 árboles bloqueados sólo en el servidor.
-Se registran en [#353](https://github.com/cavazquez/pyao-server/issues/353).
-Requieren sincronizar políticas; las puertas y talleres no se deben tratar como
-paredes estáticas por una mera comparación de bits.
-
-La clasificación del mapa del mundo también necesita revisión en el cliente:
-28.201 salidas con el patrón horizontal X=9→91 o X=92→10 están marcadas como
-`teleport` (364 pares). Eso altera la disposición geográfica y la selección de
-vecinos para precarga, aunque la coordenada de destino siga presente. Véase
-[#169 del cliente](https://github.com/cavazquez/ArgentumOnlineGodot/issues/169).
-
-El recorrido de dos clientes y las reglas de llegada deben cerrarse junto con
-los issues anteriores antes de afirmar que todos los portales funcionan.
+El cliente conserva `tools/smoke-world-routes.py`: carga y renderiza los 290 mapas
+y ambos extremos de cada par dirigido. Compara las máscaras completas de
+2.900.000 casillas, comprueba caché acotada y cierre sin errores, también sobre
+el ejecutable exportado. Su resultado `network_crossings: false` describe sólo
+ese comprobador; la evidencia TCP anterior se registra aparte.

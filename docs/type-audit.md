@@ -1,6 +1,6 @@
 # Alcance del tipado (#370)
 
-La ejecución `mypy src tests` controla el servidor. La ampliación histórica a `mypy .` encontró 145 errores en 13 utilidades sin cambios respecto de main. Esos 145 errores están resueltos: ese lote amplió el control independiente a 18 archivos. Los cuatro generadores/validadores de canales posteriores lo amplían a 22. El inventario con el diagnóstico original, el issue y la comprobación de conducta por archivo está en [type-audit.json](type-audit.json).
+La ejecución `mypy src tests` controla el servidor. La ampliación histórica a `mypy .` encontró 145 errores en 13 utilidades sin cambios respecto de main. Esos 145 errores están resueltos: ese lote amplió el control independiente a 18 archivos. Los cuatro generadores/validadores de canales posteriores lo amplían a 22. La auditoría de cruces TCP añade el archivo 23. El inventario con el diagnóstico original, el issue y la comprobación de conducta por archivo está en [type-audit.json](type-audit.json).
 
 Las utilidades de benchmarks, regeneración de catálogos, diagnóstico de skills, verificación de Snap y análisis de pruebas se conservan con contratos explícitos. Los registros de cobertura, NPC y comerciantes usan `TypedDict`; las fronteras dinámicas de respuestas Redis y reportes JSON mantienen `Any` explícito. Los fixtures livianos del benchmark de índices siguen excluyendo conexiones y el modelo completo de NPC, que se mide por separado.
 

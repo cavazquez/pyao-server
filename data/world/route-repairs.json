@@ -831,6 +831,31 @@
     },
     {
       "source": [
+        96,
+        9,
+        91
+      ],
+      "original_destination": [
+        24,
+        91,
+        91
+      ],
+      "destination": [
+        24,
+        91,
+        90
+      ],
+      "reason": "Original landing overlaps a tree on water; preserve both original resource and navigation medium and move one free tile along the same boundary. Confirmed by exhaustive TCP audit (#395).",
+      "original_object": {
+        "m": 24,
+        "x": 91,
+        "y": 91,
+        "g": 7001,
+        "t": "tree"
+      }
+    },
+    {
+      "source": [
         111,
         36,
         94

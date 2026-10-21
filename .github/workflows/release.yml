@@ -47,7 +47,7 @@ jobs:
         run: |
           gh api "repos/$GH_REPO/actions/runs/$DISTRIBUTION_RUN" > run.json
           gh api "repos/$GH_REPO/actions/runs/$DISTRIBUTION_RUN/jobs?per_page=100" > jobs.json
-          python3 tools/github_release.py check-run --run run.json --jobs jobs.json --commit "$RELEASE_COMMIT" --workflow ci.yml --required test --required build-distribution
+          python3 tools/github_release.py check-run --run run.json --jobs jobs.json --commit "$RELEASE_COMMIT" --workflow ci.yml --required test --required build-distribution --required world-routes-complete
           gh run download "$DISTRIBUTION_RUN" --repo "$GH_REPO" --name validated-python-distribution --dir incoming/distribution
           gh api "repos/$GH_REPO/actions/runs/$SNAP_RUN" > run.json
           gh api "repos/$GH_REPO/actions/runs/$SNAP_RUN/jobs?per_page=100" > jobs.json
