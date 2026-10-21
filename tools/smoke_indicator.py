@@ -1,6 +1,7 @@
 """Acredita el backend nativo opcional sin conectar el servidor a Redis."""
 
 import argparse
+from contextlib import chdir
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--capture", action="store_true")
     args = parser.parse_args()
+    args.output = args.output.resolve()
     if sys.platform not in {"win32", "darwin"}:
         parser.error("Este backend nativo se verifica en Windows/macOS; Linux usa el puente GTK")
     import pystray
@@ -31,7 +33,7 @@ def main() -> None:
     }
     errors = []
     original = pystray.Icon
-    with tempfile.TemporaryDirectory(prefix="pyao-desktop-native-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="pyao-desktop-native-") as temporary, chdir(temporary):
         os.environ["PYAO_STATE_DIR"] = temporary
         supervisor = ServerProcess(["--version"])
 
