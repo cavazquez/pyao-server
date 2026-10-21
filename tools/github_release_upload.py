@@ -21,9 +21,7 @@ def sha(path):
 
 def payloads(directory, version, commit):
     """Validate every local byte before making a remote change."""
-    require(
-        re.fullmatch(r"\d+\.\d+\.\d+(?:(?:a|b|rc)\d+)?", version), "Invalid version"
-    )
+    require(re.fullmatch(r"\d+\.\d+\.\d+(?:(?:a|b|rc)\d+)?", version), "Invalid version")
     require(re.fullmatch(r"[0-9a-f]{40}", commit), "Invalid commit")
     manifest = json.loads((directory / "release-manifest.json").read_text())
     require(
@@ -33,15 +31,11 @@ def payloads(directory, version, commit):
     files = manifest["files"]
     require(isinstance(files, dict) and files, "Empty release manifest")
     names = set(files) | {"release-manifest.json", "SHA256SUMS"}
-    require(
-        set(p.name for p in directory.iterdir()) == names, "Unexpected local assets"
-    )
+    require(set(p.name for p in directory.iterdir()) == names, "Unexpected local assets")
     for name in names:
         require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", name), "Unsafe asset name")
         path = directory / name
-        require(
-            path.is_file() and not path.is_symlink(), "Asset must be a regular file"
-        )
+        require(path.is_file() and not path.is_symlink(), "Asset must be a regular file")
     checksums = {}
     for line in (directory / "SHA256SUMS").read_text().splitlines():
         digest, name = line.split("  ", 1)
@@ -79,9 +73,38 @@ class GitHub:
             except (ValueError, AttributeError):
                 missing = False
             if missing:
-                return None
+                # The tag endpoint only returns published releases. Authenticated
+                # listings also include drafts; never mistake a partial draft for
+                # a missing release and attempt to create it again.
+                return self.find_draft()
             raise RuntimeError("Cannot inspect release: " + result.stderr.strip())
         return json.loads(result.stdout)
+
+    def find_draft(self):
+        result = subprocess.run(
+            [
+                "gh",
+                "api",
+                "--paginate",
+                "--slurp",
+                f"repos/{self.repository}/releases?per_page=100",
+            ],
+            text=True,
+            capture_output=True,
+            timeout=120,
+        )
+        if result.returncode:
+            raise RuntimeError("Cannot inspect release drafts: " + result.stderr.strip())
+        pages = json.loads(result.stdout)
+        require(
+            isinstance(pages, list) and all(isinstance(page, list) for page in pages),
+            "Invalid paginated release listing",
+        )
+        records = [record for page in pages for record in page]
+        require(all(isinstance(record, dict) for record in records), "Invalid release records")
+        matches = [record for record in records if record.get("tag_name") == self.tag]
+        require(len(matches) <= 1, "Duplicate releases for the same tag")
+        return matches[0] if matches else None
 
     def create(self, version, commit):
         args = [
@@ -162,9 +185,7 @@ def inspect_release(record, files, version, tag, backend, *, complete):
     assets = record["assets"]
     names = [asset["name"] for asset in assets]
     require(len(set(names)) == len(names), "Duplicate remote asset names")
-    require(
-        set(names) <= set(files), "Unexpected remote assets; refusing to modify release"
-    )
+    require(set(names) <= set(files), "Unexpected remote assets; refusing to modify release")
     if complete:
         require(set(names) == set(files), "Release is missing approved assets")
     with tempfile.TemporaryDirectory(prefix="pyao-release-verify-") as temp:
@@ -172,8 +193,7 @@ def inspect_release(record, files, version, tag, backend, *, complete):
             name = asset["name"]
             local = files[name]
             require(
-                asset.get("state") == "uploaded"
-                and asset["size"] == local.stat().st_size,
+                asset.get("state") == "uploaded" and asset["size"] == local.stat().st_size,
                 "Incomplete or different remote asset: " + name,
             )
             downloaded = Path(temp) / name
@@ -220,9 +240,7 @@ def stage_release(directory, version, commit, tag, backend, *, dry_run=False):
             # Recover a lost upload response only when the named bytes can be
             # downloaded and verified. Never use --clobber or delete an asset.
             record = backend.load()
-            existing = inspect_release(
-                record, files, version, tag, backend, complete=False
-            )
+            existing = inspect_release(record, files, version, tag, backend, complete=False)
             require(record["draft"] and name in existing, "Upload incomplete: " + name)
         uploaded.append(name)
     record = backend.load()
@@ -234,9 +252,7 @@ def stage_release(directory, version, commit, tag, backend, *, dry_run=False):
     }
 
 
-def verify_release(
-    directory, version, commit, tag, backend, *, publish=False, dry_run=False
-):
+def verify_release(directory, version, commit, tag, backend, *, publish=False, dry_run=False):
     require(tag == "v" + version, "Tag and version differ")
     files = payloads(directory, version, commit)
     record = backend.load()
