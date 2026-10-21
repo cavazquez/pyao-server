@@ -6,7 +6,12 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
+import time
+
+
+DRAFT_VISIBILITY_TIMEOUT = 60
 
 
 def require(condition, message):
@@ -60,12 +65,13 @@ class GitHub:
         require(re.fullmatch(r"[\w.-]+/[\w.-]+", repository), "Invalid repository")
         self.repository, self.tag = repository, tag
 
-    def load(self):
+    def load(self, *, timeout=120):
+        deadline = time.monotonic() + timeout
         result = subprocess.run(
             ["gh", "api", f"repos/{self.repository}/releases/tags/{self.tag}"],
             text=True,
             capture_output=True,
-            timeout=120,
+            timeout=timeout,
         )
         if result.returncode:
             try:
@@ -76,11 +82,14 @@ class GitHub:
                 # The tag endpoint only returns published releases. Authenticated
                 # listings also include drafts; never mistake a partial draft for
                 # a missing release and attempt to create it again.
-                return self.find_draft()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired("Inspect release drafts", timeout)
+                return self.find_draft(timeout=remaining)
             raise RuntimeError("Cannot inspect release: " + result.stderr.strip())
         return json.loads(result.stdout)
 
-    def find_draft(self):
+    def find_draft(self, *, timeout=120):
         result = subprocess.run(
             [
                 "gh",
@@ -91,7 +100,7 @@ class GitHub:
             ],
             text=True,
             capture_output=True,
-            timeout=120,
+            timeout=timeout,
         )
         if result.returncode:
             raise RuntimeError("Cannot inspect release drafts: " + result.stderr.strip())
@@ -202,7 +211,52 @@ def inspect_release(record, files, version, tag, backend, *, complete):
     return set(names)
 
 
-def stage_release(directory, version, commit, tag, backend, *, dry_run=False):
+def wait_for_created_draft(backend, diagnostics, *, timeout=DRAFT_VISIBILITY_TIMEOUT):
+    """Poll absence after one create; all lookup errors remain fatal."""
+    require(0 < timeout <= 600, "Draft visibility timeout must be between 0 and 600 seconds")
+    started = time.monotonic()
+    deadline = started + timeout
+    attempt = 0
+    pause = 1
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise RuntimeError(
+                f"Created draft remained invisible for {timeout:g} seconds; "
+                "creation was not repeated"
+            )
+        attempt += 1
+        event = {"attempt": attempt}
+        try:
+            record = backend.load(timeout=remaining)
+        except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
+            event.update(status="failed", error=str(error))
+            raise
+        else:
+            event["status"] = "missing" if record is None else "visible"
+        finally:
+            event["elapsed_seconds"] = round(time.monotonic() - started, 3)
+            diagnostics.append(event)
+            print(json.dumps({"draft_visibility": event}), file=sys.stderr, flush=True)
+        if record is not None:
+            return record
+        remaining = deadline - time.monotonic()
+        if remaining > 0:
+            time.sleep(min(pause, remaining))
+            pause = min(pause * 2, 5)
+
+
+def stage_release(
+    directory,
+    version,
+    commit,
+    tag,
+    backend,
+    *,
+    dry_run=False,
+    visibility_diagnostics=None,
+    visibility_timeout=DRAFT_VISIBILITY_TIMEOUT,
+):
     require(tag == "v" + version, "Tag and version differ")
     files = payloads(directory, version, commit)
     record = backend.load()
@@ -218,17 +272,23 @@ def stage_release(directory, version, commit, tag, backend, *, dry_run=False):
     if dry_run:
         return {"status": "planned", "verified": False, "missing": missing}
     if record is None:
+        creation_error = None
         try:
             backend.create(version, commit)
-        except (RuntimeError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        except (RuntimeError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
             # A response can be lost after GitHub created the draft. Inspect the
             # concrete result; never blindly issue another create.
-            record = backend.load()
-            if record is None:
-                raise
-            inspect_release(record, files, version, tag, backend, complete=False)
-            require(record["draft"], "Creation returned a published release")
-        record = backend.load()
+            creation_error = error
+        diagnostics = visibility_diagnostics if visibility_diagnostics is not None else []
+        try:
+            record = wait_for_created_draft(backend, diagnostics, timeout=visibility_timeout)
+        except (ValueError, RuntimeError, OSError, subprocess.SubprocessError) as error:
+            if creation_error is not None:
+                raise RuntimeError(
+                    f"Draft creation response failed: {creation_error}; "
+                    f"visibility check failed: {error}"
+                ) from creation_error
+            raise
         existing = inspect_release(record, files, version, tag, backend, complete=False)
         require(record["draft"], "Creation did not leave a draft")
         missing = sorted(set(files) - existing)
@@ -286,6 +346,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     backend = GitHub(args.repository, args.tag)
     failed = False
+    visibility = []
     try:
         if args.operation == "stage":
             result = stage_release(
@@ -295,6 +356,7 @@ if __name__ == "__main__":
                 args.tag,
                 backend,
                 dry_run=args.dry_run,
+                visibility_diagnostics=visibility,
             )
         else:
             result = verify_release(
@@ -314,6 +376,7 @@ if __name__ == "__main__":
         tag=args.tag,
         version=args.version,
         commit=args.commit,
+        draft_visibility=visibility,
     )
     if args.receipt:
         args.receipt.parent.mkdir(parents=True, exist_ok=True)
