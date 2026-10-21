@@ -70,6 +70,21 @@ def test_zip_preserves_runtime_symlinks_and_executable_mode(tmp_path: Path) -> N
         assert (archive.getinfo("python3.14").external_attr >> 16) & 0o111 == 0o111
 
 
+@pytest.mark.parametrize("payload", [b"", b"\n", b"uv", b"uv\n"])
+def test_zip_metadata_never_expands_into_a_dangerous_negative_compression_ratio(
+    tmp_path: Path, payload: bytes
+) -> None:
+    """Conserva metadatos mínimos sin el rechazo estructural de WinGet (#396)."""
+    source = tmp_path / "candidate"
+    source.mkdir()
+    (source / "INSTALLER").write_bytes(payload)
+    archive_tree(source, tmp_path / "payload.zip")
+    with zipfile.ZipFile(tmp_path / "payload.zip") as archive:
+        info = archive.getinfo("INSTALLER")
+        assert archive.read(info) == payload
+        assert info.compress_size <= info.file_size
+
+
 def test_server_cannot_be_sealed_with_another_pair_or_changed_payload(tmp_path: Path) -> None:
     """Un PONG aislado o una prueba de otro servidor no habilitan publicación."""
     candidate = tmp_path / "candidate"

@@ -26,6 +26,9 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = re.compile(r"^(\d+\.\d+\.\d+)(?:rc(\d+))?$")
 PLATFORMS = {"Linux": "linux", "Darwin": "macos", "Windows": "windows"}
+# Deflating tiny INSTALLER/zip-safe metadata can increase its size by 2x/3x;
+# WinGet's ZIP validator rejects that negative compression ratio (#396).
+ZIP_MIN_DEFLATE_BYTES = 64
 
 
 def sha(path: Path) -> str:
@@ -318,7 +321,12 @@ def archive_tree(source: Path, output: Path) -> None:
                 info.external_attr = (stat.S_IFLNK | 0o777) << 16
                 archive.writestr(info, os.readlink(path))
             elif path.is_file():
-                archive.write(path, path.relative_to(source).as_posix())
+                method = (
+                    zipfile.ZIP_STORED
+                    if path.stat().st_size < ZIP_MIN_DEFLATE_BYTES
+                    else zipfile.ZIP_DEFLATED
+                )
+                archive.write(path, path.relative_to(source).as_posix(), compress_type=method)
 
 
 def seal_server(candidate: Path, cli_proof: Path, pair_proof: Path, output: Path) -> dict[str, Any]:
