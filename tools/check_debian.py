@@ -35,7 +35,8 @@ done
 apt-get install -y --no-install-recommends /tmp/fixture-packages/*.deb
 pyao-server --version
 pyao-server --check-resources
-printf '\n# Preserve packaging upgrade\n' >> /tmp/pyao-state/config/server.toml
+mkdir -p /tmp/pyao-state/config
+printf '# User configuration\n[server]\nhost = "127.0.0.1"\n\n# Preserve packaging upgrade\n' > /tmp/pyao-state/config/server.toml
 printf 'keep\n' > /tmp/pyao-preferences/pyao-upgrade-marker
 configuration_before=$(sha256sum /tmp/pyao-state/config/server.toml)
 apt-get install -y --no-install-recommends /packages/*.deb

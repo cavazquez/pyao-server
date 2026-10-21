@@ -107,8 +107,8 @@ def verify(server_manifest: Path, client_manifest: Path, output: Path) -> dict[s
             )
             logs.append(call([str(entry), "--check-resources"], env=environment))
             config = output / "state/config/server.toml"
-            with config.open("a") as stream:
-                stream.write("\n# preserve channel upgrade\n")
+            config.parent.mkdir(parents=True, exist_ok=True)
+            config.write_text('[server]\nhost = "127.0.0.1"\n\n# preserve channel upgrade\n')
             before = sha(config)
             formula.write_text(current_formula)
             cask.write_text(current_cask)

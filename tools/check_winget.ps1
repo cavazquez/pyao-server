@@ -47,7 +47,11 @@ try {
     & $server --check-resources
     if ($LASTEXITCODE -ne 0) { throw "Server resource check failed after installation" }
     $configuration = Join-Path $env:PYAO_STATE_DIR "config/server.toml"
-    Add-Content -Path $configuration -Value "`n# preserve WinGet update" -Encoding utf8
+    New-Item -ItemType Directory -Force (Split-Path $configuration) | Out-Null
+    Set-Content -Path $configuration -Value '[server]
+host = "127.0.0.1"
+
+# preserve WinGet update' -Encoding utf8
     $configurationHash = (Get-FileHash $configuration -Algorithm SHA256).Hash
     Set-Content $marker "[channel_validation]`nkeep=`"PYAO_CHANNEL_UPGRADE_SENTINEL`"" -Encoding utf8
     foreach ($identifier in $identifiers) {

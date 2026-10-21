@@ -476,7 +476,10 @@ def main() -> None:
         result = build_deb(
             args.candidate.resolve(), args.role, args.proof.resolve(), args.output.resolve()
         )
-    print(json.dumps(result, indent=2))
+    summary = {**result}
+    if "files" in summary:
+        summary["files"] = len(summary["files"])
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":
