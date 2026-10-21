@@ -17,11 +17,13 @@ import subprocess
 import sys
 import time
 from unittest.mock import patch
+from typing import Any
+from collections.abc import Awaitable, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def percentiles(values):
+def percentiles(values: list[float]) -> dict[str, float]:
     values = sorted(values)
     return {
         "p50_ms": statistics.median(values),
@@ -31,7 +33,7 @@ def percentiles(values):
     }
 
 
-async def worker(args):
+async def worker(args: argparse.Namespace) -> None:
     sys.path.insert(0, str(args.checkout))
     from redis.asyncio import Redis
     from redis.asyncio.client import Pipeline
@@ -54,13 +56,13 @@ async def worker(args):
     redis = client.redis
     key = RedisKeys.ground_items(1)
     metrics = {"read": 0, "write": 0}
-    execute = Redis.execute_command
+    execute: Callable[..., Awaitable[Any]] = Redis.execute_command
     pipe_execute = Pipeline.execute_command
 
-    def selected(arguments):
+    def selected(arguments: tuple[object, ...]) -> bool:
         return len(arguments) > 1 and arguments[1] == key
 
-    def payload(reply):
+    def payload(reply: object) -> int:
         if isinstance(reply, (list, tuple)):
             return sum(payload(value) for value in reply)
         if isinstance(reply, dict):
@@ -69,7 +71,7 @@ async def worker(args):
             return 0
         return len(reply if isinstance(reply, bytes) else str(reply).encode())
 
-    def record_write(arguments):
+    def record_write(arguments: tuple[object, ...]) -> None:
         if selected(arguments):
             command = str(arguments[0]).upper()
             if command == "SET":
@@ -77,19 +79,19 @@ async def worker(args):
             elif command == "HSET":
                 metrics["write"] += sum(payload(value) for value in arguments[3::2])
 
-    async def tracked_execute(connection, *arguments, **kwargs):
+    async def tracked_execute(connection: Redis, *arguments: Any, **kwargs: Any) -> Any:
         reply = await execute(connection, *arguments, **kwargs)
         if selected(arguments) and str(arguments[0]).upper() in {"GET", "HMGET", "HGETALL"}:
             metrics["read"] += payload(reply)
         record_write(arguments)
         return reply
 
-    def tracked_pipeline(connection, *arguments, **kwargs):
+    def tracked_pipeline(connection: Pipeline, *arguments: Any, **kwargs: Any) -> Any:
         result = pipe_execute(connection, *arguments, **kwargs)
         record_write(arguments)
         if selected(arguments) and str(arguments[0]).upper() in {"GET", "HMGET", "HGETALL"}:
 
-            async def read():
+            async def read() -> Any:
                 reply = await result
                 metrics["read"] += payload(reply)
                 return reply
@@ -150,8 +152,9 @@ async def worker(args):
             manager = MapManager(GroundItemsRepository(client))
             await manager.load_ground_items(1)
             memory = await redis.memory_usage(key)
-            samples = {"drop": [], "pickup": []}
-            sizes = {"drop": [], "pickup": []}
+            samples: dict[str, list[float]] = {"drop": [], "pickup": []}
+            sizes: dict[str, list[dict[str, int]]] = {"drop": [], "pickup": []}
+            stack = ""
             with (
                 patch.object(Redis, "execute_command", tracked_execute),
                 patch.object(Pipeline, "execute_command", tracked_pipeline),
@@ -238,7 +241,7 @@ async def worker(args):
         await client.disconnect()
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--baseline", type=Path)
@@ -258,8 +261,8 @@ def main():
     from src.operations.redis_sandbox import RedisSandbox
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    result = {
-        "recorded_date": "2026-10-20",
+    result: dict[str, Any] = {
+        "recorded_date": time.strftime("%Y-%m-%d", time.gmtime()),
         "production_data_used": False,
         "limitations": [
             "Synthetic positions, one sequential actor; not 5000 connected players",

@@ -19,21 +19,25 @@ from src.utils.redis_client import RedisClient
 async def check_user_skills(user_id: int) -> None:
     """Verifica las skills de un usuario."""
     # Conectar a Redis
-    redis_client = await RedisClient.create()
-    player_repo = PlayerRepository(redis_client)
+    redis_client = RedisClient()
+    await redis_client.connect(seed_defaults=False)
+    try:
+        player_repo = PlayerRepository(redis_client)
 
-    # Obtener skills del usuario
-    skills = await player_repo.get_skills(user_id)
+        # Obtener skills del usuario
+        skills = await player_repo.get_skills(user_id)
 
-    if skills:
-        print(f"\n📊 Skills del usuario {user_id}:")
-        print("-" * 40)
-        for skill_name, skill_value in sorted(skills.items()):
-            if skill_value > 0:
-                print(f"  {skill_name:15} = {skill_value}")
-    else:
-        print(f"\n⚠️  Usuario {user_id} no tiene skills guardadas")
-        print("   (Puede ser que el personaje no se haya creado aún)")
+        if skills:
+            print(f"\n📊 Skills del usuario {user_id}:")
+            print("-" * 40)
+            for skill_name, skill_value in sorted(skills.items()):
+                if skill_value > 0:
+                    print(f"  {skill_name:15} = {skill_value}")
+        else:
+            print(f"\n⚠️  Usuario {user_id} no tiene skills guardadas")
+            print("   (Puede ser que el personaje no se haya creado aún)")
+    finally:
+        await redis_client.disconnect()
 
 
 async def show_class_skills() -> None:
@@ -49,9 +53,7 @@ async def show_class_skills() -> None:
             print(f"\n{class_icon(class_id)} {character_class.name} (ID: {class_id})")
             print("-" * 40)
             if character_class.initial_skills:
-                for skill_name, skill_value in sorted(
-                    character_class.initial_skills.items()
-                ):
+                for skill_name, skill_value in sorted(character_class.initial_skills.items()):
                     print(f"  {skill_name:15} = {skill_value}")
             else:
                 print("  (Sin skills iniciales)")
@@ -76,7 +78,9 @@ async def show_class_attributes() -> None:
             attrs = character_class.base_attributes
             print(f"\n{class_icon(class_id)} {character_class.name} (ID: {class_id})")
             print("-" * 40)
-            print(f"  STR: {attrs['strength']:2}  AGI: {attrs['agility']:2}  INT: {attrs['intelligence']:2}")
+            print(
+                f"  STR: {attrs['strength']:2}  AGI: {attrs['agility']:2}  INT: {attrs['intelligence']:2}"
+            )
             print(f"  CHA: {attrs['charisma']:2}  CON: {attrs['constitution']:2}")
 
 
@@ -99,4 +103,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-

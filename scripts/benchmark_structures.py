@@ -14,6 +14,11 @@ import sys
 import time
 import tracemalloc
 from pathlib import Path
+from collections.abc import Callable, Sized
+from typing import Any, TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from src.messaging.message_sender import MessageSender
 from types import SimpleNamespace
 
 from src.game.ground_item_index import GroundItemIndex
@@ -26,7 +31,7 @@ from src.services.map.map_resources_service import MapResourcesService
 from src.utils.ground_state import GroundState, stack_identity
 
 
-def deep_bytes(value, seen=None):
+def deep_bytes(value: object, seen: set[int] | None = None) -> int:
     """Count owned Python containers without counting shared objects twice."""
     seen = set() if seen is None else seen
     if id(value) in seen:
@@ -46,13 +51,13 @@ def deep_bytes(value, seen=None):
     return size
 
 
-def extra_bytes(base, extra):
-    seen = set()
+def extra_bytes(base: object, extra: object) -> int:
+    seen: set[int] = set()
     deep_bytes(base, seen)
     return deep_bytes(extra, seen)
 
 
-def npc_model_footprint():
+def npc_model_footprint() -> dict[str, int | float | str]:
     records = [
         NPC(
             npc_id=1,
@@ -83,7 +88,9 @@ def npc_model_footprint():
     }
 
 
-def measure(operation, *, repeats=31, loops=10):
+def measure(
+    operation: Callable[[], object], *, repeats: int = 31, loops: int = 10
+) -> dict[str, int | float | str]:
     for _ in range(3):
         operation()
     samples = []
@@ -103,7 +110,7 @@ def measure(operation, *, repeats=31, loops=10):
     }
 
 
-def allocations(operation):
+def allocations(operation: Callable[[], Sized]) -> dict[str, int]:
     gc.collect()
     tracemalloc.start()
     result = operation()
@@ -112,7 +119,7 @@ def allocations(operation):
     return {"retained_bytes": current, "peak_bytes": peak, "result_length": len(result)}
 
 
-def entities(count, maps):
+def entities(count: int, maps: int) -> dict[str, object]:
     occupied = TileOccupation()
     players = PlayerIndex(occupied)
     npcs = NpcIndex(occupied)
@@ -121,7 +128,9 @@ def entities(count, maps):
         mid = identity % maps + 1
         coordinate = identity // maps
         x, y = coordinate % 100 + 1, coordinate // 100 + 1
-        players.add_player(mid, identity + 1, None, f"Player{identity}")
+        # The index never sends messages in this benchmark; preserve its empty
+        # connection fixture so connection internals do not affect owned bytes.
+        players.add_player(mid, identity + 1, cast("MessageSender", None), f"Player{identity}")
         npc = SimpleNamespace(
             instance_id=f"npc-{identity}",
             char_index=identity + 10001,
@@ -129,7 +138,8 @@ def entities(count, maps):
             x=x,
             y=y,
         )
-        npcs.add_npc(mid, npc)
+        # Only the five index fields are used; NPC model size is measured separately.
+        npcs.add_npc(mid, cast(NPC, npc))
         ground.add_ground_item(mid, x, y, {"item_id": 15, "quantity": 1})
     last_map = (count - 1) % maps + 1
     last_index = count - 1 + 10001
@@ -142,12 +152,13 @@ def entities(count, maps):
     by_character = {
         (mid, npc.char_index): npc for mid, row in npcs.npcs_by_map.items() for npc in row.values()
     }
-    by_ground_map = {}
+    by_ground_map: dict[int, dict[tuple[int, int], list[dict[str, Any]]]] = {}
     for (mid, x, y), row in ground.ground_items.items():
         by_ground_map.setdefault(mid, {})[x, y] = row
-    unique = lambda: list(
-        dict.fromkeys(uid for row in players.players_by_map.values() for uid in row)
-    )
+
+    def unique() -> list[int]:
+        return list(dict.fromkeys(uid for row in players.players_by_map.values() for uid in row))
+
     assert unique() == players.get_all_connected_user_ids()
     assert by_character[last_map, last_index] is npcs.get_npc_by_char_index(last_map, last_index)
     return {
@@ -185,7 +196,7 @@ def entities(count, maps):
     }
 
 
-def ground_document(count):
+def ground_document(count: int) -> tuple[dict[str, object], str]:
     values = {
         f"{i % 100 + 1},{i // 100 + 1}": [
             {"item_id": 15, "quantity": 1, "stack_id": stack_identity(f"fixture:{i}")}
@@ -194,12 +205,12 @@ def ground_document(count):
     }
     raw = json.dumps(values, separators=(",", ":"))
 
-    def change():
+    def change() -> str:
         state = GroundState(1, raw)
         state.append(100, 100, {"item_id": 15, "quantity": 1, "stack_id": stack_identity("extra")})
         return state.encode()
 
-    result = {
+    result: dict[str, Any] = {
         "positions": count,
         "json_bytes": len(raw.encode()),
         "read_validate_modify_encode": measure(change, repeats=21, loops=1),
@@ -209,7 +220,7 @@ def ground_document(count):
     return result, raw
 
 
-def terrain():
+def terrain() -> dict[str, object]:
     started = time.perf_counter()
     maps = MapResourcesService()
     loaded = time.perf_counter() - started
@@ -236,7 +247,7 @@ def terrain():
     }
 
 
-def redis_workloads(documents):
+def redis_workloads(documents: list[tuple[int, str]]) -> dict[str, Any]:
     from src.operations.redis_sandbox import RedisSandbox
 
     with RedisSandbox() as sandbox, sandbox.client() as redis:
@@ -244,17 +255,17 @@ def redis_workloads(documents):
         for i in range(1000):
             redis.hset(f"player:{i}:fixture", mapping={"hp": "100", "x": "50", "y": "50"})
 
-        def sequential():
+        def sequential() -> list[dict[str, str]]:
             return [redis.hgetall(f"player:{i}:fixture") for i in range(50)]
 
-        def pipelined():
+        def pipelined() -> list[Any]:
             with redis.pipeline(transaction=False) as pipe:
                 for i in range(50):
                     pipe.hgetall(f"player:{i}:fixture")
-                return pipe.execute()
+                return cast(list[Any], pipe.execute())
 
         assert sequential() == pipelined()
-        results = {
+        results: dict[str, Any] = {
             "redis": redis.info("server")["redis_version"],
             "sequential_50_hashes": measure(sequential, repeats=21, loops=1),
             "pipeline_50_hashes": measure(pipelined, repeats=21, loops=1),
@@ -269,7 +280,7 @@ def redis_workloads(documents):
             key = "fixture:ground"
             redis.set(key, raw)
 
-            def actual_document_roundtrip():
+            def actual_document_roundtrip() -> None:
                 with redis.pipeline() as pipe:
                     pipe.watch(key)
                     state = GroundState(1, pipe.get(key))
@@ -289,7 +300,7 @@ def redis_workloads(documents):
         return results
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--redis", action="store_true")
@@ -297,7 +308,7 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     sizes = (100, 1000) if args.quick else (100, 1000, 5000)
-    result = {
+    result: dict[str, Any] = {
         "recorded_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "python": sys.version,
         "platform": platform.platform(),

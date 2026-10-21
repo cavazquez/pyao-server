@@ -5,19 +5,19 @@ import sys
 from pathlib import Path
 
 # Agregar src al path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent))
 
-from services.map.map_resources_service import MapResourcesService
+from src.services.map.map_resources_service import MapResourcesService
 
 SEARCH_RADIUS = 5
 TARGET_COORD = (74, 92)
 
 
-def test_tree_detection() -> None:
+def test_tree_detection() -> bool:
     """Test simple para verificar detección del árbol en (74, 92).
 
     Returns:
-        None
+        True si la coordenada conocida contiene un árbol.
     """
     print("🔍 Test: Detección de Árbol en Mapa 1, Coordenada (74, 92)")
     print("=" * 60)
@@ -63,8 +63,8 @@ def test_tree_detection() -> None:
 
         with objects_file.open(encoding="utf-8") as f:
             for line_num, line in enumerate(f, 1):
-                if '"x": 74' in line and '"y": 92' in line:
-                    entry = json.loads(line.strip())
+                entry = json.loads(line)
+                if entry.get("m") == 1 and (entry.get("x"), entry.get("y")) == TARGET_COORD:
                     print(f"   ✅ Línea {line_num}: {entry}")
                     print(f"   📊 GrhIndex: {entry.get('g')}")
                     print(f"   🏷️  Tipo: {entry.get('t')}")

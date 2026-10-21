@@ -25,7 +25,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/analyze_redundant_tests.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/analyze_redundant_tests-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/378"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/378",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "tests/operations/test_helper_contracts.py: coverage analysis and report with temporary sources"
     },
     {
       "file": "scripts/benchmark_candidate_reads.py",
@@ -120,7 +124,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/benchmark_candidate_reads.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_candidate_reads-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/379"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/379",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "benchmark CLI: 20, 50 and 500 candidates in disposable Redis"
     },
     {
       "file": "scripts/benchmark_ground_transactions.py",
@@ -280,7 +288,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/benchmark_ground_transactions.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_ground_transactions-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/380"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/380",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "benchmark CLI: 20 samples per action at 100, 1000 and 5000 ground positions; AOF enabled"
     },
     {
       "file": "scripts/benchmark_structures.py",
@@ -595,7 +607,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/benchmark_structures.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_structures-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/381"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/381",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "benchmark CLI --quick --redis; synthetic indices and disposable Redis"
     },
     {
       "file": "scripts/benchmark_world_load.py",
@@ -655,7 +671,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/benchmark_world_load.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/benchmark_world_load-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/382"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/382",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "benchmark CLI: all 290 maps with a temporary state directory"
     },
     {
       "file": "scripts/check_class_skills.py",
@@ -670,7 +690,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/check_class_skills.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/check_class_skills-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/383"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/383",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "real class catalog CLI and connection cleanup contract regression"
     },
     {
       "file": "scripts/find_real_redundant_tests.py",
@@ -685,7 +709,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/find_real_redundant_tests.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/find_real_redundant_tests-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/384"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/384",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "temporary coverage JSON and restoration of a renamed source after a failed probe"
     },
     {
       "file": "scripts/fix_toml_format.py",
@@ -710,7 +738,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/fix_toml_format.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/fix_toml_format-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/385"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/385",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "temporary legacy TOML normalized and parsed by tomllib"
     },
     {
       "file": "scripts/regenerate_npcs_toml.py",
@@ -735,7 +767,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/regenerate_npcs_toml.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/regenerate_npcs_toml-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/386"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/386",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "temporary NPCs.dat regenerated and parsed by tomllib; appearance, sounds, combat and stock verified"
     },
     {
       "file": "scripts/smoke_installed_snap.py",
@@ -755,7 +791,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/smoke_installed_snap.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/smoke_installed_snap-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/387"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/387",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "installed pyao revision 26, TLS PONG, two starts, disposable Redis and AppArmor-safe cleanup"
     },
     {
       "file": "scripts/sync_merchant_inventories.py",
@@ -795,7 +835,11 @@
       "decision": "type independently, preserve behavior, then add to the strict helper CI gate",
       "followup_title": "Tipar scripts/sync_merchant_inventories.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/sync_merchant_inventories-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/388"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/388",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "temporary legacy NPC source regenerated and parsed by tomllib"
     },
     {
       "file": "test_tree_detection.py",
@@ -825,7 +869,11 @@
       "decision": "port imports and use current isolated fixtures; retain useful assertions",
       "followup_title": "Tipar test_tree_detection.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/test_tree_detection-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/389"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/389",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "real map 1 resource and NDJSON coordinate (74, 92)"
     },
     {
       "file": "test_work_flow.py",
@@ -855,7 +903,13 @@
       "decision": "port imports and use current isolated fixtures; retain useful assertions",
       "followup_title": "Tipar test_work_flow.py",
       "body_file": "/home/cristian/repos/propios/ProyectoAO/fase-mundo-botin-2026-10-21/test_work_flow-issue.md",
-      "issue": "https://github.com/cavazquez/pyao-server/issues/390"
+      "issue": "https://github.com/cavazquez/pyao-server/issues/390",
+      "current_errors": 0,
+      "strict_ci_gate": "mypy-tools.ini",
+      "status": "resolved",
+      "behavior_check": "19 isolated current parsing/delegation and atomic gathering regressions"
     }
-  ]
+  ],
+  "strict_helper_file_count": 18,
+  "validated_date": "2026-10-21"
 }
