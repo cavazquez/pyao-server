@@ -30,10 +30,13 @@ function Find-Portable([string]$Identifier, [string]$Executable) {
     return $path
 }
 $identifiers = @("Cavazquez.PyAOServer", "Cavazquez.PyAOClient")
+$packageNames = @{ "Cavazquez.PyAOServer" = "PyAO Server"; "Cavazquez.PyAOClient" = "PyAO Client" }
 $env:PYAO_STATE_DIR = Join-Path $Directory "state"
 $marker = Join-Path $env:APPDATA "Godot/app_userdata/$UserDataName/options.cfg"
 New-Item -ItemType Directory -Force (Split-Path $marker) | Out-Null
 $installed = @()
+$primaryFailure = $null
+$cleanupFailures = @()
 try {
     Invoke-WinGet -Arguments @("settings", "--enable", "LocalManifestFiles")
     foreach ($identifier in $identifiers) {
@@ -74,11 +77,21 @@ host = "127.0.0.1"
         $content = Get-Content (Join-Path $Directory $log) -Raw
         if ($content -match "SCRIPT ERROR:|ERROR:") { throw "Installed client logged an error: $log" }
     }
+} catch {
+    $primaryFailure = $_
 } finally {
     foreach ($identifier in $installed) {
-        Invoke-WinGet -Arguments @("uninstall", "--id", $identifier, "--exact", "--silent", "--disable-interactivity")
+        try {
+            # Local manifests have no public catalog identity yet. Match the
+            # exact project display name in this disposable runner's registry.
+            Invoke-WinGet -Arguments @("uninstall", "--name", $packageNames[$identifier], "--exact", "--silent", "--disable-interactivity", "--accept-source-agreements")
+        } catch {
+            $cleanupFailures += $_.Exception.Message
+        }
     }
 }
+if ($null -ne $primaryFailure) { throw $primaryFailure }
+if ($cleanupFailures.Count -gt 0) { throw ($cleanupFailures -join "`n") }
 if ((Get-FileHash $configuration -Algorithm SHA256).Hash -ne $configurationHash) { throw "Uninstall changed configuration" }
 if ((Get-Content $marker -Raw) -notmatch "PYAO_CHANNEL_UPGRADE_SENTINEL") { throw "Uninstall removed user preferences" }
 $proof = @{passed=$true; installed=$true; upgraded=$true; removed=$true; configuration_preserved=$true; preferences_preserved=$true; user_data_preserved=$true; redis_installed_or_started=$false; version=$Version; local_manifest_fixture=$true}
