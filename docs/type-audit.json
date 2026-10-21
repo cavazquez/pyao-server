@@ -910,7 +910,7 @@
       "behavior_check": "19 isolated current parsing/delegation and atomic gathering regressions"
     }
   ],
-  "strict_helper_file_count": 22,
+  "strict_helper_file_count": 23,
   "validated_date": "2026-10-21",
   "baseline_resolution_gate_file_count": 18
 }
