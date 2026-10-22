@@ -51,6 +51,14 @@ def deb_version(value: str) -> str:
     return product_version(value).replace("rc", "~rc")
 
 
+def deb_asset_name(archive: str) -> str:
+    """Nombre externo estable en GitHub; la versión interna conserva el tilde."""
+    public_name = archive.replace("~", ".")
+    if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*\.deb", public_name) is None:
+        raise ValueError("Nombre de paquete Debian no seguro")
+    return public_name
+
+
 def native_target() -> str:
     architecture = {"x86_64": "amd64", "AMD64": "amd64", "aarch64": "arm64", "arm64": "arm64"}.get(
         platform.machine()
@@ -384,7 +392,7 @@ def build_deb(candidate: Path, role: str, proof_path: Path, output: Path) -> dic
     name = "pyao-server" if server else "pyao-client"
     version = product_version(record["version"])
     output.mkdir(parents=True, exist_ok=True)
-    destination = output / f"{name}_{deb_version(version)}_{architecture}.deb"
+    destination = output / deb_asset_name(f"{name}_{deb_version(version)}_{architecture}.deb")
     if destination.exists():
         raise ValueError("No se sobrescribe un paquete Debian")
     with TemporaryDirectory(prefix="pyao-deb-") as temporary:

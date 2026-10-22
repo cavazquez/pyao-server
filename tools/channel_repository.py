@@ -16,7 +16,7 @@ import shutil
 import subprocess
 from typing import Any
 
-from tools.package_channels import product_version, sha
+from tools.package_channels import deb_asset_name, product_version, sha
 
 CHANNEL_REPOSITORY = "cavazquez/homebrew-pyao"
 REPOSITORIES = {"server": "cavazquez/pyao-server", "client": "cavazquez/ArgentumOnlineGodot"}
@@ -332,11 +332,12 @@ def prepare(plan_path: Path, output: Path) -> dict[str, Any]:
     packages = []
     for record in sorted(debs, key=lambda r: r["archive"]):
         path = record["path"]
-        shutil.copy2(path, apt / path.name)
+        public_name = deb_asset_name(record["archive"])
+        shutil.copy2(path, apt / public_name)
         control: str = subprocess.check_output(["dpkg-deb", "--field", str(path)], text=True)
         packages.append(
             control.rstrip()
-            + f"\nFilename: {path.name}\nSize: {path.stat().st_size}\nSHA256: {sha(path)}\n"
+            + f"\nFilename: {public_name}\nSize: {path.stat().st_size}\nSHA256: {sha(path)}\n"
         )
     (apt / "Packages").write_text("\n".join(packages) + "\n")
     (apt / "Packages.gz").write_bytes(gzip.compress((apt / "Packages").read_bytes(), mtime=0))
@@ -352,14 +353,23 @@ def prepare(plan_path: Path, output: Path) -> dict[str, Any]:
     for record in records["server"].values():
         shutil.copy2(record["path"], assets / record["archive"])
     for record in debs:
-        shutil.copy2(record["path"], assets / record["archive"])
+        shutil.copy2(record["path"], assets / deb_asset_name(record["archive"]))
     result = {
         "version": version,
         "sources": commits,
         "repository": CHANNEL_REPOSITORY,
         "promoted": False,
         "artifacts": {p.name: sha(p) for p in sorted(assets.iterdir())},
-        "apt_packages": {r["archive"]: r["sha256"] for r in debs},
+        "apt_packages": {deb_asset_name(r["archive"]): r["sha256"] for r in debs},
+        "public_filename_mapping": {
+            r["archive"]: {
+                "public_archive": deb_asset_name(r["archive"]),
+                "sha256": r["sha256"],
+                "debian_control_version": r["debian_version"],
+            }
+            for r in debs
+            if r["archive"] != deb_asset_name(r["archive"])
+        },
         "client_release_urls": {
             key: url(record, "client", version) for key, record in records["client"].items()
         },
