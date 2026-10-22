@@ -24,6 +24,17 @@ COMMERCE_INIT abre la ventana con el ID 7 solo; después llegan slots ID 59. El
 builder extendido sin uso no define un segundo layout del mismo ID. SEND_SKILLS
 71 registra el layout legacy de 9 int16; el catálogo/progreso se alinea en #126.
 
+### Visibilidad de nombres de NPC
+
+La revisión de nombres agrega `show_name u8` (0 u 1) después de `privileges` en
+`CHARACTER_CREATE=29`. Se conserva el nombre completo para identificar al objetivo
+en combate; la etiqueta sólo se permite para habitantes amistosos y guardias.
+Criaturas, animales neutrales, mascotas e invocaciones tienen `show_name=0`.
+Los jugadores conservan su nombre visible según preferencias e invisibilidad.
+Las fixtures `character_bat`, `character_banker` y `character_player` fijan ambos
+casos y sus fronteras. Esta revisión requiere actualizar cliente y servidor
+juntos; no admite clientes con el layout anterior ni intenta inferirlo del stream.
+
 ## Coordinación de revisiones
 
 La revisión de partida es servidor `37a8b22` y cliente `e911af34`. **No son todavía

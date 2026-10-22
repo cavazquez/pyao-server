@@ -1,6 +1,7 @@
 """Llegadas con Redis real del fixture, reservas y transporte que puede fallar."""
 
 import asyncio
+import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -91,20 +92,46 @@ async def test_reservation_survives_redis_await_and_blocks_other_arrival(arrival
     await w.redis.hset(RedisKeys.player_position(2), mapping={"map": 2, "x": 50, "y": 50})
     entered, resume = asyncio.Event(), asyncio.Event()
 
-    async def delayed(*args: object):
+    async def delayed(*args: object, **kwargs: object):
         entered.set()
         await resume.wait()
-        return await commit_transfer(*args)
+        return await commit_transfer(*args, **kwargs)
 
     with patch("src.services.map.player_map_service.commit_transfer", delayed):
         first = asyncio.create_task(cross(w))
-        await entered.wait()
+        await asyncio.wait_for(entered.wait(), 1)
         assert not await cross(w, user=2)
         resume.set()
         assert await first
     assert (await w.player.get_position(1))["map"] == 3
     assert (await w.player.get_position(2))["map"] == 2
     assert w.maps._tile_occupation[3, 20, 20] == "player:1"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("change", ["alive", "pending", "cancelled", "replaced", "future"])
+async def test_home_arrival_rechecks_life_and_deadline_before_commit(arrivals, change):
+    """Un plazo observado no puede trasladar una vida nueva ni cancelar otro regreso."""
+    w = arrivals
+    deadline = time.time() + (60 if change == "future" else -1)
+    state = {"min_hp": "0", "death_state": "complete", "home_due": str(deadline)}
+    if change == "alive":
+        state["min_hp"] = "1"
+    elif change == "pending":
+        state["death_state"] = "pending"
+    elif change == "cancelled":
+        state["home_due"] = "0"
+    elif change == "replaced":
+        state["home_due"] = str(deadline + 120)
+    await w.redis.hset(RedisKeys.player_user_stats(1), mapping=state)
+    assert not await w.service.transition_to_map(
+        1, 2, 50, 50, 3, 20, 20, 2, w.sender, home_deadline=deadline
+    )
+    assert (await w.player.get_position(1))["map"] == 2
+    assert await w.redis.hget(RedisKeys.player_user_stats(1), "home_due") == state["home_due"]
+    assert w.maps.get_tile_occupant(2, 50, 50) == "player:1"
+    assert w.maps.get_tile_occupant(3, 20, 20) is None
+    w.sender.send_change_map.assert_not_awaited()
 
 
 @pytest.mark.asyncio
@@ -177,7 +204,8 @@ async def test_portal_override_precedes_local_actor_and_never_opens_closed_door(
     """El desbloqueo sólo afecta portales y se publica antes del actor interactivo."""
     w = arrivals
     w.solid.update({(3, 9, 9), (3, 10, 9), (3, 11, 9)})
-    w.maps._exit_index.update({(3, 9, 9): {}, (3, 10, 9): {}})
+    destination = {"to_map": 2, "to_x": 20, "to_y": 20}
+    w.maps._exit_index.update({(3, 9, 9): destination, (3, 10, 9): destination})
     w.maps.block_tile(3, 10, 9)
     assert await cross(w)
     w.sender.send_block_position.assert_awaited_once_with(9, 9, blocked=False)

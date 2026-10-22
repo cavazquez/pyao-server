@@ -13,6 +13,7 @@ from src.commands.talk_command import TalkCommand
 from src.services.account_moderation import AccountModeration
 
 if TYPE_CHECKING:
+    from src.core.dependency_container import DependencyContainer
     from src.game.game_tick import GameTick
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
@@ -49,6 +50,7 @@ class TalkCommandHandler(CommandHandler):
         npc_service: NPCService | None = None,
         summon_service: SummonService | None = None,
         session_data: dict[str, dict[str, int] | int | str] | None = None,
+        classic_deps: DependencyContainer | None = None,
     ) -> None:
         """Inicializa el handler.
 
@@ -63,8 +65,10 @@ class TalkCommandHandler(CommandHandler):
             npc_service: Servicio de NPCs (opcional, para comandos de mascotas).
             summon_service: Servicio de invocación (opcional, para comandos de mascotas).
             session_data: Datos de sesión compartidos.
+            classic_deps: Servicios reales para los comandos del catálogo clásico.
         """
         self.player_repo = player_repo
+        self.classic_deps = classic_deps
         self.account_repo = account_repo
         self.moderation = AccountModeration(account_repo)
         self.map_manager = map_manager
@@ -153,6 +157,19 @@ class TalkCommandHandler(CommandHandler):
         if command.is_pet_command():
             await self.pet_handler.handle_pet_command(user_id, command)
             return CommandResult.ok(data={"command": "pet"})
+
+        # Una barra nunca debe convertirse en chat público, incluso si el cliente
+        # es antiguo, está modificado o se equivocó al escribir el comando.
+        if message.strip().startswith("/"):
+            if self.classic_deps is not None:
+                from src.services.classic_chat.service import ClassicChatService  # ruff: ignore[import-outside-top-level]
+
+                await ClassicChatService(self.classic_deps).execute(
+                    user_id, message, self.message_sender
+                )
+            else:
+                await self.message_sender.send_console_msg("Comando desconocido. Usa /AYUDA.")
+            return CommandResult.ok(data={"command": "chat_command"})
 
         # Mensaje de chat público - delegar a handler especializado
         success, error_message, data = await self.public_handler.handle_public_message(

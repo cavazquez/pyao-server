@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.gm_command import GMCommand
-from src.utils.gold_atomic import operation_id
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -114,16 +113,15 @@ class GMCommandHandler(CommandHandler):
             return CommandResult.error("El mapa o destino no está disponible")
         if self.action_cadence and not self.action_cadence.claim(target, "walk"):
             return CommandResult.error("El jugador está moviéndose; reintentá en un instante")
-        reservation = operation_id()
         try:
-            maps.reserve_positions(reservation, command.map_id, [(command.x, command.y)])
+            # PlayerMapService reserva el destino y confirma el origen con WATCH.
+            # Otra reserva aquí impediría que el mismo traslado lo ocupe.
             return await self._teleport_player(
                 target, command.map_id, command.x, command.y, sender=sender
             )
         except ValueError:
             return CommandResult.error("El destino cambió y ya no está disponible")
         finally:
-            maps.release_positions(reservation)
             if self.action_cadence:
                 self.action_cadence.release(target, "walk")
 

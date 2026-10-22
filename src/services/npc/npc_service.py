@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 from src.runtime_paths import data_dir
 from src.utils.redis_config import RedisKeys
 
+NPC_FORBIDDEN_TRIGGER = 3
+
 logger = logging.getLogger(__name__)
 MAX_CHARACTER_INDEX = 32767
 
@@ -260,7 +262,17 @@ class NPCService:
         return tuple(range(first, first + count))
 
     async def spawn_npc(
-        self, npc_id: int, map_id: int, x: int, y: int, heading: int = 3
+        self,
+        npc_id: int,
+        map_id: int,
+        x: int,
+        y: int,
+        heading: int = 3,
+        *,
+        reservation: str = "",
+        role: str | None = None,
+        respawn_seconds: int | None = None,
+        respawn_max_seconds: int | None = None,
     ) -> NPC | None:
         """Spawnea un NPC en el mundo.
 
@@ -270,10 +282,24 @@ class NPCService:
             x: Posición X.
             y: Posición Y.
             heading: Dirección (1=Norte, 2=Este, 3=Sur, 4=Oeste).
+            reservation: Reserva propia que se convierte en ocupación sin ceder control.
+            role: Rol explícito de una instancia administrativa o de entrenamiento.
+            respawn_seconds: Reaparición de la instancia; None conserva la plantilla.
+            respawn_max_seconds: Máximo del rango al reconstruir una instancia muerta.
 
         Returns:
             Instancia de NPC creada o None si hay error.
         """
+        if (
+            self.map_manager.tile_overrides.get((map_id, x, y), {}).get("trigger")
+            == NPC_FORBIDDEN_TRIGGER
+        ):
+            return None
+        if (
+            reservation
+            and self.map_manager.get_tile_occupant(map_id, x, y) != f"reservation:{reservation}"
+        ):
+            return None
         # Obtener datos del catálogo
         npc_data = self.npc_catalog.get_npc_data(npc_id)
         if not npc_data:
@@ -281,8 +307,11 @@ class NPCService:
             return None
 
         # Asignar CharIndex único
-        char_index = self._next_char_index
-        self._next_char_index += 1
+        try:
+            (char_index,) = self.reserve_character_indices(1)
+        except ValueError:
+            logger.warning("No quedan índices de personaje disponibles para crear NPC")
+            return None
 
         # Extraer sonidos desde appearance.sounds (si está disponible)
         snd1, snd2, snd3 = 0, 0, 0
@@ -323,9 +352,15 @@ class NPCService:
             is_merchant=cast("bool", npc_data.get("es_mercader", False)),
             is_banker=cast("bool", npc_data.get("es_banquero", False)),
             movement_type="static",  # Por ahora todos estáticos
-            respawn_time=cast("int", npc_data.get("respawn_time", 0)),
-            respawn_time_max=cast("int", npc_data.get("respawn_time_max", 0)),
-            role=str(npc_data.get("role", "inhabitant")),
+            respawn_time=respawn_seconds
+            if respawn_seconds is not None
+            else cast("int", npc_data.get("respawn_time", 0)),
+            respawn_time_max=respawn_max_seconds
+            if respawn_max_seconds is not None
+            else respawn_seconds
+            if respawn_seconds is not None
+            else cast("int", npc_data.get("respawn_time_max", 0)),
+            role=role if role is not None else str(npc_data.get("role", "inhabitant")),
             guard_faction=str(npc_data.get("guard_faction", "neutral")),
             gold_min=cast("int", npc_data.get("oro_min", 0)),
             gold_max=cast("int", npc_data.get("oro_max", 0)),
@@ -340,6 +375,12 @@ class NPCService:
             snd3=snd3,
         )
 
+        # Convertir sólo la reserva propia; no hay await entre liberar y registrar.
+        if reservation:
+            if self.map_manager.get_tile_occupant(map_id, x, y) != f"reservation:{reservation}":
+                await self.npc_repository.remove_npc(npc.instance_id)
+                return None
+            self.map_manager.release_positions(reservation, (map_id, x, y))
         # Agregar al MapManager
         self.map_manager.add_npc(map_id, npc)
 
@@ -409,6 +450,7 @@ class NPCService:
                 fx=npc.fx_loop,  # Aura continua del NPC
                 loops=-1 if npc.fx_loop > 0 else 0,  # Loop infinito si tiene aura
                 name=npc.name,
+                show_name=npc.show_name,
             )
             # Delay entre NPCs para que el cliente Godot los procese correctamente
             await asyncio.sleep(0.05)
@@ -460,6 +502,11 @@ class NPCService:
         await self.npc_repository.update_npc_position(npc.instance_id, new_x, new_y, new_heading)
 
         # Actualizar en memoria
+        if (
+            self.map_manager.tile_overrides.get((npc.map_id, new_x, new_y), {}).get("trigger")
+            == NPC_FORBIDDEN_TRIGGER
+        ):
+            return
         old_x = npc.x
         old_y = npc.y
         npc.x = new_x
@@ -509,6 +556,7 @@ class NPCService:
                 x=npc.x,
                 y=npc.y,
                 name=npc.name,
+                show_name=npc.show_name,
             )
 
         logger.info("Enviados %d NPCs del mapa %d al jugador", len(npcs), map_id)

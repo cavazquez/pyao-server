@@ -296,6 +296,24 @@ _MANUAL_ITEMS_CATALOG: dict[int, Item] = {
 }
 
 
+def reload_items_catalog() -> int:
+    """Valida el catálogo tipado antes de actualizar su identidad compartida.
+
+    Returns:
+        Cantidad de objetos cargados.
+
+    Raises:
+        ValueError: Si desaparece una definición existente.
+    """
+    candidate = _load_items_from_toml()
+    if not ITEMS_CATALOG.keys() <= candidate.keys():
+        message = "La recarga no puede eliminar objetos del catálogo tipado"
+        raise ValueError(message)
+    ITEMS_CATALOG.clear()
+    ITEMS_CATALOG.update(candidate)
+    return len(ITEMS_CATALOG)
+
+
 def get_item(item_id: int) -> Item | None:
     """Obtiene un item del catálogo.
 

@@ -18,6 +18,7 @@ def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
     repo.redis.hset = AsyncMock()
+    repo.redis.hget = AsyncMock(return_value=None)
     repo.get_immobilized_until = AsyncMock(return_value=0.0)
     repo.is_meditating = AsyncMock(return_value=False)
     repo.set_meditating = AsyncMock()

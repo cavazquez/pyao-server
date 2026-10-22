@@ -40,6 +40,7 @@ async def emit_chat(
     font: int = 7,
     recipient: int = 0,
     recipient_name: str = "",
+    color: tuple[int, int, int] | None = None,
 ) -> None:
     """Divide texto sin pérdida; los campos de identidad los calcula el servidor.
 
@@ -62,6 +63,7 @@ async def emit_chat(
                 "font": font,
                 "recipient": recipient,
                 "recipient_name": recipient_name[:20],
+                **({"color": list(color)} if color is not None else {}),
             },
         )
 
@@ -78,6 +80,7 @@ async def deliver_chat(
     font: int = 7,
     recipient: int = 0,
     recipient_name: str = "",
+    color: tuple[int, int, int] | None = None,
 ) -> None:
     """Elige una sola representación por conexión y preserva el texto legacy."""
     if supports_chat(getattr(sender, "connection", None)):
@@ -91,6 +94,7 @@ async def deliver_chat(
             font=font,
             recipient=recipient,
             recipient_name=recipient_name,
+            color=color,
         )
     else:
         await sender.send_console_msg(legacy, font_color=font)

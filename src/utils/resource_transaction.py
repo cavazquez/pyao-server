@@ -49,6 +49,8 @@ class Resource:
     ttl_seconds: int | None = None
     keep_ttl: bool = False
     fields: tuple[str, ...] | None = None
+    deletable: bool = False
+    replace: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -56,7 +58,7 @@ class Decision:
     """Resultado serializable y valores completos que se confirman juntos."""
 
     result: dict[str, Any]
-    writes: Mapping[str, str | dict[str, str] | set[str]]
+    writes: Mapping[str, str | dict[str, str] | set[str] | None]
 
 
 def _request_fingerprint(resources: tuple[Resource, ...], request: dict[str, Any]) -> str:
@@ -65,7 +67,11 @@ def _request_fingerprint(resources: tuple[Resource, ...], request: dict[str, Any
             {
                 "request": request,
                 "resources": [
-                    (r.key, r.kind, r.fields) if r.kind == "ground" else (r.key, r.kind)
+                    (r.key, r.kind, r.fields)
+                    if r.kind == "ground"
+                    else (r.key, r.kind, r.deletable, r.replace)
+                    if r.deletable or r.replace
+                    else (r.key, r.kind)
                     for r in resources
                 ],
             },
@@ -96,9 +102,15 @@ async def _read_snapshot(pipe: Pipeline, resources: tuple[Resource, ...]) -> Sna
 
     Returns:
         Copias de los recursos sin publicar modificaciones.
+
+    Raises:
+        ValueError: Si los datos o precondiciones de la operación son inválidos.
     """
     snapshot: Snapshot = {}
     for resource in resources:
+        if resource.replace and (resource.kind != "hash" or resource.keep_ttl):
+            msg = "Sólo un hash sin keep_ttl permite reemplazo completo"
+            raise ValueError(msg)
         if resource.kind == "ground":
             ground = await read_ground(pipe, map_id_from_key(resource.key), resource.fields)
             snapshot[resource.key] = ground.encode()
@@ -239,7 +251,7 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
 
 
 def _validate_writes(
-    resources: dict[str, Resource], writes: Mapping[str, str | dict[str, str] | set[str]]
+    resources: dict[str, Resource], writes: Mapping[str, str | dict[str, str] | set[str] | None]
 ) -> None:
     """Rechaza toda mutación inválida antes de encolar el primer comando.
 
@@ -248,6 +260,15 @@ def _validate_writes(
         TypeError: Si una decisión intenta persistir valores de otro tipo.
     """
     for key, value in writes.items():
+        if value is None:
+            if (
+                key not in resources
+                or not resources[key].deletable
+                or resources[key].kind == "ground"
+            ):
+                msg = "La decisión intentó eliminar un recurso no autorizado"
+                raise ValueError(msg)
+            continue
         if (
             key not in resources
             or (isinstance(value, dict) != (resources[key].kind == "hash"))
@@ -281,10 +302,13 @@ def _validate_writes(
 def _enqueue_writes(
     pipe: Pipeline,
     resources: dict[str, Resource],
-    writes: Mapping[str, str | dict[str, str] | set[str]],
+    writes: Mapping[str, str | dict[str, str] | set[str] | None],
 ) -> None:
     """Encola sólo valores previamente validados y sin hacer I/O antes de EXEC."""
     for key, value in writes.items():
+        if value is None:
+            pipe.delete(key)
+            continue
         if resources[key].kind == "ground":
             ground = GroundState(map_id_from_key(key), cast("str", value))
             fields = encode_fields(ground)
@@ -294,8 +318,11 @@ def _enqueue_writes(
                 pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", present))
             if absent:
                 pipe.hdel(key, *absent)
-        elif isinstance(value, dict) and value:
-            pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", value))
+        elif isinstance(value, dict):
+            if resources[key].replace:
+                pipe.delete(key)
+            if value:
+                pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", value))
         elif isinstance(value, set):
             pipe.delete(key)
             if value:

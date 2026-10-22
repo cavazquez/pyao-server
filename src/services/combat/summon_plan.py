@@ -6,6 +6,7 @@ from uuid import NAMESPACE_URL, uuid5
 
 from src.constants.gameplay import MAX_PETS
 from src.models.npc import NPC
+from src.services.classic_chat.world_rules import combat_rejection
 from src.services.combat.spell_plan import SpellPlan
 from src.services.skill_training import trained_decision
 from src.utils.redis_config import RedisKeys
@@ -91,6 +92,15 @@ class SummonPlan(SpellPlan):
             Peticiones de publicación derivadas exclusivamente del commit confirmado.
         """
         request = self.request
+        if self.world is not None:
+            merged = self.world.merge(snapshot, request.user_id)
+            if merged is None:
+                return Decision(
+                    {"applied": False, "message": "El mapa cambió; vuelve a intentarlo."}, {}
+                )
+            snapshot = merged
+        if rejection := combat_rejection(snapshot, request.user_id, 0, self.spell):
+            return Decision({"applied": False, "message": rejection}, {})
         if self.world_guard is not None and not self.world_guard():
             return Decision({"applied": False, "message": "La sesión o el terreno cambió."}, {})
         stats_key = RedisKeys.player_user_stats(request.user_id)

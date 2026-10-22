@@ -135,6 +135,9 @@ class NPCRespawnService:
                             x=spawn_x,
                             y=spawn_y,
                             heading=npc.heading,
+                            role=npc.role,
+                            respawn_seconds=npc.respawn_time,
+                            respawn_max_seconds=npc.respawn_time_max,
                         )
 
                         if new_npc:

@@ -91,7 +91,7 @@ class AreaSpellPlan(SpellPlan):
         if not first_result.result.get("applied"):
             return first_result
         selected[0] = first, first_result
-        writes: dict[str, str | dict[str, str] | set[str]] = {}
+        writes: Snapshot = {}
         outcomes = []
         for target, decision in selected:
             for key, value in decision.writes.items():

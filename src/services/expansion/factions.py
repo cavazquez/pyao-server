@@ -6,8 +6,11 @@ from typing import TYPE_CHECKING, Any, cast
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
+NOBLE_RANGE = 4
+
 if TYPE_CHECKING:
     from src.core.dependency_container import DependencyContainer
+    from src.models.npc import NPC
     from src.services.expansion.catalog import ExpansionCatalog
 
 MAX_PRESTIGE = 1000000
@@ -81,7 +84,13 @@ class FactionService:
         }
 
     async def command(
-        self, user: int, action: str, params: dict[str, Any], identity: str
+        self,
+        user: int,
+        action: str,
+        params: dict[str, Any],
+        identity: str,
+        *,
+        noble: NPC | None = None,
     ) -> dict[str, Any]:
         """Ingresa o abandona una facción con exclusión mutua y cooldown.
 
@@ -90,13 +99,45 @@ class FactionService:
         """
         key, now = RedisKeys.player_user_stats(user), time.time()
         selected = str(params.get("faction", "neutral"))
+        position_key, selection_key = RedisKeys.player_position(user), f"chat:target:{user}"
+        npc_key = RedisKeys.npc_instance(noble.instance_id) if noble else ""
 
         def decide(snapshot: Snapshot) -> Decision:
             stats = cast("dict[str, str]", snapshot[key])
+            if noble:
+                position = cast("dict[str, str]", snapshot[position_key])
+                npc = cast("dict[str, str]", snapshot[npc_key])
+                selection = cast("dict[str, str]", snapshot[selection_key])
+                valid_identity = (
+                    selection.get("npc") == noble.instance_id
+                    and npc.get("instance_id") == noble.instance_id
+                    and int(npc.get("npc_id", 0)) == noble.npc_id
+                )
+                npc_alive = not (int(npc.get("max_hp", 0)) > 0 and int(npc.get("hp", 0)) <= 0)
+                if (
+                    not valid_identity
+                    or int(position.get("map", 0)) != int(npc.get("map_id", -1))
+                    or max(
+                        abs(int(position.get("x", 0)) - int(npc.get("x", -100))),
+                        abs(int(position.get("y", 0)) - int(npc.get("y", -100))),
+                    )
+                    > NOBLE_RANGE
+                    or not npc_alive
+                ):
+                    return Decision(
+                        {
+                            "applied": False,
+                            "message": "El noble seleccionado cambió o está fuera de alcance.",
+                        },
+                        {},
+                    )
             current = stats.get("faction_id", "neutral")
             row = self.catalog.factions.get(selected)
             if action == "join" and (
-                row is None or current != "neutral" or int(stats.get("level", 0)) < row.min_level
+                row is None
+                or current != "neutral"
+                or int(stats.get("level", 0)) < row.min_level
+                or stats.get(f"faction_banned_{selected}") == "1"
             ):
                 return Decision(
                     {
@@ -128,14 +169,31 @@ class FactionService:
                         "faction_id": selected if action == "join" else "neutral",
                         "faction_prestige": "0",
                         "faction_rank": "0",
+                        "faction_council": "0",
                         "faction_change_after": str(now + cooldown),
+                        "faction_kill_baseline": stats.get(
+                            "criminal_kills" if selected == "royal" else "citizen_kills", "0"
+                        )
+                        if action == "join"
+                        else stats.get("faction_kill_baseline", "0"),
                     }
                 },
             )
 
         return await transact(
             self.deps.redis_client.redis,
-            (Resource(key, "hash"),),
+            (
+                Resource(key, "hash"),
+                *(
+                    (
+                        Resource(position_key, "hash"),
+                        Resource(selection_key, "hash"),
+                        Resource(npc_key, "hash"),
+                    )
+                    if noble
+                    else ()
+                ),
+            ),
             identity,
             {"faction": action, "params": params, "user": user},
             decide,

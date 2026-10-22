@@ -32,7 +32,9 @@ async def test_reader_failure_releases_session_and_classifies_error(
     writer.wait_closed = AsyncMock()
     lease = AsyncMock()
     database = SimpleNamespace(
-        redis=MagicMock(), increment_connections=AsyncMock(), decrement_connections=AsyncMock()
+        redis=SimpleNamespace(hget=AsyncMock(return_value=None)),
+        increment_connections=AsyncMock(),
+        decrement_connections=AsyncMock(),
     )
     server.deps = SimpleNamespace(redis_client=database)
     caplog.set_level(logging.INFO, logger="src.server")
@@ -132,7 +134,10 @@ async def test_stop_drains_active_operation_and_cleanup_before_redis() -> None: 
     server = ArgentumServer(host="127.0.0.1", port=7777)
     events = []
     entered, finish = asyncio.Event(), asyncio.Event()
-    database = SimpleNamespace(redis=MagicMock(), increment_connections=AsyncMock())
+    database = SimpleNamespace(
+        redis=SimpleNamespace(hget=AsyncMock(return_value=None)),
+        increment_connections=AsyncMock(),
+    )
 
     async def record(label):
         assert "redis" not in events

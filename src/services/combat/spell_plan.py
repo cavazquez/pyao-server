@@ -6,8 +6,17 @@ from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING, Any, cast
 
 from src.models.skills import skill_progress
+from src.services.classic_chat.world_rules import (
+    WORLD_REVISION,
+    WorldSnapshot,
+    combat_rejection,
+    duel,
+)
+from src.services.classic_chat.world_rules import policy as world_policy
+from src.services.classic_chat.world_rules import prepare as prepare_world
 from src.services.combat.barriers import absorb_damage, clear_barrier
 from src.services.combat.clan_policy import ClanCombat
+from src.services.combat.npc_claims import claim_changes, claim_rejection, sharing_key
 from src.services.combat.periodic import periodic_changes
 from src.services.combat.pvp_policy import PvpPolicy, is_hostile
 from src.services.combat.spell_components import take_materials
@@ -68,6 +77,8 @@ class SpellPlan:
         self.request = request
         self.spell = spell
         self.policy = policy
+        self.base_policy = policy
+        self.world: WorldSnapshot | None = None
         self.now = time.time()
         self.base_amount = random.randint(
             int(spell.get("min_damage", 0)), int(spell.get("max_damage", 0))
@@ -104,6 +115,11 @@ class SpellPlan:
                 for resource in (
                     *(Resource(key, "hash") for key in sorted(keys)),
                     *training_resources(request.user_id),
+                    *(
+                        [Resource(sharing_key(request.user_id), "set")]
+                        if request.target_npc
+                        else []
+                    ),
                 )
             }.values()
         )
@@ -114,8 +130,19 @@ class SpellPlan:
         Returns:
             Resultado estable y campos exactos de recursos confirmados conjuntamente.
         """
-        values = {key: cast("dict[str, str]", value) for key, value in snapshot.items()}
         request = self.request
+        if self.world is not None:
+            merged = self.world.merge(snapshot, request.user_id)
+            if merged is None:
+                return Decision(
+                    {
+                        "applied": False,
+                        "message": "Las reglas o el mapa cambiaron; vuelve a intentarlo.",
+                    },
+                    {},
+                )
+            snapshot = merged
+        values = {key: cast("dict[str, str]", value) for key, value in snapshot.items()}
         self._relationship = (
             self.clan_policy.relationship(snapshot) if self.clan_policy else "neutral"
         )
@@ -124,8 +151,14 @@ class SpellPlan:
         source_key = RedisKeys.player_user_stats(request.user_id)
         source = values[source_key]
         position = values[RedisKeys.player_position(request.user_id)]
+        self.policy = world_policy(
+            snapshot, request.user_id, self.base_policy, target=request.target_player
+        )
         book = values[RedisKeys.player_spellbook(request.user_id)]
         error = self._validate_caster(values, source, position, book)
+        error = error or combat_rejection(
+            snapshot, request.user_id, request.target_player, self.spell
+        )
         if error:
             return Decision({"applied": False, "message": error}, {})
         target_key = (
@@ -147,10 +180,17 @@ class SpellPlan:
         if error:
             return Decision({"applied": False, "message": error}, {})
         writes: dict[str, str | dict[str, str]] = {}
+        if (
+            request.target_npc
+            and is_hostile(self.spell)
+            and (rejection := claim_rejection(snapshot, target, request.user_id, self.now))
+        ):
+            return Decision({"applied": False, "message": rejection}, {})
         target_changes: dict[str, str] = {}
         source_changes = {
             "hidden_until": "0",
             "meditating": "0",
+            "resting": "0",
             "min_mana": str(int(source.get("min_mana", 0)) - int(self.spell.get("mana_cost", 0))),
             "min_sta": str(int(source.get("min_sta", 0)) - int(self.spell.get("stamina_cost", 3))),
         }
@@ -198,6 +238,7 @@ class SpellPlan:
                     target_position,
                     0,
                     f"cast:{request.user_id}:{request.spell_id}:{self.now}",
+                    duel=duel(snapshot, request.user_id, request.target_player),
                 )
             )
         effects = self._effects(target_changes, bool(request.target_player))
@@ -298,6 +339,8 @@ class SpellPlan:
         if request.target_player and int(target_changes.get("min_hp", hp)) <= 0:
             target_changes.update({"periodic_effects": "[]", **clear_barrier()})
         writes[target_key] = target_changes
+        if request.target_npc and is_hostile(self.spell):
+            target_changes.update(claim_changes(target, request.user_id, self.now))
         if source_key == target_key:
             target_changes.update(source_changes)
         else:
@@ -487,6 +530,9 @@ async def commit_spell(redis: Redis, identity: str, plan: SpellPlan) -> dict[str
         Resultado original de la intención congelada, sin compensaciones.
     """
     await require_durable(redis)
+    if plan.world is None:
+        plan.world = await prepare_world(redis, plan.request.user_id)
+        plan.resources = (*plan.resources, Resource(WORLD_REVISION, "string"))
     await plan.prepare_relations(redis)
     result = await transact(
         redis,

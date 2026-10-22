@@ -1,9 +1,11 @@
 """Handler especializado para ejecución de movimiento."""
 
 import logging
+import random
 from typing import TYPE_CHECKING, Any
 
 from src.models.item_constants import BOAT_ITEM_IDS
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -199,6 +201,17 @@ class WalkMovementHandler:
                 new_map = exit_tile["to_map"]
                 new_x = exit_tile["to_x"]
                 new_y = exit_tile["to_y"]
+                radius = exit_tile.get("radius", 0)
+                if radius:
+                    positions = [
+                        (new_x + dx, new_y + dy)
+                        for dx in range(-radius, radius + 1)
+                        for dy in range(-radius, radius + 1)
+                        if self.map_manager.can_move_to(new_map, new_x + dx, new_y + dy)
+                        and not self.map_manager.get_exit_tile(new_map, new_x + dx, new_y + dy)
+                    ]
+                    if positions:
+                        new_x, new_y = random.choice(positions)
                 changed_map = True
 
                 logger.info(
@@ -354,6 +367,14 @@ class WalkMovementHandler:
             True si el jugador posee una barca en algún slot del inventario,
             False en caso contrario.
         """
+        if self.player_repo:
+            account_key = await self.player_repo.redis.hget(
+                RedisKeys.player_user_stats(user_id), "gm_navigation_account"
+            )
+            if account_key:
+                profile = await self.player_repo.redis.hgetall(str(account_key))
+                if profile.get("is_gm") == "1" and profile.get("user_id") == str(user_id):
+                    return True
         if not self.inventory_repo:
             return False
 

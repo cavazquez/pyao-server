@@ -280,6 +280,7 @@ class NPCRepository:
             random_spawn_area=result.get("random_spawn_area", ""),
             loot_profile=result.get("loot_profile", "none"),
             loot_material=int(result.get("loot_material", "0")),
+            gm_follow_user=int(result.get("gm_follow_user", "0")),
         )
 
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:

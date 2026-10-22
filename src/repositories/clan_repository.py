@@ -52,12 +52,14 @@ class ClanRepository:
 
         Returns:
             int: The next clan ID.
+
+        Raises:
+            ValueError: Si los datos o precondiciones de la operación son inválidos.
         """
         clan_id = await self.redis.incr(self.NEXT_CLAN_ID_KEY)
         if clan_id > self.MAX_CLAN_ID:
-            # Reset to 1 if we exceed maximum
-            await self.redis.set(self.NEXT_CLAN_ID_KEY, "1")
-            clan_id = 1
+            message = "Se agotó el rango de identificadores de clan; no se reutilizan IDs"
+            raise ValueError(message)
         return clan_id
 
     async def save_clan(self, clan: Clan) -> None:

@@ -43,6 +43,7 @@ class CharacterMessageSender:
         name: str = "",
         nick_color: int = 0,
         privileges: int = 0,
+        show_name: bool = True,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -61,6 +62,7 @@ class CharacterMessageSender:
             name: Nombre del personaje (string), por defecto vacío.
             nick_color: Color del nick (byte), por defecto 0.
             privileges: Privilegios del personaje (byte), por defecto 0.
+            show_name: Permite mostrar la etiqueta de nombre en el mapa.
         """
         response = build_character_create_response(
             char_index=char_index,
@@ -77,6 +79,7 @@ class CharacterMessageSender:
             name=name,
             nick_color=nick_color,
             privileges=privileges,
+            show_name=show_name,
         )
         logger.debug(
             "[%s] Enviando CHARACTER_CREATE: charIndex=%d, name=%s, pos=(%d,%d)",

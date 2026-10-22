@@ -75,6 +75,7 @@ def build_character_create_response(
     name: str = "",
     nick_color: int = 0,
     privileges: int = 0,
+    show_name: bool = True,
 ) -> bytes:
     """Construye el paquete CharacterCreate del protocolo AO estándar.
 
@@ -93,6 +94,7 @@ def build_character_create_response(
         name: Nombre del personaje (string), por defecto vacío.
         nick_color: Color del nick (byte), por defecto 0.
         privileges: Privilegios del personaje (byte), por defecto 0.
+        show_name: Permite mostrar el nombre en el mapa sin borrar su identidad.
 
     Returns:
         Paquete de bytes con el formato CHARACTER_CREATE.
@@ -114,6 +116,7 @@ def build_character_create_response(
     packet.add_unicode_string(name)
     packet.add_byte(nick_color)
     packet.add_byte(privileges)
+    packet.add_byte(int(show_name))
     return packet.to_bytes()
 
 

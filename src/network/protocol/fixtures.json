@@ -558,5 +558,35 @@
       "class": 12,
       "jail_remaining_days": 2
     }
+  },
+  {
+    "name": "character_bat",
+    "direction": "server",
+    "hex": "1d112701000100033232000000000000000000000a004d75726369e96c61676f000000",
+    "values": {
+      "index": 10001,
+      "name": "Murciélago",
+      "show_name": 0
+    }
+  },
+  {
+    "name": "character_banker",
+    "direction": "server",
+    "hex": "1d12270100010003323200000000000000000000080042616e717565726f000001",
+    "values": {
+      "index": 10002,
+      "name": "Banquero",
+      "show_name": 1
+    }
+  },
+  {
+    "name": "character_player",
+    "direction": "server",
+    "hex": "1d0100010001000332320000000000000000000004005065f161000001",
+    "values": {
+      "index": 1,
+      "name": "Peña",
+      "show_name": 1
+    }
   }
 ]

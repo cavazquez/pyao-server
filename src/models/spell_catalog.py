@@ -22,7 +22,24 @@ class SpellCatalog:
             spells_path: Ruta al archivo de hechizos.
         """
         self.spells: dict[int, dict[str, Any]] = {}
-        self._load_spells(spells_path or str(data_dir() / "spells.toml"))
+        self.path = spells_path or str(data_dir() / "spells.toml")
+        self._load_spells(self.path)
+
+    def reload(self) -> int:
+        """Valida antes de sustituir hechizos, sin invalidar libros persistidos.
+
+        Returns:
+            Número de hechizos cargados.
+
+        Raises:
+            ValueError: Si desaparece un hechizo existente.
+        """
+        candidate = SpellCatalog(self.path)
+        if not self.spells.keys() <= candidate.spells.keys():
+            message = "La recarga no puede eliminar hechizos existentes"
+            raise ValueError(message)
+        self.spells = candidate.spells
+        return len(self.spells)
 
     def _load_spells(self, spells_path: str) -> None:
         """Carga los hechizos desde el archivo TOML.

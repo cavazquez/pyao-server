@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "issue": 334,
+  "redis": "8.10.2",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "machine": "x86_64",
+  "synthetic_only": true,
+  "production_data_used": false,
+  "production_durability_enabled": false,
+  "rows": [
+    {
+      "objects": 1000,
+      "layout": "current-slots",
+      "key_count": 34,
+      "sum_memory_usage_bytes": 15181,
+      "memory_usage_bytes_per_object": 15.181,
+      "used_memory_delta_bytes": 53872,
+      "redis_rss_bytes": 21749760,
+      "aof_growth_bytes": 60424,
+      "creation_seconds": 0.7858971490004478,
+      "creation_objects_per_second": 1272.4311333510516,
+      "creation_wire_input_bytes": 60548,
+      "creation_wire_output_bytes": 8914,
+      "container_read": {
+        "p50_ms": 0.10518500039324863,
+        "p95_ms": 0.5540070005736197,
+        "p99_ms": 1.5927340000416734,
+        "samples": 101,
+        "stdev_ms": 0.2877266164967734
+      },
+      "one_metadata_update": null,
+      "read_update_client_cpu_seconds": 0.008454587000000013,
+      "metadata_encoding": null
+    },
+    {
+      "objects": 1000,
+      "layout": "individual-prototype",
+      "key_count": 1034,
+      "sum_memory_usage_bytes": 241181,
+      "memory_usage_bytes_per_object": 241.181,
+      "used_memory_delta_bytes": 283336,
+      "redis_rss_bytes": 22142976,
+      "aof_growth_bytes": 369848,
+      "creation_seconds": 0.9811445850000382,
+      "creation_objects_per_second": 1019.217774106108,
+      "creation_wire_input_bytes": 369972,
+      "creation_wire_output_bytes": 12946,
+      "container_read": {
+        "p50_ms": 0.5160769997019088,
+        "p95_ms": 1.0962830001517432,
+        "p99_ms": 2.3038429999360233,
+        "samples": 101,
+        "stdev_ms": 0.32633147616155017
+      },
+      "one_metadata_update": {
+        "p50_ms": 0.05896899983781623,
+        "p95_ms": 0.12551300005725352,
+        "p99_ms": 0.6557770002473262,
+        "samples": 101,
+        "stdev_ms": 0.12363656683187396
+      },
+      "read_update_client_cpu_seconds": 0.04396509799999998,
+      "metadata_encoding": "listpack"
+    },
+    {
+      "objects": 100000,
+      "layout": "current-slots",
+      "key_count": 3334,
+      "sum_memory_usage_bytes": 1522251,
+      "memory_usage_bytes_per_object": 15.22251,
+      "used_memory_delta_bytes": 1678328,
+      "redis_rss_bytes": 23441408,
+      "aof_growth_bytes": 6236784,
+      "creation_seconds": 0.9279510739997932,
+      "creation_objects_per_second": 107764.30223736375,
+      "creation_wire_input_bytes": 6236908,
+      "creation_wire_output_bytes": 404959,
+      "container_read": {
+        "p50_ms": 0.09523700009594904,
+        "p95_ms": 0.11273899963271106,
+        "p99_ms": 0.9183329993902589,
+        "samples": 101,
+        "stdev_ms": 0.13388518023386844
+      },
+      "one_metadata_update": null,
+      "read_update_client_cpu_seconds": 0.006862991999999957,
+      "metadata_encoding": null
+    },
+    {
+      "objects": 100000,
+      "layout": "individual-prototype",
+      "key_count": 103334,
+      "sum_memory_usage_bytes": 24218441,
+      "memory_usage_bytes_per_object": 242.18441,
+      "used_memory_delta_bytes": 27611496,
+      "redis_rss_bytes": 49889280,
+      "aof_growth_bytes": 37373568,
+      "creation_seconds": 2.990768298999683,
+      "creation_objects_per_second": 33436.22440877377,
+      "creation_wire_input_bytes": 37373692,
+      "creation_wire_output_bytes": 804994,
+      "container_read": {
+        "p50_ms": 0.5512020006790408,
+        "p95_ms": 1.1073329997088877,
+        "p99_ms": 1.7862529994090437,
+        "samples": 101,
+        "stdev_ms": 0.27508176938023066
+      },
+      "one_metadata_update": {
+        "p50_ms": 0.0738970002203132,
+        "p95_ms": 0.8629299991298467,
+        "p99_ms": 1.650050000534975,
+        "samples": 101,
+        "stdev_ms": 0.37345022380007686
+      },
+      "read_update_client_cpu_seconds": 0.05030141999999982,
+      "metadata_encoding": "listpack"
+    }
+  ],
+  "limitations": [
+    "one host and one prototype layout, not production capacity",
+    "101 warm container reads; startup and cold page cache are not measured",
+    "RSS includes allocator history; use MEMORY USAGE for stored-key comparisons",
+    "creation uses pipelines; it does not model per-action WATCH/EXEC and WAITAOF cost",
+    "timestamps and the example lifetime describe payload size, not proposed balance defaults"
+  ]
+}

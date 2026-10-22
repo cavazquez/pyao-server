@@ -1,0 +1,3986 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-22T13:47:02Z",
+  "commit": "942bdf7780d82b86b3c8a5a98d07cbb7e80a957c",
+  "source_hashes": {
+    "src/log_context.py": "b659cb9ce6c41963c5a5bf31731e3f5191ab7fcc52e094e9dc86d3f2d889328d",
+    "src/runtime_paths.py": "12e6700dceda52632c401779890a8692abfffb8acde40046627583d6c847c808",
+    "src/server_cli.py": "1536a12af3152d7b99efaefb3efb54b439252320ae541cae7cfa24a6b867bb76",
+    "src/__init__.py": "84d679b068154bff08241e2cad966001ff6ec992e1859040a8f016c7a2c0c20d",
+    "src/_version.py": "054c4ec52f5bd109704685e94b48531582583a3f0378e5e5ccbb27bc8111cfb3",
+    "src/logging_config.py": "aa3ce5238ef9b21e7f529b05348b7ed28c11949adc5ea164465b60d3c53e1af6",
+    "src/diagnostics.py": "e75e0684df6404bcf1d3fb3212b22dec2d1c6ac3362803c3cf93a8d24334f5ef",
+    "src/server.py": "bcdacbd85c5bdbd4e99098469a53f63a84552135ccf054eb4807f1d8f956eff8",
+    "src/run_server.py": "bc1c959d8bb2dac89366cdb9a1c6c23314f5999f41d0571e2bf6b8452b8f1193",
+    "src/config.py": "9df54753538f59a3c81dae4498da74c057f0cba3baa29edd1bdc028edc273c59",
+    "src/effects/tick_effect.py": "49ef565d41ae9783083224f770290208991e0a6f4add2a4bb648b8803dfbdc18",
+    "src/effects/effect_gold_decay.py": "656aa6dab937e43729d3623768d57bfd97f9055e38dcd71d5bb384ae191555a7",
+    "src/effects/meditation_effect.py": "85cf61f7134d30558c161db5212461d7974faca8124f72d413088da8f78732b7",
+    "src/effects/effect_npc_poison.py": "77c3afa8592c12a481ef77689f4c6ad6f7ff7bfb4476ba9b9bc017fccd45d2d7",
+    "src/effects/effect_npc_movement.py": "f1336065a055aa7461eaf6d6d9900ad3b93004fb77dfd8ca85193f5697b655dd",
+    "src/effects/effect_stamina_regen.py": "490152e385bfc4999edbaf4d7095ba9dba9ec1deefdf3c5c435cf66838546e82",
+    "src/effects/effect_morph_expiry.py": "c9881e6e3fa6e0bb744a944611500c96a959f252eb697ff6a8e2c59c7772d8bb",
+    "src/effects/npc_ai_effect.py": "97455ce0482f68d800a61c89a293d19014343195638aefc126097fad27658d02",
+    "src/effects/__init__.py": "bc824bddfd7927c470aa700936cd726f7580b18a23ae6f4a8033dbd6ff85d552",
+    "src/effects/effect_lifecycle.py": "a00c46ca2047d1d7fadd4ff102b9e8493e266985a26922bde40ea76ef7a450f3",
+    "src/effects/effect_attribute_modifiers.py": "5f9ae3e577a6b258b9ce699dd9bf858f47e5db1b5ec6f85daa4cdbb19de17066",
+    "src/effects/effect_npc_rewards.py": "5fa8282330b3a83fe8ff43c86b635d9d7f081903ad8b267dbe432bb950161eb8",
+    "src/effects/effect_summon_expiry.py": "7932d1ada239e02840976493ae15243a0de4f6731e73f4513a173a9ecff7ec37",
+    "src/effects/effect_poison.py": "ff3cfa16009ec56e142b65d044d8e6dd8cec69675aaa33b5845dd6f5896307ec",
+    "src/effects/effect_hunger_thirst.py": "a73cb74d1e76f637428329d39881b863876189cfbc51e6dca6122f9ed3d1d0b0",
+    "src/effects/effect_pet_follow.py": "ca16bf8676209b81dcfba4cf45456e20ea87c5aa3815e12cab8fc42435d3fd03",
+    "src/commands/request_attributes_command.py": "14bbc9874b48df443b824db9443e09efe3eeefff637f955f85ee64e2a4c18b65",
+    "src/commands/request_skills_command.py": "43312ed87b5c1e0259cfbb062318eb23a02f9f1d0086920c4592ac8ce0714416",
+    "src/commands/bank_extract_gold_command.py": "9ecc4be7798e6e8d3f16ad6351fff5eb6a4a282b9251234943647c038a260f78",
+    "src/commands/party_join_command.py": "722c3c1734174aac9d2436f05042c1c569ee1b911b11f0616cd60b865a1077ef",
+    "src/commands/spell_info_command.py": "62d7d3a24ffda6f990c4532ca944692678b6958d613d4af05189afb5f240b965",
+    "src/commands/move_spell_command.py": "b047481ee8fc33a7554ad97d8cce6762bb007368d666b49411039b6b99f70c4c",
+    "src/commands/online_command.py": "94a1b839270495bc3666a42a8139275d81c6e8016067b4dec88f755616d2a20c",
+    "src/commands/left_click_command.py": "d60eb72a93179bc3bd51fbfc452b9e0eac081d8ac3259f60291565ed65e0b301",
+    "src/commands/work_command.py": "3fb71199cdcb513a5971a0eaa28348b1ff4b7298e7b45612d935a011bab11399",
+    "src/commands/commerce_end_command.py": "e2fcb9eeb0e0d6160c04765f41df72cf00f70800f93b55e2180d261c553b429a",
+    "src/commands/dice_command.py": "7391b4f2a7ae307d1b9b095178cad17e6ffbf374f89ec4d48d81e1658ab2384a",
+    "src/commands/party_create_command.py": "b086f1d0a5f8da952ff3034e07296da9ed1e5ebf45522bf6f70aaeac85a65fad",
+    "src/commands/kick_clan_member_command.py": "c2670d15d66f37d370938c2e319e1e476947c84752da8686495aee69cf39513b",
+    "src/commands/start_player_trade_command.py": "ead56e5810bae8ee7a2a98cfad01d2b3ae96c511203bdcbb3674f8e5d2e30258",
+    "src/commands/change_heading_command.py": "b864c9f06f7b026b71b245b0b252a286de56062c7275c6935969159b244ff959",
+    "src/commands/bank_deposit_command.py": "a59cb520748d40dbe39fd0af3233dc192a286d1307005dfdb755a22ec0944897",
+    "src/commands/safe_toggle_command.py": "7ef56d0000db6b28102d8bd621c45574d4f8a0371d18f20ba5d1b553ca402a0f",
+    "src/commands/party_set_leader_command.py": "9a02afbf46717bf27d6f79f51a5145ffaefc3378d1254f33b2c4fe98d4d67a54",
+    "src/commands/whisper_command.py": "ef5d76ace91185f453a0ac1ded400ecdf0b4c666a3dc5fa145739bb5f376e21b",
+    "src/commands/commerce_buy_command.py": "337d4f9e24622add5c461b132a4344780ff1614280a96f0b8ed9f5c97e781870",
+    "src/commands/move_item_command.py": "50a9f15ae02b0e40634ef6a1f8933a90e5414cfce34a1ffd5c00f2fbc3cffc31",
+    "src/commands/login_command.py": "2cfd9bd192a0848dfcab402f484349cb6ead6910878196426dc9fb7984c47355",
+    "src/commands/request_position_update_command.py": "07d109e73a304e9620e452cbe91c7a85c936c112198660989dd375ed7f909814",
+    "src/commands/inventory_click_command.py": "fce3c0d3e94a96ccaa2d910a766d0e9504bfac7027c143a926f99d51278cd3f4",
+    "src/commands/ayuda_command.py": "de0a5c723763295755afcfac97d55adeda0c18ef3af10f280bbeef074b776446",
+    "src/commands/accept_clan_command.py": "54b33226c8786917aa21b5b09030ff92f54dcc7c3827289af3a991d106c06296",
+    "src/commands/leave_clan_command.py": "08d2984cf51c3e6873b38c2f990240f6804d678fee327a508e24ba7237a035e6",
+    "src/commands/use_item_command.py": "5ccde6088d1d67312643717eb160e5a90d7cc312c7b143d52e8b8c6beb41910b",
+    "src/commands/__init__.py": "78314e885a6f9a19da9c33a0898e753d4bfc42c2dc03cc3f3fd6a7fb84a5197d",
+    "src/commands/transfer_clan_leadership_command.py": "7847b9c38fc518d5e555aaa13ef5c552f3181f788c9fb30900099c388d73cc4a",
+    "src/commands/motd_command.py": "26820d1166b3449760a9a81d981ec7d91c663d5785065c2a870edbe26cac5337",
+    "src/commands/talk_command.py": "38347d866ab2bbea8ea710a7ef442436d054fa1456443da19f4d45f1c6b1890b",
+    "src/commands/create_account_command.py": "9fc80b718f8288c085d8af47fd73c456b1cd70dd31951ce40e4c7f67cf5aa573",
+    "src/commands/walk_command.py": "27e3e0145ea8781148578f14d026da948ae62cc694ee1e9633d561ca37e731c3",
+    "src/commands/information_command.py": "73cf1ba8974e2edc1a52dab8e856ab267e9d46d0b414318fd6228e96a26856c2",
+    "src/commands/equip_item_command.py": "0f4fe3e2117586cadf940ba85cfce0d72d69236a4cb3ffeb7d4735a0ca47a682",
+    "src/commands/bank_end_command.py": "dba3910af95e3eb99e633b0a130066015b9d5bda441dbec3da261bc2ef74ae9d",
+    "src/commands/promote_clan_member_command.py": "ca58c55b59cbca867c6f35ad7266f7197275a48567a8a537aa5b53c7eeadee07",
+    "src/commands/ping_command.py": "11f062eb6716cb3a381883c4bdff959c96f46fb6e7ebdb0955c4c03b042b0394",
+    "src/commands/reject_clan_command.py": "24ca6ab166d3f35f63959aaf96d7dec58e7ea8618db5d454c44472d456633528",
+    "src/commands/base.py": "4fc06ec2826f3f243887e94ab54fe7c4b284e7422acfca8a14b56c0ccffd71e1",
+    "src/commands/create_clan_command.py": "884955e971ffab2bf55bfe4b3f01fd0f6f3309dfb618c48415720da2df4ae6bd",
+    "src/commands/meditate_command.py": "4bba85692b7abd9a3aea4e9aea9ef8302d31734b090033d2e85de6f46d3ed400",
+    "src/commands/gm_command.py": "dac923018bfc409e1a1b8e975dbd78bcaf55c9f80dea8d6f36bd0d70ec5c4ec3",
+    "src/commands/yell_command.py": "84d411a319ecc6402e4c3d5acb1e211ba9ecf20e0f37b1719df0ee3e12819e86",
+    "src/commands/bank_extract_command.py": "cacab68b4875921c114a6d974f662c723b2f4d54c5dbd08cb2c51e8a081d5de2",
+    "src/commands/party_accept_command.py": "946f91ac1fcf38a28928eef55383cb90a9f51adc0789a1348342b01eab647797",
+    "src/commands/party_kick_command.py": "09bdd9baed92ba381dc22feedf64c6add80e3fb82383b4c2521c60a32fb5a968",
+    "src/commands/work_left_click_command.py": "33ad99517a36541ac36ea6c0a18f82e0f0f2d8042ad46f1ac3b23ed707b76e13",
+    "src/commands/uptime_command.py": "4a4049e25bb61c4bba4daf8959589255643b79fb2fa7d4a37f895af6968be4f5",
+    "src/commands/pickup_command.py": "c018a6cd7c83772d0680ab5b9f94a9569f10474f4f0b477c351c606f9d815f40",
+    "src/commands/bank_deposit_gold_command.py": "eb298aff2a47efec01d8616b27708e06f837d6a8f93c6b2c1c3f4aa169667f21",
+    "src/commands/quit_command.py": "982e4cec7b6b1d0732e6cf7b574175dad553629f9385b781e2bbc2301b2cec56",
+    "src/commands/update_trade_offer_command.py": "5251d988dc47864cd8a7aeb3509a376d3b157bceedba288d4f8fdd4c1460d06b",
+    "src/commands/demote_clan_member_command.py": "8f40c5421d12d040f63d53dd13bd73ac4e3331a1f9dd3cdaca91c58ffcf3d828",
+    "src/commands/request_clan_details_command.py": "fa01f2c1f0c241cd0a578a7c8e6c27f175d8098da7d28daca3e114f78e96ff31",
+    "src/commands/party_message_command.py": "ecd5409f735d952b3a0cf15a0a72b1dc346c380fcd3e0a0fb61c33f8fc5b6a56",
+    "src/commands/request_stats_command.py": "470d1a75f31c4dcb0ad2a3c41d65cd2405e6f56aa757f19c32cccf0cbf2e8c97",
+    "src/commands/double_click_command.py": "a5d0bc7b1ab1e138fc29843bec62951b8a57d32d7475e6b5cffde6e980cc228b",
+    "src/commands/commerce_sell_command.py": "021d979bc13c66dc04e12ce0b36c7afa21bbbf214071de863647e751599fbec6",
+    "src/commands/party_leave_command.py": "50d0900fb3294107d7d47b880ee5ca206bf7e7483860ef96cb3febeec8772981",
+    "src/commands/update_player_trade_command.py": "53ca18a29feb1d8c3d14dcb9888a2beb70a130b652589d9494e13bfc94043f50",
+    "src/commands/drop_command.py": "0f1f1facd671a96716f403e53db9bb5e4bace2cab126dc4926e9e93154fe8a92",
+    "src/commands/cast_spell_command.py": "b38ff8fe863c1cc9090abf2e02a3fea17cb28975afbb071d2909be7b95ad5d70",
+    "src/commands/attack_command.py": "324690df45610407e13e091db95fed7d5a07f4ec9be22f9327cfc7a30c3597c3",
+    "src/commands/invite_clan_command.py": "d4217211ce7c76e503b42de02e0f0170b928aac41b399caca27598b4304b485d",
+    "src/repositories/inventory_repository.py": "b7481d510ad504519b2adb31107e7fc69d488a27b25b9425c0c07407e4363dfc",
+    "src/repositories/ground_items_repository.py": "e64a3acce674f11b53de24b5cc9665b6206e771afda133e6685c30ecdf99bdf2",
+    "src/repositories/merchant_repository.py": "732daf2cbeb40d3465c68bd33470dd41e7732ff844768ddacc3029a4ade06bef",
+    "src/repositories/server_repository.py": "cf56458f2a1bb599e8d5583d8b8b046c3022261878b353bf4af8fbcbc82ad86e",
+    "src/repositories/bank_repository.py": "ba665eb5263ed45152e235e1cf91bb29e16fa68a8c22b7997ae17bc2d054c128",
+    "src/repositories/door_repository.py": "924b2192c662460e2c7f71bd3b43a4024f15e9295d63ecf7d4981eac2e5fa678",
+    "src/repositories/account_repository.py": "49b6c4041012b1665607bb9b1eaeea9afe69d934c06e305786c130a74887819b",
+    "src/repositories/party_repository.py": "4df12d0902532646156e6f1246697f0639e8b5a21d61e2a46a4da11a87581414",
+    "src/repositories/npc_repository.py": "da9ef4666f0338d0c1656671af30751e6dee3e923654e0f437926c26ec1cc240",
+    "src/repositories/clan_repository.py": "c8a8d4ceb98a54914035aa843ed1abfb05658549f4d7373a623295bb85781747",
+    "src/repositories/base_slot_repository.py": "b91398f29209e40af8b3d9eb9fb667f84500e04b18b3bfde025ffd588e8908c0",
+    "src/repositories/__init__.py": "8229fa5c7e5563c10b534a83a5074a183eee91b871872c301367269c496db776",
+    "src/repositories/spellbook_repository.py": "91bb51f041f46d9b2a2e08dc5579f4cc4d0f377d0650f8874ed328adb9a2511f",
+    "src/repositories/equipment_repository.py": "707af1b93e66fb58b71044792b781f9df46b559387bdf131346fb16048976256",
+    "src/repositories/account_creation.py": "4dcf971bf9dee160363db28d6f4b40fb9b7d188c9efe9889201a4ffbb4d9367f",
+    "src/repositories/player_repository.py": "02834f99503080e9ca606315d0b8e628420db6a36f0cc3ec9a078c195db5cd42",
+    "src/validation/dataset.py": "30dd220fb377100458cf97c520db66b327b6beeb7bddec06e199c4e9e69aac85",
+    "src/validation/__init__.py": "764889ece14ecd3b60cfd713656177698949ed183d9786e797799799d5bb156d",
+    "src/economy/merchant_stock.py": "3c7699ce52061e8d22b0a044cd5a53b0e1e8c2d22c8b86615c5f40d9ee9818a2",
+    "src/economy/ground_devaluation.py": "806a7b7d478eab8f859eac2ed9242627cf81a3b37e10a37142f75747a1083c66",
+    "src/economy/merchant_rules.py": "16baf0ce88e21a80afb5b7802aaa3103f3d6c055e1446c65d13ea6f3a86484cc",
+    "src/economy/devaluation_fractions.py": "641dc4ad80178ab1f7b917f6b835a3351c4c1667557e52247256da913dc508ef",
+    "src/economy/commerce_training.py": "3dca700a23f4502313f949e7e7ed668c14646035704455e5a62e78bafe2a8e13",
+    "src/economy/crafting_budget.py": "60edc0988e717ffda14b30c25c0efb12f6705fbcc36ddc03fe01129545bf3838",
+    "src/economy/tax_transactions.py": "bb2c71e996f1b4f924ee4fe1ecf32a4316eeddfc935327a91f45f6c7e9d1924a",
+    "src/economy/maintenance.py": "b629bd6c2ad325b951145923bccf3cffd93db04756fd44d68d05ce2941a8a975",
+    "src/economy/__init__.py": "acd67a297a0804485cefc810883a6c0a083db31087a69ddfe75b6dda12e5920c",
+    "src/economy/tax_service.py": "4d24daea8bc05c4ddda3993de8ac2593bcc79f5952c0eaff1e78d1869fb9fc9e",
+    "src/economy/tax_migration.py": "6666cdf34354b1d4f3d9b2538cb064f97da574db40b079a3698a03cca74eb1b7",
+    "src/economy/taxes.py": "5d614b5d50dbe82a9cac92fd33c3ac502e97f48fe174bc127d449792057d3341",
+    "src/game/player_index.py": "1994db9f1ec73d5b55df7de7d55fd136de7ff9bd04a9b4abce85c44e9348666b",
+    "src/game/door_state.py": "395cdf862f7151c3dd7b799ac88f4d7d45f987384304dd6c4a362f67d3a64214",
+    "src/game/tile_occupation.py": "2bd6409dd6f12f3dc1ddc6626542bbd4e980d37a5d2959c4539041fefeddd5b1",
+    "src/game/game_tick.py": "4942634325d858619ed68af7895be68bd3e66f74a86c221be410b54c664cfb1b",
+    "src/game/character_constants.py": "43b9e3e7a4d82404a8e0cca035158408ee67a77fa221949c245ee4f87b4582e8",
+    "src/game/__init__.py": "37627f4245a2faf43c5b652178e33f469edc1589e2fdc592860f33f1eeaa026c",
+    "src/game/map_tile_index.py": "c15681a72356331c4b02ab166cacd54ac55465b0f1c237c70768f8682b2fef3a",
+    "src/game/map_manager_spatial.py": "ec81a940510e04bcd65ccd46837a7f6a409480f209cdd03bc651fb0c74ae9088",
+    "src/game/exit_index.py": "5226ccfe4dc0dcc57ada0e1b53f6609c0f597ef96fd327307af5e17a6ee8a232",
+    "src/game/map_metadata_loader.py": "dc30db5e844c953c9a1d3b430c3833136c9d65588729ecf7949cfeb0bd1d65fd",
+    "src/game/coordinate_mask.py": "f9cbc351ce08cef90d968d5243ad6d1f7da6d3a66e04b21b255c5bda5103a2e3",
+    "src/game/ground_item_index.py": "e7a7b1605aafeb026fcab27d5b513a71b78a3889d831b24a027ccf29c6b8ad75",
+    "src/game/map_manager.py": "24f2c82a9ea508ff76240c7d75dd36615ac0b099bf9300304ed5fbd38108ef10",
+    "src/game/npc_index.py": "c78e38dd316e4ef2b320153bdf7f64a4b56b78050e34707ff6bbcafc95550a90",
+    "src/security/ip_bans.py": "afaaf86e86e5f27ea29c677ac709c07f792f19622043840cef2c90af48ae52e7",
+    "src/security/password_executor.py": "33731a589452bc2c01883b6723ad4308446b13f19f9dd41db9662201c96a50b5",
+    "src/security/account_bans.py": "d927dc5ea8af73122ee4acd5bd969d1232b21bd18e571a948febf4c822db88c2",
+    "src/security/ssl_manager.py": "e08b4ede4998641e96892f9d63e658a1e533671ed64c5cf97cf0907a87fec822",
+    "src/security/__init__.py": "2c5cc461ba3c2016fb1d01a905249f7afd589694235a2c92956c7a6fde8865b8",
+    "src/security/auth_limits.py": "9f942e7e449c5b891bab369aaf2fd00ff58b6ca67add89d2fe949c816b8e947b",
+    "src/security/chat_mutes.py": "549f8ff046a429d399c3e1ff8009367d5d0a72e518b63133464320fe0f421dd1",
+    "src/security/session_lease.py": "20eb740398d90c0c6c5b2a218779b7cfcd64f530d3acc8ddc2166423d25ab198",
+    "src/models/item_types.py": "23e6f167534e2ae1f278f43d80198da366a26db89062080e465b77646fed4e40",
+    "src/models/city_data_loader.py": "520b7b5a694ede615a9674a0748e6ed861e34f4253a8bb8ba6db4303813be4ec",
+    "src/models/item_constants.py": "dc8ff69763a204e1e023752a99b2684df6cf1b4c29022242f4ee694f21f1bcd0",
+    "src/models/skills.py": "1ef7028858e8a765b892d260e84536173e5c1dd7267bea22942cd60edf7ee3d1",
+    "src/models/party.py": "bb1ef01fd53321622a09303a84b1cf71708a3f9265ebd140776835e26d7d43d5",
+    "src/models/character_class.py": "ef6f571e5ea39ac7a23899f046571ffa9affece0e30905fca99bbd65bef74a2a",
+    "src/models/npc_catalog.py": "693d28e810c170ee82b835cb5bc7559eac302c1b8b3142e857f6eb0ec6c6f049",
+    "src/models/item.py": "aad4410db11066f00c4bb56d41a1141719b927ff64523917a09fe85b3a5df9c6",
+    "src/models/body_part.py": "b61ad993129c2d5b1515b6f31bdeb343b84beda6f52149632eda35e4ee7d9895",
+    "src/models/player_stats.py": "07e86b7a1fcad5543bcea195d1fb6359b0db96f36caeaebc76c22d61b9b675c5",
+    "src/models/clan.py": "23253ba0ded39925c0a63eab4276e760a02d9f12b10a345b25aa9a86213ee271",
+    "src/models/npc_factory.py": "e6e5bf8946b8a1d69de30426628f1eab36410f88215ae99c50a5472cabe66f6e",
+    "src/models/potion_duration.py": "bbd881321dd92a98ff29c6c257edaada6ebc53f24b8973fab99d68b76f3fbe50",
+    "src/models/__init__.py": "b8d7121c60fd91b79e6440302c3e52ed3c5ffcbfeb93fc0b5c8715cd31e7a14a",
+    "src/models/items_catalog.py": "58752fb373fa8c4baec680d73365647766ca344f4970ffb59ab385776729a8fb",
+    "src/models/merchant_data_loader.py": "6322b729c9b42a580f46d07ba7ba7931f4451a559c24fc60d9f89502280fd25b",
+    "src/models/skill_data_loader.py": "8c06eb1a1faa0acf13c7f4bfa135625687896a564529c8ba52e970c37d40fb1a",
+    "src/models/mana.py": "6bfba9e58751a22f48ae23f7665aa632a636eaafae4b1a07cd2732f611783b05",
+    "src/models/spell_extensions.py": "e0845d53536ee3a9b7f0bad778fb13949a370ee9404ac6f6296be228dd05ebd8",
+    "src/models/crafting_data_loader.py": "c1a88dba5e784efcca41fc0372ff1a3ad4ffebe6a35788e30ce0cc0799c0c6e4",
+    "src/models/npc.py": "d8d287f2910fc449bf9b693a1f4c1dc1c3fcfe955e5d74533b8c01c7e40b657b",
+    "src/models/item_catalog.py": "084d3492650f30a473a0f02071d4d9260b2e85e68785a1eee44cbae281ab7d4a",
+    "src/models/spell_catalog.py": "8c84c4449e93f83de7eafcc705c9ff6d595393d41942ad6a683f177e1b4616bd",
+    "src/messaging/broadcast_service.py": "5a71ca20e3a8d2bb759931aa6da5d00ca80dce55f0b49f2c50d07cfa6621dc95",
+    "src/messaging/__init__.py": "6af0286898756368602f0c7faf656e4485a6d53ef166c722d9b64030bd85f3f3",
+    "src/messaging/message_sender.py": "0a38f1897e74c9fbc23579df83665739b63311326b9b0a661c9e7bcceaf2e01a",
+    "src/services/password_change.py": "96c5cd14c4f0410c6e813c68efa3af442517508a2f7f6ea231e497a6500d4bb6",
+    "src/services/chat_budget.py": "2064b5e73bdf543148f8dffce52016dff2bc7448602738f83a9a2a82a859392c",
+    "src/services/crafting.py": "730de880f78e2a4a17bb4c470d35259e9e6bbf85d62b9e936306ca8fcbe36f83",
+    "src/services/account_moderation.py": "5e23b9960ddc902ab71a63873190859a7d730d0e4eed2c533c0357d1211f691b",
+    "src/services/bank_item_transfer.py": "67a540d7562c0bd4e8f3b330977014eca158d2f0b74ee6a08c74151543e578b9",
+    "src/services/skill_action_service.py": "5f91d65b9adcc3883f99e366b5bbcfb7ce3035df197f5034b7297923344acd38",
+    "src/services/party_service.py": "82b927d61b32d5ef717e880b6fd5cf78e7f956f65539afa4b162af9db5ce0680",
+    "src/services/bank_gold_transfer.py": "7d3e17a54ca817a35dcbf8f7161c77c4291f1aca74b896a6df149d886e8f82f2",
+    "src/services/clan_service.py": "5d140459fe9a94aecac710800f452b8603bdd17deb694839de9f2a2cd8af0e40",
+    "src/services/personal_skills.py": "5e9b6ed06de6f2f2cb0e095a9dcbdf2bf4907db7f32bd58467445f3a87cca978",
+    "src/services/skill_allocation.py": "120e5597e24634097e2bf6031743898b543310a7dadd27b691764b6bd29264a7",
+    "src/services/multiplayer_broadcast_service.py": "f0f0db83ac93d3add2ae2fa64dec441ae5f9808b542db59cf941788e801abb7e",
+    "src/services/gathering.py": "686621ec61b37f840b74ee628823a40f67337353687d49b4e7b88183afd6e524",
+    "src/services/npc_trade_plan.py": "a3ac708845a1a144e0831e97add4063301429c7ac5f6d73a0d7ea350dc78b94c",
+    "src/services/skill_training.py": "5e5bbaa7c86df5f2db351969c10d2cec84456933ec272cf8b6f1b95328222997",
+    "src/services/meditation.py": "e903b25c6b05105ae09146ade088fbd7f0b9abb50eedd3a06b34d170b0e43f08",
+    "src/services/action_resources.py": "bfcbe470f2b9bdedb965d7660d4167c7e31c3ea89aee8cc7870ac13764ac0647",
+    "src/services/nutrition.py": "15b3bd77c8bc10448539470ac8569280acbcf50ffa3d329fc224688ae0b60932",
+    "src/services/combat_snapshot.py": "38ea110d7628e617e7fde06e44cf9ee8371813684f0cb555bf888f18d253d76f",
+    "src/services/player_progression.py": "b9a577bccaa199cc742a8a9c94fae7eefff997ef96c421a35b8745d02151bc94",
+    "src/services/ground_transfer.py": "8e004aba4b709141747defec8abcdd4ee386d2fcb430bfcd635066665b9bdc22",
+    "src/services/scroll_learning.py": "59ad221c4b2a24aafa7329d7db2896a172fedd9233f6b70755bd48ad0d516dab",
+    "src/services/trade_service.py": "8ee4aca9c4888d9d624b23d59f6b735b0b3118df7a0b6f28035cdcafb682e1f4",
+    "src/services/action_cadence.py": "e02b04147228318bb09f5e61613d8b2854607d7cd37b598b8a42d761aed8854b",
+    "src/services/__init__.py": "c4e22810714d22b71f7024aaea5c5d4160df728cf8fe4e7e88ac919c3456c662",
+    "src/services/fishing_zones.py": "24c6f68b4d0b0b58292ac8c4c9269cd4f99de43d169af5fe855418c34ba1fa9a",
+    "src/services/commerce_service.py": "2d010fb4a0e47a981df9c14689aeaade254a4915af3e0580df6519e21010afe3",
+    "src/services/starter_spellbook.py": "c17681ad07316dbd367bb12169942716d991f40c6146f97bff0da9cb373ff401",
+    "src/services/inventory_notifications.py": "81bbe953c2528b7e97880cd74bbebe945d20e745dd5f7d17929c321154cb7d7c",
+    "src/services/navigation.py": "dd2d35c24c4d4832d76b4d1c8908e881887bbfb690bf34df87e2733d5aa6faa2",
+    "src/services/trade_settlement.py": "8fa7dfd559c572f66301c283c1ee8aecea8747d8bbbb7ac0dfad6e64bb546ee7",
+    "src/services/visual_events.py": "331bfa91a20091b71f2f9bc2827b5b6ed37fb1932cd8b0cb9b2850c1bfb50e96",
+    "src/network/packet_handlers.py": "15a990d6b4b5cf033a0574c9be01426675d5d61cdf13a4565b036a467f92b276",
+    "src/network/packet_reader.py": "6773639acdb7eb436d1989dda92a9f81122fbcaebf7b174375b0d9e21a8a9909",
+    "src/network/msg_player_stats.py": "bd6f484576b40ac7be8c91494b0a610fea45205582647a00606dea485324a3a5",
+    "src/network/packet_builder.py": "2be2967e5bc7daef4723cc097f81eed7e4680f8ef65e8622f9217eaac8d3efdf",
+    "src/network/state_channel.py": "7e1d7ebf194448102022174dd2392a381ba58fadf73f7427a9b2840ba0904843",
+    "src/network/packet_data.py": "7f2964b2e2bc9252589d3e38fd2ffb40f3518ecd846be9076bc17f821f912ad8",
+    "src/network/session_manager.py": "11117601d52a165908f51af3a34d3747f3e3f6f81913255b6b08e53fc3815076",
+    "src/network/chat_channel.py": "b39f9b757cf48fbd9cdc446434188d525c0642a9a0d69eb3db6d1e5c49894e2f",
+    "src/network/request_context.py": "ff7cdece62b986721a6d983971bcb93a8ac09e92c2c146bdc88d6c154dc1cfcd",
+    "src/network/msg_audio.py": "e44cedebacdbe72d3e425551221c08bece432df51d77b7885a899e2626d7071d",
+    "src/network/packet_framer.py": "dc30f43fe784b0ffde76c912df4983a2d9cf37a93de2df0818a0f99bf6bab2b4",
+    "src/network/packet_validator.py": "8fe30a30bdccd138736c1e467d3f480b1fad7477fe27e2e79a04cf07b0fa3922",
+    "src/network/capabilities.py": "c661b1deec711d5f96421a91d4a74b823cab1eaf134176ad9f53300965e539ea",
+    "src/network/client_connection.py": "ad9ebd22409372028c4f0b199f164d247905ed75ab6f81a8f391d749995275eb",
+    "src/network/__init__.py": "7755282320b68b5ff58feb3639a28fcb2b5f554bccfbbc4f27248966d331a39e",
+    "src/network/msg_user_commerce.py": "2037bd6fdabd1adc5788081183c5e76848883e1b8376f831c73068d8b989cc7d",
+    "src/network/msg_clan.py": "943ae34d4269e0dd24583a09ee1b8e407e29a1ea8240de99951b0b1a5fb71984",
+    "src/network/validation_result.py": "7bb8e3e0d97d183dfce8d379ac3cdc5eee474cb687e1ba8c8f22cb88bc3004b1",
+    "src/network/msg_session.py": "c2897090d9ab85da0955165c4b75757a948286adcd51e81ad3e66fdee43b6655",
+    "src/network/msg_status_effects.py": "b65657fa6bde0d441d655dcf06380c36760f09838c8388f2428b71bca99b9caa",
+    "src/network/msg_console.py": "039717e066870262ccd6f2d46b24de86f5952b21322fcf23e57856df83f55fbb",
+    "src/network/websocket_transport.py": "b69abc20e5daee604d6ccc138116bfcea5119536454e83867da48193b01c4f27",
+    "src/network/packet_id.py": "6b95fb8a333586acc1d5961cb5aa30e3f7dd2618d09333ed7825b2c0d51fe288",
+    "src/network/msg_map.py": "9dbe0305bfa2650ca348bccd81ebfd24ef4be4cbf1a08a0f6eaeedf84198e0d0",
+    "src/network/msg_visual_effects.py": "945f850612cb736a868295558cffe8ee90d77aadd72ddfa4fe58d9b7eab4c26d",
+    "src/network/packet_reader_mixin.py": "7d0617bf2c228a636a6aaed6d78095531c20d8a9804de9bb9fb4698d8c9a7641",
+    "src/network/msg_character.py": "578f48f894ea97949378697a24aaded635e3aa3d2ea1933e75bd9cc4f25234e0",
+    "src/network/msg_skills.py": "2fca2561fba2f90f65107fdb29c232edf63b4d4d447e244176768f5bd585c617",
+    "src/network/msg_inventory.py": "01932039ce306fa80d919cfce88537524dc690f0daabafe7a0b29e1da116f4fd",
+    "src/utils/password_utils.py": "a2e237d5ec60a5ccf9093eccaecf45c8e7d3f8b49b8cdea1a014fc8a00f023ca",
+    "src/utils/level_calculator.py": "8cce08e572ff013f93d7505bf06b3bec58488ba94b68bfe2651d250944f86a2a",
+    "src/utils/slot_plan.py": "d8ec8035ba529d661fa1120a961d6e5a8ef4123a88f8e405822583bd71dece9a",
+    "src/utils/resource_transaction.py": "15380fed7cb83f74cdf9aa39e8e043d64db10859d6394168aef06a0649cc0e75",
+    "src/utils/inventory_storage.py": "4faae5153c3eff65fa5d65d2d2cf7fc7b67ab2722c7e3480546191ba7663896d",
+    "src/utils/gold_atomic.py": "0822623a1bb516621fef9dda471fd6cbb34a80c045a9259f5ea44dfcb4f504e1",
+    "src/utils/item_slot_parser.py": "9f2ca0db71b7c38d29379afbbf86d5fbaef9c3f8efa45cc5f402a13f9a205437",
+    "src/utils/packet_length_validator.py": "2f0f3decaea2d186cec6c22a782d54c2faa3a218d6e8c427724482790e22de1c",
+    "src/utils/redis_client.py": "4726e9b48b9638bdbfb122c491fa7ac73ef6f4041c7c695881a3c3eec71ec920",
+    "src/utils/ground_state.py": "3f7e97c1426df98b484f23075cb6d857b3af880f075d4f3b65b02a3ff7e1a937",
+    "src/utils/__init__.py": "29f938427f5a46eaa90561425a86b5b61ccef9a941807f8e0b3f90e8761f35b7",
+    "src/utils/durability.py": "d2c602f6ac0fedccb9798cc52c8980deddfdc4ef7244a59eea7d597c8a9e02a4",
+    "src/utils/redis_decorators.py": "3698ba20b6929f45a104aa6a198c458555eab551310848e05e231c4f332d3cd4",
+    "src/utils/inventory_atomic.py": "a652532ff2eabe2a9314342ca0d0732226d112af7bb5996fba4af7307096d2de",
+    "src/utils/sounds.py": "a4005dd46f09ccab492bfcbc21361ac0cd01fbdbcf83578777a1c78b50c4329e",
+    "src/utils/equipment_slot.py": "75299bb819ced460f847f5906d7d5151c5b3dd992e4ce512264c5cdc454fc669",
+    "src/utils/inventory_slot.py": "8783e8fa3df5bd856a5309a1c9dfd5643937a77dc2402a68f46fdf2c9bdc5c84",
+    "src/utils/redis_config.py": "e288924bc1840a2cd582db7626d3532a858daaaa7fd931813d9c47aaf76470f0",
+    "src/utils/base_data_loader.py": "8dc9f0c6b82709a4eee4bf92eb11d4201d41cd9fe55d0e2b15449569977ee2ae",
+    "src/utils/ground_storage.py": "d2e94e2b68f8b8c322455d29e198f23328ca41783b1c33964ff8581621c2d1b1",
+    "src/utils/visual_effects.py": "aff53e29cb10132442cee0d2ea7a4761dd8b93df6768d73bd748874fd9a4fe84",
+    "src/utils/inventory_stacking_strategy.py": "afdbb7655421503a653520e928d5ef31089fac55bf4306997c4cfcbc3e4c42a9",
+    "src/config/config_manager.py": "88aad8f0f8e80a20fd936c1487319531d59094eb55e4c0d3f77a596a6bf6c8ca",
+    "src/config/__init__.py": "a37e16ea799406269a3c1dc3853e5329a17d233058aba01c43871753a763bd0d",
+    "src/config/game_config.py": "9de0d6230f070bd6fdf14fac921486a72c9cec3c38b7c2104b1ed50b417a73fa",
+    "src/command_handlers/left_click_npc_handler.py": "5b1f7c48b732872ceca19bdf26a49d9d1cf992f8065b6d0b6288fdc9bfd3de14",
+    "src/command_handlers/cast_spell_execution_handler.py": "0e46900c8f6cdc158dc2b9c74e69b3f7d351cd88e4ee2e0383ee4fa326b6d195",
+    "src/command_handlers/cast_spell_handler.py": "ff916f22182ff187a7782473849f941341636297f9bd6d3b406a4c60ab0a77f2",
+    "src/command_handlers/inventory_click_handler.py": "f9ca6833680df041c18dbe33e4fdb1c9e7d917abc1b11838f54a4a3ae2c851d6",
+    "src/command_handlers/attack_handler.py": "61501ef6ca857f1dfd8356774aa89fafd4c82a454d9241c1d92d986646f32c7e",
+    "src/command_handlers/request_attributes_handler.py": "de467f4dffdc02a78ba78a85672f9bf536708f65bd94cf9fa2900ff69cbea155",
+    "src/command_handlers/motd_handler.py": "14b0c8b1355d58e32bd29298635218f68f937714b55d4df9a6e3ff076ff06f84",
+    "src/command_handlers/kick_clan_member_handler.py": "0e23a2a416ccd79002ce5ba42a036ab41da8a97500adab29dace00a7a5847485",
+    "src/command_handlers/use_item_consumable_handler.py": "34282352d17d0dfeca6fe4c2ad59b9ba4da62262e105cbcaf186fb7913de825c",
+    "src/command_handlers/change_heading_handler.py": "76e88601a438d817f0a68dbc972b755587df337b1f80ced1c85d47167a798596",
+    "src/command_handlers/create_account_handler.py": "c284df04c4b9d6447c7cde42d7e6a5513a6ef09fc11715f696ee4425410a2dc4",
+    "src/command_handlers/spell_info_handler.py": "d8c7ebcc06f6e62eeac085d5dffede0c6ac4fe3a3b3f89966ca29265f0593551",
+    "src/command_handlers/talk_clan_handler.py": "1097c22cb8f2d510b0eeccdc709a54b9c78ad3429eebc77724e4742a113784a3",
+    "src/command_handlers/request_position_update_handler.py": "89c64a3639258c1e7a477d8fa4a7232126fc50378761a60ae91fdfe309aaa29f",
+    "src/command_handlers/safe_toggle_handler.py": "31c49d58fba2a1bdb184a32ca993614061448d70085f1a3ace72bf2be0aed4de",
+    "src/command_handlers/quit_handler.py": "4c24a9a82d81f018da6c2b2ca3beb57003332931ffbe4c17898aefea86d738db",
+    "src/command_handlers/online_handler.py": "c2f9ee555bb43b60d8ac400484b6e8409df1a84aacee30c18c1730d3a848b3b6",
+    "src/command_handlers/promote_clan_member_handler.py": "6b2d5ff1e66f6d0757caaf90bad826f1bc17b9e2f43acc21df1b0e8975c996a0",
+    "src/command_handlers/talk_handler.py": "0afabf3582b5b790de45d5bea0adfb57ed1a0fc1c3d56aa26b5bf5befb111eb8",
+    "src/command_handlers/demote_clan_member_handler.py": "233eed3eb3fbfc9391d793c37bff104a7bd0a715df46f9ce98fd5e83bd8646f4",
+    "src/command_handlers/login_authentication_handler.py": "561b74cc33def9f8189b35cb0dae5715966a5cf7c72df19af0d4c059683dc665",
+    "src/command_handlers/request_skills_handler.py": "495011398d604d1d7d6750b3169419bb7c62eabb5d5779d62bb5e2483f014c74",
+    "src/command_handlers/dice_handler.py": "7bc8fda472b2fc0dfa23e758c526a5b4329dcbf19e19fd6051b630e183f7cbee",
+    "src/command_handlers/information_handler.py": "cf0a8714c22138da8b0f5fe6e57a00acc4208a713cfd3e8c435c18ddaf0b1526",
+    "src/command_handlers/work_left_click_handler.py": "1c99683731acb27804459e2e5491752aafeb91705d8e3da9c4c9797a2f911ebe",
+    "src/command_handlers/talk_public_handler.py": "71096e293196025ea56c54999a838bda704d4fef3ecce493ed4025e5d9de44ef",
+    "src/command_handlers/party_message_handler.py": "d496c1c10c0e73e074e90f90257a6be5060d541bd196521b78631f424c11ba2e",
+    "src/command_handlers/walk_validation_handler.py": "fee536bf6fe52f6332abaac27c3b063942f9a69042190b1eee187958a3cf9067",
+    "src/command_handlers/commerce_buy_handler.py": "8ddb493550053a305fc3f425b6f786d4f7de52dd219d0a8dc01c6fc6b2afc5ca",
+    "src/command_handlers/invite_clan_handler.py": "10d69ed7d65644c26cdee9c9c17e4f5c8fb20db6de57390667e15d07154681d7",
+    "src/command_handlers/double_click_handler.py": "bbc33fac0b7096ba01456ff8d80f241cf677484c0794bf5faaf5c75397658b98",
+    "src/command_handlers/start_player_trade_handler.py": "51eee3c9e7964c4f6082e1d4e33de5853d601377d131c987d851609328b753c0",
+    "src/command_handlers/party_kick_handler.py": "2de82062f36fee5292e19c6de8121828a2d1edca82b7f3fb2e183309544b1f6e",
+    "src/command_handlers/login_finalization_handler.py": "e9a1485255676fc7e30084479d4d89772549ae5aacdf737eb6e9bc5cf18b0966",
+    "src/command_handlers/login_spawn_handler.py": "98c4733ba3a7048e6962c40373c87960145dd8264225db2b97721775c87887b1",
+    "src/command_handlers/party_set_leader_handler.py": "73e8b34943b7e46518f11ac0f48c761d04acfbe23a5306efb52aa887192edf49",
+    "src/command_handlers/walk_handler.py": "1bc9878228810c25e23b48022d395f388a905ca8ad2175bf62915a7292084c21",
+    "src/command_handlers/request_clan_details_handler.py": "99dc6cba5cddfdb0273f82c42bef2eee231a93067983f7d945b4711101fa7ffd",
+    "src/command_handlers/party_leave_handler.py": "49aeb92a5d84b3e99c07a59bc90c0353a136ee814dbbedcec24f1c92b9089f84",
+    "src/command_handlers/move_spell_handler.py": "70ef5342ccd46efd63c3b57fe6c0bc2b899be42021e3077d77a28db39f50d030",
+    "src/command_handlers/bank_deposit_handler.py": "fc600cc3d69c9b4aeb8cb7304ac5f087781714808abaae670555517551cbbe38",
+    "src/command_handlers/left_click_tile_handler.py": "1aca8ba497dd126843500f383b284679ded84977fa55f42410aa07f6e727aad9",
+    "src/command_handlers/bank_extract_gold_handler.py": "1fbbbad7b0d0b2f3d2dc98b5350d122f6c9e58b1fff1ce9c378dd4fac4b5d680",
+    "src/command_handlers/commerce_sell_handler.py": "04828577eb0adfc3ad44de724ba9fc1cea0a329bd3228202f2c76358eb247f20",
+    "src/command_handlers/use_item_handler.py": "e86e2a204613cb6445a9db59e113f594da178534c10a9d43f4faec29f384f182",
+    "src/command_handlers/__init__.py": "7790244e9ad83b07db206701532fdf9f41f2e645508ae107f30f21cbd439c4fb",
+    "src/command_handlers/double_click_item_handler.py": "56114915929c2460e784f7ab2d8cc9ee2b5d87521f400f317569a9081a80395c",
+    "src/command_handlers/login_handler.py": "b3f5891458bb6b008bd888de50ef883079803bccca40969acde169c35e34bab6",
+    "src/command_handlers/commerce_end_handler.py": "bbfd556d29fb63785099ca15e19a474b143c9ebbd4691b4b304954bb60994ff7",
+    "src/command_handlers/left_click_handler.py": "bf71267dc6f6cd1f3de1518df95efa134da0abe24b8e9fa525de8c2846fa60db",
+    "src/command_handlers/walk_movement_handler.py": "cb03401f72162e45518088702f35a5d91ca9e2a966054f98bb126de705f95364",
+    "src/command_handlers/bank_extract_handler.py": "c2445bd1d8d44c93377d099f504815fc8f3df97fc6a1186d35940c905967a644",
+    "src/command_handlers/move_item_handler.py": "fb31dd7c283894bee21be29b24ce83006b12334a352eae34155091263726844f",
+    "src/command_handlers/party_join_handler.py": "13008518af0d54fbf850ea94c80e3f0ce033a1e79f38b5ace0e2e31ae764646b",
+    "src/command_handlers/pickup_handler.py": "32a9a06abec48e22ec3accad88c7a006480d584edeee58a8bbaf5bc8da6a3df6",
+    "src/command_handlers/yell_handler.py": "1c0b78823126fc5a55c6dbc3a9ebb09cc8cf655b1637a1adaba6a2d280e945cf",
+    "src/command_handlers/talk_metrics_handler.py": "9052b6322826dd9012cae147838ec97ac41ad96c82bf09a5e966125e95085f7d",
+    "src/command_handlers/use_item_special_handler.py": "a8302531f76e0d5bb385be28127dc5e535a9b8433c6eb86aff6fa0304d9b4e2a",
+    "src/command_handlers/cast_spell_validation_handler.py": "8bf9c4ecfc22561380ee21aeb8f0cc8aeaba72b3f30869cb7b08e863b9aeacae",
+    "src/command_handlers/meditate_handler.py": "279afbcddee5a4b0a457bf4532f75383be30f94a688f5e984f10658cfcda8b5d",
+    "src/command_handlers/double_click_npc_handler.py": "830b1b71369a8162c31e9ee27c3c929e1088750936737d08d68a89d14580dbe6",
+    "src/command_handlers/transfer_clan_leadership_handler.py": "246f266d44463339db6a32c685c663cf3970a51510dae4567aeb63ae6f603623",
+    "src/command_handlers/talk_pet_handler.py": "aa08c66f78cd0e218a71789840c33119f2f3a310bd610e553ec6edf8a65e5c93",
+    "src/command_handlers/attack_loot_handler.py": "39b7491a537c2b6335580b2d380f0841f9a3a91be5cd294998ed9819832cecc7",
+    "src/command_handlers/attack_execution_handler.py": "2d27b9277a0b77961d3bb77287fdfeabfe4762cc406a327cff92bb437755a1cc",
+    "src/command_handlers/work_handler.py": "ce6ca2f4179a2f358f72c52205e393078173be98422fabeb3c169a175905f038",
+    "src/command_handlers/accept_clan_handler.py": "2b8007bf655cd388d314eaa944796663093a68d67d31088a802c5b331640fc47",
+    "src/command_handlers/create_account_character_handler.py": "a873f6b800b5e302a50cb6c8fb1ff1f646cf205e134cb5b7bff5458b7c913a57",
+    "src/command_handlers/whisper_handler.py": "602974e16fe8f9d62661f5548a35be98c744c517ef1410b4af2aeec046c502b2",
+    "src/command_handlers/ping_handler.py": "47ac10f3dbf867811ff6179cc2324f7375d68defc915a8b578d86ef7d2498c07",
+    "src/command_handlers/update_trade_offer_handler.py": "a15e1f24fcdb6b73433f8ee3abcc68ae111026993dc9b9a453b609b3bfd37e52",
+    "src/command_handlers/equip_item_handler.py": "0e3bdd443671c6f0e452c3f46fc63e6f827a8104ab7ec5a62fb356b6b83bf3dd",
+    "src/command_handlers/login_initialization_handler.py": "2c7eab9a7b4af11507dbf0ede1f39c50f84f28a8ff46a99b917e1ae2ab6b5b8b",
+    "src/command_handlers/bank_end_handler.py": "10560624a191b07dbf9c579781dbabc72b4db359c3ad9f787faa58130854eb63",
+    "src/command_handlers/reject_clan_handler.py": "25fbffd9c8ca7f66bc273e8a494ed28f6bcf799531d695a86eb9a78c32bcd09e",
+    "src/command_handlers/party_accept_handler.py": "cfc519730cf2f63ecbaec6986b9c6cd28b4fcdb3d52a52be9aa097819b5ed50e",
+    "src/command_handlers/leave_clan_handler.py": "200c0f2f2686d0ee8f943e6e071a8768fbb81c622d0bc451a0f282571f72ad54",
+    "src/command_handlers/request_stats_handler.py": "fb7645d8a3ae5ac77053c1a91c080d98e7d20f735c4fb657ef56c6db02c66cdc",
+    "src/command_handlers/attack_validation_handler.py": "67976019577897c1ebf38107ed9ea049d9777d73ac610243e2c3711b2b97aa53",
+    "src/command_handlers/party_create_handler.py": "6d59d2b2bc43c22e8eb6a66c542251a0ab402324286263b4eef0760b98a18796",
+    "src/command_handlers/ayuda_handler.py": "b9d278665ff452afec76e72665c8277a0516a8c1a4390afffbb6cafdbfeef91d",
+    "src/command_handlers/create_account_finalization_handler.py": "16d59e6168e8ccdac16ec069d8394f092cf86db367ac75913041263658cfeb7f",
+    "src/command_handlers/gm_command_handler.py": "bb25aa3b699430cc4037d8d4e638a8a0966812d95e929f1042b7599649e5fe75",
+    "src/command_handlers/uptime_handler.py": "04c3a34de6a17e11acbc680e636a3300837858a273ab9aed8a776e65798ee0c6",
+    "src/command_handlers/update_player_trade_handler.py": "ed5d930fe39150b6c1561147cdc09f4d8071551bf94c446cb237c5e4e19225d6",
+    "src/command_handlers/talk_trade_handler.py": "a4be41c1857fc3b4dab2c87bdd7ab487e1b0fc1c44441820db8e1e0b62693115",
+    "src/command_handlers/bank_deposit_gold_handler.py": "dec46ae1acda8d09fc9b8d689a04d585723d66a2027ae8ea3abb489c7ebfa33e",
+    "src/command_handlers/create_clan_handler.py": "1c3b7847c4efcd2852b3333778dc8b46badb0f5c6541806955e4956cdb9a462f",
+    "src/command_handlers/drop_handler.py": "2f9888d6ebedf23fdd5e93eea1cc3dbf3103fffc7e0c86cf509ae2c40ae73050",
+    "src/command_handlers/create_account_validation_handler.py": "d0c30eda0567ac9ef2e50011e3b41cabae3787b03c62a082d3997e1651f57dde",
+    "src/combat/combat_damage_calculator.py": "6b332ce43bf5ff005ec6d10f5c2043d08759bf8474713de880ed158564c3f85d",
+    "src/combat/combat_reward_calculator.py": "23f9d8f7969ee3961bf89c60d1bc2aad9faf8364a3011c0418a0cd1c4f755604",
+    "src/combat/__init__.py": "ec02e813b776cf075058fe64b747cc292227b817fa289b986ee0727008f781c7",
+    "src/combat/combat_critical_calculator.py": "f11cf650429837e67fbe6ee94dc1314f009e663ff6770ee3ab85ed77de356083",
+    "src/combat/combat_validator.py": "9c530df357a1f884ba30c97c143b9a8d802818736f7f5b9f03bd02c47dabe8af",
+    "src/tasks/task_modify_skills.py": "094a4dacf6a873c6533ebc131684db823739c13e1a2c65022a3881236f012c44",
+    "src/tasks/task_party_join.py": "767a0ea67d3f74e524df925f209ca877304b831806e1ebe7ee25f185587cd734",
+    "src/tasks/task_factory.py": "3bcbaeb198de06bb4b64a5770c8814a6ead903daeb363c7c8a4c59d0e0291e53",
+    "src/tasks/task_party_accept_member.py": "43b8dda5aca490fdd551af12dc73384be684ede49dea246208d72ed14226695a",
+    "src/tasks/task_chat_limited.py": "3116751e0042fa340d3af828351c2a4ccdd0d35d6dc5ef9bbca20b18d73661be",
+    "src/tasks/task_quit.py": "965c81af2eda321781ef32cc6953efd0c54fdd205bfc4387fa49da48791d704a",
+    "src/tasks/task_motd.py": "442f741094bafd1c09276135cd3ea82d8a411a710cb48c8a22cb361e85221a7c",
+    "src/tasks/task.py": "ef37eb9ec58257c481abfc2f61e7ea92a778a7dc9f41132d3196cf3aac03cbb7",
+    "src/tasks/task_skill_action.py": "0f58eb3515c203b598039d1c6e4917fbd6e2700fef18afec408b2e7ecc1cb12a",
+    "src/tasks/task_online.py": "0a9040965681c0aa6a3f44de5bc7a34a77faaa8ed3900629ba737be1d5c27a4b",
+    "src/tasks/handler_registry.py": "a99c900f4cd0dcad547bd507a20cd68bcb284a24d5b5eae3df216d7f6ab8c59e",
+    "src/tasks/task_ping.py": "87a76eda8be75902885e6e160e4911718a7b827bde7a33f711068528dea36963",
+    "src/tasks/task_party_create.py": "07bbd7d874406752ab302cabf2b2cf67d03c9b365639f57f688717351a6166aa",
+    "src/tasks/task_party_set_leader.py": "8af803d7d3654ba0d81c79539a4e70035fd99f3a96f1a992ea340d1ec121d6c4",
+    "src/tasks/task_trade_action.py": "9f23f8a84c8f94e3404e55415f758cf90a239315fc83d84bf983fe9d1c9e6695",
+    "src/tasks/task_party_kick.py": "87251c7b7b48c53fbe87e189e64a89d05d0b732949289fa05c6495289e6818c3",
+    "src/tasks/__init__.py": "b6af37b13d495795467fa4b710572aaae032b8a0038d705b37540fa60715af31",
+    "src/tasks/task_ayuda.py": "484cbb085bd09987b674a154fdd63580e3959a3c1a447c2be18421f8ef015a3e",
+    "src/tasks/task_party_leave.py": "b7f2732022b1f23c8b4e2a80fd7e01632b18a15472275ea688ae078c5bc2399e",
+    "src/tasks/task_tls_handshake.py": "99cd73a139349d605eacfef602d51456ac06f2c5adf88a6fbf4e39c24fb41798",
+    "src/tasks/task_change_password.py": "1eae0ea83512fef7020b7b5c27934db5ddeda6e6933a6ae9b273203dd4ad259e",
+    "src/tasks/task_capabilities.py": "1ab00b74ae407d5288c3578b53280086aecd7f36f7b3950e0343c11a327e9520",
+    "src/tasks/task_dice.py": "ef0b078b3cd48f25e8baade212be07157c7df7a4c30a1526dc4f409cee8ca89e",
+    "src/tasks/task_party_message.py": "7ae3a51a35180286f22e6b5f323a953f6bb3b75c0bfa94d87334285e1c8b9331",
+    "src/tasks/task_null.py": "378e4bc1fa1bebfbfa2e4bf9ae87449b940ddb62eaca5e3bace1a73024147ebb",
+    "src/tasks/task_world_state.py": "d38ed33dbad2024aaf4a31aaef8a730c2f6c402274d98ae9a72adf925cb87540",
+    "src/tasks/task_uptime.py": "92fa693ae6126c2da021d36de759aa8a458d0dc192490c38ccf83573105a76ed",
+    "src/tasks/task_safe_toggle.py": "3b6439f580cf3f449ab4831b86424f19fb08d2710638c13d95fd407e94764d49",
+    "src/tasks/task_request_skills.py": "19659448303abc7b7849ffb466ca9e52d17886ce703e6d830f006807c686374c",
+    "src/constants/__init__.py": "a7fdb16d8b47a54fd98c18328ecf57d5aa7b2d21664c625a49a282e24cf296c8",
+    "src/constants/graphics.py": "95521e70bcab6a4040d8ff79b30e931e2d33e7a4134206f6623f24e0398450d3",
+    "src/constants/map.py": "038b3a4593fda52dc6979bea4f944de7d545c4fabcd39355f8817be176f5b735",
+    "src/constants/items.py": "8a21033308ea3ac4533bc9b7d0e1c7d68db801d51dfed8a045deff8186f3c2b0",
+    "src/constants/gameplay.py": "3fa8a0d84cf5a65a67611d6a882514485c2e85e86c37c04e04d60046dbd64a2a",
+    "src/constants/effects.py": "87c0385a34b913746c6262163b87683b04843cd40e2cfd24e5916ff47751742d",
+    "src/constants/npcs.py": "6a518bb62e36b5c2485c8c3203112352a3d003e1c4b916d8a07bcb282916c39b",
+    "src/core/service_initializer.py": "1550773933935bf8703f5c6859c9004321599dd748be49bffb61ea6dd9878b06",
+    "src/core/game_tick_initializer.py": "5646ba427905a59cca59c2b15828e4d641fdab383b575a817ab9e7548d8b5b4f",
+    "src/core/__init__.py": "e0c449ec0292df9a39258bdb7e009901eaf228cd9131ed4785bfed4f92d27e19",
+    "src/core/schema_manager.py": "936dbd9053ef845cd404c05037307dec0f3cfa5227369047aa94c263d074ef64",
+    "src/core/repository_initializer.py": "5423b9bbc752d177794be3c3cddb0c2019945f3dfc03d5a5679fda862f6d25d2",
+    "src/core/dependency_container.py": "f1b13c5f9dc257b8ec073e3e324939636a59c063646d720f017254090d520670",
+    "src/core/redis_initializer.py": "74f3b7fc4af5b4202fff9fdbaa6fb007341ec3c607df0b72e0d538ff0903de2d",
+    "src/core/server_initializer.py": "20cabb80f1eceaadc10cb3e1c3dc80e3231be988188d36bd26efb0bac8443733",
+    "src/core/data_initializer.py": "4703bbd862d133b111a75dd64c01d6b9eec6882b9b62434355261bcbfd02c631",
+    "src/desktop/indicator.py": "deb7e3c7b19f12703cd8aa96130c47137987b6ccf8d9ed15355ab0001afd2158",
+    "src/desktop/__init__.py": "67fca2f5dbff8dd01b4b6811ed4c887b86d172517ebefc40125ee711eae58f6d",
+    "src/operations/economy_smoke.py": "8cb885ac37563a732af4d9df37e393db0b66f45b33a2e2c84af3f6c0b8741316",
+    "src/operations/skill_migration.py": "3d7e619d190a84e8c474cf9a5ff7319c7c80744bd99ab1021e8b99018b65bf7d",
+    "src/operations/npc_audit_scenarios.py": "50322e493cb9fe94dec556798635e2914fd24696c4cec0e1ab321976cef4654d",
+    "src/operations/two_client_smoke.py": "80e6e4c3271632cfdf6c83bdc77e0f2ed1ab9121320f79001201fdf385217e5b",
+    "src/operations/redis_secret.py": "002723739b04d58dc1df09b3de51941bca21550c370352407e11d949da8b591a",
+    "src/operations/merchant_catalog.py": "b3cfa437a9a837cf7751d70b686c5b153ca47cbef796600c739b35bb29565665",
+    "src/operations/gold_atomic_smoke.py": "3877e70a5b15c2de33404a601ae5da7d3a29fc403925025fdcc52e48aa4a47d2",
+    "src/operations/redis_persistence.py": "c3a1af5d165a41479d21e4738f1e2b9aa90d8bb1a27b3f5c36f0705bcc8af26b",
+    "src/operations/npc_audit.py": "fbcded84689ca7d0dad3550fbf810277f427cdfcea9f682374853081f1f60fc4",
+    "src/operations/distribution.py": "9907c3f25d7ed415dba885ac447f068fca35f59947d9b8a7051ef29e298ef58b",
+    "src/operations/skill_allocation_smoke.py": "a18b9049fc4c27858e0bc9971d32409b6012234a8776e93eb294461e0c809114",
+    "src/operations/redis_sandbox.py": "e6f5091c6d077657f12dc3782aa7e546bba9108defec534eb7040154aaf1cf22",
+    "src/operations/bank_items_smoke.py": "66064a8d0c881fa731c879396b0d3a53313843ae89b2a1247a16e9a27b0adff7",
+    "src/operations/redis_backup.py": "b4f8b250e1bf91db99c9138b696175e2c5b35a1c862111ba59325a3c605962f0",
+    "src/operations/ground_migration.py": "58baa8c22cbd5bf49c265c04fbcc2651ddb9b8e960bb033cb14e02e83dfa2d53",
+    "src/operations/npc_commerce_smoke.py": "349b33a682ac2236bbad5488b253973d8c022fe5b60ab23461f2979a5f8186a8",
+    "src/operations/password_change_smoke.py": "610c56a01235c9ee5e830538f16d07932624c7edbeddcc5f01b47991f925d495",
+    "src/operations/spell_lifecycle_smoke.py": "6aa614fbb1c25fa34c20f5a3b87763026703e3cfad875062d0e28f39414666c6",
+    "src/operations/npc_loot_smoke.py": "31f2c31218095bb89681004b15a121e0f006464a6d599c6b58fc02b72ed9d0a4",
+    "src/operations/__init__.py": "867fa0a5b8458e8f2cda7d45b17867d64265cbab89d16b9b7b21c5655a4211dc",
+    "src/operations/bootstrap_smoke.py": "d1262b7d2c458aa14c46e1efa9f9258bdf7e34dc8fd0a128a1c1d620c921d8aa",
+    "src/operations/redis_schema.py": "889c25e14ff9c77ae855484283595acaa2a452e16665315a949eeb7ddfbd986d",
+    "src/operations/npc_loot_audit.py": "ba1fa648adf118c067dab35c453524dc19bdfaa10b782c2c3a1b05077e1456f6",
+    "src/operations/player_jail.py": "3eac090b65cd7abb91bffa590245609e48024f240a0111ab23cb6666aaf05125",
+    "src/operations/scroll_learning_smoke.py": "073687083b6a9881c206bd8cf62c47412a754e1671285a2918941b2d9ddde847",
+    "src/operations/mana_repair.py": "c8095cd7501e99eec0694288800c792e1fbb8bebed4d284f356bf6a585ae2a12",
+    "src/operations/merchant_stock_smoke.py": "e3ad40e953a650f62c22986fe4943e32982b03fb98050b53539541f4c9fb0082",
+    "src/operations/trade_atomic_smoke.py": "3be61e13396c4bba5b78d46c79493f9d40c40f341783d96754a11dcd81013678",
+    "src/operations/trade_protocol_smoke.py": "d5436dacf4f8f0325d7c53663fec66eea7e2bdd47d31e81917bcd72d35069400",
+    "src/operations/ground_atomic_smoke.py": "6a346cf292cf671bd920c2f0bd8c10fdcbabf4854347b53329709b4146d8dc4d",
+    "src/operations/npc_audit_report.py": "553d90bd3f0fa2b34978734f0adc6ddce7b073df2ff425a2d9de6e4e428b9624",
+    "src/tasks/player/task_meditate.py": "3a692068cb95a53545a466eef3f6357e4cd1cda5b9788cfcf73df8603ee1f947",
+    "src/tasks/player/task_attributes.py": "c9d830abff38395049156b1c1dde740e56ce077a92092a7abcd8412da77081e7",
+    "src/tasks/player/task_request_position_update.py": "de127dba1310f125c11f24ce7bf11aab55a048697c7322229766bbc099d2e766",
+    "src/tasks/player/__init__.py": "cbcda0b7140063b5f255fde780671e5046df0c05d436db26c5fb5dad65cbfcae",
+    "src/tasks/player/task_mini_stats.py": "1893521ed504a327709bbff7e826bbb5c5dd23da1ed18cec750c86a4f9402baa",
+    "src/tasks/player/task_change_heading.py": "f5b8aabf4fe3a3e2b28567a83c4aefc7b5a0e43aa395cbaf4188d6b8156b2334",
+    "src/tasks/player/task_walk.py": "52d10a06f77b5a8538723c057b991ee5e31d4821887e0b4500eae1093673630b",
+    "src/tasks/player/task_login.py": "dbcf4b8c92ceb4729a58c023d139c79d32583d62df353865a46db6b76743aca0",
+    "src/tasks/player/task_attack.py": "bbc4a681aaf8cf9dd4ef02d5783488a92db7bf614b4f1e77412f9e6cc9716100",
+    "src/tasks/player/task_account.py": "7cda38fe851b704176f2609e2b463e938e01a9a38003686645b148f669470cff",
+    "src/tasks/player/task_request_stats.py": "7c793a45e8fb9ba3edaf6faf44749cc4d775c061bbee93e0fa7fc7e5ec3261b3",
+    "src/tasks/inventory/task_drop.py": "5f330ed2e46483f371fa7b64bdd5be53ebcd5f62e6f0e375abd21857767e2c8c",
+    "src/tasks/inventory/task_equip_item.py": "5d316e78a5ab36a44c0e1df78c45710397acb2a7db810562472862a31604a0d0",
+    "src/tasks/inventory/task_inventory_click.py": "a432e74648d29a159b5c26fea3a5b4b5e2fd9fec3622dab22aa2774b739e2a3d",
+    "src/tasks/inventory/task_double_click.py": "e73e1f5d1100061214ec4cb79c04190861db884baca7e4c145e5a5c4dd2eecea",
+    "src/tasks/inventory/__init__.py": "53316d7618cef6903b42887050b9d96508aaf67372bb541e59511394c4beba0e",
+    "src/tasks/inventory/task_move_item.py": "74dd2cc0f2017c433fb74c6abd1dcd12ffaa0702d6a4403d1fca3eea934d0e28",
+    "src/tasks/inventory/task_use_item.py": "28ed38c73cd814af134661ea1c95d8db02ed4e28df48b06337d418f5a4271c42",
+    "src/tasks/clan/task_request_clan_details.py": "bc69fe74e9df6a2303e9a88104aa7abe8697c3fd2d68195b5485bc0fba392342",
+    "src/tasks/clan/task_leave_clan.py": "e7dfa1dcdc90d0a133a27ba18dbbb84e025f4596eb7930cd1076977e500e0514",
+    "src/tasks/clan/__init__.py": "6c29f36ba3f32cef92bc62c443fc0ab9d22f8ff2f611c25de2250b018c4b699c",
+    "src/tasks/clan/task_create_clan.py": "3322542f725360100014cd0a2dadf520a374da2cc8cd8b90353b3641017e24eb",
+    "src/tasks/banking/task_bank_end.py": "8bbc8e5c4f6f6de28129c4c9140b7c8b0328b66faf141aebc2ec750157951171",
+    "src/tasks/banking/task_bank_extract.py": "c61aea431c64f692a9ee6730326609667a936ab7a6f86f1d930c598ec5af0fa6",
+    "src/tasks/banking/task_bank_extract_gold.py": "3d81c789a0f70b2bd98ba2dd4a721c9496e0f63ba8eb0d4515e00294db9558b1",
+    "src/tasks/banking/task_bank_deposit.py": "62733c1a9f9947f5212f22a6ad80b8d1e780e39cd51fd72ec9dc0b00768f3461",
+    "src/tasks/banking/__init__.py": "5f7b843e92480d3ce4b7dfa2300ccc110d33c52a088a2d048f47fd35903ef4b1",
+    "src/tasks/banking/task_bank_deposit_gold.py": "90f4a444482a009d22d00f93ba16556fc6f0e60a8f0cfd5a252e788de4d07463",
+    "src/tasks/spells/task_spell_info.py": "e35689c551572b4c607e551a688b57097cb7247b1b47090ae0da909f30e9c623",
+    "src/tasks/spells/task_move_spell.py": "5a0534a4792c3e19e61da80aeb1ccf43179250c2776b4e5fc896f878c65eb342",
+    "src/tasks/spells/__init__.py": "853f446766416a39ba8524fb0ad0edb2f3130344db2117eba9ed6fd513506fc7",
+    "src/tasks/spells/task_cast_spell.py": "c2bb3a670cd61086ac71da1fa6dd0ef90f734e945513e907dc3b39babac309a2",
+    "src/tasks/commerce/task_user_commerce_end.py": "4b549ff5d51b6b7a0a2794a9574ee73a2d302e65029c6674af3a613a746726c2",
+    "src/tasks/commerce/task_commerce_sell.py": "bca8c137c8bb036ce6fb54c12c4fca72a7ea97e2e14f03870917a1ce9cd3a7b5",
+    "src/tasks/commerce/task_commerce_buy.py": "60cd0741caa445412cf8986af2bfbd3e501a3324744b4951323c022abc4547c2",
+    "src/tasks/commerce/task_commerce_end.py": "1994edc468c02781fc9797a295640939af75b9a6fc1a846f9c5c1d69b66721be",
+    "src/tasks/commerce/task_user_commerce_ok.py": "53c71a766c5642d360bdbf3e1fc129952df77a9cd7db317318a92c1b34aeb250",
+    "src/tasks/commerce/__init__.py": "1daaa1ae9384be4d243c1736ff2b2d1a545e42ab6884b49e0752b6ca30341c7f",
+    "src/tasks/commerce/task_user_commerce_offer.py": "7f22aeb19bfb41ff9ba03663521dfec9d7086287b8b25f76f53486cb3aa47a38",
+    "src/tasks/commerce/task_user_commerce_reject.py": "ade02292af9d4ce1272cd73a7d073c4566c2a543ed06d19cd7c024d56491a332",
+    "src/tasks/commerce/task_user_commerce_confirm.py": "8cef6ce4d73df8dbc46f4236dc95cd3193150c0168728e5459f6129eb62cefe9",
+    "src/tasks/commerce/task_commerce_start.py": "80381e11568c3fdad112778d3d74d17a82b549061e660df5d7835db6c6e82682",
+    "src/tasks/work/task_work_left_click.py": "d0dc8feb7f0efcb36758e887a8149e1c38e8729783f54de50e15fceb06f4efd0",
+    "src/tasks/work/__init__.py": "19ded587e4f2afd41c8d7164acb8a772b33ad0ea031ba5349cdd8d34b4c80b6e",
+    "src/tasks/work/task_work.py": "0dd089efa2655ce12d42602a0276834c396ba2b6dcb93cc16068ae098482b5d5",
+    "src/tasks/interaction/task_yell.py": "d52f181b64a3a8bdd93e759b87c62b281ca762ef528a08259d706dd5e7564f6c",
+    "src/tasks/interaction/task_talk.py": "b6e2946a7ae07001d00f0c274279153cb3ddb8ea39218fa7b2a8175a24ddd471",
+    "src/tasks/interaction/task_left_click.py": "585f34c99557498af60e56dff6d6c30316fab834ed05f50a51596b3ebda9d665",
+    "src/tasks/interaction/task_whisper.py": "022339334b7ff2cf45a2b1546bf0ddd5e2ac6602e26ebf16023b376d232ba311",
+    "src/tasks/interaction/task_pickup.py": "87236170f6ea3470392c48246978cc6430642990dfe9f3ab88c86b635081b577",
+    "src/tasks/interaction/task_information.py": "e1e5fb6642b0dfd37e20669eef4b1b34d0253896cc8cbb08fb7c0d311ce37c5e",
+    "src/tasks/interaction/__init__.py": "05c809e17320a652b96119cb5be1a6088eaa05f8c6504f732fb9d205dd447cb6",
+    "src/tasks/admin/task_gm_commands.py": "db163f4e48d344574bddf70aa687bba57e072d22954c044f1dd8ad79b4d67aea",
+    "src/tasks/admin/__init__.py": "2aea3f823a2832c9df0f1e4f43c8e7784bb5195969ffe5c0627f285f27f1f57a",
+    "src/network/validators/movement.py": "d1e1df80e1a45f6a918c52e7464e13f351db790bb9fd799ce94d743f537bed79",
+    "src/network/validators/gm.py": "28c85559d8014f872045a9b8cb389cddb8f047d0d278b785f619c8141d32105d",
+    "src/network/validators/__init__.py": "6a27a7442970c9fd4d27a7104cdbc2936c9ddf5d4e100564925e6591655eb78a",
+    "src/network/validators/simple.py": "459cb5206f657ce7ce0619817013f77525fcbf76027b15f85ec710e4ed88a5c1",
+    "src/network/validators/spells.py": "1affc8c685a04244a8065c5495bfe32f65b9a10e0d7a1ad903ed2dbfe19e9a92",
+    "src/network/validators/auth.py": "abdff0d53cc448944983a445d0277b3db18288307eb948b8723e7897e028780c",
+    "src/network/validators/chat.py": "dbe835eb2032fc00fe015ad2d317225f692cf58c141d439b020eff0a02db9980",
+    "src/network/validators/base.py": "f70e778eec876e2dacb18053906e31575eec109295cdf3f9a3b04486824f83cf",
+    "src/network/validators/helpers.py": "3a31dbc5dfd1acf4bbf6b60dcd6a5be74bc4f5e913e0106d72a6315c6f06707d",
+    "src/network/validators/inventory.py": "fc37f77d7cc9984b3a07cc5fc8d62717d199984a88b1537371eeaf32620ababe",
+    "src/network/validators/bank.py": "28a6bd2d1c7ce05f1ab56bd3e3a60ecb29848e0a264405a000d96d231b00a973",
+    "src/network/validators/registry.py": "9dabc2e9f54df623be0eeef900102aff145daff8b0a2a9dc35c46be3c76cdce0",
+    "src/network/validators/commerce.py": "71117cee41974525d5bf429c5d83d1223d712ee553ec75a284f20046a3c19388",
+    "src/services/player/equipment_service.py": "5c4234f24df53c51adbbaa967d7213f8a19d41e7bcbd9edb43fa0e4615f2f2d1",
+    "src/services/player/lifecycle.py": "5c981ef19cb093584b09f9a4397ed443c486f51557aa583419eb3664f0edf7b0",
+    "src/services/player/appearance.py": "defc7d903471b84e47fe94f3c2597e4e1bbaff6869cc2dc5e7cdaecaad91eeb4",
+    "src/services/player/authentication_service.py": "32ad69c8afb82860fa0a73d7a7fd612973dcaa5fc16b0ae4da93207de4cebf3f",
+    "src/services/player/__init__.py": "e9a6b56a8c08aaf15842c147c4fa43a234d3ffea852d1ed3bebb7e4ed7c69005",
+    "src/services/player/player_service.py": "e0eca9649dc28fc7a5cc930e39406b922c0ce381877ccf29245945ce165a772f",
+    "src/services/player/player_death_service.py": "a432109e4a51318e2faecf38ca55615cca81e2b7ad4b34b5f331dc35028a90cf",
+    "src/services/player/lifetime_stats.py": "247705083ab7ba3e3c15b8af5e1db6d7fce52434e18618124298250dda13a705",
+    "src/services/player/accessories.py": "4a421d99ddfb316efd39e02d86232472fe00d100f25ce3c9a69880ee1d27d569",
+    "src/services/player/spell_service.py": "8e396b38e7eb62ecf712a78b15662f5213d7d618f67d3997bd717b66af03fff1",
+    "src/services/player/stamina_service.py": "687ba52f6408eee5a16a23761a2f6097abd80302ccedfb7142a08a347b3aca27",
+    "src/services/party/experience.py": "d037d4ab432b6d4a7b4279630d3bf5ebafde26735788150e2fef320db1a829de",
+    "src/services/party/creation.py": "9e7cbb06884ba2b8de7ce42793d2c4e7eea7e4b23732583bb50460e42c976aa8",
+    "src/services/party/membership.py": "8d7950fefb4ba05df4c3546b99a910b58394f3f2754341309f02450cc3c40c61",
+    "src/services/party/__init__.py": "c4a7a0e68de4b2c6acc7d93c3064f08e106593b9c0077f6164b9854456143bc8",
+    "src/services/party/invitations.py": "23a84dfc1736c8820738a2d8a0b6e2ea53f8de475ef3e0f5325c2a38d8fe929c",
+    "src/services/party/messaging.py": "3b66944ca864cd919c5731f04e042112e1212b43e8d1774af00e0df5a5d073b5",
+    "src/services/expansion/catalog.py": "932e68559c38bbe885e29a3619c2aa177e5f19c621c221e5557fc15e32781ca8",
+    "src/services/expansion/party_finder.py": "fea6d7982e16daf41bc366558cc918c958b9defe743a75bc2c38bd7490fd856f",
+    "src/services/expansion/quests.py": "9c814b8f2d17b30404872a16d1e211a92a248e7b6b32a5166a0a2607c8691553",
+    "src/services/expansion/clans.py": "c008b2f979761ae346c9307391aa44a177489bf27afa3895c1d27401cde2ccb7",
+    "src/services/expansion/factions.py": "1cec9a55305523dc0dc69ce9f58c3d41f2588452426c71113df8ca89e9ba764e",
+    "src/services/expansion/__init__.py": "81aca36b9f0247f22e370fd803f8034412776610860c5e5136f9cfe457b136cc",
+    "src/services/expansion/pages.py": "df017aabb9082de99e19d8cd3ce08c4ce60de3a4c046e7b8f8cd793f59e77d13",
+    "src/services/expansion/service.py": "ee62a2674f679dfe6d797c4b2c0e372bdb47344d6d5cbc3e4b8cf45c2e06dc52",
+    "src/services/game/class_service.py": "75f94a026e4a44fe8b9e466061a8c33c66be6479a7377242306f0f229dcf5877",
+    "src/services/game/npc_service.py": "fc250e162f7148203cd805c7c3173f355eee3ec1869a7ec1d38046787facbc46",
+    "src/services/game/npc_map_spawner.py": "d538074ae67971fd6b642b7adf57d19cb79fec4063a706946d1eebfa76aa817e",
+    "src/services/game/npc_spawn_service.py": "d92a4fad31118c12874831ecddacb7eee6bef039ee6d199a72579b07888f2328",
+    "src/services/game/__init__.py": "a502da79da5bcca35b89d55642af7c3502bc474cea2912a518b4bf9d2e47ecd4",
+    "src/services/game/npc_world_manager.py": "6d6f5c73d18626500224ebe74ba64af72dd3c76a5738ed8da2bb94dae1db9033",
+    "src/services/game/balance_service.py": "a51a5a309e8aa20aab07be8091816a41f97dd201ae3e218a397a91d5e67018ed",
+    "src/services/game/crafting_service.py": "166a0382b6c4ec92c4a6dd1f744f0c1059c7653d0f80f8e90adf94b4dc0f358f",
+    "src/services/classic_chat/world_rules.py": "6c8bb2418afaeb297cdca924b43ee29f6683e9aba846767efb9067c3c384cdaa",
+    "src/services/classic_chat/admin_presentation.py": "c21d1a98bbc8d551eb839f01c95381f087c8d3d97d533fbc8673f285e3e8b17e",
+    "src/services/classic_chat/admin_operations.py": "cef3cb2ad96dca5f9f283dccfbfa91756211c5cb0364b2e068630c58a119af1b",
+    "src/services/classic_chat/admin_npcs.py": "20a56e7f100faf541889149f919e474883506e39051489a682ff49f5db5f1cc8",
+    "src/services/classic_chat/admin_world.py": "131bcaecf50e7f66e958b768de86c5475555c1f4bba5993c60a2b2475e55c98b",
+    "src/services/classic_chat/admin_character.py": "ce1aa5ccc4d0be787b72e2f82c87507688085516070acd467b5b8a2b1281408a",
+    "src/services/classic_chat/appearance.py": "be588d8f22e40d03030dab56e3fe938b6f82491cf4e99d4f91c0bcc762045dfe",
+    "src/services/classic_chat/catalog.py": "e88d1a22d13058e1c8690a764d955714ae9c87a0659663881f3fd40af348c664",
+    "src/services/classic_chat/admin_social.py": "8691f393a6ef95d68be7b70c731ec81ab18db92c719b6098a0a65c2f0e374559",
+    "src/services/classic_chat/maintenance.py": "65c4c096d5f2b7ca9a5b61846fd7a0ceea1261955b59ec1b39eb834d55c7db48",
+    "src/services/classic_chat/social.py": "25b6a98c2c9dddfc6c94d5a98cbc74124be903caf59d6248176487c5e06f7776",
+    "src/services/classic_chat/admin_common.py": "0f8f7042d89bd0c809df706b444c9c1c73ce07b16715dbde12c97c28529c8ed3",
+    "src/services/classic_chat/admin_queries.py": "52da10e1177e769c5aa2534d37424ee66b872c33afa74af872bc3cdf1d2aebfb",
+    "src/services/classic_chat/factions.py": "54cc2bb08ba36e0f6988a3f285703b7cd2ed789bc6c71d621f165f8597766cf9",
+    "src/services/classic_chat/__init__.py": "b7a43b7b5699bb12b00ce83ea912038f32c17fe23f0df3cfbdc0e83a062b9bfb",
+    "src/services/classic_chat/context.py": "35666c02f985a637b81e7a7af014ba891f5db8655390544bf7c91c22ccd17751",
+    "src/services/classic_chat/admin_accounts.py": "c01585168eb7f71a04debb410d8e851fbe7950ca2d16bbcab3a950d93cfb3509",
+    "src/services/classic_chat/jobs.py": "ddc4fa7a50b5a9b5cb94508de4e60eccd9a9567e68d91c42c78be698709a28b4",
+    "src/services/classic_chat/admin_tools.py": "5dccc4d0366bd4adb1b9404fc61239034117887ea95462279ad170868b45218c",
+    "src/services/classic_chat/native.py": "bbb983432c22ad0a80e673646327dd0b0af238ec505fe46f96172ed0dc5a60b0",
+    "src/services/classic_chat/admin_edit.py": "291e369c42a1a09f51e6dffe01bed8cd657418a1a0c7efca6485aca664e03815",
+    "src/services/classic_chat/admin_moderation.py": "cf08e66097058df34a4367729e0cd0d6b37fc637974ae8066d3be27eb7b246f4",
+    "src/services/classic_chat/service.py": "acf4e9d368f4b5ac7de9ea31bbc6daf9c8953f7a381ca9db32cbba09748a8438",
+    "src/services/classic_chat/collective.py": "aa1a5b4bf3c12e8c75fe6cfec7993c10351557a86105613818f938f59eb14e07",
+    "src/services/classic_chat/player.py": "063d6a3a064dc86dbc79faae011c6431bd6ba2e15ad8d664c30f683c4c4197dd",
+    "src/services/map/map_bulk_resources_loader.py": "49d9befe4e921c66c4240220de6bb70d5c35763fd054063f822e9f5ad5b0d0b0",
+    "src/services/map/map_workshops.py": "00bde530bcf963c20f6ca00d3870541a79a426e1dbce8c0e277fd6d383687ca0",
+    "src/services/map/blocked_loader.py": "72e11f671089097fd3904f83254d54854e3cf28ac2093fe0ff560cf66c66fd09",
+    "src/services/map/cache.py": "b393a904b0734685e96c16fd2d03d66126a213140f21c758e168b08095f01db3",
+    "src/services/map/ndjson_reader.py": "7f528896692ef2bbf82547b0c9a8ba1a663d22c80370ad3689309ca7bfe5bdf9",
+    "src/services/map/door_service.py": "fb9e6370a611c733fbe49c0abc4d16eea4343eea4ebf136a6bf55e876bb27dbd",
+    "src/services/map/map_resources_service.py": "d069158ea9b166d649da40f5797c7245a820b7f23eadd020c9e9c2e489dd0f52",
+    "src/services/map/map_transition_steps.py": "044226d56a76acf63f88dbf5949f4ceef8fbc81ced131ac2d2664aeec5168d78",
+    "src/services/map/map_transition_service.py": "92ce8ee6269e3454f0d002795818184a7fa7997a5e74de41110c3a8a43468abe",
+    "src/services/map/__init__.py": "c2e87eca464b763d52e50bb9ff7cbaf29d20df14a58b9bf1b192ee79d7df388b",
+    "src/services/map/map_single_map_loader.py": "bea633e0dbda08317d75bcc7fdf106add80f3cf6f41a0741d93250d4e588644b",
+    "src/services/map/pathfinding_service.py": "2980fb76afd897dbc123d24923076c2c40742813279392d2b7ccdbe45b3d6eb1",
+    "src/services/map/map_manual_doors.py": "0d2aab2e60ec18bf737584a34d11f8a976540a2fd16ed101686e68bcbfd0736c",
+    "src/services/map/map_resource_queries.py": "ef3d619d22ac89ee6a7d9e436a26ab4eb6816503f41dff41bed0d171ace3b5ad",
+    "src/services/map/map_bitmap.py": "e345d6ed9ce56d0212400f25125384f783c9e8b7e25af98aa0c7777b3c7924ca",
+    "src/services/map/objects_loader.py": "244d09c517cd5851412ebe8bd59dab50d192e5cdca7f879c11a1a9b3dc1ac2f1",
+    "src/services/map/door_world.py": "bd259a5c98ddca8505998a66c39425895c3aabcbecf1012598e7606283daede3",
+    "src/services/map/player_map_service.py": "b11df1d17210464761723867dcc5dd3426c478336cc004559e4a132a70007388",
+    "src/services/map/binary_cache.py": "513f0384cbf917ada14ac6113a1838fdeb9403c5b1dee0207a03902068d88a8a",
+    "src/services/map/transfer.py": "9dad29f85ef5e2cfdc97a10b3b80692bd9ceba56f41f452be939b59ad9f685c6",
+    "src/services/clan/clan_service.py": "0975dd3b56c4cd4909387cb7f4ec559a80eaec4c9735afe1d930999465838718",
+    "src/services/clan/ranks.py": "fd24850eece7d87e0df0e983012ff8bfe4977fa8528c7c716cfff889140565ac",
+    "src/services/clan/creation.py": "91a43f9524a813fc7d05b4b8d956a1c8d711d7a2b5763479fe468404ee6e8afd",
+    "src/services/clan/membership.py": "f11d17b2e2fd5ea3764395dbc9661ad2083ecc6d48ca1aef709d3bb651734cd8",
+    "src/services/clan/__init__.py": "4613a3312365d6c707e457ffa5757978a89ab63aa25a2976c232f04951d3d1f3",
+    "src/services/clan/messaging.py": "10f12c116f43bfc95dd5325960700fc945b0aafcdc544398bf4df027ba88c724",
+    "src/services/clan/_base.py": "9c63d76dd1dbd9f7c7d247a808cd50bbef41c75251447286c05d353bea50a26a",
+    "src/services/clan/_helpers.py": "df5be0d2323854132cb024ed4c0989ff45dd4105f6e6bedc6bd9d5adaad39ebc",
+    "src/services/combat/area_spell.py": "1645bd44d2a1da2b2ac06c99cdfa36721ee788de9600421b613374ba70f493d5",
+    "src/services/combat/barriers.py": "aea228fd7126ea22875fafefd7a0cd3a6bbcb8fd78ff3aa37f743cb26d29d102",
+    "src/services/combat/pvp_policy.py": "8877abc568bf966d9a4deae6c948d1e4eb9d5478fea1a37a36f1d39eb29459e1",
+    "src/services/combat/combat_weapon_service.py": "9cbcd49177011c9e96434334227afb11a865f11dac7d53e4ff4a381177dbd832",
+    "src/services/combat/spell_components.py": "908d4dbab560410fc892eaa7bb39d40d052efa324391c4db1c59244b5e58586f",
+    "src/services/combat/physical_plan.py": "77e59bafb4fa87299e7edc4f2d480c0e617c182c6a2914241a681b692f499375",
+    "src/services/combat/__init__.py": "d3c1341303cdee8c13330ebddc53b75f0a5a82c9af6ca28ee479669e03287616",
+    "src/services/combat/periodic.py": "013db76816c4d892364815984f6b922a7c8da9c3c2cccdc728413affde03a36a",
+    "src/services/combat/summon_plan.py": "2d9c13549a5294e085462f292ba536d225ea4ad30e79017e343a3d029b054703",
+    "src/services/combat/combat_service.py": "cbe5ff46543350bf0249f940a5e8afb41ae6d9f43c251c786a793ea56f7bdaf5",
+    "src/services/combat/npc_claims.py": "124f22e0f34bfcba454d41aac88fd8900e30b5b10a327850fe65646b4331242d",
+    "src/services/combat/spell_plan.py": "6c3324fe6221f99c79fc1358183942fd9d162aa76fd77bec1872400a3ba55216",
+    "src/services/combat/clan_policy.py": "be858557629e97774f0f5fc80caec392787a968e16b21c9536eed93556fc7b57",
+    "src/services/world/pets.py": "17974b4530e664f55d6363043a9a018f61e94a6ddb6de7fcc5cca8e556caebbb",
+    "src/services/world/serialization.py": "239a60a6832d477cd5313c434a24d99226533a3fe2dab26815df2ec7593a8224",
+    "src/services/world/weather.py": "0d8b7332d1bdc2e517fa7ca6d7351b275e754f439a9ae39897b8cef521eb45e9",
+    "src/services/world/social.py": "a9f5be5694cf2e91c6e4326774a6bb33beb8bbf4a2f614c559b42605834cb048",
+    "src/services/world/__init__.py": "a076b7cd804ebbf090223de9cd42a1e508c723c241090f746b1710700bc6b9a8",
+    "src/services/world/world_state.py": "8d86e2c19fa71ae6adbbdea5240ecff536b19a5645dd7b80c13c89cbd07bb5fe",
+    "src/services/world/actions.py": "678eab479b480d1f1fc6555ffd23503467966a4575e63717013c1ad246d2b9b5",
+    "src/services/world/commands.py": "c5e79a073eccbd7a134cc309689a6ce4403b730c5e02bca4f8894a91d27ac603",
+    "src/services/world/trade_metadata.py": "a8ab8dcdcb712cfda025a8bdb9e11be96c61ae89c6e6644739cae870e0cae468",
+    "src/services/npc/random_spawn_service.py": "30a347697977c84424444c9e08189bc5b3f5f6dc4b6f2a9891f4384d8f878e4f",
+    "src/services/npc/npc_service.py": "b4434399b452e49c1ed5d8727c07ace6242e13293a6af4a9e6971fd660a2cc4d",
+    "src/services/npc/npc_death_service.py": "06a951c3d9aab9d1446cd188dc01e2b09aa0e1b9c812c7772103d4d6069ede3f",
+    "src/services/npc/__init__.py": "c729538caca01bb2f61e55139e977349ba9d24bf90c00977ee4979e0bc252837",
+    "src/services/npc/guard_ai.py": "b4f4f5b5c2e14817fd2fa126daa95b04f21fae5c0e4bf0a2022097cd15eb1774",
+    "src/services/npc/npc_respawn_service.py": "d2c5c945129dfdb814e4cc3b36aeda680f7555907390b8e43f116017f9e50bfd",
+    "src/services/npc/summon_service.py": "fd0e0408979dde59f6a900d41b1544ce336b024e5b68bcaacdb9410481ef3468",
+    "src/services/npc/npc_ai_service.py": "0b7e6a165ea78828e4f3247e84633468c6dee365d7fbc9152431d387e646ee6e",
+    "src/services/npc/loot_table_service.py": "811df731b5bd260b7eb82d6da473626b6365952ea80d464c8ef6d19ebbe864b8",
+    "src/services/npc/loot_catalog.py": "68f6cb5d136176b8875798f4fe931e82c8d8e57c6ebf1f82140f06a18dea21ad",
+    "src/services/npc/rewards/experience.py": "0e49514a47c337950e314685892178f2b862cf75c1425774fa3a001f0a89045a",
+    "src/services/npc/rewards/settlement.py": "b4e411ae0632f178760346aeefd607bb41844e53f66c97e573c15c877bab331b",
+    "src/services/npc/rewards/__init__.py": "c4a7a0e68de4b2c6acc7d93c3064f08e106593b9c0077f6164b9854456143bc8",
+    "src/services/npc/rewards/plan.py": "c47f83889791b09de9082adb005494a317fde053b15d8e9969451e37109dd85f",
+    "src/services/npc/rewards/poison.py": "df33dca741aa6687554ae29351cf55708ae4b64d0720d83d43a029b99fb328fb",
+    "src/messaging/senders/message_npc_sender.py": "e5501f0a86d7d8db46a71025a8beb99cd7428387066f3ddff3c7ba2b4b1ee266",
+    "src/messaging/senders/message_combat_sender.py": "81666b7c661978a3f478e7a2418110ce50c5262123c6c1c6a880df5156b76186",
+    "src/messaging/senders/message_console_sender.py": "13d7ca5a4422cdde0adc951e1d9398cf62858bbdc93e5bb8fb0cdb62afcf40a2",
+    "src/messaging/senders/message_inventory_sender.py": "5147081ba4fecbdaedff60333d59b2ff35462c808ea2b50d18b8d7a3fd44909f",
+    "src/messaging/senders/message_audio_sender.py": "ea4d564f5575cd75c9847c9c177ad16f12d3280e666c4d895ed313bac4f28edb",
+    "src/messaging/senders/message_visual_effects_sender.py": "7f1162d42f5ad86bdb73d7aa7c6a4ef081a7803ea64de7a153b0c8794659b77f",
+    "src/messaging/senders/__init__.py": "1306a51f5d10a30a62effcb3ca484b702529057eb95bef55ec949f67d728d868",
+    "src/messaging/senders/message_player_stats_sender.py": "708f063f6058679f83192912c7f0e020d5ef057f254cd758b91e27b8b05f87a5",
+    "src/messaging/senders/message_character_sender.py": "83ad05aae29e86c1060c0d1d486da1ccbf37b25a5b72553348a6831d587e773e",
+    "src/messaging/senders/message_status_effects_sender.py": "12ebbf9216d5352b34ae6f841443038339b2b6753b6c05b38e763276cbedef84",
+    "src/messaging/senders/message_map_sender.py": "87306ae9d8007c7be0294c59dbbb57b2945aad809784a46c93e52c7767af9600",
+    "src/messaging/senders/message_work_sender.py": "5163ff36cd11b936210f529e69a05fc23a5a72f1ccc50464da14bd57108c2e3a",
+    "src/messaging/senders/message_session_sender.py": "5e8655c7d35f2ef6b25b0e1e4517cd4ab49cd37e8765eda638ab73a22524ccf4",
+    "src/repositories/player_mixins/_status_mixin.py": "ba46f7f048d41674c07d63791d0ef43a831cec38fdaed0153dc9b443b4f67195",
+    "src/repositories/player_mixins/_stats_mixin.py": "2a8e72c2e383bcdf54dd491d7085076396c1db85a634aec4e9b368d389cbe1e3",
+    "src/repositories/player_mixins/_attributes_mixin.py": "968ffdcb11800d69d80db1f8804aef8171e554044de9a4ba94f795dcf8317e7a",
+    "src/repositories/player_mixins/_position_mixin.py": "f96f5fa447cf87fd2f66113188a05073cedc442fcb4e2e5c886eed464821bb60",
+    "src/repositories/player_mixins/__init__.py": "1bbaa3ff5b689e0bd8a3d8cb8231b43cc83e39542e76cb55a1715c8ba8bc12c2",
+    "src/repositories/player_mixins/_base.py": "fabcd06fbc6841060edae350ba4f7be5249ec82205a05c6d940679f799562cb2",
+    "src/repositories/player_mixins/_skills_mixin.py": "b4ef1f8d39e42acf9690c141084a6a047ec9f5942a1dd250a9aa052c3c18d39b"
+  },
+  "probe_sha256": "34afb39a3b6764f823857a30e9f8c254327924a1c00ce6bf24d7b78521092c7e",
+  "rows": [
+    {
+      "mode": "default",
+      "repeat": 0,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4052574090001144,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6065548280002986,
+        "cpu_seconds": 0.556744514
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 243.663,
+            "p95": 280.131,
+            "p99": 289.157,
+            "mean": 237.56754455445545,
+            "stdev": 35.963299910471164
+          },
+          "cpu_ns_mean": 236.50422772277227,
+          "operations_per_second": 4209329.19046431,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 455.536,
+            "p95": 573.295,
+            "p99": 584.436,
+            "mean": 465.0766534653465,
+            "stdev": 69.78625363500116
+          },
+          "cpu_ns_mean": 464.60872277227725,
+          "operations_per_second": 2150183.184962888,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 362.794,
+            "p95": 415.111,
+            "p99": 429.217,
+            "mean": 351.3180297029703,
+            "stdev": 50.29662174410036
+          },
+          "cpu_ns_mean": 349.82047524752477,
+          "operations_per_second": 2846423.796824411,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 135.442,
+            "p95": 184.914,
+            "p99": 199.741,
+            "mean": 143.5260594059406,
+            "stdev": 32.98087314939426
+          },
+          "cpu_ns_mean": 142.4662277227723,
+          "operations_per_second": 6967375.848950602,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 161.069,
+            "p95": 180.946,
+            "p99": 193.309,
+            "mean": 155.77487128712872,
+            "stdev": 22.06306147009674
+          },
+          "cpu_ns_mean": 154.82951485148516,
+          "operations_per_second": 6419520.630877436,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 525.666,
+            "p95": 646.35,
+            "p99": 688.94,
+            "mean": 531.1411584158416,
+            "stdev": 78.593446911143
+          },
+          "cpu_ns_mean": 528.6729801980198,
+          "operations_per_second": 1882738.67343016,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57327.68,
+            "p95": 64162.38,
+            "p99": 64767.3,
+            "mean": 57406.77069306931,
+            "stdev": 4596.1144313139675
+          },
+          "cpu_ns_mean": 57128.92514851485,
+          "operations_per_second": 17419.54804158196,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 57450496,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-O",
+      "repeat": 0,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-O",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.5290501670006051,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 1,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.7295455910007149,
+        "cpu_seconds": 0.703553565
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 245.035,
+            "p95": 277.045,
+            "p99": 281.953,
+            "mean": 238.24263366336635,
+            "stdev": 43.114679277648065
+          },
+          "cpu_ns_mean": 234.5830693069307,
+          "operations_per_second": 4197401.550777795,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 481.815,
+            "p95": 574.457,
+            "p99": 601.277,
+            "mean": 475.28624752475247,
+            "stdev": 67.11195565551729
+          },
+          "cpu_ns_mean": 474.769,
+          "operations_per_second": 2103995.2348882575,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 324.723,
+            "p95": 399.732,
+            "p99": 413.688,
+            "mean": 323.4701782178218,
+            "stdev": 54.999862983719524
+          },
+          "cpu_ns_mean": 322.94395049504953,
+          "operations_per_second": 3091475.0951990676,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 155.689,
+            "p95": 188.5,
+            "p99": 209.94,
+            "mean": 156.62158415841583,
+            "stdev": 27.909715454037624
+          },
+          "cpu_ns_mean": 155.0921188118812,
+          "operations_per_second": 6384816.0224745525,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 156.551,
+            "p95": 183.651,
+            "p99": 185.785,
+            "mean": 153.28730693069306,
+            "stdev": 23.494439940438067
+          },
+          "cpu_ns_mean": 152.9580396039604,
+          "operations_per_second": 6523697.362966508,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 577.362,
+            "p95": 651.771,
+            "p99": 672.619,
+            "mean": 556.4289603960395,
+            "stdev": 74.81564368190931
+          },
+          "cpu_ns_mean": 555.9311881188119,
+          "operations_per_second": 1797174.6101932721,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57008.48,
+            "p95": 61738.26,
+            "p99": 62989.38,
+            "mean": 56193.33782178218,
+            "stdev": 3970.9879227546394
+          },
+          "cpu_ns_mean": 56028.193663366335,
+          "operations_per_second": 17795.703881686324,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 71487488,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-OO",
+      "repeat": 0,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-OO",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4809562640002696,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 2,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6730362200014497,
+        "cpu_seconds": 0.668870289
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 243.793,
+            "p95": 278.057,
+            "p99": 283.517,
+            "mean": 235.80560396039604,
+            "stdev": 35.196584369816115
+          },
+          "cpu_ns_mean": 235.27165346534653,
+          "operations_per_second": 4240781.318191029,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 502.894,
+            "p95": 587.401,
+            "p99": 637.113,
+            "mean": 499.4895742574257,
+            "stdev": 77.28125267790973
+          },
+          "cpu_ns_mean": 491.888801980198,
+          "operations_per_second": 2002043.7893757166,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 368.284,
+            "p95": 421.122,
+            "p99": 643.435,
+            "mean": 358.3734950495049,
+            "stdev": 66.65521492525903
+          },
+          "cpu_ns_mean": 351.3871485148515,
+          "operations_per_second": 2790384.9302858245,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 144.749,
+            "p95": 192.608,
+            "p99": 197.397,
+            "mean": 146.61626732673267,
+            "stdev": 33.008763565420345
+          },
+          "cpu_ns_mean": 146.2529801980198,
+          "operations_per_second": 6820525.568090691,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 163.994,
+            "p95": 188.45,
+            "p99": 192.968,
+            "mean": 156.6969306930693,
+            "stdev": 26.128709040156355
+          },
+          "cpu_ns_mean": 156.33254455445544,
+          "operations_per_second": 6381745.9319528965,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 565.22,
+            "p95": 661.268,
+            "p99": 669.794,
+            "mean": 561.3760693069307,
+            "stdev": 68.10940013438048
+          },
+          "cpu_ns_mean": 559.9963267326733,
+          "operations_per_second": 1781337.0656048628,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57185.4,
+            "p95": 60694.14,
+            "p99": 61510.04,
+            "mean": 56841.970891089106,
+            "stdev": 2817.6480106692175
+          },
+          "cpu_ns_mean": 56814.94673267327,
+          "operations_per_second": 17592.634180754034,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 70017024,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "jit-on",
+      "repeat": 0,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1423585609991278,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": true,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.33767745700060914,
+        "cpu_seconds": 0.33392801499999997
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 251.196,
+            "p95": 289.668,
+            "p99": 291.16,
+            "mean": 244.0159207920792,
+            "stdev": 35.822773835838895
+          },
+          "cpu_ns_mean": 243.53334653465348,
+          "operations_per_second": 4098093.2586447042,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 481.835,
+            "p95": 579.576,
+            "p99": 587.761,
+            "mean": 471.5230396039604,
+            "stdev": 72.5693098135735
+          },
+          "cpu_ns_mean": 470.55646534653465,
+          "operations_per_second": 2120787.1429568226,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 411.064,
+            "p95": 461.357,
+            "p99": 478.519,
+            "mean": 401.0576831683168,
+            "stdev": 48.81641719645773
+          },
+          "cpu_ns_mean": 400.56756435643564,
+          "operations_per_second": 2493406.9136890657,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 182.81,
+            "p95": 219.047,
+            "p99": 237.131,
+            "mean": 172.3529108910891,
+            "stdev": 37.25296600704406
+          },
+          "cpu_ns_mean": 171.56553465346533,
+          "operations_per_second": 5802048.801089913,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 172.27,
+            "p95": 201.845,
+            "p99": 207.756,
+            "mean": 164.33443564356435,
+            "stdev": 30.547485746756912
+          },
+          "cpu_ns_mean": 163.10714851485147,
+          "operations_per_second": 6085151.879968512,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 589.134,
+            "p95": 687.997,
+            "p99": 702.003,
+            "mean": 577.3907029702971,
+            "stdev": 85.40677809384272
+          },
+          "cpu_ns_mean": 574.8263861386139,
+          "operations_per_second": 1731929.5147214094,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57194.02,
+            "p95": 61827.64,
+            "p99": 65959.5,
+            "mean": 57253.16930693069,
+            "stdev": 3407.167591768347
+          },
+          "cpu_ns_mean": 56970.48059405941,
+          "operations_per_second": 17466.281991116717,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58105856,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-O",
+      "repeat": 1,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-O",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4600266400011606,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 1,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6494283680003718,
+        "cpu_seconds": 0.645987498
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 247.14,
+            "p95": 283.576,
+            "p99": 286.062,
+            "mean": 239.1179702970297,
+            "stdev": 35.98727816644528
+          },
+          "cpu_ns_mean": 238.4128811881188,
+          "operations_per_second": 4182036.1671597124,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 488.668,
+            "p95": 581.48,
+            "p99": 588.323,
+            "mean": 478.4592772277228,
+            "stdev": 76.31362714117562
+          },
+          "cpu_ns_mean": 477.98342574257424,
+          "operations_per_second": 2090042.0319868722,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 347.896,
+            "p95": 407.036,
+            "p99": 418.357,
+            "mean": 339.8509900990099,
+            "stdev": 51.35727980539761
+          },
+          "cpu_ns_mean": 338.93050495049505,
+          "operations_per_second": 2942466.0487487963,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 159.387,
+            "p95": 189.743,
+            "p99": 192.568,
+            "mean": 151.2549900990099,
+            "stdev": 31.11613760012481
+          },
+          "cpu_ns_mean": 150.88371287128712,
+          "operations_per_second": 6611352.123625216,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 165.908,
+            "p95": 183.561,
+            "p99": 189.482,
+            "mean": 159.46849504950495,
+            "stdev": 28.07509679400011
+          },
+          "cpu_ns_mean": 157.5150099009901,
+          "operations_per_second": 6270831.111120493,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 551.023,
+            "p95": 649.116,
+            "p99": 665.186,
+            "mean": 553.4994356435643,
+            "stdev": 73.48965140377464
+          },
+          "cpu_ns_mean": 553.0190099009901,
+          "operations_per_second": 1806686.5756372109,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 58162.62,
+            "p95": 62754.16,
+            "p99": 67138.1,
+            "mean": 58013.4700990099,
+            "stdev": 3406.221878244133
+          },
+          "cpu_ns_mean": 57779.531881188115,
+          "operations_per_second": 17237.37604893017,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 70852608,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-OO",
+      "repeat": 1,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-OO",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4505562640006247,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 2,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6459477600001264,
+        "cpu_seconds": 0.641617899
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 249.354,
+            "p95": 276.264,
+            "p99": 285.411,
+            "mean": 237.05278217821783,
+            "stdev": 34.100604242330945
+          },
+          "cpu_ns_mean": 236.3820495049505,
+          "operations_per_second": 4218469.788927402,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 480.693,
+            "p95": 583.012,
+            "p99": 592.811,
+            "mean": 478.20359405940593,
+            "stdev": 67.41986651309512
+          },
+          "cpu_ns_mean": 477.6764950495049,
+          "operations_per_second": 2091159.523731586,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 336.335,
+            "p95": 406.926,
+            "p99": 418.337,
+            "mean": 334.90486138613863,
+            "stdev": 53.69960170374259
+          },
+          "cpu_ns_mean": 334.4317227722772,
+          "operations_per_second": 2985922.616533834,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 152.503,
+            "p95": 193.038,
+            "p99": 196.915,
+            "mean": 151.32765346534654,
+            "stdev": 32.437004167288826
+          },
+          "cpu_ns_mean": 150.96534653465346,
+          "operations_per_second": 6608177.534643371,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 168.914,
+            "p95": 188.099,
+            "p99": 189.392,
+            "mean": 164.20157425742573,
+            "stdev": 21.627143742226586
+          },
+          "cpu_ns_mean": 163.27332673267327,
+          "operations_per_second": 6090075.594721509,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 557.816,
+            "p95": 648.444,
+            "p99": 683.309,
+            "mean": 558.262801980198,
+            "stdev": 67.47436952073281
+          },
+          "cpu_ns_mean": 557.0418118811881,
+          "operations_per_second": 1791271.0580983162,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 58036.98,
+            "p95": 62396.28,
+            "p99": 63579.08,
+            "mean": 57797.333267326736,
+            "stdev": 2910.589202407344
+          },
+          "cpu_ns_mean": 57655.175643564355,
+          "operations_per_second": 17301.83632131878,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 69726208,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "jit-on",
+      "repeat": 1,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.154025759000433,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": true,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.3296627769996121,
+        "cpu_seconds": 0.32869651399999994
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 240.387,
+            "p95": 287.204,
+            "p99": 290.339,
+            "mean": 235.12882178217822,
+            "stdev": 38.26932940995858
+          },
+          "cpu_ns_mean": 234.6250297029703,
+          "operations_per_second": 4252987.755479816,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 498.486,
+            "p95": 591.258,
+            "p99": 616.044,
+            "mean": 498.9482079207921,
+            "stdev": 64.58229166363127
+          },
+          "cpu_ns_mean": 497.84012871287126,
+          "operations_per_second": 2004216.0371056986,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 410.262,
+            "p95": 459.483,
+            "p99": 467.038,
+            "mean": 397.3980594059406,
+            "stdev": 48.13443484156052
+          },
+          "cpu_ns_mean": 396.6399702970297,
+          "operations_per_second": 2516368.6040512435,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 195.212,
+            "p95": 247.66,
+            "p99": 300.128,
+            "mean": 187.31162376237623,
+            "stdev": 47.23120886995197
+          },
+          "cpu_ns_mean": 184.55250495049503,
+          "operations_per_second": 5338696.979470966,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 156.13,
+            "p95": 204.76,
+            "p99": 232.421,
+            "mean": 155.19274257425744,
+            "stdev": 34.11468997357398
+          },
+          "cpu_ns_mean": 153.48423762376237,
+          "operations_per_second": 6443600.283186662,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 584.125,
+            "p95": 682.187,
+            "p99": 692.076,
+            "mean": 578.7177128712872,
+            "stdev": 70.40447531106764
+          },
+          "cpu_ns_mean": 576.2537722772278,
+          "operations_per_second": 1727958.1698623598,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 56938.36,
+            "p95": 61530.06,
+            "p99": 65172.24,
+            "mean": 56872.47425742574,
+            "stdev": 3462.7333989382855
+          },
+          "cpu_ns_mean": 56405.62712871287,
+          "operations_per_second": 17583.19842870968,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58626048,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "default",
+      "repeat": 1,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1294596870011446,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.32964189700032875,
+        "cpu_seconds": 0.327802563
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 217.023,
+            "p95": 274.791,
+            "p99": 279.019,
+            "mean": 219.07970297029703,
+            "stdev": 39.174949899022096
+          },
+          "cpu_ns_mean": 218.61452475247526,
+          "operations_per_second": 4564548.82146513,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 477.918,
+            "p95": 581.32,
+            "p99": 598.241,
+            "mean": 476.7035841584158,
+            "stdev": 75.02828839088191
+          },
+          "cpu_ns_mean": 475.6332871287129,
+          "operations_per_second": 2097739.629471057,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 346.243,
+            "p95": 411.344,
+            "p99": 421.072,
+            "mean": 336.8381188118812,
+            "stdev": 59.1866901869478
+          },
+          "cpu_ns_mean": 335.69141584158416,
+          "operations_per_second": 2968785.1349107083,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 170.647,
+            "p95": 190.183,
+            "p99": 191.044,
+            "mean": 159.9568712871287,
+            "stdev": 28.116272087054273
+          },
+          "cpu_ns_mean": 159.4690297029703,
+          "operations_per_second": 6251685.169591507,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 165.688,
+            "p95": 182.539,
+            "p99": 185.314,
+            "mean": 156.470099009901,
+            "stdev": 23.895241632385705
+          },
+          "cpu_ns_mean": 156.12744554455446,
+          "operations_per_second": 6390997.425883413,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 547.757,
+            "p95": 660.436,
+            "p99": 671.077,
+            "mean": 549.090306930693,
+            "stdev": 74.06753809122355
+          },
+          "cpu_ns_mean": 547.7508316831684,
+          "operations_per_second": 1821194.050191495,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57656.28,
+            "p95": 61983.72,
+            "p99": 63306.8,
+            "mean": 57180.442574257424,
+            "stdev": 3703.700053379769
+          },
+          "cpu_ns_mean": 57015.47148514851,
+          "operations_per_second": 17488.497027656776,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 57651200,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-OO",
+      "repeat": 2,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-OO",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.452276312998947,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 2,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6551615469998069,
+        "cpu_seconds": 0.652520514
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 242.981,
+            "p95": 281.613,
+            "p99": 284.087,
+            "mean": 232.3151089108911,
+            "stdev": 37.56484471388136
+          },
+          "cpu_ns_mean": 231.59128712871288,
+          "operations_per_second": 4304498.337142459,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 523.553,
+            "p95": 579.205,
+            "p99": 596.467,
+            "mean": 499.061,
+            "stdev": 77.32167449505992
+          },
+          "cpu_ns_mean": 495.27993069306933,
+          "operations_per_second": 2003763.067039901,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 356.181,
+            "p95": 409.64,
+            "p99": 425.31,
+            "mean": 340.6329801980198,
+            "stdev": 56.67219690747487
+          },
+          "cpu_ns_mean": 340.0868613861386,
+          "operations_per_second": 2935711.0383694232,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 149.357,
+            "p95": 190.173,
+            "p99": 193.379,
+            "mean": 148.22756435643564,
+            "stdev": 29.412074757628318
+          },
+          "cpu_ns_mean": 147.8420594059406,
+          "operations_per_second": 6746383.537648561,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 170.617,
+            "p95": 185.605,
+            "p99": 187.408,
+            "mean": 159.20873267326732,
+            "stdev": 25.481889804286922
+          },
+          "cpu_ns_mean": 158.83445544554456,
+          "operations_per_second": 6281062.497069356,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 572.964,
+            "p95": 663.763,
+            "p99": 680.584,
+            "mean": 560.786702970297,
+            "stdev": 77.40833466940683
+          },
+          "cpu_ns_mean": 555.4030594059406,
+          "operations_per_second": 1783209.1857801531,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57818.78,
+            "p95": 61763.72,
+            "p99": 63879.46,
+            "mean": 57021.446336633664,
+            "stdev": 3496.168949844307
+          },
+          "cpu_ns_mean": 56719.57405940594,
+          "operations_per_second": 17537.26122793111,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 70254592,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "jit-on",
+      "repeat": 2,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1463242919999175,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": true,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.3295756019997498,
+        "cpu_seconds": 0.328499602
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 247.62,
+            "p95": 285.79,
+            "p99": 298.575,
+            "mean": 237.29555445544554,
+            "stdev": 45.05649416443211
+          },
+          "cpu_ns_mean": 233.8969405940594,
+          "operations_per_second": 4214153.957897931,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 501.321,
+            "p95": 581.38,
+            "p99": 607.699,
+            "mean": 490.74647524752476,
+            "stdev": 66.83166319770802
+          },
+          "cpu_ns_mean": 489.35371287128714,
+          "operations_per_second": 2037712.0375558801,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 380.797,
+            "p95": 441.56,
+            "p99": 459.784,
+            "mean": 378.41128712871284,
+            "stdev": 45.274446483493676
+          },
+          "cpu_ns_mean": 377.91632673267327,
+          "operations_per_second": 2642627.305299855,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 197.758,
+            "p95": 241.138,
+            "p99": 242.23,
+            "mean": 185.9030792079208,
+            "stdev": 41.68295514804179
+          },
+          "cpu_ns_mean": 185.46719801980197,
+          "operations_per_second": 5379147.049423337,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 166.329,
+            "p95": 198.289,
+            "p99": 201.424,
+            "mean": 157.74652475247524,
+            "stdev": 29.691896420940868
+          },
+          "cpu_ns_mean": 157.2779108910891,
+          "operations_per_second": 6339283.870558351,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 586.319,
+            "p95": 686.906,
+            "p99": 824.832,
+            "mean": 583.544297029703,
+            "stdev": 81.42774406521951
+          },
+          "cpu_ns_mean": 577.3113762376238,
+          "operations_per_second": 1713665.9634754327,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57673.72,
+            "p95": 61423.28,
+            "p99": 68514.46,
+            "mean": 57121.18554455446,
+            "stdev": 3707.900934133078
+          },
+          "cpu_ns_mean": 56913.23405940594,
+          "operations_per_second": 17506.639445009438,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58314752,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "default",
+      "repeat": 2,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1232735760004289,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.32472709600006056,
+        "cpu_seconds": 0.324360162
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 238.332,
+            "p95": 285.12,
+            "p99": 291.28,
+            "mean": 233.70145544554455,
+            "stdev": 40.4967253516935
+          },
+          "cpu_ns_mean": 230.73826732673268,
+          "operations_per_second": 4278963.509634679,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 483.438,
+            "p95": 580.869,
+            "p99": 590.367,
+            "mean": 483.02047524752476,
+            "stdev": 64.64054646544908
+          },
+          "cpu_ns_mean": 480.00440594059404,
+          "operations_per_second": 2070305.6107249865,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 349.429,
+            "p95": 411.233,
+            "p99": 418.037,
+            "mean": 337.9524158415842,
+            "stdev": 57.0830583056422
+          },
+          "cpu_ns_mean": 337.2451287128713,
+          "operations_per_second": 2958996.4537159926,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 168.804,
+            "p95": 189.852,
+            "p99": 191.546,
+            "mean": 160.41448514851484,
+            "stdev": 28.069716411326233
+          },
+          "cpu_ns_mean": 159.95679207920793,
+          "operations_per_second": 6233851.008368606,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 172.45,
+            "p95": 189.953,
+            "p99": 194.27,
+            "mean": 164.99753465346535,
+            "stdev": 22.93157028533561
+          },
+          "cpu_ns_mean": 164.65587128712872,
+          "operations_per_second": 6060696.616469096,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 561.102,
+            "p95": 663.733,
+            "p99": 678.991,
+            "mean": 563.1915148514852,
+            "stdev": 70.84317913753078
+          },
+          "cpu_ns_mean": 561.0226435643565,
+          "operations_per_second": 1775594.932859921,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 56761.42,
+            "p95": 60661.28,
+            "p99": 61422.08,
+            "mean": 56339.09306930693,
+            "stdev": 3006.0244547833413
+          },
+          "cpu_ns_mean": 56208.47069306931,
+          "operations_per_second": 17749.66449619317,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58011648,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-O",
+      "repeat": 2,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-O",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.462745160999475,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 1,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6552482709994365,
+        "cpu_seconds": 0.651828481
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 249.693,
+            "p95": 282.905,
+            "p99": 308.283,
+            "mean": 242.81668316831684,
+            "stdev": 46.77892480485858
+          },
+          "cpu_ns_mean": 237.9198712871287,
+          "operations_per_second": 4118333.1678524544,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 494.018,
+            "p95": 571.611,
+            "p99": 584.676,
+            "mean": 488.75557425742574,
+            "stdev": 67.59069353843716
+          },
+          "cpu_ns_mean": 483.4086633663366,
+          "operations_per_second": 2046012.4705878112,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 349.8,
+            "p95": 405.022,
+            "p99": 416.263,
+            "mean": 337.3059900990099,
+            "stdev": 53.127872813711456
+          },
+          "cpu_ns_mean": 335.69222772277226,
+          "operations_per_second": 2964667.184553908,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 163.715,
+            "p95": 193.359,
+            "p99": 219.388,
+            "mean": 157.35355445544553,
+            "stdev": 30.55288570150952
+          },
+          "cpu_ns_mean": 155.90749504950494,
+          "operations_per_second": 6355115.418019672,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 161.219,
+            "p95": 182.789,
+            "p99": 185.124,
+            "mean": 151.17576237623763,
+            "stdev": 26.9398468678456
+          },
+          "cpu_ns_mean": 150.78022772277228,
+          "operations_per_second": 6614816.980457866,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 571.782,
+            "p95": 667.46,
+            "p99": 711.641,
+            "mean": 560.2800198019802,
+            "stdev": 80.18508439503948
+          },
+          "cpu_ns_mean": 556.127801980198,
+          "operations_per_second": 1784821.8116959268,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57248.12,
+            "p95": 61736.66,
+            "p99": 62731.3,
+            "mean": 57247.94811881188,
+            "stdev": 2845.6034975184834
+          },
+          "cpu_ns_mean": 56958.56237623763,
+          "operations_per_second": 17467.874969502995,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 71315456,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "jit-on",
+      "repeat": 3,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1409374039994873,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": true,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.3306166519996623,
+        "cpu_seconds": 0.329772748
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 251.718,
+            "p95": 287.954,
+            "p99": 292.424,
+            "mean": 241.71869306930694,
+            "stdev": 35.77933894547035
+          },
+          "cpu_ns_mean": 240.86028712871288,
+          "operations_per_second": 4137040.4055315424,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 485.111,
+            "p95": 574.216,
+            "p99": 592.681,
+            "mean": 478.9858316831683,
+            "stdev": 72.10858234829878
+          },
+          "cpu_ns_mean": 477.37838613861385,
+          "operations_per_second": 2087744.425520844,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 393.131,
+            "p95": 445.578,
+            "p99": 467.498,
+            "mean": 385.3053168316832,
+            "stdev": 48.61004335318591
+          },
+          "cpu_ns_mean": 384.7979801980198,
+          "operations_per_second": 2595344.4095266405,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 178.231,
+            "p95": 220.62,
+            "p99": 238.623,
+            "mean": 174.30048514851484,
+            "stdev": 35.85922190890758
+          },
+          "cpu_ns_mean": 173.9130099009901,
+          "operations_per_second": 5737218.683860449,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 167.942,
+            "p95": 199.641,
+            "p99": 204.309,
+            "mean": 164.12248514851484,
+            "stdev": 28.866774920871872
+          },
+          "cpu_ns_mean": 163.58243564356437,
+          "operations_per_second": 6093010.345871241,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 599.223,
+            "p95": 688.479,
+            "p99": 694.4,
+            "mean": 590.6830099009901,
+            "stdev": 60.26626349998729
+          },
+          "cpu_ns_mean": 590.1652079207921,
+          "operations_per_second": 1692955.4147284841,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 56819.94,
+            "p95": 62759.76,
+            "p99": 66435.4,
+            "mean": 56517.126138613865,
+            "stdev": 4718.364906008642
+          },
+          "cpu_ns_mean": 55853.56118811881,
+          "operations_per_second": 17693.751758491766,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58601472,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "default",
+      "repeat": 3,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1323146750000888,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.3344416250001814,
+        "cpu_seconds": 0.333313363
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 249.975,
+            "p95": 281.603,
+            "p99": 287.444,
+            "mean": 239.85027722772278,
+            "stdev": 35.24167342256006
+          },
+          "cpu_ns_mean": 239.39068316831683,
+          "operations_per_second": 4169267.642957789,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 471.666,
+            "p95": 599.574,
+            "p99": 607.028,
+            "mean": 482.48514851485146,
+            "stdev": 74.34251606091713
+          },
+          "cpu_ns_mean": 480.98323762376236,
+          "operations_per_second": 2072602.6553938973,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 357.263,
+            "p95": 406.104,
+            "p99": 412.686,
+            "mean": 343.37954455445544,
+            "stdev": 48.87279323867723
+          },
+          "cpu_ns_mean": 342.4859603960396,
+          "operations_per_second": 2912229.385409454,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 171.538,
+            "p95": 198.288,
+            "p99": 212.805,
+            "mean": 163.6351782178218,
+            "stdev": 29.947660937173723
+          },
+          "cpu_ns_mean": 162.71443564356434,
+          "operations_per_second": 6111155.381692177,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 166.269,
+            "p95": 188.69,
+            "p99": 194.531,
+            "mean": 159.26770297029702,
+            "stdev": 32.64060043643332
+          },
+          "cpu_ns_mean": 157.25356435643565,
+          "operations_per_second": 6278736.877284513,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 565.801,
+            "p95": 662.69,
+            "p99": 669.513,
+            "mean": 566.3041485148515,
+            "stdev": 67.28292253958446
+          },
+          "cpu_ns_mean": 565.8262772277228,
+          "operations_per_second": 1765835.554308631,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 56682.86,
+            "p95": 60438.66,
+            "p99": 60967.04,
+            "mean": 56410.1297029703,
+            "stdev": 2762.8170455006443
+          },
+          "cpu_ns_mean": 56326.86396039604,
+          "operations_per_second": 17727.312545912202,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58126336,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-O",
+      "repeat": 3,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-O",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.463327716999629,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 1,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6538850719989568,
+        "cpu_seconds": 0.651324055
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 248.882,
+            "p95": 282.545,
+            "p99": 288.456,
+            "mean": 241.8191089108911,
+            "stdev": 32.887898086348116
+          },
+          "cpu_ns_mean": 241.17244554455445,
+          "operations_per_second": 4135322.491691482,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 493.126,
+            "p95": 579.196,
+            "p99": 606.146,
+            "mean": 488.02107920792076,
+            "stdev": 64.68320084885768
+          },
+          "cpu_ns_mean": 486.8127524752475,
+          "operations_per_second": 2049091.8171465935,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 346.293,
+            "p95": 409.951,
+            "p99": 419.259,
+            "mean": 333.2039702970297,
+            "stdev": 66.83917679781155
+          },
+          "cpu_ns_mean": 331.2548811881188,
+          "operations_per_second": 3001164.719341624,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 165.347,
+            "p95": 188.511,
+            "p99": 214.348,
+            "mean": 154.20493069306931,
+            "stdev": 32.673933169809054
+          },
+          "cpu_ns_mean": 153.76337623762376,
+          "operations_per_second": 6484876.945928582,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 169.364,
+            "p95": 188.74,
+            "p99": 207.956,
+            "mean": 162.35664356435643,
+            "stdev": 25.0973643901443
+          },
+          "cpu_ns_mean": 160.79533663366337,
+          "operations_per_second": 6159279.83016975,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 551.434,
+            "p95": 658.563,
+            "p99": 676.316,
+            "mean": 561.4140693069307,
+            "stdev": 67.18041963552437
+          },
+          "cpu_ns_mean": 560.2159306930693,
+          "operations_per_second": 1781216.4936203083,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57233.5,
+            "p95": 62426.74,
+            "p99": 65476.8,
+            "mean": 57049.723564356435,
+            "stdev": 3574.0308902698603
+          },
+          "cpu_ns_mean": 56502.55287128713,
+          "operations_per_second": 17528.568720791853,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 71335936,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-OO",
+      "repeat": 3,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-OO",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4560828850007965,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 2,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.657120408000992,
+        "cpu_seconds": 0.65463264
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 222.403,
+            "p95": 276.664,
+            "p99": 335.443,
+            "mean": 220.32466336633664,
+            "stdev": 46.92379401887218
+          },
+          "cpu_ns_mean": 217.84247524752476,
+          "operations_per_second": 4538756.509239673,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 490.09,
+            "p95": 585.698,
+            "p99": 592.09,
+            "mean": 484.93221782178216,
+            "stdev": 72.07913295963041
+          },
+          "cpu_ns_mean": 482.90535643564357,
+          "operations_per_second": 2062143.8692850694,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 352.264,
+            "p95": 408.228,
+            "p99": 427.504,
+            "mean": 340.9081089108911,
+            "stdev": 53.366334446521805
+          },
+          "cpu_ns_mean": 338.44661386138614,
+          "operations_per_second": 2933341.7829066273,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 152.223,
+            "p95": 191.245,
+            "p99": 204.43,
+            "mean": 152.2612079207921,
+            "stdev": 40.22133964857879
+          },
+          "cpu_ns_mean": 149.20420792079207,
+          "operations_per_second": 6567661.019215155,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 169.906,
+            "p95": 185.475,
+            "p99": 222.904,
+            "mean": 162.415,
+            "stdev": 26.799694991547945
+          },
+          "cpu_ns_mean": 159.95265346534654,
+          "operations_per_second": 6157066.773389158,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 556.824,
+            "p95": 665.346,
+            "p99": 688.258,
+            "mean": 551.0678514851485,
+            "stdev": 78.15735200752212
+          },
+          "cpu_ns_mean": 548.6671584158416,
+          "operations_per_second": 1814658.571181321,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57011.68,
+            "p95": 61164.8,
+            "p99": 63454.66,
+            "mean": 56134.733861386136,
+            "stdev": 4003.60283218877
+          },
+          "cpu_ns_mean": 56069.6902970297,
+          "operations_per_second": 17814.282374069975,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 70017024,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "default",
+      "repeat": 4,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.1326769349998358,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.3287167179987591,
+        "cpu_seconds": 0.327838008
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 249.353,
+            "p95": 290.6,
+            "p99": 295.378,
+            "mean": 242.38860396039604,
+            "stdev": 38.713596102940166
+          },
+          "cpu_ns_mean": 241.38252475247523,
+          "operations_per_second": 4125606.499897125,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 498.797,
+            "p95": 577.522,
+            "p99": 606.437,
+            "mean": 492.91032673267324,
+            "stdev": 64.7768259514325
+          },
+          "cpu_ns_mean": 492.24139603960396,
+          "operations_per_second": 2028766.5844386814,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 348.888,
+            "p95": 404.892,
+            "p99": 410.342,
+            "mean": 335.51470297029704,
+            "stdev": 56.15658358581735
+          },
+          "cpu_ns_mean": 334.91859405940596,
+          "operations_per_second": 2980495.314056414,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 166.359,
+            "p95": 192.958,
+            "p99": 206.794,
+            "mean": 158.7580099009901,
+            "stdev": 27.790356105129366
+          },
+          "cpu_ns_mean": 158.19877227722773,
+          "operations_per_second": 6298894.780954064,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 167.421,
+            "p95": 184.733,
+            "p99": 188.299,
+            "mean": 159.22372277227723,
+            "stdev": 23.238927705950122
+          },
+          "cpu_ns_mean": 158.88342574257425,
+          "operations_per_second": 6280471.167165249,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 567.144,
+            "p95": 665.786,
+            "p99": 675.144,
+            "mean": 550.2877623762377,
+            "stdev": 87.24630460175932
+          },
+          "cpu_ns_mean": 549.5665940594059,
+          "operations_per_second": 1817231.035053055,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 57836.82,
+            "p95": 61786.16,
+            "p99": 66297.14,
+            "mean": 57223.94792079208,
+            "stdev": 4239.476806179819
+          },
+          "cpu_ns_mean": 56859.19445544555,
+          "operations_per_second": 17475.201141035817,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 57970688,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-O",
+      "repeat": 4,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-O",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.4669575410007383,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 1,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6492154310017213,
+        "cpu_seconds": 0.6479528000000001
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 243.802,
+            "p95": 278.998,
+            "p99": 285.16,
+            "mean": 235.93790099009902,
+            "stdev": 34.33787388045595
+          },
+          "cpu_ns_mean": 235.39651485148514,
+          "operations_per_second": 4238403.392602718,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 487.886,
+            "p95": 573.746,
+            "p99": 592.029,
+            "mean": 481.3676633663366,
+            "stdev": 68.12683952588397
+          },
+          "cpu_ns_mean": 480.7601584158416,
+          "operations_per_second": 2077414.159909963,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 338.709,
+            "p95": 414.089,
+            "p99": 467.92,
+            "mean": 333.79048514851485,
+            "stdev": 60.99809557430689
+          },
+          "cpu_ns_mean": 331.0742673267327,
+          "operations_per_second": 2995891.268605412,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 135.932,
+            "p95": 187.829,
+            "p99": 217.504,
+            "mean": 143.2789801980198,
+            "stdev": 33.236029443054775
+          },
+          "cpu_ns_mean": 141.3099900990099,
+          "operations_per_second": 6979390.826330159,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 137.546,
+            "p95": 183.07,
+            "p99": 192.458,
+            "mean": 143.62373267326734,
+            "stdev": 28.14649524359688
+          },
+          "cpu_ns_mean": 142.4269405940594,
+          "operations_per_second": 6962637.590508256,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 554.74,
+            "p95": 666.167,
+            "p99": 675.174,
+            "mean": 555.9814752475247,
+            "stdev": 78.12858100933282
+          },
+          "cpu_ns_mean": 553.8769504950495,
+          "operations_per_second": 1798621.0773565734,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 58220.92,
+            "p95": 63219.0,
+            "p99": 66509.12,
+            "mean": 58132.66574257426,
+            "stdev": 3369.985820695792
+          },
+          "cpu_ns_mean": 57798.82396039604,
+          "operations_per_second": 17202.03240684413,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 71114752,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "-OO",
+      "repeat": 4,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-OO",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.5043672860010702,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 2,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": false,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.6998895329998049,
+        "cpu_seconds": 0.6952046119999999
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 205.292,
+            "p95": 283.307,
+            "p99": 357.684,
+            "mean": 218.1039504950495,
+            "stdev": 49.079408559879006
+          },
+          "cpu_ns_mean": 215.47415841584157,
+          "operations_per_second": 4584969.679504718,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 517.942,
+            "p95": 602.068,
+            "p99": 652.051,
+            "mean": 485.6139603960396,
+            "stdev": 96.21686325285405
+          },
+          "cpu_ns_mean": 478.68358415841584,
+          "operations_per_second": 2059248.8716437556,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 332.567,
+            "p95": 432.483,
+            "p99": 893.008,
+            "mean": 336.07943564356435,
+            "stdev": 118.68574581780373
+          },
+          "cpu_ns_mean": 319.6982376237624,
+          "operations_per_second": 2975487.024622862,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 160.488,
+            "p95": 190.634,
+            "p99": 194.331,
+            "mean": 152.82824752475247,
+            "stdev": 29.07059287782275
+          },
+          "cpu_ns_mean": 152.26651485148514,
+          "operations_per_second": 6543292.985402043,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 166.088,
+            "p95": 179.083,
+            "p99": 182.88,
+            "mean": 157.6270495049505,
+            "stdev": 21.377139977731463
+          },
+          "cpu_ns_mean": 157.23957425742574,
+          "operations_per_second": 6344088.804178204,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 559.469,
+            "p95": 662.52,
+            "p99": 668.943,
+            "mean": 549.1078415841585,
+            "stdev": 95.94142542767776
+          },
+          "cpu_ns_mean": 547.7339801980198,
+          "operations_per_second": 1821135.8940259025,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 54385.62,
+            "p95": 61382.6,
+            "p99": 65373.42,
+            "mean": 54499.91722772277,
+            "stdev": 4955.908172638416
+          },
+          "cpu_ns_mean": 54135.89108910891,
+          "operations_per_second": 18348.651720361227,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 69754880,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    },
+    {
+      "mode": "jit-on",
+      "repeat": 4,
+      "command": [
+        "/snap/pyao/current/usr/bin/python3.14",
+        "-m",
+        "tools.analysis.interpreter_study",
+        "--probe",
+        "--samples",
+        "101",
+        "--batch",
+        "1000"
+      ],
+      "process_wall_seconds": 1.2276003309998487,
+      "runtime": {
+        "executable": "/snap/pyao/current/usr/bin/python3.14",
+        "version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+        "implementation": "CPython",
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+        "processor": "",
+        "cpu_count": 12,
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "optimize": 0,
+        "build": {
+          "CONFIG_ARGS": "'--enable-shared' '--prefix=/usr' '--libdir=/usr/lib/x86_64-linux-gnu' '--enable-ipv6' '--enable-loadable-sqlite-extensions' '--with-dbmliborder=bdb:gdbm' '--with-computed-gotos' '--without-ensurepip' '--with-system-expat' '--with-dtrace' '--with-ssl-default-suites=openssl' '--with-system-libmpdec=no' '--with-wheel-pkg-dir=/usr/share/python-wheels/' 'MKDIR_P=/bin/mkdir -p' '--enable-experimental-jit=yes-off' 'CC=x86_64-linux-gnu-gcc'",
+          "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall",
+          "PY_CFLAGS_NODIST": "-Wdate-time -D_FORTIFY_SOURCE=3 -g -Werror=implicit-function-declaration -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer   -fstack-protector -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection   -g -fwrapv -O2     -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -D_Py_TIER2=3 -D_Py_JIT  -I../Include/internal -I../Include/internal/mimalloc",
+          "PY_LDFLAGS_NODIST": "-Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22python3.14%22%2C%22version%22:%223.14.4-1ubuntu0.2%22%2C%22architecture%22:%22amd64%22%7D  -Wl,-z,relro -g -fwrapv -O2    ",
+          "CC": "x86_64-linux-gnu-gcc",
+          "Py_GIL_DISABLED": 0,
+          "PGO_PROF_USE_FLAG": "",
+          "LLVM_PROF_MERGER": "true",
+          "HOST_GNU_TYPE": "x86_64-pc-linux-gnu",
+          "SOABI": "cpython-314-x86_64-linux-gnu"
+        },
+        "jit_available": true,
+        "jit_enabled": true,
+        "gil_enabled": true
+      },
+      "imports": {
+        "wall_seconds": 0.34389446299974225,
+        "cpu_seconds": 0.337367756
+      },
+      "kernels": {
+        "map_membership": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 258.29,
+            "p95": 285.57,
+            "p99": 359.828,
+            "mean": 236.16063366336633,
+            "stdev": 52.27420761861872
+          },
+          "cpu_ns_mean": 232.57737623762375,
+          "operations_per_second": 4234405.982435852,
+          "checksum": 68004
+        },
+        "movement_collision": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 532.83,
+            "p95": 615.293,
+            "p99": 1702.342,
+            "mean": 555.4722871287129,
+            "stdev": 452.8922891994373
+          },
+          "cpu_ns_mean": 496.1756831683168,
+          "operations_per_second": 1800269.8301459674,
+          "checksum": 102000
+        },
+        "player_name_1024": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 381.999,
+            "p95": 733.021,
+            "p99": 1285.017,
+            "mean": 425.1387326732673,
+            "stdev": 213.73560074970624
+          },
+          "cpu_ns_mean": 403.0879900990099,
+          "operations_per_second": 2352173.3569463594,
+          "checksum": 52141176
+        },
+        "npc_index_256": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 198.558,
+            "p95": 227.272,
+            "p99": 244.815,
+            "mean": 187.6029603960396,
+            "stdev": 35.16464243097626
+          },
+          "cpu_ns_mean": 187.11682178217822,
+          "operations_per_second": 5330406.289372769,
+          "checksum": 1033096056
+        },
+        "combat_backstab": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 184.963,
+            "p95": 208.898,
+            "p99": 225.69,
+            "mean": 173.61747524752477,
+            "stdev": 31.518547167213804
+          },
+          "cpu_ns_mean": 173.1459207920792,
+          "operations_per_second": 5759788.8609675355,
+          "checksum": 675932
+        },
+        "packet_serialization": {
+          "samples": 101,
+          "operations_per_sample": 1000,
+          "wall_ns": {
+            "p50": 663.853,
+            "p95": 1824.448,
+            "p99": 4729.714,
+            "mean": 864.2344356435643,
+            "stdev": 880.9562410626581
+          },
+          "cpu_ns_mean": 642.5155940594059,
+          "operations_per_second": 1157093.444506566,
+          "checksum": 510000
+        },
+        "ground_decode_30": {
+          "samples": 101,
+          "operations_per_sample": 50,
+          "wall_ns": {
+            "p50": 56357.46,
+            "p95": 63155.9,
+            "p99": 67176.16,
+            "mean": 55431.88356435644,
+            "stdev": 6275.041452488036
+          },
+          "cpu_ns_mean": 54820.288118811884,
+          "operations_per_second": 18040.159123205685,
+          "checksum": 181500
+        }
+      },
+      "peak_rss_bytes": 58691584,
+      "fixture": {
+        "players": 1024,
+        "maps": 8,
+        "npcs": 256,
+        "ground_stacks": 30,
+        "seed": "deterministic-v1"
+      }
+    }
+  ],
+  "limitations": [
+    "fresh process, warm filesystem cache; OS caches are not flushed",
+    "kernel throughput is not simultaneous-player capacity",
+    "no Redis, network, disk or Argon2 waits are included in kernels",
+    "PGO/LTO are measured as built; no interpreter rebuild is implied",
+    "JIT is recorded as available/enabled; unsupported builds are not treated as JIT measurements"
+  ]
+}

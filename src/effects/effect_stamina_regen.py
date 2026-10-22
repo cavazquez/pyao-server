@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.config.config_manager import ConfigManager, config_manager
 from src.effects.tick_effect import TickEffect
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 STAMINA_REGEN_RATE = ConfigManager.as_int(
     config_manager.get("game.stamina.regen_tick", 2)
 )  # Puntos regenerados por tick (cada 1 segundo)
+STAMINA_REGEN_RESTING = ConfigManager.as_int(config_manager.get("game.stamina.regen_resting", 5))
 
 
 class StaminaRegenEffect(TickEffect):
@@ -58,14 +60,14 @@ class StaminaRegenEffect(TickEffect):
     async def apply(
         self,
         user_id: int,
-        _player_repo: PlayerRepository,
+        player_repo: PlayerRepository,
         message_sender: MessageSender | None,
     ) -> None:
         """Aplica la regeneración de stamina.
 
         Args:
             user_id: ID del jugador.
-            _player_repo: Repositorio de jugadores (no usado, requerido por interfaz).
+            player_repo: Repositorio de jugadores y estado de descanso.
             message_sender: MessageSender para enviar updates.
         """
         # Verificar si el jugador debería regenerar stamina
@@ -80,6 +82,8 @@ class StaminaRegenEffect(TickEffect):
         # Regenerar stamina
         await self.stamina_service.regenerate_stamina(
             user_id=user_id,
-            amount=STAMINA_REGEN_RATE,
+            amount=STAMINA_REGEN_RESTING
+            if await player_repo.redis.hget(RedisKeys.player_user_stats(user_id), "resting") == "1"
+            else STAMINA_REGEN_RATE,
             message_sender=message_sender,
         )

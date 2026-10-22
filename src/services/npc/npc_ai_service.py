@@ -9,6 +9,7 @@ from src.services.npc.guard_ai import GUARD_RADIUS, defend
 from src.services.player_progression import publish_progress
 from src.services.visual_events import VisualEvents
 from src.utils.gold_atomic import operation_id
+from src.utils.redis_config import RedisKeys
 from src.utils.sounds import SoundID
 from src.utils.visual_effects import VisualEffectID
 
@@ -423,6 +424,20 @@ class NPCAIService:
             npc: NPC a procesar.
             candidate_positions: Candidatos compartidos sólo en esta ejecución del tick.
         """
+        if npc.gm_follow_user:
+            position = await self.player_repo.get_position(npc.gm_follow_user)
+            if (
+                position
+                and position["map"] == npc.map_id
+                and self.map_manager.get_player_message_sender(npc.gm_follow_user)
+            ):
+                if max(abs(position["x"] - npc.x), abs(position["y"] - npc.y)) > 1:
+                    await self.try_move_towards(npc, position["x"], position["y"])
+                return
+            npc.gm_follow_user = 0
+            await self.npc_service.npc_repository.redis.hset(
+                RedisKeys.npc_instance(npc.instance_id), "gm_follow_user", "0"
+            )
         if npc.role == "guard":
             await defend(self, npc)
             return

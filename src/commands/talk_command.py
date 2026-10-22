@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from time import time
 
 from src.commands.base import Command
+from src.services.classic_chat.catalog import command_token
 
 
 @dataclass
@@ -31,7 +32,7 @@ class TalkCommand(Command):
         Returns:
             True si el mensaje es el comando /METRICS, False en caso contrario.
         """
-        return self.message.upper().startswith("/METRICS")
+        return command_token(self.message) == "/METRICS"
 
     def is_clan_command(self) -> bool:
         """Determina si el mensaje es un comando de clan.
@@ -52,7 +53,7 @@ class TalkCommand(Command):
             "/TRANSFERIRLIDERAZGO",
             "/CLAN",
         ]
-        return any(message_upper.startswith(cmd) for cmd in clan_commands)
+        return command_token(message_upper) in clan_commands
 
     def parse_clan_command(self) -> tuple[str, list[str]] | None:
         """Parsea un comando de clan del mensaje.
@@ -79,7 +80,7 @@ class TalkCommand(Command):
         Returns:
             bool: True si el mensaje inicia con /COMERCIAR.
         """
-        return self.message.upper().strip().startswith("/COMERCIAR")
+        return command_token(self.message) == "/COMERCIAR"
 
     def parse_trade_command(self) -> tuple[str, list[str]] | None:
         """Parsea el comando /COMERCIAR.
@@ -104,7 +105,7 @@ class TalkCommand(Command):
         Returns:
             bool: True si el mensaje inicia con /PET.
         """
-        return self.message.upper().strip().startswith("/PET")
+        return command_token(self.message) == "/PET"
 
     def parse_pet_command(self) -> tuple[str, list[str]] | None:
         """Parsea el comando /PET.

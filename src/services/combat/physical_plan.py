@@ -9,8 +9,17 @@ from typing import TYPE_CHECKING, Any, cast
 
 from src.combat.combat_critical_calculator import CriticalCalculator
 from src.models.skill_data_loader import SKILL_RULES_KEY
+from src.services.classic_chat.world_rules import (
+    WORLD_REVISION,
+    WorldSnapshot,
+    combat_rejection,
+    duel,
+)
+from src.services.classic_chat.world_rules import policy as world_policy
+from src.services.classic_chat.world_rules import prepare as prepare_world
 from src.services.combat.barriers import absorb_damage
 from src.services.combat.clan_policy import ClanCombat
+from src.services.combat.npc_claims import claim_changes, claim_rejection, sharing_key
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat_snapshot import equipped, levels
 from src.services.npc.guard_ai import GUARD_RADIUS, guard_enemy
@@ -148,6 +157,7 @@ class PhysicalPlan:
         self.critical_roll = random.random()
         self.now = time.time()
         self.world_guard: Callable[[Snapshot], bool] | None = None
+        self.world: WorldSnapshot | None = None
         self.clan_policy: ClanCombat | None = None
         users = {request.user_id, request.target_player} - {0}
         resources = [
@@ -161,7 +171,12 @@ class PhysicalPlan:
             )
         ]
         if request.target_npc:
-            resources.append(Resource(RedisKeys.npc_instance(request.target_npc), "hash"))
+            resources.extend(
+                (
+                    Resource(RedisKeys.npc_instance(request.target_npc), "hash"),
+                    Resource(sharing_key(request.user_id), "set"),
+                )
+            )
         self.resources = tuple({r.key: r for r in resources}.values())
 
     def decide(self, snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals, too-many-statements] - un único commit de combate
@@ -172,6 +187,17 @@ class PhysicalPlan:
         """
         request = self.request
         user = request.user_id
+        if self.world is not None:
+            merged = self.world.merge(snapshot, user)
+            if merged is None:
+                return Decision(
+                    {
+                        "applied": False,
+                        "message": "Las reglas o el mapa cambiaron; vuelve a intentarlo.",
+                    },
+                    {},
+                )
+            snapshot = merged
         source_key, pos_key = RedisKeys.player_user_stats(user), RedisKeys.player_position(user)
         source, position = (
             cast("dict[str, str]", snapshot[source_key]),
@@ -199,7 +225,9 @@ class PhysicalPlan:
         rejection = ""
         if request.target_player:
             rejection = (
-                PvpPolicy.configured().rejection(
+                world_policy(
+                    snapshot, user, PvpPolicy.configured(), target=request.target_player
+                ).rejection(
                     user,
                     request.target_player,
                     position,
@@ -212,6 +240,9 @@ class PhysicalPlan:
             )
         elif str(target.get("is_attackable", "false")).lower() not in {"1", "true"}:
             rejection = "No puedes atacar a ese NPC."
+        elif request.target_npc:
+            rejection = claim_rejection(snapshot, target, user, self.now)
+        rejection = rejection or combat_rejection(snapshot, user, request.target_player)
         if rejection:
             return Decision({"applied": False, "message": rejection}, {})
         invalid_state = (
@@ -265,6 +296,7 @@ class PhysicalPlan:
                 "min_sta": str(int(source["min_sta"]) - ATTACK_STAMINA),
                 "hidden_until": "0",
                 "meditating": "0",
+                "resting": "0",
             }
         }
         projectile_asset = 0
@@ -342,10 +374,21 @@ class PhysicalPlan:
                 kill_changes(source, target, player=bool(request.target_player))
             )
         writes[target_key] = (
-            {**barrier, **hp_changes(target, target_position, hp, f"physical:{user}:{self.now}")}
+            {
+                **barrier,
+                **hp_changes(
+                    target,
+                    target_position,
+                    hp,
+                    f"physical:{user}:{self.now}",
+                    duel=duel(snapshot, user, request.target_player),
+                ),
+            }
             if request.target_player
             else death_changes(hp, user, now=self.now)
         )
+        if request.target_npc and amount > 0:
+            cast("dict[str, str]", writes[target_key]).update(claim_changes(target, user, self.now))
         result = {
             "applied": True,
             "damage": amount,
@@ -376,6 +419,9 @@ async def commit_physical(redis: Redis, plan: PhysicalPlan, identity: str) -> di
         Recibo del golpe validado sobre Redis.
     """
     request = plan.request
+    if plan.world is None:
+        plan.world = await prepare_world(redis, request.user_id)
+        plan.resources = (*plan.resources, Resource(WORLD_REVISION, "string"))
     if request.target_player and plan.clan_policy is None:
         plan.clan_policy = await ClanCombat.prepare(redis, request.user_id, request.target_player)
         plan.resources = tuple(

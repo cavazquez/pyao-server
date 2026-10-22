@@ -6,6 +6,9 @@ from typing import TYPE_CHECKING
 from src.network.chat_channel import deliver_chat
 from src.security.chat_mutes import chat_rejection
 
+RGB_COMPONENTS = 3
+RGB_MAX = 255
+
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
     from src.messaging.message_sender import MessageSender
@@ -75,6 +78,13 @@ class TalkPublicHandler:
 
         # Enviar a todos los jugadores en el mapa (incluyendo el emisor)
         all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
+        rgb = await self.player_repo.redis.hget(f"player:{user_id}:user_stats", "chat_rgb")
+        values = [int(value) for value in str(rgb).split(",")] if rgb else []
+        color = (
+            (values[0], values[1], values[2])
+            if len(values) == RGB_COMPONENTS and all(0 <= value <= RGB_MAX for value in values)
+            else None
+        )
         for sender in all_senders:
             await deliver_chat(
                 sender,
@@ -84,6 +94,7 @@ class TalkPublicHandler:
                 message,
                 legacy=formatted_message,
                 context=f"map:{map_id}",
+                color=color,
             )
 
         logger.debug(

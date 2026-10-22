@@ -4,6 +4,8 @@ import logging
 import time
 from typing import TYPE_CHECKING
 
+from src.utils.redis_config import RedisKeys
+
 # Constante para identificar NPCs
 NPC_CHAR_INDEX_START = 10001
 
@@ -339,6 +341,20 @@ class MultiplayerBroadcastService:
         # Obtener todos los jugadores en el mapa
         all_senders = self.map_manager.get_all_message_senders_in_map(map_id)
 
+        npc = (
+            self.map_manager.get_npc_by_char_index(map_id, char_index)
+            if char_index >= NPC_CHAR_INDEX_START
+            else None
+        )
+        show_name = npc.show_name if npc is not None else True
+        if npc is None and char_index < NPC_CHAR_INDEX_START:
+            show_name = (
+                await self.player_repo.redis.hget(
+                    RedisKeys.player_user_stats(char_index), "show_name"
+                )
+                != "0"
+            )
+
         notified = 0
         for sender in all_senders:
             await sender.send_character_create(
@@ -352,6 +368,7 @@ class MultiplayerBroadcastService:
                 weapon=weapon,
                 shield=shield,
                 helmet=helmet,
+                show_name=show_name,
             )
             notified += 1
 

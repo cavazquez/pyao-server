@@ -10,6 +10,7 @@ from src.command_handlers.login_spawn_handler import LoginSpawnHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.login_command import LoginCommand
 from src.network.session_manager import SessionManager
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.game.map_manager import MapManager
@@ -153,6 +154,9 @@ class LoginCommandHandler(CommandHandler):
             Estado confirmado del jugador inicializado.
         """
         logger.info("✅ Login exitoso para %s (ID: %d, Clase: %d)", username, user_id, user_class)
+        await self.player_repo.redis.hset(
+            RedisKeys.account_data(username), "last_ip", self.message_sender.connection.address[0]
+        )
 
         await self.player_repo.redis.hset(
             f"player:{user_id}:user_stats", "class_id", str(user_class)

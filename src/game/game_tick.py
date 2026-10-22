@@ -57,13 +57,17 @@ class GameTick:
             "effect_metrics": {},  # {effect_name: {total_time_ms, count, max_time_ms}}
         }
 
-    def add_effect(self, effect: TickEffect) -> None:
+    def add_effect(self, effect: TickEffect, *, first: bool = False) -> None:
         """Agrega un efecto al sistema de tick.
 
         Args:
             effect: Efecto a agregar.
+            first: Ejecutarlo antes de los efectos ya registrados.
         """
-        self.effects.append(effect)
+        if first:
+            self.effects.insert(0, effect)
+        else:
+            self.effects.append(effect)
         logger.info("Efecto agregado: %s", effect.get_name())
 
     async def _tick_loop(self) -> None:

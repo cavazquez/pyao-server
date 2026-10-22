@@ -81,3 +81,14 @@ class NPC:
     random_spawn_area: str = ""
     loot_profile: str = "none"
     loot_material: int = 0
+    gm_follow_user: int = 0
+
+    @property
+    def show_name(self) -> bool:
+        """Indica si es un habitante amistoso con nombre visible en el mapa."""
+        return (
+            self.role in {"inhabitant", "guard"}
+            and not self.is_hostile
+            and not self.is_tamed
+            and not self.summoned_by_user_id
+        )

@@ -66,6 +66,7 @@ class NPCMapSpawner:
                     "es_atacable", full_npc_data.get("is_attackable", True)
                 ),
                 is_merchant=npc_data["trader"],
+                role=str(full_npc_data.get("role", "inhabitant")),
             )
 
             # Agregar al MapManager
@@ -80,6 +81,7 @@ class NPCMapSpawner:
                 x=npc_obj.x,
                 y=npc_obj.y,
                 name=npc_obj.name,
+                show_name=npc_obj.show_name,
             )
 
         logger.info("Spawneados %d NPCs para el jugador", len(npc_list))

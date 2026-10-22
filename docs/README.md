@@ -29,6 +29,8 @@ Setup, protocolo, datos y herramientas.
 - [DATA_ITEMS.md](guides/DATA_ITEMS.md) — Convenciones de items
 - [TOOLS_DIRECTORY.md](guides/TOOLS_DIRECTORY.md) — Herramientas en `tools/`
 - [HOW_TO_SET_GM.md](guides/HOW_TO_SET_GM.md) — Asignar GM
+- [Chat clásico](development/classic-chat.md) — Comandos de jugador y GM, permisos y adaptaciones del original
+- [Estudio de rendimiento Python](development/python-performance-study.md) — Mediciones reproducibles de CPython, flags y JIT
 - [WORK_SYSTEM.md](guides/WORK_SYSTEM.md) — Trabajo (talar, minería, pesca)
 
 ## Arquitectura ([architecture/](architecture/README.md))
@@ -48,6 +50,8 @@ Setup, protocolo, datos y herramientas.
 - [BANK_SYSTEM.md](systems/BANK_SYSTEM.md) — Banco
 - [PLAYER_TRADE_SYSTEM.md](systems/PLAYER_TRADE_SYSTEM.md) — Comercio entre jugadores
 - [ITEMS_SYSTEM.md](systems/ITEMS_SYSTEM.md) — Ítems e inventario
+- [Estudio de durabilidad](systems/item-durability-study.md) — Identidad, usos, vida útil y coste medido del prototipo
+- [Estudio de lotería](systems/lottery-study.md) — NPC físico, probabilidades, comisión y pago durable propuestos
 - [player-appearance.md](operations/player-appearance.md) — Equipo visible, estados del personaje y sincronización entre clientes
 - [LOOT_SYSTEM.md](systems/LOOT_SYSTEM.md) — Botín
 - [CLAN_SYSTEM.md](systems/CLAN_SYSTEM.md) — Clanes/guilds

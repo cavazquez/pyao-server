@@ -305,6 +305,7 @@ class MessageSender:
         name: str = "",
         nick_color: int = 0,
         privileges: int = 0,
+        show_name: bool = True,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -323,6 +324,7 @@ class MessageSender:
             name: Nombre del personaje (string), por defecto vacío.
             nick_color: Color del nick (byte), por defecto 0.
             privileges: Privilegios del personaje (byte), por defecto 0.
+            show_name: Permite mostrar la etiqueta de nombre en el mapa.
         """
         self.status_effects.invalidate_character(char_index)
         await self.character.send_character_create(
@@ -340,6 +342,7 @@ class MessageSender:
             name,
             nick_color,
             privileges,
+            show_name,
         )
 
     async def send_character_change(

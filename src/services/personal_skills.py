@@ -10,6 +10,7 @@ from src.economy.devaluation_fractions import move_gold_remainder
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.models.skill_data_loader import SKILL_RULES_KEY
 from src.services.action_resources import player_action_resources
+from src.services.classic_chat.world_rules import WORLD_REVISION, policy, prepare, rules, trigger
 from src.services.combat.pvp_policy import PvpPolicy
 from src.services.combat_snapshot import levels
 from src.services.crafting import consume_materials
@@ -18,6 +19,8 @@ from src.services.skill_training import trained_decision
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
+
+SAFE_TRIGGER = 4
 
 MAX_SKILL = 100
 THIEF_CLASS = 5
@@ -66,6 +69,7 @@ async def hide(player: PlayerRepository, user: int, identity: str) -> dict[str, 
     """
     sample, now = random.random(), time.time()
     key = RedisKeys.player_user_stats(user)
+    world = await prepare(player.redis.redis, user)
 
     def decide(snapshot: Snapshot) -> Decision:
         stats = cast("dict[str, str]", snapshot[key])
@@ -78,13 +82,21 @@ async def hide(player: PlayerRepository, user: int, identity: str) -> dict[str, 
                 {"applied": True, "message": "Has dejado de ocultarte."},
                 {key: {"hidden_until": "0"}},
             )
+        merged = world.merge(snapshot, user)
+        if merged is None:
+            return Decision(
+                {"applied": False, "message": "El mapa cambió; vuelve a intentarlo."}, {}
+            )
+        position = cast("dict[str, str]", snapshot[RedisKeys.player_position(user)])
+        if rules(merged, int(position.get("map", 0))).get("no_hide") == "1":
+            return Decision({"applied": False, "message": "No puedes ocultarte en este mapa."}, {})
         level = levels(snapshot, user)["ocultarse"]
         chance = ((0.000002 * level - 0.0002) * level + 0.0064) * level + 0.1124
         success = sample < min(1.0, chance)
-        rules = json.loads(str(snapshot.get(SKILL_RULES_KEY) or "{}"))
-        duration = max(1.0, float(rules.get("hide_max_seconds", 60)) * (level + 10) / 110)
+        training_rules = json.loads(str(snapshot.get(SKILL_RULES_KEY) or "{}"))
+        duration = max(1.0, float(training_rules.get("hide_max_seconds", 60)) * (level + 10) / 110)
         duration *= float(
-            rules.get("hiding_duration_modifiers", {}).get(stats.get("class_id", "0"), 1.0)
+            training_rules.get("hiding_duration_modifiers", {}).get(stats.get("class_id", "0"), 1.0)
         )
         changes = {"hidden_until": str(now + duration if success else 0), "meditating": "0"}
         return trained_decision(
@@ -104,7 +116,11 @@ async def hide(player: PlayerRepository, user: int, identity: str) -> dict[str, 
         )
 
     return await transact(
-        player.redis.redis, player_action_resources(user), identity, {"hide": user}, decide
+        player.redis.redis,
+        (*player_action_resources(user), Resource(WORLD_REVISION, "string")),
+        identity,
+        {"hide": user},
+        decide,
     )
 
 
@@ -127,8 +143,16 @@ async def steal(
     resources = tuple(
         {r.key: r for uid in sorted({user, target}) for r in player_action_resources(uid)}.values()
     )
+    world = await prepare(player.redis.redis, user)
+    resources = (*resources, Resource(WORLD_REVISION, "string"))
 
     def decide(snapshot: Snapshot) -> Decision:  # ruff: ignore[too-many-locals] - dos inventarios y saldos en un commit
+        merged = world.merge(snapshot, user)
+        if merged is None:
+            return Decision(
+                {"applied": False, "message": "El mapa cambió; vuelve a intentarlo."}, {}
+            )
+        snapshot = merged
         stats, victim = (
             cast("dict[str, str]", snapshot[source_key]),
             cast("dict[str, str]", snapshot[target_key]),
@@ -137,7 +161,13 @@ async def steal(
             cast("dict[str, str]", snapshot[RedisKeys.player_position(uid)])
             for uid in (user, target)
         )
-        error = PvpPolicy.configured().rejection(user, target, pos, target_pos, stats, victim)
+        error = policy(snapshot, user, PvpPolicy.configured()).rejection(
+            user, target, pos, target_pos, stats, victim
+        )
+        if rules(snapshot, int(pos.get("map", 0))).get("no_steal") == "1" or any(
+            trigger(snapshot, p) == SAFE_TRIGGER for p in (pos, target_pos)
+        ):
+            error = "No puedes robar en esta zona."
         if error or not valid_actor(
             snapshot,
             user,

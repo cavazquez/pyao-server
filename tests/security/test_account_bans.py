@@ -51,6 +51,19 @@ async def test_regular_account_cannot_block_or_unblock(redis_client):
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "text", ["/BAN", "/BAN Operator invalid private", "/UNBAN", "/MUTE", "/UNMUTE"]
+)
+async def test_text_moderation_rejects_role_before_parsing_or_reading_target(redis_client, text):
+    """Una petición incompleta tampoco salta la autorización ni consulta al objetivo."""
+    repo, _actor, target = await accounts(redis_client)
+    with patch.object(repo, "get_account", new=AsyncMock(wraps=repo.get_account)) as lookup:
+        result = await AccountModeration(repo).handle_text(target, text)
+        assert result == {"applied": False, "message": "No tienes permisos de moderación."}
+        lookup.assert_awaited_once_with("Target")
+
+
+@pytest.mark.asyncio
 async def test_identified_ban_replays_one_audit_and_blocks_reservation(redis_client):
     """El replay no prolonga el bloqueo ni genera una segunda acción auditada."""
     repo, actor, target = await accounts(redis_client)
@@ -128,6 +141,7 @@ async def test_authentication_checks_password_before_disclosing_account_ban(redi
     """Una contraseña incorrecta conserva el error genérico incluso en una cuenta bloqueada."""
     repo, actor, target = await accounts(redis_client)
     sender = MagicMock()
+    sender.connection.address = ("127.0.0.1", 12345)
     sender.send_error_msg = AsyncMock()
     with patch("src.services.account_moderation.require_durable", new=AsyncMock()):
         await AccountModeration(repo).apply(actor, "Target", active=True, days=0, reason="Ensayo")
