@@ -1,5 +1,6 @@
 """Gestor de mapas y jugadores para broadcast multijugador."""
 
+import asyncio
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
@@ -53,6 +54,8 @@ class MapManager(SpatialIndexMixin):
         - _players_by_map: {map_id: {user_id: (message_sender, username)}} (delegado en PlayerIndex)
         - _npcs_by_map: {map_id: {instance_id: NPC}} (delegado en NpcIndex)
         """
+        # Serializa el commit y la publicación local de ediciones administrativas.
+        self.map_edit_lock = asyncio.Lock()
         # Índice espacial para colisiones
         self._tile_occupation_store = TileOccupation()
         self._tile_occupation: dict[tuple[int, int, int], str] = self._tile_occupation_store.data

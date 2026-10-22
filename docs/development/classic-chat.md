@@ -142,6 +142,9 @@ etiquetas y reconexión, y rechaza todas las rutas GM desde un jugador común po
 La consola conserva hasta 200 párrafos: una respuesta paginada no pierde su encabezado
 al superar las diez líneas antiguas. La aceptación prolongada usa además el binario
 y fuentes limpios de la versión que se va a distribuir.
+Las ediciones de terreno conservan el orden entre commit Redis y publicación local,
+incluso con dos GM y una confirmación lenta. Su exclusión es independiente de las
+acciones normales y vuelve a comprobar permisos después de cualquier espera.
 
 Estudios separados: [durabilidad individual](../systems/item-durability-study.md),
 [lotería física](../systems/lottery-study.md) y [rendimiento de CPython](python-performance-study.md).
