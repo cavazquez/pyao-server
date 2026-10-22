@@ -44,6 +44,8 @@ HANDLERS = {
     **ADMIN_SOCIAL_HANDLERS,
 }
 
+MAP_EDITS = frozenset({"/BLOQ", "/TRIGGER", "/CT", "/DT", "/MODMAPINFO"})
+
 
 class ClassicChatService:
     """No interpreta prefijos, evalúa código ni usa argumentos como identidad."""
@@ -54,8 +56,18 @@ class ClassicChatService:
 
     async def execute(self, user: int, text: str, sender: MessageSender) -> None:
         """Valida autorización antes de acceder a datos o ejecutar una acción."""
+        name = command_token(text)
+        if name in MAP_EDITS:
+            account = await self.deps.account_repo.get_account_by_user_id(user) or {}
+            if account.get("is_gm") != "1" or is_blocked(account, prefix="ban_"):
+                await sender.send_console_msg("No tienes permisos de Game Master.")
+                return
+            async with self.deps.map_manager.map_edit_lock:
+                # _execute vuelve a validar el rol después de cualquier espera.
+                await self._execute(user, text, sender)
+            return
         social = self.deps.world_state
-        if social is not None and command_token(text) in {
+        if social is not None and name in {
             "/FUNDARCLANGM",
             "/RAJARCLAN",
             "/BANCLAN",
