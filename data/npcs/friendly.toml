@@ -746,6 +746,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 65
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gallo"
 descripcion = "Un gallo."
@@ -761,6 +762,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 66
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cerdo"
 descripcion = "Un cerdo."
@@ -776,6 +778,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 67
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Vaca"
 descripcion = "Un vaca."
@@ -908,6 +911,7 @@ es_mercader = true
 accepted_obj_types = [3]
 [[npc]]
 id = 75
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Cuervo"
 descripcion = "Un cuervo."
@@ -923,6 +927,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 76
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Hormiga"
 descripcion = "Un hormiga."
@@ -938,6 +943,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 77
+role = "creature"
 appearance = { sounds = [47, 47, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Rata"
 descripcion = "Un rata."
@@ -953,6 +959,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 78
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Oso Pardo Domesticado"
 descripcion = "Un oso pardo domesticado."
@@ -968,6 +975,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 79
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tortuga de Mar"
 descripcion = "Un tortuga de mar."
@@ -1120,6 +1128,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 89
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Fuego Fatuo"
 descripcion = "Un fuego fatuo."
@@ -1135,6 +1144,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 90
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Morgolock's Soul"
 descripcion = "Un morgolock's soul."
@@ -1150,6 +1160,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 91
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Gran Águila"
 descripcion = "Un gran águila."
@@ -1165,6 +1176,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 92
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Agua"
 descripcion = "Un elemental de agua."
@@ -1180,6 +1192,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 93
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Fuego"
 descripcion = "Un elemental de fuego."
@@ -1195,6 +1208,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 94
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Elemental de Tierra"
 descripcion = "Un elemental de tierra."
@@ -1210,6 +1224,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 95
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Jabalí"
 descripcion = "Un jabalí."
@@ -1225,6 +1240,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 96
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Tigre de Bengala"
 descripcion = "Un tigre de bengala."
@@ -1240,6 +1256,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 97
+role = "creature"
 appearance = { sounds = [0, 0, 96], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Pato"
 descripcion = "Un pato."
@@ -1255,6 +1272,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 98
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Demonio Legionario"
 descripcion = "Si deseas unirte a la Legión Oscura escribe /ENLISTAR"
@@ -1400,6 +1418,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 107
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Golem Oscuro"
 descripcion = "Un golem oscuro."
@@ -2714,6 +2733,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 4
+role = "creature"
 appearance = { sounds = [0, 8, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = false }
 nombre = "Vaca"
 descripcion = "Un vaca."
@@ -2891,6 +2911,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 17
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Conejo"
 descripcion = "Un conejo."
@@ -2906,6 +2927,7 @@ respawn_time = 0
 respawn_time_max = 0
 [[npc]]
 id = 18
+role = "creature"
 appearance = { sounds = [0, 0, 0], sounds_source = "AO 0.13.3 NPCs.dat; identidad verificada por ID y nombre", silent_intentionally = true }
 nombre = "Pavo Real"
 descripcion = "Un pavo real."

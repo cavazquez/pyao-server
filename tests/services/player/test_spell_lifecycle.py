@@ -139,6 +139,40 @@ async def cast(world, spell=2, x=51, y=50, **kwargs: object):
 
 
 @pytest.mark.asyncio
+async def test_spell_chat_names_creature_without_nameplate_once(world):
+    """Ocultar el nombre en el mapa conserva el objetivo en el chat, también al reintentar."""
+    npc = await world.npcs.create_npc_instance(
+        npc_id=500,
+        char_index=10001,
+        map_id=2,
+        x=52,
+        y=50,
+        heading=3,
+        name="Murciélago",
+        description="",
+        body_id=9,
+        head_id=0,
+        hp=500,
+        max_hp=500,
+        level=1,
+        is_hostile=True,
+        is_attackable=True,
+        respawn_time=0,
+        respawn_time_max=0,
+        gold_min=0,
+        gold_max=0,
+    )
+    world.maps.add_npc(2, npc)
+    assert npc.show_name is False
+    identity = operation_id()
+    assert await cast(world, x=52, identity=identity)
+    assert await cast(world, x=52, identity=identity)
+    expected = f"Has lanzado {world.catalog.get_spell_data(2)['name']} sobre Murciélago."
+    messages = [call.args[0] for call in world.senders[1].send_console_msg.await_args_list]
+    assert messages.count(expected) == 1
+
+
+@pytest.mark.asyncio
 async def test_cost_and_damage_once_and_replay(world):
     """Repetir una intención no vuelve a cobrar ni a dañar."""
     identity = operation_id()
@@ -574,8 +608,13 @@ async def test_lost_ack_internal_retry_has_one_cost_and_effect(world, monkeypatc
 
     async def execute(self, *args: object, **kwargs: object):
         nonlocal lost
+        commit = any(
+            str(arguments[0]).upper() == "SET"
+            and str(arguments[1]).startswith("operation:resources:")
+            for arguments, _options in self.command_stack
+        )
         result = await original(self, *args, **kwargs)
-        if not lost:
+        if commit and not lost:
             lost = True
             message = "synthetic lost EXEC ACK"
             raise RedisConnectionError(message)
@@ -583,6 +622,7 @@ async def test_lost_ack_internal_retry_has_one_cost_and_effect(world, monkeypatc
 
     monkeypatch.setattr(pipeline_type, "execute", execute)
     assert await cast(world)
+    assert lost
     assert (await world.player.get_mana(1))[0] == 4990
     assert (await world.player.get_stamina(1))[0] == 4999
     assert 94 <= await world.player.get_current_hp(2) <= 98

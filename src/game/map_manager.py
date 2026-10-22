@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from src.game.door_state import DoorState
 from src.game.exit_index import ExitIndex
@@ -79,6 +79,10 @@ class MapManager(SpatialIndexMixin):
 
         # Tamaños de mapas: {map_id: (width, height)}
         self._map_sizes: dict[int, tuple[int, int]] = {}
+        self.tile_overrides: dict[tuple[int, int, int], dict[str, Any]] = {}
+        self.overlay_positions: dict[int, set[tuple[int, int]]] = {}
+        self.map_overrides: dict[int, dict[str, str]] = {}
+        self.training_maps: set[int] = set()
 
         # Ground items index (compatibilidad con _ground_items)
         self._ground_items_repo = ground_items_repo
@@ -512,7 +516,10 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Casillas de portal indexadas por mapa.
         """
-        return self._exit_index.positions(map_id)
+        positions = set(self._exit_index.positions(map_id)) | self.overlay_positions.get(
+            map_id, set()
+        )
+        return tuple(sorted((x, y) for x, y in positions if self.get_exit_tile(map_id, x, y)))
 
     def release_map_source_cache(self) -> None:
         """Descarta las copias de lectura una vez cargado el mundo en sus índices."""
@@ -540,6 +547,9 @@ class MapManager(SpatialIndexMixin):
         Returns:
             Dict con {to_map, to_x, to_y} si es un exit, None si no.
         """
+        overlay = self.tile_overrides.get((map_id, x, y), {})
+        if "portal" in overlay:
+            return cast("dict[str, int] | None", overlay["portal"])
         return self._exit_index.get_exit_tile(map_id, x, y)
 
     def block_tile(self, map_id: int, x: int, y: int) -> None:

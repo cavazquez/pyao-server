@@ -90,6 +90,8 @@ class NPCMessageSender:
                 name=name,
                 nick_color=nick_color,
                 privileges=privileges,
+                show_name=not hostile
+                and bool(npc_data.get("show_name", is_trader or npc_data.get("role") == "guard")),
             )
         )
 

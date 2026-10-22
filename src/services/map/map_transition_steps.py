@@ -39,6 +39,7 @@ class MapTransitionContext:
     helmet: int = 0
     position_committed: bool = False
     navigation_changed: bool = False
+    show_name: bool = True
 
 
 class MapTransitionStep(ABC):
@@ -202,6 +203,7 @@ class SendSelfCharacterCreateStep(MapTransitionStep):
             x=context.new_x,
             y=context.new_y,
             name=context.username,
+            show_name=context.show_name,
         )
 
 

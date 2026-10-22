@@ -355,9 +355,11 @@ class SpellService:
             )
         delta = int(result.get("hp_delta", 0))
         actor = request.target_player
+        target_name = ""
         if request.target_npc:
             target_npc = await self.npc_repo.get_npc(request.target_npc)
             actor = target_npc.char_index if target_npc else 0
+            target_name = target_npc.name if target_npc else ""
             if delta < 0 and target_npc and target_npc.snd2 and self.broadcast_service:
                 await self.broadcast_service.broadcast_play_wave(
                     map_id=target_npc.map_id,
@@ -503,7 +505,10 @@ class SpellService:
                     )
         await self._publish_spell_media(request.user_id, spell, actors, sender)
         if announce:
-            await sender.send_console_msg(f"Has lanzado {spell.get('name', 'un hechizo')}.")
+            target_suffix = f" sobre {target_name}" if target_name else ""
+            await sender.send_console_msg(
+                f"Has lanzado {spell.get('name', 'un hechizo')}{target_suffix}."
+            )
 
     async def _publish_spell_media(
         self,

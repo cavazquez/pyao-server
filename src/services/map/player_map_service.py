@@ -42,6 +42,7 @@ class PlayerVisualData:
     weapon: int = 0
     shield: int = 0
     helmet: int = 0
+    show_name: bool = True
 
 
 class PlayerMapService:
@@ -119,6 +120,7 @@ class PlayerMapService:
             visual.body,
             visual.head,
             **visual.equipment(),
+            show_name=stats.get("show_name", "1") != "0",
         )
 
     async def _send_players_in_map(
@@ -165,6 +167,7 @@ class PlayerMapService:
                 x=other_position["x"],
                 y=other_position["y"],
                 name=other_visual.username,
+                show_name=other_visual.show_name,
             )
             players_sent += 1
             if players_sent % ENTITY_SEND_BATCH == 0:
@@ -200,6 +203,7 @@ class PlayerMapService:
                 fx=0,
                 loops=0,
                 name=npc.name,
+                show_name=npc.show_name,
             )
             npcs_sent += 1
             if npcs_sent % ENTITY_SEND_BATCH == 0:
@@ -273,6 +277,21 @@ class PlayerMapService:
         count = await self._unblock_exit_tiles(map_id, sender)
         if self.door_world is not None:
             count += await self.door_world.snapshot(map_id, sender)
+        music = self.map_manager.map_overrides.get(map_id, {}).get("music")
+        if music is not None:
+            await sender.send_play_midi(int(music))
+        for x, y in sorted(self.map_manager.overlay_positions.get(map_id, set())):
+            state = self.map_manager.tile_overrides[map_id, x, y]
+            if "blocked" in state:
+                await sender.send_block_position(x, y, bool(state["blocked"]))
+            if "portal" in state:
+                if state["portal"]:
+                    await sender.send_object_create(
+                        x, y, self._item_catalog.get_grh_index(651) or 0
+                    )
+                else:
+                    await sender.send_object_delete(x, y)
+            count += 1
         return count
 
     async def spawn_in_map(
@@ -322,6 +341,7 @@ class PlayerMapService:
             x=x,
             y=y,
             name=visual_data.username,
+            show_name=visual_data.show_name,
         )
 
         # 3. Enviar todos los jugadores existentes en el mapa
@@ -372,6 +392,8 @@ class PlayerMapService:
         new_y: int,
         heading: int,
         message_sender: MessageSender,
+        *,
+        home_deadline: float | None = None,
     ) -> bool:
         """Transiciona un jugador de un mapa a otro (usado en cambios de mapa).
 
@@ -388,6 +410,7 @@ class PlayerMapService:
             new_y: Nueva posición Y.
             heading: Dirección del jugador.
             message_sender: MessageSender del jugador.
+            home_deadline: Plazo observado de regreso al hogar, si es un fantasma.
 
         Returns:
             Si se confirmó el destino conservando las validaciones de llegada.
@@ -424,6 +447,7 @@ class PlayerMapService:
                 heading,
                 water,
                 identity,
+                home_deadline=home_deadline,
             )
             if not result["applied"]:
                 return await self._reject_arrival(
@@ -525,6 +549,7 @@ class PlayerMapService:
             username=visual_data.username,
             char_body=visual_data.char_body,
             char_head=visual_data.char_head,
+            show_name=visual_data.show_name,
             weapon=visual_data.weapon,
             shield=visual_data.shield,
             helmet=visual_data.helmet,
@@ -617,6 +642,7 @@ class PlayerMapService:
                 fx=npc.fx_loop if hasattr(npc, "fx_loop") else 0,
                 loops=-1 if hasattr(npc, "fx_loop") and npc.fx_loop > 0 else 0,
                 name=npc.name,
+                show_name=npc.show_name,
             )
             if index % ENTITY_SEND_BATCH == 0:
                 await asyncio.sleep(0)

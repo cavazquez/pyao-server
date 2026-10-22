@@ -64,4 +64,10 @@ class MeditationEffect(TickEffect):
             await message_sender.send_create_fx(char_index=user_id, fx=0, loops=0)
         if result.get("recovered"):
             await message_sender.send_update_mana(int(result["mana"]))
+            await message_sender.send_console_msg(
+                f"Meditando recuperas {int(result['recovered'])} puntos de maná "
+                f"(maná actual: {int(result['mana'])})."
+            )
+        if result.get("full"):
+            await message_sender.send_console_msg("Tu maná está completo. Dejas de meditar.")
         await publish_progress(player_repo, user_id, message_sender)

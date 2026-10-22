@@ -16,6 +16,9 @@ def mock_player_repo() -> MagicMock:
     """Mock de PlayerRepository."""
     repo = MagicMock()
     repo.get_position = AsyncMock(return_value={"map": 1, "x": 50, "y": 50})
+    repo.redis.redis.hset = AsyncMock()
+    repo.redis.redis.expire = AsyncMock()
+    repo.redis.redis.hgetall = AsyncMock(return_value={})
     return repo
 
 

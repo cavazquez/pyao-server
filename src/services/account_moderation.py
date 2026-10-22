@@ -13,6 +13,8 @@ from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 
+COMMAND_AND_NAME = 2
+
 if TYPE_CHECKING:
     from src.repositories.account_repository import AccountRepository
 
@@ -162,11 +164,24 @@ class AccountModeration:
         Returns:
             Resultado o sintaxis corregible por el operador.
         """
+        operator = await self.accounts.get_account_by_user_id(actor)
+        if not operator or operator.get("is_gm") != "1" or is_blocked(operator, prefix="ban_"):
+            return {"applied": False, "message": "No tienes permisos de moderación."}
         command = text.split(maxsplit=1)[0].upper()
         if command in {"/MUTE", "/UNMUTE"}:
             return await moderate_chat(self.accounts, actor, text)
         parts = text.split(maxsplit=3 if command == "/BAN" else 2)
         try:
+            payload = text.strip().split(maxsplit=1)
+            if command == "/BAN" and len(payload) == COMMAND_AND_NAME and "@" in payload[1]:
+                name, reason = payload[1].split("@", 1)
+                return await self.apply(
+                    actor, name.strip(), active=True, days=0, reason=reason.strip()
+                )
+            if command == "/UNBAN" and len(parts) == COMMAND_AND_NAME:
+                return await self.apply(
+                    actor, parts[1], active=False, days=0, reason="Revocado por administración"
+                )
             if command == "/BAN" and len(parts) == len(("command", "user", "days", "reason")):
                 return await self.apply(
                     actor, parts[1], active=True, days=int(parts[2]), reason=parts[3]
@@ -177,5 +192,8 @@ class AccountModeration:
             pass
         return {
             "applied": False,
-            "message": "Uso: /BAN nombre días motivo (0: permanente); /UNBAN nombre motivo.",
+            "message": (
+                "Uso: /BAN nombre@motivo o /BAN nombre días motivo (0: permanente); "
+                "/UNBAN nombre [motivo]."
+            ),
         }

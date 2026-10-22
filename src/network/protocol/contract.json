@@ -1561,6 +1561,10 @@
           {
             "name": "privileges",
             "type": "u8"
+          },
+          {
+            "name": "show_name",
+            "type": "u8"
           }
         ]
       },

@@ -55,12 +55,13 @@ class PlayerPositionMixin:
     ) -> dict[int, dict[str, int]]:
         """Lee candidatos en lotes acotados, sin conservar snapshots entre acciones.
 
-        El filtro de vida sólo lee HP. No consulta ni liquida saldos de oro para
+        El filtro de candidatos sólo lee HP y la exclusión administrativa de NPC.
+        No consulta ni liquida saldos de oro para
         elegir un objetivo; el ataque vuelve a validar su estado autoritativo.
 
         Args:
             user_ids: Jugadores solicitados, en orden de selección.
-            alive_only: Excluye jugadores sin estadísticas o con HP <= 0.
+            alive_only: Excluye jugadores sin vida o ignorados por los NPC.
 
         Returns:
             Posiciones existentes, por ID, con los defaults de get_position.
@@ -82,7 +83,11 @@ class PlayerPositionMixin:
                     continue
                 if alive_only:
                     stats = rows[index * stride + 1]
-                    if not stats or int(stats.get("min_hp", stats.get("hp", 100))) <= 0:
+                    if (
+                        not stats
+                        or int(stats.get("min_hp", stats.get("hp", 100))) <= 0
+                        or stats.get("npc_ignore") == "1"
+                    ):
                         continue
                 positions[user_id] = _position(row)
         return positions

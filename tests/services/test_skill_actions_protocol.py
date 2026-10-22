@@ -472,6 +472,33 @@ async def test_meditation_stops_for_every_observer(action_world, reason):
 
 
 @pytest.mark.asyncio
+async def test_meditation_chat_reports_only_confirmed_recovery(action_world):
+    """El chat refleja el maná confirmado sin inventar recuperaciones en ticks vacíos."""
+    world = action_world
+    key = RedisKeys.player_user_stats(1)
+    await world.redis.hset(
+        key, mapping={"meditating": "1", "meditation_due": "1", "min_mana": "95", "max_mana": "100"}
+    )
+    with patch("src.services.meditation.random.random", return_value=0.0):
+        await MeditationEffect().apply(1, world.player, world.senders[1])
+    assert await world.redis.hget(key, "min_mana") == "100"
+    packets = [call.args[0] for call in world.senders[1].connection.send.await_args_list]
+    messages = [
+        json.loads(packet[4:].decode("ascii"))["data"]["text"]
+        for packet in packets
+        if packet[0] == ServerPacketID.WORLD_STATE
+        and json.loads(packet[4:].decode("ascii"))["kind"] == "chat"
+    ]
+    assert "Meditando recuperas 5 puntos de maná (maná actual: 100)." in messages
+    assert "Tu maná está completo. Dejas de meditar." in messages
+    assert await world.redis.hget(key, "meditating") == "0"
+    world.senders[1].connection.send.reset_mock()
+    await MeditationEffect().apply(1, world.player, world.senders[1])
+    world.senders[1].connection.send.assert_not_awaited()
+    world.senders[2].connection.send.assert_not_awaited()
+
+
+@pytest.mark.asyncio
 async def test_meditation_retries_failed_send_and_ignores_another_map(action_world):
     """Sólo recuerda envíos exitosos y no difunde el aura fuera del mapa actual."""
     world = action_world

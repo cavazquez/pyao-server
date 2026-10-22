@@ -3,6 +3,7 @@
 import logging
 
 from src.network.chat_channel import deliver_chat
+from src.repositories.account_repository import AccountRepository
 from src.security.chat_mutes import chat_rejection
 from src.services.clan._helpers import ClanServiceHelpersMixin
 
@@ -55,4 +56,21 @@ class ClanMessagingMixin(ClanServiceHelpersMixin):
                         font=7,
                     )
 
+        if self.map_manager:
+            accounts = AccountRepository(self.clan_repo.redis)
+            for identity in await self.clan_repo.redis.redis.smembers("chat:clan_observers"):
+                user = int(identity)
+                if user in clan.members or not await accounts.is_gm_by_user_id(user):
+                    continue
+                observer = self._get_player_message_sender(user)
+                if observer:
+                    await deliver_chat(
+                        observer,
+                        "system",
+                        sender_id,
+                        sender_username,
+                        f"[Observación {clan.name}] {message}",
+                        legacy=f"[Observación {clan.name}] {sender_username}: {message}",
+                        context=f"clan:{clan.name}",
+                    )
         return ""

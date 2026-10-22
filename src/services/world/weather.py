@@ -9,7 +9,7 @@ from src.utils.resource_transaction import Decision, Resource, Snapshot, transac
 if TYPE_CHECKING:
     from src.core.dependency_container import DependencyContainer
 
-OUTDOOR_TYPES = frozenset({"city", "wilderness", "water"})
+OUTDOOR_TYPES = frozenset({"city", "wilderness", "water", "snow", "desert", "field"})
 MAX_INTENSITY = 100
 
 
@@ -29,15 +29,29 @@ class WeatherState:
         """
         position = await self.deps.player_repo.get_position(user) or {}
         map_id = int(position.get("map", 0))
-        outdoor = self.maps.get(f"map_{map_id}", {}).get("type") in OUTDOOR_TYPES
+        metadata = self.maps.get(f"map_{map_id}", {})
+        manager = self.deps.map_manager
+        policy = manager.map_overrides.get(map_id, {})
+        zone = policy.get("zone", policy.get("terrain", metadata.get("type", "unknown")))
+        outdoor = zone in OUTDOOR_TYPES
+        roof = (
+            manager.tile_overrides.get(
+                (map_id, position.get("x", 0), position.get("y", 0)), {}
+            ).get("trigger")
+            == 1
+        )
         fields = (
             await self.deps.redis_client.redis.hgetall(f"world:weather:{map_id}") if outdoor else {}
         )
-        raining = outdoor and fields.get("raining") == "1"
+        raining = outdoor and not roof and fields.get("raining") == "1"
         return {
             "map": map_id,
+            "name": policy.get("name", metadata.get("name", "")),
+            "zone": zone,
+            "terrain": policy.get("terrain", metadata.get("type", "unknown")),
             "outdoor": outdoor,
             "raining": raining,
+            "night": outdoor and fields.get("night") == "1",
             "intensity": max(0, min(MAX_INTENSITY, int(fields.get("intensity", 0))))
             if raining
             else 0,
@@ -53,7 +67,13 @@ class WeatherState:
             return {"applied": False, "message": "No tienes permisos de Game Master."}
         map_id = params["map"]
         if (
-            self.maps.get(f"map_{map_id}", {}).get("type") not in OUTDOOR_TYPES
+            self.deps.map_manager.map_overrides.get(map_id, {}).get(
+                "zone",
+                self.deps.map_manager.map_overrides.get(map_id, {}).get(
+                    "terrain", self.maps.get(f"map_{map_id}", {}).get("type")
+                ),
+            )
+            not in OUTDOOR_TYPES
             or not 0 <= params["intensity"] <= MAX_INTENSITY
         ):
             return {"applied": False, "message": "Mapa exterior o intensidad inválidos."}

@@ -9,6 +9,7 @@ from src.economy.ground_devaluation import split_remainder
 from src.economy.tax_transactions import tax_key
 from src.models.item_constants import GOLD_ITEM_ID
 from src.models.items_catalog import ITEMS_CATALOG
+from src.services.classic_chat.world_rules import WORLD_REVISION, prepare, rules
 from src.services.combat.barriers import absorb_damage, clear_barrier
 from src.services.player.lifetime_stats import increment, kill_changes
 from src.utils.durability import require_durable
@@ -34,7 +35,7 @@ GOLD_DROP_DIVISOR = 10
 
 
 def hp_changes(
-    stats: dict[str, str], position: dict[str, str], hp: int, event: str
+    stats: dict[str, str], position: dict[str, str], hp: int, event: str, *, duel: bool = False
 ) -> dict[str, str]:
     """Marca el daño letal y su posición en el mismo commit del HP.
 
@@ -56,6 +57,8 @@ def hp_changes(
                 "periodic_effects": "[]",
                 **clear_barrier(),
                 "death_event": event,
+                "home_due": "0",
+                "death_duel": "1" if duel else "0",
                 "death_map": position.get("map", "1"),
                 "death_x": position.get("x", "50"),
                 "death_y": position.get("y", "50"),
@@ -82,6 +85,7 @@ def revive_changes(stats: dict[str, str]) -> dict[str, str]:
         **({"hp": hp} if "hp" in stats else {}),
         "life_id": str(int(stats.get("life_id", 0)) + 1),
         "death_state": "alive",
+        "home_due": "0",
         "morphed_body": "0",
         "morphed_head": "0",
         "morphed_until": "0",
@@ -184,18 +188,20 @@ async def settle_death(
         ground = GroundState(map_id, cast("str | None", snapshot[ground_key]))
         experience = int(stats.get("experience", 0))
         gold = int(stats.get("gold", 0))
-        pending = stats.get("death_state") == "pending"
+        penalized = stats.get("death_state") == "pending" and stats.get("death_duel") != "1"
         loss = (
-            experience // EXP_PENALTY_DIVISOR if pending and experience >= MIN_PENALIZED_EXP else 0
+            experience // EXP_PENALTY_DIVISOR
+            if penalized and experience >= MIN_PENALIZED_EXP
+            else 0
         )
-        dropped_gold = gold // GOLD_DROP_DIVISOR if pending else 0
+        dropped_gold = gold // GOLD_DROP_DIVISOR if penalized else 0
         fraction = split_remainder(
             int(cast("dict[str, str]", snapshot.get(tax_key(user_id)) or {}).get("remainder", 0)),
             dropped_gold,
             gold + int(str(snapshot.get(RedisKeys.bank_gold(user_id)) or 0)),
         )
         event = stats.get("death_event", f"legacy:{user_id}:{life_id}")
-        if pending and dropped_gold:
+        if dropped_gold:
             try:
                 ground.append(
                     x,
@@ -212,7 +218,9 @@ async def settle_death(
                 dropped_gold = 0
         slots = sorted(inventory.slots)
         selected = (
-            random.Random(event).sample(slots, min(len(slots), MAX_DEATH_DROPS)) if pending else []
+            random.Random(event).sample(slots, min(len(slots), MAX_DEATH_DROPS))
+            if penalized
+            else []
         )
         for slot in selected:
             stack = inventory.slots[slot]
@@ -289,23 +297,40 @@ async def resurrect(
     """
     key = RedisKeys.player_user_stats(user_id)
     resources = [Resource(key, "hash")]
+    world = await prepare(redis, user_id) if priest else None
     if priest:
         resources.extend(
             [
                 Resource(RedisKeys.player_position(user_id), "hash"),
                 Resource(RedisKeys.npc_instance(priest.instance_id), "hash"),
+                Resource(WORLD_REVISION, "string"),
             ]
         )
 
     def decide(snapshot: Snapshot) -> Decision:
         stats = cast("dict[str, str]", snapshot[key])
         if priest:
+            merged = world.merge(snapshot, user_id) if world else None
+            if merged is None:
+                return Decision(
+                    {"applied": False, "message": "El mapa cambió; vuelve a intentarlo."}, {}
+                )
             position = cast("dict[str, str]", snapshot[RedisKeys.player_position(user_id)])
+            if rules(merged, int(position.get("map", 0))).get("no_revive") == "1":
+                return Decision(
+                    {
+                        "applied": False,
+                        "message": "La resurrección está deshabilitada en este mapa.",
+                    },
+                    {},
+                )
             npc = cast("dict[str, str]", snapshot[RedisKeys.npc_instance(priest.instance_id)])
             allowed = config_manager.get("game.spells.resurrection_npc_ids", [81, 82, 119])
+            npc_alive = bool(npc) and not (
+                int(npc.get("max_hp", 0)) > 0 and int(npc.get("hp", 0)) <= 0
+            )
             if (
-                not npc
-                or int(npc.get("hp", 0)) <= 0
+                not npc_alive
                 or int(npc.get("npc_id", 0)) not in (allowed if isinstance(allowed, list) else [])
                 or int(position.get("map", 0)) != int(npc.get("map_id", -1))
                 or max(

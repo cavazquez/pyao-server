@@ -47,6 +47,7 @@ class StatusEffectsMessageSender:
         self._visibility_lock = asyncio.Lock()
         self._meditation_fx: set[int] = set()
         self._meditating = False
+        self._resting = False
         self._campfire_map = 0
         self._campfires: set[tuple[int, int]] = set()
 
@@ -178,6 +179,10 @@ class StatusEffectsMessageSender:
             blind = alive and float(stats.get("blinded_until", 0)) > now
             dumb = alive and float(stats.get("dumb_until", 0)) > now
             meditating = alive and stats.get("meditating") == "1"
+            resting = alive and stats.get("resting") == "1"
+            if resting != self._resting:
+                await self.connection.send(build_rest_ok_response())
+                self._resting = resting
             if meditating != self._meditating:
                 await self.connection.send(bytes([ServerPacketID.MEDITATE_TOGGLE]))
                 self._meditating = meditating

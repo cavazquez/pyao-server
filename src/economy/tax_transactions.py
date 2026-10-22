@@ -177,14 +177,20 @@ def taxed_decision(
     projected, tax_writes = tax_snapshot(snapshot, resources, today)
     decision = decide(projected)
     combined: dict[str, str | dict[str, str] | set[str]] = dict(tax_writes)
+    removed: dict[str, None] = {}
     for key, value in decision.writes.items():
+        if value is None:
+            removed[key] = None
+            continue
         prior = combined.get(key)
         combined[key] = (
             {**prior, **value} if isinstance(prior, dict) and isinstance(value, dict) else value
         )
     if projected.get(TAX_POLICY_KEY):
         combined = stamp_ground_gold(combined, resources, today)
-    return Decision(decision.result, stamp_money_revision(snapshot, resources, combined))
+    return Decision(
+        decision.result, {**stamp_money_revision(snapshot, resources, combined), **removed}
+    )
 
 
 def stamp_money_revision(

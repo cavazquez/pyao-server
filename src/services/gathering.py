@@ -2,6 +2,7 @@
 
 import math
 import random
+import time
 from typing import TYPE_CHECKING, Any, cast
 
 from src.models.skills import skill_progress
@@ -122,7 +123,13 @@ async def gather(
                 if successful
                 else f"No has obtenido {catch_name}; sigues practicando.",
             },
-            {inventory_key: slots.fields()} if successful else {},
+            {
+                RedisKeys.player_user_stats(user_id): {
+                    "work_last_at": str(time.time()),
+                    "work_skill": key,
+                },
+                **({inventory_key: slots.fields()} if successful else {}),
+            },
         )
         return trained_decision(decision, snapshot, user_id, ((key, successful),))
 

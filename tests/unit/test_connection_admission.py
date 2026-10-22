@@ -64,6 +64,7 @@ async def test_failure_or_cancellation_always_releases_place(failure):
     server = ArgentumServer()
     server.max_connections = 1
     server.deps = MagicMock()
+    server.deps.redis_client.redis.hget = AsyncMock(return_value=None)
     server.deps.redis_client.increment_connections = AsyncMock()
     server.deps.redis_client.decrement_connections = AsyncMock()
     reader = MagicMock(read=AsyncMock(return_value=b"\x01"))

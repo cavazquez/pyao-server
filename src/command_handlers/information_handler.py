@@ -4,6 +4,7 @@ import logging
 import time
 from typing import TYPE_CHECKING
 
+from src import __version__
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.information_command import InformationCommand
 
@@ -57,7 +58,7 @@ class InformationCommandHandler(CommandHandler):
             info_parts = ["--- Informacion del Servidor ---"]
 
             # Nombre del servidor
-            info_parts.extend(["Nombre: Argentum Online", "Version: PyAO 0.1.0"])
+            info_parts.extend(["Nombre: Argentum Online", f"Version: PyAO {__version__}"])
 
             # Jugadores online
             if self.map_manager:

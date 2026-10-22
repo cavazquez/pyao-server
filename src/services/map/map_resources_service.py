@@ -119,6 +119,12 @@ class MapResourcesService:
 
     def is_blocked(self, map_id: int, x: int, y: int) -> bool:
         """Indica si un tile está marcado como bloqueado en el mapa."""
+        if self.map_manager:
+            if self.map_manager.is_door_closed(map_id, x, y) is True:
+                return True
+            value = self.map_manager.tile_overrides.get((map_id, x, y), {}).get("blocked")
+            if type(value) is bool:
+                return value
         return bool(
             self.map_manager and self.map_manager.is_door_closed(map_id, x, y) is True
         ) or tile_in_required_layer(self.resources, map_id, "blocked", x, y)

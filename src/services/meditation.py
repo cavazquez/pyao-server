@@ -36,7 +36,14 @@ async def meditate_tick(
             return Decision({"applied": False}, {})
         mana, maximum = int(stats.get("min_mana", 0)), int(stats.get("max_mana", 0))
         if mana >= maximum or int(stats.get("min_hp", 0)) <= 0:
-            return Decision({"applied": True, "stopped": True}, {key: {"meditating": "0"}})
+            return Decision(
+                {
+                    "applied": True,
+                    "stopped": True,
+                    "full": mana >= maximum and int(stats.get("min_hp", 0)) > 0,
+                },
+                {key: {"meditating": "0"}},
+            )
         due = float(stats.get("meditation_due", 0))
         if due > timestamp:
             return Decision({"applied": False}, {})
@@ -63,6 +70,7 @@ async def meditate_tick(
                 {
                     "applied": True,
                     "stopped": stopped,
+                    "full": stopped,
                     "recovered": recovered,
                     "mana": mana + recovered,
                 },

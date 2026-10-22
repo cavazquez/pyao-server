@@ -169,6 +169,7 @@ class TestSendSelfCharacterCreateStep:
             weapon=12,
             shield=4,
             helmet=6,
+            show_name=True,
         )
 
 

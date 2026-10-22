@@ -68,7 +68,7 @@ class MeditateCommandHandler(CommandHandler):
             # Mensaje al jugador y efectos visuales
             if new_state:
                 await self.message_sender.send_console_msg(
-                    "Comienzas a meditar. Recuperaras mana automaticamente."
+                    "Comienzas a meditar. Recuperas maná con cada intento exitoso de meditación."
                 )
                 # Enviar FX de meditación con loop infinito (loops=-1)
                 # Para jugadores, char_index = user_id (NPCs usan char_index >= 10001)

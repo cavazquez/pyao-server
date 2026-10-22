@@ -78,6 +78,7 @@ class HandlerConfig:
     deps_keys: list[str] = field(default_factory=list)
     needs_session_data: bool = False
     needs_message_sender: bool = True
+    uses_container: bool = False
     initial_kwargs: dict[str, object] = field(default_factory=dict)
 
 
@@ -358,6 +359,7 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
             "summon_service",
         ],
         needs_session_data=True,
+        uses_container=True,
     ),
     "yell": HandlerConfig(
         YellCommandHandler,
@@ -467,6 +469,8 @@ class HandlerRegistry:
         # Los tasks de clan asignan el usuario autenticado antes de ejecutar el
         # handler. Cada petición recibe su propio diccionario y su propia instancia.
         kwargs: dict[str, object] = dict(config.initial_kwargs)
+        if config.uses_container:
+            kwargs["classic_deps"] = self.deps
         if config.needs_message_sender:
             kwargs["message_sender"] = message_sender
 

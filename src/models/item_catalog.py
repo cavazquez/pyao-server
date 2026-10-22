@@ -4,6 +4,7 @@ import logging
 import tomllib
 from pathlib import Path
 
+from src.models.items_catalog import reload_items_catalog
 from src.models.potion_duration import normalize_potion_duration
 from src.runtime_paths import data_dir
 
@@ -47,6 +48,23 @@ class ItemCatalog:
         self._items: dict[int, dict[str, object]] = {}
         self._data_path = data_path or str(data_dir() / "items.toml")
         self._load_catalog()
+
+    def reload(self) -> int:
+        """Adopta un catálogo validado sin dejar objetos persistidos sin definición.
+
+        Returns:
+            Número de objetos del catálogo.
+
+        Raises:
+            ValueError: Si la recarga elimina un identificador existente.
+        """
+        candidate = ItemCatalog(self._data_path)
+        if not self._items.keys() <= candidate._items.keys():
+            message = "La recarga no puede eliminar objetos existentes"
+            raise ValueError(message)
+        reload_items_catalog()
+        self._items = candidate._items
+        return len(self._items)
 
     def _load_catalog(self) -> None:
         """Carga el catálogo de items desde el archivo TOML."""

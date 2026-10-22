@@ -41,6 +41,22 @@ class NPCCatalog:
         )
         self._load_catalog()
 
+    def reload(self) -> int:
+        """Valida un catálogo nuevo antes de sustituir las plantillas activas.
+
+        Returns:
+            Cantidad de plantillas disponibles.
+
+        Raises:
+            ValueError: Si la recarga elimina plantillas existentes.
+        """
+        candidate = NPCCatalog(self._hostile_path, self._friendly_path)
+        if not self._npcs.keys() <= candidate._npcs.keys():
+            message = "La recarga no puede eliminar plantillas de NPC existentes"
+            raise ValueError(message)
+        self._npcs = candidate._npcs
+        return len(self._npcs)
+
     def _load_file(self, file_path: str, file_type: str) -> None:
         """Carga NPCs desde un archivo TOML.
 

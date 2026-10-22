@@ -37,7 +37,13 @@ class SpatialIndexMixin:
 
         # Verificar tiles bloqueados (paredes, agua, etc.)
         blocked_tiles = cast("dict[int, Coordinates]", getattr(self, "_blocked_tiles", {}))
-        if map_id in blocked_tiles and (x, y) in blocked_tiles[map_id]:
+        overlays = getattr(self, "tile_overrides", {})
+        blocked_override = overlays.get((map_id, x, y), {}).get("blocked")
+        if blocked_override is True or (
+            blocked_override is not False
+            and map_id in blocked_tiles
+            and (x, y) in blocked_tiles[map_id]
+        ):
             return False
 
         # Verificar puertas cerradas
@@ -99,8 +105,11 @@ class SpatialIndexMixin:
             return False
         blocked = cast("dict[int, Coordinates]", getattr(self, "_blocked_tiles", {}))
         doors = cast("dict[int, set[tuple[int, int]]]", getattr(self, "_closed_doors", {}))
-        if (x, y) in doors.get(map_id, set()) or (
-            not water and (x, y) in blocked.get(map_id, set())
+        value = getattr(self, "tile_overrides", {}).get((map_id, x, y), {}).get("blocked")
+        if (
+            value is True
+            or (x, y) in doors.get(map_id, set())
+            or (not water and value is not False and (x, y) in blocked.get(map_id, set()))
         ):
             return False
         occupied = cast("dict[tuple[int, int, int], str]", getattr(self, "_tile_occupation", {}))

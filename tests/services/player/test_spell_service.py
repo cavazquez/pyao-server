@@ -116,6 +116,7 @@ def test_success_uses_catalog_cost_and_intelligence_bonus(planned_cast):
         "min_sta": "99",
         "hidden_until": "0",
         "meditating": "0",
+        "resting": "0",
     }
     assert result.writes[RedisKeys.player_user_stats(2)]["min_hp"] == "94"
     assert snapshot[RedisKeys.player_user_stats(1)]["gold"] == "123"

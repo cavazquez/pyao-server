@@ -1,0 +1,1558 @@
+{
+  "version": 1,
+  "reference": "Argentum Online 0.13.3",
+  "commands": [
+    {
+      "name": "/ONLINE",
+      "syntax": "/ONLINE",
+      "description": "Jugadores conectados",
+      "role": "player",
+      "transport": "native",
+      "source_line": 123
+    },
+    {
+      "name": "/SALIR",
+      "syntax": "/SALIR",
+      "description": "Salir del juego",
+      "role": "player",
+      "transport": "native",
+      "source_line": 125
+    },
+    {
+      "name": "/SALIRCLAN",
+      "syntax": "/SALIRCLAN",
+      "description": "Abandonar el clan",
+      "role": "player",
+      "transport": "native",
+      "source_line": 135
+    },
+    {
+      "name": "/BALANCE",
+      "syntax": "/BALANCE",
+      "description": "Consultar el oro del banco",
+      "role": "player",
+      "transport": "text",
+      "source_line": 138
+    },
+    {
+      "name": "/QUIETO",
+      "syntax": "/QUIETO",
+      "description": "Ordenar a tus mascotas esperar",
+      "role": "player",
+      "transport": "text",
+      "source_line": 147
+    },
+    {
+      "name": "/ACOMPAÑAR",
+      "syntax": "/ACOMPAÑAR",
+      "description": "Ordenar a tus mascotas seguirte",
+      "role": "player",
+      "transport": "text",
+      "source_line": 156
+    },
+    {
+      "name": "/LIBERAR",
+      "syntax": "/LIBERAR",
+      "description": "Liberar tus mascotas",
+      "role": "player",
+      "transport": "text",
+      "source_line": 165
+    },
+    {
+      "name": "/ENTRENAR",
+      "syntax": "/ENTRENAR [número]",
+      "description": "Consultar criaturas o solicitar una al entrenador seleccionado",
+      "role": "player",
+      "transport": "text",
+      "source_line": 174
+    },
+    {
+      "name": "/DESCANSAR",
+      "syntax": "/DESCANSAR",
+      "description": "Descansar junto a una fogata",
+      "role": "player",
+      "transport": "text",
+      "source_line": 183
+    },
+    {
+      "name": "/MEDITAR",
+      "syntax": "/MEDITAR",
+      "description": "Meditar y recuperar maná",
+      "role": "player",
+      "transport": "native",
+      "source_line": 192
+    },
+    {
+      "name": "/CONSULTA",
+      "syntax": "/CONSULTA",
+      "description": "Alternar consulta GM con el objetivo",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 203
+    },
+    {
+      "name": "/RESUCITAR",
+      "syntax": "/RESUCITAR",
+      "description": "Pedir resurrección al sacerdote",
+      "role": "player",
+      "transport": "text",
+      "source_line": 206
+    },
+    {
+      "name": "/CURAR",
+      "syntax": "/CURAR",
+      "description": "Pedir curación al sacerdote",
+      "role": "player",
+      "transport": "text",
+      "source_line": 209
+    },
+    {
+      "name": "/EST",
+      "syntax": "/EST",
+      "description": "Consultar estadísticas",
+      "role": "player",
+      "transport": "native",
+      "source_line": 212
+    },
+    {
+      "name": "/AYUDA",
+      "syntax": "/AYUDA [página]",
+      "description": "Consultar ayuda de comandos",
+      "role": "player",
+      "transport": "text",
+      "source_line": 215
+    },
+    {
+      "name": "/COMERCIAR",
+      "syntax": "/COMERCIAR [nombre]",
+      "description": "Comerciar con el NPC seleccionado o proponer intercambio",
+      "role": "player",
+      "transport": "native",
+      "source_line": 218
+    },
+    {
+      "name": "/BOVEDA",
+      "syntax": "/BOVEDA",
+      "description": "Abrir la bóveda del banco",
+      "role": "player",
+      "transport": "text",
+      "source_line": 233
+    },
+    {
+      "name": "/ENLISTAR",
+      "syntax": "/ENLISTAR",
+      "description": "Ingresar en la facción del noble",
+      "role": "player",
+      "transport": "text",
+      "source_line": 242
+    },
+    {
+      "name": "/INFORMACION",
+      "syntax": "/INFORMACION",
+      "description": "Consultar progreso de facción al noble",
+      "role": "player",
+      "transport": "text",
+      "source_line": 245
+    },
+    {
+      "name": "/RECOMPENSA",
+      "syntax": "/RECOMPENSA",
+      "description": "Reclamar recompensa de facción",
+      "role": "player",
+      "transport": "text",
+      "source_line": 248
+    },
+    {
+      "name": "/MOTD",
+      "syntax": "/MOTD",
+      "description": "Ver mensaje del día",
+      "role": "player",
+      "transport": "native",
+      "source_line": 251
+    },
+    {
+      "name": "/UPTIME",
+      "syntax": "/UPTIME",
+      "description": "Ver tiempo de actividad",
+      "role": "player",
+      "transport": "native",
+      "source_line": 254
+    },
+    {
+      "name": "/SALIRPARTY",
+      "syntax": "/SALIRPARTY",
+      "description": "Abandonar el grupo",
+      "role": "player",
+      "transport": "native",
+      "source_line": 257
+    },
+    {
+      "name": "/CREARPARTY",
+      "syntax": "/CREARPARTY",
+      "description": "Crear un grupo",
+      "role": "player",
+      "transport": "native",
+      "source_line": 260
+    },
+    {
+      "name": "/PARTY",
+      "syntax": "/PARTY [nombre]",
+      "description": "Solicitar ingreso o invitar por nombre",
+      "role": "player",
+      "transport": "text",
+      "source_line": 269
+    },
+    {
+      "name": "/COMPARTIRNPC",
+      "syntax": "/COMPARTIRNPC",
+      "description": "Compartir criaturas con el objetivo",
+      "role": "player",
+      "transport": "text",
+      "source_line": 278
+    },
+    {
+      "name": "/NOCOMPARTIRNPC",
+      "syntax": "/NOCOMPARTIRNPC",
+      "description": "Dejar de compartir criaturas",
+      "role": "player",
+      "transport": "text",
+      "source_line": 288
+    },
+    {
+      "name": "/ENCUESTA",
+      "syntax": "/ENCUESTA [opción]",
+      "description": "Consultar encuesta o votar; GM usa CREAR o CERRAR",
+      "role": "player",
+      "transport": "text",
+      "source_line": 298
+    },
+    {
+      "name": "/CMSG",
+      "syntax": "/CMSG mensaje",
+      "description": "Enviar mensaje privado a tu clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 312
+    },
+    {
+      "name": "/PMSG",
+      "syntax": "/PMSG mensaje",
+      "description": "Enviar mensaje privado a tu grupo",
+      "role": "player",
+      "transport": "native",
+      "source_line": 321
+    },
+    {
+      "name": "/CENTINELA",
+      "syntax": "/CENTINELA código",
+      "description": "Responder al desafío de presencia vigente",
+      "role": "player",
+      "transport": "text",
+      "source_line": 330
+    },
+    {
+      "name": "/ONLINECLAN",
+      "syntax": "/ONLINECLAN",
+      "description": "Ver miembros conectados del clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 343
+    },
+    {
+      "name": "/ONLINEPARTY",
+      "syntax": "/ONLINEPARTY",
+      "description": "Ver miembros conectados del grupo",
+      "role": "player",
+      "transport": "text",
+      "source_line": 346
+    },
+    {
+      "name": "/BMSG",
+      "syntax": "/BMSG mensaje",
+      "description": "Enviar mensaje privado a tu consejo de facción",
+      "role": "player",
+      "transport": "text",
+      "source_line": 349
+    },
+    {
+      "name": "/ROL",
+      "syntax": "/ROL consulta",
+      "description": "Solicitar ayuda de rol de forma privada",
+      "role": "player",
+      "transport": "text",
+      "source_line": 357
+    },
+    {
+      "name": "/GM",
+      "syntax": "/GM [consulta]",
+      "description": "Solicitar ayuda de un administrador",
+      "role": "player",
+      "transport": "text",
+      "source_line": 365
+    },
+    {
+      "name": "/_BUG",
+      "syntax": "/_BUG descripción",
+      "description": "Registrar un error de forma privada",
+      "role": "player",
+      "transport": "text",
+      "source_line": 368
+    },
+    {
+      "name": "/DESC",
+      "syntax": "/DESC descripción",
+      "description": "Cambiar tu descripción pública",
+      "role": "player",
+      "transport": "text",
+      "source_line": 376
+    },
+    {
+      "name": "/VOTO",
+      "syntax": "/VOTO nombre",
+      "description": "Votar una sola vez en la elección de tu clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 386
+    },
+    {
+      "name": "/PENAS",
+      "syntax": "/PENAS nombre",
+      "description": "Consultar el prontuario público del personaje",
+      "role": "player",
+      "transport": "text",
+      "source_line": 394
+    },
+    {
+      "name": "/CONTRASEÑA",
+      "syntax": "/CONTRASEÑA",
+      "description": "Abrir cambio seguro de contraseña",
+      "role": "player",
+      "transport": "form",
+      "source_line": 402
+    },
+    {
+      "name": "/APOSTAR",
+      "syntax": "/APOSTAR cantidad",
+      "description": "Apostar de 1 a 5000 oro en el casino clásico",
+      "role": "player",
+      "transport": "text",
+      "source_line": 405
+    },
+    {
+      "name": "/RETIRARFACCION",
+      "syntax": "/RETIRARFACCION",
+      "description": "Abandonar la facción",
+      "role": "player",
+      "transport": "text",
+      "source_line": 424
+    },
+    {
+      "name": "/RETIRAR",
+      "syntax": "/RETIRAR cantidad",
+      "description": "Retirar oro de tu banco",
+      "role": "player",
+      "transport": "native",
+      "source_line": 434
+    },
+    {
+      "name": "/DEPOSITAR",
+      "syntax": "/DEPOSITAR cantidad",
+      "description": "Depositar oro en tu banco",
+      "role": "player",
+      "transport": "native",
+      "source_line": 452
+    },
+    {
+      "name": "/DENUNCIAR",
+      "syntax": "/DENUNCIAR mensaje",
+      "description": "Registrar una denuncia para administradores",
+      "role": "player",
+      "transport": "text",
+      "source_line": 472
+    },
+    {
+      "name": "/FUNDARCLAN",
+      "syntax": "/FUNDARCLAN",
+      "description": "Fundar un clan",
+      "role": "player",
+      "transport": "form",
+      "source_line": 480
+    },
+    {
+      "name": "/FUNDARCLANGM",
+      "syntax": "/FUNDARCLANGM nombre",
+      "description": "Fundar un clan sin requisitos de nivel o Liderazgo",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 487
+    },
+    {
+      "name": "/ECHARPARTY",
+      "syntax": "/ECHARPARTY NICKNAME",
+      "description": "Expulsar miembro del grupo",
+      "role": "player",
+      "transport": "native",
+      "source_line": 490
+    },
+    {
+      "name": "/PARTYLIDER",
+      "syntax": "/PARTYLIDER NICKNAME",
+      "description": "Transferir liderazgo del grupo",
+      "role": "player",
+      "transport": "native",
+      "source_line": 498
+    },
+    {
+      "name": "/ACCEPTPARTY",
+      "syntax": "/ACCEPTPARTY nombre",
+      "description": "Aceptar invitación o aprobar una solicitud a tu party",
+      "role": "player",
+      "transport": "text",
+      "source_line": 506
+    },
+    {
+      "name": "/GMSG",
+      "syntax": "/GMSG mensaje",
+      "description": "Enviar un mensaje sólo a administradores conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 518
+    },
+    {
+      "name": "/SHOWNAME",
+      "syntax": "/SHOWNAME",
+      "description": "Mostrar u ocultar tu nombre en los demás clientes",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 526
+    },
+    {
+      "name": "/ONLINEREAL",
+      "syntax": "/ONLINEREAL",
+      "description": "Listar integrantes conectados de la Armada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 529
+    },
+    {
+      "name": "/ONLINECAOS",
+      "syntax": "/ONLINECAOS",
+      "description": "Listar integrantes conectados del Caos",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 532
+    },
+    {
+      "name": "/IRCERCA",
+      "syntax": "/IRCERCA nombre",
+      "description": "Ir a una casilla libre junto al jugador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 535
+    },
+    {
+      "name": "/REM",
+      "syntax": "/REM comentario",
+      "description": "Guardar un comentario privado de administración",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 543
+    },
+    {
+      "name": "/HORA",
+      "syntax": "/HORA",
+      "description": "Consultar el reloj UTC del servidor",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 551
+    },
+    {
+      "name": "/DONDE",
+      "syntax": "/DONDE nombre",
+      "description": "Consultar la posición persistida del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 554
+    },
+    {
+      "name": "/NENE",
+      "syntax": "/NENE [mapa]",
+      "description": "Contar NPC por especie en un mapa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 562
+    },
+    {
+      "name": "/TELEPLOC",
+      "syntax": "/TELEPLOC",
+      "description": "Ir a la casilla seleccionada del mapa actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 575
+    },
+    {
+      "name": "/TELEP",
+      "syntax": "/TELEP [nombre o YO] mapa x y",
+      "description": "Trasladar un personaje a un destino libre",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 578
+    },
+    {
+      "name": "/SILENCIAR",
+      "syntax": "/SILENCIAR nombre",
+      "description": "Alternar el permiso de enviar denuncias",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 610
+    },
+    {
+      "name": "/SHOW",
+      "syntax": "/SHOW [SOS o DENUNCIAS o BUGS o ROL o SERVER] [página]",
+      "description": "Consultar las colas privadas de asistencia",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 618
+    },
+    {
+      "name": "/DENUNCIAS",
+      "syntax": "/DENUNCIAS",
+      "description": "Alternar la recepción de denuncias",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 632
+    },
+    {
+      "name": "/IRA",
+      "syntax": "/IRA nombre",
+      "description": "Ir junto al personaje indicado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 635
+    },
+    {
+      "name": "/INVISIBLE",
+      "syntax": "/INVISIBLE",
+      "description": "Alternar tu invisibilidad y sincronizar observadores",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 643
+    },
+    {
+      "name": "/PANELGM",
+      "syntax": "/PANELGM",
+      "description": "Abrir el panel textual de administración",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 646
+    },
+    {
+      "name": "/TRABAJANDO",
+      "syntax": "/TRABAJANDO",
+      "description": "Listar personajes que realizaron recolección recientemente",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 649
+    },
+    {
+      "name": "/OCULTANDO",
+      "syntax": "/OCULTANDO",
+      "description": "Listar personajes con ocultación activa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 652
+    },
+    {
+      "name": "/CARCEL",
+      "syntax": "/CARCEL nombre@motivo@minutos",
+      "description": "Encarcelar de 1 a 1440 minutos; 0 libera",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 655
+    },
+    {
+      "name": "/RMATA",
+      "syntax": "/RMATA",
+      "description": "Retirar el NPC seleccionado y programar su reaparición",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 674
+    },
+    {
+      "name": "/ADVERTENCIA",
+      "syntax": "/ADVERTENCIA nombre@motivo",
+      "description": "Registrar y notificar una advertencia pública",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 677
+    },
+    {
+      "name": "/MOD",
+      "syntax": "/MOD nombre atributo valor",
+      "description": "Modificar atributos, habilidades o posición del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 691
+    },
+    {
+      "name": "/INFO",
+      "syntax": "/INFO nombre",
+      "description": "Consultar perfil y posición sin credenciales",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 765
+    },
+    {
+      "name": "/STAT",
+      "syntax": "/STAT nombre",
+      "description": "Consultar estadísticas y contadores del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 773
+    },
+    {
+      "name": "/BAL",
+      "syntax": "/BAL nombre",
+      "description": "Consultar bolsillo y banco del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 781
+    },
+    {
+      "name": "/INV",
+      "syntax": "/INV nombre",
+      "description": "Consultar slots del inventario del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 789
+    },
+    {
+      "name": "/BOV",
+      "syntax": "/BOV nombre",
+      "description": "Consultar objetos de la bóveda del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 797
+    },
+    {
+      "name": "/SKILLS",
+      "syntax": "/SKILLS nombre",
+      "description": "Consultar niveles de las habilidades",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 805
+    },
+    {
+      "name": "/REVIVIR",
+      "syntax": "/REVIVIR nombre",
+      "description": "Resucitar una muerte ya liquidada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 813
+    },
+    {
+      "name": "/ONLINEGM",
+      "syntax": "/ONLINEGM",
+      "description": "Listar administradores conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 821
+    },
+    {
+      "name": "/ONLINEMAP",
+      "syntax": "/ONLINEMAP [mapa]",
+      "description": "Listar personajes conectados en un mapa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 824
+    },
+    {
+      "name": "/PERDON",
+      "syntax": "/PERDON nombre",
+      "description": "Marcar al personaje como ciudadano",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 835
+    },
+    {
+      "name": "/ECHAR",
+      "syntax": "/ECHAR nombre",
+      "description": "Desconectar al personaje indicado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 843
+    },
+    {
+      "name": "/EJECUTAR",
+      "syntax": "/EJECUTAR nombre",
+      "description": "Aplicar una muerte mediante el ciclo de vida normal",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 851
+    },
+    {
+      "name": "/BAN",
+      "syntax": "/BAN nombre@motivo",
+      "description": "Bloquear permanentemente la cuenta indicada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 859
+    },
+    {
+      "name": "/UNBAN",
+      "syntax": "/UNBAN nombre",
+      "description": "Revocar el bloqueo de una cuenta",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 873
+    },
+    {
+      "name": "/SEGUIR",
+      "syntax": "/SEGUIR",
+      "description": "Alternar el seguimiento del NPC seleccionado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 881
+    },
+    {
+      "name": "/SUM",
+      "syntax": "/SUM nombre",
+      "description": "Traer al personaje junto al administrador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 884
+    },
+    {
+      "name": "/CC",
+      "syntax": "/CC [página]",
+      "description": "Consultar una página de plantillas NPC",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 892
+    },
+    {
+      "name": "/RESETINV",
+      "syntax": "/RESETINV",
+      "description": "Reponer el stock del mercader seleccionado desde Redis",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 895
+    },
+    {
+      "name": "/LIMPIAR",
+      "syntax": "/LIMPIAR",
+      "description": "Retirar objetos del suelo de todos los mapas",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 898
+    },
+    {
+      "name": "/RMSG",
+      "syntax": "/RMSG mensaje",
+      "description": "Enviar un anuncio a todos los personajes conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 901
+    },
+    {
+      "name": "/MAPMSG",
+      "syntax": "/MAPMSG mensaje",
+      "description": "Enviar un anuncio al mapa actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 909
+    },
+    {
+      "name": "/NICK2IP",
+      "syntax": "/NICK2IP nombre",
+      "description": "Consultar IP actual o última conocida",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 917
+    },
+    {
+      "name": "/IP2NICK",
+      "syntax": "/IP2NICK IP",
+      "description": "Listar conexiones activas de una IP",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 925
+    },
+    {
+      "name": "/ONCLAN",
+      "syntax": "/ONCLAN nombre del clan",
+      "description": "Listar miembros conectados de un clan",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 938
+    },
+    {
+      "name": "/CT",
+      "syntax": "/CT mapa x y [radio de 0 a 6]",
+      "description": "Crear un portal al norte del administrador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 946
+    },
+    {
+      "name": "/DT",
+      "syntax": "/DT",
+      "description": "Retirar el portal seleccionado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 970
+    },
+    {
+      "name": "/LLUVIA",
+      "syntax": "/LLUVIA",
+      "description": "Alternar la lluvia del mapa exterior",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 973
+    },
+    {
+      "name": "/SETDESC",
+      "syntax": "/SETDESC nombre@descripción",
+      "description": "Modificar la descripción de un personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 976
+    },
+    {
+      "name": "/FORCEMIDIMAP",
+      "syntax": "/FORCEMIDIMAP música [mapa]",
+      "description": "Reproducir música en un mapa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 979
+    },
+    {
+      "name": "/FORCEWAVMAP",
+      "syntax": "/FORCEWAVMAP sonido [mapa [x y]]",
+      "description": "Reproducir un sonido global o posicional en un mapa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1003
+    },
+    {
+      "name": "/REALMSG",
+      "syntax": "/REALMSG mensaje",
+      "description": "Enviar un anuncio a integrantes de la Armada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1030
+    },
+    {
+      "name": "/CAOSMSG",
+      "syntax": "/CAOSMSG mensaje",
+      "description": "Enviar un anuncio a integrantes del Caos",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1038
+    },
+    {
+      "name": "/CIUMSG",
+      "syntax": "/CIUMSG mensaje",
+      "description": "Enviar un anuncio a ciudadanos conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1046
+    },
+    {
+      "name": "/CRIMSG",
+      "syntax": "/CRIMSG mensaje",
+      "description": "Enviar un anuncio a criminales conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1054
+    },
+    {
+      "name": "/TALKAS",
+      "syntax": "/TALKAS mensaje",
+      "description": "Hacer hablar al NPC seleccionado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1062
+    },
+    {
+      "name": "/MASSDEST",
+      "syntax": "/MASSDEST",
+      "description": "Retirar objetos del suelo en un radio de diez casillas",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1070
+    },
+    {
+      "name": "/ACEPTCONSE",
+      "syntax": "/ACEPTCONSE nombre",
+      "description": "Nombrar consejero de la Armada a un integrante",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1073
+    },
+    {
+      "name": "/ACEPTCONSECAOS",
+      "syntax": "/ACEPTCONSECAOS nombre",
+      "description": "Nombrar consejero del Caos a un integrante",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1081
+    },
+    {
+      "name": "/PISO",
+      "syntax": "/PISO",
+      "description": "Contar objetos del suelo del mapa actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1089
+    },
+    {
+      "name": "/ESTUPIDO",
+      "syntax": "/ESTUPIDO nombre",
+      "description": "Aplicar confusión temporal al personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1092
+    },
+    {
+      "name": "/NOESTUPIDO",
+      "syntax": "/NOESTUPIDO nombre",
+      "description": "Eliminar confusión del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1100
+    },
+    {
+      "name": "/DUMPSECURITY",
+      "syntax": "/DUMPSECURITY",
+      "description": "Consultar un resumen privado de sesiones y bloqueos IP",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1108
+    },
+    {
+      "name": "/KICKCONSE",
+      "syntax": "/KICKCONSE nombre",
+      "description": "Retirar al personaje de su consejo de facción",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1111
+    },
+    {
+      "name": "/TRIGGER",
+      "syntax": "/TRIGGER [número de 0 a 6]",
+      "description": "Consultar o cambiar el trigger de la casilla seleccionada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1119
+    },
+    {
+      "name": "/BANIPLIST",
+      "syntax": "/BANIPLIST [página]",
+      "description": "Consultar los bloqueos de IP persistidos",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1132
+    },
+    {
+      "name": "/BANIPRELOAD",
+      "syntax": "/BANIPRELOAD",
+      "description": "Validar y releer los bloqueos IP de Redis",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1135
+    },
+    {
+      "name": "/MIEMBROSCLAN",
+      "syntax": "/MIEMBROSCLAN nombre del clan",
+      "description": "Listar todos los integrantes del clan",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1138
+    },
+    {
+      "name": "/BANCLAN",
+      "syntax": "/BANCLAN nombre del clan",
+      "description": "Suspender el clan y bloquear sus cuentas",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1146
+    },
+    {
+      "name": "/BANIP",
+      "syntax": "/BANIP IP o nombre [motivo]",
+      "description": "Bloquear una IP y cerrar sus conexiones",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1154
+    },
+    {
+      "name": "/UNBANIP",
+      "syntax": "/UNBANIP IP",
+      "description": "Revocar un bloqueo IP",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1167
+    },
+    {
+      "name": "/CI",
+      "syntax": "/CI objeto [cantidad]",
+      "description": "Crear objetos al norte del administrador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1180
+    },
+    {
+      "name": "/DEST",
+      "syntax": "/DEST",
+      "description": "Retirar objetos de la casilla del administrador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1193
+    },
+    {
+      "name": "/NOCAOS",
+      "syntax": "/NOCAOS nombre",
+      "description": "Prohibir el ingreso al Caos y retirar afiliación actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1196
+    },
+    {
+      "name": "/NOREAL",
+      "syntax": "/NOREAL nombre",
+      "description": "Prohibir el ingreso a la Armada y retirar afiliación actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1204
+    },
+    {
+      "name": "/FORCEMIDI",
+      "syntax": "/FORCEMIDI música",
+      "description": "Reproducir música a todos los conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1212
+    },
+    {
+      "name": "/FORCEWAV",
+      "syntax": "/FORCEWAV sonido",
+      "description": "Reproducir sonido a todos los conectados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1225
+    },
+    {
+      "name": "/BORRARPENA",
+      "syntax": "/BORRARPENA nombre@identificador",
+      "description": "Retirar una pena conservando su auditoría",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1238
+    },
+    {
+      "name": "/BLOQ",
+      "syntax": "/BLOQ",
+      "description": "Alternar colisión de una casilla libre seleccionada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1252
+    },
+    {
+      "name": "/MATA",
+      "syntax": "/MATA",
+      "description": "Retirar el NPC seleccionado sin botín ni reaparición",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1255
+    },
+    {
+      "name": "/MASSKILL",
+      "syntax": "/MASSKILL",
+      "description": "Retirar NPC próximos sin entregar botín ni experiencia",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1258
+    },
+    {
+      "name": "/LASTIP",
+      "syntax": "/LASTIP nombre",
+      "description": "Consultar la última IP registrada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1261
+    },
+    {
+      "name": "/MOTDCAMBIA",
+      "syntax": "/MOTDCAMBIA mensaje",
+      "description": "Cambiar el mensaje de bienvenida persistido",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1269
+    },
+    {
+      "name": "/SMSG",
+      "syntax": "/SMSG mensaje",
+      "description": "Enviar un mensaje global del servidor",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1272
+    },
+    {
+      "name": "/ACC",
+      "syntax": "/ACC NPC",
+      "description": "Crear una criatura sin reaparición",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1280
+    },
+    {
+      "name": "/RACC",
+      "syntax": "/RACC NPC",
+      "description": "Crear una criatura con reaparición",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1293
+    },
+    {
+      "name": "/AI",
+      "syntax": "/AI índice de 1 a 4 objeto",
+      "description": "Configurar armaduras de recompensa de la Armada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1306
+    },
+    {
+      "name": "/AC",
+      "syntax": "/AC índice de 1 a 4 objeto",
+      "description": "Configurar armaduras de recompensa del Caos",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1319
+    },
+    {
+      "name": "/NAVE",
+      "syntax": "/NAVE",
+      "description": "Alternar navegación GM sin requerir embarcación",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1332
+    },
+    {
+      "name": "/HABILITAR",
+      "syntax": "/HABILITAR",
+      "description": "Alternar admisión de jugadores o sólo administradores",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1335
+    },
+    {
+      "name": "/APAGAR",
+      "syntax": "/APAGAR",
+      "description": "Cerrar conexiones y detener el servidor ordenadamente",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1338
+    },
+    {
+      "name": "/CONDEN",
+      "syntax": "/CONDEN nombre",
+      "description": "Marcar al personaje como criminal",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1341
+    },
+    {
+      "name": "/RAJAR",
+      "syntax": "/RAJAR nombre",
+      "description": "Restablecer afiliación de facción sin borrar contadores históricos",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1349
+    },
+    {
+      "name": "/RAJARCLAN",
+      "syntax": "/RAJARCLAN nombre",
+      "description": "Expulsar a un integrante de su clan salvo al fundador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1357
+    },
+    {
+      "name": "/LASTEMAIL",
+      "syntax": "/LASTEMAIL nombre",
+      "description": "Consultar correo registrado del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1365
+    },
+    {
+      "name": "/APASS",
+      "syntax": "/APASS destino@origen",
+      "description": "Copiar el hash de contraseña y revocar sesiones del destino",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1373
+    },
+    {
+      "name": "/AEMAIL",
+      "syntax": "/AEMAIL nombre-correo",
+      "description": "Cambiar el correo de una cuenta existente",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1387
+    },
+    {
+      "name": "/ANAME",
+      "syntax": "/ANAME origen@destino",
+      "description": "Renombrar una cuenta desconectada sin cambiar su identidad",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1401
+    },
+    {
+      "name": "/SLOT",
+      "syntax": "/SLOT nombre número",
+      "description": "Consultar un slot de inventario del personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1415
+    },
+    {
+      "name": "/CENTINELAACTIVADO",
+      "syntax": "/CENTINELAACTIVADO",
+      "description": "Alternar desafíos de presencia para personajes que recolectan",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1434
+    },
+    {
+      "name": "/CREARPRETORIANOS",
+      "syntax": "/CREARPRETORIANOS mapa x y",
+      "description": "Crear un grupo de pretorianos en casillas libres",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1437
+    },
+    {
+      "name": "/ELIMINARPRETORIANOS",
+      "syntax": "/ELIMINARPRETORIANOS [mapa]",
+      "description": "Retirar el grupo pretoriano de un mapa",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1457
+    },
+    {
+      "name": "/DOBACKUP",
+      "syntax": "/DOBACKUP",
+      "description": "Crear un snapshot RDB en el almacenamiento de Redis",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1474
+    },
+    {
+      "name": "/SHOWCMSG",
+      "syntax": "/SHOWCMSG",
+      "description": "Alternar observación de chat de clanes como administrador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1477
+    },
+    {
+      "name": "/GUARDAMAPA",
+      "syntax": "/GUARDAMAPA",
+      "description": "Guardar configuración y NPC del mapa en Redis",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1485
+    },
+    {
+      "name": "/MODMAPINFO",
+      "syntax": "/MODMAPINFO [atributo valor]",
+      "description": "Consultar o modificar las reglas del mapa actual",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1488
+    },
+    {
+      "name": "/GRABAR",
+      "syntax": "/GRABAR",
+      "description": "Confirmar persistencia de la partida mediante la barrera AOF",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1530
+    },
+    {
+      "name": "/BORRAR",
+      "syntax": "/BORRAR [SOS]",
+      "description": "Vaciar la cola de solicitudes de asistencia",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1533
+    },
+    {
+      "name": "/NOCHE",
+      "syntax": "/NOCHE",
+      "description": "Alternar la iluminación nocturna del mapa exterior",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1542
+    },
+    {
+      "name": "/ECHARTODOSPJS",
+      "syntax": "/ECHARTODOSPJS",
+      "description": "Desconectar jugadores conservando administradores",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1545
+    },
+    {
+      "name": "/RELOADNPCS",
+      "syntax": "/RELOADNPCS",
+      "description": "Recargar plantillas NPC sin eliminar IDs en uso",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1548
+    },
+    {
+      "name": "/RELOADSINI",
+      "syntax": "/RELOADSINI",
+      "description": "Recargar configuración validada y reaplicar ajustes de Redis",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1551
+    },
+    {
+      "name": "/RELOADHECHIZOS",
+      "syntax": "/RELOADHECHIZOS",
+      "description": "Recargar el catálogo de hechizos validado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1554
+    },
+    {
+      "name": "/RELOADOBJ",
+      "syntax": "/RELOADOBJ",
+      "description": "Recargar los catálogos de objetos validados",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1557
+    },
+    {
+      "name": "/REINICIAR",
+      "syntax": "/REINICIAR",
+      "description": "Cerrar ordenadamente y reiniciar el mismo ejecutable",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1560
+    },
+    {
+      "name": "/AUTOUPDATE",
+      "syntax": "/AUTOUPDATE",
+      "description": "Ejecutar el agente de actualización configurado por el operador",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1563
+    },
+    {
+      "name": "/CHATCOLOR",
+      "syntax": "/CHATCOLOR [rojo verde azul]",
+      "description": "Configurar el color de tu chat; sin argumentos restaura verde",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1566
+    },
+    {
+      "name": "/IGNORADO",
+      "syntax": "/IGNORADO",
+      "description": "Alternar si los NPC pueden seleccionarte como objetivo",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1581
+    },
+    {
+      "name": "/PING",
+      "syntax": "/PING",
+      "description": "Medir latencia con el servidor",
+      "role": "player",
+      "transport": "text",
+      "source_line": 1584
+    },
+    {
+      "name": "/SETINIVAR",
+      "syntax": "/SETINIVAR sección.clave valor",
+      "description": "Editar un parámetro de juego permitido y persistirlo",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1587
+    },
+    {
+      "name": "/HOGAR",
+      "syntax": "/HOGAR",
+      "description": "Elegir hogar o regresar como fantasma",
+      "role": "player",
+      "transport": "text",
+      "source_line": 1595
+    },
+    {
+      "name": "/SETDIALOG",
+      "syntax": "/SETDIALOG diálogo",
+      "description": "Cambiar el diálogo de la instancia NPC seleccionada",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1598
+    },
+    {
+      "name": "/IMPERSONAR",
+      "syntax": "/IMPERSONAR",
+      "description": "Adoptar apariencia y lugar del NPC seleccionado y retirarlo",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1606
+    },
+    {
+      "name": "/MIMETIZAR",
+      "syntax": "/MIMETIZAR",
+      "description": "Adoptar temporalmente la apariencia del NPC seleccionado",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 1609
+    },
+    {
+      "name": "/SERVIDOR",
+      "syntax": "/SERVIDOR",
+      "description": "Información y versión del servidor",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/DETALLESCLAN",
+      "syntax": "/DETALLESCLAN",
+      "description": "Abrir detalles del clan",
+      "role": "player",
+      "transport": "form",
+      "source_line": 0
+    },
+    {
+      "name": "/KICK",
+      "syntax": "/KICK nombre",
+      "description": "Alias de /ECHARPARTY",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/ELECCIONES",
+      "syntax": "/ELECCIONES [ABRIR]",
+      "description": "Consultar o abrir una elección de clan de 24 horas",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/METRICS",
+      "syntax": "/METRICS",
+      "description": "Ver métricas operativas del servidor",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/CREARCLAN",
+      "syntax": "/CREARCLAN nombre [descripción]",
+      "description": "Fundar un clan con requisitos de nivel y Liderazgo",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/INVITARCLAN",
+      "syntax": "/INVITARCLAN nombre",
+      "description": "Invitar un personaje al clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/ACEPTARCLAN",
+      "syntax": "/ACEPTARCLAN",
+      "description": "Aceptar invitación pendiente al clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/RECHAZARCLAN",
+      "syntax": "/RECHAZARCLAN",
+      "description": "Rechazar invitación pendiente al clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/EXPULSARCLAN",
+      "syntax": "/EXPULSARCLAN nombre",
+      "description": "Expulsar integrante según permisos de rango",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/PROMOVERCLAN",
+      "syntax": "/PROMOVERCLAN nombre",
+      "description": "Promover rango de un integrante del clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/DEGRADARCLAN",
+      "syntax": "/DEGRADARCLAN nombre",
+      "description": "Degradar rango de un integrante del clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/TRANSFERIRLIDERAZGO",
+      "syntax": "/TRANSFERIRLIDERAZGO nombre",
+      "description": "Transferir el liderazgo del clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/CLAN",
+      "syntax": "/CLAN mensaje",
+      "description": "Enviar mensaje privado al clan",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/PET",
+      "syntax": "/PET INFO o LIBERAR o SEGUIR o ESPERAR",
+      "description": "Consultar y ordenar tus mascotas",
+      "role": "player",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/MUTE",
+      "syntax": "/MUTE nombre minutos canales motivo",
+      "description": "Silenciar el chat de un personaje",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 0
+    },
+    {
+      "name": "/UNMUTE",
+      "syntax": "/UNMUTE nombre motivo",
+      "description": "Revocar silencio del chat",
+      "role": "gm",
+      "transport": "text",
+      "source_line": 0
+    }
+  ]
+}

@@ -11,7 +11,7 @@ from src.services.player.authentication_service import AuthenticationService
 
 
 @pytest.mark.asyncio
-async def test_authenticate_success():
+async def test_authenticate_success(redis_client):
     """Verifica autenticación exitosa."""
     # Mock del writer
     writer = MagicMock()
@@ -20,6 +20,7 @@ async def test_authenticate_success():
 
     # Mock del account_repo
     account_repo = MagicMock(spec=AccountRepository)
+    account_repo.redis = redis_client
     account_repo.get_account = AsyncMock(
         return_value={
             "user_id": 123,
@@ -48,13 +49,14 @@ async def test_authenticate_success():
 
 
 @pytest.mark.asyncio
-async def test_authenticate_user_not_found():
+async def test_authenticate_user_not_found(redis_client):
     """Verifica rechazo cuando el usuario no existe."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
     account_repo = MagicMock(spec=AccountRepository)
+    account_repo.redis = redis_client
     account_repo.get_account = AsyncMock(return_value=None)
 
     reader = MagicMock()
@@ -76,13 +78,14 @@ async def test_authenticate_user_not_found():
 
 
 @pytest.mark.asyncio
-async def test_authenticate_wrong_password():
+async def test_authenticate_wrong_password(redis_client):
     """Verifica rechazo con contraseña incorrecta."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
 
     account_repo = MagicMock(spec=AccountRepository)
+    account_repo.redis = redis_client
     account_repo.get_account = AsyncMock(
         return_value={
             "user_id": 123,

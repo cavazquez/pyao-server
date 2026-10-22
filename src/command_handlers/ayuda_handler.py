@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from src.commands.ayuda_command import AyudaCommand
 from src.commands.base import Command, CommandHandler, CommandResult
+from src.services.classic_chat.catalog import help_text
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -44,43 +45,7 @@ class AyudaCommandHandler(CommandHandler):
         )
 
         try:
-            # Mensaje de ayuda con comandos disponibles
-            help_message = (
-                "--- Comandos Disponibles ---\n"
-                "/AYUDA - Muestra esta ayuda\n"
-                "/EST - Muestra tus estadisticas\n"
-                "/ONLINE - Lista de jugadores conectados\n"
-                "/MOTD - Mensaje del dia del servidor\n"
-                "/UPTIME - Tiempo de actividad del servidor\n"
-                "/INFO - Informacion del servidor\n"
-                "/METRICS - Metricas de rendimiento del servidor\n"
-                "/SALIR - Desconectarse del servidor\n"
-                "--- Comandos de Party ---\n"
-                "/CREARPARTY - Crear una nueva party (nivel 15+)\n"
-                "/PARTY <nombre> - Invitar jugador a tu party\n"
-                "/ACCEPTPARTY <lider> - Aceptar invitacion de party\n"
-                "/SALIRPARTY - Abandonar la party actual\n"
-                "/PMSG <mensaje> - Enviar mensaje a tu party\n"
-                "/KICK <nombre> - Expulsar miembro (solo lider)\n"
-                "/PARTYLIDER <nombre> - Transferir liderazgo (solo lider)\n"
-                "--- Comandos de Clan ---\n"
-                "/CREARCLAN <nombre> [descripción] - Crear un clan (nivel 13+)\n"
-                "/INVITARCLAN <usuario> - Invitar jugador a tu clan\n"
-                "/ACEPTARCLAN - Aceptar invitación a clan\n"
-                "/RECHAZARCLAN - Rechazar invitación a clan\n"
-                "/SALIRCLAN - Abandonar tu clan\n"
-                "/EXPULSARCLAN <usuario> - Expulsar miembro (solo oficiales+)\n"
-                "/PROMOVERCLAN <usuario> - Promover miembro (solo vice líder+)\n"
-                "/DEGRADARCLAN <usuario> - Degradar miembro (solo vice líder+)\n"
-                "/TRANSFERIRLIDERAZGO <usuario> - Transferir liderazgo (solo líder)\n"
-                "--- Comandos de Mascotas ---\n"
-                "/PET - Listar tus mascotas invocadas\n"
-                "/PET INFO - Información detallada de tus mascotas\n"
-                "/PET LIBERAR - Liberar todas tus mascotas\n"
-                "--- Informacion ---\n"
-                "Usa las teclas de direccion para moverte\n"
-                "Escribe en el chat para hablar con otros jugadores"
-            )
+            help_message = help_text()
 
             # Enviar ayuda línea por línea
             await self.message_sender.send_multiline_console_msg(help_message)

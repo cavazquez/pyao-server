@@ -1,0 +1,81 @@
+{
+  "reference": "AO 0.13.3 NPCs.dat; ID y nombre deben coincidir",
+  "npcs": {
+    "72": {
+      "name": "Tancredo de Hauteville, soberano de Banderbill",
+      "service": "noble",
+      "faction": "royal"
+    },
+    "98": {
+      "name": "Demonio Legionario",
+      "service": "noble",
+      "faction": "chaos"
+    },
+    "60": {
+      "name": "O'Riley de Banderbill",
+      "service": "trainer",
+      "creatures": [
+        566,
+        565,
+        564,
+        516
+      ]
+    },
+    "108": {
+      "name": "O'Riley de Arkhein",
+      "service": "trainer",
+      "creatures": [
+        534,
+        539,
+        541,
+        554,
+        567
+      ]
+    },
+    "104": {
+      "name": "Timbero",
+      "service": "gambler"
+    },
+    "13": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 1
+    },
+    "150": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 2
+    },
+    "151": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 3
+    },
+    "152": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 4
+    },
+    "153": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 5
+    },
+    "158": {
+      "name": "Gobernador",
+      "service": "governor",
+      "home": 6
+    },
+    "6": {
+      "name": "Entrenador",
+      "service": "trainer",
+      "creatures": [
+        566,
+        565,
+        564,
+        516
+      ],
+      "source": "Plantilla propia de PyAO; no heredar Guardia Imperial del ID original"
+    }
+  }
+}

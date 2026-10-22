@@ -54,6 +54,7 @@ async def test_task_create_account_success(redis_client) -> None:  # ruff: ignor
     )
 
     account_repo = MagicMock(spec=AccountRepository)
+    account_repo.redis = redis_client
     account_repo.create_account = AsyncMock(return_value=1)
     # Mocks necesarios para TaskLogin que se ejecuta después de crear la cuenta
     account_repo.get_account = AsyncMock(return_value={"user_id": 1, "char_job": 1})

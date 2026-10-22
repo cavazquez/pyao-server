@@ -71,7 +71,10 @@ class NPCAIEffect(TickEffect):
 
         # Filtrar solo NPCs hostiles vivos
         hostile_npcs = [
-            npc for npc in all_npcs if (npc.is_hostile or npc.role == "guard") and npc.hp > 0
+            npc
+            for npc in all_npcs
+            if (npc.is_hostile or npc.role == "guard" or npc.gm_follow_user)
+            and (npc.hp > 0 or npc.max_hp == 0)
         ]
 
         if not hostile_npcs:

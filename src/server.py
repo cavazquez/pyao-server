@@ -17,6 +17,7 @@ from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
 from src.network.packet_framer import FramingError, PacketFramer
 from src.security.auth_limits import AuthLimiter
+from src.security.ip_bans import ip_is_blocked
 from src.security.password_executor import close_password_executor
 from src.security.ssl_manager import SSLConfigurationError, SSLManager
 from src.tasks.task_factory import TaskFactory
@@ -63,6 +64,7 @@ class ArgentumServer:
         self.auth_limiter = AuthLimiter(security)
         self._active_connections = 0
         self._stopping = False
+        self.restart_requested = False
         self._stop_task: asyncio.Task[None] | None = None
         self._client_tasks: set[asyncio.Task[None]] = set()
         self._receivers: set[asyncio.Task[bytes]] = set()
@@ -143,6 +145,12 @@ class ArgentumServer:
                 connection.session_redis = self.deps.redis_client.redis
             deadline = asyncio.get_running_loop().time() + self.auth_timeout_seconds
             message_sender = MessageSender(connection)
+            if self.deps and await ip_is_blocked(
+                self.deps.redis_client.redis, connection.address[0]
+            ):
+                await message_sender.send_error_msg("Esta conexión está bloqueada.")
+                await connection.flush()
+                return
             logger.info("Nueva conexión desde %s", connection.address)
             if self.deps and self.deps.redis_client:
                 await self.deps.redis_client.increment_connections()
@@ -323,6 +331,7 @@ class ArgentumServer:
         try:
             # Inicializar todas las dependencias usando ServerInitializer
             self.deps, _, _ = await ServerInitializer.initialize_all()
+            self.deps.admin_control = self.request_admin_stop
 
             # Crear TaskFactory con las dependencias
             self.task_factory = TaskFactory(self.deps)
@@ -398,6 +407,15 @@ class ArgentumServer:
 
         async with self.server:
             await self.server.serve_forever()
+
+    def request_admin_stop(self, restart: bool) -> None:
+        """Programa el cierre nativo sin esperar a la misma tarea que solicitó salir."""
+        if self._stopping:
+            return
+        self.restart_requested = restart
+        asyncio.get_running_loop().call_soon(
+            lambda: asyncio.create_task(self.stop(), name="admin-stop")
+        )
 
     async def stop(self) -> None:
         """Cierra una sola vez; un solicitante cancelado no cancela el cierre compartido."""

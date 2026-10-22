@@ -7,6 +7,8 @@ from src.services.action_cadence import ActionCadence
 from src.services.chat_budget import ChatBudget
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from src.game.game_tick import GameTick
     from src.game.map_manager import MapManager
     from src.models.item_catalog import ItemCatalog
@@ -113,3 +115,4 @@ class DependencyContainer:
     action_cadence: ActionCadence = field(default_factory=ActionCadence)
 
     chat_budget: ChatBudget = field(default_factory=ChatBudget)
+    admin_control: Callable[[bool], None] | None = None

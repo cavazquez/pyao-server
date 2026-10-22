@@ -1,81 +1,29 @@
-"""Sintaxis soportada y permisos derivados del personaje, sin ejecutar texto."""
+"""Catálogo de autocompletado compacto, derivado de los permisos del servidor."""
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from src.models.clan import ClanRank
+from src.config.config_manager import config_manager
+from src.services.classic_chat.catalog import COMMANDS, available_commands
 
 if TYPE_CHECKING:
     from src.core.dependency_container import DependencyContainer
 
-BASE_COMMANDS = (
-    ("/ayuda", "/ayuda"),
-    ("/est", "/est"),
-    ("/meditar", "/meditar"),
-    ("/boveda", "/boveda"),
-    ("/depositar", "/depositar cantidad"),
-    ("/retirar", "/retirar cantidad"),
-    ("/balance", "/balance"),
-    ("/comerciar", "/comerciar"),
-    ("/descansar", "/descansar"),
-    ("/contraseña", "/contraseña (abre formulario)"),
-    ("/PET", "/PET INFO | LIBERAR | SEGUIR | ESPERAR"),
+BASE_COMMANDS = tuple(
+    (entry.name, entry.syntax) for entry in COMMANDS.values() if entry.role != "gm"
 )
 
 
-async def command_snapshot(deps: DependencyContainer, user: int) -> dict[str, Any]:
-    """Expone sólo sintaxis real; las acciones siguen verificando sus propios permisos.
+async def command_snapshot(deps: DependencyContainer, user: int) -> dict[str, list[str]]:
+    """Envía nombres compactos; el cliente comparte sus metadatos de sintaxis.
 
     Returns:
-        Catálogo acotado según pertenencia, liderazgo y rangos vigentes.
+        Catálogo completo autorizado, dentro de un único frame de estado.
     """
-    commands = list(BASE_COMMANDS)
-    party = await deps.party_service.get_party_info(user)
-    if party is None:
-        commands.extend(
-            (
-                ("/crearparty", "/crearparty"),
-                ("/party", "/party nombre"),
-                ("/acceptparty", "/acceptparty nombre"),
-            )
+    gm = await deps.account_repo.is_gm_by_user_id(user)
+    names = [
+        entry.name
+        for entry in available_commands(
+            gm=gm, autoupdate=bool(config_manager.get("server.autoupdate_hook", ""))
         )
-    else:
-        commands.extend((("/salirparty", "/salirparty"), ("/pmsg", "/pmsg mensaje")))
-        if party.is_leader(user):
-            commands.extend(
-                (
-                    ("/party", "/party nombre"),
-                    ("/echarparty", "/echarparty nombre"),
-                    ("/partylider", "/partylider nombre"),
-                )
-            )
-    clan = await deps.clan_repo.get_user_clan(user)
-    actor = clan.get_member(user) if clan else None
-    if actor is None:
-        commands.append(("/CREARCLAN", "/CREARCLAN nombre [descripción]"))
-        invitation = await deps.clan_repo.get_invitation(user)
-        if invitation and not invitation.is_expired():
-            commands.extend((("/ACEPTARCLAN", "/ACEPTARCLAN"), ("/RECHAZARCLAN", "/RECHAZARCLAN")))
-    else:
-        commands.extend((("/CLAN", "/CLAN mensaje"), ("/SALIRCLAN", "/SALIRCLAN")))
-        if actor.can_invite_members():
-            commands.extend(
-                (("/INVITARCLAN", "/INVITARCLAN nombre"), ("/EXPULSARCLAN", "/EXPULSARCLAN nombre"))
-            )
-        if actor.can_promote_demote():
-            commands.extend(
-                (
-                    ("/PROMOVERCLAN", "/PROMOVERCLAN nombre"),
-                    ("/DEGRADARCLAN", "/DEGRADARCLAN nombre"),
-                )
-            )
-        if actor.rank == ClanRank.LEADER:
-            commands.append(("/TRANSFERIRLIDERAZGO", "/TRANSFERIRLIDERAZGO nombre"))
-    account = await deps.account_repo.get_account_by_user_id(user)
-    if account and account.get("is_gm") == "1":
-        commands.extend(
-            (
-                ("/MUTE", "/MUTE nombre minutos all|canales motivo"),
-                ("/UNMUTE", "/UNMUTE nombre motivo"),
-            )
-        )
-    return {"commands": [{"text": command, "syntax": syntax} for command, syntax in commands]}
+    ]
+    return {"names": sorted(set(names))}

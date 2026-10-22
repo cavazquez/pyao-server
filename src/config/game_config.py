@@ -32,6 +32,7 @@ class ServerConfig(BaseModel):
     wss_host: str = "127.0.0.1"
     wss_origins: list[str] = Field(default_factory=list, max_length=20)
     wss_tls_proxy: bool = False
+    autoupdate_hook: str = ""
 
 
 class CombatConfig(BaseModel):

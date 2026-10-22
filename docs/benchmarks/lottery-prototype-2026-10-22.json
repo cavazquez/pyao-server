@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "issue": 403,
+  "created_utc": "2026-10-22T13:43:30Z",
+  "probe_sha256": "ce1d0a770e8bec5968258291838510d456bcc76947f60481c7483f279c3670e0",
+  "redis": "8.10.2",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "rows": [
+    {
+      "participants": 1,
+      "redis_participant_hash_bytes": 88,
+      "json_payload_bytes": 31,
+      "prefix_build_p50_ns": 521,
+      "prefix_build_p95_ns": 842,
+      "interval_lookup_mean_ns": 36.0789,
+      "draw_lookup_samples": 10000
+    },
+    {
+      "participants": 128,
+      "redis_participant_hash_bytes": 4722,
+      "json_payload_bytes": 4429,
+      "prefix_build_p50_ns": 16501,
+      "prefix_build_p95_ns": 19686,
+      "interval_lookup_mean_ns": 107.3491,
+      "draw_lookup_samples": 10000
+    },
+    {
+      "participants": 4096,
+      "redis_participant_hash_bytes": 271582,
+      "json_payload_bytes": 148596,
+      "prefix_build_p50_ns": 894109,
+      "prefix_build_p95_ns": 1000346,
+      "interval_lookup_mean_ns": 166.8736,
+      "draw_lookup_samples": 10000
+    }
+  ],
+  "vectors_100_plus_300": [
+    {
+      "number": 0,
+      "winner_index": 0
+    },
+    {
+      "number": 98,
+      "winner_index": 0
+    },
+    {
+      "number": 99,
+      "winner_index": 1
+    },
+    {
+      "number": 395,
+      "winner_index": 1
+    }
+  ],
+  "gross": 400,
+  "fee": 4,
+  "pool": 396,
+  "simulation": {
+    "seed": 403,
+    "samples": 200000,
+    "wins_first": 50097,
+    "observed_first": 0.250485,
+    "expected_first": 0.25,
+    "normal_95_half_width": 0.0018977618396416342
+  },
+  "production_data_used": false,
+  "lottery_enabled": false,
+  "limitations": [
+    "stdlib PRNG is used only for a repeatable simulation, not the proposed production RNG",
+    "simulation does not prove cryptographic fairness or payment durability",
+    "Redis measurements include only participants, excluding receipts, round metadata and AOF",
+    "single development host with other tests; timings are not a production SLA"
+  ]
+}

@@ -155,6 +155,8 @@ def main() -> None:
 
     try:
         asyncio.run(run_until_stopped(server))
+        if server.restart_requested:
+            os.execv(sys.executable, [sys.executable, "-m", "src.run_server", *sys.argv[1:]])  # ruff: ignore[start-process-with-no-shell] - reinicio del mismo intérprete, sin ruta elegida por chat.
     except KeyboardInterrupt:
         logger.info("Servidor detenido por el usuario")
     except Exception:

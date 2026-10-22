@@ -17,6 +17,7 @@ from src.network.msg_player_stats import (
     build_update_gold_response,
 )
 from src.network.state_channel import send_state
+from src.services.classic_chat.maintenance import ClassicMaintenance
 from src.services.expansion.service import EXPANSION_TOPICS, ExpansionService
 from src.services.world.actions import TOPICS, clan_action, party_action
 from src.services.world.commands import command_snapshot
@@ -69,6 +70,7 @@ class WorldStateService:
         bind_groups(deps.party_service, deps.clan_service, self.lock)
         self.pets = PetOrders(deps.npc_service)
         self.weather = WeatherState(deps)
+        self.classic_maintenance = ClassicMaintenance(deps)
         self.expansion = ExpansionService(deps)
         self.cache: dict[tuple[str, str], str] = {}
         self.legacy_revisions: dict[str, int] = {}
@@ -95,6 +97,11 @@ class WorldStateService:
 
     async def _run(self) -> None:
         while True:
+            try:
+                async with self.lock:
+                    await self.classic_maintenance.tick()
+            except RedisError, ValueError, RuntimeError, ConnectionError:
+                logger.exception("Mantenimiento de comandos clásicos pendiente")
             epochs = set()
             for user in self.deps.map_manager.get_all_connected_user_ids():
                 sender = self.deps.map_manager.get_player_message_sender(user)

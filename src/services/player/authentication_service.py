@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from src.security.account_bans import is_blocked
+from src.security.ip_bans import ip_is_blocked
 from src.security.password_executor import PasswordQueueFullError
 
 if TYPE_CHECKING:
@@ -63,6 +64,11 @@ class AuthenticationService:
             await self.message_sender.send_error_msg("Servicio no disponible")
             return None
 
+        redis = self.account_repo.redis.redis
+        if await ip_is_blocked(redis, self.message_sender.connection.address[0]):
+            await self.message_sender.send_error_msg("Esta conexión está bloqueada.")
+            return None
+
         # Obtener datos de la cuenta
         account_data = await self.account_repo.get_account(username)
         if not account_data:
@@ -92,6 +98,21 @@ class AuthenticationService:
         # Autenticación exitosa
         user_id = int(account_data.get("user_id", 0))
         user_class = int(account_data.get("char_job", 1))
+        restricted = await redis.hget("server:admission", "gm_only") == "1"
+        clan = await redis.get(f"user:{user_id}:clan")
+        if isinstance(clan, bytes):
+            clan = clan.decode()
+        clan_banned = bool(clan and await redis.hget(f"clan:{clan}:ban", "active") == "1")
+        if restricted and account_data.get("is_gm") != "1":
+            await self.message_sender.send_error_msg(
+                "El servidor está temporalmente restringido a administradores."
+            )
+            return None
+        if clan_banned:
+            await self.message_sender.send_error_msg(
+                "El clan está bloqueado. Contacta a un moderador."
+            )
+            return None
         logger.info(
             "Autenticación exitosa para %s (ID: %d, Clase: %d)",
             username,

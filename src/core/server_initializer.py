@@ -13,6 +13,9 @@ from src.game.map_manager import MapManager
 from src.network.session_manager import SessionManager
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.runtime_paths import maps_dir
+from src.services.classic_chat.admin_operations import load_runtime_settings
+from src.services.classic_chat.admin_world import load_overlays, restore_saved_maps
+from src.services.classic_chat.jobs import ClassicActionsEffect
 from src.services.world.world_state import WorldStateService
 
 logger = logging.getLogger(__name__)
@@ -76,6 +79,7 @@ class ServerInitializer:
 
         # 1. Inicializar Redis y datos
         redis_client = await RedisInitializer.initialize()
+        await load_runtime_settings(redis_client.redis)
 
         # Redis conserva metadatos históricos; no participa del bind del socket.
         host = str(config_manager.get("server.host", "0.0.0.0"))
@@ -169,7 +173,10 @@ class ServerInitializer:
         )
 
         logger.info("=" * 60)
+        await load_overlays(container)
+        await restore_saved_maps(container)
         container.world_state = WorldStateService(container)
+        container.game_tick.add_effect(ClassicActionsEffect(container), first=True)
         logger.info("✓ SERVIDOR INICIALIZADO CORRECTAMENTE")
         logger.info("=" * 60)
 

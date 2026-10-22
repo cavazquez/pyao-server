@@ -33,6 +33,8 @@ class ClanMembershipMixin(ClanServiceHelpersMixin):
         clan = await self.clan_repo.get_user_clan(inviter_id)
         if not clan:
             return False, "No eres miembro de ningún clan", None
+        if await self.clan_repo.redis.redis.hget(f"clan:{clan.clan_id}:ban", "active") == "1":
+            return False, "El clan está suspendido", clan
 
         # Check if inviter has permission to invite
         inviter_member = clan.get_member(inviter_id)
@@ -145,6 +147,9 @@ class ClanMembershipMixin(ClanServiceHelpersMixin):
         if not clan:
             await self.clan_repo.delete_invitation(user_id)
             return None, "El clan ya no existe"
+        if await self.clan_repo.redis.redis.hget(f"clan:{clan.clan_id}:ban", "active") == "1":
+            await self.clan_repo.delete_invitation(user_id)
+            return None, "El clan está suspendido"
 
         # Check if clan is still not full
         if clan.is_full:

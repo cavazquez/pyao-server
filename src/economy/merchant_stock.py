@@ -70,6 +70,15 @@ def _read_policy(policy: dict[str, str]) -> tuple[list[list[int]], int, int]:
     raise ValueError(message)
 
 
+def stock_policy(policy: dict[str, str]) -> tuple[list[list[int]], int, int]:
+    """Expone la política validada para la reposición administrativa explícita.
+
+    Returns:
+        Objetos, período y última reposición.
+    """
+    return _read_policy(policy)
+
+
 def _validate_seed(entries: tuple[StockEntry, ...], interval_seconds: int) -> None:
     """Valida sólo la semilla que efectivamente se va a adoptar.
 
