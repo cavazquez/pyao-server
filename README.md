@@ -16,10 +16,10 @@
 
 <p align="center">
   <a href="https://snapcraft.io/pyao"><img src="https://img.shields.io/snapcraft/v/pyao/latest/edge?arch=amd64&amp;label=snap%20edge&amp;logo=snapcraft" alt="Versión de pyao en Snap latest/edge para amd64"></a>
-  <a href="https://github.com/cavazquez/pyao-server/issues/363"><img src="https://img.shields.io/badge/homebrew-pendiente-lightgrey?logo=homebrew" alt="Homebrew pendiente: issue 363"></a>
-  <a href="https://github.com/cavazquez/pyao-server/issues/364"><img src="https://img.shields.io/badge/apt-pendiente-lightgrey?logo=debian" alt="APT pendiente: issue 364"></a>
+  <a href="https://github.com/cavazquez/homebrew-pyao#macos-homebrew"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcavazquez%2Fhomebrew-pyao%2Fmain%2Fchannel-manifest.json&amp;query=%24.version&amp;label=homebrew&amp;logo=homebrew&amp;color=FBB040" alt="Versión publicada mediante Homebrew para macOS Intel y Apple Silicon"></a>
+  <a href="https://github.com/cavazquez/homebrew-pyao#debian-y-ubuntu-apt-firmado"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcavazquez%2Fhomebrew-pyao%2Fmain%2Fchannel-manifest.json&amp;query=%24.version&amp;label=apt&amp;logo=debian&amp;color=007ec6" alt="Versión publicada en APT firmado para amd64 y arm64"></a>
   <a href="https://github.com/cavazquez/pyao-server/issues/366"><img src="https://img.shields.io/badge/Microsoft%20Store-pendiente-lightgrey" alt="Microsoft Store pendiente de evaluación: issue 366"></a>
-  <a href="https://github.com/cavazquez/pyao-server/issues/365"><img src="https://img.shields.io/badge/winget-pendiente-lightgrey" alt="WinGet pendiente: issue 365"></a>
+  <a href="https://github.com/microsoft/winget-pkgs/pull/458433"><img src="https://img.shields.io/badge/winget-en%20revisi%C3%B3n-lightgrey" alt="Propuesta WinGet en revisión: Cavazquez.PyAOServer"></a>
 </p>
 
 <p align="center">
@@ -34,7 +34,9 @@
   <a href="https://github.com/cavazquez/pyao-server/releases">Releases</a>
 </p>
 
-Los canales marcados como pendientes enlazan sus issues de implementación.
+Homebrew y APT enlazan sus instrucciones de instalación verificadas. WinGet enlaza su propuesta en revisión; Microsoft Store sigue pendiente.
+
+Instalación y actualización: [Homebrew, APT firmado y estado de WinGet](https://github.com/cavazquez/homebrew-pyao#readme).
 
 Servidor de Argentum Online implementado en Python 3.14+ con asyncio.
 
