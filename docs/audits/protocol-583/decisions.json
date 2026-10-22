@@ -1,0 +1,879 @@
+{
+  "baseline_commits": {
+    "server": "9dd5467707118905e60720a897a4a4089fd3d2d4",
+    "client": "42398cd55dc4843d8ea2830d4dcf7003f62e2475"
+  },
+  "packets": {
+    "client:18": {
+      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
+      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_ACTION (252) / TRADE_STATE (252)"
+      ]
+    },
+    "client:19": {
+      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
+      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_ACTION (252) / TRADE_STATE (252)"
+      ]
+    },
+    "client:22": {
+      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
+      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_ACTION (252) / TRADE_STATE (252)"
+      ]
+    },
+    "client:23": {
+      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
+      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_ACTION (252) / TRADE_STATE (252)"
+      ]
+    },
+    "client:48": {
+      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
+      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_ACTION (252) / TRADE_STATE (252)"
+      ]
+    },
+    "server:9": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:10": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:11": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:12": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:84": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:86": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "server:106": {
+      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
+      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/591"
+      ],
+      "replacement": [
+        "TRADE_STATE (252); susurro (5) para mensajes privados"
+      ]
+    },
+    "client:31": {
+      "rationale": "La ventana de crafting usa recetas y cantidades validadas con operación idempotente, no los opcodes VB6.",
+      "impact": "La mecánica de fabricación usa una extensión propia; no duplicar handlers históricos.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION (251): recipes/craft"
+      ]
+    },
+    "client:32": {
+      "rationale": "La ventana de crafting usa recetas y cantidades validadas con operación idempotente, no los opcodes VB6.",
+      "impact": "La mecánica de fabricación usa una extensión propia; no duplicar handlers históricos.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION (251): recipes/craft"
+      ]
+    },
+    "client:123": {
+      "rationale": "La ventana de crafting usa recetas y cantidades validadas con operación idempotente, no los opcodes VB6.",
+      "impact": "La mecánica de fabricación usa una extensión propia; no duplicar handlers históricos.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION (251): recipes/craft"
+      ]
+    },
+    "client:34": {
+      "rationale": "La fundación de clan se resuelve desde su formulario con el servicio actual.",
+      "impact": "No hay que reactivar el paquete antiguo para fundar clanes.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.create"
+      ]
+    },
+    "client:114": {
+      "rationale": "La fundación de clan se resuelve desde su formulario con el servicio actual.",
+      "impact": "No hay que reactivar el paquete antiguo para fundar clanes.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.create"
+      ]
+    },
+    "client:115": {
+      "rationale": "La fundación de clan se resuelve desde su formulario con el servicio actual.",
+      "impact": "No hay que reactivar el paquete antiguo para fundar clanes.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.create"
+      ]
+    },
+    "client:49": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:50": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:51": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:52": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:53": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:54": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:55": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:56": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:58": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:59": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:60": {
+      "rationale": "Las propuestas y guerras tienen esquema y revisión propios en la extensión de diplomacia.",
+      "impact": "La política de diplomacia propia reemplaza la ventana y los opcodes VB6.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): diplomacy.*"
+      ]
+    },
+    "client:57": {
+      "rationale": "La membresía usa invitaciones y permisos actuales; no se traslada literalmente la solicitud del cliente VB6.",
+      "impact": "Comparar semántica, no sólo nombres: invitación no equivale a habilitar el opcode antiguo.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.invite/accept/reject/kick; TALK para consultas"
+      ]
+    },
+    "client:62": {
+      "rationale": "La membresía usa invitaciones y permisos actuales; no se traslada literalmente la solicitud del cliente VB6.",
+      "impact": "Comparar semántica, no sólo nombres: invitación no equivale a habilitar el opcode antiguo.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.invite/accept/reject/kick; TALK para consultas"
+      ]
+    },
+    "client:63": {
+      "rationale": "La membresía usa invitaciones y permisos actuales; no se traslada literalmente la solicitud del cliente VB6.",
+      "impact": "Comparar semántica, no sólo nombres: invitación no equivale a habilitar el opcode antiguo.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.invite/accept/reject/kick; TALK para consultas"
+      ]
+    },
+    "client:64": {
+      "rationale": "La membresía usa invitaciones y permisos actuales; no se traslada literalmente la solicitud del cliente VB6.",
+      "impact": "Comparar semántica, no sólo nombres: invitación no equivale a habilitar el opcode antiguo.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.invite/accept/reject/kick; TALK para consultas"
+      ]
+    },
+    "client:68": {
+      "rationale": "La membresía usa invitaciones y permisos actuales; no se traslada literalmente la solicitud del cliente VB6.",
+      "impact": "Comparar semántica, no sólo nombres: invitación no equivale a habilitar el opcode antiguo.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.invite/accept/reject/kick; TALK para consultas"
+      ]
+    },
+    "client:61": {
+      "rationale": "La consulta del clan existe, pero no se acredita una edición equivalente del sitio/noticias del clan.",
+      "impact": "El líder no dispone de la edición de ese campo desde el formulario actual.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/593",
+        "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
+      ]
+    },
+    "client:66": {
+      "rationale": "La información y elecciones disponibles usan el panel social y los comandos clásicos adaptados.",
+      "impact": "La edición de noticias/sitio/códice requiere distinguirse de la mera consulta. No se acredita edición sólo por esta sustitución.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.read; TALK /VOTO /MIEMBROSCLAN"
+      ]
+    },
+    "client:67": {
+      "rationale": "La información y elecciones disponibles usan el panel social y los comandos clásicos adaptados.",
+      "impact": "La edición de noticias/sitio/códice requiere distinguirse de la mera consulta. No se acredita edición sólo por esta sustitución.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.read; TALK /VOTO /MIEMBROSCLAN"
+      ]
+    },
+    "client:125": {
+      "rationale": "La información y elecciones disponibles usan el panel social y los comandos clásicos adaptados.",
+      "impact": "La edición de noticias/sitio/códice requiere distinguirse de la mera consulta. No se acredita edición sólo por esta sustitución.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.read; TALK /VOTO /MIEMBROSCLAN"
+      ]
+    },
+    "client:74": {
+      "rationale": "Las órdenes operativas usan la identidad real de mascota y los servicios actuales.",
+      "impact": "No reenviar las órdenes binarias antiguas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): pets.order/pets.release; TALK /QUIETO /ACOMPAÑAR /LIBERAR"
+      ]
+    },
+    "client:75": {
+      "rationale": "Las órdenes operativas usan la identidad real de mascota y los servicios actuales.",
+      "impact": "No reenviar las órdenes binarias antiguas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): pets.order/pets.release; TALK /QUIETO /ACOMPAÑAR /LIBERAR"
+      ]
+    },
+    "client:76": {
+      "rationale": "Las órdenes operativas usan la identidad real de mascota y los servicios actuales.",
+      "impact": "No reenviar las órdenes binarias antiguas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): pets.order/pets.release; TALK /QUIETO /ACOMPAÑAR /LIBERAR"
+      ]
+    },
+    "client:39": {
+      "rationale": "El entrenador se usa físicamente y sus listas se muestran en consola.",
+      "impact": "La ausencia del opcode Train no impide entrenar.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "TALK /ENTRENAR"
+      ]
+    },
+    "client:77": {
+      "rationale": "El entrenador se usa físicamente y sus listas se muestran en consola.",
+      "impact": "La ausencia del opcode Train no impide entrenar.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "TALK /ENTRENAR"
+      ]
+    },
+    "client:120": {
+      "rationale": "El botón GRUPO abre el estado estructurado de party.",
+      "impact": "La ventana propia no necesita RequestPartyForm clásico.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): party.read"
+      ]
+    },
+    "client:20": {
+      "rationale": "Se dispone de susurro privado; no existe una consola de chat incrustada en el intercambio clásico.",
+      "impact": "El chat privado está disponible; la UI de comercio no ofrece el chat VB6 incrustado.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WHISPER (5)"
+      ]
+    },
+    "client:12": {
+      "rationale": "Se consulta el clan por la interfaz y las consultas autorizadas actuales.",
+      "impact": "No reintroducir una ventana VB6 por conservar el ID.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_ACTION (248): clan.read; TALK /MIEMBROSCLAN"
+      ]
+    },
+    "server:13": {
+      "rationale": "La ventana de fabricación propia recibe recetas, cantidades y resultado correlacionado.",
+      "impact": "Los lectores vacíos antiguos no son la implementación de crafting.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION_STATE (255): catálogo de recetas"
+      ]
+    },
+    "server:14": {
+      "rationale": "La ventana de fabricación propia recibe recetas, cantidades y resultado correlacionado.",
+      "impact": "Los lectores vacíos antiguos no son la implementación de crafting.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION_STATE (255): catálogo de recetas"
+      ]
+    },
+    "server:51": {
+      "rationale": "La ventana de fabricación propia recibe recetas, cantidades y resultado correlacionado.",
+      "impact": "Los lectores vacíos antiguos no son la implementación de crafting.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION_STATE (255): catálogo de recetas"
+      ]
+    },
+    "server:52": {
+      "rationale": "La ventana de fabricación propia recibe recetas, cantidades y resultado correlacionado.",
+      "impact": "Los lectores vacíos antiguos no son la implementación de crafting.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION_STATE (255): catálogo de recetas"
+      ]
+    },
+    "server:53": {
+      "rationale": "La ventana de fabricación propia recibe recetas, cantidades y resultado correlacionado.",
+      "impact": "Los lectores vacíos antiguos no son la implementación de crafting.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "SKILL_ACTION_STATE (255): catálogo de recetas"
+      ]
+    },
+    "server:25": {
+      "rationale": "El servidor publica /CMSG a la audiencia de clan con mensajes de consola.",
+      "impact": "El stub GuildChat no impide el chat de clan.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): audiencia de clan"
+      ]
+    },
+    "server:43": {
+      "rationale": "Clima e intensidad se representan con el estado estructurado por mapa.",
+      "impact": "No activar RainToggle o SendNight sin un emisor y una política de mapa coherentes.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): weather"
+      ]
+    },
+    "server:87": {
+      "rationale": "Clima e intensidad se representan con el estado estructurado por mapa.",
+      "impact": "No activar RainToggle o SendNight sin un emisor y una política de mapa coherentes.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): weather"
+      ]
+    },
+    "server:46": {
+      "rationale": "La solicitud de objetivo usa el subtipo WorkRequestTarget operativo.",
+      "impact": "El ID 46 independiente se conserva sin habilitar.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "MULTI_MESSAGE (104), subtipo 17"
+      ]
+    },
+    "server:72": {
+      "rationale": "El listado del entrenador se consulta y selecciona mediante comandos.",
+      "impact": "La función física usa el servicio actual sin TrainerCreatureList.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): /ENTRENAR"
+      ]
+    },
+    "server:73": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:74": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:75": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:76": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:77": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:78": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:79": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:81": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:83": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:98": {
+      "rationale": "Los paneles sociales y los comandos paginados reemplazan las antiguas ventanas Win32.",
+      "impact": "La sustitución no acredita todos los campos de edición del cliente VB6; los faltantes deben revisarse por operación.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "WORLD_STATE (248): clan/diplomacy; CONSOLE_MSG (24)"
+      ]
+    },
+    "server:90": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:91": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:92": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:93": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:94": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:95": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:96": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:97": {
+      "rationale": "Los informes de asistencia, denuncias y registros se consultan mediante comandos GM autorizados.",
+      "impact": "Las antiguas ventanas de administración no son necesarias para estas consultas.",
+      "priority": "P3",
+      "issues": [],
+      "replacement": [
+        "CONSOLE_MSG (24): consultas GM paginadas"
+      ]
+    },
+    "server:85": {
+      "rationale": "No hay emisor de BANK_OK y el dispatcher sólo contiene pass. Banco se confirma con sus snapshots y actualizaciones efectivas.",
+      "impact": "Ninguna operación bancaria depende de este ACK vacío; retirarlo de supported requiere el seguimiento de coherencia.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/590"
+      ],
+      "retired": true
+    },
+    "server:103": {
+      "rationale": "El contrato actual fija 30 slots y no ofrece ampliación de inventario.",
+      "impact": "No habilitar capacidad adicional por enviar el opcode AddSlots.",
+      "priority": "P3",
+      "issues": [],
+      "retired": true
+    },
+    "server:99": {
+      "rationale": "El servidor emite el ID en login, pero no hay rama receptora. GRUPO se crea desde el HUD y usa WORLD_ACTION.",
+      "impact": "Se envía una señal sin efecto y aparece el nombre del paquete en el diagnóstico; no significa que falten parties.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/589"
+      ],
+      "reproduction": "Iniciar sesión y observar SHOW_PARTY_FORM en message_session_sender.py y ausencia del caso en message_dispatcher.gd."
+    },
+    "server:7": {
+      "rationale": "El emisor activo send_commerce_init_empty coincide con el contrato. Existe además un constructor extendido incompatible, detrás de un wrapper sin uso real.",
+      "impact": "Usar por error send_commerce_init puede desalinear el stream del cliente.",
+      "priority": "P1",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/588"
+      ],
+      "reproduction": "Construir build_commerce_init_response(1, []) y comparar su longitud con el único byte permitido para COMMERCE_INIT.",
+      "partial": true
+    },
+    "server:38": {
+      "rationale": "La ruta MIDI existe, pero no se acredita música audible de introducción/mapa por encontrar el writer.",
+      "impact": "La verificación musical sigue en el issue del cliente #215.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/ArgentumOnlineGodot/issues/215"
+      ]
+    },
+    "client:11": {
+      "rationale": "Seguro específico de resurrección no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Seguro específico de resurrección. No confundir el enum histórico con una implementación.",
+      "priority": "P3",
+      "issues": []
+    },
+    "client:14": {
+      "rationale": "Fama/reputación clásica VB6 no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Fama/reputación clásica VB6. No confundir el enum histórico con una implementación.",
+      "priority": "P3",
+      "issues": []
+    },
+    "client:29": {
+      "rationale": "Macro automática de hechizos no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Macro automática de hechizos. No confundir el enum histórico con una implementación.",
+      "priority": "P3",
+      "issues": []
+    },
+    "client:44": {
+      "rationale": "Publicación en foros del mapa no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Publicación en foros del mapa. No confundir el enum histórico con una implementación.",
+      "priority": "P3",
+      "issues": []
+    },
+    "client:46": {
+      "rationale": "Reordenamiento de slots de la bóveda no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Reordenamiento de slots de la bóveda. No confundir el enum histórico con una implementación.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/592",
+        "https://github.com/cavazquez/ArgentumOnlineGodot/issues/234"
+      ]
+    },
+    "client:47": {
+      "rationale": "Edición del códice del clan no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Edición del códice del clan. No confundir el enum histórico con una implementación.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/593",
+        "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
+      ]
+    },
+    "client:121": {
+      "rationale": "Mejora de objetos con ItemUpgrade no tiene una ruta equivalente acreditada en el cliente actual.",
+      "impact": "Ausencia funcional o decisión de producto pendiente: Mejora de objetos con ItemUpgrade. No confundir el enum histórico con una implementación.",
+      "priority": "P3",
+      "issues": []
+    },
+    "client:65": {
+      "rationale": "La consulta del clan existe, pero no se acredita una edición equivalente del sitio/noticias del clan.",
+      "impact": "El líder no dispone de la edición de ese campo desde el formulario actual.",
+      "priority": "P2",
+      "issues": [
+        "https://github.com/cavazquez/pyao-server/issues/593",
+        "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
+      ]
+    }
+  },
+  "subtypes": {},
+  "followups": {
+    "commerce_init": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Protocolo: unificar COMMERCE_INIT con su formato de un byte",
+      "priority": "P1",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/588"
+    },
+    "party_signal": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Protocolo: retirar SHOW_PARTY_FORM sin receptor conservando la ventana GRUPO",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/589"
+    },
+    "contract_metadata": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Protocolo: actualizar metadatos de capacidades y declaraciones obsoletas del contrato",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/590"
+    },
+    "legacy_trade": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Protocolo: consolidar el intercambio de jugadores en TRADE_ACTION y TRADE_STATE",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/591"
+    },
+    "bank_server": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Banco: implementar reordenamiento persistente y validado de slots de bóveda",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/592"
+    },
+    "bank_client": {
+      "repository": "cavazquez/ArgentumOnlineGodot",
+      "title": "Banco: permitir reordenar la bóveda y mostrar el resultado confirmado",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/ArgentumOnlineGodot/issues/234"
+    },
+    "clan_server": {
+      "repository": "cavazquez/pyao-server",
+      "title": "Clanes: agregar edición autorizada de códice, noticias y sitio de la ficha pública",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/pyao-server/issues/593"
+    },
+    "clan_client": {
+      "repository": "cavazquez/ArgentumOnlineGodot",
+      "title": "Clanes: agregar edición de la ficha pública para líderes",
+      "priority": "P2",
+      "state": "created",
+      "url": "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
+    }
+  },
+  "deferred_product_decisions": [
+    {
+      "packet": "client:11",
+      "topic": "Seguro de resurrección específico, distinto del seguro PvP."
+    },
+    {
+      "packet": "client:14",
+      "topic": "Reputación VB6 frente a las facciones y prestigio propios."
+    },
+    {
+      "packet": "client:29",
+      "topic": "Macro automática de hechizos."
+    },
+    {
+      "packet": "client:44",
+      "topic": "Foros de objetos del mapa."
+    },
+    {
+      "packet": "client:121",
+      "topic": "Mejora de ítems; no equivale a desgaste o fabricación."
+    }
+  ]
+}

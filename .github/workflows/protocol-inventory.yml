@@ -1,0 +1,49 @@
+name: Inventario cruzado del protocolo
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  protocol-inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Leer la revisión auditada del cliente
+        id: peer
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          record = json.loads(Path("docs/audits/protocol-583/decisions.json").read_text())
+          commit = record["baseline_commits"]["client"]
+          assert re.fullmatch(r"[0-9a-f]{40}", commit)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write("commit=" + commit + "\n")
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: cavazquez/ArgentumOnlineGodot
+          ref: ${{ steps.peer.outputs.commit }}
+          path: build/protocol-peer
+          persist-credentials: false
+          sparse-checkout: |
+            common
+            engine
+            network
+            screens
+            ui
+            protocol
+            tests
+      - name: Detectar divergencias de IDs, rutas, campos e inventario revisado
+        run: python3 tools/analysis/protocol_inventory.py --client build/protocol-peer --check
+      - name: Probar mutaciones que deben detectar futuras divergencias
+        run: python3 -m unittest discover -s tools/tests -p test_protocol_inventory.py -v

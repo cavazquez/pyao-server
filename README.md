@@ -46,6 +46,9 @@ Los PR ejecutan validaciones, pruebas y controles de dependencias sin construir
 distribuciones. Compilar y publicar son operaciones manuales separadas; ver
 [CI y releases](docs/development/CI_RELEASES.md).
 
+La [auditoría cruzada del protocolo](docs/audits/protocol-583/README.md) distingue
+paquetes operativos, rutas pendientes, extensiones y funciones adaptadas del original.
+
 > Implementación moderna y eficiente del servidor de Argentum Online.
 
 Índice de toda la documentación interna: **[docs/README.md](docs/README.md)**.
