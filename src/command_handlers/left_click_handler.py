@@ -164,9 +164,16 @@ class LeftClickCommandHandler(CommandHandler):
                     return CommandResult.ok(data=data)
                 return CommandResult.error(error_msg or "Error al procesar click en NPC")
 
-            if max(
+            player_on_tile = max(
                 abs(x - position["x"]), abs(y - position["y"])
-            ) <= TARGET_RANGE and await self._select_player(user_id, map_id, x, y):
+            ) <= TARGET_RANGE and await self._select_player(user_id, map_id, x, y)
+            # Seleccionar al ocupante conserva su objetivo, pero la puerta aún
+            # debe informar que no se puede cerrar mientras alguien la ocupa.
+            door_on_tile = (
+                self.tile_handler.map_resources
+                and self.tile_handler.map_resources.get_door_at(map_id, x, y)
+            )
+            if player_on_tile and not door_on_tile:
                 return CommandResult.ok()
             # No hay NPC, mostrar información del tile
             success, error_msg, data = await self.tile_handler.handle_tile_click(map_id, x, y)
@@ -182,7 +189,7 @@ class LeftClickCommandHandler(CommandHandler):
         """Selecciona un jugador visible y muestra su descripción sólo al observador.
 
         Returns:
-            Si había un jugador y no corresponde mostrar información del terreno.
+            Si un jugador ajeno ocupa el tile, sin revelar identidades camufladas.
         """
         if self.map_manager is None:
             return False
