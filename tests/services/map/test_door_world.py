@@ -1,16 +1,20 @@
 """Puertas restauradas y compartidas por jugadores, NPCs y reservas."""
 
 import asyncio
+import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from src.command_handlers.left_click_handler import LeftClickCommandHandler
+from src.commands.left_click_command import LeftClickCommand
 from src.game.coordinate_mask import CoordinateMask
 from src.game.map_manager import MapManager
 from src.repositories.door_repository import DoorRepository
 from src.services.map.door_service import DoorService
 from src.services.map.door_world import DoorWorld
+from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import transact
 
 
@@ -39,6 +43,73 @@ async def make_world(redis):
     for user, sender in enumerate(senders, 1):
         maps.add_player(111, user, sender, f"Prueba{user}")
     return doors, maps, senders
+
+
+async def make_player_click_world(redis, *, on_door=True):
+    """Conecta el handler real con una puerta compartida y dos jugadores."""
+    doors, maps, senders = await make_world(redis)
+    with patch("src.services.map.door_world.require_durable", new=AsyncMock()):
+        assert (await doors.toggle(1, 48, 65))["applied"]
+    maps.door_world = doors
+    terrain = doors.terrain
+    terrain.get_door_at = lambda mid, x, y: terrain.doors.get(f"map_{mid}", {}).get((x, y))
+    for user, position in ((1, (48 if on_door else 47, 65)), (2, (45, 62))):
+        maps.remove_player(111, user)
+        maps.add_player(1, user, senders[user - 1], f"Prueba{user}")
+        maps.update_player_tile(user, 1, 0, 0, *position)
+    await redis.redis.hset(RedisKeys.player_user_stats(1), mapping={"description": "Un viajero"})
+    player_repo = SimpleNamespace(
+        redis=redis, get_position=AsyncMock(return_value={"map": 1, "x": 45, "y": 62})
+    )
+    handler = LeftClickCommandHandler(
+        player_repo, maps, terrain, None, None, doors.catalog, doors.repository, redis, senders[1]
+    )
+    return handler, doors, maps, senders
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("concealment", [None, "hidden_until", "invisible_until"])
+async def test_player_selection_preserves_occupied_door_rejection(redis_client, concealment):
+    """Seleccionar el ocupante no oculta el rechazo ni revela jugadores camuflados."""
+    handler, _doors, maps, senders = await make_player_click_world(redis_client)
+    if concealment:
+        await redis_client.redis.hset(
+            RedisKeys.player_user_stats(1), concealment, str(time.time() + 600)
+        )
+    result = await handler.handle(LeftClickCommand(user_id=2, map_id=1, x=48, y=65))
+    assert result.success
+    lines = [call.args[0] for call in senders[1].send_console_msg.call_args_list]
+    assert any("ocupada" in line for line in lines)
+    assert await redis_client.get("door:1:48:65") == "7:1"
+    assert await redis_client.get("door:1:49:65") == "7:1"
+    assert maps.can_move_to(1, 49, 65)
+    assert await redis_client.redis.hget("chat:target:2", "user") == ("0" if concealment else "1")
+    assert any("Prueba1: Un viajero" in line for line in lines) is (concealment is None)
+    for sender in senders:
+        sender.send_object_create.assert_not_awaited()
+        sender.send_block_position.assert_not_awaited()
+    maps.update_player_tile(1, 1, 48, 65, 47, 65)
+    with patch("src.services.map.door_world.require_durable", new=AsyncMock()):
+        assert (await handler.handle(LeftClickCommand(user_id=2, map_id=1, x=48, y=65))).success
+    assert await redis_client.get("door:1:48:65") == "8:0"
+    assert await redis_client.get("door:1:49:65") == "8:0"
+    assert not maps.can_move_to(1, 48, 65)
+    for sender in senders:
+        assert sender.send_block_position.await_count == 2
+    _restored, restored_maps, _ = await make_world(redis_client)
+    assert not restored_maps.can_move_to(1, 48, 65)
+    assert not restored_maps.can_move_to(1, 49, 65)
+
+
+@pytest.mark.asyncio
+async def test_player_on_regular_tile_keeps_description_without_terrain_messages(redis_client):
+    """Fuera de una puerta el clic conserva únicamente el objetivo y su descripción."""
+    handler, _doors, _maps, senders = await make_player_click_world(redis_client, on_door=False)
+    result = await handler.handle(LeftClickCommand(user_id=2, map_id=1, x=47, y=65))
+    assert result.success
+    senders[1].send_console_msg.assert_awaited_once_with("Prueba1: Un viajero")
+    assert await redis_client.redis.hget("chat:target:2", "user") == "1"
+    assert await redis_client.get("door:1:48:65") == "7:1"
 
 
 @pytest.mark.asyncio
