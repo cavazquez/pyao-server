@@ -7,6 +7,8 @@ import time
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from src.desktop.indicator import ServerProcess, linux_indicator
 
 
@@ -62,17 +64,26 @@ def test_stop_is_graceful_and_only_signals_own_process(tmp_path, monkeypatch):
             unrelated.wait()
 
 
-def test_closing_indicator_detaches_instead_of_stopping_own_server(tmp_path, monkeypatch):
+@pytest.mark.parametrize("close_input_first", [False, True], ids=["detach", "closed-reader"])
+def test_closing_indicator_detaches_instead_of_stopping_own_server(
+    tmp_path, monkeypatch, close_input_first
+):
     """Un bridge que cierra su menú conserva el hijo que ya había iniciado."""
     monkeypatch.setenv("PYAO_STATE_DIR", str(tmp_path))
+    supervisor = ServerProcess([])
     bridge = tmp_path / "tray"
     bridge.write_text(
-        f"#!{sys.executable}\nimport time\nprint('READY',flush=True)\n"
-        "time.sleep(0.1)\nprint('DETACH',flush=True)\n"
+        f"#!{sys.executable}\nimport os,time\nfrom pathlib import Path\n"
+        + ("os.close(0)\n" if close_input_first else "")
+        + "print('READY',flush=True)\ndeadline=time.monotonic()+5\n"
+        + f"owned_log=Path({str(supervisor.log)!r})\n"
+        + "while not owned_log.exists() and time.monotonic()<deadline: time.sleep(0.01)\n"
+        + "assert owned_log.exists(), 'El supervisor no inició su servidor'\n"
+        + ("" if close_input_first else "print('DETACH',flush=True)\n")
     )
     bridge.chmod(0o755)
     original = subprocess.Popen
-    supervisor = ServerProcess([])
+    bridges = []
 
     def start(command, **kwargs: object):
         if command[:3] == [sys.executable, "-m", "src.run_server"]:
@@ -81,7 +92,10 @@ def test_closing_indicator_detaches_instead_of_stopping_own_server(tmp_path, mon
                 "-c",
                 "import time; print('READY',flush=True); time.sleep(30)",
             ]
-        return original(command, **kwargs)
+            return original(command, **kwargs)
+        process = original(command, **kwargs)
+        bridges.append(process)
+        return process
 
     try:
         with (
@@ -89,7 +103,13 @@ def test_closing_indicator_detaches_instead_of_stopping_own_server(tmp_path, mon
             patch("src.desktop.indicator.subprocess.Popen", side_effect=start),
         ):
             assert linux_indicator(supervisor, Path("icon.png")) == 0
+        assert supervisor.process is not None
         assert supervisor.process.poll() is None
+        assert len(bridges) == 1
+        assert bridges[0].poll() is not None
+        assert bridges[0].stdin.closed
+        assert bridges[0].stdout.closed
     finally:
-        supervisor.process.send_signal(signal.SIGINT)
-        supervisor.process.wait(timeout=5)
+        if supervisor.process is not None:
+            supervisor.process.send_signal(signal.SIGINT)
+            supervisor.process.wait(timeout=5)
