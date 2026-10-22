@@ -1,6 +1,8 @@
 """Paquetes de canales: identidad común y rechazo de candidatos alterados."""
 
 import json
+import shutil
+import subprocess  # noqa: S404 - Comandos dpkg fijos sobre paquetes de fixture propios.
 import zipfile
 from pathlib import Path
 
@@ -15,6 +17,8 @@ from tools.channel_repository import (
 )
 from tools.package_channels import (
     archive_tree,
+    build_deb,
+    deb_asset_name,
     deb_version,
     file_inventory,
     seal_server,
@@ -30,6 +34,74 @@ from tools.package_channels import (
 def test_debian_version_preserves_prerelease_order(value: str, expected: str) -> None:
     """La sintaxis Debian conserva la identidad de producto y ordena RC antes de final."""
     assert deb_version(value) == expected
+
+
+@pytest.mark.parametrize(
+    ("archive", "expected"),
+    [
+        ("pyao-server_1.0.0~rc5_amd64.deb", "pyao-server_1.0.0.rc5_amd64.deb"),
+        ("pyao-client_1.0.0~rc5_arm64.deb", "pyao-client_1.0.0.rc5_arm64.deb"),
+        ("pyao-client_1.0.0_amd64.deb", "pyao-client_1.0.0_amd64.deb"),
+    ],
+)
+def test_debian_asset_name_survives_github_normalization(archive: str, expected: str) -> None:
+    """GitHub sustituye el tilde; el índice debe usar el mismo nombre público."""
+    assert deb_asset_name(archive) == expected
+    assert deb_asset_name(expected) == expected
+
+
+@pytest.mark.parametrize("archive", ["../app.deb", "a/b.deb", "a\\b.deb", "x y.deb", "x.zip"])
+def test_debian_asset_name_rejects_escaping_or_ambiguous_paths(archive: str) -> None:
+    """Un nombre remoto no puede introducir rutas ni caracteres normalizados."""
+    with pytest.raises(ValueError, match="Debian"):
+        deb_asset_name(archive)
+
+
+@pytest.mark.parametrize("platform_name", ["linux", "linux-arm64"])
+def test_debian_rc_keeps_internal_order_and_runtime_bytes(
+    tmp_path: Path, platform_name: str
+) -> None:
+    """Construye un .deb de fixture y comprueba su control y payload reales."""
+    dpkg_deb = shutil.which("dpkg-deb")
+    dpkg = shutil.which("dpkg")
+    if dpkg_deb is None or dpkg is None:
+        pytest.skip("La fixture requiere las herramientas Debian")
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    executable = "pyao-client.arm64" if platform_name.endswith("arm64") else "pyao-client.x86_64"
+    payload = b"#!/bin/sh\nexit 0\n"
+    (candidate / executable).write_bytes(payload)
+    (candidate / executable).chmod(0o755)
+    (candidate / "pyao-client.png").write_bytes(b"unit-fixture-icon")
+    (candidate / "LICENSE").write_text("unit fixture")
+    record = {
+        "platform": platform_name,
+        "version": "1.0.0rc5",
+        "commit": "a" * 40,
+        "dirty": False,
+        "files": file_inventory(candidate),
+        "user_data_name": "unit-fixture",
+    }
+    manifest = candidate / "candidate-manifest.json"
+    manifest.write_text(json.dumps(record))
+    proof = tmp_path / "proof.json"
+    proof.write_text(json.dumps({"passed": True, "candidate_manifest_sha256": sha(manifest)}))
+    result = build_deb(candidate, "client", proof, tmp_path / "debs")
+    package = tmp_path / "debs" / result["archive"]
+    assert "~" not in package.name
+    assert ".rc5_" in package.name
+    version = subprocess.check_output(  # noqa: S603 - Lector dpkg sobre el paquete de esta fixture.
+        [dpkg_deb, "--field", str(package), "Version"], text=True
+    )
+    assert version.strip() == "1.0.0~rc5"
+    subprocess.run(  # noqa: S603 - Comparación de versiones generadas por la fixture.
+        [dpkg, "--compare-versions", version.strip(), "lt", "1.0.0"], check=True
+    )
+    extracted = tmp_path / "extracted"
+    subprocess.run(  # noqa: S603 - Extracción del paquete propio dentro de tmp_path.
+        [dpkg_deb, "--extract", str(package), str(extracted)], check=True
+    )
+    assert (extracted / "opt/pyao-client" / executable).read_bytes() == payload
 
 
 @pytest.mark.parametrize("value", ["../1", "1.0.0; x", "v1.0.0", "1.0.0rc-1"])
