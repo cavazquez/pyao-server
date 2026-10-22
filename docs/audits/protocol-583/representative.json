@@ -1,0 +1,1318 @@
+{
+  "commits": {
+    "server": "9dd5467707118905e60720a897a4a4089fd3d2d4",
+    "client": "42398cd55dc4843d8ea2830d4dcf7003f62e2475"
+  },
+  "result_sha256": "5e02414a9a0bb0927e77110c888122358ae67ddc61ad55670c31a2b4babf0468",
+  "scenarios_sha256": "dcf2c359493f437928e9c62c114eeac1a94d0467bd42786aeaaac12931605390",
+  "runtime_inputs": [
+    {
+      "repository": "client",
+      "path": "common/enums/enums.gd",
+      "sha256": "eb5f1672ec533c8fc1d0d2dc6c940f65041eae0edb63fb51ef39d1ddb1984ede"
+    },
+    {
+      "repository": "client",
+      "path": "engine/autoload/client_interface.gd",
+      "sha256": "7685e1641182d898aacd1a7604423ca316ffdd02100a9474112f755e01743217"
+    },
+    {
+      "repository": "client",
+      "path": "engine/autoload/game_protocol.gd",
+      "sha256": "432a5978c497624b4b1f9d6986bf1d9238f56ead961065b1efb44368cd1783a9"
+    },
+    {
+      "repository": "client",
+      "path": "network/client_capabilities.gd",
+      "sha256": "a8913b8ce22e37257c895dea5780cb4b4341164152bbb718854cc6fedd232503"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/AreaChanged.gd",
+      "sha256": "9d1f37ba5054754f0f6997c4abaece3268263302b7e1be94cb9f83c4ccf8a33b"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/Atributes.gd",
+      "sha256": "87981a778469003fd15303fdc447fd533ebe5cfea4bfb709a9373fa75df9aecb"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/BankInit.gd",
+      "sha256": "a5d750b5759dafea851e514d74cd020fd5f496ecdaf718461a48f0c5d615b829"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/BlacksmithArmors.gd",
+      "sha256": "aac9e85e306dc3194537f8a01bc638317aa9a7c604c8e70cf08af09a5b8fccb6"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/BlacksmithWeapons.gd",
+      "sha256": "b5f125e5c79ffa641f9f809b59ef08a1e384e91a462b38907896156f7b6be65b"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/BlockPosition.gd",
+      "sha256": "6a4f174720547ddfd0cd88f05c2df6377c4a88063444951732816ec7e7d0f814"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CancelOfferItem.gd",
+      "sha256": "0b78e2529915ba2aeae41f774d3a9dbdd6dec5c4fca42ef8c9bdd56f0d022dc2"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CarpenterObjects.gd",
+      "sha256": "195cbb635546ebb7ed1e8c8a1b650e4f9e2aabbee8a9f24c660fe597b8ced731"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChangeBankSlot.gd",
+      "sha256": "5f1a712da82618573dee87a6890528fd902da812f391912954d6593cbc8302c4"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChangeInventorySlot.gd",
+      "sha256": "80b2bca953e26e6c51566fc679df77153b72a36efa2470c7c117ff5900c173ad"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChangeMap.gd",
+      "sha256": "60aa8c9cbd232c89a08eee006a14d57941da936c42c690281c47d7d36ce7e9d1"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChangeNPCInventorySlot.gd",
+      "sha256": "5b8bf5956aa77350535e0da6cf2ac8d4615c82f2449944d0be782588a3d97e21"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChangeSpellSlot.gd",
+      "sha256": "68d24c3c30f489c88a43643b85d0ee56fe314c3045e6cfdeac73506ca62bd580"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CharacterChange.gd",
+      "sha256": "e42313500e0f4661335871bfd599cd71e833366f61a147c19c27095259f2a42f"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CharacterChangeNick.gd",
+      "sha256": "e25d122c6aa62ee50ba955ac7022af8d3870cb19624770c80a271d5fe2ee9dcd"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CharacterCreate.gd",
+      "sha256": "f6b40982b4985668f41e6e23dc050f11b8f380109e9f4e1c9c0146976232d665"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CharacterMove.gd",
+      "sha256": "36690cc2e0000960ce863c64cd3e94ec06c6280512e911d7bce0c841b0d24588"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CharacterRemove.gd",
+      "sha256": "73d0897ea973d50df39feabfe78dc121c96045adc9e3be803e6b4b771e28a970"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ChatOverHead.gd",
+      "sha256": "73c3b6c6aeeb7acbcb1b85c64e33d0ddf21f00e8aa91fa3877b8fe5ae5847184"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ClanDetailsPacket.gd",
+      "sha256": "d9d5d645d7272151812e936603ac49c1a77ec4bb7b267f7bbf32da531b1556f0"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CommerceChat.gd",
+      "sha256": "ab3a1ac8d195eb3bdd509dfe87239497f3ba1f4744d59e00e61631a4027a3fe9"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ConsoleMessage.gd",
+      "sha256": "c266aa1c852f935c98fd0623311930e0f82723979fe578aeb85d5411ce5ea62f"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/CreateFx.gd",
+      "sha256": "cb663ac07f562ec5c80c587b28ffe8c493036fb05777006d6cecb2e7c4f272bb"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ErrorMsg.gd",
+      "sha256": "90d6450969e20504f31a1b665d95123dbf5520f28a1902163de4ddf4cc500303"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/Fame.gd",
+      "sha256": "1c17993210fd86363a0e55db8d8981cb4cd07621b66e9ab5469d16ee1ec74714"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ForceCharMove.gd",
+      "sha256": "61a1c4b18f20a2220925a5588686889ec4c848e51abb84e64d3b30311ec14a49"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/GuildChat.gd",
+      "sha256": "cbd59b22fd11af95fe6928f248312880c344757219ac26c9f53aa8bf2bbc46a1"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/LevelUp.gd",
+      "sha256": "feb79cc67cb58f782605fbb33622c4f46b6b8251040c0583f2d6e9d48861a6ea"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/Logged.gd",
+      "sha256": "d6c32416a7a0a68d194ec27a0ab1807ed8948d7148d5c240b4ed555de2569236"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/MiniStats.gd",
+      "sha256": "48d3b931ff7b5ee43a57c8977ac5715c0e694f4e76d14ad05c361b5a1ce0ca46"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/MultiMessage.gd",
+      "sha256": "4829328f2974f9d6c7abadd2df33873b49422e5d46baae8c49732c5f027e3a78"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ObjectCreate.gd",
+      "sha256": "6790b02a0fcad5811fc65a457594b9d29576d7cb237f12db1c77c6d55b9b53f7"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ObjectDelete.gd",
+      "sha256": "f9b7df9f1e1c3d38ecdc78c8073f88694b5b46b53e312ec5486d051ce526ca6a"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/PasswordChangeReply.gd",
+      "sha256": "03ba8f43fe9dacda097e99a428f1a61eba41c779993878a004f136f5edfeabcc"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/PlayMidi.gd",
+      "sha256": "fb5496bdab5568dcd7fc7df85706e22f818c5de55bb7f1d0eba6adf9ce2380a0"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/PlayWave.gd",
+      "sha256": "c89af0c469bb0fa5f806b263b3df66000363f2242d748f6e58c3b4933eac02a4"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/PosUpdate.gd",
+      "sha256": "34d51a4e37778514f6dd24d16410563bda602fb51305ed072d8fe1b14b0a43be"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/RemoveCharDialog.gd",
+      "sha256": "30975cb5729f0b80886e45210bb8190c934a956c7dab4be8042b9ecd0b26abc0"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SendNight.gd",
+      "sha256": "104d69eb0b52af2f0ae901cecb408e1776e36d16314eca0d7fa1dbd0a6bb40c0"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SendSkills.gd",
+      "sha256": "6bfda8d28f4f610461b177c78796ca3b31f924960daa3c9d8ec5ee684c4fcffb"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SetInvisible.gd",
+      "sha256": "11dcc27bcd8093727456a9e922c9af5f7f10fe81f975041da2aeba687f45db48"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ShowGuildAlign.gd",
+      "sha256": "f8153fff4243e6bac789d9e9ff01c6d2df99301b6291a6bc0e953f1b5e51cff8"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/ShowMessageBox.gd",
+      "sha256": "c70153159c69145993076dc309f62e9ec40f351f04c4d92cb06babd05bd24786"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SkillActionState.gd",
+      "sha256": "4147496e93cd7ecf8ebb6c0bf7cd5073a29b47cf8a1d31a20234bd9ff2e871dc"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SkillAllocationState.gd",
+      "sha256": "31c4cc78fcdc5103308ba3d4e6cab4130eded286ed39eda35bcf7e6d69f8a529"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/SkillCatalogPacket.gd",
+      "sha256": "2e1fe72eb48dd7847dcccf9583b5ad2434d80a94fe7eefb0993f9c102027cabb"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateBankGold.gd",
+      "sha256": "0117e2ebf2509a3d21b7690814e6c9e298aac23fffeb9832f8d161ff3094a776"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateDexterity.gd",
+      "sha256": "58e60aff8922af5c988da3ad1e6b93c0faee35a42c398704cbef1463812d3490"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateExp.gd",
+      "sha256": "d98f01b6680491ca1a3419f9d1faf9d21324763dd7bc79599cb1416a2e9af077"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateGold.gd",
+      "sha256": "2b859dae0b6ec2c5d3c2f7d7ee57c026a253927926999be681eefd48f700c81e"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateHP.gd",
+      "sha256": "07f0af011da3be7d104d8c158435a896a02d82fcb237d2ff572d255fe560905b"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateHungerAndThirst.gd",
+      "sha256": "9b82f6a182fc3fe42887cd8903132488291bf62e3fa04903062380b8a6c460a0"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateMana.gd",
+      "sha256": "9533c31826743706f633ac999fe4bb0989a60a95f1026b8070547414325f89d8"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateSta.gd",
+      "sha256": "72d4dc17d0d1423ea24e70d5bd077a2ca00070a18e5559565167556ab0ede43d"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateStrenght.gd",
+      "sha256": "b6a173d6991b293f29d09fb7e5b0ffdc75111a6e63ccd5a12e47e46ffc719224"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateStrenghtAndDexterity.gd",
+      "sha256": "ddb3b64dce44cc92476e2110f991cf39d2b553f4e083a8469c69dcbb81bf8bec"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateTagAndStatus.gd",
+      "sha256": "e02effeb892548476452eaf5ff2208463eb9d27c200899629509f554e7bdbfee"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UpdateUserStats.gd",
+      "sha256": "3849b69ed7f5eb5a5851cba528fabbebdf180c5edb70731cdb6547a565721e3d"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UserCharIndexInServer.gd",
+      "sha256": "d27d73a70bcb0ceab40470c7f2367cf8d2705e35e13b3fe78c84d3161e03b839"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UserCommerceInit.gd",
+      "sha256": "55c088afb1778e6002110a2f3870a672da48231a8ecd654ec748cbb755932911"
+    },
+    {
+      "repository": "client",
+      "path": "network/commands/UserIndexInServer.gd",
+      "sha256": "a67ee0cbec480e2ff24fe30f1ba9b161f297dea59b1881c1dda4d1bb5a84125d"
+    },
+    {
+      "repository": "client",
+      "path": "network/message_dispatcher.gd",
+      "sha256": "e3c4c7cc7ba556e5b9b69d3d61f4e01dfeab951474afc9c5bde90be041f55cd8"
+    },
+    {
+      "repository": "client",
+      "path": "network/packet_framer.gd",
+      "sha256": "6c6c53a4dbb2f452141cce1fd5ff2c33d83a2c431ad1c8720f189bad9936f143"
+    },
+    {
+      "repository": "client",
+      "path": "network/trade_snapshot.gd",
+      "sha256": "3974de64652943cd9c50f9cd2a9b4f052da08810b41bd6caf1b6cc9f656a974f"
+    },
+    {
+      "repository": "client",
+      "path": "network/visual_event.gd",
+      "sha256": "204c4638e256169a82a67c8d323c9bc52a67259e132b6f77182cb80284190120"
+    },
+    {
+      "repository": "client",
+      "path": "network/world_state_packet.gd",
+      "sha256": "4d593ca6d2a22babb0df53f2da31c49fc9370336feaa0888567a58e40d4a7b62"
+    },
+    {
+      "repository": "client",
+      "path": "protocol/contract.json",
+      "sha256": "7a655e83c2f6c5b479a8fee179d40ce804496c9cd78df0cbcfce639739faf255"
+    },
+    {
+      "repository": "client",
+      "path": "screens/character_creation_screen.gd",
+      "sha256": "df28eb86ba3f04e994bb59001f7a399747742fc4daae00b5bc776933e53403e1"
+    },
+    {
+      "repository": "client",
+      "path": "screens/game_screen.gd",
+      "sha256": "5dea5ddb1848c734e1d5abc2029169166c83239d8ea78a4faa8ab261cdb136e8"
+    },
+    {
+      "repository": "client",
+      "path": "screens/login_screen.gd",
+      "sha256": "7fa38beca41e4b6fcdda5ff131b819b615827760f765f2701708d94cf7f2743c"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/bank_panel.gd",
+      "sha256": "b17352b52c60864644c11679f4f1dd34b9c9fe507e077ea33b249214f484008c"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/chat_input_helper.gd",
+      "sha256": "39340e8f324532fb5e2fdd895a3419e2022a5d6bc5fc72b63ff0b07ee9065c01"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/clan_details_window.gd",
+      "sha256": "b67b64654eaf1e2beb4b5a9a97c33d1319f7479431715479f894faae92e59dbf"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/console_command_processor.gd",
+      "sha256": "293187b22e0e576e54495cfbdb0c9c3d63d8f1a279849dfa337a386cf5a35c52"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/crafting_window.gd",
+      "sha256": "45a877c5fabab95af66afc759642f55edb59ba9e4f0bd8e40271cd06b7e43d54"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/drop_panel.gd",
+      "sha256": "d94e355dd1faaeebf3a9f6619da5fb1147fec6003797e2d0ce073a00f33da5b0"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/expansion_window.gd",
+      "sha256": "52f3d9548c5afcf4afe1fd2b83be69e85014de23754d9580a3a9b354c8f612ca"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/guild_alignment_window.gd",
+      "sha256": "c2b5a3848252524fe9c008cf1cd33fcfe3383135c592555ac81128381e3ea5a2"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/hub_controller.gd",
+      "sha256": "59430390eeaee6af03e184c26367fe41e5d68cd08faa10e9577ba3829acddae8"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/inventory_container.gd",
+      "sha256": "45ae5bd4f9c232de49b7eab628a2ca0d360e0b8b6fb37aadebaac88e75d149ab"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/merchant_panel.gd",
+      "sha256": "edb8b6ba48ea5d84b8cda1c2c57632834b8fb37c7d82ab2afd137e1cf6a6db6c"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/password_change_window.gd",
+      "sha256": "388fb28f4022847607d72e025d68a490825bcab07a3260f44dd8a7ffe6de8083"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/player_trade_panel.gd",
+      "sha256": "0a951662735ae6cb6e97aa224cf9db569e62be0aee0ae2a15d472ea6bd537f96"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/skills_window.gd",
+      "sha256": "3fc087653a58cfbb770a9774eb4459ebafc9a468f3ec582495b16b16ebe9511f"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/social_window.gd",
+      "sha256": "78b0653b7213c3cd61965f78eef76516bc08c85e7768f8ef95095aadd5c1046d"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/spell_list_panel.gd",
+      "sha256": "1b0c36df7f4fe182e313fe7d10db804ed1401edf37a59eca1268a6839de4f654"
+    },
+    {
+      "repository": "client",
+      "path": "ui/hub/world_state_window.gd",
+      "sha256": "73b09ae50d54c121ae023c3b21dd45601ed3e7e8764886c1cf1bb00719b8d055"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/attack_handler.py",
+      "sha256": "61501ef6ca857f1dfd8356774aa89fafd4c82a454d9241c1d92d986646f32c7e"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/bank_end_handler.py",
+      "sha256": "10560624a191b07dbf9c579781dbabc72b4db359c3ad9f787faa58130854eb63"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/commerce_end_handler.py",
+      "sha256": "bbfd556d29fb63785099ca15e19a474b143c9ebbd4691b4b304954bb60994ff7"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/inventory_click_handler.py",
+      "sha256": "f9ca6833680df041c18dbe33e4fdb1c9e7d917abc1b11838f54a4a3ae2c851d6"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/left_click_npc_handler.py",
+      "sha256": "5b1f7c48b732872ceca19bdf26a49d9d1cf992f8065b6d0b6288fdc9bfd3de14"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/login_finalization_handler.py",
+      "sha256": "e9a1485255676fc7e30084479d4d89772549ae5aacdf737eb6e9bc5cf18b0966"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/login_handler.py",
+      "sha256": "b3f5891458bb6b008bd888de50ef883079803bccca40969acde169c35e34bab6"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/meditate_handler.py",
+      "sha256": "279afbcddee5a4b0a457bf4532f75383be30f94a688f5e984f10658cfcda8b5d"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/request_skills_handler.py",
+      "sha256": "495011398d604d1d7d6750b3169419bb7c62eabb5d5779d62bb5e2483f014c74"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/talk_handler.py",
+      "sha256": "0afabf3582b5b790de45d5bea0adfb57ed1a0fc1c3d56aa26b5bf5befb111eb8"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/use_item_handler.py",
+      "sha256": "e86e2a204613cb6445a9db59e113f594da178534c10a9d43f4faec29f384f182"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/use_item_special_handler.py",
+      "sha256": "a8302531f76e0d5bb385be28127dc5e535a9b8433c6eb86aff6fa0304d9b4e2a"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/walk_validation_handler.py",
+      "sha256": "fee536bf6fe52f6332abaac27c3b063942f9a69042190b1eee187958a3cf9067"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/work_handler.py",
+      "sha256": "ce6ca2f4179a2f358f72c52205e393078173be98422fabeb3c169a175905f038"
+    },
+    {
+      "repository": "server",
+      "path": "src/command_handlers/work_left_click_handler.py",
+      "sha256": "1c99683731acb27804459e2e5491752aafeb91705d8e3da9c4c9797a2f911ebe"
+    },
+    {
+      "repository": "server",
+      "path": "src/economy/tax_migration.py",
+      "sha256": "6666cdf34354b1d4f3d9b2538cb064f97da574db40b079a3698a03cca74eb1b7"
+    },
+    {
+      "repository": "server",
+      "path": "src/economy/tax_service.py",
+      "sha256": "4d24daea8bc05c4ddda3993de8ac2593bcc79f5952c0eaff1e78d1869fb9fc9e"
+    },
+    {
+      "repository": "server",
+      "path": "src/effects/effect_lifecycle.py",
+      "sha256": "a00c46ca2047d1d7fadd4ff102b9e8493e266985a26922bde40ea76ef7a450f3"
+    },
+    {
+      "repository": "server",
+      "path": "src/effects/meditation_effect.py",
+      "sha256": "85cf61f7134d30558c161db5212461d7974faca8124f72d413088da8f78732b7"
+    },
+    {
+      "repository": "server",
+      "path": "src/game/ground_item_index.py",
+      "sha256": "e7a7b1605aafeb026fcab27d5b513a71b78a3889d831b24a027ccf29c6b8ad75"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/message_sender.py",
+      "sha256": "0a38f1897e74c9fbc23579df83665739b63311326b9b0a661c9e7bcceaf2e01a"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_audio_sender.py",
+      "sha256": "ea4d564f5575cd75c9847c9c177ad16f12d3280e666c4d895ed313bac4f28edb"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_character_sender.py",
+      "sha256": "83ad05aae29e86c1060c0d1d486da1ccbf37b25a5b72553348a6831d587e773e"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_combat_sender.py",
+      "sha256": "81666b7c661978a3f478e7a2418110ce50c5262123c6c1c6a880df5156b76186"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_console_sender.py",
+      "sha256": "13d7ca5a4422cdde0adc951e1d9398cf62858bbdc93e5bb8fb0cdb62afcf40a2"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_inventory_sender.py",
+      "sha256": "5147081ba4fecbdaedff60333d59b2ff35462c808ea2b50d18b8d7a3fd44909f"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_map_sender.py",
+      "sha256": "87306ae9d8007c7be0294c59dbbb57b2945aad809784a46c93e52c7767af9600"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_npc_sender.py",
+      "sha256": "e5501f0a86d7d8db46a71025a8beb99cd7428387066f3ddff3c7ba2b4b1ee266"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_player_stats_sender.py",
+      "sha256": "708f063f6058679f83192912c7f0e020d5ef057f254cd758b91e27b8b05f87a5"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_session_sender.py",
+      "sha256": "5e8655c7d35f2ef6b25b0e1e4517cd4ab49cd37e8765eda638ab73a22524ccf4"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_status_effects_sender.py",
+      "sha256": "12ebbf9216d5352b34ae6f841443038339b2b6753b6c05b38e763276cbedef84"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_visual_effects_sender.py",
+      "sha256": "7f1162d42f5ad86bdb73d7aa7c6a4ef081a7803ea64de7a153b0c8794659b77f"
+    },
+    {
+      "repository": "server",
+      "path": "src/messaging/senders/message_work_sender.py",
+      "sha256": "5163ff36cd11b936210f529e69a05fc23a5a72f1ccc50464da14bd57108c2e3a"
+    },
+    {
+      "repository": "server",
+      "path": "src/models/city_data_loader.py",
+      "sha256": "520b7b5a694ede615a9674a0748e6ed861e34f4253a8bb8ba6db4303813be4ec"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/capabilities.py",
+      "sha256": "c661b1deec711d5f96421a91d4a74b823cab1eaf134176ad9f53300965e539ea"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/chat_channel.py",
+      "sha256": "b39f9b757cf48fbd9cdc446434188d525c0642a9a0d69eb3db6d1e5c49894e2f"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_audio.py",
+      "sha256": "e44cedebacdbe72d3e425551221c08bece432df51d77b7885a899e2626d7071d"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_character.py",
+      "sha256": "578f48f894ea97949378697a24aaded635e3aa3d2ea1933e75bd9cc4f25234e0"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_clan.py",
+      "sha256": "943ae34d4269e0dd24583a09ee1b8e407e29a1ea8240de99951b0b1a5fb71984"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_console.py",
+      "sha256": "039717e066870262ccd6f2d46b24de86f5952b21322fcf23e57856df83f55fbb"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_inventory.py",
+      "sha256": "01932039ce306fa80d919cfce88537524dc690f0daabafe7a0b29e1da116f4fd"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_map.py",
+      "sha256": "9dbe0305bfa2650ca348bccd81ebfd24ef4be4cbf1a08a0f6eaeedf84198e0d0"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_player_stats.py",
+      "sha256": "bd6f484576b40ac7be8c91494b0a610fea45205582647a00606dea485324a3a5"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_session.py",
+      "sha256": "c2897090d9ab85da0955165c4b75757a948286adcd51e81ad3e66fdee43b6655"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_skills.py",
+      "sha256": "2fca2561fba2f90f65107fdb29c232edf63b4d4d447e244176768f5bd585c617"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_status_effects.py",
+      "sha256": "b65657fa6bde0d441d655dcf06380c36760f09838c8388f2428b71bca99b9caa"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_user_commerce.py",
+      "sha256": "2037bd6fdabd1adc5788081183c5e76848883e1b8376f831c73068d8b989cc7d"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/msg_visual_effects.py",
+      "sha256": "945f850612cb736a868295558cffe8ee90d77aadd72ddfa4fe58d9b7eab4c26d"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/packet_framer.py",
+      "sha256": "dc30f43fe784b0ffde76c912df4983a2d9cf37a93de2df0818a0f99bf6bab2b4"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/packet_handlers.py",
+      "sha256": "15a990d6b4b5cf033a0574c9be01426675d5d61cdf13a4565b036a467f92b276"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/packet_id.py",
+      "sha256": "6b95fb8a333586acc1d5961cb5aa30e3f7dd2618d09333ed7825b2c0d51fe288"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/protocol/contract.json",
+      "sha256": "7a655e83c2f6c5b479a8fee179d40ce804496c9cd78df0cbcfce639739faf255"
+    },
+    {
+      "repository": "server",
+      "path": "src/network/state_channel.py",
+      "sha256": "7e1d7ebf194448102022174dd2392a381ba58fadf73f7427a9b2840ba0904843"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/account_creation.py",
+      "sha256": "4dcf971bf9dee160363db28d6f4b40fb9b7d188c9efe9889201a4ffbb4d9367f"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/base_slot_repository.py",
+      "sha256": "b91398f29209e40af8b3d9eb9fb667f84500e04b18b3bfde025ffd588e8908c0"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/clan_repository.py",
+      "sha256": "c8a8d4ceb98a54914035aa843ed1abfb05658549f4d7373a623295bb85781747"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/ground_items_repository.py",
+      "sha256": "e64a3acce674f11b53de24b5cc9665b6206e771afda133e6685c30ecdf99bdf2"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/party_repository.py",
+      "sha256": "4df12d0902532646156e6f1246697f0639e8b5a21d61e2a46a4da11a87581414"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/player_mixins/_position_mixin.py",
+      "sha256": "f96f5fa447cf87fd2f66113188a05073cedc442fcb4e2e5c886eed464821bb60"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/player_mixins/_skills_mixin.py",
+      "sha256": "b4ef1f8d39e42acf9690c141084a6a047ec9f5942a1dd250a9aa052c3c18d39b"
+    },
+    {
+      "repository": "server",
+      "path": "src/security/account_bans.py",
+      "sha256": "d927dc5ea8af73122ee4acd5bd969d1232b21bd18e571a948febf4c822db88c2"
+    },
+    {
+      "repository": "server",
+      "path": "src/security/session_lease.py",
+      "sha256": "20eb740398d90c0c6c5b2a218779b7cfcd64f530d3acc8ddc2166423d25ab198"
+    },
+    {
+      "repository": "server",
+      "path": "src/server.py",
+      "sha256": "bcdacbd85c5bdbd4e99098469a53f63a84552135ccf054eb4807f1d8f956eff8"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/admin_character.py",
+      "sha256": "ce1aa5ccc4d0be787b72e2f82c87507688085516070acd467b5b8a2b1281408a"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/admin_tools.py",
+      "sha256": "5dccc4d0366bd4adb1b9404fc61239034117887ea95462279ad170868b45218c"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/appearance.py",
+      "sha256": "be588d8f22e40d03030dab56e3fe938b6f82491cf4e99d4f91c0bcc762045dfe"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/jobs.py",
+      "sha256": "ddc4fa7a50b5a9b5cb94508de4e60eccd9a9567e68d91c42c78be698709a28b4"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/maintenance.py",
+      "sha256": "65c4c096d5f2b7ca9a5b61846fd7a0ceea1261955b59ec1b39eb834d55c7db48"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/player.py",
+      "sha256": "063d6a3a064dc86dbc79faae011c6431bd6ba2e15ad8d664c30f683c4c4197dd"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/classic_chat/world_rules.py",
+      "sha256": "6c8bb2418afaeb297cdca924b43ee29f6683e9aba846767efb9067c3c384cdaa"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/combat/combat_service.py",
+      "sha256": "cbe5ff46543350bf0249f940a5e8afb41ae6d9f43c251c786a793ea56f7bdaf5"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/expansion/party_finder.py",
+      "sha256": "fea6d7982e16daf41bc366558cc918c958b9defe743a75bc2c38bd7490fd856f"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/expansion/service.py",
+      "sha256": "ee62a2674f679dfe6d797c4b2c0e372bdb47344d6d5cbc3e4b8cf45c2e06dc52"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/map/door_world.py",
+      "sha256": "bd259a5c98ddca8505998a66c39425895c3aabcbecf1012598e7606283daede3"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/map/map_transition_steps.py",
+      "sha256": "044226d56a76acf63f88dbf5949f4ceef8fbc81ced131ac2d2664aeec5168d78"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/map/player_map_service.py",
+      "sha256": "b11df1d17210464761723867dcc5dd3426c478336cc004559e4a132a70007388"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/npc/npc_ai_service.py",
+      "sha256": "0b7e6a165ea78828e4f3247e84633468c6dee365d7fbc9152431d387e646ee6e"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/npc/npc_death_service.py",
+      "sha256": "06a951c3d9aab9d1446cd188dc01e2b09aa0e1b9c812c7772103d4d6069ede3f"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/password_change.py",
+      "sha256": "96c5cd14c4f0410c6e813c68efa3af442517508a2f7f6ea231e497a6500d4bb6"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/player/lifetime_stats.py",
+      "sha256": "247705083ab7ba3e3c15b8af5e1db6d7fce52434e18618124298250dda13a705"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/player/player_death_service.py",
+      "sha256": "a432109e4a51318e2faecf38ca55615cca81e2b7ad4b34b5f331dc35028a90cf"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/player/spell_service.py",
+      "sha256": "8e396b38e7eb62ecf712a78b15662f5213d7d618f67d3997bd717b66af03fff1"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/player_progression.py",
+      "sha256": "b9a577bccaa199cc742a8a9c94fae7eefff997ef96c421a35b8745d02151bc94"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/skill_action_service.py",
+      "sha256": "5f91d65b9adcc3883f99e366b5bbcfb7ce3035df197f5034b7297923344acd38"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/skill_allocation.py",
+      "sha256": "120e5597e24634097e2bf6031743898b543310a7dadd27b691764b6bd29264a7"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/trade_service.py",
+      "sha256": "8ee4aca9c4888d9d624b23d59f6b735b0b3118df7a0b6f28035cdcafb682e1f4"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/visual_events.py",
+      "sha256": "331bfa91a20091b71f2f9bc2827b5b6ed37fb1932cd8b0cb9b2850c1bfb50e96"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/world/actions.py",
+      "sha256": "678eab479b480d1f1fc6555ffd23503467966a4575e63717013c1ad246d2b9b5"
+    },
+    {
+      "repository": "server",
+      "path": "src/services/world/world_state.py",
+      "sha256": "8d86e2c19fa71ae6adbbdea5240ecff536b19a5645dd7b80c13c89cbd07bb5fe"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/admin/task_gm_commands.py",
+      "sha256": "db163f4e48d344574bddf70aa687bba57e072d22954c044f1dd8ad79b4d67aea"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/banking/task_bank_deposit.py",
+      "sha256": "62733c1a9f9947f5212f22a6ad80b8d1e780e39cd51fd72ec9dc0b00768f3461"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/banking/task_bank_deposit_gold.py",
+      "sha256": "90f4a444482a009d22d00f93ba16556fc6f0e60a8f0cfd5a252e788de4d07463"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/banking/task_bank_end.py",
+      "sha256": "8bbc8e5c4f6f6de28129c4c9140b7c8b0328b66faf141aebc2ec750157951171"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/banking/task_bank_extract.py",
+      "sha256": "c61aea431c64f692a9ee6730326609667a936ab7a6f86f1d930c598ec5af0fa6"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/banking/task_bank_extract_gold.py",
+      "sha256": "3d81c789a0f70b2bd98ba2dd4a721c9496e0f63ba8eb0d4515e00294db9558b1"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/clan/task_leave_clan.py",
+      "sha256": "e7dfa1dcdc90d0a133a27ba18dbbb84e025f4596eb7930cd1076977e500e0514"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/clan/task_request_clan_details.py",
+      "sha256": "bc69fe74e9df6a2303e9a88104aa7abe8697c3fd2d68195b5485bc0fba392342"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_commerce_buy.py",
+      "sha256": "60cd0741caa445412cf8986af2bfbd3e501a3324744b4951323c022abc4547c2"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_commerce_end.py",
+      "sha256": "1994edc468c02781fc9797a295640939af75b9a6fc1a846f9c5c1d69b66721be"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_commerce_sell.py",
+      "sha256": "bca8c137c8bb036ce6fb54c12c4fca72a7ea97e2e14f03870917a1ce9cd3a7b5"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_commerce_start.py",
+      "sha256": "80381e11568c3fdad112778d3d74d17a82b549061e660df5d7835db6c6e82682"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_user_commerce_confirm.py",
+      "sha256": "8cef6ce4d73df8dbc46f4236dc95cd3193150c0168728e5459f6129eb62cefe9"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_user_commerce_end.py",
+      "sha256": "4b549ff5d51b6b7a0a2794a9574ee73a2d302e65029c6674af3a613a746726c2"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_user_commerce_offer.py",
+      "sha256": "7f22aeb19bfb41ff9ba03663521dfec9d7086287b8b25f76f53486cb3aa47a38"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_user_commerce_ok.py",
+      "sha256": "53c71a766c5642d360bdbf3e1fc129952df77a9cd7db317318a92c1b34aeb250"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/commerce/task_user_commerce_reject.py",
+      "sha256": "ade02292af9d4ce1272cd73a7d073c4566c2a543ed06d19cd7c024d56491a332"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_information.py",
+      "sha256": "e1e5fb6642b0dfd37e20669eef4b1b34d0253896cc8cbb08fb7c0d311ce37c5e"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_left_click.py",
+      "sha256": "585f34c99557498af60e56dff6d6c30316fab834ed05f50a51596b3ebda9d665"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_pickup.py",
+      "sha256": "87236170f6ea3470392c48246978cc6430642990dfe9f3ab88c86b635081b577"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_talk.py",
+      "sha256": "b6e2946a7ae07001d00f0c274279153cb3ddb8ea39218fa7b2a8175a24ddd471"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_whisper.py",
+      "sha256": "022339334b7ff2cf45a2b1546bf0ddd5e2ac6602e26ebf16023b376d232ba311"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/interaction/task_yell.py",
+      "sha256": "d52f181b64a3a8bdd93e759b87c62b281ca762ef528a08259d706dd5e7564f6c"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/inventory/task_double_click.py",
+      "sha256": "e73e1f5d1100061214ec4cb79c04190861db884baca7e4c145e5a5c4dd2eecea"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/inventory/task_drop.py",
+      "sha256": "5f330ed2e46483f371fa7b64bdd5be53ebcd5f62e6f0e375abd21857767e2c8c"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/inventory/task_equip_item.py",
+      "sha256": "5d316e78a5ab36a44c0e1df78c45710397acb2a7db810562472862a31604a0d0"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/inventory/task_move_item.py",
+      "sha256": "74dd2cc0f2017c433fb74c6abd1dcd12ffaa0702d6a4403d1fca3eea934d0e28"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/inventory/task_use_item.py",
+      "sha256": "28ed38c73cd814af134661ea1c95d8db02ed4e28df48b06337d418f5a4271c42"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_account.py",
+      "sha256": "7cda38fe851b704176f2609e2b463e938e01a9a38003686645b148f669470cff"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_attack.py",
+      "sha256": "bbc4a681aaf8cf9dd4ef02d5783488a92db7bf614b4f1e77412f9e6cc9716100"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_attributes.py",
+      "sha256": "c9d830abff38395049156b1c1dde740e56ce077a92092a7abcd8412da77081e7"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_change_heading.py",
+      "sha256": "f5b8aabf4fe3a3e2b28567a83c4aefc7b5a0e43aa395cbaf4188d6b8156b2334"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_login.py",
+      "sha256": "dbcf4b8c92ceb4729a58c023d139c79d32583d62df353865a46db6b76743aca0"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_meditate.py",
+      "sha256": "3a692068cb95a53545a466eef3f6357e4cd1cda5b9788cfcf73df8603ee1f947"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_mini_stats.py",
+      "sha256": "1893521ed504a327709bbff7e826bbb5c5dd23da1ed18cec750c86a4f9402baa"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_request_position_update.py",
+      "sha256": "de127dba1310f125c11f24ce7bf11aab55a048697c7322229766bbc099d2e766"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_request_stats.py",
+      "sha256": "7c793a45e8fb9ba3edaf6faf44749cc4d775c061bbee93e0fa7fc7e5ec3261b3"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/player/task_walk.py",
+      "sha256": "52d10a06f77b5a8538723c057b991ee5e31d4821887e0b4500eae1093673630b"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/spells/task_cast_spell.py",
+      "sha256": "c2bb3a670cd61086ac71da1fa6dd0ef90f734e945513e907dc3b39babac309a2"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/spells/task_move_spell.py",
+      "sha256": "5a0534a4792c3e19e61da80aeb1ccf43179250c2776b4e5fc896f878c65eb342"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/spells/task_spell_info.py",
+      "sha256": "e35689c551572b4c607e551a688b57097cb7247b1b47090ae0da909f30e9c623"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_ayuda.py",
+      "sha256": "484cbb085bd09987b674a154fdd63580e3959a3c1a447c2be18421f8ef015a3e"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_capabilities.py",
+      "sha256": "1ab00b74ae407d5288c3578b53280086aecd7f36f7b3950e0343c11a327e9520"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_change_password.py",
+      "sha256": "1eae0ea83512fef7020b7b5c27934db5ddeda6e6933a6ae9b273203dd4ad259e"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_dice.py",
+      "sha256": "ef0b078b3cd48f25e8baade212be07157c7df7a4c30a1526dc4f409cee8ca89e"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_modify_skills.py",
+      "sha256": "094a4dacf6a873c6533ebc131684db823739c13e1a2c65022a3881236f012c44"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_motd.py",
+      "sha256": "442f741094bafd1c09276135cd3ea82d8a411a710cb48c8a22cb361e85221a7c"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_online.py",
+      "sha256": "0a9040965681c0aa6a3f44de5bc7a34a77faaa8ed3900629ba737be1d5c27a4b"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_accept_member.py",
+      "sha256": "43b8dda5aca490fdd551af12dc73384be684ede49dea246208d72ed14226695a"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_create.py",
+      "sha256": "07bbd7d874406752ab302cabf2b2cf67d03c9b365639f57f688717351a6166aa"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_join.py",
+      "sha256": "767a0ea67d3f74e524df925f209ca877304b831806e1ebe7ee25f185587cd734"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_kick.py",
+      "sha256": "87251c7b7b48c53fbe87e189e64a89d05d0b732949289fa05c6495289e6818c3"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_leave.py",
+      "sha256": "b7f2732022b1f23c8b4e2a80fd7e01632b18a15472275ea688ae078c5bc2399e"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_message.py",
+      "sha256": "7ae3a51a35180286f22e6b5f323a953f6bb3b75c0bfa94d87334285e1c8b9331"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_party_set_leader.py",
+      "sha256": "8af803d7d3654ba0d81c79539a4e70035fd99f3a96f1a992ea340d1ec121d6c4"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_ping.py",
+      "sha256": "87a76eda8be75902885e6e160e4911718a7b827bde7a33f711068528dea36963"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_quit.py",
+      "sha256": "965c81af2eda321781ef32cc6953efd0c54fdd205bfc4387fa49da48791d704a"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_request_skills.py",
+      "sha256": "19659448303abc7b7849ffb466ca9e52d17886ce703e6d830f006807c686374c"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_safe_toggle.py",
+      "sha256": "3b6439f580cf3f449ab4831b86424f19fb08d2710638c13d95fd407e94764d49"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_skill_action.py",
+      "sha256": "0f58eb3515c203b598039d1c6e4917fbd6e2700fef18afec408b2e7ecc1cb12a"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_trade_action.py",
+      "sha256": "9f23f8a84c8f94e3404e55415f758cf90a239315fc83d84bf983fe9d1c9e6695"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_uptime.py",
+      "sha256": "92fa693ae6126c2da021d36de759aa8a458d0dc192490c38ccf83573105a76ed"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/task_world_state.py",
+      "sha256": "d38ed33dbad2024aaf4a31aaef8a730c2f6c402274d98ae9a72adf925cb87540"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/work/task_work.py",
+      "sha256": "0dd089efa2655ce12d42602a0276834c396ba2b6dcb93cc16068ae098482b5d5"
+    },
+    {
+      "repository": "server",
+      "path": "src/tasks/work/task_work_left_click.py",
+      "sha256": "d0dc8feb7f0efcb36758e887a8149e1c38e8729783f54de50e15fceb06f4efd0"
+    },
+    {
+      "repository": "server",
+      "path": "src/utils/gold_atomic.py",
+      "sha256": "0822623a1bb516621fef9dda471fd6cbb34a80c045a9259f5ea44dfcb4f504e1"
+    },
+    {
+      "repository": "server",
+      "path": "src/utils/inventory_storage.py",
+      "sha256": "4faae5153c3eff65fa5d65d2d2cf7fc7b67ab2722c7e3480546191ba7663896d"
+    },
+    {
+      "repository": "server",
+      "path": "src/utils/resource_transaction.py",
+      "sha256": "15380fed7cb83f74cdf9aa39e8e043d64db10859d6394168aef06a0649cc0e75"
+    }
+  ],
+  "packet_cases": {
+    "client": {
+      "0": [
+        "chat"
+      ],
+      "3": [
+        "chat"
+      ],
+      "4": [
+        "chat"
+      ],
+      "5": [
+        "chat"
+      ],
+      "6": [
+        "map_exit"
+      ],
+      "9": [
+        "inventory"
+      ],
+      "24": [
+        "inventory"
+      ],
+      "30": [
+        "inventory"
+      ],
+      "79": [
+        "meditation"
+      ],
+      "129": [
+        "inventory"
+      ],
+      "250": [
+        "meditation"
+      ],
+      "253": [
+        "magic"
+      ]
+    },
+    "server": {
+      "0": [
+        "chat"
+      ],
+      "24": [
+        "chat"
+      ],
+      "29": [
+        "meditation"
+      ],
+      "44": [
+        "meditation"
+      ],
+      "47": [
+        "inventory"
+      ],
+      "68": [
+        "meditation"
+      ],
+      "250": [
+        "meditation"
+      ]
+    }
+  },
+  "method": "Muestra nativa ejecutada con el binario RC6 fijado y servidor fuente cuyos archivos de runtime se conservan; no es una certificación de todos los opcodes.",
+  "screenshots": {
+    "representative-client-1.png": "de1733428991c484535474c2e955e50e62b0e891829511eb2dc0feeb4f4d4f25",
+    "representative-client-2.png": "78a10efc32180d8d344616d908c6c22c91a3472b64e81e6550777a8b7a9b7966"
+  }
+}

@@ -1,0 +1,422 @@
+[
+  {
+    "id": "cities",
+    "requirement": "R04/R08",
+    "passed": true,
+    "observations": {
+      "characters": [
+        {
+          "job": 1,
+          "race": 1,
+          "home": 1,
+          "map": 1,
+          "character": {
+            "char_job": "1",
+            "char_race": "1",
+            "char_home": "1",
+            "char_head": "25",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 2,
+          "race": 2,
+          "home": 2,
+          "map": 34,
+          "character": {
+            "char_job": "2",
+            "char_race": "2",
+            "char_home": "2",
+            "char_head": "28",
+            "char_gender": "2"
+          }
+        },
+        {
+          "job": 3,
+          "race": 3,
+          "home": 3,
+          "map": 59,
+          "character": {
+            "char_job": "3",
+            "char_race": "3",
+            "char_home": "3",
+            "char_head": "8",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 4,
+          "race": 4,
+          "home": 4,
+          "map": 62,
+          "character": {
+            "char_job": "4",
+            "char_race": "4",
+            "char_home": "4",
+            "char_head": "34",
+            "char_gender": "2"
+          }
+        },
+        {
+          "job": 5,
+          "race": 5,
+          "home": 5,
+          "map": 196,
+          "character": {
+            "char_job": "5",
+            "char_race": "5",
+            "char_home": "5",
+            "char_head": "33",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 6,
+          "race": 1,
+          "home": 6,
+          "map": 151,
+          "character": {
+            "char_job": "6",
+            "char_race": "1",
+            "char_home": "6",
+            "char_head": "17",
+            "char_gender": "2"
+          }
+        },
+        {
+          "job": 7,
+          "race": 2,
+          "home": 1,
+          "map": 1,
+          "character": {
+            "char_job": "7",
+            "char_race": "2",
+            "char_home": "1",
+            "char_head": "25",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 8,
+          "race": 3,
+          "home": 2,
+          "map": 34,
+          "character": {
+            "char_job": "8",
+            "char_race": "3",
+            "char_home": "2",
+            "char_head": "11",
+            "char_gender": "2"
+          }
+        },
+        {
+          "job": 9,
+          "race": 4,
+          "home": 3,
+          "map": 59,
+          "character": {
+            "char_job": "9",
+            "char_race": "4",
+            "char_home": "3",
+            "char_head": "31",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 10,
+          "race": 5,
+          "home": 4,
+          "map": 62,
+          "character": {
+            "char_job": "10",
+            "char_race": "5",
+            "char_home": "4",
+            "char_head": "23",
+            "char_gender": "2"
+          }
+        },
+        {
+          "job": 11,
+          "race": 1,
+          "home": 5,
+          "map": 196,
+          "character": {
+            "char_job": "11",
+            "char_race": "1",
+            "char_home": "5",
+            "char_head": "14",
+            "char_gender": "1"
+          }
+        },
+        {
+          "job": 12,
+          "race": 2,
+          "home": 6,
+          "map": 151,
+          "character": {
+            "char_job": "12",
+            "char_race": "2",
+            "char_home": "6",
+            "char_head": "26",
+            "char_gender": "2"
+          }
+        }
+      ]
+    },
+    "godot_receipts": 26
+  },
+  {
+    "id": "inventory",
+    "requirement": "R05",
+    "passed": true,
+    "observations": {
+      "slots": [
+        1,
+        25,
+        26,
+        30
+      ],
+      "observed_hp": 1830,
+      "drop_pickup": true,
+      "swap": true
+    },
+    "godot_receipts": 42
+  },
+  {
+    "id": "bank",
+    "requirement": "R05",
+    "passed": true,
+    "observations": {
+      "gold_conserved": 10000,
+      "items_conserved": true,
+      "included_icons": true
+    },
+    "godot_receipts": 56
+  },
+  {
+    "id": "merchant",
+    "requirement": "R05",
+    "passed": true,
+    "observations": {
+      "purchase_price": 140,
+      "sale_price": 70
+    },
+    "godot_receipts": 63
+  },
+  {
+    "id": "trade_complete",
+    "requirement": "R05",
+    "passed": true,
+    "observations": {
+      "gold_conserved": 19930,
+      "items_conserved": 2
+    },
+    "godot_receipts": 75
+  },
+  {
+    "id": "trade_cancel",
+    "requirement": "R05",
+    "passed": true,
+    "observations": {
+      "gold_conserved": 19930,
+      "items_conserved": 2
+    },
+    "godot_receipts": 85
+  },
+  {
+    "id": "chat",
+    "requirement": "R03/R07",
+    "passed": true,
+    "observations": {
+      "public": true,
+      "yell": true,
+      "private": true,
+      "latin1_accents": true
+    },
+    "godot_receipts": 91
+  },
+  {
+    "id": "party",
+    "requirement": "R07",
+    "passed": true,
+    "observations": {
+      "create_join_accept_chat_leave": true,
+      "real_names_in_redis_and_ui": true
+    },
+    "godot_receipts": 100
+  },
+  {
+    "id": "clan",
+    "requirement": "R07",
+    "passed": true,
+    "observations": {
+      "create_invite_accept_chat_details_leave": true
+    },
+    "godot_receipts": 112
+  },
+  {
+    "id": "meditation",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "mana_before": 4490,
+      "mana_after": 4740,
+      "both_clients_animated": true,
+      "observer_reconnect_restores_effect": true,
+      "manual_and_movement_stop_both": true
+    },
+    "godot_receipts": 159
+  },
+  {
+    "id": "scroll",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "duplicate_does_not_consume": true
+    },
+    "godot_receipts": 162
+  },
+  {
+    "id": "skills",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "points_before": 3,
+      "points_after": 2,
+      "skill": "talar"
+    },
+    "godot_receipts": 167
+  },
+  {
+    "id": "magic",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "targeted_damage": true,
+      "healing": true,
+      "cancellation": true,
+      "invalid_target_no_charge": true
+    },
+    "godot_receipts": 176
+  },
+  {
+    "id": "party_rewards",
+    "requirement": "R07",
+    "passed": true,
+    "observations": {
+      "awarded": {
+        "1": 11,
+        "2": 11
+      },
+      "not_duplicated": true
+    },
+    "godot_receipts": 184
+  },
+  {
+    "id": "combat",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "experience_before": 0,
+      "experience_after": 11
+    },
+    "godot_receipts": 185
+  },
+  {
+    "id": "pets",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "summoned": true,
+      "followed": true,
+      "released": true
+    },
+    "godot_receipts": 199
+  },
+  {
+    "id": "spell_order",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "first_slots": [
+        3,
+        33,
+        2,
+        11
+      ],
+      "reconnect_checked_after_soak": true
+    },
+    "godot_receipts": 201
+  },
+  {
+    "id": "life_cycle",
+    "requirement": "R06",
+    "passed": true,
+    "observations": {
+      "resurrections": [
+        {
+          "method": "spell",
+          "life_before": 0,
+          "life_after": 1,
+          "appearance": [
+            1,
+            24
+          ]
+        },
+        {
+          "method": "priest",
+          "life_before": 1,
+          "life_after": 2,
+          "appearance": [
+            1,
+            24
+          ]
+        }
+      ]
+    },
+    "godot_receipts": 225
+  },
+  {
+    "id": "wood",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 58,
+      "gained": 5,
+      "map": 1
+    },
+    "godot_receipts": 235
+  },
+  {
+    "id": "mine",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 192,
+      "gained": 3,
+      "map": 33
+    },
+    "godot_receipts": 248
+  },
+  {
+    "id": "fish",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 139,
+      "gained": 2,
+      "map": 9
+    },
+    "godot_receipts": 258
+  },
+  {
+    "id": "map_exit",
+    "requirement": "R04",
+    "passed": true,
+    "observations": {
+      "from_map": 1,
+      "to_map": 5
+    },
+    "godot_receipts": 264
+  }
+]

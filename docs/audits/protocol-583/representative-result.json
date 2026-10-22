@@ -1,0 +1,275 @@
+{
+  "passed": true,
+  "clients": 2,
+  "seconds": 120.98,
+  "started_at": "2026-10-22T21:58:14.668235+00:00",
+  "completed_at": "2026-10-22T22:00:29.999150+00:00",
+  "long_acceptance": false,
+  "tls": true,
+  "installed_wheel": false,
+  "source_checkout": true,
+  "server_commit": "9dd5467707118905e60720a897a4a4089fd3d2d4",
+  "client_commit": "42398cd55dc4843d8ea2830d4dcf7003f62e2475",
+  "wheel_sha256": null,
+  "server_candidate_sha256": null,
+  "redis": "8.10.2",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "client_audio_driver_requested": "PulseAudio",
+  "client_audio_drivers": [
+    "PulseAudio",
+    "PulseAudio"
+  ],
+  "graceful_sigterm": true,
+  "periodic_screenshots": [],
+  "live_tls_sessions_drained": 2,
+  "release_version": "1.0.0rc6",
+  "installed_snap_ui": false,
+  "snap_install_source": null,
+  "godot_measured_seconds": [
+    10.0,
+    11.0
+  ],
+  "reconnect_states": [
+    {
+      "capabilities": 1983,
+      "exact_inventory_and_spell_order": true,
+      "hunger_after": [
+        90.0,
+        90.0
+      ],
+      "hunger_before": [
+        90.0,
+        90.0
+      ],
+      "inventory": {
+        "0": [
+          38,
+          10,
+          false
+        ],
+        "1": [
+          58,
+          5,
+          false
+        ],
+        "2": [
+          192,
+          3,
+          false
+        ],
+        "3": [
+          139,
+          2,
+          false
+        ],
+        "19": [
+          561,
+          1,
+          false
+        ],
+        "20": [
+          562,
+          1,
+          false
+        ],
+        "21": [
+          563,
+          1,
+          true
+        ],
+        "22": [
+          197,
+          1,
+          false
+        ],
+        "24": [
+          37,
+          10,
+          false
+        ],
+        "25": [
+          15,
+          1,
+          false
+        ],
+        "26": [
+          659,
+          1,
+          false
+        ],
+        "29": [
+          1,
+          10,
+          false
+        ]
+      },
+      "spells": [
+        3,
+        33,
+        2,
+        11,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "capabilities": 1983,
+      "exact_inventory_and_spell_order": true,
+      "hunger_after": [
+        90.0,
+        90.0
+      ],
+      "hunger_before": [
+        90.0,
+        90.0
+      ],
+      "inventory": {
+        "20": [
+          562,
+          1,
+          false
+        ],
+        "22": [
+          197,
+          2,
+          false
+        ],
+        "25": [
+          15,
+          1,
+          false
+        ]
+      },
+      "spells": [
+        3,
+        2,
+        33,
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "native_export": true,
+  "export_sha256": "c9469cbdbf8781f32103cbaf5a8311d76beab6f237117b8df4bad7edcbc61530",
+  "export_entrypoint_sha256": "1ccd2832c1263665d37f1c4e16374ad50e698e8ca0ea3d8cf4f3597d5e67247d",
+  "export_provenance": {
+    "commit": "42398cd55dc4843d8ea2830d4dcf7003f62e2475",
+    "clean_before_export": true,
+    "files": {
+      "pyao-client-r10.x86_64": "c9469cbdbf8781f32103cbaf5a8311d76beab6f237117b8df4bad7edcbc61530",
+      "override.cfg": "1ccd2832c1263665d37f1c4e16374ad50e698e8ca0ea3d8cf4f3597d5e67247d"
+    }
+  },
+  "acceptance": {
+    "required": [
+      "bank",
+      "chat",
+      "cities",
+      "clan",
+      "combat",
+      "fish",
+      "inventory",
+      "life_cycle",
+      "magic",
+      "map_exit",
+      "meditation",
+      "merchant",
+      "mine",
+      "party",
+      "party_rewards",
+      "pets",
+      "scroll",
+      "skills",
+      "spell_order",
+      "trade_cancel",
+      "trade_complete",
+      "wood"
+    ],
+    "completed": [
+      "bank",
+      "chat",
+      "cities",
+      "clan",
+      "combat",
+      "fish",
+      "inventory",
+      "life_cycle",
+      "magic",
+      "map_exit",
+      "meditation",
+      "merchant",
+      "mine",
+      "party",
+      "party_rewards",
+      "pets",
+      "scroll",
+      "skills",
+      "spell_order",
+      "trade_cancel",
+      "trade_complete",
+      "wood"
+    ],
+    "missing": [],
+    "functional_passed": true,
+    "r10_gameplay_passed": false
+  }
+}
