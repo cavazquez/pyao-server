@@ -10,7 +10,7 @@ import signal
 import subprocess  # ruff: ignore[suspicious-subprocess-import] - fixed argv; no shell
 import sys
 import threading
-from contextlib import suppress
+from contextlib import ExitStack, suppress
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -90,6 +90,13 @@ def quit_bridge(process: subprocess.Popen[str]) -> None:
             process.stdin.flush()
 
 
+def close_bridge_input(process: subprocess.Popen[str]) -> None:
+    """Cierra el buffer antes de que Popen repita un flush con el lector terminado."""
+    if process.stdin is not None:
+        with suppress(BrokenPipeError):
+            process.stdin.close()
+
+
 def linux_indicator(supervisor: ServerProcess, icon: Path) -> int:
     """Inicia el servidor sólo después de confirmar una bandeja disponible.
 
@@ -106,15 +113,19 @@ def linux_indicator(supervisor: ServerProcess, icon: Path) -> int:
             file=sys.stderr,
         )
         return 2
-    with subprocess.Popen(  # noqa: S603 - a resolved executable with fixed protocol
-        [bridge, "server", str(icon), "PyAO Server · esperando bandeja"],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        text=True,
-        bufsize=1,
-    ) as process:
+    with (
+        subprocess.Popen(  # noqa: S603 - a resolved executable with fixed protocol
+            [bridge, "server", str(icon), "PyAO Server · esperando bandeja"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            text=True,
+            bufsize=1,
+        ) as process,
+        ExitStack() as cleanup,
+    ):
         assert process.stdout is not None  # noqa: S101 - pipes created above
         assert process.stdin is not None  # noqa: S101
+        cleanup.callback(close_bridge_input, process)
         with selectors.DefaultSelector() as selector:
             selector.register(process.stdout, selectors.EVENT_READ)
             title = ""
