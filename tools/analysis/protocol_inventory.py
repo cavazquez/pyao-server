@@ -11,6 +11,7 @@ import ast
 import hashlib
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -1099,6 +1100,10 @@ def markdown(result):
 
 
 def main():
+    if sys.version_info < (3, 14):
+        raise SystemExit(
+            "La auditoría del AST del servidor requiere Python 3.14; ejecutar con uv run --no-project --python 3.14 python."
+        )
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--server", type=Path, default=SERVER)
     parser.add_argument("--client", type=Path, required=True)

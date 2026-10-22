@@ -26,14 +26,16 @@ a esta revisión pública; no se le atribuye falsamente el commit del repositori
 Con ambos checkouts, ejecutar desde el servidor:
 
 ```sh
-python3 tools/analysis/protocol_inventory.py --client ../ArgentumOnlineGodot --check
-python3 -m unittest discover -s tools/tests -p test_protocol_inventory.py -v
+uv run --no-project --python 3.14 python tools/analysis/protocol_inventory.py --client ../ArgentumOnlineGodot --check
+uv run --no-project --python 3.14 python -m unittest discover -s tools/tests -p test_protocol_inventory.py -v
 ```
 
 Para una actualización revisada, ejecutar el primer comando sin `--check`. Revisar
 `decisions.json`, `inventory.json` e `inventory.md`; no aceptar un diff generado sin
 examinar nuevos faltantes. CI ejecuta el mismo control en ambos repositorios, con la
 contraparte fijada por commit. No instala el servidor, Redis o Godot para el chequeo.
+El intérprete de la auditoría es Python 3.14 porque analiza su sintaxis; Python 3.12
+no puede interpretar las excepciones múltiples sin paréntesis usadas por el servidor.
 
 Para regenerar la referencia, obtener los cuatro archivos de `original.json` en su
 commit exacto y ejecutar `extract_ao_protocol.py` con `--reference`, `--origin`,
