@@ -27,7 +27,7 @@ class PetOrders:
         now = time.time()
         pets = [
             pet
-            for pet in self.npc_service.map_manager.get_all_npcs()
+            for pet in self.npc_service.map_manager.get_player_pets(user)
             if pet.summoned_by_user_id == user
             and pet.hp > 0
             and (pet.is_tamed or pet.summoned_until > now)
@@ -106,11 +106,11 @@ class PetOrders:
             decide,
         )
         if result["applied"]:
-            for pet in self.npc_service.map_manager.get_all_npcs():
-                if pet.instance_id == instance and pet.summoned_by_user_id == user:
-                    if order == "release":
-                        pet.hp = 0
-                        await self.npc_service.remove_npc(pet)
-                    else:
-                        pet.pet_order = order
+            pet = self.npc_service.map_manager.get_npc_by_instance(instance)
+            if pet is not None and pet.summoned_by_user_id == user:
+                if order == "release":
+                    pet.hp = 0
+                    await self.npc_service.remove_npc(pet)
+                else:
+                    pet.pet_order = order
         return result

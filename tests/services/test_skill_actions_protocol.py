@@ -395,6 +395,7 @@ async def test_campfire_is_visible_to_peers_and_removed_when_expired(action_worl
     """La fogata usa un objeto real del mapa y desaparece al expirar su clave Redis."""
     world = action_world
     await world.redis.hset("world:campfire:2:49:50", mapping={"until": "200", "x": "49", "y": "50"})
+    await world.redis.sadd("world:campfires:2", "world:campfire:2:49:50")
     with patch("src.messaging.senders.message_status_effects_sender.time.time", return_value=100):
         for uid, sender in world.senders.items():
             await sender.status_effects.sync_campfires(uid, world.player)
@@ -407,6 +408,30 @@ async def test_campfire_is_visible_to_peers_and_removed_when_expired(action_worl
             assert sender.connection.send.await_args.args[0] == bytes(
                 [ServerPacketID.OBJECT_DELETE, 49, 50]
             )
+
+
+@pytest.mark.asyncio
+async def test_campfire_concurrent_sync_and_map_reentry_are_idempotent(action_world):
+    """Ticks concurrentes no duplican objetos; volver al mapa reconstruye la vista."""
+    world = action_world
+    await world.redis.hset("world:campfire:2:49:50", mapping={"until": "200", "x": "49", "y": "50"})
+    await world.redis.sadd("world:campfires:2", "world:campfire:2:49:50")
+    sender = world.senders[1].status_effects
+    with patch("src.messaging.senders.message_status_effects_sender.time.time", return_value=100):
+        await asyncio.gather(*(sender.sync_campfires(1, world.player) for _ in range(5)))
+        create = struct.pack("<BBBh", ServerPacketID.OBJECT_CREATE, 49, 50, 1521)
+        assert [call.args[0] for call in world.senders[1].connection.send.await_args_list].count(
+            create
+        ) == 1
+        await world.player.set_position(1, 50, 50, 1, 3)
+        await sender.sync_campfires(1, world.player)
+        assert sender._campfires == set()
+        await world.player.set_position(1, 50, 50, 2, 3)
+        await sender.sync_campfires(1, world.player)
+        assert sender._campfires == {(49, 50)}
+        assert [call.args[0] for call in world.senders[1].connection.send.await_args_list].count(
+            create
+        ) == 2
 
 
 @pytest.mark.asyncio

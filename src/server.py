@@ -302,12 +302,14 @@ class ArgentumServer:
             try:
                 pet_instance_ids = await self.deps.summon_service.remove_all_player_pets(user_id)
                 # Remover cada mascota del mundo
-                all_npcs = await self.deps.npc_service.npc_repository.get_all_npcs()
                 for pet_instance_id in pet_instance_ids:
-                    pet_npc = next(
-                        (npc for npc in all_npcs if npc.instance_id == pet_instance_id),
-                        None,
-                    )
+                    pet_npc = self.deps.map_manager.get_npc_by_instance(pet_instance_id)
+                    if pet_npc is None:
+                        pet_npc = await self.deps.npc_service.npc_repository.get_npc(
+                            pet_instance_id
+                        )
+                    if pet_npc and pet_npc.summoned_by_user_id != user_id:
+                        continue
                     if pet_npc:
                         await self.deps.npc_service.remove_npc(pet_npc)
                         logger.info(

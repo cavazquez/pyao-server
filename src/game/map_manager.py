@@ -331,6 +331,30 @@ class MapManager(SpatialIndexMixin):
         result = self._npc_index.get_npc_by_char_index(map_id, char_index)
         return result if result is not None else None
 
+    def get_npc_by_instance(self, instance: str) -> NPC | None:
+        """Busca una instancia local en tiempo constante.
+
+        Returns:
+            NPC registrado o None.
+        """
+        return self._npc_index.get_npc_by_instance(instance)
+
+    def get_player_pets(self, user: int) -> list[NPC]:
+        """Consulta sólo las mascotas locales de un propietario.
+
+        Returns:
+            Referencias a los modelos del mundo actual.
+        """
+        return self._npc_index.get_player_pets(user)
+
+    def get_all_pets(self) -> list[NPC]:
+        """Consulta mascotas locales sin recorrer los NPC del mundo.
+
+        Returns:
+            Mascotas registradas, incluidas las pendientes de vencer.
+        """
+        return self._npc_index.get_all_pets()
+
     # Ground Items Methods
 
     def add_ground_item(

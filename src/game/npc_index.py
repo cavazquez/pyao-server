@@ -28,6 +28,8 @@ class NpcIndex:
         self._map_by_instance: dict[str, int] = {}
         self._character_by_instance: dict[str, int] = {}
         self._registered_position: dict[str, tuple[int, int]] = {}
+        self._pets_by_owner: dict[int, dict[str, NPC]] = {}
+        self._pet_owner_by_instance: dict[str, int] = {}
 
     @property
     def npcs_by_map(self) -> dict[int, dict[str, NPC]]:
@@ -60,6 +62,10 @@ class NpcIndex:
         self._map_by_instance[npc.instance_id] = map_id
         self._character_by_instance[npc.instance_id] = npc.char_index
         self._registered_position[npc.instance_id] = npc.x, npc.y
+        if npc.summoned_by_user_id > 0 and (npc.is_tamed or npc.summoned_until > 0):
+            user = npc.summoned_by_user_id
+            self._pets_by_owner.setdefault(user, {})[npc.instance_id] = npc
+            self._pet_owner_by_instance[npc.instance_id] = user
         logger.debug("NPC %s agregado al mapa %d en tile (%d,%d)", npc.name, map_id, npc.x, npc.y)
 
     def move_npc(
@@ -92,6 +98,11 @@ class NpcIndex:
         old_character = self._character_by_instance.pop(instance_id)
         self._by_character.pop((map_id, old_character), None)
         self._map_by_instance.pop(instance_id, None)
+        user = self._pet_owner_by_instance.pop(instance_id, None)
+        if user is not None:
+            self._pets_by_owner[user].pop(instance_id, None)
+            if not self._pets_by_owner[user]:
+                del self._pets_by_owner[user]
         logger.debug("NPC %s removido del mapa %d", npc.name, map_id)
 
         if not self._npcs_by_map[map_id]:
@@ -118,6 +129,31 @@ class NpcIndex:
         for npcs_in_map in self._npcs_by_map.values():
             all_npcs.extend(npcs_in_map.values())
         return all_npcs
+
+    def get_npc_by_instance(self, instance: str) -> NPC | None:
+        """Busca la identidad estable sin recorrer mapas.
+
+        Returns:
+            Instancia local o None.
+        """
+        map_id = self._map_by_instance.get(instance)
+        return self._npcs_by_map.get(map_id, {}).get(instance) if map_id is not None else None
+
+    def get_player_pets(self, user: int) -> list[NPC]:
+        """Devuelve sólo las referencias de ese propietario.
+
+        Returns:
+            Mascotas locales, incluyendo vencidas para poder retirarlas.
+        """
+        return list(self._pets_by_owner.get(user, {}).values())
+
+    def get_all_pets(self) -> list[NPC]:
+        """Consulta únicamente mascotas para los efectos globales.
+
+        Returns:
+            Referencias locales que se reconstruyen desde Redis al arrancar.
+        """
+        return [pet for pets in self._pets_by_owner.values() for pet in pets.values()]
 
     def get_npc_by_char_index(self, map_id: int, char_index: int) -> NPC | None:
         """Busca un NPC por char_index en un mapa.

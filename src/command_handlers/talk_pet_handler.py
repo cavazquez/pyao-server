@@ -63,13 +63,7 @@ class TalkPetHandler:
 
         _, args = parsed
 
-        # Obtener todas las mascotas del jugador
-        all_npcs = await self.npc_service.npc_repository.get_all_npcs()
-        player_pets = [
-            npc
-            for npc in all_npcs
-            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
-        ]
+        player_pets = await self.npc_service.npc_repository.get_player_pets(user_id)
 
         # Comando sin argumentos o con "INFO" - mostrar información
         if not args or (args and args[0].upper() == "INFO"):
@@ -120,8 +114,11 @@ class TalkPetHandler:
             released_count = 0
             for pet in player_pets:
                 try:
-                    await self.npc_service.remove_npc(pet)
-                    released_count += 1
+                    if self.pet_orders:
+                        result = await self.pet_orders.command(
+                            user_id, pet.instance_id, "release", operation_id()
+                        )
+                        released_count += int(bool(result["applied"]))
                     logger.info(
                         "Mascota liberada por comando: user_id=%d, mascota=%s",
                         user_id,

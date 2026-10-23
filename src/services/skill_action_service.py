@@ -194,12 +194,12 @@ class SkillActionService:
                         await observer.send_create_fx(user, int(VisualEffectID.MEDITATION), loops=1)
             return result
         if skill == TAME_SKILL and npc:
-            all_npcs = await self.npcs.npc_repository.get_all_npcs()
-            pets = [n.instance_id for n in all_npcs if n.summoned_by_user_id == user]
+            pets = [n.instance_id for n in await self.npcs.npc_repository.get_player_pets(user)]
             result = await tame(self.player, user, npc.instance_id, pets, identity)
             if result.get("successful"):
                 npc.summoned_by_user_id, npc.summoned_until, npc.is_tamed = user, 0.0, True
                 npc.is_hostile, npc.movement_type, npc.respawn_time = False, "static", 0
+                self.maps.add_npc(npc.map_id, npc)
             return result
         target = await self._player_at(pos["map"], x, y, user)
         if skill == STEAL_SKILL and target:

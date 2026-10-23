@@ -88,6 +88,7 @@ async def test_pet_aliases_preserve_ownership_and_remove_released_pet(chat_world
         mapping={"is_tamed": "True", "summoned_by_user_id": "2"},
     )
     await world.redis.sadd("player:2:pets", pet.instance_id)
+    world.deps.map_manager.add_npc(pet.map_id, pet)
     await world.run("/QUIETO", user=2)
     assert pet.pet_order == "wait"
     await world.run("/ACOMPAÑAR", user=2)

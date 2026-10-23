@@ -312,7 +312,7 @@ async def test_handle_pet_command_info(
         summoned_until=time.time() + 300,
     )
 
-    mock_npc_repo.get_all_npcs = AsyncMock(return_value=[mock_pet])
+    mock_npc_repo.get_player_pets = AsyncMock(return_value=[mock_pet])
 
     mock_npc_service = MagicMock()
     mock_npc_service.npc_repository = mock_npc_repo
@@ -346,7 +346,7 @@ async def test_handle_pet_command_no_pets(
 ) -> None:
     """Test comando /PET sin mascotas."""
     mock_npc_repo = MagicMock()
-    mock_npc_repo.get_all_npcs = AsyncMock(return_value=[])
+    mock_npc_repo.get_player_pets = AsyncMock(return_value=[])
 
     mock_npc_service = MagicMock()
     mock_npc_service.npc_repository = mock_npc_repo

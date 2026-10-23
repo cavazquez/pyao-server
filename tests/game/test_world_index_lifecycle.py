@@ -57,7 +57,16 @@ def test_name_update_and_normalized_collision_do_not_leave_stale_aliases() -> No
 
 def make_npc(identity: str, character: int, x: int = 1) -> MagicMock:
     """NPC liviano con identidad y posición mutables."""
-    return MagicMock(instance_id=identity, char_index=character, x=x, y=1, name=identity)
+    return MagicMock(
+        instance_id=identity,
+        char_index=character,
+        x=x,
+        y=1,
+        name=identity,
+        summoned_by_user_id=0,
+        summoned_until=0,
+        is_tamed=False,
+    )
 
 
 def test_npc_character_reuse_and_cross_map_rebinding() -> None:

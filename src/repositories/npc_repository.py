@@ -1,13 +1,21 @@
 """Repositorio para operaciones de NPCs usando Redis."""
 
 import logging
+import time
 import uuid
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
+
+from redis.exceptions import WatchError
 
 from src.models.npc import NPC
+from src.utils.pet_index import enqueue_pet_index, owner_key, pet_owner
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from redis.typing import EncodableT
+
     from src.utils.redis_client import RedisClient
 else:
     RedisClient = object
@@ -202,11 +210,11 @@ class NPCRepository:
             "random_spawn_area": "",
         }
 
-        await self.redis.hset(key, mapping=npc_data)
-
-        # Agregar a índice de mapa
-        map_key = RedisKeys.npc_map_index(map_id)
-        await self.redis.sadd(map_key, instance_id)
+        async with self.redis.redis.pipeline(transaction=True) as pipe:
+            pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", npc_data))
+            pipe.sadd(RedisKeys.npc_map_index(map_id), instance_id)
+            enqueue_pet_index(pipe, instance_id, {}, npc_data)
+            await pipe.execute()
 
         logger.debug(
             "NPC creado: %s (ID: %d, CharIndex: %d) en mapa %d (%d, %d)",
@@ -235,6 +243,15 @@ class NPCRepository:
         if not result:
             return None
 
+        return self._from_data(result)
+
+    @staticmethod
+    def _from_data(result: dict[str, str]) -> NPC:
+        """Decodifica una instancia, tanto individual como obtenida por lote.
+
+        Returns:
+            Modelo del NPC persistido.
+        """
         return NPC(
             npc_id=int(result["npc_id"]),
             char_index=int(result["char_index"]),
@@ -283,6 +300,62 @@ class NPCRepository:
             gm_follow_user=int(result.get("gm_follow_user", "0")),
         )
 
+    async def get_player_pets(self, user_id: int, *, include_expired: bool = False) -> list[NPC]:
+        """Consulta sólo el propietario y valida las instancias con una lectura por lote.
+
+        Returns:
+            Mascotas vivas del dueño; opcionalmente incluye invocaciones vencidas.
+        """
+        members: list[str] = sorted(await self.redis.smembers(owner_key(user_id)))
+        rows = await self._read_many(members)
+        stale = [
+            instance
+            for instance, row in zip(members, rows, strict=True)
+            if pet_owner(row) != user_id
+        ]
+        if stale:
+            await self._prune_owner_index(user_id, stale)
+        now = time.time()
+        return [
+            self._from_data(row)
+            for row in rows
+            if pet_owner(row) == user_id
+            and (
+                include_expired
+                or row.get("is_tamed", "False").lower() == "true"
+                or float(row.get("summoned_until", 0)) > now
+            )
+        ]
+
+    async def _read_many(self, instances: list[str]) -> list[dict[str, str]]:
+        if not instances:
+            return []
+        async with self.redis.redis.pipeline(transaction=False) as pipe:
+            for instance in instances:
+                pipe.hgetall(RedisKeys.npc_instance(instance))
+            return cast("list[dict[str, str]]", await pipe.execute())
+
+    async def _prune_owner_index(self, user_id: int, instances: list[str]) -> None:
+        # WATCH evita borrar una membresía que acaba de volver a ser válida.
+        keys = [RedisKeys.npc_instance(instance) for instance in instances]
+        for _ in range(3):
+            async with self.redis.redis.pipeline() as pipe:
+                try:
+                    await pipe.watch(*keys)
+                    stale = []
+                    for instance, key in zip(instances, keys, strict=True):
+                        row = cast("dict[str, str]", await pipe.hgetall(key))
+                        if pet_owner(row) != user_id:
+                            stale.append(instance)
+                    pipe.multi()  # type: ignore[no-untyped-call]
+                    if stale:
+                        pipe.srem(owner_key(user_id), *stale)
+                    await pipe.execute()
+                except WatchError:
+                    continue
+                else:
+                    return
+
     async def get_npcs_in_map(self, map_id: int) -> list[NPC]:
         """Obtiene todos los NPCs de un mapa.
 
@@ -295,7 +368,7 @@ class NPCRepository:
         map_key = RedisKeys.npc_map_index(map_id)
         instance_ids: set[str] = await self.redis.smembers(map_key)
 
-        npcs = []
+        npcs: list[NPC] = []
         for instance_id in instance_ids:
             npc = await self.get_npc(instance_id)
             if npc:
@@ -309,18 +382,15 @@ class NPCRepository:
         Returns:
             Lista de todos los NPCs.
         """
-        # Obtener todas las claves de NPCs
-        pattern = "npc:instance:*"
-        keys = await self.redis.keys(pattern)
-
-        npcs = []
-        for key in keys:
-            # Extraer instance_id de la clave
-            instance_id = key.split(":")[-1]
-            npc = await self.get_npc(instance_id)
-            if npc:
-                npcs.append(npc)
-
+        # Sólo inicialización/mantenimiento: nunca usar esta ruta en un tick.
+        instances = [
+            str(key).removeprefix("npc:instance:")
+            async for key in self.redis.redis.scan_iter(match="npc:instance:*", count=256)
+        ]
+        npcs: list[NPC] = []
+        for offset in range(0, len(instances), 256):
+            rows = await self._read_many(instances[offset : offset + 256])
+            npcs.extend(self._from_data(row) for row in rows if row)
         return npcs
 
     async def update_npc_position(self, instance_id: str, x: int, y: int, heading: int) -> None:
@@ -348,8 +418,7 @@ class NPCRepository:
             instance_id: ID único de la instancia del NPC.
             hp: Nuevo HP.
         """
-        key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(key, "hp", str(hp))
+        await self._write_membership(instance_id, {"hp": str(hp)})
         logger.debug("HP actualizado para NPC %s: %d", instance_id, hp)
 
     async def update_npc_paralyzed_until(self, instance_id: str, paralyzed_until: float) -> None:
@@ -401,10 +470,9 @@ class NPCRepository:
             summoned_by_user_id: ID del jugador que invocó al NPC (0 = no invocado).
             summoned_until: Timestamp hasta cuando existe (0.0 = permanente/no invocado).
         """
-        key = RedisKeys.npc_instance(instance_id)
-        await self.redis.hset(
-            key,
-            mapping={
+        await self._write_membership(
+            instance_id,
+            {
                 "summoned_by_user_id": str(summoned_by_user_id),
                 "summoned_until": str(summoned_until),
             },
@@ -422,54 +490,63 @@ class NPCRepository:
         Args:
             instance_id: ID único de la instancia del NPC.
         """
-        # Obtener el NPC para saber su mapa
-        npc = await self.get_npc(instance_id)
-        if not npc:
-            logger.warning("Intento de eliminar NPC inexistente: %s", instance_id)
-            return
+        await self._write_membership(instance_id, None)
 
-        # Eliminar de índice de mapa
-        map_key = RedisKeys.npc_map_index(npc.map_id)
-        await self.redis.srem(map_key, instance_id)
+    async def _write_membership(self, instance: str, changes: dict[str, str] | None) -> None:
+        """Confirma instancia e índices sin carreras de muerte, dueño o cambio de mapa.
 
-        if npc.summoned_by_user_id:
-            await self.redis.srem(f"player:{npc.summoned_by_user_id}:pets", instance_id)
-        # Eliminar datos del NPC
-        key = RedisKeys.npc_instance(instance_id)
-        await self.redis.delete(key)
-
-        logger.debug("NPC eliminado: %s (%s)", npc.name, instance_id)
+        Raises:
+            RuntimeError: Si la instancia permanece en contención tras 16 intentos.
+        """
+        key = RedisKeys.npc_instance(instance)
+        for _ in range(16):
+            async with self.redis.redis.pipeline() as pipe:
+                try:
+                    await pipe.watch(key)
+                    before = cast("dict[str, str]", await pipe.hgetall(key))
+                    if not before:
+                        return
+                    pipe.multi()  # type: ignore[no-untyped-call]
+                    if changes is None:
+                        pipe.delete(key)
+                        pipe.srem(RedisKeys.npc_map_index(int(before["map_id"])), instance)
+                        user = int(before.get("summoned_by_user_id", 0))
+                        if user:
+                            pipe.srem(owner_key(user), instance)
+                    else:
+                        pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", changes))
+                    enqueue_pet_index(
+                        pipe, instance, before, {} if changes is None else {**before, **changes}
+                    )
+                    await pipe.execute()
+                except WatchError:
+                    continue
+                else:
+                    return
+        message = "La instancia NPC cambió durante todos los intentos de actualización"
+        raise RuntimeError(message)
 
     async def clear_all_npcs(self, *, preserve_tamed: bool = False) -> None:
         """Elimina todos los NPCs del mundo (útil para reiniciar).
 
         ADVERTENCIA: Esta operación es destructiva.
         """
-        if preserve_tamed:
-            for npc in await self.get_all_npcs():
-                state = await self.redis.hget(f"npc:instance:{npc.instance_id}", "death_state")
-                if state == "pending":
-                    continue
-                if not npc.is_tamed or npc.hp <= 0:
-                    await self.remove_npc(npc.instance_id)
-            keys = await self.redis.keys("npc:map:*")
-            if keys:
-                await self.redis.delete(*keys)
-            for pet in await self.get_all_npcs():
-                await self.redis.sadd(RedisKeys.npc_map_index(pet.map_id), pet.instance_id)
-                await self.redis.sadd(f"player:{pet.summoned_by_user_id}:pets", pet.instance_id)
-            return
-
-        # Eliminar todas las instancias de NPCs
-        pattern = "npc:instance:*"
-        keys = await self.redis.keys(pattern)
-        if keys:
-            await self.redis.delete(*keys)
-
-        # Eliminar todos los índices de mapas
-        pattern = "npc:map:*"
-        keys = await self.redis.keys(pattern)
-        if keys:
-            await self.redis.delete(*keys)
+        kept = []
+        for npc in await self.get_all_npcs():
+            pending = await self.redis.hget(RedisKeys.npc_instance(npc.instance_id), "death_state")
+            if preserve_tamed and (pending == "pending" or (npc.is_tamed and npc.hp > 0)):
+                kept.append(npc)
+            else:
+                await self.remove_npc(npc.instance_id)
+        # Reconstrucción exclusivamente al arrancar, antes de aceptar jugadores.
+        for pattern in ("npc:map:*", "player:*:pets"):
+            async for key in self.redis.redis.scan_iter(match=pattern, count=256):
+                await self.redis.delete(str(key))
+        async with self.redis.redis.pipeline() as pipe:
+            for npc in kept:
+                pipe.sadd(RedisKeys.npc_map_index(npc.map_id), npc.instance_id)
+                if npc.summoned_by_user_id > 0 and npc.is_tamed and npc.hp > 0:
+                    pipe.sadd(owner_key(npc.summoned_by_user_id), npc.instance_id)
+            await pipe.execute()
 
         logger.info("Todos los NPCs han sido eliminados de Redis")

@@ -54,8 +54,7 @@ class SummonExpiryEffect(TickEffect):
         # Actualizar timestamp de última verificación
         SummonExpiryEffect._last_check_time = current_time
 
-        # Obtener todos los NPCs del mundo
-        all_npcs = await self.npc_service.npc_repository.get_all_npcs()
+        all_npcs = self.npc_service.map_manager.get_all_pets()
 
         # Filtrar solo NPCs invocados expirados
         expired_pets = [

@@ -66,14 +66,14 @@ class PetFollowEffect(TickEffect):
         PetFollowEffect._last_check_time = current_time
 
         try:
-            # Obtener todos los NPCs del mundo
-            all_npcs = await self.npc_service.npc_repository.get_all_npcs()
-
-            # Filtrar solo mascotas invocadas
+            # La vista local se reconstruye desde Redis durante la inicialización.
+            all_npcs = self.npc_service.map_manager.get_all_pets()
             pets = [
                 npc
                 for npc in all_npcs
-                if npc.summoned_by_user_id > 0 and (npc.summoned_until > 0.0 or npc.is_tamed)
+                if npc.hp > 0
+                and npc.summoned_by_user_id > 0
+                and (npc.summoned_until > current_time or npc.is_tamed)
             ]
 
             if not pets:
