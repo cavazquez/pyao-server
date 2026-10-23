@@ -90,11 +90,7 @@ def test_build_commerce_end_response() -> None:
 
 def test_build_commerce_init_response() -> None:
     """Verifica que build_commerce_init_response construye el paquete correctamente."""
-    items = [
-        (1, 100, "Espada", 1, 500, 1000, 2, 10, 5, 0, 0),
-        (2, 101, "Escudo", 1, 300, 1001, 3, 0, 0, 5, 3),
-    ]
-    response = build_commerce_init_response(npc_id=2, items=items)
+    response = build_commerce_init_response()
 
     assert isinstance(response, bytes)
-    assert response[0] == ServerPacketID.COMMERCE_INIT
+    assert response == bytes([ServerPacketID.COMMERCE_INIT])

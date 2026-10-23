@@ -138,6 +138,11 @@ class ClanRepository:
             return None
 
         data = json.loads(data_str)
+        profile = await self.redis.hgetall(f"clan:{clan_id}:profile")
+        for field in ("description", "news", "website"):
+            if field in profile:
+                data[field] = profile[field]
+        data["profile_revision"] = int(profile.get("revision", 0))
         members = await self._get_clan_members(clan_id)
 
         return ClanRepository._deserialize_clan(data, members)
@@ -186,6 +191,7 @@ class ClanRepository:
 
         # Remove clan data
         pipe.delete(self.CLAN_KEY.format(clan_id=clan_id))
+        pipe.delete(f"clan:{clan_id}:profile")
         pipe.hdel(self.ALL_CLANS_KEY, str(clan_id))
         pipe.delete(self.CLAN_MEMBERS_KEY.format(clan_id=clan_id))
         pipe.delete(self.CLAN_NAME_INDEX_KEY.format(name=clan.name.lower()))
@@ -286,6 +292,7 @@ class ClanRepository:
             gold=data.get("gold", 0),
             website=data.get("website", ""),
             news=data.get("news", ""),
+            profile_revision=data.get("profile_revision", 0),
             alliances=set(data.get("alliances", [])),
             wars=set(data.get("wars", [])),
             peace_treaties=set(data.get("peace_treaties", [])),

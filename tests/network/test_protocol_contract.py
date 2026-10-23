@@ -38,7 +38,10 @@ def test_golden_fields_consume_exactly_the_packet(fixture: dict) -> None:
     entry = CONTRACT["directions"][fixture["direction"]][str(data[0])]
     offset = 1
     decoded = {}
-    for field in entry["fields"]:
+    fields = list(entry["fields"])
+    if "variants" in entry:
+        fields.extend(entry["variants"][str(data[1])])
+    for field in fields:
         kind = field["type"]
         if kind == "str16":
             length = struct.unpack_from("<H", data, offset)[0]

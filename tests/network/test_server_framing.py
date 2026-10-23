@@ -35,7 +35,10 @@ async def test_handle_client_dispatches_complete_packets_once_in_order(fragmente
         return MagicMock(execute=execute)
 
     output = writer()
-    with patch.object(server, "create_task", side_effect=create):
+    with (
+        patch.object(server, "create_task", side_effect=create),
+        patch.object(server, "_validate_packet_state"),
+    ):
         handling = asyncio.create_task(server.handle_client(reader, output))
         payload = b"".join(expected)
         chunks = [bytes([value]) for value in payload] if fragmented else [payload]
@@ -62,7 +65,10 @@ async def test_connections_keep_independent_partial_buffers_and_ignore_partial_e
         received.append(data)
         return task
 
-    with patch.object(server, "create_task", side_effect=create):
+    with (
+        patch.object(server, "create_task", side_effect=create),
+        patch.object(server, "_validate_packet_state"),
+    ):
         handling = [asyncio.create_task(server.handle_client(r, writer())) for r in readers]
         readers[0].feed_data(b"\x06")
         readers[1].feed_data(b"\x06\x04")

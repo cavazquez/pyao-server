@@ -64,11 +64,10 @@ loopback.
 
 ## Durabilidad
 
-`redis/redis.conf` habilita AOF con `appendfsync everysec`, sin desactivar fsync
+`redis/redis.conf` habilita AOF con `appendfsync always`, sin desactivar fsync
 al reescribir, y RDB a los 900 s/1 cambio, 300 s/10 cambios o 60 s/10000 cambios.
 Se persiste **todo `/data`**, incluido `appendonlydir` y su manifiesto. Un cierre
-limpio guarda escrituras pendientes. Ante caída abrupta, everysec puede perder
-aproximadamente el último segundo; el almacenamiento debe cumplir fsync. Un
+limpio guarda escrituras pendientes. El perfil `always` confirma fsync en cada lote de escrituras; el almacenamiento debe cumplir fsync. Si una instalación existente conserva `everysec`, puede perder aproximadamente el último segundo de escrituras no confirmadas y cada barrera puede esperar ese intervalo. Un
 reinicio de proceso no equivale a un corte eléctrico. Los snapshots agregan
 puntos de recuperación; el volumen local sigue necesitando un backup externo.
 

@@ -19,8 +19,11 @@ from src.network.msg_player_stats import (
 from src.network.state_channel import send_state
 from src.services.classic_chat.maintenance import ClassicMaintenance
 from src.services.expansion.service import EXPANSION_TOPICS, ExpansionService
+from src.services.inventory_notifications import notify_bank
 from src.services.lottery.service import LotteryService
 from src.services.world.actions import TOPICS, clan_action, party_action
+from src.services.world.bank import BankState
+from src.services.world.clan_profile import update_profile
 from src.services.world.commands import command_snapshot
 from src.services.world.pets import PetOrders
 from src.services.world.serialization import GroupLock, bind_groups
@@ -74,6 +77,7 @@ class WorldStateService:
         self.classic_maintenance = ClassicMaintenance(deps)
         self.expansion = ExpansionService(deps)
         self.lottery = LotteryService(deps)
+        self.bank = BankState(deps)
         self.cache: dict[tuple[str, str], str] = {}
         self.legacy_revisions: dict[str, int] = {}
         self.legacy_receipts: dict[str, str] = {}
@@ -176,6 +180,8 @@ class WorldStateService:
             return await tax_status(self.deps.redis_client.redis, user)
         if topic == "lottery":
             return await self.lottery.snapshot(user)
+        if topic == "bank":
+            return await self.bank.snapshot(user)
         if topic in EXPANSION_TOPICS:
             return await self.expansion.snapshot(user, topic)
         if topic == "party":
@@ -276,6 +282,8 @@ class WorldStateService:
                 return
             data = await self.snapshot(user, topic, sender.connection.state_pages.get(topic, 0))
             result = await self._mutate(user, request, _digest(data, volatile=False))
+            if action == "bank.move" and result.get("applied"):
+                await notify_bank(sender, self.deps.bank_repo, user)
             await send_state(sender, "result", {"action": action, **result}, identity=identity)
             await self.publish(user, topic, force=True)
 
@@ -293,6 +301,26 @@ class WorldStateService:
                     "uncertain": True,
                     "message": (
                         "Apuesta pendiente: reintentá la misma operación "
+                        "para recuperar el comprobante."
+                    ),
+                }
+        if action in {"bank.move", "clan.profile"}:
+            try:
+                sender = self.deps.map_manager.get_player_message_sender(user)
+                if sender is None:
+                    return {"applied": False, "message": "La conexión cambió."}
+                return (
+                    await self.bank.move(user, sender, request)
+                    if action == "bank.move"
+                    else await update_profile(self.deps, user, request)
+                )
+            except RedisError, RuntimeError:
+                logger.exception("Confirmación de almacenamiento pendiente user_id=%d", user)
+                return {
+                    "applied": False,
+                    "uncertain": True,
+                    "message": (
+                        "Resultado pendiente: reintentá la misma operación "
                         "para recuperar el comprobante."
                     ),
                 }

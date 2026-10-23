@@ -144,6 +144,13 @@ jobs:
         run: |
           uv sync --locked
           uv run --locked pytest tests/repositories/test_scoped_world_indexes.py --junitxml=artifacts/scoped-indexes.xml
+      - name: Bank reorder, clan profile and combat AOF crash recovery
+        timeout-minutes: 3
+        env:
+          PYAO_RUN_STORAGE_REDIS: '1'
+        run: |
+          uv sync --locked
+          uv run --locked pytest tests/services/test_storage_actions.py --junitxml=artifacts/storage-redis.xml
       - name: Lottery atomic bets, weighted draw and AOF crash recovery
         timeout-minutes: 5
         env:

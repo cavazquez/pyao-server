@@ -15,7 +15,8 @@ from src.core.server_initializer import ServerInitializer
 from src.log_context import connection_id, operation
 from src.messaging.message_sender import MessageSender
 from src.network.client_connection import ClientConnection
-from src.network.packet_framer import FramingError, PacketFramer
+from src.network.packet_framer import CONTRACT, FramingError, PacketFramer
+from src.network.packet_id import ClientPacketID
 from src.security.auth_limits import AuthLimiter
 from src.security.ip_bans import ip_is_blocked
 from src.security.password_executor import close_password_executor
@@ -136,6 +137,7 @@ class ArgentumServer:
                 max_outgoing_packets=self.outgoing_config.outgoing_max_packets,
                 max_outgoing_bytes=self.outgoing_config.outgoing_max_bytes,
                 drain_timeout=self.outgoing_config.outgoing_drain_timeout,
+                validate_packets=True,
             )
             connection.owner_task = asyncio.current_task()
             self._connections.add(connection)
@@ -166,13 +168,9 @@ class ArgentumServer:
                                 framer.buffer_size,
                             )
                         break
-                    framer.feed(data)
-                    while (packet := framer.next_packet()) is not None:
-                        if self._stopping:
-                            break
-                        task = self.create_task(packet, message_sender, session_data)
-                        with operation(uuid4().hex):
-                            await task.execute()
+                    await self._dispatch_frames(
+                        data, framer, connection, message_sender, session_data
+                    )
         except FramingError as error:
             logger.info("Conexión cerrada por framing inválido: %s", error)
         except TimeoutError:
@@ -239,6 +237,36 @@ class ArgentumServer:
             except Exception:
                 logger.exception("No se pudo actualizar la métrica de conexiones")
 
+    async def _dispatch_frames(
+        self,
+        data: bytes,
+        framer: PacketFramer,
+        connection: ClientConnection,
+        sender: MessageSender,
+        session_data: dict[str, dict[str, int]],
+    ) -> None:
+        """Drena cada tramo antes de recibir más bytes sin mezclar sesiones.
+
+        Raises:
+            FramingError: Por un frame inválido o un buffer sin progreso.
+        """
+        offset = 0
+        while offset < len(data) and not self._stopping:
+            available = framer.MAX_BUFFER_BYTES - framer.buffer_size
+            if available <= 0:
+                msg = "El frame incompleto agotó el buffer"
+                raise FramingError(msg)
+            count = min(available, len(data) - offset)
+            framer.feed(data[offset : offset + count])
+            offset += count
+            while (packet := framer.next_packet()) is not None:
+                if self._stopping:
+                    break
+                self._validate_packet_state(packet, connection)
+                task = self.create_task(packet, sender, session_data)
+                with operation(uuid4().hex):
+                    await task.execute()
+
     async def _receive(self, connection: ClientConnection) -> bytes:
         """Permite despertar lectores ociosos sin cancelar una operación en curso.
 
@@ -261,6 +289,31 @@ class ArgentumServer:
             raise
         finally:
             self._receivers.discard(reader)
+
+    def _validate_packet_state(self, packet: bytes, connection: ClientConnection) -> None:
+        """Rechaza mensajes fuera de sesión o extensiones aún no negociadas.
+
+        Raises:
+            FramingError: Si el mensaje no pertenece al estado de esta conexión.
+        """
+        packet_id = packet[0]
+        public = {
+            ClientPacketID.LOGIN,
+            ClientPacketID.CREATE_ACCOUNT,
+            ClientPacketID.THROW_DICES,
+            ClientPacketID.PING,
+            ClientPacketID.QUIT,
+        }
+        required = CONTRACT["directions"]["client"][str(packet_id)].get("requires_capability", 0)
+        unauthenticated = not connection.is_authenticated and packet_id not in public
+        repeated_login = connection.is_authenticated and packet_id in {
+            ClientPacketID.LOGIN,
+            ClientPacketID.CREATE_ACCOUNT,
+        }
+        unavailable = required and connection.capabilities.enabled & required != required
+        if unauthenticated or repeated_login or unavailable:
+            msg = f"Mensaje fuera del estado de conexión: ID {packet_id}"
+            raise FramingError(msg)
 
     async def _cleanup_player(
         self, session_data: dict[str, dict[str, int]], message_sender: MessageSender | None = None

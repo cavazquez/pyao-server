@@ -404,28 +404,13 @@ class MessageSender:
         """Envía paquete CommerceEnd para cerrar la ventana de comercio."""
         await self.inventory.send_commerce_end()
 
-    async def send_commerce_init(
-        self,
-        npc_id: int,
-        items: list[tuple[int, int, str, int, int, int, int, int, int, int, int]],
-    ) -> None:
-        """Envía paquete COMMERCE_INIT para abrir ventana de comercio con inventario del mercader.
-
-        Args:
-            npc_id: ID del NPC mercader.
-            items: Lista de tuplas con formato:
-                (slot, item_id, name, quantity, price, grh_index, obj_type,
-                 max_hit, min_hit, max_def, min_def)
-        """
-        await self.inventory.send_commerce_init(npc_id, items)
-
-    async def send_commerce_init_empty(self) -> None:
+    async def send_commerce_init(self) -> None:
         """Envía paquete COMMERCE_INIT vacío (solo abre la ventana).
 
         El cliente Godot espera que los items se envíen previamente
         con ChangeNPCInventorySlot.
         """
-        await self.inventory.send_commerce_init_empty()
+        await self.inventory.send_commerce_init()
 
     async def send_change_npc_inventory_slot(
         self,
@@ -660,14 +645,6 @@ class MessageSender:
         """Envía paquete PONG en respuesta a un PING."""
         await self.session.send_pong()
 
-    async def send_show_party_form(self) -> None:
-        """Envía paquete SHOW_PARTY_FORM para habilitar el botón de party en el cliente.
-
-        Este packet habilita la funcionalidad de parties en la UI del cliente.
-        Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
-        """
-        await self.session.send_show_party_form()
-
     async def send_clan_details(self, clan: Clan) -> None:
         """Envía paquete CLAN_DETAILS para habilitar el botón de clan en el cliente.
 
@@ -678,14 +655,6 @@ class MessageSender:
             clan: Objeto Clan con los datos del clan.
         """
         await self.session.send_clan_details(clan)
-
-    async def send_user_commerce_init(self, partner_username: str) -> None:
-        """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
-        await self.inventory.send_user_commerce_init(partner_username)
-
-    async def send_user_commerce_end(self) -> None:
-        """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
-        await self.inventory.send_user_commerce_end()
 
     async def send_work_request_target(self, skill_type: int) -> None:
         """Envía paquete WORK_REQUEST_TARGET para cambiar cursor al modo de trabajo.

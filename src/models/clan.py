@@ -136,6 +136,7 @@ class Clan:
     gold: int = 0  # Clan treasury gold
     website: str = ""
     news: str = ""  # Clan news/announcements
+    profile_revision: int = 0
     # Relationships with other clans
     alliances: set[int] = field(default_factory=set)  # Clan IDs that are allies
     wars: set[int] = field(default_factory=set)  # Clan IDs that are at war

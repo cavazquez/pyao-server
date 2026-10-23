@@ -2,6 +2,7 @@
 
 from dataclasses import asdict
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 import pytest_asyncio
 
@@ -17,12 +18,14 @@ from src.utils.redis_config import RedisKeys
 
 
 @pytest_asyncio.fixture
-async def mechanics_world(redis_client):
+async def mechanics_world(redis_client, monkeypatch):
     """Carga reglas y recetas, dos jugadores y una criatura con progreso independiente.
 
     Returns:
         Repositorios reales, terreno controlable y estados iniciales en Redis.
     """
+    monkeypatch.setattr("src.services.combat.physical_plan.ensure_aof", AsyncMock())
+    monkeypatch.setattr("src.services.combat.physical_plan.require_durable", AsyncMock())
     await SkillDataLoader(redis_client).load()
     await CraftingDataLoader(redis_client).load()
     player, inventory = PlayerRepository(redis_client), InventoryRepository(redis_client)

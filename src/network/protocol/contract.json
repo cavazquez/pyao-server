@@ -142,7 +142,9 @@
         "fields": [
           {
             "name": "heading",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 4
           }
         ]
       },
@@ -203,13 +205,15 @@
       },
       "18": {
         "name": "USER_COMMERCE_END",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: use negotiated TRADE_ACTION (252) with session and revision."
       },
       "19": {
         "name": "USER_COMMERCE_CONFIRM",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: use negotiated TRADE_ACTION (252) with session and revision."
       },
       "20": {
         "name": "CommerceChat",
@@ -223,13 +227,15 @@
       },
       "22": {
         "name": "USER_COMMERCE_OK",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: use negotiated TRADE_ACTION (252) with session and revision."
       },
       "23": {
         "name": "USER_COMMERCE_REJECT",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: use negotiated TRADE_ACTION (252) with session and revision."
       },
       "24": {
         "name": "DROP",
@@ -237,11 +243,15 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 30
           },
           {
             "name": "quantity",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 10000
           }
         ],
         "gold_slots": [
@@ -255,7 +265,9 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 35
           }
         ]
       },
@@ -265,11 +277,15 @@
         "fields": [
           {
             "name": "x",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           },
           {
             "name": "y",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           }
         ]
       },
@@ -279,11 +295,15 @@
         "fields": [
           {
             "name": "x",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           },
           {
             "name": "y",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           }
         ]
       },
@@ -293,7 +313,9 @@
         "fields": [
           {
             "name": "skill",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 22
           }
         ]
       },
@@ -308,7 +330,9 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           }
         ]
       },
@@ -328,15 +352,21 @@
         "fields": [
           {
             "name": "x",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           },
           {
             "name": "y",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 100
           },
           {
             "name": "skill",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 22
           }
         ]
       },
@@ -351,7 +381,9 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 35
           }
         ]
       },
@@ -361,7 +393,9 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           }
         ]
       },
@@ -371,7 +405,9 @@
         "fields": [
           {
             "name": "heading",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 4
           }
         ]
       },
@@ -382,7 +418,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "operation_id",
@@ -392,179 +430,267 @@
           },
           {
             "name": "id_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "delta_1",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 2,
+            "max": 2
           },
           {
             "name": "delta_2",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 3,
+            "max": 3
           },
           {
             "name": "delta_3",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 4,
+            "max": 4
           },
           {
             "name": "delta_4",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 5,
+            "max": 5
           },
           {
             "name": "delta_5",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 6,
+            "max": 6
           },
           {
             "name": "delta_6",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 7,
+            "max": 7
           },
           {
             "name": "delta_7",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 8,
+            "max": 8
           },
           {
             "name": "delta_8",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 9,
+            "max": 9
           },
           {
             "name": "delta_9",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 10,
+            "max": 10
           },
           {
             "name": "delta_10",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 11,
+            "max": 11
           },
           {
             "name": "delta_11",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 12,
+            "max": 12
           },
           {
             "name": "delta_12",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 13,
+            "max": 13
           },
           {
             "name": "delta_13",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 14,
+            "max": 14
           },
           {
             "name": "delta_14",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 15,
+            "max": 15
           },
           {
             "name": "delta_15",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 16,
+            "max": 16
           },
           {
             "name": "delta_16",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 17,
+            "max": 17
           },
           {
             "name": "delta_17",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 18,
+            "max": 18
           },
           {
             "name": "delta_18",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 19,
+            "max": 19
           },
           {
             "name": "delta_19",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 20,
+            "max": 20
           },
           {
             "name": "delta_20",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 21,
+            "max": 21
           },
           {
             "name": "delta_21",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 22,
+            "max": 22
           },
           {
             "name": "delta_22",
-            "type": "i16"
+            "type": "i16",
+            "min": 0,
+            "max": 100
           }
         ]
       },
@@ -579,11 +705,15 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           },
           {
             "name": "quantity",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 10000
           }
         ]
       },
@@ -593,11 +723,15 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 40
           },
           {
             "name": "quantity",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 10000
           }
         ]
       },
@@ -607,11 +741,15 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           },
           {
             "name": "quantity",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 10000
           }
         ]
       },
@@ -621,11 +759,15 @@
         "fields": [
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           },
           {
             "name": "quantity",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 10000
           }
         ]
       },
@@ -640,11 +782,15 @@
         "fields": [
           {
             "name": "upwards",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 1
           },
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 35
           }
         ]
       },
@@ -660,7 +806,7 @@
       },
       "48": {
         "name": "USER_COMMERCE_OFFER",
-        "status": "supported",
+        "status": "unsupported",
         "fields": [
           {
             "name": "slot",
@@ -670,7 +816,8 @@
             "name": "quantity",
             "type": "i16"
           }
-        ]
+        ],
+        "reason": "Retired: use negotiated TRADE_ACTION (252) with session and revision."
       },
       "49": {
         "name": "GuildAcceptPeace",
@@ -982,7 +1129,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "operation_id",
@@ -1022,7 +1171,9 @@
         "fields": [
           {
             "name": "amount",
-            "type": "i32"
+            "type": "i32",
+            "min": 1,
+            "max": 999999999
           }
         ]
       },
@@ -1032,7 +1183,9 @@
         "fields": [
           {
             "name": "amount",
-            "type": "i32"
+            "type": "i32",
+            "min": 1,
+            "max": 999999999
           }
         ]
       },
@@ -1169,11 +1322,15 @@
         "fields": [
           {
             "name": "source",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           },
           {
             "name": "destination",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 30
           }
         ]
       },
@@ -1183,7 +1340,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "mask",
@@ -1198,7 +1357,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "session_id",
@@ -1208,19 +1369,26 @@
           },
           {
             "name": "revision",
-            "type": "i32"
+            "type": "i32",
+            "min": 0
           },
           {
             "name": "action",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 5
           },
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 30
           },
           {
             "name": "quantity",
-            "type": "i32"
+            "type": "i32",
+            "min": 0,
+            "max": 999999999
           }
         ]
       },
@@ -1231,19 +1399,27 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "slot",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 35
           },
           {
             "name": "x",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 100
           },
           {
             "name": "y",
-            "type": "i16"
+            "type": "i16",
+            "min": 1,
+            "max": 100
           }
         ]
       },
@@ -1254,7 +1430,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "request",
@@ -1270,7 +1448,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "payload",
@@ -1334,19 +1514,21 @@
       },
       "9": {
         "name": "USER_COMMERCE_INIT",
-        "status": "supported",
+        "status": "unsupported",
         "fields": [
           {
             "name": "partner",
             "type": "str16",
             "max_bytes": 1024
           }
-        ]
+        ],
+        "reason": "Retired: no active receiver; confirmed state uses current snapshots."
       },
       "10": {
         "name": "USER_COMMERCE_END",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: no active receiver; confirmed state uses current snapshots."
       },
       "11": {
         "name": "UserOfferConfirm",
@@ -1519,7 +1701,9 @@
           },
           {
             "name": "heading",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 4
           },
           {
             "name": "x",
@@ -1564,7 +1748,9 @@
           },
           {
             "name": "show_name",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 1
           }
         ]
       },
@@ -1624,7 +1810,9 @@
           },
           {
             "name": "heading",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 4
           },
           {
             "name": "weapon",
@@ -1694,7 +1882,9 @@
           },
           {
             "name": "blocked",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 1
           }
         ]
       },
@@ -1838,7 +2028,9 @@
           },
           {
             "name": "equipped",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 1
           },
           {
             "name": "grh",
@@ -1866,7 +2058,8 @@
           },
           {
             "name": "price",
-            "type": "f32"
+            "type": "f32",
+            "min": 0
           }
         ]
       },
@@ -2027,7 +2220,8 @@
           },
           {
             "name": "price",
-            "type": "f32"
+            "type": "f32",
+            "min": 0
           },
           {
             "name": "grh",
@@ -2145,7 +2339,9 @@
           },
           {
             "name": "invisible",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 1
           }
         ]
       },
@@ -2357,12 +2553,14 @@
       "84": {
         "name": "TradeOK",
         "status": "unsupported",
-        "fields": []
+        "fields": [],
+        "reason": "Retired: no active receiver; confirmed state uses current snapshots."
       },
       "85": {
         "name": "BANK_OK",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: no active receiver; confirmed state uses current snapshots."
       },
       "86": {
         "name": "ChangeUserTradeSlot",
@@ -2445,8 +2643,9 @@
       },
       "99": {
         "name": "SHOW_PARTY_FORM",
-        "status": "supported",
-        "fields": []
+        "status": "unsupported",
+        "fields": [],
+        "reason": "Retired: no active receiver; confirmed state uses current snapshots."
       },
       "100": {
         "name": "UPDATE_STRENGTH_AND_DEXTERITY",
@@ -2529,7 +2728,8 @@
       "106": {
         "name": "CANCEL_OFFER_ITEM",
         "status": "unsupported",
-        "fields": []
+        "fields": [],
+        "reason": "Retired: TRADE_STATE is the sole player-trade transport."
       },
       "250": {
         "name": "CAPABILITIES",
@@ -2537,7 +2737,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "mask",
@@ -2552,7 +2754,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "free_points",
@@ -2560,267 +2764,399 @@
           },
           {
             "name": "id_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "level_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 2,
+            "max": 2
           },
           {
             "name": "level_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 3,
+            "max": 3
           },
           {
             "name": "level_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 4,
+            "max": 4
           },
           {
             "name": "level_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 5,
+            "max": 5
           },
           {
             "name": "level_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 6,
+            "max": 6
           },
           {
             "name": "level_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 7,
+            "max": 7
           },
           {
             "name": "level_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 8,
+            "max": 8
           },
           {
             "name": "level_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 9,
+            "max": 9
           },
           {
             "name": "level_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 10,
+            "max": 10
           },
           {
             "name": "level_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 11,
+            "max": 11
           },
           {
             "name": "level_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 12,
+            "max": 12
           },
           {
             "name": "level_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 13,
+            "max": 13
           },
           {
             "name": "level_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 14,
+            "max": 14
           },
           {
             "name": "level_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 15,
+            "max": 15
           },
           {
             "name": "level_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 16,
+            "max": 16
           },
           {
             "name": "level_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 17,
+            "max": 17
           },
           {
             "name": "level_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 18,
+            "max": 18
           },
           {
             "name": "level_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 19,
+            "max": 19
           },
           {
             "name": "level_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 20,
+            "max": 20
           },
           {
             "name": "level_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 21,
+            "max": 21
           },
           {
             "name": "level_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 22,
+            "max": 22
           },
           {
             "name": "level_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           }
         ]
       },
@@ -2831,7 +3167,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "snapshot",
@@ -2848,7 +3186,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "operation_id",
@@ -2876,267 +3216,399 @@
           },
           {
             "name": "id_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "level_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_1",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 2,
+            "max": 2
           },
           {
             "name": "level_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_2",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 3,
+            "max": 3
           },
           {
             "name": "level_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_3",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 4,
+            "max": 4
           },
           {
             "name": "level_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_4",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 5,
+            "max": 5
           },
           {
             "name": "level_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_5",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 6,
+            "max": 6
           },
           {
             "name": "level_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_6",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 7,
+            "max": 7
           },
           {
             "name": "level_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_7",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 8,
+            "max": 8
           },
           {
             "name": "level_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_8",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 9,
+            "max": 9
           },
           {
             "name": "level_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_9",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 10,
+            "max": 10
           },
           {
             "name": "level_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_10",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 11,
+            "max": 11
           },
           {
             "name": "level_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_11",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 12,
+            "max": 12
           },
           {
             "name": "level_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_12",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 13,
+            "max": 13
           },
           {
             "name": "level_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_13",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 14,
+            "max": 14
           },
           {
             "name": "level_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_14",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 15,
+            "max": 15
           },
           {
             "name": "level_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_15",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 16,
+            "max": 16
           },
           {
             "name": "level_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_16",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 17,
+            "max": 17
           },
           {
             "name": "level_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_17",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 18,
+            "max": 18
           },
           {
             "name": "level_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_18",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 19,
+            "max": 19
           },
           {
             "name": "level_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_19",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 20,
+            "max": 20
           },
           {
             "name": "level_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_20",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 21,
+            "max": 21
           },
           {
             "name": "level_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_21",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "id_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 22,
+            "max": 22
           },
           {
             "name": "level_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           },
           {
             "name": "percentage_22",
-            "type": "u8"
+            "type": "u8",
+            "min": 0,
+            "max": 100
           }
         ]
       },
@@ -3147,7 +3619,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "operation_id",
@@ -3178,7 +3652,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "result",
@@ -3282,7 +3758,9 @@
         "fields": [
           {
             "name": "version",
-            "type": "u8"
+            "type": "u8",
+            "min": 1,
+            "max": 1
           },
           {
             "name": "payload",
@@ -3295,20 +3773,20 @@
     }
   },
   "compatibility": {
-    "baseline_server": "37a8b22",
-    "baseline_client": "e911af34",
-    "state": "implementations_pending",
+    "baseline_server": "7651301e12850493a57382370a8fc11d6c45d85a",
+    "baseline_client": "3520cb3d17e34197368a13087b78db83f2777f22",
+    "state": "coordinated_implementation",
     "party_join": "ID 93 + nickname str16; replace both endpoints together, never infer old short payload",
-    "commerce_init": "ID 7 opens window, inventory follows in ID 59. The unused extended builder is not a supported layout.",
-    "skills": "ID 71 documents legacy nine signed int16 values. Catalog/progress alignment is tracked in server #126.",
-    "extensions": "Opt-in negotiation AFTER successful login only (server #117); unnegotiated clients keep the legacy stream."
+    "commerce_init": "ID 7 is exactly one byte; inventory follows through ID 59.",
+    "skills": "ID 71 has nine int16 fields; negotiated SKILLS_CATALOG provides all 22 skills.",
+    "extensions": "Negotiate after authentication. No support for old client versions; player trade requires TRADE_STATE."
   },
   "capabilities": {
     "packet_id": 250,
     "version": 1,
     "after_login_only": true,
-    "response_timeout_client_seconds": 2,
-    "request_window_server_seconds": 10,
+    "response_timeout_client_seconds": 30,
+    "request_window_server_seconds": 30,
     "mask_bits": {
       "skills_catalog": 1,
       "targeted_cast": 2,
@@ -3319,7 +3797,9 @@
       "weather": 64,
       "trade_state": 128,
       "skill_actions": 256,
-      "world_state": 512
-    }
+      "world_state": 512,
+      "expansion": 1024
+    },
+    "login_budget_seconds": 5
   }
 }

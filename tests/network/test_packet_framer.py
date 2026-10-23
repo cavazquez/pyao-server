@@ -11,6 +11,8 @@ Estos tests cubren explícitamente los bugs de la capa de transporte:
 
 from __future__ import annotations
 
+import struct
+
 import pytest
 
 from src.network.packet_framer import (
@@ -253,7 +255,9 @@ def test_every_supported_handler_at_every_boundary() -> None:
                 text = b"a" * max(1, field.get("min_bytes", 0))
                 packet += _u16(len(text)) + text
             else:
-                packet += b"\x01" * {"u8": 1, "i16": 2, "i32": 4}[field["type"]]
+                packet += struct.pack(
+                    "<" + {"u8": "B", "i16": "h", "i32": "i"}[field["type"]], field.get("min", 1)
+                )
         for split in range(1, len(packet)):
             framer = PacketFramer()
             framer.feed(packet[:split])

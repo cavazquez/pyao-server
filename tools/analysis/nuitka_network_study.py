@@ -125,29 +125,47 @@ def main():
         action="store_true",
         help="Separate CPython diagnosis; never mix profiled and ordinary trial timings",
     )
+    parser.add_argument(
+        "--stage-profile",
+        action="store_true",
+        help="Bounded async stage timings without the CPU profiler's startup overhead",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--seconds", type=int, default=20)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--connections", type=int, default=8)
+    parser.add_argument("--cpython-only", action="store_true")
+    parser.add_argument("--combat-receipts", action="store_true")
+    parser.add_argument("--cadence", type=float, default=0.10)
+    parser.add_argument("--slow-readers", type=int, choices=(0, 1), default=1)
     parser.add_argument(
         "--combat",
         action="store_true",
         help="Stationary pairs exchanging real physical attacks instead of movement",
     )
     args = parser.parse_args()
+    diagnostic = args.profile or args.stage_profile
+    if args.profile and args.stage_profile:
+        parser.error("Choose either --profile or --stage-profile")
     if (
-        not (1 if args.profile else 2) <= args.repeats <= 10
+        not (1 if diagnostic else 2) <= args.repeats <= 10
         or not 10 <= args.seconds <= 120
         or not 2 <= args.connections <= 32
     ):
         parser.error("repeats=2..10, seconds=10..120, connections=2..32")
-    if not args.build and not args.profile:
+    if args.combat_receipts and not args.combat:
+        parser.error("--combat-receipts requires --combat")
+    if args.combat and args.connections % 2:
+        parser.error("Combat requires an even number of paired clients")
+    if not args.build and not diagnostic and not args.cpython_only:
         parser.error("--build is required for a comparison")
+    if not 0.10 <= args.cadence <= 2.0:
+        parser.error("cadence=0.10..2.0 seconds")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     variants = [("cpython", [sys.executable, "-m", "src.run_server"])]
-    for path in [] if args.profile else args.build:
+    for path in [] if diagnostic else args.build:
         build = json.loads(path.read_text())
         if (
             build.get("exit_code") != 0
@@ -165,12 +183,15 @@ def main():
     rows = []
     report = {
         "workload": "physical_combat" if args.combat else "movement",
-        "diagnostic_profile_only": args.profile,
+        "diagnostic_profile_only": diagnostic,
         "started_at": datetime.now(UTC).isoformat(),
         "runtime": runtime_metadata(),
         "source_sha256": source_hashes(),
         "repeats": args.repeats,
         "connections": args.connections,
+        "cadence_seconds": args.cadence,
+        "slow_readers": args.slow_readers,
+        "combat_receipts": args.combat_receipts,
         "warmup_seconds": args.warmup,
         "measured_seconds": args.seconds,
         "trials": rows,
@@ -226,6 +247,7 @@ def main():
                     store.flushdb()
                     store.set("config:effects:gold_decay:enabled", "0")
                     cpu_before = store.info("cpu")
+                    report["aof_policy"] = store.config_get("appendonly", "appendfsync")
                 endpoint = port()
                 environment = {
                     key: value
@@ -272,6 +294,16 @@ def main():
                         str(trial / "runtime-profile.json"),
                         *command[3:],
                     ]
+                elif args.stage_profile:
+                    command = [
+                        sys.executable,
+                        "-m",
+                        "tools.profile_runtime",
+                        "--output",
+                        str(trial / "runtime-profile.json"),
+                        "--",
+                        *command[3:],
+                    ]
                 with (trial / "server.log").open("wb") as log:
                     process = subprocess.Popen(
                         command, cwd=work, env=environment, stdout=log, stderr=subprocess.STDOUT
@@ -299,9 +331,9 @@ def main():
                             "--connections",
                             str(args.connections),
                             "--slow-readers",
-                            "1",
+                            str(args.slow_readers),
                             "--cadence",
-                            ".10",
+                            str(args.cadence),
                             "--host",
                             "127.0.0.1",
                             "--port",
@@ -315,6 +347,8 @@ def main():
                         ]
                         if args.combat:
                             common.append("--combat")
+                        if args.combat_receipts:
+                            common.append("--combat-receipts")
                         combat_before = {}
                         for label, seconds in (("warmup", args.warmup), ("measured", args.seconds)):
                             subprocess.run(

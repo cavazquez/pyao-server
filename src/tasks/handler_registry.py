@@ -51,8 +51,6 @@ from src.command_handlers.request_stats_handler import RequestStatsCommandHandle
 from src.command_handlers.safe_toggle_handler import SafeToggleCommandHandler
 from src.command_handlers.spell_info_handler import SpellInfoCommandHandler
 from src.command_handlers.talk_handler import TalkCommandHandler
-from src.command_handlers.update_player_trade_handler import UpdatePlayerTradeCommandHandler
-from src.command_handlers.update_trade_offer_handler import UpdateTradeOfferCommandHandler
 from src.command_handlers.uptime_handler import UptimeCommandHandler
 from src.command_handlers.use_item_handler import UseItemCommandHandler
 from src.command_handlers.walk_handler import WalkCommandHandler
@@ -330,15 +328,6 @@ HANDLER_CONFIGS: dict[str, HandlerConfig] = {
         RequestClanDetailsCommandHandler,
         deps_keys=["clan_service"],
         initial_kwargs={"user_id": 0},
-    ),
-    # Handlers de trade
-    "trade_update": HandlerConfig(
-        UpdatePlayerTradeCommandHandler,
-        deps_keys=["trade_service"],
-    ),
-    "trade_offer": HandlerConfig(
-        UpdateTradeOfferCommandHandler,
-        deps_keys=["trade_service"],
     ),
     # Handlers complejos con session_data
     "change_heading": HandlerConfig(

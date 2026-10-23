@@ -188,6 +188,9 @@
     "values": {
       "version": 1,
       "mask": 0
+    },
+    "emitter": {
+      "kind": "capabilities"
     }
   },
   {
@@ -420,6 +423,13 @@
       "next_operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "status": 0,
       "message": ""
+    },
+    "python": {
+      "module": "src.services.password_change",
+      "function": "build_password_reply",
+      "kwargs": {
+        "next_identity": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
     }
   },
   {
@@ -516,6 +526,9 @@
     "values": {
       "version": 1,
       "payload": "{\"epoch\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"sequence\":1,\"kind\":\"party\",\"id\":\"\",\"revision\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"data\":{\"user\":1,\"party_id\":1,\"leader\":1,\"permissions\":[\"invite\",\"leave\",\"kick\",\"leader\"],\"invitations\":[],\"members\":[{\"id\":1,\"name\":\"Pe\\u00f1a\",\"level\":20,\"online\":true,\"hp\":100,\"max_hp\":100,\"map\":1}]}}"
+    },
+    "emitter": {
+      "kind": "world"
     }
   },
   {
@@ -557,6 +570,9 @@
       "deaths": 9,
       "class": 12,
       "jail_remaining_days": 2
+    },
+    "emitter": {
+      "kind": "mini_stats"
     }
   },
   {
@@ -587,6 +603,2519 @@
       "index": 1,
       "name": "Peña",
       "show_name": 1
+    }
+  },
+  {
+    "name": "writer_build_play_midi_response",
+    "direction": "server",
+    "hex": "2602",
+    "values": {
+      "midi": 2
+    },
+    "python": {
+      "module": "src.network.msg_audio",
+      "function": "build_play_midi_response",
+      "kwargs": {
+        "midi_id": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_play_wave_response",
+    "direction": "server",
+    "hex": "27020304",
+    "values": {
+      "wave": 2,
+      "x": 3,
+      "y": 4
+    },
+    "python": {
+      "module": "src.network.msg_audio",
+      "function": "build_play_wave_response",
+      "kwargs": {
+        "wave_id": 2,
+        "x": 3,
+        "y": 4
+      }
+    }
+  },
+  {
+    "name": "writer_build_character_change_response",
+    "direction": "server",
+    "hex": "220200030004000406000700080009000a00",
+    "values": {
+      "index": 2,
+      "body": 3,
+      "head": 4,
+      "heading": 4,
+      "weapon": 6,
+      "shield": 7,
+      "helmet": 8,
+      "fx": 9,
+      "loops": 10
+    },
+    "python": {
+      "module": "src.network.msg_character",
+      "function": "build_character_change_response",
+      "kwargs": {
+        "char_index": 2,
+        "body": 3,
+        "head": 4,
+        "heading": 4,
+        "weapon": 6,
+        "shield": 7,
+        "helmet": 8,
+        "fx": 9,
+        "loops": 10
+      }
+    }
+  },
+  {
+    "name": "writer_build_character_create_response",
+    "direction": "server",
+    "hex": "1d020003000400040607080009000a000b000c0004005065f1610e0f01",
+    "values": {
+      "index": 2,
+      "body": 3,
+      "head": 4,
+      "heading": 4,
+      "x": 6,
+      "y": 7,
+      "weapon": 8,
+      "shield": 9,
+      "helmet": 10,
+      "fx": 11,
+      "loops": 12,
+      "name": "Peña",
+      "nick_color": 14,
+      "privileges": 15,
+      "show_name": 1
+    },
+    "python": {
+      "module": "src.network.msg_character",
+      "function": "build_character_create_response",
+      "kwargs": {
+        "char_index": 2,
+        "body": 3,
+        "head": 4,
+        "heading": 4,
+        "x": 6,
+        "y": 7,
+        "weapon": 8,
+        "shield": 9,
+        "helmet": 10,
+        "fx": 11,
+        "loops": 12,
+        "name": "Peña",
+        "nick_color": 14,
+        "privileges": 15,
+        "show_name": true
+      }
+    }
+  },
+  {
+    "name": "writer_build_character_move_response",
+    "direction": "server",
+    "hex": "2002000304",
+    "values": {
+      "index": 2,
+      "x": 3,
+      "y": 4
+    },
+    "python": {
+      "module": "src.network.msg_character",
+      "function": "build_character_move_response",
+      "kwargs": {
+        "char_index": 2,
+        "x": 3,
+        "y": 4
+      }
+    }
+  },
+  {
+    "name": "writer_build_character_remove_response",
+    "direction": "server",
+    "hex": "1e0200",
+    "values": {
+      "index": 2
+    },
+    "python": {
+      "module": "src.network.msg_character",
+      "function": "build_character_remove_response",
+      "kwargs": {
+        "char_index": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_clan_details_response",
+    "direction": "server",
+    "hex": "50060050727565626104005065f1610a0031382f31302f3230323604005065f161170068747470733a2f2f6578616d706c652e696e76616c6964010000000006004e455554524f00000000000000000300302f350000060043f36469676f",
+    "values": {
+      "name": "Prueba",
+      "founder": "Peña",
+      "foundation_date": "18/10/2026",
+      "leader": "Peña",
+      "website": "https://example.invalid",
+      "members": 1,
+      "elections": 0,
+      "alignment": "NEUTRO",
+      "enemies": 0,
+      "allies": 0,
+      "antifaction_points": "0/5",
+      "codex": "",
+      "description": "Código"
+    },
+    "python": {
+      "module": "src.network.msg_clan",
+      "function": "build_clan_details_response",
+      "kwargs": {
+        "clan": {
+          "clan_id": 7,
+          "name": "Prueba",
+          "description": "Código",
+          "leader_id": 1,
+          "leader_username": "Peña",
+          "created_at": 1792324800,
+          "website": "https://example.invalid",
+          "news": "Noticias"
+        }
+      }
+    }
+  },
+  {
+    "name": "writer_build_console_msg_response",
+    "direction": "server",
+    "hex": "1804005065f16103",
+    "values": {
+      "message": "Peña",
+      "color": 3
+    },
+    "python": {
+      "module": "src.network.msg_console",
+      "function": "build_console_msg_response",
+      "kwargs": {
+        "message": "Peña",
+        "font_color": 3
+      }
+    }
+  },
+  {
+    "name": "writer_build_error_msg_response",
+    "direction": "server",
+    "hex": "3704005065f161",
+    "values": {
+      "message": "Peña"
+    },
+    "python": {
+      "module": "src.network.msg_console",
+      "function": "build_error_msg_response",
+      "kwargs": {
+        "error_message": "Peña"
+      }
+    }
+  },
+  {
+    "name": "writer_build_change_bank_slot_response",
+    "direction": "server",
+    "hex": "3002030004005065f1610500060007080009000a000b00",
+    "values": {
+      "slot": 2,
+      "item": 3,
+      "name": "Peña",
+      "amount": 5,
+      "grh": 6,
+      "item_type": 7,
+      "max_hit": 8,
+      "min_hit": 9,
+      "max_def": 10,
+      "min_def": 11
+    },
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_change_bank_slot_response",
+      "kwargs": {
+        "slot": 2,
+        "item_id": 3,
+        "name": "Peña",
+        "amount": 5,
+        "grh_id": 6,
+        "item_type": 7,
+        "max_hit": 8,
+        "min_hit": 9,
+        "max_def": 10,
+        "min_def": 11
+      }
+    }
+  },
+  {
+    "name": "writer_build_change_inventory_slot_response",
+    "direction": "server",
+    "hex": "2f02030004005065f16105000107000809000a000b000c0000002040",
+    "values": {
+      "slot": 2,
+      "item": 3,
+      "name": "Peña",
+      "amount": 5,
+      "equipped": 1,
+      "grh": 7,
+      "item_type": 8,
+      "max_hit": 9,
+      "min_hit": 10,
+      "max_def": 11,
+      "min_def": 12,
+      "price": 2.5
+    },
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_change_inventory_slot_response",
+      "kwargs": {
+        "slot": 2,
+        "item_id": 3,
+        "name": "Peña",
+        "amount": 5,
+        "equipped": true,
+        "grh_id": 7,
+        "item_type": 8,
+        "max_hit": 9,
+        "min_hit": 10,
+        "max_def": 11,
+        "min_def": 12,
+        "sale_price": 2.5
+      }
+    }
+  },
+  {
+    "name": "writer_build_change_npc_inventory_slot_response",
+    "direction": "server",
+    "hex": "3b0204005065f161040000002040060007000809000a000b000c00",
+    "values": {
+      "slot": 2,
+      "name": "Peña",
+      "amount": 4,
+      "price": 2.5,
+      "grh": 6,
+      "item": 7,
+      "item_type": 8,
+      "max_hit": 9,
+      "min_hit": 10,
+      "max_def": 11,
+      "min_def": 12
+    },
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_change_npc_inventory_slot_response",
+      "kwargs": {
+        "slot": 2,
+        "name": "Peña",
+        "amount": 4,
+        "sale_price": 2.5,
+        "grh_id": 6,
+        "item_id": 7,
+        "item_type": 8,
+        "max_hit": 9,
+        "min_hit": 10,
+        "max_def": 11,
+        "min_def": 12
+      }
+    }
+  },
+  {
+    "name": "writer_build_change_spell_slot_response",
+    "direction": "server",
+    "hex": "3102030004005065f161",
+    "values": {
+      "slot": 2,
+      "spell": 3,
+      "name": "Peña"
+    },
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_change_spell_slot_response",
+      "kwargs": {
+        "slot": 2,
+        "spell_id": 3,
+        "spell_name": "Peña"
+      }
+    }
+  },
+  {
+    "name": "writer_build_commerce_end_response",
+    "direction": "server",
+    "hex": "05",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_commerce_end_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_commerce_init_response",
+    "direction": "server",
+    "hex": "07",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_inventory",
+      "function": "build_commerce_init_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_block_position_response",
+    "direction": "server",
+    "hex": "25020301",
+    "values": {
+      "x": 2,
+      "y": 3,
+      "blocked": 1
+    },
+    "python": {
+      "module": "src.network.msg_map",
+      "function": "build_block_position_response",
+      "kwargs": {
+        "x": 2,
+        "y": 3,
+        "blocked": true
+      }
+    }
+  },
+  {
+    "name": "writer_build_change_map_response",
+    "direction": "server",
+    "hex": "1502000300",
+    "values": {
+      "map": 2,
+      "version": 3
+    },
+    "python": {
+      "module": "src.network.msg_map",
+      "function": "build_change_map_response",
+      "kwargs": {
+        "map_number": 2,
+        "version": 3
+      }
+    }
+  },
+  {
+    "name": "writer_build_object_create_response",
+    "direction": "server",
+    "hex": "2302030400",
+    "values": {
+      "x": 2,
+      "y": 3,
+      "grh": 4
+    },
+    "python": {
+      "module": "src.network.msg_map",
+      "function": "build_object_create_response",
+      "kwargs": {
+        "x": 2,
+        "y": 3,
+        "grh_index": 4
+      }
+    }
+  },
+  {
+    "name": "writer_build_object_delete_response",
+    "direction": "server",
+    "hex": "240203",
+    "values": {
+      "x": 2,
+      "y": 3
+    },
+    "python": {
+      "module": "src.network.msg_map",
+      "function": "build_object_delete_response",
+      "kwargs": {
+        "x": 2,
+        "y": 3
+      }
+    }
+  },
+  {
+    "name": "writer_build_pos_update_response",
+    "direction": "server",
+    "hex": "160203",
+    "values": {
+      "x": 2,
+      "y": 3
+    },
+    "python": {
+      "module": "src.network.msg_map",
+      "function": "build_pos_update_response",
+      "kwargs": {
+        "x": 2,
+        "y": 3
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_bank_gold_response",
+    "direction": "server",
+    "hex": "1302000000",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_bank_gold_response",
+      "kwargs": {
+        "bank_gold": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_dexterity_response",
+    "direction": "server",
+    "hex": "6602",
+    "values": {
+      "dexterity": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_dexterity_response",
+      "kwargs": {
+        "dexterity": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_exp_response",
+    "direction": "server",
+    "hex": "1402000000",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_exp_response",
+      "kwargs": {
+        "experience": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_gold_response",
+    "direction": "server",
+    "hex": "1202000000",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_gold_response",
+      "kwargs": {
+        "gold": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_hp_response",
+    "direction": "server",
+    "hex": "110200",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_hp_response",
+      "kwargs": {
+        "hp": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_hunger_and_thirst_response",
+    "direction": "server",
+    "hex": "3c02030405",
+    "values": {
+      "max_water": 2,
+      "water": 3,
+      "max_hunger": 4,
+      "hunger": 5
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_hunger_and_thirst_response",
+      "kwargs": {
+        "max_water": 2,
+        "min_water": 3,
+        "max_hunger": 4,
+        "min_hunger": 5
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_mana_response",
+    "direction": "server",
+    "hex": "100200",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_mana_response",
+      "kwargs": {
+        "mana": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_sta_response",
+    "direction": "server",
+    "hex": "0f0200",
+    "values": {
+      "value": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_sta_response",
+      "kwargs": {
+        "stamina": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_strength_and_dexterity_response",
+    "direction": "server",
+    "hex": "640203",
+    "values": {
+      "strength": 2,
+      "dexterity": 3
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_strength_and_dexterity_response",
+      "kwargs": {
+        "strength": 2,
+        "dexterity": 3
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_strength_response",
+    "direction": "server",
+    "hex": "6502",
+    "values": {
+      "strength": 2
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_strength_response",
+      "kwargs": {
+        "strength": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_user_stats_response",
+    "direction": "server",
+    "hex": "2d02000300040005000600070008000000090a0000000b000000",
+    "values": {
+      "max_hp": 2,
+      "hp": 3,
+      "max_mana": 4,
+      "mana": 5,
+      "max_stamina": 6,
+      "stamina": 7,
+      "gold": 8,
+      "level": 9,
+      "next_level": 10,
+      "experience": 11
+    },
+    "python": {
+      "module": "src.network.msg_player_stats",
+      "function": "build_update_user_stats_response",
+      "kwargs": {
+        "max_hp": 2,
+        "min_hp": 3,
+        "max_mana": 4,
+        "min_mana": 5,
+        "max_sta": 6,
+        "min_sta": 7,
+        "gold": 8,
+        "level": 9,
+        "elu": 10,
+        "experience": 11
+      }
+    }
+  },
+  {
+    "name": "writer_build_attributes_response",
+    "direction": "server",
+    "hex": "320203040506",
+    "values": {
+      "strength": 2,
+      "agility": 3,
+      "intelligence": 4,
+      "charisma": 5,
+      "constitution": 6
+    },
+    "python": {
+      "module": "src.network.msg_session",
+      "function": "build_attributes_response",
+      "kwargs": {
+        "strength": 2,
+        "agility": 3,
+        "intelligence": 4,
+        "charisma": 5,
+        "constitution": 6
+      }
+    }
+  },
+  {
+    "name": "writer_build_dice_roll_response",
+    "direction": "server",
+    "hex": "430203040506",
+    "values": {
+      "strength": 2,
+      "agility": 3,
+      "intelligence": 4,
+      "charisma": 5,
+      "constitution": 6
+    },
+    "python": {
+      "module": "src.network.msg_session",
+      "function": "build_dice_roll_response",
+      "kwargs": {
+        "strength": 2,
+        "agility": 3,
+        "intelligence": 4,
+        "charisma": 5,
+        "constitution": 6
+      }
+    }
+  },
+  {
+    "name": "writer_build_logged_response",
+    "direction": "server",
+    "hex": "0002",
+    "values": {
+      "class": 2
+    },
+    "python": {
+      "module": "src.network.msg_session",
+      "function": "build_logged_response",
+      "kwargs": {
+        "user_class": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_pong_response",
+    "direction": "server",
+    "hex": "58",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_session",
+      "function": "build_pong_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_user_char_index_in_server_response",
+    "direction": "server",
+    "hex": "1c0200",
+    "values": {
+      "index": 2
+    },
+    "python": {
+      "module": "src.network.msg_session",
+      "function": "build_user_char_index_in_server_response",
+      "kwargs": {
+        "char_index": 2
+      }
+    }
+  },
+  {
+    "name": "writer_build_skill_catalog_response",
+    "direction": "server",
+    "hex": "fb0105000103040203040303040403040503040603040703040803040903040a03040b03040c03040d03040e03040f0304100304110304120304130304140304150304160304",
+    "values": {
+      "version": 1,
+      "free_points": 5,
+      "id_1": 1,
+      "level_1": 3,
+      "percentage_1": 4,
+      "id_2": 2,
+      "level_2": 3,
+      "percentage_2": 4,
+      "id_3": 3,
+      "level_3": 3,
+      "percentage_3": 4,
+      "id_4": 4,
+      "level_4": 3,
+      "percentage_4": 4,
+      "id_5": 5,
+      "level_5": 3,
+      "percentage_5": 4,
+      "id_6": 6,
+      "level_6": 3,
+      "percentage_6": 4,
+      "id_7": 7,
+      "level_7": 3,
+      "percentage_7": 4,
+      "id_8": 8,
+      "level_8": 3,
+      "percentage_8": 4,
+      "id_9": 9,
+      "level_9": 3,
+      "percentage_9": 4,
+      "id_10": 10,
+      "level_10": 3,
+      "percentage_10": 4,
+      "id_11": 11,
+      "level_11": 3,
+      "percentage_11": 4,
+      "id_12": 12,
+      "level_12": 3,
+      "percentage_12": 4,
+      "id_13": 13,
+      "level_13": 3,
+      "percentage_13": 4,
+      "id_14": 14,
+      "level_14": 3,
+      "percentage_14": 4,
+      "id_15": 15,
+      "level_15": 3,
+      "percentage_15": 4,
+      "id_16": 16,
+      "level_16": 3,
+      "percentage_16": 4,
+      "id_17": 17,
+      "level_17": 3,
+      "percentage_17": 4,
+      "id_18": 18,
+      "level_18": 3,
+      "percentage_18": 4,
+      "id_19": 19,
+      "level_19": 3,
+      "percentage_19": 4,
+      "id_20": 20,
+      "level_20": 3,
+      "percentage_20": 4,
+      "id_21": 21,
+      "level_21": 3,
+      "percentage_21": 4,
+      "id_22": 22,
+      "level_22": 3,
+      "percentage_22": 4
+    },
+    "python": {
+      "module": "src.network.msg_skills",
+      "function": "build_skill_catalog_response",
+      "kwargs": {
+        "progress": true
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_skills_response",
+    "direction": "server",
+    "hex": "47020003000400050006000700080009000a00",
+    "values": {
+      "magic": 2,
+      "robustness": 3,
+      "woodcutting": 4,
+      "agility": 5,
+      "fishing": 6,
+      "mining": 7,
+      "blacksmithing": 8,
+      "carpentry": 9,
+      "survival": 10
+    },
+    "python": {
+      "module": "src.network.msg_skills",
+      "function": "build_update_skills_response",
+      "kwargs": {
+        "magic": 2,
+        "robustness": 3,
+        "agility": 5,
+        "woodcutting": 4,
+        "fishing": 6,
+        "mining": 7,
+        "blacksmithing": 8,
+        "carpentry": 9,
+        "survival": 10
+      }
+    }
+  },
+  {
+    "name": "writer_build_blind_no_more_response",
+    "direction": "server",
+    "hex": "45",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_blind_no_more_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_blind_response",
+    "direction": "server",
+    "hex": "38",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_blind_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_dumb_no_more_response",
+    "direction": "server",
+    "hex": "46",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_dumb_no_more_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_dumb_response",
+    "direction": "server",
+    "hex": "39",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_dumb_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_paralize_ok_response",
+    "direction": "server",
+    "hex": "52",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_paralize_ok_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_rest_ok_response",
+    "direction": "server",
+    "hex": "36",
+    "values": {},
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_rest_ok_response",
+      "kwargs": {}
+    }
+  },
+  {
+    "name": "writer_build_set_invisible_response",
+    "direction": "server",
+    "hex": "42020001",
+    "values": {
+      "index": 2,
+      "invisible": 1
+    },
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_set_invisible_response",
+      "kwargs": {
+        "char_index": 2,
+        "invisible": true
+      }
+    }
+  },
+  {
+    "name": "writer_build_update_tag_and_status_response",
+    "direction": "server",
+    "hex": "5902000304005065f161",
+    "values": {
+      "index": 2,
+      "nick_color": 3,
+      "tag": "Peña"
+    },
+    "python": {
+      "module": "src.network.msg_status_effects",
+      "function": "build_update_tag_and_status_response",
+      "kwargs": {
+        "char_index": 2,
+        "nick_color": 3,
+        "user_tag": "Peña"
+      }
+    }
+  },
+  {
+    "name": "writer_build_create_fx_response",
+    "direction": "server",
+    "hex": "2c020003000400",
+    "values": {
+      "index": 2,
+      "fx": 3,
+      "loops": 4
+    },
+    "python": {
+      "module": "src.network.msg_visual_effects",
+      "function": "build_create_fx_response",
+      "kwargs": {
+        "char_index": 2,
+        "fx": 3,
+        "loops": 4
+      }
+    }
+  },
+  {
+    "name": "contract_client_1",
+    "direction": "client",
+    "hex": "01",
+    "values": {}
+  },
+  {
+    "name": "contract_client_4",
+    "direction": "client",
+    "hex": "0404005065f161",
+    "values": {
+      "message": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_5",
+    "direction": "client",
+    "hex": "0504005065f16104005065f161",
+    "values": {
+      "receiver": "Peña",
+      "message": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_7",
+    "direction": "client",
+    "hex": "07",
+    "values": {}
+  },
+  {
+    "name": "contract_client_8",
+    "direction": "client",
+    "hex": "08",
+    "values": {}
+  },
+  {
+    "name": "contract_client_9",
+    "direction": "client",
+    "hex": "09",
+    "values": {}
+  },
+  {
+    "name": "contract_client_10",
+    "direction": "client",
+    "hex": "0a",
+    "values": {}
+  },
+  {
+    "name": "contract_client_13",
+    "direction": "client",
+    "hex": "0d",
+    "values": {}
+  },
+  {
+    "name": "contract_client_15",
+    "direction": "client",
+    "hex": "0f",
+    "values": {}
+  },
+  {
+    "name": "contract_client_16",
+    "direction": "client",
+    "hex": "10",
+    "values": {}
+  },
+  {
+    "name": "contract_client_17",
+    "direction": "client",
+    "hex": "11",
+    "values": {}
+  },
+  {
+    "name": "contract_client_21",
+    "direction": "client",
+    "hex": "15",
+    "values": {}
+  },
+  {
+    "name": "contract_client_24",
+    "direction": "client",
+    "hex": "18020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "name": "contract_client_26",
+    "direction": "client",
+    "hex": "1a0203",
+    "values": {
+      "x": 2,
+      "y": 3
+    }
+  },
+  {
+    "name": "contract_client_28",
+    "direction": "client",
+    "hex": "1c02",
+    "values": {
+      "skill": 2
+    }
+  },
+  {
+    "name": "contract_client_30",
+    "direction": "client",
+    "hex": "1e02",
+    "values": {
+      "slot": 2
+    }
+  },
+  {
+    "name": "contract_client_33",
+    "direction": "client",
+    "hex": "21020304",
+    "values": {
+      "x": 2,
+      "y": 3,
+      "skill": 4
+    }
+  },
+  {
+    "name": "contract_client_35",
+    "direction": "client",
+    "hex": "2302",
+    "values": {
+      "slot": 2
+    }
+  },
+  {
+    "name": "contract_client_36",
+    "direction": "client",
+    "hex": "2402",
+    "values": {
+      "slot": 2
+    }
+  },
+  {
+    "name": "contract_client_37",
+    "direction": "client",
+    "hex": "2502",
+    "values": {
+      "heading": 2
+    }
+  },
+  {
+    "name": "contract_client_40",
+    "direction": "client",
+    "hex": "28020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "name": "contract_client_41",
+    "direction": "client",
+    "hex": "29020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "name": "contract_client_42",
+    "direction": "client",
+    "hex": "2a020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "name": "contract_client_43",
+    "direction": "client",
+    "hex": "2b020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    }
+  },
+  {
+    "name": "contract_client_45",
+    "direction": "client",
+    "hex": "2d0103",
+    "values": {
+      "upwards": 1,
+      "slot": 3
+    }
+  },
+  {
+    "name": "contract_client_69",
+    "direction": "client",
+    "hex": "45",
+    "values": {}
+  },
+  {
+    "name": "contract_client_70",
+    "direction": "client",
+    "hex": "46",
+    "values": {}
+  },
+  {
+    "name": "contract_client_71",
+    "direction": "client",
+    "hex": "47",
+    "values": {}
+  },
+  {
+    "name": "contract_client_72",
+    "direction": "client",
+    "hex": "48",
+    "values": {}
+  },
+  {
+    "name": "contract_client_79",
+    "direction": "client",
+    "hex": "4f",
+    "values": {}
+  },
+  {
+    "name": "contract_client_82",
+    "direction": "client",
+    "hex": "52",
+    "values": {}
+  },
+  {
+    "name": "contract_client_83",
+    "direction": "client",
+    "hex": "53",
+    "values": {}
+  },
+  {
+    "name": "contract_client_84",
+    "direction": "client",
+    "hex": "54",
+    "values": {}
+  },
+  {
+    "name": "contract_client_87",
+    "direction": "client",
+    "hex": "57",
+    "values": {}
+  },
+  {
+    "name": "contract_client_89",
+    "direction": "client",
+    "hex": "59",
+    "values": {}
+  },
+  {
+    "name": "contract_client_90",
+    "direction": "client",
+    "hex": "5a",
+    "values": {}
+  },
+  {
+    "name": "contract_client_91",
+    "direction": "client",
+    "hex": "5b",
+    "values": {}
+  },
+  {
+    "name": "contract_client_92",
+    "direction": "client",
+    "hex": "5c",
+    "values": {}
+  },
+  {
+    "name": "contract_client_96",
+    "direction": "client",
+    "hex": "6004005065f161",
+    "values": {
+      "message": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_111",
+    "direction": "client",
+    "hex": "6f02000000",
+    "values": {
+      "amount": 2
+    }
+  },
+  {
+    "name": "contract_client_112",
+    "direction": "client",
+    "hex": "7002000000",
+    "values": {
+      "amount": 2
+    }
+  },
+  {
+    "name": "contract_client_116",
+    "direction": "client",
+    "hex": "7404005065f161",
+    "values": {
+      "nickname": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_117",
+    "direction": "client",
+    "hex": "7504005065f161",
+    "values": {
+      "nickname": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_118",
+    "direction": "client",
+    "hex": "7604005065f161",
+    "values": {
+      "nickname": "Peña"
+    }
+  },
+  {
+    "name": "contract_client_119",
+    "direction": "client",
+    "hex": "77",
+    "values": {}
+  },
+  {
+    "name": "contract_client_122_11",
+    "direction": "client",
+    "hex": "7a0b04005065f16103000303",
+    "values": {
+      "subcommand": 11,
+      "username": "Peña",
+      "map": 3,
+      "x": 3,
+      "y": 3
+    }
+  },
+  {
+    "name": "contract_client_251",
+    "direction": "client",
+    "hex": "fb0104005065f161",
+    "values": {
+      "version": 1,
+      "request": "Peña"
+    }
+  },
+  {
+    "name": "contract_server_3",
+    "direction": "server",
+    "hex": "03",
+    "values": {},
+    "emitter": {
+      "kind": "sender",
+      "method": "send_navigate_toggle",
+      "args": []
+    }
+  },
+  {
+    "name": "contract_server_6",
+    "direction": "server",
+    "hex": "06",
+    "values": {},
+    "emitter": {
+      "kind": "sender",
+      "method": "send_bank_end",
+      "args": []
+    }
+  },
+  {
+    "name": "contract_server_8",
+    "direction": "server",
+    "hex": "08",
+    "values": {},
+    "emitter": {
+      "kind": "sender",
+      "method": "send_bank_init_empty",
+      "args": []
+    }
+  },
+  {
+    "name": "contract_server_68",
+    "direction": "server",
+    "hex": "44",
+    "values": {},
+    "emitter": {
+      "kind": "sender",
+      "method": "send_meditate_toggle",
+      "args": []
+    }
+  },
+  {
+    "name": "contract_server_104_12",
+    "direction": "server",
+    "hex": "680c030300",
+    "values": {
+      "subtype": 12,
+      "damage": 3,
+      "body_part": 3
+    },
+    "emitter": {
+      "kind": "sender",
+      "method": "send_npc_hit_user",
+      "args": [
+        3,
+        3
+      ]
+    }
+  },
+  {
+    "name": "contract_server_104_13",
+    "direction": "server",
+    "hex": "680d03000000",
+    "values": {
+      "subtype": 13,
+      "damage": 3
+    },
+    "emitter": {
+      "kind": "sender",
+      "method": "send_user_hit_npc",
+      "args": [
+        3
+      ]
+    }
+  },
+  {
+    "name": "contract_server_104_17",
+    "direction": "server",
+    "hex": "681103",
+    "values": {
+      "subtype": 17,
+      "skill": 3
+    },
+    "emitter": {
+      "kind": "sender",
+      "method": "send_work_request_target",
+      "args": [
+        3
+      ]
+    }
+  },
+  {
+    "name": "contract_server_255",
+    "direction": "server",
+    "hex": "ff0166007b226964223a22313739323332343830302e6262626262626262626262626262626262626262626262626262626262626262222c226170706c696564223a747275652c226d657373616765223a22416363695c75303066336e20636f6e6669726d616461227d",
+    "values": {
+      "version": 1,
+      "result": "{\"id\":\"1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"applied\":true,\"message\":\"Acci\\u00f3n confirmada\"}"
+    },
+    "emitter": {
+      "kind": "skill_reply"
+    }
+  },
+  {
+    "name": "godot_writer_WriteLoginExistingCharacter",
+    "direction": "client",
+    "hex": "0004005065f1610600736563726574000d00",
+    "values": {
+      "username": "Peña",
+      "password": "secret",
+      "major": 0,
+      "minor": 13,
+      "patch": 0
+    },
+    "godot": {
+      "method": "WriteLoginExistingCharacter",
+      "args": [
+        "Peña",
+        "secret"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteLoginNewChar",
+    "direction": "client",
+    "hex": "0204005065f1610600736563726574000d000102040300140074657374406578616d706c652e696e76616c696401",
+    "values": {
+      "username": "Peña",
+      "password": "secret",
+      "email": "test@example.invalid",
+      "race": 1,
+      "gender": 2,
+      "home": 1,
+      "head": 3,
+      "major": 0,
+      "minor": 13,
+      "patch": 0,
+      "job": 4
+    },
+    "godot": {
+      "method": "WriteLoginNewChar",
+      "args": [
+        "Peña",
+        "secret",
+        "test@example.invalid",
+        4,
+        1,
+        2,
+        1,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteModifySkills",
+    "direction": "client",
+    "hex": "26012b00313739323332343830302e62626262626262626262626262626262626262626262626262626262626262620100000200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "id_1": 1,
+      "delta_1": 0,
+      "id_2": 2,
+      "delta_2": 0,
+      "id_3": 3,
+      "delta_3": 0,
+      "id_4": 4,
+      "delta_4": 0,
+      "id_5": 5,
+      "delta_5": 0,
+      "id_6": 6,
+      "delta_6": 0,
+      "id_7": 7,
+      "delta_7": 0,
+      "id_8": 8,
+      "delta_8": 0,
+      "id_9": 9,
+      "delta_9": 0,
+      "id_10": 10,
+      "delta_10": 0,
+      "id_11": 11,
+      "delta_11": 0,
+      "id_12": 12,
+      "delta_12": 0,
+      "id_13": 13,
+      "delta_13": 0,
+      "id_14": 14,
+      "delta_14": 0,
+      "id_15": 15,
+      "delta_15": 0,
+      "id_16": 16,
+      "delta_16": 0,
+      "id_17": 17,
+      "delta_17": 0,
+      "id_18": 18,
+      "delta_18": 0,
+      "id_19": 19,
+      "delta_19": 0,
+      "id_20": 20,
+      "delta_20": 0,
+      "id_21": 21,
+      "delta_21": 0,
+      "id_22": 22,
+      "delta_22": 0
+    },
+    "godot": {
+      "method": "WriteModifySkills",
+      "args": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWarpChar",
+    "direction": "client",
+    "hex": "7a0b04005065f1612a003233",
+    "values": {
+      "subcommand": 11,
+      "username": "Peña",
+      "map": 42,
+      "x": 50,
+      "y": 51
+    },
+    "godot": {
+      "method": "WriteWarpChar",
+      "args": [
+        "Peña",
+        42,
+        50,
+        51
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_begin",
+    "direction": "client",
+    "hex": "fa01bf070000",
+    "values": {
+      "version": 1,
+      "mask": 1983
+    },
+    "godot": {
+      "method": "begin",
+      "args": [],
+      "capabilities": true
+    }
+  },
+  {
+    "name": "godot_writer_WriteCastTarget",
+    "direction": "client",
+    "hex": "fd010137003200",
+    "values": {
+      "version": 1,
+      "slot": 1,
+      "x": 55,
+      "y": 50
+    },
+    "godot": {
+      "method": "WriteCastTarget",
+      "args": [
+        1,
+        {
+          "vector2i": [
+            55,
+            50
+          ]
+        }
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteTradeAction",
+    "direction": "client",
+    "hex": "fc012000616161616161616161616161616161616161616161616161616161616161616101000000030000000000",
+    "values": {
+      "version": 1,
+      "session_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "revision": 1,
+      "action": 3,
+      "slot": 0,
+      "quantity": 0
+    },
+    "godot": {
+      "method": "WriteTradeAction",
+      "args": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        1,
+        3,
+        0,
+        0
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePasswordRequest",
+    "direction": "client",
+    "hex": "6b012b00313739323332343830302e6262626262626262626262626262626262626262626262626262626262626262060073656372657409006e6577736563726574",
+    "values": {
+      "version": 1,
+      "operation_id": "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "current_password": "secret",
+      "new_password": "newsecret"
+    },
+    "godot": {
+      "method": "WritePasswordRequest",
+      "args": [
+        "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "secret",
+        "newsecret"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteSkillAction",
+    "direction": "client",
+    "hex": "fb0150007b22616374696f6e223a2268696465222c226964223a22313739323332343830302e6262626262626262626262626262626262626262626262626262626262626262222c22706172616d73223a7b7d7d",
+    "values": {
+      "version": 1,
+      "request": "{\"action\":\"hide\",\"id\":\"1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"params\":{}}"
+    },
+    "godot": {
+      "method": "WriteSkillAction",
+      "args": [
+        "hide",
+        {},
+        "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWorldAction",
+    "direction": "client",
+    "hex": "f8018d007b22616374696f6e223a227461782e72656164222c2265706f6368223a226161616161616161616161616161616161616161616161616161616161616161222c226964223a22313739323332343830302e6262626262626262626262626262626262626262626262626262626262626262222c22706172616d73223a7b7d2c227265766973696f6e223a22227d",
+    "values": {
+      "version": 1,
+      "payload": "{\"action\":\"tax.read\",\"epoch\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"params\":{},\"revision\":\"\"}"
+    },
+    "godot": {
+      "method": "WriteWorldAction",
+      "args": [
+        "tax.read",
+        {},
+        "",
+        "1792324800.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteThrowDice",
+    "direction": "client",
+    "hex": "01",
+    "values": {},
+    "godot": {
+      "method": "WriteThrowDice",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteTalk",
+    "direction": "client",
+    "hex": "0304005065f161",
+    "values": {
+      "message": "Peña"
+    },
+    "godot": {
+      "method": "WriteTalk",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteYell",
+    "direction": "client",
+    "hex": "0404005065f161",
+    "values": {
+      "message": "Peña"
+    },
+    "godot": {
+      "method": "WriteYell",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWhisper",
+    "direction": "client",
+    "hex": "0504005065f16104005065f161",
+    "values": {
+      "receiver": "Peña",
+      "message": "Peña"
+    },
+    "godot": {
+      "method": "WriteWhisper",
+      "args": [
+        "Peña",
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWalk",
+    "direction": "client",
+    "hex": "0602",
+    "values": {
+      "heading": 2
+    },
+    "godot": {
+      "method": "WriteWalk",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestPositionUpdate",
+    "direction": "client",
+    "hex": "07",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestPositionUpdate",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteAttack",
+    "direction": "client",
+    "hex": "08",
+    "values": {},
+    "godot": {
+      "method": "WriteAttack",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePickup",
+    "direction": "client",
+    "hex": "09",
+    "values": {},
+    "godot": {
+      "method": "WritePickup",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteSafeToggle",
+    "direction": "client",
+    "hex": "0a",
+    "values": {},
+    "godot": {
+      "method": "WriteSafeToggle",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestAtributes",
+    "direction": "client",
+    "hex": "0d",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestAtributes",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestSkills",
+    "direction": "client",
+    "hex": "0f",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestSkills",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestMiniStats",
+    "direction": "client",
+    "hex": "10",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestMiniStats",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteCommerceEnd",
+    "direction": "client",
+    "hex": "11",
+    "values": {},
+    "godot": {
+      "method": "WriteCommerceEnd",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteBankEnd",
+    "direction": "client",
+    "hex": "15",
+    "values": {},
+    "godot": {
+      "method": "WriteBankEnd",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteDrop",
+    "direction": "client",
+    "hex": "18020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    },
+    "godot": {
+      "method": "WriteDrop",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteCastSpell",
+    "direction": "client",
+    "hex": "1902",
+    "values": {
+      "slot": 2
+    },
+    "godot": {
+      "method": "WriteCastSpell",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteLeftClick",
+    "direction": "client",
+    "hex": "1a0203",
+    "values": {
+      "x": 2,
+      "y": 3
+    },
+    "godot": {
+      "method": "WriteLeftClick",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteDoubleClick",
+    "direction": "client",
+    "hex": "1b0203",
+    "values": {
+      "x": 2,
+      "y": 3
+    },
+    "godot": {
+      "method": "WriteDoubleClick",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWork",
+    "direction": "client",
+    "hex": "1c02",
+    "values": {
+      "skill": 2
+    },
+    "godot": {
+      "method": "WriteWork",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteUseItem",
+    "direction": "client",
+    "hex": "1e02",
+    "values": {
+      "slot": 2
+    },
+    "godot": {
+      "method": "WriteUseItem",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteWorkLeftClick",
+    "direction": "client",
+    "hex": "21020304",
+    "values": {
+      "x": 2,
+      "y": 3,
+      "skill": 4
+    },
+    "godot": {
+      "method": "WriteWorkLeftClick",
+      "args": [
+        2,
+        3,
+        4
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteSpellInfo",
+    "direction": "client",
+    "hex": "2302",
+    "values": {
+      "slot": 2
+    },
+    "godot": {
+      "method": "WriteSpellInfo",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteEquipItem",
+    "direction": "client",
+    "hex": "2402",
+    "values": {
+      "slot": 2
+    },
+    "godot": {
+      "method": "WriteEquipItem",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteChangeHeading",
+    "direction": "client",
+    "hex": "2502",
+    "values": {
+      "heading": 2
+    },
+    "godot": {
+      "method": "WriteChangeHeading",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteCommerceBuy",
+    "direction": "client",
+    "hex": "28020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    },
+    "godot": {
+      "method": "WriteCommerceBuy",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteBankExtractItem",
+    "direction": "client",
+    "hex": "29020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    },
+    "godot": {
+      "method": "WriteBankExtractItem",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteCommerceSell",
+    "direction": "client",
+    "hex": "2a020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    },
+    "godot": {
+      "method": "WriteCommerceSell",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteBankDepositItem",
+    "direction": "client",
+    "hex": "2b020300",
+    "values": {
+      "slot": 2,
+      "quantity": 3
+    },
+    "godot": {
+      "method": "WriteBankDepositItem",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteMoveSpell",
+    "direction": "client",
+    "hex": "2d0103",
+    "values": {
+      "upwards": 1,
+      "slot": 3
+    },
+    "godot": {
+      "method": "WriteMoveSpell",
+      "args": [
+        true,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteGuildRequestDetails",
+    "direction": "client",
+    "hex": "45",
+    "values": {},
+    "godot": {
+      "method": "WriteGuildRequestDetails",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteOnline",
+    "direction": "client",
+    "hex": "46",
+    "values": {},
+    "godot": {
+      "method": "WriteOnline",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteQuit",
+    "direction": "client",
+    "hex": "47",
+    "values": {},
+    "godot": {
+      "method": "WriteQuit",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteGuildLeave",
+    "direction": "client",
+    "hex": "48",
+    "values": {},
+    "godot": {
+      "method": "WriteGuildLeave",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteMeditate",
+    "direction": "client",
+    "hex": "4f",
+    "values": {},
+    "godot": {
+      "method": "WriteMeditate",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteHelp",
+    "direction": "client",
+    "hex": "52",
+    "values": {},
+    "godot": {
+      "method": "WriteHelp",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestStats",
+    "direction": "client",
+    "hex": "53",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestStats",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteCommerceStart",
+    "direction": "client",
+    "hex": "54",
+    "values": {},
+    "godot": {
+      "method": "WriteCommerceStart",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteInformation",
+    "direction": "client",
+    "hex": "57",
+    "values": {},
+    "godot": {
+      "method": "WriteInformation",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteRequestMOTD",
+    "direction": "client",
+    "hex": "59",
+    "values": {},
+    "godot": {
+      "method": "WriteRequestMOTD",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteUpTime",
+    "direction": "client",
+    "hex": "5a",
+    "values": {},
+    "godot": {
+      "method": "WriteUpTime",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyLeave",
+    "direction": "client",
+    "hex": "5b",
+    "values": {},
+    "godot": {
+      "method": "WritePartyLeave",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyCreate",
+    "direction": "client",
+    "hex": "5c",
+    "values": {},
+    "godot": {
+      "method": "WritePartyCreate",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyJoin",
+    "direction": "client",
+    "hex": "5d04005065f161",
+    "values": {
+      "nickname": "Peña"
+    },
+    "godot": {
+      "method": "WritePartyJoin",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyMessage",
+    "direction": "client",
+    "hex": "6004005065f161",
+    "values": {
+      "message": "Peña"
+    },
+    "godot": {
+      "method": "WritePartyMessage",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteBankExtractGold",
+    "direction": "client",
+    "hex": "6f02000000",
+    "values": {
+      "amount": 2
+    },
+    "godot": {
+      "method": "WriteBankExtractGold",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteBankDepositGold",
+    "direction": "client",
+    "hex": "7002000000",
+    "values": {
+      "amount": 2
+    },
+    "godot": {
+      "method": "WriteBankDepositGold",
+      "args": [
+        2
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyKick",
+    "direction": "client",
+    "hex": "7404005065f161",
+    "values": {
+      "nickname": "Peña"
+    },
+    "godot": {
+      "method": "WritePartyKick",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartySetLeader",
+    "direction": "client",
+    "hex": "7504005065f161",
+    "values": {
+      "nickname": "Peña"
+    },
+    "godot": {
+      "method": "WritePartySetLeader",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePartyAcceptMember",
+    "direction": "client",
+    "hex": "7604005065f161",
+    "values": {
+      "nickname": "Peña"
+    },
+    "godot": {
+      "method": "WritePartyAcceptMember",
+      "args": [
+        "Peña"
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WritePing",
+    "direction": "client",
+    "hex": "77",
+    "values": {},
+    "godot": {
+      "method": "WritePing",
+      "args": [],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "godot_writer_WriteMoveItem",
+    "direction": "client",
+    "hex": "810203",
+    "values": {
+      "source": 2,
+      "destination": 3
+    },
+    "godot": {
+      "method": "WriteMoveItem",
+      "args": [
+        2,
+        3
+      ],
+      "capabilities": false
+    }
+  },
+  {
+    "name": "emitter_trade",
+    "direction": "server",
+    "hex": "fc01ae007b226964223a226161616161616161616161616161616161616161616161616161616161616161222c227265766973696f6e223a312c2273657175656e6365223a312c227374617465223a22616374697665222c22766965776572223a312c22706c6179657273223a5b5b312c22416c696365222c302c66616c73652c5b5b33302c3130312c325d5d5d2c5b322c22426f62222c31302c66616c73652c5b5d5d5d2c22726561736f6e223a22227d",
+    "values": {
+      "version": 1,
+      "snapshot": "{\"id\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"revision\":1,\"sequence\":1,\"state\":\"active\",\"viewer\":1,\"players\":[[1,\"Alice\",0,false,[[30,101,2]]],[2,\"Bob\",10,false,[]]],\"reason\":\"\"}"
+    },
+    "emitter": {
+      "kind": "trade"
+    }
+  },
+  {
+    "name": "emitter_damage",
+    "direction": "server",
+    "hex": "f61200666978747572652d76697375616c3a373a3402000700000032331400000004",
+    "values": {
+      "event": "fixture-visual:7:4",
+      "map": 2,
+      "actor": 7,
+      "x": 50,
+      "y": 51,
+      "amount": 20,
+      "kind": 4
+    },
+    "emitter": {
+      "kind": "damage"
+    }
+  },
+  {
+    "name": "emitter_projectile",
+    "direction": "server",
+    "hex": "f71000666978747572652d76697375616c3a3802000700000008000000323334330107000200",
+    "values": {
+      "event": "fixture-visual:8",
+      "map": 2,
+      "source": 7,
+      "target": 8,
+      "sx": 50,
+      "sy": 51,
+      "tx": 52,
+      "ty": 51,
+      "kind": 1,
+      "asset": 7,
+      "spell": 2
+    },
+    "emitter": {
+      "kind": "projectile"
+    }
+  },
+  {
+    "name": "writer_allocation_initial",
+    "direction": "server",
+    "hex": "fe0100002b00313739323332343830302e616161616161616161616161616161616161616161616161616161616161616100000000000100000200000300000400000500000600000700000800000900000a00000b00000c00000d00000e00000f0000100000110000120000130000140000150000160000",
+    "values": {
+      "version": 1,
+      "operation_id": "",
+      "next_operation_id": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "status": 0,
+      "message": "",
+      "free_points": 0,
+      "id_1": 1,
+      "level_1": 0,
+      "percentage_1": 0,
+      "id_2": 2,
+      "level_2": 0,
+      "percentage_2": 0,
+      "id_3": 3,
+      "level_3": 0,
+      "percentage_3": 0,
+      "id_4": 4,
+      "level_4": 0,
+      "percentage_4": 0,
+      "id_5": 5,
+      "level_5": 0,
+      "percentage_5": 0,
+      "id_6": 6,
+      "level_6": 0,
+      "percentage_6": 0,
+      "id_7": 7,
+      "level_7": 0,
+      "percentage_7": 0,
+      "id_8": 8,
+      "level_8": 0,
+      "percentage_8": 0,
+      "id_9": 9,
+      "level_9": 0,
+      "percentage_9": 0,
+      "id_10": 10,
+      "level_10": 0,
+      "percentage_10": 0,
+      "id_11": 11,
+      "level_11": 0,
+      "percentage_11": 0,
+      "id_12": 12,
+      "level_12": 0,
+      "percentage_12": 0,
+      "id_13": 13,
+      "level_13": 0,
+      "percentage_13": 0,
+      "id_14": 14,
+      "level_14": 0,
+      "percentage_14": 0,
+      "id_15": 15,
+      "level_15": 0,
+      "percentage_15": 0,
+      "id_16": 16,
+      "level_16": 0,
+      "percentage_16": 0,
+      "id_17": 17,
+      "level_17": 0,
+      "percentage_17": 0,
+      "id_18": 18,
+      "level_18": 0,
+      "percentage_18": 0,
+      "id_19": 19,
+      "level_19": 0,
+      "percentage_19": 0,
+      "id_20": 20,
+      "level_20": 0,
+      "percentage_20": 0,
+      "id_21": 21,
+      "level_21": 0,
+      "percentage_21": 0,
+      "id_22": 22,
+      "level_22": 0,
+      "percentage_22": 0
+    },
+    "python": {
+      "module": "src.services.skill_allocation",
+      "function": "build_allocation_state",
+      "kwargs": {
+        "values": {},
+        "next_identity": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
     }
   }
 ]

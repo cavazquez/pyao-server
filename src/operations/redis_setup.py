@@ -52,7 +52,8 @@ Verificar con autenticación interactiva, sin contraseña en la línea de comand
 {cli} PING
 {cli} INFO server
 {cli} CONFIG GET appendonly appendfsync
-Se espera PONG, Redis >= 7.2, appendonly=yes y appendfsync=everysec o always.
+Se espera PONG, Redis >= 7.2 y appendonly=yes. Se recomienda appendfsync=always
+para evitar hasta un segundo por barrera; everysec sigue admitido con esa demora.
 Habilitar AOF en el archivo persistente de configuración del servicio Redis y
 respaldar su volumen; un PONG por sí solo no acredita persistencia.
 Si un ACL impide INFO/CONFIG, pedir al administrador la comprobación; no ampliar
