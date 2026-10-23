@@ -12,8 +12,9 @@ no se interpretan como un mensaje válido sin payload.
 
 ## Fuentes y reproducción
 
-La línea base estática del servidor es `b9593f9b40309cb6593fec7b46f9462cd939952e`
-(índices #577/#578) y la del cliente `42398cd55dc4843d8ea2830d4dcf7003f62e2475`.
+La línea base estática del servidor es `5a8614272e2032a3de4cacb32ba2be6cd373687d`
+(índices #577/#578 y lotería #571–#576) y la del cliente
+`bbea62b2851918cd57da8fc77996873a629cd830` (diálogo #217).
 La muestra nativa conservada se ejecutó sobre el servidor
 `9dd5467707118905e60720a897a4a4089fd3d2d4`: ahora es evidencia histórica y no
 acredita automáticamente el runtime modificado. Las pruebas gráficas actuales de
