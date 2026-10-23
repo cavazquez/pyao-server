@@ -2,8 +2,8 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "f0359974dff8914949601381d5dd6d4ba572ef6d",
-    "client": "fd35291f98687a7af3150fc20c52d083dce25682"
+    "server": "9a5098a9af53b84abfbad10aed95723fa5481b46",
+    "client": "7dd750091af33903a3783f1530ac6cb12f80e42c"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -115,6 +115,10 @@
         },
         {
           "repository": "client",
+          "path": "ui/hub/expansion_window.gd"
+        },
+        {
+          "repository": "client",
           "path": "ui/hub/hub_controller.gd"
         },
         {
@@ -204,6 +208,10 @@
         {
           "repository": "server",
           "path": "src/server.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/services/expansion/party_finder.py"
         },
         {
           "repository": "server",
@@ -312,6 +320,10 @@
       },
       {
         "repository": "client",
+        "path": "ui/hub/expansion_window.gd"
+      },
+      {
+        "repository": "client",
         "path": "ui/hub/hub_controller.gd"
       },
       {
@@ -401,6 +413,10 @@
       {
         "repository": "server",
         "path": "src/server.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/services/expansion/party_finder.py"
       },
       {
         "repository": "server",
@@ -845,11 +861,6 @@
     },
     {
       "repository": "client",
-      "path": "ui/hub/expansion_window.gd",
-      "sha256": "52f3d9548c5afcf4afe1fd2b83be69e85014de23754d9580a3a9b354c8f612ca"
-    },
-    {
-      "repository": "client",
       "path": "ui/hub/guild_alignment_window.gd",
       "sha256": "c2b5a3848252524fe9c008cf1cd33fcfe3383135c592555ac81128381e3ea5a2"
     },
@@ -896,7 +907,7 @@
     {
       "repository": "client",
       "path": "ui/hub/world_state_window.gd",
-      "sha256": "da8ee38c1f91cad7b0a99eb7a27e91e4bb3453e88c477a7c9c5e73ba6b3f17e5"
+      "sha256": "fc442871da555b8b9a0c7d75951b5600e6d8dc477bca6f0eabc23f1f6aaf6651"
     },
     {
       "repository": "server",
@@ -1261,7 +1272,7 @@
     {
       "repository": "server",
       "path": "src/services/expansion/party_finder.py",
-      "sha256": "fea6d7982e16daf41bc366558cc918c958b9defe743a75bc2c38bd7490fd856f"
+      "sha256": "371b2ec27622da70673ea566e8f656e77adce120bbfe4821a8b73afd6d32fe43"
     },
     {
       "repository": "server",
@@ -22282,13 +22293,6 @@
         },
         {
           "repository": "client",
-          "path": "ui/hub/expansion_window.gd",
-          "line": 101,
-          "end_line": 111,
-          "symbol": "request_state"
-        },
-        {
-          "repository": "client",
           "path": "ui/hub/player_trade_panel.gd",
           "line": 222,
           "end_line": 229,
@@ -22304,22 +22308,22 @@
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 77,
-          "end_line": 86,
+          "line": 80,
+          "end_line": 89,
           "symbol": "_visibility"
         },
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 87,
-          "end_line": 91,
-          "symbol": "request_state"
+          "line": 94,
+          "end_line": 105,
+          "symbol": "request_topic_state"
         },
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 115,
-          "end_line": 131,
+          "line": 129,
+          "end_line": 145,
           "symbol": "_resend"
         }
       ],
@@ -38776,8 +38780,8 @@
         {
           "repository": "server",
           "path": "src/services/expansion/party_finder.py",
-          "line": 37,
-          "end_line": 72,
+          "line": 49,
+          "end_line": 84,
           "symbol": "active"
         },
         {
