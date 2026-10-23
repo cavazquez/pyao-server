@@ -1,0 +1,36 @@
+{
+  "server_full_suite": {
+    "passed": 4208,
+    "skipped": 4,
+    "failures": 0,
+    "errors": 0,
+    "coverage_percent": 80.82,
+    "runtime_src_tree": "61005d1dcfe90a8dd44bd620ede93e8daeef4151"
+  },
+  "additional_creation_face_cases": 3,
+  "targeted_appearance_tests_passed": 14,
+  "server_static": [
+    "ruff check",
+    "ruff format --check",
+    "mypy src tests",
+    "mypy tools",
+    "protocol inventory --check"
+  ],
+  "server_tools": "passed",
+  "client_tools": {
+    "passed": 156,
+    "subtests": 72
+  },
+  "godot_smokes": "passed",
+  "equipment_catalog": {
+    "references": 386,
+    "boots": 5
+  },
+  "benchmark_script_sha256": "096dfd97408e68f008b243e45f043e529cab0b043ed90f0284bb7c4308dd1641",
+  "snap_candidate": {
+    "client_commit": "35321fa58909b177bcf05ba40c2d416dc7c15482",
+    "binary_sha256": "518aa71e6ac720802d1a6e70e8135cba1a86dd910767a95bd00570212ff2fd04",
+    "confinement": "existing installed pyao-client; candidate in isolated review directory; headless with PulseAudio",
+    "published_new_revision": false
+  }
+}

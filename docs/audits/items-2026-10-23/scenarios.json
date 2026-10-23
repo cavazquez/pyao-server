@@ -1,0 +1,183 @@
+[
+  {
+    "id": "equipment-1",
+    "requirement": "Equipo y herramientas visibles en ambas ventanas",
+    "passed": true,
+    "observations": {
+      "samples": [
+        30,
+        15,
+        563,
+        561,
+        562,
+        564,
+        128,
+        132,
+        2,
+        31,
+        659,
+        1058,
+        401,
+        543,
+        1055,
+        1059,
+        1063,
+        1067,
+        1071
+      ],
+      "four_directions": true
+    },
+    "godot_receipts": 124
+  },
+  {
+    "id": "equipment-2",
+    "requirement": "Equipo y herramientas visibles en ambas ventanas",
+    "passed": true,
+    "observations": {
+      "samples": [
+        30,
+        15,
+        563,
+        561,
+        562,
+        564,
+        128,
+        132,
+        2,
+        31,
+        659,
+        1058,
+        401,
+        543,
+        1055,
+        1059,
+        1063,
+        1067,
+        1071
+      ],
+      "four_directions": true
+    },
+    "godot_receipts": 241
+  },
+  {
+    "id": "equipment-reconnect",
+    "requirement": "Equipo restaurado al reconectar ambos jugadores",
+    "passed": true,
+    "observations": {
+      "preserved": true
+    },
+    "godot_receipts": 249
+  },
+  {
+    "id": "equipment-map-exit",
+    "requirement": "Equipo conservado para el actor y el observador al cruzar un portal",
+    "passed": true,
+    "observations": {
+      "from_map": 1,
+      "to_map": 5
+    },
+    "godot_receipts": 264
+  },
+  {
+    "id": "equipment-remove",
+    "requirement": "Retirar equipo se ve en ambas ventanas",
+    "passed": true,
+    "observations": {
+      "removed": true
+    },
+    "godot_receipts": 301
+  },
+  {
+    "id": "individual-ui",
+    "requirement": "Dos espadas iguales con identidad y estado propios",
+    "passed": true,
+    "observations": {
+      "identities_distinct": true
+    },
+    "godot_receipts": 313
+  },
+  {
+    "id": "individual-bank-ground",
+    "requirement": "Banco y suelo conservan identidad, usos y antig\u00fcedad",
+    "passed": true,
+    "observations": {
+      "preserved": true
+    },
+    "godot_receipts": 321
+  },
+  {
+    "id": "individual-trade",
+    "requirement": "Dos clientes muestran y transfieren el mismo ejemplar gastado en ambas direcciones",
+    "passed": true,
+    "observations": {
+      "same_identity": true,
+      "preserved_uses": 5000
+    },
+    "godot_receipts": 349
+  },
+  {
+    "id": "individual-expiry",
+    "requirement": "Equipo vence conectado y avisa sin retirar su capa gr\u00e1fica",
+    "passed": true,
+    "observations": {
+      "passive_expiry": true
+    },
+    "godot_receipts": 352
+  },
+  {
+    "id": "individual-combat",
+    "requirement": "Golpe v\u00e1lido consume uso; arma rota no ataca ni gasta de nuevo",
+    "passed": true,
+    "observations": {
+      "accepted_spends": true,
+      "broken_rejected": true
+    },
+    "godot_receipts": 376
+  },
+  {
+    "id": "wood",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 58,
+      "gained": 5,
+      "map": 1
+    },
+    "godot_receipts": 386
+  },
+  {
+    "id": "mine",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 192,
+      "gained": 3,
+      "map": 33
+    },
+    "godot_receipts": 396
+  },
+  {
+    "id": "fish",
+    "requirement": "R08",
+    "passed": true,
+    "observations": {
+      "item_id": 139,
+      "gained": 2,
+      "map": 9
+    },
+    "godot_receipts": 409
+  },
+  {
+    "id": "individual-gathering",
+    "requirement": "Talar, minar y pescar gastan usos en herramientas individuales",
+    "passed": true,
+    "observations": {
+      "tools": [
+        561,
+        562,
+        563
+      ]
+    },
+    "godot_receipts": 409
+  }
+]

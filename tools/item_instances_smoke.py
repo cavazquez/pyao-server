@@ -5,6 +5,7 @@ import argparse
 # ruff: noqa: S101 - invariantes de este ensayo descartable de aceptación.
 import asyncio
 import json
+import math
 import statistics
 import time
 import tomllib
@@ -145,7 +146,7 @@ async def latency(redis: Redis, *, individual: bool) -> dict[str, float | int]:
     return {
         "samples": len(timings),
         "median_ms": round(statistics.median(timings), 4),
-        "p95_ms": round(timings[int(len(timings) * 0.95) - 1], 4),
+        "p95_ms": round(timings[math.ceil(len(timings) * 0.95) - 1], 4),
         "max_ms": round(max(timings), 4),
     }
 
