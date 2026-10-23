@@ -2,8 +2,8 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "f0359974dff8914949601381d5dd6d4ba572ef6d",
-    "client": "fd35291f98687a7af3150fc20c52d083dce25682"
+    "server": "5d8175e353c2f0cb3b6ca5339fa6d6b5b29f1c69",
+    "client": "995527661d763e1e2b3700e642e340bccf6e7238"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -115,6 +115,10 @@
         },
         {
           "repository": "client",
+          "path": "ui/hub/expansion_window.gd"
+        },
+        {
+          "repository": "client",
           "path": "ui/hub/hub_controller.gd"
         },
         {
@@ -204,6 +208,10 @@
         {
           "repository": "server",
           "path": "src/server.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/services/expansion/party_finder.py"
         },
         {
           "repository": "server",
@@ -312,6 +320,10 @@
       },
       {
         "repository": "client",
+        "path": "ui/hub/expansion_window.gd"
+      },
+      {
+        "repository": "client",
         "path": "ui/hub/hub_controller.gd"
       },
       {
@@ -401,6 +413,10 @@
       {
         "repository": "server",
         "path": "src/server.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/services/expansion/party_finder.py"
       },
       {
         "repository": "server",
@@ -796,7 +812,7 @@
     {
       "repository": "client",
       "path": "protocol/contract.json",
-      "sha256": "ca6cddab8e7a6f984ed355de453f39006b6471d05c25c084ab799dea1e2da7ae"
+      "sha256": "11d7a83c37d684cf6ca34e76fd139ab4816faead7cf750a6a59a333b23389bb2"
     },
     {
       "repository": "client",
@@ -816,7 +832,7 @@
     {
       "repository": "client",
       "path": "ui/hub/bank_panel.gd",
-      "sha256": "436832a798e6a97c6c51ab4a7bf835de7f3ee83869ae01fcae81d73195df6b57"
+      "sha256": "ace77991ca3a4036c38258774864ed3ebeb5e6d0a0011809ff99ef3c08f196f5"
     },
     {
       "repository": "client",
@@ -842,11 +858,6 @@
       "repository": "client",
       "path": "ui/hub/drop_panel.gd",
       "sha256": "d94e355dd1faaeebf3a9f6619da5fb1147fec6003797e2d0ce073a00f33da5b0"
-    },
-    {
-      "repository": "client",
-      "path": "ui/hub/expansion_window.gd",
-      "sha256": "52f3d9548c5afcf4afe1fd2b83be69e85014de23754d9580a3a9b354c8f612ca"
     },
     {
       "repository": "client",
@@ -896,7 +907,7 @@
     {
       "repository": "client",
       "path": "ui/hub/world_state_window.gd",
-      "sha256": "da8ee38c1f91cad7b0a99eb7a27e91e4bb3453e88c477a7c9c5e73ba6b3f17e5"
+      "sha256": "fc442871da555b8b9a0c7d75951b5600e6d8dc477bca6f0eabc23f1f6aaf6651"
     },
     {
       "repository": "server",
@@ -1151,7 +1162,7 @@
     {
       "repository": "server",
       "path": "src/network/protocol/contract.json",
-      "sha256": "ca6cddab8e7a6f984ed355de453f39006b6471d05c25c084ab799dea1e2da7ae"
+      "sha256": "11d7a83c37d684cf6ca34e76fd139ab4816faead7cf750a6a59a333b23389bb2"
     },
     {
       "repository": "server",
@@ -1261,7 +1272,7 @@
     {
       "repository": "server",
       "path": "src/services/expansion/party_finder.py",
-      "sha256": "fea6d7982e16daf41bc366558cc918c958b9defe743a75bc2c38bd7490fd856f"
+      "sha256": "371b2ec27622da70673ea566e8f656e77adce120bbfe4821a8b73afd6d32fe43"
     },
     {
       "repository": "server",
@@ -5093,8 +5104,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 112,
-          "end_line": 120,
+          "line": 116,
+          "end_line": 124,
           "symbol": "RequestClose"
         }
       ],
@@ -5350,7 +5361,7 @@
           "name": "slot",
           "type": "u8",
           "min": 0,
-          "max": 30
+          "max": 31
         },
         {
           "name": "quantity",
@@ -5454,6 +5465,12 @@
           "repository": "server",
           "path": "tests/tasks/inventory/test_task_drop.py",
           "line": 46,
+          "kind": "reference_only_not_execution_proof"
+        },
+        {
+          "repository": "client",
+          "path": "tests/wire_validation.gd",
+          "line": 64,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -7901,8 +7918,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 133,
-          "end_line": 137,
+          "line": 137,
+          "end_line": 141,
           "symbol": "_on_btn_extract_pressed"
         }
       ],
@@ -8227,8 +8244,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 138,
-          "end_line": 141,
+          "line": 142,
+          "end_line": 145,
           "symbol": "_on_btn_deposit_pressed"
         }
       ],
@@ -15222,8 +15239,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 125,
-          "end_line": 128,
+          "line": 129,
+          "end_line": 132,
           "symbol": "_on_btn_extract_gold_pressed"
         },
         {
@@ -15371,8 +15388,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 129,
-          "end_line": 132,
+          "line": 133,
+          "end_line": 136,
           "symbol": "_on_btn_deposit_gold_pressed"
         },
         {
@@ -22249,21 +22266,21 @@
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
           "line": 32,
-          "end_line": 57,
+          "end_line": 59,
           "symbol": "_ready"
         },
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 112,
-          "end_line": 120,
+          "line": 116,
+          "end_line": 124,
           "symbol": "RequestClose"
         },
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 148,
-          "end_line": 160,
+          "line": 152,
+          "end_line": 164,
           "symbol": "_Resend"
         },
         {
@@ -22282,13 +22299,6 @@
         },
         {
           "repository": "client",
-          "path": "ui/hub/expansion_window.gd",
-          "line": 101,
-          "end_line": 111,
-          "symbol": "request_state"
-        },
-        {
-          "repository": "client",
           "path": "ui/hub/player_trade_panel.gd",
           "line": 222,
           "end_line": 229,
@@ -22304,22 +22314,22 @@
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 77,
-          "end_line": 86,
+          "line": 80,
+          "end_line": 89,
           "symbol": "_visibility"
         },
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 87,
-          "end_line": 91,
-          "symbol": "request_state"
+          "line": 94,
+          "end_line": 105,
+          "symbol": "request_topic_state"
         },
         {
           "repository": "client",
           "path": "ui/hub/world_state_window.gd",
-          "line": 115,
-          "end_line": 131,
+          "line": 129,
+          "end_line": 145,
           "symbol": "_resend"
         }
       ],
@@ -38776,8 +38786,8 @@
         {
           "repository": "server",
           "path": "src/services/expansion/party_finder.py",
-          "line": 37,
-          "end_line": 72,
+          "line": 49,
+          "end_line": 84,
           "symbol": "active"
         },
         {

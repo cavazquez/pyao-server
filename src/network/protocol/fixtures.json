@@ -3122,5 +3122,22 @@
         "next_identity": "1792324800.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     }
+  },
+  {
+    "name": "drop_gold_godot",
+    "direction": "client",
+    "hex": "181fe803",
+    "values": {
+      "slot": 31,
+      "quantity": 1000
+    },
+    "godot": {
+      "method": "WriteDrop",
+      "args": [
+        31,
+        1000
+      ],
+      "capabilities": false
+    }
   }
 ]
