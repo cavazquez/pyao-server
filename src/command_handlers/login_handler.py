@@ -10,6 +10,7 @@ from src.command_handlers.login_spawn_handler import LoginSpawnHandler
 from src.commands.base import Command, CommandHandler, CommandResult
 from src.commands.login_command import LoginCommand
 from src.network.session_manager import SessionManager
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -168,9 +169,40 @@ class LoginCommandHandler(CommandHandler):
         # Enviar paquetes iniciales y obtener posición
         position = await self.init_handler.send_login_packets(user_id, user_class)
 
-        # Buscar casilla libre si la posición está ocupada
-        new_position = self.spawn_handler.find_free_spawn_position(position)
+        sailing = await self.player_repo.is_sailing(user_id)
+        identity = operation_id()
+        new_position = self.spawn_handler.reserve_spawn_position(
+            position, identity, sailing=sailing
+        )
+        if new_position is None:
+            message = "No hay espacio libre cerca de tu posición. Intentá ingresar nuevamente."
+            try:
+                await self.message_sender.send_error_msg(message)
+            finally:
+                self.message_sender.connection.close()
+            return CommandResult.error(message)
+        try:
+            return await self._finish_reserved_login(
+                user_id, user_class, username, position, new_position, sailing=sailing
+            )
+        finally:
+            self.spawn_handler.release_spawn_position(identity, new_position)
 
+    async def _finish_reserved_login(
+        self,
+        user_id: int,
+        user_class: int,
+        username: str,
+        position: dict[str, int],
+        new_position: dict[str, int],
+        *,
+        sailing: bool,
+    ) -> CommandResult:
+        """Inicializa y publica al actor mientras su destino permanece reservado.
+
+        Returns:
+            Resultado del login confirmado.
+        """
         # Si cambió la posición, actualizar en Redis
         if new_position != position:
             await self.player_repo.set_position(
@@ -178,7 +210,7 @@ class LoginCommandHandler(CommandHandler):
                 new_position["x"],
                 new_position["y"],
                 new_position["map"],
-                new_position["heading"],
+                new_position.get("heading", 3),
             )
             # Enviar actualización al cliente también
             await self.message_sender.send_pos_update(new_position["x"], new_position["y"])
@@ -194,7 +226,7 @@ class LoginCommandHandler(CommandHandler):
         # Spawn del jugador
         await self.spawn_handler.spawn_player(user_id, username, position)
 
-        if await self.player_repo.is_sailing(user_id):
+        if sailing:
             await self.message_sender.send_navigate_toggle()
 
         # Enviar inventario y MOTD
