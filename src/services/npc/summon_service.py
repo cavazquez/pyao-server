@@ -38,15 +38,7 @@ class SummonService:
         Returns:
             Número de mascotas activas.
         """
-        # Obtener todas las mascotas del jugador desde Redis
-        # Usamos un patrón para buscar NPCs con summoned_by_user_id = user_id
-        # Por ahora, iteramos todos los NPCs (puede optimizarse con un índice)
-        all_npcs = await self.npc_repository.get_all_npcs()
-        return sum(
-            1
-            for npc in all_npcs
-            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
-        )
+        return len(await self.npc_repository.get_player_pets(user_id))
 
     async def can_summon(self, user_id: int, count: int = 1) -> tuple[bool, str]:
         """Verifica si un jugador puede invocar más mascotas.
@@ -80,12 +72,7 @@ class SummonService:
         Returns:
             Lista de instance_ids de las mascotas activas.
         """
-        all_npcs = await self.npc_repository.get_all_npcs()
-        return [
-            npc.instance_id
-            for npc in all_npcs
-            if npc.summoned_by_user_id == user_id and (npc.summoned_until > 0 or npc.is_tamed)
-        ]
+        return [npc.instance_id for npc in await self.npc_repository.get_player_pets(user_id)]
 
     async def register_pet(self, user_id: int, npc_instance_id: str) -> bool:
         """Registra una mascota para un jugador.
@@ -123,12 +110,11 @@ class SummonService:
             True si se removió correctamente, False si no era mascota del jugador.
         """
         # Verificar que el NPC es mascota del jugador
-        all_npcs = await self.npc_repository.get_all_npcs()
         pet_npc = next(
             (
                 npc
-                for npc in all_npcs
-                if npc.instance_id == npc_instance_id and npc.summoned_by_user_id == user_id
+                for npc in await self.npc_repository.get_player_pets(user_id)
+                if npc.instance_id == npc_instance_id
             ),
             None,
         )
@@ -158,10 +144,8 @@ class SummonService:
         Returns:
             Lista de instance_ids de las mascotas que fueron removidas.
         """
-        all_npcs = await self.npc_repository.get_all_npcs()
-        player_pets = [
-            npc for npc in all_npcs if npc.summoned_by_user_id == user_id and npc.summoned_until > 0
-        ]
+        all_npcs = await self.npc_repository.get_player_pets(user_id, include_expired=True)
+        player_pets = [npc for npc in all_npcs if not npc.is_tamed and npc.summoned_until > 0]
 
         pet_instance_ids = [pet.instance_id for pet in player_pets]
         logger.info(

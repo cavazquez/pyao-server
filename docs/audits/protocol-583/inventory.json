@@ -2,7 +2,7 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "9dd5467707118905e60720a897a4a4089fd3d2d4",
+    "server": "b9593f9b40309cb6593fec7b46f9462cd939952e",
     "client": "42398cd55dc4843d8ea2830d4dcf7003f62e2475"
   },
   "original_reference": {
@@ -46,13 +46,12 @@
       "declared_unused": 14,
       "emitter_without_receiver": 1,
       "negotiated_extension": 14,
-      "operational_end_to_end": 18,
       "partially_implemented": 1,
       "receiver_without_emitter": 11,
       "replaced_by_other_transport": 100,
       "retired_not_desired": 2,
       "stub_or_noop": 1,
-      "wired_not_exercised": 89
+      "wired_not_exercised": 107
     },
     "declared_supported": {
       "client": 66,
@@ -164,38 +163,51 @@
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/589"
       ]
+    },
+    {
+      "kind": "historical_representative_evidence",
+      "changed_inputs": [
+        {
+          "repository": "server",
+          "path": "src/messaging/senders/message_status_effects_sender.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/server.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/services/skill_action_service.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/utils/resource_transaction.py"
+        }
+      ]
     }
   ],
   "representative_validation": {
     "file": "representative.json",
     "sha256": "978004077932c0911e841f1c7cdd2b0c90c91accec55566272bd206cd3e77fa4",
-    "applicable_to_current_inputs": true,
-    "clients": 2,
-    "native_export": true,
-    "long_acceptance": false,
-    "scenarios": [
-      "bank",
-      "chat",
-      "cities",
-      "clan",
-      "combat",
-      "fish",
-      "inventory",
-      "life_cycle",
-      "magic",
-      "map_exit",
-      "meditation",
-      "merchant",
-      "mine",
-      "party",
-      "party_rewards",
-      "pets",
-      "scroll",
-      "skills",
-      "spell_order",
-      "trade_cancel",
-      "trade_complete",
-      "wood"
+    "applicable_to_current_inputs": false,
+    "status": "historical_source_changed",
+    "changed_inputs": [
+      {
+        "repository": "server",
+        "path": "src/messaging/senders/message_status_effects_sender.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/server.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/services/skill_action_service.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/utils/resource_transaction.py"
+      }
     ],
     "all_packets_exercised": false
   },
@@ -803,7 +815,7 @@
     {
       "repository": "server",
       "path": "src/messaging/senders/message_status_effects_sender.py",
-      "sha256": "12ebbf9216d5352b34ae6f841443038339b2b6753b6c05b38e763276cbedef84"
+      "sha256": "2e802899d28bf13aa2a0b2412613746ae13616ced9f5bdbe8ae709aea27df837"
     },
     {
       "repository": "server",
@@ -927,6 +939,11 @@
     },
     {
       "repository": "server",
+      "path": "src/repositories/campfire_repository.py",
+      "sha256": "2e1708b117024027e55c84a4f27eeea9f1c9ca1a072b111bb19fcbcbeb4913a8"
+    },
+    {
+      "repository": "server",
       "path": "src/repositories/clan_repository.py",
       "sha256": "c8a8d4ceb98a54914035aa843ed1abfb05658549f4d7373a623295bb85781747"
     },
@@ -934,6 +951,11 @@
       "repository": "server",
       "path": "src/repositories/ground_items_repository.py",
       "sha256": "e64a3acce674f11b53de24b5cc9665b6206e771afda133e6685c30ecdf99bdf2"
+    },
+    {
+      "repository": "server",
+      "path": "src/repositories/npc_repository.py",
+      "sha256": "e300233b15c96bcd69c8c1206b89ca1307283d20a893599b82343567380819a9"
     },
     {
       "repository": "server",
@@ -963,7 +985,7 @@
     {
       "repository": "server",
       "path": "src/server.py",
-      "sha256": "bcdacbd85c5bdbd4e99098469a53f63a84552135ccf054eb4807f1d8f956eff8"
+      "sha256": "5b78302b5dc62fd17ae8a4c4eed18307d2a1f5fe103e653a192d9466c56c9441"
     },
     {
       "repository": "server",
@@ -1063,7 +1085,7 @@
     {
       "repository": "server",
       "path": "src/services/skill_action_service.py",
-      "sha256": "5f91d65b9adcc3883f99e366b5bbcfb7ce3035df197f5034b7297923344acd38"
+      "sha256": "ef2fb633905d76b43ee761e1ab1df28d8a398d8df467759640d6f2acf919e557"
     },
     {
       "repository": "server",
@@ -1428,7 +1450,7 @@
     {
       "repository": "server",
       "path": "src/utils/resource_transaction.py",
-      "sha256": "15380fed7cb83f74cdf9aa39e8e043d64db10859d6394168aef06a0649cc0e75"
+      "sha256": "141b9347cc8ca3f4f3f3157666dbb5d0c6311e379a05574290bef7077584d9b7"
     }
   ],
   "packets": [
@@ -1522,7 +1544,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -1668,14 +1690,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -2161,7 +2176,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -2299,14 +2314,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [
         "/MIMETIZAR"
       ],
@@ -2363,7 +2371,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -2455,14 +2463,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [
         "/MIMETIZAR"
       ],
@@ -2531,7 +2532,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -2626,14 +2627,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -2687,7 +2681,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -2821,14 +2815,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "map_exit"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -3147,7 +3134,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -3230,14 +3217,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "inventory"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -5229,7 +5209,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -5324,14 +5304,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "inventory"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -6085,7 +6058,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -6183,14 +6156,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "inventory"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -11219,7 +11185,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -11322,14 +11288,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -21384,7 +21343,7 @@
         {
           "repository": "server",
           "path": "tests/services/classic_chat/test_player_commands.py",
-          "line": 165,
+          "line": 166,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -21813,7 +21772,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -21920,14 +21879,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "inventory"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -22123,7 +22075,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -22219,14 +22171,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -22636,14 +22581,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "magic"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -22697,7 +22635,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -22834,14 +22772,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -26420,7 +26351,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -26510,14 +26441,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "chat"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -27145,7 +27069,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -27323,14 +27247,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -28217,9 +28134,9 @@
         {
           "repository": "server",
           "path": "src/messaging/senders/message_status_effects_sender.py",
-          "line": 58,
+          "line": 65,
           "end_line": 90,
-          "symbol": "sync_campfires"
+          "symbol": "_sync_campfires"
         },
         {
           "repository": "server",
@@ -28232,17 +28149,10 @@
       "production_callers": [
         {
           "repository": "server",
-          "path": "src/effects/effect_lifecycle.py",
-          "line": 38,
+          "path": "src/messaging/senders/message_status_effects_sender.py",
+          "line": 60,
           "end_line": 63,
-          "symbol": "apply"
-        },
-        {
-          "repository": "server",
-          "path": "src/services/map/player_map_service.py",
-          "line": 661,
-          "end_line": 669,
-          "symbol": "_sync_map_states"
+          "symbol": "sync_campfires"
         },
         {
           "repository": "server",
@@ -28280,7 +28190,7 @@
       ],
       "writers": [
         {
-          "symbol": "sync_campfires",
+          "symbol": "_sync_campfires",
           "contract_gate": null,
           "subtype": null,
           "enabled_by_contract": true,
@@ -28309,7 +28219,7 @@
       ],
       "layout_review": [
         {
-          "symbol": "sync_campfires",
+          "symbol": "_sync_campfires",
           "status": "dynamic_requires_test"
         },
         {
@@ -28351,7 +28261,7 @@
         {
           "repository": "server",
           "path": "tests/services/test_skill_actions_protocol.py",
-          "line": 400,
+          "line": 403,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -28517,7 +28427,7 @@
         {
           "repository": "server",
           "path": "tests/services/test_skill_actions_protocol.py",
-          "line": 408,
+          "line": 409,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -29456,7 +29366,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -29580,14 +29490,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -30090,7 +29993,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -30222,14 +30125,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "inventory"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -33278,7 +33174,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -33474,7 +33370,7 @@
         {
           "repository": "server",
           "path": "tests/services/test_skill_actions_protocol.py",
-          "line": 424,
+          "line": 449,
           "kind": "reference_only_not_execution_proof"
         },
         {
@@ -33490,14 +33386,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",
@@ -38404,7 +38293,7 @@
         {
           "repository": "server",
           "path": "tests/services/test_skill_actions_protocol.py",
-          "line": 489,
+          "line": 514,
           "kind": "reference_only_not_execution_proof"
         },
         {
@@ -38442,7 +38331,7 @@
       "fields_source": "current_contract",
       "variants": {},
       "requires_capability": 0,
-      "status": "operational_end_to_end",
+      "status": "wired_not_exercised",
       "binary_support": {
         "enabled_by_contract": true,
         "writer_found": true,
@@ -38533,6 +38422,34 @@
         },
         {
           "repository": "server",
+          "path": "src/repositories/campfire_repository.py",
+          "line": 47,
+          "end_line": 70,
+          "symbol": "positions"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/campfire_repository.py",
+          "line": 72,
+          "end_line": 92,
+          "symbol": "_prune"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/campfire_repository.py",
+          "line": 94,
+          "end_line": 100,
+          "symbol": "remove"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/campfire_repository.py",
+          "line": 116,
+          "end_line": 129,
+          "symbol": "_rebuild_batch"
+        },
+        {
+          "repository": "server",
           "path": "src/repositories/clan_repository.py",
           "line": 65,
           "end_line": 117,
@@ -38551,6 +38468,41 @@
           "line": 32,
           "end_line": 56,
           "symbol": "save_ground_items"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/npc_repository.py",
+          "line": 37,
+          "end_line": 229,
+          "symbol": "create_npc_instance"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/npc_repository.py",
+          "line": 330,
+          "end_line": 336,
+          "symbol": "_read_many"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/npc_repository.py",
+          "line": 338,
+          "end_line": 357,
+          "symbol": "_prune_owner_index"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/npc_repository.py",
+          "line": 495,
+          "end_line": 527,
+          "symbol": "_write_membership"
+        },
+        {
+          "repository": "server",
+          "path": "src/repositories/npc_repository.py",
+          "line": 529,
+          "end_line": 552,
+          "symbol": "clear_all_npcs"
         },
         {
           "repository": "server",
@@ -38723,8 +38675,8 @@
         {
           "repository": "server",
           "path": "src/utils/resource_transaction.py",
-          "line": 154,
-          "end_line": 250,
+          "line": 155,
+          "end_line": 254,
           "symbol": "transact"
         }
       ],
@@ -38769,14 +38721,7 @@
           "kind": "reference_only_not_execution_proof"
         }
       ],
-      "dynamic_verification": {
-        "status": "representative_scenario_passed",
-        "cases": [
-          "meditation"
-        ],
-        "proof": "representative.json",
-        "scope": "Efecto observado en la muestra; no acredita cada variante, rechazo ni plataforma."
-      },
+      "dynamic_verification": "not_credited_by_static_analysis",
       "replacement": [],
       "rationale": "El análisis estático acredita rutas, no la ejecución completa de la mecánica.",
       "impact": "Sin ausencia funcional demostrada; verificar la prueba dinámica indicada.",

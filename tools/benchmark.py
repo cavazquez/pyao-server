@@ -98,7 +98,10 @@ async def benchmark(args):
                     before=time.perf_counter()
                     peer.writer.write(bytes([ClientPacketID.PING]))
                     # Un cuadrado pequeño, cadencia menor que el máximo del servidor.
-                    peer.writer.write(bytes([ClientPacketID.WALK,(2,3,4,1)[iteration%4]]))
+                    if getattr(args,'combat',False):
+                        peer.writer.write(bytes([ClientPacketID.ATTACK]))
+                    else:
+                        peer.writer.write(bytes([ClientPacketID.WALK,(2,3,4,1)[iteration%4]]))
                     if iteration%12==0:
                         text=f'Ensayo {index} {iteration}'.encode('ascii')
                         peer.writer.write(bytes([ClientPacketID.TALK])+struct.pack('<H',len(text))+text)
@@ -124,6 +127,7 @@ async def benchmark(args):
         await asyncio.gather(*(exercise(i,p) for i,p in enumerate(peers)),measure())
         ticks_after=json.loads(args.metrics.read_text()) if args.metrics and args.metrics.exists() else None
         metrics={'version':__version__,'started_at':datetime.now(UTC).isoformat(),'platform':platform.platform(),'cpu_count':os.cpu_count(),'python':platform.python_version(),'connections':len(peers),'slow_readers':len(slow),'seconds':time.monotonic()-started,'login_ms':{'p50':percentile(logins,.5),'p95':percentile(logins,.95),'max':max(logins,default=None)},'rtt_ms':{'samples':len(latencies),'sample_limit':100000,'p50':percentile(latencies,.5),'p95':percentile(latencies,.95),'p99':percentile(latencies,.99),'max':max(latencies,default=None)},'errors':errors,'packets':dict(sum((p.counts for p in peers),Counter())),'server_process':samples,'tick_before':ticks_before,'tick_after':ticks_after,'budgets':{'rtt_p95_ms':args.max_p95_ms,'login_ms':args.max_login_ms},'passed':bool(latencies) and not errors and (args.max_p95_ms is None or percentile(latencies,.95)<=args.max_p95_ms) and (args.max_login_ms is None or max(logins)<=args.max_login_ms)}
+        metrics['workload']='physical_combat' if getattr(args,'combat',False) else 'movement'
         metrics['outliers_ms']=list(outliers)
         metrics['started_monotonic']=started
         metrics['login_first_stats_ms']={'p50':percentile(first_stats,.5),'p95':percentile(first_stats,.95),'max':max(first_stats,default=None)}
@@ -138,7 +142,7 @@ async def benchmark(args):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--host',default='127.0.0.1');p.add_argument('--port',type=int,default=17666);p.add_argument('--allow-remote',action='store_true');p.add_argument('--accounts',type=Path,required=True);p.add_argument('--connections',type=int,default=2);p.add_argument('--slow-readers',type=int,default=0);p.add_argument('--seconds',type=int,default=60);p.add_argument('--cadence',type=float,default=.35);p.add_argument('--pid',type=int);p.add_argument('--metrics',type=Path);p.add_argument('--ca',type=Path);p.add_argument('--tls-name',default='localhost');p.add_argument('--output',type=Path,required=True);p.add_argument('--max-p95-ms',type=float);p.add_argument('--max-login-ms',type=float);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--host',default='127.0.0.1');p.add_argument('--port',type=int,default=17666);p.add_argument('--allow-remote',action='store_true');p.add_argument('--accounts',type=Path,required=True);p.add_argument('--connections',type=int,default=2);p.add_argument('--slow-readers',type=int,default=0);p.add_argument('--seconds',type=int,default=60);p.add_argument('--cadence',type=float,default=.35);p.add_argument('--pid',type=int);p.add_argument('--metrics',type=Path);p.add_argument('--ca',type=Path);p.add_argument('--tls-name',default='localhost');p.add_argument('--output',type=Path,required=True);p.add_argument('--max-p95-ms',type=float);p.add_argument('--max-login-ms',type=float);p.add_argument('--combat',action='store_true');a=p.parse_args()
     if a.host not in {'127.0.0.1','localhost','::1'} and not a.allow_remote:p.error('Usar loopback o autorizar explícitamente --allow-remote para un entorno de ensayo')
     if not 1<=a.connections<=500 or not 0<=a.slow_readers<=10 or not 1<=a.seconds<=3600 or a.cadence<.05:p.error('Carga o duración fuera de límites')
     report=asyncio.run(benchmark(a));print(json.dumps({'passed':report['passed'],'connections':a.connections,'rtt_ms':report['rtt_ms']}));raise SystemExit(0 if report['passed'] else 1)

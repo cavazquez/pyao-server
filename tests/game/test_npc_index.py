@@ -21,7 +21,16 @@ def make_npc(
     name: str = "NPC",
 ) -> SimpleNamespace:
     """Crea un NPC liviano para pruebas."""
-    return SimpleNamespace(x=x, y=y, instance_id=instance_id, char_index=char_index, name=name)
+    return SimpleNamespace(
+        x=x,
+        y=y,
+        instance_id=instance_id,
+        char_index=char_index,
+        name=name,
+        summoned_by_user_id=0,
+        summoned_until=0,
+        is_tamed=False,
+    )
 
 
 def test_add_npc_marks_occupation_and_storage() -> None:

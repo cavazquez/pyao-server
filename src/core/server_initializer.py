@@ -11,6 +11,7 @@ from src.core.repository_initializer import RepositoryInitializer
 from src.core.service_initializer import ServiceInitializer
 from src.game.map_manager import MapManager
 from src.network.session_manager import SessionManager
+from src.repositories.campfire_repository import CampfireRepository
 from src.repositories.ground_items_repository import GroundItemsRepository
 from src.runtime_paths import maps_dir
 from src.services.classic_chat.admin_operations import load_runtime_settings
@@ -80,6 +81,7 @@ class ServerInitializer:
         # 1. Inicializar Redis y datos
         redis_client = await RedisInitializer.initialize()
         await load_runtime_settings(redis_client.redis)
+        await CampfireRepository(redis_client).rebuild()
 
         # Redis conserva metadatos históricos; no participa del bind del socket.
         host = str(config_manager.get("server.host", "0.0.0.0"))

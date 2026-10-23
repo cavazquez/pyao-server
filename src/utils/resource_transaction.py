@@ -28,6 +28,7 @@ from src.utils.ground_storage import (
     read_ground,
     validate_fields,
 )
+from src.utils.pet_index import enqueue_pet_index
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -164,7 +165,9 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
     """Lee precondiciones y confirma todos los cambios con su recibo en un EXEC.
 
     Las funciones de decisión no hacen I/O ni escriben fuera de esta transacción.
-    Todas las claves que modifican deben estar declaradas entre los recursos.
+    Todas las claves de negocio deben estar declaradas entre los recursos.
+    Los índices de mascotas se derivan de las instancias observadas y se
+    actualizan con SADD/SREM dentro del mismo EXEC, sin reemplazar conjuntos.
 
     Returns:
         El resultado confirmado, idéntico en un reintento con el mismo ID y petición.
@@ -240,6 +243,7 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
                 )
                 pipe.multi()  # type: ignore[no-untyped-call]
                 _enqueue_writes(pipe, by_key, decision.writes)
+                _enqueue_pet_indexes(pipe, by_key, snapshot, decision.writes)
                 pipe.set(receipt_key, receipt_json, ex=receipt_ttl_seconds)
                 await pipe.execute()
             except WatchError, RedisConnectionError, RedisTimeoutError:
@@ -248,6 +252,21 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
                 return decision.result
     msg = "Commit no confirmado; conservar el identificador de operación"
     raise RuntimeError(msg)
+
+
+def _enqueue_pet_indexes(
+    pipe: Pipeline,
+    resources: dict[str, Resource],
+    snapshot: Snapshot,
+    writes: Mapping[str, ResourceValue],
+) -> None:
+    for key, value in writes.items():
+        if key.startswith("npc:instance:") and (value is None or isinstance(value, dict)):
+            before = cast("dict[str, str]", snapshot[key])
+            after = (
+                {} if value is None else value if resources[key].replace else {**before, **value}
+            )
+            enqueue_pet_index(pipe, key.removeprefix("npc:instance:"), before, after)
 
 
 def _validate_writes(

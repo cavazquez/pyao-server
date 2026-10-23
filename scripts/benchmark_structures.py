@@ -137,8 +137,11 @@ def entities(count: int, maps: int) -> dict[str, object]:
             name=f"NPC{identity}",
             x=x,
             y=y,
+            summoned_by_user_id=0,
+            summoned_until=0.0,
+            is_tamed=False,
         )
-        # Only the five index fields are used; NPC model size is measured separately.
+        # Index fields include pet classification; full NPC model size is measured separately.
         npcs.add_npc(mid, cast(NPC, npc))
         ground.add_ground_item(mid, x, y, {"item_id": 15, "quantity": 1})
     last_map = (count - 1) % maps + 1

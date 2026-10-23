@@ -9,6 +9,7 @@ from src.constants.gameplay import MAX_PETS
 from src.economy.devaluation_fractions import move_gold_remainder
 from src.models.item_constants import MAX_PLAYER_GOLD
 from src.models.skill_data_loader import SKILL_RULES_KEY
+from src.repositories.campfire_repository import campfire_index
 from src.services.action_resources import player_action_resources
 from src.services.classic_chat.world_rules import WORLD_REVISION, policy, prepare, rules, trigger
 from src.services.combat.pvp_policy import PvpPolicy
@@ -289,6 +290,7 @@ async def survival(
     resources = (
         *player_action_resources(user),
         Resource(fire_key, "hash", ttl_seconds=120),
+        Resource(campfire_index(map_id), "set"),
         Resource(npc_key, "hash"),
     )
 
@@ -346,6 +348,8 @@ async def survival(
                             "x": str(x),
                             "y": str(y),
                         },
+                        campfire_index(map_id): cast("set[str]", snapshot[campfire_index(map_id)])
+                        | {fire_key},
                     }
                 )
             message = (

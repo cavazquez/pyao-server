@@ -370,7 +370,32 @@ async def test_survival_fire_consumes_fuel_once_and_survives_repository_recreati
     assert first["fire"] is True
     assert await world.inventory.get_slot(1, 1) == (58, 3)
     assert int(await world.redis.redis.ttl("world:campfire:2:49:50")) > 0
+    assert await world.redis.smembers("world:campfires:2") == {"world:campfire:2:49:50"}
     assert await world.redis.hget(RedisKeys.player_skills(1), "xp:supervivencia") == "50"
+
+
+@pytest.mark.asyncio
+async def test_competing_fires_and_lost_ack_keep_one_fuel_charge(mechanics_world):
+    """Dos jugadores compiten por la casilla; sólo uno paga y su reintento es idéntico."""
+    world = mechanics_world
+    for user in (1, 2):
+        await world.redis.hset(RedisKeys.player_inventory(user), "slot_1", "58:6")
+    identities = [operation_id(), operation_id()]
+    with patch("src.services.personal_skills.random.random", return_value=0.0):
+        results = await asyncio.gather(
+            *(
+                survival(world.player, world.inventory, world.terrain, user, 2, 49, 50, identity)
+                for user, identity in zip((1, 2), identities, strict=True)
+            )
+        )
+        winner = next(index for index, result in enumerate(results) if result.get("fire"))
+        repeated = await survival(
+            world.player, world.inventory, world.terrain, winner + 1, 2, 49, 50, identities[winner]
+        )
+    assert sum(bool(result.get("fire")) for result in results) == 1
+    assert repeated == results[winner]
+    assert sum([(await world.inventory.get_slot(user, 1))[1] for user in (1, 2)]) == 9
+    assert await world.redis.smembers("world:campfires:2") == {"world:campfire:2:49:50"}
 
 
 @pytest.mark.asyncio

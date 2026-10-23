@@ -6,6 +6,11 @@ de mantener una compilación propia de CPython, medir la carga esperada de jugad
 y corregir los recorridos Redis que crecen con toda la base. Nuitka se estudia por
 separado en [#564](https://github.com/cavazquez/pyao-server/issues/564).
 
+Actualización del 22 de octubre: los [índices #577/#578](world-index-performance.md)
+ya eliminan esos recorridos globales de juego. El [estudio Nuitka #564](nuitka-performance-study.md)
+conserva CPython tras comparar prototipos accelerated/standalone, red y dos clientes
+gráficos. Las mediciones de esta página se conservan como baseline histórico de #401.
+
 ## Qué se midió
 
 Host Linux x86_64, Ryzen 5 9600X, 12 CPU lógicas y 32 GB de RAM. Siete kernels reales:

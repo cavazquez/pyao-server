@@ -19,6 +19,7 @@ from src.network.msg_status_effects import (
 from src.network.msg_visual_effects import build_create_fx_response
 from src.network.packet_builder import PacketBuilder
 from src.network.packet_id import ServerPacketID
+from src.repositories.campfire_repository import CampfireRepository
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -50,6 +51,7 @@ class StatusEffectsMessageSender:
         self._resting = False
         self._campfire_map = 0
         self._campfires: set[tuple[int, int]] = set()
+        self._campfire_lock = asyncio.Lock()
 
     def record_meditation_toggle(self) -> None:
         """Registra un toggle enviado por una acción explícita del jugador."""
@@ -57,19 +59,17 @@ class StatusEffectsMessageSender:
 
     async def sync_campfires(self, user_id: int, repository: PlayerRepository) -> None:
         """Restaura fogatas visibles y retira las que vencieron aunque cambie la conexión."""
+        async with self._campfire_lock:
+            await self._sync_campfires(user_id, repository)
+
+    async def _sync_campfires(self, user_id: int, repository: PlayerRepository) -> None:
         position = await repository.get_position(user_id)
         if position is None:
             return
         map_id = position["map"]
         if self._campfire_map != map_id:
             self._campfire_map, self._campfires = map_id, set()
-        fires: set[tuple[int, int]] = set()
-        async for key in repository.redis.redis.scan_iter(
-            match=f"world:campfire:{map_id}:*", count=100
-        ):
-            data = await repository.redis.hgetall(str(key))
-            if float(data.get("until", 0)) > time.time():
-                fires.add((int(data["x"]), int(data["y"])))
+        fires = await CampfireRepository(repository.redis).positions(map_id, time.time())
         for x, y in fires - self._campfires:
             await self.connection.send(
                 PacketBuilder()
