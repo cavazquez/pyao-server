@@ -19,8 +19,9 @@ PREFIX = "item:instance:"
 MARKER = "__item_instances__"
 # La única escritura fuera del EXEC es un reloj creciente; nunca cambia oro u objetos.
 _READ = """
-local now = math.max(tonumber(ARGV[1]), tonumber(redis.call('GET', KEYS[1]) or '0'))
-redis.call('SET', KEYS[1], now)
+local previous = tonumber(redis.call('GET', KEYS[1]) or '0')
+local now = math.max(tonumber(ARGV[1]), previous)
+if now > previous then redis.call('SET', KEYS[1], now) end
 local result = {tostring(now)}
 for i=2,#KEYS do result[#result+1] = redis.call('HGETALL', KEYS[i]) end
 return result

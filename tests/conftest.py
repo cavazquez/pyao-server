@@ -113,8 +113,10 @@ def fake_item_ledger_reader(monkeypatch):
     async def read(pipe, keys):
         if not pipe.connection_pool.connection_class.__module__.startswith("fakeredis"):
             return await original(pipe, keys)
-        now = max(int(time.time()), int(await pipe.get(ledger.CLOCK_KEY) or 0))
-        await pipe.set(ledger.CLOCK_KEY, str(now))
+        previous = int(await pipe.get(ledger.CLOCK_KEY) or 0)
+        now = max(int(time.time()), previous)
+        if now > previous:
+            await pipe.set(ledger.CLOCK_KEY, str(now))
         result = [str(now)]
         for key in keys:
             state = await pipe.hgetall(key)

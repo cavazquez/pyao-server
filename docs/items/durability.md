@@ -47,7 +47,8 @@ intencionales (consumo/venta sin capacidad del mercader) dejan una marca
 
 Las ubicaciones y el desgaste se confirman en el mismo EXEC que los recursos de
 negocio y el recibo. WATCH cubre los contenedores y los metadatos necesarios.
-Un lector Lua obtiene los metadatos y un reloj UTC creciente en una llamada.
+Un lector Lua obtiene los metadatos y un reloj UTC creciente en una llamada. El reloj sólo se persiste al avanzar
+el segundo, evitando escrituras/fsync redundantes en cada lectura de equipo.
 En stock comercial sólo se leen los metadatos de unidades efectivamente movidas;
 no se carga todo el mercado para cada compra. Un conflicto de lectura se
 revalida con WATCH antes de denunciar corrupción.
