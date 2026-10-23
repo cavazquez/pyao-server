@@ -69,7 +69,7 @@ def _request_fingerprint(resources: tuple[Resource, ...], request: dict[str, Any
                 "request": request,
                 "resources": [
                     (r.key, r.kind, r.fields)
-                    if r.kind == "ground"
+                    if r.kind == "ground" or r.fields is not None
                     else (r.key, r.kind, r.deletable, r.replace)
                     if r.deletable or r.replace
                     else (r.key, r.kind)
@@ -116,9 +116,17 @@ async def _read_snapshot(pipe: Pipeline, resources: tuple[Resource, ...]) -> Sna
             ground = await read_ground(pipe, map_id_from_key(resource.key), resource.fields)
             snapshot[resource.key] = ground.encode()
         elif resource.kind == "hash":
-            snapshot[resource.key] = await cast(
-                "Awaitable[dict[str, str]]", pipe.hgetall(resource.key)
-            )
+            if resource.fields is None:
+                snapshot[resource.key] = await cast(
+                    "Awaitable[dict[str, str]]", pipe.hgetall(resource.key)
+                )
+            else:
+                values = await pipe.hmget(resource.key, resource.fields)
+                snapshot[resource.key] = {
+                    field: value.decode() if isinstance(value, bytes) else value
+                    for field, value in zip(resource.fields, values, strict=True)
+                    if value is not None
+                }
         elif resource.kind == "set":
             snapshot[resource.key] = await cast("Awaitable[set[str]]", pipe.smembers(resource.key))
         else:
@@ -213,8 +221,15 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
                 if tuple(sorted(set(resource.fields))) != resource.fields:
                     msg = "Alcance del suelo duplicado o sin normalizar"
                     raise ValueError(msg)
-        elif resource.fields is not None:
-            msg = "Sólo el suelo permite declarar casillas"
+        elif resource.fields is not None and (  # ruff: ignore[too-many-boolean-expressions] - alcance indivisible de hash parcial.
+            resource.kind != "hash"
+            or not resource.fields
+            or resource.replace
+            or resource.deletable
+            or tuple(sorted(set(resource.fields))) != resource.fields
+            or not all(isinstance(field, str) and field for field in resource.fields)
+        ):
+            msg = "Alcance parcial de hash inválido"
             raise ValueError(msg)
     receipt_key = f"operation:resources:{identity}"
     if len(by_key) != len(resources) or receipt_key in by_key:
@@ -302,6 +317,13 @@ def _validate_writes(
             raise ValueError(msg)
         if isinstance(value, set) and not all(isinstance(member, str) for member in value):
             msg = "Miembros Redis inválidos"
+            raise ValueError(msg)
+        if (
+            isinstance(value, dict)
+            and resources[key].fields is not None
+            and not value.keys() <= set(resources[key].fields or ())
+        ):
+            msg = "La decisión escribió fuera de los campos declarados"
             raise ValueError(msg)
         if not isinstance(value, (str, dict, set)):
             msg = "Valor Redis inválido"

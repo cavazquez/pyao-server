@@ -80,6 +80,9 @@ class RedisClient:
                 await self._initialize_default_config()
 
         except redis.ConnectionError as e:
+            logger.warning(
+                "Redis/Redis Insight: --redis-guide (Snap: pyao.pyao-server --redis-guide)"
+            )
             logger.warning("No se pudo conectar a Redis en %s:%d - %s", config.host, config.port, e)
             await self.disconnect()
             raise

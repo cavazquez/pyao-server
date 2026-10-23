@@ -73,6 +73,42 @@ def _run_diagnostic(args: argparse.Namespace) -> None:
     sys.exit(0 if result["ok"] else 1)
 
 
+def _run_redis_setup(args: argparse.Namespace) -> None:
+    """Muestra orientación o consulta Redis antes de importar el servidor."""
+    from src.operations.redis_setup import check, guide  # ruff: ignore[import-outside-top-level]
+
+    try:
+        from src.config.game_config import get_game_config  # ruff: ignore[import-outside-top-level]
+
+        redis_config = get_game_config().redis
+    except OSError, ValueError, RuntimeError:
+        if args.redis_guide:
+            print(guide())
+            sys.exit(0)
+        print(
+            json.dumps({"ok": False, "message": "Revisar configuración; ejecutar --redis-guide."})
+        )
+        sys.exit(1)
+    if args.redis_guide:
+        print(guide(redis_config))
+        sys.exit(0)
+    result = asyncio.run(check(redis_config))
+    print(json.dumps(result, ensure_ascii=True))
+    sys.exit(0 if result["ok"] else 1)
+
+
+def _cancel_lottery(args: argparse.Namespace) -> None:
+    """Cancela con credenciales del operador sin iniciar el servidor."""
+    from src.config.game_config import get_game_config  # ruff: ignore[import-outside-top-level]
+    from src.operations.lottery import cancel_round  # ruff: ignore[import-outside-top-level]
+
+    result = asyncio.run(
+        cancel_round(get_game_config().redis, args.cancel_lottery, args.lottery_reason)
+    )
+    print(json.dumps(result, ensure_ascii=True))
+    sys.exit(0 if result.get("applied") else 1)
+
+
 def main() -> None:
     """Punto de entrada principal del servidor."""
     cli = ServerCLI()
@@ -88,6 +124,10 @@ def main() -> None:
             os.environ[environment] = str(Path(value).expanduser().resolve())
     if args.diagnose:
         _run_diagnostic(args)
+    if args.cancel_lottery:
+        _cancel_lottery(args)
+    if args.redis_guide or args.check_redis:
+        _run_redis_setup(args)
     # Las dependencias y sus singletons leen las rutas después de parsear el CLI.
     from src.validation.dataset import DatasetValidator  # ruff: ignore[import-outside-top-level]
 

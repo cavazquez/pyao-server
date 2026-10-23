@@ -81,7 +81,7 @@ async def diagnose(args: argparse.Namespace) -> dict[str, object]:
                     "name": "redis",
                     "ok": False,
                     "message": "Revisar servicio, endpoint y secreto Redis "
-                    f"({type(error).__name__})",
+                    f"({type(error).__name__}); ejecutar --redis-guide (Redis y GUI opcional)",
                 }
             )
         finally:

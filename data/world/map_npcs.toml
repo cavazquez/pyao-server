@@ -8,6 +8,13 @@
 name = "Ullathorpe"
 description = "Ciudad principal del juego"
 
+# Puesto permanente: acceso desde (52,52) y (54,52).
+[[map_npcs.1.spawn_points]]
+npc_id = 950
+x = 53
+y = 52
+direction = 3
+
 # Spawn points fijos
 [[map_npcs.1.spawn_points]]
 npc_id = 1

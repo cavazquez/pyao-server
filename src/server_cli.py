@@ -106,6 +106,26 @@ Ejemplos:
             help="Comprobar configuración, Redis, dataset y TLS sin modificar el mundo",
         )
         parser.add_argument(
+            "--redis-guide",
+            action="store_true",
+            help="Guía opcional para Redis y Redis Insight; funciona sin Redis",
+        )
+        parser.add_argument(
+            "--check-redis",
+            action="store_true",
+            help="Leer conexión, versión y persistencia de Redis sin modificar datos",
+        )
+        parser.add_argument(
+            "--cancel-lottery",
+            metavar="ROUND",
+            help="Cancelar ronda sin sorteo; requiere credenciales Redis del operador",
+        )
+        parser.add_argument(
+            "--lottery-reason",
+            default="",
+            help="Motivo auditable para --cancel-lottery; hasta 200 caracteres",
+        )
+        parser.add_argument(
             "--log-format",
             choices=("text", "json"),
             default=None,

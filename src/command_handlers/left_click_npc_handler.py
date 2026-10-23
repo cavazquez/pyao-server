@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from src.models.items_catalog import ITEMS_CATALOG
 from src.models.skills import skill_progress
+from src.network.state_channel import send_state
 from src.services.npc_trade_plan import commerce_price
 from src.utils.redis_config import RedisKeys
 
@@ -53,6 +54,10 @@ class LeftClickNPCHandler:
         Returns:
             Tupla (success, error_message, data).
         """
+        if npc.role == "lottery":
+            await send_state(self.message_sender, "lottery_open", {"npc": npc.instance_id})
+            return True, None, {"type": "lottery"}
+
         # Si es un mercader, abrir ventana de comercio
         if npc.is_merchant:
             return await self._handle_merchant_click(user_id, npc)

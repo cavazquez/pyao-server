@@ -72,6 +72,7 @@ class NPCRepository:
         guard_faction: str = "neutral",
         loot_profile: str = "none",
         loot_material: int = 0,
+        stable_instance: str = "",
     ) -> NPC:
         """Crea una nueva instancia de NPC en Redis.
 
@@ -81,6 +82,7 @@ class NPCRepository:
             guard_faction: Facción defendida por un guardia.
             loot_profile: Política de botín, independiente del nivel del jugador.
             loot_material: Piel específica de la especie, si corresponde.
+            stable_instance: Identidad fija de un servicio del mundo, nunca entrada de red.
             char_index: CharIndex único en el mapa.
             map_id: ID del mapa.
             x: Posición X.
@@ -117,7 +119,11 @@ class NPCRepository:
             Instancia de NPC creada.
 
         """
-        instance_id = str(uuid.uuid4())
+        instance_id = stable_instance or str(uuid.uuid4())
+        if stable_instance:
+            existing = await self.get_npc(stable_instance)
+            if existing is not None:
+                return existing
 
         npc = NPC(
             npc_id=npc_id,

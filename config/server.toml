@@ -82,6 +82,9 @@ interval_seconds = 60.0
 enabled = true
 daily_percentage = 1.0
 
+[game.lottery]
+round_seconds = 300
+
 [game.inventory]
 max_slots = 30
 

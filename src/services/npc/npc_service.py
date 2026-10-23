@@ -306,6 +306,26 @@ class NPCService:
             logger.error("NPC ID %d no encontrado en el catálogo", npc_id)
             return None
 
+        from src.services.lottery.rules import (  # ruff: ignore[import-outside-top-level]
+            NPC_ID,
+            NPC_INSTANCE,
+            NPC_MAP,
+            NPC_X,
+            NPC_Y,
+        )
+
+        stable_instance = ""
+        if npc_id == NPC_ID and (map_id, x, y) == (NPC_MAP, NPC_X, NPC_Y):
+            stable_instance = NPC_INSTANCE
+            existing = self.map_manager.get_npc_by_instance(stable_instance)
+            if existing is not None:
+                if await self.npc_repository.get_npc(stable_instance) is not None:
+                    return existing
+                self.map_manager.remove_npc(map_id, stable_instance)
+            if not self.map_manager.can_move_to(map_id, x, y):
+                logger.warning("Puesto de lotería bloqueado por el mapa o un overlay")
+                return None
+
         # Asignar CharIndex único
         try:
             (char_index,) = self.reserve_character_indices(1)
@@ -333,6 +353,7 @@ class NPCService:
         # Crear instancia en Redis
         npc = await self.npc_repository.create_npc_instance(
             npc_id=npc_id,
+            stable_instance=stable_instance,
             char_index=char_index,
             map_id=map_id,
             x=x,
