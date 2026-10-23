@@ -125,6 +125,8 @@ def minimum_dependencies(client: RedisClient) -> DependencyContainer:
     player = repositories["player_repo"]
     account = repositories["account_repo"]
     maps = MapManager(repositories["ground_items_repo"])
+    # El mapa vacío de la fixture tiene dimensiones conocidas como uno cargado.
+    maps._map_sizes[1] = (100, 100)  # ruff: ignore[private-member-access]
     broadcast = MultiplayerBroadcastService(maps, player, account)
     values: dict[str, Any] = {
         entry.name: None
@@ -325,6 +327,27 @@ async def scenario(settings: RedisConfig) -> dict[str, Any]:  # ruff: ignore[too
         )
         position = await position_of(deps.player_repo, user_ids[1])
         require((position["x"], position["y"]) == (60, 60), "B conserva su sesión y movimiento")
+        # A vuelve a una posición guardada que B ocupó durante su desconexión.
+        await deps.player_repo.set_position(user_ids[0], B_START, B_START, 1, 3)
+        reader, writer = await asyncio.open_connection("127.0.0.1", port)
+        returning = ProtocolPeer(reader, writer)
+        peers.append(returning)
+        await returning.send(login_packet(profiles[0][0], profiles[0][1]))
+        await verify_own_session(returning, profiles[0][2], profiles[0][3], user_ids[0])
+        arrival = await position_of(deps.player_repo, user_ids[0])
+        require(
+            (arrival["x"], arrival["y"]) != (B_START, B_START),
+            "el login elige otra casilla sin superponer jugadores",
+        )
+        require(
+            deps.map_manager.get_tile_occupant(1, B_START, B_START) == f"player:{user_ids[1]}",
+            "la reconexión conserva al ocupante original",
+        )
+        require(
+            deps.map_manager.get_tile_occupant(1, arrival["x"], arrival["y"])
+            == f"player:{user_ids[0]}",
+            "la reserva del login se convierte en ocupación del jugador",
+        )
         return {
             "two_distinct_logins": True,
             "sessions_isolated": True,
@@ -333,6 +356,7 @@ async def scenario(settings: RedisConfig) -> dict[str, Any]:  # ruff: ignore[too
             "coalesced_walk_and_ping_once": True,
             "legacy_extended_isolated": True,
             "disconnect_a_preserves_b": True,
+            "occupied_login_relocated": True,
             "production_data_used": False,
         }
     finally:

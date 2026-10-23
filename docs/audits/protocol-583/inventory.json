@@ -155,6 +155,10 @@
         },
         {
           "repository": "server",
+          "path": "src/command_handlers/login_handler.py"
+        },
+        {
+          "repository": "server",
           "path": "src/game/ground_item_index.py"
         },
         {
@@ -357,6 +361,10 @@
       {
         "repository": "server",
         "path": "src/command_handlers/login_finalization_handler.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/command_handlers/login_handler.py"
       },
       {
         "repository": "server",
@@ -937,7 +945,7 @@
     {
       "repository": "server",
       "path": "src/command_handlers/login_handler.py",
-      "sha256": "b3f5891458bb6b008bd888de50ef883079803bccca40969acde169c35e34bab6"
+      "sha256": "fb7d2da480e556790eae4d5003ee8b33d7d26fffc0ba815a8866a02dfacfb21a"
     },
     {
       "repository": "server",
@@ -23377,9 +23385,9 @@
         {
           "repository": "server",
           "path": "src/command_handlers/login_handler.py",
-          "line": 150,
-          "end_line": 211,
-          "symbol": "_complete_login"
+          "line": 191,
+          "end_line": 243,
+          "symbol": "_finish_reserved_login"
         },
         {
           "repository": "server",

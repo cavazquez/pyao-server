@@ -39,7 +39,6 @@ def login_handler(sender, session):
     handler.init_handler.send_login_packets = AsyncMock(return_value=position)
     handler.init_handler.initialize_player_data = AsyncMock()
     handler.init_handler.send_spellbook = AsyncMock()
-    handler.spawn_handler.find_free_spawn_position = lambda current: current
     handler.spawn_handler.spawn_player = AsyncMock()
     handler.spawn_handler.send_map_data = AsyncMock()
     handler.finalization_handler.finalize_login = AsyncMock()
