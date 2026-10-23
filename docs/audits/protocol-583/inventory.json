@@ -2,8 +2,8 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "9a5098a9af53b84abfbad10aed95723fa5481b46",
-    "client": "7dd750091af33903a3783f1530ac6cb12f80e42c"
+    "server": "121989cd4c2ac7b7cc72bf3be95ad61b760b1bd5",
+    "client": "f279631aa4b64a55b6a60c740c73f87c703a675f"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -832,7 +832,7 @@
     {
       "repository": "client",
       "path": "ui/hub/bank_panel.gd",
-      "sha256": "436832a798e6a97c6c51ab4a7bf835de7f3ee83869ae01fcae81d73195df6b57"
+      "sha256": "ace77991ca3a4036c38258774864ed3ebeb5e6d0a0011809ff99ef3c08f196f5"
     },
     {
       "repository": "client",
@@ -5104,8 +5104,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 112,
-          "end_line": 120,
+          "line": 116,
+          "end_line": 124,
           "symbol": "RequestClose"
         }
       ],
@@ -7912,8 +7912,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 133,
-          "end_line": 137,
+          "line": 137,
+          "end_line": 141,
           "symbol": "_on_btn_extract_pressed"
         }
       ],
@@ -8238,8 +8238,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 138,
-          "end_line": 141,
+          "line": 142,
+          "end_line": 145,
           "symbol": "_on_btn_deposit_pressed"
         }
       ],
@@ -15233,8 +15233,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 125,
-          "end_line": 128,
+          "line": 129,
+          "end_line": 132,
           "symbol": "_on_btn_extract_gold_pressed"
         },
         {
@@ -15382,8 +15382,8 @@
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 129,
-          "end_line": 132,
+          "line": 133,
+          "end_line": 136,
           "symbol": "_on_btn_deposit_gold_pressed"
         },
         {
@@ -22260,21 +22260,21 @@
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
           "line": 32,
-          "end_line": 57,
+          "end_line": 59,
           "symbol": "_ready"
         },
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 112,
-          "end_line": 120,
+          "line": 116,
+          "end_line": 124,
           "symbol": "RequestClose"
         },
         {
           "repository": "client",
           "path": "ui/hub/bank_panel.gd",
-          "line": 148,
-          "end_line": 160,
+          "line": 152,
+          "end_line": 164,
           "symbol": "_Resend"
         },
         {
