@@ -198,7 +198,7 @@ class SpatialIndexMixin:
         """
         # Limpiar posición anterior
         old_key = (map_id, old_x, old_y)
-        if old_key in self._tile_occupation:  # type: ignore[attr-defined]
+        if self._tile_occupation.get(old_key) == f"player:{user_id}":  # type: ignore[attr-defined]
             del self._tile_occupation[old_key]  # type: ignore[attr-defined]
 
         # Marcar nueva posición
@@ -220,7 +220,7 @@ class SpatialIndexMixin:
         """
         # Limpiar posición anterior
         old_key = (map_id, old_x, old_y)
-        if old_key in self._tile_occupation:  # type: ignore[attr-defined]
+        if self._tile_occupation.get(old_key) == f"npc:{instance_id}":  # type: ignore[attr-defined]
             del self._tile_occupation[old_key]  # type: ignore[attr-defined]
 
         # Marcar nueva posición

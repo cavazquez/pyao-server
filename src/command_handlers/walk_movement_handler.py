@@ -5,6 +5,7 @@ import random
 from typing import TYPE_CHECKING, Any
 
 from src.models.item_constants import BOAT_ITEM_IDS
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
@@ -133,9 +134,21 @@ class WalkMovementHandler:
 
         # Actualizar posición y broadcast
         position = await self.player_repo.get_position(user_id) if self.player_repo else None
-        await self._update_position_and_spatial_index(
-            user_id, heading, current_x, current_y, current_map, new_x, new_y
-        )
+        identity = operation_id()
+        water = bool(self.map_resources and self.map_resources.has_water(current_map, new_x, new_y))
+        if self.map_manager and not self.map_manager.reserve_arrival(
+            identity, current_map, new_x, new_y, water=water
+        ):
+            if position:
+                await self.message_sender.send_pos_update(position["x"], position["y"])
+            return True, None, {"moved": False, "blocked": True}
+        try:
+            await self._update_position_and_spatial_index(
+                user_id, heading, current_x, current_y, current_map, new_x, new_y
+            )
+        finally:
+            if self.map_manager:
+                self.map_manager.release_positions(identity, (current_map, new_x, new_y))
 
         # Broadcast a otros jugadores
         if position:
@@ -490,12 +503,14 @@ class WalkMovementHandler:
         """
         if self.player_repo:
             await self.player_repo.set_position(user_id, new_x, new_y, current_map, heading)
-            await self.player_repo.redis.hset(f"player:{user_id}:user_stats", "hidden_until", "0")
 
         if self.map_manager:
             self.map_manager.update_player_tile(
                 user_id, current_map, current_x, current_y, new_x, new_y
             )
+
+        if self.player_repo:
+            await self.player_repo.redis.hset(f"player:{user_id}:user_stats", "hidden_until", "0")
 
         logger.debug(
             "User %d se movió de (%d,%d) a (%d,%d) en dirección %d",
