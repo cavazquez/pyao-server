@@ -1,7 +1,7 @@
 {
   "baseline_commits": {
-    "server": "5a8614272e2032a3de4cacb32ba2be6cd373687d",
-    "client": "bbea62b2851918cd57da8fc77996873a629cd830"
+    "server": "24af5550385edbf845872db9f8c7e9d204e9efe9",
+    "client": "06060261d58031efeb2967a2ce1bb8a9aba4eca2"
   },
   "packets": {
     "client:18": {
