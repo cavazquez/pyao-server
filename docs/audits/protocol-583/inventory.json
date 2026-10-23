@@ -3,7 +3,7 @@
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
     "server": "e9288aeae9803972eb96c8baabd4f66b03c31e7e",
-    "client": "9b1644e6498ef8be0ceb302e4eb50d1ff4e3d1e6"
+    "client": "667c5445c6cd22c85ff9468986e538a6a0323943"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -856,12 +856,12 @@
     {
       "repository": "client",
       "path": "ui/hub/hub_controller.gd",
-      "sha256": "9f33b086cc627c95e1ae5d7ff7d69e0d540f71d21181d94b2130cee096cd1a96"
+      "sha256": "49c7ae71995e2045dabccb1206d21a3f0a369f0d57873d676b800ba0562a4771"
     },
     {
       "repository": "client",
       "path": "ui/hub/inventory_container.gd",
-      "sha256": "89684ef0e0b67dcae286a47349055e520eee044083d82aef2daf1a7d161990af"
+      "sha256": "b5eaac761fc3a36ef548a24d89c787f0788a72f90e274e987c9eb43b227e4afa"
     },
     {
       "repository": "client",
@@ -2442,15 +2442,15 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 408,
-          "end_line": 445,
+          "line": 414,
+          "end_line": 451,
           "symbol": "_OnConsoleInputTextSubmitted"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 728,
-          "end_line": 746,
+          "line": 735,
+          "end_line": 753,
           "symbol": "_on_guild_foundation_submitted"
         }
       ],
@@ -2616,8 +2616,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 408,
-          "end_line": 445,
+          "line": 414,
+          "end_line": 451,
           "symbol": "_OnConsoleInputTextSubmitted"
         }
       ],
@@ -2777,8 +2777,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 408,
-          "end_line": 445,
+          "line": 414,
+          "end_line": 451,
           "symbol": "_OnConsoleInputTextSubmitted"
         }
       ],
@@ -3111,8 +3111,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 498,
-          "end_line": 502,
+          "line": 505,
+          "end_line": 509,
           "symbol": "_request_position_update"
         }
       ],
@@ -3243,8 +3243,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 490,
-          "end_line": 497,
+          "line": 497,
+          "end_line": 504,
           "symbol": "_attack"
         }
       ],
@@ -3324,7 +3324,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 440,
+          "line": 449,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -3393,8 +3393,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 470,
-          "end_line": 476,
+          "line": 477,
+          "end_line": 483,
           "symbol": "_pickup_object"
         }
       ],
@@ -3519,8 +3519,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 368,
-          "end_line": 401,
+          "line": 374,
+          "end_line": 407,
           "symbol": "_handle_key_event"
         }
       ],
@@ -3638,8 +3638,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 368,
-          "end_line": 401,
+          "line": 374,
+          "end_line": 407,
           "symbol": "_handle_key_event"
         }
       ],
@@ -3797,8 +3797,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 654,
-          "end_line": 666,
+          "line": 661,
+          "end_line": 673,
           "symbol": "_on_btn_stadistics_pressed"
         }
       ],
@@ -3929,8 +3929,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 654,
-          "end_line": 666,
+          "line": 661,
+          "end_line": 673,
           "symbol": "_on_btn_stadistics_pressed"
         }
       ],
@@ -4033,15 +4033,15 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 638,
-          "end_line": 649,
+          "line": 645,
+          "end_line": 656,
           "symbol": "_on_btn_skills_pressed"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 654,
-          "end_line": 666,
+          "line": 661,
+          "end_line": 673,
           "symbol": "_on_btn_stadistics_pressed"
         },
         {
@@ -4166,8 +4166,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 654,
-          "end_line": 666,
+          "line": 661,
+          "end_line": 673,
           "symbol": "_on_btn_stadistics_pressed"
         }
       ],
@@ -5693,8 +5693,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 317,
-          "end_line": 367,
+          "line": 323,
+          "end_line": 373,
           "symbol": "_HandleMouseInput"
         }
       ],
@@ -5862,8 +5862,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 317,
-          "end_line": 367,
+          "line": 323,
+          "end_line": 373,
           "symbol": "_HandleMouseInput"
         }
       ],
@@ -6025,22 +6025,22 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 506,
-          "end_line": 512,
+          "line": 513,
+          "end_line": 519,
           "symbol": "_tam_animal"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 513,
-          "end_line": 518,
+          "line": 520,
+          "end_line": 525,
           "symbol": "_steal"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 570,
-          "end_line": 576,
+          "line": 577,
+          "end_line": 583,
           "symbol": "_hide"
         }
       ],
@@ -6105,7 +6105,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 471,
+          "line": 480,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -6247,8 +6247,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 456,
-          "end_line": 469,
+          "line": 462,
+          "end_line": 476,
           "symbol": "_use_object"
         }
       ],
@@ -6561,8 +6561,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 317,
-          "end_line": 367,
+          "line": 323,
+          "end_line": 373,
           "symbol": "_HandleMouseInput"
         }
       ],
@@ -6930,15 +6930,15 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 184,
-          "end_line": 190,
+          "line": 186,
+          "end_line": 192,
           "symbol": "_RequestEquipment"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 446,
-          "end_line": 455,
+          "line": 452,
+          "end_line": 461,
           "symbol": "_equip_object"
         }
       ],
@@ -7169,7 +7169,7 @@
         {
           "repository": "client",
           "path": "tests/mechanics_client.gd",
-          "line": 323,
+          "line": 328,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -8543,7 +8543,7 @@
         {
           "repository": "client",
           "path": "tests/protocol_smoke.gd",
-          "line": 568,
+          "line": 586,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -10614,8 +10614,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 503,
-          "end_line": 505,
+          "line": 510,
+          "end_line": 512,
           "symbol": "_exit_game"
         }
       ],
@@ -11493,15 +11493,15 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 577,
-          "end_line": 588,
+          "line": 584,
+          "end_line": 595,
           "symbol": "_meditate"
         },
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 880,
-          "end_line": 906,
+          "line": 887,
+          "end_line": 913,
           "symbol": "UseSkill"
         }
       ],
@@ -21275,8 +21275,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 589,
-          "end_line": 599,
+          "line": 596,
+          "end_line": 606,
           "symbol": "_on_main_viewport_container_gui_input"
         }
       ],
@@ -22095,8 +22095,8 @@
         {
           "repository": "client",
           "path": "ui/hub/inventory_container.gd",
-          "line": 99,
-          "end_line": 107,
+          "line": 125,
+          "end_line": 133,
           "symbol": "DropItem"
         }
       ],
@@ -22571,8 +22571,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 880,
-          "end_line": 906,
+          "line": 887,
+          "end_line": 913,
           "symbol": "UseSkill"
         }
       ],
@@ -22715,8 +22715,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 827,
-          "end_line": 853,
+          "line": 834,
+          "end_line": 860,
           "symbol": "ApplyTradeSnapshot"
         },
         {
@@ -22874,8 +22874,8 @@
         {
           "repository": "client",
           "path": "ui/hub/hub_controller.gd",
-          "line": 317,
-          "end_line": 367,
+          "line": 323,
+          "end_line": 373,
           "symbol": "_HandleMouseInput"
         }
       ],
@@ -22943,7 +22943,7 @@
         {
           "repository": "client",
           "path": "tests/protocol_smoke.gd",
-          "line": 828,
+          "line": 846,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -24248,7 +24248,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 410,
+          "line": 419,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -24400,7 +24400,7 @@
         {
           "repository": "client",
           "path": "tests/protocol_smoke.gd",
-          "line": 478,
+          "line": 496,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -25543,7 +25543,7 @@
         {
           "repository": "client",
           "path": "tests/protocol_smoke.gd",
-          "line": 833,
+          "line": 851,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -25691,7 +25691,7 @@
         {
           "repository": "client",
           "path": "tests/protocol_smoke.gd",
-          "line": 386,
+          "line": 404,
           "kind": "reference_only_not_execution_proof"
         }
       ],
