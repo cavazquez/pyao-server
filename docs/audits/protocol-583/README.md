@@ -93,7 +93,13 @@ Los detalles, pruebas y límites de la fase están en
 La muestra que sigue se conserva como evidencia histórica y no acredita por sí
 sola las fuentes modificadas por esta tanda.
 
-La música sigue pendiente en cliente #215. El seguro específico de resurrección,
+La tanda de objetos individuales incorpora la música de cliente #215 y agrega
+botas al final de CharacterCreate/CharacterChange; requiere actualizar ambos
+extremos juntos. Sus reglas y verificaciones están en
+[durabilidad](../../items/durability.md). La muestra histórica de abajo sigue
+sin acreditar automáticamente estos cambios.
+
+El seguro específico de resurrección,
 reputación VB6, macros automáticas, foros de mapa e ItemUpgrade conservan sus
 respectivas decisiones de producto; no se habilitan al declarar sus opcodes.
 El inventario actual tiene 30 slots.
