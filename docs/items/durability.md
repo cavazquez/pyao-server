@@ -44,6 +44,11 @@ suelo y caída por muerte conservan la identidad. Una reventa conserva los usos
 y fechas; sólo la reposición comercial crea ejemplares nuevos. Los retiros
 intencionales (consumo/venta sin capacidad del mercader) dejan una marca
 `retired` por siete días. Nunca se reutiliza una identidad retirada.
+El índice ordenado `items:ground:gc` se actualiza en el mismo EXEC que cada
+movimiento. El mantenimiento revisa como máximo 64 vencimientos por segundo:
+si el suelo desapareció, retira el metadato durante siete días; si la referencia
+continúa en el suelo, la conserva y reprograma su revisión. Renovar el TTL del
+mapa no borra equipo todavía presente, y recogerlo cancela la revisión.
 
 Las ubicaciones y el desgaste se confirman en el mismo EXEC que los recursos de
 negocio y el recibo. WATCH cubre los contenedores y los metadatos necesarios.
@@ -85,7 +90,7 @@ seguro después de haber admitido transacciones nuevas.
   identidad, banco/suelo, intercambio de ejemplares del mismo tipo y recompra.
 - `uv run python tools/item_instances_smoke.py --output artifacts/items`:
   Redis Docker descartable con AOF, concurrencia, ACK perdido, reinicio,
-  1.000 y 100.000 objetos. Nunca usa el Redis del operador.
+  limpieza acotada del suelo, 1.000 y 100.000 objetos. Nunca usa el Redis del operador.
 - Cliente: `tools/integration-world.py --scenario durable-items` ejercita
   equipo en dos observadores, banco/suelo, vencimiento equipado, combate y
   recolección. El modo `--client-audio PulseAudio` usa salida real.

@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from src.economy.merchant_stock import StockEntry, restock_merchant, seed_merchant
+from src.items.ground_gc import QUEUE_KEY
 from src.items.ledger import PREFIX
 from src.items.migration import migrate
 from src.items.view import pages
@@ -110,12 +111,14 @@ async def test_ground_cycle_preserves_spent_uses_and_age(redis_client):
         assert result["applied"]
         tile = (await read_ground(redis, 1)).tile(50, 50)
         assert tile[0]["instance_ids"] == [iid]
+        assert await redis.zscore(QUEUE_KEY, iid) is not None
         result = await transfer_ground(
             redis,
             GroundRequest(1, 1, 50, 50, "pickup", expected_stack=tile[0]["stack_id"]),
             operation_id(),
         )
         assert result["applied"]
+    assert await redis.zscore(QUEUE_KEY, iid) is None
     restored = await redis.hgetall(PREFIX + iid)
     assert restored["created_at"] == original["created_at"]
     assert restored["expires_at"] == original["expires_at"]

@@ -1346,7 +1346,7 @@
     {
       "repository": "server",
       "path": "src/services/world/world_state.py",
-      "sha256": "7878d17d7e556f781736152b58bcf36bcf331b6b4ec4be9e03da9fe6e20853a2"
+      "sha256": "9744eba127dda0a2e227dddfbea04eb44c3459a95207e29a7cf175504e96eb7a"
     },
     {
       "repository": "server",
@@ -1661,7 +1661,7 @@
     {
       "repository": "server",
       "path": "src/utils/resource_transaction.py",
-      "sha256": "d76ffaa5dae68667aef157c715a5f04a665629ecde286405ccbd029dca1b4729"
+      "sha256": "f3552ba94702340df6759a3aaf5eb721400cdf9b00a46ed222d4329fae8f15b5"
     }
   ],
   "packets": [
@@ -25623,8 +25623,8 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 148,
-          "end_line": 164,
+          "line": 150,
+          "end_line": 166,
           "symbol": "publish_legacy_tax"
         }
       ],
@@ -25771,8 +25771,8 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 148,
-          "end_line": 164,
+          "line": 150,
+          "end_line": 166,
           "symbol": "publish_legacy_tax"
         }
       ],
@@ -38349,29 +38349,29 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 207,
-          "end_line": 233,
+          "line": 209,
+          "end_line": 235,
           "symbol": "publish"
         },
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 235,
-          "end_line": 312,
+          "line": 237,
+          "end_line": 314,
           "symbol": "publish_items"
         },
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 314,
-          "end_line": 331,
+          "line": 316,
+          "end_line": 333,
           "symbol": "publish_trade"
         },
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 333,
-          "end_line": 378,
+          "line": 335,
+          "end_line": 380,
           "symbol": "execute"
         },
         {
@@ -38832,8 +38832,8 @@
         {
           "repository": "server",
           "path": "src/utils/resource_transaction.py",
-          "line": 172,
-          "end_line": 302,
+          "line": 173,
+          "end_line": 303,
           "symbol": "transact"
         }
       ],

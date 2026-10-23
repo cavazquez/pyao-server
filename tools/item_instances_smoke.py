@@ -15,11 +15,14 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 
 from src.items import ledger
 from src.items.condition import condition
+from src.items.ground_gc import BATCH_SIZE, QUEUE_KEY, RETIRED_TTL_SECONDS, collect
 from src.items.migration import migrate
 from src.items.view import pages
 from src.operations.redis_sandbox import RedisSandbox
 from src.services.bank_item_transfer import transfer_bank_item
+from src.services.ground_transfer import GroundRequest, transfer_ground
 from src.utils.gold_atomic import operation_id
+from src.utils.ground_state import GROUND_TTL_SECONDS
 from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
@@ -29,6 +32,58 @@ if TYPE_CHECKING:
 
 
 MAX_VIEW_BYTES = 3500
+
+
+async def ground_cleanup(redis: Redis, iid: str) -> dict[str, Any]:
+    """Comprueba referencias reales, vencimiento del suelo y el límite de trabajo.
+
+    Returns:
+        Evidencia del retiro y de la conservación de objetos recuperados.
+    """
+    await redis.hset(RedisKeys.player_position(1), mapping={"map": "1", "x": "50", "y": "50"})
+    result = await transfer_bank_item(redis, 1, 1, 1, "withdraw", operation_id())
+    assert result["applied"]
+    drop = GroundRequest(1, 1, 50, 50, "drop_item", slot=1, quantity=1, expected_item_id=2)
+    result = await transfer_ground(redis, drop, operation_id())
+    assert result["applied"]
+    due = int(await redis.zscore(QUEUE_KEY, iid))
+    assert await collect(redis, now=due) == (1, 0)
+    assert await redis.hget(ledger.PREFIX + iid, "location") != "retired"
+    ground_key = RedisKeys.ground_items(1)
+    original_tile = await redis.hget(ground_key, "50,50")
+    await redis.hset(ground_key, "50,50", "{invalid")
+    assert await collect(redis, now=due + GROUND_TTL_SECONDS) == (1, 0)
+    assert await redis.hget(ledger.PREFIX + iid, "location") != "retired"
+    await redis.hset(ground_key, "50,50", original_tile)
+    pickup = GroundRequest(1, 1, 50, 50, "pickup", expected_stack=result["item"]["stack_id"])
+    assert (await transfer_ground(redis, pickup, operation_id()))["applied"]
+    assert await redis.zscore(QUEUE_KEY, iid) is None
+    # Una entrada derivada obsoleta tampoco puede retirar el objeto recogido.
+    await redis.zadd(QUEUE_KEY, {iid: due})
+    assert await collect(redis, now=due) == (1, 0)
+    assert await redis.hget(ledger.PREFIX + iid, "location") != "retired"
+    assert (await transfer_ground(redis, drop, operation_id()))["applied"]
+    await redis.delete(RedisKeys.ground_items(1))
+    assert await collect(redis, now=due + GROUND_TTL_SECONDS) == (1, 1)
+    assert await redis.hget(ledger.PREFIX + iid, "location") == "retired"
+    assert 0 < await redis.ttl(ledger.PREFIX + iid) <= RETIRED_TTL_SECONDS
+    async with redis.pipeline() as pipe:
+        for index in range(BATCH_SIZE + 1):
+            fixture = f"{index + 10000:032x}"
+            pipe.hset(
+                ledger.PREFIX + fixture,
+                mapping=ledger.new_state(fixture, 2, "ground_items:2|1,1/g1.fixture", due),
+            )
+            pipe.zadd(QUEUE_KEY, {fixture: due})
+        await pipe.execute()
+    assert await collect(redis, now=due) == (BATCH_SIZE, BATCH_SIZE)
+    assert await collect(redis, now=due) == (1, 1)
+    return {
+        "keeps_live_references": True,
+        "keeps_picked_up": True,
+        "invalid_ground_does_not_delete": True,
+        "batch_limit": BATCH_SIZE,
+    }
 
 
 async def exercise(redis: Redis) -> dict[str, Any]:
@@ -79,12 +134,14 @@ async def exercise(redis: Redis) -> dict[str, Any]:
     state = await redis.hgetall(ledger.PREFIX + iid)
     state.update(uses_spent=state["max_uses"])
     assert condition(state, int(time.time())) == (0, 0, True)
+    cleanup = await ground_cleanup(redis, iid)
     return {
         "ack_loss": True,
         "concurrent_deposits": len(contenders),
         "accepted_deposits": 1,
         "repeat_does_not_spend_uses": True,
         "bounded_pages": True,
+        "ground_cleanup": cleanup,
         "recovery_iid": iid,
         "saved_state": await redis.hgetall(ledger.PREFIX + iid),
     }

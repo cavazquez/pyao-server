@@ -13,6 +13,7 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from redis.exceptions import TimeoutError as RedisTimeoutError
 from redis.exceptions import WatchError
 
+from src.items.ground_gc import enqueue as enqueue_item_ground_gc
 from src.utils.gold_atomic import (
     MAX_CLOCK_SKEW_SECONDS,
     MAX_TRANSACTION_ATTEMPTS,
@@ -397,6 +398,8 @@ def _enqueue_writes(
                 pipe.delete(key)
             if value:
                 pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", value))
+            if key.startswith("item:instance:"):
+                enqueue_item_ground_gc(pipe, key, value)
         elif isinstance(value, set):
             pipe.delete(key)
             if value:

@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any, cast
 from redis.exceptions import RedisError
 
 from src.economy.tax_service import tax_status
+from src.items.ground_gc import collect as collect_ground_items
 from src.items.view import pages as item_pages
 from src.models.items_catalog import ITEMS_CATALOG
 from src.network.capabilities import Capability
@@ -112,6 +113,7 @@ class WorldStateService:
         while True:
             try:
                 await self.lottery.repo.advance()
+                await collect_ground_items(self.deps.redis_client.redis)
                 async with self.lock:
                     await self.classic_maintenance.tick()
             except RedisError, ValueError, RuntimeError, ConnectionError:
