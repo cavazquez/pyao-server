@@ -22,9 +22,21 @@ MAX_LEVEL = 100
 MAX_PAGE = 1000
 MAX_MAP = 10000
 MAX_REQUESTS = 10
+REQUEST_SECONDS = 120
 MIN_AD_SECONDS = 30
 MAX_AD_SECONDS = 1800
 MAX_AD_TEXT = 120
+
+
+def live_requests(raw: str | bytes | None) -> dict[str, dict[str, Any]]:
+    """Conserva sólo las solicitudes vigentes del documento acotado del grupo.
+
+    Returns:
+        Solicitudes por usuario, con vencimientos independientes del TTL del documento.
+    """
+    now = time.time()
+    requests: dict[str, dict[str, Any]] = json.loads(raw or "{}")
+    return {user: row for user, row in requests.items() if float(row["expires"]) > now}
 
 
 class PartyFinder:
@@ -115,12 +127,8 @@ class PartyFinder:
         own = await self.deps.party_repo.get_user_party(user)
         requests = []
         if own and own.leader_id == user:
-            async for key in redis.scan_iter(match=f"finder:request:{own.party_id}:*", count=50):
-                raw = await redis.get(key)
-                if raw:
-                    requests.append(json.loads(raw))
-                if len(requests) >= MAX_REQUESTS:
-                    break
+            raw = await redis.get(f"finder:requests:{own.party_id}")
+            requests = list(live_requests(raw).values())
         chunks = bounded_pages(rows, PAGE_SIZE, 2000)
         pages = len(chunks)
         page = min(page, pages - 1)
@@ -157,12 +165,10 @@ class PartyFinder:
                     "applied": False,
                     "message": "Sólo el líder del anuncio vigente puede invitar.",
                 }
-            raw = await self.deps.redis_client.redis.get(
-                f"finder:request:{party_id}:{int(params['user'])}"
-            )
-            if not raw:
+            raw = await self.deps.redis_client.redis.get(f"finder:requests:{party_id}")
+            request = live_requests(raw).get(str(int(params["user"])))
+            if request is None:
                 return {"applied": False, "message": "La solicitud venció."}
-            request = json.loads(raw)
             message = await self.deps.party_service.invite_to_party(user, request["name"])
             invitation = await self.deps.party_repo.get_invitation(int(params["user"]), party_id)
             return {
@@ -176,7 +182,7 @@ class PartyFinder:
             f"user:{user}:party",
         )
         stats_key, position_key = RedisKeys.player_user_stats(user), RedisKeys.player_position(user)
-        request_key = f"finder:request:{party_id}:{user}"
+        request_key = f"finder:requests:{party_id}"
         seconds = int(params.get("seconds", 600))
         if action == "publish" and not MIN_AD_SECONDS <= seconds <= MAX_AD_SECONDS:
             return {"applied": False, "message": "El anuncio debe durar entre 30 y 1800 segundos."}
@@ -193,7 +199,9 @@ class PartyFinder:
             Resource(stats_key, "hash"),
             Resource(position_key, "hash"),
             Resource(INDEX, "set"),
-            Resource(request_key, "string", ttl_seconds=120),
+            Resource(
+                request_key, "string", ttl_seconds=REQUEST_SECONDS, deletable=action == "close"
+            ),
         )
 
         def decide(snapshot: Snapshot) -> Decision:
@@ -219,7 +227,8 @@ class PartyFinder:
                 if action == "close":
                     ids.discard(str(party_id))
                     return Decision(
-                        {"applied": True, "message": "Anuncio cerrado."}, {ad_key: "", INDEX: ids}
+                        {"applied": True, "message": "Anuncio cerrado."},
+                        {ad_key: "", INDEX: ids, request_key: None},
                     )
                 lo, hi = int(params["min_level"]), int(params["max_level"])
                 has_capacity = len(members) < MAX_PARTY_MEMBERS and (
@@ -265,15 +274,21 @@ class PartyFinder:
                     {"applied": False, "message": "El anuncio cambió o no cumples los requisitos."},
                     {},
                 )
-            request = {
+            requests = live_requests(str(snapshot[request_key] or "{}"))
+            if str(user) not in requests and len(requests) >= MAX_REQUESTS:
+                return Decision(
+                    {"applied": False, "message": "El grupo ya tiene diez solicitudes pendientes."},
+                    {},
+                )
+            requests[str(user)] = {
                 "id": user,
                 "name": self.deps.map_manager.get_player_username(user) or "",
                 "level": int(stats["level"]),
-                "expires": int(time.time()) + 120,
+                "expires": int(time.time()) + REQUEST_SECONDS,
             }
             return Decision(
                 {"applied": True, "message": "Solicitud enviada; el líder puede invitarte."},
-                {request_key: json.dumps(request)},
+                {request_key: json.dumps(requests)},
             )
 
         return await transact(
