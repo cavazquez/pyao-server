@@ -2,8 +2,8 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "b9593f9b40309cb6593fec7b46f9462cd939952e",
-    "client": "42398cd55dc4843d8ea2830d4dcf7003f62e2475"
+    "server": "5a8614272e2032a3de4cacb32ba2be6cd373687d",
+    "client": "bbea62b2851918cd57da8fc77996873a629cd830"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -59,10 +59,10 @@
     }
   },
   "subtype_summary": {
-    "count": 226,
+    "count": 228,
     "by_status": {
       "declared_unused": 30,
-      "negotiated_extension": 56,
+      "negotiated_extension": 58,
       "replaced_by_other_transport": 136,
       "wired_not_exercised": 4
     }
@@ -168,6 +168,22 @@
       "kind": "historical_representative_evidence",
       "changed_inputs": [
         {
+          "repository": "client",
+          "path": "network/world_state_packet.gd"
+        },
+        {
+          "repository": "client",
+          "path": "ui/hub/hub_controller.gd"
+        },
+        {
+          "repository": "client",
+          "path": "ui/hub/world_state_window.gd"
+        },
+        {
+          "repository": "server",
+          "path": "src/command_handlers/left_click_npc_handler.py"
+        },
+        {
           "repository": "server",
           "path": "src/messaging/senders/message_status_effects_sender.py"
         },
@@ -178,6 +194,14 @@
         {
           "repository": "server",
           "path": "src/services/skill_action_service.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/services/world/actions.py"
+        },
+        {
+          "repository": "server",
+          "path": "src/services/world/world_state.py"
         },
         {
           "repository": "server",
@@ -193,6 +217,22 @@
     "status": "historical_source_changed",
     "changed_inputs": [
       {
+        "repository": "client",
+        "path": "network/world_state_packet.gd"
+      },
+      {
+        "repository": "client",
+        "path": "ui/hub/hub_controller.gd"
+      },
+      {
+        "repository": "client",
+        "path": "ui/hub/world_state_window.gd"
+      },
+      {
+        "repository": "server",
+        "path": "src/command_handlers/left_click_npc_handler.py"
+      },
+      {
         "repository": "server",
         "path": "src/messaging/senders/message_status_effects_sender.py"
       },
@@ -203,6 +243,14 @@
       {
         "repository": "server",
         "path": "src/services/skill_action_service.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/services/world/actions.py"
+      },
+      {
+        "repository": "server",
+        "path": "src/services/world/world_state.py"
       },
       {
         "repository": "server",
@@ -560,7 +608,7 @@
     {
       "repository": "client",
       "path": "network/world_state_packet.gd",
-      "sha256": "4d593ca6d2a22babb0df53f2da31c49fc9370336feaa0888567a58e40d4a7b62"
+      "sha256": "f923ec206a0bc6961c7408685df3c7c76c838d8eb3b0c7e82b3e84cfb990c04e"
     },
     {
       "repository": "client",
@@ -625,7 +673,7 @@
     {
       "repository": "client",
       "path": "ui/hub/hub_controller.gd",
-      "sha256": "59430390eeaee6af03e184c26367fe41e5d68cd08faa10e9577ba3829acddae8"
+      "sha256": "bd96be02193f0a60b5363373a8443b91179b297b285008a404843ea37334dd36"
     },
     {
       "repository": "client",
@@ -665,7 +713,7 @@
     {
       "repository": "client",
       "path": "ui/hub/world_state_window.gd",
-      "sha256": "73b09ae50d54c121ae023c3b21dd45601ed3e7e8764886c1cf1bb00719b8d055"
+      "sha256": "da8ee38c1f91cad7b0a99eb7a27e91e4bb3453e88c477a7c9c5e73ba6b3f17e5"
     },
     {
       "repository": "server",
@@ -690,7 +738,7 @@
     {
       "repository": "server",
       "path": "src/command_handlers/left_click_npc_handler.py",
-      "sha256": "5b1f7c48b732872ceca19bdf26a49d9d1cf992f8065b6d0b6288fdc9bfd3de14"
+      "sha256": "a4c3ffc979f38373a91c7e473d800600a144cb7fdd7bc3d02989c05dacc593ac"
     },
     {
       "repository": "server",
@@ -955,7 +1003,7 @@
     {
       "repository": "server",
       "path": "src/repositories/npc_repository.py",
-      "sha256": "e300233b15c96bcd69c8c1206b89ca1307283d20a893599b82343567380819a9"
+      "sha256": "b96d94e5fc2e1ad61003237db57c3d53429a3e82f2972c7e8f599fdb17dbbfbf"
     },
     {
       "repository": "server",
@@ -1039,6 +1087,11 @@
     },
     {
       "repository": "server",
+      "path": "src/services/lottery/service.py",
+      "sha256": "7e3a47c9c2e77e69d11866d2bd7c4670b7c4a514d316bf588e754d8db5234ed4"
+    },
+    {
+      "repository": "server",
       "path": "src/services/map/map_transition_steps.py",
       "sha256": "044226d56a76acf63f88dbf5949f4ceef8fbc81ced131ac2d2664aeec5168d78"
     },
@@ -1105,12 +1158,12 @@
     {
       "repository": "server",
       "path": "src/services/world/actions.py",
-      "sha256": "678eab479b480d1f1fc6555ffd23503467966a4575e63717013c1ad246d2b9b5"
+      "sha256": "be3f03429b97bc6559e0372d3b5c9f255c427f20b29a88c38be82265516e800f"
     },
     {
       "repository": "server",
       "path": "src/services/world/world_state.py",
-      "sha256": "8d86e2c19fa71ae6adbbdea5240ecff536b19a5645dd7b80c13c89cbd07bb5fe"
+      "sha256": "34357c5922c821d9972cf095fe41ec6665da96f4fd32fc5eeca3131d9a9f6bba"
     },
     {
       "repository": "server",
@@ -1450,7 +1503,7 @@
     {
       "repository": "server",
       "path": "src/utils/resource_transaction.py",
-      "sha256": "141b9347cc8ca3f4f3f3157666dbb5d0c6311e379a05574290bef7077584d9b7"
+      "sha256": "31b67f62bb6f3fbc732b4c00a5cd621337e10ec7538b17bb913483a87f00230d"
     }
   ],
   "packets": [
@@ -3087,7 +3140,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 379,
+          "line": 389,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -5940,7 +5993,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 410,
+          "line": 420,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -23835,8 +23888,8 @@
         {
           "repository": "server",
           "path": "src/command_handlers/left_click_npc_handler.py",
-          "line": 67,
-          "end_line": 169,
+          "line": 72,
+          "end_line": 174,
           "symbol": "_handle_merchant_click"
         },
         {
@@ -23941,7 +23994,7 @@
         {
           "repository": "client",
           "path": "tests/r10_client.gd",
-          "line": 349,
+          "line": 359,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -24018,8 +24071,8 @@
         {
           "repository": "server",
           "path": "src/command_handlers/left_click_npc_handler.py",
-          "line": 171,
-          "end_line": 233,
+          "line": 176,
+          "end_line": 238,
           "symbol": "_handle_banker_click"
         },
         {
@@ -25482,8 +25535,8 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 134,
-          "end_line": 150,
+          "line": 137,
+          "end_line": 153,
           "symbol": "publish_legacy_tax"
         }
       ],
@@ -25630,8 +25683,8 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 134,
-          "end_line": 150,
+          "line": 137,
+          "end_line": 153,
           "symbol": "publish_legacy_tax"
         }
       ],
@@ -38207,6 +38260,13 @@
       "production_callers": [
         {
           "repository": "server",
+          "path": "src/command_handlers/left_click_npc_handler.py",
+          "line": 45,
+          "end_line": 70,
+          "symbol": "handle_npc_click"
+        },
+        {
+          "repository": "server",
           "path": "src/messaging/senders/message_player_stats_sender.py",
           "line": 42,
           "end_line": 53,
@@ -38222,22 +38282,22 @@
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 189,
-          "end_line": 212,
+          "line": 194,
+          "end_line": 217,
           "symbol": "publish"
         },
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 214,
-          "end_line": 230,
+          "line": 219,
+          "end_line": 235,
           "symbol": "publish_trade"
         },
         {
           "repository": "server",
           "path": "src/services/world/world_state.py",
-          "line": 232,
-          "end_line": 275,
+          "line": 237,
+          "end_line": 280,
           "symbol": "execute"
         },
         {
@@ -38473,35 +38533,35 @@
           "repository": "server",
           "path": "src/repositories/npc_repository.py",
           "line": 37,
-          "end_line": 229,
+          "end_line": 235,
           "symbol": "create_npc_instance"
         },
         {
           "repository": "server",
           "path": "src/repositories/npc_repository.py",
-          "line": 330,
-          "end_line": 336,
+          "line": 336,
+          "end_line": 342,
           "symbol": "_read_many"
         },
         {
           "repository": "server",
           "path": "src/repositories/npc_repository.py",
-          "line": 338,
-          "end_line": 357,
+          "line": 344,
+          "end_line": 363,
           "symbol": "_prune_owner_index"
         },
         {
           "repository": "server",
           "path": "src/repositories/npc_repository.py",
-          "line": 495,
-          "end_line": 527,
+          "line": 501,
+          "end_line": 533,
           "symbol": "_write_membership"
         },
         {
           "repository": "server",
           "path": "src/repositories/npc_repository.py",
-          "line": 529,
-          "end_line": 552,
+          "line": 535,
+          "end_line": 558,
           "symbol": "clear_all_npcs"
         },
         {
@@ -38625,6 +38685,13 @@
         },
         {
           "repository": "server",
+          "path": "src/services/lottery/service.py",
+          "line": 35,
+          "end_line": 83,
+          "symbol": "snapshot"
+        },
+        {
+          "repository": "server",
           "path": "src/services/map/map_transition_steps.py",
           "line": 294,
           "end_line": 320,
@@ -38675,8 +38742,8 @@
         {
           "repository": "server",
           "path": "src/utils/resource_transaction.py",
-          "line": 155,
-          "end_line": 254,
+          "line": 163,
+          "end_line": 269,
           "symbol": "transact"
         }
       ],
@@ -43735,7 +43802,7 @@
     {
       "direction": "client_to_server",
       "id": 248,
-      "subtype": "party.read",
+      "subtype": "lottery.read",
       "fields": {},
       "requires_capability": 512,
       "status": "negotiated_extension",
@@ -43743,6 +43810,40 @@
         "repository": "server",
         "path": "src/services/world/actions.py",
         "line": 12,
+        "symbol": "ACTION_FIELDS"
+      },
+      "dynamic_verification": "not_credited_by_static_analysis"
+    },
+    {
+      "direction": "client_to_server",
+      "id": 248,
+      "subtype": "lottery.bet",
+      "fields": {
+        "round": "str",
+        "npc": "str",
+        "gross": "int"
+      },
+      "requires_capability": 512,
+      "status": "negotiated_extension",
+      "schema": {
+        "repository": "server",
+        "path": "src/services/world/actions.py",
+        "line": 13,
+        "symbol": "ACTION_FIELDS"
+      },
+      "dynamic_verification": "not_credited_by_static_analysis"
+    },
+    {
+      "direction": "client_to_server",
+      "id": 248,
+      "subtype": "party.read",
+      "fields": {},
+      "requires_capability": 512,
+      "status": "negotiated_extension",
+      "schema": {
+        "repository": "server",
+        "path": "src/services/world/actions.py",
+        "line": 14,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43759,7 +43860,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 13,
+        "line": 15,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43774,7 +43875,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 14,
+        "line": 16,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43789,7 +43890,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 15,
+        "line": 17,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43804,7 +43905,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 16,
+        "line": 18,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43822,7 +43923,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 17,
+        "line": 19,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43837,7 +43938,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 18,
+        "line": 20,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43854,7 +43955,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 19,
+        "line": 21,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43871,7 +43972,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 20,
+        "line": 22,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43888,7 +43989,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 21,
+        "line": 23,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43903,7 +44004,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 22,
+        "line": 24,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43920,7 +44021,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 23,
+        "line": 25,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43937,7 +44038,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 24,
+        "line": 26,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43955,7 +44056,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 25,
+        "line": 27,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43972,7 +44073,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 26,
+        "line": 28,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -43987,7 +44088,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 27,
+        "line": 29,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44002,7 +44103,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 28,
+        "line": 30,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44017,7 +44118,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 29,
+        "line": 31,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44034,7 +44135,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 30,
+        "line": 32,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44051,7 +44152,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 31,
+        "line": 33,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44068,7 +44169,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 32,
+        "line": 34,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44085,7 +44186,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 33,
+        "line": 35,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44103,7 +44204,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 34,
+        "line": 36,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44120,7 +44221,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 35,
+        "line": 37,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44139,7 +44240,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 36,
+        "line": 38,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
@@ -44158,7 +44259,7 @@
       "schema": {
         "repository": "server",
         "path": "src/services/world/actions.py",
-        "line": 37,
+        "line": 39,
         "symbol": "ACTION_FIELDS"
       },
       "dynamic_verification": "not_credited_by_static_analysis"
