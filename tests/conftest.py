@@ -8,7 +8,8 @@ import pytest
 import pytest_asyncio
 from fakeredis import aioredis
 
-from src.items import ledger
+from src.items import ledger, migration
+from src.utils import resource_transaction
 from src.utils.redis_client import RedisClient
 
 
@@ -109,6 +110,13 @@ async def redis_client() -> RedisClient:
 def fake_item_ledger_reader(monkeypatch):
     """Reproduce el lector Lua únicamente en fakeredis; la integración usa Redis real."""
     original = ledger.read_states
+    original_enqueue = migration._enqueue_migration
+
+    def enqueue(pipe, resources, snapshot, writes):
+        if pipe.connection_pool.connection_class.__module__.startswith("fakeredis"):
+            resource_transaction._enqueue_writes(pipe, {r.key: r for r in resources}, writes)
+        else:
+            original_enqueue(pipe, resources, snapshot, writes)
 
     async def read(pipe, keys):
         if not pipe.connection_pool.connection_class.__module__.startswith("fakeredis"):
@@ -124,3 +132,4 @@ def fake_item_ledger_reader(monkeypatch):
         return result
 
     monkeypatch.setattr(ledger, "read_states", read)
+    monkeypatch.setattr(migration, "_enqueue_migration", enqueue)

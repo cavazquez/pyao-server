@@ -156,7 +156,7 @@ class SpellPlan:
             snapshot, request.user_id, self.base_policy, target=request.target_player
         )
         book = values[RedisKeys.player_spellbook(request.user_id)]
-        error = self._validate_caster(values, source, position, book)
+        error = self._validate_caster(snapshot, source, position, book)
         error = error or combat_rejection(
             snapshot, request.user_id, request.target_player, self.spell
         )
@@ -379,7 +379,7 @@ class SpellPlan:
 
     def _validate_caster(
         self,
-        values: dict[str, dict[str, str]],
+        snapshot: Snapshot,
         source: dict[str, str],
         position: dict[str, str],
         book: dict[str, str],
@@ -406,17 +406,19 @@ class SpellPlan:
             > MAX_RANGE
         ):
             return "El objetivo está demasiado lejos."
-        if skill_progress(values[RedisKeys.player_skills(request.user_id)])[0].level < int(
-            self.spell.get("min_skill", 0)
-        ):
+        if skill_progress(
+            cast("dict[str, str]", snapshot[RedisKeys.player_skills(request.user_id)])
+        )[0].level < int(self.spell.get("min_skill", 0)):
             return "No tienes suficiente magia."
         if int(source.get("min_mana", 0)) < int(self.spell.get("mana_cost", 0)):
             return "No tienes suficiente mana."
         if int(source.get("min_sta", 0)) < int(self.spell.get("stamina_cost", 3)):
             return "No tienes suficiente energía."
         if self.spell.get("need_staff"):
-            equipped = values[RedisKeys.player_equipment(request.user_id)]
-            inventory = values[RedisKeys.player_inventory(request.user_id)]
+            equipped = cast("dict[str, str]", snapshot[RedisKeys.player_equipment(request.user_id)])
+            inventory = cast(
+                "dict[str, str]", snapshot[RedisKeys.player_inventory(request.user_id)]
+            )
             from src.utils.inventory_slot import InventorySlot  # ruff: ignore[import-outside-top-level]
 
             foci = [
@@ -426,7 +428,7 @@ class SpellPlan:
             if not any(
                 item is not None
                 and item.item_id in self.staff_items
-                and (not item.instance_ids or not item_broken(values, item.instance_ids[0]))
+                and (not item.instance_ids or not item_broken(snapshot, item.instance_ids[0]))
                 for item in foci
             ):
                 return "Necesitas un bastón o foco mágico equipado."

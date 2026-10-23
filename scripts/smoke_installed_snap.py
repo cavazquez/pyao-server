@@ -31,7 +31,8 @@ def wait_for_tls(process: subprocess.Popen[bytes], port: int, cert: Path) -> Non
     """Espera un PONG del servidor instalado mediante una conexión TLS verificada."""
     context = ssl.create_default_context(cafile=cert)
     context.minimum_version = ssl.TLSVersion.TLSv1_2
-    deadline = time.monotonic() + 90
+    # El primer arranque migra el stock completo antes de admitir conexiones.
+    deadline = time.monotonic() + 240
     while time.monotonic() < deadline:
         if process.poll() is not None:
             raise RuntimeError(f"El Snap terminó antes de abrir TLS: {process.returncode}")
@@ -44,7 +45,7 @@ def wait_for_tls(process: subprocess.Popen[bytes], port: int, cert: Path) -> Non
                     return
         except ConnectionError, TimeoutError:
             time.sleep(0.2)
-    raise TimeoutError("El Snap no abrió TLS en 90 segundos")
+    raise TimeoutError("El Snap no abrió TLS en 240 segundos")
 
 
 def signal_snap(process: subprocess.Popen[bytes], value: signal.Signals) -> None:

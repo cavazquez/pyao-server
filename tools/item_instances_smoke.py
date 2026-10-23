@@ -19,7 +19,8 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 from src.items import ledger
 from src.items.condition import condition
 from src.items.ground_gc import BATCH_SIZE, QUEUE_KEY, RETIRED_TTL_SECONDS, collect
-from src.items.migration import migrate
+from src.items.migration import BOOTSTRAP_SOCKET_TIMEOUT, migrate
+from src.items.policy import individual
 from src.items.view import pages
 from src.models.item_catalog import ItemCatalog
 from src.models.skill_data_loader import SKILL_RULES_KEY
@@ -315,6 +316,73 @@ async def load(redis: Redis, count: int) -> dict[str, Any]:
     }
 
 
+async def catalog_migration(redis: Redis) -> dict[str, Any]:
+    """Comprueba el stock inicial real, también con lotes de miles de ejemplares.
+
+    Returns:
+        Cantidades, conservación, época y tiempo del primer arranque completo.
+    """
+    await redis.flushdb()
+    merchants = tomllib.loads((data_dir() / "npcs/merchants.toml").read_text())["merchant"]
+    originals = {
+        f"merchant:{index}:inventory": {
+            f"slot_{slot}": f"{item['item_id']}:{item['quantity']}"
+            for slot, item in enumerate(merchant["item"], 1)
+        }
+        for index, merchant in enumerate(merchants, 1)
+    }
+    async with redis.pipeline(transaction=False) as pipe:
+        for key, original in originals.items():
+            pipe.hset(key, mapping=original)
+        await pipe.execute()
+    start = time.perf_counter()
+    count = await migrate(redis)
+    elapsed = time.perf_counter() - start
+    assert redis.connection_pool.connection_kwargs["socket_timeout"] == 5
+    epoch = await redis.get("items:migration:epoch")
+    expected_ids: set[str] = set()
+    expected_units = 0
+    for key, original in originals.items():
+        assert json.loads(await redis.get("items:migration:backup:" + key)) == original
+        migrated = await redis.hgetall(key)
+        for field, raw in original.items():
+            before, after = InventorySlot.parse(raw), InventorySlot.parse(migrated[field])
+            assert before is not None and after is not None
+            assert (before.item_id, before.quantity) == (after.item_id, after.quantity)
+            if not individual(before.item_id):
+                continue
+            assert len(after.instance_ids) == before.quantity
+            expected_units += before.quantity
+            expected_ids.update(after.instance_ids)
+            for iid in {
+                after.instance_ids[0],
+                after.instance_ids[len(after.instance_ids) // 2],
+                after.instance_ids[-1],
+            }:
+                state = await redis.hgetall(ledger.PREFIX + iid)
+                assert state["id"] == iid and state["item_id"] == str(before.item_id)
+                assert state["location"] == key + "|" + field
+                assert state["created_at"] == epoch and state["uses_spent"] == "0"
+    actual = {
+        key.removeprefix(ledger.PREFIX)
+        async for key in redis.scan_iter(match=ledger.PREFIX + "*", count=5000)
+    }
+    assert actual == expected_ids and len(actual) == expected_units
+    assert await migrate(redis) == 0
+    return {
+        "merchant_containers": count,
+        "individual_objects": expected_units,
+        "migration_seconds": round(elapsed, 3),
+        "all_identities_present": True,
+        "legacy_stock_preserved": True,
+        "original_backups_preserved": True,
+        "fixed_birth_epoch": True,
+        "rerun_is_idempotent": True,
+        "runtime_socket_timeout_seconds": 5,
+        "bootstrap_socket_timeout_seconds": BOOTSTRAP_SOCKET_TIMEOUT,
+    }
+
+
 def main() -> None:
     """Crea y destruye sus propios contenedor, volumen y credenciales."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -350,6 +418,12 @@ def main() -> None:
                 return [await load(redis, count) for count in (1000, 100000)]
 
         result["load"] = asyncio.run(benchmark())
+
+        async def initial_stock() -> dict[str, Any]:
+            async with Redis(**settings, socket_timeout=5, socket_connect_timeout=5) as redis:
+                return await catalog_migration(redis)
+
+        result["full_catalog_migration"] = asyncio.run(initial_stock())
         (args.output / "redis-items.json").write_text(json.dumps(result, indent=2) + "\n")
     print("ITEM_INSTANCES: PASS")
 
