@@ -245,7 +245,7 @@
             "name": "slot",
             "type": "u8",
             "min": 0,
-            "max": 30
+            "max": 31
           },
           {
             "name": "quantity",
