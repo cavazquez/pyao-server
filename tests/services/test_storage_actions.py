@@ -20,6 +20,7 @@ from src.services.bank_item_transfer import transfer_bank_item
 from src.services.world.bank import BankState
 from src.services.world.clan_profile import update_profile
 from src.utils.gold_atomic import operation_id
+from src.utils.slot_plan import SlotPlan
 
 
 @pytest.fixture(scope="module")
@@ -206,14 +207,39 @@ async def test_city_banker_without_hp_is_available_but_dead_attackable_npc_is_no
 
 
 @pytest.mark.asyncio
-async def test_deposit_invalidates_old_bank_revision(storage):
-    """Deposit invalidates old bank revision."""
+@pytest.mark.parametrize("direction", ["deposit", "withdraw"])
+async def test_bank_transfer_invalidates_old_bank_revision(storage, direction):
+    """Ni un depósito ni una extracción permiten reutilizar la revisión previa."""
     request = await move_request(storage)
     await storage.redis.hset("player:1:inventory", "slot_1", "1:4")
-    result = await transfer_bank_item(storage.redis, 1, 1, 4, "deposit", operation_id())
+    result = await transfer_bank_item(storage.redis, 1, 1, 4, direction, operation_id())
     assert result["applied"]
     assert not (await storage.bank.move(1, storage.sender, request))["applied"]
-    assert await storage.redis.hget("bank:1:vault", "slot_1") == "1:9"
+    expected = "1:9" if direction == "deposit" else "1:1"
+    assert await storage.redis.hget("bank:1:vault", "slot_1") == expected
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("direction", ["deposit", "withdraw"])
+async def test_bank_move_competes_with_transfer_without_losing_or_duplicating(storage, direction):
+    """WATCH reintenta el estado vigente cuando depósito/extracción y drag compiten."""
+    await storage.redis.hset("player:1:inventory", "slot_1", "1:4")
+    request = await move_request(storage)
+    transfer_id = operation_id()
+    _, transfer = await asyncio.gather(
+        storage.bank.move(1, storage.sender, request),
+        transfer_bank_item(storage.redis, 1, 1, 1, direction, transfer_id),
+    )
+    keys = ("bank:1:vault", "player:1:inventory")
+    after = [await storage.redis.hgetall(key) for key in keys]
+    amounts = {}
+    for raw in after:
+        for item in SlotPlan(raw, 40, 32767).slots.values():
+            amounts[item.item_id] = amounts.get(item.item_id, 0) + item.quantity
+    assert amounts == {1: 9, 2: 3}
+    assert await transfer_bank_item(storage.redis, 1, 1, 1, direction, transfer_id) == transfer
+    await storage.bank.move(1, storage.sender, request)
+    assert [await storage.redis.hgetall(key) for key in keys] == after
 
 
 @pytest.mark.asyncio

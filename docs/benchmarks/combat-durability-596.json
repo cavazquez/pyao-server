@@ -820,41 +820,65 @@
       "sample": "combat-2-0.1-0",
       "changed_runtime_inputs_since_trial": [
         "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
       ]
     },
     {
       "sample": "combat-2-0.1-1",
       "changed_runtime_inputs_since_trial": [
         "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
       ]
     },
     {
       "sample": "combat-2-1.5-0",
       "changed_runtime_inputs_since_trial": [
         "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
       ]
     },
     {
       "sample": "combat-2-1.5-1",
       "changed_runtime_inputs_since_trial": [
         "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
       ]
     },
     {
       "sample": "combat-8-0.1-0",
-      "changed_runtime_inputs_since_trial": []
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
     },
     {
       "sample": "combat-8-0.1-1",
-      "changed_runtime_inputs_since_trial": []
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
     },
     {
       "sample": "combat-8-1.5-0",
-      "changed_runtime_inputs_since_trial": []
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
     },
     {
       "sample": "combat-8-1.5-1",
-      "changed_runtime_inputs_since_trial": []
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
     }
   ],
   "diagnostic_profile_only": {
@@ -1153,6 +1177,7 @@
     "First 2-client runs predate the zero-HP invulnerable banker fix; the combat/transport/config runtime hashes match. All 8-client trials and final stage profile match current runtime inputs.",
     "CPU is measured after login/startup and is process CPU time divided by elapsed sample time. RSS sampled each 0.5 seconds.",
     "Stage timings include startup/warmup when the same stage executes there. Combat-only stages and cadence are separately named; diagnostic timings never replace ordinary trial percentiles.",
-    "The existing --profile CPU-profiler run exceeded its 120-second initialization limit on this free-threaded interpreter. --stage-profile completed separately; no CPU-profiler timings are credited."
+    "The existing --profile CPU-profiler run exceeded its 120-second initialization limit on this free-threaded interpreter. --stage-profile completed separately; no CPU-profiler timings are credited.",
+    "Operational test helpers under src/operations are listed separately: the password-change smoke now waits the existing one-second status-query interval. These helpers are not imported by the server runtime."
   ]
 }

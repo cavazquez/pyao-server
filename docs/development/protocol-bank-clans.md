@@ -158,3 +158,6 @@ con líder y miembro, prueba conflicto de borrador y cambio de líder, rechaza a
 exlíder y reinicia el servidor. Usa dos Godot, TLS, audio real y Redis propio.
 Su ejecución corta es una regresión funcional, no una nueva aceptación prolongada
 de 30 minutos ni una publicación de distribuciones.
+
+El [registro de validación de esta tanda](../audits/protocol-bank-clans-2026-10-22/README.md)
+conserva los 25 escenarios, capturas, resultados y hashes contrastados con Git.
