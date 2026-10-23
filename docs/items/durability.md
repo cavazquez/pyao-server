@@ -91,6 +91,12 @@ seguro después de haber admitido transacciones nuevas.
 - `uv run python tools/item_instances_smoke.py --output artifacts/items`:
   Redis Docker descartable con AOF, concurrencia, ACK perdido, reinicio,
   limpieza acotada del suelo, 1.000 y 100.000 objetos. Nunca usa el Redis del operador.
+  Dos atacantes reales compiten por un blanco, se liquida concurrentemente una
+  muerte y el reinicio conserva usos e identidad del equipo caído. El JSON mide
+  memoria, CPU del migrador/Redis, AOF antes/después y latencias de treinta
+  lecturas de veinte slots para cada formato. La lectura actual incluye
+  condición y coherencia; la base registra el hash de existencias. El AOF mide
+  el log acumulado antes/después de migrar, con su historial de escrituras.
 - Cliente: `tools/integration-world.py --scenario durable-items` ejercita
   equipo en dos observadores, banco/suelo, vencimiento equipado, combate y
   recolección. El modo `--client-audio PulseAudio` usa salida real.
