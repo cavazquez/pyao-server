@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from src.services.multiplayer_broadcast_service import MultiplayerBroadcastService
 
 from src.runtime_paths import data_dir
+from src.utils.gold_atomic import operation_id
 from src.utils.redis_config import RedisKeys
 
 NPC_FORBIDDEN_TRIGGER = 3
@@ -75,6 +76,7 @@ class NPCService:
         self.broadcast_service = broadcast_service
         self._next_char_index = 10001  # CharIndex inicial para NPCs
         self._spawn_entries: list[dict[str, Any]] = []
+        self._moving_npcs: set[str] = set()
 
         NPCService._initialized = True
         NPCService._instance = self
@@ -506,6 +508,8 @@ class NPCService:
             new_y: Nueva posición Y.
             new_heading: Nueva dirección.
         """
+        if npc.instance_id in self._moving_npcs:
+            return
         if not self.map_manager.can_move_to(npc.map_id, new_x, new_y):
             reason = self.map_manager.get_tile_block_reason(npc.map_id, new_x, new_y)
             logger.info(
@@ -519,45 +523,60 @@ class NPCService:
                 reason,
             )
             return
-        # Actualizar en Redis
-        await self.npc_repository.update_npc_position(npc.instance_id, new_x, new_y, new_heading)
-
-        # Actualizar en memoria
         if (
             self.map_manager.tile_overrides.get((npc.map_id, new_x, new_y), {}).get("trigger")
             == NPC_FORBIDDEN_TRIGGER
         ):
             return
-        old_x = npc.x
-        old_y = npc.y
-        npc.x = new_x
-        npc.y = new_y
-        npc.heading = new_heading
-        # El seguimiento lee copias desde Redis. Sin actualizar el actor vivo,
-        # los siguientes spawns/clics usan la posición vieja y el remove deja
-        # ocupado el último tile, aunque Redis ya haya eliminado la mascota.
-        live = self.map_manager.get_npc_by_char_index(npc.map_id, npc.char_index)
-        if live is not None and live.instance_id == npc.instance_id:
-            live.x, live.y, live.heading = new_x, new_y, new_heading
+        identity = operation_id()
+        try:
+            self.map_manager.reserve_positions(identity, npc.map_id, [(new_x, new_y)])
+        except ValueError:
+            return
+        self._moving_npcs.add(npc.instance_id)
+        try:
+            # Actualizar en Redis
+            await self.npc_repository.update_npc_position(
+                npc.instance_id, new_x, new_y, new_heading
+            )
 
-        # Actualizar índice espacial
-        self.map_manager.update_npc_tile(npc.instance_id, npc.map_id, old_x, old_y, new_x, new_y)
+            # Actualizar en memoria
+            old_x = npc.x
+            old_y = npc.y
+            npc.x = new_x
+            npc.y = new_y
+            npc.heading = new_heading
+            # El seguimiento lee copias desde Redis. Sin actualizar el actor vivo,
+            # los siguientes spawns/clics usan la posición vieja y el remove deja
+            # ocupado el último tile, aunque Redis ya haya eliminado la mascota.
+            live = self.map_manager.get_npc_by_char_index(npc.map_id, npc.char_index)
+            if live is not None and live.instance_id == npc.instance_id:
+                live.x, live.y, live.heading = new_x, new_y, new_heading
 
-        # Broadcast CHARACTER_MOVE a jugadores cercanos
-        await self.broadcast_service.broadcast_character_move(
-            npc.map_id, npc.char_index, new_x, new_y, new_heading, old_x, old_y
-        )
+            # Actualizar índice espacial
+            self.map_manager.update_npc_tile(
+                npc.instance_id, npc.map_id, old_x, old_y, new_x, new_y
+            )
 
-        logger.debug(
-            "NPC movido: %s (inst:%s) de (%d,%d) a (%d,%d) heading=%d",
-            npc.name,
-            npc.instance_id,
-            old_x,
-            old_y,
-            new_x,
-            new_y,
-            new_heading,
-        )
+            # Broadcast CHARACTER_MOVE a jugadores cercanos
+            await self.broadcast_service.broadcast_character_move(
+                npc.map_id, npc.char_index, new_x, new_y, new_heading, old_x, old_y
+            )
+
+            logger.debug(
+                "NPC movido: %s (inst:%s) de (%d,%d) a (%d,%d) heading=%d",
+                npc.name,
+                npc.instance_id,
+                old_x,
+                old_y,
+                new_x,
+                new_y,
+                new_heading,
+            )
+
+        finally:
+            self._moving_npcs.discard(npc.instance_id)
+            self.map_manager.release_positions(identity, (npc.map_id, new_x, new_y))
 
     async def send_npcs_in_map(self, map_id: int, message_sender: MessageSender) -> None:
         """Envía CHARACTER_CREATE de todos los NPCs en un mapa a un jugador.
