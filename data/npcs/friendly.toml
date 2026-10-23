@@ -3042,3 +3042,22 @@ oro_max = 0
 respawn_time = 0
 respawn_time_max = 0
 es_banquero = true
+
+[[npc]]
+id = 950
+role = "lottery"
+appearance = { sounds = [0, 0, 0], sounds_source = "PyAO: puesto de lotería, silencio explícito", silent_intentionally = true }
+nombre = "Lotero de Ullathorpe"
+descripcion = "Acercate para participar. Comisión del 1%, probabilidad proporcional al aporte neto y sorteos cada cinco minutos desde la primera apuesta."
+body_id = 501
+head_id = 1
+es_hostil = false
+es_atacable = false
+nivel = 0
+hp_max = 100
+oro_min = 0
+oro_max = 0
+ataque = 0
+loot_profile = "none"
+respawn_time = 0
+respawn_time_max = 0

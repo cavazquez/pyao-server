@@ -187,6 +187,12 @@ class CadenceConfig(BaseModel):
     cast_seconds: float = Field(default=1.0, ge=0.01, le=10.0)
 
 
+class LotteryConfig(BaseModel):
+    """Plazo de la ronda; la primera apuesta inicia el reloj autoritativo."""
+
+    round_seconds: int = Field(default=300, ge=10, le=86400)
+
+
 class GameConfigSection(BaseModel):
     """Sección de configuración del juego."""
 
@@ -208,6 +214,7 @@ class GameConfigSection(BaseModel):
     hunger_thirst: HungerThirstConfig = Field(default_factory=HungerThirstConfig)
     gold_decay: GoldDecayConfig = Field(default_factory=GoldDecayConfig)
     tax: GoldTaxConfig = Field(default_factory=GoldTaxConfig)
+    lottery: LotteryConfig = Field(default_factory=LotteryConfig)
     inventory: InventoryConfig = Field(default_factory=InventoryConfig)
     bank: BankConfig = Field(default_factory=BankConfig)
     character: CharacterConfig = Field(default_factory=CharacterConfig)

@@ -166,6 +166,11 @@ Instalar la misma versión de producto en ambos proyectos. La configuración y l
 archivos del servidor Snap se conservan en `SNAP_USER_COMMON`; la partida sigue
 en Redis. Ver [instalación y actualización Snap](docs/guides/SNAP.md).
 
+El operador puede consultar `pyao.pyao-server --redis-guide` para preparar Redis
+local/remoto y la GUI opcional Redis Insight. `--check-redis` comprueba conexión,
+versión y AOF sin modificar datos: [puesta en marcha](docs/operations/redis-setup.md).
+El cliente no requiere instalar esas herramientas.
+
 Las publicaciones reutilizan artefactos probados del mismo commit, comprueban
 sus SHA256 y conservan recibos. El publicador espera automáticamente la
 visibilidad de borradores nuevos: [publicación](docs/release-uploader.md).

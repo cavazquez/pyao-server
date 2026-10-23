@@ -87,7 +87,7 @@ class NPC:
     def show_name(self) -> bool:
         """Indica si es un habitante amistoso con nombre visible en el mapa."""
         return (
-            self.role in {"inhabitant", "guard"}
+            self.role in {"inhabitant", "guard", "lottery"}
             and not self.is_hostile
             and not self.is_tamed
             and not self.summoned_by_user_id

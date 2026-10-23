@@ -19,6 +19,7 @@ from src.network.msg_player_stats import (
 from src.network.state_channel import send_state
 from src.services.classic_chat.maintenance import ClassicMaintenance
 from src.services.expansion.service import EXPANSION_TOPICS, ExpansionService
+from src.services.lottery.service import LotteryService
 from src.services.world.actions import TOPICS, clan_action, party_action
 from src.services.world.commands import command_snapshot
 from src.services.world.pets import PetOrders
@@ -40,7 +41,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 PUBLISH_SECONDS = 1
-VOLATILE_FIELDS = frozenset({"hp", "max_hp", "map"})
+VOLATILE_FIELDS = frozenset({"hp", "max_hp", "map", "server_time"})
 
 
 def _digest(data: dict[str, Any], *, volatile: bool = True) -> str:
@@ -72,6 +73,7 @@ class WorldStateService:
         self.weather = WeatherState(deps)
         self.classic_maintenance = ClassicMaintenance(deps)
         self.expansion = ExpansionService(deps)
+        self.lottery = LotteryService(deps)
         self.cache: dict[tuple[str, str], str] = {}
         self.legacy_revisions: dict[str, int] = {}
         self.legacy_receipts: dict[str, str] = {}
@@ -98,6 +100,7 @@ class WorldStateService:
     async def _run(self) -> None:
         while True:
             try:
+                await self.lottery.repo.advance()
                 async with self.lock:
                     await self.classic_maintenance.tick()
             except RedisError, ValueError, RuntimeError, ConnectionError:
@@ -156,8 +159,8 @@ class WorldStateService:
             del self.expansion.queries[key]
         if not sender.connection.capabilities.enabled & Capability.WORLD_STATE:
             return
-        sender.connection.state_topics.update({"tax", "weather"})
-        for topic in ("tax", "weather", "commands"):
+        sender.connection.state_topics.update({"tax", "weather", "lottery"})
+        for topic in ("tax", "weather", "commands", "lottery"):
             await self.publish(user, topic, force=True)
 
     async def snapshot(self, user: int, topic: str, page: int = 0) -> dict[str, Any]:
@@ -171,6 +174,8 @@ class WorldStateService:
         """
         if topic == "tax":
             return await tax_status(self.deps.redis_client.redis, user)
+        if topic == "lottery":
+            return await self.lottery.snapshot(user)
         if topic in EXPANSION_TOPICS:
             return await self.expansion.snapshot(user, topic)
         if topic == "party":
@@ -276,6 +281,21 @@ class WorldStateService:
 
     async def _mutate(self, user: int, request: dict[str, Any], revision: str) -> dict[str, Any]:
         action, params, identity = request["action"], request["params"], request["id"]
+        # El recibo económico resuelve reintentos aun después de cerrar la ronda.
+        # No usar la reserva efímera genérica ui-action para operaciones monetarias.
+        if action == "lottery.bet":
+            try:
+                return await self.lottery.bet(user, request)
+            except RedisError, RuntimeError:
+                logger.exception("Confirmación de apuesta pendiente user_id=%d", user)
+                return {
+                    "applied": False,
+                    "uncertain": True,
+                    "message": (
+                        "Apuesta pendiente: reintentá la misma operación "
+                        "para recuperar el comprobante."
+                    ),
+                }
         redis = self.deps.redis_client.redis
         key = f"ui-action:{user}:{identity}"
         fingerprint = _digest(request)

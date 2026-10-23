@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "issues": [
+    571,
+    572,
+    573,
+    574,
+    575,
+    576
+  ],
+  "samples": 200000,
+  "fixture_seed": 576,
+  "expected_first": 0.25,
+  "wins_first": 49742,
+  "observed_first": 0.24871,
+  "observed_normal_95_interval": [
+    0.2468155135587798,
+    0.2506044864412202
+  ],
+  "production_seed_source": "secrets.token_hex(32); PRNG used only by this fixture",
+  "algorithm": "HMAC-SHA256 with rejection sampling; cumulative net intervals",
+  "vector": {
+    "seed": "0000000000000000000000000000000000000000000000000000000000000000",
+    "commitment": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925",
+    "round": "11111111111111111111111111111111",
+    "snapshot_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+    "pool": 396,
+    "number": 61,
+    "winner": 1
+  },
+  "boundaries": [
+    {
+      "number": 0,
+      "winner": 1
+    },
+    {
+      "number": 98,
+      "winner": 1
+    },
+    {
+      "number": 99,
+      "winner": 2
+    },
+    {
+      "number": 395,
+      "winner": 2
+    }
+  ],
+  "limitations": [
+    "The deterministic simulation does not prove cryptographic fairness.",
+    "Persistence and live gameplay are exercised separately with owned Redis/AOF and two graphical Godot processes."
+  ]
+}

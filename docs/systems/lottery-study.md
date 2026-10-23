@@ -1,5 +1,9 @@
 # Lotería física de oro — estudio #403
 
+Nota posterior: la tanda #571–#576 implementa el diseño. Ver las reglas y
+operación vigentes en [lotería de Ullathorpe](lottery.md); el texto siguiente
+conserva la propuesta previa y sus decisiones.
+
 Recomendación: viable con un NPC amistoso de ciudad, apuestas enteras, pozo en
 Redis y liquidación durable. No habilitarla en esta versión. `/APOSTAR` continúa
 siendo el casino clásico, con reglas separadas; no comparte pozo ni probabilidades.

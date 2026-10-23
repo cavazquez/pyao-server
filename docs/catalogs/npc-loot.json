@@ -2,7 +2,7 @@
   "version": 2,
   "items_total": 1078,
   "eligible": 494,
-  "npcs_total": 336,
+  "npcs_total": 337,
   "profiles": {
     "humanoid": {
       "gold_probability": 0.85,
@@ -1511,7 +1511,8 @@
     {"id": 920, "name": "Bandido Pretoriano", "level": 65, "profile": "humanoid", "species_material": 0, "gold_probability": 0.85, "gold_range": [350, 800], "no_loot_reason": null},
     {"id": 921, "name": "Bandido Pretoriano", "level": 65, "profile": "humanoid", "species_material": 0, "gold_probability": 0.85, "gold_range": [350, 800], "no_loot_reason": null},
     {"id": 922, "name": "Ladrón Pretoriano", "level": 38, "profile": "boss", "species_material": 0, "gold_probability": 0.95, "gold_range": [100, 300], "no_loot_reason": null},
-    {"id": 923, "name": "Ladrón Pretoriano", "level": 38, "profile": "boss", "species_material": 0, "gold_probability": 0.95, "gold_range": [100, 300], "no_loot_reason": null}
+    {"id": 923, "name": "Ladrón Pretoriano", "level": 38, "profile": "boss", "species_material": 0, "gold_probability": 0.95, "gold_range": [100, 300], "no_loot_reason": null},
+    {"id": 950, "name": "Lotero de Ullathorpe", "level": 0, "profile": "none", "species_material": 0, "gold_probability": 0.0, "gold_range": [0, 0], "no_loot_reason": "Perfil explícito sin recompensa"}
   ],
   "probabilities": {
     "humanoid": {
