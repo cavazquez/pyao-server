@@ -1,140 +1,152 @@
 {
   "baseline_commits": {
-    "server": "5a8614272e2032a3de4cacb32ba2be6cd373687d",
-    "client": "bbea62b2851918cd57da8fc77996873a629cd830"
+    "server": "9b3d107f429f29a91afebd1597e0391ceb0e036c",
+    "client": "784629bfae7b49845bafc7315dab0d1c823ea909"
   },
   "packets": {
     "client:18": {
-      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
-      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
         "TRADE_ACTION (252) / TRADE_STATE (252)"
-      ]
+      ],
+      "retired": true
     },
     "client:19": {
-      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
-      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
         "TRADE_ACTION (252) / TRADE_STATE (252)"
-      ]
+      ],
+      "retired": true
     },
     "client:22": {
-      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
-      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
         "TRADE_ACTION (252) / TRADE_STATE (252)"
-      ]
+      ],
+      "retired": true
     },
     "client:23": {
-      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
-      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
         "TRADE_ACTION (252) / TRADE_STATE (252)"
-      ]
+      ],
+      "retired": true
     },
     "client:48": {
-      "rationale": "La UI usa sesiones y revisiones explícitas del intercambio moderno. El handler legado no acredita que Godot emita ese opcode.",
-      "impact": "El comercio funciona por el transporte negociado; queda consolidar o retirar estas rutas antiguas.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
         "TRADE_ACTION (252) / TRADE_STATE (252)"
-      ]
+      ],
+      "retired": true
     },
     "server:9": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:10": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:11": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "El intercambio actual usa acciones y snapshots versionados; estos opcodes históricos no tienen ruta activa.",
+      "impact": "No se emiten ni aceptan; invitaciones, ofertas y confirmaciones usan TRADE_ACTION/TRADE_STATE.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:12": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "El intercambio actual usa acciones y snapshots versionados; estos opcodes históricos no tienen ruta activa.",
+      "impact": "No se emiten ni aceptan; invitaciones, ofertas y confirmaciones usan TRADE_ACTION/TRADE_STATE.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:84": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:86": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "El intercambio actual usa acciones y snapshots versionados; estos opcodes históricos no tienen ruta activa.",
+      "impact": "No se emiten ni aceptan; invitaciones, ofertas y confirmaciones usan TRADE_ACTION/TRADE_STATE.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "server:106": {
-      "rationale": "El panel de intercambio se gobierna con snapshots versionados. Las ramas de ventanas clásicas no son su UI efectiva.",
-      "impact": "No equivale a falta de comercio; los mensajes legados que aún se emiten requieren limpieza coordinada.",
+      "rationale": "El intercambio actual usa acciones y snapshots versionados; estos opcodes históricos no tienen ruta activa.",
+      "impact": "No se emiten ni aceptan; invitaciones, ofertas y confirmaciones usan TRADE_ACTION/TRADE_STATE.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/591"
       ],
       "replacement": [
-        "TRADE_STATE (252); susurro (5) para mensajes privados"
-      ]
+        "TRADE_ACTION (252) / TRADE_STATE (252); WHISPER cliente (5) y CONSOLE_MSG servidor (24) para mensajes privados"
+      ],
+      "retired": true
     },
     "client:31": {
       "rationale": "La ventana de crafting usa recetas y cantidades validadas con operación idempotente, no los opcodes VB6.",
@@ -335,13 +347,17 @@
       ]
     },
     "client:61": {
-      "rationale": "La consulta del clan existe, pero no se acredita una edición equivalente del sitio/noticias del clan.",
-      "impact": "El líder no dispone de la edición de ese campo desde el formulario actual.",
+      "rationale": "Operación implementada en el transporte negociado con validación, revisión y confirmación durable.",
+      "impact": "La UI usa el estado confirmado por el servidor; el opcode VB6 permanece retirado.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/593",
         "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
-      ]
+      ],
+      "replacement": [
+        "WORLD_ACTION clan.profile / WORLD_STATE clan"
+      ],
+      "partial": false
     },
     "client:66": {
       "rationale": "La información y elecciones disponibles usan el panel social y los comandos clásicos adaptados.",
@@ -695,8 +711,8 @@
       ]
     },
     "server:85": {
-      "rationale": "No hay emisor de BANK_OK y el dispatcher sólo contiene pass. Banco se confirma con sus snapshots y actualizaciones efectivas.",
-      "impact": "Ninguna operación bancaria depende de este ACK vacío; retirarlo de supported requiere el seguimiento de coherencia.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/590"
@@ -711,23 +727,24 @@
       "retired": true
     },
     "server:99": {
-      "rationale": "El servidor emite el ID en login, pero no hay rama receptora. GRUPO se crea desde el HUD y usa WORLD_ACTION.",
-      "impact": "Se envía una señal sin efecto y aparece el nombre del paquete en el diagnóstico; no significa que falten parties.",
+      "rationale": "Ruta histórica retirada del contrato y del runtime. El cliente actual usa los estados y acciones negociados.",
+      "impact": "No se emite ni acepta este opcode; no hay compatibilidad con clientes anteriores.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/589"
       ],
-      "reproduction": "Iniciar sesión y observar SHOW_PARTY_FORM en message_session_sender.py y ausencia del caso en message_dispatcher.gd."
+      "reproduction": "Iniciar sesión y observar SHOW_PARTY_FORM en message_session_sender.py y ausencia del caso en message_dispatcher.gd.",
+      "retired": true
     },
     "server:7": {
-      "rationale": "El emisor activo send_commerce_init_empty coincide con el contrato. Existe además un constructor extendido incompatible, detrás de un wrapper sin uso real.",
-      "impact": "Usar por error send_commerce_init puede desalinear el stream del cliente.",
+      "rationale": "Una sola API send_commerce_init/build_commerce_init_response produce exactamente 07.",
+      "impact": "La apertura no contiene inventario; los slots llegan por CHANGE_NPC_INVENTORY_SLOT.",
       "priority": "P1",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/588"
       ],
-      "reproduction": "Construir build_commerce_init_response(1, []) y comparar su longitud con el único byte permitido para COMMERCE_INIT.",
-      "partial": true
+      "reproduction": "Las fixtures compartidas ejecutan el constructor y verifican COMMERCE_INIT seguido de PONG.",
+      "partial": false
     },
     "server:38": {
       "rationale": "La ruta MIDI existe, pero no se acredita música audible de introducción/mapa por encontrar el writer.",
@@ -762,22 +779,30 @@
       "issues": []
     },
     "client:46": {
-      "rationale": "Reordenamiento de slots de la bóveda no tiene una ruta equivalente acreditada en el cliente actual.",
-      "impact": "Ausencia funcional o decisión de producto pendiente: Reordenamiento de slots de la bóveda. No confundir el enum histórico con una implementación.",
+      "rationale": "Operación implementada en el transporte negociado con validación, revisión y confirmación durable.",
+      "impact": "La UI usa el estado confirmado por el servidor; el opcode VB6 permanece retirado.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/592",
         "https://github.com/cavazquez/ArgentumOnlineGodot/issues/234"
-      ]
+      ],
+      "replacement": [
+        "WORLD_ACTION bank.move / WORLD_STATE bank"
+      ],
+      "partial": false
     },
     "client:47": {
-      "rationale": "Edición del códice del clan no tiene una ruta equivalente acreditada en el cliente actual.",
-      "impact": "Ausencia funcional o decisión de producto pendiente: Edición del códice del clan. No confundir el enum histórico con una implementación.",
+      "rationale": "Operación implementada en el transporte negociado con validación, revisión y confirmación durable.",
+      "impact": "La UI usa el estado confirmado por el servidor; el opcode VB6 permanece retirado.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/593",
         "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
-      ]
+      ],
+      "replacement": [
+        "WORLD_ACTION clan.profile / WORLD_STATE clan"
+      ],
+      "partial": false
     },
     "client:121": {
       "rationale": "Mejora de objetos con ItemUpgrade no tiene una ruta equivalente acreditada en el cliente actual.",
@@ -786,13 +811,17 @@
       "issues": []
     },
     "client:65": {
-      "rationale": "La consulta del clan existe, pero no se acredita una edición equivalente del sitio/noticias del clan.",
-      "impact": "El líder no dispone de la edición de ese campo desde el formulario actual.",
+      "rationale": "Operación implementada en el transporte negociado con validación, revisión y confirmación durable.",
+      "impact": "La UI usa el estado confirmado por el servidor; el opcode VB6 permanece retirado.",
       "priority": "P2",
       "issues": [
         "https://github.com/cavazquez/pyao-server/issues/593",
         "https://github.com/cavazquez/ArgentumOnlineGodot/issues/235"
-      ]
+      ],
+      "replacement": [
+        "WORLD_ACTION clan.profile / WORLD_STATE clan"
+      ],
+      "partial": false
     }
   },
   "subtypes": {},

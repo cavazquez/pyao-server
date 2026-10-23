@@ -27,6 +27,7 @@ from src.services.npc.rewards.settlement import death_changes
 from src.services.player.lifecycle import hp_changes
 from src.services.player.lifetime_stats import kill_changes
 from src.services.skill_training import TrainingEvent, trained_decision, training_resources
+from src.utils.durability import ensure_aof, require_durable
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, Snapshot, transact
 from src.utils.slot_plan import SlotPlan
@@ -419,6 +420,7 @@ async def commit_physical(redis: Redis, plan: PhysicalPlan, identity: str) -> di
         Recibo del golpe validado sobre Redis.
     """
     request = plan.request
+    await ensure_aof(redis)
     if plan.world is None:
         plan.world = await prepare_world(redis, request.user_id)
         plan.resources = (*plan.resources, Resource(WORLD_REVISION, "string"))
@@ -427,7 +429,7 @@ async def commit_physical(redis: Redis, plan: PhysicalPlan, identity: str) -> di
         plan.resources = tuple(
             {r.key: r for r in (*plan.resources, *plan.clan_policy.resources)}.values()
         )
-    return await transact(
+    result = await transact(
         redis,
         plan.resources,
         identity,
@@ -439,6 +441,8 @@ async def commit_physical(redis: Redis, plan: PhysicalPlan, identity: str) -> di
         },
         plan.decide,
     )
+    await require_durable(redis)
+    return result
 
 
 async def defend_npc(

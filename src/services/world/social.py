@@ -101,6 +101,8 @@ async def clan_snapshot(deps: DependencyContainer, user: int, page: int) -> dict
         permissions.append("invite")
     if actor.can_manage_clan():
         permissions.append("transfer")
+    if actor.rank == ClanRank.LEADER and clan.leader_id == user:
+        permissions.append("profile")
     pages = max(1, (clan.member_count + CLAN_PAGE_SIZE - 1) // CLAN_PAGE_SIZE)
     if page < 0:
         message = "Página de clan fuera de rango"
@@ -115,6 +117,12 @@ async def clan_snapshot(deps: DependencyContainer, user: int, page: int) -> dict
         page=page,
         pages=pages,
         member_count=clan.member_count,
+        profile={
+            "description": clan.description,
+            "news": clan.news,
+            "website": clan.website,
+            "version": clan.profile_revision,
+        },
     )
     for target in sorted(clan.members.values(), key=lambda member: member.user_id)[
         page * CLAN_PAGE_SIZE : (page + 1) * CLAN_PAGE_SIZE

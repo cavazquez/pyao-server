@@ -176,49 +176,10 @@ def build_commerce_end_response() -> bytes:
     return packet.to_bytes()
 
 
-def build_commerce_init_response(
-    npc_id: int,
-    items: list[tuple[int, int, str, int, int, int, int, int, int, int, int]],
-) -> bytes:
-    """Construye el paquete COMMERCE_INIT del protocolo AO estándar.
-
-    Args:
-        npc_id: ID del NPC mercader.
-        items: Lista de tuplas con formato:
-            (slot, item_id, name, quantity, price, grh_index, obj_type,
-             max_hit, min_hit, max_def, min_def)
+def build_commerce_init_response() -> bytes:
+    """Abre el comercio; los objetos se envían en CHANGE_NPC_INVENTORY_SLOT.
 
     Returns:
-        Paquete de bytes con el formato del cliente.
+        El único byte definido para COMMERCE_INIT.
     """
-    packet = PacketBuilder()
-    packet.add_byte(ServerPacketID.COMMERCE_INIT)
-    packet.add_int16(npc_id)
-    packet.add_byte(len(items))
-
-    for (
-        slot,
-        item_id,
-        name,
-        quantity,
-        price,
-        grh_index,
-        obj_type,
-        max_hit,
-        min_hit,
-        max_def,
-        min_def,
-    ) in items:
-        packet.add_byte(slot)
-        packet.add_int16(item_id)
-        packet.add_unicode_string(name)
-        packet.add_int16(quantity)
-        packet.add_int16(price)  # Cambiado de int32 a int16
-        packet.add_int16(grh_index)
-        packet.add_byte(obj_type)
-        packet.add_int16(max_hit)
-        packet.add_int16(min_hit)
-        packet.add_int16(max_def)
-        packet.add_int16(min_def)
-
-    return packet.to_bytes()
+    return bytes([ServerPacketID.COMMERCE_INIT])

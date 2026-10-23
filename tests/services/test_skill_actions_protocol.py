@@ -84,6 +84,56 @@ async def action_world(mechanics_world):
 
 
 @pytest.mark.asyncio
+async def test_physical_effects_wait_for_the_post_commit_barrier(action_world):
+    """Un EXEC visible en Redis no publica daño ni audio antes de fsync."""
+    entered, release = asyncio.Event(), asyncio.Event()
+
+    async def durable(_redis):
+        entered.set()
+        await release.wait()
+
+    with patch("src.services.combat.physical_plan.require_durable", new=durable):
+        task = asyncio.create_task(
+            action_world.actions.execute(1, "attack", {"x": 51, "y": 50}, action_world.senders[1])
+        )
+        await asyncio.wait_for(entered.wait(), 2)
+        for sender in action_world.senders.values():
+            sender.connection.send.assert_not_awaited()
+        release.set()
+        assert (await task)["applied"]
+    assert action_world.senders[1].connection.send.await_count > 0
+
+
+@pytest.mark.asyncio
+async def test_physical_lost_fsync_ack_replays_the_same_commit(action_world):
+    """Reintentar el recibo no repite daño, coste ni entrenamiento."""
+    world = action_world
+    identity = operation_id()
+
+    def plan():
+        return PhysicalPlan(
+            PhysicalRequest(1, 0, world.npc.instance_id, False), world.catalog, 30, 20
+        )
+
+    with (
+        patch(
+            "src.services.combat.physical_plan.require_durable",
+            new=AsyncMock(side_effect=RuntimeError("ACK lost")),
+        ),
+        pytest.raises(RuntimeError, match="ACK lost"),
+    ):
+        await commit_physical(world.redis.redis, plan(), identity)
+    keys = [
+        RedisKeys.npc_instance(world.npc.instance_id),
+        RedisKeys.player_user_stats(1),
+        RedisKeys.player_skills(1),
+    ]
+    after = [await world.redis.hgetall(key) for key in keys]
+    assert (await commit_physical(world.redis.redis, plan(), identity))["applied"]
+    assert [await world.redis.hgetall(key) for key in keys] == after
+
+
+@pytest.mark.asyncio
 async def test_boat_confirmation_waits_for_durability_before_enabling_walk(action_world):
     """La apariencia y el toggle no adelantan al cliente durante WAITAOF."""
     world = action_world

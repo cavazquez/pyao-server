@@ -90,7 +90,7 @@ class LeftClickNPCHandler:
         await self.redis_client.set_active_merchant(user_id, npc.npc_id)
 
         # Enviar packet COMMERCE_INIT vacío PRIMERO (abre la ventana)
-        await self.message_sender.send_commerce_init_empty()
+        await self.message_sender.send_commerce_init()
 
         # Obtener inventario del mercader
         merchant_items = await self.merchant_repo.get_all_items(npc.npc_id)
@@ -187,6 +187,7 @@ class LeftClickNPCHandler:
             return False, "El banco no está disponible", None
 
         logger.info("user_id %d abriendo banco con %s (npc_id=%d)", user_id, npc.name, npc.npc_id)
+        self.message_sender.connection.bank_npc = npc.instance_id
 
         # Enviar packet BANK_INIT vacío PRIMERO (abre la ventana)
         await self.message_sender.send_bank_init_empty()

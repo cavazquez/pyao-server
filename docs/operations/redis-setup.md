@@ -26,7 +26,8 @@ dentro de `$SNAP_USER_COMMON`, con permisos 0600 y una sola línea. No incluirlo
 capturas, URLs ni argumentos. La guía imprime host/puerto/base, nunca su contenido.
 
 Redis >=7.2 proporciona WAITAOF; la integración se prueba con Redis 8.10.2. La
-instancia debe tener AOF activado, appendfsync `everysec` o `always`, volumen
+instancia debe tener AOF activado, appendfsync `always` recomendado (`everysec`
+sigue admitido, pero cada barrera puede esperar hasta un segundo), volumen
 persistente y autenticación. La guía usa `redis-cli --askpass`, que solicita el
 secreto interactivamente. Un PONG no sustituye la comprobación de AOF ni un backup.
 El juego exige fsync antes de confirmar cobros. El diagnóstico es de sólo lectura:

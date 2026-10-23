@@ -87,9 +87,14 @@ class SkillActionService:
         if not self.cadence.claim(user, budget):
             return {"applied": False, "message": "Acción demasiado frecuente; espera un instante."}
         try:
-            await require_durable(self.player.redis.redis)
+            physical = action == "attack" or (
+                action == "work" and params.get("skill") == RANGED_SKILL
+            )
+            if not physical:
+                await require_durable(self.player.redis.redis)
             result = await self._dispatch(user, action, params, sender, identity)
-            await require_durable(self.player.redis.redis)
+            if not physical:
+                await require_durable(self.player.redis.redis)
             if announce and result.get("message"):
                 await sender.send_console_msg(str(result["message"]))
             if result.get("applied"):

@@ -36,6 +36,7 @@ class ClientConnection:
         max_outgoing_packets: int = 128,
         max_outgoing_bytes: int = 262144,
         drain_timeout: float = 5.0,
+        validate_packets: bool = False,
     ) -> None:
         """Inicializa la conexión del cliente.
 
@@ -45,6 +46,7 @@ class ClientConnection:
             max_outgoing_packets: Límite de mensajes, incluido el que está en drain.
             max_outgoing_bytes: Límite de payload retenido, incluido el mensaje en vuelo.
             drain_timeout: Plazo máximo del escritor de esta conexión.
+            validate_packets: Valida cada frame AO antes de encolarlo en producción.
 
         Raises:
             ValueError: Si los límites de salida no son positivos.
@@ -53,6 +55,7 @@ class ClientConnection:
             msg = "Límites de salida inválidos"
             raise ValueError(msg)
         self._outbox: asyncio.Queue[bytes] = asyncio.Queue(maxsize=max_outgoing_packets)
+        self._validate_packets = validate_packets
         self._max_outgoing_packets = max_outgoing_packets
         self._max_outgoing_bytes = max_outgoing_bytes
         self._drain_timeout = drain_timeout
@@ -76,6 +79,7 @@ class ClientConnection:
         self.state_tokens = 8.0
         self.state_budget_at = 0.0
         self.state_topics: set[str] = set()
+        self.bank_npc = ""
         self.is_authenticated = False
         self.capabilities = ConnectionCapabilities()
         self.reader = reader
@@ -192,6 +196,10 @@ class ClientConnection:
         """
         if self._closed or not data:
             return
+        if self._validate_packets:
+            from src.network.packet_framer import validate_packet  # ruff: ignore[import-outside-top-level]
+
+            validate_packet(data, "server")
         if (
             self._pending_packets >= self._max_outgoing_packets
             or self._pending_bytes + len(data) > self._max_outgoing_bytes

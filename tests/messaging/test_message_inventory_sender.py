@@ -148,8 +148,8 @@ async def test_send_bank_end() -> None:
 
 
 @pytest.mark.asyncio
-async def test_send_commerce_init_empty() -> None:
-    """Verifica que send_commerce_init_empty() envíe el paquete correcto."""
+async def test_send_commerce_init() -> None:
+    """Verifica que send_commerce_init() envíe el paquete correcto."""
     writer = MagicMock()
     writer.get_extra_info.return_value = ("127.0.0.1", 12345)
     writer.drain = AsyncMock()
@@ -158,7 +158,7 @@ async def test_send_commerce_init_empty() -> None:
     connection = ClientConnection(reader, writer)
     sender = InventoryMessageSender(connection)
 
-    await sender.send_commerce_init_empty()
+    await sender.send_commerce_init()
 
     written_data = writer.write.call_args[0][0]
     assert len(written_data) == 1
@@ -250,7 +250,7 @@ async def test_multiple_inventory_messages() -> None:
     )
     await sender.send_bank_init_empty()
     await sender.send_bank_end()
-    await sender.send_commerce_init_empty()
+    await sender.send_commerce_init()
     await sender.send_commerce_end()
 
     assert writer.write.call_count == 5

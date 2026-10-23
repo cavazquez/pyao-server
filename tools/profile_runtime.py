@@ -9,6 +9,7 @@ import argparse
 import asyncio
 import atexit
 from collections import Counter, deque
+import math
 from contextvars import ContextVar
 from functools import wraps
 import json
@@ -17,7 +18,32 @@ import sys
 import time
 
 _packet = ContextVar("profile_packet", default="background")
-COMMANDS = {"GET", "SET", "HGET", "HGETALL", "HSET", "HMGET", "EXISTS", "WATCH", "UNWATCH", "EXEC", "MULTI", "EVAL", "EVALSHA", "SCAN", "KEYS", "SMEMBERS", "SADD", "SREM", "WAITAOF", "DEL", "EXPIRE", "PING", "INCR", "DECR"}
+COMMANDS = {
+    "GET",
+    "SET",
+    "HGET",
+    "HGETALL",
+    "HSET",
+    "HMGET",
+    "EXISTS",
+    "WATCH",
+    "UNWATCH",
+    "EXEC",
+    "MULTI",
+    "EVAL",
+    "EVALSHA",
+    "SCAN",
+    "KEYS",
+    "SMEMBERS",
+    "SADD",
+    "SREM",
+    "WAITAOF",
+    "DEL",
+    "EXPIRE",
+    "PING",
+    "INCR",
+    "DECR",
+}
 
 
 class RuntimeProfile:
@@ -25,16 +51,25 @@ class RuntimeProfile:
         self.events = deque(maxlen=limit)
         self.counts = Counter()
         self.maximum_ms = {}
+        self.samples = {}
         self.threshold_ms = threshold_ms
         self.event_count = 0
 
     def record(self, stage, started, elapsed_ms=None):
         elapsed = (time.monotonic() - started) * 1000 if elapsed_ms is None else elapsed_ms
         self.counts[stage] += 1
+        self.samples.setdefault(stage, deque(maxlen=4096)).append(elapsed)
         self.maximum_ms[stage] = max(elapsed, self.maximum_ms.get(stage, 0))
         if elapsed >= self.threshold_ms:
             self.event_count += 1
-            self.events.append({"stage": stage, "packet": _packet.get(), "started_monotonic": started, "elapsed_ms": elapsed})
+            self.events.append(
+                {
+                    "stage": stage,
+                    "packet": _packet.get(),
+                    "started_monotonic": started,
+                    "elapsed_ms": elapsed,
+                }
+            )
 
     def wrap(self, method, stage, *, command=False):
         @wraps(method)
@@ -49,10 +84,32 @@ class RuntimeProfile:
                 return await method(*args, **kwargs)
             finally:
                 self.record(label, started)
+
         return measured
 
     def report(self):
-        return {"counts": dict(self.counts), "maximum_ms": self.maximum_ms, "events": list(self.events), "event_limit": self.events.maxlen, "dropped_events": self.event_count - len(self.events), "threshold_ms": self.threshold_ms, "contains_payloads": False}
+        summaries = {}
+        for stage, samples in self.samples.items():
+            ordered = sorted(samples)
+            summaries[stage] = {
+                "samples": len(ordered),
+                **{
+                    key: ordered[
+                        min(len(ordered) - 1, max(0, math.ceil(len(ordered) * fraction) - 1))
+                    ]
+                    for key, fraction in (("p50", 0.5), ("p95", 0.95), ("p99", 0.99))
+                },
+            }
+        return {
+            "latency_ms": summaries,
+            "counts": dict(self.counts),
+            "maximum_ms": self.maximum_ms,
+            "events": list(self.events),
+            "event_limit": self.events.maxlen,
+            "dropped_events": self.event_count - len(self.events),
+            "threshold_ms": self.threshold_ms,
+            "contains_payloads": False,
+        }
 
 
 def install(profile):
@@ -65,16 +122,58 @@ def install(profile):
     from src.command_handlers.login_spawn_handler import LoginSpawnHandler
 
     Redis.execute_command = profile.wrap(Redis.execute_command, "redis", command=True)
-    Pipeline.immediate_execute_command = profile.wrap(Pipeline.immediate_execute_command, "redis-watch", command=True)
+    Pipeline.immediate_execute_command = profile.wrap(
+        Pipeline.immediate_execute_command, "redis-watch", command=True
+    )
     Pipeline.execute = profile.wrap(Pipeline.execute, "redis-pipeline")
     PasswordExecutor.run = profile.wrap(PasswordExecutor.run, "password-executor")
     for cls, names in (
-        (PlayerMapService, ("_send_players_in_map", "_send_npcs_in_map", "_send_ground_items_in_map", "_unblock_exit_tiles")),
+        (
+            PlayerMapService,
+            (
+                "_send_players_in_map",
+                "_send_npcs_in_map",
+                "_send_ground_items_in_map",
+                "_unblock_exit_tiles",
+            ),
+        ),
         (ClientLoadDelayStep, ("execute",)),
         (LoginSpawnHandler, ("spawn_player", "send_map_data")),
     ):
         for name in names:
             setattr(cls, name, profile.wrap(getattr(cls, name), cls.__name__ + "." + name))
+    from src.services.skill_action_service import SkillActionService
+    from src.services.action_cadence import ActionCadence
+    from src.services.combat import physical_plan
+    from src.utils import resource_transaction
+    from src.services import inventory_notifications, player_progression
+
+    claim = ActionCadence.claim
+
+    @wraps(claim)
+    def timed_claim(*args, **kwargs):
+        started = time.monotonic()
+        accepted = claim(*args, **kwargs)
+        profile.record("cadence-accepted" if accepted else "cadence-rejected", started)
+        return accepted
+
+    ActionCadence.claim = timed_claim
+
+    for module, name, stage in (
+        (durability, "ensure_aof", "combat-preflight"),
+        (physical_plan, "commit_physical", "physical-commit"),
+        (resource_transaction, "transact", "resource-transaction"),
+        (inventory_notifications, "notify_inventory", "inventory-publish"),
+        (player_progression, "publish_progress", "progress-publish"),
+    ):
+        original_function = getattr(module, name)
+        replacement = profile.wrap(original_function, stage)
+        for module_name, loaded in tuple(sys.modules.items()):
+            if module_name.startswith("src.") and getattr(loaded, name, None) is original_function:
+                setattr(loaded, name, replacement)
+    SkillActionService._physical = profile.wrap(
+        SkillActionService._physical, "physical-with-publication"
+    )
     original = durability.require_durable
     measured = profile.wrap(original, "aof-barrier")
     # Some service modules have already imported the function during Server import.
@@ -97,8 +196,10 @@ def install(profile):
             finally:
                 profile.record("packet:" + label, started)
                 _packet.reset(token)
+
         task.execute = traced_execute
         return task
+
     ArgentumServer.create_task = traced_task
     run = asyncio.run
 
@@ -129,7 +230,12 @@ def main():
     atexit.register(lambda: args.output.write_text(json.dumps(profile.report(), indent=2) + "\n"))
     install(profile)
     from src.run_server import main as server_main
-    sys.argv = ["pyao-server", *args.server_args[1:]] if args.server_args[:1] == ["--"] else ["pyao-server", *args.server_args]
+
+    sys.argv = (
+        ["pyao-server", *args.server_args[1:]]
+        if args.server_args[:1] == ["--"]
+        else ["pyao-server", *args.server_args]
+    )
     server_main()
 
 

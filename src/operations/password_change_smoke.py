@@ -18,7 +18,7 @@ from src.repositories.account_repository import AccountRepository
 from src.security.password_executor import get_password_executor
 from src.services.password_change import password_change_status
 from src.tasks.task_capabilities import TaskCapabilities
-from src.tasks.task_change_password import TaskChangePassword
+from src.tasks.task_change_password import STATUS_INTERVAL_SECONDS, TaskChangePassword
 from src.utils.password_utils import hash_password
 from src.utils.redis_client import RedisClient
 
@@ -80,6 +80,15 @@ async def verify_credentials(account: AccountRepository, frames: list[bytes]) ->
         )
 
 
+async def recover_ignored_ack(peer: ProtocolPeer, identity: str) -> None:
+    """Consulta el cambio sin claves y respetando el presupuesto de frecuencia."""
+    await peer.send(request(identity, OLD_PASSWORD, NEW_PASSWORD))
+    # AOF always can finish before the existing one-second status budget.
+    # Recover the deliberately ignored ACK without bypassing that limit.
+    await asyncio.sleep(STATUS_INTERVAL_SECONDS)
+    await peer.send(request(identity))
+
+
 async def exercise(config: RedisConfig) -> tuple[int, str]:
     """Una fixture autenticada negocia por TCP y recupera un resultado sin reenviar claves.
 
@@ -129,7 +138,7 @@ async def exercise(config: RedisConfig) -> tuple[int, str]:
         await peer.wait(lambda frames: bool(replies(frames)))
         identity = replies(peer.frames)[-1][1]
         # Se ignora el primer ack a propósito; la consulta posterior no contiene claves.
-        await peer.send(request(identity, OLD_PASSWORD, NEW_PASSWORD) + request(identity))
+        await recover_ignored_ack(peer, identity)
         await peer.wait(
             lambda frames: (
                 sum(item[0] == identity for item in replies(frames)) == EXPECTED_CONFIRMATIONS

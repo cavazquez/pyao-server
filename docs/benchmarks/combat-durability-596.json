@@ -1,0 +1,1183 @@
+{
+  "issue": 596,
+  "date": "2026-10-22",
+  "passed": true,
+  "test_data": "Disposable authenticated Redis 8.10.2/AOF; synthetic accounts; loopback TLS; no operator Redis",
+  "runtime": {
+    "executable": "/home/cristian/repos/propios/ProyectoAO/pyao-server/.venv/bin/python",
+    "version": "3.14.0 free-threading build (main, Oct 10 2025, 12:48:27) [Clang 20.1.4 ]",
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "processor": "",
+    "cpu_count": 12,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "optimize": 0,
+    "build": {
+      "CONFIG_ARGS": "'--build=x86_64-unknown-linux-gnu' '--host=x86_64-unknown-linux-gnu' '--prefix=/install' '--with-openssl=/tools/deps' '--with-system-expat' '--with-system-libmpdec' '--without-ensurepip' '--with-readline=editline' '--with-tail-call-interp' '--enable-static-libpython-for-interpreter' '--enable-shared' '--with-mimalloc' '--disable-gil' '--enable-optimizations' '--enable-bolt' '--with-lto' '--with-build-python=/tools/host/bin/python3.14' 'ac_cv_func_explicit_bzero=no' '--with-dbmliborder=bdb' 'build_alias=x86_64-unknown-linux-gnu' 'host_alias=x86_64-unknown-linux-gnu' 'PKG_CONFIG=pkg-config --static' 'PKG_CONFIG_PATH=/tools/deps/share/pkgconfig:/tools/deps/lib/pkgconfig' 'CC=clang' 'CFLAGS= -fPIC ' 'LDFLAGS= -Wl,--exclude-libs,ALL -LModules/_hacl' 'CPPFLAGS= -fPIC '",
+      "PY_CFLAGS": "-fno-strict-overflow -Wsign-compare -Wunreachable-code -DNDEBUG -g -O3 -Wall -fPIC",
+      "PY_CFLAGS_NODIST": "-fno-semantic-interposition -flto=thin -g -fno-pie -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -fprofile-instr-use=/build/Python-3.14.0/code.profclangd -I./Include/internal -I./Include/internal/mimalloc",
+      "PY_LDFLAGS_NODIST": "-fno-semantic-interposition -flto=thin -g -Wl,--emit-relocs",
+      "CC": "cc -pthread",
+      "Py_GIL_DISABLED": 1,
+      "PGO_PROF_USE_FLAG": "-fprofile-instr-use=\"$(shell pwd)/code.profclangd\"",
+      "LLVM_PROF_MERGER": "/tools/llvm/bin/llvm-profdata merge -output=\"$(shell pwd)/code.profclangd\" \"$(shell pwd)\"/*.profclangr",
+      "HOST_GNU_TYPE": "x86_64-unknown-linux-gnu",
+      "SOABI": "cpython-314t-x86_64-linux-gnu"
+    },
+    "jit_available": false,
+    "jit_enabled": false,
+    "gil_enabled": false
+  },
+  "cpu_model": "AMD Ryzen 5 9600X 6-Core Processor",
+  "source_sha256": {
+    "src/network/__init__.py": "7755282320b68b5ff58feb3639a28fcb2b5f554bccfbbc4f27248966d331a39e",
+    "src/network/capabilities.py": "c661b1deec711d5f96421a91d4a74b823cab1eaf134176ad9f53300965e539ea",
+    "src/network/chat_channel.py": "b39f9b757cf48fbd9cdc446434188d525c0642a9a0d69eb3db6d1e5c49894e2f",
+    "src/network/client_connection.py": "1c25dc6d54a024598002ad98e4f287d92a5942dffbcf601363a6b68d2607b401",
+    "src/network/msg_audio.py": "e44cedebacdbe72d3e425551221c08bece432df51d77b7885a899e2626d7071d",
+    "src/network/msg_character.py": "578f48f894ea97949378697a24aaded635e3aa3d2ea1933e75bd9cc4f25234e0",
+    "src/network/msg_clan.py": "943ae34d4269e0dd24583a09ee1b8e407e29a1ea8240de99951b0b1a5fb71984",
+    "src/network/msg_console.py": "039717e066870262ccd6f2d46b24de86f5952b21322fcf23e57856df83f55fbb",
+    "src/network/msg_inventory.py": "acccbd0cba38fc13ac92511cadbefc71738f844b72e840535109bdbfa97d0087",
+    "src/network/msg_map.py": "9dbe0305bfa2650ca348bccd81ebfd24ef4be4cbf1a08a0f6eaeedf84198e0d0",
+    "src/network/msg_player_stats.py": "bd6f484576b40ac7be8c91494b0a610fea45205582647a00606dea485324a3a5",
+    "src/network/msg_session.py": "c2897090d9ab85da0955165c4b75757a948286adcd51e81ad3e66fdee43b6655",
+    "src/network/msg_skills.py": "2fca2561fba2f90f65107fdb29c232edf63b4d4d447e244176768f5bd585c617",
+    "src/network/msg_status_effects.py": "b65657fa6bde0d441d655dcf06380c36760f09838c8388f2428b71bca99b9caa",
+    "src/network/msg_visual_effects.py": "945f850612cb736a868295558cffe8ee90d77aadd72ddfa4fe58d9b7eab4c26d",
+    "src/network/packet_builder.py": "2be2967e5bc7daef4723cc097f81eed7e4680f8ef65e8622f9217eaac8d3efdf",
+    "src/network/packet_data.py": "7f2964b2e2bc9252589d3e38fd2ffb40f3518ecd846be9076bc17f821f912ad8",
+    "src/network/packet_framer.py": "ea05d7bb2b8c4491559c212a674b4d9e5ddcaa6dd5d5245f0e3a993f6a42cafe",
+    "src/network/packet_handlers.py": "ab798b10848465e9fb0ba22d9703deb89454d9ce6b30782742a56817e6edad51",
+    "src/network/packet_id.py": "6b95fb8a333586acc1d5961cb5aa30e3f7dd2618d09333ed7825b2c0d51fe288",
+    "src/network/packet_reader.py": "6773639acdb7eb436d1989dda92a9f81122fbcaebf7b174375b0d9e21a8a9909",
+    "src/network/packet_reader_mixin.py": "7d0617bf2c228a636a6aaed6d78095531c20d8a9804de9bb9fb4698d8c9a7641",
+    "src/network/packet_validator.py": "8fe30a30bdccd138736c1e467d3f480b1fad7477fe27e2e79a04cf07b0fa3922",
+    "src/network/protocol/chat_commands.json": "974d0992148fa17c5242cb9ab45b61fb1fec2e53edd50eac59056f3d691bbc59",
+    "src/network/protocol/contract.json": "ba225d03d3bd1e2edcad73fb070045f320c0a7de56119c20f147fb79a4d3f0fc",
+    "src/network/protocol/credentials.json": "89410616f50768b1aae5aaa31fdc731a33966034404d4e00f569e0e8651c5956",
+    "src/network/protocol/fixtures.json": "9f1d5c68d33edc0e8cebd9ea96eb36c84803e050025b946af7ddfca678dd966e",
+    "src/network/protocol/skills.json": "5a32414695b16bb43c237da33590bd54971b216a52e9dabe3e66e900fd88a99c",
+    "src/network/request_context.py": "ff7cdece62b986721a6d983971bcb93a8ac09e92c2c146bdc88d6c154dc1cfcd",
+    "src/network/session_manager.py": "11117601d52a165908f51af3a34d3747f3e3f6f81913255b6b08e53fc3815076",
+    "src/network/state_channel.py": "7e1d7ebf194448102022174dd2392a381ba58fadf73f7427a9b2840ba0904843",
+    "src/network/validation_result.py": "7bb8e3e0d97d183dfce8d379ac3cdc5eee474cb687e1ba8c8f22cb88bc3004b1",
+    "src/network/validators/__init__.py": "6a27a7442970c9fd4d27a7104cdbc2936c9ddf5d4e100564925e6591655eb78a",
+    "src/network/validators/auth.py": "abdff0d53cc448944983a445d0277b3db18288307eb948b8723e7897e028780c",
+    "src/network/validators/bank.py": "28a6bd2d1c7ce05f1ab56bd3e3a60ecb29848e0a264405a000d96d231b00a973",
+    "src/network/validators/base.py": "f70e778eec876e2dacb18053906e31575eec109295cdf3f9a3b04486824f83cf",
+    "src/network/validators/chat.py": "dbe835eb2032fc00fe015ad2d317225f692cf58c141d439b020eff0a02db9980",
+    "src/network/validators/commerce.py": "71117cee41974525d5bf429c5d83d1223d712ee553ec75a284f20046a3c19388",
+    "src/network/validators/gm.py": "28c85559d8014f872045a9b8cb389cddb8f047d0d278b785f619c8141d32105d",
+    "src/network/validators/helpers.py": "3a31dbc5dfd1acf4bbf6b60dcd6a5be74bc4f5e913e0106d72a6315c6f06707d",
+    "src/network/validators/inventory.py": "fc37f77d7cc9984b3a07cc5fc8d62717d199984a88b1537371eeaf32620ababe",
+    "src/network/validators/movement.py": "d1e1df80e1a45f6a918c52e7464e13f351db790bb9fd799ce94d743f537bed79",
+    "src/network/validators/registry.py": "9dabc2e9f54df623be0eeef900102aff145daff8b0a2a9dc35c46be3c76cdce0",
+    "src/network/validators/simple.py": "459cb5206f657ce7ce0619817013f77525fcbf76027b15f85ec710e4ed88a5c1",
+    "src/network/validators/spells.py": "1affc8c685a04244a8065c5495bfe32f65b9a10e0d7a1ad903ed2dbfe19e9a92",
+    "src/network/websocket_transport.py": "b69abc20e5daee604d6ccc138116bfcea5119536454e83867da48193b01c4f27",
+    "src/server.py": "c72bcaba4f71942cc81c611a426eca4327edd41799f27a80f1965ac900b5a0ab",
+    "src/services/combat/__init__.py": "d3c1341303cdee8c13330ebddc53b75f0a5a82c9af6ca28ee479669e03287616",
+    "src/services/combat/area_spell.py": "1645bd44d2a1da2b2ac06c99cdfa36721ee788de9600421b613374ba70f493d5",
+    "src/services/combat/barriers.py": "aea228fd7126ea22875fafefd7a0cd3a6bbcb8fd78ff3aa37f743cb26d29d102",
+    "src/services/combat/clan_policy.py": "be858557629e97774f0f5fc80caec392787a968e16b21c9536eed93556fc7b57",
+    "src/services/combat/combat_service.py": "cbe5ff46543350bf0249f940a5e8afb41ae6d9f43c251c786a793ea56f7bdaf5",
+    "src/services/combat/combat_weapon_service.py": "9cbcd49177011c9e96434334227afb11a865f11dac7d53e4ff4a381177dbd832",
+    "src/services/combat/npc_claims.py": "124f22e0f34bfcba454d41aac88fd8900e30b5b10a327850fe65646b4331242d",
+    "src/services/combat/periodic.py": "013db76816c4d892364815984f6b922a7c8da9c3c2cccdc728413affde03a36a",
+    "src/services/combat/physical_plan.py": "06b0890ea9656d513d3d67c35ef2aac965864be1b3da07d07ef580dfaf454d31",
+    "src/services/combat/pvp_policy.py": "8877abc568bf966d9a4deae6c948d1e4eb9d5478fea1a37a36f1d39eb29459e1",
+    "src/services/combat/spell_components.py": "908d4dbab560410fc892eaa7bb39d40d052efa324391c4db1c59244b5e58586f",
+    "src/services/combat/spell_plan.py": "6c3324fe6221f99c79fc1358183942fd9d162aa76fd77bec1872400a3ba55216",
+    "src/services/combat/summon_plan.py": "2d9c13549a5294e085462f292ba536d225ea4ad30e79017e343a3d029b054703",
+    "src/services/skill_action_service.py": "0aca7276390808d6ee9a38f54b7a41dadd479f4fc62eebe2eb120d8086bb1f95",
+    "src/utils/durability.py": "db053ba96b384b85ba40c6d5ea372788994aeca9abf24713340eea4a981435b1",
+    "redis/Dockerfile": "7ac7bfe4d6802344aa394b9a7f720a6507220badd78eb490e4b5d3ab497338f4",
+    "redis/README.md": "612c9c120c22579c94e432077719d6c709cf3f63bd3da13fb62e9b80d4a6021d",
+    "redis/entrypoint.sh": "347586da9f7ec23e8b55ba74aa1759eb267a76e2ab93f5636746e88544ecd705",
+    "redis/redis.conf": "a5fd7ee5da0d8ded33bec57a7c5ebebba649a533844d4680d31a583a647d4d75"
+  },
+  "response_budget_ms": {
+    "applied_attack_ack_p95": 100,
+    "target_damage_p95": 100
+  },
+  "baseline_and_isolating_controls": {
+    "combat-before": {
+      "aof_policy_from_hashed_config": "everysec",
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "source_sha256": {
+        "src/services/combat/physical_plan.py": "77e59bafb4fa87299e7edc4f2d480c0e617c182c6a2914241a681b692f499375",
+        "src/services/skill_action_service.py": "ef2fb633905d76b43ee761e1ab1df28d8a398d8df467759640d6f2acf919e557",
+        "src/utils/durability.py": "d2c602f6ac0fedccb9798cc52c8980deddfdc4ef7244a59eea7d597c8a9e02a4",
+        "redis/redis.conf": "afdd65314ef46fab45d0446fc117fc17e3de2d5dc48c122289602bd46348ad45"
+      },
+      "trials": [
+        {
+          "ping_ms": {
+            "samples": 56,
+            "sample_limit": 100000,
+            "p50": 1881.1614219957846,
+            "p95": 1959.0041139963432,
+            "p99": 1959.0580920048524,
+            "max": 1959.0580920048524
+          },
+          "cpu_seconds": 1.0099999999999998,
+          "duration_seconds": 9.52045817799808,
+          "rss_bytes": 133693440
+        },
+        {
+          "ping_ms": {
+            "samples": 56,
+            "sample_limit": 100000,
+            "p50": 1877.911657000368,
+            "p95": 1999.31839400233,
+            "p99": 1999.4672629982233,
+            "max": 1999.4672629982233
+          },
+          "cpu_seconds": 0.9699999999999989,
+          "duration_seconds": 9.518474119999155,
+          "rss_bytes": 133742592
+        }
+      ]
+    },
+    "combat-one-barrier": {
+      "aof_policy_from_hashed_config": "everysec",
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "source_sha256": {
+        "src/services/combat/physical_plan.py": "06b0890ea9656d513d3d67c35ef2aac965864be1b3da07d07ef580dfaf454d31",
+        "src/services/skill_action_service.py": "0aca7276390808d6ee9a38f54b7a41dadd479f4fc62eebe2eb120d8086bb1f95",
+        "src/utils/durability.py": "db053ba96b384b85ba40c6d5ea372788994aeca9abf24713340eea4a981435b1",
+        "redis/redis.conf": "afdd65314ef46fab45d0446fc117fc17e3de2d5dc48c122289602bd46348ad45"
+      },
+      "trials": [
+        {
+          "ping_ms": {
+            "samples": 96,
+            "sample_limit": 100000,
+            "p50": 902.0785309985513,
+            "p95": 920.7606490017497,
+            "p99": 922.2679070007871,
+            "max": 922.2679070007871
+          },
+          "cpu_seconds": 1.2400000000000002,
+          "duration_seconds": 9.516799917000753,
+          "rss_bytes": 134295552
+        },
+        {
+          "ping_ms": {
+            "samples": 96,
+            "sample_limit": 100000,
+            "p50": 901.2244420009665,
+            "p95": 920.5984069994884,
+            "p99": 924.7770469955867,
+            "max": 924.7770469955867
+          },
+          "cpu_seconds": 1.25,
+          "duration_seconds": 9.516495420000865,
+          "rss_bytes": 133337088
+        }
+      ]
+    },
+    "combat-always": {
+      "aof_policy_from_hashed_config": "always",
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "source_sha256": {
+        "src/services/combat/physical_plan.py": "06b0890ea9656d513d3d67c35ef2aac965864be1b3da07d07ef580dfaf454d31",
+        "src/services/skill_action_service.py": "0aca7276390808d6ee9a38f54b7a41dadd479f4fc62eebe2eb120d8086bb1f95",
+        "src/utils/durability.py": "db053ba96b384b85ba40c6d5ea372788994aeca9abf24713340eea4a981435b1",
+        "redis/redis.conf": "a5fd7ee5da0d8ded33bec57a7c5ebebba649a533844d4680d31a583a647d4d75"
+      },
+      "trials": [
+        {
+          "ping_ms": {
+            "samples": 792,
+            "sample_limit": 100000,
+            "p50": 0.6118499950389378,
+            "p95": 1.7676089992164634,
+            "p99": 3.034669003682211,
+            "max": 15.995747002307326
+          },
+          "cpu_seconds": 1.9000000000000004,
+          "duration_seconds": 9.512759900004312,
+          "rss_bytes": 134332416
+        },
+        {
+          "ping_ms": {
+            "samples": 792,
+            "sample_limit": 100000,
+            "p50": 0.7427599994116463,
+            "p95": 1.802134996978566,
+            "p99": 4.261893998773303,
+            "max": 5.313385001500137
+          },
+          "cpu_seconds": 1.9700000000000006,
+          "duration_seconds": 9.51561786000093,
+          "rss_bytes": 134029312
+        }
+      ]
+    }
+  },
+  "ordinary_trials": [
+    {
+      "connections": 2,
+      "cadence_seconds": 1.5,
+      "slow_readers": 0,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 20,
+        "sample_limit": 100000,
+        "p50": 0.3967320008086972,
+        "p95": 1.3390319945756346,
+        "p99": 1.4875060005579144,
+        "max": 1.4875060005579144
+      },
+      "attack_ack_ms": {
+        "samples": 20,
+        "p50": 10.583960000076331,
+        "p95": 21.898958999372553,
+        "p99": 22.641118994215503,
+        "max": 22.641118994215503
+      },
+      "target_visibility_ms": {
+        "samples": 9,
+        "p50": 8.86125899705803,
+        "p95": 20.474478995311074,
+        "p99": 20.474478995311074,
+        "max": 20.474478995311074
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 0.45000000000000107,
+      "duration": 14.52490255599696,
+      "rss_bytes": 131661824,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 1.5,
+      "slow_readers": 0,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 20,
+        "sample_limit": 100000,
+        "p50": 0.27049899654230103,
+        "p95": 0.4579460000968538,
+        "p99": 0.46859600115567446,
+        "max": 0.46859600115567446
+      },
+      "attack_ack_ms": {
+        "samples": 20,
+        "p50": 10.60262499959208,
+        "p95": 13.776733998383861,
+        "p99": 17.359338999085594,
+        "max": 17.359338999085594
+      },
+      "target_visibility_ms": {
+        "samples": 10,
+        "p50": 7.427843003824819,
+        "p95": 9.504777000984177,
+        "p99": 9.504777000984177,
+        "max": 9.504777000984177
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 0.45000000000000107,
+      "duration": 14.525083373999223,
+      "rss_bytes": 131366912,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 1.5,
+      "slow_readers": 1,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 20,
+        "sample_limit": 100000,
+        "p50": 0.3578509931685403,
+        "p95": 0.7460679989890195,
+        "p99": 2.3789429978933185,
+        "max": 2.3789429978933185
+      },
+      "attack_ack_ms": {
+        "samples": 20,
+        "p50": 11.70496999839088,
+        "p95": 29.503532001399435,
+        "p99": 30.454327003099024,
+        "max": 30.454327003099024
+      },
+      "target_visibility_ms": {
+        "samples": 10,
+        "p50": 8.509200997650623,
+        "p95": 27.58785500191152,
+        "p99": 27.58785500191152,
+        "max": 27.58785500191152
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 0.6799999999999997,
+      "duration": 14.528499174994067,
+      "rss_bytes": 131710976,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 1.5,
+      "slow_readers": 1,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 20,
+        "sample_limit": 100000,
+        "p50": 0.42306099931010976,
+        "p95": 0.5764449961134233,
+        "p99": 1.8897289992310107,
+        "max": 1.8897289992310107
+      },
+      "attack_ack_ms": {
+        "samples": 20,
+        "p50": 11.413422995246947,
+        "p95": 27.660799998557195,
+        "p99": 37.67517999949632,
+        "max": 37.67517999949632
+      },
+      "target_visibility_ms": {
+        "samples": 12,
+        "p50": 8.457315001578536,
+        "p95": 35.67086900147842,
+        "p99": 35.67086900147842,
+        "max": 35.67086900147842
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 0.6699999999999999,
+      "duration": 14.52303550200304,
+      "rss_bytes": 131305472,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 0.1,
+      "slow_readers": 0,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 292,
+        "sample_limit": 100000,
+        "p50": 0.34290299663553014,
+        "p95": 0.6057880018488504,
+        "p99": 2.7606969961198047,
+        "max": 7.8984829960973
+      },
+      "attack_ack_ms": {
+        "samples": 60,
+        "p50": 10.883404997002799,
+        "p95": 15.875822995440103,
+        "p99": 17.22929200332146,
+        "max": 17.22929200332146
+      },
+      "target_visibility_ms": {
+        "samples": 34,
+        "p50": 8.157190997735597,
+        "p95": 13.937022995378356,
+        "p99": 14.277681999374181,
+        "max": 14.277681999374181
+      },
+      "cadence_rejections": 232,
+      "cpu_seconds": 0.75,
+      "duration": 14.522649418002402,
+      "rss_bytes": 130621440,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 0.1,
+      "slow_readers": 0,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 291,
+        "sample_limit": 100000,
+        "p50": 0.3114650025963783,
+        "p95": 0.6770600011805072,
+        "p99": 8.512357002473436,
+        "max": 12.559850998513866
+      },
+      "attack_ack_ms": {
+        "samples": 59,
+        "p50": 11.045794999517966,
+        "p95": 15.698655995947774,
+        "p99": 16.428673996415455,
+        "max": 16.428673996415455
+      },
+      "target_visibility_ms": {
+        "samples": 28,
+        "p50": 7.832071001757868,
+        "p95": 14.191433001542464,
+        "p99": 14.576453999325167,
+        "max": 14.576453999325167
+      },
+      "cadence_rejections": 232,
+      "cpu_seconds": 0.7900000000000009,
+      "duration": 14.522327751998091,
+      "rss_bytes": 131461120,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 292,
+        "sample_limit": 100000,
+        "p50": 0.2280609987792559,
+        "p95": 0.47758199798408896,
+        "p99": 2.0847689957008697,
+        "max": 8.713368995813653
+      },
+      "attack_ack_ms": {
+        "samples": 60,
+        "p50": 9.46968499920331,
+        "p95": 16.87700299953576,
+        "p99": 19.108051994408015,
+        "max": 19.108051994408015
+      },
+      "target_visibility_ms": {
+        "samples": 37,
+        "p50": 7.353909000812564,
+        "p95": 15.418549999594688,
+        "p99": 16.407094997703098,
+        "max": 16.407094997703098
+      },
+      "cadence_rejections": 232,
+      "cpu_seconds": 0.8300000000000001,
+      "duration": 14.52459034200001,
+      "rss_bytes": 131301376,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 2,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 290,
+        "sample_limit": 100000,
+        "p50": 0.34218200016766787,
+        "p95": 0.6617020044359379,
+        "p99": 4.004114001872949,
+        "max": 13.589703004981857
+      },
+      "attack_ack_ms": {
+        "samples": 58,
+        "p50": 11.287992994766682,
+        "p95": 18.249859000206925,
+        "p99": 22.202025000297,
+        "max": 22.202025000297
+      },
+      "target_visibility_ms": {
+        "samples": 34,
+        "p50": 8.1311839967384,
+        "p95": 14.998595004726667,
+        "p99": 19.71988199511543,
+        "max": 19.71988199511543
+      },
+      "cadence_rejections": 232,
+      "cpu_seconds": 1.0099999999999998,
+      "duration": 14.521936593002465,
+      "rss_bytes": 131321856,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 1.5,
+      "slow_readers": 0,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 80,
+        "sample_limit": 100000,
+        "p50": 0.37368999619502574,
+        "p95": 2.0314210050855763,
+        "p99": 3.0573660042136908,
+        "max": 3.0573660042136908
+      },
+      "attack_ack_ms": {
+        "samples": 80,
+        "p50": 23.685516003752127,
+        "p95": 56.19758099783212,
+        "p99": 87.9216390021611,
+        "max": 87.9216390021611
+      },
+      "target_visibility_ms": {
+        "samples": 41,
+        "p50": 10.950420000881422,
+        "p95": 40.8218480006326,
+        "p99": 61.515759996837005,
+        "max": 61.515759996837005
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 1.3600000000000012,
+      "duration": 14.524653986001795,
+      "rss_bytes": 133038080,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 1.5,
+      "slow_readers": 0,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 80,
+        "sample_limit": 100000,
+        "p50": 0.3945989956264384,
+        "p95": 0.7900179989519529,
+        "p99": 2.0903399999951944,
+        "max": 2.0903399999951944
+      },
+      "attack_ack_ms": {
+        "samples": 80,
+        "p50": 21.05433800170431,
+        "p95": 55.22942400421016,
+        "p99": 99.75738700450165,
+        "max": 99.75738700450165
+      },
+      "target_visibility_ms": {
+        "samples": 52,
+        "p50": 14.69936400098959,
+        "p95": 45.61561199807329,
+        "p99": 94.64787199976854,
+        "max": 94.64787199976854
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 1.4100000000000001,
+      "duration": 14.522027992999938,
+      "rss_bytes": 133394432,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 1.5,
+      "slow_readers": 1,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 80,
+        "sample_limit": 100000,
+        "p50": 0.4314170000725426,
+        "p95": 2.8287429959164,
+        "p99": 6.145719002233818,
+        "max": 6.145719002233818
+      },
+      "attack_ack_ms": {
+        "samples": 80,
+        "p50": 23.279126995475963,
+        "p95": 68.79276299878256,
+        "p99": 93.85955999459838,
+        "max": 93.85955999459838
+      },
+      "target_visibility_ms": {
+        "samples": 42,
+        "p50": 17.376978001266252,
+        "p95": 65.86191099631833,
+        "p99": 77.73737899697153,
+        "max": 77.73737899697153
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 1.7500000000000018,
+      "duration": 14.523761528995237,
+      "rss_bytes": 133337088,
+      "aof_policy": {
+        "appendonly": "yes",
+        "appendfsync": "always"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 1.5,
+      "slow_readers": 1,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 80,
+        "sample_limit": 100000,
+        "p50": 0.44289800280239433,
+        "p95": 1.110079996578861,
+        "p99": 3.1294889995479025,
+        "max": 3.1294889995479025
+      },
+      "attack_ack_ms": {
+        "samples": 80,
+        "p50": 29.986453999299556,
+        "p95": 66.79740899562603,
+        "p99": 77.25904800463468,
+        "max": 77.25904800463468
+      },
+      "target_visibility_ms": {
+        "samples": 39,
+        "p50": 20.72770600352669,
+        "p95": 59.49923199659679,
+        "p99": 61.231983003381174,
+        "max": 61.231983003381174
+      },
+      "cadence_rejections": 0,
+      "cpu_seconds": 1.7400000000000002,
+      "duration": 14.522393166000256,
+      "rss_bytes": 133865472,
+      "aof_policy": {
+        "appendonly": "yes",
+        "appendfsync": "always"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 0,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 1120,
+        "sample_limit": 100000,
+        "p50": 0.28677899535978213,
+        "p95": 0.7965609984239563,
+        "p99": 2.334190001420211,
+        "max": 10.031595003965776
+      },
+      "attack_ack_ms": {
+        "samples": 224,
+        "p50": 32.40273700066609,
+        "p95": 62.666965000971686,
+        "p99": 68.801943998551,
+        "max": 72.01859400083777
+      },
+      "target_visibility_ms": {
+        "samples": 116,
+        "p50": 18.272923996846657,
+        "p95": 45.721631999185774,
+        "p99": 54.778896999778226,
+        "max": 54.98040900420165
+      },
+      "cadence_rejections": 896,
+      "cpu_seconds": 2.4200000000000017,
+      "duration": 14.51636150899867,
+      "rss_bytes": 133443584,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 0,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 1120,
+        "sample_limit": 100000,
+        "p50": 0.2830929952324368,
+        "p95": 1.3957379997009411,
+        "p99": 2.388100001553539,
+        "max": 12.082873996405397
+      },
+      "attack_ack_ms": {
+        "samples": 224,
+        "p50": 33.82944199984195,
+        "p95": 59.878266001760494,
+        "p99": 66.48195999878226,
+        "max": 74.80853699962609
+      },
+      "target_visibility_ms": {
+        "samples": 106,
+        "p50": 23.978821001946926,
+        "p95": 51.71778699877905,
+        "p99": 57.37181700533256,
+        "max": 71.4153709996026
+      },
+      "cadence_rejections": 896,
+      "cpu_seconds": 2.6500000000000004,
+      "duration": 14.52573549200315,
+      "rss_bytes": 133152768,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "repeat": 0,
+      "ping_ms": {
+        "samples": 1112,
+        "sample_limit": 100000,
+        "p50": 0.21042899606982246,
+        "p95": 1.3986630001454614,
+        "p99": 2.506969998648856,
+        "max": 11.517599996295758
+      },
+      "attack_ack_ms": {
+        "samples": 224,
+        "p50": 43.78431600343902,
+        "p95": 59.16021099983482,
+        "p99": 66.35333500162233,
+        "max": 71.135325000796
+      },
+      "target_visibility_ms": {
+        "samples": 126,
+        "p50": 29.870632002712227,
+        "p95": 49.19430700101657,
+        "p99": 62.595775998488534,
+        "max": 63.9323540017358
+      },
+      "cadence_rejections": 888,
+      "cpu_seconds": 2.41,
+      "duration": 14.520260368997697,
+      "rss_bytes": 134246400,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    },
+    {
+      "connections": 8,
+      "cadence_seconds": 0.1,
+      "slow_readers": 1,
+      "repeat": 1,
+      "ping_ms": {
+        "samples": 1127,
+        "sample_limit": 100000,
+        "p50": 0.2513449944672175,
+        "p95": 1.3866910012438893,
+        "p99": 2.5189919979311526,
+        "max": 8.653269993374124
+      },
+      "attack_ack_ms": {
+        "samples": 170,
+        "p50": 29.05274200020358,
+        "p95": 55.897677993925754,
+        "p99": 65.42510099825449,
+        "max": 68.00918399676448
+      },
+      "target_visibility_ms": {
+        "samples": 80,
+        "p50": 18.926572003692854,
+        "p95": 47.18907500500791,
+        "p99": 59.368907001044136,
+        "max": 59.368907001044136
+      },
+      "cadence_rejections": 957,
+      "cpu_seconds": 2.3900000000000006,
+      "duration": 14.521100689002196,
+      "rss_bytes": 133902336,
+      "aof_policy": {
+        "appendfsync": "always",
+        "appendonly": "yes"
+      }
+    }
+  ],
+  "ordinary_trial_runtime_verification": [
+    {
+      "sample": "combat-2-0.1-0",
+      "changed_runtime_inputs_since_trial": [
+        "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-2-0.1-1",
+      "changed_runtime_inputs_since_trial": [
+        "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-2-1.5-0",
+      "changed_runtime_inputs_since_trial": [
+        "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-2-1.5-1",
+      "changed_runtime_inputs_since_trial": [
+        "src/services/world/bank.py"
+      ],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-8-0.1-0",
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-8-0.1-1",
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-8-1.5-0",
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    },
+    {
+      "sample": "combat-8-1.5-1",
+      "changed_runtime_inputs_since_trial": [],
+      "changed_operational_test_helpers_since_trial": [
+        "src/operations/password_change_smoke.py"
+      ]
+    }
+  ],
+  "diagnostic_profile_only": {
+    "timings_are_inclusive_not_additive": true,
+    "phase_ms": {
+      "writer-drain": {
+        "samples": 4096,
+        "p50": 0.0005210022209212184,
+        "p95": 0.001082000380847603,
+        "p99": 0.0018430000636726618
+      },
+      "redis:PING": {
+        "samples": 1,
+        "p50": 1.3631990004796535,
+        "p95": 1.3631990004796535,
+        "p99": 1.3631990004796535
+      },
+      "redis:EXISTS": {
+        "samples": 22,
+        "p50": 0.05076600064057857,
+        "p95": 0.3047619975404814,
+        "p99": 0.36653799907071516
+      },
+      "redis:HGET": {
+        "samples": 2702,
+        "p50": 1.0138819998246618,
+        "p95": 19.572159995732363,
+        "p99": 32.830803997057956
+      },
+      "redis:SCAN": {
+        "samples": 78,
+        "p50": 0.0766140001360327,
+        "p95": 1.6023870048229583,
+        "p99": 12.995156001124997
+      },
+      "redis:other": {
+        "samples": 451,
+        "p50": 0.27674000011757016,
+        "p95": 1.7642509992583655,
+        "p99": 2.398712000285741
+      },
+      "redis:SET": {
+        "samples": 244,
+        "p50": 1.114270999096334,
+        "p95": 2.0737020022352226,
+        "p99": 2.977415999339428
+      },
+      "redis-watch:WATCH": {
+        "samples": 938,
+        "p50": 1.463465996494051,
+        "p95": 11.761546003981493,
+        "p99": 14.901221999025438
+      },
+      "redis-watch:HGETALL": {
+        "samples": 4096,
+        "p50": 0.6185210004332475,
+        "p95": 2.165965001040604,
+        "p99": 2.7222179996897466
+      },
+      "redis-pipeline": {
+        "samples": 3250,
+        "p50": 1.1537549944478087,
+        "p95": 3.006111001013778,
+        "p99": 4.577920000883751
+      },
+      "redis:HGETALL": {
+        "samples": 4096,
+        "p50": 1.1300400001346134,
+        "p95": 11.127041005238425,
+        "p99": 28.74957799940603
+      },
+      "redis:HSET": {
+        "samples": 992,
+        "p50": 2.0845719991484657,
+        "p95": 31.378498999401927,
+        "p99": 36.365626998303924
+      },
+      "event-loop-lag": {
+        "samples": 875,
+        "p50": 0.329049005813431,
+        "p95": 1.572533008584287,
+        "p99": 3.5348790042917244
+      },
+      "redis-watch:GET": {
+        "samples": 4096,
+        "p50": 0.6091530012781732,
+        "p95": 1.9712689972948283,
+        "p99": 2.705266000702977
+      },
+      "redis-watch:SMEMBERS": {
+        "samples": 161,
+        "p50": 0.036056997487321496,
+        "p95": 0.49305499851470813,
+        "p99": 1.1975069937761873
+      },
+      "resource-transaction": {
+        "samples": 567,
+        "p50": 20.685094998043496,
+        "p95": 58.546947002469096,
+        "p99": 64.72405600652564
+      },
+      "redis:GET": {
+        "samples": 1234,
+        "p50": 0.9246850022464059,
+        "p95": 3.246421998483129,
+        "p99": 3.577923998818733
+      },
+      "redis:WAITAOF": {
+        "samples": 201,
+        "p50": 0.24340600066352636,
+        "p95": 1.3851900002919137,
+        "p99": 1.8281099983141758
+      },
+      "aof-barrier": {
+        "samples": 201,
+        "p50": 1.5303719992516562,
+        "p95": 3.423635003855452,
+        "p99": 4.582442001265008
+      },
+      "redis:SMEMBERS": {
+        "samples": 345,
+        "p50": 0.9319189994130284,
+        "p95": 1.9243610004195943,
+        "p99": 2.5769969943212345
+      },
+      "password-executor": {
+        "samples": 18,
+        "p50": 28.402996002114378,
+        "p95": 39.49553500569891,
+        "p99": 39.49553500569891
+      },
+      "PlayerMapService._unblock_exit_tiles": {
+        "samples": 18,
+        "p50": 0.38363000203389674,
+        "p95": 0.39922900032252073,
+        "p99": 0.39922900032252073
+      },
+      "PlayerMapService._send_players_in_map": {
+        "samples": 18,
+        "p50": 2.101834994391538,
+        "p95": 10.825477998878341,
+        "p99": 10.825477998878341
+      },
+      "PlayerMapService._send_npcs_in_map": {
+        "samples": 18,
+        "p50": 0.4504549942794256,
+        "p95": 0.5851579990121536,
+        "p99": 0.5851579990121536
+      },
+      "PlayerMapService._send_ground_items_in_map": {
+        "samples": 18,
+        "p50": 0.005379995855037123,
+        "p95": 0.007934999302960932,
+        "p99": 0.007934999302960932
+      },
+      "LoginSpawnHandler.spawn_player": {
+        "samples": 18,
+        "p50": 7.875893999880645,
+        "p95": 26.231541000015568,
+        "p99": 26.231541000015568
+      },
+      "packet:TaskLogin": {
+        "samples": 18,
+        "p50": 47.419144997547846,
+        "p95": 87.35647000139579,
+        "p99": 87.35647000139579
+      },
+      "packet:TaskPing": {
+        "samples": 1605,
+        "p50": 0.04068599810125306,
+        "p95": 0.19083799998043105,
+        "p99": 0.7217349993879907
+      },
+      "packet:TaskCapabilities": {
+        "samples": 16,
+        "p50": 0.11605799954850227,
+        "p95": 1.9717809991561808,
+        "p99": 1.9717809991561808
+      },
+      "redis:HMGET": {
+        "samples": 22,
+        "p50": 1.347730001725722,
+        "p95": 30.478492997644935,
+        "p99": 31.022811999719124
+      },
+      "cadence-accepted": {
+        "samples": 201,
+        "p50": 0.004938992788083851,
+        "p95": 0.010009003744926304,
+        "p99": 0.012292999599594623
+      },
+      "combat-preflight": {
+        "samples": 182,
+        "p50": 0.27934500394621864,
+        "p95": 1.8122410037904046,
+        "p99": 2.5094890006585047
+      },
+      "physical-commit": {
+        "samples": 182,
+        "p50": 14.988387003540993,
+        "p95": 47.66847700375365,
+        "p99": 68.29927299986593
+      },
+      "progress-publish": {
+        "samples": 327,
+        "p50": 0.6405730018741451,
+        "p95": 1.8447309994371608,
+        "p99": 3.8972029942669906
+      },
+      "physical-with-publication": {
+        "samples": 201,
+        "p50": 18.359841000346933,
+        "p95": 54.12471700401511,
+        "p99": 60.69331899925601
+      },
+      "inventory-publish": {
+        "samples": 163,
+        "p50": 2.8389079961925745,
+        "p95": 6.39982899883762,
+        "p99": 7.535800003097393
+      },
+      "packet:TaskSkillAction": {
+        "samples": 973,
+        "p50": 0.08471900218864903,
+        "p95": 55.26501900021685,
+        "p99": 66.90035299834562
+      },
+      "packet:TaskTalk": {
+        "samples": 89,
+        "p50": 0.9224909954355098,
+        "p95": 6.169508000311907,
+        "p99": 28.982432006159797
+      },
+      "cadence-rejected": {
+        "samples": 772,
+        "p50": 0.0019040016923099756,
+        "p95": 0.00362699938705191,
+        "p99": 0.004458001058083028
+      },
+      "redis-watch:HMGET": {
+        "samples": 1,
+        "p50": 1.0008090030169114,
+        "p95": 1.0008090030169114,
+        "p99": 1.0008090030169114
+      }
+    },
+    "counts": {
+      "writer-drain": 46519,
+      "redis:PING": 1,
+      "redis:EXISTS": 22,
+      "redis:HGET": 2702,
+      "redis:SCAN": 78,
+      "redis:other": 451,
+      "redis:SET": 244,
+      "redis-watch:WATCH": 938,
+      "redis-watch:HGETALL": 7333,
+      "redis-pipeline": 3250,
+      "redis:HGETALL": 10020,
+      "redis:HSET": 992,
+      "event-loop-lag": 875,
+      "redis-watch:GET": 5166,
+      "redis-watch:SMEMBERS": 161,
+      "resource-transaction": 567,
+      "redis:GET": 1234,
+      "redis:WAITAOF": 201,
+      "aof-barrier": 201,
+      "redis:SMEMBERS": 345,
+      "password-executor": 18,
+      "PlayerMapService._unblock_exit_tiles": 18,
+      "PlayerMapService._send_players_in_map": 18,
+      "PlayerMapService._send_npcs_in_map": 18,
+      "PlayerMapService._send_ground_items_in_map": 18,
+      "LoginSpawnHandler.spawn_player": 18,
+      "packet:TaskLogin": 18,
+      "packet:TaskPing": 1605,
+      "packet:TaskCapabilities": 16,
+      "redis:HMGET": 22,
+      "cadence-accepted": 201,
+      "combat-preflight": 182,
+      "physical-commit": 182,
+      "progress-publish": 327,
+      "physical-with-publication": 201,
+      "inventory-publish": 163,
+      "packet:TaskSkillAction": 973,
+      "packet:TaskTalk": 89,
+      "cadence-rejected": 772,
+      "redis-watch:HMGET": 1
+    },
+    "payloads_recorded": false
+  },
+  "limits": [
+    "Loopback samples, not Internet latency or maximum capacity. Other development workloads were not excluded.",
+    "2 repetitions of 15 measured seconds after 3 warmup seconds per matrix cell; cadence 1.5s from Godot or aggressive 0.1s, 2/8 clients and 0/1 slow readers.",
+    "Only successful physical action acknowledgements count as attack latency; damage messages only count on the target.",
+    "Original before/after isolation used the same legacy attack+PING workload; do not substitute its PING latency for attack acknowledgement.",
+    "First 2-client runs predate the zero-HP invulnerable banker fix; the combat/transport/config runtime hashes match. All 8-client trials and final stage profile match current runtime inputs.",
+    "CPU is measured after login/startup and is process CPU time divided by elapsed sample time. RSS sampled each 0.5 seconds.",
+    "Stage timings include startup/warmup when the same stage executes there. Combat-only stages and cadence are separately named; diagnostic timings never replace ordinary trial percentiles.",
+    "The existing --profile CPU-profiler run exceeded its 120-second initialization limit on this free-threaded interpreter. --stage-profile completed separately; no CPU-profiler timings are credited.",
+    "Operational test helpers under src/operations are listed separately: the password-change smoke now waits the existing one-second status-query interval. These helpers are not imported by the server runtime."
+  ]
+}

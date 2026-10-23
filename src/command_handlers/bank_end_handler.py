@@ -48,6 +48,8 @@ class BankEndCommandHandler(CommandHandler):
         logger.info("BankEndCommandHandler: user_id %d cerró la ventana del banco", user_id)
 
         try:
+            self.message_sender.connection.bank_npc = ""
+            self.message_sender.connection.state_topics.discard("bank")
             # Enviar confirmación al cliente para cerrar la ventana
             await self.message_sender.send_bank_end()
             logger.debug("BANK_END enviado a user_id %d", user_id)

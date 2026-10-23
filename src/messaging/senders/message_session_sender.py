@@ -11,7 +11,6 @@ from src.network.msg_session import (
     build_pong_response,
     build_user_char_index_in_server_response,
 )
-from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
     from src.models.clan import Clan
@@ -125,25 +124,6 @@ class SessionMessageSender:
         """Envía paquete PONG en respuesta a un PING del cliente."""
         response = build_pong_response()
         logger.debug("[%s] Enviando PONG", self.connection.address)
-        await self.connection.send(response)
-
-    async def send_show_party_form(self) -> None:
-        """Envía paquete SHOW_PARTY_FORM para habilitar el botón de party en el cliente.
-
-        Este packet habilita la funcionalidad de parties en la UI del cliente.
-        Debe enviarse durante el login para que el botón "GRUPO" esté disponible.
-
-        NOTA: El cliente Godot actualmente NO procesa este packet (ID 99).
-        El servidor lo envía correctamente, pero el cliente necesita implementar
-        el manejo de este packet para habilitar el botón "GRUPO" en la UI.
-        """
-        response = bytes([ServerPacketID.SHOW_PARTY_FORM])
-        logger.info(
-            "[%s] Enviando SHOW_PARTY_FORM (packet_id=%d, bytes=%s)",
-            self.connection.address,
-            ServerPacketID.SHOW_PARTY_FORM,
-            response.hex(),
-        )
         await self.connection.send(response)
 
     async def send_clan_details(self, clan: Clan) -> None:

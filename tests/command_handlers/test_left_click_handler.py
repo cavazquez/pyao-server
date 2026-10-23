@@ -202,7 +202,7 @@ async def test_handle_npc_click_merchant(
     mock_redis_client = MagicMock()
     mock_redis_client.set_active_merchant = AsyncMock()
 
-    mock_message_sender.send_commerce_init_empty = AsyncMock()
+    mock_message_sender.send_commerce_init = AsyncMock()
     mock_message_sender.send_console_msg = AsyncMock()
 
     handler = LeftClickCommandHandler(
@@ -224,7 +224,7 @@ async def test_handle_npc_click_merchant(
     # Cuando no tiene items, retorna sin type pero con merchant_id
     assert "merchant_id" in result.data
     assert result.data["items_count"] == 0
-    mock_message_sender.send_commerce_init_empty.assert_called_once()
+    mock_message_sender.send_commerce_init.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -512,7 +512,7 @@ async def test_handle_merchant_no_items(
     mock_redis_client = MagicMock()
     mock_redis_client.set_active_merchant = AsyncMock()
 
-    mock_message_sender.send_commerce_init_empty = AsyncMock()
+    mock_message_sender.send_commerce_init = AsyncMock()
     mock_message_sender.send_console_msg = AsyncMock()
 
     handler = LeftClickCommandHandler(

@@ -101,7 +101,6 @@ class TradeSession:
     session_id: str = field(default_factory=lambda: uuid4().hex)
     revision: int = 0
     sequence: int = 0
-    versioned: bool = False
     senders: dict[int, MessageSender] = field(default_factory=dict)
     frozen_offers: tuple[ParticipantOffer, ParticipantOffer] | None = None
 
@@ -205,17 +204,16 @@ class TradeService:
             return False, "El destinatario no está conectado."
         concrete = {user: sender for user, sender in senders.items() if sender is not None}
         versions = {self._versioned(sender) for sender in concrete.values()}
-        if len(versions) != 1:
-            return False, "Ambos participantes deben usar la misma versión de intercambio."
+        if versions != {True}:
+            return False, "Ambos participantes deben negociar TRADE_STATE para intercambiar."
         session = TradeSession(
             initiator_id,
             self.map_manager.get_player_username(initiator_id) or "Jugador",
             target_id,
             self.map_manager.get_player_username(target_id) or "Jugador",
-            TradeState.PENDING if True in versions else TradeState.ACTIVE,
+            TradeState.PENDING,
             self.clock(),
             self.clock(),
-            versioned=True in versions,
             senders=concrete,
         )
         reason = await self._eligible(session)
@@ -227,18 +225,11 @@ class TradeService:
             self._sessions_by_user[user] = session
         if self.monitor and (self._monitor_task is None or self._monitor_task.done()):
             self._monitor_task = asyncio.create_task(self._watch_sessions(), name="trade-lifecycle")
-        if not session.versioned:
-            for user, sender in concrete.items():
-                await sender.send_user_commerce_init(
-                    session.target_username if user == initiator_id else session.initiator_username
-                )
         await self._publish(session)
         return True, f"Solicitud de comercio enviada a {session.target_username}."
 
     async def _publish(self, session: TradeSession, reason: str = "") -> None:
         # Arrays compactos: cada ítem es [slot, id, cantidad]; 60 ítems caben en 3072 bytes.
-        if not session.versioned:
-            return
         players = [
             [
                 user,
@@ -302,7 +293,7 @@ class TradeService:
             Resultado; una revisión obsoleta recibe el snapshot vigente.
         """
         session = self.get_session(user_id)
-        if not session or not session.versioned or session.session_id != session_id:
+        if not session or session.session_id != session_id:
             return False, "La sesión de intercambio ya no existe."
         if not self._sender(session, user_id):
             return False, "La conexión de intercambio cambió."
@@ -343,7 +334,7 @@ class TradeService:
         session = self.get_session(user_id)
         if not session or session.state != TradeState.ACTIVE or session.settlement_uncertain:
             return False, "La oferta no se puede editar ahora."
-        if session.versioned and revision != session.revision:
+        if revision != session.revision:
             return False, "Revisión obsoleta."
         if not 0 <= slot <= ConfigManager.as_int(self.inventory_repo.MAX_SLOTS) or quantity < 0:
             return False, "Slot o cantidad inválidos."
@@ -403,7 +394,7 @@ class TradeService:
         session = self.get_session(user_id)
         if not session or session.state not in {TradeState.ACTIVE, TradeState.COMMITTING}:
             return False, "No tienes una sesión activa."
-        if session.versioned and revision != session.revision:
+        if revision != session.revision:
             return False, "Revisión obsoleta."
         observed = session.revision
         reason = await self._eligible(session)
@@ -504,30 +495,6 @@ class TradeService:
         session.state = state
         self.clear_session(session.initiator_id)
         await self._publish(session, message)
-        if not session.versioned:
-            for user in session.senders:
-                sender = self._sender(session, user)
-                if sender:
-                    await sender.send_user_commerce_end()
-                    await sender.send_console_msg(
-                        message, font_color=7 if state == TradeState.COMPLETED else 1
-                    )
-
-    async def ready_trade(self, user_id: int) -> tuple[bool, str]:
-        """Compatibilidad con USER_COMMERCE_OK.
-
-        Returns:
-            Resultado de la confirmación clásica.
-        """
-        return await self.confirm_trade(user_id)
-
-    async def reject_trade(self, user_id: int) -> tuple[bool, str]:
-        """Compatibilidad con el rechazo clásico.
-
-        Returns:
-            Resultado de la cancelación.
-        """
-        return await self.cancel_trade(user_id, "Comercio rechazado.")
 
     async def sweep(self) -> None:
         """Evalúa reloj, conexiones, vida y rango sin depender de tráfico del jugador."""

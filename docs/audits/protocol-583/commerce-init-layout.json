@@ -1,9 +1,9 @@
 {
   "packet_id": 7,
-  "encoded_hex": "07010000",
-  "actual_bytes": 4,
+  "encoded_hex": "07",
+  "actual_bytes": 1,
   "contract_fields": [],
   "expected_bytes": 1,
-  "active_path": "send_commerce_init_empty",
-  "incompatible_path": "build_commerce_init_response / send_commerce_init"
+  "active_path": "build_commerce_init_response / send_commerce_init",
+  "incompatible_path_removed": true
 }

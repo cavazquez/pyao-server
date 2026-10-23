@@ -10,10 +10,6 @@ from src.network.msg_inventory import (
     build_change_spell_slot_response,
     build_commerce_init_response,
 )
-from src.network.msg_user_commerce import (
-    build_user_commerce_end_response,
-    build_user_commerce_init_response,
-)
 from src.network.packet_id import ServerPacketID
 
 if TYPE_CHECKING:
@@ -184,32 +180,10 @@ class InventoryMessageSender:
         logger.info("[%s] Enviando BANK_END", self.connection.address)
         await self.connection.send(response)
 
-    async def send_commerce_init_empty(self) -> None:
+    async def send_commerce_init(self) -> None:
         """Envía paquete COMMERCE_INIT vacío (solo abre la ventana)."""
-        response = bytes([ServerPacketID.COMMERCE_INIT])
+        response = build_commerce_init_response()
         logger.debug("[%s] Enviando COMMERCE_INIT (vacío)", self.connection.address)
-        await self.connection.send(response)
-
-    async def send_commerce_init(
-        self,
-        npc_id: int,
-        items: list[tuple[int, int, str, int, int, int, int, int, int, int, int]],
-    ) -> None:
-        """Envía paquete COMMERCE_INIT para abrir ventana de comercio con inventario del mercader.
-
-        Args:
-            npc_id: ID del NPC mercader.
-            items: Lista de tuplas con formato:
-                (slot, item_id, name, quantity, price, grh_index, obj_type,
-                 max_hit, min_hit, max_def, min_def)
-        """
-        response = build_commerce_init_response(npc_id=npc_id, items=items)
-        logger.debug(
-            "[%s] Enviando COMMERCE_INIT: npc_id=%d, num_items=%d",
-            self.connection.address,
-            npc_id,
-            len(items),
-        )
         await self.connection.send(response)
 
     async def send_commerce_end(self) -> None:
@@ -248,20 +222,4 @@ class InventoryMessageSender:
         """Envía paquete NAVIGATE_TOGGLE para alternar modo navegación."""
         response = bytes([ServerPacketID.NAVIGATE_TOGGLE])
         logger.debug("[%s] Enviando NAVIGATE_TOGGLE", self.connection.address)
-        await self.connection.send(response)
-
-    async def send_user_commerce_init(self, partner_username: str) -> None:
-        """Envía USER_COMMERCE_INIT con el nombre del otro jugador."""
-        response = build_user_commerce_init_response(partner_username)
-        logger.info(
-            "[%s] Enviando USER_COMMERCE_INIT (partner=%s)",
-            self.connection.address,
-            partner_username,
-        )
-        await self.connection.send(response)
-
-    async def send_user_commerce_end(self) -> None:
-        """Envía USER_COMMERCE_END para cerrar la ventana de comercio entre jugadores."""
-        response = build_user_commerce_end_response()
-        logger.info("[%s] Enviando USER_COMMERCE_END", self.connection.address)
         await self.connection.send(response)

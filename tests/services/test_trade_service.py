@@ -20,6 +20,9 @@ class DummySender:
 
     def __init__(self) -> None:
         self.init_payloads: list[str] = []
+        self.connection = SimpleNamespace(
+            capabilities=SimpleNamespace(enabled=128), send=AsyncMock()
+        )
         self.end_calls = 0
         self.send_change_inventory_slot = AsyncMock()
         self.send_update_gold = AsyncMock()
@@ -94,36 +97,59 @@ async def test_request_validation_and_cancel(setup_trade):
     assert not (await service.request_trade(1, "Alice"))[0]
     assert (await service.request_trade(1, "bob"))[0]
     assert service.get_session(1) is service.get_session(2)
-    assert manager.get_player_message_sender(1).init_payloads == ["Bob"]
+    assert (
+        b'"state":"pending"'
+        in manager.get_player_message_sender(1).connection.send.call_args.args[0]
+    )
     assert not (await service.request_trade(2, "Alice"))[0]
     assert (await service.cancel_trade(1))[0]
     assert not (await service.cancel_trade(2))[0]
-    assert manager.get_player_message_sender(1).end_calls == 1
-    assert manager.get_player_message_sender(2).end_calls == 1
-    assert not (await service.confirm_trade(1))[0]
+    assert (
+        b'"state":"cancelled"'
+        in manager.get_player_message_sender(1).connection.send.call_args.args[0]
+    )
+    assert (
+        b'"state":"cancelled"'
+        in manager.get_player_message_sender(2).connection.send.call_args.args[0]
+    )
+    assert not (
+        await service.confirm_trade(
+            1, revision=service.get_session(1).revision if service.get_session(1) else None
+        )
+    )[0]
 
 
 @pytest.mark.asyncio
 async def test_offer_preconditions(setup_trade):
     service, _manager, _player, _inventory = setup_trade
     assert (await service.request_trade(1, "Bob"))[0]
-    assert not (await service.update_offer(1, 1, 6))[0]
-    assert not (await service.update_offer(1, 0, 101))[0]
-    assert not (await service.update_offer(1, 31, 1))[0]
-    assert not (await service.update_offer(1, 1, -1))[0]
+    assert not (await service.update_offer(1, 1, 6, revision=service.get_session(1).revision))[0]
+    assert not (await service.update_offer(1, 0, 101, revision=service.get_session(1).revision))[0]
+    assert not (await service.update_offer(1, 31, 1, revision=service.get_session(1).revision))[0]
+    assert not (await service.update_offer(1, 1, -1, revision=service.get_session(1).revision))[0]
 
 
 @pytest.mark.asyncio
 async def test_concurrent_confirm_moves_both_resources_once(setup_trade):
     service, manager, player, inventory = setup_trade
     await service.request_trade(1, "Bob")
-    await service.update_offer(1, 1, 2)
-    await service.update_offer(2, 2, 1)
-    await service.update_offer(1, 0, 20)
-    await service.update_offer(2, 0, 60)
+    session = service.get_session(1)
+    await service.apply_action(2, session.session_id, session.revision, 0, 0, 0)
+    await service.update_offer(1, 1, 2, revision=service.get_session(1).revision)
+    await service.update_offer(2, 2, 1, revision=service.get_session(2).revision)
+    await service.update_offer(1, 0, 20, revision=service.get_session(1).revision)
+    await service.update_offer(2, 0, 60, revision=service.get_session(2).revision)
     session = service.get_session(1)
     await asyncio.gather(
-        service.confirm_trade(1), service.confirm_trade(2), service.confirm_trade(2)
+        service.confirm_trade(
+            1, revision=service.get_session(1).revision if service.get_session(1) else None
+        ),
+        service.confirm_trade(
+            2, revision=service.get_session(2).revision if service.get_session(2) else None
+        ),
+        service.confirm_trade(
+            2, revision=service.get_session(2).revision if service.get_session(2) else None
+        ),
     )
     assert await inventory.get_slot(1, 1) == (101, 3)
     assert await inventory.get_slot(1, 2) == (202, 1)
@@ -136,7 +162,7 @@ async def test_concurrent_confirm_moves_both_resources_once(setup_trade):
     assert session.settlement_id
     for user_id in [1, 2]:
         sender = manager.get_player_message_sender(user_id)
-        assert sender.end_calls == 1
+        assert b'"state":"completed"' in sender.connection.send.call_args.args[0]
         assert sender.send_change_inventory_slot.await_count == 30
 
 
@@ -145,8 +171,10 @@ async def test_concurrent_confirm_moves_both_resources_once(setup_trade):
 async def test_rejected_settlement_preserves_every_resource(setup_trade, reason):
     service, _manager, player, inventory = setup_trade
     await service.request_trade(1, "Bob")
-    await service.update_offer(1, 1, 2)
-    await service.update_offer(1, 0, 20)
+    session = service.get_session(1)
+    await service.apply_action(2, session.session_id, session.revision, 0, 0, 0)
+    await service.update_offer(1, 1, 2, revision=service.get_session(1).revision)
+    await service.update_offer(1, 0, 20, revision=service.get_session(1).revision)
     if reason == "source_changed":
         await inventory.set_slot(1, 1, 101, 1)
     elif reason == "full":
@@ -158,8 +186,14 @@ async def test_rejected_settlement_preserves_every_resource(setup_trade, reason)
         await player.redis.hset("player:1:equipment", mapping={"weapon": "1"})
     before = [await inventory.get_inventory(i) for i in [1, 2]]
     balances = [await player.get_gold(i) for i in [1, 2]]
-    await service.confirm_trade(1)
-    assert not (await service.confirm_trade(2))[0]
+    await service.confirm_trade(
+        1, revision=service.get_session(1).revision if service.get_session(1) else None
+    )
+    assert not (
+        await service.confirm_trade(
+            2, revision=service.get_session(2).revision if service.get_session(2) else None
+        )
+    )[0]
     assert [await inventory.get_inventory(i) for i in [1, 2]] == before
     assert [await player.get_gold(i) for i in [1, 2]] == balances
 
@@ -168,8 +202,12 @@ async def test_rejected_settlement_preserves_every_resource(setup_trade, reason)
 async def test_unknown_durability_result_is_retried_without_reapplying(setup_trade):
     service, _manager, player, _inventory = setup_trade
     await service.request_trade(1, "Bob")
-    await service.update_offer(1, 0, 20)
-    await service.confirm_trade(1)
+    session = service.get_session(1)
+    await service.apply_action(2, session.session_id, session.revision, 0, 0, 0)
+    await service.update_offer(1, 0, 20, revision=service.get_session(1).revision)
+    await service.confirm_trade(
+        1, revision=service.get_session(1).revision if service.get_session(1) else None
+    )
     failure = RuntimeError("fsync acknowledgment lost")
     with (
         patch(
@@ -178,12 +216,18 @@ async def test_unknown_durability_result_is_retried_without_reapplying(setup_tra
         ),
         pytest.raises(RuntimeError, match="fsync"),
     ):
-        await service.confirm_trade(2)
+        await service.confirm_trade(
+            2, revision=service.get_session(2).revision if service.get_session(2) else None
+        )
     assert await player.get_gold(1) == 80
     assert await player.get_gold(2) == 220
-    assert not (await service.update_offer(1, 0, 1))[0]
+    assert not (await service.update_offer(1, 0, 1, revision=service.get_session(1).revision))[0]
     assert (await service.cancel_trade(1))[0]  # El commit ya ganó; informa éxito, sin reembolsar.
-    assert not (await service.confirm_trade(1))[0]
+    assert not (
+        await service.confirm_trade(
+            1, revision=service.get_session(1).revision if service.get_session(1) else None
+        )
+    )[0]
     assert await player.get_gold(1) == 80
     assert await player.get_gold(2) == 220
 
@@ -193,7 +237,9 @@ async def test_offer_read_racing_with_commit_cannot_change_frozen_offer(setup_tr
     """Una lectura de slot que empezó antes no edita una oferta ya en confirmación."""
     service, _manager, player, inventory = setup_trade
     await service.request_trade(1, "Bob")
-    await service.update_offer(1, 0, 20)
+    session = service.get_session(1)
+    await service.apply_action(2, session.session_id, session.revision, 0, 0, 0)
+    await service.update_offer(1, 0, 20, revision=service.get_session(1).revision)
     entered_read, resume_read = asyncio.Event(), asyncio.Event()
     entered_commit, resume_commit = asyncio.Event(), asyncio.Event()
     original = inventory.get_slot
@@ -212,10 +258,18 @@ async def test_offer_read_racing_with_commit_cannot_change_frozen_offer(setup_tr
         patch.object(inventory, "get_slot", slow_read),
         patch("src.services.trade_settlement.require_durable", slow_durability),
     ):
-        edit = asyncio.create_task(service.update_offer(1, 1, 2))
+        edit = asyncio.create_task(
+            service.update_offer(1, 1, 2, revision=service.get_session(1).revision)
+        )
         await asyncio.wait_for(entered_read.wait(), 2)
-        await service.confirm_trade(1)
-        commit = asyncio.create_task(service.confirm_trade(2))
+        await service.confirm_trade(
+            1, revision=service.get_session(1).revision if service.get_session(1) else None
+        )
+        commit = asyncio.create_task(
+            service.confirm_trade(
+                2, revision=service.get_session(2).revision if service.get_session(2) else None
+            )
+        )
         await asyncio.wait_for(entered_commit.wait(), 2)
         resume_read.set()
         assert not (await edit)[0]

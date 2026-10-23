@@ -7,13 +7,16 @@ se interpreta la frontera TCP como frontera de un mensaje. No realiza I/O.
 from __future__ import annotations
 
 import json
+import math
+import struct
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Literal
 
 CONTRACT: dict[str, Any] = json.loads(
     (Path(__file__).parent / "protocol/contract.json").read_text(encoding="utf-8")
 )
 WIDTHS = {"u8": 1, "i16": 2, "i32": 4, "u32": 4, "f32": 4}
+FORMATS = {"u8": "B", "i16": "h", "i32": "i", "u32": "I", "f32": "f"}
 
 
 class FramingError(Exception):
@@ -41,6 +44,10 @@ class InvalidVariantError(FramingError):
     """Subcomando no soportado: su longitud no se puede inferir."""
 
 
+class InvalidValueError(FramingError):
+    """Campo fuera de rango, no finito o frame con bytes sobrantes."""
+
+
 def _fields_end(data: bytes, fields: list[dict[str, Any]], offset: int) -> int | None:
     """Calcula el fin sólo si están disponibles todos los campos.
 
@@ -49,6 +56,7 @@ def _fields_end(data: bytes, fields: list[dict[str, Any]], offset: int) -> int |
 
     Raises:
         InvalidLengthError: Ante una longitud fuera del contrato, sin esperar payload.
+        InvalidValueError: Ante un campo numérico no finito o fuera de rango.
     """
     for field in fields:
         kind = field["type"]
@@ -62,6 +70,16 @@ def _fields_end(data: bytes, fields: list[dict[str, Any]], offset: int) -> int |
                 raise InvalidLengthError(msg)
             offset += length
         else:
+            width = WIDTHS[kind]
+            if offset + width > len(data):
+                return None
+            value = struct.unpack_from("<" + FORMATS[kind], data, offset)[0]
+            finite = kind != "f32" or math.isfinite(value)
+            minimum = field.get("min", value)
+            maximum = field.get("max", value)
+            if not finite or not minimum <= value <= maximum:
+                msg = f"Campo fuera del contrato: {field['name']}"
+                raise InvalidValueError(msg)
             offset += WIDTHS[kind]
         if offset > CONTRACT["max_packet_bytes"]:
             msg = "Longitud de paquete fuera del contrato"
@@ -96,14 +114,26 @@ def packet_length(data: bytes, direction: str = "client") -> int | None:
     return _fields_end(data, variant, end)
 
 
+def validate_packet(data: bytes, direction: str = "client") -> None:
+    """Valida exactamente un mensaje antes de enviarlo o despacharlo.
+
+    Raises:
+        InvalidValueError: Por longitud incompleta o bytes sobrantes.
+    """
+    if not data or packet_length(data, direction) != len(data):
+        msg = "El mensaje no coincide exactamente con su layout"
+        raise InvalidValueError(msg)
+
+
 class PacketFramer:
     """Acumula un remanente acotado y extrae mensajes completos en orden."""
 
     MAX_BUFFER_BYTES: ClassVar[int] = CONTRACT["max_packet_bytes"]
 
-    def __init__(self) -> None:
+    def __init__(self, direction: Literal["client", "server"] = "client") -> None:
         """Crea un buffer exclusivo de la conexión."""
         self._buffer = bytearray()
+        self.direction = direction
 
     def feed(self, data: bytes) -> None:
         """Agrega una lectura; el consumidor drena mensajes después de cada feed.
@@ -122,7 +152,7 @@ class PacketFramer:
         Returns:
             Bytes del paquete completo, o None mientras está incompleto.
         """
-        length = packet_length(bytes(self._buffer))
+        length = packet_length(bytes(self._buffer), self.direction)
         if length is None:
             return None
         packet = bytes(self._buffer[:length])

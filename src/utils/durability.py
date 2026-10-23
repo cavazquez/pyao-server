@@ -11,6 +11,20 @@ AOF_TIMEOUT_MS = 5000
 BARRIER_TTL_SECONDS = 60
 
 
+async def ensure_aof(redis: Redis) -> None:
+    """Comprueba AOF antes de mutar sin esperar fsync de una escritura artificial.
+
+    La barrera posterior al EXEC sigue siendo obligatoria antes de publicar.
+
+    Raises:
+        RuntimeError: Si AOF está deshabilitado o su última escritura falló.
+    """
+    info = await redis.info("persistence")
+    if info.get("aof_enabled") != 1 or info.get("aof_last_write_status") != "ok":
+        msg = "Se requiere Redis con AOF activo y sin errores de escritura"
+        raise RuntimeError(msg)
+
+
 async def require_durable(redis: Redis) -> None:
     """Exige fsync local de todos los writes anteriores en el orden de Redis.
 

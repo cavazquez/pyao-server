@@ -34,7 +34,7 @@ def validate_persistence() -> dict[str, Any]:
             policy = client.config_get("appendonly", "appendfsync", "dir", "save", "protected-mode")
             require(policy["protected-mode"] == "yes", "modo protegido")
             require(policy["appendonly"] == "yes", "política efectiva")
-            require(policy["appendfsync"] == "everysec", "política efectiva")
+            require(policy["appendfsync"] == "always", "política efectiva")
             require(policy["dir"] == "/data", "política efectiva")
             require(policy["save"] == "900 1 300 10 60 10000", "política efectiva")
             version = client.info("server")["redis_version"]

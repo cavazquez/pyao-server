@@ -69,32 +69,34 @@ el mensaje llegue al usuario. Las referencias a tests son un índice, no un resu
 de ejecución. Las operaciones primitivas y los campos históricos con control de flujo
 no se presentan como esquemas completos; los formatos compuestos se señalan para prueba.
 
-## Hallazgos y orden propuesto
+## Correcciones posteriores a la auditoría
 
-1. **P1 — Formato alternativo de COMMERCE_INIT:** el constructor antiguo produce
-   cuatro bytes (`07010000`) para un mensaje de un byte. La ruta activa usa el
-   formato correcto. Reproducción en `commerce-init-layout.json`. Seguir en [#588](https://github.com/cavazquez/pyao-server/issues/588).
-2. **P2 — Señal de party sin receptor:** el servidor envía SHOW_PARTY_FORM (99), que
-   el dispatcher no procesa. GRUPO y las parties sí funcionan con el estado actual.
-   Retirar o definir un efecto real: [#589](https://github.com/cavazquez/pyao-server/issues/589).
-3. **P2 — Contrato desactualizado:** EXPANSION=1024 no figura en mask_bits, el plazo
-   declarado de negociación difiere de Godot y compatibility sigue indicando
-   implementaciones pendientes. BANK_OK (85) está marcado supported sin emisor y
-   con consumidor `pass`: [#590](https://github.com/cavazquez/pyao-server/issues/590).
-4. **P2 — Comercio antiguo duplicado:** hay handlers sin writers y mensajes con
-   consumidores vacíos mientras el intercambio real usa TRADE_ACTION/TRADE_STATE.
-   Consolidar sin romper cancelación/cierre: [#591](https://github.com/cavazquez/pyao-server/issues/591).
-5. **P2 — Reordenar bóveda:** no equivale a depositar/extraer. Servidor [#592](https://github.com/cavazquez/pyao-server/issues/592)
-   y cliente [#234](https://github.com/cavazquez/ArgentumOnlineGodot/issues/234), en ese orden.
-6. **P2 — Editar ficha de clan:** consultar clan o votar no acredita editar códice,
-   noticias/sitio. Servidor [#593](https://github.com/cavazquez/pyao-server/issues/593)
-   y cliente [#235](https://github.com/cavazquez/ArgentumOnlineGodot/issues/235), en ese orden.
+La tanda coordinada de protocolo, combate, bóveda y clanes implementa los
+seguimientos #582, #588–#593 y #596, con cliente #234/#235:
 
-La música conserva su validación pendiente en cliente #215. Las pruebas negativas
-del protocolo continúan en #582. El seguro específico de resurrección, reputación
-VB6, macros automáticas, foros de mapa y ItemUpgrade no se habilitan durante esta
-auditoría: son decisiones de producto pendientes, distintas de los transportes propios.
-La ampliación dinámica de inventario no se ofrece: el inventario actual tiene 30 slots.
+1. COMMERCE_INIT tiene un solo constructor de un byte; se retiró el extendido.
+2. SHOW_PARTY_FORM no se emite y GRUPO conserva sus operaciones reales.
+3. EXPANSION, plazos y baseline del contrato están actualizados; BANK_OK no se
+   anuncia como soportado.
+4. El intercambio usa una sola autoridad mediante TRADE_ACTION/TRADE_STATE. Se
+   retiraron handlers, DTOs y emisiones antiguas.
+5. Reordenar bóveda tiene una operación atómica con revisión, acceso físico y UI
+   sin movimientos optimistas; no equivale a depositar y extraer.
+6. Códice/descripción, noticias y sitio del clan tienen edición versionada para
+   el líder vigente y conservación de borradores frente a conflictos.
+7. Las fixtures cubren todos los mensajes y variantes soportados, escritores
+   reales, receptores, fragmentación, límites y negociación. El combate conserva
+   una barrera durable dentro de su commit antes de publicar efectos.
+
+Los detalles, pruebas y límites de la fase están en
+[protocol-bank-clans.md](../../development/protocol-bank-clans.md).
+La muestra que sigue se conserva como evidencia histórica y no acredita por sí
+sola las fuentes modificadas por esta tanda.
+
+La música sigue pendiente en cliente #215. El seguro específico de resurrección,
+reputación VB6, macros automáticas, foros de mapa e ItemUpgrade conservan sus
+respectivas decisiones de producto; no se habilitan al declarar sus opcodes.
+El inventario actual tiene 30 slots.
 
 ## Muestra representativa
 

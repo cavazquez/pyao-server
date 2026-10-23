@@ -1,0 +1,283 @@
+{
+  "clients": 2,
+  "seconds": 159.24,
+  "started_at": "2026-10-23T02:41:23.259600+00:00",
+  "completed_at": "2026-10-23T02:44:23.738227+00:00",
+  "long_acceptance": false,
+  "tls": true,
+  "installed_wheel": false,
+  "source_checkout": true,
+  "server_commit": "9b3d107f429f29a91afebd1597e0391ceb0e036c",
+  "client_commit": "3ce61f66bc3d22cadeac1d76167c69786d102f81",
+  "wheel_sha256": null,
+  "server_candidate_sha256": null,
+  "redis": "8.10.2",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "client_audio_driver_requested": "PulseAudio",
+  "client_audio_drivers": [
+    "PulseAudio",
+    "PulseAudio"
+  ],
+  "graceful_sigterm": true,
+  "periodic_screenshots": [],
+  "live_tls_sessions_drained": 2,
+  "release_version": "1.0.0rc6",
+  "installed_snap_ui": false,
+  "snap_install_source": null,
+  "godot_measured_seconds": [
+    61.0,
+    61.0
+  ],
+  "reconnect_states": [
+    {
+      "capabilities": 1983,
+      "exact_inventory_and_spell_order": true,
+      "hunger_after": [
+        90.0,
+        90.0
+      ],
+      "hunger_before": [
+        100.0,
+        100.0
+      ],
+      "inventory": {
+        "0": [
+          38,
+          9,
+          false
+        ],
+        "19": [
+          561,
+          1,
+          false
+        ],
+        "20": [
+          562,
+          1,
+          false
+        ],
+        "21": [
+          563,
+          1,
+          false
+        ],
+        "22": [
+          197,
+          2,
+          false
+        ],
+        "24": [
+          37,
+          10,
+          false
+        ],
+        "26": [
+          659,
+          1,
+          false
+        ],
+        "29": [
+          1,
+          10,
+          false
+        ]
+      },
+      "spells": [
+        3,
+        2,
+        33,
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "capabilities": 1983,
+      "exact_inventory_and_spell_order": true,
+      "hunger_after": [
+        90.0,
+        90.0
+      ],
+      "hunger_before": [
+        100.0,
+        100.0
+      ],
+      "inventory": {
+        "0": [
+          38,
+          10,
+          false
+        ],
+        "19": [
+          561,
+          1,
+          false
+        ],
+        "20": [
+          562,
+          1,
+          false
+        ],
+        "21": [
+          563,
+          1,
+          false
+        ],
+        "22": [
+          197,
+          2,
+          false
+        ],
+        "24": [
+          37,
+          10,
+          false
+        ],
+        "25": [
+          15,
+          1,
+          false
+        ],
+        "26": [
+          659,
+          1,
+          false
+        ],
+        "29": [
+          1,
+          10,
+          false
+        ]
+      },
+      "spells": [
+        3,
+        2,
+        33,
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "native_export": false,
+  "acceptance": {
+    "required": [
+      "bank",
+      "bank_reorder",
+      "chat",
+      "cities",
+      "clan",
+      "clan_profile",
+      "combat",
+      "fish",
+      "inventory",
+      "life_cycle",
+      "magic",
+      "map_exit",
+      "meditation",
+      "merchant",
+      "mine",
+      "party",
+      "party_rewards",
+      "pets",
+      "scroll",
+      "skills",
+      "spell_order",
+      "storage_restart",
+      "trade_cancel",
+      "trade_complete",
+      "wood"
+    ],
+    "completed": [
+      "bank",
+      "bank_reorder",
+      "chat",
+      "cities",
+      "clan",
+      "clan_profile",
+      "combat",
+      "fish",
+      "inventory",
+      "life_cycle",
+      "magic",
+      "map_exit",
+      "meditation",
+      "merchant",
+      "mine",
+      "party",
+      "party_rewards",
+      "pets",
+      "scroll",
+      "skills",
+      "spell_order",
+      "storage_restart",
+      "trade_cancel",
+      "trade_complete",
+      "wood"
+    ],
+    "missing": [],
+    "functional_passed": true,
+    "graphical_passed": true,
+    "test_execution_passed": true
+  },
+  "scenario": "storage-protocol",
+  "regression_passed": true
+}

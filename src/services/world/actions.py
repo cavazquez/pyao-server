@@ -13,6 +13,9 @@ ACTION_FIELDS: dict[str, dict[str, type]] = {
     "lottery.bet": {"round": str, "npc": str, "gross": int},
     "party.read": {},
     "clan.read": {"page": int},
+    "clan.profile": {"clan": int, "version": int, "description": str, "news": str, "website": str},
+    "bank.read": {},
+    "bank.move": {"source": int, "destination": int, "banker": str},
     "pets.read": {},
     "weather.read": {},
     "commands.read": {},
@@ -38,7 +41,7 @@ ACTION_FIELDS: dict[str, dict[str, type]] = {
     "weather.set": {"map": int, "raining": bool, "intensity": int},
     "trade.read": {"session": str, "revision": int, "page": int},
 }
-TOPICS = frozenset({"tax", "party", "clan", "pets", "weather", "commands", "lottery"})
+TOPICS = frozenset({"tax", "party", "clan", "pets", "weather", "commands", "lottery", "bank"})
 ACTION_FIELDS.update(EXPANSION_FIELDS)
 TOPICS |= EXPANSION_TOPICS
 

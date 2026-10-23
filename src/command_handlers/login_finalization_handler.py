@@ -57,14 +57,6 @@ class LoginFinalizationHandler:
         player_service = PlayerService(self.player_repo, self.message_sender, self.account_repo)
         await player_service.send_inventory(user_id, self.equipment_repo)
 
-        # Habilitar botón de party en el cliente (después del spawn completo)
-        logger.info("[LOGIN-FINALIZE] user_id=%d Enviando SHOW_PARTY_FORM (ID=101)", user_id)
-        await self.message_sender.send_show_party_form()
-
-        # NOTA: El envío de CLAN_DETAILS (packet 80) está deshabilitado hasta que el cliente
-        # Godot implemente el handler para procesar GuildDetails.
-        # Ver: docs/systems/CLAN_SYSTEM.md para instrucciones de cómo habilitarlo.
-
         # Enviar MOTD (Mensaje del Día)
         logger.info("[LOGIN-FINALIZE] user_id=%d Enviando MOTD", user_id)
         if self._motd_handler is None:
