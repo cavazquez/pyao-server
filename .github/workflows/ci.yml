@@ -47,6 +47,8 @@ jobs:
         run: |
           uv run --locked mypy src tests
           uv run --locked mypy --config-file mypy-tools.ini
+      - name: Reproducibility and release helper tests
+        run: uv run --locked python -m unittest discover -s tools/tests -v
 
   fast-tests:
     runs-on: ubuntu-24.04
