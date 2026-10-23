@@ -13,6 +13,8 @@ from redis.exceptions import ConnectionError as RedisConnectionError
 
 from src.effects.effect_lifecycle import LifecycleEffect
 from src.game.map_manager import MapManager
+from src.items.ledger import PREFIX
+from src.items.migration import migrate
 from src.messaging.senders.message_status_effects_sender import StatusEffectsMessageSender
 from src.models.item_catalog import ItemCatalog
 from src.models.npc import NPC
@@ -34,6 +36,7 @@ from src.services.player.lifetime_stats import DAY_SECONDS, mini_stats_packet, r
 from src.services.player.player_death_service import PlayerDeathService
 from src.services.player.spell_service import SpellService
 from src.utils.gold_atomic import operation_id
+from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 
 
@@ -463,6 +466,37 @@ async def test_summoning_and_warp_confirm_pet_and_cost_together(world):
     assert pet.map_id == 2
     assert max(abs(pet.x - 50), abs(pet.y - 50)) == 1
     assert (pet.x, pet.y) != (51, 50)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("expired", [False, True])
+async def test_staff_summon_preserves_individual_condition_clock(world, expired):
+    """El foco migrado autoriza la invocación sólo mientras conserve condición."""
+    staff = min(ItemCatalog().staff_item_ids())
+    await world.client.hset(RedisKeys.player_inventory(1), "slot_1", f"{staff}:1")
+    await world.client.hset(RedisKeys.player_equipment(1), "weapon", "1")
+    await migrate(world.client.redis)
+    stack = InventorySlot.parse(await world.client.hget(RedisKeys.player_inventory(1), "slot_1"))
+    assert stack is not None
+    assert len(stack.instance_ids) == 1
+    if expired:
+        await world.client.hset(
+            PREFIX + stack.instance_ids[0], mapping={"expires_at": "1", "lifetime_seconds": "1"}
+        )
+    before = await world.player.get_mana(1)
+    identity = operation_id()
+    assert await cast(world, 33, 52, 50, identity=identity) is (not expired)
+    pets = await world.service.summon_service.get_player_pets(1)
+    after = await world.player.get_mana(1)
+    if expired:
+        assert pets == []
+        assert after == before
+    else:
+        assert pets
+        assert after < before
+        assert await cast(world, 33, 52, 50, identity=identity)
+        assert await world.player.get_mana(1) == after
+        assert await world.service.summon_service.get_player_pets(1) == pets
 
 
 @pytest.mark.asyncio

@@ -5,6 +5,7 @@ import time
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from fakeredis import aioredis
 
 from src.economy.merchant_stock import StockEntry, restock_merchant, seed_merchant
 from src.items.ground_gc import QUEUE_KEY
@@ -21,6 +22,21 @@ from src.utils.ground_storage import read_ground
 from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 from src.utils.resource_transaction import Decision, Resource, transact
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(("socket_limit", "expected"), [(5, 60.0), (120, 120.0), (None, None)])
+async def test_bootstrap_timeout_owns_a_separate_pool(socket_limit, expected):
+    """La migración permite EXEC grandes sin alterar ni cerrar el pool del juego."""
+    async with aioredis.FakeRedis(decode_responses=True, socket_timeout=socket_limit) as redis:
+        with patch("src.items.migration._migrate", new=AsyncMock(return_value=0)) as run:
+            assert await migrate(redis) == 0
+        bootstrap = run.await_args.args[0]
+        assert bootstrap.connection_pool is not redis.connection_pool
+        assert bootstrap.connection_pool.connection_kwargs["socket_timeout"] == expected
+        assert bootstrap.auto_close_connection_pool
+        assert redis.connection_pool.connection_kwargs["socket_timeout"] == socket_limit
+        assert await redis.ping()
 
 
 @pytest.mark.asyncio

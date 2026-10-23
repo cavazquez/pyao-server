@@ -106,9 +106,11 @@ class SummonPlan(SpellPlan):
         stats_key = RedisKeys.player_user_stats(request.user_id)
         stats = cast("dict[str, str]", snapshot[stats_key])
         position = cast("dict[str, str]", snapshot[RedisKeys.player_position(request.user_id)])
-        values = {key: value for key, value in snapshot.items() if isinstance(value, dict)}
         error = self._validate_caster(
-            values, stats, position, values[RedisKeys.player_spellbook(request.user_id)]
+            snapshot,
+            stats,
+            position,
+            cast("dict[str, str]", snapshot[RedisKeys.player_spellbook(request.user_id)]),
         )
         if error:
             return Decision({"applied": False, "message": error}, {})

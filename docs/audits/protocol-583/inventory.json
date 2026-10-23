@@ -2,8 +2,8 @@
   "schema_version": 1,
   "issue": "https://github.com/cavazquez/pyao-server/issues/583",
   "baseline_commits": {
-    "server": "e9288aeae9803972eb96c8baabd4f66b03c31e7e",
-    "client": "667c5445c6cd22c85ff9468986e538a6a0323943"
+    "server": "f0359974dff8914949601381d5dd6d4ba572ef6d",
+    "client": "fd35291f98687a7af3150fc20c52d083dce25682"
   },
   "original_reference": {
     "repository": "Comunidad-Winter/Argentum-Online",
@@ -991,7 +991,7 @@
     {
       "repository": "server",
       "path": "src/items/migration.py",
-      "sha256": "37198fe172562f9357e99903646b0d3323e84203c29040715709b41ff86debdc"
+      "sha256": "bcf84ec2235fc3cc57f28d1dd2863d8ee01675b008eacc20f780f548ddffcb52"
     },
     {
       "repository": "server",
@@ -32715,7 +32715,7 @@
         {
           "repository": "server",
           "path": "tests/services/player/test_spell_lifecycle.py",
-          "line": 33,
+          "line": 35,
           "kind": "reference_only_not_execution_proof"
         }
       ],
@@ -33550,7 +33550,7 @@
         {
           "repository": "server",
           "path": "tests/services/player/test_spell_lifecycle.py",
-          "line": 661,
+          "line": 695,
           "kind": "reference_only_not_execution_proof"
         },
         {
@@ -38053,7 +38053,7 @@
         {
           "repository": "server",
           "path": "tests/services/player/test_spell_lifecycle.py",
-          "line": 233,
+          "line": 236,
           "kind": "reference_only_not_execution_proof"
         },
         {
@@ -38545,8 +38545,8 @@
         {
           "repository": "server",
           "path": "src/items/migration.py",
-          "line": 56,
-          "end_line": 87,
+          "line": 120,
+          "end_line": 151,
           "symbol": "_container"
         },
         {
