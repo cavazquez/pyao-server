@@ -29,6 +29,7 @@ async def test_migration_bank_and_retry_keep_identity_and_age(redis_client):
     key, bank = RedisKeys.player_inventory(1), RedisKeys.bank(1)
     await redis.hset(key, mapping={"slot_1": "2:2"})
     await migrate(redis)
+    assert json.loads(await redis.get("items:migration:backup:" + key)) == {"slot_1": "2:2"}
     first = InventorySlot.parse(await redis.hget(key, "slot_1"))
     second = InventorySlot.parse(await redis.hget(key, "slot_2"))
     assert first.quantity == second.quantity == 1

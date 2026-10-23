@@ -60,7 +60,8 @@ async def _container(redis: Redis, resource: Resource, epoch: int) -> None:
             try:
                 await pipe.watch(resource.key, backup)
                 snapshot = await _read_snapshot(pipe, (resource,))
-                original = snapshot[resource.key]
+                value = snapshot[resource.key]
+                original = value.copy() if isinstance(value, dict) else value
                 if await pipe.exists(backup):
                     # Un commit previo incluyó el backup y el contenedor juntos.
                     return
