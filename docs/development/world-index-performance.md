@@ -30,9 +30,10 @@ anteriores. Al arrancar, Redis reconstruye la vista y los índices, conserva las
 mascotas domadas vivas y retira invocaciones temporales, como antes. No se cambió
 la política de persistencia de invocaciones.
 
-La consulta pasa de O(K + N) y N viajes de lectura a O(P), con dos viajes normales
+Las lecturas pasan de O(K + N) y N viajes secuenciales a O(P), con dos viajes normales
 (conjunto y lote), donde K son claves Redis, N todos los NPC y P las mascotas del
-dueño. El seguimiento local pasa de O(K + N) con I/O de NPC a O(Ptotal), sin
+dueño. El orden estable de IDs añade O(P log P) de CPU, con P limitado a tres por
+las reglas actuales. El seguimiento local pasa de O(K + N) con I/O de NPC a O(Ptotal), sin
 consultas Redis para descubrir mascotas; conserva las lecturas necesarias del dueño.
 La memoria adicional es O(Ptotal) referencias, sin copiar modelos completos.
 
@@ -50,7 +51,8 @@ referencia corrupta a otro mapa se retira del conjunto sin leer ni borrar ese da
 La reconstrucción se hace una vez antes de abrir el listener; no renueva TTL ni
 reescribe hashes. No requiere migrar el esquema persistido. Los recorridos globales
 `SCAN` que quedan pertenecen al arranque/mantenimiento, nunca a sincronización por
-jugador o tick. La consulta pasa de O(K + F) a O(Fmapa); el índice ocupa O(Fmapa).
+jugador o tick. Las lecturas pasan de O(K + F) a O(Fmapa); ordenar las referencias
+añade O(Fmapa log Fmapa) de CPU y el índice ocupa O(Fmapa).
 Un lock por emisor evita paquetes duplicados de ticks concurrentes y volver al
 mapa reconstruye la vista.
 

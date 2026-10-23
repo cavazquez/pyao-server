@@ -32,13 +32,12 @@ def configure_scenario():
             print("SCOPED_WORLD: PASS", key, flush=True)
 
         def fire_visible(self, index, x, y, visible=True):
+            def matches():
+                probe = self.command(index, "loot_probe", x=x, y=y, graphic=1521)["loot_probe"]
+                return all(probe.values()) if visible else not probe["visible"]
+
             return self.wait(
-                lambda: (
-                    self.command(index, "loot_probe", x=x, y=y, graphic=1521)["loot_probe"][
-                        "visible"
-                    ]
-                    == visible
-                ),
+                matches,
                 f"campfire visible={visible} client={index}",
             )
 

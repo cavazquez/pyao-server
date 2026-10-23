@@ -1,0 +1,45 @@
+{
+  "errors": 0,
+  "warnings": 4,
+  "counts": {
+    "items": 1078,
+    "npcs": 336,
+    "spells": 50,
+    "loot_eligible": 494,
+    "loot_excluded": 584,
+    "recipes_weapons": 26,
+    "recipes_armor": 61,
+    "recipes_carpentry": 34,
+    "maps": 290
+  },
+  "findings": [
+    {
+      "severity": "warning",
+      "file": "/home/cristian/repos/propios/ProyectoAO/fase-redis-nuitka-2026-10-22/standalone-r2/nuitka_entry.dist/src/runtime_data/data/items/misc/teleports.toml",
+      "field": "item[15].GrhIndex",
+      "record_id": "1043",
+      "message": "Objeto invisible: el mapa no dibuja sprite (GrhIndex=0)"
+    },
+    {
+      "severity": "warning",
+      "file": "/home/cristian/repos/propios/ProyectoAO/fase-redis-nuitka-2026-10-22/standalone-r2/nuitka_entry.dist/src/runtime_data/data/items/world_objects/signs.toml",
+      "field": "item[76].GrhIndex",
+      "record_id": "987",
+      "message": "Objeto invisible: el mapa no dibuja sprite (GrhIndex=0)"
+    },
+    {
+      "severity": "warning",
+      "file": "/home/cristian/repos/propios/ProyectoAO/fase-redis-nuitka-2026-10-22/standalone-r2/nuitka_entry.dist/src/runtime_data/data/items/world_objects/signs.toml",
+      "field": "item[77].GrhIndex",
+      "record_id": "989",
+      "message": "Objeto invisible: el mapa no dibuja sprite (GrhIndex=0)"
+    },
+    {
+      "severity": "warning",
+      "file": "/home/cristian/repos/propios/ProyectoAO/fase-redis-nuitka-2026-10-22/standalone-r2/nuitka_entry.dist/src/runtime_data/data",
+      "field": "client_assets",
+      "record_id": "?",
+      "message": "Sin --client-dir: validaci\u00f3n audiovisual omitida; el servidor no usa esos archivos."
+    }
+  ]
+}

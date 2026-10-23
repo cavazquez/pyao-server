@@ -1,0 +1,31 @@
+{
+  "root": "map_data",
+  "manifest_collected": "after the trials; all modes used the same directory and the versioned archive in builds.json",
+  "files": {
+    ".map_sync_metadata.json": "43d4b68bb7342b3e2225c45debe950afafc4885d92c04bbf49cdf84bd9fa7502",
+    "blocked_001-050.json": "e986845f22e303f15694ecf2b2b4dc559a9c596810d68685eac100bbafea9ee8",
+    "blocked_051-100.json": "67411fae34d0f7575d85a411d0f5dd378f4a5e9a5f87aa5b9e3f795cebfc6474",
+    "blocked_101-150.json": "9887442b040e844332b67dee386cff6eee34ebc1d1dc5269cbcb0b8deb67429c",
+    "blocked_151-200.json": "8c8b90186b4f648f5ec680f67ca3fd9c22ecb40b950f46241f4e5aa19220c33c",
+    "blocked_201-250.json": "68ecaccf302d5fba44957a0cd8b060af1a6507efe0a44c674d64341d3976b148",
+    "blocked_251-290.json": "f7d24da2d8e3d230704d5dcaa7cfb4ac6f20fe6e1058700a73eea3968d5af547",
+    "metadata_001-051.json": "b8945eee9ce4d4057c1c3eeb874b5df0f6790b2e3b8787bd636a793fc4a988df",
+    "metadata_052-101.json": "323d42d1289c6c02cdd81552c2129b192bb998c3f7cc8c2b7746776767dfdae1",
+    "metadata_102-151.json": "ee464bf1ca09f2ff3ea2a983b5ed5a1355abb7b6afdc7fa79a59527ffe859a2c",
+    "metadata_152-201.json": "f6b01d71ec6540cc00e785aa8649d53bf8d909e1bfa7bb5d38a0659f7ec5ac5a",
+    "metadata_202-251.json": "528128d523e7f725db303528f6669f7dc74823d9343b8b73e19341be98bd08e9",
+    "metadata_252-290.json": "beef5bf0784fe075074208753d2bdca119a584fb954b1e3e5d38518969d96bbf",
+    "objects_001-050.json": "be414c3c29c3b6652276cd234ce06bce937892bda4d980d05d2c4967a4ecf74b",
+    "objects_051-100.json": "0cdc720b34316c8160e009166ce7d344bf478cc205d65272ceef08a9325a2d11",
+    "objects_101-150.json": "543033a7632f606c44e996da2cfbf6d6a548b069e355bd908d66a872b874adc7",
+    "objects_151-200.json": "748dfdd40e2066094bb9ab3d67f15103570b0ff12d263e7c27c7f3776529a42c",
+    "objects_201-250.json": "15e3d16a3ae85bdffb3bd53645fbfd5227b891a90b719221729b59d5d5e9bd86",
+    "objects_251-290.json": "4d3f172ef0504fe6c372b43f267c234373375f210e465259df6f9f1b908abb0a",
+    "transitions_001-050.json": "0116c795be03614c63641a9c21e79e529c90bc9dada3c5992a5f6ed13a6bb0fb",
+    "transitions_051-100.json": "fec19ec9abc2800613375336ad257c17a6e89cc2b5b706a333efe229ff5056b7",
+    "transitions_101-150.json": "1f55db25d3fffe90170cc69a1c029717baf8684bd18a8a2a7b8adeef9f2b15d7",
+    "transitions_151-200.json": "1fc03d58f7dd8b66113e5ec80d6781dd7167ec66bf213b6d92f1536f6c7a901f",
+    "transitions_201-250.json": "5912e83648c28ea85fea6e3a14589f41997fd7f5c80e8134af4e1de254f19bae",
+    "transitions_251-290.json": "3562f367b4fcd66b3f6e377bf1a32fbe6a1d150b4bb8aeba8188aee553c940c5"
+  }
+}

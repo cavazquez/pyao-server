@@ -49,7 +49,7 @@ def wait_server(process, endpoint):
     raise TimeoutError("Server did not listen within 120 seconds")
 
 
-async def seed(settings, password_hash, password, count):
+async def seed(settings, password_hash, password, count, *, combat=False):
     client = RedisClient()
     await client.connect(settings, seed_defaults=False)
     try:
@@ -63,7 +63,9 @@ async def seed(settings, password_hash, password, count):
                 "study@example.invalid",
                 {"race": 1, "gender": 1, "job": 1, "head": 1, "home": 1},
             )
-            await players.set_position(uid, 20 + number, 64, 2, 3)
+            await players.set_position(
+                uid, 20 + number, 64, 2, (2 if number % 2 == 0 else 4) if combat else 3
+            )
             await players.set_attributes(
                 uid, strength=20, agility=20, intelligence=20, charisma=20, constitution=20
             )
@@ -81,7 +83,9 @@ async def seed(settings, password_hash, password, count):
                 experience=0,
             )
             await players.set_skills(uid, magia=90)
-            profiles.append({"username": name, "password": password})
+            if combat:
+                await client.hset(f"player:{uid}:user_stats", "safe_mode", "0")
+            profiles.append({"username": name, "password": password, "user_id": uid})
         return profiles
     finally:
         await client.disconnect()
@@ -115,23 +119,35 @@ def summarize(rows):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--build", type=Path, action="append", required=True)
+    parser.add_argument("--build", type=Path, action="append", default=[])
+    parser.add_argument(
+        "--profile",
+        action="store_true",
+        help="Separate CPython diagnosis; never mix profiled and ordinary trial timings",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--seconds", type=int, default=20)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--connections", type=int, default=8)
+    parser.add_argument(
+        "--combat",
+        action="store_true",
+        help="Stationary pairs exchanging real physical attacks instead of movement",
+    )
     args = parser.parse_args()
     if (
-        not 2 <= args.repeats <= 10
+        not (1 if args.profile else 2) <= args.repeats <= 10
         or not 10 <= args.seconds <= 120
         or not 2 <= args.connections <= 32
     ):
         parser.error("repeats=2..10, seconds=10..120, connections=2..32")
+    if not args.build and not args.profile:
+        parser.error("--build is required for a comparison")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     variants = [("cpython", [sys.executable, "-m", "src.run_server"])]
-    for path in args.build:
+    for path in [] if args.profile else args.build:
         build = json.loads(path.read_text())
         if (
             build.get("exit_code") != 0
@@ -148,6 +164,8 @@ def main():
         variants.append((build["mode"], [str(binary)]))
     rows = []
     report = {
+        "workload": "physical_combat" if args.combat else "movement",
+        "diagnostic_profile_only": args.profile,
         "started_at": datetime.now(UTC).isoformat(),
         "runtime": runtime_metadata(),
         "source_sha256": source_hashes(),
@@ -244,6 +262,16 @@ def main():
                     "--maps-dir",
                     str(ROOT / "map_data"),
                 ]
+                if args.profile:
+                    command = [
+                        sys.executable,
+                        "-m",
+                        "tools.analysis.nuitka_network_study",
+                        "--cpu-worker",
+                        str(trial / "cpu.pstats"),
+                        str(trial / "runtime-profile.json"),
+                        *command[3:],
+                    ]
                 with (trial / "server.log").open("wb") as log:
                     process = subprocess.Popen(
                         command, cwd=work, env=environment, stdout=log, stderr=subprocess.STDOUT
@@ -251,7 +279,13 @@ def main():
                     try:
                         startup = wait_server(process, endpoint)
                         profiles = asyncio.run(
-                            seed(settings, password_hash, password, args.connections + 1)
+                            seed(
+                                settings,
+                                password_hash,
+                                password,
+                                args.connections + 1,
+                                combat=args.combat,
+                            )
                         )
                         credentials = work / "accounts.json"
                         credentials.write_text(json.dumps(profiles))
@@ -279,6 +313,9 @@ def main():
                             "--metrics",
                             str(trial / "ticks.json"),
                         ]
+                        if args.combat:
+                            common.append("--combat")
+                        combat_before = {}
                         for label, seconds in (("warmup", args.warmup), ("measured", args.seconds)):
                             subprocess.run(
                                 [
@@ -298,6 +335,17 @@ def main():
                                 time.sleep(
                                     0.5
                                 )  # allow owned sessions to release before the next login
+                                if args.combat:
+                                    with sandbox.client() as store:
+                                        combat_before = {
+                                            str(profile["user_id"]): int(
+                                                store.hget(
+                                                    f"player:{profile['user_id']}:user_stats",
+                                                    "min_hp",
+                                                )
+                                            )
+                                            for profile in profiles[: args.connections]
+                                        }
                         measured = json.loads((trial / "measured.json").read_text())
                         if not measured["passed"] or measured["errors"]:
                             raise RuntimeError("Benchmark functional failure")
@@ -306,7 +354,27 @@ def main():
                             cpu_after = store.info("cpu")
                             commands = store.info("commandstats")
                             npcs = len(list(store.scan_iter("npc:instance:*")))
+                            combat_after = (
+                                {
+                                    str(profile["user_id"]): int(
+                                        store.hget(
+                                            f"player:{profile['user_id']}:user_stats", "min_hp"
+                                        )
+                                    )
+                                    for profile in profiles[: args.connections]
+                                }
+                                if args.combat
+                                else {}
+                            )
+                        if args.combat and not any(
+                            combat_after[user] < hp for user, hp in combat_before.items()
+                        ):
+                            raise RuntimeError(
+                                "Combat load did not apply real damage; do not report rejected attacks as combat"
+                            )
                         row = {
+                            "combat_hp_before": combat_before,
+                            "combat_hp_after": combat_after,
                             "variant": name,
                             "repeat": repeat,
                             "startup_seconds": startup,
@@ -356,5 +424,23 @@ def main():
     (output / "network.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
+def cpu_worker():
+    import cProfile
+
+    from tools.profile_runtime import main as run_profiled
+
+    cpu_path, runtime_path, *arguments = sys.argv[2:]
+    profiler = cProfile.Profile(timer=time.process_time_ns, timeunit=1e-9)
+    sys.argv = ["tools.profile_runtime", "--output", runtime_path, "--", *arguments]
+    try:
+        with profiler:
+            run_profiled()
+    finally:
+        profiler.dump_stats(cpu_path)
+
+
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:2] == ["--cpu-worker"]:
+        cpu_worker()
+    else:
+        main()

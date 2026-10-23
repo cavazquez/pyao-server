@@ -153,6 +153,19 @@ def sysconfig_gil_disabled():
     return bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 
+def validate_probes(probes):
+    reference = probes[0]
+    fields = ("version", "gil_enabled", "optimize", "jit_enabled", "machine")
+    runtime = {field: reference["runtime"][field] for field in fields}
+    checksums = {name: kernel["checksum"] for name, kernel in reference["kernels"].items()}
+    for probe in probes:
+        if {field: probe["runtime"][field] for field in fields} != runtime:
+            raise RuntimeError("Probe runtimes differ; do not attribute the change to compilation")
+        if {name: kernel["checksum"] for name, kernel in probe["kernels"].items()} != checksums:
+            raise RuntimeError("Probe kernel results differ; timings are not comparable")
+    return {"same_runtime": True, "same_kernel_checksums": True, "runtime_fields": fields}
+
+
 def compare(args):
     candidates = []
     for path in args.build:
@@ -186,6 +199,7 @@ def compare(args):
                     **probe,
                 }
             )
+    validation = validate_probes(results)
     summary = {}
     for name, _ in variants:
         probes = [row for row in results if row["variant"] == name]
@@ -205,6 +219,7 @@ def compare(args):
                 "source_sha256": source_hashes(),
                 "runtime": runtime_metadata(),
                 "probes": results,
+                "validation": validation,
                 "summary": summary,
                 "limitations": [
                     "Fresh process on warm filesystem; includes imports and kernels, not server startup",
