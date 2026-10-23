@@ -8,7 +8,7 @@ from typing import Self, cast
 from src.models.item_constants import GOLD_ITEM_ID, MAX_PLAYER_GOLD
 from src.utils.slot_plan import MAX_SLOT_QUANTITY
 
-GroundItem = dict[str, int | str | None]
+GroundItem = dict[str, int | str | list[str] | None]
 GROUND_TTL_SECONDS = 3600
 MAX_GROUND_ITEMS_PER_TILE = 10
 MAX_GROUND_COORDINATE = 100
@@ -43,6 +43,15 @@ def validate_item(item: GroundItem) -> None:
     if not isinstance(item.get("stack_id"), str) or not _STACK_ID.fullmatch(str(item["stack_id"])):
         msg = "Identidad del stack inválida"
         raise ValueError(msg)
+    identities = item.get("instance_ids")
+    if identities is not None and (
+        not isinstance(identities, list)
+        or len(identities) != quantity
+        or len(set(identities)) != len(identities)
+        or any(not isinstance(i, str) or not re.fullmatch(r"[0-9a-f]{32}", i) for i in identities)
+    ):
+        msg_0 = "Identidad individual del suelo inválida"
+        raise ValueError(msg_0)
     if item_id == GOLD_ITEM_ID:
         for field, maximum in (("devaluation_day", None), ("devaluation_remainder", 9999)):
             if field in item:

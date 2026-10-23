@@ -220,8 +220,8 @@ async def steal(
         ):
             slot, item = loot[min(len(loot) - 1, int(choice_roll * len(loot)))]
             try:
-                bag.give(item.item_id, 1)
-                other.take(slot, item.item_id, 1)
+                removed = other.take(slot, item.item_id, 1)
+                bag.give(item.item_id, 1, instance_ids=removed.instance_ids)
             except ValueError as error:
                 return Decision({"applied": False, "message": str(error)}, {})
             item_id = item.item_id

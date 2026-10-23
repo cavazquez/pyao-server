@@ -11,6 +11,9 @@ from typing import TYPE_CHECKING, Any, cast
 from redis.exceptions import RedisError
 
 from src.economy.tax_service import tax_status
+from src.items.ground_gc import collect as collect_ground_items
+from src.items.view import pages as item_pages
+from src.models.items_catalog import ITEMS_CATALOG
 from src.network.capabilities import Capability
 from src.network.msg_player_stats import (
     build_update_bank_gold_response,
@@ -37,6 +40,7 @@ from src.utils.gold_atomic import (
     RETRY_WINDOW_SECONDS,
     validate_operation_id,
 )
+from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.core.dependency_container import DependencyContainer
@@ -44,6 +48,10 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 PUBLISH_SECONDS = 1
+ITEM_WARN_LOW = 2000
+ITEM_WARN_CRITICAL = 500
+ITEM_HEALTHY = 100
+MERCHANT_INSPECTION_RANGE = 3
 VOLATILE_FIELDS = frozenset({"hp", "max_hp", "map", "server_time"})
 
 
@@ -105,6 +113,7 @@ class WorldStateService:
         while True:
             try:
                 await self.lottery.repo.advance()
+                await collect_ground_items(self.deps.redis_client.redis)
                 async with self.lock:
                     await self.classic_maintenance.tick()
             except RedisError, ValueError, RuntimeError, ConnectionError:
@@ -163,8 +172,8 @@ class WorldStateService:
             del self.expansion.queries[key]
         if not sender.connection.capabilities.enabled & Capability.WORLD_STATE:
             return
-        sender.connection.state_topics.update({"tax", "weather", "lottery"})
-        for topic in ("tax", "weather", "commands", "lottery"):
+        sender.connection.state_topics.update({"tax", "weather", "lottery", "items"})
+        for topic in ("tax", "weather", "commands", "lottery", "items"):
             await self.publish(user, topic, force=True)
 
     async def snapshot(self, user: int, topic: str, page: int = 0) -> dict[str, Any]:
@@ -210,6 +219,9 @@ class WorldStateService:
         ):
             return
         async with self.lock:
+            if topic == "items":
+                await self.publish_items(user, sender, force=force, identity=identity)
+                return
             data = await self.snapshot(user, topic, sender.connection.state_pages.get(topic, 0))
             if topic == "clan":
                 sender.connection.state_pages[topic] = int(data["page"])
@@ -221,6 +233,85 @@ class WorldStateService:
                 sender, topic, data, identity=identity, revision=_digest(data, volatile=False)
             )
             self.cache[key] = digest
+
+    async def publish_items(
+        self, user: int, sender: MessageSender, *, force: bool = False, identity: str = ""
+    ) -> None:
+        """Publica páginas pequeñas y sólo cambios de condición/slots autorizados."""
+        scopes = {"inventory": (RedisKeys.player_inventory(user), tuple(range(1, 31)))}
+        if getattr(sender.connection, "bank_npc", ""):
+            bank = await self.bank.snapshot(user)
+            if bank["access"]:
+                scopes["bank"] = (RedisKeys.bank(user), tuple(range(1, 41)))
+        merchant = await self.deps.redis_client.get_active_merchant(user)
+        if merchant:
+            position = await self.deps.player_repo.get_position(user)
+            stats = await self.deps.player_repo.get_stats(user)
+            nearby = position and any(
+                npc.npc_id == merchant
+                and npc.is_merchant
+                and max(abs(npc.x - position["x"]), abs(npc.y - position["y"]))
+                <= MERCHANT_INSPECTION_RANGE
+                for npc in self.deps.map_manager.get_npcs_in_map(position["map"])
+            )
+            if nearby and stats and int(stats.get("min_hp", 0)) > 0:
+                scopes["merchant"] = (RedisKeys.merchant_inventory(merchant), tuple(range(1, 21)))
+        session = self.deps.trade_service.get_session(user)
+        if session and session.senders.get(user) is sender:
+            for scope, offer in (
+                (
+                    "trade_mine",
+                    session.initiator_offer
+                    if session.initiator_id == user
+                    else session.target_offer,
+                ),
+                (
+                    "trade_other",
+                    session.target_offer
+                    if session.initiator_id == user
+                    else session.initiator_offer,
+                ),
+            ):
+                scopes[scope] = (
+                    RedisKeys.player_inventory(
+                        user
+                        if scope == "trade_mine"
+                        else session.target_id
+                        if session.initiator_id == user
+                        else session.initiator_id
+                    ),
+                    tuple(sorted(item.slot for item in offer.items.values())),
+                )
+        for data in await item_pages(self.deps.redis_client.redis, scopes):
+            key = sender.connection.state_epoch, f"items:{data['scope']}:{data['page']}"
+            digest = _digest({k: v for k, v in data.items() if k != "clock"})
+            if force or self.cache.get(key) != digest:
+                await send_state(sender, "items", data, identity=identity, revision=digest)
+                self.cache[key] = digest
+            if data["scope"] == "inventory":
+                equipment = await self.deps.redis_client.hgetall(RedisKeys.player_equipment(user))
+                for slot, state in data["rows"]:
+                    if not state or str(slot) not in equipment.values():
+                        continue
+                    threshold = (
+                        0
+                        if state["broken"]
+                        else 5
+                        if state["condition"] <= ITEM_WARN_CRITICAL
+                        else 20
+                        if state["condition"] <= ITEM_WARN_LOW
+                        else ITEM_HEALTHY
+                    )
+                    warning = sender.connection.state_epoch, f"wear:{state['id']}:{threshold}"
+                    if threshold < ITEM_HEALTHY and warning not in self.cache:
+                        item = ITEMS_CATALOG.get(state["item"])
+                        name = item.name if item else "El objeto equipado"
+                        await sender.send_console_msg(
+                            f"{name}: está roto y ya no aporta estadísticas."
+                            if threshold == 0
+                            else f"{name}: condición baja ({state['condition'] / 100:.2f} %)."
+                        )
+                        self.cache[warning] = "sent"
 
     async def publish_trade(self, user: int) -> None:
         """Pagina el catálogo de la revisión actual sin ampliar TRADE_STATE legacy."""
@@ -239,6 +330,7 @@ class WorldStateService:
         ]
         for data in pages:
             await send_state(sender, "trade", data, revision=str(data["trade_revision"]))
+        await self.publish_items(user, sender, force=True)
 
     async def execute(self, user: int, sender: MessageSender, request: dict[str, Any]) -> None:
         """Valida generación, revisión e identidad antes de despachar cualquier mutación."""

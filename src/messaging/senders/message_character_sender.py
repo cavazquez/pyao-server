@@ -44,6 +44,7 @@ class CharacterMessageSender:
         nick_color: int = 0,
         privileges: int = 0,
         show_name: bool = True,
+        boots: int = 0,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -57,6 +58,7 @@ class CharacterMessageSender:
             weapon: ID del arma (int16), por defecto 0.
             shield: ID del escudo (int16), por defecto 0.
             helmet: ID del casco (int16), por defecto 0.
+            boots: Capa de calzado equipada; cero retira las botas.
             fx: ID del efecto visual (int16), por defecto 0.
             loops: Número de loops del efecto (int16), por defecto 0.
             name: Nombre del personaje (string), por defecto vacío.
@@ -80,6 +82,7 @@ class CharacterMessageSender:
             nick_color=nick_color,
             privileges=privileges,
             show_name=show_name,
+            boots=boots,
         )
         logger.debug(
             "[%s] Enviando CHARACTER_CREATE: charIndex=%d, name=%s, pos=(%d,%d)",
@@ -102,6 +105,7 @@ class CharacterMessageSender:
         helmet: int = 0,
         fx: int = 0,
         loops: int = 0,
+        boots: int = 0,
     ) -> None:
         """Envía paquete CharacterChange del protocolo AO estándar.
 
@@ -113,6 +117,7 @@ class CharacterMessageSender:
             weapon: ID del arma (int16).
             shield: ID del escudo (int16).
             helmet: ID del casco (int16).
+            boots: Capa de calzado equipada; cero retira las botas.
             fx: ID del efecto visual (int16).
             loops: Número de loops del efecto (int16).
         """
@@ -126,6 +131,7 @@ class CharacterMessageSender:
             helmet=helmet,
             fx=fx,
             loops=loops,
+            boots=boots,
         )
         logger.debug(
             "[%s] Enviando CHARACTER_CHANGE: charIndex=%d heading=%s",

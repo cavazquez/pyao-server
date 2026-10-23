@@ -57,7 +57,14 @@ def _load_items_from_single_file(file_path: Path) -> dict[int, Item]:
             consumable=obj_type
             in {ObjType.COMIDA, ObjType.POCIONES, ObjType.BEBIDA, ObjType.BOTELLAS_LLENAS},
             equippable=obj_type
-            in {ObjType.ARMAS, ObjType.ARMADURAS, ObjType.ESCUDOS, ObjType.CASCOS, ObjType.ANILLOS},
+            in {
+                ObjType.ARMAS,
+                ObjType.ARMADURAS,
+                ObjType.ESCUDOS,
+                ObjType.CASCOS,
+                ObjType.ANILLOS,
+                ObjType.BOTAS,
+            },
             value=item_data.get("Valor", 0),
             obj_type=obj_type,
             min_damage=item_data.get("MinHit", 0),
@@ -142,6 +149,7 @@ def _map_obj_type_to_item_type(obj_type: int) -> ItemType:
         ObjType.ESCUDOS: ItemType.SHIELD,
         ObjType.CASCOS: ItemType.HELMET,
         ObjType.ANILLOS: ItemType.ACCESSORY,
+        ObjType.BOTAS: ItemType.BOOTS,
     }
     return mapping.get(obj_type, ItemType.MISC)
 

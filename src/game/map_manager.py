@@ -358,7 +358,7 @@ class MapManager(SpatialIndexMixin):
     # Ground Items Methods
 
     def add_ground_item(
-        self, map_id: int, x: int, y: int, item: dict[str, int | str | None]
+        self, map_id: int, x: int, y: int, item: dict[str, int | str | list[str] | None]
     ) -> None:
         """Agrega un item al suelo en una posición específica.
 
@@ -380,7 +380,7 @@ class MapManager(SpatialIndexMixin):
         map_id: int,
         x: int,
         y: int,
-        item: dict[str, int | str | None],
+        item: dict[str, int | str | list[str] | None],
         *,
         broadcast_service: MultiplayerBroadcastService | None = None,
         operation_id: str | None = None,
@@ -415,7 +415,9 @@ class MapManager(SpatialIndexMixin):
             map_id, x, y, redis, operation, broadcast_service, operation_id, ground_positions
         )
 
-    def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
+    def get_ground_items(
+        self, map_id: int, x: int, y: int
+    ) -> list[dict[str, int | str | list[str] | None]]:
         """Obtiene todos los items en un tile específico.
 
         Args:
@@ -440,7 +442,7 @@ class MapManager(SpatialIndexMixin):
 
     def remove_ground_item(
         self, map_id: int, x: int, y: int, item_index: int = 0
-    ) -> dict[str, int | str | None] | None:
+    ) -> dict[str, int | str | list[str] | None] | None:
         """Remueve un item del suelo.
 
         Args:

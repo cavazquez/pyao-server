@@ -7,12 +7,13 @@ import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from hashlib import sha256
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import TYPE_CHECKING, Any, Literal, Never, cast
 
 from redis.exceptions import ConnectionError as RedisConnectionError
 from redis.exceptions import TimeoutError as RedisTimeoutError
 from redis.exceptions import WatchError
 
+from src.items.ground_gc import enqueue as enqueue_item_ground_gc
 from src.utils.gold_atomic import (
     MAX_CLOCK_SKEW_SECONDS,
     MAX_TRANSACTION_ATTEMPTS,
@@ -160,7 +161,16 @@ async def read_resource_receipt(
     return cast("dict[str, Any]", receipt["result"])
 
 
-async def transact(  # ruff: ignore[too-many-statements] - un solo límite de commit para negocio, impuesto y recibo.
+def _reject(message: str) -> Never:
+    """Propaga un rechazo validado fuera del bloque que resuelve conflictos WATCH.
+
+    Raises:
+        ValueError: Con el motivo de rechazo de la operación.
+    """
+    raise ValueError(message)
+
+
+async def transact(  # ruff: ignore[too-many-statements, too-many-locals] - un solo límite de commit para negocio, impuesto y recibo.
     redis: Redis,
     resources: tuple[Resource, ...],
     identity: str,
@@ -244,25 +254,49 @@ async def transact(  # ruff: ignore[too-many-statements] - un solo límite de co
                     receipt = json.loads(saved)
                     if not _receipt_matches(receipt, original_resources, request):
                         msg = "Identificador reutilizado para otra petición"
-                        raise ValueError(msg)
+                        _reject(msg)
                     return cast("dict[str, Any]", receipt["result"])
                 age = time.time() - created_at
                 if age < -MAX_CLOCK_SKEW_SECONDS or age > retry_window_seconds:
                     msg = "Operación vencida; consultar estado antes de iniciar otra"
-                    raise ValueError(msg)
+                    _reject(msg)
                 snapshot = await _read_snapshot(pipe, resources)
+                from src.items import ledger  # ruff: ignore[import-outside-top-level]
+
+                item_scope = any(ledger.container(r.key) or r.kind == "ground" for r in resources)
+                enabled = item_scope and await pipe.get(ledger.FORMAT_KEY) == "1"
+                if enabled:
+                    item_now, item_before = await ledger.prepare(pipe, snapshot, resources)
                 decision = taxed_decision(snapshot, original_resources, tax_day, decide)
-                _validate_writes(by_key, decision.writes)
+                commit_resources = resources
+                if enabled:
+                    decision, commit_resources = await ledger.finish(
+                        pipe, snapshot, resources, identity, decision, item_now, item_before
+                    )
+                commit_by_key = {resource.key: resource for resource in commit_resources}
+                _validate_writes(commit_by_key, decision.writes)
                 receipt_json = json.dumps(
                     {"version": 2, "request": fingerprint, "result": decision.result}
                 )
                 pipe.multi()  # type: ignore[no-untyped-call]
-                _enqueue_writes(pipe, by_key, decision.writes)
-                _enqueue_pet_indexes(pipe, by_key, snapshot, decision.writes)
+                _enqueue_writes(pipe, commit_by_key, decision.writes)
+                _enqueue_pet_indexes(pipe, commit_by_key, snapshot, decision.writes)
                 pipe.set(receipt_key, receipt_json, ex=receipt_ttl_seconds)
                 await pipe.execute()
             except WatchError, RedisConnectionError, RedisTimeoutError:
                 await asyncio.sleep(random.uniform(0, min(0.0002 * (attempt + 1), 0.01)))
+            except ValueError:
+                # Se puede haber leído un contenedor antes de un movimiento y
+                # su metadato después. Confirmar WATCH antes de denunciar
+                # corrupción. Nunca ejecutar una cola de escrituras parcial.
+                if pipe.explicit_transaction:
+                    raise
+                try:
+                    pipe.multi()  # type: ignore[no-untyped-call]
+                    await pipe.execute()
+                except WatchError:
+                    continue
+                raise
             else:
                 return decision.result
     msg = "Commit no confirmado; conservar el identificador de operación"
@@ -364,6 +398,8 @@ def _enqueue_writes(
                 pipe.delete(key)
             if value:
                 pipe.hset(key, mapping=cast("Mapping[EncodableT, EncodableT]", value))
+            if key.startswith("item:instance:"):
+                enqueue_item_ground_gc(pipe, key, value)
         elif isinstance(value, set):
             pipe.delete(key)
             if value:

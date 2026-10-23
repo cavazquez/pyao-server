@@ -1,7 +1,7 @@
 """Capa de almacenamiento para inventarios en Redis."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from src.config.config_manager import ConfigManager, config_manager
 from src.utils.inventory_slot import InventorySlot
@@ -9,6 +9,7 @@ from src.utils.redis_config import RedisKeys
 
 if TYPE_CHECKING:
     from src.utils.redis_client import RedisClient
+    from src.utils.resource_transaction import Snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +69,33 @@ class InventoryStorage:
 
         key = RedisKeys.player_inventory(user_id)
         slot_key = f"slot_{slot}"
+        from src.items.ledger import FORMAT_KEY  # ruff: ignore[import-outside-top-level]
+        from src.utils.gold_atomic import operation_id  # ruff: ignore[import-outside-top-level]
+        from src.utils.resource_transaction import Decision, Resource, transact  # ruff: ignore[import-outside-top-level]
+
+        if await self.redis_client.get(FORMAT_KEY) == "1":
+
+            def decide(snapshot: Snapshot) -> Decision:
+                before = cast("dict[str, str]", snapshot[key]).get(slot_key, "")
+                after = inventory_slot.to_string() if inventory_slot else ""
+                existing = InventorySlot.parse(before)
+                if (
+                    existing
+                    and inventory_slot
+                    and not inventory_slot.instance_ids
+                    and existing.item_id == inventory_slot.item_id
+                ):
+                    return Decision({"applied": False}, {})
+                return Decision({"applied": True}, {key: {slot_key: after}})
+
+            result = await transact(
+                self.redis_client.redis,
+                (Resource(key, "hash"),),
+                operation_id(),
+                {"set_slot": slot, "value": inventory_slot.to_string() if inventory_slot else ""},
+                decide,
+            )
+            return bool(result["applied"])
 
         if inventory_slot is None or inventory_slot.is_empty():
             # Vaciar el slot

@@ -1,0 +1,11 @@
+# Pistas AO preconvertidas y distribuidas por el cliente. 0 = silencio explícito.
+# Valores por tipo, con excepciones por mapa; nunca heredar música del mapa anterior.
+[types]
+city = 2
+wilderness = 3
+dungeon = 4
+building = 2
+water = 5
+unknown = 3
+
+[maps]

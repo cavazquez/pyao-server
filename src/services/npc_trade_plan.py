@@ -141,8 +141,8 @@ class NpcTradePlan:
         if total > self.gold:
             msg = f"No tienes suficiente oro. Necesitas {total} oro."
             raise ValueError(msg)
-        self.stock.take(self.request.slot, item_id, self.request.quantity)
-        self.inventory.give(item_id, self.request.quantity)
+        removed = self.stock.take(self.request.slot, item_id, self.request.quantity)
+        self.inventory.give(item_id, self.request.quantity, instance_ids=removed.instance_ids)
         self.gold -= total
 
     def _sell(self, item_id: int, total: int) -> None:
@@ -157,8 +157,8 @@ class NpcTradePlan:
         if str(self.request.slot) in self.equipment.values():
             msg = "Desequipá el objeto antes de venderlo"
             raise ValueError(msg)
-        self.inventory.take(self.request.slot, item_id, self.request.quantity)
+        removed = self.inventory.take(self.request.slot, item_id, self.request.quantity)
         self.gold += total
         # Regla previa: el NPC compra aunque no guarde más stock para revender.
         with suppress(ValueError):
-            self.stock.give(item_id, self.request.quantity)
+            self.stock.give(item_id, self.request.quantity, instance_ids=removed.instance_ids)

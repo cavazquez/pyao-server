@@ -9,6 +9,7 @@ from src.command_handlers.equip_item_handler import EquipItemCommandHandler
 from src.commands.equip_item_command import EquipItemCommand
 from src.game.map_manager import MapManager
 from src.messaging.message_sender import MessageSender
+from src.models.items_catalog import ITEMS_CATALOG
 from src.network.msg_character import build_character_change_response
 from src.network.packet_id import ServerPacketID
 from src.repositories.equipment_repository import EquipmentRepository
@@ -58,6 +59,23 @@ def test_priority_and_expiry_restore_full_equipment():
     )
     assert resolve_appearance({}, {}, {}, inventory) == PlayerAppearance(1, 1)
     assert resolve_appearance({}, {}, {"helmet": "2"}, inventory) == PlayerAppearance(1, 1)
+
+
+@pytest.mark.parametrize("head", [1, 3, 15])
+def test_every_equippable_item_preserves_creation_face(head):
+    """Ninguna armadura, casco, arma, bota o accesorio sustituye la cara base."""
+    account = {"char_head": str(head), "char_race": "1"}
+    for item in ITEMS_CATALOG.values():
+        if not item.equippable:
+            continue
+        visual = resolve_appearance(
+            account,
+            {"min_hp": "100"},
+            {item.item_type.value: "1", "head": "1"},
+            {"slot_1": f"{item.item_id}:1"},
+        )
+        assert visual.head == head, item.name
+    assert account == {"char_head": str(head), "char_race": "1"}
 
 
 @pytest.mark.asyncio

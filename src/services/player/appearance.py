@@ -21,6 +21,7 @@ class PlayerAppearance:
     weapon: int = 0
     shield: int = 0
     helmet: int = 0
+    boots: int = 0
 
     def equipment(self) -> dict[str, int]:
         """Obtiene las capas opcionales para los paquetes de personaje.
@@ -28,7 +29,12 @@ class PlayerAppearance:
         Returns:
             Animaciones completas, incluso las piezas retiradas.
         """
-        return {"weapon": self.weapon, "shield": self.shield, "helmet": self.helmet}
+        return {
+            "weapon": self.weapon,
+            "shield": self.shield,
+            "helmet": self.helmet,
+            "boots": self.boots,
+        }
 
 
 def resolve_appearance(
@@ -52,7 +58,7 @@ def resolve_appearance(
         return PlayerAppearance(
             int(stats.get("morphed_body", body)), int(stats.get("morphed_head", head))
         )
-    layers = {"weapon": 0, "shield": 0, "helmet": 0}
+    layers = {"weapon": 0, "shield": 0, "helmet": 0, "boots": 0}
     for slot in ("armor", *layers):
         stack = InventorySlot.parse(inventory.get(f"slot_{equipment.get(slot, '0')}", ""))
         item = ITEMS_CATALOG.get(stack.item_id) if stack else None

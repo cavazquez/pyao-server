@@ -306,6 +306,7 @@ class MessageSender:
         nick_color: int = 0,
         privileges: int = 0,
         show_name: bool = True,
+        boots: int = 0,
     ) -> None:
         """Envía paquete CharacterCreate del protocolo AO estándar.
 
@@ -319,6 +320,7 @@ class MessageSender:
             weapon: ID del arma equipada (int16), por defecto 0.
             shield: ID del escudo equipado (int16), por defecto 0.
             helmet: ID del casco equipado (int16), por defecto 0.
+            boots: Capa de calzado equipada; cero retira las botas.
             fx: ID del efecto visual (int16), por defecto 0.
             loops: Loops del efecto (int16), por defecto 0.
             name: Nombre del personaje (string), por defecto vacío.
@@ -343,6 +345,7 @@ class MessageSender:
             nick_color,
             privileges,
             show_name,
+            boots,
         )
 
     async def send_character_change(
@@ -356,6 +359,7 @@ class MessageSender:
         helmet: int = 0,
         fx: int = 0,
         loops: int = 0,
+        boots: int = 0,
     ) -> None:
         """Envía paquete CharacterChange del protocolo AO estándar.
 
@@ -367,11 +371,12 @@ class MessageSender:
             weapon: ID del arma equipada (int16), por defecto 0.
             shield: ID del escudo equipado (int16), por defecto 0.
             helmet: ID del casco equipado (int16), por defecto 0.
+            boots: Capa de calzado equipada; cero retira las botas.
             fx: ID del efecto visual (int16), por defecto 0.
             loops: Loops del efecto (int16), por defecto 0.
         """
         await self.character.send_character_change(
-            char_index, body, head, heading, weapon, shield, helmet, fx, loops
+            char_index, body, head, heading, weapon, shield, helmet, fx, loops, boots
         )
 
     async def send_character_remove(self, char_index: int) -> None:

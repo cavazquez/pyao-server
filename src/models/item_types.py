@@ -44,6 +44,7 @@ class ObjType(IntEnum):
     BOTELLAS_VACIAS = 33
     BOTELLAS_LLENAS = 34
     MANCHAS = 35
+    BOTAS = 36
 
 
 class TipoPocion(IntEnum):

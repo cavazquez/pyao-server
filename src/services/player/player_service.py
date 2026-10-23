@@ -10,6 +10,7 @@ from src.config.config_manager import ConfigManager
 from src.models.items_catalog import get_item
 from src.repositories.inventory_repository import InventoryRepository
 from src.services.player.equipment_service import EquipmentService
+from src.utils.inventory_slot import InventorySlot
 from src.utils.visual_effects import FXLoops, VisualEffectID
 
 if TYPE_CHECKING:
@@ -246,8 +247,11 @@ class PlayerService:
             # Solo enviar slots con items (no enviar vacíos)
             if slot_value and isinstance(slot_value, str):
                 try:
-                    item_id, quantity = slot_value.split(":")
-                    item = get_item(int(item_id))
+                    stack = InventorySlot.parse(slot_value)
+                    if stack is None:
+                        continue
+                    quantity = stack.quantity
+                    item = get_item(stack.item_id)
 
                     if item:
                         is_equipped = i in equipped_slots
@@ -276,6 +280,6 @@ class PlayerService:
                             sale_price=float(item.value),
                         )
                     else:
-                        logger.warning("Item %s no encontrado en catálogo", item_id)
+                        logger.warning("Item %s no encontrado en catálogo", stack.item_id)
                 except (ValueError, AttributeError) as e:
                     logger.warning("Error procesando slot %d: %s", i, e)

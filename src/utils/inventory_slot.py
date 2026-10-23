@@ -2,6 +2,10 @@
 
 from dataclasses import dataclass
 
+INDIVIDUAL_PARTS = 3
+MAX_SLOT_QUANTITY = 32767
+IDENTITY_LENGTH = 32
+
 
 @dataclass(frozen=True)
 class InventorySlot:
@@ -13,6 +17,7 @@ class InventorySlot:
 
     item_id: int
     quantity: int
+    instance_ids: tuple[str, ...] = ()
 
     @classmethod
     def parse(cls, value: str | bytes) -> InventorySlot | None:
@@ -37,6 +42,20 @@ class InventorySlot:
 
         try:
             parts = value.split(":")
+            if len(parts) == INDIVIDUAL_PARTS and parts[0] == "i1":
+                identities = tuple(parts[2].split(","))
+                if (
+                    not parts[1].isdigit()
+                    or int(parts[1]) < 1
+                    or len(identities) > MAX_SLOT_QUANTITY
+                    or len(set(identities)) != len(identities)
+                    or any(
+                        len(i) != IDENTITY_LENGTH or any(c not in "0123456789abcdef" for c in i)
+                        for i in identities
+                    )
+                ):
+                    return None
+                return cls(int(parts[1]), len(identities), identities)
             if len(parts) != 2:  # ruff: ignore[magic-value-comparison]
                 return None
 
@@ -54,8 +73,16 @@ class InventorySlot:
         """Convierte el slot a formato "item_id:quantity".
 
         Returns:
-            String en formato "item_id:quantity".
+            String en formato "item_id:quantity" o referencias individuales.
+
+        Raises:
+            ValueError: Si las identidades no coinciden con la cantidad.
         """
+        if self.instance_ids:
+            if len(self.instance_ids) != self.quantity:
+                msg = "Cantidad e identidades del slot no coinciden"
+                raise ValueError(msg)
+            return f"i1:{self.item_id}:" + ",".join(self.instance_ids)
         return f"{self.item_id}:{self.quantity}"
 
     def is_empty(self) -> bool:
@@ -75,7 +102,7 @@ class InventorySlot:
         Returns:
             True si tienen el mismo item_id.
         """
-        return self.item_id == other.item_id
+        return self.item_id == other.item_id and not self.instance_ids and not other.instance_ids
 
     def add_quantity(self, amount: int, max_stack: int = 20) -> tuple[InventorySlot, int]:
         """Intenta agregar cantidad al slot respetando el límite de stack.
@@ -90,6 +117,8 @@ class InventorySlot:
         """
         if amount <= 0:
             return self, 0
+        if self.instance_ids:
+            return self, amount
 
         space_available = max_stack - self.quantity
         if space_available <= 0:
@@ -123,4 +152,4 @@ class InventorySlot:
         if new_quantity <= 0:
             return None
 
-        return InventorySlot(item_id=self.item_id, quantity=new_quantity)
+        return InventorySlot(self.item_id, new_quantity, self.instance_ids[amount:])

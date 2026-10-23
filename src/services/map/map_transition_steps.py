@@ -37,6 +37,7 @@ class MapTransitionContext:
     weapon: int = 0
     shield: int = 0
     helmet: int = 0
+    boots: int = 0
     position_committed: bool = False
     navigation_changed: bool = False
     show_name: bool = True
@@ -199,6 +200,7 @@ class SendSelfCharacterCreateStep(MapTransitionStep):
             weapon=context.weapon,
             shield=context.shield,
             helmet=context.helmet,
+            boots=context.boots,
             heading=context.heading,
             x=context.new_x,
             y=context.new_y,
@@ -277,6 +279,7 @@ class BroadcastCreateInNewMapStep(MapTransitionStep):
             weapon=context.weapon,
             shield=context.shield,
             helmet=context.helmet,
+            boots=context.boots,
             heading=context.heading,
             x=context.new_x,
             y=context.new_y,

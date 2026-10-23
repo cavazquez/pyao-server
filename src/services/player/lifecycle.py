@@ -234,6 +234,9 @@ async def settle_death(
                     {
                         "item_id": stack.item_id,
                         "quantity": stack.quantity,
+                        **(
+                            {"instance_ids": list(stack.instance_ids)} if stack.instance_ids else {}
+                        ),
                         "grh_index": item.graphic_id,
                         "stack_id": stack_identity(event + f":slot:{slot}"),
                     },

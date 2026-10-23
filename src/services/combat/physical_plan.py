@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, cast
 
 from src.combat.combat_critical_calculator import CriticalCalculator
+from src.items.wear import costs as wear_costs
+from src.items.wear import defensive as defensive_wear
 from src.models.skill_data_loader import SKILL_RULES_KEY
 from src.services.classic_chat.world_rules import (
     WORLD_REVISION,
@@ -120,7 +122,8 @@ def defense(
     block_chance = min(0.75, skills["defensa"] / 300 + mean_defense(shield) / 100)
     blocked = bool(shield) and not dodged and shield_roll < block_chance
     protection = sum(
-        mean_defense(equipped(snapshot, user, slot, catalog)) for slot in ("armor", "helmet")
+        mean_defense(equipped(snapshot, user, slot, catalog))
+        for slot in ("armor", "helmet", "boots")
     )
     reduction = min(0.5, 0.1 + protection / 100)
     robustness = (
@@ -272,6 +275,10 @@ class PhysicalPlan:
                 {},
             )
         weapon = equipped(snapshot, user, "weapon", self.catalog)
+        if weapon.get("_broken"):
+            return Decision(
+                {"applied": False, "message": "El arma está rota; desequípala o reemplázala."}, {}
+            )
         bow = bool(weapon.get("Proyectil"))
         if bow != request.ranged:
             return Decision(
@@ -392,6 +399,14 @@ class PhysicalPlan:
             cast("dict[str, str]", writes[target_key]).update(claim_changes(target, user, self.now))
         result = {
             "applied": True,
+            "_item_uses": {
+                **wear_costs(snapshot, user, ("weapon",)),
+                **(
+                    defensive_wear(snapshot, request.target_player, dodged=dodged, blocked=blocked)
+                    if request.target_player
+                    else {}
+                ),
+            },
             "damage": amount,
             "projectile_asset": projectile_asset,
             "critical": successful and (critical or stabbed),
@@ -517,6 +532,7 @@ async def defend_npc(
                     "dodged": dodged,
                     "blocked": blocked,
                     "new_hp": new_hp,
+                    "_item_uses": defensive_wear(snapshot, user, dodged=dodged, blocked=blocked),
                     "player_died": new_hp <= 0,
                 },
                 {

@@ -45,17 +45,19 @@ class GroundItemIndex:
         self._devaluation_pending: dict[int, set[tuple[int, int]]] = {}
         self.max_items_per_tile = max_items_per_tile
         self.ground_items_repo = ground_items_repo
-        self._ground_items: MapTileIndex[list[dict[str, int | str | None]]] = MapTileIndex()
+        self._ground_items: MapTileIndex[list[dict[str, int | str | list[str] | None]]] = (
+            MapTileIndex()
+        )
 
     @property
     def ground_items(
         self,
-    ) -> MutableMapping[tuple[int, int, int], list[dict[str, int | str | None]]]:
+    ) -> MutableMapping[tuple[int, int, int], list[dict[str, int | str | list[str] | None]]]:
         """Storage interno (compatibilidad con MapManager)."""
         return self._ground_items
 
     def add_ground_item(
-        self, map_id: int, x: int, y: int, item: dict[str, int | str | None]
+        self, map_id: int, x: int, y: int, item: dict[str, int | str | list[str] | None]
     ) -> None:
         """Agrega un item al suelo en una posición específica."""
         self._require_memory_mode()
@@ -83,19 +85,21 @@ class GroundItemIndex:
             item.get("quantity"),
         )
 
-    def get_ground_items(self, map_id: int, x: int, y: int) -> list[dict[str, int | str | None]]:
+    def get_ground_items(
+        self, map_id: int, x: int, y: int
+    ) -> list[dict[str, int | str | list[str] | None]]:
         """Obtiene todos los items en un tile específico.
 
         Returns:
-            list[dict[str, int | str | None]]: Items en el tile (o lista vacía).
+            list[dict[str, int | str | list[str] | None]]: Items en el tile (o lista vacía).
         """
         return self._ground_items.get((map_id, x, y), [])
 
     @staticmethod
-    def _graphic_for(item: dict[str, int | str | None]) -> int:
+    def _graphic_for(item: dict[str, int | str | list[str] | None]) -> int:
         graphic = item.get("grh_index")
         if not isinstance(graphic, int):
-            definition = ITEMS_CATALOG.get(int(item.get("item_id") or 0))
+            definition = ITEMS_CATALOG.get(int(str(item.get("item_id") or 0)))
             graphic = definition.graphic_id if definition else 0
         return graphic
 
@@ -124,11 +128,11 @@ class GroundItemIndex:
 
     def remove_ground_item(
         self, map_id: int, x: int, y: int, item_index: int = 0
-    ) -> dict[str, int | str | None] | None:
+    ) -> dict[str, int | str | list[str] | None] | None:
         """Remueve un item del suelo.
 
         Returns:
-            dict[str, int | str | None] | None: Item removido o None si no existe.
+            dict[str, int | str | list[str] | None] | None: Item removido o None si no existe.
         """
         self._require_memory_mode()
         key = (map_id, x, y)

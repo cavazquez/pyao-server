@@ -5,6 +5,7 @@ import time
 from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING, Any, cast
 
+from src.items.wear import broken as item_broken
 from src.models.skills import skill_progress
 from src.services.classic_chat.world_rules import (
     WORLD_REVISION,
@@ -422,7 +423,12 @@ class SpellPlan:
                 InventorySlot.parse(inventory.get(f"slot_{equipped.get(slot, '0')}", ""))
                 for slot in ("weapon", "accessory")
             ]
-            if not any(item is not None and item.item_id in self.staff_items for item in foci):
+            if not any(
+                item is not None
+                and item.item_id in self.staff_items
+                and (not item.instance_ids or not item_broken(values, item.instance_ids[0]))
+                for item in foci
+            ):
                 return "Necesitas un bastón o foco mágico equipado."
         return None
 

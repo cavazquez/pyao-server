@@ -79,7 +79,7 @@ def _ground_items(
                 devaluation_day=tax.last_day,
                 devaluation_remainder=tax.remainder,
             )
-        if int(item["quantity"] or 0) > 0:
+        if int(str(item["quantity"] or 0)) > 0:
             items.append(item)
     return items
 

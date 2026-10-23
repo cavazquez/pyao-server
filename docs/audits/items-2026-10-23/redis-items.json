@@ -1,0 +1,73 @@
+{
+  "ack_loss": true,
+  "concurrent_deposits": 12,
+  "accepted_deposits": 1,
+  "repeat_does_not_spend_uses": true,
+  "bounded_pages": true,
+  "ground_cleanup": {
+    "keeps_live_references": true,
+    "keeps_picked_up": true,
+    "invalid_ground_does_not_delete": true,
+    "batch_limit": 64
+  },
+  "battle_and_death": {
+    "attackers": 2,
+    "accepted_attacks": 1,
+    "accepted_death_settlements": 1,
+    "aof_preserves_attacker_uses_and_death_drop": true
+  },
+  "recovery_iid": "ac2dbd90e19805b0f3eef83d92f73417",
+  "aof_restart_preserves_identity_and_uses": true,
+  "load": [
+    {
+      "objects": 1000,
+      "containers": 50,
+      "migration_seconds": 0.108,
+      "objects_per_second": 9246,
+      "used_memory": 2283088,
+      "legacy_used_memory": 1597416,
+      "legacy_aof_bytes": 116842,
+      "individual_aof_bytes": 650655,
+      "migration_client_cpu_seconds": 0.0488,
+      "migration_redis_cpu_seconds": 0.0073,
+      "legacy_stock_hash_latency": {
+        "samples": 30,
+        "median_ms": 0.0923,
+        "p95_ms": 0.1019,
+        "max_ms": 0.1071
+      },
+      "individual_condition_pages_latency": {
+        "samples": 30,
+        "median_ms": 1.2475,
+        "p95_ms": 1.9368,
+        "max_ms": 2.0075
+      },
+      "restart_does_not_remigrate": true
+    },
+    {
+      "objects": 100000,
+      "containers": 5000,
+      "migration_seconds": 10.402,
+      "objects_per_second": 9614,
+      "used_memory": 44730816,
+      "legacy_used_memory": 3871536,
+      "legacy_aof_bytes": 3029565,
+      "individual_aof_bytes": 56610852,
+      "migration_client_cpu_seconds": 4.7205,
+      "migration_redis_cpu_seconds": 0.773,
+      "legacy_stock_hash_latency": {
+        "samples": 30,
+        "median_ms": 0.0936,
+        "p95_ms": 0.1212,
+        "max_ms": 0.1929
+      },
+      "individual_condition_pages_latency": {
+        "samples": 30,
+        "median_ms": 1.2443,
+        "p95_ms": 1.5373,
+        "max_ms": 1.7174
+      },
+      "restart_does_not_remigrate": true
+    }
+  ]
+}

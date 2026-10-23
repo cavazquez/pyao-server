@@ -195,6 +195,8 @@ jobs:
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.bootstrap_smoke > artifacts/bootstrap.json 2> artifacts/bootstrap.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.economy_smoke > artifacts/economy.json 2> artifacts/economy.log
           timeout -k 10s 150s uv run --locked --no-dev python -m src.operations.merchant_stock_smoke > artifacts/merchant-stock.json 2> artifacts/merchant-stock.log
+      - name: Identidad, desgaste y carga de 100.000 objetos con AOF
+        run: timeout -k 10s 240s uv run --locked python tools/item_instances_smoke.py --output artifacts/items
       - name: Conservar evidencia de recuperación
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

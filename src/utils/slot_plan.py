@@ -1,5 +1,7 @@
 """Plan de slots en memoria: nunca persiste una distribución parcial de stacks."""
 
+from uuid import uuid4
+
 from src.utils.inventory_slot import InventorySlot
 
 MAX_SLOT_QUANTITY = 32767
@@ -21,6 +23,7 @@ class SlotPlan:
             raise ValueError(msg)
         self.capacity = capacity
         self.max_stack = max_stack
+        self.individual = values.get("__item_instances__") == "1"
         self.slots: dict[int, InventorySlot] = {}
         for slot in range(1, capacity + 1):
             value = values.get(f"slot_{slot}", "")
@@ -36,8 +39,11 @@ class SlotPlan:
                 raise ValueError(msg)
             self.slots[slot] = parsed
 
-    def take(self, slot: int, item_id: int, quantity: int) -> None:
+    def take(self, slot: int, item_id: int, quantity: int) -> InventorySlot:
         """Retira de un slot exacto conservando identidad y cantidad.
+
+        Returns:
+            Cantidad retirada con sus identidades originales.
 
         Raises:
             ValueError: Si el recurso cambió o la cantidad/slot no son válidos.
@@ -52,9 +58,12 @@ class SlotPlan:
         if current.quantity == quantity:
             del self.slots[slot]
         else:
-            self.slots[slot] = InventorySlot(item_id, current.quantity - quantity)
+            self.slots[slot] = InventorySlot(
+                item_id, current.quantity - quantity, current.instance_ids[quantity:]
+            )
+        return InventorySlot(item_id, quantity, current.instance_ids[:quantity])
 
-    def give(self, item_id: int, quantity: int) -> None:
+    def give(self, item_id: int, quantity: int, *, instance_ids: tuple[str, ...] = ()) -> None:
         """Distribuye una cantidad completa entre stacks existentes y vacíos.
 
         Raises:
@@ -75,6 +84,21 @@ class SlotPlan:
         )
         before = self.slots.copy()
         remaining = quantity
+        if instance_ids and len(instance_ids) != quantity:
+            msg = "La cantidad no coincide con las identidades transferidas"
+            raise ValueError(msg)
+        if self.individual:
+            from src.items.policy import individual  # ruff: ignore[import-outside-top-level]
+
+            if individual(item_id):
+                empty = [slot for slot in range(1, self.capacity + 1) if slot not in self.slots]
+                if len(empty) < quantity:
+                    msg = "No hay espacio para todos los ejemplares individuales"
+                    raise ValueError(msg)
+                for index, slot in enumerate(empty[:quantity]):
+                    ids = instance_ids[index : index + 1] if instance_ids else ()
+                    self.slots[slot] = InventorySlot(item_id, 1, ids)
+                return
         matching = [slot for slot, item in self.slots.items() if item.item_id == item_id]
         empty = [slot for slot in range(1, self.capacity + 1) if slot not in self.slots]
         for slot in sorted(matching) + empty:
@@ -82,7 +106,14 @@ class SlotPlan:
             existing = current.quantity if current else 0
             accepted = min(remaining, max(0, stack_limit - existing))
             if accepted:
-                self.slots[slot] = InventorySlot(item_id, existing + accepted)
+                previous_ids = current.instance_ids if current else ()
+                added_ids = instance_ids[quantity - remaining : quantity - remaining + accepted]
+                if previous_ids and not added_ids:
+                    added_ids = tuple(uuid4().hex for _ in range(accepted))
+                identities = previous_ids + added_ids
+                if len(identities) != existing + accepted:
+                    identities = ()
+                self.slots[slot] = InventorySlot(item_id, existing + accepted, identities)
                 remaining -= accepted
             if remaining == 0:
                 return
