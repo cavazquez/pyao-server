@@ -12,10 +12,13 @@ no se interpretan como un mensaje válido sin payload.
 
 ## Fuentes y reproducción
 
-La línea base del servidor es `9dd5467707118905e60720a897a4a4089fd3d2d4` y la del cliente
-`42398cd55dc4843d8ea2830d4dcf7003f62e2475`. Son los commits del código de juego que se
-auditó y probó; el commit que añade la herramienta es posterior. Los hashes de los
-archivos de runtime permiten comprobar que la muestra sigue correspondiendo al código.
+La línea base estática del servidor es `b9593f9b40309cb6593fec7b46f9462cd939952e`
+(índices #577/#578) y la del cliente `42398cd55dc4843d8ea2830d4dcf7003f62e2475`.
+La muestra nativa conservada se ejecutó sobre el servidor
+`9dd5467707118905e60720a897a4a4089fd3d2d4`: ahora es evidencia histórica y no
+acredita automáticamente el runtime modificado. Las pruebas gráficas actuales de
+índices se documentan en [su estudio](../../development/world-index-performance.md).
+Los hashes de los archivos de runtime impiden reutilizar crédito dinámico obsoleto.
 
 La referencia original es Comunidad-Winter/Argentum-Online, rama 0.13.3, commit
 `928f826cd459f727e0c8ea134327bcf55711d573`. `original.json` registra rutas, objetos Git,
