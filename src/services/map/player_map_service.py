@@ -22,6 +22,7 @@ from src.services.map.map_transition_steps import (
     MapTransitionContext,
     MapTransitionOrchestrator,
 )
+from src.services.map.music import tracks as map_tracks
 from src.services.map.transfer import commit_transfer
 from src.services.player.appearance import resolve_appearance
 from src.utils.gold_atomic import operation_id
@@ -43,6 +44,7 @@ class PlayerVisualData:
     shield: int = 0
     helmet: int = 0
     show_name: bool = True
+    boots: int = 0
 
 
 class PlayerMapService:
@@ -163,6 +165,7 @@ class PlayerMapService:
                 weapon=other_visual.weapon,
                 shield=other_visual.shield,
                 helmet=other_visual.helmet,
+                boots=other_visual.boots,
                 heading=other_position.get("heading", 3),
                 x=other_position["x"],
                 y=other_position["y"],
@@ -277,9 +280,10 @@ class PlayerMapService:
         count = await self._unblock_exit_tiles(map_id, sender)
         if self.door_world is not None:
             count += await self.door_world.snapshot(map_id, sender)
-        music = self.map_manager.map_overrides.get(map_id, {}).get("music")
-        if music is not None:
-            await sender.send_play_midi(int(music))
+        music = self.map_manager.map_overrides.get(map_id, {}).get(
+            "music", map_tracks().get(map_id, 0)
+        )
+        await sender.send_play_midi(int(music))
         for x, y in sorted(self.map_manager.overlay_positions.get(map_id, set())):
             state = self.map_manager.tile_overrides[map_id, x, y]
             if "blocked" in state:
@@ -337,6 +341,7 @@ class PlayerMapService:
             weapon=visual_data.weapon,
             shield=visual_data.shield,
             helmet=visual_data.helmet,
+            boots=visual_data.boots,
             heading=heading,
             x=x,
             y=y,
@@ -365,6 +370,7 @@ class PlayerMapService:
             weapon=visual_data.weapon,
             shield=visual_data.shield,
             helmet=visual_data.helmet,
+            boots=visual_data.boots,
             heading=heading,
             x=x,
             y=y,
@@ -455,7 +461,7 @@ class PlayerMapService:
                 )
             if result["dead"]:
                 visual_data.char_body, visual_data.char_head = 500, 500
-                visual_data.weapon = visual_data.shield = visual_data.helmet = 0
+                visual_data.weapon = visual_data.shield = visual_data.helmet = visual_data.boots = 0
             try:
                 await self._complete_transfer(
                     user_id,
@@ -535,6 +541,7 @@ class PlayerMapService:
                 weapon=visual_data.weapon,
                 shield=visual_data.shield,
                 helmet=visual_data.helmet,
+                boots=visual_data.boots,
                 heading=heading,
                 x=new_x,
                 y=new_y,
@@ -553,6 +560,7 @@ class PlayerMapService:
             weapon=visual_data.weapon,
             shield=visual_data.shield,
             helmet=visual_data.helmet,
+            boots=visual_data.boots,
             current_map=current_map,
             current_x=current_x,
             current_y=current_y,

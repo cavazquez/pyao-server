@@ -327,8 +327,8 @@ class ClanExpansion:
                 )
             source, destination = (own, depot) if action == "deposit" else (depot, own)
             try:
-                source.take(slot, item_id, quantity)
-                destination.give(item_id, quantity)
+                removed = source.take(slot, item_id, quantity)
+                destination.give(item_id, quantity, instance_ids=removed.instance_ids)
             except ValueError as error:
                 return Decision({"applied": False, "message": str(error)}, {})
             history = cast("set[str]", snapshot[history_key]) | {identity}

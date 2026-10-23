@@ -29,6 +29,7 @@ def build_character_change_response(
     helmet: int = 0,
     fx: int = 0,
     loops: int = 0,
+    boots: int = 0,
 ) -> bytes:
     """Construye el paquete CharacterChange del protocolo AO estándar.
 
@@ -40,6 +41,7 @@ def build_character_change_response(
         weapon: ID del arma equipada (int16).
         shield: ID del escudo equipado (int16).
         helmet: ID del casco equipado (int16).
+        boots: Capa de calzado equipada; cero retira las botas.
         fx: ID del efecto visual (int16).
         loops: Número de loops del efecto (int16).
 
@@ -57,6 +59,7 @@ def build_character_change_response(
     packet.add_int16(helmet)
     packet.add_int16(fx)
     packet.add_int16(loops)
+    packet.add_int16(boots)
     return packet.to_bytes()
 
 
@@ -76,6 +79,7 @@ def build_character_create_response(
     nick_color: int = 0,
     privileges: int = 0,
     show_name: bool = True,
+    boots: int = 0,
 ) -> bytes:
     """Construye el paquete CharacterCreate del protocolo AO estándar.
 
@@ -94,6 +98,7 @@ def build_character_create_response(
         name: Nombre del personaje (string), por defecto vacío.
         nick_color: Color del nick (byte), por defecto 0.
         privileges: Privilegios del personaje (byte), por defecto 0.
+        boots: Capa de calzado equipada; cero retira las botas.
         show_name: Permite mostrar el nombre en el mapa sin borrar su identidad.
 
     Returns:
@@ -117,6 +122,7 @@ def build_character_create_response(
     packet.add_byte(nick_color)
     packet.add_byte(privileges)
     packet.add_byte(int(show_name))
+    packet.add_int16(boots)
     return packet.to_bytes()
 
 

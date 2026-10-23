@@ -164,7 +164,11 @@ class GroundTransferPlan:
                 item["quantity"] = amount - accepted
                 return transferred
         else:
-            self.inventory.give(cast("int", item["item_id"]), amount)
+            self.inventory.give(
+                cast("int", item["item_id"]),
+                amount,
+                instance_ids=tuple(cast("list[str]", item.get("instance_ids", []))),
+            )
         tile.remove(item)
         return transferred
 
@@ -181,6 +185,7 @@ class GroundTransferPlan:
             msg = "Cantidad inválida"
             raise ValueError(msg)
         fraction = 0
+        identities: tuple[str, ...] = ()
         if self.request.action == "drop_gold":
             amount = min(self.request.quantity, self.gold)
             if amount < 1:
@@ -208,7 +213,7 @@ class GroundTransferPlan:
                 }
             amount = min(self.request.quantity, stack.quantity)
             item_id = stack.item_id
-            self.inventory.take(self.request.slot, item_id, amount)
+            identities = self.inventory.take(self.request.slot, item_id, amount).instance_ids
         item: GroundItem = {
             "item_id": item_id,
             "quantity": amount,
@@ -217,6 +222,8 @@ class GroundTransferPlan:
             "spawn_time": None,
             "grh_index": self.request.graphic_id,
         }
+        if identities:
+            item["instance_ids"] = list(identities)
         if item_id == GOLD_ITEM_ID and self.tax_state:
             item["devaluation_remainder"] = fraction
         self.ground.append(self.request.x, self.request.y, item)

@@ -7,6 +7,7 @@ from src.config.config_manager import ConfigManager, config_manager
 from src.core.data_initializer import DataInitializer
 from src.core.schema_manager import ensure_schema_ready
 from src.economy.tax_migration import initialize_tax_policy
+from src.items.migration import migrate as migrate_items
 from src.repositories.account_repository import AccountRepository
 from src.repositories.server_repository import ServerRepository
 from src.utils.redis_client import RedisClient
@@ -40,6 +41,7 @@ class RedisInitializer:
 
         data_initializer = DataInitializer(redis_client)
         await data_initializer.initialize_all()
+        await migrate_items(redis_client.redis)
         logger.info("✓ Datos iniciales cargados")
 
         server_repo = ServerRepository(redis_client)

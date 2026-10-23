@@ -3,6 +3,8 @@
 from functools import cache
 from typing import TYPE_CHECKING, Any, cast
 
+from src.items.condition import condition
+from src.items.ledger import PREFIX
 from src.models.character_class import ClassCatalog
 from src.models.item_catalog import ItemCatalog
 from src.models.item_types import ObjType
@@ -45,6 +47,15 @@ async def toggle_accessory(redis: RedisClient, user: int, inventory_slot: int) -
             return Decision({"applied": False, "message": "El accesorio de ese slot cambió."}, {})
         equipped = gear.get("accessory") == str(inventory_slot)
         if not equipped:
+            state = (
+                snapshot.get(PREFIX + stack.instance_ids[0])
+                if stack and stack.instance_ids
+                else None
+            )
+            if isinstance(state, dict) and condition(state, int(str(snapshot["items:now"])))[2]:
+                return Decision(
+                    {"applied": False, "message": "El accesorio está roto; reemplázalo."}, {}
+                )
             character_class = classes.get_class(int(stats.get("class_id", 0)))
             forbidden = cast("list[str]", item.get("ClasesProhibidas", []))
             if int(stats.get("min_hp", 0)) <= 0:

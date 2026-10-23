@@ -3,6 +3,8 @@
 import logging
 from dataclasses import dataclass
 
+from src.utils.inventory_slot import InventorySlot
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,6 +14,7 @@ class ParsedItem:
 
     item_id: int
     quantity: int
+    instance_ids: tuple[str, ...] = ()
 
     def to_string(self) -> str:
         """Convierte el item a formato Redis (item_id:quantity).
@@ -19,7 +22,7 @@ class ParsedItem:
         Returns:
             String en formato "item_id:quantity".
         """
-        return f"{self.item_id}:{self.quantity}"
+        return InventorySlot(self.item_id, self.quantity, self.instance_ids).to_string()
 
 
 class ItemSlotParser:
@@ -44,10 +47,9 @@ class ItemSlotParser:
                 value = value.decode("utf-8")
 
             # Parsear formato "item_id:quantity"
-            item_id_str, quantity_str = str(value).split(":")
-            return ParsedItem(
-                item_id=int(item_id_str),
-                quantity=int(quantity_str),
+            parsed = InventorySlot.parse(value)
+            return (
+                ParsedItem(parsed.item_id, parsed.quantity, parsed.instance_ids) if parsed else None
             )
         except (ValueError, AttributeError) as e:
             logger.debug("Error parseando item slot: %s - %s", value, e)

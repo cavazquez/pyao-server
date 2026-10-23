@@ -3,9 +3,11 @@
 import logging
 from typing import TYPE_CHECKING
 
+from src.items.equipment import toggle as toggle_individual_equipment
 from src.models.items_catalog import get_item
 from src.services.player.accessories import toggle_accessory
 from src.utils.equipment_slot import EquipmentSlot
+from src.utils.inventory_slot import InventorySlot
 
 if TYPE_CHECKING:
     from src.messaging.message_sender import MessageSender
@@ -58,8 +60,10 @@ class EquipmentService:
             return False
 
         try:
-            item_id_str, _ = slot_value.split(":")
-            item_id = int(item_id_str)
+            stack = InventorySlot.parse(slot_value)
+            if stack is None:
+                return False
+            item_id = stack.item_id
         except ValueError, AttributeError:
             logger.exception("Formato de slot inválido: %s", slot_value)
             return False
@@ -97,6 +101,21 @@ class EquipmentService:
         if not equipment_slot:
             logger.error("No se pudo determinar slot de equipamiento para %s", item.item_type)
             return False
+
+        if await self.inventory_repo.redis_client.get("items:format_version") == "1":
+            result = await toggle_individual_equipment(
+                self.inventory_repo.redis_client.redis, user_id, inventory_slot, equipment_slot
+            )
+            await message_sender.send_console_msg(
+                (
+                    ("Has equipado " if result.get("equipped") else "Has desequipado ")
+                    + item.name
+                    + "."
+                )
+                if result["applied"]
+                else result["message"]
+            )
+            return bool(result["applied"])
 
         # Verificar si el item ya está equipado
         equipped_slot = await self.equipment_repo.is_slot_equipped(user_id, inventory_slot)

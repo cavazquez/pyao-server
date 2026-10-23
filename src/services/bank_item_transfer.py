@@ -73,8 +73,8 @@ async def transfer_bank_item(
                 return Decision(
                     {"applied": False, "error": "Desequipá el objeto antes de depositarlo"}, {}
                 )
-            source.take(slot, item.item_id, quantity)
-            destination.give(item.item_id, quantity)
+            removed = source.take(slot, item.item_id, quantity)
+            destination.give(item.item_id, quantity, instance_ids=removed.instance_ids)
             inventory_after, bank_after = inventory.fields(), bank.fields()
             inventory_changed = [
                 int(key.removeprefix("slot_"))

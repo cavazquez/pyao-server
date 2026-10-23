@@ -578,31 +578,34 @@
   {
     "name": "character_bat",
     "direction": "server",
-    "hex": "1d112701000100033232000000000000000000000a004d75726369e96c61676f000000",
+    "hex": "1d112701000100033232000000000000000000000a004d75726369e96c61676f0000000000",
     "values": {
       "index": 10001,
       "name": "Murciélago",
-      "show_name": 0
+      "show_name": 0,
+      "boots": 0
     }
   },
   {
     "name": "character_banker",
     "direction": "server",
-    "hex": "1d12270100010003323200000000000000000000080042616e717565726f000001",
+    "hex": "1d12270100010003323200000000000000000000080042616e717565726f0000010000",
     "values": {
       "index": 10002,
       "name": "Banquero",
-      "show_name": 1
+      "show_name": 1,
+      "boots": 0
     }
   },
   {
     "name": "character_player",
     "direction": "server",
-    "hex": "1d0100010001000332320000000000000000000004005065f161000001",
+    "hex": "1d0100010001000332320000000000000000000004005065f1610000010000",
     "values": {
       "index": 1,
       "name": "Peña",
-      "show_name": 1
+      "show_name": 1,
+      "boots": 0
     }
   },
   {
@@ -642,7 +645,7 @@
   {
     "name": "writer_build_character_change_response",
     "direction": "server",
-    "hex": "220200030004000406000700080009000a00",
+    "hex": "220200030004000406000700080009000a000000",
     "values": {
       "index": 2,
       "body": 3,
@@ -652,7 +655,8 @@
       "shield": 7,
       "helmet": 8,
       "fx": 9,
-      "loops": 10
+      "loops": 10,
+      "boots": 0
     },
     "python": {
       "module": "src.network.msg_character",
@@ -673,7 +677,7 @@
   {
     "name": "writer_build_character_create_response",
     "direction": "server",
-    "hex": "1d020003000400040607080009000a000b000c0004005065f1610e0f01",
+    "hex": "1d020003000400040607080009000a000b000c0004005065f1610e0f010000",
     "values": {
       "index": 2,
       "body": 3,
@@ -689,7 +693,8 @@
       "name": "Peña",
       "nick_color": 14,
       "privileges": 15,
-      "show_name": 1
+      "show_name": 1,
+      "boots": 0
     },
     "python": {
       "module": "src.network.msg_character",

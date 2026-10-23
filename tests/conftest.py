@@ -1,12 +1,14 @@
 """Configuración de fixtures para tests."""
 
 import socket
+import time
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 import pytest_asyncio
 from fakeredis import aioredis
 
+from src.items import ledger
 from src.utils.redis_client import RedisClient
 
 
@@ -101,3 +103,22 @@ async def redis_client() -> RedisClient:
     client._redis = await aioredis.FakeRedis(decode_responses=True)
 
     return client
+
+
+@pytest.fixture(autouse=True)
+def fake_item_ledger_reader(monkeypatch):
+    """Reproduce el lector Lua únicamente en fakeredis; la integración usa Redis real."""
+    original = ledger.read_states
+
+    async def read(pipe, keys):
+        if not pipe.connection_pool.connection_class.__module__.startswith("fakeredis"):
+            return await original(pipe, keys)
+        now = max(int(time.time()), int(await pipe.get(ledger.CLOCK_KEY) or 0))
+        await pipe.set(ledger.CLOCK_KEY, str(now))
+        result = [str(now)]
+        for key in keys:
+            state = await pipe.hgetall(key)
+            result.append([value for pair in state.items() for value in pair])
+        return result
+
+    monkeypatch.setattr(ledger, "read_states", read)

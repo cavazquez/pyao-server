@@ -6,6 +6,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from src.items.ledger import PREFIX
+from src.items.migration import migrate as migrate_items
 from src.models.crafting_data_loader import CRAFTING_KEY, load_recipes
 from src.models.items_catalog import ITEMS_CATALOG
 from src.models.skill_data_loader import SKILL_RULES_KEY
@@ -28,6 +30,7 @@ from src.services.npc_trade_plan import commerce_price
 from src.services.party_service import PartyService
 from src.services.personal_skills import hide, steal, survival, tame
 from src.utils.gold_atomic import operation_id
+from src.utils.inventory_slot import InventorySlot
 from src.utils.redis_config import RedisKeys
 
 
@@ -89,8 +92,9 @@ def test_all_owned_recipes_have_real_materials_and_preserve_carpentry():
 @pytest.mark.asyncio
 @pytest.mark.parametrize("recipe_id", ["herreria:15", "carpinteria:480", "fundir:192"])
 @pytest.mark.parametrize("success", [True, False])
+@pytest.mark.parametrize("individual", [True, False])
 async def test_crafting_confirms_actual_materials_product_and_training(
-    mechanics_world, recipe_id, success
+    mechanics_world, recipe_id, success, individual
 ):
     """Fabricar y fundir no duplican materiales, productos ni XP ante un reintento."""
     world = mechanics_world
@@ -105,6 +109,12 @@ async def test_crafting_confirms_actual_materials_product_and_training(
         RedisKeys.player_inventory(1),
         mapping={"slot_1": f"{tool}:1", "slot_2": f"{recipe['materials'][0]['item_id']}:20"},
     )
+    iid = ""
+    if individual:
+        await migrate_items(world.redis.redis)
+        iid = InventorySlot.parse(
+            await world.redis.hget(RedisKeys.player_inventory(1), "slot_1")
+        ).instance_ids[0]
     identity = operation_id()
     with patch("src.services.crafting.random.random", return_value=0.0 if success else 0.999):
         first = await craft(
@@ -126,6 +136,11 @@ async def test_crafting_confirms_actual_materials_product_and_training(
         if s.item_id == recipe["item_id"]
     )
     assert product == (2 if success else 0)
+
+    if iid:
+        assert await world.redis.hget(PREFIX + iid, "uses_spent") == (
+            "0" if recipe["skill"] == "mineria" else "2"
+        )
 
 
 @pytest.mark.asyncio
@@ -183,8 +198,9 @@ async def test_full_mana_stops_meditation_without_training(mechanics_world):
     [("wrestling", 0, False), ("armas", 15, False), ("proyectiles", 665, True)],
 )
 @pytest.mark.parametrize("success", [True, False])
+@pytest.mark.parametrize("individual", [True, False])
 async def test_physical_attack_uses_real_weapon_and_consumes_ammo_once(
-    mechanics_world, skill, weapon, ranged, success
+    mechanics_world, skill, weapon, ranged, success, individual
 ):
     """Las tres habilidades físicas cambian el ataque y entrenan éxito o fallo válido."""
     world = mechanics_world
@@ -193,6 +209,13 @@ async def test_physical_attack_uses_real_weapon_and_consumes_ammo_once(
         await world.redis.hset(RedisKeys.player_equipment(1), "weapon", "1")
     if ranged:
         await world.redis.hset(RedisKeys.player_inventory(1), "slot_2", "480:3")
+    iid = ""
+    if individual:
+        await migrate_items(world.redis.redis)
+        if weapon:
+            iid = InventorySlot.parse(
+                await world.redis.hget(RedisKeys.player_inventory(1), "slot_1")
+            ).instance_ids[0]
     with patch(
         "src.services.combat.physical_plan.random.random",
         side_effect=[0.0 if success else 0.99, 0.99, 0.99, 0.5, 0.99],
@@ -211,6 +234,8 @@ async def test_physical_attack_uses_real_weapon_and_consumes_ammo_once(
     assert await world.redis.hget(RedisKeys.player_skills(1), f"xp:{skill}") == (
         "50" if success else "20"
     )
+    if iid:
+        assert await world.redis.hget(PREFIX + iid, "uses_spent") == "1"
     if ranged:
         assert await world.inventory.get_slot(1, 2) == (480, 2)
 

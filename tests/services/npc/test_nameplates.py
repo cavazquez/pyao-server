@@ -115,7 +115,7 @@ async def test_spawn_and_reconnect_send_same_policy_to_two_observers(template: i
     service = PlayerMapService(MagicMock(), MagicMock(), maps, broadcast)
     for sender in observers:
         packet = sender.connection.send.await_args.args[0]
-        assert packet[-1] == int(npc.show_name)
+        assert packet[-3] == int(npc.show_name)
         assert npc.name.encode("latin1") in packet
         sender.connection.send.reset_mock()
         await service._send_npcs_in_map(1, sender)

@@ -319,6 +319,7 @@ class MultiplayerBroadcastService:
         weapon: int = 0,
         shield: int = 0,
         helmet: int = 0,
+        boots: int = 0,
     ) -> int:
         """Broadcast de CHARACTER_CREATE a todos los jugadores en un mapa.
 
@@ -334,6 +335,7 @@ class MultiplayerBroadcastService:
             weapon: Animación del arma o herramienta equipada.
             shield: Animación del escudo equipado.
             helmet: Animación del casco equipado.
+            boots: Animación de calzado independiente.
 
         Returns:
             Número de jugadores notificados.
@@ -368,6 +370,7 @@ class MultiplayerBroadcastService:
                 weapon=weapon,
                 shield=shield,
                 helmet=helmet,
+                boots=boots,
                 show_name=show_name,
             )
             notified += 1

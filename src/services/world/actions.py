@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 
 ACTION_FIELDS: dict[str, dict[str, type]] = {
     "tax.read": {},
+    "items.read": {},
     "lottery.read": {},
     "lottery.bet": {"round": str, "npc": str, "gross": int},
     "party.read": {},
@@ -41,7 +42,9 @@ ACTION_FIELDS: dict[str, dict[str, type]] = {
     "weather.set": {"map": int, "raining": bool, "intensity": int},
     "trade.read": {"session": str, "revision": int, "page": int},
 }
-TOPICS = frozenset({"tax", "party", "clan", "pets", "weather", "commands", "lottery", "bank"})
+TOPICS = frozenset(
+    {"tax", "party", "clan", "pets", "weather", "commands", "lottery", "bank", "items"}
+)
 ACTION_FIELDS.update(EXPANSION_FIELDS)
 TOPICS |= EXPANSION_TOPICS
 

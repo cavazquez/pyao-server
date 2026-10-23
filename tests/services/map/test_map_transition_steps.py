@@ -41,6 +41,7 @@ def mock_context():
         weapon=12,
         shield=4,
         helmet=6,
+        boots=0,
     )
 
 
@@ -169,6 +170,7 @@ class TestSendSelfCharacterCreateStep:
             weapon=12,
             shield=4,
             helmet=6,
+            boots=0,
             show_name=True,
         )
 
@@ -226,6 +228,7 @@ class TestBroadcastCreateInNewMapStep:
             weapon=12,
             shield=4,
             helmet=6,
+            boots=0,
         )
 
 

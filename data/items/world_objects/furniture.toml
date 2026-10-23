@@ -813,7 +813,7 @@ Agarrable = 1
 id = 1055
 Name = "Botas de Cuero"
 GrhIndex = 546
-ObjType = 20
+ObjType = 36
 Agarrable = 0
 Crucial = 1
 MaxDef = 5
@@ -822,11 +822,12 @@ NumRopaje = 1
 Valor = 800
 sale_price = 800
 
+Anim = 1
 [[item]]
 id = 1059
 Name = "Botas de Placas de Hierro"
 GrhIndex = 3043
-ObjType = 20
+ObjType = 36
 Agarrable = 0
 ClasesProhibidas = ['MAGO', 'DRUIDA', 'LADRON', 'BARDO']
 Crucial = 1
@@ -836,11 +837,12 @@ NumRopaje = 3
 Valor = 3000
 sale_price = 3000
 
+Anim = 2
 [[item]]
 id = 1063
 Name = "Botas de Escamas de Dragón"
 GrhIndex = 3045
-ObjType = 20
+ObjType = 36
 Agarrable = 0
 ClasesProhibidas = ['MAGO', 'DRUIDA']
 Crucial = 1
@@ -850,11 +852,12 @@ NumRopaje = 5
 Valor = 12000
 sale_price = 12000
 
+Anim = 3
 [[item]]
 id = 1067
 Name = "Botas de las Sombras"
 GrhIndex = 546
-ObjType = 20
+ObjType = 36
 Agarrable = 0
 Crucial = 1
 MaxDef = 18
@@ -863,11 +866,12 @@ NumRopaje = 2
 Valor = 6000
 sale_price = 6000
 
+Anim = 4
 [[item]]
 id = 1071
 Name = "Botas Arcanas"
 GrhIndex = 546
-ObjType = 20
+ObjType = 36
 Agarrable = 0
 Crucial = 1
 MaxDef = 10
@@ -876,3 +880,4 @@ NumRopaje = 1
 Valor = 4000
 sale_price = 4000
 
+Anim = 5

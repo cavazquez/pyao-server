@@ -83,7 +83,7 @@ class AttackLootHandler:
             drop_x, drop_y = drop_pos
 
             # Crear ground item
-            ground_item: dict[str, int | str | None] = {
+            ground_item: dict[str, int | str | list[str] | None] = {
                 "item_id": item_id,
                 "quantity": quantity,
                 "grh_index": grh_index,

@@ -18,7 +18,9 @@ def mock_equipment_repo() -> MagicMock:
 @pytest.fixture
 def mock_inventory_repo() -> MagicMock:
     """Crea un mock de InventoryRepository."""
-    return MagicMock()
+    repo = MagicMock()
+    repo.redis_client.get = AsyncMock(return_value=None)
+    return repo
 
 
 @pytest.fixture

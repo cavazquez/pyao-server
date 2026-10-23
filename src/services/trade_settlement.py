@@ -53,6 +53,7 @@ def _plan(
     """
     inventories: dict[int, SlotPlan] = {}
     balances: dict[int, int] = {}
+    moved: dict[tuple[int, int], tuple[str, ...]] = {}
     for offer in offers:
         if not 0 <= offer.gold <= MAX_PLAYER_GOLD:
             msg = "Oferta de oro inválida"
@@ -70,7 +71,8 @@ def _plan(
             msg = "Desequipá los objetos antes de intercambiarlos"
             raise ValueError(msg)
         for item in offer.items:
-            inventories[offer.user_id].take(item.slot, item.item_id, item.quantity)
+            removed = inventories[offer.user_id].take(item.slot, item.item_id, item.quantity)
+            moved[offer.user_id, item.slot] = removed.instance_ids
     for index, offer in enumerate(offers):
         target = offers[1 - index].user_id
         balances[target] += offer.gold
@@ -78,7 +80,9 @@ def _plan(
             msg = "El destinatario supera el tope de oro"
             raise ValueError(msg)
         for item in offer.items:
-            inventories[target].give(item.item_id, item.quantity)
+            inventories[target].give(
+                item.item_id, item.quantity, instance_ids=moved[offer.user_id, item.slot]
+            )
     writes: dict[str, str | dict[str, str] | set[str]] = {}
     for user_id, planned_inventory in inventories.items():
         writes[RedisKeys.player_inventory(user_id)] = planned_inventory.fields()

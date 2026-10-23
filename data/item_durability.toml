@@ -1,0 +1,265 @@
+# Política 1: vida calendario UTC. Barcos y oro están exentos.
+# Durables: curva lineal 100% -> 50%; agotamiento = roto, sin desaparición.
+# Usos cero deshabilita el contador; días cero deshabilita vencimiento.
+
+[types."1"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."2"]
+kind = "durable"
+max_uses = 10000
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."3"]
+kind = "durable"
+max_uses = 20000
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."4"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."5"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."6"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."7"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."8"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."9"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."10"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."11"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."12"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."13"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."14"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."15"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."16"]
+kind = "durable"
+max_uses = 20000
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."17"]
+kind = "durable"
+max_uses = 20000
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."18"]
+kind = "durable"
+max_uses = 0
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."19"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."20"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."21"]
+kind = "durable"
+max_uses = 0
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."22"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."23"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."24"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."25"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."26"]
+kind = "durable"
+max_uses = 0
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."27"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."28"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."29"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."30"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."31"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."32"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."33"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."34"]
+kind = "consumable"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."35"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[types."36"]
+kind = "durable"
+max_uses = 0
+lifetime_seconds = 2592000
+minimum_factor_bps = 5000
+version = 1
+
+[types."37"]
+kind = "exempt"
+max_uses = 0
+lifetime_seconds = 0
+minimum_factor_bps = 5000
+version = 1
+
+[tools]
+max_uses = 5000

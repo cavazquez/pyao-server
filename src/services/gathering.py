@@ -5,6 +5,8 @@ import random
 import time
 from typing import TYPE_CHECKING, Any, cast
 
+from src.items.wear import broken as item_broken
+from src.items.wear import costs as wear_costs
 from src.models.skills import skill_progress
 from src.services.fishing_zones import FishingZones
 from src.services.skill_training import trained_decision, training_resources
@@ -88,6 +90,10 @@ async def gather(
             return Decision(
                 {"applied": False, "message": "No tienes la herramienta necesaria."}, {}
             )
+        if weapon.instance_ids and item_broken(snapshot, weapon.instance_ids[0]):
+            return Decision(
+                {"applied": False, "message": "La herramienta está rota; reemplázala."}, {}
+            )
         skills = cast("dict[str, str]", snapshot[RedisKeys.player_skills(user_id)])
         catch_item, catch_name = item, name
         band, coast_distance = "", 0
@@ -113,6 +119,7 @@ async def gather(
         decision = Decision(
             {
                 "applied": True,
+                "_item_uses": wear_costs(snapshot, user_id, ("weapon",)),
                 "successful": successful,
                 "quantity": quantity if successful else 0,
                 "item_id": catch_item,

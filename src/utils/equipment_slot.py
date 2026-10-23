@@ -6,6 +6,7 @@ from enum import Enum
 class EquipmentSlot(Enum):
     """Slots de equipamiento disponibles."""
 
+    BOOTS = "boots"
     WEAPON = "weapon"  # Arma
     ARMOR = "armor"  # Armadura
     HELMET = "helmet"  # Casco
@@ -23,6 +24,7 @@ class EquipmentSlot(Enum):
             Slot de equipamiento correspondiente o None si no es equipable.
         """
         mapping = {
+            "boots": cls.BOOTS,
             "weapon": cls.WEAPON,
             "armor": cls.ARMOR,
             "helmet": cls.HELMET,

@@ -1,5 +1,5 @@
 {
-  "version": "pyao-1.0-draft.1",
+  "version": "pyao-1.0-draft.2",
   "byte_order": "little",
   "string_encoding": "iso-8859-1",
   "string_length": "u16_bytes",
@@ -1751,6 +1751,12 @@
             "type": "u8",
             "min": 0,
             "max": 1
+          },
+          {
+            "name": "boots",
+            "type": "i16",
+            "min": 0,
+            "max": 5
           }
         ]
       },
@@ -1833,6 +1839,12 @@
           {
             "name": "loops",
             "type": "i16"
+          },
+          {
+            "name": "boots",
+            "type": "i16",
+            "min": 0,
+            "max": 5
           }
         ]
       },

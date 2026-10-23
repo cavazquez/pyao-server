@@ -5,6 +5,7 @@ import math
 import random
 from typing import TYPE_CHECKING, Any, cast
 
+from src.items.wear import tool_costs
 from src.models.crafting_data_loader import CRAFTING_KEY
 from src.models.skills import skill_progress
 from src.services.skill_training import trained_decision, training_resources
@@ -105,11 +106,16 @@ async def craft(
         tools = CRAFT_TOOLS[skill]
         if tools and not any(s.item_id in tools for s in slots.slots.values()):
             return Decision({"applied": False, "message": "Te falta la herramienta apropiada."}, {})
+        try:
+            use_cost = tool_costs(snapshot, slots.slots.values(), tools, quantity)
+        except ValueError as error:
+            return Decision({"applied": False, "message": str(error)}, {})
         rate = min(100, recipe["success_rate"] + max(0, level - recipe["required"]) // 2)
         success = sample < rate / 100
         try:
             # La bolsa debe admitir la fabricación completa incluso al fallar.
             capacity = SlotPlan(slots.fields(), slots.capacity, slots.max_stack)
+            capacity.individual = slots.individual
             consume_materials(capacity, recipe["materials"], quantity)
             capacity.give(recipe["item_id"], quantity)
             if success:
@@ -126,6 +132,7 @@ async def craft(
             Decision(
                 {
                     "applied": True,
+                    "_item_uses": use_cost,
                     "successful": success,
                     "quantity": quantity if success else 0,
                     "item_id": recipe["item_id"],
